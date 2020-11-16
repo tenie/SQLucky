@@ -44,7 +44,7 @@ public class MenuBarContainer {
 		Save.setGraphic(ImageViewGenerator.svgImageUnactive("floppy-o"));
 		Save.setAccelerator(KeyCombination.keyCombination("shortcut+S"));
 		Save.setOnAction(value -> {
-			CommonAction.openSqlFile();
+			CommonAction.saveSqlAction();
 		});
 
 		MenuItem exit = new MenuItem("Exit");

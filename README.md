@@ -11,4 +11,6 @@
     $ git clone git@github.com:tenie/SQLucky.git
     $ cd  SQLucky
     $ mvn jfx:run
-   
+
+## demo截图 ##
+![](demo.png)
