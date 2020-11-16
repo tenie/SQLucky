@@ -13,4 +13,4 @@
     $ mvn jfx:run
 
 ## demo截图 ##
-![](demo.png)
+![](https://github.com/tenie/SQLucky/blob/main/demo.png)
