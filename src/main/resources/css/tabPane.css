@@ -1,0 +1,40 @@
+ /* TabPane */
+.tab-pane>*.tab-header-area>*.tab-header-background {
+   -fx-background-color:  #323232; 
+}  
+
+.tab {
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0; /* eckig */
+/*     -fx-background-color: #3C3F41;  */
+	/*  -fx-border-color: #4E5254 #323232 #323232 #4E5254  ; */
+     -fx-background-color: #323232;
+   /*    #2B2B2B  */
+}
+
+.tab:hover  {
+	  -fx-background-color: #2F65CA ; 
+}
+
+.tab:selected {
+    -fx-background-color: #4E5254 ;
+    -fx-border-color: transparent transparent  #059BCE transparent ;  /* transparent 透明*/
+    -fx-border-width : 2
+}
+
+.tab:selected  .tab-label { 
+    -fx-text-fill:   #ccd171; 
+}
+/* .tab .tab-close-button {
+    -fx-shape: "M19,6.41L17.59,5 12,10.59 6.41,5 5,6.41 10.59,12 5,17.59 6.41,19 12,13.41 17.59,19 19,17.59 13.41,12z";
+    -fx-scale-shape: false; 
+    -fx-background-color:  #5e6771;   
+} */
+
+.tab .tab-label {
+    -fx-text-fill:   #bdcddf;
+}
+.label {
+	-fx-text-fill:   red;
+	-fx-font-weight: bold;
+} 

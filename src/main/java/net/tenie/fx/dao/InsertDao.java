@@ -1,0 +1,72 @@
+package net.tenie.fx.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.Timestamp;
+import java.util.Date;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
+import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.utility.CommonUtility;
+import net.tenie.lib.reflex.BuildObject;
+import net.tenie.lib.tools.StrUtils;
+
+/*   @author tenie */
+public class InsertDao {
+	public static String execInsert(Connection conn, String tableName, ObservableList<StringProperty> data,
+			ObservableList<SqlFieldPo> fpos) throws Exception {
+		String msg = "";
+		StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
+		StringBuilder values = new StringBuilder("");
+		int size = fpos.size();
+		for (int i = 0; i < size; i++) {
+			SqlFieldPo po = fpos.get(i);
+			String temp = data.get(i).get();
+			if (StrUtils.isNotNullOrEmpty(temp) && !"<null>".equals(temp)) {
+				sql.append(po.getColumnLabel().get());
+				values.append(" ? ");
+				sql.append(" ,");
+				values.append(" ,");
+			}
+
+		}
+		String insert = sql.toString();
+		String valstr = values.toString();
+		if (insert.endsWith(",")) {
+			insert = insert.substring(0, insert.length() - 1);
+			valstr = valstr.substring(0, values.length() - 1);
+		}
+
+		insert += " ) VALUES (" + valstr + ")";
+
+		PreparedStatement pstmt = null;
+		pstmt = conn.prepareStatement(insert); 
+		System.out.println(insert);
+		int idx = 0;
+		for (int i = 0; i < size; i++) {
+			String val = data.get(i).get();
+			if (StrUtils.isNotNullOrEmpty(val) && !"<null>".equals(val)) {
+				idx++;
+				String type = fpos.get(i).getColumnClassName().get();
+				int javatype = fpos.get(i).getColumnType().get();
+
+				if (CommonUtility.isDateTime(javatype)) {
+					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
+					Timestamp ts = new Timestamp(dv.getTime());
+					pstmt.setTimestamp(idx, ts);
+					System.out.println(idx + "  " + ts);
+				} else {
+					Object obj = BuildObject.buildObj(type, val);
+					pstmt.setObject(idx, obj);
+					System.out.println(idx + "  " + obj);
+				}
+			}
+
+		}
+		int count = pstmt.executeUpdate();
+
+		msg = "Ok, Insert " + count;
+		return msg;
+	}
+}

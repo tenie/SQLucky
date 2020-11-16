@@ -1,0 +1,238 @@
+.pop-up-filter{
+	-fx-background-color: #2B2B2B; 
+} 
+.table-view2{
+	-fx-background-color: #2B2B2B; 
+}
+
+.table-view{
+	-fx-background-color: #2B2B2B; 
+}
+.column-header-background{
+	-fx-background-color: #2B2B2B; 
+}
+
+.myTableTag .filler{
+		-fx-background-color: #2B2B2B; 
+}
+.myTableTag .column-header-background{
+	-fx-background-color: #2B2B2B; 
+ }
+ .myTableTag .column-header-background .show-hide-columns-button{
+ 	-fx-background-color: #2B2B2B;
+ }
+ /* nested-column-header */
+ 
+ 
+ /*  序号部分 底部的一个展位框*/
+ .myTableTag .hbar{
+	-fx-background-color: #2B2B2B;
+}
+
+/*表头  */ 
+ 
+ 
+.myTableTag   .row-header  * .table-column{
+	-fx-background-color: #2B2B2B;
+	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
+}
+.myTableTag   .row-header  * .table-column:selected {
+	-fx-background-color: red;
+	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
+}
+
+/* 表头 列 column-header table-column */
+.myTableTag .nested-column-header  .column-header {
+	-fx-background-color: #2B2B2B;
+	-fx-border-color: #2B2B2B #2B2B2B #2B2B2B #3C3F41;
+}
+
+ /* 表头中的文本  */
+.myTableTag    .label{
+	-fx-background-color: #2B2B2B;
+	/* -fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41; */
+}
+ /* 表头  column-header table-column */
+ .myTableTag  .column-header{
+	-fx-background-color: #2B2B2B;
+	-fx-border-color: #2B2B2B #2B2B2B #323232 #2B2B2B;
+}
+
+
+ /* 数据部分 */
+.myTableTag .clipped-container .sheet .table-row-cell{
+	 -fx-background-color: #2B2B2B;
+}
+ /* 选中行颜色 */
+.myTableTag .clipped-container .table-row-cell:selected .table-column{
+	 -fx-background-color: #2F65CA  ;
+}
+.myTableTag .clipped-container .table-row-cell:hover .table-column{
+	 -fx-background-color: #387af9  ;
+}
+/* 每个单元格背景色 */
+ .myTableTag  .clipped-container .sheet .table-column {
+	-fx-background-color: #2B2B2B;
+	-fx-border-color: #323232  #323232  #2B2B2B #2B2B2B;
+} 
+
+
+
+ /****** 表格过滤功能弹出框样式  原始/org/controlsfx/control/tableview2/popupfilter.css *****/
+.mypopup  .pop-up-filter { 
+    -fx-background-color: #4E5254;
+    -fx-border-width: 1;
+    -fx-border-color: black;
+    -fx-pref-width: 300px;
+    -fx-spacing: 2;
+    -fx-padding: 2;
+}
+
+.mypopup  .pop-up-filter > VBox  {
+	-fx-text-fill: yellow;
+    -fx-background-color: #4E5254; 
+}
+
+.mypopup  .pop-up-filter  .label.operation  {
+    -fx-background-color: #4a2ade; 
+    -fx-text-fill : white;
+    -fx-background-radius: 5;
+    -fx-padding: 1 2 1 2;
+}  
+
+.pop-up-filter > VBox > HBox {
+    -fx-spacing: 2;
+     -fx-background-color: #4E5254;
+    -fx-alignment: center-left;
+}
+/* 文本框样式 */
+.pop-up-filter > VBox > HBox  .text-field{
+    -fx-spacing: 2;
+    -fx-background-color: #414141;
+    -fx-text-fill : white;
+    -fx-alignment: center-left;
+}
+
+/* 错误输入文本框样式 */
+.pop-up-filter > VBox > HBox  .text-field:error{
+   /* -fx-background-color:  red; */
+   -fx-control-inner-background: #414141;
+   -fx-text-fill : red;
+   -fx-alignment: center-left;
+}
+
+.pop-up-filter > VBox > HBox > .toggle-button {
+	 -fx-background-color: #4E5254;
+    -fx-padding: 0.16666em 0.33333em 0.16666em 0.33333em; /* 2 4 2 4 */
+}
+  /****** END 表格过滤功能弹出框样式 END *****/
+
+
+/* 序号部分 */ 
+/* .myTableTag .hbar{
+	-fx-background-color: #2B2B2B;
+}
+  */
+
+ /* 
+.myTableTag   .row-header  * .table-column{
+	-fx-background-color: #2B2B2B;
+	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
+}
+.myTableTag   .row-header  * .table-column:selected {
+	-fx-background-color: red;
+	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
+} */
+
+/* 表头 列 column-header table-column */
+/* .myTableTag .nested-column-header  .column-header {
+	-fx-background-color: #2B2B2B;
+	-fx-border-color: #2B2B2B #2B2B2B #2B2B2B #3C3F41;
+} */
+
+ /* 表头中的文本  */
+/* .myTableTag  .label{
+	-fx-background-color: #2B2B2B;
+ 
+} */
+ /* 表头  column-header table-column */
+/*  .myTableTag  .column-header{
+	-fx-background-color: #2B2B2B;
+	-fx-border-color: #2B2B2B #2B2B2B #323232 #2B2B2B;
+} */
+ /*  test   .cell .indexed-cell .table-cell .text-field-table-cell .tableview2-cell .table-column*/
+ 
+/*  .myTableTag  .clipped-container .sheet  .indexed-cell {
+	-fx-background-color: #2B2B2B;
+	-fx-border-color: #2B2B2B;
+} */
+ 
+/*    表数据  部分   */
+/*  .myTableTag  .clipped-container .sheet :hover {
+	-fx-background-color: #2F65CA;
+} */
+
+/*  .myTableTag  .clipped-container .sheet .table-column {
+	-fx-background-color: #2B2B2B;
+} 
+   .myTableTag  .clipped-container .sheet .table-column:hover {
+	-fx-background-color: #2F65CA;
+}   */
+  
+ 
+ /* 滚动条部分 */ 
+ 
+/* 滚动条角的颜色 */
+.myTableTag  .corner   {
+	-fx-background-color:  #3C3F41;
+}  
+
+.myTableTag   .scroll-bar {
+    -fx-background-color:  #3C3F41; 
+}
+ /* 滚动条上下2端的按钮  */ 
+.myTableTag  .scroll-bar:vertical .increment-button ,
+.myTableTag  .scroll-bar:vertical .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em; 
+} 
+
+/* 水平滚动条两端的按钮 */
+.myTableTag  .scroll-bar:horizontal .increment-button ,
+.myTableTag  .scroll-bar:horizontal .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em; 
+}
+
+.myTableTag   .scroll-bar .increment-arrow,
+.myTableTag   .scroll-bar .decrement-arrow{
+    -fx-shape : " ";     
+}
+
+ .myTableTag  .scroll-bar:vertical .increment-arrow,
+ .myTableTag  .scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " "; 
+}
+
+.myTableTag  .scroll-bar:horizontal .thumb,
+.myTableTag  .scroll-bar:vertical .thumb { 
+    -fx-background-color:
+        #4E5254,
+        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
+        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%)); 
+        -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0.5em;
+}
+
+.myTableTag  .scroll-bar:horizontal .thumb:hover,
+.myTableTag  .scroll-bar:vertical .thumb:hover { 
+    -fx-background-color:
+        #4E5254,
+        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
+        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%));
+        -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0.5em;
+}
+ 
+
+ 

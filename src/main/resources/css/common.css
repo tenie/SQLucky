@@ -1,0 +1,334 @@
+/* 空标记 */
+.my-tag{
+	
+}
+
+.myAlert {
+ -fx-border-color: #4C708C; 
+ -fx-background-color: #3C3F41;
+}
+.myAlert  TextField{
+ -fx-text-fill: white;
+}
+
+.myAlert   Button{
+ -fx-background-color: #365880;
+ -fx-text-fill: white;
+ -fx-border-color: #4C708C;
+}
+
+
+MenuButton{
+	-fx-background-color: #3C3F41;
+}
+MenuItem{
+	-fx-background-color:  #4E5254;
+}
+ContextMenu{
+	-fx-background-color:  #4E5254;
+}
+
+FlowPane{
+	-fx-background-color: #3C3F41;
+	-fx-text-fill: white;
+}
+
+FlowPane TextField{ 
+	-fx-text-fill: white;
+}
+
+
+/*连接编辑窗口*/
+.connectionEditor {
+    -fx-background-color: #3C3F41;
+}
+.connectionEditor  TextField{
+    -fx-text-fill: white;
+    -fx-background-color: #373a3c;
+    -fx-border-color: #5E6060 ;
+    -fx-border-radius: 3px; /* 圆角 */
+}
+
+.connectionEditor  PasswordField{
+    -fx-text-fill: white;
+    -fx-background-color: #373a3c;
+    -fx-border-color: #5E6060 ;
+    -fx-border-radius: 3px; /* 圆角 */
+}
+.connectionEditor  ChoiceBox{
+    -fx-text-fill: white;
+    -fx-background-color: #373a3c;
+    -fx-border-color: #5E6060 ;
+    -fx-border-radius: 3px; /* 圆角 */
+}
+
+
+
+.connectionEditor   Button{
+    -fx-background-color: #365880;
+    -fx-text-fill: white;
+    -fx-border-color: #4C708C;
+}
+
+/* 
+.control-buttons-tab{
+	-fx-visible: true;
+} */
+/*搜索 替换 按钮*/
+.myReplaceBtn{
+    -fx-border-color: #5E6060 ;
+    -fx-border-radius: 3px;
+}
+
+/*  搜索框 */
+.myFindTextField{
+	-fx-text-fill: white;
+	-fx-background-color: #373a3c;
+	-fx-border-color: #5E6060 ;
+	-fx-border-radius: 3px; /* 圆角 */
+}
+
+.myTextField{
+	-fx-text-fill: white;
+	-fx-background-color: #373a3c;
+}
+.myTextField:hover{
+	-fx-background-color: #323232;
+}
+
+.myBorderColor{
+	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
+}
+
+.menu-bar {
+	/* -fx-background-color: red; */
+	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
+}
+
+.button:hover{
+	 -fx-background-color: #323232;
+}
+ 
+
+/* 右键菜单  -fx-background-color: #323232;*/
+.context-menu{
+	 -fx-background-color: #4E5254;
+}
+
+.myComboBox{
+	 
+}
+
+/* .combo-box-base {
+	-fx-text-fill: #13B7FE;
+	-fx-body-color: #323232;
+	-fx-shadow-highlight-color: #323232;
+	-fx-background-color:  #323232;
+} */
+
+.combo-box {   
+     -fx-border-color: #373a3c;
+     -fx-border-width: 0;
+     -fx-background-radius: 0; /* */
+     -fx-background-color: #373a3c;
+    /*  -fx-font-family: "Arial"; */
+     -fx-font-size: 12px;
+     -fx-text-fill: #ffffff;
+     -fx-background-insets: 0;
+     -fx-alignment: center;
+     -fx-content-display: center;
+ }
+
+ .combo-box > .cell {   
+     -fx-text-fill: #ffffff;
+     -fx-alignment: center;
+ }
+
+ .combo-box:hover {   
+     -fx-background-color: #323232;
+        /* #87cefa; */
+ }
+ .combo-box-popup .list-view {
+ 	 -fx-background-color: #4E5254;  
+ }
+ .combo-box-popup .list-view .list-cell {
+     -fx-background-color: #323232;  
+     -fx-text-fill: #ffffff;
+     -fx-text-alignment: center;
+ }
+
+/*  .combo-box-popup .list-view .list-cell:filled:selected, 
+ .combo-box-popup .list-view .list-cell:filled:selected:hover {
+     -fx-background: #2f4f4f;
+     -fx-background-color: #323232;
+     -fx-text-fill: #ffffff;
+     -fx-text-alignment: center;
+ } */
+
+ .combo-box-popup .list-view .list-cell:filled:hover {
+     -fx-background-color: #2F65CA ;
+     -fx-text-alignment: center;
+/*      -fx-background-radius: 10.0; */
+ }
+
+
+
+
+
+.my-jfx-text-field {
+    -fx-focus-color: #77acf4;
+    -fx-unfocus-color: #00f900;
+    -fx-padding: 0.333333em 0 0.333333em 0;
+}
+
+/* 滚动条角的颜色 */
+.my-tag  .corner   {
+	-fx-background-color:  #3C3F41;
+}
+
+/* .scroll-pane > .corner {    
+-fx-background-color: red;
+}
+.scroll-bar > .corner {    
+-fx-background-color: red;
+} */
+
+.my-tag   .scroll-bar {
+    -fx-background-color:  #3C3F41;
+    /*  #3C3F41 */
+}
+/* .scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color :transparent;
+    -fx-border-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-border-radius :2.0em;
+} */
+
+
+.my-tag  .scroll-bar:horizontal .increment-button ,
+.my-tag  .scroll-bar:horizontal .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 0.0 10.0 0.0; 
+}
+
+.my-tag  .scroll-bar:vertical .increment-button ,
+.my-tag  .scroll-bar:vertical .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 10.0 0.0 0.0;
+
+}
+
+.my-tag   .scroll-bar .increment-arrow,
+.my-tag   .scroll-bar .decrement-arrow{
+    -fx-shape : " ";    
+    -fx-padding :0.15em 0.0;
+}
+
+ .my-tag  .scroll-bar:vertical .increment-arrow,
+ .my-tag  .scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";    
+    -fx-padding :0.0 0.15em;
+}
+
+.my-tag  .scroll-bar:horizontal .thumb,
+.my-tag  .scroll-bar:vertical .thumb {
+   /*  -fx-background-color :derive(black,90.0%);
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em; */
+    -fx-background-color:
+        #4E5254,
+        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
+        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%));
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0.5em;
+}
+
+.my-tag  .scroll-bar:horizontal .thumb:hover,
+.my-tag  .scroll-bar:vertical .thumb:hover {
+   /*  -fx-background-color :derive(#4D4C4F,10.0%);
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em; */
+    -fx-background-color:
+        #4E5254,
+        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
+        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%));
+    -fx-background-insets: 0, 1, 2;
+    -fx-background-radius: 0.5em;
+}
+
+/* 
+.dialog-pane  > .alert{
+  -fx-background-color: black;
+  -fx-border-color:black;
+  -fx-border-width:2.0px;
+}  
+.dialog-pane{
+  -fx-background-color: black;
+  -fx-border-color:black;
+  -fx-border-width:2.0px;
+ }
+ */
+/**Costumization of The Bar where the buttons are located**/
+/* .dialog-pane > .button-bar > .container {
+  -fx-background-color:black;
+}
+
+.dialog-pane > .content.label {
+   -fx-padding: 0.5em 0.5em 0.5em 0.5em;
+   -fx-background-color: yellow;
+   -fx-text-fill:black;
+   -fx-font-size:15.0px;
+} */
+
+/**Costumization of DialogPane Header**/
+/* .dialog-pane:header .header-panel {
+  -fx-background-color: black;
+}
+
+.dialog-pane:header .header-panel .label{
+  -fx-background-color: yellow;
+  -fx-background-radius:10px;
+  -fx-text-fill:black;
+  -fx-font-size:15.0px;
+}
+ */
+
+/**Costumization of Buttons**/
+.dialog-pane .button{
+   -fx-background-color:black;
+   -fx-text-fill:white;
+   -fx-wrap-text: true;
+   -fx-effect: dropshadow( three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
+   -fx-cursor:hand;
+ }
+
+.dialog-pane .button:hover{     
+  -fx-background-color:white;
+  -fx-text-fill:black;
+  -fx-font-weight:bold; 
+ }
+
+/*  失去焦点隐藏
+.scroll-bar{ 
+    visibility:hidden;
+} */
+
+/*
+note:
+	  设置背景颜色渐变,where <side-or-corner> = [left | right] || [top | bottom] 
+	-fx-background-color: linear-gradient(to bottom,#99CCFF,#CCFFFF)
+	 
+	  边角圆弧,参数分别是左上角→右上角→左下角→右下角,全部统一就只输50 
+	-fx-background-radius: 50 0 50 0
+	
+	内边距  
+	-fx-background-insets:10 0 10 0
+	
+	标题面板  
+	-fx-background-color: linear-gradient(from 0px 0px to 0px 50px, gray, darkgray 50%, dimgray 99%, white)
+	-fx-background-radius: 30 30 0 0
+	
+*/

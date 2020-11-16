@@ -1,0 +1,50 @@
+ 
+
+/* tree  */
+.tree-view, .tree-cell {
+    -fx-background-color: #2B2B2B ;
+    -fx-text-fill: white ;
+}
+/* .tree-cell:expanded, .tree-cell:sub-tree-item {
+    -fx-background-color: #404040 ;
+} */
+
+/*  选中的颜色 */
+.tree-cell:selected {
+    -fx-font-weight: bold ;
+    -fx-background-color: #164b72 ;
+}
+.tree-cell:hover { 
+    -fx-background-color: #2F65CA  ;
+}
+
+.tree-cell {
+    -fx-padding: 0.5em 0em 0.5em 0em ;
+}
+.tree-cell:sub-tree-item {
+    -fx-padding: 0.25em ;
+}
+
+.tree-cell .tree-disclosure-node .arrow {
+     -fx-background-color: #ADADAD ;
+}
+/* 箭头颜色  */
+/* .tree-cell .tree-disclosure-node .arrow {
+   -fx-shape: "M1600 736v192q0 40-28 68t-68 28h-416v416q0 40-28 68t-68 28h-192q-40 0-68-28t-28-68v-416h-416q-40 0-68-28t-28-68v-192q0-40 28-68t68-28h416v-416q0-40 28-68t68-28h192q40 0 68 28t28 68v416h416q40 0 68 28t28 68z";   
+   -fx-background-color: #ADADAD ;
+} */
+/* .tree-cell:expanded .tree-disclosure-node .arrow {
+ 
+     -fx-shape: "M 0 -1 L 7 -1 L 7 1 L 0 1 z";
+} */
+
+/* .tree-cell:expanded, .tree-cell:sub-tree-item {
+    -fx-background-color: #757575;
+} */
+/* .tree-cell:sub-tree-item{
+     -fx-indent: 22;
+}
+ */
+ 
+
+ 
