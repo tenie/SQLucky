@@ -55,6 +55,7 @@ public class RunSQLHelper {
 	private static Thread thread;
 	private static JFXButton runbtn;
 	private static JFXButton stopbtn;
+	private static JFXButton otherbtn;
 	private static final String WAITTB_NAME = "Loading...";
 
 	@SuppressWarnings("restriction")
@@ -64,6 +65,7 @@ public class RunSQLHelper {
 		String sqlstr = (String) val.get("sql");
 		Connection conn = (Connection) val.get("conn");
 		String tabIdx = (String) val.get("tabIdx");
+		String btn = (String)val.get("btn");
 		int tidx = -1;
 		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
 			tidx = Integer.valueOf(tabIdx);
@@ -80,7 +82,15 @@ public class RunSQLHelper {
 			} else {
 				// 获取文本编辑中选中的sql文本来执行sql
 				// 获取sql 语句
-				List<String> allsqls = willExecSql();
+				List<String> allsqls = new ArrayList<>();
+				if(StrUtils.isNotNullOrEmpty(btn)) {
+					String str = SqlEditor.getCurrentTabSQLText();
+					allsqls.add(str);
+				}else {
+					allsqls = willExecSql();
+				}
+				  
+				
 				// 执行sql
 				execSqlList(allsqls, conn);
 			}
@@ -215,7 +225,7 @@ public class RunSQLHelper {
 	}
 
 	// 在子线程执行 运行sql 的任务
-	public static Thread createThread(Connection conn, String sql, String tabIdx,
+	public static Thread createThread(Connection conn, String sql, String tabIdx, JFXButton run,
 			Consumer<Map<String, Object>> action) {
 		return new Thread() {
 			public void run() {
@@ -224,31 +234,36 @@ public class RunSQLHelper {
 				val.put("sql", sql);
 				val.put("conn", conn);
 				val.put("tabIdx", tabIdx);
+				val.put("btn", run.getId());
 				action.accept(val);
 				System.out.println("线程结束了" + this.getName());
+				System.out.println(run.getId());
 			}
 		};
 	}
 
 	// 设置 按钮状态
-	public static void settingBtn(JFXButton run, JFXButton stop) {
+	public static void settingBtn(JFXButton run, JFXButton stop,JFXButton btn) {
 		if (runbtn == null) {
 			runbtn = run;
+			otherbtn = btn;
 		}
 		if (stopbtn == null) {
 			stopbtn = stop;
 		}
 		runbtn.setDisable(stopbtn.disabledProperty().getValue());
+		otherbtn.setDisable(stopbtn.disabledProperty().getValue());
 		stopbtn.setDisable(!runbtn.disabledProperty().getValue());
 	}
 
-	public static void settingBtn(JFXButton run, boolean runt, JFXButton stop, boolean stopt) {
+	public static void settingBtn(JFXButton run, boolean runt, JFXButton stop, boolean stopt, JFXButton btn) {
 		run.setDisable(runt);
+		btn.setDisable(runt);
 		stop.setDisable(stopt);
 	}
 
 	public static void settingBtn() {
-		settingBtn(null, null);
+		settingBtn(null, null , null);
 	}
 
 //    检查db连接状态
@@ -260,21 +275,21 @@ public class RunSQLHelper {
 		if (conns.getValue() == null || StrUtils.isNullOrEmpty(conns.getValue().getText())) {
 			warn = true;
 			ModalDialog.errorAlert("Warn!", "please , choose alive DB connection!");
-		} else {
-			String val = conns.getValue().getText();
-			DbConnectionPo po = DBConns.get(val);
-			if (po == null || !po.isAlive()) {
-				warn = true;
-				ModalDialog.errorAlert("Warn!", "please ,  connect DB !");
-			}
+			return warn;
+		} 
+		String val = conns.getValue().getText();
+		DbConnectionPo po = DBConns.get(val);
+		if (po == null || !po.isAlive()) {
+			warn = true;
+			ModalDialog.errorAlert("Warn!", "please ,  connect DB !");
 		}
 		return warn;
 	}
 
 	// 运行sql 事件
-	public static EventHandler<Event> runSQL(JFXButton run, JFXButton stop) {
+	public static EventHandler<Event> runSQL(JFXButton run, JFXButton stop, JFXButton btn) {
 		return e -> {
-			runSQLMethod(run, stop);
+			runSQLMethod(run, stop, btn);
 		};
 
 	}
@@ -294,18 +309,18 @@ public class RunSQLHelper {
 	}
 
 	// 运行 sql 入口
-	public static void runSQLMethod(Connection conn, String sql, String tabIdx) {
+	public static void runSQLMethod(Connection conn, String sql, String tabIdx, JFXButton run) {
 		settingBtn();
 		CommonAction.showDetailPane();
-		thread = createThread(conn, sql, tabIdx, RunSQLHelper::runMain);
+		thread = createThread(conn, sql, tabIdx, run, RunSQLHelper::runMain);
 		thread.start();
 	}
 
-	public static void runSQLMethod(JFXButton run, JFXButton stop) {
-		runSQLMethod(run, stop, null, null);
+	public static void runSQLMethod(JFXButton run, JFXButton stop, JFXButton btn) {
+		runSQLMethod(run, stop, btn, null, null);
 	}
 
-	public static void runSQLMethod(JFXButton run, JFXButton stop, String sql, String tabIdx) {
+	public static void runSQLMethod(JFXButton run, JFXButton stop, JFXButton btn, String sql, String tabIdx) {
 		if (checkDBconn())
 			return;
 		DbConnectionPo dpo = DBConns.get(getComboBoxDbConnName());
@@ -321,31 +336,31 @@ public class RunSQLHelper {
 			return;
 		}
 
-		settingBtn(run, stop);
+		settingBtn(run, stop , btn );
 		CommonAction.showDetailPane();
 
-		thread = createThread(conn, sql, tabIdx, RunSQLHelper::runMain);
+		thread = createThread(conn, sql, tabIdx, run, RunSQLHelper::runMain);
 		thread.start();
 	}
 
 	// stop 事件
-	public static EventHandler<Event> stopSQL(JFXButton run, JFXButton stop) {
+	public static EventHandler<Event> stopSQL(JFXButton run, JFXButton stop, JFXButton btn) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
-				stopSQLMethod(run, stop);
+				stopSQLMethod(run, stop, btn);
 			}
 		};
 	}
 
 	// stop 入口
-	public static void stopSQLMethod(JFXButton run, JFXButton stop) {
+	public static void stopSQLMethod(JFXButton run, JFXButton stop, JFXButton btn) {
 
 		if (thread != null && !stop.disabledProperty().getValue()) {
 //   		 	 settingBtn(run, stop); 
 			thread.interrupt();
 			System.out.println("线程是否被中断：" + thread.isInterrupted());// true
 			if (thread.isInterrupted()) {
-				settingBtn(run, true, stop, false);
+				settingBtn(run, true, stop, false, btn);
 			}
 
 		}

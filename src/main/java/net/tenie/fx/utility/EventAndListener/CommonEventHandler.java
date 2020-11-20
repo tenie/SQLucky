@@ -28,6 +28,7 @@ import net.tenie.fx.Action.ShowTableRowDateDetailAction;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
+import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ConnectionEditor;
@@ -315,7 +316,8 @@ public class CommonEventHandler {
 					// 关闭当前tab
 					CommonUtility.setTabName(tb, "");
 					String idx = "" + ComponentGetter.dataTab.getSelectionModel().getSelectedIndex();
-					RunSQLHelper.runSQLMethod(conn, sql, idx);
+					JFXButton runFunPro = AllButtons.btns.get("runFunPro");
+					RunSQLHelper.runSQLMethod(conn, sql, idx, runFunPro);
 				}
 			}
 		};

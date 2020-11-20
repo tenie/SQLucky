@@ -58,8 +58,7 @@ public class CodeContainer {
 		stopbtn.setGraphic(ImageViewGenerator.svgImage("stop", "red"));
 		stopbtn.setTooltip(MyTooltipTool.instance("stop         ctrl + I "));
 
-		runbtn.setOnMouseClicked(RunSQLHelper.runSQL(runbtn, stopbtn));
-		stopbtn.setOnMouseClicked(RunSQLHelper.stopSQL(runbtn, stopbtn));
+		
 		stopbtn.setDisable(true);
 		// add panel
 		JFXButton addcodeArea = new JFXButton();
@@ -78,7 +77,21 @@ public class CodeContainer {
 			CommonAction.formatSqlText();
 		});
 		formatSQL.setTooltip(MyTooltipTool.instance("Format code   ctrl + shif + T   "));
+		
+		// 执行存储过程
+		JFXButton runFunPro = new JFXButton();
+		runFunPro.setGraphic(ImageViewGenerator.svgImageDefActive("bolt")); //zero-rerun bolt
+//		runFunPro.setOnMouseClicked(v -> {
+//			CommonAction.formatSqlText();
+//		});
+		runFunPro.setId("runFunPro");
+		runFunPro.setTooltip(MyTooltipTool.instance("Execut Create Program DDL"));
 
+		
+		runbtn.setOnMouseClicked(RunSQLHelper.runSQL(runbtn, stopbtn, runFunPro));
+		runFunPro.setOnMouseClicked(RunSQLHelper.runSQL(runFunPro, stopbtn, runbtn));
+		stopbtn.setOnMouseClicked(RunSQLHelper.stopSQL(runbtn, stopbtn, runFunPro));
+		
 		JFXButton hideLeft = new JFXButton();
 		hideLeft.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-left"));// fontImgName("caret-square-o-left",
 																							// 16, Color.ROYALBLUE));
@@ -155,6 +168,12 @@ public class CodeContainer {
 		y += fix;
 		formatSQL.setLayoutX(y);
 
+		//runFunPro
+		pn.getChildren().add(runFunPro);
+		runFunPro.setLayoutY(0);
+		y += fix;
+		runFunPro.setLayoutX(y);
+		
 		pn.getChildren().add(lbcnn);
 		lbcnn.setLayoutY(5);
 		y += fix + 100;
@@ -174,6 +193,7 @@ public class CodeContainer {
 
 		AllButtons.btns.put("runbtn", runbtn);
 		AllButtons.btns.put("stopbtn", stopbtn);
+		AllButtons.btns.put("runFunPro", runFunPro);
 		AllButtons.btns.put("addcodeArea", addcodeArea);
 
 	}

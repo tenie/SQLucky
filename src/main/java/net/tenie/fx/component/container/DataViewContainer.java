@@ -31,21 +31,24 @@ import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 
-/*   @author tenie */
+/*   
+ * 展示(数据, ddl等)面板的容器
+ * @author tenie 
+ */
 public class DataViewContainer {
 	private HBox container;
-	private VBox TabPancontainer;
+	private VBox TabPanContainer;
 	private TabPane dataView;
 
 	public DataViewContainer() {
 		container = new HBox();
-		TabPancontainer = new VBox();
-		container.getChildren().add(TabPancontainer);
+		TabPanContainer = new VBox();
+		container.getChildren().add(TabPanContainer);
 		dataView = new TabPane();
-		TabPancontainer.getChildren().add(dataView);
+		TabPanContainer.getChildren().add(dataView);
 
 		VBox.setVgrow(dataView, Priority.ALWAYS);
-		HBox.setHgrow(TabPancontainer, Priority.ALWAYS);
+		HBox.setHgrow(TabPanContainer, Priority.ALWAYS);
 
 		ComponentGetter.dataTab = dataView;
 		DraggingTabPaneSupport support2 = new DraggingTabPaneSupport();
@@ -236,11 +239,11 @@ public class DataViewContainer {
 	}
 
 	public VBox getTabPancontainer() {
-		return TabPancontainer;
+		return TabPanContainer;
 	}
 
 	public void setTabPancontainer(VBox tabPancontainer) {
-		TabPancontainer = tabPancontainer;
+		TabPanContainer = tabPancontainer;
 	}
 
 	public TabPane getDataView() {

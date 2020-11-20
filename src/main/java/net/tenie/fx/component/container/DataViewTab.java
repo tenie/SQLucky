@@ -2,14 +2,28 @@ package net.tenie.fx.component.container;
 
 import org.controlsfx.control.MaskerPane;
 
+import com.jfoenix.controls.JFXButton;
+
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.SqlCodeAreaHighLighting;
+import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 
 /*   @author tenie */
@@ -32,15 +46,44 @@ public class DataViewTab {
 
 	// 表, 视图 等 数据库对象的ddl语句
 	public static void showDdlPanel(String title, String ddl) {
-		Tab tb = createTab(title);
-		StackPane sp = new SqlCodeAreaHighLighting().getObj(ddl, false);
-		tb.setContent(sp);
+		Tab tb = createTab(title); 
+		VBox box = CreateDDLBox(ddl);
+		tb.setContent(box);
 
 		ComponentGetter.dataTab.getTabs().add(tb);
 		CommonAction.showDetailPane();
 		ComponentGetter.dataTab.getSelectionModel().select(tb);
 	}
 
+	// 数据tab中的组件
+		public static VBox CreateDDLBox(String ddl) {
+			VBox vb = new VBox();
+			StackPane sp = new SqlCodeAreaHighLighting().getObj(ddl, false);
+			// 表格上面的按钮
+			FlowPane fp = ddlOptionBtnsPane(ddl);
+			vb.getChildren().add(fp);
+			vb.getChildren().add(sp);
+			VBox.setVgrow(sp, Priority.ALWAYS);
+			return vb;
+		}
+		
+		// 数据表格 操作按钮们
+		public static FlowPane ddlOptionBtnsPane(String ddl) {
+			FlowPane fp = new FlowPane();
+			fp.prefHeight(25);
+			JFXButton editBtn = new JFXButton();
+			editBtn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
+			editBtn.setOnMouseClicked(e->{
+				SqlEditor.createTabFromSqlFile(ddl, "", "");
+			});
+			editBtn.setTooltip(MyTooltipTool.instance("Edit"));
+			editBtn.setId(AllButtons.SAVE);
+ 
+
+			fp.getChildren().addAll(editBtn );
+			return fp;
+		}
+	
 	// 右键菜单
 	public static ContextMenu tableViewMenu(Tab tb) {
 		ContextMenu contextMenu = new ContextMenu();

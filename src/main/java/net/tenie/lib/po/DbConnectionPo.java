@@ -83,7 +83,7 @@ public class DbConnectionPo {
 
 	// 判断是否连接着
 	public boolean isAlive() {
-		boolean tf = false;
+		boolean tf = false; 
 		if (conn != null) {
 			tf = true;
 		}

@@ -45,6 +45,7 @@ public final class SettingKeyCodeCombination {
 //        KeyCodeCombination ctrlD = new KeyCodeCombination(KeyCode.D, KeyCodeCombination.SHORTCUT_DOWN);
 		JFXButton runbtn = AllButtons.btns.get("runbtn");
 		JFXButton stopbtn = AllButtons.btns.get("stopbtn");
+		JFXButton runFunPro = AllButtons.btns.get("runFunPro");
 
 		scene.getAccelerators().put(ctrlShiftD, () -> {
 			CommonAction.shortcutShowDataDatil();
@@ -67,13 +68,13 @@ public final class SettingKeyCodeCombination {
 		// 运行SQL
 		scene.getAccelerators().put(ctrlEnter, () -> {
 			if (!runbtn.disabledProperty().getValue()) {
-				RunSQLHelper.runSQLMethod(runbtn, stopbtn);
+				RunSQLHelper.runSQLMethod(runbtn, stopbtn, runFunPro);
 			}
 		});
 
 		// 停止真正运行的sql
 		scene.getAccelerators().put(ctrlI, () -> {
-			RunSQLHelper.stopSQLMethod(runbtn, stopbtn);
+			RunSQLHelper.stopSQLMethod(runbtn, stopbtn, runFunPro);
 		});
 		// 添加代码窗口
 		scene.getAccelerators().put(ctrlT, () -> {

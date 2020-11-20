@@ -2,6 +2,9 @@
 .my-tag{
 	
 }
+.mainWindow{
+	 -fx-background-color: red; 
+}
 
 .myAlert {
  -fx-border-color: #4C708C; 

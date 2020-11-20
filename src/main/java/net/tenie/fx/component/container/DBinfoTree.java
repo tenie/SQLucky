@@ -19,7 +19,6 @@ import net.tenie.fx.component.ConnectionEditor;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.fx.utility.ConnTreeViewUtility;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.po.DBOptionHelper;
@@ -44,7 +43,7 @@ public class DBinfoTree {
 	// db节点view
 	public TreeView<TreeNodePo> createConnsTreeView() {
 		TreeItem<TreeNodePo> rootNode = new TreeItem<>(
-				new TreeNodePo("Connections", ImageViewGenerator.svgImageDefActive("connectdevelop")));
+				new TreeNodePo("Connections", ImageViewGenerator.svgImageDefActive("windows-globe"))); //connectdevelop  windows-globe
 		TreeView<TreeNodePo> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");
 		try {
@@ -148,10 +147,10 @@ public class DBinfoTree {
 				ConnItem ci = new ConnItem();
 				connItems.add(ci);
 				String schema = item.getValue().getName();
-				TreeItem<TreeNodePo> tableNode = ConnTreeViewUtility.CreateTableNode(po, schema);
-				TreeItem<TreeNodePo> viewNode = ConnTreeViewUtility.CreateViewNode(po, schema);
-				TreeItem<TreeNodePo> funcNode = ConnTreeViewUtility.CreateFunctionNode(po, schema);
-				TreeItem<TreeNodePo> procNode = ConnTreeViewUtility.CreateProceduresNode(po, schema);
+				TreeItem<TreeNodePo> tableNode = ConnItem.CreateTableNode(po, schema);
+				TreeItem<TreeNodePo> viewNode = ConnItem.CreateViewNode(po, schema);
+				TreeItem<TreeNodePo> funcNode = ConnItem.CreateFunctionNode(po, schema);
+				TreeItem<TreeNodePo> procNode = ConnItem.CreateProceduresNode(po, schema);
 
 				item.getChildren().add(tableNode);
 				item.getChildren().add(viewNode);

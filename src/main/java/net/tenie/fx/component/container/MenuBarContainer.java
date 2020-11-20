@@ -179,6 +179,7 @@ public class MenuBarContainer {
 		});
 
 		MenuItem hideLeftBottom = new MenuItem(MenuItemNameFormat("Hide/Show All Panels"));
+		hideLeftBottom.setGraphic(ImageViewGenerator.svgImageUnactive("arrows-alt"));
 		hideLeftBottom.setOnAction(value -> {
 			CommonAction.hideLeftBottom();
 		});
