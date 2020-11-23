@@ -3,6 +3,7 @@ package net.tenie.fx.PropertyPo;
 import java.io.Serializable;
 
 import javafx.scene.Node;
+import net.tenie.fx.component.container.ConnItemParent;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;
@@ -19,6 +20,7 @@ public class TreeNodePo implements Serializable {
 	private TablePo table;
 	private FuncProcTriggerPo funcProTri;
 	private DbConnectionPo connpo;
+	private ConnItemParent connItemParent;
 
 	public TreeNodePo(String name, Node cion) {
 		super();
@@ -138,6 +140,14 @@ public class TreeNodePo implements Serializable {
 
 	public void setFuncProTri(FuncProcTriggerPo funcProTri) {
 		this.funcProTri = funcProTri;
+	}
+
+	public ConnItemParent getConnItemParent() {
+		return connItemParent;
+	}
+
+	public void setConnItemParent(ConnItemParent connItemParent) {
+		this.connItemParent = connItemParent;
 	}
 
 	@Override

@@ -1,7 +1,9 @@
 package net.tenie.fx.component.container;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javafx.collections.ObservableList;
@@ -14,15 +16,17 @@ import net.tenie.lib.po.DbConnectionPo;
 public class ConnItemParent {
 	private TreeItem<TreeNodePo> root;
 	private TreeItem<TreeNodePo> schemaNode; 
-	private List<ConnItem> connItems = new ArrayList<>();
+	private Map<String , ConnItem> connItems = new HashMap<>();
 	
-	
+	public ConnItemParent() {
+		
+	}
 	
 	public ConnItemParent(DbConnectionPo connpo, TreeItem<TreeNodePo> root) {
 		this.root = root;
 		
 		String defSch = connpo.getDefaultSchema();
-		setSchemaNode(CreateSchemaNode(connpo)); 
+		schemaNode = CreateSchemaNode(connpo); 
 		moveDefaultNodeToTopAddTable(defSch, schemaNode );
 		showConnNode(connpo, defSch);
 
@@ -49,7 +53,8 @@ public class ConnItemParent {
 	
 	
 	public void addConnItem(ConnItem ci) {
-		connItems.add(ci);
+//		connItems.add(ci);
+		connItems.put(ci.getSchemaName(), ci);
 		ObservableList<TreeItem<TreeNodePo>> ls = schemaNode.getChildren();
 		for (int i = 0; i < ls.size(); i++) {
 			TreeItem<TreeNodePo> val = ls.get(i);
@@ -62,8 +67,8 @@ public class ConnItemParent {
 		}   
 	}
 	
-	public void selectTable( ) {
-		ConnItem item = connItems.get(0);
+	public void selectTable(String key) { 
+		ConnItem item = connItems.get(key);
 		ComponentGetter.treeView.getSelectionModel().select(item.getTableNode()); // 选择新加的节点
 	}
 	
@@ -107,12 +112,15 @@ public class ConnItemParent {
 
 		this.schemaNode = schemaNode;
 	}
-	public List<ConnItem> getConnItem() {
+	 
+	public Map<String, ConnItem> getConnItems() {
 		return connItems;
 	}
-	public void setConnItem(List<ConnItem> connItem) {
-		connItems = connItem;
+
+	public void setConnItems(Map<String, ConnItem> connItems) {
+		this.connItems = connItems;
 	}
+
 	public TreeItem<TreeNodePo> getRoot() {
 		return root;
 	}

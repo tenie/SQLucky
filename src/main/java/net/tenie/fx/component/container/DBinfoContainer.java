@@ -26,7 +26,8 @@ public class DBinfoContainer {
 
 		dbInfoTree = new DBinfoTree();
 		treeView = dbInfoTree.getTreeView();
-		filter = DBinfoFilter.createFilterPane(treeView);
+		DBinfoFilter dbf  = new DBinfoFilter();
+		filter = dbf.createFilterPane(treeView);
 		container.getChildren().addAll(treeBtnPane, treeView, filter);
 		VBox.setVgrow(treeView, Priority.ALWAYS);
 

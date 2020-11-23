@@ -415,13 +415,14 @@ public class ConnectionEditor {
 					po.getConn();
 					if (po.isAlive()) {
 //						ConnItem ci = new ConnItem(po);
-						ConnItemParent ci = new  ConnItemParent(po, item.getParent());
+						ConnItemParent ci = new  ConnItemParent(po, item);
 						ComponentGetter.dbInfoTree.getConnItemParent().add(ci);
 						TreeItem<TreeNodePo> s = ci.getSchemaNode();
 						Platform.runLater(() -> {
 							item.getChildren().add(s);
+							item.getValue().setConnItemParent(ci);
 							item.getValue().setIcon(ImageViewGenerator.svgImage("link", "#7CFC00"));							
-							ci.selectTable();
+							ci.selectTable(po.getDefaultSchema());
 						});
 					} else {
 						Platform.runLater(() -> {

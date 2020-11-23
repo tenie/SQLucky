@@ -1,5 +1,6 @@
 package net.tenie.fx.component.container;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.jfoenix.controls.JFXButton;
@@ -19,8 +20,11 @@ import net.tenie.lib.tools.StrUtils;
 /*   @author tenie */
 public class DBinfoFilter {
 	 AnchorPane filter;
+	 private  ObservableList<TreeItem<TreeNodePo>> temp  = FXCollections.observableArrayList();
+	 private  ObservableList<TreeItem<TreeNodePo>>  filtList = FXCollections.observableArrayList();
 	 
-	 public static AnchorPane createFilterPane(TreeView<TreeNodePo> treeView) {
+	 public DBinfoFilter () {}
+	 public   AnchorPane createFilterPane(TreeView<TreeNodePo> treeView) {
 		 AnchorPane filter = new AnchorPane();
 		 filter.setPrefHeight(20);
 		 JFXButton query = new JFXButton();
@@ -32,52 +36,112 @@ public class DBinfoFilter {
 		 
 		 txt.setPrefWidth(200);
 		 txt.getStyleClass().add("myTextField");
-//		 txt.textProperty().addListener((o, oldVal, newVal) -> {		
-//			List<ConnItem> connItems =  ComponentGetter.dbInfoTree.getConnItems();
-//			
-//			if(StrUtils.isNullOrEmpty(newVal)  ) {
-//				for(int i = 0; i < connItems.size(); i++) {
-//					 ConnItem ci = connItems.get(i);  
-//					 ObservableList<TreeItem<TreeNodePo>>  val  =  ci.getTableItem();
-//					 ci.getTableNode().getChildren().setAll(val); 
-//					 
-//					 val  =   ci.getViewItem()  ;
-//					 ci.getViewNode().getChildren().setAll(val);
-//					 
-//					 val =   ci.getFuncItem() ;
-//					 ci.getFuncNode().getChildren().setAll(val);
-//					 
-//					 val =   ci.getProcItem() ;
-//					 ci.getProcNode().getChildren().setAll(val);
-//					 
-//				 }
-//			}
-//			
-//			if(StrUtils.isNotNullOrEmpty(newVal)) {
-//				
-//				for(int i = 0; i < connItems.size(); i++) {
-//					 ConnItem ci = connItems.get(i);  
-//					 if( ci.getSchemaNode().getChildren().size() > 0 ) {
-//						 ObservableList<TreeItem<TreeNodePo>> val =  filter( ci.getTableItem() , newVal);
-//						 ci.getTableNode().getChildren().setAll(val);
+		 txt.textProperty().addListener((o, oldVal, newVal) -> {		
+			 
+			 // 获取连接节点集合
+			 ObservableList<TreeItem<TreeNodePo>> connNodes =   treeView.getRoot().getChildren();
+			 if(temp.size() < connNodes.size()) {
+				 temp.addAll( connNodes);
+//				 treeView.getRoot().getChildren().clear();
+//				 treeView.getRoot().getChildren().addAll(temp);
+//				 return;
+			 }
+			 
+			if(StrUtils.isNullOrEmpty(newVal)  ) {
+				if(temp != null ) {
+//					for (int i = 0; i < temp.size(); i++) {
+//						TreeItem<TreeNodePo> np = temp.get(i);
+//						np.
+//					}
+//					treeView.getRoot().getChildren().setAll(temp);
+					 treeView.getRoot().getChildren().clear();
+					 treeView.getRoot().getChildren().addAll(temp);
+				}
+			}
+			
+			if(StrUtils.isNotNullOrEmpty(newVal)) {
+				 
+				filtList.clear();
+				for(int i = 0; i < temp.size() ; i++) {
+					TreeItem<TreeNodePo> connRoot  = temp.get(i);
+					if( connRoot.getChildren().size() > 0 ) {
+						TreeNodePo rootPo = connRoot.getValue();
+						ConnItemParent cip = rootPo.getConnItemParent();
+						if(cip != null) {
+							 ObservableList<TreeItem<TreeNodePo>> schemas = cip.getSchemaNode().getChildren();
+							 ObservableList<TreeItem<TreeNodePo>> schemasTemp = cip.getSchemaNode().getChildren();
+							 List<ConnItem> cs = new ArrayList<>();
+							 for (int j = 0; j < schemas.size(); j++) {
+								int count = 0;
+								 // schema 有子节点时
+								if( schemas.get(j).getChildren().size() > 0) { 
+									
+									 ConnItem ci = cip.getConnItems().get( schemas.get(j).getValue().getName());
+									 ObservableList<TreeItem<TreeNodePo>> val =  filter( ci.getTableItem() , newVal);
+									 ci.getTableNode().getChildren().setAll(val);
+									 count += val.size();
+									 
+									 val =  filter( ci.getViewItem() , newVal);
+									 ci.getViewNode().getChildren().setAll(val);
+									 count += val.size();
+									 
+									 val =  filter( ci.getFuncItem() , newVal);
+									 ci.getFuncNode().getChildren().setAll(val);
+									 count += val.size();
+									 
+									 val =  filter( ci.getProcItem() , newVal);
+									 ci.getProcNode().getChildren().setAll(val); 
+									 count += val.size();
+									 if(count > 0 ) {
+										cs.add(ci);
+									 }
+								}
+							}
+							if(cs.size() > 0) {
+								for (int j = 0; j < cs.size(); j++) {
+									ConnItem ci = cs.get(j); 
+									connRoot.getChildren().clear();
+									connRoot.getChildren().add(ci.getParentNode());
+								}
+							}
+							 
+						}
+					}
+					
+				}
+				
+				
+//				for(int i = 0; i < cips.size(); i++) {
+//					ConnItemParent cip = cips.get(i);  
+//					TreeItem<TreeNodePo>  cipRoot = cip.getRoot();
+//					 if( cipRoot.getChildren().size() > 0 ) {
+//						 List<ConnItem> connItems = cip.getConnItem();
+//						 for(int j = 0 ; j < connItems.size() ; j++) {
+//							 ConnItem ci =  connItems.get(j);
+//							 ObservableList<TreeItem<TreeNodePo>> val =  filter( ci.getTableItem() , newVal);
+//							 ci.getTableNode().getChildren().setAll(val);
+//							 
+//							 val =  filter( ci.getViewItem() , newVal);
+//							 ci.getViewNode().getChildren().setAll(val);
+//							 
+//							 val =  filter( ci.getFuncItem() , newVal);
+//							 ci.getFuncNode().getChildren().setAll(val);
+//							 
+//							 val =  filter( ci.getProcItem() , newVal);
+//							 ci.getProcNode().getChildren().setAll(val); 
+//							 
+//						 }
 //						 
-//						 val =  filter( ci.getViewItem() , newVal);
-//						 ci.getViewNode().getChildren().setAll(val);
-//						 
-//						 val =  filter( ci.getFuncItem() , newVal);
-//						 ci.getFuncNode().getChildren().setAll(val);
-//						 
-//						 val =  filter( ci.getProcItem() , newVal);
-//						 ci.getProcNode().getChildren().setAll(val);  
 //					 }else {
-//						 System.out.println(ci.getSchemaNode().getChildren().get(i).getValue().getName());
+////						 System.out.println(ci.getSchemaNode().getChildren().get(i).getValue().getName());
+//						 rmRoot(cipRoot);
 //						 
 //					 }
 //				 }
-//			} 
-//		 	
-//			 
-//		 });
+			} 
+		 	
+			 
+		 });
 		 
 		 	int x = 0;
 			query.setLayoutX(x);
@@ -99,5 +163,18 @@ public class DBinfoFilter {
 			}
 		});
 		return rs;
+	}
+	
+	
+	private static void  rmRoot(TreeItem<TreeNodePo>  cipRoot) {
+		TreeItem<TreeNodePo> rootParent = cipRoot.getParent(); 
+		String rootName = cipRoot.getValue().getName();
+		ObservableList<TreeItem<TreeNodePo>> os =  rootParent.getChildren();
+		for(int i = 0 ; i < os.size() ; i ++ ) {
+			if(rootName.equals(  os.get(i).getValue().getName() )) {
+				os.remove(i);
+			}
+		}
+		
 	}
 }
