@@ -32,47 +32,52 @@ public class DBinfoFilter {
 		 
 		 txt.setPrefWidth(200);
 		 txt.getStyleClass().add("myTextField");
-		 txt.textProperty().addListener((o, oldVal, newVal) -> {		
-			List<ConnItem> connItems =  ComponentGetter.dbInfoTree.getConnItems();
-			
-			if(StrUtils.isNullOrEmpty(newVal)  ) {
-				for(int i = 0; i < connItems.size(); i++) {
-					 ConnItem ci = connItems.get(i);  
-					 ObservableList<TreeItem<TreeNodePo>>  val  =  ci.getTableItem();
-					 ci.getTableNode().getChildren().setAll(val); 
-					 
-					 val  =   ci.getViewItem()  ;
-					 ci.getViewNode().getChildren().setAll(val);
-					 
-					 val =   ci.getFuncItem() ;
-					 ci.getFuncNode().getChildren().setAll(val);
-					 
-					 val =   ci.getProcItem() ;
-					 ci.getProcNode().getChildren().setAll(val);
-					 
-				 }
-			}
-			
-			if(StrUtils.isNotNullOrEmpty(newVal)) {
-				for(int i = 0; i < connItems.size(); i++) {
-					 ConnItem ci = connItems.get(i); 
-					 
-					 ObservableList<TreeItem<TreeNodePo>> val =  filter( ci.getTableItem() , newVal);
-					 ci.getTableNode().getChildren().setAll(val);
-					 
-					 val =  filter( ci.getViewItem() , newVal);
-					 ci.getViewNode().getChildren().setAll(val);
-					 
-					 val =  filter( ci.getFuncItem() , newVal);
-					 ci.getFuncNode().getChildren().setAll(val);
-					 
-					 val =  filter( ci.getProcItem() , newVal);
-					 ci.getProcNode().getChildren().setAll(val);
-				 }
-			} 
-		 	
-			 
-		 });
+//		 txt.textProperty().addListener((o, oldVal, newVal) -> {		
+//			List<ConnItem> connItems =  ComponentGetter.dbInfoTree.getConnItems();
+//			
+//			if(StrUtils.isNullOrEmpty(newVal)  ) {
+//				for(int i = 0; i < connItems.size(); i++) {
+//					 ConnItem ci = connItems.get(i);  
+//					 ObservableList<TreeItem<TreeNodePo>>  val  =  ci.getTableItem();
+//					 ci.getTableNode().getChildren().setAll(val); 
+//					 
+//					 val  =   ci.getViewItem()  ;
+//					 ci.getViewNode().getChildren().setAll(val);
+//					 
+//					 val =   ci.getFuncItem() ;
+//					 ci.getFuncNode().getChildren().setAll(val);
+//					 
+//					 val =   ci.getProcItem() ;
+//					 ci.getProcNode().getChildren().setAll(val);
+//					 
+//				 }
+//			}
+//			
+//			if(StrUtils.isNotNullOrEmpty(newVal)) {
+//				
+//				for(int i = 0; i < connItems.size(); i++) {
+//					 ConnItem ci = connItems.get(i);  
+//					 if( ci.getSchemaNode().getChildren().size() > 0 ) {
+//						 ObservableList<TreeItem<TreeNodePo>> val =  filter( ci.getTableItem() , newVal);
+//						 ci.getTableNode().getChildren().setAll(val);
+//						 
+//						 val =  filter( ci.getViewItem() , newVal);
+//						 ci.getViewNode().getChildren().setAll(val);
+//						 
+//						 val =  filter( ci.getFuncItem() , newVal);
+//						 ci.getFuncNode().getChildren().setAll(val);
+//						 
+//						 val =  filter( ci.getProcItem() , newVal);
+//						 ci.getProcNode().getChildren().setAll(val);  
+//					 }else {
+//						 System.out.println(ci.getSchemaNode().getChildren().get(i).getValue().getName());
+//						 
+//					 }
+//				 }
+//			} 
+//		 	
+//			 
+//		 });
 		 
 		 	int x = 0;
 			query.setLayoutX(x);

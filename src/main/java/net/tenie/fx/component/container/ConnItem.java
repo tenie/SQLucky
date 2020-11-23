@@ -16,7 +16,11 @@ import net.tenie.lib.po.TablePo;
 
 /*   @author tenie */
 public class ConnItem {
-	private TreeItem<TreeNodePo> schemaNode;
+//	private TreeItem<TreeNodePo> schemaNode;
+	
+	private TreeItem<TreeNodePo> parentNode;
+	private String schemaName;
+	
 	private TreeItem<TreeNodePo> tableNode;
 	private ObservableList<TreeItem<TreeNodePo>> tableItem;
 
@@ -29,26 +33,48 @@ public class ConnItem {
 	private TreeItem<TreeNodePo> procNode;
 	private ObservableList<TreeItem<TreeNodePo>> procItem;
 
-	public ConnItem() {
+
+	public ConnItem(DbConnectionPo connpo, String schemaName ) {
+		this.schemaName = schemaName;
+		createConnItem(connpo, schemaName);
+
 	}
-
-	public ConnItem(DbConnectionPo connpo) {
-		showConnNode(connpo);
-
-	}
-
+/**
+ * ImageViewGenerator.svgImage("database", "#7CFC00 ")
+ * @param connpo
+ */
 	// 渲染 默认连接节点
-	public void showConnNode(DbConnectionPo connpo) {
-		String defSch = connpo.getDefaultSchema();
-		setSchemaNode(CreateSchemaNode(connpo));
+	public void showConnNode(DbConnectionPo connpo , String schemaName) {
+//		String defSch = connpo.getDefaultSchema();
+//		setSchemaNode(CreateSchemaNode(connpo));
 		setTableNode(CreateTableNode(connpo, connpo.getDefaultSchema()));
 		setViewNode(CreateViewNode(connpo, connpo.getDefaultSchema()));
 		setFuncNode(CreateFunctionNode(connpo, connpo.getDefaultSchema()));
-		procNode = CreateProceduresNode(connpo, connpo.getDefaultSchema());
 		setProcNode(CreateProceduresNode(connpo, connpo.getDefaultSchema()));
-		moveDefaultNodeToTopAddTable(defSch, schemaNode, tableNode, viewNode, funcNode, procNode);
-
+//		moveDefaultNodeToTopAddTable(defSch, schemaNode, tableNode, viewNode, funcNode, procNode);
+	    parentNode = new TreeItem<>(new TreeNodePo("Table", TreeItemType.TABLE_ROOT,
+				ImageViewGenerator.svgImage("window-restore", "blue"), connpo));
 	}
+	
+	public void createConnItem(DbConnectionPo connpo , String schemaName) {
+
+		setTableNode(CreateTableNode(connpo, schemaName));
+		setViewNode(CreateViewNode(connpo, schemaName ));
+		setFuncNode(CreateFunctionNode(connpo, schemaName));
+		procNode = CreateProceduresNode(connpo, schemaName);
+		setProcNode(CreateProceduresNode(connpo, schemaName));
+		
+		
+		parentNode = new TreeItem<>(new TreeNodePo(schemaName, TreeItemType.SCHEMA,
+	    		ImageViewGenerator.svgImage("database", "#7CFC00 ") , connpo));
+		
+		parentNode.getChildren().add(tableNode);
+		parentNode.getChildren().add(viewNode);
+		parentNode.getChildren().add(funcNode);
+		parentNode.getChildren().add(procNode);
+	}
+	
+	
 
 	// 创建表节点
 	public static TreeItem<TreeNodePo> CreateSchemaNode(DbConnectionPo connpo) {
@@ -125,7 +151,7 @@ public class ConnItem {
 
 	// 默认的schema移动到第一位 , 遍历所有节点, 找默认节点, 从原位置删除, 后再插入到第一个位置
 	// 并且添加tableNode
-	public static void moveDefaultNodeToTopAddTable(String defSch, TreeItem<TreeNodePo> schemas,
+	public  void moveDefaultNodeToTopAddTable(String defSch, TreeItem<TreeNodePo> schemas,
 			TreeItem<TreeNodePo> tableNode, TreeItem<TreeNodePo> viewNode, TreeItem<TreeNodePo> funcNode,
 			TreeItem<TreeNodePo> procNode) {
 		if (defSch != null) {
@@ -141,6 +167,7 @@ public class ConnItem {
 
 					ls.remove(i);
 					ls.add(0, val);
+					setParentNode(val);
 					break;
 				}
 			}
@@ -171,14 +198,14 @@ public class ConnItem {
 
 	}
 
-	public TreeItem<TreeNodePo> getSchemaNode() {
-		return schemaNode;
-	}
-
-	public void setSchemaNode(TreeItem<TreeNodePo> schemaNode) {
-
-		this.schemaNode = schemaNode;
-	}
+//	public TreeItem<TreeNodePo> getSchemaNode() {
+//		return schemaNode;
+//	}
+//
+//	public void setSchemaNode(TreeItem<TreeNodePo> schemaNode) {
+//
+//		this.schemaNode = schemaNode;
+//	}
 
 	public TreeItem<TreeNodePo> getTableNode() {
 		return tableNode;
@@ -256,6 +283,20 @@ public class ConnItem {
 
 	public void setProcItem(ObservableList<TreeItem<TreeNodePo>> procItem) {
 		this.procItem = procItem;
+	}
+
+	public TreeItem<TreeNodePo> getParentNode() {
+		return parentNode;
+	}
+
+	public void setParentNode(TreeItem<TreeNodePo> parentNode) {
+		this.parentNode = parentNode;
+	}
+	public String getSchemaName() {
+		return schemaName;
+	}
+	public void setSchemaName(String schemaName) {
+		this.schemaName = schemaName;
 	}
 
 }

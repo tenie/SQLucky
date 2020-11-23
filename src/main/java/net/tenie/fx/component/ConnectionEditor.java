@@ -25,6 +25,7 @@ import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.container.ConnItem;
+import net.tenie.fx.component.container.ConnItemParent;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
@@ -413,14 +414,14 @@ public class ConnectionEditor {
 
 					po.getConn();
 					if (po.isAlive()) {
-						ConnItem ci = new ConnItem(po);
-						ComponentGetter.dbInfoTree.getConnItems().add(ci);
+//						ConnItem ci = new ConnItem(po);
+						ConnItemParent ci = new  ConnItemParent(po, item.getParent());
+						ComponentGetter.dbInfoTree.getConnItemParent().add(ci);
 						TreeItem<TreeNodePo> s = ci.getSchemaNode();
 						Platform.runLater(() -> {
 							item.getChildren().add(s);
-							item.getValue().setIcon(ImageViewGenerator.svgImage("link", "#7CFC00"));
-
-							ComponentGetter.treeView.getSelectionModel().select(ci.getTableNode()); // 选择新加的节点
+							item.getValue().setIcon(ImageViewGenerator.svgImage("link", "#7CFC00"));							
+							ci.selectTable();
 						});
 					} else {
 						Platform.runLater(() -> {
