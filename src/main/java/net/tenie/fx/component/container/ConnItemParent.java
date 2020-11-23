@@ -16,7 +16,7 @@ import net.tenie.lib.po.DbConnectionPo;
 public class ConnItemParent {
 	private TreeItem<TreeNodePo> root;
 	private TreeItem<TreeNodePo> schemaNode; 
-	private Map<String , ConnItem> connItems = new HashMap<>();
+//	private Map<String , ConnItem> connItems = new HashMap<>();
 	
 	public ConnItemParent() {
 		
@@ -54,7 +54,7 @@ public class ConnItemParent {
 	
 	public void addConnItem(ConnItem ci) {
 //		connItems.add(ci);
-		connItems.put(ci.getSchemaName(), ci);
+//		connItems.put(ci.getSchemaName(), ci);
 		ObservableList<TreeItem<TreeNodePo>> ls = schemaNode.getChildren();
 		for (int i = 0; i < ls.size(); i++) {
 			TreeItem<TreeNodePo> val = ls.get(i);
@@ -62,14 +62,15 @@ public class ConnItemParent {
 				TreeItem<TreeNodePo> item = ci.getParentNode(); 
 				ls.remove(i);
 				ls.add(i, item);  
+				item.getValue().setConnItem(ci);
 				break;
 			}
 		}   
 	}
 	
-	public void selectTable(String key) { 
-		ConnItem item = connItems.get(key);
-		ComponentGetter.treeView.getSelectionModel().select(item.getTableNode()); // 选择新加的节点
+	public void selectTable() { 
+//		ConnItem item = connItems.get(key);
+//		ComponentGetter.treeView.getSelectionModel().select(item.getTableNode()); // 选择新加的节点
 	}
 	
 	// 默认的schema移动到第一位 , 遍历所有节点, 找默认节点, 从原位置删除, 后再插入到第一个位置
@@ -113,13 +114,13 @@ public class ConnItemParent {
 		this.schemaNode = schemaNode;
 	}
 	 
-	public Map<String, ConnItem> getConnItems() {
-		return connItems;
-	}
-
-	public void setConnItems(Map<String, ConnItem> connItems) {
-		this.connItems = connItems;
-	}
+//	public Map<String, ConnItem> getConnItems() {
+//		return connItems;
+//	}
+//
+//	public void setConnItems(Map<String, ConnItem> connItems) {
+//		this.connItems = connItems;
+//	}
 
 	public TreeItem<TreeNodePo> getRoot() {
 		return root;

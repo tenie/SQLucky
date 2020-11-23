@@ -15,6 +15,7 @@ import javafx.scene.layout.AnchorPane;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
  
 /*   @author tenie */
@@ -22,8 +23,12 @@ public class DBinfoFilter {
 	 AnchorPane filter;
 	 private  ObservableList<TreeItem<TreeNodePo>> temp  = FXCollections.observableArrayList();
 	 private  ObservableList<TreeItem<TreeNodePo>>  filtList = FXCollections.observableArrayList();
+	 private  ObservableList<TreeItem<TreeNodePo>> filtConnNodes  = FXCollections.observableArrayList();
 	 
 	 public DBinfoFilter () {}
+	 
+	 
+	 
 	 public   AnchorPane createFilterPane(TreeView<TreeNodePo> treeView) {
 		 AnchorPane filter = new AnchorPane();
 		 filter.setPrefHeight(20);
@@ -153,6 +158,49 @@ public class DBinfoFilter {
 		 filter.getChildren().addAll(query, txt);  
 		 return filter;
 	 }
+	 
+	 
+	private TreeItem<TreeNodePo>  connNodeOption(TreeItem<TreeNodePo> conn, String queryStr) {
+		if( conn.getChildren().size() > 0) {
+			ConnItemParent cip = conn.getValue().getConnItemParent();
+			ObservableList<TreeItem<TreeNodePo>> vals = cip.getSchemaNode().getChildren();
+			 TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
+						new TreeNodePo("Schemas", ImageViewGenerator.svgImage("th-list", "#FFD700"), connpo));
+			for (int i = 0; i < vals.size(); i++) {
+				TreeItem<TreeNodePo> sche = vals.get(i);
+				if(sche.getChildren().size() > 0) {
+					ConnItem ci =	sche.getValue().getConnItem();
+					DbConnectionPo	connpo = ci.getConnpo();
+					ConnItem cinew = new ConnItem( connpo);
+					 ObservableList<TreeItem<TreeNodePo>> 
+					 val =  filter( ci.getTableItem() , queryStr); 
+					 cinew.getTableNode().getChildren().setAll(val);
+					 
+					 val =  filter( ci.getViewItem() , queryStr);
+					 cinew.getViewNode().getChildren().setAll(val);
+					 
+					 val =  filter( ci.getFuncItem() , queryStr);
+					 cinew.getFuncNode().getChildren().setAll(val);
+					 
+					 val =  filter( ci.getProcItem() , queryStr);
+					 cinew.getProcNode().getChildren().setAll(val); 
+//					 sche.getValue().setConnItem(cinew);
+					 
+					
+					
+					 schemas.getChildren().add(cinew.getParentNode());
+				
+				}
+				
+			}
+			if(schemas.getChildren().size()> 0) {
+//				return schemas;
+				TreeItem<TreeNodePo> conn = new 
+			}
+		}
+		
+		return null;
+	}
 	 
 	private static ObservableList<TreeItem<TreeNodePo>> filter(ObservableList<TreeItem<TreeNodePo>> val, String str){
 		ObservableList<TreeItem<TreeNodePo>> rs =  FXCollections.observableArrayList();

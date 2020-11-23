@@ -153,7 +153,7 @@ public class DBinfoTree {
 				ConnItemParent cip = findConnItemParent(connRoot);
 				if(cip != null ) {
 					cip.addConnItem(ci);
-					cip.selectTable(schema);
+//					cip.selectTable(schema);
 				}
 				//TODO
 //				connItemParent.addConnItem(ci);

@@ -32,13 +32,38 @@ public class ConnItem {
 
 	private TreeItem<TreeNodePo> procNode;
 	private ObservableList<TreeItem<TreeNodePo>> procItem;
+	
+	private DbConnectionPo connpo;
 
+	public ConnItem (DbConnectionPo connpo) {
+		this.connpo  = connpo;
+		tableNode = CreateTableNode();
+		viewNode = CreateViewNode();
+		funcNode= CreateFunctionNode();
+		procNode= CreateProceduresNode();
+
+		parentNode = new TreeItem<>(new TreeNodePo(schemaName, TreeItemType.SCHEMA,
+	    		ImageViewGenerator.svgImage("database", "#7CFC00 ") , connpo));
+		
+		parentNode.getChildren().add(tableNode);
+		parentNode.getChildren().add(viewNode);
+		parentNode.getChildren().add(funcNode);
+		parentNode.getChildren().add(procNode);
+	}
 
 	public ConnItem(DbConnectionPo connpo, String schemaName ) {
+		this.connpo  = connpo;
 		this.schemaName = schemaName;
 		createConnItem(connpo, schemaName);
 
 	}
+	
+//	public  void copy( ConnItem c1) {
+//		this.connpo = c1.connpo;
+//		this.
+//	}
+	
+	
 /**
  * ImageViewGenerator.svgImage("database", "#7CFC00 ")
  * @param connpo
@@ -92,9 +117,16 @@ public class ConnItem {
 	}
 
 	// 创建表节点
-	public static TreeItem<TreeNodePo> CreateTableNode(DbConnectionPo connpo, String sche) {
-		TreeItem<TreeNodePo> Table = new TreeItem<>(new TreeNodePo("Table", TreeItemType.TABLE_ROOT,
-				ImageViewGenerator.svgImage("window-restore", "blue"), connpo));
+	public   TreeItem<TreeNodePo> CreateTableNode() {
+		TreeItem<TreeNodePo> Table =
+				new TreeItem<TreeNodePo>(new TreeNodePo("Table", TreeItemType.TABLE_ROOT,
+						ImageViewGenerator.svgImage("window-restore", "blue"), connpo));
+		return Table;
+	}
+	public   TreeItem<TreeNodePo> CreateTableNode(DbConnectionPo connpo, String sche) {
+//		TreeItem<TreeNodePo> Table = new TreeItem<>(new TreeNodePo("Table", TreeItemType.TABLE_ROOT,
+//				ImageViewGenerator.svgImage("window-restore", "blue"), connpo));
+		TreeItem<TreeNodePo> Table = CreateTableNode();
 		List<TablePo> tabs = DBOptionHelper.getTabsName(connpo, sche, true);// connpo.getTabs(sche);
 
 		ObservableList<TreeItem<TreeNodePo>> sourceList = FXCollections.observableArrayList();
@@ -111,7 +143,14 @@ public class ConnItem {
 	}
 
 	// 创建View节点
-	public static TreeItem<TreeNodePo> CreateViewNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateViewNode() {
+		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("View", TreeItemType.VIEW_ROOT,
+				ImageViewGenerator.svgImage("object-group", "blue"), connpo));
+		 
+		return Table;
+	}
+
+	public   TreeItem<TreeNodePo> CreateViewNode(DbConnectionPo connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("View", TreeItemType.VIEW_ROOT,
 				ImageViewGenerator.svgImage("object-group", "blue"), connpo));
 		List<TablePo> tabs = DBOptionHelper.getViewsName(connpo, sche, true);// connpo.getViews(sche);
@@ -128,7 +167,7 @@ public class ConnItem {
 	}
 
 	// 创建function节点
-	public static TreeItem<TreeNodePo> CreateFunctionNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateFunctionNode(DbConnectionPo connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Function", TreeItemType.FUNCTION_ROOT,
 				ImageViewGenerator.svgImage("gears", "blue"), connpo));
 		List<FuncProcTriggerPo> vals = DBOptionHelper.getFunctions(connpo, sche, true);// connpo.getFunctions(sche);
@@ -137,15 +176,27 @@ public class ConnItem {
 
 		return Table;
 	}
+	public   TreeItem<TreeNodePo> CreateFunctionNode( ) {
+		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Function", TreeItemType.FUNCTION_ROOT,
+				ImageViewGenerator.svgImage("gears", "blue"), connpo));
+	 
+		return Table;
+	}
 
 	// 创建function节点
-	public static TreeItem<TreeNodePo> CreateProceduresNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateProceduresNode(DbConnectionPo connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Procedure", TreeItemType.PROCEDURE_ROOT,
 				ImageViewGenerator.svgImage("puzzle-piece", "blue"), connpo));
 		List<FuncProcTriggerPo> vals = DBOptionHelper.getProcedures(connpo, sche, true); // connpo.getProcedures(sche);
 
 		addFuncTreeItem(Table, vals, "gear", TreeItemType.PROCEDURE, connpo);
 
+		return Table;
+	}
+	public   TreeItem<TreeNodePo> CreateProceduresNode() {
+		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Procedure", TreeItemType.PROCEDURE_ROOT,
+				ImageViewGenerator.svgImage("puzzle-piece", "blue"), connpo));
+		 
 		return Table;
 	}
 
@@ -175,7 +226,7 @@ public class ConnItem {
 	}
 
 	// TreeItem 添加 子节点
-	public static void addFuncTreeItem(TreeItem<TreeNodePo> parent, List<FuncProcTriggerPo> tabs, String img,
+	public   void addFuncTreeItem(TreeItem<TreeNodePo> parent, List<FuncProcTriggerPo> tabs, String img,
 			TreeItemType type, DbConnectionPo connpo) {
 		for (FuncProcTriggerPo po : tabs) {
 			addTreeItem(parent, po, img, type, connpo);
@@ -183,7 +234,7 @@ public class ConnItem {
 	}
 
 	// TreeItem 添加 子节点
-	public static void addTreeItem(TreeItem<TreeNodePo> parent, FuncProcTriggerPo fpt, String img, TreeItemType type,
+	public   void addTreeItem(TreeItem<TreeNodePo> parent, FuncProcTriggerPo fpt, String img, TreeItemType type,
 			DbConnectionPo connpo) {
 		TreeNodePo po = new TreeNodePo(fpt.getName());
 		po.setType(type);
@@ -297,6 +348,14 @@ public class ConnItem {
 	}
 	public void setSchemaName(String schemaName) {
 		this.schemaName = schemaName;
+	}
+
+	public DbConnectionPo getConnpo() {
+		return connpo;
+	}
+
+	public void setConnpo(DbConnectionPo connpo) {
+		this.connpo = connpo;
 	}
 
 }
