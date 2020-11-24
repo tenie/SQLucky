@@ -35,20 +35,21 @@ public class ConnItem {
 	
 	private DbConnectionPo connpo;
 
-	public ConnItem (DbConnectionPo connpo) {
+	public ConnItem () {
+		
+	}
+	// 初始化一个空的对象
+	public void  initConnItem(DbConnectionPo connpo, String schemaName ) {
 		this.connpo  = connpo;
 		tableNode = CreateTableNode();
 		viewNode = CreateViewNode();
 		funcNode= CreateFunctionNode();
 		procNode= CreateProceduresNode();
-
-		parentNode = new TreeItem<>(new TreeNodePo(schemaName, TreeItemType.SCHEMA,
-	    		ImageViewGenerator.svgImage("database", "#7CFC00 ") , connpo));
-		
-		parentNode.getChildren().add(tableNode);
-		parentNode.getChildren().add(viewNode);
-		parentNode.getChildren().add(funcNode);
-		parentNode.getChildren().add(procNode);
+ 
+		// 新数据对象的一些初始化操作
+		TreeItem<TreeNodePo> cinewParentNode = new TreeItem<>(new TreeNodePo( schemaName, TreeItemType.SCHEMA,
+		    		ImageViewGenerator.svgImage("database", "#7CFC00 ") , connpo));
+		setParentNode(cinewParentNode);
 	}
 
 	public ConnItem(DbConnectionPo connpo, String schemaName ) {
@@ -57,30 +58,22 @@ public class ConnItem {
 		createConnItem(connpo, schemaName);
 
 	}
-	
-//	public  void copy( ConnItem c1) {
-//		this.connpo = c1.connpo;
-//		this.
-//	}
-	
-	
-/**
- * ImageViewGenerator.svgImage("database", "#7CFC00 ")
- * @param connpo
- */
+	 
+
 	// 渲染 默认连接节点
-	public void showConnNode(DbConnectionPo connpo , String schemaName) {
-//		String defSch = connpo.getDefaultSchema();
-//		setSchemaNode(CreateSchemaNode(connpo));
-		setTableNode(CreateTableNode(connpo, connpo.getDefaultSchema()));
-		setViewNode(CreateViewNode(connpo, connpo.getDefaultSchema()));
-		setFuncNode(CreateFunctionNode(connpo, connpo.getDefaultSchema()));
-		setProcNode(CreateProceduresNode(connpo, connpo.getDefaultSchema()));
-//		moveDefaultNodeToTopAddTable(defSch, schemaNode, tableNode, viewNode, funcNode, procNode);
-	    parentNode = new TreeItem<>(new TreeNodePo("Table", TreeItemType.TABLE_ROOT,
-				ImageViewGenerator.svgImage("window-restore", "blue"), connpo));
-	}
-	
+//	public void showConnNode(DbConnectionPo connpo , String schemaName) {
+////		String defSch = connpo.getDefaultSchema();
+////		setSchemaNode(CreateSchemaNode(connpo));
+//		setTableNode(CreateTableNode(connpo, connpo.getDefaultSchema()));
+//		setViewNode(CreateViewNode(connpo, connpo.getDefaultSchema()));
+//		setFuncNode(CreateFunctionNode(connpo, connpo.getDefaultSchema()));
+//		setProcNode(CreateProceduresNode(connpo, connpo.getDefaultSchema()));
+////		moveDefaultNodeToTopAddTable(defSch, schemaNode, tableNode, viewNode, funcNode, procNode);
+//	    parentNode = new TreeItem<>(new TreeNodePo("Table", TreeItemType.TABLE_ROOT,
+//				ImageViewGenerator.svgImage("window-restore", "blue"), connpo));
+//	}
+//	
+	// 构造一个有数据的对象
 	public void createConnItem(DbConnectionPo connpo , String schemaName) {
 
 		setTableNode(CreateTableNode(connpo, schemaName));

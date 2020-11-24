@@ -142,6 +142,7 @@ public class DBinfoTree {
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
 				ConnectionEditor.openConn(item);
+//				item.setExpanded(true);
 			} // Schemas 双击, 打开非默认的schema
 			else if (parentItem != null && "Schemas".equals(parentItem.getValue().getName())) {
 				DbConnectionPo po = ComponentGetter.getSchameIsConnObj(item);
@@ -153,7 +154,7 @@ public class DBinfoTree {
 				ConnItemParent cip = findConnItemParent(connRoot);
 				if(cip != null ) {
 					cip.addConnItem(ci);
-//					cip.selectTable(schema);
+					cip.selectTable(schema);
 				}
 				//TODO
 //				connItemParent.addConnItem(ci);

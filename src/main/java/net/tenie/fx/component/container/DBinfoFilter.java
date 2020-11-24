@@ -12,6 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
@@ -24,7 +25,7 @@ public class DBinfoFilter {
 	 private  ObservableList<TreeItem<TreeNodePo>> temp  = FXCollections.observableArrayList();
 	 private  ObservableList<TreeItem<TreeNodePo>>  filtList = FXCollections.observableArrayList();
 	 private  ObservableList<TreeItem<TreeNodePo>> filtConnNodes  = FXCollections.observableArrayList();
-	 
+	 private  TreeItem<TreeNodePo> rootNode ; 
 	 public DBinfoFilter () {}
 	 
 	 
@@ -43,106 +44,40 @@ public class DBinfoFilter {
 		 txt.getStyleClass().add("myTextField");
 		 txt.textProperty().addListener((o, oldVal, newVal) -> {		
 			 
-			 // 获取连接节点集合
+			 // 缓存
 			 ObservableList<TreeItem<TreeNodePo>> connNodes =   treeView.getRoot().getChildren();
 			 if(temp.size() < connNodes.size()) {
+				 temp.clear();
 				 temp.addAll( connNodes);
-//				 treeView.getRoot().getChildren().clear();
-//				 treeView.getRoot().getChildren().addAll(temp);
-//				 return;
+				 rootNode = treeView.getRoot(); 
 			 }
 			 
+			 // 恢复
 			if(StrUtils.isNullOrEmpty(newVal)  ) {
-				if(temp != null ) {
-//					for (int i = 0; i < temp.size(); i++) {
-//						TreeItem<TreeNodePo> np = temp.get(i);
-//						np.
-//					}
-//					treeView.getRoot().getChildren().setAll(temp);
-					 treeView.getRoot().getChildren().clear();
-					 treeView.getRoot().getChildren().addAll(temp);
+				if(rootNode != null ) { 
+					 treeView.setRoot( rootNode);
+//					 ComponentGetter.treeView.refresh();
 				}
 			}
 			
+			// 查询时
 			if(StrUtils.isNotNullOrEmpty(newVal)) {
-				 
 				filtList.clear();
-				for(int i = 0; i < temp.size() ; i++) {
-					TreeItem<TreeNodePo> connRoot  = temp.get(i);
-					if( connRoot.getChildren().size() > 0 ) {
-						TreeNodePo rootPo = connRoot.getValue();
-						ConnItemParent cip = rootPo.getConnItemParent();
-						if(cip != null) {
-							 ObservableList<TreeItem<TreeNodePo>> schemas = cip.getSchemaNode().getChildren();
-							 ObservableList<TreeItem<TreeNodePo>> schemasTemp = cip.getSchemaNode().getChildren();
-							 List<ConnItem> cs = new ArrayList<>();
-							 for (int j = 0; j < schemas.size(); j++) {
-								int count = 0;
-								 // schema 有子节点时
-								if( schemas.get(j).getChildren().size() > 0) { 
-									
-									 ConnItem ci = cip.getConnItems().get( schemas.get(j).getValue().getName());
-									 ObservableList<TreeItem<TreeNodePo>> val =  filter( ci.getTableItem() , newVal);
-									 ci.getTableNode().getChildren().setAll(val);
-									 count += val.size();
-									 
-									 val =  filter( ci.getViewItem() , newVal);
-									 ci.getViewNode().getChildren().setAll(val);
-									 count += val.size();
-									 
-									 val =  filter( ci.getFuncItem() , newVal);
-									 ci.getFuncNode().getChildren().setAll(val);
-									 count += val.size();
-									 
-									 val =  filter( ci.getProcItem() , newVal);
-									 ci.getProcNode().getChildren().setAll(val); 
-									 count += val.size();
-									 if(count > 0 ) {
-										cs.add(ci);
-									 }
-								}
-							}
-							if(cs.size() > 0) {
-								for (int j = 0; j < cs.size(); j++) {
-									ConnItem ci = cs.get(j); 
-									connRoot.getChildren().clear();
-									connRoot.getChildren().add(ci.getParentNode());
-								}
-							}
-							 
-						}
+				// 遍历每一个连接节点, 在节点下查找到了数据, 就会返回一个新节点对象, 最后使用新节点创建一个新的树
+				for (int i = 0; i < temp.size(); i++) {
+					TreeItem<TreeNodePo> connNode = temp.get(i);
+					TreeItem<TreeNodePo> nConnNode = connNodeOption(connNode, newVal);
+					// 新节点不是NULL 缓存
+					if(nConnNode != null) {
+						filtList.add(nConnNode);
 					}
-					
-				}
+				} 
+				// 创建一个新的树根, 将查询数据挂在新的上面
+				TreeItem<TreeNodePo> rootNode = new TreeItem<>(
+						new TreeNodePo("Connections", ImageViewGenerator.svgImageDefActive("windows-globe")));  
+				rootNode.getChildren().addAll(filtList);
+				treeView.setRoot(rootNode); // 使用新的树根
 				
-				
-//				for(int i = 0; i < cips.size(); i++) {
-//					ConnItemParent cip = cips.get(i);  
-//					TreeItem<TreeNodePo>  cipRoot = cip.getRoot();
-//					 if( cipRoot.getChildren().size() > 0 ) {
-//						 List<ConnItem> connItems = cip.getConnItem();
-//						 for(int j = 0 ; j < connItems.size() ; j++) {
-//							 ConnItem ci =  connItems.get(j);
-//							 ObservableList<TreeItem<TreeNodePo>> val =  filter( ci.getTableItem() , newVal);
-//							 ci.getTableNode().getChildren().setAll(val);
-//							 
-//							 val =  filter( ci.getViewItem() , newVal);
-//							 ci.getViewNode().getChildren().setAll(val);
-//							 
-//							 val =  filter( ci.getFuncItem() , newVal);
-//							 ci.getFuncNode().getChildren().setAll(val);
-//							 
-//							 val =  filter( ci.getProcItem() , newVal);
-//							 ci.getProcNode().getChildren().setAll(val); 
-//							 
-//						 }
-//						 
-//					 }else {
-////						 System.out.println(ci.getSchemaNode().getChildren().get(i).getValue().getName());
-//						 rmRoot(cipRoot);
-//						 
-//					 }
-//				 }
 			} 
 		 	
 			 
@@ -159,43 +94,89 @@ public class DBinfoFilter {
 		 return filter;
 	 }
 	 
-	 
+	
+	/*
+	 * 传递连接节点, 对其进行过滤
+	 * 如果节点包含查询内容就返回一个新的节点, 否则返回null
+	 */
 	private TreeItem<TreeNodePo>  connNodeOption(TreeItem<TreeNodePo> conn, String queryStr) {
+		// 1. 首先看节点是否激活的(有子节点?)
 		if( conn.getChildren().size() > 0) {
-			ConnItemParent cip = conn.getValue().getConnItemParent();
-			ObservableList<TreeItem<TreeNodePo>> vals = cip.getSchemaNode().getChildren();
-			 TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
-						new TreeNodePo("Schemas", ImageViewGenerator.svgImage("th-list", "#FFD700"), connpo));
-			for (int i = 0; i < vals.size(); i++) {
-				TreeItem<TreeNodePo> sche = vals.get(i);
-				if(sche.getChildren().size() > 0) {
-					ConnItem ci =	sche.getValue().getConnItem();
-					DbConnectionPo	connpo = ci.getConnpo();
-					ConnItem cinew = new ConnItem( connpo);
-					 ObservableList<TreeItem<TreeNodePo>> 
-					 val =  filter( ci.getTableItem() , queryStr); 
-					 cinew.getTableNode().getChildren().setAll(val);
-					 
-					 val =  filter( ci.getViewItem() , queryStr);
-					 cinew.getViewNode().getChildren().setAll(val);
-					 
-					 val =  filter( ci.getFuncItem() , queryStr);
-					 cinew.getFuncNode().getChildren().setAll(val);
-					 
-					 val =  filter( ci.getProcItem() , queryStr);
-					 cinew.getProcNode().getChildren().setAll(val); 
-//					 sche.getValue().setConnItem(cinew);
-					 
-					
-					
-					 schemas.getChildren().add(cinew.getParentNode());
+			ConnItemParent cip = conn.getValue().getConnItemParent(); 
+			if(cip != null &&  cip.getSchemaNode().getChildren().size() > 0) {
+				// 获取Schema的节点集合
+				ObservableList<TreeItem<TreeNodePo>> vals = cip.getSchemaNode().getChildren();
 				
+				ConnItemParent tempcip = new ConnItemParent(cip.getConnpo());
+				DbConnectionPo connpo = tempcip.getConnpo();
+				 
+				// 2. 遍历每个schema节点
+				for (int i = 0; i < vals.size(); i++) {
+					TreeItem<TreeNodePo> sche = vals.get(i);
+					int count = 0;
+				    int sz =  0;
+				    // 如果schema节点 是激活的
+					if(sche.getChildren().size() > 0) {
+						// 从schema节点下获取数据对象
+						ConnItem ci =	sche.getValue().getConnItem(); 
+						// 创建一个新的数据对象, 来存储过滤后的数据
+						ConnItem cinew = new ConnItem( ); 
+						cinew.initConnItem(connpo,  ci.getSchemaName());
+					
+						
+						// 开始查找, 从表开始
+						 ObservableList<TreeItem<TreeNodePo>> 
+						 val =  filter( ci.getTableItem() , queryStr); 
+						 sz =  val.size();
+						 //如果找到来数据, 将数据放入到新的数据对象中
+						 if(sz > 0) {
+							 cinew.getTableNode().getChildren().setAll(val);
+							 cinew.getParentNode().getChildren().add( cinew.getTableNode());
+							 count += val.size();
+						 }
+						
+						 
+						 val =  filter( ci.getViewItem() , queryStr);
+						 sz =  val.size();
+						 if(sz > 0) {
+							 cinew.getViewNode().getChildren().setAll(val);
+							 cinew.getParentNode().getChildren().add( cinew.getViewNode());
+							 count += val.size();
+						 }
+						 
+						 val =  filter( ci.getFuncItem() , queryStr);
+						 sz =  val.size();
+						 if(sz > 0) {
+							 cinew.getFuncNode().getChildren().setAll(val);
+							 cinew.getParentNode().getChildren().add( cinew.getFuncNode());
+							 count += val.size();
+						 }
+						 val =  filter( ci.getProcItem() , queryStr);
+						 sz =  val.size();
+						 if(sz > 0) {
+							 cinew.getProcNode().getChildren().setAll(val);
+							 cinew.getParentNode().getChildren().add( cinew.getProcNode());
+							 count += val.size();
+						 }
+						 
+//						 cinew.getProcNode().getChildren().setAll(val);
+//						 count += val.size();
+						 // 如果找到了数据, 将新的数据对象, 放入schema数据对象
+						 if(count > 0 ) {
+							 tempcip.addChildren(cinew); 
+						 } 
+					}					
 				}
-				
-			}
-			if(schemas.getChildren().size()> 0) {
-//				return schemas;
-				TreeItem<TreeNodePo> conn = new 
+				// schema数据对象有数据的 情况, 创建一个新的连接节点并返回它
+				if(tempcip.getSchemaNode().getChildren().size() > 0) {
+					MyTreeItem<TreeNodePo> newConn = new MyTreeItem<TreeNodePo>(
+							new TreeNodePo(connpo.getConnName(), ImageViewGenerator.svgImage("link", "#7CFC00")));
+					
+					newConn.getChildren().add(tempcip.getSchemaNode());
+					newConn.getValue().setConnItemParent(tempcip); 
+					return newConn;
+				}
+			
 			}
 		}
 		

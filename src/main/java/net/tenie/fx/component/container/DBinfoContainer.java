@@ -6,6 +6,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
@@ -73,13 +74,25 @@ public class DBinfoContainer {
 		deleteConn.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
 		deleteConn.setOnMouseClicked(CommonEventHandler.deleteConnEvent());
 		deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
-
+		
+		// 收缩树 zero-fitscreen-24
+		JFXButton shrink = new JFXButton();
+		shrink.setGraphic(ImageViewGenerator.svgImageDefActive("zero-fitscreen-24"));
+		shrink.setOnMouseClicked(e->{
+			CommonAction.shrinkTreeView();
+		});
+		shrink.setTooltip(MyTooltipTool.instance("Shrink "));
+		
 		pn.getChildren().add(addConnbtn);
+		pn.getChildren().add(editConn);
+		pn.getChildren().add(shrink);
+		
 		pn.getChildren().add(openConn);
 		pn.getChildren().add(closeConn);
 		pn.getChildren().add(closeALlConn);
-		pn.getChildren().add(editConn);
+		
 		pn.getChildren().add(deleteConn);
+		
 	}
 
 	public VBox getContainer() {

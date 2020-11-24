@@ -422,7 +422,8 @@ public class ConnectionEditor {
 							item.getChildren().add(s);
 							item.getValue().setConnItemParent(ci);
 							item.getValue().setIcon(ImageViewGenerator.svgImage("link", "#7CFC00"));							
-							ci.selectTable();
+							ci.selectTable(po.getDefaultSchema());
+//							item.setExpanded(true);
 						});
 					} else {
 						Platform.runLater(() -> {

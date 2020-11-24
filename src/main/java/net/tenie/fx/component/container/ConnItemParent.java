@@ -1,11 +1,6 @@
 package net.tenie.fx.component.container;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -16,15 +11,17 @@ import net.tenie.lib.po.DbConnectionPo;
 public class ConnItemParent {
 	private TreeItem<TreeNodePo> root;
 	private TreeItem<TreeNodePo> schemaNode; 
+	private DbConnectionPo connpo;
 //	private Map<String , ConnItem> connItems = new HashMap<>();
 	
-	public ConnItemParent() {
-		
+	public ConnItemParent(DbConnectionPo connpo) {
+		this.connpo = connpo;
+		schemaNode = CreateEmptySchemaNode(connpo);
 	}
 	
 	public ConnItemParent(DbConnectionPo connpo, TreeItem<TreeNodePo> root) {
 		this.root = root;
-		
+		this.connpo = connpo;
 		String defSch = connpo.getDefaultSchema();
 		schemaNode = CreateSchemaNode(connpo); 
 		moveDefaultNodeToTopAddTable(defSch, schemaNode );
@@ -33,22 +30,7 @@ public class ConnItemParent {
 	}
 	public  void  showConnNode(DbConnectionPo connpo, String schemaName) {
 		ConnItem ci = new ConnItem(connpo, schemaName);
-		addConnItem(ci);  
-		
-//		ObservableList<TreeItem<TreeNodePo>> ls = schemaNode.getChildren();
-//		for (int i = 0; i < ls.size(); i++) {
-//			TreeItem<TreeNodePo> val = ls.get(i);
-//			if (val.getValue().getName().equals(schemaName)) {
-//				ConnItem ci = new ConnItem(connpo, schemaName);
-//				ConnItem.add(ci);
-//				TreeItem<TreeNodePo> item = ci.getParentNode(); 
-//				ls.remove(i);
-//				ls.add(i, item); 
-//				ComponentGetter.treeView.getSelectionModel().select(ci.getTableNode()); // 选择新加的节点
-//				break;
-//			}
-//		} 
-		
+		addConnItem(ci);
 	}
 	
 	
@@ -68,7 +50,21 @@ public class ConnItemParent {
 		}   
 	}
 	
-	public void selectTable() { 
+	public void addChildren(ConnItem ci) {
+//		String name = ci.getSchemaName();
+		TreeItem<TreeNodePo> item = ci.getParentNode(); 
+		schemaNode.getChildren().add(item);
+	}
+	
+	public void selectTable(String itemName) { 
+		for (int i = 0; i < schemaNode.getChildren().size(); i++) {
+			 String scheName = schemaNode.getChildren().get(i).getValue().getName();
+			 if(itemName.equals(scheName)) {
+//				 schemaNode.getChildren().get(i).setExpanded(true);
+				 ComponentGetter.treeView.getSelectionModel()
+				 	.select(schemaNode.getChildren().get(i).getValue().getConnItem().getTableNode() );
+			 }
+		}
 //		ConnItem item = connItems.get(key);
 //		ComponentGetter.treeView.getSelectionModel().select(item.getTableNode()); // 选择新加的节点
 	}
@@ -91,6 +87,13 @@ public class ConnItemParent {
 	}
 
 	// 创建表节点
+	public static TreeItem<TreeNodePo> CreateEmptySchemaNode(DbConnectionPo connpo) {
+
+		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
+				new TreeNodePo("Schemas", ImageViewGenerator.svgImage("th-list", "#FFD700"), connpo));
+	 
+		return schemas;
+	}
 	public static TreeItem<TreeNodePo> CreateSchemaNode(DbConnectionPo connpo) {
 
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
@@ -127,6 +130,14 @@ public class ConnItemParent {
 	}
 	public void setRoot(TreeItem<TreeNodePo> root) {
 		this.root = root;
+	}
+
+	public DbConnectionPo getConnpo() {
+		return connpo;
+	}
+
+	public void setConnpo(DbConnectionPo connpo) {
+		this.connpo = connpo;
 	}
 	
 	

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.control.*;
 import javafx.scene.layout.FlowPane;
@@ -15,6 +16,7 @@ import org.fxmisc.richtext.CodeArea;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.input.MouseEvent;
+import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.fx.component.ComponentGetter;
@@ -373,7 +375,22 @@ public class CommonAction {
 		t.start();
 		return false;
 	}
-
+	//收缩treeview
+	public static void shrinkTreeView() {
+		TreeItem<TreeNodePo>  root =ComponentGetter.treeView.getRoot();
+		shrinkTreeViewHelper(root);
+	}
+	
+	private  static void shrinkTreeViewHelper(TreeItem<TreeNodePo>  node) {
+		ObservableList<TreeItem<TreeNodePo>>  subNodes = node.getChildren();
+		for (int i = 0; i < subNodes.size(); i++) {
+			TreeItem<TreeNodePo>  subnode = subNodes.get(i);
+			if(subnode.getChildren().size() > 0 ) {
+				subnode.setExpanded(false);
+				shrinkTreeViewHelper(subnode);
+			}
+		}
+	}
 	public static void demo() {
 
 	}
