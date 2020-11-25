@@ -24,8 +24,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.container.ConnItem;
-import net.tenie.fx.component.container.ConnItemParent;
+import net.tenie.fx.component.container.ConnItemDbObjects;
+import net.tenie.fx.component.container.ConnItemContainer;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
@@ -414,16 +414,12 @@ public class ConnectionEditor {
 
 					po.getConn();
 					if (po.isAlive()) {
-//						ConnItem ci = new ConnItem(po);
-						ConnItemParent ci = new  ConnItemParent(po, item);
-						ComponentGetter.dbInfoTree.getConnItemParent().add(ci);
-						TreeItem<TreeNodePo> s = ci.getSchemaNode();
+						ConnItemContainer connItemContainer = new  ConnItemContainer(po, item);
+						TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
 						Platform.runLater(() -> {
 							item.getChildren().add(s);
-							item.getValue().setConnItemParent(ci);
 							item.getValue().setIcon(ImageViewGenerator.svgImage("link", "#7CFC00"));							
-							ci.selectTable(po.getDefaultSchema());
-//							item.setExpanded(true);
+							connItemContainer.selectTable(po.getDefaultSchema());
 						});
 					} else {
 						Platform.runLater(() -> {

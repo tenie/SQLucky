@@ -3,8 +3,8 @@ package net.tenie.fx.PropertyPo;
 import java.io.Serializable;
 
 import javafx.scene.Node;
-import net.tenie.fx.component.container.ConnItem;
-import net.tenie.fx.component.container.ConnItemParent;
+import net.tenie.fx.component.container.ConnItemDbObjects;
+import net.tenie.fx.component.container.ConnItemContainer;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;
@@ -21,8 +21,8 @@ public class TreeNodePo implements Serializable {
 	private TablePo table;
 	private FuncProcTriggerPo funcProTri;
 	private DbConnectionPo connpo;
-	private ConnItemParent connItemParent;
-	private ConnItem connItem;
+	private ConnItemContainer connItemContainer;
+	private ConnItemDbObjects connItem;
 	
 
 	public TreeNodePo(String name, Node cion) {
@@ -68,11 +68,11 @@ public class TreeNodePo implements Serializable {
 		this.icon = cion;
 	}
 
-	public ConnItem getConnItem() {
+	public ConnItemDbObjects getConnItem() {
 		return connItem;
 	}
 
-	public void setConnItem(ConnItem connItem) {
+	public void setConnItem(ConnItemDbObjects connItem) {
 		this.connItem = connItem;
 	}
 
@@ -153,13 +153,7 @@ public class TreeNodePo implements Serializable {
 		this.funcProTri = funcProTri;
 	}
 
-	public ConnItemParent getConnItemParent() {
-		return connItemParent;
-	}
-
-	public void setConnItemParent(ConnItemParent connItemParent) {
-		this.connItemParent = connItemParent;
-	}
+	
 
 	@Override
 	public int hashCode() {
@@ -211,6 +205,14 @@ public class TreeNodePo implements Serializable {
 	public String toString() {
 		return "TreeNodePo [name=" + name + ", type=" + type + ", icon=" + icon + ", parent=" + parent + ", TableDDL="
 				+ TableDDL + "]";
+	}
+
+	public ConnItemContainer getConnItemContainer() {
+		return connItemContainer;
+	}
+
+	public void setConnItemContainer(ConnItemContainer connItemContainer) {
+		this.connItemContainer = connItemContainer;
 	}
 
 }

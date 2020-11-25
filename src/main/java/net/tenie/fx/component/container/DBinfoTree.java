@@ -34,8 +34,8 @@ public class DBinfoTree {
 	public static ContextMenu contextMenu;
 	private TreeView<TreeNodePo> treeView;
 	private ObservableList<TreeItem<TreeNodePo>> connsNode;
-	List<ConnItemParent> connItemParent = new ArrayList<>();
-//	private ConnItemParent connItemParent ;
+	// 缓存 激活的ConnItemContainer
+	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
 	
 	
 	public DBinfoTree() {
@@ -146,34 +146,19 @@ public class DBinfoTree {
 			} // Schemas 双击, 打开非默认的schema
 			else if (parentItem != null && "Schemas".equals(parentItem.getValue().getName())) {
 				DbConnectionPo po = ComponentGetter.getSchameIsConnObj(item);
-				// 获取连接节点
+				// 获取当前schema node 所在的连接节点
 				TreeItem<TreeNodePo> connRoot = item.getParent().getParent();
-				
-				String schema = item.getValue().getName();
-				ConnItem ci = new ConnItem(po, schema); 
-				ConnItemParent cip = findConnItemParent(connRoot);
-				if(cip != null ) {
-					cip.addConnItem(ci);
-					cip.selectTable(schema);
+				// 获取当前节点的schema name
+				String schemaName = item.getValue().getName();
+				// 初始化schema中数据库对象的数据
+				ConnItemDbObjects ci = new ConnItemDbObjects(po, schemaName); 
+				// 
+				ConnItemContainer connItemContainer = connRoot.getValue().getConnItemContainer(); //findConnItemParent(connRoot);
+				if(connItemContainer != null ) {
+					connItemContainer.addConnItem(ci);
+					connItemContainer.selectTable(schemaName);
 				}
-				//TODO
-//				connItemParent.addConnItem(ci);
-//				dataNode.add(ci);
-				
-//				TreeItem<TreeNodePo> tableNode = ConnItem.CreateTableNode(po, schema);
-//				TreeItem<TreeNodePo> viewNode = ConnItem.CreateViewNode(po, schema);
-//				TreeItem<TreeNodePo> funcNode = ConnItem.CreateFunctionNode(po, schema);
-//				TreeItem<TreeNodePo> procNode = ConnItem.CreateProceduresNode(po, schema);
-//
-//				item.getChildren().add(tableNode);
-//				item.getChildren().add(viewNode);
-//				item.getChildren().add(funcNode);
-//				item.getChildren().add(procNode);
-////				ci.setSchemaNode(item);
-//				ci.setTableNode(tableNode);
-//				ci.setViewNode(viewNode);
-//				ci.setFuncNode(funcNode);
-//				ci.setProcNode(procNode);
+				//TODO 
 			}
 			// 表格
 			else if (parentItem.getValue().getType() != null
@@ -296,32 +281,25 @@ public class DBinfoTree {
 		this.treeView = treeView;
 	}
 
-	public List<ConnItemParent> getConnItemParent() {
-		return connItemParent;
-	}
-
-	public void setConnItemParent(List<ConnItemParent> connItemParent) {
-		this.connItemParent = connItemParent;
-	}
-	
-	
-	public ConnItemParent findConnItemParent(TreeItem<TreeNodePo> val) {
-		for (int i = 0; i < connItemParent.size(); i++) {
-			ConnItemParent  cip =  connItemParent.get(i);
-			if( cip.getRoot().getValue().getName()
-					.equals(val.getValue().getName()) ){
-					return cip;
-				}
-		}
-		return null;
-	}
-
-//	public ConnItemParent getConnItemParent() {
+//	public List<ConnItemContainer> getConnItemParent() {
 //		return connItemParent;
 //	}
 //
-//	public void setConnItemParent(ConnItemParent connItemParent) {
+//	public void setConnItemParent(List<ConnItemContainer> connItemParent) {
 //		this.connItemParent = connItemParent;
+//	}
+//	
+	
+//	public ConnItemContainer findConnItemParent2(TreeItem<TreeNodePo> val) {
+//		for (int i = 0; i < connItemParent.size(); i++) {
+//			ConnItemContainer cip = connItemParent.get(i);
+//			String schemaParentNodeName = cip.getParentNode().getValue().getName();
+//			String nodeName = val.getValue().getName();
+//			if (schemaParentNodeName.equals(nodeName)) {
+//				return cip;
+//			}
+//		}
+//		return null;
 //	}
 
 	 

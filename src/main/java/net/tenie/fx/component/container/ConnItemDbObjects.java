@@ -15,7 +15,7 @@ import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;
 
 /*   @author tenie */
-public class ConnItem {
+public class ConnItemDbObjects {
 //	private TreeItem<TreeNodePo> schemaNode;
 	
 	private TreeItem<TreeNodePo> parentNode;
@@ -35,7 +35,7 @@ public class ConnItem {
 	
 	private DbConnectionPo connpo;
 
-	public ConnItem () {
+	public ConnItemDbObjects () {
 		
 	}
 	// 初始化一个空的对象
@@ -52,7 +52,7 @@ public class ConnItem {
 		setParentNode(cinewParentNode);
 	}
 
-	public ConnItem(DbConnectionPo connpo, String schemaName ) {
+	public ConnItemDbObjects(DbConnectionPo connpo, String schemaName ) {
 		this.connpo  = connpo;
 		this.schemaName = schemaName;
 		createConnItem(connpo, schemaName);
