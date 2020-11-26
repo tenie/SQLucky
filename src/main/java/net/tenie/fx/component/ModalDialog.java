@@ -89,7 +89,7 @@ public class ModalDialog {
 
 			stage.setScene(scene);
 
-			stage.show();
+			stage.show(); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -8,7 +8,9 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.input.KeyCombination;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.ConnectionEditor;
+import net.tenie.fx.component.DataTransferWindow;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlEditor;
 
 /*   @author tenie */
@@ -183,8 +185,14 @@ public class MenuBarContainer {
 		hideLeftBottom.setOnAction(value -> {
 			CommonAction.hideLeftBottom();
 		});
-
-		mn.getItems().addAll(addDB, editConn, openConn, closeConn, closeALlConn, deleteConn, new SeparatorMenuItem(),
+		
+		// 数据迁移
+		MenuItem dataTransfer = new MenuItem(MenuItemNameFormat("Data TransFer"));
+		dataTransfer.setGraphic(ImageViewGenerator.svgImageUnactive("mfglabs-random"));
+		dataTransfer.setOnAction(value -> {
+			DataTransferWindow dtw = new DataTransferWindow();
+		});
+		mn.getItems().addAll(dataTransfer, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn, closeALlConn, deleteConn, new SeparatorMenuItem(),
 				hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem());
 		return mn;
 	}
