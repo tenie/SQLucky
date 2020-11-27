@@ -378,19 +378,29 @@ public class CommonAction {
 	//收缩treeview
 	public static void shrinkTreeView() {
 		TreeItem<TreeNodePo>  root =ComponentGetter.treeView.getRoot();
-		shrinkTreeViewHelper(root);
+		shrinkUnfoldTreeViewHelper(root, false);
 	}
+	 
 	
-	private  static void shrinkTreeViewHelper(TreeItem<TreeNodePo>  node) {
-		ObservableList<TreeItem<TreeNodePo>>  subNodes = node.getChildren();
-		for (int i = 0; i < subNodes.size(); i++) {
-			TreeItem<TreeNodePo>  subnode = subNodes.get(i);
-			if(subnode.getChildren().size() > 0 ) {
-				subnode.setExpanded(false);
-				shrinkTreeViewHelper(subnode);
+	
+	//展开treeview
+		public static void unfoldTreeView() {
+			TreeItem<TreeNodePo>  root =ComponentGetter.treeView.getRoot();
+			root.setExpanded(true);
+			shrinkUnfoldTreeViewHelper(root, true);
+		}
+		
+		private  static void shrinkUnfoldTreeViewHelper(TreeItem<TreeNodePo>  node, boolean tf) {
+			ObservableList<TreeItem<TreeNodePo>>  subNodes = node.getChildren();
+			for (int i = 0; i < subNodes.size(); i++) {
+				TreeItem<TreeNodePo>  subnode = subNodes.get(i);
+				if(subnode.getChildren().size() > 0 ) {
+					subnode.setExpanded(tf);
+					shrinkUnfoldTreeViewHelper(subnode, tf);
+				}
 			}
 		}
-	}
+	
 	public static void demo() {
 
 	}

@@ -7,7 +7,9 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
@@ -76,14 +78,18 @@ public class DBinfoFilter {
 						new TreeNodePo("Connections", ImageViewGenerator.svgImageDefActive("windows-globe")));
 				rootNode.getChildren().addAll(filtList);
 				treeView.setRoot(rootNode); // 使用新的树根
-
+				
+				if(filtList.size() >0 ) {
+					CommonAction.unfoldTreeView();
+				}
+				
 			}
 
 		});
 
 		return filter;
 	}
-	 
+ 
 	
 	/*
 	 * 传递连接节点, 对其进行过滤
