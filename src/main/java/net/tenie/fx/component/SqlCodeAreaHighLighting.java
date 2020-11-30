@@ -2,11 +2,15 @@ package net.tenie.fx.component;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.concurrent.Task;
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.scene.input.InputMethodRequests;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -82,6 +86,14 @@ public class SqlCodeAreaHighLighting {
 		sp.getStyleClass().add("my-tag");
 		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
 		codeArea.setEditable(editable);
+		 
+	    // 中午输入法显示问题
+		codeArea.setInputMethodRequests(new InputMethodRequestsObject(codeArea));
+		codeArea.setOnInputMethodTextChanged(e ->{ 			
+			 if (e.getCommitted() != "") {
+				 codeArea.insertText(codeArea.getCaretPosition(), e.getCommitted());
+		        }
+		});
 		return sp;
 	}
 
@@ -129,4 +141,36 @@ public class SqlCodeAreaHighLighting {
 		spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
 		return spansBuilder.create();
 	}
+}
+class InputMethodRequestsObject implements InputMethodRequests {
+    private CodeArea area;
+	public InputMethodRequestsObject(CodeArea area) {
+		this.area = area;
+	}
+	@Override
+	public
+    String getSelectedText() {
+        return "";
+    }
+    @Override
+	public
+    int getLocationOffset(int x, int y) {
+        return 0;
+    }
+    @Override
+	public
+    void cancelLatestCommittedText() {
+
+    }
+    @Override
+    public Point2D getTextLocation(int offset) {
+        // a very rough example, only tested under macOS
+        Optional<Bounds> caretPositionBounds = area.getCaretBounds();
+        if (caretPositionBounds.isPresent()) {
+            Bounds bounds = caretPositionBounds.get();
+            return new Point2D(bounds.getMaxX() - 5, bounds.getMaxY());
+        } 
+        throw new NullPointerException();
+    }
+    
 }

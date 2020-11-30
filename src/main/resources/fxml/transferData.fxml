@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="457.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane prefHeight="117.0" prefWidth="601.0">
+         <children>
+            <ChoiceBox layoutX="53.0" layoutY="14.0" prefWidth="150.0" />
+            <ChoiceBox layoutX="279.0" layoutY="14.0" prefWidth="150.0" />
+            <Label layoutX="7.0" layoutY="18.0" text="source" />
+            <Label layoutX="228.0" layoutY="17.0" text="target" />
+            <ChoiceBox layoutX="53.0" layoutY="41.0" prefWidth="150.0" />
+            <ChoiceBox layoutX="279.0" layoutY="41.0" prefWidth="150.0" />
+         </children>
+      </Pane>
+      <Pane prefHeight="246.0" prefWidth="601.0">
+         <children>
+            <CheckBox layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="忽略错误继续执行" />
+            <CheckBox layoutX="14.0" layoutY="38.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步表结构" />
+            <CheckBox layoutX="199.0" layoutY="14.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="对象存在删除" />
+            <CheckBox layoutX="14.0" layoutY="62.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步索引" />
+            <CheckBox layoutX="14.0" layoutY="86.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步视图" />
+            <CheckBox layoutX="14.0" layoutY="113.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步函数/过程" />
+            <CheckBox layoutX="14.0" layoutY="142.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="trigger" />
+            <CheckBox layoutX="14.0" layoutY="170.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步序列" />
+         </children>
+      </Pane>
+      <SplitPane dividerPositions="0.4941569282136895" prefHeight="149.0" prefWidth="601.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="149.0" prefWidth="293.0" />
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
+        </items>
+      </SplitPane>
+   </children>
+</VBox>

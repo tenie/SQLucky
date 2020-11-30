@@ -256,12 +256,15 @@ public class Dbinfo {
 			tablesResultSet = dbMetaData.getTables(catalog, schema, null, null);
 			while (tablesResultSet.next()) {
 				String tableType = tablesResultSet.getString("TABLE_TYPE");
+				if(tableType == null ) {
+					tableType = "";
+				}
 				if (istable) {
-					if ("VIEW".equals(tableType)) {
+					if (tableType.contains("VIEW")) {
 						continue;
 					}
 				} else {
-					if (!"VIEW".equals(tableType)) {
+					if (!tableType.contains("VIEW")) {
 						continue;
 					}
 				}
