@@ -94,6 +94,8 @@ FlowPane TextField{
 .myTextField{
 	-fx-text-fill: white;
 	-fx-background-color: #373a3c;
+    -fx-border-color: #059BCE;
+    -fx-border-width: 0 0 1 0;
 }
 .myTextField:hover{
 	-fx-background-color: #323232;
@@ -130,10 +132,10 @@ FlowPane TextField{
 } */
 
 .combo-box {   
-     -fx-border-color: #373a3c;
-     -fx-border-width: 0;
-     -fx-background-radius: 0; /* */
-     -fx-background-color: #373a3c;
+     -fx-border-color: #059BCE;
+     -fx-border-width: 0 0 1 0;
+     -fx-background-radius: 0; 
+     -fx-background-color: #373a3c; /* #373a3c */
     /*  -fx-font-family: "Arial"; */
      -fx-font-size: 12px;
      -fx-text-fill: #ffffff;

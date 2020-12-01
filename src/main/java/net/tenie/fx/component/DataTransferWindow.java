@@ -1,8 +1,13 @@
 package net.tenie.fx.component;
 
+import java.io.IOException;
+import java.net.URL;
+
 import com.jfoenix.controls.JFXButton;
 
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -16,7 +21,27 @@ import net.tenie.fx.config.ConfigVal;
 public class DataTransferWindow {
 	
 	public DataTransferWindow() {
-		CreateModalWindow();
+//		CreateModalWindow();
+		showFxml("/fxml/transferData.fxml");
+	}
+	
+	// 根据给定的fxml 创建 模态框
+	public void showFxml(    String fxml) {
+
+		try {
+			final Stage stage = new Stage();
+			stage.initModality(Modality.APPLICATION_MODAL);
+//			stage.initOwner(stg);
+			stage.setTitle("Top Stage With Modality");
+
+			URL url = getClass().getResource(fxml);
+			Parent root = FXMLLoader.load(url);
+			Scene scene = new Scene(root);
+			stage.setScene(scene);
+			stage.show();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public   Stage CreateModalWindow() {

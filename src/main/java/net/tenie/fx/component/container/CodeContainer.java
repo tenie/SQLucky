@@ -80,10 +80,7 @@ public class CodeContainer {
 		
 		// 执行存储过程
 		JFXButton runFunPro = new JFXButton();
-		runFunPro.setGraphic(ImageViewGenerator.svgImageDefActive("bolt")); //zero-rerun bolt
-//		runFunPro.setOnMouseClicked(v -> {
-//			CommonAction.formatSqlText();
-//		});
+		runFunPro.setGraphic(ImageViewGenerator.svgImageDefActive("bolt"));
 		runFunPro.setId("runFunPro");
 		runFunPro.setTooltip(MyTooltipTool.instance("Execut Create Program DDL"));
 
@@ -112,7 +109,7 @@ public class CodeContainer {
 		AllButtons.btns.put("hideBottom", hideBottom);
 
 		// 选择sql在哪个连接上执行
-		Label lbcnn = new Label("DB Connection");
+		Label lbcnn = new Label("DB Connection: ");
 		JFXComboBox<Label> conns = new JFXComboBox<Label>();
 		lbcnn.setLabelFor(conns);
 		conns.setPrefHeight(25);
@@ -127,7 +124,7 @@ public class CodeContainer {
 		ComponentGetter.connComboBox = conns;
 
 		// sql 执行读取行数
-		Label lb = new Label("Max Rows");
+		Label lb = new Label("Max Rows: ");
 		JFXTextField rows = new JFXTextField();
 		lb.setLabelFor(rows);
 		rows.setPrefHeight(25);
@@ -180,7 +177,7 @@ public class CodeContainer {
 		lbcnn.setLayoutX(y);
 		pn.getChildren().add(conns);
 		conns.setLayoutY(0);
-		y += fix + 60;
+		y += fix + 65;
 		conns.setLayoutX(y);
 		pn.getChildren().add(lb);
 		lb.setLayoutY(5);

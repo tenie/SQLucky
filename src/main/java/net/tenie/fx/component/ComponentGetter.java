@@ -40,6 +40,36 @@ public final class ComponentGetter {
 	public static ComboBox<Label> connComboBox;
 	public static volatile AppWindow app;
 
+	// 根据链接名称,获取链接Node 
+	public static TreeItem<TreeNodePo>  getConnNode(String dbName){
+//		TreeItem<TreeNodePo> conn =
+		TreeItem<TreeNodePo> root  = treeView.getRoot();
+		 // 遍历tree root 找到对于的数据库节点
+	    for(  TreeItem<TreeNodePo>  connNode : root.getChildren()) {
+	    	if(connNode.getValue().getName().equals(dbName)) { 
+	    		return connNode; 
+	    	}
+	    		
+	    } 
+	    return null;
+	}
+	
+	// 根据链接名称,获取链接Node 
+		public static TreeItem<TreeNodePo>  getSchemaNode(String dbName, String SchemaName){
+			TreeItem<TreeNodePo> connNode = getConnNode(dbName);
+			if(connNode!=null ) {
+				TreeItem<TreeNodePo> schemaParent =	connNode.getChildren().get(0);
+				for(TreeItem<TreeNodePo> schNode : schemaParent.getChildren()) {
+					if(schNode.getValue().getName().equals(SchemaName)) {
+						return schNode;
+					}
+				}
+			}
+			
+			return null;
+		}
+	
+	
 	// 获取当前代码Tab中的
 
 	// 获取库的连接对象

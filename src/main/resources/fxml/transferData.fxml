@@ -1,39 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="457.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="457.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.fx.controller.TransferDataController">
    <children>
-      <Pane prefHeight="117.0" prefWidth="601.0">
+      <GridPane>
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="54.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="214.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="541.0" minWidth="10.0" prefWidth="67.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="541.0" minWidth="10.0" prefWidth="277.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <ChoiceBox layoutX="53.0" layoutY="14.0" prefWidth="150.0" />
-            <ChoiceBox layoutX="279.0" layoutY="14.0" prefWidth="150.0" />
-            <Label layoutX="7.0" layoutY="18.0" text="source" />
-            <Label layoutX="228.0" layoutY="17.0" text="target" />
-            <ChoiceBox layoutX="53.0" layoutY="41.0" prefWidth="150.0" />
-            <ChoiceBox layoutX="279.0" layoutY="41.0" prefWidth="150.0" />
+            <Label text="source" />
+            <Label text="target" GridPane.columnIndex="2" />
+            <JFXComboBox fx:id="soDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" />
+            <JFXComboBox fx:id="soSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <JFXComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" />
+            <JFXComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
-      </Pane>
-      <Pane prefHeight="246.0" prefWidth="601.0">
+      </GridPane>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
          <children>
-            <CheckBox layoutX="14.0" layoutY="14.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="忽略错误继续执行" />
-            <CheckBox layoutX="14.0" layoutY="38.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步表结构" />
-            <CheckBox layoutX="199.0" layoutY="14.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="对象存在删除" />
-            <CheckBox layoutX="14.0" layoutY="62.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步索引" />
-            <CheckBox layoutX="14.0" layoutY="86.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步视图" />
-            <CheckBox layoutX="14.0" layoutY="113.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步函数/过程" />
-            <CheckBox layoutX="14.0" layoutY="142.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="trigger" />
-            <CheckBox layoutX="14.0" layoutY="170.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步序列" />
+            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="忽略错误继续执行" />
+            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="对象存在删除" GridPane.columnIndex="1" />
+            <CheckBox fx:id="tabStruct" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步表结构" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步索引" GridPane.rowIndex="4" />
+            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步视图" GridPane.rowIndex="2" />
+            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步函数/过程" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="trigger" GridPane.rowIndex="3" />
+            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步序列" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <CheckBox fx:id="tabData" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步表数据" GridPane.rowIndex="1" />
          </children>
-      </Pane>
-      <SplitPane dividerPositions="0.4941569282136895" prefHeight="149.0" prefWidth="601.0">
-        <items>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="149.0" prefWidth="293.0" />
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-        </items>
+      </GridPane>
+      <SplitPane prefHeight="220.0" prefWidth="601.0">
+         <items>
+            <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" />
+         </items>
       </SplitPane>
    </children>
 </VBox>

@@ -46,14 +46,24 @@ public final class DBConns {
 		if (cb == null) {
 			return;
 		}
-		String currentStr = "";
-		Label currentLabel = null;
-		if (cb.getItems() != null) {
-			if (cb.getValue() != null) {
-				currentStr = cb.getValue().getText();
-				cb.getItems().clear();
-			}
-		}
+//		String currentStr = "";
+//		Label currentLabel = null;
+//		if (cb.getItems() != null) {
+//			if (cb.getValue() != null) {
+//				currentStr = cb.getValue().getText();
+//				cb.getItems().clear();
+//			}
+//		}
+		
+		ObservableList<Label> list= getChoiceBoxItems();
+		cb.setItems(list);
+//		if (currentLabel != null) {
+//			cb.getSelectionModel().select(currentLabel);
+//		}
+
+	}
+	
+	public static ObservableList<Label> getChoiceBoxItems(){
 		ObservableList<Label> list = FXCollections.observableArrayList();
 		list.add(new Label(""));
 		for (String key : DBConns.allNames()) {
@@ -65,22 +75,17 @@ public final class DBConns {
 			} else {
 				lb.setGraphic(ImageViewGenerator.svgImageUnactive("unlink"));
 			}
-			if (name.equals(currentStr)) {
-				currentLabel = lb;
-			}
+//			if (name.equals(currentStr)) {
+//				currentLabel = lb;
+//			}
 			list.add(lb);
 		}
-
-		cb.setItems(list);
-		if (currentLabel != null) {
-			cb.getSelectionModel().select(currentLabel);
-		}
-
+		return list;
 	}
 
-	public static void flushChoiceBox() {
-		flushChoiceBox(cb);
-	}
+//	public static void flushChoiceBox() {
+//		flushChoiceBox(cb);
+//	}
 
 	// 选择连接框的选项修改选项
 	public static void changeChoiceBox(String idx) {
@@ -93,7 +98,7 @@ public final class DBConns {
 	public static void add(String name, DbConnectionPo o) {
 		set.add(name);
 		dbs.put(name, o);
-		flushChoiceBox();
+		flushChoiceBox(cb);
 	}
 
 	public static boolean conaction(String name) {
@@ -108,7 +113,7 @@ public final class DBConns {
 	public static void remove(String name) {
 		set.remove(name);
 		dbs.remove(name);
-		flushChoiceBox();
+		flushChoiceBox(cb);
 	}
 
 	public static DbConnectionPo get(String name) {
