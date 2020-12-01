@@ -32,24 +32,27 @@ import net.tenie.lib.tools.StrUtils;
 
 public class TransferDataController implements Initializable {
 	
-	@FXML
-	private HBox treePane;
+	@FXML private HBox treePane;
 	
-	@FXML
-	private JFXComboBox<Label>  soDB;
-	@FXML
-	private JFXComboBox<Label>  soSC;
+	@FXML private JFXComboBox<Label>  soDB;
+	@FXML private JFXComboBox<Label>  soSC;
 	
-	@FXML
-	private JFXComboBox<Label>  taDB;
-	@FXML
-	private JFXComboBox<Label>  taSC;
+	@FXML private JFXComboBox<Label>  taDB;
 	
-	@FXML
-	private CheckBox tabData;
+	@FXML private JFXComboBox<Label>  taSC;
 	
-	@FXML
-	private CheckBox tabStruct;
+	@FXML private CheckBox isIgnore; 
+	@FXML private CheckBox isDel;
+	
+	@FXML private CheckBox tabData; 
+	@FXML private CheckBox tabStruct; 
+	
+	@FXML private CheckBox chView;
+	@FXML private CheckBox chFun;
+	@FXML private CheckBox chPro;
+	@FXML private CheckBox chTri;
+	@FXML private CheckBox chIndex; 
+	@FXML private CheckBox chSeq;
 	
 	
 	private CheckBoxTreeItem<String> root;
@@ -57,8 +60,19 @@ public class TransferDataController implements Initializable {
 	
 	// 清除 check Box 
 	private void cleanCheckBox() {
+		isIgnore.setSelected(false);
+		isDel.setSelected(false);
+		
 		tabData.setSelected(false);
 		tabStruct.setSelected(false);
+		
+		chView.setSelected(false);
+		chFun.setSelected(false);
+		chPro.setSelected(false);
+		chTri.setSelected(false);
+		chIndex.setSelected(false);
+		chSeq.setSelected(false); 
+		
 	}
 	 
 
@@ -66,79 +80,118 @@ public class TransferDataController implements Initializable {
 	// 初始化方法, 这边在初始化的时候添加按钮的点击事件
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		 
-		soDB.setItems( DBConns.getChoiceBoxItems());  
-		taDB.setItems( DBConns.getChoiceBoxItems());
+
+		soDB.setItems(DBConns.getChoiceBoxItems());
+		taDB.setItems(DBConns.getChoiceBoxItems());
 //		soDB.setItems( getConnComboBoxList()); 
 //		taDB.setItems( getConnComboBoxList());
 
-		
-		soDB.getSelectionModel().selectedItemProperty().addListener( 
-				(ChangeListener<? super Label>) (observable, oldValue, newValue) -> {
-					 soSC.setItems(empty);
-					 cleanCheckBox();
-					 String str  = newValue.getText(); 
-					 soSC.setItems( getSchemaLabels(str) );
-					 
-					 root.getChildren().removeAll(root.getChildren());
-//					 soSC.getItems().get(0); 
-					 
-				});
-		soSC.getSelectionModel().selectedItemProperty().addListener( 
-				(ChangeListener<? super Label>) (observable, oldValue, newValue) -> {
-					 
-					 root.getChildren().removeAll(root.getChildren());
-					 cleanCheckBox();
-				});
-		
+		soDB.getSelectionModel().selectedItemProperty()
+				.addListener((ChangeListener<? super Label>) (observable, oldValue, newValue) -> {
+					soSC.setItems(empty);
+					cleanCheckBox();
+					String str = newValue.getText();
+					soSC.setItems(getSchemaLabels(str));
 
-		taDB.getSelectionModel().selectedItemProperty().addListener( 
-				(ChangeListener<? super Label>) (observable, oldValue, newValue) -> {
-					 String str  = newValue.getText(); 
-					 taSC.setItems( getSchemaLabels(str) );
+					root.getChildren().removeAll(root.getChildren());
+//					 soSC.getItems().get(0); 
+
 				});
-		
-		
-	    root = new CheckBoxTreeItem<String>("全选");
-		root.setExpanded(true); 
-		
-	        
-	        CheckTreeView<String> checkTreeView =  new CheckTreeView<>(root);
-	        checkTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-	        treePane.getChildren().addAll(checkTreeView);
-	        HBox.setHgrow(checkTreeView, Priority.ALWAYS);
-	        
-	    // check box 
-	        tabData.selectedProperty().addListener((ChangeListener<? super Boolean>) (observable, oldValue, newValue) -> {
-						if(newValue && !tabStruct.isSelected()) {
-							String dbname = soDB.getValue().getText();
-							String schename = soSC.getValue().getText();
-							if(StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) { 
-								TreeItem<TreeNodePo>   schemaNode = ComponentGetter.getSchemaNode(dbname , schename); 
-								addNode(schemaNode.getChildren().get(0));
-							}
-						}
-						if(!newValue  && ! tabStruct.isSelected()) { //
-							removeNode("Table");
-						}
-						
+		soSC.getSelectionModel().selectedItemProperty()
+				.addListener((ChangeListener<? super Label>) (observable, oldValue, newValue) -> {
+
+					root.getChildren().removeAll(root.getChildren());
+					cleanCheckBox();
 				});
-	        tabStruct.selectedProperty().addListener((ChangeListener<? super Boolean>) (observable, oldValue, newValue) -> {
-				if(newValue  && !tabData.isSelected() ) {
-					String dbname = soDB.getValue().getText();
-					String schename = soSC.getValue().getText();
-					if(StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) { 
-						TreeItem<TreeNodePo>   schemaNode = ComponentGetter.getSchemaNode(dbname , schename); 
-						addNode(schemaNode.getChildren().get(0));
-					}
+
+		taDB.getSelectionModel().selectedItemProperty()
+				.addListener((ChangeListener<? super Label>) (observable, oldValue, newValue) -> {
+					String str = newValue.getText();
+					taSC.setItems(getSchemaLabels(str));
+				});
+
+		root = new CheckBoxTreeItem<String>("全选");
+		root.setExpanded(true);
+
+		CheckTreeView<String> checkTreeView = new CheckTreeView<>(root);
+		checkTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		treePane.getChildren().addAll(checkTreeView);
+		HBox.setHgrow(checkTreeView, Priority.ALWAYS);
+
+		// check box
+		tabData.selectedProperty().addListener((ChangeListener<? super Boolean>) (observable, oldValue, newValue) -> {
+			if (newValue && !tabStruct.isSelected()) {
+				String dbname = soDB.getValue().getText();
+				String schename = soSC.getValue().getText();
+				if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
+					TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
+					addNode(schemaNode.getChildren().get(0));
 				}
-				if(!newValue  && ! tabData.isSelected()) { //
-					removeNode("Table");
-				}
-				
+			}
+			if (!newValue && !tabStruct.isSelected()) { //
+				removeNode("Table");
+			}
+
 		});
- 
+		tabStruct.selectedProperty().addListener((ChangeListener<? super Boolean>) (observable, oldValue, newValue) -> {
+			if (newValue && !tabData.isSelected()) {
+				String dbname = soDB.getValue().getText();
+				String schename = soSC.getValue().getText();
+				if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
+					TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
+					addNode(schemaNode.getChildren().get(0));
+				}
+			}
+			if (!newValue && !tabData.isSelected()) { //
+				removeNode("Table");
+			}
+
+		});
+		chView.selectedProperty().addListener((ChangeListener<? super Boolean>) (observable, oldValue, newValue) -> {
+			if (newValue) {
+				String dbname = soDB.getValue().getText();
+				String schename = soSC.getValue().getText();
+				if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
+					TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
+					addNode(schemaNode.getChildren().get(1));
+				}
+			}
+			if (!newValue ) { //
+				removeNode("View");
+			}
+
+		});
 		
+		chFun.selectedProperty().addListener((ChangeListener<? super Boolean>) (observable, oldValue, newValue) -> {
+			if (newValue) {
+				String dbname = soDB.getValue().getText();
+				String schename = soSC.getValue().getText();
+				if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
+					TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
+					addNode(schemaNode.getChildren().get(2));
+				}
+			}
+			if (!newValue ) { //
+				removeNode("Function");
+			}
+
+		});
+		
+		chPro.selectedProperty().addListener((ChangeListener<? super Boolean>) (observable, oldValue, newValue) -> {
+			if (newValue) {
+				String dbname = soDB.getValue().getText();
+				String schename = soSC.getValue().getText();
+				if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
+					TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
+					addNode(schemaNode.getChildren().get(3));
+				}
+			}
+			if (!newValue ) { //
+				removeNode("Procedure");
+			}
+
+		});
+
 	}
 	
 	// 获取连接名称list

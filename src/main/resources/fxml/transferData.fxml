@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -27,6 +28,9 @@
             <JFXComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" />
             <JFXComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
+         <VBox.margin>
+            <Insets left="10.0" />
+         </VBox.margin>
       </GridPane>
       <GridPane>
         <columnConstraints>
@@ -41,16 +45,20 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="忽略错误继续执行" />
-            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="对象存在删除" GridPane.columnIndex="1" />
+            <CheckBox fx:id="isIgnore" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="忽略错误继续执行" />
+            <CheckBox fx:id="isDel" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="对象存在删除" GridPane.columnIndex="1" />
             <CheckBox fx:id="tabStruct" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步表结构" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步索引" GridPane.rowIndex="4" />
-            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步视图" GridPane.rowIndex="2" />
-            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步函数/过程" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="trigger" GridPane.rowIndex="3" />
-            <CheckBox mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步序列" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <CheckBox fx:id="chIndex" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步索引" GridPane.rowIndex="4" />
+            <CheckBox fx:id="chView" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步视图" GridPane.rowIndex="2" />
+            <CheckBox fx:id="chFun" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步函数" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <CheckBox fx:id="chTri" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步触发器" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <CheckBox fx:id="chSeq" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步序列" GridPane.columnIndex="1" GridPane.rowIndex="4" />
             <CheckBox fx:id="tabData" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步表数据" GridPane.rowIndex="1" />
+            <CheckBox fx:id="chPro" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步过程" GridPane.rowIndex="3" />
          </children>
+         <VBox.margin>
+            <Insets bottom="10.0" left="10.0" />
+         </VBox.margin>
       </GridPane>
       <SplitPane prefHeight="220.0" prefWidth="601.0">
          <items>
@@ -58,4 +66,10 @@
          </items>
       </SplitPane>
    </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <padding>
+      <Insets top="10.0" />
+   </padding>
 </VBox>
