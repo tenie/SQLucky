@@ -152,10 +152,14 @@ public class ShowTableRowDateDetailAction {
 
 	}
 
-	public static final void bindTableViewFilter(TableView<SqlFieldPo> tableView,
-			ObservableList<SqlFieldPo> observableList, String newValue) {
+	public static final void bindTableViewFilter(
+			TableView<SqlFieldPo> tableView,
+			ObservableList<SqlFieldPo> observableList,
+			String newValue) {
 		FilteredList<SqlFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
-		filteredData.setPredicate(entity -> entity.getColumnLabel().get().toUpperCase().contains(newValue.toUpperCase())
+		filteredData.setPredicate(
+				   entity -> 
+				   entity.getColumnLabel().get().toUpperCase().contains(newValue.toUpperCase())
 				|| entity.getValue().get().toUpperCase().contains(newValue.toUpperCase()));
 		SortedList<SqlFieldPo> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());

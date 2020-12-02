@@ -245,9 +245,9 @@ public class TransferDataController implements Initializable {
 			     && StrUtils.isNotNullOrEmpty(targetSchename)) {
 				
 				DbConnectionPo dbpo = DBConns.get(dbname);
-				Connection  conn = dbpo.getConn();
+				Connection  soConn = dbpo.getConn();
 				ExportDDL export = dbpo.getExportDDL();
-				boolean delObj = isDel.isSelected();
+				
 				
 				DbConnectionPo tarDbpo = DBConns.get(targetDBName);
 				Connection  tarConn = tarDbpo.getConn();
@@ -256,32 +256,39 @@ public class TransferDataController implements Initializable {
 				// 将要执行的sql集合
 				List<String> sqls = new ArrayList<>();
 				
-				if(tabStruct.isSelected()) {
-					TreeItem<String> table = rootSubNode(TABLE);
-					if(table != null) {
-						ObservableList<CheckBoxTreeItem<String> > selectNodes = selectNode(table);
-						for(CheckBoxTreeItem<String> cb : selectNodes ) {
-//							System.out.println(cb.getValue());
-							String tableName = cb.getValue();
-							// 删表语句
-							if(delObj) {
-								String drop = export.exportDropTable(schename, tableName);
-//								System.out.println(drop);
-								sqls.add(drop);
-							}
-							// 建表语句
-							String ctab = export.exportCreateTable(conn, schename, tableName);
-//							System.out.println(ctab);
-							sqls.add(ctab);
-							
-							
-						}
-					}
+				if(tabStruct.isSelected()) { 
+					sqls.addAll( synTabStruct(soConn, export, schename) );
 				}
 				// 数据同步
+				if(tabData.isSelected()) { 
+					
+				}
+				// 视图同步
 				if(tabData.isSelected()) {
 					
 				}
+				// 函数同步
+				if(tabData.isSelected()) {
+					
+				}
+				// 过程同步
+				if(tabData.isSelected()) {
+					
+				}
+				// 触发器同步
+				if(tabData.isSelected()) {
+					
+				}
+				// 索引同步
+				if(tabData.isSelected()) {
+					
+				}
+				// 序列同步
+				if(tabData.isSelected()) {
+					
+				}
+				
+				
 				execSQL(sqls, tarConn);
 				
 			}
@@ -289,6 +296,60 @@ public class TransferDataController implements Initializable {
 		});
 
 	}
+	// 表结构
+	private List<String> synTabStruct(Connection  soConn , ExportDDL export,  String schename ) {
+		boolean delObj = isDel.isSelected();
+		List<String> sqls = new ArrayList<>();
+		TreeItem<String> table = rootSubNode(TABLE);
+		if(table != null) {
+			ObservableList<CheckBoxTreeItem<String> > selectNodes = selectNode(table);
+			for(CheckBoxTreeItem<String> cb : selectNodes ) {
+//				System.out.println(cb.getValue());
+				String tableName = cb.getValue();
+				// 删表语句
+				if(delObj) {
+					String drop = export.exportDropTable(schename, tableName);
+//					System.out.println(drop);
+					sqls.add(drop);
+				}
+				// 建表语句
+				String ctab = export.exportCreateTable(  soConn , schename, tableName);
+//				System.out.println(ctab);
+				sqls.add(ctab);
+				
+				
+			}
+		}
+		return sqls;
+	}
+	
+	// 表结构
+		private List<String> synTabData(Connection  soConn , ExportDDL export,  String schename ) {
+			boolean delObj = isDel.isSelected();
+			List<String> sqls = new ArrayList<>();
+			TreeItem<String> table = rootSubNode(TABLE);
+			if(table != null) {
+				ObservableList<CheckBoxTreeItem<String> > selectNodes = selectNode(table);
+				for(CheckBoxTreeItem<String> cb : selectNodes ) {
+//					System.out.println(cb.getValue());
+					String tableName = cb.getValue();
+					// 删表语句
+					if(delObj) {
+						String del = "delete from schename."+tableName;
+//						System.out.println(drop);
+						sqls.add(del);
+					}
+					// 建表语句
+					String ctab = export.exportCreateTable(  soConn , schename, tableName);
+//					System.out.println(ctab);
+					sqls.add(ctab);
+					
+					
+				}
+			}
+			return sqls;
+		}
+		
 	
 	private void execSQL(List<String> sqls , Connection tarConn) {
 		Thread th = new Thread() {
