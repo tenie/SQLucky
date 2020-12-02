@@ -65,11 +65,18 @@
             <Insets bottom="10.0" left="10.0" />
          </VBox.margin>
       </GridPane>
-      <SplitPane prefHeight="220.0" prefWidth="601.0">
-         <items>
+      <VBox prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <FlowPane prefHeight="95.0" prefWidth="601.0">
+               <children>
+                  <Label text="查询" />
+                  <TextField />
+                  <Button fx:id="execBtn" mnemonicParsing="false" text="运行" />
+               </children>
+            </FlowPane>
             <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" />
-         </items>
-      </SplitPane>
+         </children>
+      </VBox>
    </children>
    <opaqueInsets>
       <Insets />

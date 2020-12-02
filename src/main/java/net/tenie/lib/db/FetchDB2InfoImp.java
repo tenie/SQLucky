@@ -146,6 +146,52 @@ public class FetchDB2InfoImp {
 		return sql;
 	}
 
+	public String createTab(String schema, TablePo tab) {
+		Set<TableFieldPo> fls = tab.getFields();
+		String tableName = tab.getTableName();
+
+		Boolean hasItemID = false;
+
+		String sql = "CREATE TABLE " + schema+"."+tableName + " ( \n";
+		String keysql = "";
+		// 字段
+		for (TableFieldPo po : fls) {
+			// not null
+			String notnull = "N".equals(po.getIsNullable()) ? "not null " : " ";
+			// default
+			String defVal = StrUtils.isNullOrEmpty(po.getDefaultVal()) ? "" : " default " + po.getDefaultVal();
+
+			// 字段类型type长度
+			String typeLength = getTypeLength(po);
+
+			String fieldName = po.getFieldName();
+			sql += "	" + fieldName + " " + po.getType() + typeLength + notnull + " " + defVal + " ,\n";
+
+			if ("ITEM_ID".equals(fieldName.toUpperCase())) {
+				hasItemID = true;
+			}
+
+		}
+		// 获取主键
+		ArrayList<TablePrimaryKeysPo> ls = tab.getPrimaryKeys();
+		String pkn = "";
+		if (ls.size() > 0) {
+			for (TablePrimaryKeysPo kp : ls) {
+				keysql += kp.getColumnName() + ",";
+				pkn = kp.getPkName();
+			}
+		}
+		// 有主键就加上
+		if (!StrUtils.isNullOrEmpty(keysql)) {
+			String keyName = pkn; // "P"+ tableName.substring(tableName.indexOf("_") );
+			keysql = " CONSTRAINT " + keyName + " PRIMARY KEY ( " + keysql.substring(0, keysql.length() - 1) + " )";
+			sql += keysql + " \n" + ") \n";
+		} else {
+			sql = sql.substring(0, sql.length() - 2) + " \n )";
+		}
+		 
+		return sql;
+	}
 	public String createTab(TablePo tab) {
 		Set<TableFieldPo> fls = tab.getFields();
 		String tableName = tab.getTableName();
