@@ -31,7 +31,10 @@ public class StrUtils {
 		}
 		return rs.toString();
 	}
-
+public static void main(String[] args) {
+	String s = CamelCaseUnderline("balancePartAmount");
+	System.out.println(s);
+}
 	// 下划线 轉 驼峰命名
 	public static String underlineCaseCamel(String str) {
 		StringBuilder rs = new StringBuilder();

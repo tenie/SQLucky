@@ -127,7 +127,7 @@ public class CommonAction {
 		int end = i.getEnd();
 		// 将原文本删除
 		code.deleteText(start, end);
-		// 插入 注释过的文本
+		 
 		code.insertText(start, text.toUpperCase());
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
@@ -144,7 +144,7 @@ public class CommonAction {
 		int end = i.getEnd();
 		// 将原文本删除
 		code.deleteText(start, end);
-		// 插入 注释过的文本
+		 
 		code.insertText(start, text.toLowerCase());
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
@@ -161,7 +161,7 @@ public class CommonAction {
 		int end = i.getEnd();
 		// 将原文本删除
 		code.deleteText(start, end);
-		// 插入 注释过的文本
+	 
 		text = StrUtils.CamelCaseUnderline(text);
 		code.insertText(start, text);
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
