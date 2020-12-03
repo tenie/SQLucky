@@ -339,7 +339,7 @@ public class TransferDataController implements Initializable {
 //						System.out.println(drop);
 						sqls.add(del);
 					}
-					// 建表语句
+					// 建表语句 
 					String ctab = export.exportCreateTable(  soConn , schename, tableName);
 //					System.out.println(ctab);
 					sqls.add(ctab);
