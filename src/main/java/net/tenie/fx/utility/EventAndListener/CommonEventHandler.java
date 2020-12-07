@@ -429,31 +429,34 @@ public class CommonEventHandler {
 
 				String tabId = table.getId();
 
-//				String tabName = CacheTableDate.getTableName(tabId);
+//				String tabName = CacheTableDate.getTableNam e(tabId);
 //				Connection conn = CacheTableDate.getDBConn(tabId);
+				// 获取字段属性信息
 				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tabId);
-
+				
+				// 选中的行数据
 				ObservableList<ObservableList<StringProperty>> vals = ComponentGetter.dataTableViewSelectedItems();// table.getSelectionModel().getSelectedItems();
 //				int seIdx = table.getSelectionModel().getSelectedIndex();
 //				List<String> temp = new ArrayList<>();
 
 				try {
-
+					// 遍历选中的行
 					for (int i = 0; i < vals.size(); i++) {
-						// 选中的行
+						// 一行数据, 提醒: 最后一列是行号
 						ObservableList<StringProperty> sps = vals.get(i);
 						// copy 一行
 						ObservableList<StringProperty> item = FXCollections.observableArrayList();
 						int newLineidx = ConfigVal.newLineIdx++;
 //						for (StringProperty strp : sps) {
-						for (int j = 0 ; j < sps.size(); j++) {
+						for (int j = 0 ; j < fs.size(); j++) {
 							StringProperty strp = sps.get(j);
 						 
 							StringProperty newsp = new SimpleStringProperty(strp.get());
-							CommonUtility.newStringPropertyChangeListener(newsp, fs.get(i).getColumnType().get());
+							int dataType = fs.get(j).getColumnType().get();
+							CommonUtility.newStringPropertyChangeListener(newsp, dataType);
 							item.add(newsp);
 						}
-						item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
+						item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 新行的行号没什么用
 						CacheTableDate.appendDate(tabId, newLineidx, item); // 可以防止在map中被覆盖
 						table.getItems().add(item);
 

@@ -122,6 +122,7 @@ public class CommonUtility {
 				if (CommonUtility.isNum(dbtype) 
 				&& !StrUtils.isNumeric(newValue) 
 				&& !"<null>".equals(newValue)) {
+					System.out.println("newStringPropertyChangeListener() : newValue= "+newValue+"set fail" );
 					Platform.runLater(() -> val.setValue(oldValue));
 					return;
 				}

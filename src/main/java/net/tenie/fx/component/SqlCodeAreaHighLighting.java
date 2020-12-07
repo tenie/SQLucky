@@ -15,7 +15,9 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
@@ -34,21 +36,24 @@ public class SqlCodeAreaHighLighting {
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new CodeArea();
 		codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea));
-		// 事件
-//		codeArea.setOnKeyReleased(e ->{
-//			e.consume();
-//		}); 
-		codeArea.setOnKeyPressed(CommonEventHandler.codeAreaChange(codeArea)); 
-		codeArea.accessibleTextProperty().addListener(
-				 new ChangeListener<String>() { 
-					@Override
-					public void changed(ObservableValue<? extends String> observable, String oldValue,
-							String newValue) {
-						System.out.println("newValue =" + newValue);
-						
+		// 事件KeyEvent
+		
+		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{ 
+			if(e.getCode() == KeyCode.TAB ) {
+				System.out.println("e.getCode() "+e.getCode() );
+				if (codeArea.getSelectedText().contains("\n") ) { 
+					e.consume();
+					if(e.isShiftDown()) {
+						CommonAction.minus4Space();
+					}else { 
+						CommonAction.add4Space();
 					}
-									}
-				);
+				}
+				
+			}
+		});
+ 
+		codeArea.setOnKeyPressed(CommonEventHandler.codeAreaChange(codeArea)); 
 		codeArea.replaceText(0, 0, sampleCode);
 		if (text != null)
 			codeArea.appendText(text);

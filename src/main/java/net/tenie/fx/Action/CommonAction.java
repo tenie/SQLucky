@@ -241,17 +241,19 @@ public class CommonAction {
 		}
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
-	
-	public static void addString(String str) { 
+	// 添加tab符号
+	public static void add4Space() { 
 		
-		String replaceStr1 = "\n"+str+" ";
-		String replaceStr2 = str+" ";
+		String replaceStr1 = "\n    ";
+		String replaceStr2 = "    ";
 		
 		CodeArea code = SqlEditor.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();
-
+		int begin = start;
+		int over = end;
+		
 		// 修正开始下标 , 获取开始之前的字符串, 找到最接近start 的换行符
 		String frontTxt = code.getText(0, start);
 		int lidx = frontTxt.lastIndexOf('\n'); // 找到最后一个换行符
@@ -263,9 +265,7 @@ public class CommonAction {
 		}
 		// 获取文本
 		String txt = code.getText(start, end);
-		System.out.println("txt = " + txt);
-		// 添加注释
-		if (!StrUtils.beginWith(txt.trim(), str)) {
+		System.out.println("txt = " + txt); 
 			String temp = "";
 			for (int t = 0; t < start; t++) {
 				temp += " ";
@@ -274,14 +274,76 @@ public class CommonAction {
 			txt = temp + replaceStr1 + txt;
 			System.out.println(txt);
 			int k = txt.indexOf('\n', 0);
+			int count  = 0;
 			while (k >= 0) {
+				count++;
 				code.insertText(k, replaceStr2);
 				k = txt.indexOf('\n', k + 1);
+			} 
+		code.selectRange(begin, over+ (count*4)); 
+	}
+	// 减少前置tab符号
+	public static void minus4Space() {  
+		CodeArea code = SqlEditor.getCodeArea();
+		IndexRange i = code.getSelection(); // 获取当前选中的区间
+		int start = i.getStart();
+		int end = i.getEnd(); 
+		
+		// 修正开始下标 , 获取开始之前的字符串, 找到最接近start 的换行符
+		String frontTxt = code.getText(0, start);
+		int lidx = frontTxt.lastIndexOf('\n'); // 找到最后一个换行符
+		if (lidx > 0) {
+			lidx = frontTxt.length() - lidx - 1; // 获取换行符的位置, 不包括换行符自己
+			start = start - lidx; // start的位置定位到最后一个换行符之后
+		} else { // 如果没有找到换行符, 说明在第一行, 把start置为0
+			start = 0;
+		}
+		// 获取文本
+		String txt = code.getText(start, end);
+		
+		String valStr = "";
+
+		String[] strArr = txt.split("\n");
+		String endtxt = "";
+		if (strArr.length > 0) {
+			endtxt = txt.substring(txt.length() - 1);
+			// 遍历每一行
+			for (String val : strArr) {
+				// 获取没有空格的纯字符串
+				String trimStr = val.trim();
+				// 找到纯字符串, 在原本行里的下标位置
+				int subscript  = val.indexOf(trimStr);
+//				下标为0 就是没有必要去除空格
+				if(subscript == 0) {
+					valStr += val + "\n";
+				}else { // 开始去除行的前4个空格
+					String SpaceStr  = val.substring(0, subscript);
+					// 如果有tab键就 换成4个空格
+					if(SpaceStr.contains("\t")) {
+						SpaceStr = SpaceStr.replaceAll("\t", "    ");
+					}
+					// 如果空格大于4个减去4个, 否则空格归零
+					if( SpaceStr.length() > 4) {
+						SpaceStr = SpaceStr.substring(3, SpaceStr.length());
+					}else {
+						SpaceStr = "";
+					} 
+					valStr += SpaceStr+ trimStr + "\n";
+				}
 			}
 		}
+		if (!"\n".equals(endtxt)) { // 去除最后一个换行符
+			valStr = valStr.substring(0, valStr.length() - 1);
+		}
+		// 将原文本删除
+		code.deleteText(start, end);
+		// 插入 注释过的文本
+		code.insertText(start, valStr);
 		
-	
+		code.selectRange(start, start+valStr.length()); 
+		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
+	
 	
 	// 代码添加注释-- 或去除注释
 	public static void addAnnotationSQLTextSelectText() {
