@@ -72,21 +72,26 @@ public class SelectDao {
 			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
 			int rn = rowNo++;
 			for (int i = 0; i < columnnums; i++) {
-				String field = fpo.get(i).getColumnLabel().get();
+//				String field = fpo.get(i).getColumnLabel().get();
 				int dbtype = fpo.get(i).getColumnType().get();
 				StringProperty val;
-				String temp = rs.getString(field);
-
-				if (temp == null) {
+				
+				Object obj = rs.getObject(i + 1);
+				if(obj == null) {
 					val = new SimpleStringProperty("<null>");
-				} else if (CommonUtility.isDateTime(dbtype)) {
-					java.sql.Timestamp ts = rs.getTimestamp(field);
-					Date d = new Date(ts.getTime());
-					String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
-					val = new SimpleStringProperty(v);
-				} else {
-					val = new SimpleStringProperty(temp);
+				}else {
+					if (CommonUtility.isDateTime(dbtype)) {
+						java.sql.Timestamp ts = rs.getTimestamp(i + 1);
+						Date d = new Date(ts.getTime());
+						String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
+						val = new SimpleStringProperty(v);
+					} else {
+						String temp = rs.getString(i+1);
+						val = new SimpleStringProperty(temp); 
+					}
 				}
+				
+				
 				CommonUtility.addStringPropertyChangeListener(val, rn, table.getId(), i, vals, dbtype);
 				vals.add(val);
 			}

@@ -19,6 +19,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
@@ -186,18 +187,34 @@ public class CommonEventHandler {
 		};
 	}
 
-	// 代码输入时, 修改tab 的名称加上* ,意味未保存
+	//TODO 代码输入时, 修改tab 的名称加上* ,意味未保存
 	public static EventHandler<KeyEvent> codeAreaChange(CodeArea code) {
 		return new EventHandler<KeyEvent>() {
 			public void handle(KeyEvent e) {
-				Tab tb = SqlEditor.mainTabPaneSelectedTab();
-				if (tb != null) {
-					String title = CommonUtility.tabText(tb);  
-					if (!title.endsWith("*")) { 
-						CommonUtility.setTabName(tb, title + "*");
+				 
+				
+				String s = e.getCode().getName();
+				KeyCode kc =  e.getCode();
+				if(	KeyCode.TAB == kc) {
+					e.consume();
+//					System.out.println(s);
+//					CommonAction.addString("\t");
+//					CodeArea code = SqlEditor.getCodeArea();
+//					code.getText()
+					
+					 
+				} else {
+//					System.out.println(s);
+					Tab tb = SqlEditor.mainTabPaneSelectedTab();
+					if (tb != null) {
+						String title = CommonUtility.tabText(tb);  
+						if (!title.endsWith("*")) { 
+							CommonUtility.setTabName(tb, title + "*");
+						}
+						SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 					}
-					SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 				}
+				
 
 			}
 		};
@@ -403,7 +420,7 @@ public class CommonEventHandler {
 		};
 	}
 
-	// 赋值选择的 行数据 插入到表格末尾
+	// 复制选择的 行数据 插入到表格末尾
 	public static EventHandler<Event> copyData(JFXButton btn) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
@@ -412,13 +429,13 @@ public class CommonEventHandler {
 
 				String tabId = table.getId();
 
-				String tabName = CacheTableDate.getTableName(tabId);
-				Connection conn = CacheTableDate.getDBConn(tabId);
+//				String tabName = CacheTableDate.getTableName(tabId);
+//				Connection conn = CacheTableDate.getDBConn(tabId);
 				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tabId);
 
 				ObservableList<ObservableList<StringProperty>> vals = ComponentGetter.dataTableViewSelectedItems();// table.getSelectionModel().getSelectedItems();
-				int seIdx = table.getSelectionModel().getSelectedIndex();
-				List<String> temp = new ArrayList<>();
+//				int seIdx = table.getSelectionModel().getSelectedIndex();
+//				List<String> temp = new ArrayList<>();
 
 				try {
 
@@ -428,7 +445,10 @@ public class CommonEventHandler {
 						// copy 一行
 						ObservableList<StringProperty> item = FXCollections.observableArrayList();
 						int newLineidx = ConfigVal.newLineIdx++;
-						for (StringProperty strp : sps) {
+//						for (StringProperty strp : sps) {
+						for (int j = 0 ; j < sps.size(); j++) {
+							StringProperty strp = sps.get(j);
+						 
 							StringProperty newsp = new SimpleStringProperty(strp.get());
 							CommonUtility.newStringPropertyChangeListener(newsp, fs.get(i).getColumnType().get());
 							item.add(newsp);

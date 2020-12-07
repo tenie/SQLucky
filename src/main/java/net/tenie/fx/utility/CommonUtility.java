@@ -50,9 +50,15 @@ public class CommonUtility {
 
 	// 判断数据库字段是否是数字类型
 	public static boolean isNum(int type) {
-		if (type == java.sql.Types.BIGINT || type == java.sql.Types.BIT || type == java.sql.Types.DECIMAL
-				|| type == java.sql.Types.DOUBLE || type == java.sql.Types.FLOAT || type == java.sql.Types.NUMERIC
-				|| type == java.sql.Types.REAL || type == java.sql.Types.TINYINT || type == java.sql.Types.SMALLINT
+		if (type == java.sql.Types.BIGINT 
+				|| type == java.sql.Types.BIT 
+				|| type == java.sql.Types.DECIMAL
+				|| type == java.sql.Types.DOUBLE 
+				|| type == java.sql.Types.FLOAT
+				|| type == java.sql.Types.NUMERIC
+				|| type == java.sql.Types.REAL 
+				|| type == java.sql.Types.TINYINT
+				|| type == java.sql.Types.SMALLINT
 				|| type == java.sql.Types.INTEGER) {
 			return true;
 		}
@@ -82,8 +88,7 @@ public class CommonUtility {
 		ChangeListener<String> cl = new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				System.out
-						.println("addStringPropertyChangeListener ：newValue：" + newValue + " | oldValue =" + oldValue);
+				System.out.println("addStringPropertyChangeListener ：newValue：" + newValue + " | oldValue =" + oldValue);
 				System.out.println("key ==" + tabId + "-" + rowNo);
 				System.out.println("observable = " + observable);
 				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
@@ -114,7 +119,9 @@ public class CommonUtility {
 		ChangeListener<String> cl = new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
+				if (CommonUtility.isNum(dbtype) 
+				&& !StrUtils.isNumeric(newValue) 
+				&& !"<null>".equals(newValue)) {
 					Platform.runLater(() -> val.setValue(oldValue));
 					return;
 				}

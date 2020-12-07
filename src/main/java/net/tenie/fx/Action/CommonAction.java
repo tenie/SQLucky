@@ -185,6 +185,104 @@ public class CommonAction {
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
 
+	public static void selectTextAddString() {
+		CodeArea code = SqlEditor.getCodeArea();
+		IndexRange i = code.getSelection(); // 获取当前选中的区间
+		int start = i.getStart();
+		int end = i.getEnd();
+
+		// 修正开始下标 , 获取开始之前的字符串, 找到最接近start 的换行符
+		String frontTxt = code.getText(0, start);
+		int lidx = frontTxt.lastIndexOf('\n'); // 找到最后一个换行符
+		if (lidx > 0) {
+			lidx = frontTxt.length() - lidx - 1; // 获取换行符的位置, 不包括换行符自己
+			start = start - lidx; // start的位置定位到最后一个换行符之后
+		} else { // 如果没有找到换行符, 说明在第一行, 把start置为0
+			start = 0;
+		}
+		// 获取文本
+		String txt = code.getText(start, end);
+		// 添加注释
+		if (!StrUtils.beginWith(txt.trim(), "--")) {
+			String temp = "";
+			for (int t = 0; t < start; t++) {
+				temp += " ";
+			}
+			txt = txt.replaceAll("\n", "\n-- ");
+			txt = temp + "\n-- " + txt;
+			System.out.println(txt);
+			int k = txt.indexOf('\n', 0);
+			while (k >= 0) {
+				code.insertText(k, "-- ");
+				k = txt.indexOf('\n', k + 1);
+			}
+		} else {// 去除注释
+			String valStr = "";
+
+			String[] strArr = txt.split("\n");
+			String endtxt = "";
+			if (strArr.length > 0) {
+				endtxt = txt.substring(txt.length() - 1);
+				for (String val : strArr) {
+					if (StrUtils.beginWith(val.trim(), "--")) {
+						valStr += val.replaceFirst("-- ", "") + "\n";
+					} else {
+						valStr += val + "\n";
+					}
+				}
+			}
+			if (!"\n".equals(endtxt)) { // 去除最后一个换行符
+				valStr = valStr.substring(0, valStr.length() - 1);
+			}
+			// 将原文本删除
+			code.deleteText(start, end);
+			// 插入 注释过的文本
+			code.insertText(start, valStr);
+		}
+		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+	}
+	
+	public static void addString(String str) { 
+		
+		String replaceStr1 = "\n"+str+" ";
+		String replaceStr2 = str+" ";
+		
+		CodeArea code = SqlEditor.getCodeArea();
+		IndexRange i = code.getSelection(); // 获取当前选中的区间
+		int start = i.getStart();
+		int end = i.getEnd();
+
+		// 修正开始下标 , 获取开始之前的字符串, 找到最接近start 的换行符
+		String frontTxt = code.getText(0, start);
+		int lidx = frontTxt.lastIndexOf('\n'); // 找到最后一个换行符
+		if (lidx > 0) {
+			lidx = frontTxt.length() - lidx - 1; // 获取换行符的位置, 不包括换行符自己
+			start = start - lidx; // start的位置定位到最后一个换行符之后
+		} else { // 如果没有找到换行符, 说明在第一行, 把start置为0
+			start = 0;
+		}
+		// 获取文本
+		String txt = code.getText(start, end);
+		System.out.println("txt = " + txt);
+		// 添加注释
+		if (!StrUtils.beginWith(txt.trim(), str)) {
+			String temp = "";
+			for (int t = 0; t < start; t++) {
+				temp += " ";
+			}
+			txt = txt.replaceAll("\n", replaceStr1);
+			txt = temp + replaceStr1 + txt;
+			System.out.println(txt);
+			int k = txt.indexOf('\n', 0);
+			while (k >= 0) {
+				code.insertText(k, replaceStr2);
+				k = txt.indexOf('\n', k + 1);
+			}
+		}
+		
+	
+	}
+	
 	// 代码添加注释-- 或去除注释
 	public static void addAnnotationSQLTextSelectText() {
 
