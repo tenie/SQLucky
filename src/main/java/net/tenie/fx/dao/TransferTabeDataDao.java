@@ -20,9 +20,8 @@ import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
 
 public class TransferTabeDataDao {
-	public static DbTableDatePo selectSql(Connection conn, String tableName, int limit,
-			FilteredTableView<ObservableList<StringProperty>> table) throws SQLException {
-		String sql = "select   *   from   "+tableName+"    where   1=1  ";
+	public static DbTableDatePo insertData(Connection conn, Connection toConn , String tableName,  String schename , String targetSchename) throws SQLException {
+		String sql = "select   *   from   "+schename+"."+tableName+"    where   1=1  ";
 		DbTableDatePo dpo = new DbTableDatePo();
 		// DB对象
 		PreparedStatement pstate = null;
@@ -49,7 +48,7 @@ public class TransferTabeDataDao {
 			}
 
 
-		execRs(rs, dpo, table);
+			execRs(toConn, rs, dpo, targetSchename+"."+tableName);
 			
 		} catch (SQLException e) {
 			throw e;
@@ -58,44 +57,59 @@ public class TransferTabeDataDao {
 				rs.close();
 		}
 		return dpo;
-	}
-//	private static String bulidUpdateSql(String tableName, ObservableList<SqlFieldPo> fpos) { }
+	} 
 	
-	private static void execRs( ResultSet rs, DbTableDatePo dpo,
-			FilteredTableView<ObservableList<StringProperty>> table) throws SQLException {
+	private static void execRs( Connection toConn ,ResultSet rs, DbTableDatePo dpo, String tableName) throws SQLException {
 		 
-		int rowNo = 0;
-		ObservableList<SqlFieldPo> fpo = dpo.getFields();
-		int columnnums = fpo.size();
-		while (rs.next()) {
-			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
-			int rn = rowNo++;
-			for (int i = 0; i < columnnums; i++) {
-//				String field = fpo.get(i).getColumnLabel().get();
-				int dbtype = fpo.get(i).getColumnType().get();
-				StringProperty val;
-				
-				Object obj = rs.getObject(i + 1);
-				if(obj == null) {
-					val = new SimpleStringProperty("<null>");
-				}else {
-					if (CommonUtility.isDateTime(dbtype)) {
-						java.sql.Timestamp ts = rs.getTimestamp(i + 1);
-						Date d = new Date(ts.getTime());
-						String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
-						val = new SimpleStringProperty(v);
-					} else {
-						String temp = rs.getString(i+1);
-						val = new SimpleStringProperty(temp); 
+		try {  
+//			DBTools.execDDL(tarConn, sql);
+			PreparedStatement pstmt = null;
+		
+			int rowNo = 0;
+			ObservableList<SqlFieldPo> fpo = dpo.getFields();
+			int columnnums = fpo.size();
+			while (rs.next()) {
+				ObservableList<StringProperty> vals = FXCollections.observableArrayList();
+				int rn = rowNo++;
+				for (int i = 0; i < columnnums; i++) {
+	//				String field = fpo.get(i).getColumnLabel().get();
+					int dbtype = fpo.get(i).getColumnType().get();
+					StringProperty val;
+					
+					Object obj = rs.getObject(i + 1);
+					if(obj == null) {
+						val = new SimpleStringProperty("<null>");
+					}else {
+						if (CommonUtility.isDateTime(dbtype)) {
+							java.sql.Timestamp ts = rs.getTimestamp(i + 1);
+							Date d = new Date(ts.getTime());
+							String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
+							val = new SimpleStringProperty(v);
+						} else {
+							String temp = rs.getString(i+1);
+							val = new SimpleStringProperty(temp); 
+						}
 					}
+					 vals.add(val);
+				} 
+				String  insertSql = GenerateSQLString.insertSQL(tableName, vals, fpo); 
+				System.out.println(insertSql);
+				try {
+					pstmt = toConn.prepareStatement(insertSql);
+					pstmt.execute();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw e;
+				} finally {
+					if (pstmt != null)
+						pstmt.close();
 				}
-				 vals.add(val);
+				 
 			}
-//Connection conn, String tableName, ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos
-			execInsert
-			dpo.addData(vals);
-
-			 
+			
+			
+		} catch (Exception e1) { 
+			e1.printStackTrace();
 		}
 	}
 

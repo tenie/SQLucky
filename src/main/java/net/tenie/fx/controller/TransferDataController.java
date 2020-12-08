@@ -36,6 +36,7 @@ import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
+import net.tenie.fx.dao.TransferTabeDataDao;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportDDL;
 import net.tenie.lib.po.DbConnectionPo;
@@ -285,49 +286,50 @@ public class TransferDataController implements Initializable {
 			
 			// 将要执行的sql集合
 			List<String> sqls = new ArrayList<>();
-			// 数据同步
-			if(tabData.isSelected()) { 
-				
-			}
+			
 			
 			if(tabStruct.isSelected()) {  
-				List<String>  vals = createSynSql( soConn , export, schename, TABLE );
+				List<String>  vals = createSynSql( soConn , export, schename, TABLE ,targetSchename);
 				sqls.addAll( vals );
 			}
 			
 			// 视图同步
 			if(chView.isSelected()) {
-				List<String>  vals = createSynSql( soConn , export, schename, VIEW );
+				List<String>  vals = createSynSql( soConn , export, schename, VIEW , targetSchename);
 				sqls.addAll( vals );
 			}
 			// 函数同步
 			if(chFun.isSelected()) {
-				List<String>  vals = createSynSql( soConn , export, schename, FUNCTION );
+				List<String>  vals = createSynSql( soConn , export, schename, FUNCTION  , targetSchename);
 				sqls.addAll( vals );
 			}
 			// 过程同步
 			if(chPro.isSelected()) {
-				List<String>  vals = createSynSql( soConn , export, schename, PROCEDURE );
+				List<String>  vals = createSynSql( soConn , export, schename, PROCEDURE  , targetSchename);
 				sqls.addAll( vals );
 			}
 			// 触发器同步
 			if(chTri.isSelected()) {
-				List<String>  vals = createSynSql( soConn , export, schename, TRIGGER );
+				List<String>  vals = createSynSql( soConn , export, schename, TRIGGER  , targetSchename);
 				sqls.addAll( vals );
 			}
 			// 索引同步
 			if(chIndex.isSelected()) {
-				List<String>  vals = createSynSql( soConn , export, schename, INDEX );
+				List<String>  vals = createSynSql( soConn , export, schename, INDEX  , targetSchename);
 				sqls.addAll( vals );
 			}
 			// 序列同步
 			if(chSeq.isSelected()) {
-				List<String>  vals = createSynSql( soConn , export, schename, SEQUENCE );
+				List<String>  vals = createSynSql( soConn , export, schename, SEQUENCE  , targetSchename);
 				sqls.addAll( vals );
 			}
 			
 			
-//			execSQL(sqls, tarConn);
+			execSQL(sqls, tarConn);
+			// 数据同步
+			if(tabData.isSelected()) { 
+				synTabData( soConn ,tarConn ,  export, schename , targetSchename);
+			}
 			
 		}
 		
@@ -336,7 +338,7 @@ public class TransferDataController implements Initializable {
 	
  
 	// 表 
-	private List<String> synTabData(Connection  soConn , ExportDDL export,  String schename ) {
+	private List<String> synTabData(Connection  soConn , Connection  toConn , ExportDDL export,  String schename , String targetSchename) {
 			boolean delObj = isDel.isSelected();
 			List<String> sqls = new ArrayList<>();
 			TreeItem<String> table = rootSubNode(TABLE);
@@ -344,18 +346,38 @@ public class TransferDataController implements Initializable {
 				ObservableList<CheckBoxTreeItem<String> > selectNodes = selectNode(table);
 				for(CheckBoxTreeItem<String> cb : selectNodes ) {
 //					System.out.println(cb.getValue());
-					String tableName = cb.getValue();
+					String tabName = cb.getValue();
 					// 删表语句
 					if(delObj) {
-						String del = "delete from schename."+tableName;
-//						System.out.println(drop);
-						sqls.add(del);
+						String tableName = targetSchename+"."+cb.getValue();
+						String del = "delete from "+tableName;
+						System.out.println(del);
+//						sqls.add(del);
+						PreparedStatement pstmt = null;
+						try {
+							pstmt = toConn.prepareStatement(del);
+							pstmt.execute();
+						} catch (SQLException e) {
+							e.printStackTrace(); 
+						} finally {
+							if (pstmt != null)
+								try {
+									pstmt.close();
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+						}
 					}
-					// 建表语句 
-					String ctab = export.exportCreateTable(  soConn , schename, tableName);
+					// 建表语句 TransferTabeDataDao
+//					String ctab = export.exportCreateTable(  soConn , schename, tableName);
 //					System.out.println(ctab);
-					sqls.add(ctab);
-					
+//					sqls.add(ctab);
+					try {
+						TransferTabeDataDao.insertData(soConn,  toConn, tabName, schename, targetSchename);
+					} catch (SQLException e) { 
+						e.printStackTrace();
+					}
 					
 				}
 			}
@@ -363,7 +385,7 @@ public class TransferDataController implements Initializable {
 		}
 	
 	// 试图
-	private List<String> createSynSql(Connection  soConn , ExportDDL export,  String schename, String nodeType ) {
+	private List<String> createSynSql(Connection  soConn , ExportDDL export,  String schename, String nodeType, String targetSchename ) {
 			boolean delObj = isDel.isSelected();
 			List<String> sqls = new ArrayList<>();
 			TreeItem<String> table = rootSubNode(nodeType);
@@ -373,12 +395,12 @@ public class TransferDataController implements Initializable {
 					String checkBoxName = cb.getValue();
 					//drop语句
 					if(delObj) {
-						String drop = getDropDDL(export, nodeType, schename, checkBoxName) ; 
+						String drop = getDropDDL(export, nodeType, schename, checkBoxName, targetSchename) ; 
 						System.out.println(drop);
 						sqls.add(drop);
 					}
 					// create语句
-					String create = getCreateDDL(soConn, export, nodeType, schename, checkBoxName);  
+					String create = getCreateDDL(soConn, export, nodeType, schename, checkBoxName, targetSchename);  
 					System.out.println(create);
 					sqls.add(create);
 					
@@ -390,7 +412,7 @@ public class TransferDataController implements Initializable {
 		 
 	
 	//TODO 获取drop 语句
-	private String  getDropDDL( ExportDDL export, String type, String schename, String objName) {
+	private String  getDropDDL( ExportDDL export, String type, String schename, String objName, String tarSchename) {
 		String drop = "";
 		if(type.equals(TABLE)) {
 			drop = export.exportDropTable(schename, objName);
@@ -401,11 +423,11 @@ public class TransferDataController implements Initializable {
 		}else if(type.equals(PROCEDURE)) {
 			drop =  export.exportDropProcedure(schename, objName);
 		}
-		
+		drop = drop.replaceAll(schename+"."+objName,  tarSchename+ "." + objName);
 		return drop;
 	}
 	//TODO 获取Create 语句
-	private String  getCreateDDL(Connection  conn, ExportDDL export, String type, String schename, String objName) {
+	private String  getCreateDDL(Connection  conn, ExportDDL export, String type, String schename, String objName, String tarSchename) {
 		String drop = "";
 		if(type.equals(TABLE)) {
 			drop = export.exportCreateTable(conn, schename, objName);
@@ -416,7 +438,7 @@ public class TransferDataController implements Initializable {
 		}else if(type.equals(PROCEDURE)) {
 			drop =  export.exportCreateProcedure(conn, schename, objName);
 		}
-		
+		drop = drop.replaceAll(schename+"."+objName,  tarSchename+ "." + objName);
 		return drop;
 	}
 		

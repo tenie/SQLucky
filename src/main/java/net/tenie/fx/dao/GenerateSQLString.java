@@ -8,8 +8,14 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class GenerateSQLString {
-	public static String insertSQL(String tableName, ObservableList<StringProperty> data,
-			ObservableList<SqlFieldPo> fpos) {
+	/**
+	 * 给一行数据到处insert 语句
+	 * @param tableName
+	 * @param data
+	 * @param fpos
+	 * @return
+	 */
+	public static String insertSQL(String tableName, ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos) {
 
 		StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
 		StringBuilder values = new StringBuilder("");
@@ -36,7 +42,7 @@ public class GenerateSQLString {
 			valstr = valstr.substring(0, values.length() - 1);
 		}
 
-		insert += " ) VALUES (" + valstr + ");\n";
+		insert += " ) VALUES (" + valstr + ") ";
 
 		return insert;
 	}
@@ -48,7 +54,7 @@ public class GenerateSQLString {
 			StringBuilder strb = new StringBuilder();
 			for (int i = 0; i < vals.size(); i++) {
 				ObservableList<StringProperty> vl = vals.get(i);
-				String rs = GenerateSQLString.insertSQL(tableName, vl, fs);
+				String rs = GenerateSQLString.insertSQL(tableName, vl, fs) + ";\n";
 				strb.append(rs);
 			}
 			String str = strb.toString();

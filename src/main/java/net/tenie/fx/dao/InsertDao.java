@@ -14,6 +14,16 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class InsertDao {
+	
+	/**
+	 * 提供一行表格数据, 做插入保存
+	 * @param conn			数据库连接
+	 * @param tableName		表
+	 * @param data			列的数据
+	 * @param fpos			列的数据字段类型
+	 * @return
+	 * @throws Exception
+	 */
 	public static String execInsert(Connection conn, String tableName, ObservableList<StringProperty> data,
 			ObservableList<SqlFieldPo> fpos) throws Exception {
 		String msg = "";
