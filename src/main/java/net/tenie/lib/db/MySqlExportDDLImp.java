@@ -291,44 +291,44 @@ public class MySqlExportDDLImp implements ExportDDL {
 
 	@Override
 	public String exportDropTable(String schema, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "DROP TABLE " + schema + "." + name.trim();
+		return sql;
 	}
 
 	@Override
 	public String exportDropView(String schema, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "DROP VIEW " + schema + "." + name.trim();
+		return sql;
 	}
 
 	@Override
-	public String exportDropFcuntion(String schema, String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public String exportDropFunction(String schema, String name) {
+		String sql = "DROP  FUNCTION " + schema + "." + name.trim();
+		return sql;
 	}
 
 	@Override
 	public String exportDropProcedure(String schema, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "DROP  PROCEDURE " + schema + "." + name.trim();
+		return sql;
 	}
 
 	@Override
 	public String exportDropIndex(String schema, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "DROP INDEX " + schema + "." + name.trim();
+		return sql;
 	}
 
 	@Override
 	public String exportDropSequence(String schema, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "DROP sequence " + schema + "." + name.trim() ;
+		return sql;
 	}
 
 	@Override
 	public String exportDropTrigger(String schema, String name) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "DROP TRIGGER " + schema + "." + name.trim();
+		return sql;
 	}
 
 	@Override

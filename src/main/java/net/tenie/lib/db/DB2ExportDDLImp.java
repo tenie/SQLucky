@@ -298,7 +298,7 @@ public class DB2ExportDDLImp implements ExportDDL {
 	}
 
 	@Override
-	public String exportDropFcuntion(String schema, String name) {
+	public String exportDropFunction(String schema, String name) {
 		String sql = "DROP  FUNCTION " + schema + "." + name.trim();
 		return sql;
 	}

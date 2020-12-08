@@ -65,7 +65,7 @@ public interface ExportDDL {
 
 	String exportDropView(String schema, String name);
 
-	String exportDropFcuntion(String schema, String name);
+	String exportDropFunction(String schema, String name);
 
 	String exportDropProcedure(String schema, String name);
 

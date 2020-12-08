@@ -69,9 +69,10 @@
          <children>
             <FlowPane prefHeight="95.0" prefWidth="601.0">
                <children>
-                  <Label text="查询" />
+                  <Label fx:id="queryLabel" text="查询" />
                   <TextField />
                   <Button fx:id="execBtn" mnemonicParsing="false" text="运行" />
+                  <Button fx:id="stopBtn" mnemonicParsing="false" text="stop" />
                </children>
             </FlowPane>
             <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" />

@@ -168,7 +168,7 @@ public class CommonFetchDBInfo {
 
 	// 删 函数
 	public String exportDropFcuntion(String schema, String name) {
-		String sql = exportDDL.exportDropFcuntion(schema, name);
+		String sql = exportDDL.exportDropFunction(schema, name);
 		return sql;
 	}
 
