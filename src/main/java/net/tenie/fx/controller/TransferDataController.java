@@ -350,24 +350,11 @@ public class TransferDataController implements Initializable {
 					// 删表语句
 					if(delObj) {
 						String tableName = targetSchename+"."+cb.getValue();
-						String del = "delete from "+tableName;
-						System.out.println(del);
-//						sqls.add(del);
-						PreparedStatement pstmt = null;
 						try {
-							pstmt = toConn.prepareStatement(del);
-							pstmt.execute();
-						} catch (SQLException e) {
-							e.printStackTrace(); 
-						} finally {
-							if (pstmt != null)
-								try {
-									pstmt.close();
-								} catch (SQLException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-						}
+							DBTools.execDelTab(toConn, tableName);
+						} catch (SQLException e) { 
+							e.printStackTrace();
+						} 
 					}
 					// 建表语句 TransferTabeDataDao
 //					String ctab = export.exportCreateTable(  soConn , schename, tableName);

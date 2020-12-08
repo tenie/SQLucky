@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -61,18 +62,17 @@ public class TransferTabeDataDao {
 	
 	private static void execRs( Connection toConn ,ResultSet rs, DbTableDatePo dpo, String tableName) throws SQLException {
 		 
-		try {  
-//			DBTools.execDDL(tarConn, sql);
-			PreparedStatement pstmt = null;
-		
-			int rowNo = 0;
+		Statement stmt = null;
+		try {
+			int idx = 0 ; 
 			ObservableList<SqlFieldPo> fpo = dpo.getFields();
 			int columnnums = fpo.size();
+			String  insertSql = "";
 			while (rs.next()) {
+				idx++;
 				ObservableList<StringProperty> vals = FXCollections.observableArrayList();
-				int rn = rowNo++;
+
 				for (int i = 0; i < columnnums; i++) {
-	//				String field = fpo.get(i).getColumnLabel().get();
 					int dbtype = fpo.get(i).getColumnType().get();
 					StringProperty val;
 					
@@ -92,24 +92,27 @@ public class TransferTabeDataDao {
 					}
 					 vals.add(val);
 				} 
-				String  insertSql = GenerateSQLString.insertSQL(tableName, vals, fpo); 
+			    insertSql = GenerateSQLString.insertSQL(tableName, vals, fpo); 
 				System.out.println(insertSql);
-				try {
-					pstmt = toConn.prepareStatement(insertSql);
-					pstmt.execute();
-				} catch (SQLException e) {
-					e.printStackTrace();
-					throw e;
-				} finally {
-					if (pstmt != null)
-						pstmt.close();
-				}
+			 
+				stmt = toConn.createStatement();
+				stmt.addBatch(insertSql); 
+				if( idx % 2500 == 0 ) { 
+					int[] count = stmt.executeBatch();
+					System.out.println("instert = "+count.length);
+				}  
 				 
 			}
 			
-			
+			if( idx % 2500 >  0 ) { 
+				int[] count = stmt.executeBatch();
+				System.out.println("instert = "+count.length);
+			} 
 		} catch (Exception e1) { 
 			e1.printStackTrace();
+		}finally {
+			if (stmt != null)
+				stmt.close();
 		}
 	}
 
