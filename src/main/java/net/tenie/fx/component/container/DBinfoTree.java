@@ -221,6 +221,34 @@ public class DBinfoTree {
 				System.out.println(sqlStr);
 				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
 
+			} // trigger
+			else if (parentItem.getValue().getType() != null
+					&& parentItem.getValue().getType() == TreeItemType.TRIGGER_ROOT) {
+				DbConnectionPo dpo = item.getValue().getConnpo();
+				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
+				String sqlStr = fpt.getDdl();// DBOptionHelper.getProceduresSQL(dpo, item.getValue().getName());
+				
+				if(StrUtils.isNullOrEmpty(sqlStr)) { 
+					sqlStr = dpo.getExportDDL().exportCreateTrigger(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					if(StrUtils.isNullOrEmpty(sqlStr)) fpt.setDdl(sqlStr);
+				}
+				System.out.println(sqlStr);
+				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
+
+			}// index
+			else if (parentItem.getValue().getType() != null
+					&& parentItem.getValue().getType() == TreeItemType.INDEX_ROOT) {
+				DbConnectionPo dpo = item.getValue().getConnpo();
+				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
+				String sqlStr = fpt.getDdl();// DBOptionHelper.getProceduresSQL(dpo, item.getValue().getName());
+				
+				if(StrUtils.isNullOrEmpty(sqlStr)) { 
+					sqlStr = dpo.getExportDDL().exportCreateIndex(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					if(StrUtils.isNullOrEmpty(sqlStr)) fpt.setDdl(sqlStr);
+				}
+				System.out.println(sqlStr);
+				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
+
 			}
 
 		}

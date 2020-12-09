@@ -149,14 +149,23 @@ public class DB2ExportDDLImp implements ExportDDL {
 	@Override
 	public List<FuncProcTriggerPo> allTriggerObj(Connection conn, String schema) {
 		try {
-			// 函数名称
-			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
-			if (vals != null && vals.size() > 0) {
-				vals.forEach(v -> {
-					String ddl = exportCreateTrigger(conn, schema, v.getName());
-					v.setDdl(ddl);
-				});
-			}
+			// 名称
+			 List<String> names = fdb2.getTriggers(conn, schema);
+			 List<FuncProcTriggerPo> vals = new ArrayList<>();
+			 for(String name : names) {
+				    FuncProcTriggerPo po = new FuncProcTriggerPo();
+					po.setName(name);
+					po.setSchema(schema);
+					vals.add(po);
+			 }
+			
+//			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
+//			if (vals != null && vals.size() > 0) {
+//				vals.forEach(v -> {
+//					String ddl = exportCreateTrigger(conn, schema, v.getName());
+//					v.setDdl(ddl);
+//				});
+//			}
 
 			return vals;
 		} catch (Exception e) {
@@ -177,6 +186,7 @@ public class DB2ExportDDLImp implements ExportDDL {
 			for(String name : names ) {
 				FuncProcTriggerPo po = new FuncProcTriggerPo();
 				po.setName(name);
+				po.setSchema(schema);
 				vals.add(po);
 			}
 //			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
@@ -197,7 +207,7 @@ public class DB2ExportDDLImp implements ExportDDL {
 
 	@Override
 	public List<String> allIndexName(Connection conn, String schema) {
-		return fdb2.exportAllIndexs(conn, schema);
+		return fdb2.getIndexs(conn, schema);
 	}
 
 	@Override

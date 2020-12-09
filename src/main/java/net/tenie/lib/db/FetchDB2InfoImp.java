@@ -671,7 +671,9 @@ public class FetchDB2InfoImp {
 	}
 
 	public List<String> getTriggers(Connection conn, String schema) {
-		String select = "select NAME  \n" + "FROM  SYSIBM.SYSTRIGGERS    \n" + "WHERE					   \n"
+		String select = "select NAME  \n" 
+				+ "FROM  SYSIBM.SYSTRIGGERS    \n" 
+				+ "WHERE					   \n"
 				+ "    SCHEMA = '" + schema + "'";
 		List<String> ls = execSQL(conn, select);
 		return ls;
