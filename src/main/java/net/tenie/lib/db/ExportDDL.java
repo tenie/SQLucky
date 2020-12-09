@@ -24,6 +24,8 @@ public interface ExportDDL {
 	List<FuncProcTriggerPo> allProcedureObj(Connection conn, String schema);
 
 	List<FuncProcTriggerPo> allTriggerObj(Connection conn, String schema);
+	List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema);
+//	List<FuncProcTriggerPo> allTriggerObj(Connection conn, String schema);
 
 	List<String> allIndexName(Connection conn, String schema);
 

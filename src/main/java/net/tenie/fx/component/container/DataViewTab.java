@@ -54,6 +54,16 @@ public class DataViewTab {
 		CommonAction.showDetailPane();
 		ComponentGetter.dataTab.getSelectionModel().select(tb);
 	}
+	
+	public static void showEmptyPanel(String title, String message) {
+		Tab tb = createTab(title); 
+		VBox box = CreateDDLBox(message);
+		tb.setContent(box);
+
+		ComponentGetter.dataTab.getTabs().add(tb);
+		CommonAction.showDetailPane();
+//		ComponentGetter.dataTab.getSelectionModel().select(tb);
+	}
 
 	// 数据tab中的组件
 		public static VBox CreateDDLBox(String ddl) {
@@ -91,6 +101,7 @@ public class DataViewTab {
 		closeAll.setOnAction(e -> {
 			int size = ComponentGetter.dataTab.getTabs().size();
 			ComponentGetter.dataTab.getTabs().remove(0, size);
+			CommonAction.hideBottom();
 		});
 
 		MenuItem closeOther = new MenuItem("Close Other");

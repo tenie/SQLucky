@@ -96,7 +96,7 @@ public class RunSQLHelper {
 			}
 
 		} catch (Exception e) {
-			Platform.runLater(() -> {
+			Platform.runLater(() -> { 
 				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
 			});
 			e.printStackTrace();
@@ -104,7 +104,7 @@ public class RunSQLHelper {
 			rmWaitingPane(waitTb);
 			settingBtn();
 		}
-
+		
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
@@ -122,37 +122,38 @@ public class RunSQLHelper {
 			sqlstr = allsqls.get(i);
 			sql = StrUtils.trimComment(sqlstr, "--");
 			int type = ParseSQL.parseType(sql);
-			if (type == ParseSQL.SELECT) {
-				selectAction(sql, conn);
-			} else {
-				String msg = "";
-				try {
-					if (type == ParseSQL.UPDATE) {
-						msg = DmlDdlDao.updateSql2(conn, sql);
-						System.out.println("add update sql: " + sql);
-					} else if (type == ParseSQL.INSERT) {
-						msg = DmlDdlDao.insertSql2(conn, sql);
-						System.out.println("add insert sql: " + sql);
-					} else if (type == ParseSQL.DELETE) {
-						msg = DmlDdlDao.deleteSql2(conn, sql);
-						System.out.println("add DELETE sql: " + sql);
-					} else if (type == ParseSQL.DROP) {
-						msg = DmlDdlDao.dropSql2(conn, sql);
-						System.out.println("add DROP sql: " + sql);
-					} else if (type == ParseSQL.ALTER) {
-						msg = DmlDdlDao.alterSql2(conn, sql);
-						System.out.println("add ALTER sql: " + sql);
-					} else if (type == ParseSQL.CREATE) {
-						msg = DmlDdlDao.createSql2(conn, sql);
-						System.out.println("add CREATE sql: " + sql);
-					} else {
-						msg = DmlDdlDao.otherSql2(conn, sql);
-						System.out.println("add OTEHR sql: " + sql);
-					}
-
-				} catch (Exception e) {
-					msg = "failed : " + e.getMessage();
+			String msg = "";
+			try {
+				if (type == ParseSQL.SELECT) {
+					  selectAction(sql, conn); 
+				} else { 
+						if (type == ParseSQL.UPDATE) {
+							msg = DmlDdlDao.updateSql2(conn, sql);
+							System.out.println("add update sql: " + sql);
+						} else if (type == ParseSQL.INSERT) {
+							msg = DmlDdlDao.insertSql2(conn, sql);
+							System.out.println("add insert sql: " + sql);
+						} else if (type == ParseSQL.DELETE) {
+							msg = DmlDdlDao.deleteSql2(conn, sql);
+							System.out.println("add DELETE sql: " + sql);
+						} else if (type == ParseSQL.DROP) {
+							msg = DmlDdlDao.dropSql2(conn, sql);
+							System.out.println("add DROP sql: " + sql);
+						} else if (type == ParseSQL.ALTER) {
+							msg = DmlDdlDao.alterSql2(conn, sql);
+							System.out.println("add ALTER sql: " + sql);
+						} else if (type == ParseSQL.CREATE) {
+							msg = DmlDdlDao.createSql2(conn, sql);
+							System.out.println("add CREATE sql: " + sql);
+						} else {
+							msg = DmlDdlDao.otherSql2(conn, sql);
+							System.out.println("add OTEHR sql: " + sql);
+						}
 				}
+			} catch (Exception e) {
+				msg = "failed : " + e.getMessage();
+			}
+			if(StrUtils.isNotNullOrEmpty(msg)) {
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
 				val.add(new SimpleStringProperty(msg));
 				val.add(new SimpleStringProperty(sqlstr));
@@ -180,11 +181,11 @@ public class RunSQLHelper {
 	}
 
 	// select action 选中的sql执行
-	private static void selectAction(String sql, Connection conn) {
+	private static void selectAction(String sql, Connection conn) throws Exception {
 		selectAction(sql, conn, -1);
 	}
 
-	private static void selectAction(String sql, Connection conn, int tidx) {
+	private static void selectAction(String sql, Connection conn, int tidx) throws Exception {
 		try {
 			DataTabDataPo tdpo = new DataTabDataPo();
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
@@ -211,6 +212,7 @@ public class RunSQLHelper {
 				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
 			});
 			e.printStackTrace();
+			throw e;
 		}
 	}
 

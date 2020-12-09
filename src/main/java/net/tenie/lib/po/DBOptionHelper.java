@@ -105,6 +105,29 @@ public class DBOptionHelper {
 
 		return val;
 	}
+	
+	// 返回 指定schema中所有的 INDEX
+	static public List<FuncProcTriggerPo> getIndexs(DbConnectionPo po, String schemasName, boolean isNew) {
+		Map<String, DbSchemaPo> map = po.getSchemas();
+		DbSchemaPo spo = map.get(schemasName);
+		List<FuncProcTriggerPo> val = null;
+		if (isNew || spo != null) {
+			val = spo.getTriggers();
+			if (isNew || val == null) {
+				try {
+					val = po.getExportDDL().allIndexObj(po.getConn(), schemasName);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				spo.setTriggers(val);
+			}
+		}
+
+		return val;
+	}
+		
+	
+	
 
 //	 获取表的建表语句
 	public static String getCreateTableSQL(DbConnectionPo cp, String schema, String tab) {

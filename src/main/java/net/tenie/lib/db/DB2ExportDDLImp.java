@@ -107,12 +107,12 @@ public class DB2ExportDDLImp implements ExportDDL {
 		try {
 			// 函数名称
 			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllFunctions(conn, schema);
-			if (vals != null && vals.size() > 0) {
-				vals.forEach(v -> {
-					String ddl = exportCreateFunction(conn, schema, v.getName());
-					v.setDdl(ddl);
-				});
-			}
+//			if (vals != null && vals.size() > 0) {
+//				vals.forEach(v -> {
+//					String ddl = exportCreateFunction(conn, schema, v.getName());
+//					v.setDdl(ddl);
+//				});
+//			}
 
 			return vals;
 		} catch (Exception e) {
@@ -127,14 +127,14 @@ public class DB2ExportDDLImp implements ExportDDL {
 	@Override
 	public List<FuncProcTriggerPo> allProcedureObj(Connection conn, String schema) {
 		try {
-			// 函数名称
+			// 名称
 			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllProcedures(conn, schema);
-			if (vals != null && vals.size() > 0) {
-				vals.forEach(v -> {
-					String ddl = exportCreateProcedure(conn, schema, v.getName());
-					v.setDdl(ddl);
-				});
-			}
+//			if (vals != null && vals.size() > 0) {
+//				vals.forEach(v -> {
+//					String ddl = exportCreateProcedure(conn, schema, v.getName());
+//					v.setDdl(ddl);
+//				});
+//			}
 
 			return vals;
 		} catch (Exception e) {
@@ -164,6 +164,36 @@ public class DB2ExportDDLImp implements ExportDDL {
 		}
 		return null;
 	}
+	
+	/**
+	 * 索引
+	 */
+	@Override
+	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
+		try {
+			// 名称
+			List<String> names = allIndexName(conn, schema);
+			List<FuncProcTriggerPo> vals = new ArrayList<>();
+			for(String name : names ) {
+				FuncProcTriggerPo po = new FuncProcTriggerPo();
+				po.setName(name);
+				vals.add(po);
+			}
+//			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
+//			if (vals != null && vals.size() > 0) {
+//				vals.forEach(v -> {
+//					String ddl = exportCreateTrigger(conn, schema, v.getName());
+//					v.setDdl(ddl);
+//				});
+//			}
+
+			return vals;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 
 	@Override
 	public List<String> allIndexName(Connection conn, String schema) {

@@ -303,5 +303,11 @@ public class H2ExportDDLImp implements ExportDDL {
 		return null;
 	}
 
+	@Override
+	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	
 }

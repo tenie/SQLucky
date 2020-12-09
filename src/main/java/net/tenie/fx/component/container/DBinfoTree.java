@@ -198,6 +198,12 @@ public class DBinfoTree {
 				DbConnectionPo dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl();// DBOptionHelper.getFunctionSQL(dpo, item.getValue().getName());
+				
+				if(StrUtils.isNullOrEmpty(sqlStr)) { 
+					sqlStr = dpo.getExportDDL().exportCreateFunction(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					if(StrUtils.isNullOrEmpty(sqlStr)) fpt.setDdl(sqlStr);
+				}
+				
 				sqlStr = SqlFormatter.format(sqlStr);
 				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
 
@@ -207,6 +213,11 @@ public class DBinfoTree {
 				DbConnectionPo dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl();// DBOptionHelper.getProceduresSQL(dpo, item.getValue().getName());
+				
+				if(StrUtils.isNullOrEmpty(sqlStr)) { 
+					sqlStr = dpo.getExportDDL().exportCreateProcedure(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					if(StrUtils.isNullOrEmpty(sqlStr)) fpt.setDdl(sqlStr);
+				}
 				System.out.println(sqlStr);
 				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
 

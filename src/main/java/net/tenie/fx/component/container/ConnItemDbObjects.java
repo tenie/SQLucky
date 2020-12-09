@@ -33,6 +33,14 @@ public class ConnItemDbObjects {
 	private TreeItem<TreeNodePo> procNode;
 	private ObservableList<TreeItem<TreeNodePo>> procItem;
 	
+	private TreeItem<TreeNodePo> triggerNode;
+	private ObservableList<TreeItem<TreeNodePo>> triggerItem;
+	
+	private TreeItem<TreeNodePo> indexNode;
+	private ObservableList<TreeItem<TreeNodePo>> indexItem;
+	
+	
+	
 	private DbConnectionPo connpo;
 
 	public ConnItemDbObjects () {
@@ -45,6 +53,8 @@ public class ConnItemDbObjects {
 		viewNode = CreateViewNode();
 		funcNode= CreateFunctionNode();
 		procNode= CreateProceduresNode();
+		triggerNode = CreateTriggerNode();
+		indexNode = CreateTriggerNode();
  
 		// 新数据对象的一些初始化操作
 		TreeItem<TreeNodePo> cinewParentNode = new TreeItem<>(new TreeNodePo( schemaName, TreeItemType.SCHEMA,
@@ -59,20 +69,6 @@ public class ConnItemDbObjects {
 
 	}
 	 
-
-	// 渲染 默认连接节点
-//	public void showConnNode(DbConnectionPo connpo , String schemaName) {
-////		String defSch = connpo.getDefaultSchema();
-////		setSchemaNode(CreateSchemaNode(connpo));
-//		setTableNode(CreateTableNode(connpo, connpo.getDefaultSchema()));
-//		setViewNode(CreateViewNode(connpo, connpo.getDefaultSchema()));
-//		setFuncNode(CreateFunctionNode(connpo, connpo.getDefaultSchema()));
-//		setProcNode(CreateProceduresNode(connpo, connpo.getDefaultSchema()));
-////		moveDefaultNodeToTopAddTable(defSch, schemaNode, tableNode, viewNode, funcNode, procNode);
-//	    parentNode = new TreeItem<>(new TreeNodePo("Table", TreeItemType.TABLE_ROOT,
-//				ImageViewGenerator.svgImage("window-restore", "blue"), connpo));
-//	}
-//	
 	// 构造一个有数据的对象
 	public void createConnItem(DbConnectionPo connpo , String schemaName) {
 
@@ -82,6 +78,10 @@ public class ConnItemDbObjects {
 		procNode = CreateProceduresNode(connpo, schemaName);
 		setProcNode(CreateProceduresNode(connpo, schemaName));
 		
+		triggerNode = CreateTriggerNode(connpo, schemaName);
+		 
+		indexNode = CreateIndexNode(connpo, schemaName);
+		//book-perspective
 		
 		parentNode = new TreeItem<>(new TreeNodePo(schemaName, TreeItemType.SCHEMA,
 	    		ImageViewGenerator.svgImage("database", "#7CFC00 ") , connpo));
@@ -90,6 +90,9 @@ public class ConnItemDbObjects {
 		parentNode.getChildren().add(viewNode);
 		parentNode.getChildren().add(funcNode);
 		parentNode.getChildren().add(procNode);
+		parentNode.getChildren().add(triggerNode);
+		parentNode.getChildren().add(indexNode);
+		
 	}
 	
 	
@@ -189,6 +192,45 @@ public class ConnItemDbObjects {
 	public   TreeItem<TreeNodePo> CreateProceduresNode() {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Procedure", TreeItemType.PROCEDURE_ROOT,
 				ImageViewGenerator.svgImage("puzzle-piece", "blue"), connpo));
+		 
+		return Table;
+	}
+	// 创建trigger节点
+	
+	public   TreeItem<TreeNodePo> CreateTriggerNode( ) {
+		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Trigger", TreeItemType.TRIGGER_ROOT,
+				ImageViewGenerator.svgImage("gears", "blue"), connpo));
+	 
+		return Table;
+	}
+	
+	// 触发器
+	public   TreeItem<TreeNodePo> CreateTriggerNode(DbConnectionPo connpo, String sche) {
+		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Trigger", TreeItemType.TRIGGER_ROOT,
+				ImageViewGenerator.svgImage("originals-ray-gun", "blue"), connpo));
+		List<FuncProcTriggerPo> vals = DBOptionHelper.getTriggers(connpo, sche, true); // connpo.getProcedures(sche);
+
+		addFuncTreeItem(Table, vals, "originals-ray-gun", TreeItemType.TRIGGER, connpo);
+
+		return Table;
+	}
+	
+
+	
+	// 索引
+	public   TreeItem<TreeNodePo> CreateIndexNode(DbConnectionPo connpo, String sche) {
+		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Index", TreeItemType.INDEX_ROOT,
+				ImageViewGenerator.svgImage("book-perspective", "blue"), connpo));
+		List<FuncProcTriggerPo> vals = DBOptionHelper.getProcedures(connpo, sche, true); // connpo.getProcedures(sche);
+
+		addFuncTreeItem(Table, vals, "book-perspective", TreeItemType.INDEX, connpo);
+
+		return Table;
+	}
+	
+	public   TreeItem<TreeNodePo> CreateIndexNode() {
+		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Index", TreeItemType.INDEX_ROOT,
+				ImageViewGenerator.svgImage("book-perspective", "blue"), connpo));
 		 
 		return Table;
 	}
