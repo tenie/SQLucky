@@ -17,19 +17,33 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 
 public class DataTransferWindow {
-	
+	Stage stage;
 	public DataTransferWindow() {
 //		CreateModalWindow();
-		showFxml("/fxml/transferData.fxml");
+		if(stage == null ) {
+			showFxml("/fxml/transferData.fxml");
+		}else {
+			stage.show();
+		}
+			
+	}
+	
+	public void show() {
+		if(stage == null ) {
+			showFxml("/fxml/transferData.fxml");
+		}else {
+			stage.show();
+		}
 	}
 	
 	// 根据给定的fxml 创建 模态框
 	public void showFxml(    String fxml) {
 
 		try {
-			final Stage stage = new Stage();
+		    stage = new Stage();
 			stage.initModality(Modality.APPLICATION_MODAL);
 //			stage.initOwner(stg);
 			stage.setTitle("Top Stage With Modality");
@@ -37,8 +51,13 @@ public class DataTransferWindow {
 			URL url = getClass().getResource(fxml);
 			Parent root = FXMLLoader.load(url);
 			Scene scene = new Scene(root);
+			scene.getStylesheets().addAll(ConfigVal.cssList);
 			stage.setScene(scene);
 			stage.show();
+			stage.setOnCloseRequest(ev->{
+				stage.hide();
+				ev.consume();
+			});
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

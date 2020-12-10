@@ -63,7 +63,9 @@ public class TransferTabeDataDao {
 	private static void execRs( Connection toConn ,ResultSet rs, DbTableDatePo dpo, String tableName) throws SQLException {
 		 
 		Statement stmt = null;
+		int execLine = 500;
 		try {
+			stmt = toConn.createStatement();
 			int idx = 0 ; 
 			ObservableList<SqlFieldPo> fpo = dpo.getFields();
 			int columnnums = fpo.size();
@@ -92,19 +94,19 @@ public class TransferTabeDataDao {
 					}
 					 vals.add(val);
 				} 
-			    insertSql = GenerateSQLString.insertSQL(tableName, vals, fpo); 
-				System.out.println(insertSql);
-			 
-				stmt = toConn.createStatement();
+			    insertSql = GenerateSQLString.insertSQL(tableName, vals, fpo);  
+				
 				stmt.addBatch(insertSql); 
-				if( idx % 2500 == 0 ) { 
+				if( idx % execLine == 0 ) { 
+					System.out.println(insertSql);
 					int[] count = stmt.executeBatch();
 					System.out.println("instert = "+count.length);
 				}  
 				 
 			}
 			
-			if( idx % 2500 >  0 ) { 
+			if( idx % execLine >  0 ) { 
+				System.out.println(insertSql);
 				int[] count = stmt.executeBatch();
 				System.out.println("instert = "+count.length);
 			} 
@@ -114,6 +116,10 @@ public class TransferTabeDataDao {
 			if (stmt != null)
 				stmt.close();
 		}
+	}
+	
+	public static void main(String[] args) {
+		System.out.println(100%100);
 	}
 
 }

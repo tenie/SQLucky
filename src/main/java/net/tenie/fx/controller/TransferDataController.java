@@ -14,6 +14,7 @@ import org.controlsfx.control.CheckTreeView;
 
 import com.jfoenix.controls.JFXComboBox;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -34,6 +35,7 @@ import javafx.scene.layout.Priority;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.dao.TransferTabeDataDao;
@@ -113,7 +115,9 @@ public class TransferDataController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		queryLabel.setGraphic(ImageViewGenerator.svgImageUnactive("search"));
-		
+//		execBtn.getStyleClass().add("my-run-btn");
+//		execBtn.setStyle("-fx-background-color: green");
+		 
 		soDB.setItems(DBConns.getChoiceBoxItems());
 		taDB.setItems(DBConns.getChoiceBoxItems());
 //		soDB.setItems( getConnComboBoxList()); 
@@ -236,9 +240,18 @@ public class TransferDataController implements Initializable {
 		
 		//TODO 执行按钮
 		execBtn.setOnAction(e->{
+			execBtn.setDisable(true);
+			execBtn.getStyleClass().add("my-run-btn");
+			stopBtn.getStyleClass().add("my-stop-btn");  
 			currentThread = new Thread() {
 				public void run() {
 					runBtnAction();
+					Platform.runLater(() -> { 
+						execBtn.setDisable(false); 
+						execBtn.getStyleClass().remove("my-run-btn");
+						stopBtn.getStyleClass().remove("my-stop-btn");
+					});
+					
 				};
 			};
 			currentThread.start();
@@ -246,6 +259,9 @@ public class TransferDataController implements Initializable {
 		stopBtn.setOnAction(e->{
 			if(currentThread != null) {
 				currentThread.stop();
+				execBtn.setDisable(false);
+				execBtn.getStyleClass().remove("my-run-btn");
+				stopBtn.getStyleClass().remove("my-stop-btn");
 			}
 		});
 

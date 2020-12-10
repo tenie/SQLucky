@@ -20,7 +20,7 @@ public class MenuBarContainer {
 	private Menu mnEdit;
 	private Menu mnTools;
 	private Menu mnHelp;
-
+	private DataTransferWindow dtw;
 	public MenuBarContainer() {
 		mainMenuBar = new MenuBar();
 		mnfile = createFileMenu();
@@ -190,7 +190,12 @@ public class MenuBarContainer {
 		MenuItem dataTransfer = new MenuItem(MenuItemNameFormat("Data TransFer"));
 		dataTransfer.setGraphic(ImageViewGenerator.svgImageUnactive("mfglabs-random"));
 		dataTransfer.setOnAction(value -> {
-			DataTransferWindow dtw = new DataTransferWindow();
+			//TODO 
+			if(dtw == null ) {
+				 dtw = new DataTransferWindow();
+			}
+			dtw.show();
+			
 		});
 		mn.getItems().addAll(dataTransfer, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn, closeALlConn, deleteConn, new SeparatorMenuItem(),
 				hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem());

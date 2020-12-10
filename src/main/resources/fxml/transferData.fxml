@@ -6,9 +6,9 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="457.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.fx.controller.TransferDataController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="601.0" styleClass="myModalDialog" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.fx.controller.TransferDataController">
    <children>
-      <Pane prefHeight="38.0" prefWidth="601.0">
+      <Pane prefHeight="38.0" prefWidth="601.0" styleClass="myModalDialog">
          <children>
             <Label layoutX="17.0" layoutY="3.0" text="数据库同步" />
          </children>
@@ -65,9 +65,9 @@
             <Insets bottom="10.0" left="10.0" />
          </VBox.margin>
       </GridPane>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
          <children>
-            <FlowPane prefHeight="95.0" prefWidth="601.0">
+            <FlowPane prefHeight="24.0" prefWidth="601.0">
                <children>
                   <Label fx:id="queryLabel" text="查询" />
                   <TextField />
@@ -75,7 +75,7 @@
                   <Button fx:id="stopBtn" mnemonicParsing="false" text="stop" />
                </children>
             </FlowPane>
-            <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" />
+            <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" VBox.vgrow="ALWAYS" />
          </children>
       </VBox>
    </children>

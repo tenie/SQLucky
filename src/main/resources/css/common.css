@@ -2,9 +2,30 @@
 .my-tag{
 	
 }
+
+.my-run-btn{
+	 -fx-background-color: #008000;
+}
+.my-stop-btn{
+	 -fx-background-color: red;
+}
+
+
+.myModalDialog {
+ /* -fx-border-color: #4C708C;  */
+ -fx-background-color: #3C3F41;
+}
+
+GridPane {
+ /* -fx-border-color: #4C708C;  */
+ -fx-background-color: #3C3F41;
+}
+
+/*
 .mainWindow{
 	 -fx-background-color: red; 
 }
+*/
 
 .myAlert {
  -fx-border-color: #4C708C; 
