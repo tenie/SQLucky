@@ -10,30 +10,20 @@ import net.tenie.lib.po.TablePo;
  *  
  */
 public interface ExportDDL {
+ 
 
-	List<TablePo> allTableName(Connection conn, String schema);
-
-	List<TablePo> allTableObj(Connection conn, String schema);
-
-	List<TablePo> allViewObj(Connection conn, String schema);
-
-	List<TablePo> allViewName(Connection conn, String schema);
-
-	List<FuncProcTriggerPo> allFunctionObj(Connection conn, String schema);
-
-	List<FuncProcTriggerPo> allProcedureObj(Connection conn, String schema);
-
+	List<TablePo> allTableObj(Connection conn, String schema); 
+	List<TablePo> allViewObj(Connection conn, String schema); 
+	List<FuncProcTriggerPo> allFunctionObj(Connection conn, String schema); 
+	List<FuncProcTriggerPo> allProcedureObj(Connection conn, String schema); 
 	List<FuncProcTriggerPo> allTriggerObj(Connection conn, String schema);
 	List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema);
-//	List<FuncProcTriggerPo> allTriggerObj(Connection conn, String schema);
+	List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema); 
 
-	List<String> allIndexName(Connection conn, String schema);
-
-	List<String> allSequenceName(Connection conn, String schema);
-
-	List<String> allForeignKeyName(Connection conn, String schema);
-
-	List<String> allPrimaryKeyName(Connection conn, String schema);
+	List<FuncProcTriggerPo> allPrimaryKeyObj(Connection conn, String schema); 
+	List<FuncProcTriggerPo> allForeignKeyObj(Connection conn, String schema); 
+ 
+ 
 
 	String exportCreateTable(Connection conn, String schema, String obj);
 

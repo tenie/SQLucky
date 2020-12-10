@@ -15,7 +15,7 @@ public class DBOptionHelper {
 			tbs = spo.getTabs();
 			if (isNew || tbs == null) {
 				try {
-					tbs = po.getExportDDL().allTableName(po.getConn(), schemasName);
+					tbs = po.getExportDDL().allTableObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -35,7 +35,7 @@ public class DBOptionHelper {
 			views = spo.getViews();
 			if (isNew || views == null) {
 				try {
-					views = po.getExportDDL().allViewName(po.getConn(), schemasName);
+					views = po.getExportDDL().allViewObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -126,7 +126,7 @@ public class DBOptionHelper {
 		return val;
 	}
 	
-	// 返回 指定schema中所有的 INDEX
+	// 返回 指定schema中所有的 Sequence
 	static public List<FuncProcTriggerPo> getSequences(DbConnectionPo po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
@@ -135,7 +135,7 @@ public class DBOptionHelper {
 			val = spo.getTriggers();
 			if (isNew || val == null) {
 				try {
-					val = po.getExportDDL().allIndexObj(po.getConn(), schemasName);
+					val = po.getExportDDL().allSequenceObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

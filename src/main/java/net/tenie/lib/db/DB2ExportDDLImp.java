@@ -13,24 +13,15 @@ import net.tenie.lib.po.TablePo;
 public class DB2ExportDDLImp implements ExportDDL {
 
 	private FetchDB2InfoImp fdb2;
-
-	private List<TablePo> allTableObjs = new ArrayList<>();
-	private List<TablePo> allViewObjs = new ArrayList<>();
+//
+//	private List<TablePo> allTableObjs = new ArrayList<>();
+//	private List<TablePo> allViewObjs = new ArrayList<>();
 
 	public DB2ExportDDLImp() {
 		fdb2 = new FetchDB2InfoImp();
 	}
 
-	@Override
-	public List<TablePo> allTableName(Connection conn, String schema) {
-		List<TablePo> vals = null;
-		try {
-			vals = Dbinfo.fetchAllTableName(conn, schema);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return vals;
-	}
+	 
 
 	/**
 	 * 导出所有表对象, 属性: 表名, 字段, 主键, ddl
@@ -39,24 +30,24 @@ public class DB2ExportDDLImp implements ExportDDL {
 	public List<TablePo> allTableObj(Connection conn, String schema) {
 		try {
 			List<TablePo> vals = Dbinfo.fetchAllTableName(conn, schema);
-			if (vals != null && vals.size() > 0) {
-				vals.stream().forEach(v -> {
-					try {
-						// 表对象字段赋值
-						Dbinfo.fetchTableInfo(conn, v);
-						// 表对象 主键赋值
-						Dbinfo.fetchTablePrimaryKeys(conn, v);
-						// 表对象ddl语句
-						String ddl = fdb2.createTab(v);
-						v.setDdl(ddl);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-				});
-			}
+//			if (vals != null && vals.size() > 0) {
+//				vals.stream().forEach(v -> {
+//					try {
+//						// 表对象字段赋值
+////						Dbinfo.fetchTableInfo(conn, v);
+//						// 表对象 主键赋值
+////						Dbinfo.fetchTablePrimaryKeys(conn, v);
+//						// 表对象ddl语句
+////						String ddl = fdb2.createTab(v);
+////						v.setDdl(ddl);
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//
+//				});
+//			}
 			// 缓存数据
-			allTableObjs = vals;
+//			allTableObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,14 +63,14 @@ public class DB2ExportDDLImp implements ExportDDL {
 		try {
 			// 获取视图名称
 			List<TablePo> vals = Dbinfo.fetchAllViewName(conn, schema);
-			if (vals != null && vals.size() > 0) {
-				vals.stream().forEach(v -> {
-					// 视图ddl
-					String ddl = exportCreateView(conn, schema, v.getTableName());
-					v.setDdl(ddl);
-				});
-			}
-			allViewObjs = vals;
+//			if (vals != null && vals.size() > 0) {
+//				vals.stream().forEach(v -> {
+//					// 视图ddl
+//					String ddl = exportCreateView(conn, schema, v.getTableName());
+//					v.setDdl(ddl);
+//				});
+//			}
+//			allViewObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -87,18 +78,7 @@ public class DB2ExportDDLImp implements ExportDDL {
 		return null;
 	}
 
-	@Override
-	public List<TablePo> allViewName(Connection conn, String schema) {
-		try {
-			// 获取视图名称
-			List<TablePo> vals = Dbinfo.fetchAllViewName(conn, schema);
-			return vals;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
+ 
 	/**
 	 * 函数对象
 	 */
@@ -181,7 +161,7 @@ public class DB2ExportDDLImp implements ExportDDL {
 	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
 		try {
 			// 名称
-			List<String> names = allIndexName(conn, schema);
+			List<String> names = fdb2.getIndexs(conn, schema);
 			List<FuncProcTriggerPo> vals = new ArrayList<>();
 			for(String name : names ) {
 				FuncProcTriggerPo po = new FuncProcTriggerPo();
@@ -189,13 +169,6 @@ public class DB2ExportDDLImp implements ExportDDL {
 				po.setSchema(schema);
 				vals.add(po);
 			}
-//			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
-//			if (vals != null && vals.size() > 0) {
-//				vals.forEach(v -> {
-//					String ddl = exportCreateTrigger(conn, schema, v.getName());
-//					v.setDdl(ddl);
-//				});
-//			}
 
 			return vals;
 		} catch (Exception e) {
@@ -204,28 +177,66 @@ public class DB2ExportDDLImp implements ExportDDL {
 		return null;
 	}
 	
-
+	/**
+	 * 序列
+	 */
 	@Override
-	public List<String> allIndexName(Connection conn, String schema) {
-		return fdb2.getIndexs(conn, schema);
+	public List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema) {
+		try {
+			// 名称
+//			fdb2.getSeq(conn, schema)
+			List<String> names =fdb2.getSeq(conn, schema);
+			List<FuncProcTriggerPo> vals = new ArrayList<>();
+			for(String name : names ) {
+				FuncProcTriggerPo po = new FuncProcTriggerPo();
+				po.setName(name);
+				po.setSchema(schema);
+				vals.add(po);
+			}
+
+			return vals;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	@Override
+	public List<FuncProcTriggerPo> allPrimaryKeyObj(Connection conn, String schema) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	@Override
-	public List<String> allSequenceName(Connection conn, String schema) {
-		return fdb2.exportAllSeqs(conn, schema);
-	}
+
 
 	@Override
-	public List<String> allForeignKeyName(Connection conn, String schema) {
-		return fdb2.exportAllForeignKeys(conn, schema);
+	public List<FuncProcTriggerPo> allForeignKeyObj(Connection conn, String schema) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	@Override
-	public List<String> allPrimaryKeyName(Connection conn, String schema) {
-		// TODO 先不需要
-		List<String> vals = new ArrayList<String>();
-		return vals;
-	}
+
+//	@Override
+//	public List<String> allIndexName(Connection conn, String schema) {
+//		return fdb2.getIndexs(conn, schema);
+//	}
+//
+//	@Override
+//	public List<String> allSequenceName(Connection conn, String schema) {
+//		return fdb2.exportAllSeqs(conn, schema);
+//	}
+//
+//	@Override
+//	public List<String> allForeignKeyName(Connection conn, String schema) {
+//		return fdb2.exportAllForeignKeys(conn, schema);
+//	}
+//
+//	@Override
+//	public List<String> allPrimaryKeyName(Connection conn, String schema) {
+//		// TODO 先不需要
+//		List<String> vals = new ArrayList<String>();
+//		return vals;
+//	}
 
 	// 表对象ddl语句
 	@Override
@@ -378,5 +389,12 @@ public class DB2ExportDDLImp implements ExportDDL {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+	
+
+
+	
 
 }

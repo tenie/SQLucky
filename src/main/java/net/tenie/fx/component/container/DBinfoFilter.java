@@ -122,38 +122,66 @@ public class DBinfoFilter {
 						
 						// 开始查找, 从表开始
 						 ObservableList<TreeItem<TreeNodePo>> 
-						 val =  filter( ci.getTableItem() , queryStr); 
-						 sz =  val.size();
-						 //如果找到来数据, 将数据放入到新的数据对象中
-						 if(sz > 0) {
-							 cinew.getTableNode().getChildren().setAll(val);
-							 cinew.getParentNode().getChildren().add( cinew.getTableNode());
-							 count += val.size();
-						 }
+//						 val =  filter( ci.getTableItem() , queryStr); 
+						 val =  filter(  ci.getTableNode().getChildren() , queryStr); 
 						
+						 sz =  val.size();
+						// 如果找到来数据, 将数据放入到新的数据对象中
+						if (sz > 0) {
+							cinew.getTableNode().getChildren().setAll(val);
+							cinew.getParentNode().getChildren().add(cinew.getTableNode());
+							count += val.size();
+						}
+
+						val = filter(ci.getViewNode().getChildren(), queryStr);
+						sz = val.size();
+						if (sz > 0) {
+							cinew.getViewNode().getChildren().setAll(val);
+							cinew.getParentNode().getChildren().add(cinew.getViewNode());
+							count += val.size();
+						}
+
+						val = filter(ci.getFuncNode().getChildren(), queryStr);
+						sz = val.size();
+						if (sz > 0) {
+							cinew.getFuncNode().getChildren().setAll(val);
+							cinew.getParentNode().getChildren().add(cinew.getFuncNode());
+							count += val.size();
+						}
+						val = filter(ci.getProcNode().getChildren(), queryStr);
+						sz = val.size();
+						if (sz > 0) {
+							cinew.getProcNode().getChildren().setAll(val);
+							cinew.getParentNode().getChildren().add(cinew.getProcNode());
+							count += val.size();
+						}
+						
+						val = filter(ci.getTriggerNode().getChildren(), queryStr);
+						sz = val.size();
+						if (sz > 0) {
+							cinew.getTriggerNode().getChildren().setAll(val);
+							cinew.getParentNode().getChildren().add(cinew.getTriggerNode());
+							count += val.size();
+						}
+						
+						val = filter(ci.getIndexNode().getChildren(), queryStr);
+						sz = val.size();
+						if (sz > 0) {
+							cinew.getIndexNode().getChildren().setAll(val);
+							cinew.getParentNode().getChildren().add(cinew.getIndexNode());
+							count += val.size();
+						}
+						
+						val = filter(ci.getSequenceNode().getChildren(), queryStr);
+						sz = val.size();
+						if (sz > 0) {
+							cinew.getSequenceNode().getChildren().setAll(val);
+							cinew.getParentNode().getChildren().add(cinew.getSequenceNode());
+							count += val.size();
+						}
 						 
-						 val =  filter( ci.getViewItem() , queryStr);
-						 sz =  val.size();
-						 if(sz > 0) {
-							 cinew.getViewNode().getChildren().setAll(val);
-							 cinew.getParentNode().getChildren().add( cinew.getViewNode());
-							 count += val.size();
-						 }
 						 
-						 val =  filter( ci.getFuncItem() , queryStr);
-						 sz =  val.size();
-						 if(sz > 0) {
-							 cinew.getFuncNode().getChildren().setAll(val);
-							 cinew.getParentNode().getChildren().add( cinew.getFuncNode());
-							 count += val.size();
-						 }
-						 val =  filter( ci.getProcItem() , queryStr);
-						 sz =  val.size();
-						 if(sz > 0) {
-							 cinew.getProcNode().getChildren().setAll(val);
-							 cinew.getParentNode().getChildren().add( cinew.getProcNode());
-							 count += val.size();
-						 }
+						 
 						 
 						 // 如果找到了数据, 将新的数据对象, 放入schema数据对象
 						 if(count > 0 ) {

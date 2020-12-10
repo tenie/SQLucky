@@ -21,26 +21,19 @@ public class ConnItemDbObjects {
 	private TreeItem<TreeNodePo> parentNode;
 	private String schemaName;
 	
-	private TreeItem<TreeNodePo> tableNode;
-	private ObservableList<TreeItem<TreeNodePo>> tableItem;
+	private TreeItem<TreeNodePo> tableNode; 
 
-	private TreeItem<TreeNodePo> viewNode;
-	private ObservableList<TreeItem<TreeNodePo>> viewItem;
+	private TreeItem<TreeNodePo> viewNode; 
 
-	private TreeItem<TreeNodePo> funcNode;
-	private ObservableList<TreeItem<TreeNodePo>> funcItem;
+	private TreeItem<TreeNodePo> funcNode; 
 
-	private TreeItem<TreeNodePo> procNode;
-	private ObservableList<TreeItem<TreeNodePo>> procItem;
+	private TreeItem<TreeNodePo> procNode; 
 	
-	private TreeItem<TreeNodePo> triggerNode;
-	private ObservableList<TreeItem<TreeNodePo>> triggerItem;
+	private TreeItem<TreeNodePo> triggerNode; 
 	
-	private TreeItem<TreeNodePo> indexNode;
-	private ObservableList<TreeItem<TreeNodePo>> indexItem;
+	private TreeItem<TreeNodePo> indexNode; 
 	
-	private TreeItem<TreeNodePo> sequenceNode;
-	private ObservableList<TreeItem<TreeNodePo>> sequenceItem;
+	private TreeItem<TreeNodePo> sequenceNode; 
 	
 	
 	
@@ -242,7 +235,7 @@ public class ConnItemDbObjects {
 	public   TreeItem<TreeNodePo> CreateSequenceNode(DbConnectionPo connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Sequence", TreeItemType.SEQUENCE_ROOT,
 				ImageViewGenerator.svgImage("foundation-die-six", "blue"), connpo));
-		List<FuncProcTriggerPo> vals = DBOptionHelper.getIndexs(connpo, sche, true); // connpo.getProcedures(sche);
+		List<FuncProcTriggerPo> vals = DBOptionHelper.getSequences(connpo, sche, true); // connpo.getProcedures(sche);
 
 		addFuncTreeItem(Table, vals, "foundation-die-six", TreeItemType.SEQUENCE, connpo);
 
@@ -320,9 +313,6 @@ public class ConnItemDbObjects {
 	}
 
 	public void setTableNode(TreeItem<TreeNodePo> tableNode) {
-		ObservableList<TreeItem<TreeNodePo>> ls = FXCollections.observableArrayList();
-		ls.addAll(tableNode.getChildren());
-		this.tableItem = ls;
 		this.tableNode = tableNode;
 	}
 
@@ -331,9 +321,6 @@ public class ConnItemDbObjects {
 	}
 
 	public void setViewNode(TreeItem<TreeNodePo> viewNode) {
-		ObservableList<TreeItem<TreeNodePo>> ls = FXCollections.observableArrayList();
-		ls.addAll(viewNode.getChildren());
-		this.viewItem = ls;
 		this.viewNode = viewNode;
 	}
 
@@ -342,10 +329,6 @@ public class ConnItemDbObjects {
 	}
 
 	public void setFuncNode(TreeItem<TreeNodePo> funcNode) {
-		ObservableList<TreeItem<TreeNodePo>> ls = FXCollections.observableArrayList();
-		ls.addAll(funcNode.getChildren());
-		this.funcItem = ls;
-
 		this.funcNode = funcNode;
 	}
 
@@ -354,44 +337,10 @@ public class ConnItemDbObjects {
 	}
 
 	public void setProcNode(TreeItem<TreeNodePo> procNode) {
-		ObservableList<TreeItem<TreeNodePo>> ls = FXCollections.observableArrayList();
-		ls.addAll(procNode.getChildren());
-		this.procItem = ls;
-
 		this.procNode = procNode;
 	}
 
-	public ObservableList<TreeItem<TreeNodePo>> getTableItem() {
-		return tableItem;
-	}
-
-	public void setTableItem(ObservableList<TreeItem<TreeNodePo>> tableItem) {
-		this.tableItem = tableItem;
-	}
-
-	public ObservableList<TreeItem<TreeNodePo>> getViewItem() {
-		return viewItem;
-	}
-
-	public void setViewItem(ObservableList<TreeItem<TreeNodePo>> viewItem) {
-		this.viewItem = viewItem;
-	}
-
-	public ObservableList<TreeItem<TreeNodePo>> getFuncItem() {
-		return funcItem;
-	}
-
-	public void setFuncItem(ObservableList<TreeItem<TreeNodePo>> funcItem) {
-		this.funcItem = funcItem;
-	}
-
-	public ObservableList<TreeItem<TreeNodePo>> getProcItem() {
-		return procItem;
-	}
-
-	public void setProcItem(ObservableList<TreeItem<TreeNodePo>> procItem) {
-		this.procItem = procItem;
-	}
+	
 
 	public TreeItem<TreeNodePo> getParentNode() {
 		return parentNode;
@@ -414,5 +363,26 @@ public class ConnItemDbObjects {
 	public void setConnpo(DbConnectionPo connpo) {
 		this.connpo = connpo;
 	}
+	public TreeItem<TreeNodePo> getTriggerNode() {
+		return triggerNode;
+	}
+	public void setTriggerNode(TreeItem<TreeNodePo> triggerNode) {
+		this.triggerNode = triggerNode;
+	}
+	 
+	public TreeItem<TreeNodePo> getIndexNode() {
+		return indexNode;
+	}
+	public void setIndexNode(TreeItem<TreeNodePo> indexNode) {
+		this.indexNode = indexNode;
+	}
+	 
+	public TreeItem<TreeNodePo> getSequenceNode() {
+		return sequenceNode;
+	}
+	public void setSequenceNode(TreeItem<TreeNodePo> sequenceNode) {
+		this.sequenceNode = sequenceNode;
+	}
+	 
 
 }

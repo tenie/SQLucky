@@ -125,9 +125,9 @@ public class CommonFetchDBInfo {
 	}
 
 	// 所有序列 名称
-	public List<String> exportAllSequenceName(Connection conn, String schema) {
-		return exportDDL.allSequenceName(conn, schema);
-	}
+//	public List<String> exportAllSequenceName(Connection conn, String schema) {
+//		return exportDDL.allSequenceName(conn, schema);
+//	}
 
 //	// 所有触发器名称
 	public List<FuncProcTriggerPo> exportAllTrigger(Connection conn, String schema) {
@@ -145,14 +145,14 @@ public class CommonFetchDBInfo {
 	}
 
 	// 所有主键名称
-	public List<String> exportAllPrimaryKeyName(Connection conn, String schema) {
-		return exportDDL.allPrimaryKeyName(conn, schema);
-	}
+//	public List<String> exportAllPrimaryKeyName(Connection conn, String schema) {
+//		return exportDDL.allPrimaryKeyName(conn, schema);
+//	}
 
 	// 所有外键名称
-	public List<String> exportAllForeignKeyName(Connection conn, String schema) {
-		return exportDDL.allPrimaryKeyName(conn, schema);
-	}
+//	public List<String> exportAllForeignKeyName(Connection conn, String schema) {
+//		return exportDDL.allPrimaryKeyName(conn, schema);
+//	}
 
 	// 删表
 	public String exportDropTable(String schema, String name) throws SQLException {

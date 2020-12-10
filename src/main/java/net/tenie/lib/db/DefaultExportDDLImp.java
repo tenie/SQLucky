@@ -19,17 +19,7 @@ public class DefaultExportDDLImp implements ExportDDL {
 	public DefaultExportDDLImp() { 
 		fdb2  =new FetchDB2InfoImp(); 
 	}
-	 
-	@Override
-	public List<TablePo> allTableName(Connection conn, String schema ){
-		List<TablePo> vals = null;
-		try {
-			vals = Dbinfo.fetchAllTableName(conn, schema);
-		} catch (Exception e) { 
-			e.printStackTrace();
-		}
-		return vals;
-	}
+ 
 	/**
 	 * 导出所有表对象, 属性: 表名, 字段, 主键, ddl
 	 */
@@ -78,18 +68,6 @@ public class DefaultExportDDLImp implements ExportDDL {
 				}); 
 			} 
 			allViewObjs = vals;
-			return vals;
-		} catch (Exception e) { 
-			e.printStackTrace();
-		}
-		return null; 
-	}
-	
-	@Override
-	public List<TablePo> allViewName(Connection conn, String schema ){
-		try {
-			// 获取视图名称
-			List<TablePo> vals =  Dbinfo.fetchAllViewName(conn, schema); 
 			return vals;
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -164,28 +142,28 @@ public class DefaultExportDDLImp implements ExportDDL {
 	}
  
 
-	@Override
-	public List<String> allIndexName(Connection conn, String schema) {
-		return fdb2.exportAllIndexs(conn, schema); 
-	}
-
-	@Override
-	public List<String> allSequenceName(Connection conn, String schema) {
-		return fdb2.exportAllSeqs(conn, schema); 
-	}
-
-	
-	@Override
-	public List<String> allForeignKeyName(Connection conn, String schema) {
-		return fdb2.exportAllForeignKeys(conn, schema); 
-	}
-
-	@Override
-	public List<String> allPrimaryKeyName(Connection conn, String schema) {
-		//TODO 先不需要
-		List<String> vals = new ArrayList<String>();
-		return vals;
-	}
+//	@Override
+//	public List<String> allIndexName(Connection conn, String schema) {
+//		return fdb2.exportAllIndexs(conn, schema); 
+//	}
+//
+//	@Override
+//	public List<String> allSequenceName(Connection conn, String schema) {
+//		return fdb2.exportAllSeqs(conn, schema); 
+//	}
+//
+//	
+//	@Override
+//	public List<String> allForeignKeyName(Connection conn, String schema) {
+//		return fdb2.exportAllForeignKeys(conn, schema); 
+//	}
+//
+//	@Override
+//	public List<String> allPrimaryKeyName(Connection conn, String schema) {
+//		//TODO 先不需要
+//		List<String> vals = new ArrayList<String>();
+//		return vals;
+//	}
 
 	
 	
@@ -344,6 +322,24 @@ public class DefaultExportDDLImp implements ExportDDL {
 
 	@Override
 	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<FuncProcTriggerPo> allPrimaryKeyObj(Connection conn, String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<FuncProcTriggerPo> allForeignKeyObj(Connection conn, String schema) {
 		// TODO Auto-generated method stub
 		return null;
 	}

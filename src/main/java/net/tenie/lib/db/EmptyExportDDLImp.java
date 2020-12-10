@@ -10,12 +10,7 @@ import net.tenie.lib.po.TablePo;
  */
 public class EmptyExportDDLImp implements ExportDDL {
 
-	@Override
-	public List<TablePo> allTableName(Connection conn, String schema) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	 
 	@Override
 	public List<TablePo> allTableObj(Connection conn, String schema) {
 		// TODO Auto-generated method stub
@@ -24,12 +19,6 @@ public class EmptyExportDDLImp implements ExportDDL {
 
 	@Override
 	public List<TablePo> allViewObj(Connection conn, String schema) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<TablePo> allViewName(Connection conn, String schema) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -52,29 +41,6 @@ public class EmptyExportDDLImp implements ExportDDL {
 		return null;
 	}
 
-	@Override
-	public List<String> allIndexName(Connection conn, String schema) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> allSequenceName(Connection conn, String schema) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> allForeignKeyName(Connection conn, String schema) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<String> allPrimaryKeyName(Connection conn, String schema) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public String exportCreateTable(Connection conn, String schema, String obj) {
@@ -217,6 +183,24 @@ public class EmptyExportDDLImp implements ExportDDL {
 
 	@Override
 	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<FuncProcTriggerPo> allPrimaryKeyObj(Connection conn, String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<FuncProcTriggerPo> allForeignKeyObj(Connection conn, String schema) {
 		// TODO Auto-generated method stub
 		return null;
 	}
