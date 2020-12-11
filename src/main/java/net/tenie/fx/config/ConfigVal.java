@@ -29,6 +29,8 @@ public class ConfigVal {
 	// new line date idx
 	public static volatile int newLineIdx = Integer.MIN_VALUE;
 
+	// 图标
+	public static String appIcon = "/image/SQL6.png";
 	public static List<String> cssList = new ArrayList<>();
 	static {
 

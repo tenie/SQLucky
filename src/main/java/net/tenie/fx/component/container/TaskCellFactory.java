@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.ComponentGetter;
 
 /*   @author tenie */
 public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<TreeNodePo>> {
@@ -90,11 +91,18 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 
 	// 发现拖动
 	private void dragDetected(MouseEvent event, TreeCell<TreeNodePo> treeCell, TreeView<TreeNodePo> treeView) {
+		System.out.println("dragDetected");
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
-		if (draggedItem.getParent() == null)
+		if (draggedItem.getParent() == null) {
+			ComponentGetter.dragTreeItemName = "";
 			return;
+		}else {
+			ComponentGetter.dragTreeItemName =  draggedItem.getValue().getName();
+			System.out.println("ComponentGetter.dragTreeItemName =" +ComponentGetter.dragTreeItemName);
+		}
+			
 		Dragboard db = treeCell.startDragAndDrop(TransferMode.MOVE);
 
 		ClipboardContent content = new ClipboardContent();
@@ -102,9 +110,22 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 		db.setContent(content);
 		db.setDragView(treeCell.snapshot(null, null));
 		event.consume();
+	
 	}
 
 	private void dragOver(DragEvent event, TreeCell<TreeNodePo> treeCell, TreeView<TreeNodePo> treeView) {
+		System.out.println("dragOver");
+		System.out.println( event.getSceneX());
+		System.out.println( event.getScreenX());
+		System.out.println( event.getX());
+		
+		ComponentGetter.mainTabPane.getHeight();
+		ComponentGetter.mainTabPane.getWidth();
+		ComponentGetter.mainTabPane.getLayoutX();
+		ComponentGetter.mainTabPane.getLayoutY();
+		ComponentGetter.mainTabPane.getScaleX();
+		System.out.println( ComponentGetter.mainTabPane.getScaleX()+ " | "+ ComponentGetter.mainTabPane.getWidth());
+		
 		if (!event.getDragboard().hasContent(JAVA_FORMAT))
 			return;
 		TreeItem<TreeNodePo> thisItem = treeCell.getTreeItem();
@@ -124,9 +145,13 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 			this.dropZone = treeCell;
 			dropZone.setStyle(DROP_HINT_STYLE);
 		}
+		
+		 
 	}
 
+	// 放下后执行
 	private void drop(DragEvent event, TreeCell<TreeNodePo> treeCell, TreeView<TreeNodePo> treeView) {
+		System.out.println("drop");
 		Dragboard db = event.getDragboard();
 		boolean success = false;
 		if (!db.hasContent(JAVA_FORMAT))
@@ -153,6 +178,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 	}
 
 	private void clearDropLocation() {
+		System.out.println("clearDropLocation");
 		if (dropZone != null)
 			dropZone.setStyle("");
 	}

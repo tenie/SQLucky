@@ -3,11 +3,20 @@
 	
 }
 
-.my-run-btn{
+
+.transfer-run-btn{
 	 -fx-background-color: #008000;
 }
-.my-stop-btn{
+.transfer-stop-btn{
 	 -fx-background-color: red;
+}
+
+.transfer-btn{
+	-fx-border-color: #333333; 
+}
+
+CheckBoxTreeItem{
+	-fx-checked-color: red; 
 }
 
 

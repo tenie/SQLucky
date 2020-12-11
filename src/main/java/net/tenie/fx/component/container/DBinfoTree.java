@@ -161,34 +161,30 @@ public class DBinfoTree {
 				//TODO 
 			}
 			// 表格
-			else if (parentItem.getValue().getType() != null
-					&& parentItem.getValue().getType() == TreeItemType.TABLE_ROOT) {
+			else if (parentItem.getValue().getType() != null && 
+					 parentItem.getValue().getType() == TreeItemType.TABLE_ROOT) {
 				DbConnectionPo dpo = item.getValue().getConnpo();
 				TablePo table = item.getValue().getTable();
 				String createTableSql = table.getDdl();
 				if (StrUtils.isNullOrEmpty(createTableSql)) {
 					createTableSql = DBOptionHelper.getCreateTableSQL(dpo, table.getTableSchema(),
 							table.getTableName());
+					createTableSql = SqlFormatter.format(createTableSql);
 					table.setDdl(createTableSql);
 				}
-				// table.getDdl();//
-				createTableSql = SqlFormatter.format(createTableSql);
 				DataViewTab.showDdlPanel(item.getValue().getName(), createTableSql);
-
 			}
 			// 视图
-			else if (parentItem.getValue().getType() != null
-					&& parentItem.getValue().getType() == TreeItemType.VIEW_ROOT) {
-				DbConnectionPo dpo = item.getValue().getConnpo();
-				TablePo viewtable = item.getValue().getTable();
+			else if (parentItem.getValue().getType() != null && 
+					 parentItem.getValue().getType() == TreeItemType.VIEW_ROOT) {
+				DbConnectionPo dpo = item.getValue().getConnpo(); 
 				TablePo table = item.getValue().getTable();
 				String sqlStr = table.getDdl();
 				if (StrUtils.isNullOrEmpty(sqlStr)) {
 					sqlStr = DBOptionHelper.getViewSQL(dpo, table.getTableSchema(), table.getTableName());
+					sqlStr = SqlFormatter.format(sqlStr);
 					table.setDdl(sqlStr);
 				}
-
-				sqlStr = SqlFormatter.format(sqlStr);
 				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
 
 			}
@@ -197,14 +193,14 @@ public class DBinfoTree {
 					&& parentItem.getValue().getType() == TreeItemType.FUNCTION_ROOT) {
 				DbConnectionPo dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
-				String sqlStr = fpt.getDdl();// DBOptionHelper.getFunctionSQL(dpo, item.getValue().getName());
-				
+				String sqlStr = fpt.getDdl();
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
 					sqlStr = dpo.getExportDDL().exportCreateFunction(dpo.getConn(), fpt.getSchema(), fpt.getName());
-					if(StrUtils.isNullOrEmpty(sqlStr)) fpt.setDdl(sqlStr);
+					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
+						sqlStr = SqlFormatter.format(sqlStr);
+						fpt.setDdl(sqlStr);
+					}
 				}
-				
-				sqlStr = SqlFormatter.format(sqlStr);
 				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
 
 			} // 过程
@@ -212,13 +208,15 @@ public class DBinfoTree {
 					&& parentItem.getValue().getType() == TreeItemType.PROCEDURE_ROOT) {
 				DbConnectionPo dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
-				String sqlStr = fpt.getDdl();// DBOptionHelper.getProceduresSQL(dpo, item.getValue().getName());
+				String sqlStr = fpt.getDdl(); 
 				
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
 					sqlStr = dpo.getExportDDL().exportCreateProcedure(dpo.getConn(), fpt.getSchema(), fpt.getName());
-					if(StrUtils.isNullOrEmpty(sqlStr)) fpt.setDdl(sqlStr);
+					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
+						sqlStr = SqlFormatter.format(sqlStr);
+						fpt.setDdl(sqlStr);
+					}
 				}
-				System.out.println(sqlStr);
 				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
 
 			} // trigger
@@ -226,13 +224,14 @@ public class DBinfoTree {
 					&& parentItem.getValue().getType() == TreeItemType.TRIGGER_ROOT) {
 				DbConnectionPo dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
-				String sqlStr = fpt.getDdl();// DBOptionHelper.getProceduresSQL(dpo, item.getValue().getName());
-				
+				String sqlStr = fpt.getDdl(); 
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
 					sqlStr = dpo.getExportDDL().exportCreateTrigger(dpo.getConn(), fpt.getSchema(), fpt.getName());
-					if(StrUtils.isNullOrEmpty(sqlStr)) fpt.setDdl(sqlStr);
-				}
-				System.out.println(sqlStr);
+					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
+						sqlStr = SqlFormatter.format(sqlStr);
+						fpt.setDdl(sqlStr);
+					}
+				} 
 				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
 
 			}// index
@@ -240,13 +239,29 @@ public class DBinfoTree {
 					&& parentItem.getValue().getType() == TreeItemType.INDEX_ROOT) {
 				DbConnectionPo dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
-				String sqlStr = fpt.getDdl();// DBOptionHelper.getProceduresSQL(dpo, item.getValue().getName());
-				
+				String sqlStr = fpt.getDdl(); 
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
 					sqlStr = dpo.getExportDDL().exportCreateIndex(dpo.getConn(), fpt.getSchema(), fpt.getName());
-					if(StrUtils.isNullOrEmpty(sqlStr)) fpt.setDdl(sqlStr);
+					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
+						sqlStr = SqlFormatter.format(sqlStr);
+						fpt.setDdl(sqlStr);
+					}
 				}
-				System.out.println(sqlStr);
+				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
+
+			}// Sequence
+			else if (parentItem.getValue().getType() != null
+					&& parentItem.getValue().getType() == TreeItemType.SEQUENCE_ROOT) {
+				DbConnectionPo dpo = item.getValue().getConnpo();
+				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
+				String sqlStr = fpt.getDdl();  
+				if(StrUtils.isNullOrEmpty(sqlStr)) { 
+					sqlStr = dpo.getExportDDL().exportCreateSequence(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
+						sqlStr = SqlFormatter.format(sqlStr);
+						fpt.setDdl(sqlStr);
+					}
+				} 
 				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
 
 			}
@@ -319,29 +334,5 @@ public class DBinfoTree {
 	public void setTreeView(TreeView<TreeNodePo> treeView) {
 		this.treeView = treeView;
 	}
-
-//	public List<ConnItemContainer> getConnItemParent() {
-//		return connItemParent;
-//	}
-//
-//	public void setConnItemParent(List<ConnItemContainer> connItemParent) {
-//		this.connItemParent = connItemParent;
-//	}
-//	
-	
-//	public ConnItemContainer findConnItemParent2(TreeItem<TreeNodePo> val) {
-//		for (int i = 0; i < connItemParent.size(); i++) {
-//			ConnItemContainer cip = connItemParent.get(i);
-//			String schemaParentNodeName = cip.getParentNode().getValue().getName();
-//			String nodeName = val.getValue().getName();
-//			if (schemaParentNodeName.equals(nodeName)) {
-//				return cip;
-//			}
-//		}
-//		return null;
-//	}
-
-	 
  
-
 }

@@ -39,7 +39,15 @@ public final class ComponentGetter {
 
 	public static ComboBox<Label> connComboBox;
 	public static volatile AppWindow app;
+	
+	// 数据同步界面
+	public static Stage dataTransferStage;
 
+	// 当前光标位置
+	public static Long cursor;
+	// 拖动的对象名称
+	public static String  dragTreeItemName;
+	
 	// 根据链接名称,获取链接Node 
 	public static TreeItem<TreeNodePo>  getConnNode(String dbName){
 //		TreeItem<TreeNodePo> conn =

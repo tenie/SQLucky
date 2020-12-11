@@ -27,7 +27,7 @@ public class MainMyDB extends Application {
 		scene.getStylesheets().addAll(ConfigVal.cssList);
 		ComponentGetter.primaryscene = scene;
 		SettingKeyCodeCombination.Setting();
-		img = new Image(MainMyDB.class.getResourceAsStream("/image/SQL6.png"));
+		img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
 		Thread.sleep(1000);
 	}
 

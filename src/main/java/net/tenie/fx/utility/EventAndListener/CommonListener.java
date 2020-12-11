@@ -4,6 +4,9 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ConnectionEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
@@ -84,5 +87,8 @@ public class CommonListener {
 			}
 		};
 	}
+	
+	
+	
 
 }

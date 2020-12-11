@@ -368,7 +368,7 @@ public class DB2ExportDDLImp implements ExportDDL {
 
 	@Override
 	public String exportDropSequence(String schema, String name) {
-		String sql = "DROP sequence " + schema + "." + name.trim() + " RESTRICT";
+		String sql = "DROP SEQUENCE " + schema + "." + name.trim() + " RESTRICT";
 		return sql;
 	}
 

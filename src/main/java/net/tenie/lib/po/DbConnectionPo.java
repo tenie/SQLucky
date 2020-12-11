@@ -44,6 +44,20 @@ public class DbConnectionPo {
 		return connectionIng.get();
 	}
 
+	public static DbConnectionPo copyObj(DbConnectionPo sopo, String schema) {
+		DbConnectionPo val = new DbConnectionPo(  
+				sopo.getConnName()+"Copy",
+				sopo.getDriver(),
+				sopo.getHost(),
+				sopo.getPort(),
+				sopo.getUser(),
+				sopo.getPassWord(),
+				sopo.getDbVendor(),
+				schema);
+		
+		return val;
+	}
+	
 	public void setConning(Boolean tf) {
 		connectionIng.set(tf);
 	}

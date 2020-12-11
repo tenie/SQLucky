@@ -236,6 +236,30 @@ public class DBTools {
 				ps.close();
 		}
 	}
+	
+	// 执行
+	public static void execListSQL(List<String> sqls, Connection tarConn) {
+		// 执行sql
+		for (String sql : sqls) {
+			try { 
+				PreparedStatement pstmt = null;
+				try {
+					pstmt = tarConn.prepareStatement(sql);
+					pstmt.execute();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw e;
+				} finally {
+					if (pstmt != null)
+						pstmt.close();
+				} 
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	
 
 	// 调用函数
 	public static void CallProcedure(Connection conn, String sql) {

@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -17,6 +18,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.main.MainMyDB;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 
 public class DataTransferWindow {
@@ -44,6 +46,7 @@ public class DataTransferWindow {
 
 		try {
 		    stage = new Stage();
+		    ComponentGetter.dataTransferStage = stage;
 			stage.initModality(Modality.APPLICATION_MODAL);
 //			stage.initOwner(stg);
 			stage.setTitle("Top Stage With Modality");
@@ -54,6 +57,9 @@ public class DataTransferWindow {
 			scene.getStylesheets().addAll(ConfigVal.cssList);
 			stage.setScene(scene);
 			stage.show();
+			
+			Image	img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
+			stage.getIcons().add(img);
 			stage.setOnCloseRequest(ev->{
 				stage.hide();
 				ev.consume();
