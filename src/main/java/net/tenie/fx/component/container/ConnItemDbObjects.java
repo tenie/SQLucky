@@ -52,6 +52,10 @@ public class ConnItemDbObjects {
 		triggerNode = CreateTriggerNode();
 		indexNode = CreateTriggerNode();
 		sequenceNode = CreateSequenceNode();
+		if ("DB2".equals(connpo.getDbVendor().toUpperCase())) {
+			sequenceNode = CreateSequenceNode(connpo, schemaName);
+//			parentNode.getChildren().add(sequenceNode);
+		}
 		// 新数据对象的一些初始化操作
 		TreeItem<TreeNodePo> cinewParentNode = new TreeItem<>(new TreeNodePo( schemaName, TreeItemType.SCHEMA,
 		    		ImageViewGenerator.svgImage("database", "#7CFC00 ") , connpo));
@@ -75,7 +79,8 @@ public class ConnItemDbObjects {
 		setProcNode(CreateProceduresNode(connpo, schemaName)); 
 		triggerNode = CreateTriggerNode(connpo, schemaName); 
 		indexNode = CreateIndexNode(connpo, schemaName);
-		sequenceNode = CreateSequenceNode(connpo, schemaName);
+		
+		
 		//book-perspective
 		
 		parentNode = new TreeItem<>(new TreeNodePo(schemaName, TreeItemType.SCHEMA,
@@ -87,7 +92,13 @@ public class ConnItemDbObjects {
 		parentNode.getChildren().add(procNode);
 		parentNode.getChildren().add(triggerNode);
 		parentNode.getChildren().add(indexNode);
-		parentNode.getChildren().add(sequenceNode);
+		
+		if ("DB2".equals(connpo.getDbVendor().toUpperCase())) {
+			sequenceNode = CreateSequenceNode(connpo, schemaName);
+			parentNode.getChildren().add(sequenceNode);
+		}
+		 
+		
 		
 	}
 	

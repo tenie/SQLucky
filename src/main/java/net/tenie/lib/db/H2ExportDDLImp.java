@@ -283,14 +283,14 @@ public class H2ExportDDLImp implements ExportDDL {
 
 	@Override
 	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
-		// TODO Auto-generated method stub
-		return null;
+		List<FuncProcTriggerPo>  vals = new ArrayList<>();
+		return vals;
 	}
 
 	@Override
 	public List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema) {
-		// TODO Auto-generated method stub
-		return null;
+		List<FuncProcTriggerPo>  vals = new ArrayList<>();
+		return vals;
 	}
 
 	@Override

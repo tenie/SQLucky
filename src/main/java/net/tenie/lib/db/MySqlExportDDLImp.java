@@ -1,18 +1,13 @@
 package net.tenie.lib.db;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.tenie.lib.po.FuncProcTriggerPo;
-import net.tenie.lib.po.RsData;
 import net.tenie.lib.po.TablePo;
-import net.tenie.lib.tools.StrUtils;
 
 /* 
  *  * @author tenie 
@@ -208,15 +203,46 @@ public class MySqlExportDDLImp implements ExportDDL {
 	}
 
 	@Override
-	public String exportCreateIndex(Connection conn, String schema, String obj) {
-		String ddl = fdb2.exportIndex(conn, schema, obj);
+	public String exportCreateIndex(Connection conn, String schema, String obj) { 
+		String sql = "SELECT \n" + 
+				"CONCAT('ALTER TABLE `',TABLE_NAME,'` ', 'ADD ', \n" + 
+				"IF( any_value(NON_UNIQUE )= 1, \n" + 
+				"CASE UPPER(any_value(INDEX_TYPE)) \n" + 
+				"WHEN 'FULLTEXT' THEN 'FULLTEXT INDEX' \n" + 
+				"WHEN 'SPATIAL' THEN 'SPATIAL INDEX' \n" + 
+				"ELSE CONCAT('INDEX `', \n" + 
+				"INDEX_NAME, \n" + 
+				"'` USING ', \n" + 
+				"any_value(INDEX_TYPE) \n" + 
+				") \n" + 
+				"END, \n" + 
+				"IF(UPPER(INDEX_NAME) = 'PRIMARY', \n" + 
+				"CONCAT('PRIMARY KEY USING ', \n" + 
+				"any_value(INDEX_TYPE) \n" + 
+				"), \n" + 
+				"CONCAT('UNIQUE INDEX `', \n" + 
+				"INDEX_NAME, \n" + 
+				"'` USING ', \n" + 
+				"any_value(INDEX_TYPE) \n" + 
+				") \n" + 
+				") \n" + 
+				"),'(', GROUP_CONCAT(DISTINCT CONCAT('`', COLUMN_NAME, '`') ORDER BY SEQ_IN_INDEX ASC SEPARATOR ', '), ');') AS 'Show_Add_Indexes' \n" + 
+				"FROM information_schema.STATISTICS \n" + 
+				"WHERE  \n" + 
+				"      TABLE_SCHEMA = '"+schema+"'  \n" + 
+				"  AND INDEX_NAME='"+obj+"' \n" + 
+				"  AND any_value(NON_UNIQUE )= 1 \n"+
+				"GROUP BY TABLE_NAME, INDEX_NAME \n" + 
+				"ORDER BY TABLE_NAME ASC, INDEX_NAME ASC";
+		
+		String ddl = getddlHelper(conn, sql, 1);
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateSequence(Connection conn, String schema, String obj) {
-		String ddl = fdb2.exportSeq(conn, schema, obj);
-		return ddl;
+		 
+		return "";
 	}
 
 	@Override
@@ -344,6 +370,31 @@ public class MySqlExportDDLImp implements ExportDDL {
 		}
 		return ddl;
 	}
+	
+	private List<String> getAllddlHelper(Connection conn, String sql, int i) {
+		List<String> allDDl = new ArrayList<String>();
+		String ddl = "";
+		System.out.println(sql);
+		ResultSet rs = null;
+		try {
+			rs = conn.createStatement().executeQuery(sql);
+			while (rs.next()) {
+				ddl = rs.getString(i);
+				allDDl.add(ddl);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+		return allDDl;
+	}
+	
 
 	public static List<FuncProcTriggerPo> fetchAllProcedures(Connection conn, String schemaOrCatalog, String sql)
 			throws Exception {
@@ -376,13 +427,60 @@ public class MySqlExportDDLImp implements ExportDDL {
 
 	@Override
 	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
-		// TODO Auto-generated method stub
+		try {
+			String str = 
+					"select  INDEX_NAME from information_schema.STATISTICS  \n" + 
+					"where TABLE_SCHEMA = '"+schema+"' \n" + 
+					"and NON_UNIQUE = 1 \n" ;
+			// 获取名称
+			List<String> allDDLs = getAllddlHelper(conn, str, 1);
+			List<FuncProcTriggerPo> vals =  new ArrayList<>();   // getAllddlHelper(conn, schema, 1); //Dbinfo.fetchAllViewName(conn, schema);
+			if (allDDLs != null && allDDLs.size() > 0) {
+				allDDLs.stream().forEach(v -> {
+					FuncProcTriggerPo po = new FuncProcTriggerPo();
+					po.setName(v);
+					po.setSchema(schema);
+					vals.add(po);
+					
+					// 视图ddl
+//					String ddl = exportCreateView(conn, schema, v.getTableName());
+//					v.setDdl(ddl);
+				});
+			}
+			 
+			return vals;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
 	@Override
 	public List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema) {
-		// TODO Auto-generated method stub
+		try {
+			String str = 
+					"select  INDEX_NAME from information_schema.STATISTICS  \n" + 
+					"where TABLE_SCHEMA = '"+schema+"' \n" + 
+					"and NON_UNIQUE = 1 \n" ;
+			// 获取名称
+			List<String> allDDLs = getAllddlHelper(conn, str, 1);
+			List<FuncProcTriggerPo> vals =  new ArrayList<>();   // getAllddlHelper(conn, schema, 1); //Dbinfo.fetchAllViewName(conn, schema);
+			if (allDDLs != null && allDDLs.size() > 0) {
+				allDDLs.stream().forEach(v -> {
+					FuncProcTriggerPo po = new FuncProcTriggerPo();
+					po.setName(v);
+					po.setSchema(schema);
+					vals.add(po);
+					// 视图ddl
+//					String ddl = exportCreateView(conn, schema, v.getTableName());
+//					v.setDdl(ddl);
+				});
+			}
+			 
+			return vals;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return null;
 	}
 
