@@ -1,3 +1,8 @@
+/* 显示列隐藏列面板*/
+SubWindows Pane MenuBox MenuLabel Label{
+	-fx-background-color: red; 	
+}
+
 .pop-up-filter{
 	-fx-background-color: #2B2B2B; 
 } 

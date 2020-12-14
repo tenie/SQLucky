@@ -1,7 +1,7 @@
 package net.tenie.fx.component.container;
 
 import java.util.List;
-
+import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -16,12 +16,14 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.DraggingTabPaneSupport;
+import net.tenie.fx.Action.ShowTableRowDateDetailAction;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.component.AllButtons;
@@ -226,10 +228,56 @@ public class DataViewContainer {
 		int tableIdx = ConfigVal.tableIdx++;
 		table.setId(tableIdx + "");
 		table.getStyleClass().add("myTableTag");
+		
+		
+	   FilteredTableColumn<ObservableList<StringProperty>, Number> tc = new FilteredTableColumn<>();
+	   
+//		tc.setCellValueFactory(cal -> { 
+//			ObservableList<StringProperty> obs = cal.getValue(); 
+//			int sz = obs.size();
+//			StringProperty sp = obs.get(sz - 1); 
+//			IntegerProperty sum = new SimpleIntegerProperty(); 
+//			sum.setValue(Integer.valueOf(sp.get()) + 1);
+//			return sum;
+//		});
 
+	   tc.setCellFactory(col->{
+			TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>(){
+			     
+					@Override
+	                public void updateItem(Number item, boolean empty) {
+	                	super.updateItem(item, empty);
+	                    this.setText(null);
+	                    this.setGraphic(null);
+	                    if (!empty) {
+	                           int rowIndex = this.getIndex();
+	                           this.setText((rowIndex+1)+"");
+	                           this.setOnMouseClicked(e -> {
+	     		               	  if (e.getClickCount() == 2) {
+	     		               		  JFXButton btn = (JFXButton) ComponentGetter.dataFlowSaveBtn();
+	     		               	      ShowTableRowDateDetailAction.show(btn); 
+	     		               	  }
+	     	                 } ); 
+	                    }
+	                }
+			};
+			return cell;
+		}); 
+	   
+        table.setRowHeader(tc);
+        table.tableMenuButtonVisibleProperty().setValue(true);
+		
 		return table;
 	}
 
+	public static void setTabRowWith(FilteredTableView<ObservableList<StringProperty>> table , int dataSize ) {
+		if(dataSize > 1000) {
+			table.setRowHeaderWidth(50);
+		}else if(dataSize > 100000) {
+			table.setRowHeaderWidth(60);
+		}
+	}
+	
 	public HBox getContainer() {
 		return container;
 	}

@@ -75,4 +75,7 @@ public class DbTableDatePo {
 		this.allDatas = allDatas;
 	}
 
+	public int getAllDatasSize() {
+		return allDatas.size();
+	}
 }

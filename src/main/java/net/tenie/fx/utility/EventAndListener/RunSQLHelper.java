@@ -170,6 +170,7 @@ public class RunSQLHelper {
 			DataTabDataPo tdpo = new DataTabDataPo();
 			tdpo.addTableName("Execute Info");
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
 			// table 添加列和数据
 			TableAddVal(table, ddlDmlpo);
 			tdpo.addTableView(table);
@@ -194,6 +195,7 @@ public class RunSQLHelper {
 			System.out.println("tableName= " + tableName + "\n sql = " + sql);
 			tdpo.addTableName(tableName);
 			DbTableDatePo dpo = SelectDao.selectSql(conn, sql, ConfigVal.MaxRows, table);
+			DataViewContainer.setTabRowWith(table, dpo.getAllDatasSize());
 			// 保存查询信息
 			CacheTableDate.saveTableName(table.getId(), tableName);
 			CacheTableDate.saveSelectSQl(table.getId(), sql);

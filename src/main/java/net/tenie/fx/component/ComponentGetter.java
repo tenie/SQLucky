@@ -105,6 +105,12 @@ public final class ComponentGetter {
 		FlowPane fp = ComponentGetter.dataFlowPane();
 		return (Button) fp.getChildren().get(0);
 	}
+	
+	// 获取当前table view 的保存按钮
+		public static Button dataFlowDetailBtn() {
+			FlowPane fp = ComponentGetter.dataFlowPane();
+			return (Button) fp.getChildren().get(1);
+		}
 
 	// 获取当前的表格
 	public static FilteredTableView<ObservableList<StringProperty>> dataTableView() {

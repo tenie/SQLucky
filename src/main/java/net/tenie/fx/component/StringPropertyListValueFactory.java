@@ -12,6 +12,7 @@ import javafx.util.Callback;
 public class StringPropertyListValueFactory implements Callback<CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>{
 	 private final int idx;
 	 private final TableView<ObservableList<StringProperty>> table ; 
+	 
 	 public StringPropertyListValueFactory(final @NamedArg("idx") int idx ,
 			 							   final TableView<ObservableList<StringProperty>> tb   
 			 							   ) {
