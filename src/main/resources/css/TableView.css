@@ -1,5 +1,5 @@
-/* 显示列隐藏列面板*/
-SubWindows Pane MenuBox MenuLabel Label{
+/* 显示列隐藏列面板*/ 
+Pane VBox {
 	-fx-background-color: red; 	
 }
 
