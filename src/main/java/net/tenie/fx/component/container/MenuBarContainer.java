@@ -1,5 +1,8 @@
 package net.tenie.fx.component.container;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -12,6 +15,7 @@ import net.tenie.fx.component.DataTransferWindow;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.config.ConfigVal;
 
 /*   @author tenie */
 public class MenuBarContainer {
@@ -39,8 +43,19 @@ public class MenuBarContainer {
 		open.setGraphic(ImageViewGenerator.svgImageUnactive("folder-open"));
 		open.setAccelerator(KeyCombination.keyCombination("shortcut+O"));
 		open.setOnAction(value -> {
-			CommonAction.openSqlFile();
+			CommonAction.openSqlFile("UTF-8");
 		});
+		
+		Menu openEncoding = new Menu(MenuItemNameFormat("Open With Encoding "));
+		openEncoding.setGraphic(ImageViewGenerator.svgImageUnactive("folder-open")); 
+		 
+		
+		MenuItem openGBK = new MenuItem(MenuItemNameFormat("GBK"));
+		openGBK.setGraphic(ImageViewGenerator.svgImageUnactive("folder-open")); 
+		openGBK.setOnAction(value -> {
+			CommonAction.openSqlFile("GBK");
+		});
+		openEncoding.getItems().addAll(openGBK );
 
 		MenuItem Save = new MenuItem(MenuItemNameFormat("Save"));
 		Save.setGraphic(ImageViewGenerator.svgImageUnactive("floppy-o"));
@@ -56,7 +71,7 @@ public class MenuBarContainer {
 			CommonAction.mainPageClose();
 		});
 
-		mn.getItems().addAll(open, Save, new SeparatorMenuItem(), exit);
+		mn.getItems().addAll(open, openEncoding, Save, new SeparatorMenuItem(), exit);
 		return mn;
 	}
 
@@ -133,7 +148,17 @@ public class MenuBarContainer {
 
 	Menu createToolsMenu() {
 		Menu mn = new Menu("Tools");
-
+		// 数据迁移
+		MenuItem dataTransfer = new MenuItem(MenuItemNameFormat("Data TransFer"));
+		dataTransfer.setGraphic(ImageViewGenerator.svgImageUnactive("mfglabs-random"));
+		dataTransfer.setOnAction(value -> {
+			//TODO 
+			if(dtw == null ) {
+				 dtw = new DataTransferWindow();
+			}
+			dtw.show();
+			
+		});
 		MenuItem addDB = new MenuItem(MenuItemNameFormat("Add New DB Connection"));
 		addDB.setOnAction(value -> {
 			ConnectionEditor.ConnectionInfoSetting();
@@ -186,19 +211,46 @@ public class MenuBarContainer {
 			CommonAction.hideLeftBottom();
 		});
 		
-		// 数据迁移
-		MenuItem dataTransfer = new MenuItem(MenuItemNameFormat("Data TransFer"));
-		dataTransfer.setGraphic(ImageViewGenerator.svgImageUnactive("mfglabs-random"));
-		dataTransfer.setOnAction(value -> {
-			//TODO 
-			if(dtw == null ) {
-				 dtw = new DataTransferWindow();
-			}
-			dtw.show();
-			
+		MenuItem EnCoding = new MenuItem(MenuItemNameFormat("EnCoding"));
+		EnCoding.setGraphic(ImageViewGenerator.svgImageUnactive("mfglabs-random"));
+		EnCoding.setOnAction(value -> {
+			String txt = SqlEditor.getCurrentTabSQLText();
+//			System.out.println(txt);
+		    try {
+				String unicode = new String(txt.getBytes(""),"GBK");
+				System.out.println(unicode);
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} 
+		   
+//			String txt
 		});
+		
+		
+		Menu Theme = new Menu(MenuItemNameFormat("Theme"));
+		Theme.setGraphic(ImageViewGenerator.svgImageUnactive("icomoon-contrast")); 
+		
+		MenuItem themeDark = new MenuItem(MenuItemNameFormat("Dark")); 
+		themeDark.setGraphic(ImageViewGenerator.svgImageUnactive("moon")); 
+		themeDark.setOnAction(value -> {
+			CommonAction.setTheme("DARK");
+		});
+		
+		MenuItem themeLight = new MenuItem(MenuItemNameFormat("Light")); 
+		themeLight.setGraphic(ImageViewGenerator.svgImageUnactive("sun")); 
+		themeLight.setOnAction(value -> {
+			CommonAction.setTheme("LIGHT");
+		});
+		
+		Theme.getItems().addAll(themeDark , themeLight); 
+		
+		
 		mn.getItems().addAll(dataTransfer, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn, closeALlConn, deleteConn, new SeparatorMenuItem(),
-				hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem());
+				hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem()
+//				, EnCoding
+				,Theme
+				);
 		return mn;
 	}
 
@@ -233,4 +285,7 @@ public class MenuBarContainer {
 		return str;
 	}
 
+	public static void main(String[] args) {
+		   System.out.println("Default Charset=" + Charset.defaultCharset());
+	}
 }

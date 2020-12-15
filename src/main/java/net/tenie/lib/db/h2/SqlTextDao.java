@@ -30,19 +30,43 @@ public class SqlTextDao {
 				"  `RECORD_VERSION` INT(11) DEFAULT '0',\n" + 
 				"  PRIMARY KEY (`ID`,`CONN_NAME`)\n" + 
 				") ";
-		String sql2 = "CREATE TABLE `SQL_TEXT_SAVE` (\n" +  
+		String sql2 = 
+				"CREATE TABLE `SQL_TEXT_SAVE` (\n" +  
 				"  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n" + 
 				"  `SQL_TEXT` CLOB, \n" +
 				"  `FILE_NAME` VARCHAR(1000) ,\n" + 
 				"  PRIMARY KEY (`TITLE_NAME`)\n" + 
 				") ";
+		String configTable = 
+						"CREATE TABLE `APP_CONFIG` (\n" +  
+						"  `NAME` VARCHAR(1000)   NOT NULL,\n" + 
+						"  `VAL`  VARCHAR(1000), \n" + 
+						"  PRIMARY KEY (`NAME`)\n" + 
+						") ";
 		try {
 			DBTools.execDDL(conn, sql);
 			DBTools.execDDL(conn, sql2);
+			DBTools.execDDL(conn, configTable);
 		} catch (SQLException e) { 
 			e.printStackTrace();
 		}
 	}
+	
+	public static void createConfigTable(Connection conn) {
+		String configTable = 
+						"CREATE TABLE `APP_CONFIG` (\n" +  
+						"  `NAME` VARCHAR(1000)   NOT NULL,\n" + 
+						"  `VAL`  VARCHAR(1000), \n" + 
+						"  PRIMARY KEY (`NAME`)\n" + 
+						") ";
+		try { 
+			DBTools.execDDL(conn, configTable);
+		} catch (SQLException e) { 
+			e.printStackTrace();
+		}
+	
+	}
+	
 	public static void save(Connection conn , String title, String txt, String filename) {
 		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME) values ( ? , ?, ? )";
 		int i = 0;
@@ -64,6 +88,72 @@ public class SqlTextDao {
 				}
 		}
 	}
+	
+	public static String readConfig(Connection conn, String name) {
+		String sql = "select   *   from   APP_CONFIG   where name = '"+name+"' ";
+		String vals = "";
+		Statement sm = null; 
+		ResultSet rs = null;
+		try { 
+			sm = conn.createStatement();
+			System.out.println("执行   "+ sql);
+		    rs =  sm.executeQuery(sql);  
+		    if(rs.next()) {  
+		    	vals = rs.getString("VAL");
+		    }
+		} catch (SQLException e) { 
+			e.printStackTrace(); 
+		}finally { 
+			if(rs!=null)
+				try {
+					rs.close();
+				} catch (SQLException e1) { 
+					e1.printStackTrace();
+				}
+			if(sm!=null)
+				try {
+					sm.close();
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
+		}
+		return vals;
+	}
+	
+	public static void deleteConfigKey(Connection conn , String key) {
+		try {
+			DBTools.execDDL(conn, "DELETE from APP_CONFIG where name = '"+key+"' ");
+		} catch (SQLException e) { 
+			e.printStackTrace();
+		}
+	}
+	
+	public static void saveConfig(Connection conn , String key, String val) {
+		
+		String kv = readConfig(conn, key);
+		if(kv !=null && kv.length() > 0) { 
+			deleteConfigKey(conn, key);
+		}
+		String sql = "insert into APP_CONFIG (NAME, VAL) values ( ? , ?)";
+		int i = 0;
+		PreparedStatement sm = null; 
+		try { 
+			sm = conn.prepareStatement(sql);
+			sm.setString(1, key);
+			sm.setString(2, val); 
+		    i = sm.executeUpdate();
+		} catch (SQLException e) { 
+			e.printStackTrace(); 
+		}finally { 
+			if(sm!=null)
+				try {
+					sm.close();
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
+		}
+	}
+	
 	
 	
 	public static List<H2SqlTextSavePo> read(Connection conn) {

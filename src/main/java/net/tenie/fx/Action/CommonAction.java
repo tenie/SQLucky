@@ -3,6 +3,9 @@ package net.tenie.fx.Action;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -405,12 +408,12 @@ public class CommonAction {
 	}
 
 	// 打开sql文件
-	public static void openSqlFile() {
+	public static void openSqlFile(String encode) {
 		try {
 			File f = CommonFileChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
 			if (f == null)
 				return;
-			String val = FileUtils.readFileToString(f, "UTF-8");
+			String val = FileUtils.readFileToString(f, encode);
 			String id = "";
 			String tabName = "";
 
@@ -561,6 +564,29 @@ public class CommonAction {
 		}
 	}
 	
+	
+	
+	public static void setTheme(String val ) {
+		if(val.equals(ConfigVal.THEME)) {
+			return ;
+		}
+		ConfigVal.THEME = val;
+		Connection conn =  H2Db.getConn();
+		H2Db.setConfigVal(conn, "THEME", val) ;
+		H2Db.closeConn();
+		List<String> cssList = new ArrayList<>();
+		if(ConfigVal.THEME.equals( "DARK")) {
+			cssList.addAll(ConfigVal.cssList);
+		}else {
+			cssList.clear();
+			cssList.add(ConfigVal.class.getResource("/css/sql-keywords-light.css").toExternalForm());
+		}
+		
+		
+		ComponentGetter.primaryscene.getStylesheets().clear();
+		ComponentGetter.primaryscene.getStylesheets().addAll(cssList); 
+		SqlEditor.changeThemeAllCodeArea() ;
+	}
 	public static void demo() {
 
 	}

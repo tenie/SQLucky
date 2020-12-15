@@ -2,6 +2,9 @@ package net.tenie.fx.component.container;
 
 import java.util.Objects;
 
+import javafx.geometry.Bounds;
+import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -17,6 +20,7 @@ import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.SqlEditor;
 
 /*   @author tenie */
 public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<TreeNodePo>> {
@@ -88,10 +92,28 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 
 		return cell;
 	}
+	
+	/**
+	    当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个EventHandler
+	     setOnDragDetected(new EventHandler<MouseEvent>());  
+	  当你拖动到目标控件的时候，会执行这个事件回调。     
+  	    setOnDragEntered(new EventHandler<DragEvent>()); 
+	  当你拖动移出目标控件的时候，执行这个操作。
+	  setOnDragExited(new EventHandler<DragEvent>());  
+	  当你拖动到目标上方的时候，会不停的执行。
+	  setOnDragOver(new EventHandler<DragEvent>()); 
+	  当你拖动到目标并松开鼠标的时候，执行这个DragDropped事件。  
+  		setOnDragDropped(new EventHandler<DragEvent>());  
+          当你拖动并松手的时候，执行Drag完成操作。		
+  		setOnDragDone(new EventHandler<DragEvent>()); 
 
-	// 发现拖动
+	 */
+ 
+
+	// 发现拖动 当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个
 	private void dragDetected(MouseEvent event, TreeCell<TreeNodePo> treeCell, TreeView<TreeNodePo> treeView) {
-		System.out.println("dragDetected");
+		System.out.println("dragDetected"); 
+		
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
@@ -103,7 +125,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 			System.out.println("ComponentGetter.dragTreeItemName =" +ComponentGetter.dragTreeItemName);
 		}
 			
-		Dragboard db = treeCell.startDragAndDrop(TransferMode.MOVE);
+		Dragboard db = treeCell.startDragAndDrop(TransferMode.ANY);
 
 		ClipboardContent content = new ClipboardContent();
 		content.put(JAVA_FORMAT, draggedItem.getValue().getName());
@@ -115,17 +137,17 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 
 	private void dragOver(DragEvent event, TreeCell<TreeNodePo> treeCell, TreeView<TreeNodePo> treeView) {
 		System.out.println("dragOver");
-		System.out.println( event.getSceneX());
-		System.out.println( event.getScreenX());
-		System.out.println( event.getX());
+		 
 		
-		ComponentGetter.mainTabPane.getHeight();
-		ComponentGetter.mainTabPane.getWidth();
-		ComponentGetter.mainTabPane.getLayoutX();
-		ComponentGetter.mainTabPane.getLayoutY();
-		ComponentGetter.mainTabPane.getScaleX();
-		System.out.println( ComponentGetter.mainTabPane.getScaleX()+ " | "+ ComponentGetter.mainTabPane.getWidth());
-		
+//		//当前坐标转屏幕坐标
+//		double minX = getLayoutBounds.getMinX();
+//		//左上角Y
+//		double minY = getLayoutBounds.getMinY();
+//		Point2D localToScreen = SqlEditor.getCodeArea().localToScreen(minX, minY);
+//		double screenX = localToScreen.getX();
+//		double screenY = localToScreen.getY();
+//		System.out.println("screenX = " + screenX + " | screenY =" + screenY);
+//		
 		if (!event.getDragboard().hasContent(JAVA_FORMAT))
 			return;
 		TreeItem<TreeNodePo> thisItem = treeCell.getTreeItem();
@@ -139,7 +161,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 			return;
 		}
 
-		event.acceptTransferModes(TransferMode.MOVE);
+		event.acceptTransferModes(TransferMode.ANY);
 		if (!Objects.equals(dropZone, treeCell)) {
 			clearDropLocation();
 			this.dropZone = treeCell;
@@ -179,6 +201,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 
 	private void clearDropLocation() {
 		System.out.println("clearDropLocation");
+		ComponentGetter.dragTreeItemName = "";
 		if (dropZone != null)
 			dropZone.setStyle("");
 	}

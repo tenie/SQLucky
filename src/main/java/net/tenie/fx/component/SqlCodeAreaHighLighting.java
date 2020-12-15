@@ -13,14 +13,19 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.control.IndexRange;
 import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
+import net.tenie.lib.tools.StrUtils;
+
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
@@ -35,7 +40,11 @@ public class SqlCodeAreaHighLighting {
 	public StackPane getObj(String text, boolean editable) {
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new CodeArea();
-		codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea));
+		if(ConfigVal.THEME.equals("DARK")) {
+			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea));
+		}else {
+			codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+		} 
 		// 事件KeyEvent
 		
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{ 
@@ -69,6 +78,18 @@ public class SqlCodeAreaHighLighting {
 				 codeArea.insertText(codeArea.getCaretPosition(), e.getCommitted());
 		        }
 		});
+		
+		// 当表被拖拽进入到code editor , 将表名插入到 光标处
+		codeArea.setOnDragEntered(e->{
+			String val = ComponentGetter.dragTreeItemName;
+			if(StrUtils.isNotNullOrEmpty(val)) {
+				IndexRange i = codeArea.getSelection(); // 获取当前选中的区间
+				int start = i.getStart();
+				codeArea.insertText(start, val);
+			}
+			
+		});
+		
 		return sp;
 	}
 

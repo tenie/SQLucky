@@ -18,8 +18,14 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 
 /*   @author tenie */
+/**
+ *  代码行号
+ * @author tenie
+ *
+ */
 public class MyLineNumberFactory implements IntFunction<Node> {
 
+	
 	private static final Insets DEFAULT_INSETS = new Insets(0.0, 5.0, 0.0, 5.0);
 	private static final Paint DEFAULT_TEXT_FILL = Color.web("#606366");
 	private static final Font DEFAULT_FONT = Font.font("monospace", FontPosture.ITALIC, 13);

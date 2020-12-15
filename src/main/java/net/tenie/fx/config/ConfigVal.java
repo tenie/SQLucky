@@ -1,7 +1,13 @@
 package net.tenie.fx.config;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.SqlEditor;
+import net.tenie.lib.db.h2.H2Db;
+import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class ConfigVal {
@@ -32,13 +38,16 @@ public class ConfigVal {
 	// 图标
 	public static String appIcon = "/image/SQL6.png";
 	public static List<String> cssList = new ArrayList<>();
-	static {
-
-		cssList.add(ConfigVal.class.getResource("/css/sql-keywords.css").toExternalForm());
-		cssList.add(ConfigVal.class.getResource("/css/treeView.css").toExternalForm());
-		cssList.add(ConfigVal.class.getResource("/css/TableView.css").toExternalForm());
-		cssList.add(ConfigVal.class.getResource("/css/tabPane.css").toExternalForm());
-		cssList.add(ConfigVal.class.getResource("/css/common.css").toExternalForm());
+	public static String THEME = "";
+	
+	static { 
+			cssList.add(ConfigVal.class.getResource("/css/sql-keywords.css").toExternalForm());
+			cssList.add(ConfigVal.class.getResource("/css/treeView.css").toExternalForm());
+			cssList.add(ConfigVal.class.getResource("/css/TableView.css").toExternalForm());
+			cssList.add(ConfigVal.class.getResource("/css/tabPane.css").toExternalForm());
+			cssList.add(ConfigVal.class.getResource("/css/common.css").toExternalForm());		
 	}
+	
+
 
 }

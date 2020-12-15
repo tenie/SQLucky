@@ -13,20 +13,25 @@ public class H2Db {
 
 	public static Connection getConn() {
 		try {
-			if (conn == null || conn.isClosed()) {
-
-				String path = FileUtils.getUserDirectoryPath() + "/";
-				Dbinfo dbinfo = new Dbinfo("org.h2.Driver", "jdbc:h2:" + path + "h2db", "sa", "xyz123qweasd");
-				conn = dbinfo.getconn();
+			if (conn == null) { 
+				conn =  execConn() ;
 				if (!tabExist(conn, "CONNECTION_INFO")) {
 					SqlTextDao.createTab(conn);
-				}
-
+				} 
+			}else if( conn.isClosed()) {
+				conn =  execConn() ;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return conn;
+	}
+	
+	private  static Connection execConn() {
+		String path = FileUtils.getUserDirectoryPath() + "/";
+		Dbinfo dbinfo = new Dbinfo("org.h2.Driver", "jdbc:h2:" + path + "h2db", "sa", "xyz123qweasd");
+		Connection connection = dbinfo.getconn();
+		return connection;
 	}
 
 	public static void closeConn() {
@@ -52,6 +57,26 @@ public class H2Db {
 		}
 		return false;
 
+	}
+	
+	// 获取配置
+	public static String getConfigVal(Connection conn, String key) {
+		String val = "";
+		if (!tabExist(conn, "APP_CONFIG")) {
+			SqlTextDao.createConfigTable(conn); 
+			SqlTextDao.saveConfig(conn, "THEME", "DARK");
+		}else {
+			val = SqlTextDao.readConfig(conn, key);
+			
+		}
+		
+		return val;
+	}
+	
+	// 获取配置
+	public static void setConfigVal(Connection conn, String key, String val) {  
+		 
+		SqlTextDao.saveConfig(conn, key, val);
 	}
 
 }

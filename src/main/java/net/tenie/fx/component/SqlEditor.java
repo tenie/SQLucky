@@ -1,11 +1,14 @@
 package net.tenie.fx.component;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
 
+import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Priority;
@@ -24,6 +27,7 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class SqlEditor {
+	public static List<CodeArea> allCodeArea = new ArrayList<>();
 	public static TabPane myTabPane;
 
 	// 添加空文本的codeTab
@@ -197,6 +201,40 @@ public class SqlEditor {
 	public static StackPane SqlCodeArea() {
 		StackPane sp = new SqlCodeAreaHighLighting().getObj();
 		return sp;
+	}
+	
+	// 获取所有的CodeArea
+	public static List<CodeArea> getAllCodeArea() {
+		List<CodeArea> cas = new ArrayList<>();
+		TabPane myTabPane = ComponentGetter.mainTabPane;
+		if (myTabPane.getTabs().size() > 1) {
+			ObservableList<Tab> tabs = myTabPane.getTabs();
+			for(Tab tb : tabs) { 
+				CodeArea ac = getCodeArea(tb);
+				cas.add(ac);
+				if(ConfigVal.THEME.equals("DARK")) {
+					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac));
+				}else {
+					ac.setParagraphGraphicFactory(LineNumberFactory.get(ac));
+				} 
+			}
+		}
+		return cas;
+	}
+	
+	public static void changeThemeAllCodeArea() { 
+		TabPane myTabPane = ComponentGetter.mainTabPane;
+		if (myTabPane.getTabs().size() > 1) {
+			ObservableList<Tab> tabs = myTabPane.getTabs();
+			for(Tab tb : tabs) { 
+				CodeArea ac = getCodeArea(tb); 
+				if(ConfigVal.THEME.equals("DARK")) {
+					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac));
+				}else {
+					ac.setParagraphGraphicFactory(LineNumberFactory.get(ac));
+				} 
+			}
+		}
 	}
 
 }
