@@ -35,7 +35,7 @@ public class MainMyDB extends Application {
 		ComponentGetter.primaryscene = scene;
 		SettingKeyCodeCombination.Setting();
 		img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
-		Thread.sleep(1000);
+//		Thread.sleep(1000);
 	}
 
 	@Override
