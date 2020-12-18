@@ -35,6 +35,26 @@ public final class DBConns {
 			});
 		}
 	}
+	public static void flushChoiceBox() {
+		flushChoiceBox(cb);
+	}
+
+	// 选中combox的元素
+	public static void flushChoiceBox(String name) {
+		flushChoiceBox() ;
+		selectComboBoxItem(name);
+		
+	}
+	// 选中combox的元素
+	public static void selectComboBoxItem( String name) {
+		ObservableList<Label> ls = cb.getItems();
+		for(Label lb : ls) {
+			if(lb.getText().equals(name)) {
+				cb.getSelectionModel().select(lb);
+				break;
+			}
+		}
+	}
 
 	// 选择连接框的选项添加
 	public static void flushChoiceBox(JFXComboBox<Label> box) {
@@ -46,52 +66,40 @@ public final class DBConns {
 		if (cb == null) {
 			return;
 		}
-//		String currentStr = "";
-//		Label currentLabel = null;
-//		if (cb.getItems() != null) {
-//			if (cb.getValue() != null) {
-//				currentStr = cb.getValue().getText();
-//				cb.getItems().clear();
-//			}
-//		}
 		
 		ObservableList<Label> list= getChoiceBoxItems();
 		cb.setItems(list);
-//		if (currentLabel != null) {
-//			cb.getSelectionModel().select(currentLabel);
-//		}
 
 	}
 	
 	public static ObservableList<Label> getChoiceBoxItems(){
 		ObservableList<Label> list = FXCollections.observableArrayList();
-		list.add(new Label(""));
+		ObservableList<Label> aliveList = FXCollections.observableArrayList();
+		aliveList.add(new Label(""));
 		for (String key : DBConns.allNames()) {
 			DbConnectionPo po = dbs.get(key);
 			String name = po.getConnName();
 			Label lb = new Label(name);
 			if (po.isAlive()) {
 				lb.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
+				aliveList.add(lb);
 			} else {
 				lb.setGraphic(ImageViewGenerator.svgImageUnactive("unlink"));
+				list.add(lb);
 			}
-//			if (name.equals(currentStr)) {
-//				currentLabel = lb;
-//			}
-			list.add(lb);
+			
+			
 		}
-		return list;
+		aliveList.addAll(list);
+		return aliveList;
 	}
 
-//	public static void flushChoiceBox() {
-//		flushChoiceBox(cb);
-//	}
-
+	
 	// 选择连接框的选项修改选项
 	public static void changeChoiceBox(String idx) {
 		if (cb != null && idx.length() > 0) {
 			cb.getSelectionModel().select(Integer.valueOf(idx));
-			;
+
 		}
 	}
 
@@ -115,6 +123,14 @@ public final class DBConns {
 		dbs.remove(name);
 		flushChoiceBox(cb);
 	}
+	
+//	public static void update(String oldName, String newName,) {
+//		set.remove(name);
+//		dbs.remove(name);
+//		flushChoiceBox(cb);
+//	}
+	
+	
 
 	public static DbConnectionPo get(String name) {
 		return dbs.get(name);

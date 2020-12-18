@@ -3,6 +3,7 @@ package net.tenie.fx.utility.EventAndListener;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -11,6 +12,7 @@ import net.tenie.fx.component.ConnectionEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
+import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
@@ -66,8 +68,7 @@ public class CommonListener {
 			@Override
 			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
 				// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
-				MainTabs.getActTab();
-				MainTabs.setBoxIdx(MainTabs.getActTab().getText(), newValue.toString());
+				MainTabs.setBoxIdx( CommonUtility.tabText(  MainTabs.getActTab()), newValue.toString());
 			}
 		};
 	}

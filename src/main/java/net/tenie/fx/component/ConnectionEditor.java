@@ -269,19 +269,28 @@ public class ConnectionEditor {
 		saveBtn.setOnMouseClicked(e -> {
 
 			DbConnectionPo connpo = call.apply("");
+			
 			if (connpo != null) {
-				// 先删除树中的节点
-				if (dp != null) {
-					DBConns.remove(dp.getConnName());
-					DBinfoTree.rmTreeItemByName(dp.getConnName());
-				}
+				
 				DBConns.add(connpo.getConnName(), connpo);
 				// 缓存数据
 				connpo = ConnectionDao.createOrUpdate(H2Db.getConn(), connpo);
 				H2Db.closeConn();
-				TreeItem<TreeNodePo> item = new TreeItem<>(
-						new TreeNodePo(connectionName.getText(), ImageViewGenerator.svgImageUnactive("unlink")));
-				DBinfoTree.treeRootAddItem(item);
+				
+				// 先删除树中的节点
+				if (dp != null) {
+					DBConns.remove(dp.getConnName());
+//					DBinfoTree.rmTreeItemByName(dp.getConnName());
+					TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+					val.getValue().setName(connectionName.getText() );
+					ComponentGetter.treeView.refresh();
+				}else {
+					TreeItem<TreeNodePo> item = new TreeItem<>(
+							new TreeNodePo(connectionName.getText(), ImageViewGenerator.svgImageUnactive("unlink")));
+					DBinfoTree.treeRootAddItem(item); 
+				}
+			
+				 
 			} else {
 				return;
 			}
@@ -312,6 +321,7 @@ public class ConnectionEditor {
 			String str = val.getValue().getName();
 			DbConnectionPo dp = DBConns.get(str);
 			ConnectionEditor.ConnectionInfoSetting(dp);
+			 
 		}
 	}
 
@@ -420,6 +430,7 @@ public class ConnectionEditor {
 							item.getChildren().add(s);
 							item.getValue().setIcon(ImageViewGenerator.svgImage("link", "#7CFC00"));							
 							connItemContainer.selectTable(po.getDefaultSchema());
+							DBConns.flushChoiceBox(connName);
 						});
 					} else {
 						Platform.runLater(() -> {

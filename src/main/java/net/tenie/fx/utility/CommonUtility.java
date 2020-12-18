@@ -81,39 +81,7 @@ public class CommonUtility {
 		return false;
 	}
 
-	// 数据单元格添加监听
-	// 字段修改事件
-	public static void addStringPropertyChangeListener(StringProperty val, int rowNo, String tabId, int idx,
-			ObservableList<StringProperty> vals, int dbtype) {
-		ChangeListener<String> cl = new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				System.out.println("addStringPropertyChangeListener ：newValue：" + newValue + " | oldValue =" + oldValue);
-				System.out.println("key ==" + tabId + "-" + rowNo);
-				System.out.println("observable = " + observable);
-				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
-					Platform.runLater(() -> val.setValue(oldValue));
-					return;
-				}
-				ComponentGetter.dataFlowSaveBtn().setDisable(false);
-
-				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();
-				if (!CacheTableDate.exist(tabId, rowNo)) {
-					for (int i = 0; i < vals.size(); i++) {
-						if (i == idx) {
-							oldDate.add(new SimpleStringProperty(oldValue));
-						} else {
-							oldDate.add(new SimpleStringProperty(vals.get(i).get()));
-						}
-					}
-					CacheTableDate.addData(tabId, rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
-				} else {
-					CacheTableDate.addData(tabId, rowNo, vals);
-				}
-			}
-		};
-		val.addListener(cl);
-	}
+	 
 
 	public static void newStringPropertyChangeListener(StringProperty val, int dbtype) {
 		ChangeListener<String> cl = new ChangeListener<String>() {

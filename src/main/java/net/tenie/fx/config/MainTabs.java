@@ -6,6 +6,7 @@ import java.util.Map;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.utility.CommonUtility;
 
 /*   @author tenie */
 public class MainTabs {
@@ -14,7 +15,8 @@ public class MainTabs {
 	private static Tab actTab;
 
 	public static void setBoxIdx(Tab t, String idx) {
-		setBoxIdx(t.getText(), idx);
+//		 CommonUtility.tabText(nwTab);// t.getText()
+		setBoxIdx(CommonUtility.tabText(t), idx);
 	}
 
 	public static void setBoxIdx(String name, String idx) {
@@ -32,7 +34,7 @@ public class MainTabs {
 	}
 
 	public static MainTabInfo get(Tab nwTab) {
-		String name = nwTab.getText();
+		String name = CommonUtility.tabText(nwTab);// nwTab.getText();
 		return get(name);
 	}
 
@@ -42,7 +44,7 @@ public class MainTabs {
 
 	public static void add(Tab nwTab, String cn) {
 		MainTabInfo tb = new MainTabInfo();
-		String name = nwTab.getText();
+		String name =  CommonUtility.tabText(nwTab);// nwTab.getText();
 		tb.setTabName(name);
 		tb.setTabConnIdx(cn);
 		tb.setTab(nwTab);

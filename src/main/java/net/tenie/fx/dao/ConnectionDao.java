@@ -6,8 +6,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import net.tenie.fx.config.DbVendor;
+import javafx.collections.ObservableList;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.config.DBConns;
 import net.tenie.lib.db.DBTools;
+import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.po.RsData;
 import net.tenie.lib.tools.StrUtils;
@@ -22,29 +28,46 @@ public class ConnectionDao {
 			e.printStackTrace();
 		}
 	}
+//	更新节点的
+	public static void refreshConnOrder() {
+		try {  
+			System.out.println("refreshConnOrder");
+			TreeView<TreeNodePo> treeView = ComponentGetter.treeView ;
+			TreeItem<TreeNodePo>  root = treeView.getRoot();
+			ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
+			int size = ls.size();
+			Connection conn = H2Db.getConn();
+			for(int i = 0; i < size; i++) {
+				TreeItem<TreeNodePo> nopo = ls.get(i);
+				String name = nopo.getValue().getName();
+				DbConnectionPo  po = DBConns.get(name);
+				int id = po.getId();
+				updateDataOrder(conn, id, i);
+			}
+		} finally {
+			H2Db.closeConn();
+		}
+		 
+	}
+	
+	public static void updateDataOrder(Connection conn, int id, int order) {
+		 String sql  = " UPDATE CONNECTION_INFO  set  ORDER_TAG = "+  order +"  where ID = " +id; 
+		 try {
+			DBTools.execDML(conn, sql);
+		} catch (SQLException e) { 
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * 查询
 	 */
 	public static  List<DbConnectionPo> selectData(Connection conn) {
-		String sql = "SELECT * FROM  CONNECTION_INFO";
+		String sql = "SELECT * FROM  CONNECTION_INFO ORDER BY ORDER_TAG";
 		List<DbConnectionPo> datas =  new ArrayList<DbConnectionPo>();
 		try {
 		    List<RsData>  rs = DBTools.selectSql(conn, sql);
 		    for(RsData rd: rs) {
-//		    	DbConnectionPo po = new DbConnectionPo(); 
-//		    	po.setId(rd.getInteger("ID"));
-//		    	po.setConnName(rd.getString("CONN_NAME"));
-//		    	po.setHost(rd.getString("HOST"));
-//		    	po.setPort(rd.getString("PORT"));
-//		    	po.setDriver(rd.getString("DRIVER"));
-//		    	po.setDbVendor(rd.getString("VENDOR"));
-//		    	po.setDefaultSchema(rd.getString("SCHEMA"));
-//		    	po.setUser(rd.getString("USER"));
-//		    	po.setPassWord(rd.getString("PASS_WORD"));
-//		    	po.setComment(rd.getString("COMMENT"));
-		    	
-		    	
 		    	  DbConnectionPo po = new DbConnectionPo(
 		    			  	rd.getString("CONN_NAME"),
 		    			  	rd.getString("DRIVER"), //DbVendor.getDriver(dbDriver.getValue()),

@@ -114,8 +114,8 @@ public class CodeContainer {
 		lbcnn.setLabelFor(conns);
 		conns.setPrefHeight(25);
 		conns.setMinHeight(25);
-		conns.setMaxWidth(120);
-		conns.setMinWidth(120);
+		conns.setMaxWidth(150);
+		conns.setMinWidth(150);
 		conns.getStyleClass().add("myComboBox");
 		DBConns.flushChoiceBox(conns); // 填充内容
 		// change 事件
@@ -181,7 +181,7 @@ public class CodeContainer {
 		conns.setLayoutX(y);
 		pn.getChildren().add(lb);
 		lb.setLayoutY(5);
-		y += fix + 110;
+		y += fix + 140;
 		lb.setLayoutX(y);
 		pn.getChildren().add(rows);
 		rows.setLayoutY(0);

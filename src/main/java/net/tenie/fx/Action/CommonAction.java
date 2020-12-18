@@ -29,6 +29,7 @@ import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
@@ -70,6 +71,7 @@ public class CommonAction {
 
 	public static void mainPageClose() {
 		try {
+			ConnectionDao.refreshConnOrder(); 
 			TabPane mainTabPane = ComponentGetter.mainTabPane;
 			Connection H2conn = H2Db.getConn();
 			SqlTextDao.deleteAll(H2conn);

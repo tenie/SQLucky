@@ -128,6 +128,7 @@ public class CommonEventHandler {
 	public static EventHandler editConnEvent() {
 		return new EventHandler() {
 			public void handle(Event e) {
+				ConnectionEditor.closeDbConn();
 				ConnectionEditor.editDbConn();
 			}
 		};

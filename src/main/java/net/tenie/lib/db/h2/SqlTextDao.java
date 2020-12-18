@@ -14,7 +14,8 @@ public class SqlTextDao {
 	
 	// 建表 
 	public static void createTab(Connection conn) {
-		String sql = "CREATE TABLE `CONNECTION_INFO` (\n" + 
+		String sql = 
+				"CREATE TABLE `CONNECTION_INFO` (\n" + 
 				"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
 				"  `CONN_NAME` VARCHAR(1000)   NOT NULL,\n" + 
 				"  `USER` VARCHAR(1000)   NOT NULL,\n" + 
@@ -28,6 +29,7 @@ public class SqlTextDao {
 				"  `CREATED_AT` DATETIME DEFAULT NULL,\n" + 
 				"  `UPDATED_AT` DATETIME DEFAULT NULL,\n" + 
 				"  `RECORD_VERSION` INT(11) DEFAULT '0',\n" + 
+				"  `ORDER_TAG` DOUBLE(11) DEFAULT '99',\n" + 
 				"  PRIMARY KEY (`ID`,`CONN_NAME`)\n" + 
 				") ";
 		String sql2 = 

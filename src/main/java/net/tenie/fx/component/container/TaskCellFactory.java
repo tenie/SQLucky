@@ -21,6 +21,9 @@ import javafx.util.Callback;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.config.DBConns;
+import net.tenie.fx.dao.ConnectionDao;
+import net.tenie.lib.po.DbConnectionPo;
 
 /*   @author tenie */
 public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<TreeNodePo>> {
@@ -136,18 +139,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 	}
 
 	private void dragOver(DragEvent event, TreeCell<TreeNodePo> treeCell, TreeView<TreeNodePo> treeView) {
-		System.out.println("dragOver");
-		 
-		
-//		//当前坐标转屏幕坐标
-//		double minX = getLayoutBounds.getMinX();
-//		//左上角Y
-//		double minY = getLayoutBounds.getMinY();
-//		Point2D localToScreen = SqlEditor.getCodeArea().localToScreen(minX, minY);
-//		double screenX = localToScreen.getX();
-//		double screenY = localToScreen.getY();
-//		System.out.println("screenX = " + screenX + " | screenY =" + screenY);
-//		
+  
 		if (!event.getDragboard().hasContent(JAVA_FORMAT))
 			return;
 		TreeItem<TreeNodePo> thisItem = treeCell.getTreeItem();
@@ -187,6 +179,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 			droppedItemParent.getChildren().remove(draggedItem);
 			int indexInParent = thisItem.getParent().getChildren().indexOf(thisItem);
 			thisItem.getParent().getChildren().add(indexInParent + 1, draggedItem);
+			
 
 		}
 		if (Objects.equals(droppedItemParent, thisItem)) {
