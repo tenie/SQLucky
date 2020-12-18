@@ -245,14 +245,14 @@ FlowPane TextField{
 .my-tag  .scroll-bar:horizontal .decrement-button {
     -fx-background-color :transparent;
     -fx-background-radius : 0.0em;
-    -fx-padding :0.0 0.0 10.0 0.0; 
+    -fx-padding :0.0 0.0 7.0 0.0; 
 }
 
 .my-tag  .scroll-bar:vertical .increment-button ,
 .my-tag  .scroll-bar:vertical .decrement-button {
     -fx-background-color :transparent;
     -fx-background-radius : 0.0em;
-    -fx-padding :0.0 10.0 0.0 0.0;
+    -fx-padding :0.0 7.0 0.0 0.0;
 
 }
 

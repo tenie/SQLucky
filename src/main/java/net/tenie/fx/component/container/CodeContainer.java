@@ -117,6 +117,8 @@ public class CodeContainer {
 		conns.setMaxWidth(150);
 		conns.setMinWidth(150);
 		conns.getStyleClass().add("myComboBox");
+		conns.getStyleClass().add("my-tag");
+		
 		DBConns.flushChoiceBox(conns); // 填充内容
 		// change 事件
 		conns.getSelectionModel().selectedIndexProperty().addListener(CommonListener.choiceBoxChange());
