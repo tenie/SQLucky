@@ -62,20 +62,13 @@ public class H2Db {
 	// 获取配置
 	public static String getConfigVal(Connection conn, String key) {
 		String val = "";
-		if (!tabExist(conn, "APP_CONFIG")) {
-			SqlTextDao.createConfigTable(conn); 
-			SqlTextDao.saveConfig(conn, "THEME", "DARK");
-		}else {
-			val = SqlTextDao.readConfig(conn, key);
-			
-		}
+		val = SqlTextDao.readConfig(conn, key); 
 		
 		return val;
 	}
 	
-	// 获取配置
+	// SET配置
 	public static void setConfigVal(Connection conn, String key, String val) {  
-		 
 		SqlTextDao.saveConfig(conn, key, val);
 	}
 

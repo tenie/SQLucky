@@ -224,7 +224,7 @@ public class SqlEditor {
 	
 	public static void changeThemeAllCodeArea() { 
 		TabPane myTabPane = ComponentGetter.mainTabPane;
-		if (myTabPane.getTabs().size() > 1) {
+		if (myTabPane.getTabs().size() > 0) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for(Tab tb : tabs) { 
 				CodeArea ac = getCodeArea(tb); 

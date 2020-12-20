@@ -20,11 +20,11 @@ public class SqlTextDao {
 				"  `CONN_NAME` VARCHAR(1000)   NOT NULL,\n" + 
 				"  `USER` VARCHAR(1000)   NOT NULL,\n" + 
 				"  `PASS_WORD` VARCHAR(1000)   NOT NULL,\n" + 
-				"  `HOST` VARCHAR(200) NOT NULL,\n" + 
-				"  `PORT` VARCHAR(10) NOT NULL, \n" + 
-				"  `DRIVER` VARCHAR(200) NOT NULL ,\n" + 
-				"  `VENDOR` VARCHAR(100)   NOT NULL,\n" + 
-				"  `SCHEMA` VARCHAR(200) NOT NULL ,\n" + 
+				"  `HOST` VARCHAR(200) ,\n" + 
+				"  `PORT` VARCHAR(10) , \n" + 
+				"  `DRIVER` VARCHAR(200) ,\n" + 
+				"  `VENDOR` VARCHAR(100)  ,\n" + 
+				"  `SCHEMA` VARCHAR(200)  ,\n" + 
 				"  `COMMENT` VARCHAR(200) DEFAULT NULL,\n" +  
 				"  `CREATED_AT` DATETIME DEFAULT NULL,\n" + 
 				"  `UPDATED_AT` DATETIME DEFAULT NULL,\n" + 
@@ -49,76 +49,26 @@ public class SqlTextDao {
 			DBTools.execDDL(conn, sql);
 			DBTools.execDDL(conn, sql2);
 			DBTools.execDDL(conn, configTable);
+			saveConfig(conn, "THEME", "DARK");
 		} catch (SQLException e) { 
 			e.printStackTrace();
 		}
 	}
 	
-	public static void createConfigTable(Connection conn) {
-		String configTable = 
-						"CREATE TABLE `APP_CONFIG` (\n" +  
-						"  `NAME` VARCHAR(1000)   NOT NULL,\n" + 
-						"  `VAL`  VARCHAR(1000), \n" + 
-						"  PRIMARY KEY (`NAME`)\n" + 
-						") ";
-		try { 
-			DBTools.execDDL(conn, configTable);
-		} catch (SQLException e) { 
-			e.printStackTrace();
-		}
-	
-	}
+ 
 	
 	public static void save(Connection conn , String title, String txt, String filename) {
-		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME) values ( ? , ?, ? )";
-		int i = 0;
-		PreparedStatement sm = null; 
-		try { 
-			sm = conn.prepareStatement(sql);
-			sm.setString(1, title);
-			sm.setString(2, txt);
-			sm.setString(3, filename);
-		    i = sm.executeUpdate();
-		} catch (SQLException e) { 
-			e.printStackTrace(); 
-		}finally { 
-			if(sm!=null)
-				try {
-					sm.close();
-				} catch (SQLException e) { 
-					e.printStackTrace();
-				}
-		}
+		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME) values ( '"+title+"' , '"+txt+"', '"+filename+"' )";
+		try {
+			DBTools.execDML(conn, sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
 	}
 	
 	public static String readConfig(Connection conn, String name) {
-		String sql = "select   *   from   APP_CONFIG   where name = '"+name+"' ";
-		String vals = "";
-		Statement sm = null; 
-		ResultSet rs = null;
-		try { 
-			sm = conn.createStatement();
-			System.out.println("执行   "+ sql);
-		    rs =  sm.executeQuery(sql);  
-		    if(rs.next()) {  
-		    	vals = rs.getString("VAL");
-		    }
-		} catch (SQLException e) { 
-			e.printStackTrace(); 
-		}finally { 
-			if(rs!=null)
-				try {
-					rs.close();
-				} catch (SQLException e1) { 
-					e1.printStackTrace();
-				}
-			if(sm!=null)
-				try {
-					sm.close();
-				} catch (SQLException e) { 
-					e.printStackTrace();
-				}
-		}
+		String sql = "select   VAL   from   APP_CONFIG   where name = '"+name+"' ";
+		String vals = DBTools.selectOne(conn, sql);
 		return vals;
 	}
 	
@@ -136,23 +86,11 @@ public class SqlTextDao {
 		if(kv !=null && kv.length() > 0) { 
 			deleteConfigKey(conn, key);
 		}
-		String sql = "insert into APP_CONFIG (NAME, VAL) values ( ? , ?)";
-		int i = 0;
-		PreparedStatement sm = null; 
-		try { 
-			sm = conn.prepareStatement(sql);
-			sm.setString(1, key);
-			sm.setString(2, val); 
-		    i = sm.executeUpdate();
-		} catch (SQLException e) { 
-			e.printStackTrace(); 
-		}finally { 
-			if(sm!=null)
-				try {
-					sm.close();
-				} catch (SQLException e) { 
-					e.printStackTrace();
-				}
+		String sql = "insert into APP_CONFIG (NAME, VAL) values ( '"+key+"' , '"+val+"' )"; 
+		try {
+			DBTools.execDML(conn, sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 	

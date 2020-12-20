@@ -17,46 +17,7 @@ import net.tenie.lib.tools.StrUtils;
 
 public class DBTools {
 
-	// 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static DbTableDatePo selectSql(Connection conn, String sql, int limit) throws SQLException {
-		DbTableDatePo dpo = new DbTableDatePo();
-		// DB对象
-		PreparedStatement pstate = null;
-		ResultSet rs = null;
-		try {
-			pstate = conn.prepareStatement(sql);
-			// 处理结果集
-			rs = pstate.executeQuery();
-			// 获取元数据
-			ResultSetMetaData mdata = rs.getMetaData();
-			// 获取元数据列数
-			Integer columnnums = Integer.valueOf(mdata.getColumnCount());
-			// 迭代元数据
-			for (int i = 1; i <= columnnums; i++) {
-				SqlFieldPo po = new SqlFieldPo();
-				po.setColumnName(mdata.getColumnName(i));
-				po.setColumnClassName(mdata.getColumnClassName(i));
-				po.setColumnDisplaySize(mdata.getColumnDisplaySize(i));
-				po.setColumnLabel(mdata.getColumnLabel(i));
-				po.setColumnType(mdata.getColumnType(i));
-				po.setColumnTypeName(mdata.getColumnTypeName(i));
-				dpo.addField(po);
-			}
-			// 数据
-			if (limit > 0) {
-				execRs(columnnums, limit, rs, dpo);
-			} else {
-				execRs(columnnums, rs, dpo);
-			}
-
-		} catch (SQLException e) {
-			throw e;
-		} finally {
-			if (rs != null)
-				rs.close();
-		}
-		return dpo;
-	}
+ 
 
 	public static DbTableDatePo deleteSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
@@ -151,7 +112,29 @@ public class DBTools {
 				pstmt.close();
 		}
 	}
+	// 返回第一个字段的字符串值
+	public static String selectOne(Connection conn, String sql) {
+		ResultSet rs = null;
+		String str = "";
+		try {
+			rs = conn.createStatement().executeQuery(sql);
+			if (rs.next()) {
+				str = rs.getString(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
 
+		return str;
+	}
+	
 	public static DbTableDatePo execSql(Connection conn, String delSQl, String sqltype, String content)
 			throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
@@ -339,36 +322,7 @@ public class DBTools {
 		return rs;
 	}
 
-	private static void execRs(int columnnums, ResultSet rs, DbTableDatePo dpo) throws SQLException {
-		while (rs.next()) {
-			List<String> vals = new ArrayList<String>();
-			for (int i = 1; i <= columnnums; i++) {
-				String val = rs.getString(i);
-				if (val == null) {
-					val = "(null)";
-				}
-				vals.add(val);
-			}
-			dpo.addData(vals);
-		}
-	}
-
-	private static void execRs(int columnnums, int limit, ResultSet rs, DbTableDatePo dpo) throws SQLException {
-		int idx = 1;
-		while (rs.next()) {
-			List<String> vals = new ArrayList<String>();
-			for (int i = 1; i <= columnnums; i++) {
-				String val = rs.getString(i);
-				if (val == null) {
-					val = "<null>";
-				}
-				vals.add(val);
-			}
-			dpo.addData(vals);
-			if (idx == limit)
-				break;
-			idx++;
-		}
-	}
+ 
+ 
 
 }
