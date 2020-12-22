@@ -212,33 +212,7 @@ public class RunSQLHelper {
 
 			
 			//根据表明获取tablepo对象
-//			DBConns.get(ComponentGetter.connComboBox.getValue().gete)
-			String schemaName = "";
-			String tempTableName = tableName;
-			if(tableName.contains(".")) {
-				String[] arrs = tableName.split("\\.");
-				schemaName = arrs[0];
-				tempTableName = arrs[1];
-			}
-			TreeNodePo tnp = ComponentGetter.getSchemaTableNodePo(schemaName);
-			ConnItemDbObjects ci =tnp.getConnItem();
-			ObservableList<TreeItem<TreeNodePo>>  tabs = ci.getTableNode().getChildren();
-			List<String> keys = new ArrayList<>();
-			for(TreeItem<TreeNodePo> node: tabs) {
-				if(node.getValue().getName().toUpperCase().equals(tempTableName.toUpperCase())) {
-					ArrayList<TablePrimaryKeysPo> pks = node.getValue().getTable().getPrimaryKeys();
-					Dbinfo.fetchTablePrimaryKeys(conn, node.getValue().getTable());
-					pks = node.getValue().getTable().getPrimaryKeys();
-					if(pks!=null) {
-						for(TablePrimaryKeysPo kp : pks ) {
-							keys.add(kp.getColumnName());
-						}
-						break;
-					}
-				}
-			}
-
-			
+			List<String> keys = findPrimaryKeys(conn, tableName);
 			// table 添加列和数据
 			TableAddVal(table, dpo ,keys);
 			tdpo.addTableView(table);
@@ -252,6 +226,57 @@ public class RunSQLHelper {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	
+	private static List<String> findPrimaryKeys(Connection conn, String tableName ){
+		
+		String schemaName = "";
+		String tempTableName = tableName;
+		if(tableName.contains(".")) {
+			String[] arrs = tableName.split("\\.");
+			schemaName = arrs[0];
+			tempTableName = arrs[1];
+		}
+		TreeNodePo tnp = ComponentGetter.getSchemaTableNodePo(schemaName);
+		ConnItemDbObjects ci =tnp.getConnItem();
+		ObservableList<TreeItem<TreeNodePo>>  tabs = ci.getTableNode().getChildren();
+		List<String> keys = new ArrayList<>();
+		for(TreeItem<TreeNodePo> node: tabs) {
+			if(node.getValue().getName().toUpperCase().equals(tempTableName.toUpperCase())) {
+//				ArrayList<TablePrimaryKeysPo> pks = node.getValue().getTable().getPrimaryKeys();
+//				Dbinfo.fetchTablePrimaryKeys(conn, node.getValue().getTable());
+//				pks = node.getValue().getTable().getPrimaryKeys();
+//				if(pks!=null) {
+//					for(TablePrimaryKeysPo kp : pks ) {
+//						keys.add(kp.getColumnName());
+//					}
+//					break;
+//				}
+				
+				keys = getKeys(conn, node);
+			}
+		}
+		return keys;
+	}
+	
+	private static List<String>  getKeys( Connection conn, TreeItem<TreeNodePo> node){
+		List<String> keys = new ArrayList<>(); 
+		try {
+			ArrayList<TablePrimaryKeysPo> pks = node.getValue().getTable().getPrimaryKeys();
+			if(pks == null || pks.size() == 0) {
+				Dbinfo.fetchTablePrimaryKeys(conn, node.getValue().getTable()); 
+			} 
+			pks = node.getValue().getTable().getPrimaryKeys();
+			if(pks !=null ) {
+				for(TablePrimaryKeysPo kp : pks ) {
+					keys.add(kp.getColumnName());
+				} 
+			} 
+		} catch (Exception e) { 
+			e.printStackTrace();
+		}
+		
+		return keys;
 	}
 
 	private static void TableAddVal(FilteredTableView<ObservableList<StringProperty>> table, DbTableDatePo dpo, List<String> keys ) {
