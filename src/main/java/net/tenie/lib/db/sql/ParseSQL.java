@@ -16,16 +16,18 @@ public class ParseSQL {
 	public static final int UPDATE = 2;
 	public static final int INSERT = 3;
 	public static final int DELETE = 4;
-	public static final int DROP = 5;
-	public static final int ALTER = 6;
+	public static final int DROP   = 5;
+	public static final int ALTER  = 6;
 	public static final int CREATE = 7;
-	public static final int OTHER = 8;
+	public static final int OTHER  = 8;
 
 	public static int parseType(String sql) {
 		String temp = StrUtils.trimComment(sql, "--");
 		if (StrUtils.beginWithNotSensitive(temp, "SELECT")) {
 			return SELECT;
 		} else if (StrUtils.beginWithNotSensitive(temp, "WITH")) {
+			return SELECT;
+		} else if (StrUtils.beginWithNotSensitive(temp, "VALUES")) {
 			return SELECT;
 		} else if (StrUtils.beginWithNotSensitive(temp, "EXPLAIN")) {
 			return SELECT;

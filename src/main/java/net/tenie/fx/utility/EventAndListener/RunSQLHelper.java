@@ -28,17 +28,22 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
+import javafx.scene.control.TreeItem;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.MyPopupNumberFilter;
 import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.ModalDialog;
+import net.tenie.fx.component.MyTextField2TableCell;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.StringPropertyListValueFactory;
+import net.tenie.fx.component.container.ConnItemDbObjects;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.config.ConfigVal;
@@ -46,8 +51,10 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.db.sql.ParseSQL;
 import net.tenie.lib.po.DbConnectionPo;
+import net.tenie.lib.po.TablePrimaryKeysPo;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
@@ -172,7 +179,7 @@ public class RunSQLHelper {
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
 			// table 添加列和数据
-			TableAddVal(table, ddlDmlpo);
+			TableAddVal(table, ddlDmlpo, new ArrayList<String>());
 			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted())
@@ -203,8 +210,37 @@ public class RunSQLHelper {
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 
+			
+			//根据表明获取tablepo对象
+//			DBConns.get(ComponentGetter.connComboBox.getValue().gete)
+			String schemaName = "";
+			String tempTableName = tableName;
+			if(tableName.contains(".")) {
+				String[] arrs = tableName.split("\\.");
+				schemaName = arrs[0];
+				tempTableName = arrs[1];
+			}
+			TreeNodePo tnp = ComponentGetter.getSchemaTableNodePo(schemaName);
+			ConnItemDbObjects ci =tnp.getConnItem();
+			ObservableList<TreeItem<TreeNodePo>>  tabs = ci.getTableNode().getChildren();
+			List<String> keys = new ArrayList<>();
+			for(TreeItem<TreeNodePo> node: tabs) {
+				if(node.getValue().getName().toUpperCase().equals(tempTableName.toUpperCase())) {
+					ArrayList<TablePrimaryKeysPo> pks = node.getValue().getTable().getPrimaryKeys();
+					Dbinfo.fetchTablePrimaryKeys(conn, node.getValue().getTable());
+					pks = node.getValue().getTable().getPrimaryKeys();
+					if(pks!=null) {
+						for(TablePrimaryKeysPo kp : pks ) {
+							keys.add(kp.getColumnName());
+						}
+						break;
+					}
+				}
+			}
+
+			
 			// table 添加列和数据
-			TableAddVal(table, dpo);
+			TableAddVal(table, dpo ,keys);
 			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted())
@@ -218,10 +254,10 @@ public class RunSQLHelper {
 		}
 	}
 
-	private static void TableAddVal(FilteredTableView<ObservableList<StringProperty>> table, DbTableDatePo dpo) {
+	private static void TableAddVal(FilteredTableView<ObservableList<StringProperty>> table, DbTableDatePo dpo, List<String> keys ) {
 		ObservableList<SqlFieldPo> colss = dpo.getFields();
 		// 表格添加列
-		tableAddColumn(table, colss);
+		tableAddColumn(table, colss, keys);
 		// 数据添加到表格 更简洁的api
 		ObservableList<ObservableList<StringProperty>> rs = dpo.getAllDatas();
 		CacheTableDate.addData(table.getId(), rs);
@@ -258,6 +294,7 @@ public class RunSQLHelper {
 		runbtn.setDisable(stopbtn.disabledProperty().getValue());
 		otherbtn.setDisable(stopbtn.disabledProperty().getValue());
 		stopbtn.setDisable(!runbtn.disabledProperty().getValue());
+		ComponentGetter.connComboBox.setDisable( runbtn.disabledProperty().getValue());
 	}
 
 	public static void settingBtn(JFXButton run, boolean runt, JFXButton stop, boolean stopt, JFXButton btn) {
@@ -372,7 +409,7 @@ public class RunSQLHelper {
 
 	// table 添加列
 	private static void tableAddColumn(TableView<ObservableList<StringProperty>> table,
-			ObservableList<SqlFieldPo> cols) {
+			ObservableList<SqlFieldPo> cols,  List<String> keys ) {
 
 		CacheTableDate.addCols(table.getId(), cols); // 列名缓存
 		int len = cols.size();
@@ -380,42 +417,61 @@ public class RunSQLHelper {
 			String colname = cols.get(i).getColumnLabel().get();
 			int type = cols.get(i).getColumnType().get();
 			FilteredTableColumn col = null;
+			String tyNa = cols.get(i).getColumnTypeName().get() + "(" + cols.get(i).getColumnDisplaySize().get();
+			if (cols.get(i).getScale() != null && cols.get(i).getScale().get() > 0) {
+				tyNa += ", " + cols.get(i).getScale().get();
+			}
+			tyNa += ")"; 
+
+			boolean iskey = false;
+			if(keys.contains(colname)) {
+				iskey = true;
+			}
 			if (len == 2 && i == 1) {
-				col = createColumn(colname, type, i, table, true);
+				col = createColumn(colname, type, tyNa, i, table, true , iskey);
 			} else {
-				col = createColumn(colname, type, i, table, false);
+				col = createColumn(colname, type, tyNa, i, table, false , iskey);
 			}
 			table.getColumns().add(col);
 		}
 	}
 
 	// 创建列
-	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int type,
-			int i, TableView<ObservableList<StringProperty>> table, boolean augmentation) {
-		FilteredTableColumn<ObservableList<StringProperty>, String> col = new FilteredTableColumn<ObservableList<StringProperty>, String>(
-				colname);
-		col.setCellFactory(TextField2TableCell.forTableColumn());
+	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int type, String typeName,
+			int i, TableView<ObservableList<StringProperty>> table, boolean augmentation, boolean iskey) {
+		FilteredTableColumn<ObservableList<StringProperty>, String> col =
+				new FilteredTableColumn<ObservableList<StringProperty>, String>();
+		col.setCellFactory(MyTextField2TableCell.forTableColumn());
 		col.setEditable(true);
+		
+		Label label  = new Label(colname);
+		label.setTooltip(new Tooltip(typeName));
+		if(iskey) {
+			label.setGraphic(ImageViewGenerator.svgImage("material-vpn-key", 10, "#1C92FB")); 
+		}
+		col.setGraphic(label);
+		
 		int witdth;
-		witdth = (colname.length() * 10) + 10;
+		witdth = (colname.length() * 10) + 15;
 		if (witdth < 90)
-			witdth = 90;
+			witdth = 100;
 		if (augmentation) {
-			witdth = 1000;
+			witdth = 200;
 		}
 		col.setMinWidth(witdth);
 		col.setPrefWidth(witdth);
 		col.setCellValueFactory(new StringPropertyListValueFactory(i, table));
 
+		PopupFilter<ObservableList<StringProperty>, String> popupFilter ;
 		if (CommonUtility.isNum(type)) {
 			// 过滤框
-			PopupFilter<ObservableList<StringProperty>, String> popupFilter = new MyPopupNumberFilter(col);
+			popupFilter = new MyPopupNumberFilter(col);
 			col.setOnFilterAction(e -> popupFilter.showPopup());
 			popupFilter.getStyleClass().add("mypopup");
 
 		} else {
 			// 过滤框
-			PopupFilter<ObservableList<StringProperty>, Object> popupFilter = new PopupStringFilter(col);
+			popupFilter = new PopupStringFilter(col);
 			col.setOnFilterAction(e -> popupFilter.showPopup());
 			popupFilter.getStyleClass().add("mypopup");
 		}
@@ -428,8 +484,14 @@ public class RunSQLHelper {
 			CommonUtility.setClipboardVal(colname);
 		});
 
-		col.setContextMenu(cm);
-		cm.getItems().add(miActive);
+		MenuItem filter = new MenuItem("Filter");
+		filter.setOnAction(e->{
+			popupFilter.showPopup();
+		});
+
+
+		col.setContextMenu(cm); 
+		cm.getItems().addAll(miActive, filter);
 
 		return col;
 	}

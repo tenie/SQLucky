@@ -21,6 +21,8 @@ import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.config.DBConns;
 import net.tenie.lib.po.DbConnectionPo;
+import net.tenie.lib.tools.StrUtils;
+
 import java.util.Optional;
 
 /*   @author tenie */
@@ -47,6 +49,30 @@ public final class ComponentGetter {
 	public static Long cursor;
 	// 拖动的对象名称
 	public static String  dragTreeItemName;
+	
+	
+	// 获取schema节点的 TreeNodePo
+	public static TreeNodePo getSchemaTableNodePo(String schema) {
+		Label lb = connComboBox.getValue();
+		if( lb != null) {
+			String str = lb.getText();
+			TreeItem<TreeNodePo> tnp = getConnNode(str);
+			if(StrUtils.isNullOrEmpty(schema)) {
+				DbConnectionPo  dbpo = DBConns.get(str);
+				schema =  dbpo.getDefaultSchema();
+			} 
+
+			if(tnp != null ) {
+				ObservableList<TreeItem<TreeNodePo>> lsShc = tnp.getChildren().get(0).getChildren();
+			    for(TreeItem<TreeNodePo> sche : lsShc) {
+			    	if(sche.getValue().getName().equals(schema) ) {
+			    		return sche.getValue();
+			    	}
+			    } 
+			}
+		}
+		return null;
+	}
 	
 	// 根据链接名称,获取链接Node 
 	public static TreeItem<TreeNodePo>  getConnNode(String dbName){

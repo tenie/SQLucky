@@ -265,7 +265,7 @@ public class DataViewContainer {
 		}); 
 	   
         table.setRowHeader(tc);
-        table.tableMenuButtonVisibleProperty().setValue(true);
+//        table.tableMenuButtonVisibleProperty().setValue(true);
         
 		return table;
 	}

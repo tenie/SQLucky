@@ -152,6 +152,7 @@ public class DBinfoTree {
 				String schemaName = item.getValue().getName();
 				// 初始化schema中数据库对象的数据
 				ConnItemDbObjects ci = new ConnItemDbObjects(po, schemaName); 
+				item.getValue().setConnItem(ci);
 				// 
 				ConnItemContainer connItemContainer = connRoot.getValue().getConnItemContainer(); //findConnItemParent(connRoot);
 				if(connItemContainer != null ) {

@@ -31,15 +31,17 @@ public class ConnItemContainer {
 		String defSch = connpo.getDefaultSchema();
 		schemaNode = CreateSchemaNode(connpo);
 		moveSchemaToTop(defSch, schemaNode);
-		showConnNode(connpo, defSch);
+		ConnItemDbObjects ci = showConnNode(connpo, defSch);
 		// 将自己缓存到数对象中
 //		ComponentGetter.dbInfoTree.getConnItemParent().add(this);
 		parentNode.getValue().setConnItemContainer(this);
+		schemaNode.getValue().setConnItem(ci);
 	}
 
-	public void showConnNode(DbConnectionPo connpo, String schemaName) {
+	public ConnItemDbObjects showConnNode(DbConnectionPo connpo, String schemaName) {
 		ConnItemDbObjects ci = new ConnItemDbObjects(connpo, schemaName);
 		addConnItem(ci);
+		return ci;
 	}
 
 	// 根据给定的数据库对象, 将他加入到对应的schema node下
