@@ -510,6 +510,7 @@ public class RunSQLHelper {
 		});
 
 		MenuItem filter = new MenuItem("Filter");
+		filter.setGraphic(ImageViewGenerator.svgImageDefActive("filter"));
 		filter.setOnAction(e->{
 			popupFilter.showPopup();
 		});

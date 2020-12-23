@@ -95,8 +95,7 @@ public class ShowTableRowDateDetailAction {
 						tf2.setText(tyNa);
 						tf3.setText(p.getColumnClassName().get());
 					}
-				});
-
+				}); 
 		TableColumn<SqlFieldPo, String> col = new TableColumn<>("Field Name");
 		col.setCellValueFactory(cellData -> {
 			return cellData.getValue().getColumnLabel();
@@ -148,7 +147,7 @@ public class ShowTableRowDateDetailAction {
 
 		});
 
-		new ModalDialog(subvb, "Table Info");
+		new ModalDialog(subvb, tv , "Table Info");
 
 	}
 

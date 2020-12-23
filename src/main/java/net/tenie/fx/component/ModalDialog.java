@@ -1,18 +1,22 @@
 package net.tenie.fx.component;
 
 import javafx.stage.*;
+import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.main.MainMyDB;
 import javafx.scene.*;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -133,12 +137,14 @@ public class ModalDialog {
 	}
 
 	// 根据给定的node 创建 模态框
-	public ModalDialog(Parent node, String title) {
+	public ModalDialog(Parent node, TableView<SqlFieldPo>  tv ,String title) {
 		try {
 
 			final Stage stage = new Stage();
 			Scene scene = new Scene(node);
 			scene.getStylesheets().addAll(ConfigVal.cssList);
+			Image img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
+			stage.getIcons().add(img);
 
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.setTitle(title);
@@ -146,6 +152,7 @@ public class ModalDialog {
 			stage.setScene(scene);
 
 			stage.show();
+			tv.getSelectionModel().select(0);
 			stage.setOnCloseRequest(v -> {
 
 			});
