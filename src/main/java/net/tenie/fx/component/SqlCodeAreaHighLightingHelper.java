@@ -46,25 +46,14 @@ public class SqlCodeAreaHighLightingHelper {
             + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
 				    		 ;
     
-    private static final Pattern PATTERN = Pattern.compile(  "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
-            + "|(?<PAREN>" + PAREN_PATTERN + ")"
-            + "|(?<BRACE>" + BRACE_PATTERN + ")"
-            + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
-            
-//            + "|(?<PAREN>" + PAREN_PATTERN2 + ")"
-//            + "|(?<BRACE>" + BRACE_PATTERN2 + ")"
-//            + "|(?<BRACKET>" + BRACKET_PATTERN2 + ")"
-            
-            + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
-            + "|(?<STRING>" + STRING_PATTERN + ")"
-            + "|(?<COMMENT>" + COMMENT_PATTERN + ")"  );
+    private static final Pattern PATTERN = Pattern.compile(patternString  );
     
  
  
     
-    public static  StyleSpans<Collection<String>> findEqualyWord(String str, String text) {
-    	patternString +=  "|(?<FINDWORD>(" + str.toUpperCase() + "))";
-    	Pattern pattern = Pattern.compile( patternString  );
+    public static  StyleSpans<Collection<String>> findEqualyWord(String str, String text) { 
+    	String mypatternString = patternString + "|(?<FINDWORD>(" + str.toUpperCase() + "))"; 
+    	Pattern pattern = Pattern.compile( mypatternString  );
     	Matcher matcher = pattern.matcher(text.toUpperCase());
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder
@@ -90,10 +79,15 @@ public class SqlCodeAreaHighLightingHelper {
     }
 
     public static void applyHighlighting(CodeArea codeArea) {
-    	StyleSpans<Collection<String>> highlighting  = findEqualyWord("foo", codeArea.getText());
-//    	StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
+//    	StyleSpans<Collection<String>> highlighting  = findEqualyWord("foo", codeArea.getText());
+    	StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
         codeArea.setStyleSpans(0, highlighting);
     }
+    public static void applyHighlighting(CodeArea codeArea, String str) {
+    	StyleSpans<Collection<String>> highlighting  = findEqualyWord(str, codeArea.getText()); 
+        codeArea.setStyleSpans(0, highlighting);
+    }
+
 
     public static void applyErrorHighlighting(CodeArea codeArea) {
     	StyleSpans<Collection<String>> highlighting  = computeErrorHighlighting(codeArea.getText());
