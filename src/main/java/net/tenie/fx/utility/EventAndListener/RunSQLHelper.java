@@ -231,6 +231,7 @@ public class RunSQLHelper {
 	private static List<String> findPrimaryKeys(Connection conn, String tableName ){
 		
 		String schemaName = "";
+		List<String> keys = new ArrayList<>();
 		String tempTableName = tableName;
 		if(tableName.contains(".")) {
 			String[] arrs = tableName.split("\\.");
@@ -238,24 +239,15 @@ public class RunSQLHelper {
 			tempTableName = arrs[1];
 		}
 		TreeNodePo tnp = ComponentGetter.getSchemaTableNodePo(schemaName);
-		ConnItemDbObjects ci =tnp.getConnItem();
-		ObservableList<TreeItem<TreeNodePo>>  tabs = ci.getTableNode().getChildren();
-		List<String> keys = new ArrayList<>();
-		for(TreeItem<TreeNodePo> node: tabs) {
-			if(node.getValue().getName().toUpperCase().equals(tempTableName.toUpperCase())) {
-//				ArrayList<TablePrimaryKeysPo> pks = node.getValue().getTable().getPrimaryKeys();
-//				Dbinfo.fetchTablePrimaryKeys(conn, node.getValue().getTable());
-//				pks = node.getValue().getTable().getPrimaryKeys();
-//				if(pks!=null) {
-//					for(TablePrimaryKeysPo kp : pks ) {
-//						keys.add(kp.getColumnName());
-//					}
-//					break;
-//				}
-				
-				keys = getKeys(conn, node);
+		if(tnp != null) {
+			ConnItemDbObjects ci =tnp.getConnItem();
+			ObservableList<TreeItem<TreeNodePo>>  tabs = ci.getTableNode().getChildren(); 
+			for(TreeItem<TreeNodePo> node: tabs) {
+				if(node.getValue().getName().toUpperCase().equals(tempTableName.toUpperCase())) { 
+					keys = getKeys(conn, node);
+				}
 			}
-		}
+		} 
 		return keys;
 	}
 	

@@ -63,12 +63,15 @@ public final class ComponentGetter {
 			} 
 
 			if(tnp != null ) {
-				ObservableList<TreeItem<TreeNodePo>> lsShc = tnp.getChildren().get(0).getChildren();
-			    for(TreeItem<TreeNodePo> sche : lsShc) {
-			    	if(sche.getValue().getName().equals(schema) ) {
-			    		return sche.getValue();
-			    	}
-			    } 
+				if(tnp.getChildren().size() > 0) {
+					ObservableList<TreeItem<TreeNodePo>> lsShc = tnp.getChildren().get(0).getChildren();
+				    for(TreeItem<TreeNodePo> sche : lsShc) {
+				    	if(sche.getValue().getName().equals(schema) ) {
+				    		return sche.getValue();
+				    	}
+				    } 
+				}
+				
 			}
 		}
 		return null;
