@@ -3,8 +3,13 @@
      -fx-fill: #bdcddf;   /* 文本颜色 */  
 }
 
+.findword { 
+    -fx-fill: red;
+    -fx-font-weight: bold;
+}
+
 .keyword { 
-    -fx-fill: #C97632;
+    -fx-fill: blue;
     -fx-font-weight: bold;
 }
 

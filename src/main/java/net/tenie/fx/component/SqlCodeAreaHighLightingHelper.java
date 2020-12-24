@@ -31,9 +31,8 @@ public class SqlCodeAreaHighLightingHelper {
     // 注释
     private static final String COMMENT_PATTERN = "//[^\n]*" +"|"+"--[^\n]*"+ "|" + "/\\*(.|\\R)*?\\*/";
 //    private static final String COMMENT_PATTERN2 = "--[^\n]*";  '([^'\\\\]|\\\\.)*'
-
-    private static final Pattern PATTERN = Pattern.compile(
-            "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
+    private static String patternString =  
+    		  "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
             + "|(?<PAREN>" + PAREN_PATTERN + ")"
             + "|(?<BRACE>" + BRACE_PATTERN + ")"
             + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
@@ -45,12 +44,54 @@ public class SqlCodeAreaHighLightingHelper {
             + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
             + "|(?<STRING>" + STRING_PATTERN + ")"
             + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
-    );
+				    		 ;
+    
+    private static final Pattern PATTERN = Pattern.compile(  "(?<KEYWORD>" + KEYWORD_PATTERN + ")"
+            + "|(?<PAREN>" + PAREN_PATTERN + ")"
+            + "|(?<BRACE>" + BRACE_PATTERN + ")"
+            + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
+            
+//            + "|(?<PAREN>" + PAREN_PATTERN2 + ")"
+//            + "|(?<BRACE>" + BRACE_PATTERN2 + ")"
+//            + "|(?<BRACKET>" + BRACKET_PATTERN2 + ")"
+            
+            + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
+            + "|(?<STRING>" + STRING_PATTERN + ")"
+            + "|(?<COMMENT>" + COMMENT_PATTERN + ")"  );
+    
+ 
  
     
+    public static  StyleSpans<Collection<String>> findEqualyWord(String str, String text) {
+    	patternString +=  "|(?<FINDWORD>(" + str.toUpperCase() + "))";
+    	Pattern pattern = Pattern.compile( patternString  );
+    	Matcher matcher = pattern.matcher(text.toUpperCase());
+        int lastKwEnd = 0;
+        StyleSpansBuilder<Collection<String>> spansBuilder
+                = new StyleSpansBuilder<>();
+        while(matcher.find()) {
+            String styleClass =
+                    matcher.group("KEYWORD") != null ? "keyword" :
+                    matcher.group("PAREN") != null ? "paren" :
+                    matcher.group("BRACE") != null ? "brace" :
+                    matcher.group("BRACKET") != null ? "bracket" :
+                    matcher.group("SEMICOLON") != null ? "semicolon" :
+                    matcher.group("STRING") != null ? "string" :
+                    matcher.group("COMMENT") != null ? "comment" :
+                    matcher.group("FINDWORD") != null ? "findword" :
+                    null; /* never happens */ assert styleClass != null;
+            spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
+            spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
+            lastKwEnd = matcher.end();
+        }
+        spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
+        return spansBuilder.create();
+      
+    }
 
     public static void applyHighlighting(CodeArea codeArea) {
-    	StyleSpans<Collection<String>> highlighting  = computeHighlighting(codeArea.getText());
+    	StyleSpans<Collection<String>> highlighting  = findEqualyWord("foo", codeArea.getText());
+//    	StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
         codeArea.setStyleSpans(0, highlighting);
     }
 
