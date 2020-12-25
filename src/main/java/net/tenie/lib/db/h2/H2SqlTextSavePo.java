@@ -4,6 +4,15 @@ public class H2SqlTextSavePo {
 	private String title;
 	private String text;
 	private String fileName;
+	private String encode;
+	
+	
+	public String getEncode() {
+		return encode;
+	}
+	public void setEncode(String encode) {
+		this.encode = encode;
+	}
 	public String getTitle() {
 		return title;
 	}

@@ -37,6 +37,7 @@ public class SqlTextDao {
 				"  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n" + 
 				"  `SQL_TEXT` CLOB, \n" +
 				"  `FILE_NAME` VARCHAR(1000) ,\n" + 
+				"  `ENCODE` VARCHAR(100) ,\n" + 
 				"  PRIMARY KEY (`TITLE_NAME`)\n" + 
 				") ";
 		String configTable = 
@@ -57,14 +58,37 @@ public class SqlTextDao {
 	
  
 	
-	public static void save(Connection conn , String title, String txt, String filename) {
-		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME) values ( '"+title+"' , '"+txt+"', '"+filename+"' )";
-		try {
-			DBTools.execDML(conn, sql);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} 
+//	public static void save(Connection conn , String title, String txt, String filename) {
+//		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME) values ( '"+title+"' , '"+txt+"', '"+filename+"' )";
+//		try {
+//			DBTools.execDML(conn, sql);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} 
+//	}
+	public static void save(Connection conn , String title, String txt, String filename, String encode) {
+		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE) values ( ? , ?, ?, ?)";
+		int i = 0;
+		PreparedStatement sm = null; 
+		try { 
+			sm = conn.prepareStatement(sql);
+			sm.setString(1, title);
+			sm.setString(2, txt);
+			sm.setString(3, filename);
+			sm.setString(4, encode);
+		    i = sm.executeUpdate();
+		} catch (SQLException e) { 
+			e.printStackTrace(); 
+		}finally { 
+			if(sm!=null)
+				try {
+					sm.close();
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
+		}
 	}
+	
 	
 	public static String readConfig(Connection conn, String name) {
 		String sql = "select   VAL   from   APP_CONFIG   where name = '"+name+"' ";
@@ -110,6 +134,7 @@ public class SqlTextDao {
 		    	po.setTitle( rs.getString("TITLE_NAME"));
 		    	po.setText( rs.getString("SQL_TEXT"));
 		    	po.setFileName( rs.getString("FILE_NAME"));
+		    	po.setEncode( rs.getString("ENCODE"));
 		    	
 		    	vals.add(po);
 		    }

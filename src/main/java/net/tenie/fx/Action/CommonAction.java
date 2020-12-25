@@ -86,9 +86,9 @@ public class CommonAction {
 							idval = "";
 						}
 
-						String title = CommonUtility.tabText(t);
-
-						SqlTextDao.save(H2conn, title, sql, idval);
+						String title = CommonUtility.tabText(t); 
+						String encode = ComponentGetter.getFileEncode(idval);
+						SqlTextDao.save(H2conn, title, sql, idval, encode);
 					}
 				}
 			}
@@ -418,7 +418,7 @@ public class CommonAction {
 			String val = FileUtils.readFileToString(f, encode);
 			String id = "";
 			String tabName = "";
-
+			ComponentGetter.fileEncode.put( f.getPath(), encode);
 			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
 				id = ConfigVal.SAVE_TAG + f.getPath();
 				tabName = SaveFile.fileName(f.getPath());

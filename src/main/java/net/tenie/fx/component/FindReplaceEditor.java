@@ -79,7 +79,7 @@ public class FindReplaceEditor {
 			return;
 		CodeArea code = SqlEditor.getCodeArea();
 		int idx = code.getCaretPosition();
-		findString(str, idx, sensitive, forward);
+		findString(str, idx, sensitive, forward); 
 	}
 
 	public static String codeStr(boolean sensitive) {
@@ -156,7 +156,7 @@ public class FindReplaceEditor {
 				selectRange(code, start, start + length);
 			}
 		}
-
+		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(code, str);
 	}
 
 	public static void delFindReplacePane() {
@@ -227,6 +227,9 @@ public class FindReplaceEditor {
 		tf.setPrefWidth(250);
 		tf.setPrefHeight(15);
 		tf.getStyleClass().add("myFindTextField");
+		tf.textProperty().addListener((o, oldVal, newVal) -> {
+			findStringFromCodeArea(newVal, true, !cb.isSelected());
+		});
 
 		// "arrow-down"
 		JFXButton down = new JFXButton();

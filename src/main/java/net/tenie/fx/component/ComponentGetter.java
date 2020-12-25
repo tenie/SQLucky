@@ -23,6 +23,8 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 /*   @author tenie */
@@ -50,6 +52,17 @@ public final class ComponentGetter {
 	// 拖动的对象名称
 	public static String  dragTreeItemName;
 	
+	// file 编码
+	public static Map<String, String> fileEncode = new HashMap<>();
+	
+	
+	public static String getFileEncode(String name) {
+		String val = fileEncode.get(name);
+		if(val == null) {
+			val = "UTF-8";
+		}
+		return val;
+	}
 	
 	// 获取schema节点的 TreeNodePo
 	public static TreeNodePo getSchemaTableNodePo(String schema) {

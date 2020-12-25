@@ -81,6 +81,7 @@ public class SqlEditor {
 						tab.setId(ConfigVal.SAVE_TAG + po.getFileName());
 //							tab.setText(po.getTitle()); 
 						CommonUtility.setTabName(tab, po.getTitle());
+						ComponentGetter.fileEncode.put(  po.getFileName(), po.getEncode());
 					}
 
 				}

@@ -51,7 +51,7 @@ public class SqlCodeAreaHighLightingHelper {
  
  
     
-    public static  StyleSpans<Collection<String>> findEqualyWord(String str, String text) { 
+    public static  StyleSpans<Collection<String>> findEqualyWord(String str, String text) {
     	String mypatternString = patternString + "|(?<FINDWORD>(" + str.toUpperCase() + "))"; 
     	Pattern pattern = Pattern.compile( mypatternString  );
     	Matcher matcher = pattern.matcher(text.toUpperCase());
@@ -60,14 +60,14 @@ public class SqlCodeAreaHighLightingHelper {
                 = new StyleSpansBuilder<>();
         while(matcher.find()) {
             String styleClass =
+            	    matcher.group("FINDWORD") != null ? "findword" :
                     matcher.group("KEYWORD") != null ? "keyword" :
                     matcher.group("PAREN") != null ? "paren" :
                     matcher.group("BRACE") != null ? "brace" :
                     matcher.group("BRACKET") != null ? "bracket" :
                     matcher.group("SEMICOLON") != null ? "semicolon" :
                     matcher.group("STRING") != null ? "string" :
-                    matcher.group("COMMENT") != null ? "comment" :
-                    matcher.group("FINDWORD") != null ? "findword" :
+                    matcher.group("COMMENT") != null ? "comment" : 
                     null; /* never happens */ assert styleClass != null;
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
             spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
@@ -83,15 +83,17 @@ public class SqlCodeAreaHighLightingHelper {
     	StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
         codeArea.setStyleSpans(0, highlighting);
     }
-    public static void applyHighlighting(CodeArea codeArea, String str) {
+    public static void applyFindWordHighlighting(CodeArea codeArea,String str) {
     	StyleSpans<Collection<String>> highlighting  = findEqualyWord(str, codeArea.getText()); 
-        codeArea.setStyleSpans(0, highlighting);
-    }
-
-
-    public static void applyErrorHighlighting(CodeArea codeArea) {
-    	StyleSpans<Collection<String>> highlighting  = computeErrorHighlighting(codeArea.getText());
-        codeArea.setStyleSpans(0, highlighting);
+    	codeArea.setStyleSpans(0, highlighting);
+    	
+    }  
+    public static void applyErrorHighlighting( int begin , int length) {
+    	CodeArea codeArea  = SqlEditor.getCodeArea();
+    	StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
+    	spansBuilder.add(Collections.singleton("errorword"), length);
+    	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
+    	codeArea.setStyleSpans(begin, highlighting);
     	
     }
     

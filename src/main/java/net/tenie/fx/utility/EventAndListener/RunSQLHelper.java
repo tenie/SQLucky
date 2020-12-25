@@ -12,6 +12,8 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.cell.TextField2TableCell;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupStringFilter;
+import org.fxmisc.richtext.CodeArea;
+
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -41,6 +43,7 @@ import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.MyTextField2TableCell;
+import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.StringPropertyListValueFactory;
 import net.tenie.fx.component.container.ConnItemDbObjects;
@@ -89,15 +92,14 @@ public class RunSQLHelper {
 			} else {
 				// 获取文本编辑中选中的sql文本来执行sql
 				// 获取sql 语句
-				List<String> allsqls = new ArrayList<>();
-				if(StrUtils.isNotNullOrEmpty(btn)) {
+				List<sqlData> allsqls = new ArrayList<>();
+				if(StrUtils.isNotNullOrEmpty(btn)) {  //执行存储过程函数等
 					String str = SqlEditor.getCurrentTabSQLText();
-					allsqls.add(str);
+					sqlData sq = new sqlData(str, 0, str.length());
+					allsqls.add(sq);
 				}else {
 					allsqls = willExecSql();
-				}
-				  
-				
+				} 
 				// 执行sql
 				execSqlList(allsqls, conn);
 			}
@@ -115,7 +117,7 @@ public class RunSQLHelper {
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static void execSqlList(List<String> allsqls, Connection conn) throws SQLException {
+	private static void execSqlList(List<sqlData> allsqls, Connection conn) throws SQLException {
 //    	List<String > allsqls = tdpo.getSql(); 
 		String sqlstr;
 		String sql;
@@ -126,7 +128,8 @@ public class RunSQLHelper {
 		ddlDmlpo.addField("Execute SQL");
 
 		for (int i = 0; i < sqllenght; i++) {
-			sqlstr = allsqls.get(i);
+//			sqlstr = allsqls.get(i);
+			sqlstr = allsqls.get(i).sql;
 			sql = StrUtils.trimComment(sqlstr, "--");
 			int type = ParseSQL.parseType(sql);
 			String msg = "";
@@ -159,6 +162,11 @@ public class RunSQLHelper {
 				}
 			} catch (Exception e) {
 				msg = "failed : " + e.getMessage();
+				int bg = allsqls.get(i).begin;
+				int len =  allsqls.get(i).length;
+				Platform.runLater(() -> {  
+					SqlCodeAreaHighLightingHelper.applyErrorHighlighting( bg, len);
+				});
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
@@ -566,42 +574,57 @@ public class RunSQLHelper {
 
 	}
 
+	
 	/**
 	 * 获取要执行的sql, 去除无效的(如-- 开头的)
 	 */
-	public static List<String> willExecSql() {
-		String str = SqlEditor.getCurrentTabSQLTextSelected();
-		String val = "";
-		if (str != null && str.length() > 1) {
-			val = str;
+	public static List<sqlData> willExecSql() {
+		List<sqlData> sds = new ArrayList<>();
+		CodeArea code = SqlEditor.getCodeArea();
+		String str = SqlEditor.getCurrentTabSQLTextSelected(); 
+		int start = 0;
+		if (str != null && str.length() > 0) {
+		    start = code.getSelection().getStart();
 		} else {
 			str = SqlEditor.getCurrentTabSQLText();
-			if (str != null && str.length() > 1) {
-				val = str;
-			}
 		}
-
-		String sql = val;
-		List<String> allsqls = new ArrayList<String>();
+		
+		// 去除注释
+		str = StrUtils.trimCommentToSpace(str, "--");
+		
 		// 有多个 执行语句时
-		if (sql.contains(";")) {
-			String[] all = sql.split(";"); // 分割多个语句
+		if (str.contains(";")) {
+			String[] all = str.split(";"); // 分割多个语句
 			if (all != null && all.length > 0) {
-				for (String s : all) {
-					s = s.trim();
-					if (s.length() > 1) {
-						allsqls.add(s);
+				for (String s : all) { 
+					String trimSql = s.trim();
+					if (trimSql.length() > 1) {
+						sqlData sq = new sqlData(trimSql, start, s.length());
+						sds.add(sq);
+						start +=  s.length()+1; 
 					}
 				}
 
-			} else {
-				allsqls.add(sql);
 			}
-		} else {
-			allsqls.add(sql);
-		}
+		}else {
+			sqlData sq = new sqlData(str, start, str.length());
+			sds.add(sq);
+		} 
 
-		return allsqls;
+		return sds;
 	}
 
 }
+
+
+class sqlData{
+	String sql;
+	int begin;
+	int length;
+	sqlData(String s, int i, int len){
+		sql = s;
+		begin = i;
+		length = len;
+	}
+}
+

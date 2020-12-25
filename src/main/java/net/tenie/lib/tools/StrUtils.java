@@ -2,7 +2,9 @@ package net.tenie.lib.tools;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,7 +34,19 @@ public class StrUtils {
 		return rs.toString();
 	}
 public static void main(String[] args) {
-	String s = CamelCaseUnderline("balancePartAmount");
+	String str = 
+			  "balancePartAmount\n"
+			+ "1111--ssss\n"
+			+ "2222"  ;
+	System.out.println(str.length());
+	System.out.println(str);
+	System.out.println("======");
+	String s = trimComment(str, "--");
+	System.out.println(s.length());
+	System.out.println(s);
+	System.out.println("======");
+    s = trimCommentToSpace(str, "--");
+	System.out.println(s.length());
 	System.out.println(s);
 }
 	// 下划线 轉 驼峰命名
@@ -155,6 +169,71 @@ public static void main(String[] args) {
 		return nstr.trim();
 	}
 
+	// 去除注释
+	public static String trimCommentToSpace(String sql, String symbol) {
+			if(! sql.contains(symbol)) return sql;
+			String str = sql.replaceAll(symbol, "\n" + symbol);
+			if (str.contains("\r")) {
+				str = str.replace("\r", "");
+			}
+
+			String[] sa = str.split("\n");
+			String nstr = "";
+			if (sa != null && sa.length > 1) {
+				for (int i = 0; i < sa.length; i++) {
+					String temp = sa[i];
+					if (!beginWith(temp, symbol)) {
+						nstr += temp + "\n";
+					}else {
+						String space = ""; 
+						for(int j = 0 ; j < temp.length(); j++){
+							space += " ";
+						}
+						nstr = nstr.substring(0, nstr.length()-1);
+						nstr +=  space + "\n";
+					}
+				}
+			}
+			if ("".equals(nstr)) {
+				nstr = sql;
+			}
+			return nstr.trim();
+		}
+	
+	// 根据; 分割字符串, 需要忽略在注释下的分号
+	public static List<String> splitSqlStr(String sql) {
+		List<String> rs = new ArrayList<>();
+		String[] sa = sql.split("\n");
+		String nSql = "";
+		if(sa !=null && sa.length > 0) {
+			for(int i = 0; i< sa.length; i++) {
+				String sub = sa[i];
+				if(!sub.contains(";")) {  //没有分隔符, 拼接字符串
+					nSql += sub +  "\n";
+				}else{					  //有分隔符: 1. 判断有没有注释,
+					if(sub.contains("--")) {
+						int local = sub.indexOf("--");
+						String subTmp1 = sub.substring(0, local);
+						String subTmp2 = sub.substring(local);
+						if(subTmp1.contains(";")) {
+//							 sub
+						}
+						
+					}else{
+						nSql += sub +  "\n";
+						rs.add(nSql);
+						nSql = "";
+					}
+				}
+				
+			}
+			if(nSql.length()>0) {
+				rs.add(nSql);
+			}
+		}
+		return rs;
+	}
+	
 	/**
 	 * check if null or empty string
 	 */
