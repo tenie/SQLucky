@@ -1,16 +1,10 @@
 package net.tenie.fx.component;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.concurrent.Task;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.IndexRange;
@@ -22,12 +16,9 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 import net.tenie.lib.tools.StrUtils;
-
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 /*   @author tenie */
 public class SqlCodeAreaHighLighting {
@@ -73,7 +64,7 @@ public class SqlCodeAreaHighLighting {
 		 
 	    // 中午输入法显示问题
 		codeArea.setInputMethodRequests(new InputMethodRequestsObject(codeArea));
-		codeArea.setOnInputMethodTextChanged(e ->{ 			
+		codeArea.setOnInputMethodTextChanged(e ->{		
 			 if (e.getCommitted() != "") {
 				 codeArea.insertText(codeArea.getCaretPosition(), e.getCommitted());
 		        }
