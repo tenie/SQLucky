@@ -133,6 +133,7 @@ class InputMethodRequestsObject implements InputMethodRequests {
     }
     @Override
     public Point2D getTextLocation(int offset) {
+    	System.out.println("????????");
         // a very rough example, only tested under macOS
         Optional<Bounds> caretPositionBounds = area.getCaretBounds();
         if (caretPositionBounds.isPresent()) {
