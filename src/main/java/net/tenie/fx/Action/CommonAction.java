@@ -61,6 +61,7 @@ public class CommonAction {
 					SqlEditor.mainTabPaneSelectedTab().setId(ConfigVal.SAVE_TAG + file.getPath());
 				}
 			}
+			setOpenfileDir(fileName);
 
 		} catch (Exception e1) {
 			ModalDialog.showErrorMsg("Save Error!", e1.getMessage());
@@ -422,6 +423,7 @@ public class CommonAction {
 			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
 				id = ConfigVal.SAVE_TAG + f.getPath();
 				tabName = SaveFile.fileName(f.getPath());
+				setOpenfileDir(f.getPath());
 			}
 			SqlEditor.createTabFromSqlFile(val, tabName, id);
 		} catch (IOException e) {
@@ -589,6 +591,14 @@ public class CommonAction {
 		ComponentGetter.primaryscene.getStylesheets().addAll(cssList); 
 		SqlEditor.changeThemeAllCodeArea() ;
 	}
+	
+	public static void setOpenfileDir(String val) {
+		Connection conn =  H2Db.getConn();
+		H2Db.setConfigVal(conn, "OPEN_FILE_DIR", val) ;
+		H2Db.closeConn();
+		ConfigVal.openfileDir = val;
+	}
+	
 	public static void demo() {
 
 	}

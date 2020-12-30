@@ -28,6 +28,7 @@ public class MainMyDB extends Application {
 	public void init() throws Exception {
 		Connection conn = H2Db.getConn();
 	    Theme = H2Db.getConfigVal(conn , "THEME"); 
+	    ConfigVal.openfileDir = H2Db.getConfigVal(conn , "OPEN_FILE_DIR"); 
 		H2Db.closeConn();
 		app = new AppWindow();
 		scene = new Scene(app.getMainWindow());

@@ -1,6 +1,8 @@
 package net.tenie.fx.component;
 
 import javafx.scene.Node;
+
+import org.apache.commons.io.FileUtils;
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
@@ -19,10 +21,12 @@ import javafx.stage.Stage;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.DBinfoTree;
+import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -62,6 +66,22 @@ public final class ComponentGetter {
 			val = "UTF-8";
 		}
 		return val;
+	}
+	
+	// 获取打开文件的目录
+	public static File getOpenfileDir() { 
+			if(StrUtils.isNullOrEmpty(ConfigVal.openfileDir)) {
+				return  FileUtils.getUserDirectory();
+			}else {
+				 
+				File f = new File(ConfigVal.openfileDir);
+				if(f.isFile()) {
+					String fp = f.getParent();
+//					System.out.println(fp);
+				    f =  new File(fp);
+				} 
+				return  f;
+			} 
 	}
 	
 	// 获取schema节点的 TreeNodePo

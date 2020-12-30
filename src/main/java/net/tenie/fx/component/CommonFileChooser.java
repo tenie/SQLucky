@@ -6,6 +6,8 @@ import org.apache.commons.io.FileUtils;
 
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import net.tenie.fx.config.ConfigVal;
+import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public final class CommonFileChooser {
@@ -17,7 +19,9 @@ public final class CommonFileChooser {
 		fileChooser.setTitle(title);
 
 //	        fileChooser.setInitialDirectory( new File(System.getProperty("user.home"))  );
-		fileChooser.setInitialDirectory(FileUtils.getUserDirectory());
+		File dir =  ComponentGetter.getOpenfileDir();
+		
+		fileChooser.setInitialDirectory( dir);
 		fileChooser.getExtensionFilters().clear();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("sql", "*.sql"),
 				new FileChooser.ExtensionFilter("txt", "*.txt"), new FileChooser.ExtensionFilter("csv", "*.csv"),
