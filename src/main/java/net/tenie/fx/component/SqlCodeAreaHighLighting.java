@@ -85,8 +85,9 @@ public class SqlCodeAreaHighLighting {
 		codeArea.selectedTextProperty().addListener(new ChangeListener<String>() {
 		    @Override
 		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-		    	if(newValue.length() > 0) {
-		    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, newValue); 
+		    	String str = newValue.trim();
+		    	if(str.length() > 0) {
+		    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str); 
 		    	}else {
 		    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
 		    	}
