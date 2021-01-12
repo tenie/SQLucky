@@ -3,11 +3,14 @@ package net.tenie.lib.tools;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import net.tenie.fx.config.ConfigVal;
 
 /*   @author tenie */
 public class StrUtils {
@@ -34,6 +37,9 @@ public class StrUtils {
 		return rs.toString();
 	}
 public static void main(String[] args) {
+	Date d  = datePlus1Second("2021-01-07 11:47:17" );
+//								2021-01-07 11:47:18
+	 System.out.println( dateToStrL(d)); ;
 	String str = 
 			  "balancePartAmount\n"
 			+ "1111--ssss\n"
@@ -297,6 +303,21 @@ public static void main(String[] args) {
 			throw new RuntimeException();
 		}
 	}
+	
+	public static Date datePlus1Second(String str) {
+		try {
+			Date d = StrUtils.StrToDate(str, ConfigVal.dateFormateL);
+			Calendar c = Calendar.getInstance();
+			c.setTime(d);
+			c.add(Calendar.SECOND, 1);
+			
+			return c.getTime();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException();
+		}
+	}
+	
 
 	// 字符串转时间
 	public static Date StrToDate_L(String str) {

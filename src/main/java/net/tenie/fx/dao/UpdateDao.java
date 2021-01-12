@@ -16,7 +16,8 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class UpdateDao {
-
+	
+	// 更新值的 字符串拼接, <null>直接设置为 is null, 时间类型之间字符串拼接
 	public static String concatStr(ObservableList<StringProperty> vals, ObservableList<SqlFieldPo> fpos) {
 		StringBuffer str = new StringBuffer(" ");// "where ";
 		for (int i = 0; i < fpos.size(); i++) {
@@ -25,7 +26,15 @@ public class UpdateDao {
 			if ("<null>".equals(val)) {
 				str.append(field + " = null ,");
 			} else {
-				str.append(field + " = ? ,");
+//				str.append(field + " = ? ,");
+				String type = fpos.get(i).getColumnClassName().get();
+				// 日期直接拼接字符串, 防止毫秒的情况, 多加了1秒后的比较 
+				if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
+						|| type.equals("java.sql.Date")) {
+					str.append(field + " = '"+val+"' , ");  
+				}else {
+					str.append(field + " = ? ,");
+				}
 			}
 		}
 		String rs = str.toString();
@@ -36,16 +45,38 @@ public class UpdateDao {
 		return rs;
 	}
 
+	// where 后面的字段 处理, <null> 设置成is null, 时间类型 直接字符串拼接
 	public static String conditionStr(ObservableList<StringProperty> vals, ObservableList<SqlFieldPo> fpos) {
 		StringBuffer str = new StringBuffer(" ");// "where ";
 		for (int i = 0; i < fpos.size(); i++) {
 			String val = vals.get(i).get();
 			String field = fpos.get(i).getColumnLabel().get();
-			if (StrUtils.isNullOrEmpty(val) || "<null>".equals(val)) {
+			if( val != null) {
+				if( "<null>".equals(val) ) {
+					str.append(field + " is null and ");
+				}else {
+					String type = fpos.get(i).getColumnClassName().get();
+					// 日期直接拼接字符串, 防止毫秒的情况, 多加了1秒后的比较 
+					if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
+							|| type.equals("java.sql.Date")) {
+						str.append(field + " >= '"+val+"'  and ");
+						Date v =  StrUtils.datePlus1Second(val);
+						String p1s = StrUtils.dateToStr(v, ConfigVal.dateFormateL);
+						str.append(field + " <'"+p1s+"'  and ");
+					 
+					}else {
+						str.append(field + " = ?  and ");
+					}
+					
+				}
+			}else {
 				str.append(field + " is null and ");
-			} else {
-				str.append(field + " = ?  and ");
 			}
+//			if (StrUtils.isNullOrEmpty(val) || "<null>".equals(val)) {
+//				str.append(field + " is null and ");
+//			} else {
+//				str.append(field + " = ?  and ");
+//			}
 
 		}
 		String rs = str.toString();
@@ -80,15 +111,19 @@ public class UpdateDao {
 				idx++;
 				String val = oldvals.get(i).get();
 				String type = fpos.get(i).getColumnClassName().get();
-				if (StrUtils.isNullOrEmpty(val) || "<null>".equals(val)) {
+				if ("<null>".equals(val)) {
 					idx--;
 					continue;
 				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
 						|| type.equals("java.sql.Date")) {
-					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
-					Timestamp ts = new Timestamp(dv.getTime());
-					pstmt.setTimestamp(idx, ts);
-					System.out.println(idx + "  " + ts);
+//					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
+//					Timestamp ts = new Timestamp(dv.getTime());
+//					pstmt.setTimestamp(idx, ts);
+					
+					System.out.println(idx );
+					idx--;
+					continue;
+					
 				} else {
 					Object obj = BuildObject.buildObj(type, val);
 					pstmt.setObject(idx, obj);
@@ -101,9 +136,9 @@ public class UpdateDao {
 			if (rs.next()) {
 				int val = rs.getInt(1);
 				if (val > 1) {
-					tf = ModalDialog.Confirmation(
-							"Finded " + val + " line data , Are you sure continue Update " + val + " line data ?");
+					tf = ModalDialog.Confirmation("Finded " + val + " line data , Are you sure continue Update " + val + " line data ?");
 				} else if (val == 0) {
+					ModalDialog.Confirmation("Finded " + val + " line data");	
 					tf = false; // 没有更新数据
 				}
 			}
@@ -126,9 +161,12 @@ public class UpdateDao {
 					continue;
 				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
 						|| type.equals("java.sql.Date")) {
-					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
-					Timestamp ts = new Timestamp(dv.getTime());
-					pstmt.setTimestamp(idx, ts);
+//					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
+//					Timestamp ts = new Timestamp(dv.getTime());
+//					pstmt.setTimestamp(idx, ts);
+//					System.out.println(idx );
+					idx--;
+					continue;
 				} else {
 					Object obj = BuildObject.buildObj(type, val);
 					pstmt.setObject(idx, obj);
@@ -144,9 +182,12 @@ public class UpdateDao {
 					continue;
 				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
 						|| type.equals("java.sql.Date")) {
-					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
-					Timestamp ts = new Timestamp(dv.getTime());
-					pstmt.setTimestamp(idx, ts);
+//					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
+//					Timestamp ts = new Timestamp(dv.getTime());
+//					pstmt.setTimestamp(idx, ts);
+//					System.out.println(idx );
+					idx--;
+					continue;
 				} else {
 
 					Object obj = BuildObject.buildObj(type, val);
@@ -169,4 +210,24 @@ public class UpdateDao {
 		return msg;
 	}
 
+	public static void main(String[] args) {
+		Date d1 = StrUtils.StrToDate("2021-01-07 11:47:17.0", ConfigVal.dateFormateL);
+		Date d2 = StrUtils.StrToDate("2021-01-07 11:47:17", ConfigVal.dateFormateL);
+		System.out.println(d1);
+		System.out.println(d2);
+		java.sql.Date sd = new java.sql.Date(d1.getTime());
+		System.out.println(sd);
+		Timestamp ts = new Timestamp(d1.getTime());
+		System.out.println(ts);
+		
+		Timestamp ts2 = new Timestamp(d2.getTime());
+		System.out.println(ts2);
+		
+		java.sql.Time t = new java.sql.Time(d1.getTime());
+		System.out.println(t);
+		
+		String s = StrUtils.dateToStr(d1, ConfigVal.dateFormateL);
+				System.out.println(s);
+		
+	}
 }
