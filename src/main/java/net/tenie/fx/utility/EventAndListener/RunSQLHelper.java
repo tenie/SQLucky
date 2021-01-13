@@ -136,7 +136,7 @@ public class RunSQLHelper {
 			try {
 				if (type == ParseSQL.SELECT) {
 					  selectAction(sql, conn); 
-				} else { 
+				} else {
 						if (type == ParseSQL.UPDATE) {
 							msg = DmlDdlDao.updateSql2(conn, sql);
 							System.out.println("add update sql: " + sql);
@@ -179,8 +179,10 @@ public class RunSQLHelper {
 		}
 		showExecuteSQLInfo(ddlDmlpo);
 	}
-
+	
+	// 展示信息窗口,
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo) {
+		// 有数据才展示
 		if (ddlDmlpo.getAllDatas().size() > 0) {
 			DataTabDataPo tdpo = new DataTabDataPo();
 			tdpo.addTableName("Execute Info");

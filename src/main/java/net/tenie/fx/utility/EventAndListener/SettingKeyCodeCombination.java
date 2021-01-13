@@ -4,12 +4,14 @@ import net.tenie.fx.component.*;
 import com.jfoenix.controls.JFXButton;
 import javafx.event.Event;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.utility.CommonUtility;
 
 /*   @author tenie */
 public final class SettingKeyCodeCombination {
@@ -47,6 +49,17 @@ public final class SettingKeyCodeCombination {
 		JFXButton stopbtn = AllButtons.btns.get("stopbtn");
 		JFXButton runFunPro = AllButtons.btns.get("runFunPro");
 
+		
+		
+		scene.getAccelerators().put(F1, () -> {
+			 for ( Tab t : ComponentGetter.dataTab.getTabs()) {
+				 Tab t1 = t;
+				 String title = CommonUtility.tabText(t1); 
+				 System.out.println( title);
+			 }
+			
+		});
+		
 		scene.getAccelerators().put(ctrlShiftD, () -> {
 			CommonAction.shortcutShowDataDatil();
 		});
@@ -83,6 +96,10 @@ public final class SettingKeyCodeCombination {
 		// close code tab
 		scene.getAccelerators().put(ctrlW, () -> {
 			SqlEditor.closeEditor();
+			// 关闭数据窗口
+//			System.out.println(ctrlW);
+//			Tab t = ComponentGetter.dataTab.getSelectionModel().getSelectedItem();
+//			ComponentGetter.dataTab.getTabs().remove(t);
 
 		});
 		// 注释代码

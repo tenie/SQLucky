@@ -31,6 +31,7 @@ import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 
 /*   
@@ -71,7 +72,28 @@ public class DataViewContainer {
 				FilteredTableView<ObservableList<StringProperty>> table = allTable.get(i);
 				// 添加一个新的tab页， 把view 放图其中
 				String tn = names.get(i);
-				addNewDateTab(dataTabPane, table, tn, idx, disable);
+				if( "Execute Info".equals(tn)) {
+					if( ComponentGetter.dataTab.getTabs().size() > 0 ) {
+						Tab tab0 =ComponentGetter.dataTab.getTabs().get(0);
+//						tab0.getTabPane()
+						 String title = CommonUtility.tabText(tab0); 
+						if( "Execute Info".equals(title) ) {
+							VBox vb = (VBox) tab0.getContent();
+							vb.getChildren().remove(1);
+							vb.getChildren().add(table);
+							dataTabPane.getSelectionModel().select(tab0);
+						}else {
+							addNewDateTab(dataTabPane, table, tn, 0, disable);
+						}
+						 
+					}else {
+						addNewDateTab(dataTabPane, table, tn, 0, disable);
+					}
+					
+				}else {
+					addNewDateTab(dataTabPane, table, tn, idx, disable);
+				}
+				
 			}
 		});
 	}

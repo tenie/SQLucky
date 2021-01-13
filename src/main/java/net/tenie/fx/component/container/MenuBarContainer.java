@@ -8,8 +8,10 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCombination;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ConnectionEditor;
 import net.tenie.fx.component.DataTransferWindow;
 import net.tenie.fx.component.ImageViewGenerator;
@@ -87,7 +89,19 @@ public class MenuBarContainer {
 		MenuItem cce = new MenuItem(MenuItemNameFormat("Close Code Editer"));
 		cce.setAccelerator(KeyCombination.keyCombination("shortcut+W"));
 		cce.setOnAction(value -> {
-			SqlEditor.closeEditor();
+//			SqlEditor.closeEditor();
+//			关闭数据显示tab页
+			Tab t = ComponentGetter.dataTab.getSelectionModel().getSelectedItem();
+			if( t != null) {
+				ComponentGetter.dataTab.getTabs().remove(t);
+				
+				//都关闭页, 隐藏下半窗体
+				if( ComponentGetter.dataTab.getTabs().size() == 0) {
+					CommonAction.hideBottom();
+				}
+			}
+			
+			
 		});
 
 		MenuItem Find = new MenuItem(MenuItemNameFormat("Find"));
