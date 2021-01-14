@@ -16,7 +16,7 @@ public class SqlCodeAreaHighLightingHelper {
 			"CHARACTER", "CONSTRAINT", "CREATE", "SEQUENCE", "WITH", "ELSE", "NUMERIC", "COLUMN", "ADD", "FETCH", "UNION",
 			"DEFAULT", "CURRENT", "DROP", "FOR", "NEXT", "START", "BIGINT", "MAXVALUE", "INCREMENT", "FIRST", "ROWS",
 			"ONLY", "DATE", "ALL", "CALL", "OUTER", "IS", "NOT", "VALUE", "VIEW", "INSERT", "INTO", "VALUES", "AND",
-			"ORDER", "DESC", "BEGIN", "DECLARE", "END", "CLOSE", "OPEN",  "LIKE", "DELETE" , "DISTINCT"
+			"ORDER", "DESC", "BEGIN", "DECLARE", "END", "CLOSE", "OPEN",  "LIKE", "DELETE" , "DISTINCT", "WHEN", "THEN"
 
 	};
 

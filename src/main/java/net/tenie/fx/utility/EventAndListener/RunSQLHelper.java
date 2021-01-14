@@ -93,11 +93,13 @@ public class RunSQLHelper {
 				// 获取文本编辑中选中的sql文本来执行sql
 				// 获取sql 语句
 				List<sqlData> allsqls = new ArrayList<>();
-				if(StrUtils.isNotNullOrEmpty(btn)) {  //执行存储过程函数等
+				//执行存储过程函数等
+				if(StrUtils.isNotNullOrEmpty(btn)) {  
 					String str = SqlEditor.getCurrentTabSQLText();
 					sqlData sq = new sqlData(str, 0, str.length());
 					allsqls.add(sq);
 				}else {
+					// 获取编辑界面中的文本
 					allsqls = willExecSql();
 				} 
 				// 执行sql
@@ -185,7 +187,7 @@ public class RunSQLHelper {
 		// 有数据才展示
 		if (ddlDmlpo.getAllDatas().size() > 0) {
 			DataTabDataPo tdpo = new DataTabDataPo();
-			tdpo.addTableName("Execute Info");
+			tdpo.addTableName(ConfigVal.EXEC_INFO_TITLE);
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
 			// table 添加列和数据
@@ -591,27 +593,43 @@ public class RunSQLHelper {
 			str = SqlEditor.getCurrentTabSQLText();
 		}
 		
-		// 去除注释
+		// 去除注释, 包注释字符串转换为空白字符串
 		str = StrUtils.trimCommentToSpace(str, "--");
+		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
+		List<String> sqls = StrUtils.findSQLFromTxt(str);
 		
-		// 有多个 执行语句时
-		if (str.contains(";")) {
-			String[] all = str.split(";"); // 分割多个语句
-			if (all != null && all.length > 0) {
-				for (String s : all) { 
-					String trimSql = s.trim();
-					if (trimSql.length() > 1) {
-						sqlData sq = new sqlData(trimSql, start, s.length());
-						sds.add(sq);
-						start +=  s.length()+1; 
-					}
+		if(sqls.size()> 0) {
+			for (String s : sqls) { 
+				String trimSql = s.trim();
+				if (trimSql.length() > 1) {
+					sqlData sq = new sqlData(trimSql, start, s.length());
+					sds.add(sq);
+					start +=  s.length()+1; 
 				}
-
 			}
 		}else {
 			sqlData sq = new sqlData(str, start, str.length());
 			sds.add(sq);
-		} 
+		}
+		
+//		// 有多个 执行语句时
+//		if (str.contains(";")) {
+//			String[] all = str.split(";"); // 分割多个语句
+//			if (all != null && all.length > 0) {
+//				for (String s : all) { 
+//					String trimSql = s.trim();
+//					if (trimSql.length() > 1) {
+//						sqlData sq = new sqlData(trimSql, start, s.length());
+//						sds.add(sq);
+//						start +=  s.length()+1; 
+//					}
+//				}
+//
+//			}
+//		}else {
+//			sqlData sq = new sqlData(str, start, str.length());
+//			sds.add(sq);
+//		} 
 
 		return sds;
 	}

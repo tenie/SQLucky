@@ -37,6 +37,9 @@ public class ConfigVal {
 	public static volatile int tableIdx = 0;
 	// new line date idx
 	public static volatile int newLineIdx = Integer.MIN_VALUE;
+	
+	// 数据展示窗口, 执行日志信息Tab的title名称
+	public static final String  EXEC_INFO_TITLE = "Execute Info";
 
 	// 图标
 	public static String appIcon = "/image/SQL6.png";

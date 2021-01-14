@@ -18,6 +18,7 @@ import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.utility.CommonUtility;
 
 /*   @author tenie */
 public class MenuBarContainer {
@@ -93,11 +94,19 @@ public class MenuBarContainer {
 //			关闭数据显示tab页
 			Tab t = ComponentGetter.dataTab.getSelectionModel().getSelectedItem();
 			if( t != null) {
-				ComponentGetter.dataTab.getTabs().remove(t);
-				
+				// tab 名称
+				String title = CommonUtility.tabText(t);
+				ComponentGetter.dataTab.getTabs().remove(t); 
 				//都关闭页, 隐藏下半窗体
-				if( ComponentGetter.dataTab.getTabs().size() == 0) {
+				int tabSize = ComponentGetter.dataTab.getTabs().size();
+				if( tabSize == 0) {
 					CommonAction.hideBottom();
+				}else {
+					//选择最后一个
+					if( ConfigVal.EXEC_INFO_TITLE.equals(title) ) {
+						ComponentGetter.dataTab.getSelectionModel().select(tabSize -1 );
+					}
+					 
 				}
 			}
 			
@@ -220,6 +229,7 @@ public class MenuBarContainer {
 		});
 
 		MenuItem hideLeftBottom = new MenuItem(MenuItemNameFormat("Hide/Show All Panels"));
+		hideLeftBottom.setAccelerator(KeyCombination.keyCombination("shortcut+H"));
 		hideLeftBottom.setGraphic(ImageViewGenerator.svgImageUnactive("arrows-alt"));
 		hideLeftBottom.setOnAction(value -> {
 			CommonAction.hideLeftBottom();

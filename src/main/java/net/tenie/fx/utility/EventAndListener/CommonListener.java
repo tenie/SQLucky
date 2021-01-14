@@ -6,6 +6,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ConnectionEditor;
@@ -81,6 +82,7 @@ public class CommonListener {
 				if (newValue != null) {
 					DbConnectionPo cnnpo = DBConns.get(newValue.getText());
 					if (cnnpo != null && !cnnpo.isAlive() && !cnnpo.isConnIng()) {
+						CommonAction.shrinkTreeView();
 						ConnectionEditor.openConn(cnnpo.getConnName());
 					}
 				}

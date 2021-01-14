@@ -10,6 +10,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.tenie.fx.PropertyPo.MyRange;
 import net.tenie.fx.config.ConfigVal;
 
 /*   @author tenie */
@@ -36,24 +37,53 @@ public class StrUtils {
 		}
 		return rs.toString();
 	}
+
 public static void main(String[] args) {
-	Date d  = datePlus1Second("2021-01-07 11:47:17" );
-//								2021-01-07 11:47:18
-	 System.out.println( dateToStrL(d)); ;
-	String str = 
-			  "balancePartAmount\n"
-			+ "1111--ssss\n"
-			+ "2222"  ;
-	System.out.println(str.length());
-	System.out.println(str);
-	System.out.println("======");
-	String s = trimComment(str, "--");
-	System.out.println(s.length());
-	System.out.println(s);
-	System.out.println("======");
-    s = trimCommentToSpace(str, "--");
-	System.out.println(s.length());
-	System.out.println(s);
+	String str = ";123;567;9";
+	
+	List<MyRange> idxs = new ArrayList<>();
+	if (str.contains(";")) {
+		String[] all = str.split(";"); // 分割多个语句
+		if (all != null && all.length > 0) {
+			int ss = 0;
+			for(int i = 0; i < all.length ; i++) {
+				String s = all[i]; 
+			    int end  = ss + s.length()  ;
+			    if( end > str.length()) {
+			    	end--;
+			    }  
+			    MyRange mr = new MyRange(ss, end);
+			    ss = end + 1;
+			    idxs.add(mr); 
+			} 
+		}
+	}
+	System.out.println(idxs);
+	for(MyRange mr: idxs) {
+		int s = mr.getStart();
+		int e = mr.getEnd();
+		String tmps = str.substring(s, e);
+		System.out.println(tmps);
+	}
+//	
+//	
+//	Date d  = datePlus1Second("2021-01-07 11:47:17" );
+////								2021-01-07 11:47:18
+//	 System.out.println( dateToStrL(d)); ;
+//	String str = 
+//			  "balancePartAmount\n"
+//			+ "1111--ssss\n"
+//			+ "2222"  ;
+//	System.out.println(str.length());
+//	System.out.println(str);
+//	System.out.println("======");
+//	String s = trimComment(str, "--");
+//	System.out.println(s.length());
+//	System.out.println(s);
+//	System.out.println("======");
+//    s = trimCommentToSpace(str, "--");
+//	System.out.println(s.length());
+//	System.out.println(s);
 }
 	// 下划线 轉 驼峰命名
 	public static String underlineCaseCamel(String str) {
@@ -175,9 +205,18 @@ public static void main(String[] args) {
 		return nstr.trim();
 	}
 
-	// 去除注释
+	private static String createSpaceStr(int len) {
+		String space = ""; 
+		for(int j = 0 ; j < len; j++){
+			space += " ";
+		}
+		return space;
+	}
+	
+	// 将注释部分转换为空格字符,保持字符串的长度
 	public static String trimCommentToSpace(String sql, String symbol) {
 			if(! sql.contains(symbol)) return sql;
+			// 在symbol前插入换行符, 之后就是对行的处理
 			String str = sql.replaceAll(symbol, "\n" + symbol);
 			if (str.contains("\r")) {
 				str = str.replace("\r", "");
@@ -186,15 +225,20 @@ public static void main(String[] args) {
 			String[] sa = str.split("\n");
 			String nstr = "";
 			if (sa != null && sa.length > 1) {
+				// 遍历行
 				for (int i = 0; i < sa.length; i++) {
 					String temp = sa[i];
+					// 如果不是以symbol开头的字符串就保持到nstr字符串
 					if (!beginWith(temp, symbol)) {
 						nstr += temp + "\n";
 					}else {
-						String space = ""; 
-						for(int j = 0 ; j < temp.length(); j++){
-							space += " ";
-						}
+						// 生成空白行的字符串
+//						String space = ""; 
+//						for(int j = 0 ; j < temp.length(); j++){
+//							space += " ";
+//						}
+						String space = createSpaceStr( temp.length());
+						
 						nstr = nstr.substring(0, nstr.length()-1);
 						nstr +=  space + "\n";
 					}
@@ -203,8 +247,75 @@ public static void main(String[] args) {
 			if ("".equals(nstr)) {
 				nstr = sql;
 			}
-			return nstr.trim();
+//			return nstr.trim();
+			return nstr;
 		}
+	/*
+	 *  根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
+	 *  1. 先在原始文本中找到sql的字符串, 替换为空白字符串, 得到一个新文本 
+	 *  2. 在新文本中根据 ; 分割字符串, 得到每个分割出来的子串在文本中的区间
+	 *  3. 根据区间, 在原始文本中 提炼出sql语句
+	 */
+	public static List<String> findSQLFromTxt(String text) {
+		String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
+		String patternString =   "(?<STRING>" + STRING_PATTERN + ")";
+		Pattern PATTERN = Pattern.compile(patternString  );
+		Matcher matcher = PATTERN.matcher(text);
+		String txtTmp = "";
+		int lastKwEnd = 0;
+		// 把匹配到的sql的字符串替换为对应长度的空白字符串, 得到一个和原始文本一样长度的新字符串
+		while(matcher.find()) {
+//			 String styleClass = matcher.group("STRING") != null ? "string" : null;
+			 int start =  matcher.start();
+			 int end =  matcher.end();
+			 int len = end - start;
+			 String space = createSpaceStr( len);
+			 String tmp = text.substring(start, end);
+//			 System.out.println("len = "+len+" ; tmp = " + tmp); 
+			 txtTmp += text.substring(lastKwEnd, start) + space ; 
+			 lastKwEnd = end;
+		}
+		if(lastKwEnd > 0 ) {
+			String txtEnd = text.substring(lastKwEnd ,text.length());
+			 txtTmp +=  txtEnd;
+		
+		
+		
+		} 
+//		System.out.println("txtTmp = " + txtTmp);
+		
+		
+		//TODO 在新字符上面, 提取字sql语句的区间
+		String str = txtTmp;
+		List<MyRange> idxs = new ArrayList<>(); 
+		if (str.contains(";")) {
+			String[] all = str.split(";"); // 分割多个语句
+			if (all != null && all.length > 0) {
+				int ss = 0;
+				for(int i = 0; i < all.length ; i++) {
+					String s = all[i]; 
+				    int end  = ss + s.length()  ;
+				    if( end > str.length()) {
+				    	end--;
+				    }  
+				    MyRange mr = new MyRange(ss, end);
+				    ss = end + 1;
+				    idxs.add(mr); 
+				} 
+			}
+		}
+		// 根据区间提炼出真正要执行的sql语句
+		List<String> sqls = new ArrayList<>();
+		for(MyRange mr: idxs) {
+			int s = mr.getStart();
+			int e = mr.getEnd();
+			String tmps = text.substring(s, e);
+			sqls.add(tmps);
+//			System.out.println(tmps);
+		}
+//		System.out.println(sqls);
+		return sqls;
+	}
 	
 	// 根据; 分割字符串, 需要忽略在注释下的分号
 	public static List<String> splitSqlStr(String sql) {
