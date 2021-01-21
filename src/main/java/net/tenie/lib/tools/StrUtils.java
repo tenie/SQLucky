@@ -277,18 +277,19 @@ public static void main(String[] args) {
 		}
 		if(lastKwEnd > 0 ) {
 			String txtEnd = text.substring(lastKwEnd ,text.length());
-			 txtTmp +=  txtEnd;
-		
-		
-		
-		} 
+			 txtTmp +=  txtEnd;  
+		}else {
+			 txtTmp = text;
+		}
 //		System.out.println("txtTmp = " + txtTmp);
 		
 		
 		//TODO 在新字符上面, 提取字sql语句的区间
 		String str = txtTmp;
-		List<MyRange> idxs = new ArrayList<>(); 
+		// 根据区间提炼出真正要执行的sql语句
+		List<String> sqls = new ArrayList<>();
 		if (str.contains(";")) {
+			List<MyRange> idxs = new ArrayList<>(); 
 			String[] all = str.split(";"); // 分割多个语句
 			if (all != null && all.length > 0) {
 				int ss = 0;
@@ -303,17 +304,17 @@ public static void main(String[] args) {
 				    idxs.add(mr); 
 				} 
 			}
+			for(MyRange mr: idxs) {
+				int s = mr.getStart();
+				int e = mr.getEnd();
+				String tmps = text.substring(s, e);
+				sqls.add(tmps); 
+			} 
+		}else {
+			sqls.add(text);
 		}
-		// 根据区间提炼出真正要执行的sql语句
-		List<String> sqls = new ArrayList<>();
-		for(MyRange mr: idxs) {
-			int s = mr.getStart();
-			int e = mr.getEnd();
-			String tmps = text.substring(s, e);
-			sqls.add(tmps);
-//			System.out.println(tmps);
-		}
-//		System.out.println(sqls);
+		
+		
 		return sqls;
 	}
 	

@@ -25,7 +25,7 @@ import javafx.scene.text.FontPosture;
  */
 public class MyLineNumberFactory implements IntFunction<Node> {
 
-	
+	private GenericStyledArea<?, ?, ?> area;
 	private static final Insets DEFAULT_INSETS = new Insets(0.0, 5.0, 0.0, 5.0);
 	private static final Paint DEFAULT_TEXT_FILL = Color.web("#606366");
 	private static final Font DEFAULT_FONT = Font.font("monospace", FontPosture.ITALIC, 13);
@@ -46,6 +46,7 @@ public class MyLineNumberFactory implements IntFunction<Node> {
 	private MyLineNumberFactory(GenericStyledArea<?, ?, ?> area, IntFunction<String> format) {
 		nParagraphs = LiveList.sizeOf(area.getParagraphs());
 		this.format = format;
+		this.area = area;
 	}
 
 	@Override
@@ -59,11 +60,18 @@ public class MyLineNumberFactory implements IntFunction<Node> {
 		lineNo.setPadding(DEFAULT_INSETS);
 		lineNo.setAlignment(Pos.TOP_RIGHT);
 		lineNo.getStyleClass().add("myLineNumberlineno");
+		
+		lineNo.setOnMouseClicked( mouseEvent -> {
+			if (mouseEvent.getClickCount() == 1) {
+				this.area.selectLine();
+			}
+		});
+		
 
 		// bind label's text to a Val that stops observing area's paragraphs
 		// when lineNo is removed from scene
 		lineNo.textProperty().bind(formatted.conditionOnShowing(lineNo));
-
+		
 		return lineNo;
 	}
 

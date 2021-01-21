@@ -36,8 +36,8 @@ public class SqlCodeAreaHighLighting {
 		}else {
 			codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
 		} 
-		// 事件KeyEvent
-		
+		// 事件KeyEvent 
+		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{ 
 			if(e.getCode() == KeyCode.TAB ) {
 				System.out.println("e.getCode() "+e.getCode() );
@@ -81,20 +81,42 @@ public class SqlCodeAreaHighLighting {
 			
 		});
 		 
-		// 选中事件
-		codeArea.selectedTextProperty().addListener(new ChangeListener<String>() {
-		    @Override
-		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-		    	String str = newValue.trim();
-		    	if(str.length() > 0) {
-		    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str); 
-		    	}else {
-		    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
-		    	}
-		    	
-		    
-		    }
+		// 当鼠标释放, 判断有没有选择的文本, 有的话就修改选择的颜色
+		codeArea.setOnMouseReleased(e->{
+			String str  = codeArea.getSelectedText();
+			String trimStr = str.trim();
+	    	if(trimStr.length() > 0 && !"*".equals(trimStr)) {
+	    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str); 
+	    	}else {
+	    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+	    	}
 		});
+		// 鼠标双击选中一行
+		codeArea.setOnMouseClicked(mouseEvent -> {
+			if (mouseEvent.getClickCount() == 2) {
+				String str  = codeArea.getSelectedText();
+				System.out.println("|"+str+"|"+ "|"+str.trim()+"|");
+				if(str.trim().length() == 0) {
+					codeArea.selectLine();
+				}
+			}
+		});
+		// 选中事件
+//		codeArea.selectedTextProperty().addListener(new ChangeListener<String>() {
+//		    @Override
+//		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//		    	
+//		    	
+//		    	String str = newValue.trim();
+//		    	if(str.length() > 0) {
+//		    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, ); 
+//		    	}else {
+//		    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+//		    	}
+//		    	
+//		    
+//		    }
+//		});
 		
 		return sp;
 	}
