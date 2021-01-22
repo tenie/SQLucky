@@ -76,7 +76,7 @@ public class CodeContainer {
 		formatSQL.setOnMouseClicked(v -> {
 			CommonAction.formatSqlText();
 		});
-		formatSQL.setTooltip(MyTooltipTool.instance("Format code   ctrl + shif + T   "));
+		formatSQL.setTooltip(MyTooltipTool.instance("Format code   ctrl + shif + F  "));
 		
 		// 执行存储过程
 		JFXButton runFunPro = new JFXButton();

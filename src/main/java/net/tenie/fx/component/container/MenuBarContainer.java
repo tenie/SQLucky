@@ -133,7 +133,7 @@ public class MenuBarContainer {
 		});
 
 		MenuItem commentCode = new MenuItem(MenuItemNameFormat("Comment Code"));
-		commentCode.setAccelerator(KeyCombination.keyCombination("shortcut+T"));
+		commentCode.setAccelerator(KeyCombination.keyCombination("shortcut+/"));
 		commentCode.setOnAction(value -> {
 			CommonAction.addAnnotationSQLTextSelectText();
 		});

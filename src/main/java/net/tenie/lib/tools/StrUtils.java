@@ -138,6 +138,52 @@ public static void main(String[] args) {
 		return val.toString();
 	}
 
+	// 压缩字符串, 除注释行外所有的行合并成一行
+	public static String pressString(String text) {
+		StringBuilder str = new StringBuilder();
+//		text = text.trim();
+		text = text.replaceAll("\r", "");
+		text = text.replaceAll("--", "\n--");
+		String val[] = text.split("\n");
+		if(val.length > 0) {
+			for(String v : val) {
+				if(v.startsWith("--")) {
+					str.append(" "+ v + "\n");
+				}else {
+					str.append(" "+ v);
+				}
+			}
+			
+//			 Pattern p = Pattern.compile("\\s*|\t|\r"); //Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+//	         Matcher m = p.matcher(str.toString());
+//	         String dest = m.replaceAll(" ");
+			String dest = str.toString().trim();
+			dest = dest.replaceAll("\t", " "); 
+			int sz = dest.length();
+			while(true) {
+				dest = dest.replaceAll("  ", " ");
+				int tmpSz = dest.length();
+				if( tmpSz == sz) {
+					break;
+				}else {
+//					System.out.println(tmpSz);
+//					System.out.println(sz);
+					sz = tmpSz;
+					
+				}
+			}
+			
+//			dest = dest.replaceAll("  ", " ");
+			dest = dest.replaceAll("\n ", "\n");
+			
+	        return dest.trim();
+		}else {
+			return text;
+		} 
+        
+	}
+	
+	
 	public static UUID getRandomUUID() {
 		return UUID.randomUUID();
 	}

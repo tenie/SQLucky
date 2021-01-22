@@ -85,10 +85,17 @@ public class SqlEditor {
 					}
 
 				}
+				// 初始化上次选中页面
+				String SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
+				if(StrUtils.isNotNullOrEmpty(SELECT_PANE)) {
+					ComponentGetter.mainTabPane.getSelectionModel().select(Integer.valueOf(SELECT_PANE));
+				}
+				
 			} else {
 				// 触发鼠标点击事件, 增加一个 代码窗口 , 如果窗口中是空的情况下
 				addCodeEmptyTabMethod();
 			}
+			 
 
 		} finally {
 			H2Db.closeConn();

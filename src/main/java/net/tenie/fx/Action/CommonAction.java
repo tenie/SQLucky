@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -74,6 +76,7 @@ public class CommonAction {
 		try {
 			ConnectionDao.refreshConnOrder(); 
 			TabPane mainTabPane = ComponentGetter.mainTabPane;
+			int SELECT_PANE = mainTabPane.getSelectionModel().getSelectedIndex();
 			Connection H2conn = H2Db.getConn();
 			SqlTextDao.deleteAll(H2conn);
 			for (Tab t : mainTabPane.getTabs()) {
@@ -93,6 +96,8 @@ public class CommonAction {
 					}
 				}
 			}
+			// 保存选择的pane 下标
+			SqlTextDao.saveConfig(H2conn, "SELECT_PANE", SELECT_PANE+"");
 		} finally {
 			H2Db.closeConn();
 			System.exit(0);
@@ -120,6 +125,41 @@ public class CommonAction {
 		}
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
+	
+	
+	public static void main(String[] args) {
+		String s = "select\r\n" + 
+				"  *\r\n" + 
+				"from  -- foofofo \r\n" + 
+				"  TM_CUSTOMER_SERIES_TYPE_DET\r\n" + 
+				"-- eeee \n"+
+				"where\r\n" + 
+				"  1 = 1 ";
+		System.out.println(StrUtils.pressString(s));
+	}
+	
+	
+	// 代码格式化
+	public static void pressSqlText() {
+		CodeArea code = SqlEditor.getCodeArea();
+		String txt = code.getSelectedText();
+		if (StrUtils.isNotNullOrEmpty(txt)) {
+			IndexRange i = code.getSelection();
+			int start = i.getStart();
+			int end = i.getEnd();
+
+			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
+			code.deleteText(start, end);
+			code.insertText(start, rs);
+		} else {
+			txt = SqlEditor.getCurrentTabSQLText();
+			String rs = StrUtils.pressString(txt); //  SqlFormatter.format(txt);
+			code.clear();
+			code.appendText(rs);
+		}
+		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+	}
+	
 
 	// 代码大写
 	public static void UpperCaseSQLTextSelectText() {
@@ -372,18 +412,24 @@ public class CommonAction {
 		String txt = code.getText(start, end);
 		// 添加注释
 		if (!StrUtils.beginWith(txt.trim(), "--")) {
-			String temp = "";
-			for (int t = 0; t < start; t++) {
-				temp += " ";
-			}
 			txt = txt.replaceAll("\n", "\n-- ");
-			txt = temp + "\n-- " + txt;
-			System.out.println(txt);
-			int k = txt.indexOf('\n', 0);
-			while (k >= 0) {
-				code.insertText(k, "-- ");
-				k = txt.indexOf('\n', k + 1);
-			}
+			txt = "-- " + txt; 
+			code.deleteText(start, end);
+			code.insertText(start, txt);
+
+			//TODO  
+//			String temp = "";
+//			for (int t = 0; t < start; t++) {
+//				temp += " ";
+//			}
+//			txt = txt.replaceAll("\n", "\n-- ");
+//			txt = temp + "\n-- " + txt;
+//			System.out.println(txt);
+//			int k = txt.indexOf('\n', 0);
+//			while (k >= 0) {
+//				code.insertText(k, "-- ");
+//				k = txt.indexOf('\n', k + 1);
+//			}
 		} else {// 去除注释
 			String valStr = "";
 

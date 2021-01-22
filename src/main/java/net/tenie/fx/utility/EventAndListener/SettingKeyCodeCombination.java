@@ -34,6 +34,9 @@ public final class SettingKeyCodeCombination {
 		KeyCodeCombination F3 = new KeyCodeCombination(KeyCode.F3);
 		KeyCodeCombination F1 = new KeyCodeCombination(KeyCode.F1);
 
+		KeyCodeCombination ctrlO = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.SHORTCUT_DOWN);
+		
+		
 		KeyCodeCombination ctrlShiftX = new KeyCodeCombination(KeyCode.X, KeyCodeCombination.SHORTCUT_DOWN,
 				KeyCodeCombination.SHIFT_DOWN);
 		KeyCodeCombination ctrlShiftY = new KeyCodeCombination(KeyCode.Y, KeyCodeCombination.SHORTCUT_DOWN,
@@ -51,14 +54,14 @@ public final class SettingKeyCodeCombination {
 
 		
 		
-		scene.getAccelerators().put(F1, () -> {
-			 for ( Tab t : ComponentGetter.dataTab.getTabs()) {
-				 Tab t1 = t;
-				 String title = CommonUtility.tabText(t1); 
-				 System.out.println( title);
-			 }
-			
-		});
+//		scene.getAccelerators().put(F1, () -> {
+//			 for ( Tab t : ComponentGetter.dataTab.getTabs()) {
+//				 Tab t1 = t;
+//				 String title = CommonUtility.tabText(t1); 
+//				 System.out.println( title);
+//			 }
+//			
+//		});
 		
 		scene.getAccelerators().put(ctrlShiftD, () -> {
 			CommonAction.shortcutShowDataDatil();
@@ -103,10 +106,10 @@ public final class SettingKeyCodeCombination {
 
 		});
 		// 注释代码
-		scene.getAccelerators().put(ctrlSLASH, () -> {
-			CommonAction.addAnnotationSQLTextSelectText();
-
-		});
+//		scene.getAccelerators().put(ctrlSLASH, () -> {
+//			CommonAction.addAnnotationSQLTextSelectText();
+//
+//		});
 		// format sql
 		scene.getAccelerators().put(ctrlShiftF, () -> {
 			CommonAction.formatSqlText();
@@ -122,7 +125,22 @@ public final class SettingKeyCodeCombination {
 			ComponentGetter.primaryscene.lookup("#" + ConfigVal.pageSize + "row");
 
 		});
+		
+		// 压缩代码
+		scene.getAccelerators().put(ctrlP, () -> {
+			CommonAction.pressSqlText();
 
+		});
+		
+		scene.getAccelerators().put(F1, () -> {
+//			CommonAction.pressSqlText();
+			System.out.println(ComponentGetter.mainTabPane.getSelectionModel().getSelectedIndex());
+			ComponentGetter.mainTabPane.getSelectionModel().select(0);
+			
+			
+
+		});
+		
 	}
 
 	private static void fireEvent(JFXButton btn) {
