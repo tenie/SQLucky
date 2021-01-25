@@ -4,7 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -71,7 +74,7 @@ public class CommonAction {
 		}
 
 	}
-
+	// 主窗口关闭事件处理逻辑
 	public static void mainPageClose() {
 		try {
 			ConnectionDao.refreshConnOrder(); 
@@ -124,18 +127,6 @@ public class CommonAction {
 			code.appendText(rs);
 		}
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
-	}
-	
-	
-	public static void main(String[] args) {
-		String s = "select\r\n" + 
-				"  *\r\n" + 
-				"from  -- foofofo \r\n" + 
-				"  TM_CUSTOMER_SERIES_TYPE_DET\r\n" + 
-				"-- eeee \n"+
-				"where\r\n" + 
-				"  1 = 1 ";
-		System.out.println(StrUtils.pressString(s));
 	}
 	
 	
@@ -644,6 +635,313 @@ public class CommonAction {
 		H2Db.closeConn();
 		ConfigVal.openfileDir = val;
 	}
+	
+	
+	// 根据括号( 寻找配对的 结束)括号所在的位置.
+	public static int findBeginParenthesisRange(String text, int start, String pb , String pe) {
+		String startStr = text.substring(start);
+		int end = 0;
+		int strSz =  startStr.length();
+		if( strSz == 0) return end;
+		if( ! startStr.contains(pe))  return end;
+		int idx = 1;
+		for(int i = 0; i < startStr.length(); i++ ) {
+			if(idx == 0) break;
+			String tmp = startStr.substring(i, i+1);
+			
+			if( pe.equals(tmp)) {
+				idx--;
+				end = i;
+			}else if( pb.equals(tmp) ) {
+				idx++;
+			}
+		} 
+		return start + end;
+	}
+	
+	// 根据括号) 向前寻找配对的括号( 所在的位置.
+	public static int findEndParenthesisRange(String text, int start, String pb , String pe) {
+		String startStr = text.substring(0, start);
+		int end = 0;
+		int strSz =  startStr.length();
+		if( strSz == 0) return end;
+		if( ! startStr.contains(pe))  return end;
+		int idx = 1;
+		for(int i = start; i != 0; i--) {
+			if(idx == 0) break;
+			String tmp = startStr.substring(i-1, i);
+			
+			if( pe.equals(tmp)) {
+				idx--;
+				end = i;
+			}else if( pb.equals(tmp) ) {
+				idx++;
+			}
+		}		
+		return  end;
+	}
+	
+	
+	
+
+	// 根据括号( 寻找配对的 结束)括号所在的位置.
+	public static int findBeginStringRange(String text, int start, String pb , String pe) {
+		String startStr = text.substring(start).toUpperCase();
+		int end = 0;
+		int strSz =  startStr.length();
+		if( strSz == 0) return end;
+		if( ! startStr.contains(pe))  return end;
+		int idx = 1;
+		int peSz = pe.length();
+		for(int i = 0; i < strSz; i++ ) {
+			if(idx == 0) break;
+			String tmp = startStr.substring(i, i+peSz);
+			if( pb.equals(tmp) ) {
+				idx++;
+			}
+			if( pe.equals(tmp)) {
+				idx--;
+				end = i;
+			}
+		} 
+		return start + end;
+	}
+	
+	// 根据括号) 向前寻找配对的括号( 所在的位置.
+	public static int findEndStringRange(String text, int start, String pb , String pe) {
+		String startStr = text.substring(0, start).toUpperCase();;
+		int end = 0;
+		int strSz =  startStr.length();
+		if( strSz == 0) return end;
+		if( ! startStr.contains(pe))  return end;
+		int idx = 1;
+		int peSz = pe.length();
+		for(int i = start; i != 0; i--) {
+			if(idx == 0) break;
+			String tmp = startStr.substring(i-peSz, i);
+			if( pb.equals(tmp) ) {
+				idx++;
+			}
+			if( pe.equals(tmp)) {
+				idx--;
+				end = i;
+			}
+		}		
+		return  end;
+	}
+	
+	public static IndexRange findStringRange(String text, int start, String pe) {
+		IndexRange ir = new IndexRange(0, 0);
+		int strSz =  text.length();
+		if( strSz == 0) return ir;
+		int idx = -1;
+		for(int i = 0; i < strSz; i++ ) {
+			String tmp = text.substring(i, i+1);
+			if(tmp.equals(pe) ) {
+				if(idx == -1) {
+					idx = i;
+				}else {
+					if( idx == start || i == start) {
+						ir =  new IndexRange(idx+1, i); 
+						break;
+					}  
+					idx = -1;
+					
+					
+				}
+			}  
+		} 
+		return ir;
+	}
+	
+	
+	static Map<String, String> charMap = new HashMap<>();
+	static Map<String, String> charMapPre = new HashMap<>(); 
+	static List<String> charList = new ArrayList<>();
+	
+	
+	static {
+		charMap.put("(" , ")");
+		charMap.put("[" , "]");
+		charMap.put("{" , "}"); 
+		
+		charMapPre.put(")" , "("); 
+		charMapPre.put("]" , "[");
+		charMapPre.put("}" , "{");
+		
+		charList.add("\"");
+		charList.add("'");
+		charList.add("`");
+		 
+		
+	}
+	
+	
+	// 针对括号() {} []的双击, 选中括号内的文本
+	 // 如果选中了内容, 就会返回false
+	public static boolean selectSQLDoubleClicked( CodeArea codeArea) {
+		boolean tf = true;
+		String str  = codeArea.getSelectedText();
+		String trimStr = str.trim();
+		int strSz = trimStr.length();
+		if(strSz > 0 ) {
+			IndexRange i = codeArea.getSelection(); // 获取当前选中的区间 
+    		int start = i.getStart();
+    		Set<String> keys = charMap.keySet();
+    		
+    		for(String key : keys) { 
+    			if(trimStr.endsWith(key)) { 
+    				String val = charMap.get(key);
+    	    		int endIdx = str.lastIndexOf(key);
+    	    		int is = start + endIdx +1; 
+    	    		int end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, key , val );
+    	    		if( end != 0 && end > is) {
+    	    			codeArea.selectRange(is, end);
+    	    		}
+    	    		tf = false;
+    	    		break;
+    			}
+    		}
+    		
+    		if(tf) {
+    			keys = charMapPre.keySet();
+    			for(String key : keys) { 
+        			if(trimStr.endsWith(key)) { 
+        				String val = charMapPre.get(key);        	    		
+        	    		int endIdx = str.lastIndexOf(key);
+        	    		int end = start + endIdx ; 
+        	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, key , val);
+        	    		if( end > is) {
+        	    			codeArea.selectRange(is, end);
+        	    		}
+        	    		
+        	    		tf = false;
+        	    		break;
+        			}
+        		}
+    		}
+			if (tf) {
+				for(String v: charList) {
+					if (trimStr.endsWith( v)) {
+						int endIdx = str.lastIndexOf(v);
+						int end = start + endIdx;
+						IndexRange ir = CommonAction.findStringRange(codeArea.getText(), end, v);
+						if ( (ir.getStart() + ir.getEnd()) > 0) {
+							codeArea.selectRange(ir.getStart(), ir.getEnd());
+						}
+
+						tf = false; 
+						break;
+					}
+				} 
+			} 
+    		
+    		if(tf) {
+    			if(trimStr.toUpperCase().endsWith("SELECT")) { 
+    	    		int endIdx = str.lastIndexOf("SELECT");
+    	    		int is = start + endIdx + 6; 
+    	    		int end = CommonAction.findBeginStringRange(codeArea.getText(), is, "SELECT", "FROM");
+    	    		if( end != 0 && end > is) {
+    	    			codeArea.selectRange(is - 5 , end + 4);
+    	    		}
+    			}else if(trimStr.toUpperCase().endsWith("FROM")) {
+    	    		int endIdx = str.lastIndexOf("FROM");
+    	    		int end = start + endIdx ; 
+    	    		int is = CommonAction.findEndStringRange(codeArea.getText(), end, "FROM", "SELECT");
+    	    		if( end > is) {
+    	    			codeArea.selectRange(is - 6, end + 5);
+    	    		}
+    			}   
+    		}
+    		
+    		
+//			if(trimStr.endsWith("(")) { 
+//	    		int endIdx = str.lastIndexOf("(");
+//	    		int is = start + endIdx +1; 
+//	    		int end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, "(", ")");
+//	    		if( end != 0 && end > is) {
+//	    			codeArea.selectRange(is, end);
+//	    		}
+//			}else if(trimStr.endsWith(")")) {
+//	    		int endIdx = str.lastIndexOf(")");
+//	    		int end = start + endIdx ; 
+//	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, ")", "(");
+//	    		if( end > is) {
+//	    			codeArea.selectRange(is, end);
+//	    		}
+//			}else if(trimStr.endsWith("[")) { 
+//	    		int endIdx = str.lastIndexOf("[");
+//	    		int is = start + endIdx +1; 
+//	    		int end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, "[", "]");
+//	    		if( end != 0 && end > is) {
+//	    			codeArea.selectRange(is, end);
+//	    		}
+//			}else if(trimStr.endsWith("]")) {
+//	    		int endIdx = str.lastIndexOf("]");
+//	    		int end = start + endIdx ; 
+//	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, "]", "[");
+//	    		if( end > is) {
+//	    			codeArea.selectRange(is, end);
+//	    		}
+//			}else if(trimStr.endsWith("{")) { 
+//	    		int endIdx = str.lastIndexOf("{");
+//	    		int is = start + endIdx +1; 
+//	    		int end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, "{", "}");
+//	    		if( end != 0 && end > is) {
+//	    			codeArea.selectRange(is, end);
+//	    		}
+//			}else if(trimStr.endsWith("}")) {
+//	    		int endIdx = str.lastIndexOf("}");
+//	    		int end = start + endIdx ; 
+//	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, "}", "{");
+//	    		if( end > is) {	
+//	    			codeArea.selectRange(is, end);
+//	    		}
+//			}else 
+			if(trimStr.toUpperCase().endsWith("SELECT")) { 
+	    		int endIdx = str.lastIndexOf("SELECT");
+	    		int is = start + endIdx + 6; 
+	    		int end = CommonAction.findBeginStringRange(codeArea.getText(), is, "SELECT", "FROM");
+	    		if( end != 0 && end > is) {
+	    			codeArea.selectRange(is - 5 , end + 4);
+	    		}
+			}else if(trimStr.toUpperCase().endsWith("FROM")) {
+	    		int endIdx = str.lastIndexOf("FROM");
+	    		int end = start + endIdx ; 
+	    		int is = CommonAction.findEndStringRange(codeArea.getText(), end, "FROM", "SELECT");
+	    		if( end > is) {
+	    			codeArea.selectRange(is - 6, end + 5);
+	    		}
+			}   
+    	} 
+		return tf;
+	}
+	
+	
+	
+	public static void main(String[] args) {
+//		String text = "012345(ABC(DE)6789";
+//		int i = selectParenthesisRange(text, 7, "(", ")");
+//		System.out.println(i);
+//		System.out.println(text.substring(7, i));
+		
+		
+		String text = "012345(ABC(DE)6789";
+		int i = findEndParenthesisRange(text, 12, ")", "(");
+		System.out.println(i);
+		System.out.println(text.substring( i, 12));
+		
+		
+//		String s = "select\r\n" + 
+//				"  *\r\n" + 
+//				"from  -- foofofo \r\n" + 
+//				"  TM_CUSTOMER_SERIES_TYPE_DET\r\n" + 
+//				"-- eeee \n"+
+//				"where\r\n" + 
+//				"  1 = 1 ";
+//		System.out.println(StrUtils.pressString(s));
+	}
+	
 	
 	public static void demo() {
 

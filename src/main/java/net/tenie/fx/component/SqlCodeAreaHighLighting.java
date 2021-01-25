@@ -74,33 +74,51 @@ public class SqlCodeAreaHighLighting {
 		codeArea.setOnDragEntered(e->{
 			String val = ComponentGetter.dragTreeItemName;
 			if(StrUtils.isNotNullOrEmpty(val)) {
-				IndexRange i = codeArea.getSelection(); // 获取当前选中的区间
-				int start = i.getStart();
-				codeArea.insertText(start, val);
+			
 			}
 			
 		});
+		
 		 
-		// 当鼠标释放, 判断有没有选择的文本, 有的话就修改选择的颜色
-		codeArea.setOnMouseReleased(e->{
+		// 当鼠标释放, 判断是否为双击, 是双击选中对应的内容, 在判断有没有选择的文本, 有的话就修改所有相同的文本
+		codeArea.setOnMouseReleased(mouseEvent->{
+			
 			String str  = codeArea.getSelectedText();
 			String trimStr = str.trim();
-	    	if(trimStr.length() > 0 && !"*".equals(trimStr)) {
-	    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str); 
-	    	}else {
-	    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
-	    	}
-		});
-		// 鼠标双击选中一行
-		codeArea.setOnMouseClicked(mouseEvent -> {
-			if (mouseEvent.getClickCount() == 2) {
-				String str  = codeArea.getSelectedText();
-				System.out.println("|"+str+"|"+ "|"+str.trim()+"|");
-				if(str.trim().length() == 0) {
+			int strSz = trimStr.length(); 
+			boolean isContinue = true;
+			if (mouseEvent.getClickCount() == 2) {  
+				if(trimStr.length() == 0) {
+					// 选中的内容为空白符, 就选中当前行
 					codeArea.selectLine();
+				}else {
+					// 针对括号() {} []的双击, 选中括号内的文本
+					isContinue = CommonAction.selectSQLDoubleClicked(codeArea); // 如果选中了内容, 就会返回false
 				}
+				
 			}
+			// 双击选中过了就不用继续了
+			if(isContinue){
+				if(strSz > 0 && !"*".equals(trimStr)) {
+		    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str); 
+	  	    	}else {        
+		    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+		    	}
+			}
+			
+	    	
+	    	
+	    	
 		});
+		
+		
+		// 鼠标双击选中一行
+//		codeArea.setOnMouseClicked(mouseEvent -> {
+//			if (mouseEvent.getClickCount() == 2) {
+//				 
+//				
+//			}
+//		});
 		// 选中事件
 //		codeArea.selectedTextProperty().addListener(new ChangeListener<String>() {
 //		    @Override
