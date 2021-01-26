@@ -5,6 +5,7 @@ public class H2SqlTextSavePo {
 	private String text;
 	private String fileName;
 	private String encode;
+	private int paragraph;
 	
 	
 	public String getEncode() {
@@ -31,6 +32,12 @@ public class H2SqlTextSavePo {
 	}
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
+	}
+	public int getParagraph() {
+		return paragraph;
+	}
+	public void setParagraph(int paragraph) {
+		this.paragraph = paragraph;
 	}
 	
 	

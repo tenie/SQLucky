@@ -144,9 +144,9 @@ public final class SettingKeyCodeCombination {
 			 
 //			int i  = code.getCurrentLineStartInParargraph();
 //			int i2  = code.getCurrentLineEndInParargraph();
-			System.out.println(i);
-			System.out.println(i2);
-			code.showParagraphAtTop(i );
+//			System.out.println(i);
+//			System.out.println(i2);
+//			code.showParagraphAtTop(i );
 
 		});
 		

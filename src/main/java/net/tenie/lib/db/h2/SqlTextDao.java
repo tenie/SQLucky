@@ -38,6 +38,8 @@ public class SqlTextDao {
 				"  `SQL_TEXT` CLOB, \n" +
 				"  `FILE_NAME` VARCHAR(1000) ,\n" + 
 				"  `ENCODE` VARCHAR(100) ,\n" + 
+				"  `PARAGRAPH` INT(11) DEFAULT '0',\n" + 
+				 
 				"  PRIMARY KEY (`TITLE_NAME`)\n" + 
 				") ";
 		String configTable = 
@@ -67,7 +69,7 @@ public class SqlTextDao {
 //		} 
 //	}
 	public static void save(Connection conn , String title, String txt, String filename, String encode, int paragraph) {
-		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH) values ( ? , ?, ?, ?)";
+		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH) values ( ? , ?, ?, ?, ?)";
 		int i = 0;
 		PreparedStatement sm = null; 
 		try { 
@@ -76,6 +78,7 @@ public class SqlTextDao {
 			sm.setString(2, txt);
 			sm.setString(3, filename);
 			sm.setString(4, encode);
+			sm.setInt(5, paragraph);
 		    i = sm.executeUpdate();
 		} catch (SQLException e) { 
 			e.printStackTrace(); 
@@ -135,6 +138,7 @@ public class SqlTextDao {
 		    	po.setText( rs.getString("SQL_TEXT"));
 		    	po.setFileName( rs.getString("FILE_NAME"));
 		    	po.setEncode( rs.getString("ENCODE"));
+		    	po.setParagraph(rs.getInt("PARAGRAPH"));
 		    	
 		    	vals.add(po);
 		    }

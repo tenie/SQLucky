@@ -904,7 +904,11 @@ public class CommonAction {
 		int start = anchor == 0 ? anchor : anchor - 1 ; 
 		int end = anchor +1;
 		
-		
+		String text = codeArea.getText();
+		if(text.length() == anchor) {
+			return false;
+		}
+	 
 		
 		String str  = codeArea.getText(start, end);// codeArea.getSelectedText();
 		String trimStr = str.trim();

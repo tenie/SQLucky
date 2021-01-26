@@ -75,7 +75,7 @@ public class SqlEditor {
 			if (ls != null && ls.size() > 0) {
 				for (H2SqlTextSavePo po : ls) {
 					Tab tab = addCodeEmptyTabMethod();
-					setTabSQLText(tab, po.getText());
+					setTabSQLText(tab, po.getText(), po.getParagraph());
 					if (StrUtils.isNotNullOrEmpty(po.getFileName())) {
 						// String file = FilenameUtils.getName(po.getFileName());
 						tab.setId(ConfigVal.SAVE_TAG + po.getFileName());
@@ -118,6 +118,14 @@ public class SqlEditor {
 		code.appendText(text);
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
+	
+	public static void setTabSQLText(Tab tb, String text, int paragraph) {
+		CodeArea code = getCodeArea(tb);
+		code.appendText(text);
+		code.showParagraphAtTop(paragraph);
+		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+	}
+	
 
 	public static CodeArea getCodeArea() {
 		StackPane p = getTabStackPane();

@@ -27,7 +27,8 @@ public class MainMyDB extends Application {
 	@Override
 	public void init() throws Exception {
 		Connection conn = H2Db.getConn();
-	    Theme = H2Db.getConfigVal(conn , "THEME"); 
+	    Theme = H2Db.getConfigVal(conn , "THEME");  
+	    H2Db.updateAppSql(conn);
 	    ConfigVal.openfileDir = H2Db.getConfigVal(conn , "OPEN_FILE_DIR"); 
 		H2Db.closeConn();
 		app = new AppWindow();

@@ -5,6 +5,8 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.apache.commons.io.FileUtils;
+
+import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.Dbinfo;
 
 /*   @author tenie */
@@ -71,5 +73,23 @@ public class H2Db {
 	public static void setConfigVal(Connection conn, String key, String val) {  
 		SqlTextDao.saveConfig(conn, key, val);
 	}
-
+	
+	// 执行更新脚本
+	public static void updateAppSql(Connection conn) { 
+		 String  UPDATE_SQL = getConfigVal(conn , "UPDATE_SQL"); 
+		 if(UPDATE_SQL != null &&  UPDATE_SQL.length() > 0) {
+			 String[] sql = UPDATE_SQL.split(";");
+			 for(String s : sql) {
+				 try {
+					if(s.length()> 0) {
+						DBTools.execDDL(conn, s);
+					}
+					
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
+			 }
+			 setConfigVal(conn,  "UPDATE_SQL", "");
+		 }
+	}
 }
