@@ -1,6 +1,9 @@
 package net.tenie.fx.utility.EventAndListener;
 
 import net.tenie.fx.component.*;
+
+import org.fxmisc.richtext.CodeArea;
+
 import com.jfoenix.controls.JFXButton;
 import javafx.event.Event;
 import javafx.scene.Scene;
@@ -134,10 +137,16 @@ public final class SettingKeyCodeCombination {
 		
 		scene.getAccelerators().put(F1, () -> {
 //			CommonAction.pressSqlText();
-			System.out.println(ComponentGetter.mainTabPane.getSelectionModel().getSelectedIndex());
-			ComponentGetter.mainTabPane.getSelectionModel().select(0);
-			
-			
+//			System.out.println(ComponentGetter.mainTabPane.getSelectionModel().getSelectedIndex());
+//			ComponentGetter.mainTabPane.getSelectionModel().select(0);
+//			CodeArea code = SqlEditor.getCodeArea();
+			CodeArea code =  SqlEditor.getAllCodeArea().get(2);
+			 
+//			int i  = code.getCurrentLineStartInParargraph();
+//			int i2  = code.getCurrentLineEndInParargraph();
+			System.out.println(i);
+			System.out.println(i2);
+			code.showParagraphAtTop(i );
 
 		});
 		

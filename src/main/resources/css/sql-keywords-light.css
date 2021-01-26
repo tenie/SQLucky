@@ -1,9 +1,11 @@
 
-.findword { 
-  /*   -fx-fill: yellow; */
-    -rtfx-background-color: #FFF59D !important;
-   /*  -fx-stroke: green;
-    -fx-stroke-width: 5; */
+.findword {
+    -rtfx-background-color: #FFF59D !important; 
+}
+
+.findparenthesis {  
+    -rtfx-background-color: #3169ce!important;
+    -fx-font-weight: bold; 
 }
 
 .keyword {

@@ -87,7 +87,7 @@ public class SqlCodeAreaHighLighting {
 			String trimStr = str.trim();
 			int strSz = trimStr.length(); 
 			boolean isContinue = true;
-			if (mouseEvent.getClickCount() == 2) {  
+			if (mouseEvent.getClickCount() == 2) {
 				if(trimStr.length() == 0) {
 					// 选中的内容为空白符, 就选中当前行
 					codeArea.selectLine();
@@ -96,7 +96,13 @@ public class SqlCodeAreaHighLighting {
 					isContinue = CommonAction.selectSQLDoubleClicked(codeArea); // 如果选中了内容, 就会返回false
 				}
 				
+			}else if (mouseEvent.getClickCount() == 1) { //鼠标单击
+					//单击  括号() {} []的双击, 找到下一个括号, 对括号添加选中样式
+				isContinue = CommonAction.oneClickedFindParenthesis(codeArea);  
+				  
+				
 			}
+			
 			// 双击选中过了就不用继续了
 			if(isContinue){
 				if(strSz > 0 && !"*".equals(trimStr)) {

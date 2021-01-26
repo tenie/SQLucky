@@ -3,6 +3,8 @@ package net.tenie.fx.component;
 import org.fxmisc.richtext.CodeArea;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
+
+import javafx.application.Platform;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -281,6 +283,9 @@ public class FindReplaceEditor {
 		if (isReplace) {
 			b.getChildren().add(1, createReplacePane(tf, cb));
 		}
+		Platform.runLater(() -> {
+			tf.requestFocus();
+		});
 		return findAnchorPane;
 	}
 }

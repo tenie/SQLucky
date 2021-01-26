@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,8 @@ import net.tenie.fx.utility.EventAndListener.myEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.input.MouseEvent;
@@ -87,6 +91,8 @@ public class CommonAction {
 				if (StrUtils.isNotNullOrEmpty(idval)) {
 					String sql = SqlEditor.getTabSQLText(t);
 					if (StrUtils.isNotNullOrEmpty(sql)) {
+						CodeArea code = SqlEditor.getCodeArea(t);
+						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() -10 : 0;
 						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
 							idval = idval.substring(ConfigVal.SAVE_TAG.length());
 						} else {
@@ -95,7 +101,7 @@ public class CommonAction {
 
 						String title = CommonUtility.tabText(t); 
 						String encode = ComponentGetter.getFileEncode(idval);
-						SqlTextDao.save(H2conn, title, sql, idval, encode);
+						SqlTextDao.save(H2conn, title, sql, idval, encode, paragraph);
 					}
 				}
 			}
@@ -730,6 +736,7 @@ public class CommonAction {
 		return  end;
 	}
 	
+	// 引号( ' " `) 之间的字符串区间
 	public static IndexRange findStringRange(String text, int start, String pe) {
 		IndexRange ir = new IndexRange(0, 0);
 		int strSz =  text.length();
@@ -837,86 +844,118 @@ public class CommonAction {
 			} 
     		
     		if(tf) {
-    			if(trimStr.toUpperCase().endsWith("SELECT")) { 
-    	    		int endIdx = str.lastIndexOf("SELECT");
+    			if(trimStr.toUpperCase().endsWith("SELECT")) {
+    	    		int endIdx = str.toUpperCase().lastIndexOf("SELECT"); 
     	    		int is = start + endIdx + 6; 
     	    		int end = CommonAction.findBeginStringRange(codeArea.getText(), is, "SELECT", "FROM");
     	    		if( end != 0 && end > is) {
-    	    			codeArea.selectRange(is - 5 , end + 4);
+    	    			codeArea.selectRange(is - 6 , end + 4);
     	    		}
+    	    		tf = false; 
     			}else if(trimStr.toUpperCase().endsWith("FROM")) {
-    	    		int endIdx = str.lastIndexOf("FROM");
+    	    		int endIdx = str.toUpperCase().lastIndexOf("FROM");
     	    		int end = start + endIdx ; 
     	    		int is = CommonAction.findEndStringRange(codeArea.getText(), end, "FROM", "SELECT");
     	    		if( end > is) {
     	    			codeArea.selectRange(is - 6, end + 5);
     	    		}
+    	    		tf = false; 
+    			} 
+    			
+    		} 
+    		
+    		if(tf) {
+    			if(trimStr.toUpperCase().endsWith("CASE")) {
+    	    		int endIdx = str.toUpperCase().lastIndexOf("CASE");
+    	    		int is = start + endIdx + 4; 
+    	    		int end = CommonAction.findBeginStringRange(codeArea.getText(), is, "CASE", "END");
+    	    		if( end != 0 && end > is) {
+    	    			codeArea.selectRange(is - 4, end + 3);
+    	    		}
+    	    		tf = false; 
+    			}else if(trimStr.toUpperCase().endsWith("END")) {
+    	    		int endIdx = str.toUpperCase().lastIndexOf("END");
+    	    		int end = start + endIdx ; 
+    	    		int is = CommonAction.findEndStringRange(codeArea.getText(), end, "END", "CASE");
+    	    		if( end > is) {
+    	    			codeArea.selectRange(is - 4, end + 4);
+    	    		}
+    	    		tf = false; 
     			}   
-    		}
-    		
-    		
-//			if(trimStr.endsWith("(")) { 
-//	    		int endIdx = str.lastIndexOf("(");
-//	    		int is = start + endIdx +1; 
-//	    		int end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, "(", ")");
-//	    		if( end != 0 && end > is) {
-//	    			codeArea.selectRange(is, end);
-//	    		}
-//			}else if(trimStr.endsWith(")")) {
-//	    		int endIdx = str.lastIndexOf(")");
-//	    		int end = start + endIdx ; 
-//	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, ")", "(");
-//	    		if( end > is) {
-//	    			codeArea.selectRange(is, end);
-//	    		}
-//			}else if(trimStr.endsWith("[")) { 
-//	    		int endIdx = str.lastIndexOf("[");
-//	    		int is = start + endIdx +1; 
-//	    		int end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, "[", "]");
-//	    		if( end != 0 && end > is) {
-//	    			codeArea.selectRange(is, end);
-//	    		}
-//			}else if(trimStr.endsWith("]")) {
-//	    		int endIdx = str.lastIndexOf("]");
-//	    		int end = start + endIdx ; 
-//	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, "]", "[");
-//	    		if( end > is) {
-//	    			codeArea.selectRange(is, end);
-//	    		}
-//			}else if(trimStr.endsWith("{")) { 
-//	    		int endIdx = str.lastIndexOf("{");
-//	    		int is = start + endIdx +1; 
-//	    		int end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, "{", "}");
-//	    		if( end != 0 && end > is) {
-//	    			codeArea.selectRange(is, end);
-//	    		}
-//			}else if(trimStr.endsWith("}")) {
-//	    		int endIdx = str.lastIndexOf("}");
-//	    		int end = start + endIdx ; 
-//	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, "}", "{");
-//	    		if( end > is) {	
-//	    			codeArea.selectRange(is, end);
-//	    		}
-//			}else 
-			if(trimStr.toUpperCase().endsWith("SELECT")) { 
-	    		int endIdx = str.lastIndexOf("SELECT");
-	    		int is = start + endIdx + 6; 
-	    		int end = CommonAction.findBeginStringRange(codeArea.getText(), is, "SELECT", "FROM");
-	    		if( end != 0 && end > is) {
-	    			codeArea.selectRange(is - 5 , end + 4);
-	    		}
-			}else if(trimStr.toUpperCase().endsWith("FROM")) {
-	    		int endIdx = str.lastIndexOf("FROM");
-	    		int end = start + endIdx ; 
-	    		int is = CommonAction.findEndStringRange(codeArea.getText(), end, "FROM", "SELECT");
-	    		if( end > is) {
-	    			codeArea.selectRange(is - 6, end + 5);
-	    		}
-			}   
+    		} 
+    		 
     	} 
 		return tf;
 	}
 	
+	
+    public static void  setStyleSpans(CodeArea codeArea , int idx, int size) {
+    	StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
+		spansBuilder.add(Collections.emptyList(), 0);
+        spansBuilder.add(Collections.singleton("findparenthesis"),  size);
+        codeArea.setStyleSpans( idx , spansBuilder.create());
+    }
+	
+	// 鼠标单击找到括号对, 标记一下
+	public static boolean  oneClickedFindParenthesis( CodeArea codeArea) {
+		boolean tf = true;
+	
+		int anchor = codeArea.getAnchor();
+		int start = anchor == 0 ? anchor : anchor - 1 ; 
+		int end = anchor +1;
+		
+		
+		
+		String str  = codeArea.getText(start, end);// codeArea.getSelectedText();
+		String trimStr = str.trim();
+		int strSz = trimStr.length();
+		
+		if(strSz > 0 ) { 
+    		Set<String> keys = charMap.keySet();
+    		
+    		for(String key : keys) { 
+    			if(trimStr.endsWith(key)) { 
+    				String val = charMap.get(key);
+    	    		int endIdx = str.lastIndexOf(key);
+    	    		int is = start + endIdx +1; 
+    	    		end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, key , val );
+    	    		if( end != 0 && end > is) {
+    	    			
+    	    			setStyleSpans( codeArea, is -1, 1);
+    	    			setStyleSpans( codeArea, end, 1);
+    	    			
+    	    			
+    	    		}
+    	    		tf = false;
+    	    		break;
+    			}
+    		}
+    		
+    		if(tf) {
+    			keys = charMapPre.keySet();
+    			for(String key : keys) { 
+        			if(trimStr.endsWith(key)) { 
+        				String val = charMapPre.get(key);        	    		
+        	    		int endIdx = str.lastIndexOf(key);
+        	    	    end = start + endIdx ; 
+        	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, key , val);
+        	    		if( end > is) {
+        	    			setStyleSpans( codeArea, is -1, 1);
+        	    			setStyleSpans( codeArea, end, 1);
+        	    			
+        	    		}
+        	    		
+        	    		tf = false;
+        	    		break;
+        			}
+        		}
+    		}
+    		
+    		 
+    		
+	   }
+	return tf;
+	}
 	
 	
 	public static void main(String[] args) {

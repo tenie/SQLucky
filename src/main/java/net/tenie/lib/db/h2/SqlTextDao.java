@@ -66,8 +66,8 @@ public class SqlTextDao {
 //			e.printStackTrace();
 //		} 
 //	}
-	public static void save(Connection conn , String title, String txt, String filename, String encode) {
-		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE) values ( ? , ?, ?, ?)";
+	public static void save(Connection conn , String title, String txt, String filename, String encode, int paragraph) {
+		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH) values ( ? , ?, ?, ?)";
 		int i = 0;
 		PreparedStatement sm = null; 
 		try { 
