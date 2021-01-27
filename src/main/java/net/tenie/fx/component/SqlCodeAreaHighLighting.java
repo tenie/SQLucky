@@ -74,13 +74,16 @@ public class SqlCodeAreaHighLighting {
 		codeArea.setOnDragEntered(e->{
 			String val = ComponentGetter.dragTreeItemName;
 			if(StrUtils.isNotNullOrEmpty(val)) {
-				IndexRange i = codeArea.getSelection(); // 获取当前选中的区间
-				int start = i.getStart();
-				codeArea.insertText(start, val);
+//				IndexRange i = codeArea.getSelection(); // 获取当前选中的区间
+//				int start = i.getStart();
+				int start =  codeArea.getAnchor();
+				codeArea.insertText(start, " "+val);
+				codeArea.selectRange(start, start + val.length()+1);
 			}
 			
 		});
 		
+//		codeArea.setOnMouseMoved(value);
 		 
 		// 当鼠标释放, 判断是否为双击, 是双击选中对应的内容, 在判断有没有选择的文本, 有的话就修改所有相同的文本
 		codeArea.setOnMouseReleased(mouseEvent->{
