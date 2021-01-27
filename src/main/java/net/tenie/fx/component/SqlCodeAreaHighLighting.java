@@ -74,7 +74,9 @@ public class SqlCodeAreaHighLighting {
 		codeArea.setOnDragEntered(e->{
 			String val = ComponentGetter.dragTreeItemName;
 			if(StrUtils.isNotNullOrEmpty(val)) {
-			
+				IndexRange i = codeArea.getSelection(); // 获取当前选中的区间
+				int start = i.getStart();
+				codeArea.insertText(start, val);
 			}
 			
 		});

@@ -75,7 +75,8 @@ public class H2Db {
 	}
 	
 	// 执行更新脚本
-	public static void updateAppSql(Connection conn) { 
+	public static void updateAppSql(Connection conn) {
+//		 setConfigVal(conn,  "UPDATE_SQL", "ALTER TABLE SQL_TEXT_SAVE ADD PARAGRAPH  INT(11);");
 		 String  UPDATE_SQL = getConfigVal(conn , "UPDATE_SQL"); 
 		 if(UPDATE_SQL != null &&  UPDATE_SQL.length() > 0) {
 			 String[] sql = UPDATE_SQL.split(";");
