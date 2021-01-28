@@ -53,6 +53,10 @@ public final class ComponentGetter {
 
 	// 当前光标位置
 	public static Long cursor;
+	
+	// 当前光标位置
+	public static int codeAreaAnchor;
+	
 	// 拖动的对象名称
 	public static String  dragTreeItemName;
 	

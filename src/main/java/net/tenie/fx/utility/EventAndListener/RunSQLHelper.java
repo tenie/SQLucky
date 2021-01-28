@@ -251,8 +251,8 @@ public class RunSQLHelper {
 			tempTableName = arrs[1];
 		}
 		TreeNodePo tnp = ComponentGetter.getSchemaTableNodePo(schemaName);
-		if(tnp != null) {
-			ConnItemDbObjects ci =tnp.getConnItem();
+		if(tnp != null && tnp.getConnItem() != null && tnp.getConnItem().getTableNode() !=null) {
+			ConnItemDbObjects ci =tnp.getConnItem(); 
 			ObservableList<TreeItem<TreeNodePo>>  tabs = ci.getTableNode().getChildren(); 
 			for(TreeItem<TreeNodePo> node: tabs) {
 				if(node.getValue().getName().toUpperCase().equals(tempTableName.toUpperCase())) { 

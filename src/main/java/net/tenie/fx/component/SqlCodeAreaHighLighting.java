@@ -11,6 +11,7 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
@@ -76,14 +77,30 @@ public class SqlCodeAreaHighLighting {
 			if(StrUtils.isNotNullOrEmpty(val)) {
 //				IndexRange i = codeArea.getSelection(); // 获取当前选中的区间
 //				int start = i.getStart();
-				int start =  codeArea.getAnchor();
+				int start =  ComponentGetter.codeAreaAnchor  ;  //codeArea.getAnchor();
 				codeArea.insertText(start, " "+val);
-				codeArea.selectRange(start, start + val.length()+1);
+				codeArea.selectRange(start+1, start + 1 + val.length());
 			}
 			
 		});
 		
-//		codeArea.setOnMouseMoved(value);
+		codeArea.setOnMouseExited(mouseEvent->{
+			ComponentGetter.codeAreaAnchor =  codeArea.getAnchor();
+//			System.out.println(mouseEvent.getEventType());
+//			if ( mouseEvent.getEventType() == MouseEvent.MOUSE_EXITED_TARGET) {
+//				System.out.println("MOUSE_EXITED_TARGET" + codeArea.getAnchor());
+////				System.out.println();
+//			}
+		});
+		
+		codeArea.setOnMouseMoved(mouseEvent->{
+//			System.out.println(mouseEvent.getEventType());
+//			if ( mouseEvent.getEventType() == MouseEvent.MOUSE_EXITED_TARGET) {
+//				System.out.println("MOUSE_EXITED_TARGET" + codeArea.getAnchor());
+////				System.out.println();
+//			}
+		});
+		
 		 
 		// 当鼠标释放, 判断是否为双击, 是双击选中对应的内容, 在判断有没有选择的文本, 有的话就修改所有相同的文本
 		codeArea.setOnMouseReleased(mouseEvent->{
