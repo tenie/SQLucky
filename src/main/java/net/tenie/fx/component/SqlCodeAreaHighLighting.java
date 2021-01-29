@@ -32,6 +32,10 @@ public class SqlCodeAreaHighLighting {
 	public StackPane getObj(String text, boolean editable) {
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new CodeArea();
+		
+//		//字体大小设置
+//		codeArea
+		
 		if(ConfigVal.THEME.equals("DARK")) {
 			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea));
 		}else {

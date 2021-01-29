@@ -36,6 +36,7 @@ public final class SettingKeyCodeCombination {
 		KeyCodeCombination ctrlR = new KeyCodeCombination(KeyCode.R, KeyCodeCombination.SHORTCUT_DOWN);
 		KeyCodeCombination F3 = new KeyCodeCombination(KeyCode.F3);
 		KeyCodeCombination F1 = new KeyCodeCombination(KeyCode.F1);
+		KeyCodeCombination F2 = new KeyCodeCombination(KeyCode.F2);
 
 		KeyCodeCombination ctrlO = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.SHORTCUT_DOWN);
 		
@@ -140,13 +141,32 @@ public final class SettingKeyCodeCombination {
 //			System.out.println(ComponentGetter.mainTabPane.getSelectionModel().getSelectedIndex());
 //			ComponentGetter.mainTabPane.getSelectionModel().select(0);
 //			CodeArea code = SqlEditor.getCodeArea();
-			CodeArea code =  SqlEditor.getAllCodeArea().get(2);
+//			CodeArea code =  SqlEditor.getAllCodeArea().get(2);
 			 
 //			int i  = code.getCurrentLineStartInParargraph();
 //			int i2  = code.getCurrentLineEndInParargraph();
 //			System.out.println(i);
 //			System.out.println(i2);
 //			code.showParagraphAtTop(i );
+			
+//			-fx-font-size
+			
+			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
+			    System.out.println(code.getStyle());
+				code.setStyle("-fx-font-size :	"+20);
+				
+			}
+			
+
+		});
+		
+		scene.getAccelerators().put(F2, () -> { 
+			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
+			 
+				code.setStyle("-fx-font-size :	"+12);
+				
+			}
+			
 
 		});
 		
