@@ -153,7 +153,7 @@ public final class SettingKeyCodeCombination {
 			
 			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
 			    System.out.println(code.getStyle());
-				code.setStyle("-fx-font-size :	"+20);
+				code.setStyle("-fx-font-size :	"+20 );
 				
 			}
 			
@@ -162,8 +162,8 @@ public final class SettingKeyCodeCombination {
 		
 		scene.getAccelerators().put(F2, () -> { 
 			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
-			 
-				code.setStyle("-fx-font-size :	"+12);
+				System.out.println(code.getStyle());
+				code.setStyle("-fx-font-size :	"+12 );
 				
 			}
 			

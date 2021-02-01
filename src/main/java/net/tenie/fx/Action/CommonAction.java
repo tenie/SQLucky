@@ -913,7 +913,7 @@ public class CommonAction {
 		String str  = codeArea.getText(start, end);// codeArea.getSelectedText();
 		String trimStr = str.trim();
 		int strSz = trimStr.length();
-		
+		System.out.println("单击选中 |"+ trimStr+"|" );
 		if(strSz > 0 ) { 
     		Set<String> keys = charMap.keySet();
     		

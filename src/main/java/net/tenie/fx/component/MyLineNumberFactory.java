@@ -27,14 +27,18 @@ public class MyLineNumberFactory implements IntFunction<Node> {
 
 	private GenericStyledArea<?, ?, ?> area;
 	private static final Insets DEFAULT_INSETS = new Insets(0.0, 5.0, 0.0, 5.0);
-	private static final Paint DEFAULT_TEXT_FILL = Color.web("#606366");
+	private static   Paint DEFAULT_TEXT_FILL = Color.web("#606366");
 	private static final Font DEFAULT_FONT = Font.font("monospace", FontPosture.ITALIC, 13);
-	private static final Background DEFAULT_BACKGROUND = new Background(
+	private static   Background DEFAULT_BACKGROUND = new Background(
 			new BackgroundFill(Color.web("#313335"), null, null));
-
-	public static IntFunction<Node> get(GenericStyledArea<?, ?, ?> area) {
+	public static IntFunction<Node> get(GenericStyledArea<?, ?, ?> area, String textcolor, String backgroundcolor) {
+		DEFAULT_TEXT_FILL = Color.web(textcolor);
+		DEFAULT_BACKGROUND  = new Background( new BackgroundFill(Color.web(backgroundcolor ), null, null));
 		return get(area, digits -> "%1$" + digits + "s");
 	}
+//	public static IntFunction<Node> get(GenericStyledArea<?, ?, ?> area) {
+//		return get(area, digits -> "%1$" + digits + "s");
+//	}
 
 	public static IntFunction<Node> get(GenericStyledArea<?, ?, ?> area, IntFunction<String> format) {
 		return new MyLineNumberFactory(area, format);

@@ -1,4 +1,8 @@
 
+.text { 
+    
+}
+
 .findword {
     -rtfx-background-color: #FFF59D !important; 
 }
@@ -49,3 +53,9 @@
     -rtfx-blink-rate: 100ms;
     -fx-stroke-width: 10.0;
 }
+
+
+/* 文本框基本色 */
+.styled-text-area {  
+    -fx-font-size: 14;
+} 

@@ -220,6 +220,25 @@ public class SqlEditor {
 	}
 	
 	// 获取所有的CodeArea
+//	public static List<CodeArea> getAllCodeArea() {
+//		List<CodeArea> cas = new ArrayList<>();
+//		TabPane myTabPane = ComponentGetter.mainTabPane;
+//		if (myTabPane.getTabs().size() > 1) {
+//			ObservableList<Tab> tabs = myTabPane.getTabs();
+//			for(Tab tb : tabs) { 
+//				CodeArea ac = getCodeArea(tb);
+//				cas.add(ac);
+//				if(ConfigVal.THEME.equals("DARK")) {
+//					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac ,"#606366" , "#313335"));
+//				}else {
+//					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac, "#666", "#ddd"));
+//				} 
+//			}
+//		}
+//		return cas;
+//	}
+	
+	// 获取所有的CodeArea
 	public static List<CodeArea> getAllCodeArea() {
 		List<CodeArea> cas = new ArrayList<>();
 		TabPane myTabPane = ComponentGetter.mainTabPane;
@@ -228,11 +247,6 @@ public class SqlEditor {
 			for(Tab tb : tabs) { 
 				CodeArea ac = getCodeArea(tb);
 				cas.add(ac);
-				if(ConfigVal.THEME.equals("DARK")) {
-					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac));
-				}else {
-					ac.setParagraphGraphicFactory(LineNumberFactory.get(ac));
-				} 
 			}
 		}
 		return cas;
@@ -245,9 +259,9 @@ public class SqlEditor {
 			for(Tab tb : tabs) { 
 				CodeArea ac = getCodeArea(tb); 
 				if(ConfigVal.THEME.equals("DARK")) {
-					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac));
+					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac ,"#606366" , "#313335"));
 				}else {
-					ac.setParagraphGraphicFactory(LineNumberFactory.get(ac));
+					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac, "#666" , "#ddd"));
 				} 
 			}
 		}

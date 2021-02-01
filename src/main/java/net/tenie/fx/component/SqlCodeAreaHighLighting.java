@@ -37,9 +37,9 @@ public class SqlCodeAreaHighLighting {
 //		codeArea
 		
 		if(ConfigVal.THEME.equals("DARK")) {
-			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea));
+			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea ,"#606366" , "#313335"));
 		}else {
-			codeArea.setParagraphGraphicFactory(LineNumberFactory.get(codeArea));
+			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea, "#666", "#ddd"));
 		} 
 		// 事件KeyEvent 
 		// 文本缩进
