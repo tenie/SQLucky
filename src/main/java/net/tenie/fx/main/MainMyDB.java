@@ -3,6 +3,9 @@ package net.tenie.fx.main;
 import java.io.IOException;
 import java.sql.Connection;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -23,9 +26,11 @@ public class MainMyDB extends Application {
 	private Scene scene;
 	private Image img;
 	private String Theme;
-
+	private static Logger logger = LogManager.getLogger(MainMyDB.class);
+	 
 	@Override
 	public void init() throws Exception {
+		
 		Connection conn = H2Db.getConn();
 	    Theme = H2Db.getConfigVal(conn , "THEME");  
 	    H2Db.updateAppSql(conn);
@@ -38,6 +43,7 @@ public class MainMyDB extends Application {
 		SettingKeyCodeCombination.Setting();
 		img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
 //		Thread.sleep(1000);
+		logger.info("完成初始化"); 
 	}
 
 	@Override
@@ -54,6 +60,13 @@ public class MainMyDB extends Application {
 			ComponentGetter.primaryStage = primaryStage;
 			CommonAction.setTheme(Theme);
 			primaryStage.show();
+			logger.info("展示界面");
+			
+			// 设置链接窗口和代码窗口的占比
+			logger.info("设置窗口比例");
+			double wi = ComponentGetter.masterDetailPane.getWidth();
+			double val = 245 / wi ;  
+			ComponentGetter.treeAreaDetailPane.setDividerPosition(val );
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -62,8 +75,7 @@ public class MainMyDB extends Application {
 
 	}
 
-	public static void main(String[] args) throws IOException { 
+	public static void main(String[] args) throws IOException {
 		LauncherImpl.launchApplication(MainMyDB.class, MyPreloader.class, args);
-
 	}
 }

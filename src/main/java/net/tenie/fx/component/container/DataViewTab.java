@@ -4,16 +4,11 @@ import org.controlsfx.control.MaskerPane;
 
 import com.jfoenix.controls.JFXButton;
 
-import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -70,16 +65,16 @@ public class DataViewTab {
 			VBox vb = new VBox();
 			StackPane sp = new SqlCodeAreaHighLighting().getObj(ddl, false);
 			// 表格上面的按钮
-			FlowPane fp = ddlOptionBtnsPane(ddl);
+			AnchorPane fp = ddlOptionBtnsPane(ddl);
 			vb.getChildren().add(fp);
 			vb.getChildren().add(sp);
 			VBox.setVgrow(sp, Priority.ALWAYS);
 			return vb;
 		}
 		
-		// 数据表格 操作按钮们
-		public static FlowPane ddlOptionBtnsPane(String ddl) {
-			FlowPane fp = new FlowPane();
+		//TODO 数据表格 操作按钮们
+		public static AnchorPane ddlOptionBtnsPane(String ddl) {
+			AnchorPane fp = new AnchorPane();
 			fp.prefHeight(25);
 			JFXButton editBtn = new JFXButton();
 			editBtn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
@@ -88,9 +83,15 @@ public class DataViewTab {
 			});
 			editBtn.setTooltip(MyTooltipTool.instance("Edit"));
 			editBtn.setId(AllButtons.SAVE);
+			//隐藏按钮
+			JFXButton hideBottom = new JFXButton(); 
+			hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
+			hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom()); 
+			
  
 
-			fp.getChildren().addAll(editBtn );
+			fp.getChildren().addAll(editBtn , hideBottom);
+			AnchorPane.setRightAnchor(hideBottom, 0.0);
 			return fp;
 		}
 	

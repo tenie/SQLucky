@@ -6,6 +6,9 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Date;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.application.Platform;
@@ -25,6 +28,8 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class SelectDao {
+
+	private static Logger logger = LogManager.getLogger(SelectDao.class);
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
 	public static DbTableDatePo selectSql(Connection conn, String sql, int limit,
 			FilteredTableView<ObservableList<StringProperty>> table) throws SQLException {
@@ -34,8 +39,18 @@ public class SelectDao {
 		ResultSet rs = null;
 		try {
 			pstate = conn.prepareStatement(sql);
+			// 计时
+			long startTime=System.currentTimeMillis();   //获取开始时间  
+			 
+		
 			// 处理结果集
 			rs = pstate.executeQuery();
+			long endTime=System.currentTimeMillis(); //获取结束时间
+			long usetime = endTime-startTime;
+			double vt = usetime / 1000.0;
+			logger.info("查询时间： "+usetime+"ms");
+			dpo.setExecTime(vt);
+			
 			// 获取元数据
 			ResultSetMetaData mdata = rs.getMetaData();
 			// 获取元数据列数
@@ -52,6 +67,7 @@ public class SelectDao {
 				po.setColumnTypeName(mdata.getColumnTypeName(i));
 				dpo.addField(po);
 			}
+			
 			// 数据
 			if (limit > 0) {
 				execRs(limit, rs, dpo, table);
@@ -124,9 +140,9 @@ public class SelectDao {
 		ChangeListener<String> cl = new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				System.out.println("addStringPropertyChangeListener ：newValue：" + newValue + " | oldValue =" + oldValue);
-				System.out.println("key ==" + tabId + "-" + rowNo);
-				System.out.println("observable = " + observable);
+				logger.info("addStringPropertyChangeListener ：newValue：" + newValue + " | oldValue =" + oldValue);
+				logger.info("key ==" + tabId + "-" + rowNo);
+				logger.info("observable = " + observable);
 				
 				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
 					Platform.runLater(() -> val.setValue(oldValue));

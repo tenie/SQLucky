@@ -5,6 +5,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
@@ -13,6 +16,7 @@ import net.tenie.lib.reflex.BuildObject;
 import net.tenie.lib.tools.StrUtils;
 
 public class DaoTools {
+	private static Logger logger = LogManager.getLogger(DaoTools.class);
 //	public static String conditionStr(ObservableList<StringProperty> vals, ObservableList<SqlFieldPo> fpos) {
 //		StringBuffer str = new StringBuffer(" ");// "where ";
 //		for (int i = 0; i < fpos.size(); i++) {
@@ -118,13 +122,13 @@ public class DaoTools {
 //					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
 //					Timestamp ts = new Timestamp(dv.getTime());
 //					pstmt.setTimestamp(idx, ts);
-//					System.out.println(idx );
+//					logger.info(idx );
 					idx--;
 					continue;
 				} else {
 					Object obj = BuildObject.buildObj(type, val);
 					pstmt.setObject(idx, obj);
-					System.out.println(idx + "  " + obj);
+					logger.info(idx + "  " + obj);
 				}
 			}
 		}

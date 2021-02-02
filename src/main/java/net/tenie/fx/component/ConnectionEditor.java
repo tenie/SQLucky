@@ -2,6 +2,10 @@ package net.tenie.fx.component;
 
 import java.sql.Connection;
 import java.util.function.Function;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -38,6 +42,7 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class ConnectionEditor {
+	private static Logger logger = LogManager.getLogger(ConnectionEditor.class);
 	public static Stage CreateModalWindow(VBox vb) {
 
 		final Stage stage = new Stage();
@@ -257,7 +262,7 @@ public class ConnectionEditor {
 
 		testBtn.setOnMouseClicked(e -> {
 			testBtn.setStyle("-fx-background-color: red ");
-			System.out.println("Test connection~~");
+			logger.info("Test connection~~");
 			DbConnectionPo connpo = call.apply("");
 			if (connpo != null) {
 				CommonAction.isAliveTestAlert(connpo, testBtn);
@@ -327,7 +332,7 @@ public class ConnectionEditor {
 
 	public static void deleteDbConn() {
 		try {
-			System.out.println("deleteDbConn()");
+			logger.info("deleteDbConn()");
 			TreeView<TreeNodePo> treeView = ComponentGetter.treeView;
 			TreeItem<TreeNodePo> rootNode = treeView.getRoot();
 			ObservableList<TreeItem<TreeNodePo>> ls = rootNode.getChildren();
@@ -365,7 +370,7 @@ public class ConnectionEditor {
 
 	private static void closeDbConnHelper(TreeItem<TreeNodePo> val) {
 		String str = val.getValue().getName();
-		System.out.println(str);
+		logger.info(str);
 		DbConnectionPo dp = DBConns.get(str);
 		if (dp.isAlive()) {
 			// 关闭连接
@@ -379,7 +384,7 @@ public class ConnectionEditor {
 	}
 
 	public static void closeDbConn() {
-		System.out.println("closeConnEvent()");
+		logger.info("closeConnEvent()");
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
 			closeDbConnHelper(val);
@@ -416,7 +421,7 @@ public class ConnectionEditor {
 			public void run() {
 				DbConnectionPo po1 = null;
 				try {
-					System.out.println("backRunOpenConn()");
+					logger.info("backRunOpenConn()");
 					String connName = item.getValue().getName();
 					DbConnectionPo po = DBConns.get(connName);
 					po1 = po;

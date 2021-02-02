@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.cell.TextField2TableCell;
@@ -62,6 +65,7 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class RunSQLHelper {
+	private static Logger logger = LogManager.getLogger(RunSQLHelper.class);
 	private static Thread thread;
 	private static JFXButton runbtn;
 	private static JFXButton stopbtn;
@@ -141,25 +145,25 @@ public class RunSQLHelper {
 				} else {
 						if (type == ParseSQL.UPDATE) {
 							msg = DmlDdlDao.updateSql2(conn, sql);
-							System.out.println("add update sql: " + sql);
+							logger.info("add update sql: " + sql);
 						} else if (type == ParseSQL.INSERT) {
 							msg = DmlDdlDao.insertSql2(conn, sql);
-							System.out.println("add insert sql: " + sql);
+							logger.info("add insert sql: " + sql);
 						} else if (type == ParseSQL.DELETE) {
 							msg = DmlDdlDao.deleteSql2(conn, sql);
-							System.out.println("add DELETE sql: " + sql);
+							logger.info("add DELETE sql: " + sql);
 						} else if (type == ParseSQL.DROP) {
 							msg = DmlDdlDao.dropSql2(conn, sql);
-							System.out.println("add DROP sql: " + sql);
+							logger.info("add DROP sql: " + sql);
 						} else if (type == ParseSQL.ALTER) {
 							msg = DmlDdlDao.alterSql2(conn, sql);
-							System.out.println("add ALTER sql: " + sql);
+							logger.info("add ALTER sql: " + sql);
 						} else if (type == ParseSQL.CREATE) {
 							msg = DmlDdlDao.createSql2(conn, sql);
-							System.out.println("add CREATE sql: " + sql);
+							logger.info("add CREATE sql: " + sql);
 						} else {
 							msg = DmlDdlDao.otherSql2(conn, sql);
-							System.out.println("add OTEHR sql: " + sql);
+							logger.info("add OTEHR sql: " + sql);
 						}
 				}
 			} catch (Exception e) {
@@ -195,7 +199,7 @@ public class RunSQLHelper {
 			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted())
-				DataViewContainer.showTableDate(tdpo);
+				DataViewContainer.showTableDate(tdpo , "", "");
 
 		}
 	}
@@ -211,7 +215,7 @@ public class RunSQLHelper {
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 获取表名
 			String tableName = ParseSQL.tabName(sql);
-			System.out.println("tableName= " + tableName + "\n sql = " + sql);
+			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			tdpo.addTableName(tableName);
 			DbTableDatePo dpo = SelectDao.selectSql(conn, sql, ConfigVal.MaxRows, table);
 			DataViewContainer.setTabRowWith(table, dpo.getAllDatasSize());
@@ -230,7 +234,7 @@ public class RunSQLHelper {
 			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted())
-				DataViewContainer.showTableDate(tdpo, tidx, false);
+				DataViewContainer.showTableDate(tdpo, tidx, false, dpo.getExecTime()+"", dpo.getRows()+"");
 		} catch (Exception e) {
 			Platform.runLater(() -> {
 				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
@@ -298,15 +302,15 @@ public class RunSQLHelper {
 			Consumer<Map<String, Object>> action) {
 		return new Thread() {
 			public void run() {
-				System.out.println("线程启动了" + this.getName());
+				logger.info("线程启动了" + this.getName());
 				Map<String, Object> val = new HashMap<>();
 				val.put("sql", sql);
 				val.put("conn", conn);
 				val.put("tabIdx", tabIdx);
 				val.put("btn", run.getId());
 				action.accept(val);
-				System.out.println("线程结束了" + this.getName());
-				System.out.println(run.getId());
+				logger.info("线程结束了" + this.getName());
+				logger.info(run.getId());
 			}
 		};
 	}
@@ -341,7 +345,7 @@ public class RunSQLHelper {
 		ComboBox<Label> conns = ComponentGetter.connComboBox;
 
 		boolean warn = false;
-//	    	System.out.println(conns.getValue() );
+//	    	logger.info(conns.getValue() );
 		if (conns.getValue() == null || StrUtils.isNullOrEmpty(conns.getValue().getText())) {
 			warn = true;
 			ModalDialog.errorAlert("Warn!", "please , choose alive DB connection!");
@@ -428,7 +432,7 @@ public class RunSQLHelper {
 		if (thread != null && !stop.disabledProperty().getValue()) {
 //   		 	 settingBtn(run, stop); 
 			thread.interrupt();
-			System.out.println("线程是否被中断：" + thread.isInterrupted());// true
+			logger.info("线程是否被中断：" + thread.isInterrupted());// true
 			if (thread.isInterrupted()) {
 				settingBtn(run, true, stop, false, btn);
 			}
@@ -538,7 +542,7 @@ public class RunSQLHelper {
 			Tab nd = dataTab.getTabs().get(0);
 			String idVal = nd.getId();
 			dataTab.getTabs().remove(0);
-			System.out.println("idVal = " + idVal);
+			logger.info("idVal = " + idVal);
 			// 删除缓存
 			if (idVal != null) {
 				CacheTableDate.clear(idVal);

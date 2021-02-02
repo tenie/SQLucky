@@ -31,12 +31,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 
 /*   @author tenie */
 public class ModalDialog {
+	private static Logger logger = LogManager.getLogger(ModalDialog.class);
 	private static void resize(SVGPath svg, double width, double height) {
 
 		double originalWidth = svg.prefWidth(-1);
@@ -307,7 +312,7 @@ public class ModalDialog {
 
 		// 界面关闭后进入
 		result.ifPresent(listdata -> {
-			System.out.println(listdata);
+			logger.info(listdata);
 		});
 	}
 

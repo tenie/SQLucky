@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckTreeView;
 
 import com.jfoenix.controls.JFXButton;
@@ -44,6 +46,7 @@ import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.container.ConnItemContainer;
 import net.tenie.fx.component.container.ConnItemDbObjects;
 import net.tenie.fx.component.container.MyTreeItem;
+import net.tenie.fx.component.container.TaskCellFactory;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.dao.TransferTabeDataDao;
@@ -53,7 +56,7 @@ import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
 public class TransferDataController implements Initializable {
-	
+	private static Logger logger = LogManager.getLogger(TransferDataController.class);
 	private static final String TABLE = "Table"; 
 	private static final String VIEW = "View";
 	private static final String FUNCTION = "Function";
@@ -322,7 +325,7 @@ public class TransferDataController implements Initializable {
 			// 序列同步
 			createSynSql(chSeq.isSelected(), sqls, soConn, export, schename, SEQUENCE, targetSchename);
 
-//			System.out.println(sqls);
+//			logger.info(sqls);
 			// 执行ddl
 			DBTools.execListSQL(sqls, tarConn);
 			// 数据同步 执行insert 
@@ -373,12 +376,12 @@ public class TransferDataController implements Initializable {
 					// drop语句
 					if (delObj) {
 						String drop = getDropDDL(export, nodeType, schename, checkBoxName, targetSchename);
-						System.out.println(drop);
+						logger.info(drop);
 						sqls.add(drop);
 					}
 					// create语句
 					String create = getCreateDDL(soConn, export, nodeType, schename, checkBoxName, targetSchename);
-					System.out.println(create);
+					logger.info(create);
 					sqls.add(create);
 
 				}

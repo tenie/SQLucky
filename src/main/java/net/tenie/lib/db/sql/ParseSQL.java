@@ -2,15 +2,20 @@ package net.tenie.lib.db.sql;
 
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.sf.jsqlparser.JSQLParserException;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.util.TablesNamesFinder;
+import net.tenie.lib.db.h2.SqlTextDao;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class ParseSQL {
+	private static Logger logger = LogManager.getLogger(ParseSQL.class);
 
 	public static final int SELECT = 1;
 	public static final int UPDATE = 2;
@@ -108,7 +113,7 @@ public class ParseSQL {
 		int klen = key.length();
 		while (idx > 0) {
 			temp = temp.substring(idx + klen).trim();
-			System.out.println(temp);
+			logger.info(temp);
 			if (StrUtils.beginWith(temp, "(")) {
 				idx = temp.indexOf(key, 0);
 			} else {

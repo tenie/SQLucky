@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
@@ -16,7 +20,7 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class DeleteDao {
-
+	private static Logger logger = LogManager.getLogger(DeleteDao.class);
 
 
 	public static String execDelete(Connection conn, String tableName, ObservableList<StringProperty> vals,
@@ -45,20 +49,20 @@ public class DeleteDao {
 //					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
 //					Timestamp ts = new Timestamp(dv.getTime());
 //					pstmt.setTimestamp(idx, ts);
-//					System.out.println(idx + "  " + ts);
+//					logger.info(idx + "  " + ts);
 //				} else {
 //					Object obj = BuildObject.buildObj(type, val);
 //					pstmt.setObject(idx, obj);
-//					System.out.println(idx + "  " + obj);
+//					logger.info(idx + "  " + obj);
 //				}
 //			}
 			
 			boolean tf = true;
-			System.out.println("sql = " + select);
+			logger.info("sql = " + select);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				int val = rs.getInt(1);
-				System.out.println("select count = " + val);
+				logger.info("select count = " + val);
 				if (val > 1) {
 					tf = ModalDialog.Confirmation("Finded " + val + " line data , Are you sure continue delete  ?");
 				} else if (val == 0) {
@@ -72,7 +76,7 @@ public class DeleteDao {
 			}
 			String sql = "DELETE  FROM  " + tableName + " where " + condition;
 
-			System.out.println("sql = " + sql);
+			logger.info("sql = " + sql);
 			pstmt = conn.prepareStatement(sql);
 			DaoTools.conditionSetVal(pstmt, vals, fpos);
 //			// 赋值
@@ -99,7 +103,7 @@ public class DeleteDao {
 
 			// 更新
 			int i = pstmt.executeUpdate();
-			System.out.println("executeDelete = " + i);
+			logger.info("executeDelete = " + i);
 			msg = "Ok, Delete " + i;
 		} catch (SQLException e) {
 			e.printStackTrace();

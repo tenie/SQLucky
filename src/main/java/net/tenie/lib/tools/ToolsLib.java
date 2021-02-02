@@ -67,7 +67,7 @@ public class ToolsLib {
 		try {
 			stmt = conn.createStatement();
 			for (String sql : tables) {
-				System.out.println(sql);
+				logger.info(sql);
 				stmt.execute(sql);
 			}
 			return true;
@@ -212,14 +212,14 @@ public class ToolsLib {
 		// 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
 		if (file.exists() && file.isFile()) {
 			if (file.delete()) {
-				System.out.println("" + fileName + "");
+				logger.info("" + fileName + "");
 				return true;
 			} else {
-				System.out.println("" + fileName + "失败！");
+				logger.info("" + fileName + "失败！");
 				return false;
 			}
 		} else {
-			System.out.println("" + fileName + "不存在！");
+			logger.info("" + fileName + "不存在！");
 			return false;
 		}
 	}

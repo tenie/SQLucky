@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
@@ -16,7 +20,7 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class UpdateDao {
-
+	private static Logger logger = LogManager.getLogger(UpdateDao.class);
 	public static String execUpdate(Connection conn, String tableName, ObservableList<StringProperty> newvals,
 			ObservableList<StringProperty> oldvals, ObservableList<SqlFieldPo> fpos) throws Exception {
 		PreparedStatement pstmt = null;
@@ -45,18 +49,18 @@ public class UpdateDao {
 //					Timestamp ts = new Timestamp(dv.getTime());
 //					pstmt.setTimestamp(idx, ts);
 					
-					System.out.println(idx );
+					logger.info(idx );
 					idx--;
 					continue;
 					
 				} else {
 					Object obj = BuildObject.buildObj(type, val);
 					pstmt.setObject(idx, obj);
-					System.out.println(idx + "  " + obj);
+					logger.info(idx + "  " + obj);
 				}
 			}
 			boolean tf = true;
-			System.out.println("sql = " + select);
+			logger.info("sql = " + select);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				int val = rs.getInt(1);
@@ -89,7 +93,7 @@ public class UpdateDao {
 //					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
 //					Timestamp ts = new Timestamp(dv.getTime());
 //					pstmt.setTimestamp(idx, ts);
-//					System.out.println(idx );
+//					logger.info(idx );
 					idx--;
 					continue;
 				} else {
@@ -110,7 +114,7 @@ public class UpdateDao {
 //					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
 //					Timestamp ts = new Timestamp(dv.getTime());
 //					pstmt.setTimestamp(idx, ts);
-//					System.out.println(idx );
+//					logger.info(idx );
 					idx--;
 					continue;
 				} else {
@@ -138,21 +142,21 @@ public class UpdateDao {
 	public static void main(String[] args) {
 		Date d1 = StrUtils.StrToDate("2021-01-07 11:47:17.0", ConfigVal.dateFormateL);
 		Date d2 = StrUtils.StrToDate("2021-01-07 11:47:17", ConfigVal.dateFormateL);
-		System.out.println(d1);
-		System.out.println(d2);
+		logger.info(d1);
+		logger.info(d2);
 		java.sql.Date sd = new java.sql.Date(d1.getTime());
-		System.out.println(sd);
+		logger.info(sd);
 		Timestamp ts = new Timestamp(d1.getTime());
-		System.out.println(ts);
+		logger.info(ts);
 		
 		Timestamp ts2 = new Timestamp(d2.getTime());
-		System.out.println(ts2);
+		logger.info(ts2);
 		
 		java.sql.Time t = new java.sql.Time(d1.getTime());
-		System.out.println(t);
+		logger.info(t);
 		
 		String s = StrUtils.dateToStr(d1, ConfigVal.dateFormateL);
-				System.out.println(s);
+				logger.info(s);
 		
 	}
 }

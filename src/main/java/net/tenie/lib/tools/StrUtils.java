@@ -10,11 +10,16 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.tenie.fx.PropertyPo.MyRange;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.lib.po.DbConnectionPo;
 
 /*   @author tenie */
 public class StrUtils {
+	private static Logger logger = LogManager.getLogger(StrUtils.class);
 	public final static SimpleDateFormat sdf_s = new SimpleDateFormat("yyyy-MM-dd");
 	public final static SimpleDateFormat sdf_l = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public final static String EMPTY_STRING = "";
@@ -58,32 +63,32 @@ public static void main(String[] args) {
 			} 
 		}
 	}
-	System.out.println(idxs);
+	logger.info(idxs);
 	for(MyRange mr: idxs) {
 		int s = mr.getStart();
 		int e = mr.getEnd();
 		String tmps = str.substring(s, e);
-		System.out.println(tmps);
+		logger.info(tmps);
 	}
 //	
 //	
 //	Date d  = datePlus1Second("2021-01-07 11:47:17" );
 ////								2021-01-07 11:47:18
-//	 System.out.println( dateToStrL(d)); ;
+//	 logger.info( dateToStrL(d)); ;
 //	String str = 
 //			  "balancePartAmount\n"
 //			+ "1111--ssss\n"
 //			+ "2222"  ;
-//	System.out.println(str.length());
-//	System.out.println(str);
-//	System.out.println("======");
+//	logger.info(str.length());
+//	logger.info(str);
+//	logger.info("======");
 //	String s = trimComment(str, "--");
-//	System.out.println(s.length());
-//	System.out.println(s);
-//	System.out.println("======");
+//	logger.info(s.length());
+//	logger.info(s);
+//	logger.info("======");
 //    s = trimCommentToSpace(str, "--");
-//	System.out.println(s.length());
-//	System.out.println(s);
+//	logger.info(s.length());
+//	logger.info(s);
 }
 	// 下划线 轉 驼峰命名
 	public static String underlineCaseCamel(String str) {
@@ -166,8 +171,8 @@ public static void main(String[] args) {
 				if( tmpSz == sz) {
 					break;
 				}else {
-//					System.out.println(tmpSz);
-//					System.out.println(sz);
+//					logger.info(tmpSz);
+//					logger.info(sz);
 					sz = tmpSz;
 					
 				}
@@ -317,7 +322,7 @@ public static void main(String[] args) {
 			 int len = end - start;
 			 String space = createSpaceStr( len);
 			 String tmp = text.substring(start, end);
-//			 System.out.println("len = "+len+" ; tmp = " + tmp); 
+//			 logger.info("len = "+len+" ; tmp = " + tmp); 
 			 txtTmp += text.substring(lastKwEnd, start) + space ; 
 			 lastKwEnd = end;
 		}
@@ -327,7 +332,7 @@ public static void main(String[] args) {
 		}else {
 			 txtTmp = text;
 		}
-//		System.out.println("txtTmp = " + txtTmp);
+//		logger.info("txtTmp = " + txtTmp);
 		
 		
 		//TODO 在新字符上面, 提取字sql语句的区间

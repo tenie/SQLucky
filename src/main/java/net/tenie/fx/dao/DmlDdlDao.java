@@ -5,11 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 
 /*   @author tenie */
 public class DmlDdlDao {
 
+	private static Logger logger = LogManager.getLogger(DmlDdlDao.class);
 	public static DbTableDatePo deleteSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		int i = execDML(conn, sql);
@@ -106,7 +111,7 @@ public class DmlDdlDao {
 		int i = 0;
 		try {
 			sm = conn.createStatement();
-			System.out.println("执行   " + delSQl);
+			logger.info("执行   " + delSQl);
 			i = sm.executeUpdate(delSQl);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -121,7 +126,7 @@ public class DmlDdlDao {
 	public static void execDDL(Connection conn, String sql) throws SQLException {
 		PreparedStatement pstmt = null;
 		try {
-			System.out.println("执行   " + sql);
+			logger.info("执行   " + sql);
 			pstmt = conn.prepareStatement(sql);
 			pstmt.execute();
 		} catch (SQLException e) {

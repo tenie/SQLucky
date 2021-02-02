@@ -6,14 +6,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
+import net.tenie.fx.dao.DeleteDao;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class CacheTableDate {
-
+	private static Logger logger = LogManager.getLogger(CacheTableDate.class);
 	private static Map<String, String> tabNames = new HashMap<>();
 	private static Map<String, String> selectSql = new HashMap<>();
 	private static Map<String, Tab> tabs = new HashMap<>();
@@ -78,7 +83,7 @@ public class CacheTableDate {
 	public static void clear(String tab) {
 		Thread t = new Thread() {
 			public void run() {
-				System.out.println("Thread-clear Cache Data");
+				logger.info("Thread-clear Cache Data");
 				tabNames.remove(tab);
 				removeHelper(newLineDate, tab);
 				removeHelper(oldval, tab);

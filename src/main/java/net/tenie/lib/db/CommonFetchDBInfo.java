@@ -3,12 +3,18 @@ package net.tenie.lib.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import net.tenie.fx.utility.EventAndListener.SettingKeyCodeCombination;
 import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;
 /*   
  * @author tenie 
  * */
 public class CommonFetchDBInfo {
+	private static Logger logger = LogManager.getLogger(CommonFetchDBInfo.class);
 
 	private ExportDDL exportDDL;
 
@@ -31,7 +37,7 @@ public class CommonFetchDBInfo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("表个数" + ls.size());
+		logger.info("表个数" + ls.size());
 		return ls;
 	}
 

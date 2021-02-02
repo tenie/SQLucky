@@ -10,6 +10,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -18,7 +19,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -33,6 +34,7 @@ import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
+import net.tenie.lib.tools.StrUtils;
 
 /*   
  * 展示(数据, ddl等)面板的容器
@@ -58,11 +60,11 @@ public class DataViewContainer {
 		support2.addSupport(dataView);
 	}
 
-	public static void showTableDate(DataTabDataPo rsval) {
-		showTableDate(rsval, -1, true);
+	public static void showTableDate(DataTabDataPo rsval,   String time , String rows) {
+		showTableDate(rsval, -1, true, time, rows );
 	}
 
-	public static void showTableDate(DataTabDataPo rsval, int idx, boolean disable) {
+	public static void showTableDate(DataTabDataPo rsval, int idx, boolean disable, String time , String rows) {
 		Platform.runLater(() -> {
 			List<FilteredTableView<ObservableList<StringProperty>>> allTable = rsval.getNewtables();
 			List<String> names = rsval.getTableNames();
@@ -84,10 +86,10 @@ public class DataViewContainer {
 							vb.getChildren().add(table);
 							dataTabPane.getSelectionModel().select(tab0);
 						}else {
-							addNewDateTab(dataTabPane, table, tn, 0, disable);
+							addNewDateTab(dataTabPane, table, tn, 0, disable, time , rows);
 						} 
 				}else {
-					addNewDateTab(dataTabPane, table, tn, idx, disable);
+					addNewDateTab(dataTabPane, table, tn, idx, disable, time , rows);
 				}
 				
 			}
@@ -96,11 +98,11 @@ public class DataViewContainer {
 
 	// dataTab add content 添加一个tab页， 把TableView放如页中
 	private static void addNewDateTab(TabPane dataTab, FilteredTableView<ObservableList<StringProperty>> tbv,
-			String tabName, int idx, boolean disable) {
+			String tabName, int idx, boolean disable , String time , String rows) {
 		Tab nwTab = DataViewTab.createTab(dataTab, tabName);
 		nwTab.setId(tbv.getId());
 		CacheTableDate.saveTab(tbv.getId(), nwTab);
-		VBox vb = generateDataPane(tbv.getId(), disable, tbv);
+		VBox vb = generateDataPane(tbv.getId(), disable, tbv ,   time ,   rows);
 
 		if (idx > -1) {
 			dataTab.getTabs().add(idx, nwTab);
@@ -113,10 +115,10 @@ public class DataViewContainer {
 	}
 
 	// 数据tab中的组件
-	public static VBox generateDataPane(String id, boolean disable, TableView<ObservableList<StringProperty>> tbv) {
+	public static VBox generateDataPane(String id, boolean disable, TableView<ObservableList<StringProperty>> tbv , String time , String rows) {
 		VBox vb = new VBox();
 		// 表格上面的按钮
-		FlowPane fp = getDataTableOptionBtnsPane(disable);
+		AnchorPane fp = getDataTableOptionBtnsPane(disable, time, rows);
 		fp.setId(id);
 		vb.setId(id);
 		vb.getChildren().add(fp);
@@ -126,8 +128,9 @@ public class DataViewContainer {
 	}
 
 	// 数据表格 操作按钮们
-	public static FlowPane getDataTableOptionBtnsPane(boolean disable) {
-		FlowPane fp = new FlowPane();
+	public static AnchorPane getDataTableOptionBtnsPane(boolean disable, String time , String rows) {
+//		FlowPane fp = new FlowPane();
+		AnchorPane fp = new AnchorPane();
 		fp.prefHeight(25);
 		JFXButton saveBtn = new JFXButton();
 		saveBtn.setGraphic(ImageViewGenerator.svgImageDefActive("save"));
@@ -217,8 +220,37 @@ public class DataViewContainer {
 		txt.getItems().addAll(txtselected, txtselectedfile, txtall, txtallfile);
 
 		exportBtn.getItems().addAll(insertSQL, csv, txt);
-
-		fp.getChildren().addAll(saveBtn, detailBtn, refreshBtn, addBtn, minusBtn, copyBtn, exportBtn);
+		
+		//隐藏按钮
+		JFXButton hideBottom = new JFXButton(); 
+		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
+		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom()); 
+		
+		//计时/查询行数
+		String info = ""; //time+ " ms / "+rows+" rows";
+		if(StrUtils.isNotNullOrEmpty(time)) {
+			 info =  time+ " s / "+rows+" rows";
+		}
+		Label lb = new Label(info);
+		
+		
+		
+		fp.getChildren().addAll(saveBtn, detailBtn, refreshBtn, addBtn, minusBtn, copyBtn, exportBtn, 
+				hideBottom, lb);
+		Double fix = 30.0;
+		int i = 0;
+		AnchorPane.setLeftAnchor(detailBtn , fix * ++i ) ;
+		AnchorPane.setLeftAnchor(refreshBtn , fix * ++i);
+		
+		AnchorPane.setLeftAnchor(addBtn , fix * ++i ) ;
+		AnchorPane.setLeftAnchor(minusBtn , fix * ++i);
+		AnchorPane.setLeftAnchor(copyBtn , fix * ++i ) ;
+		AnchorPane.setLeftAnchor(exportBtn , fix * ++i);
+		
+		AnchorPane.setRightAnchor(hideBottom, 0.0);
+		AnchorPane.setTopAnchor(lb, 3.0);
+		AnchorPane.setRightAnchor(lb, 35.0);
+		
 		return fp;
 	}
 

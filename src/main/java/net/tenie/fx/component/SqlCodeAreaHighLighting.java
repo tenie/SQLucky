@@ -17,13 +17,15 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 import net.tenie.lib.tools.StrUtils;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.LineNumberFactory;
 
 /*   @author tenie */
 public class SqlCodeAreaHighLighting {
-  
+	private static Logger logger = LogManager.getLogger(SqlCodeAreaHighLighting.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
 
 	private CodeArea codeArea;
@@ -45,7 +47,7 @@ public class SqlCodeAreaHighLighting {
 		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{ 
 			if(e.getCode() == KeyCode.TAB ) {
-				System.out.println("e.getCode() "+e.getCode() );
+				logger.info("文本缩进 ;   "+e.getCode() );
 				if (codeArea.getSelectedText().contains("\n") ) { 
 					e.consume();
 					if(e.isShiftDown()) {
@@ -90,18 +92,18 @@ public class SqlCodeAreaHighLighting {
 		
 		codeArea.setOnMouseExited(mouseEvent->{
 			ComponentGetter.codeAreaAnchor =  codeArea.getAnchor();
-//			System.out.println(mouseEvent.getEventType());
+//			logger.info(mouseEvent.getEventType());
 //			if ( mouseEvent.getEventType() == MouseEvent.MOUSE_EXITED_TARGET) {
-//				System.out.println("MOUSE_EXITED_TARGET" + codeArea.getAnchor());
-////				System.out.println();
+//				logger.info("MOUSE_EXITED_TARGET" + codeArea.getAnchor());
+////				logger.info();
 //			}
 		});
 		
 		codeArea.setOnMouseMoved(mouseEvent->{
-//			System.out.println(mouseEvent.getEventType());
+//			logger.info(mouseEvent.getEventType());
 //			if ( mouseEvent.getEventType() == MouseEvent.MOUSE_EXITED_TARGET) {
-//				System.out.println("MOUSE_EXITED_TARGET" + codeArea.getAnchor());
-////				System.out.println();
+//				logger.info("MOUSE_EXITED_TARGET" + codeArea.getAnchor());
+////				logger.info();
 //			}
 		});
 		
@@ -185,6 +187,7 @@ public class SqlCodeAreaHighLighting {
  
 }
 class InputMethodRequestsObject implements InputMethodRequests {
+	private static Logger logger = LogManager.getLogger(InputMethodRequestsObject.class);
     private CodeArea area;
 	public InputMethodRequestsObject(CodeArea area) {
 		this.area = area;
@@ -206,7 +209,7 @@ class InputMethodRequestsObject implements InputMethodRequests {
     }
     @Override
     public Point2D getTextLocation(int offset) {
-    	System.out.println("????????");
+    	logger.info("输入法软件展示");
         // a very rough example, only tested under macOS
         Optional<Bounds> caretPositionBounds = area.getCaretBounds();
         if (caretPositionBounds.isPresent()) {

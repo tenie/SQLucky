@@ -13,6 +13,10 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.tenie.lib.po.TablePo;
 import net.tenie.lib.po.TablePrimaryKeysPo;
 import net.tenie.lib.tools.StrUtils;
@@ -28,6 +32,7 @@ import net.tenie.lib.po.TableFieldPo;
  *
  */
 public class Dbinfo {
+	private static Logger logger = LogManager.getLogger(Dbinfo.class);
 
 	private Connection conn;
 
@@ -128,7 +133,7 @@ public class Dbinfo {
 			while (rs.next()) {
 				DbSchemaPo po = new DbSchemaPo();
 				String schema = rs.getString(1);
-				System.out.println("fetchSchemasInfo(); schema=" + schema);
+				logger.info("fetchSchemasInfo(); schema=" + schema);
 				po.setSchemaName(schema);
 				pos.put(schema, po);
 			}
@@ -567,7 +572,7 @@ public class Dbinfo {
 			commentstr = comment[1];
 			int start = (commentstr.indexOf("'") + 1);
 			commentstr = commentstr.substring(start, commentstr.lastIndexOf("'"));
-			System.out.println(" 表注释名:" + commentstr);
+			logger.info(" 表注释名:" + commentstr);
 		}
 
 		return commentstr;

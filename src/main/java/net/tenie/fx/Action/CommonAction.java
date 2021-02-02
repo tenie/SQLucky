@@ -22,6 +22,8 @@ import javafx.scene.layout.VBox;
 import net.tenie.fx.utility.EventAndListener.myEvent;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
@@ -48,12 +50,12 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class CommonAction {
-
+	private static Logger logger = LogManager.getLogger(CommonAction.class);
 	public static void saveSqlAction() {
 		try {
 			String sql = SqlEditor.getCurrentTabSQLText();
 			Tab tb = SqlEditor.mainTabPaneSelectedTab();
-			System.out.println(tb.getId());
+			logger.info(tb.getId());
 			String tbid = tb.getId();
 			String fileName = "";
 			if (StrUtils.beginWith(tbid, ConfigVal.SAVE_TAG)) {
@@ -253,7 +255,7 @@ public class CommonAction {
 			}
 			txt = txt.replaceAll("\n", "\n-- ");
 			txt = temp + "\n-- " + txt;
-			System.out.println(txt);
+			logger.info(txt);
 			int k = txt.indexOf('\n', 0);
 			while (k >= 0) {
 				code.insertText(k, "-- ");
@@ -308,14 +310,14 @@ public class CommonAction {
 		}
 		// 获取文本
 		String txt = code.getText(start, end);
-		System.out.println("txt = " + txt); 
+		logger.info("txt = " + txt); 
 			String temp = "";
 			for (int t = 0; t < start; t++) {
 				temp += " ";
 			}
 			txt = txt.replaceAll("\n", replaceStr1);
 			txt = temp + replaceStr1 + txt;
-			System.out.println(txt);
+			logger.info(txt);
 			int k = txt.indexOf('\n', 0);
 			int count  = 0;
 			while (k >= 0) {
@@ -421,7 +423,7 @@ public class CommonAction {
 //			}
 //			txt = txt.replaceAll("\n", "\n-- ");
 //			txt = temp + "\n-- " + txt;
-//			System.out.println(txt);
+//			logger.info(txt);
 //			int k = txt.indexOf('\n', 0);
 //			while (k >= 0) {
 //				code.insertText(k, "-- ");
@@ -913,7 +915,7 @@ public class CommonAction {
 		String str  = codeArea.getText(start, end);// codeArea.getSelectedText();
 		String trimStr = str.trim();
 		int strSz = trimStr.length();
-		System.out.println("单击选中 |"+ trimStr+"|" );
+		logger.info("单击选中 |"+ trimStr+"|" );
 		if(strSz > 0 ) { 
     		Set<String> keys = charMap.keySet();
     		
@@ -965,14 +967,14 @@ public class CommonAction {
 	public static void main(String[] args) {
 //		String text = "012345(ABC(DE)6789";
 //		int i = selectParenthesisRange(text, 7, "(", ")");
-//		System.out.println(i);
-//		System.out.println(text.substring(7, i));
+//		logger.info(i);
+//		logger.info(text.substring(7, i));
 		
 		
 		String text = "012345(ABC(DE)6789";
 		int i = findEndParenthesisRange(text, 12, ")", "(");
-		System.out.println(i);
-		System.out.println(text.substring( i, 12));
+		logger.info(i);
+		logger.info(text.substring( i, 12));
 		
 		
 //		String s = "select\r\n" + 
@@ -982,7 +984,7 @@ public class CommonAction {
 //				"-- eeee \n"+
 //				"where\r\n" + 
 //				"  1 = 1 ";
-//		System.out.println(StrUtils.pressString(s));
+//		logger.info(StrUtils.pressString(s));
 	}
 	
 	

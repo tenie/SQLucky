@@ -4,6 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.Date;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
@@ -14,7 +18,8 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class InsertDao {
-	
+
+	private static Logger logger = LogManager.getLogger(InsertDao.class);
 	/**
 	 * 提供一行表格数据, 做插入保存
 	 * @param conn			数据库连接
@@ -52,7 +57,7 @@ public class InsertDao {
 
 		PreparedStatement pstmt = null;
 		pstmt = conn.prepareStatement(insert); 
-		System.out.println(insert);
+		logger.info(insert);
 		int idx = 0;
 		for (int i = 0; i < size; i++) {
 			String val = data.get(i).get();
@@ -65,11 +70,11 @@ public class InsertDao {
 					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
 					Timestamp ts = new Timestamp(dv.getTime());
 					pstmt.setTimestamp(idx, ts);
-					System.out.println(idx + "  " + ts);
+					logger.info(idx + "  " + ts);
 				} else {
 					Object obj = BuildObject.buildObj(type, val);
 					pstmt.setObject(idx, obj);
-					System.out.println(idx + "  " + obj);
+					logger.info(idx + "  " + obj);
 				}
 			}
 

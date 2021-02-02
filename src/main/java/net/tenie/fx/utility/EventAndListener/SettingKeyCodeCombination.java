@@ -2,6 +2,8 @@ package net.tenie.fx.utility.EventAndListener;
 
 import net.tenie.fx.component.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 
 import com.jfoenix.controls.JFXButton;
@@ -18,6 +20,7 @@ import net.tenie.fx.utility.CommonUtility;
 
 /*   @author tenie */
 public final class SettingKeyCodeCombination {
+	private static Logger logger = LogManager.getLogger(SettingKeyCodeCombination.class);
 	public static void Setting() {
 		Scene scene = ComponentGetter.primaryscene;
 		KeyCombination cx = KeyCombination.keyCombination("shortcut+X");
@@ -62,7 +65,7 @@ public final class SettingKeyCodeCombination {
 //			 for ( Tab t : ComponentGetter.dataTab.getTabs()) {
 //				 Tab t1 = t;
 //				 String title = CommonUtility.tabText(t1); 
-//				 System.out.println( title);
+//				 logger.info( title);
 //			 }
 //			
 //		});
@@ -104,7 +107,7 @@ public final class SettingKeyCodeCombination {
 		scene.getAccelerators().put(ctrlW, () -> {
 			SqlEditor.closeEditor();
 			// 关闭数据窗口
-//			System.out.println(ctrlW);
+//			logger.info(ctrlW);
 //			Tab t = ComponentGetter.dataTab.getSelectionModel().getSelectedItem();
 //			ComponentGetter.dataTab.getTabs().remove(t);
 
@@ -138,21 +141,21 @@ public final class SettingKeyCodeCombination {
 		
 		scene.getAccelerators().put(F1, () -> {
 //			CommonAction.pressSqlText();
-//			System.out.println(ComponentGetter.mainTabPane.getSelectionModel().getSelectedIndex());
+//			logger.info(ComponentGetter.mainTabPane.getSelectionModel().getSelectedIndex());
 //			ComponentGetter.mainTabPane.getSelectionModel().select(0);
 //			CodeArea code = SqlEditor.getCodeArea();
 //			CodeArea code =  SqlEditor.getAllCodeArea().get(2);
 			 
 //			int i  = code.getCurrentLineStartInParargraph();
 //			int i2  = code.getCurrentLineEndInParargraph();
-//			System.out.println(i);
-//			System.out.println(i2);
+//			logger.info(i);
+//			logger.info(i2);
 //			code.showParagraphAtTop(i );
 			
 //			-fx-font-size
 			
 			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
-			    System.out.println(code.getStyle());
+			    logger.info(code.getStyle());
 				code.setStyle("-fx-font-size :	"+20 );
 				
 			}
@@ -162,7 +165,7 @@ public final class SettingKeyCodeCombination {
 		
 		scene.getAccelerators().put(F2, () -> { 
 			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
-				System.out.println(code.getStyle());
+				logger.info(code.getStyle());
 				code.setStyle("-fx-font-size :	"+12 );
 				
 			}

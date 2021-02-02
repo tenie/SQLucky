@@ -8,9 +8,14 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.tenie.lib.db.DBTools;
+import net.tenie.lib.db.MySqlExportDDLImp;
 /*   @author tenie */
 public class SqlTextDao {
+	private static Logger logger = LogManager.getLogger(SqlTextDao.class);
 	
 	// 建表 
 	public static void createTab(Connection conn) {
@@ -131,7 +136,7 @@ public class SqlTextDao {
 		ResultSet rs = null;
 		try { 
 			sm = conn.createStatement();
-			System.out.println("执行   "+ sql);
+			logger.info("执行   "+ sql);
 		    rs =  sm.executeQuery(sql);  
 		    while(rs.next()) { 
 		    	H2SqlTextSavePo po = new H2SqlTextSavePo();

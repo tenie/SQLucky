@@ -6,6 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;
 
@@ -14,6 +17,7 @@ import net.tenie.lib.po.TablePo;
  *  
  */
 public class MySqlExportDDLImp implements ExportDDL {
+	private static Logger logger = LogManager.getLogger(MySqlExportDDLImp.class);
 
 	private FetchDB2InfoImp fdb2;
 
@@ -198,7 +202,7 @@ public class MySqlExportDDLImp implements ExportDDL {
 	public String exportCreateProcedure(Connection conn, String schema, String obj) {
 		String sql = "SHOW CREATE PROCEDURE  " + schema + "." + obj;
 		String ddl = getddlHelper(conn, sql, 3);
-		System.out.println(ddl);
+		logger.info(ddl);
 		return ddl;
 	}
 
@@ -351,7 +355,7 @@ public class MySqlExportDDLImp implements ExportDDL {
 	private String getddlHelper(Connection conn, String sql, int i) {
 
 		String ddl = "";
-		System.out.println(sql);
+		logger.info(sql);
 		ResultSet rs = null;
 		try {
 			rs = conn.createStatement().executeQuery(sql);
@@ -374,7 +378,7 @@ public class MySqlExportDDLImp implements ExportDDL {
 	private List<String> getAllddlHelper(Connection conn, String sql, int i) {
 		List<String> allDDl = new ArrayList<String>();
 		String ddl = "";
-		System.out.println(sql);
+		logger.info(sql);
 		ResultSet rs = null;
 		try {
 			rs = conn.createStatement().executeQuery(sql);

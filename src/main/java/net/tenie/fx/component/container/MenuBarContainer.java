@@ -3,6 +3,9 @@ package net.tenie.fx.component.container;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -22,6 +25,7 @@ import net.tenie.fx.utility.CommonUtility;
 
 /*   @author tenie */
 public class MenuBarContainer {
+	private static Logger logger = LogManager.getLogger(MenuBarContainer.class);
 	private MenuBar mainMenuBar;
 	private Menu mnfile;
 	private Menu mnEdit;
@@ -239,10 +243,10 @@ public class MenuBarContainer {
 		EnCoding.setGraphic(ImageViewGenerator.svgImageUnactive("mfglabs-random"));
 		EnCoding.setOnAction(value -> {
 			String txt = SqlEditor.getCurrentTabSQLText();
-//			System.out.println(txt);
+//			logger.info(txt);
 		    try {
 				String unicode = new String(txt.getBytes(""),"GBK");
-				System.out.println(unicode);
+				logger.info(unicode);
 			} catch (UnsupportedEncodingException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -310,6 +314,6 @@ public class MenuBarContainer {
 	}
 
 	public static void main(String[] args) {
-		   System.out.println("Default Charset=" + Charset.defaultCharset());
+		   logger.info("Default Charset=" + Charset.defaultCharset());
 	}
 }

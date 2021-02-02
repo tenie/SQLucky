@@ -2,6 +2,9 @@ package net.tenie.fx.component.container;
 
 import java.util.Objects;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Cursor;
@@ -27,6 +30,7 @@ import net.tenie.lib.po.DbConnectionPo;
 
 /*   @author tenie */
 public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<TreeNodePo>> {
+	private static Logger logger = LogManager.getLogger(TaskCellFactory.class);
 	private static final DataFormat JAVA_FORMAT = new DataFormat("application/x-java-serialized-object");
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
 	private TreeCell<TreeNodePo> dropZone;
@@ -115,7 +119,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 
 	// 发现拖动 当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个
 	private void dragDetected(MouseEvent event, TreeCell<TreeNodePo> treeCell, TreeView<TreeNodePo> treeView) {
-		System.out.println("dragDetected"); 
+		logger.info("dragDetected"); 
 		
 		draggedItem = treeCell.getTreeItem();
 
@@ -125,7 +129,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 			return;
 		}else {
 			ComponentGetter.dragTreeItemName =  draggedItem.getValue().getName();
-			System.out.println("ComponentGetter.dragTreeItemName =" +ComponentGetter.dragTreeItemName);
+			logger.info("ComponentGetter.dragTreeItemName =" +ComponentGetter.dragTreeItemName);
 		}
 			
 		Dragboard db = treeCell.startDragAndDrop(TransferMode.ANY);
@@ -165,7 +169,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 
 	// 放下后执行
 	private void drop(DragEvent event, TreeCell<TreeNodePo> treeCell, TreeView<TreeNodePo> treeView) {
-		System.out.println("drop");
+		logger.info("drop");
 		Dragboard db = event.getDragboard();
 		boolean success = false;
 		if (!db.hasContent(JAVA_FORMAT))
@@ -193,7 +197,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 	}
 
 	private void clearDropLocation() {
-		System.out.println("clearDropLocation");
+		logger.info("clearDropLocation");
 		ComponentGetter.dragTreeItemName = "";
 		if (dropZone != null)
 			dropZone.setStyle("");

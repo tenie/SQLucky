@@ -1,6 +1,10 @@
 package net.tenie.fx.utility;
 
 import java.util.function.Function;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -12,10 +16,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.dao.UpdateDao;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class CommonUtility {
+	private static Logger logger = LogManager.getLogger(CommonUtility.class);
 	public static void runThread(Function<Object, Object> fun) {
 		Thread t = new Thread() {
 			public void run() {
@@ -90,7 +96,7 @@ public class CommonUtility {
 				if (CommonUtility.isNum(dbtype) 
 				&& !StrUtils.isNumeric(newValue) 
 				&& !"<null>".equals(newValue)) {
-					System.out.println("newStringPropertyChangeListener() : newValue= "+newValue+"set fail" );
+					logger.info("newStringPropertyChangeListener() : newValue= "+newValue+"set fail" );
 					Platform.runLater(() -> val.setValue(oldValue));
 					return;
 				}

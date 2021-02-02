@@ -1,5 +1,7 @@
 package net.tenie.fx.component;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
@@ -13,6 +15,7 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class FindReplaceEditor {
+	private static Logger logger = LogManager.getLogger(FindReplaceEditor.class);
 	public static void findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
 		CodeArea code = SqlEditor.getCodeArea();
 		int idx = code.getCaretPosition();
@@ -71,7 +74,7 @@ public class FindReplaceEditor {
 		int start = i.getStart();
 
 		int idx = start + text.length();
-		System.out.println(idx);
+		logger.info(idx);
 		findString(text, idx, true, true);
 	}
 

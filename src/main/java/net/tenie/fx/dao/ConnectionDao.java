@@ -6,12 +6,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.controller.TransferDataController;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.po.DbConnectionPo;
@@ -19,7 +23,7 @@ import net.tenie.lib.po.RsData;
 import net.tenie.lib.tools.StrUtils;
 
 public class ConnectionDao {
-	
+	private static Logger logger = LogManager.getLogger(ConnectionDao.class);
 	public static void delete(Connection conn, int id) {
 		String sql = "delete FROM  CONNECTION_INFO where id = "+id;
 		try {
@@ -31,7 +35,7 @@ public class ConnectionDao {
 //	更新节点的
 	public static void refreshConnOrder() {
 		try {  
-			System.out.println("refreshConnOrder");
+			logger.info("refreshConnOrder");
 			TreeView<TreeNodePo> treeView = ComponentGetter.treeView ;
 			TreeItem<TreeNodePo>  root = treeView.getRoot();
 			ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
@@ -152,14 +156,14 @@ public class ConnectionDao {
 				int val = DBTools.execInsertReturnId(conn, sql);
 				
 				if(val>0) {
-					System.out.println("insert sql return id = " + val);
+					logger.info("insert sql return id = " + val);
 					po.setId(val);
 				}
 					
 			} catch (SQLException e) { 
 				e.printStackTrace();
 			}
-			System.out.println( po.toString() );
+			logger.info( po.toString() );
 			return po;
 		}
 	

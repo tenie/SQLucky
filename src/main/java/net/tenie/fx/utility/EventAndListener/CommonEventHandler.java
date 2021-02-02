@@ -198,14 +198,14 @@ public class CommonEventHandler {
 				KeyCode kc =  e.getCode();
 				if(	KeyCode.TAB == kc) {
 					e.consume();
-//					System.out.println(s);
+//					logger.info(s);
 //					CommonAction.addString("\t");
 //					CodeArea code = SqlEditor.getCodeArea();
 //					code.getText()
 					
 					 
 				} else {
-//					System.out.println(s);
+//					logger.info(s);
 					Tab tb = SqlEditor.mainTabPaneSelectedTab();
 					if (tb != null) {
 						String title = CommonUtility.tabText(tb);  
@@ -303,8 +303,9 @@ public class CommonEventHandler {
 					}
 
 					// 保存按钮禁用
-					FlowPane fp = (FlowPane) saveBtn.getParent();
-					fp.getChildren().get(0).setDisable(true);
+//					FlowPane fp = (FlowPane) saveBtn.getParent();
+//					fp.getChildren().get(0).setDisable(true);
+					saveBtn.setDisable(true);
 					RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
 
 				}

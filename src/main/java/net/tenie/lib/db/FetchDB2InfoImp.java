@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.tenie.lib.po.RsData;
 import net.tenie.lib.po.TablePo;
 import net.tenie.lib.po.TablePrimaryKeysPo;
@@ -24,6 +27,7 @@ import net.tenie.lib.tools.StrUtils;
  *  
  */
 public class FetchDB2InfoImp {
+	private static Logger logger = LogManager.getLogger(FetchDB2InfoImp.class);
 
 	// 执行sql只返回第一个字段的list
 	private List<String> execSQL(Connection conn, String sql) {
@@ -441,16 +445,16 @@ public class FetchDB2InfoImp {
 
 				stmt.addBatch(inster);
 				if (idx % 2500 == 0) {
-					System.out.println(inster);
+					logger.info(inster);
 					int[] count = stmt.executeBatch();
-					System.out.println("instert = " + count.length);
+					logger.info("instert = " + count.length);
 				}
 			}
 
 			if (idx % 2500 > 0) {
-				System.out.println(inster);
+				logger.info(inster);
 				int[] count = stmt.executeBatch();
-				System.out.println("instert = " + count.length);
+				logger.info("instert = " + count.length);
 			}
 
 		} catch (Exception e) {

@@ -7,15 +7,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import net.tenie.lib.db.DB2ExportDDLImp;
 import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.db.DefaultExportDDLImp;
 import net.tenie.lib.db.ExportDDL;
 import net.tenie.lib.db.H2ExportDDLImp;
 import net.tenie.lib.db.MySqlExportDDLImp;
+import net.tenie.lib.db.sql.ParseSQL;
 
 /*   @author tenie */
 public class DbConnectionPo {
+	private static Logger logger = LogManager.getLogger(DbConnectionPo.class);
 	private Integer id;
 	private String connName; // 连接名称
 	private String host;
@@ -127,10 +133,10 @@ public class DbConnectionPo {
 
 	public Connection getConn() {
 		if (conn == null) {
-			System.out.println(driver);
-			System.out.println(getJdbcUrl());
-			System.out.println(user);
-			System.out.println(passWord);
+			logger.info(driver);
+			logger.info(getJdbcUrl());
+			logger.info(user);
+			logger.info(passWord);
 			Dbinfo dbinfo = new Dbinfo(driver, getJdbcUrl(), user, passWord);
 
 			conn = dbinfo.getconn();
@@ -207,7 +213,7 @@ public class DbConnectionPo {
 
 		}
 
-		System.out.println(jdbcUrl);
+		logger.info(jdbcUrl);
 
 		return jdbcUrl;
 	}

@@ -13,7 +13,11 @@ public class DbTableDatePo {
 	private ObservableList<SqlFieldPo> fields;
 	// 数据
 	private ObservableList<ObservableList<StringProperty>> allDatas;
-
+	// sql执行时间
+	private double execTime = 0;
+	// 行数
+	private int rows = 0;
+	
 	public DbTableDatePo() {
 		fields = FXCollections.observableArrayList();
 		allDatas = FXCollections.observableArrayList();
@@ -78,4 +82,24 @@ public class DbTableDatePo {
 	public int getAllDatasSize() {
 		return allDatas.size();
 	}
+
+	public double getExecTime() {
+		return execTime;
+	}
+
+	public void setExecTime(double execTime) {
+		this.execTime = execTime;
+	}
+
+	public int getRows() {
+		if( allDatas != null) {
+			this.rows =  allDatas.size();
+		}
+		return rows;
+	}
+
+	public void setRows(int rows) {
+		this.rows = rows;
+	}
+	
 }

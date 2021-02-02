@@ -30,7 +30,7 @@ public class H2Db {
 	}
 	
 	private  static Connection execConn() {
-		String path = FileUtils.getUserDirectoryPath() + "/";
+		String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/";
 		Dbinfo dbinfo = new Dbinfo("org.h2.Driver", "jdbc:h2:" + path + "h2db", "sa", "xyz123qweasd");
 		Connection connection = dbinfo.getconn();
 		return connection;

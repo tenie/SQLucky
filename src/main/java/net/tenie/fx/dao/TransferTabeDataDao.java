@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -21,6 +23,8 @@ import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
 
 public class TransferTabeDataDao {
+
+	private static Logger logger = LogManager.getLogger(TransferTabeDataDao.class);
 	public static DbTableDatePo insertData(Connection conn, Connection toConn , String tableName,  String schename , String targetSchename) throws SQLException {
 		String sql = "select   *   from   "+schename+"."+tableName+"    where   1=1  ";
 		DbTableDatePo dpo = new DbTableDatePo();
@@ -98,17 +102,17 @@ public class TransferTabeDataDao {
 				
 				stmt.addBatch(insertSql); 
 				if( idx % execLine == 0 ) { 
-					System.out.println(insertSql);
+					logger.info(insertSql);
 					int[] count = stmt.executeBatch();
-					System.out.println("instert = "+count.length);
+					logger.info("instert = "+count.length);
 				}  
 				 
 			}
 			
 			if( idx % execLine >  0 ) { 
-				System.out.println(insertSql);
+				logger.info(insertSql);
 				int[] count = stmt.executeBatch();
-				System.out.println("instert = "+count.length);
+				logger.info("instert = "+count.length);
 			} 
 		} catch (Exception e1) { 
 			e1.printStackTrace();
