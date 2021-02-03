@@ -54,7 +54,12 @@ public class DataTransferWindow {
 			URL url = getClass().getResource(fxml);
 			Parent root = FXMLLoader.load(url);
 			Scene scene = new Scene(root);
-			scene.getStylesheets().addAll(ConfigVal.cssList);
+			if(ConfigVal.THEME.equals( "DARK")) {
+				scene.getStylesheets().addAll(ConfigVal.cssList);
+			}else { 
+				scene.getStylesheets().addAll(ConfigVal.cssListLight); 
+			}
+//			scene.getStylesheets().addAll(ConfigVal.cssList);
 			stage.setScene(scene);
 			stage.show();
 			

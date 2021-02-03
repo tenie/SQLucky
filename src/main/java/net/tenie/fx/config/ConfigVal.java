@@ -44,6 +44,7 @@ public class ConfigVal {
 	// 图标
 	public static String appIcon = "/image/SQL6.png";
 	public static List<String> cssList = new ArrayList<>();
+	public static List<String> cssListLight = new ArrayList<>();
 	public static String THEME = "";
 	
 	// 打开文件目录缓存
@@ -54,7 +55,10 @@ public class ConfigVal {
 			cssList.add(ConfigVal.class.getResource("/css/treeView.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/TableView.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/tabPane.css").toExternalForm());
-			cssList.add(ConfigVal.class.getResource("/css/common.css").toExternalForm());		
+			cssList.add(ConfigVal.class.getResource("/css/common.css").toExternalForm());	
+			
+			cssListLight.add(ConfigVal.class.getResource("/css/common-light.css").toExternalForm());
+			cssListLight.add(ConfigVal.class.getResource("/css/sql-keywords-light.css").toExternalForm());
 	}
 	
 	

@@ -36,6 +36,7 @@ public class UpdateDao {
 			String select = "Select count(*) as val from " + tableName + " where " + condition;
 			pstmt = conn.prepareStatement(select);
 			int idx = 0;
+			String logmsg = "[ ";
 			for (int i = 0; i < oldvalsLen; i++) {
 				idx++;
 				String val = oldvals.get(i).get();
@@ -49,16 +50,18 @@ public class UpdateDao {
 //					Timestamp ts = new Timestamp(dv.getTime());
 //					pstmt.setTimestamp(idx, ts);
 					
-					logger.info(idx );
+//					logger.info(idx );
 					idx--;
 					continue;
 					
 				} else {
 					Object obj = BuildObject.buildObj(type, val);
 					pstmt.setObject(idx, obj);
-					logger.info(idx + "  " + obj);
+					logmsg += idx + " : " + obj +"\n";
 				}
 			}
+			
+			logger.info(logmsg +" ]");
 			boolean tf = true;
 			logger.info("sql = " + select);
 			rs = pstmt.executeQuery();
@@ -139,24 +142,24 @@ public class UpdateDao {
 		return msg;
 	}
 
-	public static void main(String[] args) {
-		Date d1 = StrUtils.StrToDate("2021-01-07 11:47:17.0", ConfigVal.dateFormateL);
-		Date d2 = StrUtils.StrToDate("2021-01-07 11:47:17", ConfigVal.dateFormateL);
-		logger.info(d1);
-		logger.info(d2);
-		java.sql.Date sd = new java.sql.Date(d1.getTime());
-		logger.info(sd);
-		Timestamp ts = new Timestamp(d1.getTime());
-		logger.info(ts);
-		
-		Timestamp ts2 = new Timestamp(d2.getTime());
-		logger.info(ts2);
-		
-		java.sql.Time t = new java.sql.Time(d1.getTime());
-		logger.info(t);
-		
-		String s = StrUtils.dateToStr(d1, ConfigVal.dateFormateL);
-				logger.info(s);
-		
-	}
+//	public static void main(String[] args) {
+//		Date d1 = StrUtils.StrToDate("2021-01-07 11:47:17.0", ConfigVal.dateFormateL);
+//		Date d2 = StrUtils.StrToDate("2021-01-07 11:47:17", ConfigVal.dateFormateL);
+//		logger.info(d1);
+//		logger.info(d2);
+//		java.sql.Date sd = new java.sql.Date(d1.getTime());
+//		logger.info(sd);
+//		Timestamp ts = new Timestamp(d1.getTime());
+//		logger.info(ts);
+//		
+//		Timestamp ts2 = new Timestamp(d2.getTime());
+//		logger.info(ts2);
+//		
+//		java.sql.Time t = new java.sql.Time(d1.getTime());
+//		logger.info(t);
+//		
+//		String s = StrUtils.dateToStr(d1, ConfigVal.dateFormateL);
+//				logger.info(s);
+//		
+//	}
 }

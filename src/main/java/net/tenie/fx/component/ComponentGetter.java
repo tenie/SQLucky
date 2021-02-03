@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -160,21 +161,21 @@ public final class ComponentGetter {
 	}
 
 	// 获取 当前table view 的控制面板
-	public static FlowPane dataFlowPane() {
+	public static AnchorPane dataFlowPane() {
 		VBox vb = (VBox) dataTab.getSelectionModel().getSelectedItem().getContent();
-		FlowPane fp = (FlowPane) vb.getChildren().get(0);
+		AnchorPane fp = (AnchorPane) vb.getChildren().get(0);
 		return fp;
 	}
 
 	// 获取当前table view 的保存按钮
 	public static Button dataFlowSaveBtn() {
-		FlowPane fp = ComponentGetter.dataFlowPane();
+		AnchorPane fp = ComponentGetter.dataFlowPane();
 		return (Button) fp.getChildren().get(0);
 	}
 	
 	// 获取当前table view 的保存按钮
 		public static Button dataFlowDetailBtn() {
-			FlowPane fp = ComponentGetter.dataFlowPane();
+			AnchorPane fp = ComponentGetter.dataFlowPane();
 			return (Button) fp.getChildren().get(1);
 		}
 
@@ -199,7 +200,7 @@ public final class ComponentGetter {
 
 	// 获取当前数据页面 中的 某个按钮
 	public static Button getDataOptionBtn(String btnName) {
-		FlowPane fp = ComponentGetter.dataFlowPane();
+		AnchorPane fp = ComponentGetter.dataFlowPane();
 		Optional<Node> fn = fp.getChildren().stream().filter(v -> {
 			return v.getId().equals(btnName);
 		}).findFirst();

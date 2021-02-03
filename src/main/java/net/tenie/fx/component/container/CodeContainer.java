@@ -50,6 +50,9 @@ public class CodeContainer {
 
 	// codeArea 代码区域 按钮初始化
 	public static void codeAreabtnInit(AnchorPane pn) {
+//		pn.prefHeight(35.0);
+//		pn.setMinHeight(35.0);
+		
 		JFXButton runbtn = new JFXButton();
 		runbtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
 		runbtn.setTooltip(MyTooltipTool.instance("run sql      ctrl + Enter "));
@@ -112,8 +115,8 @@ public class CodeContainer {
 		Label lbcnn = new Label("DB Connection: ");
 		JFXComboBox<Label> conns = new JFXComboBox<Label>();
 		lbcnn.setLabelFor(conns);
-		conns.setPrefHeight(25);
-		conns.setMinHeight(25);
+		conns.setPrefHeight(22);
+		conns.setMinHeight(22);
 		conns.setMaxWidth(150);
 		conns.setMinWidth(150);
 		conns.getStyleClass().add("myComboBox");
@@ -124,13 +127,15 @@ public class CodeContainer {
 		conns.getSelectionModel().selectedIndexProperty().addListener(CommonListener.choiceBoxChange());
 		conns.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
 		ComponentGetter.connComboBox = conns;
-
+//		conns
+//		AnchorPane.setTopAnchor(conns, 0.0);
+		
 		// sql 执行读取行数
 		Label lb = new Label("Max Rows: ");
 		JFXTextField rows = new JFXTextField();
 		lb.setLabelFor(rows);
-		rows.setPrefHeight(25);
-		rows.setMinHeight(25);
+		rows.setPrefHeight(22);
+		rows.setMinHeight(22);
 
 		rows.setLabelFloat(true);
 		rows.setPromptText("Max Rows");

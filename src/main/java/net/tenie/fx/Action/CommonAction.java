@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.utility.EventAndListener.myEvent;
@@ -479,7 +480,7 @@ public class CommonAction {
 
 	// 查看表明细(一行数据) 快捷键
 	public static void shortcutShowDataDatil() {
-		FlowPane fp = ComponentGetter.dataFlowPane();
+		AnchorPane fp = ComponentGetter.dataFlowPane();
 		Button btn = (Button) fp.getChildren().get(1);
 		MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
 		Event.fireEvent(btn, me);
@@ -626,9 +627,8 @@ public class CommonAction {
 		List<String> cssList = new ArrayList<>();
 		if(ConfigVal.THEME.equals( "DARK")) {
 			cssList.addAll(ConfigVal.cssList);
-		}else {
-			cssList.clear();
-			cssList.add(ConfigVal.class.getResource("/css/sql-keywords-light.css").toExternalForm());
+		}else { 
+			cssList.addAll(ConfigVal.cssListLight);
 		}
 		
 		

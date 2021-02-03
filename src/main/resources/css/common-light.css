@@ -1,0 +1,31 @@
+/*  搜索框 */
+.myFindTextField{  
+	-fx-border-color: #5E6060 ;
+	-fx-border-radius: 3px; /* 圆角 */
+}
+
+.myTextField{  
+    
+}
+.myTextField:hover{
+	-fx-background-color: #D3D3D3;
+}
+
+.myComboBox{
+	 
+} 
+
+.combo-box {   
+     
+     -fx-background-radius: 0;  
+     -fx-font-size: 12px;
+     -fx-text-fill: #ffffff;
+     -fx-background-insets: 0;
+     -fx-alignment: center;
+     -fx-content-display: center;
+ }
+ 
+ .myComboBox:hover{
+	-fx-background-color: #D3D3D3;
+}
+ 
