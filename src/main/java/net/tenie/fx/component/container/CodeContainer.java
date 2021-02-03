@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXTextField;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -137,8 +138,8 @@ public class CodeContainer {
 		rows.setPrefHeight(22);
 		rows.setMinHeight(22);
 
-		rows.setLabelFloat(true);
-		rows.setPromptText("Max Rows");
+//		rows.setLabelFloat(true);
+//		rows.setPromptText("Max Rows");
 		rows.getStyleClass().add("myTextField");
 		rows.setMaxWidth(90);
 		rows.setTooltip(MyTooltipTool.instance("Input 0 query all data."));

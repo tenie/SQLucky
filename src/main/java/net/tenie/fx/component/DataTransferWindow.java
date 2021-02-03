@@ -23,6 +23,7 @@ import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 
 public class DataTransferWindow {
 	Stage stage;
+	Scene scene;
 	public DataTransferWindow() {
 //		CreateModalWindow();
 		if(stage == null ) {
@@ -36,9 +37,17 @@ public class DataTransferWindow {
 	public void show() {
 		if(stage == null ) {
 			showFxml("/fxml/transferData.fxml");
-		}else {
+		}else { 
 			stage.show();
 		}
+		if(ConfigVal.THEME.equals( "DARK")) {
+			scene.getStylesheets().addAll(ConfigVal.cssList);
+		}else { 
+			scene.getStylesheets().addAll(ConfigVal.cssListLight); 
+		}
+		 
+		
+		
 	}
 	
 	// 根据给定的fxml 创建 模态框
@@ -53,7 +62,7 @@ public class DataTransferWindow {
 
 			URL url = getClass().getResource(fxml);
 			Parent root = FXMLLoader.load(url);
-			Scene scene = new Scene(root);
+		    scene = new Scene(root);
 			if(ConfigVal.THEME.equals( "DARK")) {
 				scene.getStylesheets().addAll(ConfigVal.cssList);
 			}else { 
