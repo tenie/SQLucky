@@ -534,12 +534,12 @@ public class CommonEventHandler {
 			public void handle(ActionEvent e) {
 				String tableid = ComponentGetter.dataTableViewID();
 				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tableid);
-				String tableName = CacheTableDate.getTableName(tableid);
+				
 				ObservableList<ObservableList<StringProperty>> vals = getValsHelper(isSelected, tableid);
 				final File ff = getFileHelper(isFile);
 				Thread t = new Thread() {
 					public void run() {
-						String sql = GenerateSQLString.csvStrHelper(vals, tableName, fs);
+						String sql = GenerateSQLString.csvStrHelper(vals, fs);
 						if (StrUtils.isNotNullOrEmpty(sql)) {
 							if (isFile) {
 								if (ff != null) {
@@ -566,14 +566,13 @@ public class CommonEventHandler {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				String tableid = ComponentGetter.dataTableViewID();
-				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tableid);
-				String tableName = CacheTableDate.getTableName(tableid);
+				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tableid); 
 
 				ObservableList<ObservableList<StringProperty>> vals = getValsHelper(isSelected, tableid);
 				final File ff = getFileHelper(isFile);
 				Thread t = new Thread() {
 					public void run() {
-						String sql = GenerateSQLString.txtStrHelper(vals, tableName, fs);
+						String sql = GenerateSQLString.txtStrHelper(vals, fs);
 						if (StrUtils.isNotNullOrEmpty(sql)) {
 							if (isFile) {
 								if (ff != null) {
@@ -595,4 +594,39 @@ public class CommonEventHandler {
 
 		};
 	}
+	
+	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName) {
+		return new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent e) {
+				// 通过id 从缓存中获取数据
+				String tableid = ComponentGetter.dataTableViewID();
+				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tableid);
+
+				ObservableList<ObservableList<StringProperty>> vals = getValsHelper(isSelected, tableid);
+				final File ff = getFileHelper(isFile);
+				Thread t = new Thread() {
+					public void run() {
+						String sql = GenerateSQLString.columnStrHelper(vals, fs, colName);
+						if (StrUtils.isNotNullOrEmpty(sql)) {
+							if (isFile) {
+								if (ff != null) {
+									try {
+										SaveFile.save(ff, sql);
+									} catch (IOException e) {
+										e.printStackTrace();
+									}
+								}
+							} else {
+								CommonUtility.setClipboardVal(sql);
+							}
+						}
+					}
+				};
+				t.start();
+
+			}
+
+		};
+	}
+
 }

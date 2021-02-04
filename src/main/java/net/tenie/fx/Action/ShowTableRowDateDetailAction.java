@@ -25,7 +25,10 @@ import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.ModalDialog;
 import net.tenie.lib.tools.StrUtils;
 
-/*   @author tenie */
+/*   
+ * 行数据 显示窗口
+ * @author tenie 
+ * */
 public class ShowTableRowDateDetailAction {
 	public static void show(JFXButton saveBtn) {
 

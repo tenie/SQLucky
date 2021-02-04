@@ -265,15 +265,15 @@ public class DataViewContainer {
 				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
 
 		// 选中监听
-		ListChangeListener<ObservableList<StringProperty>> indicesListener = new ListChangeListener<ObservableList<StringProperty>>() {
-			@Override
-			public void onChanged(Change<? extends ObservableList<StringProperty>> c) {
-				while (c.next()) {
-
-				}
-			}
-		};
-		table.getSelectionModel().getSelectedItems().addListener(indicesListener);
+//		ListChangeListener<ObservableList<StringProperty>> indicesListener = new ListChangeListener<ObservableList<StringProperty>>() {
+//			@Override
+//			public void onChanged(Change<? extends ObservableList<StringProperty>> c) {
+//				while (c.next()) {
+//
+//				}
+//			}
+//		};
+//		table.getSelectionModel().getSelectedItems().addListener(indicesListener);
 
 		int tableIdx = ConfigVal.tableIdx++;
 		table.setId(tableIdx + "");
@@ -290,7 +290,8 @@ public class DataViewContainer {
 //			sum.setValue(Integer.valueOf(sp.get()) + 1);
 //			return sum;
 //		});
-
+	   
+	   // 点击 行号, 显示一个 当前行心的的窗口
 	   tc.setCellFactory(col->{
 			TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>(){
 			     
@@ -315,7 +316,8 @@ public class DataViewContainer {
 		}); 
 	   
         table.setRowHeader(tc);
-//        table.tableMenuButtonVisibleProperty().setValue(true);
+        table.tableMenuButtonVisibleProperty().setValue(true);
+        
         
 		return table;
 	}

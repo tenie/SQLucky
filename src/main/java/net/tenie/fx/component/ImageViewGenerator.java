@@ -117,6 +117,8 @@ public final class ImageViewGenerator {
 		switch (name) {
 		case "NULL":
 			return "";
+		case "columns":
+			return "M224 1536h608v-1152h-640v1120q0 13 9.5 22.5t22.5 9.5zm1376-32v-1120h-640v1152h608q13 0 22.5-9.5t9.5-22.5zm128-1216v1216q0 66-47 113t-113 47h-1344q-66 0-113-47t-47-113v-1216q0-66 47-113t113-47h1344q66 0 113 47t47 113z";
 		case "filter":
 			return "M1595 295q17 41-14 70l-493 493v742q0 42-39 59-13 5-25 5-27 0-45-19l-256-256q-19-19-19-45v-486l-493-493q-31-29-14-70 17-39 59-39h1280q42 0 59 39z";
 		case "material-vpn-key":

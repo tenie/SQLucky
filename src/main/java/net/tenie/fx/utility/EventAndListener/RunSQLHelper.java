@@ -29,6 +29,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -474,10 +475,11 @@ public class RunSQLHelper {
 			int i, TableView<ObservableList<StringProperty>> table, boolean augmentation, boolean iskey) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col =
 				new FilteredTableColumn<ObservableList<StringProperty>, String>();
-		col.setCellFactory(MyTextField2TableCell.forTableColumn());
+//		col.setCellFactory(MyTextField2TableCell.forTableColumn());
+		col.setCellFactory(TextField2TableCell.forTableColumn());
 		col.setEditable(true);
-		
-		Label label  = new Label(colname);
+		col.setText(colname);
+		Label label  = new Label();
 		label.setTooltip(new Tooltip(typeName));
 		if(iskey) {
 			label.setGraphic(ImageViewGenerator.svgImage("material-vpn-key", 10, "#1C92FB")); 
@@ -512,11 +514,23 @@ public class RunSQLHelper {
 		// 右点菜单
 		ContextMenu cm = new ContextMenu();
 		MenuItem miActive = new MenuItem("Copy Column Name");
+		miActive.setStyle("myMenuItem");
 		miActive.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
 		miActive.setOnAction(e -> { // 粘贴板赋值
 			CommonUtility.setClipboardVal(colname);
 		});
-
+		Menu copyColData = new Menu("Copy Column Data");
+		copyColData.setGraphic(ImageViewGenerator.svgImageDefActive("columns"));
+		
+		MenuItem selectCopyColData = new MenuItem("Copy Select Column Data");
+		selectCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+		selectCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(true, false ,  colname)  );
+		
+		MenuItem AllCopyColData = new MenuItem("Copy All Column Data");
+		AllCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+		AllCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(false, false ,  colname)  );
+		copyColData.getItems().addAll(selectCopyColData, AllCopyColData);
+		
 		MenuItem filter = new MenuItem("Filter");
 		filter.setGraphic(ImageViewGenerator.svgImageDefActive("filter"));
 		filter.setOnAction(e->{
@@ -525,7 +539,7 @@ public class RunSQLHelper {
 
 
 		col.setContextMenu(cm); 
-		cm.getItems().addAll(miActive, filter);
+		cm.getItems().addAll(miActive, copyColData,  filter);
 
 		return col;
 	}

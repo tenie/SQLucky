@@ -50,6 +50,21 @@ GridPane {
  -fx-border-color: #4C708C;
 }
 
+/*箭头颜色(菜单按钮的进入子菜单有一个箭头图标)*/
+.arrow{
+	-fx-background-color: #BBBBBB;
+}
+/* 表格头最右侧的控制列隐藏的一个菜单按钮图标*/
+.show-hide-column-image{
+	-fx-background-color: #BBBBBB;
+}
+
+
+
+
+.myMenuItem{
+-fx-background-color:  red;
+}
 
 MenuButton{
 	-fx-background-color: #3C3F41;

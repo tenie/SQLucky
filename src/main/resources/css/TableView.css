@@ -54,8 +54,8 @@ Pane VBox {
 
  /* 表头中的文本  */
 .myTableTag    .label{
-	-fx-background-color: #2B2B2B;
-	/* -fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41; */
+/*	-fx-background-color: #2B2B2B;
+	 -fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41; */
 }
  /* 表头  column-header table-column */
  .myTableTag  .column-header{

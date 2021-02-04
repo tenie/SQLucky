@@ -63,9 +63,7 @@ public class GenerateSQLString {
 		return "";
 	}
 
-	public static String csvStr(String tableName, ObservableList<StringProperty> data,
-			ObservableList<SqlFieldPo> fpos) {
-
+	public static String csvStr( ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos) {
 		StringBuilder values = new StringBuilder("");
 		int size = fpos.size();
 		for (int i = 0; i < size; i++) {
@@ -91,14 +89,13 @@ public class GenerateSQLString {
 		return valstr;
 	}
 
-	public static String csvStrHelper(ObservableList<ObservableList<StringProperty>> vals, String tableName,
-			ObservableList<SqlFieldPo> fs) {
+	public static String csvStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SqlFieldPo> fs) {
 
 		if (vals != null && vals.size() > 0) {
 			StringBuilder strb = new StringBuilder();
 			for (int i = 0; i < vals.size(); i++) {
 				ObservableList<StringProperty> vl = vals.get(i);
-				String rs = GenerateSQLString.csvStr(tableName, vl, fs);
+				String rs = GenerateSQLString.csvStr( vl, fs);
 				strb.append(rs);
 			}
 			String str = strb.toString();
@@ -107,8 +104,7 @@ public class GenerateSQLString {
 		return "";
 	}
 
-	public static String txtStr(String tableName, ObservableList<StringProperty> data,
-			ObservableList<SqlFieldPo> fpos) {
+	public static String txtStr(  ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos) {
 
 		StringBuilder values = new StringBuilder("");
 		int size = fpos.size();
@@ -119,7 +115,9 @@ public class GenerateSQLString {
 			if (StrUtils.isNullOrEmpty(temp) || "<null>".equals(temp)) {
 				values.append("null");
 			} else if (CommonUtility.isString(type) || CommonUtility.isDateTime(type)) {
-				values.append("'" + temp + "'");
+				values.append("'" );
+				values.append(temp);
+				values.append("'");
 			} else {
 				values.append(temp);
 			}
@@ -135,14 +133,13 @@ public class GenerateSQLString {
 		return valstr;
 	}
 
-	public static String txtStrHelper(ObservableList<ObservableList<StringProperty>> vals, String tableName,
-			ObservableList<SqlFieldPo> fs) {
+	public static String txtStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SqlFieldPo> fs) {
 
 		if (vals != null && vals.size() > 0) {
 			StringBuilder strb = new StringBuilder();
 			for (int i = 0; i < vals.size(); i++) {
 				ObservableList<StringProperty> vl = vals.get(i);
-				String rs = GenerateSQLString.txtStr(tableName, vl, fs);
+				String rs = GenerateSQLString.txtStr(vl, fs);
 				strb.append(rs);
 			}
 			String str = strb.toString();
@@ -150,5 +147,43 @@ public class GenerateSQLString {
 		}
 		return "";
 	}
+	
+	
+	public static String columnStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SqlFieldPo> fs, String colName) {
+
+		if (vals != null && vals.size() > 0) {
+			StringBuilder strb = new StringBuilder();
+			for (int i = 0; i < vals.size(); i++) {
+				ObservableList<StringProperty> vl = vals.get(i);
+				String rs = GenerateSQLString.columnStr(vl, fs, colName);
+				strb.append(rs);
+			}
+			String str = strb.toString();
+			return str;
+		}
+		return "";
+	}
+	
+	public static String columnStr(ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos, String colName) {
+		StringBuilder values = new StringBuilder("");
+		int size = fpos.size();
+		int idx = -1;
+		for (int i = 0; i < size; i++) {
+			SqlFieldPo po = fpos.get(i);
+			String  name = po.getColumnLabel().get();
+			if( name.equals(colName)) {
+				idx = i;
+				break;
+			}
+		}
+		if( idx > -1) { 
+				String temp = data.get(idx).get(); 
+				values.append(temp);
+				values.append("\n"); 
+		}
+		 
+		return values.toString();
+	}
+	
 
 }
