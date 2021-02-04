@@ -26,7 +26,8 @@ public class DBinfoFilter {
 	 
 	public AnchorPane createFilterPane(TreeView<TreeNodePo> treeView) {
 		AnchorPane filter = new AnchorPane();
-		filter.setPrefHeight(26);
+		filter.setPrefHeight(30);
+		filter.setMinHeight(30);
 		JFXButton query = new JFXButton();
 		JFXTextField txt = new JFXTextField();
 		query.setGraphic(ImageViewGenerator.svgImageUnactive("search"));
@@ -35,7 +36,8 @@ public class DBinfoFilter {
 		});
 
 		txt.setPrefWidth(200);
-		txt.setPrefHeight(22);
+		txt.setPrefHeight(20);
+		txt.setMaxHeight(20);
 		txt.getStyleClass().add("myTextField");
 		int x = 0;
 		query.setLayoutX(x);
