@@ -49,6 +49,7 @@ public class ConnectionEditor {
 		vb.getStyleClass().add("connectionEditor");
 
 		Scene scene = new Scene(vb);
+		
 		vb.setPrefWidth(400);
 		vb.maxWidth(400);
 		AnchorPane bottomPane = new AnchorPane();
@@ -68,8 +69,7 @@ public class ConnectionEditor {
 			stage.close();
 		});
 
-		scene.getStylesheets().addAll(ConfigVal.cssList);
-
+		CommonAction.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 
