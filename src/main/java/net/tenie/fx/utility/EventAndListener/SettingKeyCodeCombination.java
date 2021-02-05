@@ -145,52 +145,52 @@ public final class SettingKeyCodeCombination {
 		
 		scene.getAccelerators().put(F1, () -> {
 
-			setFontSize(20);
-			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
-				
-				logger.info(code.getStyle());
-				String txt = code.getText();
-				code.replaceText(0, txt.length(), txt);
-				SqlCodeAreaHighLightingHelper.applyHighlighting(code);
-			}
-			
+//			setFontSize(20);
+//			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
+//				
+//				logger.info(code.getStyle());
+//				String txt = code.getText();
+//				code.replaceText(0, txt.length(), txt);
+//				SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+//			}
+//			
 
 		});
 		
 		
 		
 		scene.getAccelerators().put(F2, () -> {  
-			setFontSize(12);
-			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
-				logger.info(code.getStyle());
-				String txt = code.getText();  
-				code.replaceText(0, txt.length(), txt);
-				SqlCodeAreaHighLightingHelper.applyHighlighting(code);
-			}
-			
+//			setFontSize(12);
+//			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
+//				logger.info(code.getStyle());
+//				String txt = code.getText();  
+//				code.replaceText(0, txt.length(), txt);
+//				SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+//			}
+//			
 
 		});
 		
 	}
-	static public void setFontSize(int i) {
-		
-		String val = 
-				".myLineNumberlineno{ \n" + 
-				"	-fx-font-size :	"+i+"; \n" + 
-				"} \n" +
-				".code-area{\n"+
-				"	-fx-font-size :	"+i+"; \n" +
-			    "} \n" +
-				"";
-		try {
-			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
-			SaveFile.save( path , val);
-			CommonAction.loadCss(ComponentGetter.primaryscene);  
-			
-		} catch (IOException e) { 
-			e.printStackTrace();
-		}
-	}
+//	static public void setFontSize(int i) {
+//		
+//		String val = 
+//				".myLineNumberlineno{ \n" + 
+//				"	-fx-font-size :	"+i+"; \n" + 
+//				"} \n" +
+//				".code-area{\n"+
+//				"	-fx-font-size :	"+i+"; \n" +
+//			    "} \n" +
+//				"";
+//		try {
+//			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
+//			SaveFile.save( path , val);
+//			CommonAction.loadCss(ComponentGetter.primaryscene);  
+//			
+//		} catch (IOException e) { 
+//			e.printStackTrace();
+//		}
+//	}
 	private static void fireEvent(JFXButton btn) {
 		btn.fireEvent(new Event(MouseEvent.MOUSE_CLICKED));
 	}

@@ -1,6 +1,7 @@
 package net.tenie.fx.component;
 
 import javafx.stage.*;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.main.MainMyDB;
@@ -147,7 +148,8 @@ public class ModalDialog {
 
 			final Stage stage = new Stage();
 			Scene scene = new Scene(node);
-			scene.getStylesheets().addAll(ConfigVal.cssList);
+			 
+			CommonAction.loadCss(scene);
 			Image img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
 			stage.getIcons().add(img);
 
