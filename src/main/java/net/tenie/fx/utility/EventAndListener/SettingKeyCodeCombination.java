@@ -2,6 +2,9 @@ package net.tenie.fx.utility.EventAndListener;
 
 import net.tenie.fx.component.*;
 
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
@@ -17,6 +20,7 @@ import javafx.scene.input.MouseEvent;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.lib.io.SaveFile;
 
 /*   @author tenie */
 public final class SettingKeyCodeCombination {
@@ -140,45 +144,53 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		scene.getAccelerators().put(F1, () -> {
-//			CommonAction.pressSqlText();
-//			logger.info(ComponentGetter.mainTabPane.getSelectionModel().getSelectedIndex());
-//			ComponentGetter.mainTabPane.getSelectionModel().select(0);
-//			CodeArea code = SqlEditor.getCodeArea();
-//			CodeArea code =  SqlEditor.getAllCodeArea().get(2);
-			 
-//			int i  = code.getCurrentLineStartInParargraph();
-//			int i2  = code.getCurrentLineEndInParargraph();
-//			logger.info(i);
-//			logger.info(i2);
-//			code.showParagraphAtTop(i );
-			
-//			-fx-font-size
-			
+
+			setFontSize(20);
 			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
-			    logger.info(code.getStyle());
-				code.setStyle("-fx-font-size :	"+20 );
 				
+				logger.info(code.getStyle());
+				String txt = code.getText();
+				code.replaceText(0, txt.length(), txt);
+				SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 			}
 			
 
 		});
 		
-		scene.getAccelerators().put(F2, () -> { 
-			
+		
+		
+		scene.getAccelerators().put(F2, () -> {  
+			setFontSize(12);
 			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
 				logger.info(code.getStyle());
-				String txt = code.getText();
-				code.deleteText(0, txt.length());
-				code.setStyle("-fx-font-size :	"+12 );
-				code.insertText(0, txt);
-				
+				String txt = code.getText();  
+				code.replaceText(0, txt.length(), txt);
+				SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 			}
 			
 
 		});
 		
 	}
-
+	static public void setFontSize(int i) {
+		
+		String val = 
+				".myLineNumberlineno{ \n" + 
+				"	-fx-font-size :	"+i+"; \n" + 
+				"} \n" +
+				".code-area{\n"+
+				"	-fx-font-size :	"+i+"; \n" +
+			    "} \n" +
+				"";
+		try {
+			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
+			SaveFile.save( path , val);
+			CommonAction.loadCss(ComponentGetter.primaryscene);  
+			
+		} catch (IOException e) { 
+			e.printStackTrace();
+		}
+	}
 	private static void fireEvent(JFXButton btn) {
 		btn.fireEvent(new Event(MouseEvent.MOUSE_CLICKED));
 	}

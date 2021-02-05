@@ -2,6 +2,7 @@ package net.tenie.fx.Action;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,6 +17,7 @@ import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -615,7 +617,7 @@ public class CommonAction {
 	}
 	
 	
-	
+	// 设置整体样式
 	public static void setTheme(String val ) {
 		if(val.equals(ConfigVal.THEME)) {
 			return ;
@@ -624,16 +626,18 @@ public class CommonAction {
 		Connection conn =  H2Db.getConn();
 		H2Db.setConfigVal(conn, "THEME", val) ;
 		H2Db.closeConn();
-		List<String> cssList = new ArrayList<>();
-		if(ConfigVal.THEME.equals( "DARK")) {
-			cssList.addAll(ConfigVal.cssList);
-		}else { 
-			cssList.addAll(ConfigVal.cssListLight);
-		}
+//		List<String> cssList = new ArrayList<>();
+//		if(ConfigVal.THEME.equals( "DARK")) {
+//			cssList.addAll(ConfigVal.cssList);
+//		}else { 
+//			cssList.addAll(ConfigVal.cssListLight);
+//		}
+//		
+//		
+//		ComponentGetter.primaryscene.getStylesheets().clear();
+//		ComponentGetter.primaryscene.getStylesheets().addAll(cssList); 
+		loadCss(ComponentGetter.primaryscene);
 		
-		
-		ComponentGetter.primaryscene.getStylesheets().clear();
-		ComponentGetter.primaryscene.getStylesheets().addAll(cssList); 
 		SqlEditor.changeThemeAllCodeArea() ;
 	}
 	
@@ -963,6 +967,87 @@ public class CommonAction {
     		
 	   }
 	return tf;
+	}
+	
+	
+	// 加载css样式
+	public static void loadCss(Scene scene) {
+		scene.getStylesheets().clear();
+		logger.info(ConfigVal.THEME);
+		if(ConfigVal.THEME.equals( "DARK")) {
+			scene.getStylesheets().addAll(ConfigVal.cssList);
+		}else { 
+			scene.getStylesheets().addAll(ConfigVal.cssListLight); 
+			
+		} 
+		
+		// 加载自定义的css
+		String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css"; 
+		File cssf = new File(path); 
+		if( ! cssf.exists() ) { 
+			setFontSize(14);
+		}
+		String uri = Paths.get(path).toUri().toString();  
+		scene.getStylesheets().add(uri);
+		
+	     
+	}
+	
+	// 设置字符大小
+	static public void setFontSize(int i) { 
+		String val = 
+				"/*"+i+"*/ \n" +
+				".myLineNumberlineno{ \n" + 
+				"	-fx-font-size :	"+i+"; \n" + 
+				"} \n" +
+				".code-area{\n"+
+				"	-fx-font-size :	"+i+"; \n" +
+			    "} \n" +
+				"";
+		try {
+			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
+			SaveFile.save( path , val);
+			CommonAction.loadCss(ComponentGetter.primaryscene);  
+			
+		} catch (IOException e) { 
+			e.printStackTrace();
+		}
+	}
+	//TODO 改变字体大小
+	public static void changeFontSize(boolean isPlus) {
+		// 获取当前的 size
+		if(ConfigVal.FONT_SIZE == -1) {
+			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
+			String str = SaveFile.read(path);
+			String val = str.split("\n")[0];
+			val = val.substring(2, val.lastIndexOf("*/"));
+			System.out.println(val);
+			ConfigVal.FONT_SIZE = Integer.valueOf(val);
+		}
+		int sz = ConfigVal.FONT_SIZE ;
+		if(isPlus) {
+			sz +=1;
+		}else {
+			sz -=1;
+		}
+		
+		if(sz > 20) {
+			sz = 20;
+		}
+		
+		if(sz < 10) {
+			sz = 10;
+		}
+		setFontSize(sz);
+		for(CodeArea code : SqlEditor.getAllCodeArea() ) {
+			logger.info(code.getStyle());
+			String txt = code.getText();  
+			code.replaceText(0, txt.length(), txt);
+			SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		}
+		
+		ConfigVal.FONT_SIZE = sz;
+		
 	}
 	
 	

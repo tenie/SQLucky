@@ -17,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.main.MainMyDB;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
@@ -40,11 +41,13 @@ public class DataTransferWindow {
 		}else { 
 			stage.show();
 		}
-		if(ConfigVal.THEME.equals( "DARK")) {
-			scene.getStylesheets().addAll(ConfigVal.cssList);
-		}else { 
-			scene.getStylesheets().addAll(ConfigVal.cssListLight); 
-		}
+		
+		CommonAction.loadCss(scene);
+//		if(ConfigVal.THEME.equals( "DARK")) {
+//			scene.getStylesheets().addAll(ConfigVal.cssList);
+//		}else { 
+//			scene.getStylesheets().addAll(ConfigVal.cssListLight); 
+//		}
 		 
 		
 		
@@ -63,11 +66,12 @@ public class DataTransferWindow {
 			URL url = getClass().getResource(fxml);
 			Parent root = FXMLLoader.load(url);
 		    scene = new Scene(root);
-			if(ConfigVal.THEME.equals( "DARK")) {
-				scene.getStylesheets().addAll(ConfigVal.cssList);
-			}else { 
-				scene.getStylesheets().addAll(ConfigVal.cssListLight); 
-			}
+		    CommonAction.loadCss(scene);
+//			if(ConfigVal.THEME.equals( "DARK")) {
+//				scene.getStylesheets().addAll(ConfigVal.cssList);
+//			}else { 
+//				scene.getStylesheets().addAll(ConfigVal.cssListLight); 
+//			}
 //			scene.getStylesheets().addAll(ConfigVal.cssList);
 			stage.setScene(scene);
 			stage.show();

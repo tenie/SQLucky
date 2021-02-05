@@ -49,6 +49,7 @@ public class MainMyDB extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+//			String cssStr = ConfigVal.class.getResource("/css/common.css").toExternalForm();
 			// 图标
 			primaryStage.getIcons().add(img);
 			primaryStage.setTitle("SQLucky");
@@ -67,6 +68,8 @@ public class MainMyDB extends Application {
 			double wi = ComponentGetter.masterDetailPane.getWidth();
 			double val = 245 / wi ;  
 			ComponentGetter.treeAreaDetailPane.setDividerPosition(val );
+			
+//			logger.info("cssStr ==" + cssStr);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

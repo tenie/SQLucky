@@ -1,6 +1,7 @@
 package net.tenie.fx.config;
 
 import java.io.File;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,19 +47,23 @@ public class ConfigVal {
 	public static List<String> cssList = new ArrayList<>();
 	public static List<String> cssListLight = new ArrayList<>();
 	public static String THEME = "";
+	public static int FONT_SIZE = -1;
+	 
 	
 	// 打开文件目录缓存
 	public static String openfileDir = "";
 	
-	static { 
-			cssList.add(ConfigVal.class.getResource("/css/sql-keywords.css").toExternalForm());
+	static {  
+		    cssList.add(ConfigVal.class.getResource("/css/sql-keywords.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/treeView.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/TableView.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/tabPane.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/common.css").toExternalForm());	
+			 
 			
 			cssListLight.add(ConfigVal.class.getResource("/css/common-light.css").toExternalForm());
 			cssListLight.add(ConfigVal.class.getResource("/css/sql-keywords-light.css").toExternalForm());
+			 
 	}
 	
 	

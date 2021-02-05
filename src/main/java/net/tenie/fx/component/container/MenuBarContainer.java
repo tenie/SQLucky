@@ -12,6 +12,8 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.ComponentGetter;
@@ -255,7 +257,7 @@ public class MenuBarContainer {
 //			String txt
 		});
 		
-		
+		// 主题变化
 		Menu Theme = new Menu(MenuItemNameFormat("Theme"));
 		Theme.setGraphic(ImageViewGenerator.svgImageUnactive("icomoon-contrast")); 
 		
@@ -273,11 +275,35 @@ public class MenuBarContainer {
 		
 		Theme.getItems().addAll(themeDark , themeLight); 
 		
+		//TODO 字体大小
+		Menu fontSize = new Menu(MenuItemNameFormat("Code Font Size"));
+		fontSize.setGraphic(ImageViewGenerator.svgImageUnactive("text-height")); 
+		
+		MenuItem fontSizePlus = new MenuItem(MenuItemNameFormat("Code Font Size +")); 
+//		KeyCodeCombination ctrlR = new KeyCodeCombination(KeyCode.EQUALS, KeyCodeCombination.SHORTCUT_DOWN);
+		fontSizePlus.setAccelerator(KeyCombination.keyCombination( "shortcut+EQUALS") );
+		fontSizePlus.setGraphic(ImageViewGenerator.svgImageUnactive("plus-circle")); 
+		fontSizePlus.setOnAction(value -> {
+			CommonAction.changeFontSize(true);
+		});
+		
+		MenuItem fontSizeMinus = new MenuItem(MenuItemNameFormat("Code Font Size -")); 
+		fontSizeMinus.setAccelerator(KeyCombination.keyCombination("shortcut+MINUS"));
+		fontSizeMinus.setGraphic(ImageViewGenerator.svgImageUnactive("minus-circle")); 
+		fontSizeMinus.setOnAction(value -> {
+			CommonAction.changeFontSize(false);
+		});
+		
+		fontSize.getItems().addAll(fontSizePlus , fontSizeMinus); 
+		
 		
 		mn.getItems().addAll(dataTransfer, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn, closeALlConn, deleteConn, new SeparatorMenuItem(),
 				hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem()
 //				, EnCoding
 				,Theme
+				, new SeparatorMenuItem()
+				,fontSize
+				
 				);
 		return mn;
 	}

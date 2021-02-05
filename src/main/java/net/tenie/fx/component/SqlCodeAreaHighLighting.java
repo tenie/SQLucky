@@ -34,6 +34,7 @@ public class SqlCodeAreaHighLighting {
 	public StackPane getObj(String text, boolean editable) {
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new CodeArea();
+		 
 		
 //		//字体大小设置
 //		codeArea
@@ -45,7 +46,7 @@ public class SqlCodeAreaHighLighting {
 		} 
 		// 事件KeyEvent 
 		// 文本缩进
-		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{ 
+		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{
 			if(e.getCode() == KeyCode.TAB ) {
 				logger.info("文本缩进 ;   "+e.getCode() );
 				if (codeArea.getSelectedText().contains("\n") ) { 
@@ -90,22 +91,11 @@ public class SqlCodeAreaHighLighting {
 			
 		});
 		
+		// 鼠标退出界面, 记录光标位置
 		codeArea.setOnMouseExited(mouseEvent->{
 			ComponentGetter.codeAreaAnchor =  codeArea.getAnchor();
-//			logger.info(mouseEvent.getEventType());
-//			if ( mouseEvent.getEventType() == MouseEvent.MOUSE_EXITED_TARGET) {
-//				logger.info("MOUSE_EXITED_TARGET" + codeArea.getAnchor());
-////				logger.info();
-//			}
 		});
 		
-		codeArea.setOnMouseMoved(mouseEvent->{
-//			logger.info(mouseEvent.getEventType());
-//			if ( mouseEvent.getEventType() == MouseEvent.MOUSE_EXITED_TARGET) {
-//				logger.info("MOUSE_EXITED_TARGET" + codeArea.getAnchor());
-////				logger.info();
-//			}
-		});
 		
 		 
 		// 当鼠标释放, 判断是否为双击, 是双击选中对应的内容, 在判断有没有选择的文本, 有的话就修改所有相同的文本
@@ -146,13 +136,7 @@ public class SqlCodeAreaHighLighting {
 		});
 		
 		
-		// 鼠标双击选中一行
-//		codeArea.setOnMouseClicked(mouseEvent -> {
-//			if (mouseEvent.getClickCount() == 2) {
-//				 
-//				
-//			}
-//		});
+ 
 		// 选中事件
 //		codeArea.selectedTextProperty().addListener(new ChangeListener<String>() {
 //		    @Override
