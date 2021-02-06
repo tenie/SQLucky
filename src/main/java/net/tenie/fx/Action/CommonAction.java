@@ -626,16 +626,7 @@ public class CommonAction {
 		Connection conn =  H2Db.getConn();
 		H2Db.setConfigVal(conn, "THEME", val) ;
 		H2Db.closeConn();
-//		List<String> cssList = new ArrayList<>();
-//		if(ConfigVal.THEME.equals( "DARK")) {
-//			cssList.addAll(ConfigVal.cssList);
-//		}else { 
-//			cssList.addAll(ConfigVal.cssListLight);
-//		}
-//		
-//		
-//		ComponentGetter.primaryscene.getStylesheets().clear();
-//		ComponentGetter.primaryscene.getStylesheets().addAll(cssList); 
+		
 		loadCss(ComponentGetter.primaryscene);
 		
 		SqlEditor.changeThemeAllCodeArea() ;
@@ -988,6 +979,7 @@ public class CommonAction {
 			setFontSize(14);
 		}
 		String uri = Paths.get(path).toUri().toString();  
+		 
 		scene.getStylesheets().add(uri);
 		
 	     

@@ -34,24 +34,33 @@ import net.tenie.lib.po.TableFieldPo;
 public class Dbinfo {
 	private static Logger logger = LogManager.getLogger(Dbinfo.class);
 
-	private Connection conn;
+	private Connection conn = null; 
 
 	private String driver, url, us, ps;
-
+    
+	//加载 jar
+	static {
+//		URL u = new URL("jar:file:/path/to/pgjdbc2.jar!/");
+////		String classname = "org.postgresql.Driver";
+//		URLClassLoader ucl = new URLClassLoader(new URL[] { u });
+//		Driver d = (Driver)Class.forName(driver, true, ucl).newInstance();
+//		DriverManager.registerDriver(new DriverShim(d));
+//		DriverManager.getConnection("jdbc:postgresql://host/db", "user", "pw");
+	}
+	
 	public Dbinfo(String driver, String url, String us, String ps) {
 		this.driver = driver;
 		this.url = url;
 		this.us = us;
 		this.ps = ps;
 
-		try {
-			Class.forName(driver).newInstance();
-			conn = DriverManager.getConnection(url, us, ps);
-		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+//		try {
+////			Class.forName(driver).newInstance();
+////			conn = DriverManager.getConnection(url, us, ps);
+//			
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	// 获取Mysql
