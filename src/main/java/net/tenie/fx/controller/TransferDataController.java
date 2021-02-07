@@ -131,6 +131,13 @@ public class TransferDataController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		filterTxtInitialize();
 		queryLabel.setGraphic(ImageViewGenerator.svgImageUnactive("search"));
+		execBtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
+		stopBtn.setGraphic(ImageViewGenerator.svgImage("stop", "red"));
+		
+		bRun.setGraphic(ImageViewGenerator.svgImageUnactive("window-close"));
+//		AnchorPane.setRightAnchor(bRun, 5.0);
+		AnchorPane.setTopAnchor(bRun, 0.0);
+		
 //		execBtn.getStyleClass().add("my-run-btn");
 //		execBtn.setStyle("-fx-background-color: green");
 		 

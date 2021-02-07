@@ -72,8 +72,8 @@
                   <Label fx:id="queryLabel" layoutX="15.0" layoutY="6.0" text="查询" />
                   <TextField fx:id="filterTxt" layoutX="70.0" layoutY="2.0" styleClass="myFindTextField" />
                   <JFXButton fx:id="execBtn" layoutX="243.0" mnemonicParsing="false" styleClass="transfer-btn" text="Run" />
-                  <JFXButton fx:id="stopBtn" layoutX="301.0" mnemonicParsing="false" styleClass="transfer-btn" text="Stop" />
-                  <JFXButton fx:id="bRun" layoutX="450.0" layoutY="2.0" styleClass="transfer-btn" text="Background Run" />
+                  <JFXButton fx:id="stopBtn" layoutX="298.0" mnemonicParsing="false" styleClass="transfer-btn" text="Stop" />
+                  <JFXButton fx:id="bRun" layoutX="356.0" styleClass="transfer-btn" text="Hide" />
                </children>
             </AnchorPane>
             <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" VBox.vgrow="ALWAYS" />

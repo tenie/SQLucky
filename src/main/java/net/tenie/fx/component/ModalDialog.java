@@ -211,7 +211,8 @@ public class ModalDialog {
 			stage.close();
 		});
 
-		scene.getStylesheets().addAll(ConfigVal.cssList);
+//		scene.getStylesheets().addAll(ConfigVal.cssList);
+		CommonAction.loadCss(scene);
 
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
@@ -226,13 +227,13 @@ public class ModalDialog {
 		});
 		return stage;
 	}
-
+//TODO
 	public static void ModalDialogApp(VBox node, String title) {
 		try {
 			node.getStyleClass().add("myAlert");
 			final Stage stage = new Stage();
 			Scene scene = new Scene(node);
-			Button btn = new Button("Close");
+			JFXButton btn = new JFXButton("Close");
 			btn.setOnAction(value -> {
 				stage.close();
 			});
@@ -241,7 +242,8 @@ public class ModalDialog {
 			AnchorPane.setRightAnchor(btn, 0.0);
 			node.getChildren().add(pn);
 
-			scene.getStylesheets().addAll(ConfigVal.cssList);
+//			scene.getStylesheets().addAll(ConfigVal.cssList);
+			CommonAction.loadCss(scene);
 
 			stage.initModality(Modality.APPLICATION_MODAL);
 			stage.setTitle(title);
