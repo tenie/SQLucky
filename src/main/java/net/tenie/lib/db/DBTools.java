@@ -10,6 +10,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import net.tenie.fx.main.MainMyDB;
 import net.tenie.lib.po.DbTableDatePo;
 import net.tenie.lib.po.RsData;
 import net.tenie.lib.po.SqlFieldPo;
@@ -17,7 +22,7 @@ import net.tenie.lib.tools.StrUtils;
 
 public class DBTools {
 
- 
+	private static Logger logger = LogManager.getLogger(DBTools.class);
 
 	public static DbTableDatePo deleteSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
@@ -78,12 +83,13 @@ public class DBTools {
 	/**
 	 * DML需要commit. SELECT INSERT UPDATE DELETE MERGE CALL EXPLAIN PLAN LOCK TABLE
 	 */
-	public static int execDML(Connection conn, String delSQl) throws SQLException {
+	public static int execDML(Connection conn, String sql) throws SQLException {
 		Statement sm = null;
 		int i = 0;
 		try {
+			logger.debug("execDML = " + sql);
 			sm = conn.createStatement();
-			i = sm.executeUpdate(delSQl);
+			i = sm.executeUpdate(sql);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
@@ -102,6 +108,7 @@ public class DBTools {
 	public static void execDDL(Connection conn, String sql) throws SQLException {
 		PreparedStatement pstmt = null;
 		try {
+			logger.debug("execDDL = " + sql);
 			pstmt = conn.prepareStatement(sql);
 			pstmt.execute();
 		} catch (SQLException e) {
@@ -135,14 +142,15 @@ public class DBTools {
 		return str;
 	}
 	
-	public static DbTableDatePo execSql(Connection conn, String delSQl, String sqltype, String content)
+	public static DbTableDatePo execSql(Connection conn, String sql, String sqltype, String content)
 			throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		dpo.addField(sqltype + " Info");
 		Statement sm = null;
 		try {
+			logger.debug("execSql = " + sql);
 			sm = conn.createStatement();
-			int i = sm.executeUpdate(delSQl);
+			int i = sm.executeUpdate(sql);
 			dpo.addData(content + i);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -159,6 +167,7 @@ public class DBTools {
 		Statement sm = null;
 		try {
 			String delSQl = "delete from " + tabName;
+			logger.debug("execDelTab = " + delSQl);
 			sm = conn.createStatement();
 			sm.executeUpdate(delSQl);
 		} catch (SQLException e) {
@@ -248,6 +257,7 @@ public class DBTools {
 	public static void CallProcedure(Connection conn, String sql) {
 		CallableStatement call = null;
 		try {
+			logger.debug("CallProcedure = " + sql);
 			call = conn.prepareCall(sql);
 			call.execute();
 		} catch (Exception e) {
@@ -267,6 +277,7 @@ public class DBTools {
 		PreparedStatement pstmt = null;
 		try {
 			String Sql = " DROP TABLE " + tabName;
+			logger.debug("dropTable() = " + Sql);
 			pstmt = conn.prepareStatement(Sql);
 			pstmt.execute();
 		} catch (SQLException e) {

@@ -28,22 +28,22 @@ public class H2ExportDDLImp implements ExportDDL {
 	public List<TablePo> allTableObj(Connection conn, String schema ){
 		try {
 			List<TablePo>  vals = Dbinfo.fetchAllTableName(conn, schema);
-			if(vals !=null && vals.size() > 0) {
-				vals.stream().forEach(v ->{
-					try {
-						// 表对象字段赋值
-						Dbinfo.fetchTableInfo(conn, v);
-						// 表对象 主键赋值
-						Dbinfo.fetchTablePrimaryKeys(conn, v);
-						// 表对象ddl语句
-						String ddl = fdb2.createTab( v);
-						v.setDdl(ddl);
-					} catch (Exception e) { 
-						e.printStackTrace();
-					}
-					
-				});
-			}
+//			if(vals !=null && vals.size() > 0) {
+//				vals.stream().forEach(v ->{
+//					try {
+//						// 表对象字段赋值
+//						Dbinfo.fetchTableInfo(conn, v);
+//						// 表对象 主键赋值
+//						Dbinfo.fetchTablePrimaryKeys(conn, v);
+//						// 表对象ddl语句
+//						String ddl = fdb2.createTab( v);
+//						v.setDdl(ddl);
+//					} catch (Exception e) { 
+//						e.printStackTrace();
+//					}
+//					
+//				});
+//			}
 			// 缓存数据
 			allTableObjs = vals;
 			return vals;

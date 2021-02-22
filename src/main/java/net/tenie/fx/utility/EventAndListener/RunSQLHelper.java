@@ -45,6 +45,7 @@ import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.MenuFactory;
 import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.MyTextField2TableCell;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
@@ -220,10 +221,12 @@ public class RunSQLHelper {
 			tdpo.addTableName(tableName);
 			DbTableDatePo dpo = SelectDao.selectSql(conn, sql, ConfigVal.MaxRows, table);
 			DataViewContainer.setTabRowWith(table, dpo.getAllDatasSize());
-			// 保存查询信息
+			//TODO 保存查询信息
 			CacheTableDate.saveTableName(table.getId(), tableName);
 			CacheTableDate.saveSelectSQl(table.getId(), sql);
 			CacheTableDate.saveDBConn(table.getId(), conn);
+			// 获取链接名称  
+			CacheTableDate.saveConnName(table.getId(), ComponentGetter.getCurrentConnectName());;
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 
@@ -497,50 +500,52 @@ public class RunSQLHelper {
 		col.setPrefWidth(witdth);
 		col.setCellValueFactory(new StringPropertyListValueFactory(i, table));
 
-		PopupFilter<ObservableList<StringProperty>, String> popupFilter ;
-		if (CommonUtility.isNum(type)) {
-			// 过滤框
-			popupFilter = new MyPopupNumberFilter(col);
-			col.setOnFilterAction(e -> popupFilter.showPopup());
-			popupFilter.getStyleClass().add("mypopup");
-
-		} else {
-			// 过滤框
-			popupFilter = new PopupStringFilter(col);
-			col.setOnFilterAction(e -> popupFilter.showPopup());
-			popupFilter.getStyleClass().add("mypopup");
-		}
+//		PopupFilter<ObservableList<StringProperty>, String> popupFilter ;
+//		if (CommonUtility.isNum(type)) {
+//			// 过滤框
+//			popupFilter = new MyPopupNumberFilter(col);
+//			col.setOnFilterAction(e -> popupFilter.showPopup());
+//			popupFilter.getStyleClass().add("mypopup");
+//
+//		} else {
+//			// 过滤框
+//			popupFilter = new PopupStringFilter(col);
+//			col.setOnFilterAction(e -> popupFilter.showPopup());
+//			popupFilter.getStyleClass().add("mypopup");
+//		}
 
 		// 右点菜单
-		ContextMenu cm = new ContextMenu();
-		MenuItem miActive = new MenuItem("Copy Column Name");
-		miActive.setStyle("myMenuItem");
-		miActive.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
-		miActive.setOnAction(e -> { // 粘贴板赋值
-			CommonUtility.setClipboardVal(colname);
-		});
-		Menu copyColData = new Menu("Copy Column Data");
-		copyColData.setGraphic(ImageViewGenerator.svgImageDefActive("columns"));
-		
-		MenuItem selectCopyColData = new MenuItem("Copy Select Column Data");
-		selectCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
-		selectCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(true, false ,  colname)  );
-		
-		MenuItem AllCopyColData = new MenuItem("Copy All Column Data");
-		AllCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
-		AllCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(false, false ,  colname)  );
-		copyColData.getItems().addAll(selectCopyColData, AllCopyColData);
-		
-		MenuItem filter = new MenuItem("Filter");
-		filter.setGraphic(ImageViewGenerator.svgImageDefActive("filter"));
-		filter.setOnAction(e->{
-			popupFilter.showPopup();
-		});
+//		ContextMenu cm = new ContextMenu();
+//		MenuItem miActive = new MenuItem("Copy Column Name");
+//		miActive.setStyle("myMenuItem");
+//		miActive.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+//		miActive.setOnAction(e -> { // 粘贴板赋值
+//			CommonUtility.setClipboardVal(colname);
+//		});
+//		Menu copyColData = new Menu("Copy Column Data");
+//		copyColData.setGraphic(ImageViewGenerator.svgImageDefActive("columns"));
+//		
+//		MenuItem selectCopyColData = new MenuItem("Copy Select Column Data");
+//		selectCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+//		selectCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(true, false ,  colname)  );
+//		
+//		MenuItem AllCopyColData = new MenuItem("Copy All Column Data");
+//		AllCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+//		AllCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(false, false ,  colname)  );
+//		copyColData.getItems().addAll(selectCopyColData, AllCopyColData);
+//		
+//		MenuItem filter = new MenuItem("Filter");
+//		filter.setGraphic(ImageViewGenerator.svgImageDefActive("filter"));
+//		filter.setOnAction(e->{
+//			popupFilter.showPopup();
+//		});
 
 
+//		col.setContextMenu(cm); 
+//		cm.getItems().addAll(miActive, copyColData,  filter);
+		// 右点菜单
+		ContextMenu cm =MenuFactory.DataTableColumnContextMenu(colname, type, col);
 		col.setContextMenu(cm); 
-		cm.getItems().addAll(miActive, copyColData,  filter);
-
 		return col;
 	}
 

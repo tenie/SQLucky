@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -275,6 +276,65 @@ public class ModalDialog {
 			e.printStackTrace();
 		}
 	}
+	
+	// 在提示框里执行
+	public static void ModalDialogAppCallConsumer(VBox node, String title, Consumer< String >  caller) {
+		try {
+			node.getStyleClass().add("myAlert");
+			final Stage stage = new Stage();
+			Scene scene = new Scene(node);
+			JFXButton btn = new JFXButton("Canel");
+			btn.setOnAction(value -> {
+				stage.close();
+			});
+			
+			JFXButton okbtn = new JFXButton("Execute");
+			okbtn.setOnAction(value -> {
+				caller.accept("");
+				stage.close();
+			});
+			
+			
+			AnchorPane pn = new AnchorPane();
+			pn.getChildren().addAll(okbtn, btn);
+			AnchorPane.setRightAnchor(btn, 0.0);
+			AnchorPane.setRightAnchor(okbtn, 60.0);
+			node.getChildren().add(pn);
+
+//			scene.getStylesheets().addAll(ConfigVal.cssList);
+			CommonAction.loadCss(scene);
+
+			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.setTitle(title);
+			stage.setScene(scene);
+
+			stage.setMaximized(false);
+			stage.setResizable(false);
+			stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
+
+			stage.show();
+			stage.setOnCloseRequest(v -> {
+
+			});
+
+			KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+			KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
+			KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+			scene.getAccelerators().put(escbtn, () -> {
+				stage.close();
+			});
+			scene.getAccelerators().put(enterbtn, () -> {
+				stage.close();
+			});
+			scene.getAccelerators().put(spacebtn, () -> {
+				stage.close();
+			});
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 
 	// 根据给定的fxml 创建 模态框
 	public ModalDialog(final Stage stg, String fxml, Modality modality) {
@@ -372,6 +432,26 @@ public class ModalDialog {
 		ModalDialog.ModalDialogApp(vb, title);
 
 	}
+	
+	public static void showComfirmExec(String title, String containTxt ,  Consumer< String >  caller) {
+		VBox vb = new VBox();
+		TextField tf1 = new TextField("");
+		tf1.setEditable(false);
+		tf1.setPrefWidth(500);
+		tf1.setStyle("-fx-background-color: transparent;");
+		tf1.setText(containTxt);
+		tf1.setPrefHeight(40);
+		tf1.setFocusTraversable(false);
+
+		vb.getChildren().add(tf1);
+		vb.setPrefWidth(500);
+		vb.setPadding(new Insets(20));
+		vb.setPrefHeight(100);
+		vb.maxHeight(100);
+		vb.maxWidth(500);
+		ModalDialog.ModalDialogAppCallConsumer(vb, title, caller); 
+	}
+	
 
 	// 确认对话框
 	public static boolean Confirmation(String msg) {

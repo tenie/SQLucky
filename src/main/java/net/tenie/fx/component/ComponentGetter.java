@@ -13,11 +13,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.container.AppWindow;
@@ -115,6 +115,16 @@ public final class ComponentGetter {
 		return null;
 	}
 	
+	// 当前选中的数据库连接名称
+	public static String getCurrentConnectName() {
+		Label lb = connComboBox.getValue();
+		String str = "";
+		if( lb != null) {
+		   str = lb.getText(); 
+		}
+		return str;
+	}
+	
 	// 根据链接名称,获取链接Node 
 	public static TreeItem<TreeNodePo>  getConnNode(String dbName){
 //		TreeItem<TreeNodePo> conn =
@@ -130,19 +140,19 @@ public final class ComponentGetter {
 	}
 	
 	// 根据链接名称,获取链接Node 
-		public static TreeItem<TreeNodePo>  getSchemaNode(String dbName, String SchemaName){
-			TreeItem<TreeNodePo> connNode = getConnNode(dbName);
-			if(connNode!=null ) {
-				TreeItem<TreeNodePo> schemaParent =	connNode.getChildren().get(0);
-				for(TreeItem<TreeNodePo> schNode : schemaParent.getChildren()) {
-					if(schNode.getValue().getName().equals(SchemaName)) {
-						return schNode;
-					}
+	public static TreeItem<TreeNodePo>  getSchemaNode(String dbName, String SchemaName){
+		TreeItem<TreeNodePo> connNode = getConnNode(dbName);
+		if(connNode!=null ) {
+			TreeItem<TreeNodePo> schemaParent =	connNode.getChildren().get(0);
+			for(TreeItem<TreeNodePo> schNode : schemaParent.getChildren()) {
+				if(schNode.getValue().getName().equals(SchemaName)) {
+					return schNode;
 				}
 			}
-			
-			return null;
 		}
+		
+		return null;
+	}
 	
 	
 	// 获取当前代码Tab中的
@@ -154,12 +164,26 @@ public final class ComponentGetter {
 	}
 
 	// 获取数据表的 控制按钮列表
-	public static FlowPane dataFlowPane(FilteredTableView<ObservableList<StringProperty>> table) {
+	public static AnchorPane dataAnchorPane(FilteredTableView<ObservableList<StringProperty>> table) {
 		VBox vb = (VBox) table.getParent();
-		FlowPane fp = (FlowPane) vb.getChildren().get(0);
+		AnchorPane fp = (AnchorPane) vb.getChildren().get(0);
 		return fp;
 	}
-
+	
+	// 获取当前数据表的Tab
+	public static Tab currentDataTab() {
+		Tab tab = dataTab.getSelectionModel().getSelectedItem();
+		return tab;
+	}
+	
+	// 获取数据页的id
+	public static String currentDataTabID() {
+		Tab tab = currentDataTab();
+		String id = tab.getId();
+		
+		return id;
+	}
+	
 	// 获取 当前table view 的控制面板
 	public static AnchorPane dataFlowPane() {
 		VBox vb = (VBox) dataTab.getSelectionModel().getSelectedItem().getContent();

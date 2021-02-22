@@ -117,7 +117,22 @@ public class DeleteDao {
 
 		return msg;
 	}
+	public static void dropColumn(Connection conn , String table, String col) throws Exception {
+		PreparedStatement pstmt = null;
+		try {
 
+			String sql = "ALTER TABLE "+table+" DROP COLUMN   " + col;
+			pstmt = conn.prepareStatement(sql);
+			pstmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null)
+				pstmt.close();
+		}
+	}
+	
 	public static void execUpdate2(Connection conn) throws Exception {
 		PreparedStatement pstmt = null;
 		try {

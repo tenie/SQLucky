@@ -37,22 +37,22 @@ public class MySqlExportDDLImp implements ExportDDL {
 	public List<TablePo> allTableObj(Connection conn, String schema) {
 		try {
 			List<TablePo> vals = Dbinfo.fetchAllTableName(conn, schema);
-			if (vals != null && vals.size() > 0) {
-				vals.stream().forEach(v -> {
-					try {
-						// 表对象字段赋值
-						Dbinfo.fetchTableInfo(conn, v);
-						// 表对象 主键赋值
-						Dbinfo.fetchTablePrimaryKeys(conn, v);
-						// 表对象ddl语句
-						String ddl = fdb2.createTab(v);
-						v.setDdl(ddl);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-
-				});
-			}
+//			if (vals != null && vals.size() > 0) {
+//				vals.stream().forEach(v -> {
+//					try {
+//						// 表对象字段赋值
+//						Dbinfo.fetchTableInfo(conn, v);
+//						// 表对象 主键赋值
+//						Dbinfo.fetchTablePrimaryKeys(conn, v);
+//						// 表对象ddl语句
+//						String ddl = fdb2.createTab(v);
+//						v.setDdl(ddl);
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
+//
+//				});
+//			}
 			// 缓存数据
 			allTableObjs = vals;
 			return vals;
@@ -276,8 +276,8 @@ public class MySqlExportDDLImp implements ExportDDL {
 
 	@Override
 	public String exportAlterTableDropColumn(Connection conn, String schema, String tableName, String col) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "ALTER TABLE "+schema+"."+tableName+" DROP COLUMN   " + col +";";
+		return sql;
 	}
 
 	@Override

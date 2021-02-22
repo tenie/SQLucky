@@ -22,6 +22,8 @@ public class CacheTableDate {
 	private static Map<String, String> tabNames = new HashMap<>();
 	private static Map<String, String> selectSql = new HashMap<>();
 	private static Map<String, Tab> tabs = new HashMap<>();
+	private static Map<String, String> connName = new HashMap<>();
+	
 
 	// table id + row num 组成key ,保存对于行的数据
 	private static Map<String, ObservableList<StringProperty>> newLineDate = new HashMap<>();
@@ -91,6 +93,7 @@ public class CacheTableDate {
 				tabData.remove(tab);
 				dbconns.remove(tab);
 				selectSql.remove(tab);
+				connName.remove(tab);
 				removeHelper(appendData, tab);
 			}
 		};
@@ -208,5 +211,15 @@ public class CacheTableDate {
 
 	public static Tab getTab(String id) {
 		return tabs.get(id);
+	}
+	
+	// 保存 链接名字
+	public static void saveConnName(String tab, String name) {
+		connName.put(tab, name);
+
+	}
+
+	public static String getConnName(String tab) {
+		return connName.get(tab);
 	}
 }

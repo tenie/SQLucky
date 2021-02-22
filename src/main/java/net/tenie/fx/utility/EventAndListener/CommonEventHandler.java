@@ -21,6 +21,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
@@ -365,7 +366,7 @@ public class CommonEventHandler {
 				tbv.getItems().add(0, item);
 
 				// 发生亮起保存按钮
-				FlowPane fp = ComponentGetter.dataFlowPane(tbv);
+				AnchorPane fp = ComponentGetter.dataAnchorPane(tbv);
 				fp.getChildren().get(0).setDisable(false);
 			}
 

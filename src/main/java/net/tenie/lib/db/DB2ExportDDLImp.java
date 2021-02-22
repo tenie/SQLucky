@@ -314,8 +314,9 @@ public class DB2ExportDDLImp implements ExportDDL {
 
 	@Override
 	public String exportAlterTableDropColumn(Connection conn, String schema, String tableName, String col) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "ALTER TABLE "+schema+"."+tableName+" DROP COLUMN   " + col +";";
+		sql += "CALL SYSPROC.ADMIN_CMD('reorg  TABLE " + schema + "." + tableName + " ') ;";
+		return sql;
 	}
 
 	@Override

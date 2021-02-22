@@ -102,6 +102,7 @@ public class DataViewContainer {
 		Tab nwTab = DataViewTab.createTab(dataTab, tabName);
 		nwTab.setId(tbv.getId());
 		CacheTableDate.saveTab(tbv.getId(), nwTab);
+		// 构建数据Tab页中的表
 		VBox vb = generateDataPane(tbv.getId(), disable, tbv ,   time ,   rows);
 
 		if (idx > -1) {
