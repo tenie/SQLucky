@@ -283,12 +283,12 @@ public class ModalDialog {
 			node.getStyleClass().add("myAlert");
 			final Stage stage = new Stage();
 			Scene scene = new Scene(node);
-			JFXButton btn = new JFXButton("Canel");
+			JFXButton btn = new JFXButton("No");
 			btn.setOnAction(value -> {
 				stage.close();
 			});
 			
-			JFXButton okbtn = new JFXButton("Execute");
+			JFXButton okbtn = new JFXButton("YES");
 			okbtn.setOnAction(value -> {
 				caller.accept("");
 				stage.close();

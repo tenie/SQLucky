@@ -2,9 +2,11 @@ package net.tenie.fx.component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 import org.controlsfx.control.tableview2.FilteredTableColumn;
+import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupStringFilter;
 
@@ -14,9 +16,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
 import net.tenie.fx.Action.MyPopupNumberFilter;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 import net.tenie.lib.db.DBTools;
@@ -51,7 +55,7 @@ public class MenuFactory {
 		// 右点菜单
 		ContextMenu cm = new ContextMenu();
 		MenuItem miActive = new MenuItem("Copy Column Name");
-		miActive.setStyle("myMenuItem");
+//		miActive.getStyleClass().add("myMenuItem");
 		miActive.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
 		miActive.setOnAction(e -> { // 粘贴板赋值
 			CommonUtility.setClipboardVal(colname);
@@ -76,7 +80,7 @@ public class MenuFactory {
 		
 		// drop column
 		MenuItem dropCol = new MenuItem("Drop Column: "+ colname);
-		dropCol.setStyle("myMenuItem");
+//		dropCol.getStyleClass().add("myMenuItem");
 		dropCol.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
 		dropCol.setOnAction(e ->  {
 			// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
@@ -100,19 +104,47 @@ public class MenuFactory {
 		});
 		
 		MenuItem alterColumn = new MenuItem("Alter Column Date Type");
-		alterColumn.setStyle("myMenuItem");
+//		alterColumn.getStyleClass().add("myMenuItem");
 		alterColumn.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
 		alterColumn.setOnAction(e -> {  
-			
+			 FilteredTableView<ObservableList<StringProperty>> table = ComponentGetter.dataTableView();
+			 ObservableList<TableColumn<ObservableList<StringProperty>, ?>> cols =  table.getColumns();
+			 int idx = -1;
+			 for(int i = 0; i < cols.size(); i++) {
+				Object obj =  cols.get(i);
+				if( Objects.equals(obj, col)) {
+					idx = i;
+					break;
+				}
+			 }
+			 if(idx > -1) {
+				 System.out.println(idx);
+				 ObservableList<ObservableList<StringProperty>> obs =  table.getItems();
+				 StringBuilder strb = new StringBuilder();
+				 for(int i = 0 ; i < obs.size(); i++) {
+					 ObservableList<StringProperty> vals = obs.get(i);
+					 if (vals != null && vals.size() > 0) {
+						    String vl = vals.get(idx).get(); 
+							strb.append(vl);
+							strb.append('\n');
+					 }
+					
+				 }
+				 String str = strb.toString();
+				 System.out.println(str);
+				 CommonUtility.setClipboardVal(str); 
+				 
+				 
+			 }
 		});
 		
 		MenuItem addColumn = new MenuItem("Add Column Name");
-		addColumn.setStyle("myMenuItem");
+//		addColumn.getStyleClass().add("myMenuItem");
 		addColumn.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
 		addColumn.setOnAction(e -> {  
 			
 		});
-		cm.getItems().addAll(miActive, copyColData,  filter, dropCol, alterColumn, addColumn);
+		cm.getItems().addAll(filter, miActive, copyColData,   dropCol, alterColumn, addColumn);
 		return cm;
 	}
 	

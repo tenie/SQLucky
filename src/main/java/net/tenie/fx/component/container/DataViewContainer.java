@@ -317,6 +317,7 @@ public class DataViewContainer {
 		}); 
 	   
         table.setRowHeader(tc);
+        //启用 隐藏列的控制按钮
         table.tableMenuButtonVisibleProperty().setValue(true);
         
         

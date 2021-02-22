@@ -62,9 +62,9 @@ GridPane {
 
 
 
-.myMenuItem{
--fx-background-color:  red;
-}
+/* .myMenuItem{
+	-fx-background-color:  red;
+} */
 
 MenuButton{
 	-fx-background-color: #3C3F41;
