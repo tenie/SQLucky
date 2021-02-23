@@ -270,8 +270,9 @@ public class MySqlExportDDLImp implements ExportDDL {
 
 	@Override
 	public String exportAlterTableAddColumn(Connection conn, String schema, String tableName, String newCol) {
-
-		return null;
+		 
+		String sql = "ALTER TABLE "+schema+"."+tableName+" ADD    " + newCol +";";
+		return sql;
 	}
 
 	@Override
@@ -282,8 +283,8 @@ public class MySqlExportDDLImp implements ExportDDL {
 
 	@Override
 	public String exportAlterTableModifyColumn(Connection conn, String schema, String tableName, String col) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "ALTER TABLE "+schema+"."+tableName+" MODIFY COLUMN  " + col +";";
+		return sql;
 	}
 
 	@Override

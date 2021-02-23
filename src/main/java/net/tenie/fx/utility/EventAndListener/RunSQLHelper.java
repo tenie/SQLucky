@@ -73,6 +73,7 @@ public class RunSQLHelper {
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
 	private static final String WAITTB_NAME = "Loading...";
+	private static String connName = "";
 
 	@SuppressWarnings("restriction")
 	private static void runMain(Map<String, Object> val) { // throws Exception
@@ -81,7 +82,7 @@ public class RunSQLHelper {
 		String sqlstr = (String) val.get("sql");
 		Connection conn = (Connection) val.get("conn");
 		String tabIdx = (String) val.get("tabIdx");
-		String btn = (String)val.get("btn");
+		String btn = (String)val.get("btn"); 
 		int tidx = -1;
 		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
 			tidx = Integer.valueOf(tabIdx);
@@ -201,7 +202,7 @@ public class RunSQLHelper {
 			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted())
-				DataViewContainer.showTableDate(tdpo , "", "");
+				DataViewContainer.showTableDate(tdpo , "", "", connName);
 
 		}
 	}
@@ -238,7 +239,7 @@ public class RunSQLHelper {
 			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted())
-				DataViewContainer.showTableDate(tdpo, tidx, false, dpo.getExecTime()+"", dpo.getRows()+"");
+				DataViewContainer.showTableDate(tdpo, tidx, false, dpo.getExecTime()+"", dpo.getRows()+"", connName);
 		} catch (Exception e) {
 			Platform.runLater(() -> {
 				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
@@ -304,6 +305,7 @@ public class RunSQLHelper {
 	// 在子线程执行 运行sql 的任务
 	public static Thread createThread(Connection conn, String sql, String tabIdx, JFXButton run,
 			Consumer<Map<String, Object>> action) {
+		connName = ComponentGetter.getCurrentConnectName();
 		return new Thread() {
 			public void run() {
 				logger.info("线程启动了" + this.getName());
@@ -416,7 +418,7 @@ public class RunSQLHelper {
 
 		settingBtn(run, stop , btn );
 		CommonAction.showDetailPane();
-
+		
 		thread = createThread(conn, sql, tabIdx, run, RunSQLHelper::runMain);
 		thread.start();
 	}
@@ -499,50 +501,7 @@ public class RunSQLHelper {
 		col.setMinWidth(witdth);
 		col.setPrefWidth(witdth);
 		col.setCellValueFactory(new StringPropertyListValueFactory(i, table));
-
-//		PopupFilter<ObservableList<StringProperty>, String> popupFilter ;
-//		if (CommonUtility.isNum(type)) {
-//			// 过滤框
-//			popupFilter = new MyPopupNumberFilter(col);
-//			col.setOnFilterAction(e -> popupFilter.showPopup());
-//			popupFilter.getStyleClass().add("mypopup");
-//
-//		} else {
-//			// 过滤框
-//			popupFilter = new PopupStringFilter(col);
-//			col.setOnFilterAction(e -> popupFilter.showPopup());
-//			popupFilter.getStyleClass().add("mypopup");
-//		}
-
-		// 右点菜单
-//		ContextMenu cm = new ContextMenu();
-//		MenuItem miActive = new MenuItem("Copy Column Name");
-//		miActive.setStyle("myMenuItem");
-//		miActive.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
-//		miActive.setOnAction(e -> { // 粘贴板赋值
-//			CommonUtility.setClipboardVal(colname);
-//		});
-//		Menu copyColData = new Menu("Copy Column Data");
-//		copyColData.setGraphic(ImageViewGenerator.svgImageDefActive("columns"));
-//		
-//		MenuItem selectCopyColData = new MenuItem("Copy Select Column Data");
-//		selectCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
-//		selectCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(true, false ,  colname)  );
-//		
-//		MenuItem AllCopyColData = new MenuItem("Copy All Column Data");
-//		AllCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
-//		AllCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(false, false ,  colname)  );
-//		copyColData.getItems().addAll(selectCopyColData, AllCopyColData);
-//		
-//		MenuItem filter = new MenuItem("Filter");
-//		filter.setGraphic(ImageViewGenerator.svgImageDefActive("filter"));
-//		filter.setOnAction(e->{
-//			popupFilter.showPopup();
-//		});
-
-
-//		col.setContextMenu(cm); 
-//		cm.getItems().addAll(miActive, copyColData,  filter);
+ 
 		// 右点菜单
 		ContextMenu cm =MenuFactory.DataTableColumnContextMenu(colname, type, col);
 		col.setContextMenu(cm); 

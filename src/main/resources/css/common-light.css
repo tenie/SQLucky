@@ -15,6 +15,10 @@
 	 
 } 
 
+
+.myAlert {
+ -fx-border-color: #4C708C; 
+}
 .combo-box {   
      
      -fx-background-radius: 0;  

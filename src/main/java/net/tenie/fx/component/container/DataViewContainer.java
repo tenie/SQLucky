@@ -60,11 +60,11 @@ public class DataViewContainer {
 		support2.addSupport(dataView);
 	}
 
-	public static void showTableDate(DataTabDataPo rsval,   String time , String rows) {
-		showTableDate(rsval, -1, true, time, rows );
+	public static void showTableDate(DataTabDataPo rsval,   String time , String rows, String connName) {
+		showTableDate(rsval, -1, true, time, rows, connName );
 	}
 
-	public static void showTableDate(DataTabDataPo rsval, int idx, boolean disable, String time , String rows) {
+	public static void showTableDate(DataTabDataPo rsval, int idx, boolean disable, String time , String rows, String connName) {
 		Platform.runLater(() -> {
 			List<FilteredTableView<ObservableList<StringProperty>>> allTable = rsval.getNewtables();
 			List<String> names = rsval.getTableNames();
@@ -72,7 +72,7 @@ public class DataViewContainer {
 			TabPane dataTabPane = ComponentGetter.dataTab;
 			for (int i = 0; i < allTable.size(); i++) {
 				FilteredTableView<ObservableList<StringProperty>> table = allTable.get(i);
-				// 添加一个新的tab页， 把view 放图其中
+				// 添加一个新的tab页， 把view 放入其中
 				String tn = names.get(i);
 				String excInfoTitle = ConfigVal.EXEC_INFO_TITLE;
 				// 如果是要添加一个info的Tab, 先看有没有旧的复用
@@ -86,10 +86,10 @@ public class DataViewContainer {
 							vb.getChildren().add(table);
 							dataTabPane.getSelectionModel().select(tab0);
 						}else {
-							addNewDateTab(dataTabPane, table, tn, 0, disable, time , rows);
+							addNewDateTab(dataTabPane, table, tn, 0, disable, time , rows, connName);
 						} 
 				}else {
-					addNewDateTab(dataTabPane, table, tn, idx, disable, time , rows);
+					addNewDateTab(dataTabPane, table, tn, idx, disable, time , rows, connName);
 				}
 				
 			}
@@ -98,12 +98,12 @@ public class DataViewContainer {
 
 	// dataTab add content 添加一个tab页， 把TableView放如页中
 	private static void addNewDateTab(TabPane dataTab, FilteredTableView<ObservableList<StringProperty>> tbv,
-			String tabName, int idx, boolean disable , String time , String rows) {
+			String tabName, int idx, boolean disable , String time , String rows, String connName) {
 		Tab nwTab = DataViewTab.createTab(dataTab, tabName);
 		nwTab.setId(tbv.getId());
 		CacheTableDate.saveTab(tbv.getId(), nwTab);
 		// 构建数据Tab页中的表
-		VBox vb = generateDataPane(tbv.getId(), disable, tbv ,   time ,   rows);
+		VBox vb = generateDataPane(tbv.getId(), disable, tbv ,   time ,   rows, connName);
 
 		if (idx > -1) {
 			dataTab.getTabs().add(idx, nwTab);
@@ -116,10 +116,10 @@ public class DataViewContainer {
 	}
 
 	// 数据tab中的组件
-	public static VBox generateDataPane(String id, boolean disable, TableView<ObservableList<StringProperty>> tbv , String time , String rows) {
+	public static VBox generateDataPane(String id, boolean disable, TableView<ObservableList<StringProperty>> tbv , String time , String rows, String connName) {
 		VBox vb = new VBox();
 		// 表格上面的按钮
-		AnchorPane fp = getDataTableOptionBtnsPane(disable, time, rows);
+		AnchorPane fp = getDataTableOptionBtnsPane(disable, time, rows, connName);
 		fp.setId(id);
 		vb.setId(id);
 		vb.getChildren().add(fp);
@@ -129,7 +129,7 @@ public class DataViewContainer {
 	}
 
 	// 数据表格 操作按钮们
-	public static AnchorPane getDataTableOptionBtnsPane(boolean disable, String time , String rows) {
+	public static AnchorPane getDataTableOptionBtnsPane(boolean disable, String time , String rows, String connName) {
 //		FlowPane fp = new FlowPane();
 		AnchorPane fp = new AnchorPane();
 		fp.prefHeight(25);
@@ -230,7 +230,7 @@ public class DataViewContainer {
 		//计时/查询行数
 		String info = ""; //time+ " ms / "+rows+" rows";
 		if(StrUtils.isNotNullOrEmpty(time)) {
-			 info =  time+ " s / "+rows+" rows";
+			 info = connName+ " Runtime : "+ time+ " s / "+rows+" rows";
 		}
 		Label lb = new Label(info);
 		

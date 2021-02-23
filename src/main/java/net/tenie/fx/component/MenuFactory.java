@@ -28,7 +28,9 @@ import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
 public class MenuFactory {
-
+	static final int DROP_COLUMN = 1;
+	static final int ALTER_COLUMN = 2;
+	static final int ADD_COLUMN = 3;
 	/**
 	 * 数据表中列的右键弹出菜单
 	 * @param colname
@@ -81,87 +83,98 @@ public class MenuFactory {
 		// drop column
 		MenuItem dropCol = new MenuItem("Drop Column: "+ colname);
 //		dropCol.getStyleClass().add("myMenuItem");
-		dropCol.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+		dropCol.setGraphic(ImageViewGenerator.svgImageDefActive("eraser"));
 		dropCol.setOnAction(e ->  {
-			// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
-			String tableId = ComponentGetter.currentDataTabID();
-			String connName = CacheTableDate.getConnName(tableId);
-			String tableName =  CacheTableDate.getTableName(tableId);
-			Connection conn = CacheTableDate.getDBConn(tableId);
-			DbConnectionPo  dbc = DBConns.get(connName); 
-			
-			String  dropSql = dbc.getExportDDL().exportAlterTableDropColumn(conn, dbc.getDefaultSchema(), tableName, colname);
-			if(StrUtils.isNotNullOrEmpty(dropSql)) {
+			rsVal rv = exportSQL(DROP_COLUMN, colname);
+			if(StrUtils.isNotNullOrEmpty(rv.sql)) {
 				// 要被执行的函数
 				Consumer< String >  caller = x ->{
-					execDropSql(dropSql, conn);
+					execExportSql(rv.sql, rv.conn);
 				};
-				Platform.runLater(() -> { 
-					ModalDialog.showComfirmExec("Confirm drop!", "Execute Sql: " + dropSql +" ?", caller);
-				});
+				ModalDialog.showComfirmExec("Confirm drop!", "Execute Sql: " + rv.sql +" ?", caller);		
 			} 
 			
 		});
 		
-		MenuItem alterColumn = new MenuItem("Alter Column Date Type");
-//		alterColumn.getStyleClass().add("myMenuItem");
-		alterColumn.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
-		alterColumn.setOnAction(e -> {  
-			 FilteredTableView<ObservableList<StringProperty>> table = ComponentGetter.dataTableView();
-			 ObservableList<TableColumn<ObservableList<StringProperty>, ?>> cols =  table.getColumns();
-			 int idx = -1;
-			 for(int i = 0; i < cols.size(); i++) {
-				Object obj =  cols.get(i);
-				if( Objects.equals(obj, col)) {
-					idx = i;
-					break;
-				}
-			 }
-			 if(idx > -1) {
-				 System.out.println(idx);
-				 ObservableList<ObservableList<StringProperty>> obs =  table.getItems();
-				 StringBuilder strb = new StringBuilder();
-				 for(int i = 0 ; i < obs.size(); i++) {
-					 ObservableList<StringProperty> vals = obs.get(i);
-					 if (vals != null && vals.size() > 0) {
-						    String vl = vals.get(idx).get(); 
-							strb.append(vl);
-							strb.append('\n');
-					 }
-					
-				 }
-				 String str = strb.toString();
-				 System.out.println(str);
-				 CommonUtility.setClipboardVal(str); 
-				 
-				 
-			 }
+		MenuItem alterColumn = new MenuItem("Alter Column Date Type"); 
+		alterColumn.setGraphic(ImageViewGenerator.svgImageDefActive("exchange"));
+		alterColumn.setOnAction(e -> { 
+			
+			Consumer< String >  caller = x ->{ 
+				String str = colname + " " + x;
+				rsVal rv = exportSQL(ALTER_COLUMN, str);
+				execExportSql(rv.sql, rv.conn);
+			};
+			ModalDialog.showExecWindow("Alter "+colname +" Date Type: input words like 'CHAR(10) ", "", caller);
 		});
 		
-		MenuItem addColumn = new MenuItem("Add Column Name");
-//		addColumn.getStyleClass().add("myMenuItem");
-		addColumn.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+		MenuItem addColumn = new MenuItem("Add New Column"); 
+		addColumn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
 		addColumn.setOnAction(e -> {  
-			
+			rsVal rv = tableInfo();
+			Consumer< String >  caller = x ->{  
+				rsVal rv2= exportSQL(ADD_COLUMN, x);
+				execExportSql(rv2.sql, rv2.conn);
+			};
+			ModalDialog.showExecWindow(rv.tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
 		});
 		cm.getItems().addAll(filter, miActive, copyColData,   dropCol, alterColumn, addColumn);
 		return cm;
 	}
 	
-	public static void  execDropSql(String dropSql, Connection conn) {
+
+	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
+	private static rsVal tableInfo() {
+		String tableId = ComponentGetter.currentDataTabID();
+		String connName = CacheTableDate.getConnName(tableId);
+		String tableName =  CacheTableDate.getTableName(tableId);
+		Connection conn = CacheTableDate.getDBConn(tableId);
+		DbConnectionPo  dbc = DBConns.get(connName); 
+		rsVal rv = new rsVal();
+		rv.conn = conn; 
+		rv.tableName = tableName;
+		rv.dbc =  dbc; 
+		return rv;
+	}
+	
+	// 导出SQL
+	private static rsVal exportSQL(int ty, String colname) {
+		// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
+		rsVal rv =  tableInfo();
+		String sql ="";
+		if(DROP_COLUMN == ty) {
+			sql = rv.dbc.getExportDDL().exportAlterTableDropColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName, colname);
+		}else if(ALTER_COLUMN == ty) {
+			sql = rv.dbc.getExportDDL().exportAlterTableModifyColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName, colname);	
+		}else if(ADD_COLUMN == ty) {
+			sql = rv.dbc.getExportDDL().exportAlterTableAddColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName, colname);	
+		}
+		 
+		rv.sql = sql; 
+		return rv;
+	}
+	// 执行导出的sql
+	public static void  execExportSql(String dropSql, Connection conn) {
 		String sql[] = dropSql.split(";");
 		for(int i=0; i< sql.length; i++) {
 			String stmp = sql[i];
 			if(StrUtils.isNotNullOrEmpty(stmp)) {
 				try {
 					DBTools.execDDL(conn, stmp);
-				} catch (SQLException e1) { 
-					Platform.runLater(() -> {
-						ModalDialog.showErrorMsg("Sql Error", e1.getMessage());
-					});
+				} catch (SQLException e1) {  
+					ModalDialog.showErrorMsg("Sql Error", e1.getMessage());
+					 
 				}
 			}
 		}
 		
 	}
+}
+
+
+class rsVal{
+	String sql;
+	String tableName;
+	Connection conn;
+	DbConnectionPo  dbc ;
 }

@@ -277,6 +277,32 @@ public class ModalDialog {
 		}
 	}
 	
+	public static void setSceneAndShow(Scene scene , Stage stage ) {
+		 
+		stage.setMaximized(false);
+		stage.setResizable(false);
+		stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
+		CommonAction.loadCss(scene);
+		
+		stage.setOnCloseRequest(v -> {
+
+		});
+
+		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+		KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
+		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+		scene.getAccelerators().put(escbtn, () -> {
+			stage.close();
+		});
+		scene.getAccelerators().put(enterbtn, () -> {
+			stage.close();
+		});
+		scene.getAccelerators().put(spacebtn, () -> {
+			stage.close();
+		});
+		stage.show();
+	}
+	
 	// 在提示框里执行
 	public static void ModalDialogAppCallConsumer(VBox node, String title, Consumer< String >  caller) {
 		try {
@@ -300,35 +326,35 @@ public class ModalDialog {
 			AnchorPane.setRightAnchor(btn, 0.0);
 			AnchorPane.setRightAnchor(okbtn, 60.0);
 			node.getChildren().add(pn);
-
-//			scene.getStylesheets().addAll(ConfigVal.cssList);
-			CommonAction.loadCss(scene);
+ 
+			
 
 			stage.initModality(Modality.APPLICATION_MODAL);
 			stage.setTitle(title);
 			stage.setScene(scene);
+			setSceneAndShow(scene, stage);
 
-			stage.setMaximized(false);
-			stage.setResizable(false);
-			stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
-
-			stage.show();
-			stage.setOnCloseRequest(v -> {
-
-			});
-
-			KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-			KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
-			KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
-			scene.getAccelerators().put(escbtn, () -> {
-				stage.close();
-			});
-			scene.getAccelerators().put(enterbtn, () -> {
-				stage.close();
-			});
-			scene.getAccelerators().put(spacebtn, () -> {
-				stage.close();
-			});
+//			stage.setMaximized(false);
+//			stage.setResizable(false);
+//			stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
+//
+//			stage.show();
+//			stage.setOnCloseRequest(v -> {
+//
+//			});
+//
+//			KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+//			KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
+//			KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+//			scene.getAccelerators().put(escbtn, () -> {
+//				stage.close();
+//			});
+//			scene.getAccelerators().put(enterbtn, () -> {
+//				stage.close();
+//			});
+//			scene.getAccelerators().put(spacebtn, () -> {
+//				stage.close();
+//			});
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -442,7 +468,8 @@ public class ModalDialog {
 		tf1.setText(containTxt);
 		tf1.setPrefHeight(40);
 		tf1.setFocusTraversable(false);
-
+		Label tit = new Label(title);
+		vb.getChildren().add(tit);
 		vb.getChildren().add(tf1);
 		vb.setPrefWidth(500);
 		vb.setPadding(new Insets(20));
@@ -450,6 +477,55 @@ public class ModalDialog {
 		vb.maxHeight(100);
 		vb.maxWidth(500);
 		ModalDialog.ModalDialogAppCallConsumer(vb, title, caller); 
+	}
+	
+	public static void showExecWindow(String title, String containTxt ,  Consumer< String >  caller) {
+		VBox vb = new VBox();
+		TextField tf1 = new TextField("");
+		tf1.setEditable(true);
+		tf1.setPrefWidth(500);
+		//tf1.setStyle("-fx-background-color: transparent;");
+		tf1.setText(containTxt);
+		tf1.setPrefHeight(40);
+		tf1.setFocusTraversable(false);
+		
+		Label tit = new Label(title);
+		vb.getChildren().add(tit);
+		vb.getChildren().add(tf1);
+		vb.setPrefWidth(500);
+		vb.setPadding(new Insets(20));
+		vb.setPrefHeight(100);
+		vb.maxHeight(100);
+		vb.maxWidth(500);
+//		ModalDialog.ModalDialogAppCallConsumer(vb, title, caller); 
+		vb.getStyleClass().add("myAlert");
+		final Stage stage = new Stage();
+		Scene scene = new Scene(vb);
+		JFXButton btn = new JFXButton("Cancel");
+		btn.setOnAction(value -> {
+			stage.close();
+		});
+		
+		JFXButton okbtn = new JFXButton("OK");
+		okbtn.setOnAction(value -> {
+			String val = tf1.getText();
+			caller.accept(val);
+			stage.close();
+		});
+		
+		
+		AnchorPane pn = new AnchorPane();
+		pn.getChildren().addAll(okbtn, btn);
+		AnchorPane.setRightAnchor(btn, 0.0);
+		AnchorPane.setRightAnchor(okbtn, 60.0);
+		vb.getChildren().add(pn);
+
+		
+
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setTitle(title);
+		stage.setScene(scene);
+		setSceneAndShow(scene, stage);
 	}
 	
 

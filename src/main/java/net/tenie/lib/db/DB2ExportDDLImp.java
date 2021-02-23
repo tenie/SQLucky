@@ -308,8 +308,10 @@ public class DB2ExportDDLImp implements ExportDDL {
 
 	@Override
 	public String exportAlterTableAddColumn(Connection conn, String schema, String tableName, String newCol) {
-
-		return null;
+		String sql = "ALTER TABLE "+schema+"."+tableName+" ADD    " + newCol +";";
+		sql += "CALL SYSPROC.ADMIN_CMD('reorg  TABLE " + schema + "." + tableName + " ') ;";
+		return sql;
+		 
 	}
 
 	@Override
@@ -319,10 +321,12 @@ public class DB2ExportDDLImp implements ExportDDL {
 		return sql;
 	}
 
-	@Override
+	@Override 
 	public String exportAlterTableModifyColumn(Connection conn, String schema, String tableName, String col) {
-		// TODO Auto-generated method stub
-		return null;
+
+		String tmp = col.trim().replaceFirst(" ", "  SET DATA TYPE "); 
+		String sql = "ALTER TABLE "+schema+"."+tableName+"  ALTER  " + tmp +";";
+		return sql;
 	}
 
 	@Override
