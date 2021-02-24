@@ -22,6 +22,8 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -74,6 +76,10 @@ public class RunSQLHelper {
 	private static JFXButton otherbtn;
 	private static final String WAITTB_NAME = "Loading...";
 	private static String connName = "";
+	
+	// 新tab页插入的位置
+	private static int tidx = -1;
+	
 
 	@SuppressWarnings("restriction")
 	private static void runMain(Map<String, Object> val) { // throws Exception
@@ -83,35 +89,39 @@ public class RunSQLHelper {
 		Connection conn = (Connection) val.get("conn");
 		String tabIdx = (String) val.get("tabIdx");
 		String btn = (String)val.get("btn"); 
-		int tidx = -1;
+		
 		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
 			tidx = Integer.valueOf(tabIdx);
+		}else {
+			tidx = -1;
 		}
 		if (conn == null)
 			return;
 		// 等待加载动画
 		Tab waitTb = DataViewTab.maskTab(WAITTB_NAME);
 		addWaitingPane(waitTb, tidx);
+		List<sqlData> allsqls = new ArrayList<>();
 		try {
 			// 执行刷新数据的时候, (执行缓存的sql)
 			if (StrUtils.isNotNullOrEmpty(sqlstr)) {
-				selectAction(sqlstr, conn, tidx); // 执行刷新查询sql
+//				selectAction(sqlstr, conn); // 执行刷新查询sql
+				allsqls = epurateSql(sqlstr);
 			} else {
 				// 获取文本编辑中选中的sql文本来执行sql
 				// 获取sql 语句
-				List<sqlData> allsqls = new ArrayList<>();
+				
 				//执行存储过程函数等
 				if(StrUtils.isNotNullOrEmpty(btn)) {  
-					String str = SqlEditor.getCurrentTabSQLText();
+					String str = SqlEditor.getCurrentCodeAreaSQLText();
 					sqlData sq = new sqlData(str, 0, str.length());
 					allsqls.add(sq);
 				}else {
 					// 获取编辑界面中的文本
 					allsqls = willExecSql();
-				} 
-				// 执行sql
-				execSqlList(allsqls, conn);
+				}  
 			}
+			// 执行sql
+			execSqlList(allsqls, conn);
 
 		} catch (Exception e) {
 			Platform.runLater(() -> { 
@@ -179,7 +189,16 @@ public class RunSQLHelper {
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
-				val.add(new SimpleStringProperty(msg));
+//				StringProperty sp = new SimpleStringProperty(msg);
+//				ChangeListener<String> cl = new ChangeListener<String>() {
+//					@Override
+//					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//						System.out.println(newValue);
+//					}};
+//				sp.addListener(cl );
+//				val.add(sp);
+				
+				val.add(new SimpleStringProperty(msg)); 
 				val.add(new SimpleStringProperty(sqlstr));
 				val.add(new SimpleStringProperty("" + i));
 				ddlDmlpo.addData(val);
@@ -208,12 +227,12 @@ public class RunSQLHelper {
 	}
 
 	// select action 选中的sql执行
-	private static void selectAction(String sql, Connection conn) throws Exception {
-		selectAction(sql, conn, -1);
-	}
+//	private static void selectAction(String sql, Connection conn) throws Exception {
+//		selectAction(sql, conn, tidx);
+//	}
 
-	private static void selectAction(String sql, Connection conn, int tidx) throws Exception {
-		try {
+	private static void selectAction(String sql, Connection conn) throws Exception {
+		try { //, int tidx
 			DataTabDataPo tdpo = new DataTabDataPo();
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 获取表名
@@ -447,8 +466,7 @@ public class RunSQLHelper {
 	}
 
 	// table 添加列
-	private static void tableAddColumn(TableView<ObservableList<StringProperty>> table,
-			ObservableList<SqlFieldPo> cols,  List<String> keys ) {
+	private static void tableAddColumn(TableView<ObservableList<StringProperty>> table, ObservableList<SqlFieldPo> cols,  List<String> keys ) {
 
 		CacheTableDate.addCols(table.getId(), cols); // 列名缓存
 		int len = cols.size();
@@ -482,12 +500,14 @@ public class RunSQLHelper {
 				new FilteredTableColumn<ObservableList<StringProperty>, String>();
 //		col.setCellFactory(MyTextField2TableCell.forTableColumn());
 		col.setCellFactory(TextField2TableCell.forTableColumn());
-		col.setEditable(true);
+//		col.setEditable(true);
 		col.setText(colname);
 		Label label  = new Label();
-		label.setTooltip(new Tooltip(typeName));
+		label.setTooltip(new Tooltip(typeName)); 
 		if(iskey) {
 			label.setGraphic(ImageViewGenerator.svgImage("material-vpn-key", 10, "#1C92FB")); 
+		}else {
+			label.setGraphic(ImageViewGenerator.svgImage("sort", 10, "#1C92FB")); 
 		}
 		col.setGraphic(label);
 		
@@ -559,24 +579,31 @@ public class RunSQLHelper {
 		});
 
 	}
-
 	
-	/**
-	 * 获取要执行的sql, 去除无效的(如-- 开头的)
-	 */
-	public static List<sqlData> willExecSql() {
+	private static List<sqlData> epurateSql(String str) {
 		List<sqlData> sds = new ArrayList<>();
-		CodeArea code = SqlEditor.getCodeArea();
-		String str = SqlEditor.getCurrentTabSQLTextSelected(); 
-		int start = 0;
-		if (str != null && str.length() > 0) {
-		    start = code.getSelection().getStart();
-		} else {
-			str = SqlEditor.getCurrentTabSQLText();
-		}
+		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
+		List<String> sqls = StrUtils.findSQLFromTxt(str);
 		
-		// 去除注释, 包注释字符串转换为空白字符串
-		str = StrUtils.trimCommentToSpace(str, "--");
+		if(sqls.size()> 0) {
+			for (String s : sqls) { 
+				String trimSql = s.trim();
+				if (trimSql.length() > 1) {
+					sqlData sq = new sqlData(trimSql, 0, 0);
+					sds.add(sq); 
+				}
+			}
+		}else {
+			sqlData sq = new sqlData(str, 0,0);
+			sds.add(sq);
+		}
+
+		return sds;
+	}
+
+	// 将sql 字符串根据;分割成多个字符串 并计算其他信息
+	private static List<sqlData> epurateSql(String str, int start) {
+		List<sqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		List<String> sqls = StrUtils.findSQLFromTxt(str);
 		
@@ -593,26 +620,43 @@ public class RunSQLHelper {
 			sqlData sq = new sqlData(str, start, str.length());
 			sds.add(sq);
 		}
+
+		return sds;
+	}
+	
+	/**
+	 * 获取要执行的sql, 去除无效的(如-- 开头的)
+	 */
+	public static List<sqlData> willExecSql() {
+		List<sqlData> sds = new ArrayList<>();
 		
-//		// 有多个 执行语句时
-//		if (str.contains(";")) {
-//			String[] all = str.split(";"); // 分割多个语句
-//			if (all != null && all.length > 0) {
-//				for (String s : all) { 
-//					String trimSql = s.trim();
-//					if (trimSql.length() > 1) {
-//						sqlData sq = new sqlData(trimSql, start, s.length());
-//						sds.add(sq);
-//						start +=  s.length()+1; 
-//					}
+		CodeArea code = SqlEditor.getCodeArea();
+		String str = SqlEditor.getCurrentCodeAreaSQLTextSelected(); 
+		int start = 0;
+		if (str != null && str.length() > 0) {
+		    start = code.getSelection().getStart();
+		} else {
+			str = SqlEditor.getCurrentCodeAreaSQLText();
+		}
+		// 去除注释, 包注释字符串转换为空白字符串
+		str = StrUtils.trimCommentToSpace(str, "--");
+//		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
+//		List<String> sqls = StrUtils.findSQLFromTxt(str);
+//		
+//		if(sqls.size()> 0) {
+//			for (String s : sqls) { 
+//				String trimSql = s.trim();
+//				if (trimSql.length() > 1) {
+//					sqlData sq = new sqlData(trimSql, start, s.length());
+//					sds.add(sq);
+//					start +=  s.length()+1; 
 //				}
-//
 //			}
 //		}else {
 //			sqlData sq = new sqlData(str, start, str.length());
 //			sds.add(sq);
-//		} 
-
+//		}
+		sds = epurateSql(str, start);
 		return sds;
 	}
 

@@ -10,6 +10,8 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupStringFilter;
 
+import com.jfoenix.controls.JFXButton;
+
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -23,6 +25,7 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
+import net.tenie.fx.utility.EventAndListener.RunSQLHelper;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
@@ -40,6 +43,7 @@ public class MenuFactory {
 	 */
 	public static ContextMenu DataTableColumnContextMenu(String colname, int type, FilteredTableColumn<ObservableList<StringProperty>, String> col) {
 		
+		// 过滤框
 		PopupFilter<ObservableList<StringProperty>, String> popupFilter ;
 		if (CommonUtility.isNum(type)) {
 			// 过滤框
@@ -118,7 +122,21 @@ public class MenuFactory {
 			};
 			ModalDialog.showExecWindow(rv.tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
 		});
-		cm.getItems().addAll(filter, miActive, copyColData,   dropCol, alterColumn, addColumn);
+		
+		MenuItem updateColumn = new MenuItem("Update Column Value"); 
+		updateColumn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+		updateColumn.setOnAction(e -> {  
+			rsVal rv = tableInfo();
+			String sql = "UPDATE " + rv.tableName + " SET " + colname + " = " ;
+			Consumer< String >  caller = x ->{   
+				String strsql = sql + x;
+				execExportSql(strsql, rv.conn);
+			};
+			ModalDialog.showExecWindow("Execute : "+ sql +" ? : input your value", "", caller);
+		});
+		
+		
+		cm.getItems().addAll(filter, miActive, copyColData,   dropCol, alterColumn, addColumn, updateColumn);
 		return cm;
 	}
 	
@@ -154,19 +172,10 @@ public class MenuFactory {
 		return rv;
 	}
 	// 执行导出的sql
-	public static void  execExportSql(String dropSql, Connection conn) {
-		String sql[] = dropSql.split(";");
-		for(int i=0; i< sql.length; i++) {
-			String stmp = sql[i];
-			if(StrUtils.isNotNullOrEmpty(stmp)) {
-				try {
-					DBTools.execDDL(conn, stmp);
-				} catch (SQLException e1) {  
-					ModalDialog.showErrorMsg("Sql Error", e1.getMessage());
-					 
-				}
-			}
-		}
+	public static void  execExportSql(String sql, Connection conn) {
+//		String idx =  "" + ComponentGetter.dataTab.getSelectionModel().getSelectedIndex();
+		JFXButton runFunPro = AllButtons.btns.get("runFunPro");
+		RunSQLHelper.runSQLMethod(conn, sql, "", runFunPro);
 		
 	}
 }

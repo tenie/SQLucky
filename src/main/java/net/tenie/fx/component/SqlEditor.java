@@ -158,14 +158,14 @@ public class SqlEditor {
 	}
 
 // get sql text
-	public static String getCurrentTabSQLText() {
+	public static String getCurrentCodeAreaSQLText() {
 		CodeArea code = getCodeArea();
 		String sqlText = code.getText();
 		return sqlText;
 	}
 
 // get select text
-	public static String getCurrentTabSQLTextSelected() {
+	public static String getCurrentCodeAreaSQLTextSelected() {
 		CodeArea code = getCodeArea();
 		return code.getSelectedText();
 	}

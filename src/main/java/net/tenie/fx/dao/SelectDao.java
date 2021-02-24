@@ -143,7 +143,7 @@ public class SelectDao {
 				logger.info("addStringPropertyChangeListener ：newValue：" + newValue + " | oldValue =" + oldValue);
 				logger.info("key ==" + tabId + "-" + rowNo);
 				logger.info("observable = " + observable);
-				
+				// 如果类似是数字的, 新值不是数字, 还原
 				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
 					Platform.runLater(() -> val.setValue(oldValue));
 					return;

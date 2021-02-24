@@ -76,18 +76,20 @@ public class DataViewContainer {
 				String tn = names.get(i);
 				String excInfoTitle = ConfigVal.EXEC_INFO_TITLE;
 				// 如果是要添加一个info的Tab, 先看有没有旧的复用
-				if( excInfoTitle.equals(tn) &&
-					ComponentGetter.dataTab.getTabs().size() > 0) { 
+				if( excInfoTitle.equals(tn) && ComponentGetter.dataTab.getTabs().size() > 0) { 
 						Tab tab0 =ComponentGetter.dataTab.getTabs().get(0); 
 						String title = CommonUtility.tabText(tab0); 
 						if( excInfoTitle.equals(title) ) {
+							// 新的table数据放入复用的table中
 							VBox vb = (VBox) tab0.getContent();
-							vb.getChildren().remove(1);
-							vb.getChildren().add(table);
+							FilteredTableView<ObservableList<StringProperty>> vbt  = 
+									(FilteredTableView<ObservableList<StringProperty>>) vb.getChildren().get(1);
+							vbt.getItems().addAll( table.getItems()) ;
 							dataTabPane.getSelectionModel().select(tab0);
 						}else {
 							addNewDateTab(dataTabPane, table, tn, 0, disable, time , rows, connName);
-						} 
+						}
+						
 				}else {
 					addNewDateTab(dataTabPane, table, tn, idx, disable, time , rows, connName);
 				}

@@ -244,7 +244,7 @@ public class MenuBarContainer {
 		MenuItem EnCoding = new MenuItem(MenuItemNameFormat("EnCoding"));
 		EnCoding.setGraphic(ImageViewGenerator.svgImageUnactive("mfglabs-random"));
 		EnCoding.setOnAction(value -> {
-			String txt = SqlEditor.getCurrentTabSQLText();
+			String txt = SqlEditor.getCurrentCodeAreaSQLText();
 //			logger.info(txt);
 		    try {
 				String unicode = new String(txt.getBytes(""),"GBK");

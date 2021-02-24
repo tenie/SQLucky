@@ -56,7 +56,7 @@ public class CommonAction {
 	private static Logger logger = LogManager.getLogger(CommonAction.class);
 	public static void saveSqlAction() {
 		try {
-			String sql = SqlEditor.getCurrentTabSQLText();
+			String sql = SqlEditor.getCurrentCodeAreaSQLText();
 			Tab tb = SqlEditor.mainTabPaneSelectedTab();
 			logger.info(tb.getId());
 			String tbid = tb.getId();
@@ -132,7 +132,7 @@ public class CommonAction {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqlEditor.getCurrentTabSQLText();
+			txt = SqlEditor.getCurrentCodeAreaSQLText();
 			String rs = SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
@@ -154,7 +154,7 @@ public class CommonAction {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqlEditor.getCurrentTabSQLText();
+			txt = SqlEditor.getCurrentCodeAreaSQLText();
 			String rs = StrUtils.pressString(txt); //  SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);

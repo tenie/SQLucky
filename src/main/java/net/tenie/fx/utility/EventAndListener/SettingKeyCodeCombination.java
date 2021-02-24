@@ -94,6 +94,7 @@ public final class SettingKeyCodeCombination {
 
 		// 运行SQL
 		scene.getAccelerators().put(ctrlEnter, () -> {
+			boolean b = runbtn.disabledProperty().getValue();
 			if (!runbtn.disabledProperty().getValue()) {
 				RunSQLHelper.runSQLMethod(runbtn, stopbtn, runFunPro);
 			}
@@ -144,7 +145,8 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		scene.getAccelerators().put(F1, () -> {
-
+//			System.out.println(1111);
+//			runbtn.setDisable(true);
 //			setFontSize(20);
 //			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
 //				
