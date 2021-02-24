@@ -17,6 +17,7 @@ import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ConnectionEditor;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.MenuFactory;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
@@ -72,7 +73,7 @@ public class DBinfoTree {
 				treeViewDoubleClick(e);
 			});
 			// 右键菜单
-			contextMenu = CreateConnMenu(); // ComponentGetter.getConnMenu();
+			contextMenu = MenuFactory.CreateTreeViewConnMenu();	//CreateConnMenu(); // ComponentGetter.getConnMenu();
 			treeView.setContextMenu(contextMenu);
 			// 选中监听事件
 			treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
@@ -295,38 +296,38 @@ public class DBinfoTree {
 		};
 	}
 
-	// treeView 右键菜单
-	public static ContextMenu CreateConnMenu() {
-		contextMenu = new ContextMenu();
-
-		MenuItem add = new MenuItem("Add Connection");
-		add.setOnAction(e -> {
-			ConnectionEditor.ConnectionInfoSetting();
-		});
-		add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
-
-		MenuItem link = new MenuItem("Open Connection");
-		link.setOnAction(CommonEventHandler.openConnEvent());
-		link.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
-
-		MenuItem unlink = new MenuItem("Close Connection");
-		unlink.setOnAction(CommonEventHandler.closeConnEvent());
-		unlink.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
-
-		MenuItem Edit = new MenuItem("Edit Connection");
-		Edit.setOnAction(CommonEventHandler.editConnEvent());
-		Edit.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
-
-		MenuItem delete = new MenuItem("Delete Connection");
-		delete.setOnAction(e -> {
-			ConnectionEditor.ConnectionInfoSetting();
-		});
-		delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
-
-		contextMenu.getItems().addAll(add, link, unlink, Edit, delete);
-
-		return contextMenu;
-	}
+//	// treeView 右键菜单
+//	public static ContextMenu CreateTreeViewConnMenu() {
+//		contextMenu = new ContextMenu();
+//
+//		MenuItem add = new MenuItem("Add Connection");
+//		add.setOnAction(e -> {
+//			ConnectionEditor.ConnectionInfoSetting();
+//		});
+//		add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+//
+//		MenuItem link = new MenuItem("Open Connection");
+//		link.setOnAction(CommonEventHandler.openConnEvent());
+//		link.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
+//
+//		MenuItem unlink = new MenuItem("Close Connection");
+//		unlink.setOnAction(CommonEventHandler.closeConnEvent());
+//		unlink.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
+//
+//		MenuItem Edit = new MenuItem("Edit Connection");
+//		Edit.setOnAction(CommonEventHandler.editConnEvent());
+//		Edit.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
+//
+//		MenuItem delete = new MenuItem("Delete Connection");
+//		delete.setOnAction(e -> {
+//			ConnectionEditor.ConnectionInfoSetting();
+//		});
+//		delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
+//
+//		contextMenu.getItems().addAll(add, link, unlink, Edit, delete);
+//
+//		return contextMenu;
+//	}
 
 	public TreeView<TreeNodePo> getTreeView() {
 		return treeView;

@@ -482,6 +482,7 @@ public class ModalDialog {
 	public static void showExecWindow(String title, String containTxt ,  Consumer< String >  caller) {
 		VBox vb = new VBox();
 		TextField tf1 = new TextField("");
+		tf1.getStyleClass().add("myFindTextField");
 		tf1.setEditable(true);
 		tf1.setPrefWidth(500);
 		//tf1.setStyle("-fx-background-color: transparent;");

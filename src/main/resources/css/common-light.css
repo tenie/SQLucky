@@ -19,6 +19,8 @@
 .myAlert {
  -fx-border-color: #4C708C; 
 }
+
+
 .combo-box {   
      
      -fx-background-radius: 0;  
@@ -31,5 +33,15 @@
  
  .myComboBox:hover{
 	-fx-background-color: #D3D3D3;
+}
+
+MenuButton{
+	-fx-background-color: #F4F4F4;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-radius: 0px;
+    -fx-border-width: 1px 1px 1px 1px;
+    -fx-border-color: transparent;
 }
  

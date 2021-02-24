@@ -12,6 +12,12 @@
     -fx-font-weight: bold; 
 }
 
+.errorword{
+    -fx-fill: red;
+    -fx-font-weight: bold;
+    -fx-underline: true ;
+}
+
 .keyword {
     -fx-fill:  #7F0055;
     -fx-font-weight: bold;  

@@ -124,7 +124,7 @@ public class MenuFactory {
 		});
 		
 		MenuItem updateColumn = new MenuItem("Update Column Value"); 
-		updateColumn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+		updateColumn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
 		updateColumn.setOnAction(e -> {  
 			rsVal rv = tableInfo();
 			String sql = "UPDATE " + rv.tableName + " SET " + colname + " = " ;
@@ -178,6 +178,42 @@ public class MenuFactory {
 		RunSQLHelper.runSQLMethod(conn, sql, "", runFunPro);
 		
 	}
+	
+	
+	
+	
+//	treeView 右键菜单
+	public static ContextMenu CreateTreeViewConnMenu() {
+			ContextMenu contextMenu = new ContextMenu();
+
+			MenuItem add = new MenuItem("Add Connection");
+			add.setOnAction(e -> {
+				ConnectionEditor.ConnectionInfoSetting();
+			});
+			add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+
+			MenuItem link = new MenuItem("Open Connection");
+			link.setOnAction(CommonEventHandler.openConnEvent());
+			link.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
+
+			MenuItem unlink = new MenuItem("Close Connection");
+			unlink.setOnAction(CommonEventHandler.closeConnEvent());
+			unlink.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
+
+			MenuItem Edit = new MenuItem("Edit Connection");
+			Edit.setOnAction(CommonEventHandler.editConnEvent());
+			Edit.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
+
+			MenuItem delete = new MenuItem("Delete Connection");
+			delete.setOnAction(e -> {
+				ConnectionEditor.ConnectionInfoSetting();
+			});
+			delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
+
+			contextMenu.getItems().addAll(add, link, unlink, Edit, delete);
+
+			return contextMenu;
+		}
 }
 
 
@@ -187,3 +223,7 @@ class rsVal{
 	Connection conn;
 	DbConnectionPo  dbc ;
 }
+
+
+
+
