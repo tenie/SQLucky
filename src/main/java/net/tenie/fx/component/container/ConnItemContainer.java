@@ -6,6 +6,7 @@ import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.config.DbVendor;
 import net.tenie.lib.po.DbConnectionPo;
 
 public class ConnItemContainer {
@@ -108,9 +109,15 @@ public class ConnItemContainer {
 
 	// 获取所有的schema, 并构建node
 	public static TreeItem<TreeNodePo> CreateSchemaNode(DbConnectionPo connpo) {
+		//判断是不是mysql
+		String nodeName = "Schemas";
+		if( DbVendor.MYSQL.equals(connpo.getDbVendor().toUpperCase()) ){
+			nodeName = "Databases";
+		}
+		
 		// 创建一个schema node , 将数据库数据放入
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
-				new TreeNodePo("Schemas", ImageViewGenerator.svgImage("th-list", "#FFD700"), connpo));
+				new TreeNodePo( nodeName, ImageViewGenerator.svgImage("th-list", "#FFD700"), connpo));
 		// 获取schema 数据
 		Set<String> set = connpo.settingSchema();
 		for (String sche : set) {

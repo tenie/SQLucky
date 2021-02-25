@@ -9,13 +9,22 @@ import java.util.Map;
  * 数据库厂家 和对应的启动字符串
  */
 public class DbVendor {
+	
+	public static String DB2 = "DB2";
+	public static String MYSQL = "MYSQL";
+	public static String H2 = "H2";
+	public static String SQLITE = "SQLITE";
+	
+	
 	private static LinkedHashSet<String> keys = new LinkedHashSet<String>();
 	private static Map<String, String> data = new HashMap<String, String>();
 
 	static {
-		add("db2", "com.ibm.db2.jcc.DB2Driver");
-		add("mysql", "com.mysql.jdbc.Driver");
-		add("h2", "org.h2.Driver");
+		add( DB2, "com.ibm.db2.jcc.DB2Driver");
+		add( MYSQL, "com.mysql.jdbc.Driver");
+		add( H2, "org.h2.Driver");
+		// 新版的jdbc 不需要手动注册驱动了
+		add(SQLITE, "");
 	}
 
 	public static void add(String name, String val) {

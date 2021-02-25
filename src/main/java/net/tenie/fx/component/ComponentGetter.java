@@ -6,6 +6,9 @@ import org.apache.commons.io.FileUtils;
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
+
+import com.jfoenix.controls.JFXTextField;
+
 import javafx.scene.layout.VBox;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -39,6 +42,7 @@ public final class ComponentGetter {
 	public static TabPane mainTabPane;
 	public static TreeView<TreeNodePo> treeView;
 	public static DBinfoTree dbInfoTree;
+	public static JFXTextField dbInfoFilter;
 
 	public static MasterDetailPane masterDetailPane;
 	public static MasterDetailPane treeAreaDetailPane;

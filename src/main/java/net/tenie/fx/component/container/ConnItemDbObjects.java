@@ -126,11 +126,11 @@ public class ConnItemDbObjects {
 						ImageViewGenerator.svgImage("window-restore", "blue"), connpo));
 		return Table;
 	}
+	
+	// 创建表格节点
 	public   TreeItem<TreeNodePo> CreateTableNode(DbConnectionPo connpo, String sche) {
-//		TreeItem<TreeNodePo> Table = new TreeItem<>(new TreeNodePo("Table", TreeItemType.TABLE_ROOT,
-//				ImageViewGenerator.svgImage("window-restore", "blue"), connpo));
 		TreeItem<TreeNodePo> Table = CreateTableNode();
-		List<TablePo> tabs = DBOptionHelper.getTabsName(connpo, sche, true);// connpo.getTabs(sche);
+		List<TablePo> tabs = DBOptionHelper.getTabsName(connpo, sche, true);
 
 		ObservableList<TreeItem<TreeNodePo>> sourceList = FXCollections.observableArrayList();
 		for (TablePo tbpo : tabs) {

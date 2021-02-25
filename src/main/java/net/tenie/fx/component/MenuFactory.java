@@ -157,18 +157,27 @@ public class MenuFactory {
 	
 	// 导出SQL
 	private static rsVal exportSQL(int ty, String colname) {
-		// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
-		rsVal rv =  tableInfo();
-		String sql ="";
-		if(DROP_COLUMN == ty) {
-			sql = rv.dbc.getExportDDL().exportAlterTableDropColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName, colname);
-		}else if(ALTER_COLUMN == ty) {
-			sql = rv.dbc.getExportDDL().exportAlterTableModifyColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName, colname);	
-		}else if(ADD_COLUMN == ty) {
-			sql = rv.dbc.getExportDDL().exportAlterTableAddColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName, colname);	
+		rsVal rv = tableInfo();
+		try {
+			// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
+
+			String sql = "";
+			if (DROP_COLUMN == ty) {
+				sql = rv.dbc.getExportDDL().exportAlterTableDropColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName,
+						colname);
+			} else if (ALTER_COLUMN == ty) {
+				sql = rv.dbc.getExportDDL().exportAlterTableModifyColumn(rv.conn, rv.dbc.getDefaultSchema(),
+						rv.tableName, colname);
+			} else if (ADD_COLUMN == ty) {
+				sql = rv.dbc.getExportDDL().exportAlterTableAddColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName,
+						colname);
+			}
+
+			rv.sql = sql;
+		} catch (Exception e) {
+			ModalDialog.showErrorMsg("Error", e.getMessage());		
+			
 		}
-		 
-		rv.sql = sql; 
 		return rv;
 	}
 	// 执行导出的sql

@@ -19,17 +19,23 @@ public class DBinfoFilter {
 	 AnchorPane filter;
 	 private  ObservableList<TreeItem<TreeNodePo>> temp  = FXCollections.observableArrayList();
 	 private  ObservableList<TreeItem<TreeNodePo>>  filtList = FXCollections.observableArrayList();
-	 private  TreeItem<TreeNodePo> rootNode ; 
+	 private  TreeItem<TreeNodePo> rootNode ;
+	 private JFXTextField txt  ;
 	 public DBinfoFilter () {}
 	 
+	public JFXTextField getTxtField() {
+		return txt;
+	}
 	 
 	 
 	public AnchorPane createFilterPane(TreeView<TreeNodePo> treeView) {
+		txt = new JFXTextField();
+		ComponentGetter.dbInfoFilter = txt;
 		AnchorPane filter = new AnchorPane();
 		filter.setPrefHeight(30);
 		filter.setMinHeight(30);
 		JFXButton query = new JFXButton();
-		JFXTextField txt = new JFXTextField();
+//		JFXTextField txt = new JFXTextField();
 		query.setGraphic(ImageViewGenerator.svgImageUnactive("search"));
 		query.setOnAction(e -> {
 			txt.requestFocus();
@@ -124,67 +130,19 @@ public class DBinfoFilter {
 					
 						
 						// 开始查找, 从表开始
-						 ObservableList<TreeItem<TreeNodePo>> 
-//						 val =  filter( ci.getTableItem() , queryStr); 
-						 val =  filter(  ci.getTableNode().getChildren() , queryStr); 
+						count += filterHelper(ci.getTableNode(), queryStr, cinew.getTableNode(), cinew.getParentNode());
 						
-						 sz =  val.size();
-						// 如果找到来数据, 将数据放入到新的数据对象中
-						if (sz > 0) {
-							cinew.getTableNode().getChildren().setAll(val);
-							cinew.getParentNode().getChildren().add(cinew.getTableNode());
-							count += val.size();
-						}
+						count += filterHelper(ci.getViewNode(), queryStr, cinew.getViewNode(), cinew.getParentNode());
 
-						val = filter(ci.getViewNode().getChildren(), queryStr);
-						sz = val.size();
-						if (sz > 0) {
-							cinew.getViewNode().getChildren().setAll(val);
-							cinew.getParentNode().getChildren().add(cinew.getViewNode());
-							count += val.size();
-						}
+						count += filterHelper(ci.getFuncNode(), queryStr, cinew.getFuncNode(), cinew.getParentNode());
 
-						val = filter(ci.getFuncNode().getChildren(), queryStr);
-						sz = val.size();
-						if (sz > 0) {
-							cinew.getFuncNode().getChildren().setAll(val);
-							cinew.getParentNode().getChildren().add(cinew.getFuncNode());
-							count += val.size();
-						}
-						val = filter(ci.getProcNode().getChildren(), queryStr);
-						sz = val.size();
-						if (sz > 0) {
-							cinew.getProcNode().getChildren().setAll(val);
-							cinew.getParentNode().getChildren().add(cinew.getProcNode());
-							count += val.size();
-						}
+						count += filterHelper(ci.getProcNode(), queryStr, cinew.getProcNode(), cinew.getParentNode());
+
+						count += filterHelper(ci.getTriggerNode(), queryStr, cinew.getTriggerNode(), cinew.getParentNode());
 						
-						val = filter(ci.getTriggerNode().getChildren(), queryStr);
-						sz = val.size();
-						if (sz > 0) {
-							cinew.getTriggerNode().getChildren().setAll(val);
-							cinew.getParentNode().getChildren().add(cinew.getTriggerNode());
-							count += val.size();
-						}
-						
-						val = filter(ci.getIndexNode().getChildren(), queryStr);
-						sz = val.size();
-						if (sz > 0) {
-							cinew.getIndexNode().getChildren().setAll(val);
-							cinew.getParentNode().getChildren().add(cinew.getIndexNode());
-							count += val.size();
-						}
-						
-						val = filter(ci.getSequenceNode().getChildren(), queryStr);
-						sz = val.size();
-						if (sz > 0) {
-							cinew.getSequenceNode().getChildren().setAll(val);
-							cinew.getParentNode().getChildren().add(cinew.getSequenceNode());
-							count += val.size();
-						}
-						 
-						 
-						 
+						count += filterHelper(ci.getIndexNode(), queryStr, cinew.getIndexNode(), cinew.getParentNode());
+
+						count += filterHelper(ci.getSequenceNode(), queryStr, cinew.getSequenceNode(), cinew.getParentNode());
 						 
 						 // 如果找到了数据, 将新的数据对象, 放入schema数据对象
 						 if(count > 0 ) {
@@ -207,6 +165,21 @@ public class DBinfoFilter {
 		
 		return null;
 	}
+	
+	private static int filterHelper(TreeItem<TreeNodePo>  node, String queryStr, TreeItem<TreeNodePo> cnode, TreeItem<TreeNodePo> pnode) {
+		int count = 0;
+		if(node !=null) {
+			ObservableList<TreeItem<TreeNodePo>>    val = filter(node.getChildren(), queryStr);
+			int sz = val.size();
+			if (sz > 0) {
+				cnode.getChildren().setAll(val);
+				pnode.getChildren().add(cnode);
+				count += val.size();
+			}
+		}
+		return count;
+	}
+	
 	 
 	private static ObservableList<TreeItem<TreeNodePo>> filter(ObservableList<TreeItem<TreeNodePo>> val, String str){
 		ObservableList<TreeItem<TreeNodePo>> rs =  FXCollections.observableArrayList();

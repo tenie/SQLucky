@@ -82,6 +82,8 @@ public class CommonListener {
 				if (newValue != null) {
 					DbConnectionPo cnnpo = DBConns.get(newValue.getText());
 					if (cnnpo != null && !cnnpo.isAlive() && !cnnpo.isConnIng()) {
+						//清除查找字符串
+						CommonAction.pressBtnESC();	
 						CommonAction.shrinkTreeView();
 						ConnectionEditor.openConn(cnnpo.getConnName());
 					}

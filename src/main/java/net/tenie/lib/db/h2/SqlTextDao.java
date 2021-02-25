@@ -12,7 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.tenie.lib.db.DBTools;
-import net.tenie.lib.db.MySqlExportDDLImp;
+import net.tenie.lib.db.ExportSqlMySqlImp;
 /*   @author tenie */
 public class SqlTextDao {
 	private static Logger logger = LogManager.getLogger(SqlTextDao.class);

@@ -9,14 +9,14 @@ import net.tenie.lib.po.TablePo;
  *  * @author tenie 
  *  
  */
-public class DefaultExportDDLImp implements ExportDDL {
+public class ExportDefaultImp implements ExportDDL {
  
 	private	FetchDB2InfoImp fdb2;
 	
 	private  List<TablePo> allTableObjs = new ArrayList<>();
 	private  List<TablePo> allViewObjs = new ArrayList<>();
 	
-	public DefaultExportDDLImp() { 
+	public ExportDefaultImp() { 
 		fdb2  =new FetchDB2InfoImp(); 
 	}
  

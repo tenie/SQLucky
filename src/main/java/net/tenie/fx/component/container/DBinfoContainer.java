@@ -1,6 +1,8 @@
 package net.tenie.fx.component.container;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXTextField;
+
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -8,9 +10,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.ButtonFactory;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
+import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 
 /*   @author tenie */
@@ -20,81 +24,26 @@ public class DBinfoContainer {
 	private TreeView<TreeNodePo> treeView;
 	private AnchorPane filter;
 	private DBinfoTree dbInfoTree;
-
+	private DBinfoFilter dbf;
+	
 	public DBinfoContainer() {
 		container = new VBox();
 		treeBtnPane = new FlowPane();
 
 		dbInfoTree = new DBinfoTree();
 		treeView = dbInfoTree.getTreeView();
-		DBinfoFilter dbf  = new DBinfoFilter();
+		dbf  = new DBinfoFilter(); 		
 		filter = dbf.createFilterPane(treeView);
 		container.getChildren().addAll(treeBtnPane, treeView, filter);
 		VBox.setVgrow(treeView, Priority.ALWAYS);
 
-		treeViewbtnInit(treeBtnPane);
+		ButtonFactory.treeViewbtnInit(treeBtnPane);
 
 		ComponentGetter.treeView = treeView;
 		ComponentGetter.dbInfoTree = dbInfoTree;
 	}
 
-	// 操作按钮
-	public static void treeViewbtnInit(FlowPane pn) {
-		// 页面初始化: 添加组件
-		JFXButton addConnbtn = new JFXButton();
-
-		addConnbtn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
-		addConnbtn.setOnMouseClicked(CommonEventHandler.addConnEvent());
-		addConnbtn.setTooltip(MyTooltipTool.instance("Add new DB Connection"));
-
-		// open连接
-		JFXButton openConn = new JFXButton();
-		openConn.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
-		openConn.setOnMouseClicked(CommonEventHandler.openConnEvent());
-		openConn.setTooltip(MyTooltipTool.instance("Open DB Connection"));
-
-		// 断开连接
-		JFXButton closeConn = new JFXButton();
-		closeConn.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
-		closeConn.setOnMouseClicked(CommonEventHandler.closeConnEvent());
-		closeConn.setTooltip(MyTooltipTool.instance("Close DB Connection"));
-
-		JFXButton closeALlConn = new JFXButton();
-		closeALlConn.setGraphic(ImageViewGenerator.svgImageDefActive("power-off"));
-		closeALlConn.setOnMouseClicked(CommonEventHandler.closeAllConnEvent());
-		closeALlConn.setTooltip(MyTooltipTool.instance("Close All DB Connection"));
-
-		JFXButton editConn = new JFXButton();
-		editConn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
-		editConn.setOnMouseClicked(CommonEventHandler.editConnEvent());
-		editConn.setTooltip(MyTooltipTool.instance("Edit DB Connection"));
-
-		// 删除连接
-		JFXButton deleteConn = new JFXButton();
-		deleteConn.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
-		deleteConn.setOnMouseClicked(CommonEventHandler.deleteConnEvent());
-		deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
-		
-		// 收缩树 zero-fitscreen-24
-		JFXButton shrink = new JFXButton();
-		shrink.setGraphic(ImageViewGenerator.svgImageDefActive("zero-fitscreen-24"));
-		shrink.setOnMouseClicked(e->{
-			CommonAction.shrinkTreeView();
-		});
-		shrink.setTooltip(MyTooltipTool.instance("Shrink "));
-		
-		pn.getChildren().add(addConnbtn);
-		pn.getChildren().add(editConn);
-		pn.getChildren().add(shrink);
-		
-		pn.getChildren().add(openConn);
-		pn.getChildren().add(closeConn);
-		pn.getChildren().add(closeALlConn);
-		
-		pn.getChildren().add(deleteConn);
-		
-	}
-
+	
 	public VBox getContainer() {
 		return container;
 	}

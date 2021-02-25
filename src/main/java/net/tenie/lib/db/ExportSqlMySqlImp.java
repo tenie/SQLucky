@@ -16,15 +16,15 @@ import net.tenie.lib.po.TablePo;
  *  * @author tenie 
  *  
  */
-public class MySqlExportDDLImp implements ExportDDL {
-	private static Logger logger = LogManager.getLogger(MySqlExportDDLImp.class);
+public class ExportSqlMySqlImp implements ExportDDL {
+	private static Logger logger = LogManager.getLogger(ExportSqlMySqlImp.class);
 
 	private FetchDB2InfoImp fdb2;
 
 	private List<TablePo> allTableObjs = new ArrayList<>();
 	private List<TablePo> allViewObjs = new ArrayList<>();
 
-	public MySqlExportDDLImp() {
+	public ExportSqlMySqlImp() {
 		fdb2 = new FetchDB2InfoImp();
 
 	}

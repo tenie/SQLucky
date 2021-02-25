@@ -27,6 +27,10 @@ public final class SettingKeyCodeCombination {
 	private static Logger logger = LogManager.getLogger(SettingKeyCodeCombination.class);
 	public static void Setting() {
 		Scene scene = ComponentGetter.primaryscene;
+		
+		
+		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+		
 		KeyCombination cx = KeyCombination.keyCombination("shortcut+X");
 
 		KeyCodeCombination ctrlEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.SHORTCUT_DOWN);
@@ -73,6 +77,10 @@ public final class SettingKeyCodeCombination {
 //			 }
 //			
 //		});
+		
+		scene.getAccelerators().put(escbtn, () -> {
+			CommonAction.pressBtnESC();
+		});
 		
 		scene.getAccelerators().put(ctrlShiftD, () -> {
 			CommonAction.shortcutShowDataDatil();

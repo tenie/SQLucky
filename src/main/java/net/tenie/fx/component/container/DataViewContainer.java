@@ -28,6 +28,7 @@ import net.tenie.fx.Action.ShowTableRowDateDetailAction;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.component.AllButtons;
+import net.tenie.fx.component.ButtonFactory;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
@@ -121,7 +122,7 @@ public class DataViewContainer {
 	public static VBox generateDataPane(String id, boolean disable, TableView<ObservableList<StringProperty>> tbv , String time , String rows, String connName) {
 		VBox vb = new VBox();
 		// 表格上面的按钮
-		AnchorPane fp = getDataTableOptionBtnsPane(disable, time, rows, connName);
+		AnchorPane fp = ButtonFactory.getDataTableOptionBtnsPane(disable, time, rows, connName);
 		fp.setId(id);
 		vb.setId(id);
 		vb.getChildren().add(fp);
@@ -130,132 +131,7 @@ public class DataViewContainer {
 		return vb;
 	}
 
-	// 数据表格 操作按钮们
-	public static AnchorPane getDataTableOptionBtnsPane(boolean disable, String time , String rows, String connName) {
-//		FlowPane fp = new FlowPane();
-		AnchorPane fp = new AnchorPane();
-		fp.prefHeight(25);
-		JFXButton saveBtn = new JFXButton();
-		saveBtn.setGraphic(ImageViewGenerator.svgImageDefActive("save"));
-		saveBtn.setOnMouseClicked(CommonEventHandler.saveDate(saveBtn));
-		saveBtn.setTooltip(MyTooltipTool.instance("Save data"));
-		saveBtn.setDisable(true);
-		saveBtn.setId(AllButtons.SAVE);
 
-		JFXButton detailBtn = new JFXButton();
-		detailBtn.setGraphic(ImageViewGenerator.svgImageDefActive("search-plus"));
-
-		detailBtn.setOnMouseClicked(CommonEventHandler.showLineDetail(detailBtn));
-		detailBtn.setTooltip(MyTooltipTool.instance("current line detail "));
-
-		// refresh
-		JFXButton refreshBtn = new JFXButton();
-		refreshBtn.setGraphic(ImageViewGenerator.svgImageDefActive("refresh"));
-
-		refreshBtn.setOnMouseClicked(CommonEventHandler.refreshData(refreshBtn));
-		refreshBtn.setTooltip(MyTooltipTool.instance("refresh table "));
-		refreshBtn.setDisable(disable);
-
-		// 添加一行数据
-		JFXButton addBtn = new JFXButton();
-		addBtn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square"));
-
-		addBtn.setOnMouseClicked(CommonEventHandler.addData(addBtn));
-		addBtn.setTooltip(MyTooltipTool.instance("add new data "));
-		addBtn.setDisable(disable);
-
-		JFXButton minusBtn = new JFXButton();
-		minusBtn.setGraphic(ImageViewGenerator.svgImage("minus-square", "#EC7774"));
-
-		minusBtn.setOnMouseClicked(CommonEventHandler.deleteData(minusBtn));
-		minusBtn.setTooltip(MyTooltipTool.instance("delete data "));
-		minusBtn.setDisable(disable);
-
-//	    	 files-o
-		JFXButton copyBtn = new JFXButton();
-		copyBtn.setGraphic(ImageViewGenerator.svgImageDefActive("files-o"));
-
-		copyBtn.setOnMouseClicked(CommonEventHandler.copyData(copyBtn));
-		copyBtn.setTooltip(MyTooltipTool.instance("copy selected row data "));
-		copyBtn.setDisable(disable);
-
-		MenuButton exportBtn = new MenuButton();
-		exportBtn.setGraphic(ImageViewGenerator.svgImageDefActive("share-square-o"));
-		exportBtn.setTooltip(MyTooltipTool.instance("Export data"));
-
-		Menu insertSQL = new Menu("Export Insert SQL Format ");
-		MenuItem selected = new MenuItem("Selected Data to Clipboard ");
-		selected.setOnAction(CommonEventHandler.InsertSQLClipboard(true, false));
-		MenuItem selectedfile = new MenuItem("Selected Data to file");
-		selectedfile.setOnAction(CommonEventHandler.InsertSQLClipboard(true, true));
-
-		MenuItem all = new MenuItem("ALl Data to Clipboard ");
-		all.setOnAction(CommonEventHandler.InsertSQLClipboard(false, false));
-		MenuItem allfile = new MenuItem("ALl Data to file");
-		allfile.setOnAction(CommonEventHandler.InsertSQLClipboard(false, true));
-
-		insertSQL.getItems().addAll(selected, selectedfile, all, allfile);
-
-		Menu csv = new Menu("Export CSV Format ");
-		MenuItem csvselected = new MenuItem("Selected Data to Clipboard ");
-		csvselected.setOnAction(CommonEventHandler.csvStrClipboard(true, false));
-		MenuItem csvselectedfile = new MenuItem("Selected Data to file");
-		csvselectedfile.setOnAction(CommonEventHandler.csvStrClipboard(true, true));
-
-		MenuItem csvall = new MenuItem("ALl Data to Clipboard ");
-		csvall.setOnAction(CommonEventHandler.csvStrClipboard(false, false));
-		MenuItem csvallfile = new MenuItem("ALl Data to file");
-		csvallfile.setOnAction(CommonEventHandler.csvStrClipboard(false, true));
-
-		csv.getItems().addAll(csvselected, csvselectedfile, csvall, csvallfile);
-
-		Menu txt = new Menu("Export TXT Format ");
-		MenuItem txtselected = new MenuItem("Selected Data to Clipboard ");
-		txtselected.setOnAction(CommonEventHandler.txtStrClipboard(true, false));
-		MenuItem txtselectedfile = new MenuItem("Selected Data to file");
-		txtselectedfile.setOnAction(CommonEventHandler.txtStrClipboard(true, true));
-
-		MenuItem txtall = new MenuItem("ALl Data to Clipboard ");
-		txtall.setOnAction(CommonEventHandler.txtStrClipboard(false, false));
-		MenuItem txtallfile = new MenuItem("ALl Data to file");
-		txtallfile.setOnAction(CommonEventHandler.txtStrClipboard(false, true));
-
-		txt.getItems().addAll(txtselected, txtselectedfile, txtall, txtallfile);
-
-		exportBtn.getItems().addAll(insertSQL, csv, txt);
-		
-		//隐藏按钮
-		JFXButton hideBottom = new JFXButton(); 
-		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
-		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom()); 
-		
-		//计时/查询行数
-		String info = ""; //time+ " ms / "+rows+" rows";
-		if(StrUtils.isNotNullOrEmpty(time)) {
-			 info = connName+ " Runtime : "+ time+ " s / "+rows+" rows";
-		}
-		Label lb = new Label(info);
-		
-		
-		
-		fp.getChildren().addAll(saveBtn, detailBtn, refreshBtn, addBtn, minusBtn, copyBtn, exportBtn, 
-				hideBottom, lb);
-		Double fix = 30.0;
-		int i = 0;
-		AnchorPane.setLeftAnchor(detailBtn , fix * ++i ) ;
-		AnchorPane.setLeftAnchor(refreshBtn , fix * ++i);
-		
-		AnchorPane.setLeftAnchor(addBtn , fix * ++i ) ;
-		AnchorPane.setLeftAnchor(minusBtn , fix * ++i);
-		AnchorPane.setLeftAnchor(copyBtn , fix * ++i ) ;
-		AnchorPane.setLeftAnchor(exportBtn , fix * ++i);
-		
-		AnchorPane.setRightAnchor(hideBottom, 0.0);
-		AnchorPane.setTopAnchor(lb, 3.0);
-		AnchorPane.setRightAnchor(lb, 35.0);
-		
-		return fp;
-	}
 
 	// 数据展示tableView StringProperty
 	public static FilteredTableView<ObservableList<StringProperty>> creatFilteredTableView() {

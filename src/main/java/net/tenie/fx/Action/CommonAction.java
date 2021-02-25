@@ -54,6 +54,14 @@ import net.tenie.lib.tools.StrUtils;
 /*   @author tenie */
 public class CommonAction {
 	private static Logger logger = LogManager.getLogger(CommonAction.class);
+	
+	public static void pressBtnESC() {
+		ComponentGetter.dbInfoFilter.setText("");
+		SqlEditor.getCodeArea().deselect();
+	}
+	
+	
+	
 	public static void saveSqlAction() {
 		try {
 			String sql = SqlEditor.getCurrentCodeAreaSQLText();

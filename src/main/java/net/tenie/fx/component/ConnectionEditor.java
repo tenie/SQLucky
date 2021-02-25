@@ -144,13 +144,14 @@ public class ConnectionEditor {
 
 		dbDriver.valueProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
 
-			if (newValue.equals("h2")) {
+			if (newValue.equals(DbVendor.H2) ||newValue.equals(DbVendor.SQLITE) ) {
 				lbhostStr.setText("DB File");
 				host.setPromptText("DB File");
 				port.setDisable(true);
 
 				defaultSchema.setText("PUBLIC");
 				defaultSchema.setDisable(true);
+				
 			} else {
 				lbhostStr.setText(hostStr);
 				host.setPromptText(hostStr);
@@ -158,7 +159,18 @@ public class ConnectionEditor {
 
 				defaultSchema.setText(defaultSchemaVal);
 				defaultSchema.setDisable(false);
+				
 			}
+			
+			
+			if (newValue.equals(DbVendor.SQLITE) ) {
+				user.setDisable(true);
+				password.setDisable(true);
+			}else {
+				user.setDisable(false);
+				password.setDisable(false);
+			}
+			
 		});
 
 		if (StrUtils.isNotNullOrEmpty(dbDriverVal)) {
@@ -204,7 +216,7 @@ public class ConnectionEditor {
 				return null;
 			}
 			if (StrUtils.isNullOrEmpty(host.getText())) {
-				if (dbDriver.getValue().equals("h2")) {
+				if (dbDriver.getValue().equals(DbVendor.H2) || dbDriver.getValue().equals(DbVendor.SQLITE)) {
 					ModalDialog.errorAlert("Warn!", "DB File is empty !");
 				} else {
 					ModalDialog.errorAlert("Warn!", "host is empty !");
@@ -213,26 +225,29 @@ public class ConnectionEditor {
 				return null;
 			}
 
-			if (!dbDriver.getValue().equals("h2")) {
+			if (!dbDriver.getValue().equals(DbVendor.H2) && !dbDriver.getValue().equals(DbVendor.SQLITE) ) {
 				if (StrUtils.isNullOrEmpty(port.getText())) {
 					ModalDialog.errorAlert("Warn!", "port is empty !");
 					return null;
 				}
 			}
-
+			
 			if (StrUtils.isNullOrEmpty(defaultSchema.getText())) {
 				ModalDialog.errorAlert("Warn!", "Schema is empty !");
 				return null;
 			}
-
-			if (StrUtils.isNullOrEmpty(user.getText())) {
-				ModalDialog.errorAlert("Warn!", "user is empty !");
-				return null;
+			
+			if ( ! dbDriver.getValue().equals(DbVendor.SQLITE) ) {
+				if (StrUtils.isNullOrEmpty(user.getText())) {
+					ModalDialog.errorAlert("Warn!", "user is empty !");
+					return null;
+				}
+				if (StrUtils.isNullOrEmpty(password.getText())) {
+					ModalDialog.errorAlert("Warn!", "password is empty !");
+					return null;
+				}
 			}
-			if (StrUtils.isNullOrEmpty(password.getText())) {
-				ModalDialog.errorAlert("Warn!", "password is empty !");
-				return null;
-			}
+			
 			if (StrUtils.isNullOrEmpty(connName)) {
 				ModalDialog.errorAlert("Warn!", "connection name is empty !");
 				return null;

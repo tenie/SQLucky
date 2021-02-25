@@ -13,3 +13,4 @@ scenicView.properties
 dependency-reduced-pom.xml
 .apt_generated/
 .apt_generated_tests/
+*.db

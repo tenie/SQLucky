@@ -3,6 +3,7 @@ package net.tenie.lib.po;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -11,12 +12,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.lib.db.DB2ExportDDLImp;
+import net.tenie.fx.config.DbVendor;
+import net.tenie.lib.db.ExportSqlDB2Imp;
 import net.tenie.lib.db.Dbinfo;
-import net.tenie.lib.db.DefaultExportDDLImp;
+import net.tenie.lib.db.ExportDefaultImp;
 import net.tenie.lib.db.ExportDDL;
-import net.tenie.lib.db.H2ExportDDLImp;
-import net.tenie.lib.db.MySqlExportDDLImp;
+import net.tenie.lib.db.ExportSqlH2Imp;
+import net.tenie.lib.db.ExportSqlMySqlImp;
+import net.tenie.lib.db.ExportSqlSqliteImp;
 import net.tenie.lib.db.sql.ParseSQL;
 
 /*   @author tenie */
@@ -42,6 +45,8 @@ public class DbConnectionPo {
 	private Connection conn;
 	private Map<String, DbSchemaPo> schemas;
 	private ExportDDL exportDDL;
+	
+	private String SQLITE_DATABASE = "SQLITE DATABASE";
 
 	// 正在连接中, 原子操作
 	private AtomicBoolean connectionIng = new AtomicBoolean(false);
@@ -71,14 +76,16 @@ public class DbConnectionPo {
 //	public DbConnectionPo(){} 
 	private ExportDDL setExportDDL(String dbvendor) {
 
-		if ("DB2".equals(dbVendor.toUpperCase())) {
-			exportDDL = new DB2ExportDDLImp();
-		} else if ("MYSQL".equals(dbVendor.toUpperCase())) {
-			exportDDL = new MySqlExportDDLImp();
-		} else if ("H2".equals(dbVendor.toUpperCase())) {
-			exportDDL = new H2ExportDDLImp();
-		} else {
-			exportDDL = new DefaultExportDDLImp();
+		if (DbVendor.DB2.equals(dbVendor.toUpperCase())) {
+			exportDDL = new ExportSqlDB2Imp();
+		} else if (DbVendor.MYSQL.equals(dbVendor.toUpperCase())) {
+			exportDDL = new ExportSqlMySqlImp();
+		} else if (DbVendor.H2 .equals(dbVendor.toUpperCase())) {
+			exportDDL = new ExportSqlH2Imp();
+		}else if (DbVendor.SQLITE.equals(dbVendor.toUpperCase())) {
+			exportDDL = new ExportSqlSqliteImp();
+		}  else {
+			exportDDL = new ExportDefaultImp();
 		}
 
 		return exportDDL;
@@ -137,9 +144,13 @@ public class DbConnectionPo {
 			logger.info(getJdbcUrl());
 			logger.info(user);
 			logger.info(passWord);
-			Dbinfo dbinfo = new Dbinfo(driver, getJdbcUrl(), user, passWord);
-
-			conn = dbinfo.getconn();
+			if (DbVendor.SQLITE.equals(dbVendor.toUpperCase())) {
+				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
+				conn = dbinfo.getconn();
+			}else {
+				Dbinfo dbinfo = new Dbinfo(driver, getJdbcUrl(), user, passWord);
+				conn = dbinfo.getconn();
+			}			
 		}
 
 		return conn;
@@ -201,9 +212,12 @@ public class DbConnectionPo {
 
 	public String getJdbcUrl() {
 		if (jdbcUrl == null || jdbcUrl.length() == 0) {
-			if ("H2".equals(dbVendor.toUpperCase())) {
+			if (DbVendor.H2.equals(dbVendor.toUpperCase())) {
 				jdbcUrl = "jdbc:h2:" + host;
 				defaultSchema = "PUBLIC";
+			}else if (DbVendor.SQLITE.equals(dbVendor.toUpperCase())) {
+				jdbcUrl = "jdbc:sqlite:" + host;
+				defaultSchema = SQLITE_DATABASE;
 			} else {
 				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + defaultSchema;
 				if (otherParameter != null && otherParameter.length() > 0) {
@@ -271,12 +285,20 @@ public class DbConnectionPo {
 	}
 
 	public Map<String, DbSchemaPo> getSchemas() {
-		if (schemas == null) {
-			try {
-				schemas = Dbinfo.fetchSchemasInfo(this);
-			} catch (Exception e) {
-				e.printStackTrace();
+		try { 
+			if (schemas == null) { 
+				if (DbVendor.SQLITE.equals(dbVendor.toUpperCase())) {
+					Map<String, DbSchemaPo> sch = new HashMap<>();
+					DbSchemaPo sp = new DbSchemaPo();
+					sp.setSchemaName(SQLITE_DATABASE);
+					sch.put(SQLITE_DATABASE, sp);
+					schemas = sch;
+				} else {
+					schemas = Dbinfo.fetchSchemasInfo(this);					
+				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return schemas;
 	}

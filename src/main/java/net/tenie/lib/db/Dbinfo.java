@@ -37,6 +37,7 @@ public class Dbinfo {
 	private Connection conn = null; 
 
 	private String driver, url, us, ps;
+	private String sqliteDriver;
     
 	//加载 jar
 	static {
@@ -53,22 +54,29 @@ public class Dbinfo {
 		this.url = url;
 		this.us = us;
 		this.ps = ps;
-
-//		try {
-////			Class.forName(driver).newInstance();
-////			conn = DriverManager.getConnection(url, us, ps);
-//			
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		this.sqliteDriver = "";
 	}
+	
+	public Dbinfo(String sqliteDriver) {
+		this.driver = "";
+		this.url = "";
+		this.us = "";
+		this.ps = "";
+		this.sqliteDriver = sqliteDriver;
+	}
+	
+	
 
-	// 获取Mysql
+	// 获取连接
 	public Connection getconn() {
 		if (conn == null) {
 			try {
-				Class.forName(driver).newInstance();
-				conn = DriverManager.getConnection(url, us, ps);
+				if(StrUtils.isNotNullOrEmpty(sqliteDriver)) {
+					conn = DriverManager.getConnection(sqliteDriver);
+				}else {
+					Class.forName(driver).newInstance();
+					conn = DriverManager.getConnection(url, us, ps);
+				} 
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 				e.printStackTrace();
 			} catch (SQLException e) {
@@ -244,10 +252,17 @@ public class Dbinfo {
 	public static List<TablePo> fetchAllViewName(Connection conn, String schemaOrCatalog) throws Exception {
 		return fetchAllTableViewName(conn, schemaOrCatalog, false);
 	}
+	public static List<TablePo> fetchAllViewName(Connection conn) throws Exception {
+		return fetchAllTableViewName(conn, false);
+	}
 
 	public static List<TablePo> fetchAllTableName(Connection conn, String schemaOrCatalog) throws Exception {
 		return fetchAllTableViewName(conn, schemaOrCatalog, true);
 	}
+	public static List<TablePo> fetchAllTableName(Connection conn) throws Exception {
+		return fetchAllTableViewName(conn, true);
+	}
+	
 
 	// jdbc方式: 获取视图, 名称,
 	public static List<TablePo> fetchAllTableViewName(Connection conn, String schemaOrCatalog, boolean istable)
@@ -289,6 +304,58 @@ public class Dbinfo {
 				po.setTableName(tableName);
 				po.setTableRemarks(remarks);
 				po.setTableSchema(schemaOrCatalog);
+				po.setTableType(tableType);
+				LinkedHashSet<TableFieldPo> fields = new LinkedHashSet<TableFieldPo>();
+				po.setFields(fields);
+				ArrayList<TablePrimaryKeysPo> tpks = new ArrayList<TablePrimaryKeysPo>();
+				po.setPrimaryKeys(tpks);
+				tbls.add(po);
+			}
+
+		} finally {
+			if (tablesResultSet != null)
+				tablesResultSet.close();
+			if (rs != null)
+				rs.close();
+			if (sm != null)
+				sm.close();
+		}
+		return tbls;
+	}
+	public static List<TablePo> fetchAllTableViewName(Connection conn, boolean istable)
+			throws Exception {
+		ResultSet tablesResultSet = null;
+		ResultSet rs = null;
+		Statement sm = null;
+		List<TablePo> tbls = new ArrayList<TablePo>();
+		try {
+			DatabaseMetaData dbMetaData = conn.getMetaData();
+
+
+			tablesResultSet = dbMetaData.getTables(null, null, null, null);
+			while (tablesResultSet.next()) {
+				String tableType = tablesResultSet.getString("TABLE_TYPE");
+				if(tableType == null ) {
+					tableType = "";
+				}
+				if (istable) {
+					if (tableType.contains("VIEW")) {
+						continue;
+					}
+				} else {
+					if (!tableType.contains("VIEW")) {
+						continue;
+					}
+				}
+
+				String tableName = tablesResultSet.getString("TABLE_NAME");
+				String remarks = tablesResultSet.getString("REMARKS");
+//				System.out.println("tableName = "+ tableName);
+//				System.out.println("REMARKS = "+ remarks);
+				TablePo po = new TablePo();
+				po.setTableName(tableName);
+				po.setTableRemarks(remarks);
+				po.setTableSchema("");
 				po.setTableType(tableType);
 				LinkedHashSet<TableFieldPo> fields = new LinkedHashSet<TableFieldPo>();
 				po.setFields(fields);
