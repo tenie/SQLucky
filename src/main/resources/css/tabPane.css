@@ -6,8 +6,8 @@
 
 .tab {
    /*  -fx-background-insets: 0, 1, 2; */
-   /* -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0;  eckig */
-     -fx-border-radius: 2px;
+  -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0;   /*  eckig */
+    /* -fx-border-radius: 2px; 圆角*/
 /*     -fx-background-color: #3C3F41;  */
 	/*  -fx-border-color: #4E5254 #323232 #323232 #4E5254  ; */
      -fx-background-color: #3C3F41;
@@ -21,12 +21,11 @@
 
 .tab:selected {
     -fx-background-color:  #323232 ; 
-    -fx-border-color: transparent transparent transparent transparent ;  /* transparent 透明  #059BCE*/
+    -fx-border-color: transparent transparent #059BCE transparent ;  /* transparent 透明  #059BCE*/
     -fx-border-width : 2
 }
 
 .tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
-    -fx-border-radius: 0px;
     -fx-border-width: 1px 1px 1px 1px;
     -fx-border-color: transparent;
 }

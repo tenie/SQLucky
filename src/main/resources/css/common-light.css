@@ -15,9 +15,13 @@
 	 
 } 
 
+.myShellWindow{
+ -fx-border-color: #4C708C; 
+}
 
 .myAlert {
- -fx-border-color: #4C708C; 
+ /*-fx-border-color: #4C708C; */
+-fx-background-color: #FFFFFF;
 }
 
 

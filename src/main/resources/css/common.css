@@ -3,7 +3,9 @@
 	
 }
 
-
+.subWindowClose{
+	 -fx-background-color:#323232;
+}
 .transfer-run-btn{
 	 -fx-background-color: #008000;
 }
@@ -35,9 +37,11 @@ GridPane {
 	 -fx-background-color: red; 
 }
 */
-
+.myShellWindow{
+	/* -fx-border-color: #4C708C; */
+}
 .myAlert {
- -fx-border-color: #4C708C; 
+/* -fx-border-color: #4C708C; */
  -fx-background-color: #3C3F41;
 }
 .myAlert  TextField{

@@ -11,12 +11,16 @@ import org.fxmisc.richtext.CodeArea;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.event.Event;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
@@ -153,6 +157,14 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		scene.getAccelerators().put(F1, () -> {
+			VBox vb = new  VBox();
+			vb.getChildren().add(new Label("sdsdsdssdsdsdssdsdsdssdsdsdssdsdsdssdsdsds"));
+			
+		    Stage stage = new Stage();
+		    Scene scene2 = new Scene(vb); 
+			stage.setScene(scene2);
+			ModalDialog.windowShell(stage, ModalDialog.ERROR);
+			 
 //			System.out.println(1111);
 //			runbtn.setDisable(true);
 //			setFontSize(20);

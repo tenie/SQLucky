@@ -30,10 +30,12 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import org.apache.commons.io.input.WindowsLineEndingInputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,6 +57,22 @@ public class ModalDialog {
 		svg.setScaleX(scaleX);
 		svg.setScaleY(scaleY);
 	}
+	
+	public static Label INFO ;
+	public static Label WARN ;
+	public static Label ERROR ;
+	public static Label EMPTY ;
+	
+	static {
+		INFO = new Label("Info!");
+		INFO.setGraphic( ImageViewGenerator.svgImage("info-circle", "green"));
+		WARN = new Label("Info!");
+		WARN.setGraphic( ImageViewGenerator.svgImage("info-circle", "#FFD700"));
+		ERROR = new Label("Info!");
+		ERROR.setGraphic( ImageViewGenerator.svgImage("info-circle", "red"));
+		EMPTY = new Label("");
+	}
+	
 
 	// 根据给定的fxml 创建 模态框
 	public static void test() {
@@ -459,6 +477,95 @@ public class ModalDialog {
 
 	}
 	
+	public static  void windowShell(Stage stage, Node title) {
+		Scene scene  = stage.getScene();
+		scene.getRoot();
+		Node n = windowShell(stage, scene.getRoot() , title,  "myAlert" );
+		scene.setRoot((Parent) n);
+		
+		stage.initModality(Modality.APPLICATION_MODAL);
+//		stage.setScene(scene);
+		setSceneAndShow(scene, stage);
+	}
+	
+	
+	// 给一个窗口加一个外壳, 包含一个头部的关闭按钮
+	public static  Node windowShell(Stage stage, Node subNode, Node title, String css) {
+		VBox subWindow = new VBox();
+		subWindow.getStyleClass().add("myShellWindow");
+		subWindow.getStyleClass().add(css);
+		
+		
+		AnchorPane pn = new AnchorPane();  
+		JFXButton btn = new JFXButton(); 
+		btn.setGraphic(ImageViewGenerator.svgImageUnactive("window-close"));
+		AnchorPane.setRightAnchor(btn, 0.0);
+//		Label titlb = new Label(title);
+		AnchorPane.setTopAnchor(title, 4.0);
+		AnchorPane.setLeftAnchor(title, 4.0);
+		pn.getChildren().addAll(btn, title );
+		pn.getStyleClass().add("subWindowClose");
+		
+		subWindow.getChildren().add(pn);
+		subWindow.getChildren().add(subNode);
+		
+		VBox.setMargin(pn, new Insets(0, 0, 5, 0));
+//		subWindow.setPadding(new Insets(0, 0, 5, 0));
+		
+		btn.setOnAction(e->{
+			stage.close();
+		});
+		
+		return subWindow;
+	}
+	
+	//TODO 设置子窗口的外形
+	public static Node setVboxShape(Stage stage , Node title, List<Node> nds, List<Node> btns ) {
+		VBox subWindow = new VBox(); 
+		subWindow.setPrefWidth(500); 
+		subWindow.setPrefHeight(80);
+		subWindow.maxHeight(80);
+		subWindow.maxWidth(500);
+		
+		// 内容
+		for(Node nd : nds) {
+			subWindow.getChildren().add(nd);
+			VBox.setMargin(nd, new Insets(0, 0, 5, 0));
+		}
+		
+		// 最后的按钮
+		AnchorPane foot = new AnchorPane();  
+		JFXButton cancelbtn = new JFXButton("Cancel");
+		
+		if(btns != null) {
+			double i = 0.0;
+			for(Node bn : btns) {
+				foot.getChildren().add(bn);
+				AnchorPane.setRightAnchor(bn, i);
+				i +=60;
+			}
+			
+		}else {
+			foot.getChildren().add(cancelbtn);
+			AnchorPane.setRightAnchor(cancelbtn, 0.0);
+		}
+		
+		VBox.setMargin(foot, new Insets(0,0,5,0));
+		
+		subWindow.getChildren().add(foot);
+		
+		cancelbtn.setOnAction(e->{
+			stage.close();
+		});
+		 
+		
+		
+		subWindow.setPadding(new Insets(0,5,5,5));
+		Node  subw = windowShell(stage, subWindow, title, "myAlert"); 
+		
+		return subw;
+	}
+	
 	public static void showComfirmExec(String title, String containTxt ,  Consumer< String >  caller) {
 		VBox vb = new VBox();
 		TextField tf1 = new TextField("");
@@ -469,6 +576,8 @@ public class ModalDialog {
 		tf1.setPrefHeight(40);
 		tf1.setFocusTraversable(false);
 		Label tit = new Label(title);
+		
+		
 		vb.getChildren().add(tit);
 		vb.getChildren().add(tf1);
 		vb.setPrefWidth(500);
@@ -479,7 +588,8 @@ public class ModalDialog {
 		ModalDialog.ModalDialogAppCallConsumer(vb, title, caller); 
 	}
 	
-	public static void showExecWindow(String title, String containTxt ,  Consumer< String >  caller) {
+	//TODO
+	public static void showExecWindow2(String title, String containTxt ,  Consumer< String >  caller) {
 		VBox vb = new VBox();
 		TextField tf1 = new TextField("");
 		tf1.getStyleClass().add("myFindTextField");
@@ -494,7 +604,7 @@ public class ModalDialog {
 		vb.getChildren().add(tit);
 		vb.getChildren().add(tf1);
 		vb.setPrefWidth(500);
-		vb.setPadding(new Insets(20));
+//		vb.setPadding(new Insets(0,20,20,20));
 		vb.setPrefHeight(100);
 		vb.maxHeight(100);
 		vb.maxWidth(500);
@@ -521,13 +631,62 @@ public class ModalDialog {
 		AnchorPane.setRightAnchor(okbtn, 60.0);
 		vb.getChildren().add(pn);
 
-		
+//		setVboxShape(vb, stage);
 
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle(title);
 		stage.setScene(scene);
 		setSceneAndShow(scene, stage);
 	}
+	
+	
+	public static void showExecWindow(String promptInfo, String containTxt ,  Consumer< String >  caller) {
+		TextField tf1 = new TextField("");
+		tf1.getStyleClass().add("myFindTextField");
+		tf1.setEditable(true);
+		tf1.setPrefWidth(500);
+		tf1.setText(containTxt);
+		tf1.setPrefHeight(40);
+		tf1.setFocusTraversable(false);
+		
+		Label tit = new Label(promptInfo);  
+		final Stage stage = new Stage();
+		
+		JFXButton btn = new JFXButton("Cancel");
+		btn.setOnAction(value -> {
+			stage.close();
+		});
+		
+		JFXButton okbtn = new JFXButton("OK");
+		okbtn.setOnAction(value -> {
+			String val = tf1.getText();
+			caller.accept(val);
+			stage.close();
+		});
+		
+		List<Node> nds = new ArrayList<>();
+		
+		nds.add( tit);
+		nds.add( tf1);
+		
+		List<Node> btns = new ArrayList<>();
+		btns.add( btn);
+		btns.add( okbtn);
+		
+		
+		Node vb = setVboxShape(stage, WARN, nds, btns);
+		Scene scene = new Scene((Parent) vb);
+		
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setScene(scene);
+		setSceneAndShow(scene, stage);
+		
+		
+
+		
+		
+	}
+	
 	
 
 	// 确认对话框

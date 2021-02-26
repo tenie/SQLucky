@@ -19,6 +19,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -35,6 +36,7 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
+import net.tenie.fx.main.MainMyDB;
 import net.tenie.fx.utility.EventAndListener.CommonListener;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.po.DbConnectionPo;
@@ -72,7 +74,8 @@ public class ConnectionEditor {
 		CommonAction.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-
+		
+		stage.getIcons().add(new Image(ConnectionEditor.class.getResourceAsStream(ConfigVal.appIcon)));
 		stage.setMaximized(false);
 		stage.setResizable(false);
 		return stage;
@@ -88,6 +91,7 @@ public class ConnectionEditor {
 
 		GridPane grid = new GridPane();
 		vb.getChildren().add(grid);
+		vb.setPadding( new Insets(5));
 		Stage stage = CreateModalWindow(vb);
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -320,7 +324,7 @@ public class ConnectionEditor {
 
 		// 默认焦点
 		Platform.runLater(() -> connectionName.requestFocus());
-
+//		ModalDialog.windowShell(stage, ModalDialog.INFO);
 		stage.show();
 
 	}
