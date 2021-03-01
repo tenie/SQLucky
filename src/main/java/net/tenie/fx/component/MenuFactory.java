@@ -19,7 +19,10 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import net.tenie.fx.Action.ButtonAction;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.MyPopupNumberFilter;
+import net.tenie.fx.Action.RsVal;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.GenerateSQLString;
@@ -41,7 +44,7 @@ public class MenuFactory {
 	 * @param col
 	 * @return
 	 */
-	public static ContextMenu DataTableColumnContextMenu(String colname, int type, FilteredTableColumn<ObservableList<StringProperty>, String> col) {
+	public static ContextMenu DataTableColumnContextMenu(String colname, int type, FilteredTableColumn<ObservableList<StringProperty>, String> col, int colIdx) {
 		
 		// 过滤框
 		PopupFilter<ObservableList<StringProperty>, String> popupFilter ;
@@ -89,7 +92,7 @@ public class MenuFactory {
 //		dropCol.getStyleClass().add("myMenuItem");
 		dropCol.setGraphic(ImageViewGenerator.svgImageDefActive("eraser"));
 		dropCol.setOnAction(e ->  {
-			rsVal rv = exportSQL(DROP_COLUMN, colname);
+			RsVal rv = exportSQL(DROP_COLUMN, colname);
 			if(StrUtils.isNotNullOrEmpty(rv.sql)) {
 				// 要被执行的函数
 				Consumer< String >  caller = x ->{
@@ -105,8 +108,9 @@ public class MenuFactory {
 		alterColumn.setOnAction(e -> { 
 			
 			Consumer< String >  caller = x ->{ 
+				if(StrUtils.isNullOrEmpty(x.trim())) return;
 				String str = colname + " " + x;
-				rsVal rv = exportSQL(ALTER_COLUMN, str);
+				RsVal rv = exportSQL(ALTER_COLUMN, str);
 				execExportSql(rv.sql, rv.conn);
 			};
 			ModalDialog.showExecWindow("Alter "+colname +" Date Type: input words like 'CHAR(10) ", "", caller);
@@ -115,49 +119,74 @@ public class MenuFactory {
 		MenuItem addColumn = new MenuItem("Add New Column"); 
 		addColumn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
 		addColumn.setOnAction(e -> {  
-			rsVal rv = tableInfo();
-			Consumer< String >  caller = x ->{  
-				rsVal rv2= exportSQL(ADD_COLUMN, x);
+			RsVal rv = CommonAction.tableInfo();
+			Consumer< String >  caller = x ->{
+				if(StrUtils.isNullOrEmpty(x.trim())) return;
+				RsVal rv2= exportSQL(ADD_COLUMN, x);
 				execExportSql(rv2.sql, rv2.conn);
 			};
 			ModalDialog.showExecWindow(rv.tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
 		});
 		
-		MenuItem updateColumn = new MenuItem("Update Column Value"); 
-		updateColumn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
-		updateColumn.setOnAction(e -> {  
-			rsVal rv = tableInfo();
+		
+		Menu updateMenu = new Menu("Update Column Data");
+		updateMenu.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
+		MenuItem updateTableColumn = new MenuItem("Update: Table is  Column Value"); 
+		updateTableColumn.setGraphic(ImageViewGenerator.svgImageDefActive("table"));
+		updateTableColumn.setOnAction(e -> {  
+			RsVal rv = CommonAction.tableInfo();
 			String sql = "UPDATE " + rv.tableName + " SET " + colname + " = " ;
-			Consumer< String >  caller = x ->{   
+			Consumer< String >  caller = x ->{
+				if(StrUtils.isNullOrEmpty(x.trim())) return;
 				String strsql = sql + x;
 				execExportSql(strsql, rv.conn);
 			};
 			ModalDialog.showExecWindow("Execute : "+ sql +" ? : input your value", "", caller);
 		});
 		
+		MenuItem updateCurrentPageColumn = new MenuItem("Update: Current All Data is  Column Value"); 
+		updateCurrentPageColumn.setGraphic(ImageViewGenerator.svgImageDefActive("file-text-o"));
+		updateCurrentPageColumn.setOnAction(e -> {  
+			RsVal rv = CommonAction.tableInfo();
+			Consumer< String >  caller = x ->{
+				if(StrUtils.isNullOrEmpty(x.trim())) return;
+				ButtonAction.updateAllColumn(colIdx, x);
+			};
+			ModalDialog.showExecWindow("Execute : Update Current "+ rv.tableName +" Column :" +colname+" data ? : input your value", "", caller);
+		});
 		
-		cm.getItems().addAll(filter, miActive, copyColData,   dropCol, alterColumn, addColumn, updateColumn);
+		MenuItem updateSelectColumn = new MenuItem("Update: Selected Data is Column Value"); 
+		updateSelectColumn.setGraphic(ImageViewGenerator.svgImageDefActive("indent"));
+		updateSelectColumn.setOnAction(e -> {
+			RsVal rv = CommonAction.tableInfo();
+			Consumer< String >  caller = x ->{
+				if(StrUtils.isNullOrEmpty(x.trim())) return;
+				ButtonAction.updateSelectedDataColumn(colIdx, x);
+			};
+			ModalDialog.showExecWindow("Execute : Update Selected "+ rv.tableName +" Column :" +colname+" data ? : input your value", "", caller);
+		
+		});
+		
+		updateMenu.getItems().addAll(updateTableColumn, updateCurrentPageColumn, updateSelectColumn);
+		
+		cm.getItems().addAll(filter, miActive, copyColData,   dropCol, alterColumn, addColumn, updateMenu);
+		cm.setOnShowing(e->{
+			ObservableList<ObservableList<StringProperty>> alls = ComponentGetter.dataTableViewSelectedItems();
+			if( alls.size() == 0) {
+				updateSelectColumn.setDisable(true);
+			}else {
+				updateSelectColumn.setDisable(false);
+			}
+		});
 		return cm;
 	}
 	
 
-	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
-	private static rsVal tableInfo() {
-		String tableId = ComponentGetter.currentDataTabID();
-		String connName = CacheTableDate.getConnName(tableId);
-		String tableName =  CacheTableDate.getTableName(tableId);
-		Connection conn = CacheTableDate.getDBConn(tableId);
-		DbConnectionPo  dbc = DBConns.get(connName); 
-		rsVal rv = new rsVal();
-		rv.conn = conn; 
-		rv.tableName = tableName;
-		rv.dbc =  dbc; 
-		return rv;
-	}
+
 	
 	// 导出SQL
-	private static rsVal exportSQL(int ty, String colname) {
-		rsVal rv = tableInfo();
+	private static RsVal exportSQL(int ty, String colname) {
+		RsVal rv = CommonAction.tableInfo();
 		try {
 			// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
 
@@ -225,13 +254,6 @@ public class MenuFactory {
 		}
 }
 
-
-class rsVal{
-	String sql;
-	String tableName;
-	Connection conn;
-	DbConnectionPo  dbc ;
-}
 
 
 

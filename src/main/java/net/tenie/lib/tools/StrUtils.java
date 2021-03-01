@@ -42,54 +42,89 @@ public class StrUtils {
 		}
 		return rs.toString();
 	}
-
-public static void main(String[] args) {
-	String str = ";123;567;9";
 	
-	List<MyRange> idxs = new ArrayList<>();
-	if (str.contains(";")) {
-		String[] all = str.split(";"); // 分割多个语句
-		if (all != null && all.length > 0) {
-			int ss = 0;
-			for(int i = 0; i < all.length ; i++) {
-				String s = all[i]; 
-			    int end  = ss + s.length()  ;
-			    if( end > str.length()) {
-			    	end--;
-			    }  
-			    MyRange mr = new MyRange(ss, end);
-			    ss = end + 1;
-			    idxs.add(mr); 
-			} 
+	private static void test1() {
+
+		String str = ";123;567;9";
+		
+		List<MyRange> idxs = new ArrayList<>();
+		if (str.contains(";")) {
+			String[] all = str.split(";"); // 分割多个语句
+			if (all != null && all.length > 0) {
+				int ss = 0;
+				for(int i = 0; i < all.length ; i++) {
+					String s = all[i]; 
+				    int end  = ss + s.length()  ;
+				    if( end > str.length()) {
+				    	end--;
+				    }  
+				    MyRange mr = new MyRange(ss, end);
+				    ss = end + 1;
+				    idxs.add(mr); 
+				} 
+			}
 		}
+		logger.info(idxs);
+		for(MyRange mr: idxs) {
+			int s = mr.getStart();
+			int e = mr.getEnd();
+			String tmps = str.substring(s, e);
+			logger.info(tmps);
+		}
+	//	
+	//	
+//		Date d  = datePlus1Second("2021-01-07 11:47:17" );
+////									2021-01-07 11:47:18
+//		 logger.info( dateToStrL(d)); ;
+//		String str = 
+//				  "balancePartAmount\n"
+//				+ "1111--ssss\n"
+//				+ "2222"  ;
+//		logger.info(str.length());
+//		logger.info(str);
+//		logger.info("======");
+//		String s = trimComment(str, "--");
+//		logger.info(s.length());
+//		logger.info(s);
+//		logger.info("======");
+//	    s = trimCommentToSpace(str, "--");
+//		logger.info(s.length());
+//		logger.info(s);
+
 	}
-	logger.info(idxs);
-	for(MyRange mr: idxs) {
-		int s = mr.getStart();
-		int e = mr.getEnd();
-		String tmps = str.substring(s, e);
-		logger.info(tmps);
+	private static void test_trimChar() {
+		
+		String rs = "";
+		String value = "'1111";
+		char c1 = value.charAt(0);
+		char c2 = value.charAt(value.length() - 1);
+		if( c1 == c2 && c1 == '\'') {
+			rs =  StrUtils.trimChar(value, "'");
+		}
+		System.out.println(rs);
+//		String v = trimChar("'1111''", "'");
+//		System.out.println(v);
 	}
-//	
-//	
-//	Date d  = datePlus1Second("2021-01-07 11:47:17" );
-////								2021-01-07 11:47:18
-//	 logger.info( dateToStrL(d)); ;
-//	String str = 
-//			  "balancePartAmount\n"
-//			+ "1111--ssss\n"
-//			+ "2222"  ;
-//	logger.info(str.length());
-//	logger.info(str);
-//	logger.info("======");
-//	String s = trimComment(str, "--");
-//	logger.info(s.length());
-//	logger.info(s);
-//	logger.info("======");
-//    s = trimCommentToSpace(str, "--");
-//	logger.info(s.length());
-//	logger.info(s);
+
+		
+public static void main(String[] args) {
+	
+	test_trimChar();
 }
+	// 去除2边指定的字符
+	public static String trimChar(String str, String tag) {
+		String rs = "";
+		str = str.trim();
+		if(str.indexOf("'") == 0) {
+			rs = str.substring(1);
+		}
+		if(rs.lastIndexOf("'") == rs.length() -1) {
+			rs = rs.substring(0, rs.length() -1);
+		}
+		
+		return rs;
+	}
+
 	// 下划线 轉 驼峰命名
 	public static String underlineCaseCamel(String str) {
 		StringBuilder rs = new StringBuilder();

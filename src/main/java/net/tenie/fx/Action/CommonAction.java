@@ -15,6 +15,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafx.application.Platform;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Scene;
@@ -27,12 +28,14 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.tableview2.FilteredTableView;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.input.MouseEvent;
+import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.CommonFileChooser;
@@ -43,6 +46,7 @@ import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
@@ -59,7 +63,27 @@ public class CommonAction {
 		ComponentGetter.dbInfoFilter.setText("");
 		SqlEditor.getCodeArea().deselect();
 	}
-	
+	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
+	public static RsVal tableInfo() {
+		String tableId = ComponentGetter.currentDataTabID();
+		String connName = CacheTableDate.getConnName(tableId);
+		String tableName =  CacheTableDate.getTableName(tableId);
+		Connection conn = CacheTableDate.getDBConn(tableId);
+		ObservableList<ObservableList<StringProperty>> alldata = CacheTableDate.getData(tableId);
+		DbConnectionPo  dbc = DBConns.get(connName); 
+		
+		Button saveBtn = ComponentGetter.dataFlowSaveBtn();
+		FilteredTableView<ObservableList<StringProperty>> dataTableView =
+				         ComponentGetter.dataTableView();
+		RsVal rv = new RsVal();
+		rv.conn = conn; 
+		rv.tableName = tableName;
+		rv.dbc =  dbc; 
+		rv.alldata = alldata;
+		rv.saveBtn = saveBtn;
+		rv.dataTableView = dataTableView;
+		return rv;
+	}
 	
 	
 	public static void saveSqlAction() {

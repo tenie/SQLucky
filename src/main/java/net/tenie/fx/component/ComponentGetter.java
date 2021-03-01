@@ -201,7 +201,7 @@ public final class ComponentGetter {
 		return (Button) fp.getChildren().get(0);
 	}
 	
-	// 获取当前table view 的保存按钮
+	// 获取当前table view 的详细按钮
 		public static Button dataFlowDetailBtn() {
 			AnchorPane fp = ComponentGetter.dataFlowPane();
 			return (Button) fp.getChildren().get(1);

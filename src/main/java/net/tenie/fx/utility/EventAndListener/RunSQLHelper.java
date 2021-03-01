@@ -495,7 +495,7 @@ public class RunSQLHelper {
 
 	// 创建列
 	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int type, String typeName,
-			int i, TableView<ObservableList<StringProperty>> table, boolean augmentation, boolean iskey) {
+			int colIdx, TableView<ObservableList<StringProperty>> table, boolean augmentation, boolean iskey) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col =
 				new FilteredTableColumn<ObservableList<StringProperty>, String>();
 //		col.setCellFactory(MyTextField2TableCell.forTableColumn());
@@ -520,10 +520,10 @@ public class RunSQLHelper {
 		}
 		col.setMinWidth(witdth);
 		col.setPrefWidth(witdth);
-		col.setCellValueFactory(new StringPropertyListValueFactory(i, table));
+		col.setCellValueFactory(new StringPropertyListValueFactory(colIdx, table));
  
 		// 右点菜单
-		ContextMenu cm =MenuFactory.DataTableColumnContextMenu(colname, type, col);
+		ContextMenu cm =MenuFactory.DataTableColumnContextMenu(colname, type, col, colIdx);
 		col.setContextMenu(cm); 
 		return col;
 	}

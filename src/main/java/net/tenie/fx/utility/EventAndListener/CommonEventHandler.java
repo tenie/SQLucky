@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
+import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.ShowTableRowDateDetailAction;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
@@ -225,91 +226,92 @@ public class CommonEventHandler {
 	public static EventHandler<Event> saveDate(JFXButton saveBtn) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
-				String tabId = saveBtn.getParent().getId();
-				String tabName = CacheTableDate.getTableName(tabId);
-				ObservableList<ObservableList<StringProperty>> alldata = CacheTableDate.getData(tabId);
-				Connection conn = CacheTableDate.getDBConn(tabId);
-				if (tabName != null && tabName.length() > 0) {
-					// 字段
-					ObservableList<SqlFieldPo> fpos = CacheTableDate.getCols(tabId);
-					// 待保存数据
-					Map<String, ObservableList<StringProperty>> modifyData = CacheTableDate.getModifyData(tabId);
-					// 执行sql 后的信息 (主要是错误后显示到界面上)
-					DbTableDatePo ddlDmlpo = new DbTableDatePo();
-					ddlDmlpo.addField("Info");
-					ddlDmlpo.addField("Status");
-
-					if (!modifyData.isEmpty()) {
-						for (String key : modifyData.keySet()) {
-							// 获取对应旧数据
-							ObservableList<StringProperty> old = CacheTableDate.getold(key);
-							ObservableList<StringProperty> newd = modifyData.get(key);
-							// 拼接update sql
-							try {
-								String msg = UpdateDao.execUpdate(conn, tabName, newd, old, fpos);
-								ObservableList<StringProperty> val = FXCollections.observableArrayList();
-								val.add(new SimpleStringProperty(msg));
-								val.add(new SimpleStringProperty("success"));
-								val.add(new SimpleStringProperty(""));
-								ddlDmlpo.addData(val);
-							} catch (Exception e1) {
-								e1.printStackTrace();
-								saveBtn.setDisable(true);
-								ObservableList<StringProperty> val = FXCollections.observableArrayList();
-								val.add(new SimpleStringProperty(e1.getMessage()));
-								val.add(new SimpleStringProperty("fail."));
-								val.add(new SimpleStringProperty(""));
-								ddlDmlpo.addData(val);
-							}
-						}
-						CacheTableDate.rmUpdateData(tabId);
-					}
-
-					// 插入操作
-					List<ObservableList<StringProperty>> dataList = CacheTableDate.getAppendData(tabId);
-					for (ObservableList<StringProperty> os : dataList) {
-						try {
-							String msg = InsertDao.execInsert(conn, tabName, os, fpos);
-							ObservableList<StringProperty> val = FXCollections.observableArrayList();
-							val.add(new SimpleStringProperty(msg));
-							val.add(new SimpleStringProperty("success"));
-							val.add(new SimpleStringProperty(""));
-							ddlDmlpo.addData(val);
-
-							// 删除缓存数据
-							CacheTableDate.rmAppendData(tabId);
-							// 对insert 的数据保存后 , 不能再修改
-							List<StringProperty> templs = new ArrayList<>();
-							for (int i = 0; i < fpos.size(); i++) {
-								StringProperty sp = os.get(i);
-								StringProperty newsp = new SimpleStringProperty(sp.get());
-								templs.add(newsp);
-								CommonUtility.prohibitChangeListener(newsp, sp.get());
-							}
-							os.clear();
-							for (int i = 0; i < templs.size(); i++) {
-								StringProperty newsp = templs.get(i);
-								os.add(newsp);
-							}
-
-						} catch (Exception e1) {
-							e1.printStackTrace();
-							saveBtn.setDisable(true);
-							ObservableList<StringProperty> val = FXCollections.observableArrayList();
-							val.add(new SimpleStringProperty(e1.getMessage()));
-							val.add(new SimpleStringProperty("fail."));
-							val.add(new SimpleStringProperty(""));
-							ddlDmlpo.addData(val);
-						}
-					}
-
-					// 保存按钮禁用
-//					FlowPane fp = (FlowPane) saveBtn.getParent();
-//					fp.getChildren().get(0).setDisable(true);
-					saveBtn.setDisable(true);
-					RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
-
-				}
+				ButtonAction.dataSave(saveBtn);
+//				String tabId = saveBtn.getParent().getId();
+//				String tabName = CacheTableDate.getTableName(tabId);
+//				ObservableList<ObservableList<StringProperty>> alldata = CacheTableDate.getData(tabId);
+//				Connection conn = CacheTableDate.getDBConn(tabId);
+//				if (tabName != null && tabName.length() > 0) {
+//					// 字段
+//					ObservableList<SqlFieldPo> fpos = CacheTableDate.getCols(tabId);
+//					// 待保存数据
+//					Map<String, ObservableList<StringProperty>> modifyData = CacheTableDate.getModifyData(tabId);
+//					// 执行sql 后的信息 (主要是错误后显示到界面上)
+//					DbTableDatePo ddlDmlpo = new DbTableDatePo();
+//					ddlDmlpo.addField("Info");
+//					ddlDmlpo.addField("Status");
+//
+//					if (!modifyData.isEmpty()) {
+//						for (String key : modifyData.keySet()) {
+//							// 获取对应旧数据
+//							ObservableList<StringProperty> old = CacheTableDate.getold(key);
+//							ObservableList<StringProperty> newd = modifyData.get(key);
+//							// 拼接update sql
+//							try {
+//								String msg = UpdateDao.execUpdate(conn, tabName, newd, old, fpos);
+//								ObservableList<StringProperty> val = FXCollections.observableArrayList();
+//								val.add(new SimpleStringProperty(msg));
+//								val.add(new SimpleStringProperty("success"));
+//								val.add(new SimpleStringProperty(""));
+//								ddlDmlpo.addData(val);
+//							} catch (Exception e1) {
+//								e1.printStackTrace();
+//								saveBtn.setDisable(true);
+//								ObservableList<StringProperty> val = FXCollections.observableArrayList();
+//								val.add(new SimpleStringProperty(e1.getMessage()));
+//								val.add(new SimpleStringProperty("fail."));
+//								val.add(new SimpleStringProperty(""));
+//								ddlDmlpo.addData(val);
+//							}
+//						}
+//						CacheTableDate.rmUpdateData(tabId);
+//					}
+//
+//					// 插入操作
+//					List<ObservableList<StringProperty>> dataList = CacheTableDate.getAppendData(tabId);
+//					for (ObservableList<StringProperty> os : dataList) {
+//						try {
+//							String msg = InsertDao.execInsert(conn, tabName, os, fpos);
+//							ObservableList<StringProperty> val = FXCollections.observableArrayList();
+//							val.add(new SimpleStringProperty(msg));
+//							val.add(new SimpleStringProperty("success"));
+//							val.add(new SimpleStringProperty(""));
+//							ddlDmlpo.addData(val);
+//
+//							// 删除缓存数据
+//							CacheTableDate.rmAppendData(tabId);
+//							// 对insert 的数据保存后 , 不能再修改
+//							List<StringProperty> templs = new ArrayList<>();
+//							for (int i = 0; i < fpos.size(); i++) {
+//								StringProperty sp = os.get(i);
+//								StringProperty newsp = new SimpleStringProperty(sp.get());
+//								templs.add(newsp);
+//								CommonUtility.prohibitChangeListener(newsp, sp.get());
+//							}
+//							os.clear();
+//							for (int i = 0; i < templs.size(); i++) {
+//								StringProperty newsp = templs.get(i);
+//								os.add(newsp);
+//							}
+//
+//						} catch (Exception e1) {
+//							e1.printStackTrace();
+//							saveBtn.setDisable(true);
+//							ObservableList<StringProperty> val = FXCollections.observableArrayList();
+//							val.add(new SimpleStringProperty(e1.getMessage()));
+//							val.add(new SimpleStringProperty("fail."));
+//							val.add(new SimpleStringProperty(""));
+//							ddlDmlpo.addData(val);
+//						}
+//					}
+//
+//					// 保存按钮禁用
+////					FlowPane fp = (FlowPane) saveBtn.getParent();
+////					fp.getChildren().get(0).setDisable(true);
+//					saveBtn.setDisable(true);
+//					RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
+//
+//				}
 
 			}
 		};
