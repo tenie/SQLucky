@@ -64,11 +64,11 @@ public class ModalDialog {
 	public static Label EMPTY ;
 	
 	static {
-		INFO = new Label("Info!");
+		INFO = new Label("Info");
 		INFO.setGraphic( ImageViewGenerator.svgImage("info-circle", "green"));
-		WARN = new Label("Info!");
+		WARN = new Label("Warn");
 		WARN.setGraphic( ImageViewGenerator.svgImage("info-circle", "#FFD700"));
-		ERROR = new Label("Info!");
+		ERROR = new Label("Error");
 		ERROR.setGraphic( ImageViewGenerator.svgImage("info-circle", "red"));
 		EMPTY = new Label("");
 	}
