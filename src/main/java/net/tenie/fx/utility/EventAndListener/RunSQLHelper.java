@@ -76,7 +76,6 @@ public class RunSQLHelper {
 	private static JFXButton otherbtn;
 	private static final String WAITTB_NAME = "Loading...";
 	private static String connName = "";
-	
 	// 新tab页插入的位置
 	private static int tidx = -1;
 	
@@ -89,7 +88,7 @@ public class RunSQLHelper {
 		Connection conn = (Connection) val.get("conn");
 		String tabIdx = (String) val.get("tabIdx");
 		String btn = (String)val.get("btn"); 
-		
+
 		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
 			tidx = Integer.valueOf(tabIdx);
 		}else {
@@ -124,9 +123,9 @@ public class RunSQLHelper {
 			execSqlList(allsqls, conn);
 
 		} catch (Exception e) {
-			Platform.runLater(() -> { 
-				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
-			});
+//			Platform.runLater(() -> { 
+//				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
+//			});
 			e.printStackTrace();
 		} finally {
 			rmWaitingPane(waitTb);
@@ -260,9 +259,9 @@ public class RunSQLHelper {
 			if (!thread.isInterrupted())
 				DataViewContainer.showTableDate(tdpo, tidx, false, dpo.getExecTime()+"", dpo.getRows()+"", connName);
 		} catch (Exception e) {
-			Platform.runLater(() -> {
-				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
-			});
+//			Platform.runLater(() -> {
+//				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
+//			});
 			e.printStackTrace();
 			throw e;
 		}
@@ -569,13 +568,14 @@ public class RunSQLHelper {
 	private static void rmWaitingPane(Tab waitTb) {
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTab;
-			if (dataTab.getTabs().size() == 1) {
-				waitTb.setContent(null);
-//		   			waitTb.setText("");
-				CommonUtility.setTabName(waitTb, "");
-			} else if (dataTab.getTabs().size() > 1) {
-				dataTab.getTabs().remove(waitTb);
-			}
+			dataTab.getTabs().remove(waitTb);
+//			if (dataTab.getTabs().size() == 1) {
+//				waitTb.setContent(null);
+////		   			waitTb.setText("");
+//				CommonUtility.setTabName(waitTb, "");
+//			} else if (dataTab.getTabs().size() > 1) {
+//				dataTab.getTabs().remove(waitTb);
+//			}
 		});
 
 	}

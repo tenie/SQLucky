@@ -62,6 +62,9 @@ public class CommonAction {
 	public static void pressBtnESC() {
 		ComponentGetter.dbInfoFilter.setText("");
 		SqlEditor.getCodeArea().deselect();
+		
+		// 隐藏查找, 替换窗口
+		hideFindReplaceWindow();
 	}
 	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
 	public static RsVal tableInfo() {
@@ -520,6 +523,15 @@ public class CommonAction {
 		Event.fireEvent(btn, me);
 	}
 
+	public static void hideFindReplaceWindow() {
+		VBox b = SqlEditor.getTabVbox();
+		int bsize = b.getChildren().size();
+		if (bsize > 1) { 
+				FindReplaceEditor.delFindReplacePane();
+		} 
+		 
+	}
+	
 	public static void findReplace(boolean isReplace) {
 		VBox b = SqlEditor.getTabVbox();
 		int bsize = b.getChildren().size();
