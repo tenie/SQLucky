@@ -79,7 +79,9 @@ public class Dbinfo {
 				} 
 			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
 				e.printStackTrace();
-			} catch (SQLException e) {
+				logger.error(e.getMessage());
+			} catch (SQLException e) { 
+				logger.error(e.getMessage());
 				e.printStackTrace();
 			}
 		}

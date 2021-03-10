@@ -10,21 +10,21 @@ import java.util.Map;
  */
 public class DbVendor {
 	
-	public static String DB2 = "DB2";
-	public static String MYSQL = "MYSQL";
-	public static String H2 = "H2";
-	public static String SQLITE = "SQLITE";
+	final public static String db2 = "db2";
+	final public static String mysql = "mysql";
+	final public static String h2 = "h2";
+	final public static String sqlite = "sqlite";
 	
 	
 	private static LinkedHashSet<String> keys = new LinkedHashSet<String>();
 	private static Map<String, String> data = new HashMap<String, String>();
 
 	static {
-		add( DB2, "com.ibm.db2.jcc.DB2Driver");
-		add( MYSQL, "com.mysql.jdbc.Driver");
-		add( H2, "org.h2.Driver");
+		add( db2, "com.ibm.db2.jcc.DB2Driver");
+		add( mysql, "com.mysql.jdbc.Driver");
+		add( h2, "org.h2.Driver");
 		// 新版的jdbc 不需要手动注册驱动了
-		add(SQLITE, "");
+		add(sqlite, "");
 	}
 
 	public static void add(String name, String val) {

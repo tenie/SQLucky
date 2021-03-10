@@ -76,13 +76,13 @@ public class DbConnectionPo {
 //	public DbConnectionPo(){} 
 	private ExportDDL setExportDDL(String dbvendor) {
 
-		if (DbVendor.DB2.equals(dbVendor.toUpperCase())) {
+		if (DbVendor.db2.toUpperCase().equals(dbVendor.toUpperCase())) {
 			exportDDL = new ExportSqlDB2Imp();
-		} else if (DbVendor.MYSQL.equals(dbVendor.toUpperCase())) {
+		} else if (DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())) {
 			exportDDL = new ExportSqlMySqlImp();
-		} else if (DbVendor.H2 .equals(dbVendor.toUpperCase())) {
+		} else if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
 			exportDDL = new ExportSqlH2Imp();
-		}else if (DbVendor.SQLITE.equals(dbVendor.toUpperCase())) {
+		}else if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 			exportDDL = new ExportSqlSqliteImp();
 		}  else {
 			exportDDL = new ExportDefaultImp();
@@ -144,7 +144,7 @@ public class DbConnectionPo {
 			logger.info(getJdbcUrl());
 			logger.info(user);
 			logger.info(passWord);
-			if (DbVendor.SQLITE.equals(dbVendor.toUpperCase())) {
+			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
 				conn = dbinfo.getconn();
 			}else {
@@ -212,10 +212,10 @@ public class DbConnectionPo {
 
 	public String getJdbcUrl() {
 		if (jdbcUrl == null || jdbcUrl.length() == 0) {
-			if (DbVendor.H2.equals(dbVendor.toUpperCase())) {
+			if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
 				jdbcUrl = "jdbc:h2:" + host;
 				defaultSchema = "PUBLIC";
-			}else if (DbVendor.SQLITE.equals(dbVendor.toUpperCase())) {
+			}else if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 				jdbcUrl = "jdbc:sqlite:" + host;
 				defaultSchema = SQLITE_DATABASE;
 			} else {
@@ -287,7 +287,7 @@ public class DbConnectionPo {
 	public Map<String, DbSchemaPo> getSchemas() {
 		try { 
 			if (schemas == null) { 
-				if (DbVendor.SQLITE.equals(dbVendor.toUpperCase())) {
+				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 					Map<String, DbSchemaPo> sch = new HashMap<>();
 					DbSchemaPo sp = new DbSchemaPo();
 					sp.setSchemaName(SQLITE_DATABASE);

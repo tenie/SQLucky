@@ -111,7 +111,7 @@ public class ConnItemContainer {
 	public static TreeItem<TreeNodePo> CreateSchemaNode(DbConnectionPo connpo) {
 		//判断是不是mysql
 		String nodeName = "Schemas";
-		if( DbVendor.MYSQL.equals(connpo.getDbVendor().toUpperCase()) ){
+		if( DbVendor.mysql.toUpperCase().equals(connpo.getDbVendor().toUpperCase()) ){
 			nodeName = "Databases";
 		}
 		

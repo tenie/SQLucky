@@ -148,7 +148,7 @@ public class ConnectionEditor {
 
 		dbDriver.valueProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
 
-			if (newValue.equals(DbVendor.H2) ||newValue.equals(DbVendor.SQLITE) ) {
+			if (newValue.equals(DbVendor.h2) ||newValue.equals(DbVendor.sqlite) ) {
 				lbhostStr.setText("DB File");
 				host.setPromptText("DB File");
 				port.setDisable(true);
@@ -167,7 +167,7 @@ public class ConnectionEditor {
 			}
 			
 			
-			if (newValue.equals(DbVendor.SQLITE) ) {
+			if (newValue.equals(DbVendor.sqlite) ) {
 				user.setDisable(true);
 				password.setDisable(true);
 			}else {
@@ -220,7 +220,7 @@ public class ConnectionEditor {
 				return null;
 			}
 			if (StrUtils.isNullOrEmpty(host.getText())) {
-				if (dbDriver.getValue().equals(DbVendor.H2) || dbDriver.getValue().equals(DbVendor.SQLITE)) {
+				if (dbDriver.getValue().equals(DbVendor.h2) || dbDriver.getValue().equals(DbVendor.sqlite)) {
 					ModalDialog.errorAlert("Warn!", "DB File is empty !");
 				} else {
 					ModalDialog.errorAlert("Warn!", "host is empty !");
@@ -229,7 +229,7 @@ public class ConnectionEditor {
 				return null;
 			}
 
-			if (!dbDriver.getValue().equals(DbVendor.H2) && !dbDriver.getValue().equals(DbVendor.SQLITE) ) {
+			if (!dbDriver.getValue().equals(DbVendor.h2) && !dbDriver.getValue().equals(DbVendor.sqlite) ) {
 				if (StrUtils.isNullOrEmpty(port.getText())) {
 					ModalDialog.errorAlert("Warn!", "port is empty !");
 					return null;
@@ -241,7 +241,7 @@ public class ConnectionEditor {
 				return null;
 			}
 			
-			if ( ! dbDriver.getValue().equals(DbVendor.SQLITE) ) {
+			if ( ! dbDriver.getValue().equals(DbVendor.sqlite) ) {
 				if (StrUtils.isNullOrEmpty(user.getText())) {
 					ModalDialog.errorAlert("Warn!", "user is empty !");
 					return null;
