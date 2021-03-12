@@ -34,10 +34,6 @@ public class SqlCodeAreaHighLighting {
 	public StackPane getObj(String text, boolean editable) {
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new CodeArea();
-		 
-		
-//		//字体大小设置
-//		codeArea
 		
 		if(ConfigVal.THEME.equals("DARK")) {
 			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea ,"#606366" , "#313335"));
@@ -121,9 +117,10 @@ public class SqlCodeAreaHighLighting {
 				
 			}
 			
-			// 双击选中过了就不用继续了
-			if(isContinue){
+			// 上面已经选中了东西这里就不继续往下走了
+			if(isContinue){ 
 				if(strSz > 0 && !"*".equals(trimStr)) {
+					// 查找选中的字符 
 		    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str); 
 	  	    	}else {        
 		    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
