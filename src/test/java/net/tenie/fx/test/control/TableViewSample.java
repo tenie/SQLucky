@@ -43,7 +43,8 @@ public class TableViewSample extends Application {
         vbox.getChildren().addAll(label, table);
 
 //        table.setSkin(value);
-        SkinBase<TableView> s = new SkinBase<>();
+//        SkinBase<TableView> s = new SkinBase<>();
+        
         
         ((Group) scene.getRoot()).getChildren().addAll(vbox);
 
