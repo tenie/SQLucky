@@ -3,8 +3,8 @@ package net.tenie.fx.PropertyPo;
 import java.io.Serializable;
 
 import javafx.scene.Node;
-import net.tenie.fx.component.container.ConnItemDbObjects;
-import net.tenie.fx.component.container.ConnItemContainer;
+import net.tenie.fx.component.TreeItem.ConnItemContainer;
+import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;

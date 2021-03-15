@@ -1,4 +1,4 @@
-package net.tenie.fx.component.container;
+package net.tenie.fx.component.TreeItem;
 
 import java.util.Set;
 import javafx.collections.ObservableList;
@@ -18,6 +18,7 @@ public class ConnItemContainer {
 	public ConnItemContainer(DbConnectionPo connpo) {
 		this.connpo = connpo;
 		schemaNode = CreateEmptySchemaNode(connpo);
+//		this.connpo.setItemContainer(this);
 	}
 
 	/**

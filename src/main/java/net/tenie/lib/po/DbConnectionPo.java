@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.lib.db.ExportSqlDB2Imp;
 import net.tenie.lib.db.Dbinfo;
@@ -45,6 +46,8 @@ public class DbConnectionPo {
 	private Connection conn;
 	private Map<String, DbSchemaPo> schemas;
 	private ExportDDL exportDDL;
+	
+//	private ConnItemContainer itemContainer;
 	
 	private String SQLITE_DATABASE = "SQLITE DATABASE";
 
@@ -338,6 +341,15 @@ public class DbConnectionPo {
 	public void setExportDDL(ExportDDL exportDDL) {
 		this.exportDDL = exportDDL;
 	}
+
+	
+//	public ConnItemContainer getItemContainer() {
+//		return itemContainer;
+//	}
+//
+//	public void setItemContainer(ConnItemContainer itemContainer) {
+//		this.itemContainer = itemContainer;
+//	}
 
 	@Override
 	public String toString() {

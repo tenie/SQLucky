@@ -53,7 +53,7 @@ import net.tenie.fx.component.MyTextField2TableCell;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.StringPropertyListValueFactory;
-import net.tenie.fx.component.container.ConnItemDbObjects;
+import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.config.ConfigVal;

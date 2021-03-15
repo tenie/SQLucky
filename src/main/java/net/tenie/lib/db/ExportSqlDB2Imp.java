@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tenie.fx.config.CommonConst;
 import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;
 /* 
@@ -30,6 +31,7 @@ public class ExportSqlDB2Imp implements ExportDDL {
 	public List<TablePo> allTableObj(Connection conn, String schema) {
 		try {
 			List<TablePo> vals = Dbinfo.fetchAllTableName(conn, schema);
+			
 //			if (vals != null && vals.size() > 0) {
 //				vals.stream().forEach(v -> {
 //					try {

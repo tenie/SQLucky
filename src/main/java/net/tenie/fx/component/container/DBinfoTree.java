@@ -12,12 +12,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import net.tenie.fx.Action.TreeObjAction;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ConnectionEditor;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MenuFactory;
+import net.tenie.fx.component.TreeItem.ConnItemContainer;
+import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
@@ -167,27 +170,29 @@ public class DBinfoTree {
 					 parentItem.getValue().getType() == TreeItemType.TABLE_ROOT) {
 				DbConnectionPo dpo = item.getValue().getConnpo();
 				TablePo table = item.getValue().getTable();
-				String createTableSql = table.getDdl();
-				if (StrUtils.isNullOrEmpty(createTableSql)) {
-					createTableSql = DBOptionHelper.getCreateTableSQL(dpo, table.getTableSchema(),
-							table.getTableName());
-					createTableSql = SqlFormatter.format(createTableSql);
-					table.setDdl(createTableSql);
-				}
-				DataViewTab.showDdlPanel(item.getValue().getName(), createTableSql);
+//				String createTableSql = table.getDdl();
+//				if (StrUtils.isNullOrEmpty(createTableSql)) {
+//					createTableSql = DBOptionHelper.getCreateTableSQL(dpo, table.getTableSchema(),
+//							table.getTableName());
+//					createTableSql = SqlFormatter.format(createTableSql);
+//					table.setDdl(createTableSql);
+//				}
+//				DataViewTab.showDdlPanel(item.getValue().getName(), createTableSql);
+				TreeObjAction.showTableSql(dpo, table, item.getValue().getName());
 			}
 			// 视图
 			else if (parentItem.getValue().getType() != null && 
 					 parentItem.getValue().getType() == TreeItemType.VIEW_ROOT) {
 				DbConnectionPo dpo = item.getValue().getConnpo(); 
 				TablePo table = item.getValue().getTable();
-				String sqlStr = table.getDdl();
-				if (StrUtils.isNullOrEmpty(sqlStr)) {
-					sqlStr = DBOptionHelper.getViewSQL(dpo, table.getTableSchema(), table.getTableName());
-					sqlStr = SqlFormatter.format(sqlStr);
-					table.setDdl(sqlStr);
-				}
-				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
+				TreeObjAction.showTableSql(dpo, table, item.getValue().getName());
+//				String sqlStr = table.getDdl();
+//				if (StrUtils.isNullOrEmpty(sqlStr)) {
+//					sqlStr = DBOptionHelper.getViewSQL(dpo, table.getTableSchema(), table.getTableName());
+//					sqlStr = SqlFormatter.format(sqlStr);
+//					table.setDdl(sqlStr);
+//				}
+//				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
 
 			}
 			// 函数

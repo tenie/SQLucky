@@ -10,6 +10,7 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
@@ -255,6 +256,15 @@ public class ButtonFactory {
 
 		detailBtn.setOnMouseClicked(CommonEventHandler.showLineDetail(detailBtn));
 		detailBtn.setTooltip(MyTooltipTool.instance("current line detail "));
+		
+		JFXButton tableSQLBtn = new JFXButton();
+		tableSQLBtn.setGraphic(ImageViewGenerator.svgImageDefActive("table")); 
+//		tableSQLBtn.setOnMouseClicked(CommonEventHandler.showLineDetail(detailBtn));
+		tableSQLBtn.setOnMouseClicked( e->{
+			ButtonAction.findTable();
+		});
+		tableSQLBtn.setTooltip(MyTooltipTool.instance("current line detail "));
+		
 
 		// refresh
 		JFXButton refreshBtn = new JFXButton();
@@ -346,11 +356,12 @@ public class ButtonFactory {
 		
 		
 		
-		fp.getChildren().addAll(saveBtn, detailBtn, refreshBtn, addBtn, minusBtn, copyBtn, exportBtn, 
+		fp.getChildren().addAll(saveBtn, detailBtn, tableSQLBtn, refreshBtn, addBtn, minusBtn, copyBtn, exportBtn, 
 				hideBottom, lb);
 		Double fix = 30.0;
 		int i = 0;
 		AnchorPane.setLeftAnchor(detailBtn , fix * ++i ) ;
+		AnchorPane.setLeftAnchor(tableSQLBtn , fix * ++i ) ;
 		AnchorPane.setLeftAnchor(refreshBtn , fix * ++i);
 		
 		AnchorPane.setLeftAnchor(addBtn , fix * ++i ) ;

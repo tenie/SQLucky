@@ -1,4 +1,4 @@
-package net.tenie.fx.component.container;
+package net.tenie.fx.component.TreeItem;
 
 import java.util.List;
 import java.util.Set;
@@ -9,6 +9,7 @@ import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.config.CommonConst;
 import net.tenie.lib.po.DBOptionHelper;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.po.FuncProcTriggerPo;
@@ -131,6 +132,14 @@ public class ConnItemDbObjects {
 	public   TreeItem<TreeNodePo> CreateTableNode(DbConnectionPo connpo, String sche) {
 		TreeItem<TreeNodePo> Table = CreateTableNode();
 		List<TablePo> tabs = DBOptionHelper.getTabsName(connpo, sche, true);
+		// 缓存起来
+		String cacheKey = connpo.getConnName() + "_" +sche;
+		TreeObjCache.tableCache.put(cacheKey, tabs);
+		for(TablePo po: tabs) {
+			po.setTableType(CommonConst.TYPE_TABLE);
+		}
+		
+		
 
 		ObservableList<TreeItem<TreeNodePo>> sourceList = FXCollections.observableArrayList();
 		for (TablePo tbpo : tabs) {
@@ -157,7 +166,11 @@ public class ConnItemDbObjects {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("View", TreeItemType.VIEW_ROOT,
 				ImageViewGenerator.svgImage("object-group", "blue"), connpo));
 		List<TablePo> tabs = DBOptionHelper.getViewsName(connpo, sche, true);// connpo.getViews(sche);
-
+		for(TablePo po: tabs) {
+			po.setTableType(CommonConst.TYPE_VIEW);
+		}
+		
+		
 		for (TablePo tbpo : tabs) {
 			TreeNodePo po = new TreeNodePo(tbpo.getTableName(), TreeItemType.VIEW,
 					ImageViewGenerator.svgImageUnactive("table"), connpo);

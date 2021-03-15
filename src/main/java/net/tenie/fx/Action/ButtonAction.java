@@ -18,10 +18,13 @@ import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.TreeItem.TreeObjCache;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.EventAndListener.RunSQLHelper;
+import net.tenie.lib.po.DbConnectionPo;
+import net.tenie.lib.po.TablePo;
 import net.tenie.lib.tools.StrUtils;
 
 public class ButtonAction {
@@ -153,4 +156,24 @@ public class ButtonAction {
 		dataSave(rv.saveBtn);
 	}
 	
+	
+	// 获取tree 节点中的 table
+	public static void findTable() {
+		RsVal rv = CommonAction.tableInfo();
+		DbConnectionPo dbcp = rv.dbc;
+		String tbn = rv.tableName;
+		String key = dbcp.getConnName() + "_" +dbcp.getDefaultSchema();
+		List<TablePo> tbs = TreeObjCache.tableCache.get(key);
+		
+		TablePo tbrs = null; 
+		for(TablePo po: tbs) {
+			if( po.getTableName().equals(tbn) ){
+				tbrs = po;
+				break;
+			}
+		}
+		if( tbrs != null)
+		TreeObjAction.showTableSql(dbcp, tbrs, tbn);
+		
+	}
 }
