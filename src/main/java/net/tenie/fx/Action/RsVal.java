@@ -14,6 +14,7 @@ public class RsVal {
 	public String sql;
 	public String tableName;
 	public Connection conn;
+	public DbConnectionPo dbconnPo;
 	public DbConnectionPo  dbc ;
 	public ObservableList<ObservableList<StringProperty>> alldata;
 	public Button saveBtn;

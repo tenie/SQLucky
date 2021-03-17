@@ -313,6 +313,9 @@ public class MenuBarContainer {
 
 		MenuItem about = new MenuItem(MenuItemNameFormat("About"));
 		about.setGraphic(ImageViewGenerator.svgImageUnactive("info-circle"));
+		about.setOnAction(value -> {
+			ModalDialog.showAbout();
+		});
 
 		mn.getItems().addAll(about);
 		return mn;

@@ -95,8 +95,8 @@ public class MenuFactory {
 			RsVal rv = exportSQL(DROP_COLUMN, colname);
 			if(StrUtils.isNotNullOrEmpty(rv.sql)) {
 				// 要被执行的函数
-				Consumer< String >  caller = x ->{
-					execExportSql(rv.sql, rv.conn);
+				Consumer< String >  caller = x ->{ 
+					execExportSql(rv.sql, rv.conn ,rv.dbconnPo);
 				};
 				ModalDialog.showComfirmExec("Confirm drop!", "Execute Sql: " + rv.sql +" ?", caller);		
 			} 
@@ -111,7 +111,7 @@ public class MenuFactory {
 				if(StrUtils.isNullOrEmpty(x.trim())) return;
 				String str = colname + " " + x;
 				RsVal rv = exportSQL(ALTER_COLUMN, str);
-				execExportSql(rv.sql, rv.conn);
+				execExportSql(rv.sql, rv.conn, rv.dbconnPo);
 			};
 			ModalDialog.showExecWindow("Alter "+colname +" Date Type: input words like 'CHAR(10) ", "", caller);
 		});
@@ -123,7 +123,7 @@ public class MenuFactory {
 			Consumer< String >  caller = x ->{
 				if(StrUtils.isNullOrEmpty(x.trim())) return;
 				RsVal rv2= exportSQL(ADD_COLUMN, x);
-				execExportSql(rv2.sql, rv2.conn);
+				execExportSql(rv2.sql, rv2.conn,  rv.dbconnPo);
 			};
 			ModalDialog.showExecWindow(rv.tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
 		});
@@ -139,7 +139,7 @@ public class MenuFactory {
 			Consumer< String >  caller = x ->{
 				if(StrUtils.isNullOrEmpty(x.trim())) return;
 				String strsql = sql + x;
-				execExportSql(strsql, rv.conn);
+				execExportSql(strsql, rv.conn,  rv.dbconnPo);
 			};
 			ModalDialog.showExecWindow("Execute : "+ sql +" ? : input your value", "", caller);
 		});
@@ -210,10 +210,10 @@ public class MenuFactory {
 		return rv;
 	}
 	// 执行导出的sql
-	public static void  execExportSql(String sql, Connection conn) {
+	public static void  execExportSql(String sql, Connection conn, DbConnectionPo dbconnPo) {
 //		String idx =  "" + ComponentGetter.dataTab.getSelectionModel().getSelectedIndex();
 		JFXButton runFunPro = AllButtons.btns.get("runFunPro");
-		RunSQLHelper.runSQLMethod(conn, sql, "", runFunPro);
+		RunSQLHelper.runSQLMethod(dbconnPo, conn, sql, "", runFunPro);
 		
 	}
 	

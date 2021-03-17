@@ -59,13 +59,19 @@ public class ModalDialog {
 	}
 	
 	public static Label INFO ;
+	public static Label ABOUT ;
 	public static Label WARN ;
 	public static Label ERROR ;
 	public static Label EMPTY ;
 	
+	
 	static {
 		INFO = new Label("Info");
 		INFO.setGraphic( ImageViewGenerator.svgImage("info-circle", "green"));
+		
+		ABOUT = new Label("About");
+		ABOUT.setGraphic( ImageViewGenerator.svgImage("info-circle", "green"));
+		
 		WARN = new Label("Warn");
 		WARN.setGraphic( ImageViewGenerator.svgImage("info-circle", "#FFD700"));
 		ERROR = new Label("Error");
@@ -679,12 +685,7 @@ public class ModalDialog {
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-		setSceneAndShow(scene, stage);
-		
-		
-
-		
-		
+		setSceneAndShow(scene, stage);  
 	}
 	
 	
@@ -707,4 +708,40 @@ public class ModalDialog {
 		}
 		return tf;
 	}
+	
+
+	// about window
+	public static void showAbout() { 
+		
+		Label tit = new Label(" ");  
+		Label text0 = new Label("#DataBase Tool #Open Source  #JAVA1.8 #JAVAFX ");  
+		Label text1 = new Label("Author: tenie  Email: tenie@tenie.net");  
+		Label text2 = new Label("Github: https://github.com/tenie/SQLucky");  
+		
+		
+		final Stage stage = new Stage(); 
+		
+		JFXButton okbtn = new JFXButton("OK");
+		okbtn.setOnAction(value -> {
+			stage.close();
+		}); 
+		List<Node> nds = new ArrayList<>(); 
+		nds.add( tit); 
+		nds.add( text0); 
+		nds.add( text1); 
+		nds.add( text2);  
+		
+		List<Node> btns = new ArrayList<>(); 
+		btns.add( okbtn);
+		
+		
+		Node vb = setVboxShape(stage, ABOUT, nds, btns);
+		Scene scene = new Scene((Parent) vb);
+		
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setScene(scene);
+		setSceneAndShow(scene, stage);  
+	}
+	
+	
 }

@@ -39,6 +39,7 @@ import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DeleteDao;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.fx.dao.InsertDao;
@@ -334,12 +335,14 @@ public class CommonEventHandler {
 				Tab tb = CacheTableDate.getTab(id);
 				String sql = CacheTableDate.getSelectSQl(id);
 				Connection conn = CacheTableDate.getDBConn(id);
+			    String connName = 	CacheTableDate.getConnName(id);
+//			    DBConns.get(connName);
 				if (conn != null) {
 					// 关闭当前tab
 					CommonUtility.setTabName(tb, "");
 					String idx = "" + ComponentGetter.dataTab.getSelectionModel().getSelectedIndex();
 					JFXButton runFunPro = AllButtons.btns.get("runFunPro");
-					RunSQLHelper.runSQLMethod(conn, sql, idx, runFunPro);
+					RunSQLHelper.runSQLMethod( DBConns.get(connName), conn, sql, idx, runFunPro);
 				}
 			}
 		};

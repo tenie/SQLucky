@@ -72,6 +72,9 @@ public class CommonAction {
 		String connName = CacheTableDate.getConnName(tableId);
 		String tableName =  CacheTableDate.getTableName(tableId);
 		Connection conn = CacheTableDate.getDBConn(tableId);
+		 
+//		DbConnectionPo getCurrentConnectPO()
+		
 		ObservableList<ObservableList<StringProperty>> alldata = CacheTableDate.getData(tableId);
 		DbConnectionPo  dbc = DBConns.get(connName); 
 		
@@ -80,6 +83,7 @@ public class CommonAction {
 				         ComponentGetter.dataTableView();
 		RsVal rv = new RsVal();
 		rv.conn = conn; 
+		rv.dbconnPo = DBConns.get(connName);
 		rv.tableName = tableName;
 		rv.dbc =  dbc; 
 		rv.alldata = alldata;
@@ -108,6 +112,7 @@ public class CommonAction {
 					fileName = SaveFile.fileName(file.getPath());
 					CommonUtility.setTabName(SqlEditor.mainTabPaneSelectedTab(), fileName);
 					SqlEditor.mainTabPaneSelectedTab().setId(ConfigVal.SAVE_TAG + file.getPath());
+					fileName = file.getPath();
 				}
 			}
 			setOpenfileDir(fileName);

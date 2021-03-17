@@ -79,14 +79,14 @@ public final class ComponentGetter {
 	
 	// 获取打开文件的目录
 	public static File getOpenfileDir() { 
+//		return  FileUtils.getUserDirectory();
 			if(StrUtils.isNullOrEmpty(ConfigVal.openfileDir)) {
 				return  FileUtils.getUserDirectory();
 			}else {
 				 
 				File f = new File(ConfigVal.openfileDir);
 				if(f.isFile()) {
-					String fp = f.getParent();
-//					System.out.println(fp);
+					String fp = f.getParent(); 
 				    f =  new File(fp);
 				} 
 				return  f;
@@ -127,6 +127,11 @@ public final class ComponentGetter {
 		   str = lb.getText(); 
 		}
 		return str;
+	}
+	// 
+	public static DbConnectionPo getCurrentConnectPO() {
+		String connName = getCurrentConnectName();
+		return DBConns.get(connName);
 	}
 	
 	// 根据链接名称,获取链接Node 

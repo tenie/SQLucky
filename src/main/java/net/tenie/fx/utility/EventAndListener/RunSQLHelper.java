@@ -58,6 +58,8 @@ import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.config.Db2ErrorCode;
+import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.utility.CommonUtility;
@@ -88,7 +90,8 @@ public class RunSQLHelper {
 		Connection conn = (Connection) val.get("conn");
 		String tabIdx = (String) val.get("tabIdx");
 		String btn = (String)val.get("btn"); 
-
+		DbConnectionPo dpo = (DbConnectionPo)val.get("dpo"); 
+		 
 		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
 			tidx = Integer.valueOf(tabIdx);
 		}else {
@@ -120,7 +123,7 @@ public class RunSQLHelper {
 				}  
 			}
 			// 执行sql
-			execSqlList(allsqls, conn);
+			execSqlList(allsqls, conn, dpo);
 
 		} catch (Exception e) {
 //			Platform.runLater(() -> { 
@@ -135,7 +138,7 @@ public class RunSQLHelper {
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static void execSqlList(List<sqlData> allsqls, Connection conn) throws SQLException {
+	private static void execSqlList(List<sqlData> allsqls, Connection conn, DbConnectionPo dpo) throws SQLException {
 //    	List<String > allsqls = tdpo.getSql(); 
 		String sqlstr;
 		String sql;
@@ -180,6 +183,9 @@ public class RunSQLHelper {
 				}
 			} catch (Exception e) {
 				msg = "failed : " + e.getMessage();
+				if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
+					msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
+				}
 				int bg = allsqls.get(i).begin;
 				int len =  allsqls.get(i).length;
 				Platform.runLater(() -> {  
@@ -321,7 +327,7 @@ public class RunSQLHelper {
 	}
 
 	// 在子线程执行 运行sql 的任务
-	public static Thread createThread(Connection conn, String sql, String tabIdx, JFXButton run,
+	public static Thread createThread(DbConnectionPo dpo, Connection conn, String sql, String tabIdx, JFXButton run,
 			Consumer<Map<String, Object>> action) {
 		connName = ComponentGetter.getCurrentConnectName();
 		return new Thread() {
@@ -329,6 +335,7 @@ public class RunSQLHelper {
 				logger.info("线程启动了" + this.getName());
 				Map<String, Object> val = new HashMap<>();
 				val.put("sql", sql);
+				val.put("dpo", dpo);
 				val.put("conn", conn);
 				val.put("tabIdx", tabIdx);
 				val.put("btn", run.getId());
@@ -407,10 +414,10 @@ public class RunSQLHelper {
 	}
 
 	// 运行 sql 入口
-	public static void runSQLMethod(Connection conn, String sql, String tabIdx, JFXButton run) {
+	public static void runSQLMethod(DbConnectionPo dpo, Connection conn, String sql, String tabIdx, JFXButton run) {
 		settingBtn();
 		CommonAction.showDetailPane();
-		thread = createThread(conn, sql, tabIdx, run, RunSQLHelper::runMain);
+		thread = createThread(dpo, conn, sql, tabIdx, run, RunSQLHelper::runMain);
 		thread.start();
 	}
 
@@ -437,7 +444,7 @@ public class RunSQLHelper {
 		settingBtn(run, stop , btn );
 		CommonAction.showDetailPane();
 		
-		thread = createThread(conn, sql, tabIdx, run, RunSQLHelper::runMain);
+		thread = createThread( dpo, conn, sql, tabIdx, run, RunSQLHelper::runMain);
 		thread.start();
 	}
 
@@ -459,8 +466,7 @@ public class RunSQLHelper {
 			logger.info("线程是否被中断：" + thread.isInterrupted());// true
 			if (thread.isInterrupted()) {
 				settingBtn(run, true, stop, false, btn);
-			}
-
+			} 
 		}
 	}
 
