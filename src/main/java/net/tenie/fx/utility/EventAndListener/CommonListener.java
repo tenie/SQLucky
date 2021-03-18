@@ -1,5 +1,7 @@
 package net.tenie.fx.utility.EventAndListener;
 
+import org.fxmisc.richtext.CodeArea;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Label;
@@ -10,6 +12,8 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ConnectionEditor;
+import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
+import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
@@ -19,7 +23,24 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class CommonListener {
-
+	
+	public static ChangeListener< String> codetxtChange(CodeArea codeArea){
+		return new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//				SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+				Tab tb = SqlEditor.mainTabPaneSelectedTab();
+				if (tb != null) {
+					String title = CommonUtility.tabText(tb);  
+					if (!title.endsWith("*")) { 
+						CommonUtility.setTabName(tb, title + "*");
+					}
+					SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+				}
+			}
+		};
+	}
+	
 	// 文本框只能输入ip字符串
 	public static ChangeListener<String> textFieldIp(TextField rows) {
 		return new ChangeListener<String>() {

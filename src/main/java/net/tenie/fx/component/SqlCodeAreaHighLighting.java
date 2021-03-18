@@ -1,5 +1,6 @@
 package net.tenie.fx.component;
 
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -8,6 +9,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.IndexRange;
+import javafx.scene.control.Tab;
 import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -15,13 +17,16 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
+import net.tenie.fx.utility.EventAndListener.CommonListener;
 import net.tenie.lib.tools.StrUtils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.Paragraph;
 
 /*   @author tenie */
 public class SqlCodeAreaHighLighting {
@@ -29,7 +34,7 @@ public class SqlCodeAreaHighLighting {
 	private static final String sampleCode = String.join("\n", new String[] { "" });
 
 	private CodeArea codeArea;
-	private ExecutorService executor;
+	private ExecutorService executor; 
 
 	public StackPane getObj(String text, boolean editable) {
 		executor = Executors.newSingleThreadExecutor();
@@ -44,7 +49,7 @@ public class SqlCodeAreaHighLighting {
 		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{
 			if(e.getCode() == KeyCode.TAB ) {
-				logger.info("文本缩进 ;   "+e.getCode() );
+				logger.info("文本缩进 : "+e.getCode() );
 				if (codeArea.getSelectedText().contains("\n") ) { 
 					e.consume();
 					if(e.isShiftDown()) {
@@ -52,12 +57,45 @@ public class SqlCodeAreaHighLighting {
 					}else { 
 						CommonAction.add4Space();
 					}
+				} 
+			}else if(e.getCode() == KeyCode.ENTER ) {
+				// 换行缩进, 和当前行的缩进保持一致
+				logger.info("换行缩进 : "+e.getCode() );
+				String seltxt = codeArea.getSelectedText();
+				if(seltxt.length() == 0) {//没有选中文本, 存粹换行, 才进行缩进计算
+					int idx = codeArea.getCurrentParagraph(); // 获取当前行号
+					// 根据行号获取该行的文本
+					Paragraph<Collection<String>, String, Collection<String>>   p = codeArea.getParagraph(idx);
+					String ptxt = p.getText();
+					
+					// 获取文本开头的空白字符串
+					if(StrUtils.isNotNullOrEmpty(ptxt)) { 
+						StringBuilder strb = new StringBuilder("");
+						for(int i = 0; i < ptxt.length(); i++) {
+							char c = ptxt.charAt(i);
+							if(c == ' ' || c == '\t') {
+								strb.append(c);
+							}else {
+								break;
+							}
+						}
+						// 在新行插入空白字符串
+						if(strb.length() > 0) {
+							e.consume();
+							String addstr = "\n"+strb.toString();
+							codeArea.insertText(codeArea.getAnchor(), addstr);
+						}
+						
+					}
+					
 				}
 				
 			}
+			
 		});
- 
-		codeArea.setOnKeyPressed(CommonEventHandler.codeAreaChange(codeArea)); 
+		//TODO 输入事件
+		codeArea.textProperty().addListener( CommonListener.codetxtChange(codeArea) );	
+//		codeArea.setOnKeyPressed(CommonEventHandler.codeAreaChange(codeArea)); 
 		codeArea.replaceText(0, 0, sampleCode);
 		if (text != null)
 			codeArea.appendText(text);
@@ -132,8 +170,8 @@ public class SqlCodeAreaHighLighting {
 	    	
 		});
 		
-		
- 
+
+
 		// 选中事件
 //		codeArea.selectedTextProperty().addListener(new ChangeListener<String>() {
 //		    @Override

@@ -194,19 +194,11 @@ public class CommonEventHandler {
 	//TODO 代码输入时, 修改tab 的名称加上* ,意味未保存
 	public static EventHandler<KeyEvent> codeAreaChange(CodeArea code) {
 		return new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent e) {
-				 
-				
+			public void handle(KeyEvent e) {  
 				String s = e.getCode().getName();
 				KeyCode kc =  e.getCode();
 				if(	KeyCode.TAB == kc) {
-					e.consume();
-//					logger.info(s);
-//					CommonAction.addString("\t");
-//					CodeArea code = SqlEditor.getCodeArea();
-//					code.getText()
-					
-					 
+					e.consume();					 
 				} else {
 //					logger.info(s);
 					Tab tb = SqlEditor.mainTabPaneSelectedTab();
@@ -218,7 +210,6 @@ public class CommonEventHandler {
 						SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 					}
 				}
-				
 
 			}
 		};

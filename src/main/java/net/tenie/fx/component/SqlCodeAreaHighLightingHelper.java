@@ -79,9 +79,13 @@ public class SqlCodeAreaHighLightingHelper {
     }
 
     public static void applyHighlighting(CodeArea codeArea) {
+//    	codeArea.textProperty().removeListener();
 //    	StyleSpans<Collection<String>> highlighting  = findEqualyWord("foo", codeArea.getText());
-    	StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
-        codeArea.setStyleSpans(0, highlighting);
+    	if(codeArea.getText().length() > 0) {
+    		StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
+            codeArea.setStyleSpans(0, highlighting);
+    	}
+    	
     }
     public static void applyFindWordHighlighting(CodeArea codeArea,String str) {
     	StyleSpans<Collection<String>> highlighting  = findEqualyWord(str, codeArea.getText()); 

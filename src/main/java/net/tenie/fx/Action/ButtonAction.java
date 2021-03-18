@@ -161,6 +161,9 @@ public class ButtonAction {
 	public static void findTable() {
 		RsVal rv = CommonAction.tableInfo();
 		DbConnectionPo dbcp = rv.dbc;
+		if(dbcp == null ) {
+			return ;
+		}
 		String tbn = rv.tableName;
 		String key = dbcp.getConnName() + "_" +dbcp.getDefaultSchema();
 		List<TablePo> tbs = TreeObjCache.tableCache.get(key);

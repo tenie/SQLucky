@@ -85,7 +85,7 @@ public class DataViewContainer {
 							VBox vb = (VBox) tab0.getContent();
 							FilteredTableView<ObservableList<StringProperty>> vbt  = 
 									(FilteredTableView<ObservableList<StringProperty>>) vb.getChildren().get(1);
-							vbt.getItems().addAll( table.getItems()) ;
+							vbt.getItems().addAll( 0, table.getItems()) ;
 							dataTabPane.getSelectionModel().select(tab0);
 						}else {
 							addNewDateTab(dataTabPane, table, tn, 0, disable, time , rows, connName);
@@ -201,7 +201,8 @@ public class DataViewContainer {
         
 		return table;
 	}
-
+	
+	// 设置序号行的宽度
 	public static void setTabRowWith(FilteredTableView<ObservableList<StringProperty>> table , int dataSize ) {
 		if(dataSize > 1000) {
 			table.setRowHeaderWidth(50);

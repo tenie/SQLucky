@@ -264,6 +264,7 @@ public class ButtonFactory {
 			ButtonAction.findTable();
 		});
 		tableSQLBtn.setTooltip(MyTooltipTool.instance("current line detail "));
+		tableSQLBtn.setDisable(disable);
 		
 
 		// refresh
@@ -300,6 +301,7 @@ public class ButtonFactory {
 		MenuButton exportBtn = new MenuButton();
 		exportBtn.setGraphic(ImageViewGenerator.svgImageDefActive("share-square-o"));
 		exportBtn.setTooltip(MyTooltipTool.instance("Export data"));
+		exportBtn.setDisable(disable);
 
 		Menu insertSQL = new Menu("Export Insert SQL Format ");
 		MenuItem selected = new MenuItem("Selected Data to Clipboard ");

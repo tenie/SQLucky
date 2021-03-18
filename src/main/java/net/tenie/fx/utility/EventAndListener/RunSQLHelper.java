@@ -3,6 +3,7 @@ package net.tenie.fx.utility.EventAndListener;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,10 +144,12 @@ public class RunSQLHelper {
 		String sqlstr;
 		String sql;
 		int sqllenght = allsqls.size();
-		DbTableDatePo ddlDmlpo = new DbTableDatePo();
-
+		DbTableDatePo ddlDmlpo = new DbTableDatePo(); 
+		ddlDmlpo.addField("Current Time");
 		ddlDmlpo.addField("Execute SQL Info");
 		ddlDmlpo.addField("Execute SQL");
+		
+		
 
 		for (int i = 0; i < sqllenght; i++) {
 //			sqlstr = allsqls.get(i);
@@ -202,9 +205,9 @@ public class RunSQLHelper {
 //					}};
 //				sp.addListener(cl );
 //				val.add(sp);
-				
+				val.add(new SimpleStringProperty(StrUtils.dateToStrL( new Date()) ));
 				val.add(new SimpleStringProperty(msg)); 
-				val.add(new SimpleStringProperty(sqlstr));
+				val.add(new SimpleStringProperty(sqlstr)); 
 				val.add(new SimpleStringProperty("" + i));
 				ddlDmlpo.addData(val);
 			}
@@ -230,11 +233,7 @@ public class RunSQLHelper {
 
 		}
 	}
-
-	// select action 选中的sql执行
-//	private static void selectAction(String sql, Connection conn) throws Exception {
-//		selectAction(sql, conn, tidx);
-//	}
+ 
 
 	private static void selectAction(String sql, Connection conn) throws Exception {
 		try { //, int tidx
@@ -517,12 +516,19 @@ public class RunSQLHelper {
 		col.setGraphic(label);
 		
 		int witdth;
-		witdth = (colname.length() * 10) + 15;
-		if (witdth < 90)
-			witdth = 100;
-		if (augmentation) {
-			witdth = 200;
+		if(colname.equals("Execute SQL Info")) {
+			witdth = 600;
+		}else if(colname.equals("Execute SQL")) {
+			witdth = 650;
+		}else {
+			witdth = (colname.length() * 10) + 15;
+			if (witdth < 90)
+				witdth = 100;
+			if (augmentation) {
+				witdth = 200;
+			}
 		}
+		
 		col.setMinWidth(witdth);
 		col.setPrefWidth(witdth);
 		col.setCellValueFactory(new StringPropertyListValueFactory(colIdx, table));
