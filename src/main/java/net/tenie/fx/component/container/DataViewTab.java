@@ -107,6 +107,7 @@ public class DataViewTab {
 					CommonAction.clearDataTable(ComponentGetter.dataTab, tab);
 				}
 				ComponentGetter.dataTab.getTabs().clear(); 
+				CommonAction.hideBottom();
 		});
 
 		MenuItem closeOther = new MenuItem("Close Other");

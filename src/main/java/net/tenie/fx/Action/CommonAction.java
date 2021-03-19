@@ -1123,11 +1123,7 @@ public class CommonAction {
 		if (idVal != null) {
 			CacheTableDate.clear(idVal);
 		}
-		tb.setContent(null);
-		
-		if(tabPane.getTabs().size() == 1) {
-			CommonAction.hideBottom();
-		}
+		tb.setContent(null); 
 		long endtime = System.currentTimeMillis();
 		long costTime = (endtime - begintime);
 		logger.info("关闭使用时间 = "+ costTime);

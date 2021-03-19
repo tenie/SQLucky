@@ -70,18 +70,9 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
 				CommonAction.clearDataTable(tabPane, tb);
-//				long begintime = System.currentTimeMillis();
-//				String idVal = tb.getId();
-//				if (idVal != null) {
-//					CacheTableDate.clear(idVal);
-//				}
-//				tb.setContent(null);
-//				long endtime = System.currentTimeMillis();
-//				long costTime = (endtime - begintime);
-//				if(tabPane.getTabs().size() == 1) {
-//					CommonAction.hideBottom();
-//				}
-//				System.out.println(costTime);
+				if(tabPane.getTabs().size() == 1) {
+					CommonAction.hideBottom();
+				} 
 			}
 		};
 	}
