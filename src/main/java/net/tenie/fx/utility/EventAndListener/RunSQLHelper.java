@@ -20,6 +20,8 @@ import org.fxmisc.richtext.CodeArea;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -205,15 +207,56 @@ public class RunSQLHelper {
 //					}};
 //				sp.addListener(cl );
 //				val.add(sp);
-				val.add(new SimpleStringProperty(StrUtils.dateToStrL( new Date()) ));
-				val.add(new SimpleStringProperty(msg)); 
-				val.add(new SimpleStringProperty(sqlstr)); 
-				val.add(new SimpleStringProperty("" + i));
+				val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+				val.add(createReadOnlyStringProperty(msg)); 
+				val.add(createReadOnlyStringProperty(sqlstr)); 
+				val.add(createReadOnlyStringProperty("" + i));
 				ddlDmlpo.addData(val);
 			}
 
 		}
 		showExecuteSQLInfo(ddlDmlpo);
+	}
+	
+	// 字段值被修改还原, 不允许修改
+	private static   StringProperty createReadOnlyStringProperty(String val ) {
+		StringProperty sp =  new StringProperty() { 
+			@Override
+			public String get() { 
+				return val;
+			}
+			
+			@Override
+			public void bind(ObservableValue<? extends String> arg0) { }
+			@Override
+			public boolean isBound() { 
+				return false;
+			}
+			@Override
+			public void unbind() { }
+
+			@Override
+			public Object getBean() { 
+				return null;
+			}
+			@Override
+			public String getName() { 
+				return null;
+			} 
+			@Override
+			public void addListener(ChangeListener<? super String> arg0) { } 
+			@Override
+			public void removeListener(ChangeListener<? super String> arg0) { } 
+			@Override
+			public void addListener(InvalidationListener arg0) { }
+			@Override
+			public void removeListener(InvalidationListener arg0) { } 		
+			@Override
+			public void set(String arg0) {}
+
+			 
+		}; 		
+		return sp;
 	}
 	
 	// 展示信息窗口,
@@ -223,6 +266,8 @@ public class RunSQLHelper {
 			DataTabDataPo tdpo = new DataTabDataPo();
 			tdpo.addTableName(ConfigVal.EXEC_INFO_TITLE);
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			// 表内容可以被修改
+			table.editableProperty().bind(new SimpleBooleanProperty(true));
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
 			// table 添加列和数据
 			TableAddVal(table, ddlDmlpo, new ArrayList<String>());
@@ -517,9 +562,9 @@ public class RunSQLHelper {
 		
 		int witdth;
 		if(colname.equals("Execute SQL Info")) {
-			witdth = 600;
+			witdth = 550;
 		}else if(colname.equals("Execute SQL")) {
-			witdth = 650;
+			witdth = 600;
 		}else {
 			witdth = (colname.length() * 10) + 15;
 			if (witdth < 90)

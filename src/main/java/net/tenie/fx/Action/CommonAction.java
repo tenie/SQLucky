@@ -598,7 +598,8 @@ public class CommonAction {
 		hideShowBottomHelper(showStatus, btn);
 
 	}
-
+	
+	// 显示或隐藏 数据面板, 修改控制按钮图标
 	public static void hideShowBottomHelper(boolean isShow, JFXButton btn) {
 		ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
 		if (isShow) {
@@ -1115,8 +1116,25 @@ public class CommonAction {
 //		logger.info(StrUtils.pressString(s));
 	}
 	
-	
-	public static void demo() {
+	// 关闭 数据页, 清理缓存
+	public static void clearDataTable(TabPane tabPane, Tab tb) {
+		long begintime = System.currentTimeMillis();
+		String idVal = tb.getId();
+		if (idVal != null) {
+			CacheTableDate.clear(idVal);
+		}
+		tb.setContent(null);
+		
+		if(tabPane.getTabs().size() == 1) {
+			CommonAction.hideBottom();
+		}
+		long endtime = System.currentTimeMillis();
+		long costTime = (endtime - begintime);
+		logger.info("关闭使用时间 = "+ costTime);
+	}
 
+
+	public static void demo() {
+		
 	}
 }

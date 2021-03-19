@@ -64,20 +64,24 @@ public class CommonEventHandler {
 	}
 
 	/**
-	 * 数据table关闭的时候新建一个空白表
+	 * 数据table关闭的时候 
 	 */
 	public static EventHandler<Event> dataTabCloseReq(TabPane tabPane, Tab tb) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
-
-				long begintime = System.currentTimeMillis();
-				String idVal = tb.getId();
-				if (idVal != null) {
-					CacheTableDate.clear(idVal);
-				}
-				tb.setContent(null);
-				long endtime = System.currentTimeMillis();
-				long costTime = (endtime - begintime);
+				CommonAction.clearDataTable(tabPane, tb);
+//				long begintime = System.currentTimeMillis();
+//				String idVal = tb.getId();
+//				if (idVal != null) {
+//					CacheTableDate.clear(idVal);
+//				}
+//				tb.setContent(null);
+//				long endtime = System.currentTimeMillis();
+//				long costTime = (endtime - begintime);
+//				if(tabPane.getTabs().size() == 1) {
+//					CommonAction.hideBottom();
+//				}
+//				System.out.println(costTime);
 			}
 		};
 	}

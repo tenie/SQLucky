@@ -86,7 +86,7 @@ public class ButtonFactory {
 
 	// 代码区
 	// codeArea 代码区域 按钮初始化
-		public static void codeAreabtnInit(AnchorPane pn) {
+	public static void codeAreabtnInit(AnchorPane pn) {
 //			pn.prefHeight(35.0);
 //			pn.setMinHeight(35.0);
 			
@@ -252,10 +252,10 @@ public class ButtonFactory {
 		saveBtn.setId(AllButtons.SAVE);
 
 		JFXButton detailBtn = new JFXButton();
-		detailBtn.setGraphic(ImageViewGenerator.svgImageDefActive("search-plus"));
-
+		detailBtn.setGraphic(ImageViewGenerator.svgImageDefActive("search-plus")); 
 		detailBtn.setOnMouseClicked(CommonEventHandler.showLineDetail(detailBtn));
 		detailBtn.setTooltip(MyTooltipTool.instance("current line detail "));
+		detailBtn.setDisable(disable);
 		
 		JFXButton tableSQLBtn = new JFXButton();
 		tableSQLBtn.setGraphic(ImageViewGenerator.svgImageDefActive("table")); 

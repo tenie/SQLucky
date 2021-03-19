@@ -1,5 +1,7 @@
 package net.tenie.fx.component.container;
 
+import java.util.Objects;
+
 import org.controlsfx.control.MaskerPane;
 
 import com.jfoenix.controls.JFXButton;
@@ -100,17 +102,27 @@ public class DataViewTab {
 		ContextMenu contextMenu = new ContextMenu();
 		MenuItem closeAll = new MenuItem("Close ALl");
 		closeAll.setOnAction(e -> {
-			int size = ComponentGetter.dataTab.getTabs().size();
-			ComponentGetter.dataTab.getTabs().remove(0, size);
-			CommonAction.hideBottom();
+				// 清空缓存
+				for(Tab tab: ComponentGetter.dataTab.getTabs()) {
+					CommonAction.clearDataTable(ComponentGetter.dataTab, tab);
+				}
+				ComponentGetter.dataTab.getTabs().clear(); 
 		});
 
 		MenuItem closeOther = new MenuItem("Close Other");
 		closeOther.setOnAction(e -> {
 			int size = ComponentGetter.dataTab.getTabs().size();
 			if (size > 1) {
-				ComponentGetter.dataTab.getTabs().remove(0, size);
+				// 清空缓存
+				for(Tab tab: ComponentGetter.dataTab.getTabs()) {
+					if( ! Objects.equals(tab, tb)) {
+						CommonAction.clearDataTable(ComponentGetter.dataTab, tab);
+					}
+					
+				}
+				ComponentGetter.dataTab.getTabs().clear(); 
 				ComponentGetter.dataTab.getTabs().add(tb);
+				
 			}
 
 		});
