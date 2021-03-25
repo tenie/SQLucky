@@ -49,7 +49,8 @@ public class SqlCodeAreaHighLighting {
 		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{
 			if(e.getCode() == KeyCode.TAB ) {
-				logger.info("文本缩进 : "+e.getCode() );
+				logger.info("文本缩进 : "+e.getCode() ); 
+				
 				if (codeArea.getSelectedText().contains("\n") ) { 
 					e.consume();
 					if(e.isShiftDown()) {
@@ -70,6 +71,8 @@ public class SqlCodeAreaHighLighting {
 					
 					// 获取文本开头的空白字符串
 					if(StrUtils.isNotNullOrEmpty(ptxt)) { 
+						
+						// 一行的前缀空白符
 						StringBuilder strb = new StringBuilder("");
 						for(int i = 0; i < ptxt.length(); i++) {
 							char c = ptxt.charAt(i);
@@ -79,11 +82,17 @@ public class SqlCodeAreaHighLighting {
 								break;
 							}
 						}
+						
+						
 						// 在新行插入空白字符串
 						if(strb.length() > 0) {
 							e.consume();
 							String addstr = "\n"+strb.toString();
+//							codeArea.gett
 							codeArea.insertText(codeArea.getAnchor(), addstr);
+						}else {
+							e.consume();
+							codeArea.insertText(codeArea.getAnchor(), "\n");
 						}
 						
 					}
