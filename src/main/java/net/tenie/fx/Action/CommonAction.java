@@ -30,10 +30,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
+
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -432,6 +435,63 @@ public class CommonAction {
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
 	
+	
+	public static void addNewLine(KeyEvent e  ,CodeArea codeArea) {
+
+		// 换行缩进, 和当前行的缩进保持一致
+		logger.info("换行缩进 : "+e.getCode() );
+		String seltxt = codeArea.getSelectedText();
+		int idx = codeArea.getCurrentParagraph(); // 获取当前行号
+		int anchor =  codeArea.getAnchor(); //光标位置
+		
+		if(seltxt.length() == 0) {//没有选中文本, 存粹换行, 才进行缩进计算 
+			// 根据行号获取该行的文本
+			Paragraph<Collection<String>, String, Collection<String>>   p = codeArea.getParagraph(idx);
+			String ptxt = p.getText();
+			
+			// 获取文本开头的空白字符串
+			if(StrUtils.isNotNullOrEmpty(ptxt)) { 
+				
+				// 一行的前缀空白符
+				String strb = StrUtils.prefixBlankStr(ptxt);
+				
+				// 获取光标之后的空白符, 如果后面的字符包含空白符, 换行的时候需要修正前缀补充的字符, 补多了换行越来越长
+				String afterAnchorText =  codeArea.getText(anchor, anchor+ptxt.length());
+				String strafter = StrUtils.prefixBlankStr(afterAnchorText);
+				
+				String fstr = "";
+				if(strafter.length() > 0) {
+					fstr = strb.substring(0 , strb.length() - strafter.length());
+				}else {
+					fstr = strb;
+				}
+				
+				// 在新行插入空白字符串
+				if(fstr.length() > 0) {
+					e.consume();
+					String addstr = "\n"+fstr; 
+					codeArea.insertText(anchor , addstr);
+				}else {
+					//如果光标在起始位, 那么回车后光标移动到起始再会到回车后的位置, 目的是防止页面不滚动
+					if( anchor == 0) {
+						Platform.runLater(() -> {
+							codeArea.moveTo(0); // 光标移动到起始位置
+							Platform.runLater(() -> {
+							    codeArea.moveTo(1);
+							});  
+						});
+					}else {
+						e.consume();   
+						codeArea.insertText(anchor , "\n");
+					}
+				}
+				
+			}
+			
+		}
+		
+	
+	}
 	
 	// 代码添加注释-- 或去除注释
 	public static void addAnnotationSQLTextSelectText() {

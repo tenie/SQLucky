@@ -26,6 +26,20 @@ public class StrUtils {
 	public final static String BLANK_SPRING_STRING = " ";
 	public static final char CHAR_TILDE = '~';
 
+	// 获取字符串的前缀空白字符
+	public static String prefixBlankStr(String txt) { 
+		StringBuilder strb = new StringBuilder("");
+		for(int i = 0; i < txt.length(); i++) {
+			char c = txt.charAt(i);
+			if(c == ' ' || c == '\t') {
+				strb.append(c);
+			}else {
+				break;
+			}
+		}
+		return strb.toString();
+	}
+	
 	// 驼峰命名转下划线
 	public static String CamelCaseUnderline(String str) {
 		StringBuilder rs = new StringBuilder();

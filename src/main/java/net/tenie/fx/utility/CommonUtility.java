@@ -134,5 +134,10 @@ public class CommonUtility {
 		});
 
 	}
+	
+	// 获取剪贴板的值
+	public static String getClipboardVal() {
+		return  javafx.scene.input.Clipboard.getSystemClipboard().getString();
+	}
 
 }

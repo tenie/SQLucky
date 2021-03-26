@@ -4,11 +4,14 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.IndexRange;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Tab;
 import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
@@ -35,6 +38,8 @@ public class SqlCodeAreaHighLighting {
 
 	private CodeArea codeArea;
 	private ExecutorService executor; 
+	
+
 
 	public StackPane getObj(String text, boolean editable) {
 		executor = Executors.newSingleThreadExecutor();
@@ -50,7 +55,6 @@ public class SqlCodeAreaHighLighting {
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{
 			if(e.getCode() == KeyCode.TAB ) {
 				logger.info("文本缩进 : "+e.getCode() ); 
-				
 				if (codeArea.getSelectedText().contains("\n") ) { 
 					e.consume();
 					if(e.isShiftDown()) {
@@ -59,46 +63,31 @@ public class SqlCodeAreaHighLighting {
 						CommonAction.add4Space();
 					}
 				} 
-			}else if(e.getCode() == KeyCode.ENTER ) {
-				// 换行缩进, 和当前行的缩进保持一致
-				logger.info("换行缩进 : "+e.getCode() );
+			}else if(e.getCode() == KeyCode.ENTER ) { 
+				CommonAction.addNewLine(e, codeArea);
+			}else if(e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE ) { 
+				// 删除选中字符串防止页面滚动, 自己删
 				String seltxt = codeArea.getSelectedText();
-				if(seltxt.length() == 0) {//没有选中文本, 存粹换行, 才进行缩进计算
-					int idx = codeArea.getCurrentParagraph(); // 获取当前行号
-					// 根据行号获取该行的文本
-					Paragraph<Collection<String>, String, Collection<String>>   p = codeArea.getParagraph(idx);
-					String ptxt = p.getText();
-					
-					// 获取文本开头的空白字符串
-					if(StrUtils.isNotNullOrEmpty(ptxt)) { 
-						
-						// 一行的前缀空白符
-						StringBuilder strb = new StringBuilder("");
-						for(int i = 0; i < ptxt.length(); i++) {
-							char c = ptxt.charAt(i);
-							if(c == ' ' || c == '\t') {
-								strb.append(c);
-							}else {
-								break;
-							}
+				if(seltxt.length() > 0) {
+					IndexRange idx = codeArea.getSelection();
+					codeArea.deleteText(idx);
+					e.consume(); 
+				}
+			}else if(e.getCode() == KeyCode.V ) { // 黏贴的时候, 防止页面跳到自己黏贴
+				if( e.isShortcutDown()) {
+					String val =  CommonUtility.getClipboardVal();
+					logger.info("黏贴值==" + val);
+					if(val.length() > 0) {
+						String seltxt = codeArea.getSelectedText();
+						if(seltxt.length() > 0) {
+							IndexRange idx = codeArea.getSelection();
+							codeArea.deleteText(idx);
+							codeArea.insertText(codeArea.getAnchor(), val);
+							e.consume(); 
 						}
-						
-						
-						// 在新行插入空白字符串
-						if(strb.length() > 0) {
-							e.consume();
-							String addstr = "\n"+strb.toString();
-//							codeArea.gett
-							codeArea.insertText(codeArea.getAnchor(), addstr);
-						}else {
-							e.consume();
-							codeArea.insertText(codeArea.getAnchor(), "\n");
-						}
-						
 					}
 					
 				}
-				
 			}
 			
 		});
