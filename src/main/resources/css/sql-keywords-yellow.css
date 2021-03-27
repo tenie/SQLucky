@@ -1,0 +1,63 @@
+
+
+.findword {
+    -rtfx-background-color: #B4D8FD!important; 
+}
+
+.findparenthesis {
+    -rtfx-background-color: #3169ce!important; 
+    -fx-font-weight: bold;
+}
+
+.errorword{
+    -fx-fill: red;
+    -fx-font-weight: bold;
+    -fx-underline: true ;
+}
+
+.keyword { 
+    -fx-fill: #FDA232;
+    -fx-font-weight: bold;
+}
+
+.keyword-error { 
+    -fx-fill: #C97632;
+    -fx-font-weight: bold;
+    -fx-underline: true ;
+}
+
+.semicolon {
+    -fx-font-weight: bold;
+}
+.paren {
+    -fx-fill: firebrick;
+    -fx-font-weight: bold;
+}
+.bracket {
+    -fx-fill: darkgreen;
+    -fx-font-weight: bold;
+}
+.brace {
+    -fx-fill: teal;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill: yellow;
+}
+.string-error{
+    -fx-fill: yellow;
+    -fx-underline: true ;
+}
+
+.comment {
+	-fx-fill:  #808080; 
+}
+
+.comment-error{
+	-fx-fill:  #808080; 
+	 -fx-underline: true ;
+}
+
+ 
+ 
+  

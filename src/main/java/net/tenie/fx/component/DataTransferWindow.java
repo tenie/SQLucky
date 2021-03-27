@@ -43,14 +43,6 @@ public class DataTransferWindow {
 		}
 		
 		CommonAction.loadCss(scene);
-//		if(ConfigVal.THEME.equals( "DARK")) {
-//			scene.getStylesheets().addAll(ConfigVal.cssList);
-//		}else { 
-//			scene.getStylesheets().addAll(ConfigVal.cssListLight); 
-//		}
-		 
-		
-		
 	}
 	
 	// 根据给定的fxml 创建 模态框
@@ -66,13 +58,7 @@ public class DataTransferWindow {
 			URL url = getClass().getResource(fxml);
 			Parent root = FXMLLoader.load(url);
 		    scene = new Scene(root);
-		    CommonAction.loadCss(scene);
-//			if(ConfigVal.THEME.equals( "DARK")) {
-//				scene.getStylesheets().addAll(ConfigVal.cssList);
-//			}else { 
-//				scene.getStylesheets().addAll(ConfigVal.cssListLight); 
-//			}
-//			scene.getStylesheets().addAll(ConfigVal.cssList);
+		    CommonAction.loadCss(scene); 
 			stage.setScene(scene);
 			stage.show();
 			

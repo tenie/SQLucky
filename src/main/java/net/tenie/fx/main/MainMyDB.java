@@ -36,6 +36,7 @@ public class MainMyDB extends Application {
 	    H2Db.updateAppSql(conn);
 	    ConfigVal.openfileDir = H2Db.getConfigVal(conn , "OPEN_FILE_DIR"); 
 		H2Db.closeConn();
+		ConfigVal.THEME = Theme;
 		app = new AppWindow();
 		scene = new Scene(app.getMainWindow());
 //		scene.getStylesheets().addAll(ConfigVal.cssList);

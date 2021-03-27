@@ -22,6 +22,7 @@ import net.tenie.fx.component.DataTransferWindow;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
 
@@ -264,16 +265,22 @@ public class MenuBarContainer {
 		MenuItem themeDark = new MenuItem(MenuItemNameFormat("Dark")); 
 		themeDark.setGraphic(ImageViewGenerator.svgImageUnactive("moon")); 
 		themeDark.setOnAction(value -> {
-			CommonAction.setTheme("DARK");
+			CommonAction.setTheme(CommonConst.THEME_DARK);
 		});
 		
 		MenuItem themeLight = new MenuItem(MenuItemNameFormat("Light")); 
 		themeLight.setGraphic(ImageViewGenerator.svgImageUnactive("sun")); 
 		themeLight.setOnAction(value -> {
-			CommonAction.setTheme("LIGHT");
+			CommonAction.setTheme(CommonConst.THEME_LIGHT);
 		});
 		
-		Theme.getItems().addAll(themeDark , themeLight); 
+		MenuItem themeYellow = new MenuItem(MenuItemNameFormat("Yellow")); 
+		themeYellow.setGraphic(ImageViewGenerator.svgImageUnactive("sun")); 
+		themeYellow.setOnAction(value -> {
+			CommonAction.setTheme(CommonConst.THEME_YELLOW);
+		});
+		
+		Theme.getItems().addAll(themeDark , themeLight, themeYellow); 
 		
 		//TODO 字体大小
 		Menu fontSize = new Menu(MenuItemNameFormat("Code Font Size"));

@@ -1,0 +1,31 @@
+ 
+
+/* tree  */
+.tree-view, .tree-cell {
+    -fx-background-color: #000000 ;
+    -fx-text-fill: white ;
+}
+
+/*  选中的颜色 */
+.tree-cell:selected {
+    -fx-font-weight: bold ;
+    -fx-background-color: #363636 ;
+}
+.tree-cell:hover { 
+    -fx-background-color: #363636  ;
+}
+
+.tree-cell {
+    -fx-padding: 0.5em 0em 0.5em 0em ;
+}
+.tree-cell:sub-tree-item {
+    -fx-padding: 0.25em ;
+}
+
+.tree-cell .tree-disclosure-node .arrow {
+     -fx-background-color: #ADADAD ;
+}
+
+ 
+
+ 

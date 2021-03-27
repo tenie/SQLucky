@@ -14,6 +14,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
@@ -219,24 +220,7 @@ public class SqlEditor {
 		return sp;
 	}
 	
-	// 获取所有的CodeArea
-//	public static List<CodeArea> getAllCodeArea() {
-//		List<CodeArea> cas = new ArrayList<>();
-//		TabPane myTabPane = ComponentGetter.mainTabPane;
-//		if (myTabPane.getTabs().size() > 1) {
-//			ObservableList<Tab> tabs = myTabPane.getTabs();
-//			for(Tab tb : tabs) { 
-//				CodeArea ac = getCodeArea(tb);
-//				cas.add(ac);
-//				if(ConfigVal.THEME.equals("DARK")) {
-//					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac ,"#606366" , "#313335"));
-//				}else {
-//					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac, "#666", "#ddd"));
-//				} 
-//			}
-//		}
-//		return cas;
-//	}
+ 
 	
 	// 获取所有的CodeArea
 	public static List<CodeArea> getAllCodeArea() {
@@ -254,17 +238,24 @@ public class SqlEditor {
 	
 	public static void changeThemeAllCodeArea() { 
 		TabPane myTabPane = ComponentGetter.mainTabPane;
-		if (myTabPane.getTabs().size() > 0) {
+		if (myTabPane != null && myTabPane.getTabs().size() > 0) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for(Tab tb : tabs) { 
 				CodeArea ac = getCodeArea(tb); 
-				if(ConfigVal.THEME.equals("DARK")) {
-					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac ,"#606366" , "#313335"));
-				}else {
-					ac.setParagraphGraphicFactory(MyLineNumberFactory.get(ac, "#666" , "#ddd"));
-				} 
+				changeThemeHelper(ac);
+
 			}
 		}
+	}
+	
+	public static void changeThemeHelper(CodeArea codeArea) {
+		if(ConfigVal.THEME.equals(CommonConst.THEME_DARK)) {
+			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea ,"#606366" , "#313335"));
+		}else if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea ,"#ffffff" , "#000000"));
+		}else if(ConfigVal.THEME.equals(CommonConst.THEME_LIGHT)) {
+			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea, "#666", "#ddd"));
+		} 
 	}
 
 }

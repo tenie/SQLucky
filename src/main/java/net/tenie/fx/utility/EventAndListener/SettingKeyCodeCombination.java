@@ -194,25 +194,7 @@ public final class SettingKeyCodeCombination {
 		});
 		
 	}
-//	static public void setFontSize(int i) {
-//		
-//		String val = 
-//				".myLineNumberlineno{ \n" + 
-//				"	-fx-font-size :	"+i+"; \n" + 
-//				"} \n" +
-//				".code-area{\n"+
-//				"	-fx-font-size :	"+i+"; \n" +
-//			    "} \n" +
-//				"";
-//		try {
-//			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
-//			SaveFile.save( path , val);
-//			CommonAction.loadCss(ComponentGetter.primaryscene);  
-//			
-//		} catch (IOException e) { 
-//			e.printStackTrace();
-//		}
-//	}
+
 	private static void fireEvent(JFXButton btn) {
 		btn.fireEvent(new Event(MouseEvent.MOUSE_CLICKED));
 	}

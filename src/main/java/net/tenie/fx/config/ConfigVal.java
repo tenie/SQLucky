@@ -46,6 +46,7 @@ public class ConfigVal {
 	public static String appIcon = "/image/SQL6.png";
 	public static List<String> cssList = new ArrayList<>();
 	public static List<String> cssListLight = new ArrayList<>();
+	public static List<String> cssListYellow = new ArrayList<>();
 	public static String THEME = "";
 	public static int FONT_SIZE = -1;
 	 
@@ -54,15 +55,23 @@ public class ConfigVal {
 	public static String openfileDir = "";
 	
 	static {  
+
+		    cssList.add(ConfigVal.class.getResource("/css/common.css").toExternalForm());	
 		    cssList.add(ConfigVal.class.getResource("/css/sql-keywords.css").toExternalForm());
+		    
 			cssList.add(ConfigVal.class.getResource("/css/treeView.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/TableView.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/tabPane.css").toExternalForm());
-			cssList.add(ConfigVal.class.getResource("/css/common.css").toExternalForm());	
 			 
 			
 			cssListLight.add(ConfigVal.class.getResource("/css/common-light.css").toExternalForm());
 			cssListLight.add(ConfigVal.class.getResource("/css/sql-keywords-light.css").toExternalForm());
+			
+			cssListYellow.add(ConfigVal.class.getResource("/css/common-yellow.css").toExternalForm());
+			cssListYellow.add(ConfigVal.class.getResource("/css/sql-keywords-yellow.css").toExternalForm());
+			cssListYellow.add(ConfigVal.class.getResource("/css/treeView-yellow.css").toExternalForm());
+			cssListYellow.add(ConfigVal.class.getResource("/css/TableView-yellow.css").toExternalForm());
+			cssListYellow.add(ConfigVal.class.getResource("/css/tabPane-yellow.css").toExternalForm());
 			 
 	}
 	

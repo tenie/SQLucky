@@ -19,6 +19,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
@@ -38,18 +39,15 @@ public class SqlCodeAreaHighLighting {
 
 	private CodeArea codeArea;
 	private ExecutorService executor; 
+	private ChangeListener<String>  cl;
 	
 
 
 	public StackPane getObj(String text, boolean editable) {
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new CodeArea();
-		
-		if(ConfigVal.THEME.equals("DARK")) {
-			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea ,"#606366" , "#313335"));
-		}else {
-			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea, "#666", "#ddd"));
-		} 
+	    cl = CommonListener.codetxtChange(codeArea);
+	    SqlEditor.changeThemeHelper(codeArea);
 		// 事件KeyEvent 
 		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{
@@ -65,14 +63,28 @@ public class SqlCodeAreaHighLighting {
 				} 
 			}else if(e.getCode() == KeyCode.ENTER ) { 
 				CommonAction.addNewLine(e, codeArea);
-			}else if(e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE ) { 
+//				codeArea.textProperty().removeListener(cl);
+//				Platform.runLater(() -> {
+//					codeArea.textProperty().addListener( cl );	
+//				}); 
+				
+			}else if(e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE ) {
 				// 删除选中字符串防止页面滚动, 自己删
-				String seltxt = codeArea.getSelectedText();
-				if(seltxt.length() > 0) {
-					IndexRange idx = codeArea.getSelection();
-					codeArea.deleteText(idx);
-					e.consume(); 
-				}
+//				String seltxt = codeArea.getSelectedText();
+//				if(seltxt.length() > 0) {
+//					IndexRange idx = codeArea.getSelection(); 
+//					codeArea.selectRange(codeArea.getAnchor(), codeArea.getAnchor());
+//					e.consume(); 
+//					Platform.runLater(() -> {
+//						codeArea.deleteText(idx);
+//					});  
+//					
+//				}
+				
+				codeArea.textProperty().removeListener(cl);
+				Platform.runLater(() -> {
+					codeArea.textProperty().addListener( cl );
+				});  
 			}else if(e.getCode() == KeyCode.V ) { // 黏贴的时候, 防止页面跳到自己黏贴
 				if( e.isShortcutDown()) {
 					String val =  CommonUtility.getClipboardVal();
@@ -88,11 +100,18 @@ public class SqlCodeAreaHighLighting {
 					}
 					
 				}
+			}else if(e.getCode() == KeyCode.Z ) {  // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
+				if( e.isShortcutDown()) {
+					codeArea.textProperty().removeListener(cl);
+					Platform.runLater(() -> {
+						codeArea.textProperty().addListener( cl );
+					});  
+				}
 			}
 			
 		});
 		//TODO 输入事件
-		codeArea.textProperty().addListener( CommonListener.codetxtChange(codeArea) );	
+		codeArea.textProperty().addListener( cl );	
 //		codeArea.setOnKeyPressed(CommonEventHandler.codeAreaChange(codeArea)); 
 		codeArea.replaceText(0, 0, sampleCode);
 		if (text != null)

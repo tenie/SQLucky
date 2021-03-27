@@ -11,6 +11,8 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.text.Font;
+import net.tenie.fx.config.CommonConst;
+import net.tenie.fx.config.ConfigVal;
 
 /*   @author tenie */
 // 图片加载类
@@ -38,7 +40,12 @@ public final class ImageViewGenerator {
 	}
 
 	public static Region svgImageDefActive(String name) {
-		return svgImage(name, 16, "#1C94FF");
+		String defColorStr = "#1C94FF";
+		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+			defColorStr = "#FDA232";
+		}
+//		defColorStr = "#FDA232";
+		return svgImage(name, 16, defColorStr); // #FDA232 #1C94FF
 	}
 
 	public static Region svgImageDefActive(String name, double size) {

@@ -48,6 +48,7 @@ import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
@@ -729,9 +730,9 @@ public class CommonAction {
 	
 	// 设置整体样式
 	public static void setTheme(String val ) {
-		if(val.equals(ConfigVal.THEME)) {
-			return ;
-		}
+//		if(val.equals(ConfigVal.THEME)) {
+//			return ;
+//		}
 		ConfigVal.THEME = val;
 		Connection conn =  H2Db.getConn();
 		H2Db.setConfigVal(conn, "THEME", val) ;
@@ -740,6 +741,8 @@ public class CommonAction {
 		loadCss(ComponentGetter.primaryscene);
 		
 		SqlEditor.changeThemeAllCodeArea() ;
+		
+		// 修改按钮颜色
 	}
 	
 	public static void setOpenfileDir(String val) {
@@ -1073,14 +1076,18 @@ public class CommonAction {
 	
 	// 加载css样式
 	public static void loadCss(Scene scene) {
+//		if(scene ==null) return;
 		scene.getStylesheets().clear();
 		logger.info(ConfigVal.THEME);
-		if(ConfigVal.THEME.equals( "DARK")) {
+		if(ConfigVal.THEME.equals( CommonConst.THEME_DARK )) {
 			scene.getStylesheets().addAll(ConfigVal.cssList);
-		}else { 
+		}else if(ConfigVal.THEME.equals( CommonConst.THEME_LIGHT)) { 
 			scene.getStylesheets().addAll(ConfigVal.cssListLight); 
 			
-		} 
+		}else if(ConfigVal.THEME.equals( CommonConst.THEME_YELLOW)) { 
+			scene.getStylesheets().addAll(ConfigVal.cssListYellow); 
+			
+		}
 		
 		// 加载自定义的css
 		String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css"; 
@@ -1109,7 +1116,7 @@ public class CommonAction {
 		try {
 			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
 			SaveFile.save( path , val);
-			CommonAction.loadCss(ComponentGetter.primaryscene);  
+			loadCss(ComponentGetter.primaryscene);  
 			
 		} catch (IOException e) { 
 			e.printStackTrace();
