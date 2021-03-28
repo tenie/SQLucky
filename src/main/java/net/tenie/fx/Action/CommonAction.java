@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.utility.EventAndListener.myEvent;
 import org.apache.commons.io.FileUtils;
@@ -743,6 +744,11 @@ public class CommonAction {
 		SqlEditor.changeThemeAllCodeArea() ;
 		
 		// 修改按钮颜色
+		ImageViewGenerator.changeSvgColor();
+//		List<Region> lsrsg = ImageViewGenerator.svgActiveImage;
+//		for(Region reg :lsrsg) {
+//			reg.setStyle("-fx-background-color: " + color + ";");
+//		}
 	}
 	
 	public static void setOpenfileDir(String val) {

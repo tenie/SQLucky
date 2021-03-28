@@ -50,32 +50,32 @@ public class MenuBarContainer {
 		Menu mn = new Menu("File");
 
 		MenuItem open = new MenuItem(MenuItemNameFormat("Open"));
-		open.setGraphic(ImageViewGenerator.svgImageUnactive("folder-open"));
+		open.setGraphic(ImageViewGenerator.svgImageDefActive("folder-open"));
 		open.setAccelerator(KeyCombination.keyCombination("shortcut+O"));
 		open.setOnAction(value -> {
 			CommonAction.openSqlFile("UTF-8");
 		});
 		
 		Menu openEncoding = new Menu(MenuItemNameFormat("Open With Encoding "));
-		openEncoding.setGraphic(ImageViewGenerator.svgImageUnactive("folder-open")); 
+		openEncoding.setGraphic(ImageViewGenerator.svgImageDefActive("folder-open")); 
 		 
 		
 		MenuItem openGBK = new MenuItem(MenuItemNameFormat("GBK"));
-		openGBK.setGraphic(ImageViewGenerator.svgImageUnactive("folder-open")); 
+		openGBK.setGraphic(ImageViewGenerator.svgImageDefActive("folder-open")); 
 		openGBK.setOnAction(value -> {
 			CommonAction.openSqlFile("GBK");
 		});
 		openEncoding.getItems().addAll(openGBK );
 
 		MenuItem Save = new MenuItem(MenuItemNameFormat("Save"));
-		Save.setGraphic(ImageViewGenerator.svgImageUnactive("floppy-o"));
+		Save.setGraphic(ImageViewGenerator.svgImageDefActive("floppy-o"));
 		Save.setAccelerator(KeyCombination.keyCombination("shortcut+S"));
 		Save.setOnAction(value -> {
 			CommonAction.saveSqlAction();
 		});
 
 		MenuItem exit = new MenuItem("Exit");
-		exit.setGraphic(ImageViewGenerator.svgImageUnactive("power-off"));
+		exit.setGraphic(ImageViewGenerator.svgImageDefActive("power-off"));
 		exit.setAccelerator(KeyCombination.keyCombination("shortcut+Q"));
 		exit.setOnAction((ActionEvent t) -> {
 			CommonAction.mainPageClose();
@@ -121,7 +121,7 @@ public class MenuBarContainer {
 		});
 
 		MenuItem Find = new MenuItem(MenuItemNameFormat("Find"));
-		Find.setGraphic(ImageViewGenerator.svgImageUnactive("search"));
+		Find.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
 		Find.setAccelerator(KeyCombination.keyCombination("shortcut+F"));
 		Find.setOnAction(value -> {
 			CommonAction.findReplace(false);
@@ -180,7 +180,7 @@ public class MenuBarContainer {
 		Menu mn = new Menu("Tools");
 		// 数据迁移
 		MenuItem dataTransfer = new MenuItem(MenuItemNameFormat("Data TransFer"));
-		dataTransfer.setGraphic(ImageViewGenerator.svgImageUnactive("mfglabs-random"));
+		dataTransfer.setGraphic(ImageViewGenerator.svgImageDefActive("mfglabs-random"));
 		dataTransfer.setOnAction(value -> {
 			//TODO 
 			if(dtw == null ) {
@@ -193,37 +193,37 @@ public class MenuBarContainer {
 		addDB.setOnAction(value -> {
 			ConnectionEditor.ConnectionInfoSetting();
 		});
-		addDB.setGraphic(ImageViewGenerator.svgImageUnactive("plus-square-o"));
+		addDB.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
 
 		MenuItem editConn = new MenuItem(MenuItemNameFormat("Edit DB Connection"));
 		editConn.setOnAction(value -> {
 			ConnectionEditor.editDbConn();
 		});
-		editConn.setGraphic(ImageViewGenerator.svgImageUnactive("edit"));
+		editConn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
 
 		MenuItem openConn = new MenuItem(MenuItemNameFormat("Open DB Connection"));
 		openConn.setOnAction(value -> {
 			ConnectionEditor.openDbConn();
 		});
-		openConn.setGraphic(ImageViewGenerator.svgImageUnactive("link"));
+		openConn.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
 
 		MenuItem closeConn = new MenuItem(MenuItemNameFormat("Close DB Connection"));
 		closeConn.setOnAction(value -> {
 			ConnectionEditor.closeDbConn();
 		});
-		closeConn.setGraphic(ImageViewGenerator.svgImageUnactive("unlink"));
+		closeConn.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
 
 		MenuItem closeALlConn = new MenuItem(MenuItemNameFormat("Close All DB Connections"));
 		closeALlConn.setOnAction(value -> {
 			ConnectionEditor.closeAllDbConn();
 		});
-		closeALlConn.setGraphic(ImageViewGenerator.svgImageUnactive("power-off"));
+		closeALlConn.setGraphic(ImageViewGenerator.svgImageDefActive("power-off"));
 
 		MenuItem deleteConn = new MenuItem(MenuItemNameFormat("Delete DB Connection"));
 		deleteConn.setOnAction(value -> {
 			ConnectionEditor.deleteDbConn();
 		});
-		deleteConn.setGraphic(ImageViewGenerator.svgImageUnactive("trash"));
+		deleteConn.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
 
 		MenuItem hideLeft = new MenuItem(MenuItemNameFormat("Hide/Show DB Info Panel"));
 		hideLeft.setOnAction(value -> {
@@ -237,13 +237,13 @@ public class MenuBarContainer {
 
 		MenuItem hideLeftBottom = new MenuItem(MenuItemNameFormat("Hide/Show All Panels"));
 		hideLeftBottom.setAccelerator(KeyCombination.keyCombination("shortcut+H"));
-		hideLeftBottom.setGraphic(ImageViewGenerator.svgImageUnactive("arrows-alt"));
+		hideLeftBottom.setGraphic(ImageViewGenerator.svgImageDefActive("arrows-alt"));
 		hideLeftBottom.setOnAction(value -> {
 			CommonAction.hideLeftBottom();
 		});
 		
 		MenuItem EnCoding = new MenuItem(MenuItemNameFormat("EnCoding"));
-		EnCoding.setGraphic(ImageViewGenerator.svgImageUnactive("mfglabs-random"));
+		EnCoding.setGraphic(ImageViewGenerator.svgImageDefActive("mfglabs-random"));
 		EnCoding.setOnAction(value -> {
 			String txt = SqlEditor.getCurrentCodeAreaSQLText();
 //			logger.info(txt);
@@ -260,22 +260,22 @@ public class MenuBarContainer {
 		
 		// 主题变化
 		Menu Theme = new Menu(MenuItemNameFormat("Theme"));
-		Theme.setGraphic(ImageViewGenerator.svgImageUnactive("icomoon-contrast")); 
+		Theme.setGraphic(ImageViewGenerator.svgImageDefActive("icomoon-contrast")); 
 		
 		MenuItem themeDark = new MenuItem(MenuItemNameFormat("Dark")); 
-		themeDark.setGraphic(ImageViewGenerator.svgImageUnactive("moon")); 
+		themeDark.setGraphic(ImageViewGenerator.svgImageDefActive("moon")); 
 		themeDark.setOnAction(value -> {
 			CommonAction.setTheme(CommonConst.THEME_DARK);
 		});
 		
 		MenuItem themeLight = new MenuItem(MenuItemNameFormat("Light")); 
-		themeLight.setGraphic(ImageViewGenerator.svgImageUnactive("sun")); 
+		themeLight.setGraphic(ImageViewGenerator.svgImageDefActive("sun")); 
 		themeLight.setOnAction(value -> {
 			CommonAction.setTheme(CommonConst.THEME_LIGHT);
 		});
 		
 		MenuItem themeYellow = new MenuItem(MenuItemNameFormat("Yellow")); 
-		themeYellow.setGraphic(ImageViewGenerator.svgImageUnactive("sun")); 
+		themeYellow.setGraphic(ImageViewGenerator.svgImageDefActive("sun")); 
 		themeYellow.setOnAction(value -> {
 			CommonAction.setTheme(CommonConst.THEME_YELLOW);
 		});
@@ -284,19 +284,19 @@ public class MenuBarContainer {
 		
 		//TODO 字体大小
 		Menu fontSize = new Menu(MenuItemNameFormat("Code Font Size"));
-		fontSize.setGraphic(ImageViewGenerator.svgImageUnactive("text-height")); 
+		fontSize.setGraphic(ImageViewGenerator.svgImageDefActive("text-height")); 
 		
 		MenuItem fontSizePlus = new MenuItem(MenuItemNameFormat("Code Font Size +")); 
 //		KeyCodeCombination ctrlR = new KeyCodeCombination(KeyCode.EQUALS, KeyCodeCombination.SHORTCUT_DOWN);
 		fontSizePlus.setAccelerator(KeyCombination.keyCombination( "shortcut+EQUALS") );
-		fontSizePlus.setGraphic(ImageViewGenerator.svgImageUnactive("plus-circle")); 
+		fontSizePlus.setGraphic(ImageViewGenerator.svgImageDefActive("plus-circle")); 
 		fontSizePlus.setOnAction(value -> {
 			CommonAction.changeFontSize(true);
 		});
 		
 		MenuItem fontSizeMinus = new MenuItem(MenuItemNameFormat("Code Font Size -")); 
 		fontSizeMinus.setAccelerator(KeyCombination.keyCombination("shortcut+MINUS"));
-		fontSizeMinus.setGraphic(ImageViewGenerator.svgImageUnactive("minus-circle")); 
+		fontSizeMinus.setGraphic(ImageViewGenerator.svgImageDefActive("minus-circle")); 
 		fontSizeMinus.setOnAction(value -> {
 			CommonAction.changeFontSize(false);
 		});
@@ -319,7 +319,7 @@ public class MenuBarContainer {
 		Menu mn = new Menu("Help");
 
 		MenuItem about = new MenuItem(MenuItemNameFormat("About"));
-		about.setGraphic(ImageViewGenerator.svgImageUnactive("info-circle"));
+		about.setGraphic(ImageViewGenerator.svgImageDefActive("info-circle"));
 		about.setOnAction(value -> {
 			ModalDialog.showAbout();
 		});

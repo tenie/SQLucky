@@ -1,8 +1,13 @@
 package net.tenie.fx.component;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -19,7 +24,9 @@ import net.tenie.fx.config.ConfigVal;
 public final class ImageViewGenerator {
 
 	private static Map<String, ImageView> imgMap = new HashMap<String, ImageView>();
-	private static Map<String, Region> RegionMap = new HashMap<>();
+//	private static Map<String, Region> RegionMap = new HashMap<>();
+	public static List<Region> svgActiveImage = new ArrayList<>();
+	
 	private static Map<String, Label> fontImgMap = new HashMap<String, Label>();
 	private static final Font GLYPH_FONTAWESOME;
 	private static final Map<String, Character> GLYPH_MAP;
@@ -30,6 +37,18 @@ public final class ImageViewGenerator {
 		GLYPH_MAP = new HashMap<String, Character>();
 	}
 
+	//修改所以按钮颜色
+	public static void changeSvgColor() {
+		String color = "#1C94FF";
+		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+			color = "#FDA232";
+		}  
+		List<Region> lsrsg = ImageViewGenerator.svgActiveImage;
+		for(Region reg :lsrsg) { 
+			reg.setStyle("-fx-background-color: " + color + ";");
+		}
+	}
+	
 	// 修改颜色
 	public static void changeColor(Node node, String color) {
 		node.setStyle("-fx-background-color: " + color + ";");
@@ -43,9 +62,10 @@ public final class ImageViewGenerator {
 		String defColorStr = "#1C94FF";
 		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
 			defColorStr = "#FDA232";
-		}
-//		defColorStr = "#FDA232";
-		return svgImage(name, 16, defColorStr); // #FDA232 #1C94FF
+		} 
+		Region rs = svgImage(name, 16, defColorStr);  
+		svgActiveImage.add(rs);
+		return rs;
 	}
 
 	public static Region svgImageDefActive(String name, double size) {
@@ -58,18 +78,18 @@ public final class ImageViewGenerator {
 
 	// svg 图片
 	public static Region svgImage(String name, double size, String color) {
-		Region svgShape = RegionMap.get(name + size + color + ".svg");
-		if (svgShape == null) {
+//		Region svgShape = RegionMap.get(name + size + color + ".svg");
+//		if (svgShape == null) {
 			SVGPath p = new SVGPath();
 			p.setContent(getSvgStr(name));
 
-			svgShape = new Region();
+			Region svgShape = new Region();
 			svgShape.setShape(p);
 			svgShape.setMinSize(size, size);
 			svgShape.setPrefSize(size, size);
 			svgShape.setMaxSize(size, size);
 			svgShape.setStyle("-fx-background-color: " + color + ";");
-		}
+//		}
 		return svgShape;
 	}
 
