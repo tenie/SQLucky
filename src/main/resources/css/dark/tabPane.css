@@ -42,10 +42,7 @@
 .tab .tab-label {
     -fx-text-fill:   #bdcddf;
 }
-.label {
-	-fx-text-fill:   red;
-	-fx-font-weight: bold;
-} 
+ 
 
 /* 
 

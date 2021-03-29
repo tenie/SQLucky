@@ -1,0 +1,81 @@
+/*  搜索框 */
+.myFindTextField{  
+	-fx-border-color: #5E6060 ;
+	-fx-border-radius: 3px; /* 圆角 */
+}
+ 
+.label{
+	-fx-text-fill: #000000;
+}
+
+
+.myTextField{
+	-fx-text-fill: #000000;
+	-fx-background-color: #DDDDDD;
+    -fx-border-color:transparent transparent #4C708C transparent;
+    -fx-border-width: 1 1 1 1;
+    -fx-background-radius: 0px; /* 圆角 */
+}
+.myTextField:hover{
+	-fx-background-color: #D3D3D3;
+}
+
+
+/*.combo-box {    
+     -fx-background-radius: 0;  
+     -fx-font-size: 12px; 
+     -fx-background-insets: 0;
+     -fx-alignment: center;
+     -fx-content-display: center;
+ }*/
+ 
+.myComboBox {
+	-fx-text-fill: #000000;
+	-fx-background-color: #E2E2E2;
+ 	-fx-border-color:transparent transparent #4C708C transparent;
+    -fx-background-radius: 0px; /* 圆角 */
+} 
+
+.myComboBox:hover{
+	-fx-background-color: #D3D3D3;
+}
+
+.myComboBox:showing{
+	-fx-border-color:transparent transparent #4C708C transparent;
+}
+.myComboBox:focused{
+	-fx-border-color:transparent transparent #4C708C transparent;
+}
+
+
+
+.myShellWindow{
+ -fx-border-color: #4C708C; 
+}
+
+.myAlert {
+ /*-fx-border-color: #4C708C; */
+-fx-background-color: #FFFFFF;
+}
+
+
+
+
+MenuButton{
+	-fx-background-color: #F4F4F4;
+}
+
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-radius: 0px;
+    -fx-border-width: 1px 1px 1px 1px;
+    -fx-border-color: transparent;
+}
+ 
+
+/* tree 过滤清空按钮*/
+.myCleanBtn{
+	 -fx-background-color: #DDDDDD;
+     -fx-background-radius: 10px;
+	 -fx-padding: 1;
+}
+

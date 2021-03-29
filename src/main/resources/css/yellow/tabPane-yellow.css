@@ -6,41 +6,27 @@
 
 .tab { 
 	 -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0; 
-     -fx-background-color: #000000;
-    /*  -fx-border-color: transparent #5D6163   transparent transparent ; */
+     -fx-background-color: #000000; 
+    /* -fx-border-color: transparent #5D6163 #5D6163 transparent ;  */
 }
 
-.tab:hover  {
-	 /*  -fx-background-color: #2F65CA ;  */
-	  -fx-background-color:  #000000 ; 
+.tab:hover  { 
     -fx-border-color: transparent transparent #FDA232 transparent ;   
     -fx-border-width : 2
-}
-/* 059BCE */
-.tab:selected {
-    -fx-background-color:  #000000 ; 
+} 
+.tab:selected { 
     -fx-border-color: transparent transparent #FDA232 transparent ;   
     -fx-border-width : 2
 }
 
+/* 选中tab有一个线, 让它透明*/
 .tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
     -fx-border-width: 1px 1px 1px 1px;
     -fx-border-color: transparent;
 }
 
-.tab:selected  .tab-label { 
-    -fx-text-fill:   #ccd171; 
-}
-
-
-.tab .tab-label {
-    -fx-text-fill:   #bdcddf;
-}
-.label {
-	-fx-text-fill:   red;
-	-fx-font-weight: bold;
-} 
-
+ 
+ 
 /* 
 
 

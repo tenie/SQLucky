@@ -86,7 +86,7 @@ public class ConnectionEditor {
 		VBox vb = new VBox();
 		Label title = new Label("Edit Connection Info");
 		title.setPadding(new Insets(15));
-		title.setGraphic(ImageViewGenerator.svgImage("gears", 20, "#AFB1B3"));
+		title.setGraphic(ImageViewGenerator.svgImageDefActive("gears"));
 		vb.getChildren().add(title);
 
 		GridPane grid = new GridPane();

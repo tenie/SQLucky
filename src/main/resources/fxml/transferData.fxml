@@ -10,7 +10,7 @@
    <children>
       <Pane prefHeight="38.0" prefWidth="601.0" styleClass="myModalDialog">
          <children>
-            <Label layoutX="17.0" layoutY="3.0" text="数据库同步" />
+            <Label fx:id="title" layoutX="17.0" layoutY="3.0" text="数据库同步" />
          </children>
       </Pane>
       <GridPane>
@@ -26,12 +26,12 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="source" />
-            <Label text="target" GridPane.columnIndex="2" />
-            <JFXComboBox fx:id="soDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" />
-            <JFXComboBox fx:id="soSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <JFXComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" />
-            <JFXComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <Label text="Source" />
+            <Label text="Target" GridPane.columnIndex="2" />
+            <ComboBox fx:id="soDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" />
+            <ComboBox fx:id="soSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <ComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" />
+            <ComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
          <VBox.margin>
             <Insets left="10.0" />
@@ -58,7 +58,7 @@
             <JFXCheckBox fx:id="chFun" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步函数" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <JFXCheckBox fx:id="chTri" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步触发器" GridPane.columnIndex="1" GridPane.rowIndex="3" />
             <JFXCheckBox fx:id="chSeq" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步序列" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <JFXCheckBox fx:id="tabData" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步表数据" GridPane.rowIndex="1" />
+            <JFXCheckBox fx:id="tabData" mnemonicParsing="false" prefHeight="18.0" prefWidth="97.0" text="同步表数据" GridPane.rowIndex="1" />
             <JFXCheckBox fx:id="chPro" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步过程" GridPane.rowIndex="3" />
          </children>
          <VBox.margin>
@@ -67,6 +67,20 @@
       </GridPane>
       <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
          <children>
+            <FlowPane prefHeight="25.0" prefWidth="601.0">
+               <children>
+                  <Label text="每次同步表数据行数">
+                     <padding>
+                        <Insets left="10.0" right="10.0" />
+                     </padding>
+                  </Label>
+                  <TextField fx:id="amountTxt" styleClass="myFindTextField">
+                     <FlowPane.margin>
+                        <Insets />
+                     </FlowPane.margin>
+                  </TextField>
+               </children>
+            </FlowPane>
             <AnchorPane prefHeight="27.0" prefWidth="601.0">
                <children>
                   <Label fx:id="queryLabel" layoutX="15.0" layoutY="6.0" text="查询" />

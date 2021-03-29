@@ -230,7 +230,7 @@ public class DBTools {
 	}
 	
 	// 执行
-	public static void execListSQL(List<String> sqls, Connection tarConn) {
+	public static void execListSQL(List<String> sqls, Connection tarConn , boolean isThrow) throws Exception {
 		// 执行sql
 		for (String sql : sqls) {
 			try { 
@@ -247,6 +247,7 @@ public class DBTools {
 				} 
 			} catch (Exception e1) {
 				e1.printStackTrace();
+				if(isThrow ) throw e1;
 			}
 		}
 	}

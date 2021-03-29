@@ -4,6 +4,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
@@ -22,30 +24,31 @@ public class DBinfoFilter {
 	 private  ObservableList<TreeItem<TreeNodePo>> temp  = FXCollections.observableArrayList();
 	 private  ObservableList<TreeItem<TreeNodePo>>  filtList = FXCollections.observableArrayList();
 	 private  TreeItem<TreeNodePo> rootNode ;
-	 private JFXTextField txt  ;
+	 private TextField txt  ;
 	 public DBinfoFilter () {}
 	 
-	public JFXTextField getTxtField() {
+	public TextField getTxtField() {
 		return txt;
 	}
 	 
 	 
 	public AnchorPane createFilterPane(TreeView<TreeNodePo> treeView) {
-		txt = new JFXTextField();
+		txt = new TextField();
 		ComponentGetter.dbInfoFilter = txt;
 		AnchorPane filter = new AnchorPane();
 		filter.setPrefHeight(30);
 		filter.setMinHeight(30);
 		JFXButton query = new JFXButton();
 //		JFXTextField txt = new JFXTextField();
-		query.setGraphic(ImageViewGenerator.svgImageUnactive("search"));
+		query.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
 		query.setOnAction(e -> {
 			txt.requestFocus();
 		});
+		 
 
 		txt.setPrefWidth(200);
-		txt.setPrefHeight(20);
-		txt.setMaxHeight(20);
+		txt.setPrefHeight(25);
+		txt.setMaxHeight(25);
 		txt.getStyleClass().add("myTextField");
 		int x = 0;
 		query.setLayoutX(x);
@@ -54,7 +57,26 @@ public class DBinfoFilter {
 		txt.setLayoutX(x);
 		txt.setLayoutY(1);
 
-		filter.getChildren().addAll(query, txt);
+//		x += 180;
+		Button clean = new Button();
+//		clean.setLayoutX(x);
+//		clean.setLayoutY(4);
+		 
+		AnchorPane.setRightAnchor(clean, 15.0);
+		AnchorPane.setTopAnchor(clean, 5.0); 
+		clean.setMaxSize(12, 12);
+		
+		clean.setGraphic(ImageViewGenerator.svgImageUnactive("times-circle" , 14));
+		clean.getStyleClass().add("myCleanBtn");
+		
+		clean.setOnAction(e->{
+			txt.clear();
+		});
+		
+		
+		filter.getChildren().addAll(query, txt , clean);
+		
+		
 		txt.textProperty().addListener((o, oldVal, newVal) -> {
 
 			// 缓存

@@ -50,6 +50,7 @@ import net.tenie.fx.component.container.TaskCellFactory;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.dao.TransferTabeDataDao;
+import net.tenie.fx.utility.EventAndListener.CommonListener;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportDDL;
 import net.tenie.lib.po.DbConnectionPo;
@@ -65,20 +66,20 @@ public class TransferDataController implements Initializable {
 	private static final String INDEX = "Index";
 	private static final String SEQUENCE = "Sequence";
 	
+	public static List<String> errorMsg = new ArrayList<>();
+	
 	
 	
 	
 	private static Thread currentThread; 
-	
-	
+	@FXML private Label title;
 	@FXML private HBox treePane;
 	
-	@FXML private JFXComboBox<Label>  soDB;
-	@FXML private JFXComboBox<Label>  soSC;
+	@FXML private ComboBox<Label>  soDB;
+	@FXML private ComboBox<Label>  soSC;
 	
-	@FXML private JFXComboBox<Label>  taDB;
-	
-	@FXML private JFXComboBox<Label>  taSC;
+	@FXML private ComboBox<Label>  taDB;
+	@FXML private ComboBox<Label>  taSC;
 	
 	@FXML private JFXCheckBox isIgnore; 
 	@FXML private JFXCheckBox isDel;
@@ -99,6 +100,7 @@ public class TransferDataController implements Initializable {
 	@FXML private JFXButton stopBtn;
 	@FXML private JFXButton bRun;
 	@FXML private TextField	filterTxt;
+	@FXML private TextField	amountTxt;
 	
 	
 	private CheckTreeView<String> checkTreeView;
@@ -130,7 +132,13 @@ public class TransferDataController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		filterTxtInitialize();
-		queryLabel.setGraphic(ImageViewGenerator.svgImageUnactive("search"));
+		
+		
+		amountTxt.lengthProperty().addListener(CommonListener.textFieldLimit(amountTxt, 4));
+		amountTxt.textProperty().addListener(CommonListener.textFieldNumChange(amountTxt));
+		
+		title.setGraphic(ImageViewGenerator.svgImageDefActive("gears"));
+		queryLabel.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
 		execBtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
 		stopBtn.setGraphic(ImageViewGenerator.svgImage("stop", "red"));
 		
@@ -231,8 +239,21 @@ public class TransferDataController implements Initializable {
 			btnController(true);
 			currentThread = new Thread() {
 				public void run() {
-					runBtnAction(); 
-					btnController(false);
+					try {
+						errorMsg.clear();
+						runBtnAction();  
+						Platform.runLater(() -> { 
+							ModalDialog.infoAlert("完成", "完成");
+						});
+					} catch (Exception e2) {
+						logger.debug(e2.getMessage());
+						Platform.runLater(() -> { 
+							ModalDialog.showErrorMsg("Error", e2.getMessage());
+						});
+					}finally {
+						btnController(false);
+					}
+					
 				};
 			};
 			currentThread.start();
@@ -297,54 +318,76 @@ public class TransferDataController implements Initializable {
 		return nDBpo;
 	}
 	
-	private void runBtnAction() {  
-		if ( checkDbConn() ) {
-			String dbname = soDB.getValue().getText();
-			String schename = soSC.getValue().getText();
-			String targetDBName = taDB.getValue().getText();
-			String targetSchename = taSC.getValue().getText();
-			
-//			DbConnectionPo soDbpo = DBConns.get(dbname);
-			DbConnectionPo soDbpo =  getNewDbConnectionPo(dbname, schename);
-			Connection  soConn = soDbpo.getConn(); 
+	private void runBtnAction() throws Exception { 
+		boolean isThrow = ! isIgnore.isSelected();
+		try {
+			if ( checkDbConn() ) { 
+				if(amountTxt.getText().equals("123")) {
+					throw new RuntimeException("123");
+				}
+					
+				String dbname = soDB.getValue().getText();
+				String schename = soSC.getValue().getText();
+				String targetDBName = taDB.getValue().getText();
+				String targetSchename = taSC.getValue().getText();
+				
+//				DbConnectionPo soDbpo = DBConns.get(dbname);
+				DbConnectionPo soDbpo =  getNewDbConnectionPo(dbname, schename);
+				Connection  soConn = soDbpo.getConn(); 
 
-			
-			DbConnectionPo tarDbpo =  getNewDbConnectionPo(targetDBName, targetSchename);// DBConns.get(targetDBName);
-			Connection  tarConn = tarDbpo.getConn();
-			
-			ExportDDL export = soDbpo.getExportDDL(); 
-			
-			// 将要执行的sql集合
-			List<String> sqls = new ArrayList<>(); 
-			// 表结构
-			createSynSql(tabStruct.isSelected(), sqls, soConn, export, schename, TABLE, targetSchename);
-			// 视图同步
-			createSynSql(chView.isSelected(), sqls, soConn, export, schename, VIEW, targetSchename);
-			// 函数同步
-			createSynSql(chFun.isSelected(), sqls, soConn, export, schename, FUNCTION, targetSchename);
-			// 过程同步
-			createSynSql(chPro.isSelected(), sqls, soConn, export, schename, PROCEDURE, targetSchename);
+				
+				DbConnectionPo tarDbpo =  getNewDbConnectionPo(targetDBName, targetSchename);// DBConns.get(targetDBName);
+				Connection  tarConn = tarDbpo.getConn();
+				
+				ExportDDL export = soDbpo.getExportDDL(); 
+				
+				// 将要执行的sql集合
+				List<String> sqls = new ArrayList<>(); 
+				// 表结构
+				createSynSql(tabStruct.isSelected(), sqls, soConn, export, schename, TABLE, targetSchename);
+				// 视图同步
+				createSynSql(chView.isSelected(), sqls, soConn, export, schename, VIEW, targetSchename);
+				// 函数同步
+				createSynSql(chFun.isSelected(), sqls, soConn, export, schename, FUNCTION, targetSchename);
+				// 过程同步
+				createSynSql(chPro.isSelected(), sqls, soConn, export, schename, PROCEDURE, targetSchename);
 
-			// 触发器同步
-			createSynSql(chTri.isSelected(), sqls, soConn, export, schename, TRIGGER, targetSchename);
-			// 索引同步
-			createSynSql(chIndex.isSelected(), sqls, soConn, export, schename, INDEX, targetSchename);
-			// 序列同步
-			createSynSql(chSeq.isSelected(), sqls, soConn, export, schename, SEQUENCE, targetSchename);
+				// 触发器同步
+				createSynSql(chTri.isSelected(), sqls, soConn, export, schename, TRIGGER, targetSchename);
+				// 索引同步
+				createSynSql(chIndex.isSelected(), sqls, soConn, export, schename, INDEX, targetSchename);
+				// 序列同步
+				createSynSql(chSeq.isSelected(), sqls, soConn, export, schename, SEQUENCE, targetSchename);
 
-//			logger.info(sqls);
-			// 执行ddl
-			DBTools.execListSQL(sqls, tarConn);
-			// 数据同步 执行insert 
-			if(tabData.isSelected()) { 
-				synTabData( soConn ,tarConn ,  export, schename , targetSchename);
-			} 
+//				logger.info(sqls);
+				
+				
+				
+				// 执行ddl
+				DBTools.execListSQL(sqls, tarConn , isThrow);
+				// 数据同步 执行insert 
+				if(tabData.isSelected()) {
+					int amount =  -1;
+					if(amountTxt.getText().length() > 0 ) {
+						 amount = Integer.valueOf(  amountTxt.getText());
+					} 
+					synTabData( soConn ,tarConn ,  export, schename , targetSchename , amount , isThrow);
+				} 
+			}else {
+				if(isThrow) throw new RuntimeException("数据库链接错误");
+			}
+		} catch (Exception e) {
+			e.printStackTrace(); 
+			logger.debug(e.getMessage());
+			errorMsg.add( e.getMessage());
+			if(isThrow) throw e;
 		}
+		
 	}
 	
  
 	//同步表数据 
-	private void synTabData(Connection  soConn , Connection  toConn , ExportDDL export,  String schename , String targetSchename) {
+	private void synTabData(Connection  soConn , Connection  toConn , ExportDDL export,  String schename , String targetSchename , int amount , boolean isThrow) throws Exception {
 			boolean delObj = isDel.isSelected(); 
 			TreeItem<String> table = rootSubNode(TABLE);
 			try {
@@ -354,18 +397,21 @@ public class TransferDataController implements Initializable {
 						String tabName = cb.getValue();
 						// 删语句
 						cleanData(delObj, toConn, targetSchename, tabName);
-						TransferTabeDataDao.insertData(soConn,  toConn, tabName, schename, targetSchename);
+						TransferTabeDataDao.insertData(soConn,  toConn, tabName, schename, targetSchename, amount, isThrow);
 					}
 				}
-			} catch (SQLException e) { 
+			} catch (Exception e) { 
 				e.printStackTrace();
+				logger.debug(e.getMessage());
+				errorMsg.add( e.getMessage());
+				if(isThrow)throw e;
 			}  
 		}
 	// 删表数据
 	private void cleanData(boolean tf, Connection  toConn , String targetSchename, String tablename ) throws SQLException {
-		if(tf) {
-			String tableName = targetSchename+"."+tablename;
-			DBTools.execDelTab(toConn, tableName); 
+		if(tf) { 
+				String tableName = targetSchename+"."+tablename;
+				DBTools.execDelTab(toConn, tableName);   
 		}
 	}
 

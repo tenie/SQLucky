@@ -176,7 +176,9 @@ public class SqlEditor {
 		VBox vb = (VBox) tb.getContent();
 		StackPane sp = null;
 		if (vb.getChildren().size() > 1) {
-			sp = (StackPane) vb.getChildren().get(1);
+			int sz = vb.getChildren().size() - 1;
+			sp = (StackPane) vb.getChildren().get(sz);
+			
 		} else {
 			sp = (StackPane) vb.getChildren().get(0);
 		}

@@ -18,6 +18,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
@@ -42,7 +43,7 @@ public final class ComponentGetter {
 	public static TabPane mainTabPane;
 	public static TreeView<TreeNodePo> treeView;
 	public static DBinfoTree dbInfoTree;
-	public static JFXTextField dbInfoFilter;
+	public static TextField dbInfoFilter;
 
 	public static MasterDetailPane masterDetailPane;
 	public static MasterDetailPane treeAreaDetailPane;

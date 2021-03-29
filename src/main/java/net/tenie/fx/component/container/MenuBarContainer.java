@@ -275,7 +275,7 @@ public class MenuBarContainer {
 		});
 		
 		MenuItem themeYellow = new MenuItem(MenuItemNameFormat("Yellow")); 
-		themeYellow.setGraphic(ImageViewGenerator.svgImageDefActive("sun")); 
+		themeYellow.setGraphic(ImageViewGenerator.svgImageDefActive("adjust")); 
 		themeYellow.setOnAction(value -> {
 			CommonAction.setTheme(CommonConst.THEME_YELLOW);
 		});

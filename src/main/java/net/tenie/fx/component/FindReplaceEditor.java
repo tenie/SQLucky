@@ -175,7 +175,7 @@ public class FindReplaceEditor {
 		AnchorPane replaceAnchorPane = new AnchorPane();
 		replaceAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
-		query.setGraphic(ImageViewGenerator.svgImageUnactive("refresh"));
+		query.setGraphic(ImageViewGenerator.svgImageDefActive("refresh"));
 		TextField tf = new TextField();
 		tf.setPrefWidth(250);
 		tf.setPrefHeight(15);
@@ -221,7 +221,7 @@ public class FindReplaceEditor {
 		findAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
 		JFXCheckBox cb = new JFXCheckBox("Sensitive");
-		query.setGraphic(ImageViewGenerator.svgImageUnactive("search"));
+		query.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
 
 		TextField tf = new TextField();
 		query.setOnAction(v -> {
@@ -238,13 +238,13 @@ public class FindReplaceEditor {
 
 		// "arrow-down"
 		JFXButton down = new JFXButton();
-		down.setGraphic(ImageViewGenerator.svgImageUnactive("arrow-down"));
+		down.setGraphic(ImageViewGenerator.svgImageDefActive("arrow-down"));
 		down.setOnAction(v -> {
 			findStringFromCodeArea(tf.getText(), true, !cb.isSelected());
 		});
 
 		JFXButton up = new JFXButton();
-		up.setGraphic(ImageViewGenerator.svgImageUnactive("arrow-up"));
+		up.setGraphic(ImageViewGenerator.svgImageDefActive("arrow-up"));
 		up.setOnAction(v -> {
 			findStringFromCodeArea(tf.getText(), false, !cb.isSelected());
 		});
@@ -273,7 +273,7 @@ public class FindReplaceEditor {
 		findAnchorPane.getChildren().add(cb);
 
 		JFXButton hideBottom = new JFXButton();
-		hideBottom.setGraphic(ImageViewGenerator.svgImageUnactive("window-close"));// fontImgName("caret-square-o-down",
+		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("window-close"));// fontImgName("caret-square-o-down",
 																					// 16, Color.ROYALBLUE));
 		findAnchorPane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);

@@ -25,7 +25,8 @@ import net.tenie.lib.tools.StrUtils;
 public class TransferTabeDataDao {
 
 	private static Logger logger = LogManager.getLogger(TransferTabeDataDao.class);
-	public static DbTableDatePo insertData(Connection conn, Connection toConn , String tableName,  String schename , String targetSchename) throws SQLException {
+	
+	public static DbTableDatePo insertData(Connection conn, Connection toConn , String tableName,  String schename , String targetSchename, int amount , boolean isThrow) throws SQLException {
 		String sql = "select   *   from   "+schename+"."+tableName+"    where   1=1  ";
 		DbTableDatePo dpo = new DbTableDatePo();
 		// DB对象
@@ -53,10 +54,12 @@ public class TransferTabeDataDao {
 			}
 
 
-			execRs(toConn, rs, dpo, targetSchename+"."+tableName);
+			execRs(toConn, rs, dpo, targetSchename+"."+tableName, amount , isThrow );
 			
 		} catch (SQLException e) {
-			throw e;
+			e.printStackTrace();
+			logger.debug(e.getMessage());
+			if(isThrow) throw e;
 		} finally {
 			if (rs != null)
 				rs.close();
@@ -64,10 +67,14 @@ public class TransferTabeDataDao {
 		return dpo;
 	} 
 	
-	private static void execRs( Connection toConn ,ResultSet rs, DbTableDatePo dpo, String tableName) throws SQLException {
+	private static void execRs( Connection toConn ,ResultSet rs, DbTableDatePo dpo, String tableName , int amount,  boolean isThrow) throws SQLException {
 		 
 		Statement stmt = null;
 		int execLine = 500;
+		if(  amount > 0 ) {
+			execLine = amount;
+		} 
+		
 		try {
 			stmt = toConn.createStatement();
 			int idx = 0 ; 
@@ -109,13 +116,15 @@ public class TransferTabeDataDao {
 				 
 			}
 			
-			if( idx % execLine >  0 ) { 
+			if( idx % execLine >  0 ) {
 				logger.info(insertSql);
 				int[] count = stmt.executeBatch();
 				logger.info("instert = "+count.length);
 			} 
 		} catch (Exception e1) { 
 			e1.printStackTrace();
+			logger.debug(e1.getMessage());
+			if(isThrow) throw e1;
 		}finally {
 			if (stmt != null)
 				stmt.close();

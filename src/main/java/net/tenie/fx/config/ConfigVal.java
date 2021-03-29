@@ -56,22 +56,23 @@ public class ConfigVal {
 	
 	static {  
 
-		    cssList.add(ConfigVal.class.getResource("/css/common.css").toExternalForm());	
-		    cssList.add(ConfigVal.class.getResource("/css/sql-keywords.css").toExternalForm());
+		    cssList.add(ConfigVal.class.getResource("/css/dark/common.css").toExternalForm());	
+		    cssList.add(ConfigVal.class.getResource("/css/dark/sql-keywords.css").toExternalForm());
 		    
-			cssList.add(ConfigVal.class.getResource("/css/treeView.css").toExternalForm());
-			cssList.add(ConfigVal.class.getResource("/css/TableView.css").toExternalForm());
-			cssList.add(ConfigVal.class.getResource("/css/tabPane.css").toExternalForm());
+			cssList.add(ConfigVal.class.getResource("/css/dark/treeView.css").toExternalForm());
+			cssList.add(ConfigVal.class.getResource("/css/dark/TableView.css").toExternalForm());
+			cssList.add(ConfigVal.class.getResource("/css/dark/tabPane.css").toExternalForm());
 			 
 			
-			cssListLight.add(ConfigVal.class.getResource("/css/common-light.css").toExternalForm());
-			cssListLight.add(ConfigVal.class.getResource("/css/sql-keywords-light.css").toExternalForm());
+			cssListLight.add(ConfigVal.class.getResource("/css/light/common-light.css").toExternalForm());
+			cssListLight.add(ConfigVal.class.getResource("/css/light/sql-keywords-light.css").toExternalForm());
+			cssListLight.add(ConfigVal.class.getResource("/css/light/tabPane-light.css").toExternalForm());
 			
-			cssListYellow.add(ConfigVal.class.getResource("/css/common-yellow.css").toExternalForm());
-			cssListYellow.add(ConfigVal.class.getResource("/css/sql-keywords-yellow.css").toExternalForm());
-			cssListYellow.add(ConfigVal.class.getResource("/css/treeView-yellow.css").toExternalForm());
-			cssListYellow.add(ConfigVal.class.getResource("/css/TableView-yellow.css").toExternalForm());
-			cssListYellow.add(ConfigVal.class.getResource("/css/tabPane-yellow.css").toExternalForm());
+			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/common-yellow.css").toExternalForm());
+			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/sql-keywords-yellow.css").toExternalForm());
+			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/treeView-yellow.css").toExternalForm());
+			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/TableView-yellow.css").toExternalForm());
+			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/tabPane-yellow.css").toExternalForm());
 			 
 	}
 	

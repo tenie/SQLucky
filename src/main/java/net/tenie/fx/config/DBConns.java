@@ -8,6 +8,7 @@ import com.jfoenix.controls.JFXComboBox;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import net.tenie.fx.component.ImageViewGenerator;
 //import net.tenie.fx.component.ShareComponnet;
@@ -17,7 +18,7 @@ import net.tenie.lib.po.DbConnectionPo;
 public final class DBConns {
 	private static LinkedHashSet<String> set = new LinkedHashSet<String>();
 	private static Map<String, DbConnectionPo> dbs = new HashMap<String, DbConnectionPo>();
-	private static JFXComboBox<Label> cb;
+	private static ComboBox<Label> cb;
 
 	public static void flushChoiceBoxGraphic() {
 		if (cb != null && cb.getItems() != null) {
@@ -57,11 +58,11 @@ public final class DBConns {
 	}
 
 	// 选择连接框的选项添加
-	public static void flushChoiceBox(JFXComboBox<Label> box) {
+	public static void flushChoiceBox(ComboBox<Label> box) {
 		if (box != null) {
 			cb = box;
 		} else {
-//			cb = (JFXComboBox<Label>) ShareComponnet.name("ComponentGenerator.ChoiceBox.conns");
+//			cb = (ComboBox<Label>) ShareComponnet.name("ComponentGenerator.ChoiceBox.conns");
 		}
 		if (cb == null) {
 			return;

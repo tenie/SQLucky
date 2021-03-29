@@ -4,10 +4,12 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import net.tenie.fx.Action.ButtonAction;
@@ -150,10 +152,10 @@ public class ButtonFactory {
 
 			// 选择sql在哪个连接上执行
 			Label lbcnn = new Label("DB Connection: ");
-			JFXComboBox<Label> conns = new JFXComboBox<Label>();
+			ComboBox<Label> conns = new ComboBox<Label>();
 			lbcnn.setLabelFor(conns);
-			conns.setPrefHeight(22);
-			conns.setMinHeight(22);
+			conns.setPrefHeight(25);
+			conns.setMinHeight(25);
 			conns.setMaxWidth(150);
 			conns.setMinWidth(150);
 			conns.getStyleClass().add("myComboBox");
@@ -169,10 +171,12 @@ public class ButtonFactory {
 			
 			// sql 执行读取行数
 			Label lb = new Label("Max Rows: ");
-			JFXTextField rows = new JFXTextField();
+			TextField rows = new TextField();
+//		    final TextField rows =  TextFieldFactory.numTextField();
+			
 			lb.setLabelFor(rows);
-			rows.setPrefHeight(22);
-			rows.setMinHeight(22);
+			rows.setPrefHeight(25);
+			rows.setMinHeight(25);
 
 //			rows.setLabelFloat(true);
 //			rows.setPromptText("Max Rows");
