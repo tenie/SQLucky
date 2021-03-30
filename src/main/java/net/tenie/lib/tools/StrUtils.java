@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +27,25 @@ public class StrUtils {
 	public final static String BLANK_SPRING_STRING = " ";
 	public static final char CHAR_TILDE = '~';
 
+	public static void testStrsToInts() {
+		List<String> ls = new ArrayList<>();
+		ls.add("10");
+		ls.add("5");
+		ls.add("15");
+		List<Integer> rs = StrUtils.StrListToIntList(ls);
+		System.out.println(rs);
+	}
+	// 字符串list 排序
+	public static List<Integer> StrListToIntList(List<String> ls){
+		List<Integer> rs = new ArrayList<>();
+		for(String str : ls) {
+			Integer v = Integer.valueOf(str.trim());
+			rs.add(v);
+		} 
+		rs.sort(Comparator.comparing(Integer::intValue)); 
+		return rs;
+	}
+	
 	// 获取字符串的前缀空白字符
 	public static String prefixBlankStr(String txt) { 
 		StringBuilder strb = new StringBuilder("");
@@ -122,8 +142,8 @@ public class StrUtils {
 
 		
 public static void main(String[] args) {
-	
-	test_trimChar();
+	testStrsToInts();
+//	test_trimChar();
 }
 	// 去除2边指定的字符
 	public static String trimChar(String str, String tag) {

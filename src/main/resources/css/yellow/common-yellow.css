@@ -2,6 +2,19 @@
 .my-tag{
 	
 }
+
+/*书签*/
+.myLineBookMark{
+	 
+
+ 	-fx-background-color: red; 
+	-fx-background-radius: 10 10 10 10; 
+ /*-fx-background-color: linear-gradient(from 0px 0px to 0px 50px, gray, darkgray 50%, dimgray 99%, white);
+*/	
+	 
+ 
+}
+
 /* 文本颜色 */
 .text {
      -fx-fill: #ffffff;   /* 文本颜色 */  
@@ -279,7 +292,14 @@ FlowPane TextField{
      -fx-text-alignment: center;
  }
 
+/* combo-box 下划线*/
+.combo-box .input-line{
+ 	 -fx-background-color:  #323232 ;
+}
 
+.combo-box .input-focused-line{
+ 	 -fx-background-color:  #323232 ;
+}
 
 
 

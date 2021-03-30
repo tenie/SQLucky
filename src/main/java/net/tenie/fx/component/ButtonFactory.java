@@ -152,7 +152,7 @@ public class ButtonFactory {
 
 			// 选择sql在哪个连接上执行
 			Label lbcnn = new Label("DB Connection: ");
-			ComboBox<Label> conns = new ComboBox<Label>();
+			JFXComboBox<Label> conns = new JFXComboBox<Label>();
 			lbcnn.setLabelFor(conns);
 			conns.setPrefHeight(25);
 			conns.setMinHeight(25);
@@ -166,7 +166,8 @@ public class ButtonFactory {
 			conns.getSelectionModel().selectedIndexProperty().addListener(CommonListener.choiceBoxChange());
 			conns.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
 			ComponentGetter.connComboBox = conns;
-//			conns
+			
+//			conns.getit
 //			AnchorPane.setTopAnchor(conns, 0.0);
 			
 			// sql 执行读取行数

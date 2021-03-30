@@ -3,12 +3,14 @@ package net.tenie.fx.component;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.IntFunction;
 
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
 
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Priority;
@@ -243,21 +245,31 @@ public class SqlEditor {
 		if (myTabPane != null && myTabPane.getTabs().size() > 0) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for(Tab tb : tabs) { 
-				CodeArea ac = getCodeArea(tb); 
-				changeThemeHelper(ac);
+				MyCodeArea ac = (MyCodeArea) getCodeArea(tb); 
+				changeCodeAreaLineNoThemeHelper(ac);
 
 			}
 		}
 	}
 	
-	public static void changeThemeHelper(CodeArea codeArea) {
+	public static void changeCodeAreaLineNoThemeHelper(MyCodeArea codeArea ) {
+		MyLineNumberFactory nbf = null;
+		List<String> lines = null;
+		if(codeArea.getMylineNumber() != null ) {
+			 lines =codeArea.getMylineNumber().getLineNoList(); 
+		}
+		
 		if(ConfigVal.THEME.equals(CommonConst.THEME_DARK)) {
-			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea ,"#606366" , "#313335"));
+			nbf = MyLineNumberFactory.get(codeArea ,"#606366" , "#313335", lines);
 		}else if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
-			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea ,"#ffffff" , "#000000"));
+			nbf = MyLineNumberFactory.get(codeArea ,"#ffffff" , "#000000", lines);
 		}else if(ConfigVal.THEME.equals(CommonConst.THEME_LIGHT)) {
-			codeArea.setParagraphGraphicFactory(MyLineNumberFactory.get(codeArea, "#666", "#ddd"));
-		} 
+			nbf = MyLineNumberFactory.get(codeArea, "#666", "#ddd", lines);
+		}
+		
+		codeArea.setParagraphGraphicFactory(nbf);
+		codeArea.setMylineNumber(nbf);
+		 
 	}
 
 }

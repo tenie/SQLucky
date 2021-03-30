@@ -21,13 +21,7 @@
 }
 
 
-/*.combo-box {    
-     -fx-background-radius: 0;  
-     -fx-font-size: 12px; 
-     -fx-background-insets: 0;
-     -fx-alignment: center;
-     -fx-content-display: center;
- }*/
+ 
  
 .myComboBox {
 	-fx-text-fill: #000000;
@@ -47,8 +41,16 @@
 	-fx-border-color:transparent transparent #4C708C transparent;
 }
 
+/* combo-box 下划线*/
+.combo-box .input-line{
+ 	 -fx-background-color:   #4C708C ;
+}
 
+.combo-box .input-focused-line{
+ 	 -fx-background-color:   #4C708C ;
+}
 
+ 
 .myShellWindow{
  -fx-border-color: #4C708C; 
 }

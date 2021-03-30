@@ -437,6 +437,29 @@ public class CommonAction {
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
 	
+	private static String paragraphPrefixBlankStr(CodeArea codeArea, int anchor) {
+		int a = anchor;
+		int b = anchor + 1;
+		int len = codeArea.getText().length();
+		
+		StringBuilder strb2 = new StringBuilder("");
+	
+		while(true) {
+				if(a >= len) break;
+				 
+			    String sc =  codeArea.getText(a, b);  
+				if(" ".equals(sc) || "\t".equals(sc)) {
+					strb2.append(sc);
+				}else {
+					break;
+				} 
+				a++;
+				b++;
+				
+		}
+		
+		return strb2.toString();
+	}
 	
 	public static void addNewLine(KeyEvent e  ,CodeArea codeArea) {
 
@@ -456,13 +479,15 @@ public class CommonAction {
 				
 				// 一行的前缀空白符
 				String strb = StrUtils.prefixBlankStr(ptxt);
+				int countSpace = strb.length();
 				
-				// 获取光标之后的空白符, 如果后面的字符包含空白符, 换行的时候需要修正前缀补充的字符, 补多了换行越来越长
-				String afterAnchorText =  codeArea.getText(anchor, anchor+ptxt.length());
-				String strafter = StrUtils.prefixBlankStr(afterAnchorText);
+				// 获取光标之后的空白符, 如果后面的字符包含空白符, 换行的时候需要修正前缀补充的字符, 补多了换行越来越长 
+//				String afterAnchorText =  codeArea.getText(anchor,codeArea.getText().length());
+//				String strafter = StrUtils.prefixBlankStr(afterAnchorText);
+				String strafter = paragraphPrefixBlankStr(codeArea , anchor);
 				
 				String fstr = "";
-				if(strafter.length() > 0) {
+				if(strafter.length() > 0 &&  strb.length() >  strafter.length()) {
 					fstr = strb.substring(0 , strb.length() - strafter.length());
 				}else {
 					fstr = strb;
@@ -473,6 +498,7 @@ public class CommonAction {
 					e.consume();
 					String addstr = "\n"+fstr; 
 					codeArea.insertText(anchor , addstr);
+					codeArea.moveTo(idx + 1, countSpace);
 				}else {
 					//如果光标在起始位, 那么回车后光标移动到起始再会到回车后的位置, 目的是防止页面不滚动
 					if( anchor == 0) {
@@ -1164,30 +1190,7 @@ public class CommonAction {
 		ConfigVal.FONT_SIZE = sz;
 		
 	}
-	
-	
-	public static void main(String[] args) {
-//		String text = "012345(ABC(DE)6789";
-//		int i = selectParenthesisRange(text, 7, "(", ")");
-//		logger.info(i);
-//		logger.info(text.substring(7, i));
-		
-		
-		String text = "012345(ABC(DE)6789";
-		int i = findEndParenthesisRange(text, 12, ")", "(");
-		logger.info(i);
-		logger.info(text.substring( i, 12));
-		
-		
-//		String s = "select\r\n" + 
-//				"  *\r\n" + 
-//				"from  -- foofofo \r\n" + 
-//				"  TM_CUSTOMER_SERIES_TYPE_DET\r\n" + 
-//				"-- eeee \n"+
-//				"where\r\n" + 
-//				"  1 = 1 ";
-//		logger.info(StrUtils.pressString(s));
-	}
+	 
 	
 	// 关闭 数据页, 清理缓存
 	public static void clearDataTable(TabPane tabPane, Tab tb) {

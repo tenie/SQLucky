@@ -211,14 +211,12 @@ Pane VBox {
 
 .myTableTag   .scroll-bar .increment-arrow,
 .myTableTag   .scroll-bar .decrement-arrow{
-    -fx-shape : " ";   
-    -fx-padding :0.0 0.15em;  
+    -fx-shape : " ";
 }
 
- .myTableTag  .scroll-bar:vertical .increment-arrow,
- .myTableTag  .scroll-bar:vertical .decrement-arrow{
-    -fx-shape : " "; 
-    -fx-padding :0.0 0.15em;
+.myTableTag  .scroll-bar:vertical .increment-arrow,
+.myTableTag  .scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";
 }
 
 .myTableTag  .scroll-bar:horizontal .thumb,

@@ -2,6 +2,7 @@ package net.tenie.fx.Action;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -18,6 +19,8 @@ import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.MyCodeArea;
+import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.TreeItem.TreeObjCache;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
@@ -178,5 +181,49 @@ public class ButtonAction {
 		if( tbrs != null)
 		TreeObjAction.showTableSql(dbcp, tbrs, tbn);
 		
+	}
+	
+	
+	/**
+	 * bookmark next
+	 * @param isNext true: 从上往下找
+	 */
+	public static void nextBookmark( boolean isNext) {
+		  
+		MyCodeArea codeArea = (MyCodeArea) SqlEditor.getCodeArea();  
+		int idx = codeArea.getCurrentParagraph(); // 获取当前行号
+		List<String> strs = codeArea.getMylineNumber().getLineNoList();
+		
+		
+		int moveto = -1;
+		if(strs !=null && strs.size() > 0) {
+			List<Integer> rs = StrUtils.StrListToIntList(strs);
+			if(! isNext) {
+				rs.sort(Comparator.comparing(Integer::intValue).reversed()); 
+			} 
+			moveto = rs.get(0) - 1;
+			for(Integer v : rs) {
+				int i = v - 1;
+				
+				if(isNext) {
+					if(idx < i ) {
+						moveto = i ; 
+						break;
+					}
+				}else {
+					if(idx > i ) {
+						moveto = i ; 
+						break;
+					}
+				}
+				
+				
+			}
+		}
+		if(moveto > -1 ) {
+			codeArea.moveTo(moveto, 0);
+			codeArea.showParagraphAtTop(moveto < 10 ? 0 : (moveto - 9));
+		}
+	
 	}
 }

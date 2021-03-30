@@ -37,7 +37,7 @@ public class SqlCodeAreaHighLighting {
 	private static Logger logger = LogManager.getLogger(SqlCodeAreaHighLighting.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
 
-	private CodeArea codeArea;
+	private MyCodeArea codeArea;
 	private ExecutorService executor; 
 	private ChangeListener<String>  cl;
 	
@@ -45,9 +45,12 @@ public class SqlCodeAreaHighLighting {
 
 	public StackPane getObj(String text, boolean editable) {
 		executor = Executors.newSingleThreadExecutor();
-		codeArea = new CodeArea();
+		codeArea = new MyCodeArea();
 	    cl = CommonListener.codetxtChange(codeArea);
-	    SqlEditor.changeThemeHelper(codeArea);
+	    
+	    // 行号主题色
+	    SqlEditor.changeCodeAreaLineNoThemeHelper(codeArea); 
+	    
 		// 事件KeyEvent 
 		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{

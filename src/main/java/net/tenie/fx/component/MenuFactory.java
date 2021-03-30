@@ -2,6 +2,7 @@ package net.tenie.fx.component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -16,6 +17,7 @@ import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
@@ -249,6 +251,43 @@ public class MenuFactory {
 			delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
 
 			contextMenu.getItems().addAll(add, link, unlink, Edit, delete);
+
+			return contextMenu;
+		}
+	
+	
+	//行号 右键菜单
+	public static ContextMenu CreateLineNoMenu(List<String> lineNoList , Label lineNo) {
+			ContextMenu contextMenu = new ContextMenu();
+
+			MenuItem add = new MenuItem("Add Bookmark");
+			add.setOnAction(e -> { 
+				if(lineNoList.contains(lineNo.getText())) {
+					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("NULL",12));
+					lineNoList.remove(lineNo.getText());
+				}else {
+					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right", 12));
+					lineNoList.add(lineNo.getText());
+				} 
+				
+			});
+			add.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right"));
+
+			MenuItem next = new MenuItem("Next");
+			next.setOnAction(e->{
+				ButtonAction.nextBookmark(true);
+			});
+			next.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-down"));
+
+			MenuItem previous = new MenuItem("Previous");
+			previous.setOnAction(e->{
+				ButtonAction.nextBookmark(false);
+			});
+			previous.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-up"));
+
+			 
+
+			contextMenu.getItems().addAll(add, next, previous);
 
 			return contextMenu;
 		}

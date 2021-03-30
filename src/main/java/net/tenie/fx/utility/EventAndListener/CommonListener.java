@@ -109,6 +109,7 @@ public class CommonListener {
 						ConnectionEditor.openConn(cnnpo.getConnName());
 					}
 				}
+			    
 
 			}
 		};

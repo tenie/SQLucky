@@ -3,6 +3,7 @@ package net.tenie.fx.utility.EventAndListener;
 import net.tenie.fx.component.*;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -21,10 +22,12 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.io.SaveFile;
+import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public final class SettingKeyCodeCombination {
@@ -157,13 +160,16 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		scene.getAccelerators().put(F1, () -> {
-			VBox vb = new  VBox();
-			vb.getChildren().add(new Label("sdsdsdssdsdsdssdsdsdssdsdsdssdsdsdssdsdsds"));
 			
-		    Stage stage = new Stage();
-		    Scene scene2 = new Scene(vb); 
-			stage.setScene(scene2);
-			ModalDialog.windowShell(stage, ModalDialog.ERROR);
+			ButtonAction.nextBookmark(false);
+			
+//			VBox vb = new  VBox();
+//			vb.getChildren().add(new Label("sdsdsdssdsdsdssdsdsdssdsdsdssdsdsdssdsdsds"));
+//			
+//		    Stage stage = new Stage();
+//		    Scene scene2 = new Scene(vb); 
+//			stage.setScene(scene2);
+//			ModalDialog.windowShell(stage, ModalDialog.ERROR);
 			 
 //			System.out.println(1111);
 //			runbtn.setDisable(true);
@@ -180,8 +186,11 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		
-		
+		// 书签查找
 		scene.getAccelerators().put(F2, () -> {  
+			ButtonAction.nextBookmark(true);
+			
+			
 //			setFontSize(12);
 //			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
 //				logger.info(code.getStyle());

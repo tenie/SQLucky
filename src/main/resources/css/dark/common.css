@@ -223,6 +223,17 @@ FlowPane TextField{
      -fx-text-alignment: center;
  }
 
+/* combo-box 下划线*/
+.combo-box .input-line{
+ 	 -fx-background-color:  #373A3C ;
+}
+
+.combo-box .input-focused-line{
+ 	 -fx-background-color:  #373A3C ;
+}
+
+
+
 /*  .combo-box-popup .list-view .list-cell:filled:selected, 
  .combo-box-popup .list-view .list-cell:filled:selected:hover {
      -fx-background: #2f4f4f;

@@ -28,10 +28,10 @@
          <children>
             <Label text="Source" />
             <Label text="Target" GridPane.columnIndex="2" />
-            <ComboBox fx:id="soDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" />
-            <ComboBox fx:id="soSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <ComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" />
-            <ComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            <JFXComboBox fx:id="soDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" />
+            <JFXComboBox fx:id="soSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <JFXComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" />
+            <JFXComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
          </children>
          <VBox.margin>
             <Insets left="10.0" />
