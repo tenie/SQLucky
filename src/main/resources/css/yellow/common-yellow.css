@@ -99,7 +99,7 @@ CheckBoxTreeItem{
 
 
 .myModalDialog {
- -fx-background-color: #000000;
+ -fx-background-color: #3C3F41;
 }
 
 GridPane {
@@ -108,7 +108,7 @@ GridPane {
 
  
 .myAlert { 
- -fx-background-color: #000000;
+ -fx-background-color: #3C3F41;
 }
 .myAlert  TextField{
  -fx-text-fill: white;

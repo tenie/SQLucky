@@ -89,6 +89,7 @@ public class ShowTableRowDateDetailAction {
 					public void changed(ObservableValue<? extends SqlFieldPo> observableValue, SqlFieldPo oldItem,
 							SqlFieldPo newItem) {
 						SqlFieldPo p = newItem;
+						if(p == null ) return;
 						tf1.setText(p.getColumnLabel().get());
 						String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
 						if (p.getScale() != null && p.getScale().get() > 0) {
@@ -124,7 +125,7 @@ public class ShowTableRowDateDetailAction {
 		topfp.setPadding(new Insets(8, 5, 8, 8));
 		Label lb = new Label();
 		lb.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
-		JFXTextField filterField = new JFXTextField();
+		TextField filterField = new TextField();
 
 		filterField.getStyleClass().add("myTextField");
 		topfp.getChildren().add(lb);
@@ -132,7 +133,7 @@ public class ShowTableRowDateDetailAction {
 		topfp.getChildren().add(filterField);
 		topfp.setMinHeight(30);
 		topfp.prefHeight(30);
-		filterField.setPrefWidth(150);
+		filterField.setPrefWidth(200);
 
 		subvb.getChildren().add(topfp);
 
@@ -160,9 +161,22 @@ public class ShowTableRowDateDetailAction {
 			String newValue) {
 		FilteredList<SqlFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
 		filteredData.setPredicate(
-				   entity -> 
-				   entity.getColumnLabel().get().toUpperCase().contains(newValue.toUpperCase())
-				|| entity.getValue().get().toUpperCase().contains(newValue.toUpperCase()));
+				   entity -> {
+					 boolean tf1 = false;
+					 boolean tf2 = false;
+					 if( entity.getColumnLabel() != null) {
+						 tf1 = entity.getColumnLabel().get().toUpperCase().contains(newValue.toUpperCase());
+					 }
+					 if( entity.getValue() != null) {
+						 tf2 = entity.getValue().get().toUpperCase().contains(newValue.toUpperCase());
+					 }
+					  
+				       
+				     return tf1 || tf2 ;
+				   }
+				 
+				
+				);
 		SortedList<SqlFieldPo> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 		tableView.setItems(sortedData);

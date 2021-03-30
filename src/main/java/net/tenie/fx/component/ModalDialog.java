@@ -170,7 +170,7 @@ public class ModalDialog {
 	// 根据给定的node 创建 模态框
 	public ModalDialog(Parent node, TableView<SqlFieldPo>  tv ,String title) {
 		try {
-
+			
 			final Stage stage = new Stage();
 			Scene scene = new Scene(node);
 			 
