@@ -23,18 +23,18 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.Action.DraggingTabPaneSupport;
-import net.tenie.fx.Action.ShowTableRowDateDetailAction;
+import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.component.AllButtons;
-import net.tenie.fx.component.ButtonFactory;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
+import net.tenie.fx.utility.DraggingTabPaneSupport;
+import net.tenie.fx.window.TableRowDataDetail;
 import net.tenie.lib.tools.StrUtils;
 
 /*   
@@ -185,7 +185,7 @@ public class DataViewContainer {
 	                           this.setOnMouseClicked(e -> {
 	     		               	  if (e.getClickCount() == 2) {
 	     		               		  JFXButton btn = (JFXButton) ComponentGetter.dataFlowSaveBtn();
-	     		               	      ShowTableRowDateDetailAction.show(btn); 
+	     		               	      TableRowDataDetail.show(btn); 
 	     		               	  }
 	     	                 } ); 
 	                    }

@@ -5,6 +5,27 @@
     -fx-background-color: #2B2B2B ;
     -fx-text-fill: white ;
 }
+.transferDataTree .tree-cell {
+   -fx-background-color: #3C3F41 ;
+   -fx-text-fill: white ;
+}
+
+/*check box tree*/
+.clipped-container{
+	 -fx-color: #2B2B2B ;
+}
+
+.check-box .box{
+	 -fx-color: #2B2B2B ;
+}
+.check-box .box:hover{
+	 -fx-color: #2B2B2B ;
+}
+
+/*.clipped-container:hover{
+	 -fx-color: #000000 ;
+}*/
+
 /* .tree-cell:expanded, .tree-cell:sub-tree-item {
     -fx-background-color: #404040 ;
 } */

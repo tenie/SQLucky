@@ -52,14 +52,21 @@
 
  
 .myShellWindow{
- -fx-border-color: #4C708C; 
+ -fx-border-color: #E2E2E2; 
 }
 
-.myAlert {
- /*-fx-border-color: #4C708C; */
--fx-background-color: #FFFFFF;
+/* 子窗口壳的顶部关闭区域*/
+.subWindowClose{
+	 -fx-background-color:#DDDDDD;
 }
 
+.myAlert { 
+	-fx-background-color: #EAEAEA;
+}
+
+.myAlertBtn{
+	-fx-background-color: #1E90FF;
+}
 
 
 

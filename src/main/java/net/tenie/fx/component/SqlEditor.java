@@ -16,13 +16,13 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.H2SqlTextSavePo;
 import net.tenie.lib.db.h2.SqlTextDao;
@@ -253,18 +253,18 @@ public class SqlEditor {
 	}
 	
 	public static void changeCodeAreaLineNoThemeHelper(MyCodeArea codeArea ) {
-		MyLineNumberFactory nbf = null;
+		MyLineNumberNode nbf = null;
 		List<String> lines = null;
 		if(codeArea.getMylineNumber() != null ) {
 			 lines =codeArea.getMylineNumber().getLineNoList(); 
 		}
 		
 		if(ConfigVal.THEME.equals(CommonConst.THEME_DARK)) {
-			nbf = MyLineNumberFactory.get(codeArea ,"#606366" , "#313335", lines);
+			nbf = MyLineNumberNode.get(codeArea ,"#606366" , "#313335", lines);
 		}else if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
-			nbf = MyLineNumberFactory.get(codeArea ,"#ffffff" , "#000000", lines);
+			nbf = MyLineNumberNode.get(codeArea ,"#ffffff" , "#000000", lines);
 		}else if(ConfigVal.THEME.equals(CommonConst.THEME_LIGHT)) {
-			nbf = MyLineNumberFactory.get(codeArea, "#666", "#ddd", lines);
+			nbf = MyLineNumberNode.get(codeArea, "#666", "#ddd", lines);
 		}
 		
 		codeArea.setParagraphGraphicFactory(nbf);

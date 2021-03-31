@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.window;
 
 import java.io.IOException;
 import java.net.URL;
@@ -18,9 +18,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.main.MainMyDB;
-import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 
 public class DataTransferWindow {
 	Stage stage;

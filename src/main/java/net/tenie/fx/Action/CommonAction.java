@@ -24,7 +24,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.utility.EventAndListener.myEvent;
+import net.tenie.fx.window.ModalDialog;
+import net.tenie.fx.window.MyAlert;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
@@ -46,7 +48,6 @@ import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.CommonConst;
@@ -123,7 +124,7 @@ public class CommonAction {
 			setOpenfileDir(fileName);
 
 		} catch (Exception e1) {
-			ModalDialog.showErrorMsg("Save Error!", e1.getMessage());
+			MyAlert.errorAlert( e1.getMessage());
 			e1.printStackTrace();
 		}
 
@@ -603,7 +604,7 @@ public class CommonAction {
 			}
 			SqlEditor.createTabFromSqlFile(val, tabName, id);
 		} catch (IOException e) {
-			ModalDialog.showErrorMsg("Sql Error", e.getMessage());
+			MyAlert.errorAlert( e.getMessage());
 			e.printStackTrace();
 		}
 	}
@@ -713,12 +714,11 @@ public class CommonAction {
 				connpo.getConn();
 				Platform.runLater(() -> {
 					if (connpo.isAlive()) {
-						ModalDialog.infoAlert("Information!", "  Successfully  !");
+						MyAlert.infoAlert("Information!", "  Successfully  !");
 						connpo.closeConn();
 						testBtn.setStyle("-fx-background-color: green ");
 					} else {
-						ModalDialog.errorAlert("Warn!",
-								" Cannot connect ip:" + connpo.getHost() + " port:" + connpo.getPort() + "  !");
+						MyAlert.errorAlert(" Cannot connect ip:" + connpo.getHost() + " port:" + connpo.getPort() + "  !");
 
 					}
 

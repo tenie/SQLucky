@@ -1,8 +1,10 @@
-package net.tenie.fx.component;
+package net.tenie.fx.window;
 
 import javafx.stage.*;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.main.MainMyDB;
 import javafx.scene.*;
@@ -253,53 +255,7 @@ public class ModalDialog {
 		return stage;
 	}
 //TODO
-	public static void ModalDialogApp(VBox node, String title) {
-		try {
-			node.getStyleClass().add("myAlert");
-			final Stage stage = new Stage();
-			Scene scene = new Scene(node);
-			JFXButton btn = new JFXButton("Close");
-			btn.setOnAction(value -> {
-				stage.close();
-			});
-			AnchorPane pn = new AnchorPane();
-			pn.getChildren().add(btn);
-			AnchorPane.setRightAnchor(btn, 0.0);
-			node.getChildren().add(pn);
-
-//			scene.getStylesheets().addAll(ConfigVal.cssList);
-			CommonAction.loadCss(scene);
-
-			stage.initModality(Modality.APPLICATION_MODAL);
-			stage.setTitle(title);
-			stage.setScene(scene);
-
-			stage.setMaximized(false);
-			stage.setResizable(false);
-			stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
-
-			stage.show();
-			stage.setOnCloseRequest(v -> {
-
-			});
-
-			KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-			KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
-			KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
-			scene.getAccelerators().put(escbtn, () -> {
-				stage.close();
-			});
-			scene.getAccelerators().put(enterbtn, () -> {
-				stage.close();
-			});
-			scene.getAccelerators().put(spacebtn, () -> {
-				stage.close();
-			});
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+	
 	
 	public static void setSceneAndShow(Scene scene , Stage stage ) {
 		 
@@ -357,29 +313,7 @@ public class ModalDialog {
 			stage.setTitle(title);
 			stage.setScene(scene);
 			setSceneAndShow(scene, stage);
-
-//			stage.setMaximized(false);
-//			stage.setResizable(false);
-//			stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
-//
-//			stage.show();
-//			stage.setOnCloseRequest(v -> {
-//
-//			});
-//
-//			KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-//			KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
-//			KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
-//			scene.getAccelerators().put(escbtn, () -> {
-//				stage.close();
-//			});
-//			scene.getAccelerators().put(enterbtn, () -> {
-//				stage.close();
-//			});
-//			scene.getAccelerators().put(spacebtn, () -> {
-//				stage.close();
-//			});
-
+ 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -430,14 +364,8 @@ public class ModalDialog {
 		});
 	}
 
-	public static void errorAlert(String title, String containTxt) {
-		showErrorMsg(title, containTxt);
-	}
 
-	public static void infoAlert(String title, String containTxt) {
-		showErrorMsg(title, containTxt);
-	}
-
+	
 	public static void showErrorMsg2(String title, String containTxt) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error Info");
@@ -463,25 +391,7 @@ public class ModalDialog {
 		alert.showAndWait();
 	}
 
-	public static void showErrorMsg(String title, String containTxt) {
-		VBox vb = new VBox();
-		TextField tf1 = new TextField("");
-		tf1.setEditable(false);
-		tf1.setPrefWidth(500);
-		tf1.setStyle("-fx-background-color: transparent;");
-		tf1.setText(containTxt);
-		tf1.setPrefHeight(40);
-		tf1.setFocusTraversable(false);
-
-		vb.getChildren().add(tf1);
-		vb.setPrefWidth(500);
-		vb.setPadding(new Insets(20));
-		vb.setPrefHeight(100);
-		vb.maxHeight(100);
-		vb.maxWidth(500);
-		ModalDialog.ModalDialogApp(vb, title);
-
-	}
+	
 	
 	public static  void windowShell(Stage stage, Node title) {
 		Scene scene  = stage.getScene();

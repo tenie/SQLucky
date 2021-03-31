@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.factory;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -14,11 +14,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.Action.CommonListener;
+import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.component.AllButtons;
+import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.MyTooltipTool;
+import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
-import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
-import net.tenie.fx.utility.EventAndListener.CommonListener;
-import net.tenie.fx.utility.EventAndListener.RunSQLHelper;
 import net.tenie.lib.tools.StrUtils;
 
 public class ButtonFactory {

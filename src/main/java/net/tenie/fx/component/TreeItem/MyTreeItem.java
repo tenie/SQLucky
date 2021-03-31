@@ -1,4 +1,4 @@
-package net.tenie.fx.component.container;
+package net.tenie.fx.component.TreeItem;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

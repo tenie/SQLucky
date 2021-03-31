@@ -1,4 +1,4 @@
-package net.tenie.fx.component.container;
+package net.tenie.fx.factory;
 
 import java.util.Objects;
 

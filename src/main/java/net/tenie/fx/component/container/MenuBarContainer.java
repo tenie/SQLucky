@@ -17,14 +17,14 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ConnectionEditor;
-import net.tenie.fx.component.DataTransferWindow;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.fx.window.ConnectionEditor;
+import net.tenie.fx.window.DataTransferWindow;
+import net.tenie.fx.window.ModalDialog;
 
 /*   @author tenie */
 public class MenuBarContainer {

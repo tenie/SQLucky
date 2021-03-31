@@ -1,4 +1,4 @@
-package net.tenie.fx.Action;
+package net.tenie.fx.utility;
 
 import impl.org.controlsfx.tableview2.filter.parser.Operation;
 import impl.org.controlsfx.tableview2.filter.parser.aggregate.AggregatorsParser;

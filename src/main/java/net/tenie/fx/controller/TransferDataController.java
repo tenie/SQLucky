@@ -39,18 +39,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
-import net.tenie.fx.component.container.MyTreeItem;
-import net.tenie.fx.component.container.TaskCellFactory;
+import net.tenie.fx.component.TreeItem.MyTreeItem;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.dao.TransferTabeDataDao;
-import net.tenie.fx.utility.EventAndListener.CommonListener;
+import net.tenie.fx.factory.TaskCellFactory;
+import net.tenie.fx.window.ModalDialog;
+import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportDDL;
 import net.tenie.lib.po.DbConnectionPo;
@@ -180,6 +181,8 @@ public class TransferDataController implements Initializable {
 		root = new CheckBoxTreeItem<String>("全选");
 		root.setExpanded(true); 
 	    checkTreeView = new CheckTreeView<>(root);
+	    checkTreeView.getStyleClass().add("transferDataTree");
+	    checkTreeView.getStyleClass().add("my-tag");
 		checkTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		treePane.getChildren().addAll(checkTreeView);
 		HBox.setHgrow(checkTreeView, Priority.ALWAYS);
@@ -243,12 +246,12 @@ public class TransferDataController implements Initializable {
 						errorMsg.clear();
 						runBtnAction();  
 						Platform.runLater(() -> { 
-							ModalDialog.infoAlert("完成", "完成");
+							MyAlert.infoAlert("完成", "完成");
 						});
 					} catch (Exception e2) {
 						logger.debug(e2.getMessage());
 						Platform.runLater(() -> { 
-							ModalDialog.showErrorMsg("Error", e2.getMessage());
+							MyAlert.errorAlert( e2.getMessage());
 						});
 					}finally {
 						btnController(false);

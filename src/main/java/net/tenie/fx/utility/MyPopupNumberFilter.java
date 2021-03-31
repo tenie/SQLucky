@@ -1,4 +1,4 @@
-package net.tenie.fx.Action;
+package net.tenie.fx.utility;
 
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.filter.parser.Parser;

@@ -1,4 +1,4 @@
-package net.tenie.fx.utility.EventAndListener;
+package net.tenie.fx.Action;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -41,8 +41,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.MyPopupNumberFilter;
 import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
@@ -50,12 +48,9 @@ import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.MenuFactory;
-import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.MyTextField2TableCell;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
-import net.tenie.fx.component.StringPropertyListValueFactory;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.container.DataViewTab;
@@ -65,7 +60,12 @@ import net.tenie.fx.config.Db2ErrorCode;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.fx.dao.SelectDao;
+import net.tenie.fx.factory.MenuFactory;
+import net.tenie.fx.factory.StringPropertyListValueFactory;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.fx.utility.MyPopupNumberFilter;
+import net.tenie.fx.window.ModalDialog;
+import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.db.sql.ParseSQL;
 import net.tenie.lib.po.DbConnectionPo;
@@ -423,14 +423,14 @@ public class RunSQLHelper {
 //	    	logger.info(conns.getValue() );
 		if (conns.getValue() == null || StrUtils.isNullOrEmpty(conns.getValue().getText())) {
 			warn = true;
-			ModalDialog.errorAlert("Warn!", "please , choose alive DB connection!");
+			MyAlert.errorAlert( "please , choose alive DB connection!");
 			return warn;
 		} 
 		String val = conns.getValue().getText();
 		DbConnectionPo po = DBConns.get(val);
 		if (po == null || !po.isAlive()) {
 			warn = true;
-			ModalDialog.errorAlert("Warn!", "please ,  connect DB !");
+			MyAlert.errorAlert( "please ,  connect DB !");
 		}
 		return warn;
 	}
@@ -478,7 +478,7 @@ public class RunSQLHelper {
 			if (conn == null) {
 				return;
 			} else if (conn.isClosed()) {
-				ModalDialog.errorAlert("Warn!", "Connect is Closed!");
+				MyAlert.errorAlert( "Connect is Closed!");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

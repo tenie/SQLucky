@@ -1,4 +1,4 @@
-package net.tenie.fx.utility.EventAndListener;
+package net.tenie.fx.Action;
 
 import org.fxmisc.richtext.CodeArea;
 
@@ -8,16 +8,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ConnectionEditor;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 

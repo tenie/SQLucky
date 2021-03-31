@@ -1,4 +1,4 @@
-package net.tenie.fx.Action;
+package net.tenie.fx.window;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
@@ -22,14 +22,13 @@ import javafx.scene.layout.VBox;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.ModalDialog;
 import net.tenie.lib.tools.StrUtils;
 
 /*   
  * 行数据 显示窗口
  * @author tenie 
  * */
-public class ShowTableRowDateDetailAction {
+public class TableRowDataDetail {
 	public static void show(JFXButton saveBtn) {
 
 		VBox vb = (VBox) saveBtn.getParent().getParent();

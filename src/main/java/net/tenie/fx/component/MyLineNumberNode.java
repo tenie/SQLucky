@@ -18,6 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
+import net.tenie.fx.factory.MenuFactory;
 
 /*   @author tenie */
 /**
@@ -25,7 +26,7 @@ import javafx.scene.text.FontPosture;
  * @author tenie
  *
  */
-public class MyLineNumberFactory implements IntFunction<Node> {
+public class MyLineNumberNode implements IntFunction<Node> {
 
 	private GenericStyledArea<?, ?, ?> area;
 	private static final Insets DEFAULT_INSETS = new Insets(0.0, 5.0, 0.0, 5.0);
@@ -33,13 +34,13 @@ public class MyLineNumberFactory implements IntFunction<Node> {
 	private static final Font DEFAULT_FONT = Font.font("monospace", FontPosture.ITALIC, 13);
 	private static   Background DEFAULT_BACKGROUND = new Background(
 			new BackgroundFill(Color.web("#313335"), null, null));
-	public static MyLineNumberFactory get(GenericStyledArea<?, ?, ?> area, String textcolor, String backgroundcolor) {
+	public static MyLineNumberNode get(GenericStyledArea<?, ?, ?> area, String textcolor, String backgroundcolor) {
 		DEFAULT_TEXT_FILL = Color.web(textcolor);
 		DEFAULT_BACKGROUND  = new Background( new BackgroundFill(Color.web(backgroundcolor ), null, null));
 		return get(area, digits -> "%1$" + digits + "s");
 	}
 	
-	public static MyLineNumberFactory get(GenericStyledArea<?, ?, ?> area, String textcolor, String backgroundcolor, List<String> lines) {
+	public static MyLineNumberNode get(GenericStyledArea<?, ?, ?> area, String textcolor, String backgroundcolor, List<String> lines) {
 		DEFAULT_TEXT_FILL = Color.web(textcolor);
 		DEFAULT_BACKGROUND  = new Background( new BackgroundFill(Color.web(backgroundcolor ), null, null));
 		if(lines !=null) {	
@@ -54,11 +55,11 @@ public class MyLineNumberFactory implements IntFunction<Node> {
 //		return get(area, digits -> "%1$" + digits + "s");
 //	}
 
-	public static  MyLineNumberFactory get(GenericStyledArea<?, ?, ?> area, IntFunction<String> format) {
-		return new MyLineNumberFactory(area, format);
+	public static  MyLineNumberNode get(GenericStyledArea<?, ?, ?> area, IntFunction<String> format) {
+		return new MyLineNumberNode(area, format);
 	}
-	public static  MyLineNumberFactory get(GenericStyledArea<?, ?, ?> area, IntFunction<String> format, List<String> lines ) {
-		return new MyLineNumberFactory(area, format, lines);
+	public static  MyLineNumberNode get(GenericStyledArea<?, ?, ?> area, IntFunction<String> format, List<String> lines ) {
+		return new MyLineNumberNode(area, format, lines);
 	}
 
 	private final Val<Integer> nParagraphs;
@@ -73,14 +74,14 @@ public class MyLineNumberFactory implements IntFunction<Node> {
 	}
 	
 
-	private MyLineNumberFactory(GenericStyledArea<?, ?, ?> area, IntFunction<String> format , List<String> lines) {
+	private MyLineNumberNode(GenericStyledArea<?, ?, ?> area, IntFunction<String> format , List<String> lines) {
 		nParagraphs = LiveList.sizeOf(area.getParagraphs());
 		this.format = format;
 		this.area = area;
 		this.lineNoList = lines;
 	}
 	
-	private MyLineNumberFactory(GenericStyledArea<?, ?, ?> area, IntFunction<String> format) {
+	private MyLineNumberNode(GenericStyledArea<?, ?, ?> area, IntFunction<String> format) {
 		nParagraphs = LiveList.sizeOf(area.getParagraphs());
 		this.format = format;
 		this.area = area;

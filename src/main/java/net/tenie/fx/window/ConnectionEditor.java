@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.window;
 
 import java.sql.Connection;
 import java.util.function.Function;
@@ -28,7 +28,11 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DBinfoTree;
@@ -37,7 +41,6 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.main.MainMyDB;
-import net.tenie.fx.utility.EventAndListener.CommonListener;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
@@ -212,18 +215,18 @@ public class ConnectionEditor {
 			String connName = connectionName.getText();
 			// check date
 			if (StrUtils.isNullOrEmpty(connName)) {
-				ModalDialog.errorAlert("Warn!", "connection name is empty !");
+				MyAlert.errorAlert( "connection name is empty !");
 				return null;
 			}
 			if (StrUtils.isNullOrEmpty(dbDriver.getValue())) {
-				ModalDialog.errorAlert("Warn!", "db Driver is empty !");
+				MyAlert.errorAlert( "db Driver is empty !");
 				return null;
 			}
 			if (StrUtils.isNullOrEmpty(host.getText())) {
 				if (dbDriver.getValue().equals(DbVendor.h2) || dbDriver.getValue().equals(DbVendor.sqlite)) {
-					ModalDialog.errorAlert("Warn!", "DB File is empty !");
+					MyAlert.errorAlert( "DB File is empty !");
 				} else {
-					ModalDialog.errorAlert("Warn!", "host is empty !");
+					MyAlert.errorAlert( "host is empty !");
 				}
 
 				return null;
@@ -231,34 +234,34 @@ public class ConnectionEditor {
 
 			if (!dbDriver.getValue().equals(DbVendor.h2) && !dbDriver.getValue().equals(DbVendor.sqlite) ) {
 				if (StrUtils.isNullOrEmpty(port.getText())) {
-					ModalDialog.errorAlert("Warn!", "port is empty !");
+					MyAlert.errorAlert( "port is empty !");
 					return null;
 				}
 			}
 			
 			if (StrUtils.isNullOrEmpty(defaultSchema.getText())) {
-				ModalDialog.errorAlert("Warn!", "Schema is empty !");
+				MyAlert.errorAlert( "Schema is empty !");
 				return null;
 			}
 			
 			if ( ! dbDriver.getValue().equals(DbVendor.sqlite) ) {
 				if (StrUtils.isNullOrEmpty(user.getText())) {
-					ModalDialog.errorAlert("Warn!", "user is empty !");
+					MyAlert.errorAlert( "user is empty !");
 					return null;
 				}
 				if (StrUtils.isNullOrEmpty(password.getText())) {
-					ModalDialog.errorAlert("Warn!", "password is empty !");
+					MyAlert.errorAlert( "password is empty !");
 					return null;
 				}
 			}
 			
 			if (StrUtils.isNullOrEmpty(connName)) {
-				ModalDialog.errorAlert("Warn!", "connection name is empty !");
+				MyAlert.errorAlert( "connection name is empty !");
 				return null;
 			}
 			if (!isEdit) {
 				if (DBConns.conaction(connName)) {
-					ModalDialog.errorAlert("Warn!", "connection name: " + connName + " is exist !");
+					MyAlert.errorAlert( "connection name: " + connName + " is exist !");
 					return null;
 				}
 			}
@@ -458,8 +461,7 @@ public class ConnectionEditor {
 						});
 					} else {
 						Platform.runLater(() -> {
-							ModalDialog.errorAlert("Warn!",
-									" Cannot connect ip:" + po.getHost() + " port:" + po.getPort() + "  !");
+							MyAlert.errorAlert( " Cannot connect ip:" + po.getHost() + " port:" + po.getPort() + "  !");
 							item.getValue().setIcon(ImageViewGenerator.svgImageUnactive("unlink"));
 							ComponentGetter.treeView.refresh();
 

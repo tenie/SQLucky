@@ -9,13 +9,13 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ButtonFactory;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.SqlEditor;
-import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
+import net.tenie.fx.factory.ButtonFactory;
 
 /*   @author tenie */
 public class DBinfoContainer {
@@ -24,7 +24,7 @@ public class DBinfoContainer {
 	private TreeView<TreeNodePo> treeView;
 	private AnchorPane filter;
 	private DBinfoTree dbInfoTree;
-	private DBinfoFilter dbf;
+	private DBinfoTreeFilter dbf;
 	
 	public DBinfoContainer() {
 		container = new VBox();
@@ -32,7 +32,7 @@ public class DBinfoContainer {
 
 		dbInfoTree = new DBinfoTree();
 		treeView = dbInfoTree.getTreeView();
-		dbf  = new DBinfoFilter(); 		
+		dbf  = new DBinfoTreeFilter(); 		
 		filter = dbf.createFilterPane(treeView);
 		container.getChildren().addAll(treeBtnPane, treeView, filter);
 		VBox.setVgrow(treeView, Priority.ALWAYS);

@@ -5,6 +5,24 @@
     -fx-background-color: #000000 ;
     -fx-text-fill: white ;
 }
+/* check box tree */
+/*.clipped-container{
+	 -fx-color: #000000 ;
+}*/
+
+/*.clipped-container:hover{
+	 -fx-color: #000000 ;
+}
+*/
+.check-box .box{
+	 -fx-color: #FDA232 ;
+}
+.check-box .box:hover{
+	 -fx-color: #FDA232 ;
+}
+              
+ 
+
 
 /*  选中的颜色 */
 .tree-cell:selected {

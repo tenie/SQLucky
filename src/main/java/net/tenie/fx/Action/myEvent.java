@@ -1,4 +1,4 @@
-package net.tenie.fx.utility.EventAndListener;
+package net.tenie.fx.Action;
 
 import javafx.event.EventType;
 import javafx.scene.Node;

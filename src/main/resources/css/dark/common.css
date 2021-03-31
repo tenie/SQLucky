@@ -3,9 +3,6 @@
 	
 }
 
-.subWindowClose{
-	 -fx-background-color:#323232;
-}
 .transfer-run-btn{
 	 -fx-background-color: #008000;
 }
@@ -40,12 +37,21 @@ GridPane {
 .myShellWindow{
 	/* -fx-border-color: #4C708C; */
 }
+
+/* 子窗口壳的顶部关闭区域*/
+.subWindowClose{
+	 -fx-background-color:#4B4B4B;
+}
 .myAlert {
 /* -fx-border-color: #4C708C; */
  -fx-background-color: #3C3F41;
 }
 .myAlert  TextField{
  -fx-text-fill: white;
+}
+
+.myAlertBtn{
+	-fx-background-color: #365880;
 }
 
 .myAlert   Button{

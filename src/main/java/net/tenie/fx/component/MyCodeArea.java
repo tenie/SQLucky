@@ -3,13 +3,13 @@ package net.tenie.fx.component;
 import org.fxmisc.richtext.CodeArea;
 
 public class MyCodeArea extends CodeArea {
-	private MyLineNumberFactory mylineNumber;
+	private MyLineNumberNode mylineNumber;
 
-	public MyLineNumberFactory getMylineNumber() {
+	public MyLineNumberNode getMylineNumber() {
 		return mylineNumber;
 	}
 
-	public void setMylineNumber(MyLineNumberFactory mylineNumber) {
+	public void setMylineNumber(MyLineNumberNode mylineNumber) {
 		this.mylineNumber = mylineNumber;
 	}
 	 

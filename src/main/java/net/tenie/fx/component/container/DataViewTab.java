@@ -15,13 +15,13 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.SqlCodeAreaHighLighting;
 import net.tenie.fx.component.SqlEditor;
-import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
 
 /*   @author tenie */
 public class DataViewTab {

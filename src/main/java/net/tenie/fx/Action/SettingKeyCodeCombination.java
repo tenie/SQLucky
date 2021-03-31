@@ -1,4 +1,4 @@
-package net.tenie.fx.utility.EventAndListener;
+package net.tenie.fx.Action;
 
 import net.tenie.fx.component.*;
 
@@ -22,8 +22,6 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import net.tenie.fx.Action.ButtonAction;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.io.SaveFile;

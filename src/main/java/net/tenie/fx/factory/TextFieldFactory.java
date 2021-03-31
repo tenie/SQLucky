@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.factory;
 
 import javafx.scene.control.TextField;
 

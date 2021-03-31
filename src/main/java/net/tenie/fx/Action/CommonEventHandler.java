@@ -1,4 +1,4 @@
-package net.tenie.fx.utility.EventAndListener;
+package net.tenie.fx.Action;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,17 +25,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
-import net.tenie.fx.Action.ButtonAction;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.ShowTableRowDateDetailAction;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ConnectionEditor;
-import net.tenie.fx.component.ModalDialog;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
@@ -45,6 +40,10 @@ import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.fx.window.ConnectionEditor;
+import net.tenie.fx.window.ModalDialog;
+import net.tenie.fx.window.MyAlert;
+import net.tenie.fx.window.TableRowDataDetail;
 import net.tenie.lib.io.SaveFile;
 import net.tenie.lib.tools.StrUtils;
 
@@ -308,7 +307,7 @@ public class CommonEventHandler {
 	public static EventHandler<Event> showLineDetail(JFXButton saveBtn) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
-				ShowTableRowDateDetailAction.show(saveBtn);
+				TableRowDataDetail.show(saveBtn);
 			}
 		};
 	}
@@ -460,7 +459,7 @@ public class CommonEventHandler {
 					// 保存按钮亮起
 					ComponentGetter.dataFlowSaveBtn().setDisable(false);
 				} catch (Exception e2) {
-					ModalDialog.errorAlert("Error", e2.getMessage());
+					MyAlert.errorAlert( e2.getMessage());
 				}
 			}
 

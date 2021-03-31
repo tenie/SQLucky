@@ -15,17 +15,18 @@ import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
+import net.tenie.fx.component.TreeItem.MyTreeItem;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
  
 /*   @author tenie */
-public class DBinfoFilter {
+public class DBinfoTreeFilter {
 	 AnchorPane filter;
 	 private  ObservableList<TreeItem<TreeNodePo>> temp  = FXCollections.observableArrayList();
 	 private  ObservableList<TreeItem<TreeNodePo>>  filtList = FXCollections.observableArrayList();
 	 private  TreeItem<TreeNodePo> rootNode ;
 	 private TextField txt  ;
-	 public DBinfoFilter () {}
+	 public DBinfoTreeFilter () {}
 	 
 	public TextField getTxtField() {
 		return txt;

@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.factory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,6 +16,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -23,14 +24,20 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.MyPopupNumberFilter;
+import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RsVal;
+import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.PropertyPo.CacheTableDate;
+import net.tenie.fx.component.AllButtons;
+import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.fx.utility.EventAndListener.CommonEventHandler;
-import net.tenie.fx.utility.EventAndListener.RunSQLHelper;
+import net.tenie.fx.utility.MyPopupNumberFilter;
+import net.tenie.fx.window.ConnectionEditor;
+import net.tenie.fx.window.ModalDialog;
+import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
@@ -206,7 +213,7 @@ public class MenuFactory {
 
 			rv.sql = sql;
 		} catch (Exception e) {
-			ModalDialog.showErrorMsg("Error", e.getMessage());		
+			MyAlert.errorAlert( e.getMessage());		
 			
 		}
 		return rv;
