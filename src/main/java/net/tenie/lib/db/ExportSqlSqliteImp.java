@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tenie.fx.config.DbVendor;
 import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;
 /* 
@@ -120,7 +121,7 @@ public class ExportSqlSqliteImp implements ExportDDL {
 		try {
 
 			TablePo v;
-			v = Dbinfo.fetchTableObjByName(conn, schema, tab);
+			v = Dbinfo.fetchTableObjByName(conn, "", tab);
 			// 表对象字段赋值
 			Dbinfo.fetchTableInfo(conn, v);
 			// 表对象 主键赋值
@@ -287,5 +288,9 @@ public class ExportSqlSqliteImp implements ExportDDL {
 		return null;
 	}
 
+	@Override
+	public String getDbVendor() { 
+		return DbVendor.sqlite;
+	}
 	
 }

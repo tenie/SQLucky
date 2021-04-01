@@ -18,6 +18,7 @@ import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -64,6 +65,14 @@ import net.tenie.lib.tools.StrUtils;
 /*   @author tenie */
 public class CommonAction {
 	private static Logger logger = LogManager.getLogger(CommonAction.class);
+	
+	public static void addCssClass(Node nd, String css) {
+		nd.getStyleClass().add(css);
+	}
+	
+	public static void rmCssClass(Node nd, String css) {
+		nd.getStyleClass().remove(css);
+	}
 	
 	public static void pressBtnESC() {
 		ComponentGetter.dbInfoFilter.setText("");

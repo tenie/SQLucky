@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tenie.fx.config.DbVendor;
 import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;
 /* 
@@ -305,5 +306,8 @@ public class ExportSqlH2Imp implements ExportDDL {
 		return null;
 	}
 
-	
+	@Override
+	public String getDbVendor() { 
+		return DbVendor.h2;
+	}
 }

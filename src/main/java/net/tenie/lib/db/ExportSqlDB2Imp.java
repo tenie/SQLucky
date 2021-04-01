@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.tenie.fx.config.CommonConst;
+import net.tenie.fx.config.DbVendor;
 import net.tenie.lib.po.FuncProcTriggerPo;
 import net.tenie.lib.po.TablePo;
 /* 
@@ -395,6 +396,13 @@ public class ExportSqlDB2Imp implements ExportDDL {
 	public String exportDropForeignKey(String schema, String name) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+
+
+	@Override
+	public String getDbVendor() { 
+		return DbVendor.db2;
 	}
 
 

@@ -125,7 +125,10 @@ public class DaoTools {
 //					logger.info(idx );
 					idx--;
 					continue;
-				} else {
+				} if (type.equals("java.lang.Object") ) {
+					pstmt.setObject(idx, val);
+					logger.info(idx + "  " + val);
+				 } else {
 					Object obj = BuildObject.buildObj(type, val);
 					pstmt.setObject(idx, obj);
 					logger.info(idx + "  " + obj);

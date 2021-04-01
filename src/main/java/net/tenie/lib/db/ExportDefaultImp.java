@@ -344,5 +344,10 @@ public class ExportDefaultImp implements ExportDDL {
 		return null;
 	}
 
+	@Override
+	public String getDbVendor() {
+		return "";
+	}
+
 	
 }

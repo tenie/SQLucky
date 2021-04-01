@@ -69,10 +69,10 @@ public class ModalDialog {
 	
 	static {
 		INFO = new Label("Info");
-		INFO.setGraphic( ImageViewGenerator.svgImage("info-circle", "green"));
+		INFO.setGraphic( ImageViewGenerator.svgImage("info-circle", "#7CFC00"));
 		
 		ABOUT = new Label("About");
-		ABOUT.setGraphic( ImageViewGenerator.svgImage("info-circle", "green"));
+		ABOUT.setGraphic( ImageViewGenerator.svgImage("info-circle", "#7CFC00"));
 		
 		WARN = new Label("Warn");
 		WARN.setGraphic( ImageViewGenerator.svgImage("info-circle", "#FFD700"));
@@ -628,10 +628,11 @@ public class ModalDialog {
 		Label text1 = new Label("Author: tenie  Email: tenie@tenie.net");  
 		Label text2 = new Label("Github: https://github.com/tenie/SQLucky");  
 		
-		
+		 
 		final Stage stage = new Stage(); 
 		
 		JFXButton okbtn = new JFXButton("OK");
+		CommonAction.addCssClass(okbtn, "myAlertBtn");
 		okbtn.setOnAction(value -> {
 			stage.close();
 		}); 

@@ -11,7 +11,7 @@ import net.tenie.lib.po.TablePo;
  */
 public interface ExportDDL {
  
-
+    String getDbVendor();
 	List<TablePo> allTableObj(Connection conn, String schema); 
 	List<TablePo> allViewObj(Connection conn, String schema); 
 	List<FuncProcTriggerPo> allFunctionObj(Connection conn, String schema); 

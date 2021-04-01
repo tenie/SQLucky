@@ -137,6 +137,13 @@ public class SqlEditor {
 		CodeArea code = (CodeArea) v.getContent();
 		return code;
 	}
+	
+	public static CodeArea getCodeArea(StackPane p) {  
+			@SuppressWarnings("rawtypes")
+			VirtualizedScrollPane v = (VirtualizedScrollPane) p.getChildren().get(0);
+			CodeArea code = (CodeArea) v.getContent();
+			return code;  
+	}
 
 //  获取Tab中的的code area
 	public static CodeArea getCodeArea(Tab tb) {
@@ -166,6 +173,20 @@ public class SqlEditor {
 		String sqlText = code.getText();
 		return sqlText;
 	}
+	
+	// append txt
+	public static void appendStr(StackPane spCode  ,String str) {
+		if(str !=null) {
+			CodeArea code = SqlEditor.getCodeArea(spCode);
+			code.appendText(str);
+		}
+		
+	}
+	public static void cleanStr(StackPane spCode) {
+		CodeArea code = SqlEditor.getCodeArea(spCode);
+		code.clear();
+	}
+	
 
 // get select text
 	public static String getCurrentCodeAreaSQLTextSelected() {

@@ -205,6 +205,11 @@ public class EmptyExportDDLImp implements ExportDDL {
 		return null;
 	}
 
+	@Override
+	public String getDbVendor() { 
+		return "";
+	}
+
   
 	 
 
