@@ -27,7 +27,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -116,8 +115,7 @@ public class TransferDataController implements Initializable {
 	@FXML private JFXButton execBtn;
 	@FXML private JFXButton stopBtn;
 	@FXML private JFXButton hideBtn;
-	@FXML private JFXButton monBtn;
-	@FXML private JFXButton textBtn;
+	@FXML private JFXButton monBtn; 
 	
 	@FXML private TextField	filterTxt;
 	@FXML private TextField	amountTxt;
@@ -147,7 +145,7 @@ public class TransferDataController implements Initializable {
 		amountTxt.setText("");
 	}
 	 
-	// 
+	// 创建check tree 
 	public void creatCheckTree() {
 		root = new CheckBoxTreeItem<String>("全选");
 		root.setExpanded(true); 
@@ -159,26 +157,27 @@ public class TransferDataController implements Initializable {
 		HBox.setHgrow(checkTreeView, Priority.ALWAYS);
 	}
 	
-	public void monitorShow() {
+	private void monitorShow() {
 		Platform.runLater(() -> { 
 			treePane.getChildren().remove(0);
 			treePane.getChildren().add(spCode);
 			HBox.setHgrow(spCode, Priority.ALWAYS);
-		});
-
-		
-		
+		});		
+	}
+	private void monitorHide() { 
+		treePane.getChildren().remove(0);
+		treePane.getChildren().add(checkTreeView);
 	}
 	
-	public void moniterAppendStr(String str) {	 
-		
+	// 输出log 
+	private void moniterAppendStr(String str) {
 		Platform.runLater(() -> { 
 			SqlEditor.appendStr(spCode, str+"\n");
 		});
 		
 	}
-	
-	public void moniterCleanStr() {
+	// 清除log
+	private void moniterCleanStr() {
 		Platform.runLater(() -> { 
 			SqlEditor.cleanStr(spCode); 
 		}); 
@@ -186,9 +185,100 @@ public class TransferDataController implements Initializable {
 	}
 	
 	
-	public void monitorHide() { 
-		treePane.getChildren().remove(0);
-		treePane.getChildren().add(checkTreeView);
+	
+	// 按钮变化控制
+	private void btnController(boolean tf) {
+		Platform.runLater(() -> {
+			if (tf) {
+				execBtn.setDisable(true);
+				execBtn.getStyleClass().add("transfer-run-btn");
+				stopBtn.getStyleClass().add("transfer-stop-btn");
+			} else {
+				execBtn.setDisable(false);
+				execBtn.getStyleClass().remove("transfer-run-btn");
+				stopBtn.getStyleClass().remove("transfer-stop-btn");
+			}
+		});
+	}
+		
+	private void runActionn() { 
+		btnController(true);
+		monitorShow() ;
+		moniterCleanStr();
+		currentThread = new Thread() {
+			public void run() {
+				try {					
+					moniterAppendStr("........begin ......");
+					runBtnAction();  
+					Platform.runLater(() -> { 
+						MyAlert.infoAlert("完成", "完成"); 
+					});
+				} catch (Exception e2) {
+					e2.printStackTrace();
+					logger.debug(e2.getMessage());
+					Platform.runLater(() -> { 
+						MyAlert.errorAlert( e2.getMessage());
+					});
+				}finally {
+					btnController(false);
+					moniterAppendStr("........end ......");
+				}
+				
+			};
+		};
+		currentThread.start();
+	
+	}
+	
+	private void stopAction() {
+		if(currentThread != null) {
+			currentThread.stop();
+			btnController(false);
+		}
+	}
+	
+	private void monBtnAction() { 
+		Object nd = treePane.getChildren().get(0);
+		if( nd instanceof StackPane ) {
+			monitorHide() ;
+		}else {
+			monitorShow();
+		}
+	
+	}
+	
+	//设置 图标 css
+	private void setGraphicAndCss() {
+		CommonAction.addCssClass(monBtn, "transfer-btn");  
+		CommonAction.addCssClass(amountTxt, "myTextField");
+		
+		title.setGraphic(ImageViewGenerator.svgImageDefActive("gears"));
+		queryLabel.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
+		execBtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
+		stopBtn.setGraphic(ImageViewGenerator.svgImage("stop", "red")); 
+		hideBtn.setGraphic(ImageViewGenerator.svgImageUnactive("circle-o"));
+		monBtn.setGraphic(ImageViewGenerator.svgImageDefActive("laptop"));
+	}
+	
+	// 设置按钮 输入框 的action
+	private void setAction() {
+		
+		// 监控显示隐藏
+		monBtn.setOnAction(e->{  monBtnAction(); });  
+		// 批处理 行数输入框 启用/禁用
+		tabData.selectedProperty().addListener((a, old, nw) ->{ amountTxt.setDisable(! nw); });  
+		//TODO 执行按钮
+		execBtn.setOnAction(e->{ runActionn(); });
+		// 停止按钮
+		stopBtn.setOnAction(e->{ stopAction(); }); 
+		// 隐藏界面
+		hideBtn.setOnAction(e->{ ComponentGetter.dataTransferStage.hide(); }); 
+		
+		amountTxt.setDisable(true);
+		amountTxt.lengthProperty().addListener(CommonListener.textFieldLimit(amountTxt, 4));
+		amountTxt.textProperty().addListener(CommonListener.textFieldNumChange(amountTxt));  
+		 
+		AnchorPane.setTopAnchor(hideBtn, 0.0); 
 	}
 	
 	
@@ -196,102 +286,13 @@ public class TransferDataController implements Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		filterTxtInitialize();
-		
-		spCode = SqlEditor.SqlCodeArea();
-		textBtn.setOnAction(e->{
-			moniterCleanStr();
-			moniterAppendStr("1");
-			moniterAppendStr("1");
-			moniterAppendStr("1");
-			moniterAppendStr("1");
-		});
-		// 监控显示隐藏
-		monBtn.setOnAction(e->{
-			Object nd = treePane.getChildren().get(0);
-			if( nd instanceof StackPane ) {
-				monitorHide() ;
-			}else {
-				monitorShow();
-			}
-		});
-		CommonAction.addCssClass(monBtn, "transfer-btn");
-		monBtn.setGraphic(ImageViewGenerator.svgImageDefActive("laptop"));
-		
-		
-		tabData.selectedProperty().addListener((a, old, nw) ->{
-			amountTxt.setDisable(! nw);
-		});
-		
-		
-		//TODO 执行按钮
-		execBtn.setOnAction(e->{
-			btnController(true);
-			monitorShow() ;
-			moniterCleanStr();
-			currentThread = new Thread() {
-				public void run() {
-					try {
-					
-						
-						
-						moniterAppendStr("........begin ......");
-						runBtnAction();  
-						Platform.runLater(() -> { 
-							MyAlert.infoAlert("完成", "完成");
-						});
-					} catch (Exception e2) {
-						e2.printStackTrace();
-						logger.debug(e2.getMessage());
-						Platform.runLater(() -> { 
-							MyAlert.errorAlert( e2.getMessage());
-						});
-					}finally {
-						btnController(false);
-					}
-					
-				};
-			};
-			currentThread.start();
-		});
-		// 停止按钮
-		stopBtn.setOnAction(e->{
-			if(currentThread != null) {
-				currentThread.stop();
-				btnController(false);
-			}
-		});
-		
-		
-		hideBtn.setOnAction(e->{ 
-			ComponentGetter.dataTransferStage.hide();
-		});
-
-		
-		amountTxt.setDisable(true);
-		amountTxt.lengthProperty().addListener(CommonListener.textFieldLimit(amountTxt, 4));
-		amountTxt.textProperty().addListener(CommonListener.textFieldNumChange(amountTxt)); 
-		CommonAction.addCssClass(amountTxt, "myTextField");
-		
-		title.setGraphic(ImageViewGenerator.svgImageDefActive("gears"));
-		queryLabel.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
-		execBtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
-		stopBtn.setGraphic(ImageViewGenerator.svgImage("stop", "red"));
-		
-		hideBtn.setGraphic(ImageViewGenerator.svgImageUnactive("circle-o"));
-		
-//		AnchorPane.setRightAnchor(bRun, 5.0);
-		AnchorPane.setTopAnchor(hideBtn, 0.0);
-		
-//		execBtn.getStyleClass().add("my-run-btn");
-//		execBtn.setStyle("-fx-background-color: green");
+		setGraphicAndCss(); 
+		spCode = SqlEditor.SqlCodeArea(); 
+		setAction();  
 		 
 		soDB.setItems(DBConns.getChoiceBoxItems());
-		taDB.setItems(DBConns.getChoiceBoxItems());
-//		soDB.setItems( getConnComboBoxList()); 
-//		taDB.setItems( getConnComboBoxList());
-
-		soDB.getSelectionModel().selectedItemProperty()
-				.addListener((ChangeListener<? super Label>) (observable, oldValue, newValue) -> {
+		taDB.setItems(DBConns.getChoiceBoxItems());  
+		soDB.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 					soSC.setItems(empty);
 					cleanCheckBox();
 					String str = newValue.getText();
@@ -300,26 +301,23 @@ public class TransferDataController implements Initializable {
 					root.getChildren().removeAll(root.getChildren()); 
 					filterTxt.clear();
 				});
-		soSC.getSelectionModel().selectedItemProperty()
-				.addListener((ChangeListener<? super Label>) (observable, oldValue, newValue) -> {
+		soSC.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 					root.getChildren().removeAll(root.getChildren());
 					cleanCheckBox();
 					filterTxt.clear();
 				});
 
-		taDB.getSelectionModel().selectedItemProperty()
-				.addListener((ChangeListener<? super Label>) (observable, oldValue, newValue) -> {
+		taDB.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 					String str = newValue.getText();
 					taSC.setItems(getSchemaLabels(str));
 				});
+
+		// check tree
+		creatCheckTree(); 
 		
-		creatCheckTree();
-
-
-		// check box
-		tabData.selectedProperty().addListener((ChangeListener<? super Boolean>) (observable, oldValue, newValue) -> {
-			if (newValue && 
-				!tabStruct.isSelected()&& 
+		tabData.selectedProperty().addListener((obs, oldValue, newValue) -> {
+			if (newValue                && 
+				!tabStruct.isSelected() && 
 				soDB.getValue() != null && 
 				soSC.getValue() !=null ) {
 					String dbname = soDB.getValue().getText();
@@ -335,11 +333,10 @@ public class TransferDataController implements Initializable {
 					}
 			}
 
-			removeNode(!newValue && !tabStruct.isSelected() , TABLE);
-			 
-
+			removeNode(!newValue && !tabStruct.isSelected() , TABLE); 
 		});
-		tabStruct.selectedProperty().addListener((ChangeListener<? super Boolean>) (observable, oldValue, newValue) -> {
+		
+		tabStruct.selectedProperty().addListener( (obs, oldValue, newValue) -> {
 			if (newValue && 
 				!tabData.isSelected()&& 
 				soDB.getValue() != null && 
@@ -364,40 +361,26 @@ public class TransferDataController implements Initializable {
 		chPro.selectedProperty().addListener(CheckListener(PROCEDURE));
 		chTri.selectedProperty().addListener(CheckListener(TRIGGER));
 		chIndex.selectedProperty().addListener(CheckListener(INDEX));
-		chSeq.selectedProperty().addListener(CheckListener(SEQUENCE));
-		
+		chSeq.selectedProperty().addListener(CheckListener(SEQUENCE)); 
 	
 	}
 	
 	
 	
-	// 按钮变化控制
-	private void btnController(boolean tf) {
-		Platform.runLater(() -> {
-			if (tf) {
-				execBtn.setDisable(true);
-				execBtn.getStyleClass().add("transfer-run-btn");
-				stopBtn.getStyleClass().add("transfer-stop-btn");
-			} else {
-				execBtn.setDisable(false);
-				execBtn.getStyleClass().remove("transfer-run-btn");
-				stopBtn.getStyleClass().remove("transfer-stop-btn");
-			}
-		});
-	}
+	
 	
 	private boolean checkDbConn() {
 		if (soSC.getValue() != null && 
 			soDB.getValue() != null && 
 			taDB.getValue() != null && 
 			taSC.getValue() != null) {
-				String dbname = soDB.getValue().getText();
-				String schename = soSC.getValue().getText();
-				String targetDBName = taDB.getValue().getText();
+				String dbname         = soDB.getValue().getText();
+				String schename       = soSC.getValue().getText();
+				String targetDBName   = taDB.getValue().getText();
 				String targetSchename = taSC.getValue().getText();
 
-			if (StrUtils.isNotNullOrEmpty(dbname) && 
-				StrUtils.isNotNullOrEmpty(schename) && 
+			if (StrUtils.isNotNullOrEmpty(dbname)       && 
+				StrUtils.isNotNullOrEmpty(schename)     && 
 				StrUtils.isNotNullOrEmpty(targetDBName) && 
 				StrUtils.isNotNullOrEmpty(targetSchename)) {
 					return true;
@@ -416,62 +399,34 @@ public class TransferDataController implements Initializable {
 	
 	private DbConnectionPo soDbpo;
 	private DbConnectionPo tarDbpo;
+//	private Connection  soConn;
+//	private Connection  tarConn;
 	
-	private void runBtnAction() throws Exception { 
-		boolean isThrow = ! isIgnore.isSelected();
+	private void runBtnAction() throws Exception {  
+		boolean isThrow  = ! isIgnore.isSelected();
 		try {
 			if ( checkDbConn() ) { 
-				if(amountTxt.getText().equals("123")) {
-					throw new RuntimeException("123");
-				}
-					
-				String dbname = soDB.getValue().getText();
-				String schename = soSC.getValue().getText();
-				String targetDBName = taDB.getValue().getText();
+				
+				String dbname         = soDB.getValue().getText();
+				String schename       = soSC.getValue().getText();
+				String targetDBName   = taDB.getValue().getText();
 				String targetSchename = taSC.getValue().getText();
-				
-//				DbConnectionPo soDbpo = DBConns.get(dbname);
-				soDbpo =  getNewDbConnectionPo(dbname, schename);
-				Connection  soConn = soDbpo.getConn(); 
-
-				
-				tarDbpo =  getNewDbConnectionPo(targetDBName, targetSchename);// DBConns.get(targetDBName);
-				Connection  tarConn = tarDbpo.getConn();
 				 
-				ExportDDL export = soDbpo.getExportDDL(); 
+				soDbpo =  getNewDbConnectionPo(dbname, schename);
+				Connection  soConn = soDbpo.getConn();  
+				tarDbpo =  getNewDbConnectionPo(targetDBName, targetSchename); 
+				Connection   tarConn = tarDbpo.getConn();  
 				
-				// 将要执行的sql集合
-				List<String> sqls = new ArrayList<>(); 
-				// 表结构
-				createSynSql(tabStruct.isSelected(), sqls, soConn, schename, TABLE, targetSchename);
-				// 视图同步
-				createSynSql(chView.isSelected(), sqls, soConn, schename, VIEW, targetSchename);
-				// 函数同步
-				createSynSql(chFun.isSelected(), sqls, soConn, schename, FUNCTION, targetSchename);
-				// 过程同步
-				createSynSql(chPro.isSelected(), sqls, soConn, schename, PROCEDURE, targetSchename);
-
-				// 触发器同步
-				createSynSql(chTri.isSelected(), sqls, soConn, schename, TRIGGER, targetSchename);
-				// 索引同步
-				createSynSql(chIndex.isSelected(), sqls, soConn, schename, INDEX, targetSchename);
-				// 序列同步
-				createSynSql(chSeq.isSelected(), sqls, soConn, schename, SEQUENCE, targetSchename);
-
-//				logger.info(sqls);
+				moniterAppendStr( "-------- 获取 ddl --------"); 
+				List<String> sqls = generateDDL(soConn, schename, targetSchename);
 				
-				
-				
+				moniterAppendStr( "--------准备执行 sql--------");
 				// 执行ddl
 				execListSQL(sqls, tarConn , isThrow);
-				// 数据同步 执行insert 
-				if(tabData.isSelected()) {
-					int amount =  -1;
-					if(amountTxt.getText().length() > 0 ) {
-						 amount = Integer.valueOf(  amountTxt.getText());
-					} 
-					synTabData( soConn ,tarConn ,  export, schename , targetSchename , amount , isThrow);
-				} 
+				 
+				moniterAppendStr( "--------准备执行 insert --------");
+				synTabData( soConn ,tarConn , schename , targetSchename , isThrow);
+				 
 			}else {
 				if(isThrow) throw new RuntimeException("数据库链接错误");
 			}
@@ -485,9 +440,41 @@ public class TransferDataController implements Initializable {
 		
 	}
 	
+	// 获取数据库对象的 创建语句
+	private List<String> generateDDL(Connection soConn , String schename, String  targetSchename ){
+		// 将要执行的sql集合
+		List<String> sqls = new ArrayList<>(); 
+		// 表结构
+		createSynSql(tabStruct.isSelected(), sqls, soConn, schename, TABLE, targetSchename);
+		// 视图同步
+		createSynSql(chView.isSelected(), sqls, soConn, schename, VIEW, targetSchename);
+		// 函数同步
+		createSynSql(chFun.isSelected(), sqls, soConn, schename, FUNCTION, targetSchename);
+		// 过程同步
+		createSynSql(chPro.isSelected(), sqls, soConn, schename, PROCEDURE, targetSchename);
+		// 触发器同步
+		createSynSql(chTri.isSelected(), sqls, soConn, schename, TRIGGER, targetSchename);
+		// 索引同步
+		createSynSql(chIndex.isSelected(), sqls, soConn, schename, INDEX, targetSchename);
+		// 序列同步
+		createSynSql(chSeq.isSelected(), sqls, soConn, schename, SEQUENCE, targetSchename);
+		
+		return sqls;
+	}
+	
  
 	//同步表数据 
-	private void synTabData(Connection  soConn , Connection  toConn , ExportDDL export,  String schename , String targetSchename , int amount , boolean isThrow) throws Exception {
+	private void synTabData(Connection  soConn , Connection  toConn ,  String schename , String targetSchename , boolean isThrow) throws Exception {
+			
+			// 数据同步 执行insert 
+			if( ! tabData.isSelected()) { 
+				return ;
+			}
+		
+			int amount =  -1;
+			if(amountTxt.getText().length() > 0 ) {
+				 amount = Integer.valueOf(  amountTxt.getText());
+			} 
 			boolean delObj = isDel.isSelected(); 
 			TreeItem<String> table = rootSubNode(TABLE);
 			try {
@@ -533,17 +520,18 @@ public class TransferDataController implements Initializable {
 						String drop = getDropDDL(nodeType, schename, checkBoxName, targetSchename);
 						logger.info(drop);
 						sqls.add(drop);
+						moniterAppendStr(drop);
 					}
 					// create语句
 					String create = getCreateDDL(soConn, nodeType, schename, checkBoxName, targetSchename);
 					logger.info(create);
 					sqls.add(create);
+					moniterAppendStr(create);
 
 				}
 			}
 
-		}
-//			return sqls;
+		} 
 	}
 		 
 	
@@ -692,39 +680,20 @@ public class TransferDataController implements Initializable {
 		pi.getChildren().addAll( newVal);
 	}
 	
-	private void removeNode(boolean tf , String name) {
-		if(tf) { 
-			for(int i = 0; i < root.getChildren().size() ; i++) { 
-				TreeItem<String> ch = root.getChildren().get(i);
-				if(ch.getValue().equals(name)) {
-					root.getChildren().remove(i);
-					break;
-				}
-			}
-		}
-			
-	}
+	
 	// 数据同步界面
 	private  ChangeListener<Boolean> CheckListener(String nodeType) {
-		return new ChangeListener<Boolean>() {
-			@Override
-			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
-				if (newValue && soDB.getValue() != null && soSC.getValue() !=null) {
-					String dbname = soDB.getValue().getText();
-					String schename = soSC.getValue().getText();
-					if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
-						TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
-						
-						addNodeHelper(schemaNode, nodeType);
-//						 TreeItem<TreeNodePo> val = getSourceNode(schemaNode, nodeType);
-//						 if(val != null) {
-//							 addNode(val);
-//						 }
-//						addNode(schemaNode.getChildren().get(position));
-					}
+		return (observable, oldValue, newValue) -> {
+			if (newValue && soDB.getValue() != null && soSC.getValue() !=null) {
+				String dbname = soDB.getValue().getText();
+				String schename = soSC.getValue().getText();
+				if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
+					TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
+					
+					addNodeHelper(schemaNode, nodeType);
 				}
-				removeNode(!newValue, nodeType);
 			}
+			removeNode(!newValue, nodeType);
 		};
 		 
 	}
@@ -734,6 +703,17 @@ public class TransferDataController implements Initializable {
 		 if(val != null) {
 			 addNode(val);
 		 }
+	}
+	private void removeNode(boolean tf , String name) {
+		if(tf) { 
+			for(int i = 0; i < root.getChildren().size() ; i++) { 
+				TreeItem<String> ch = root.getChildren().get(i);
+				if(ch.getValue().equals(name)) {
+					root.getChildren().remove(i);
+					break;
+				}
+			}
+		} 
 	}
 	
 	// 从schema中获取节点, 根据名称

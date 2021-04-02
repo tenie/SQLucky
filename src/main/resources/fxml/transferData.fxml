@@ -84,7 +84,6 @@
                   <JFXButton fx:id="stopBtn" layoutX="310.0" mnemonicParsing="false" styleClass="transfer-btn" text="Stop" />
                   <JFXButton fx:id="hideBtn" layoutX="460.0" prefHeight="23.0" prefWidth="117.0" styleClass="transfer-btn" text="Hide Window" />
                   <JFXButton fx:id="monBtn" layoutX="379.0" text="Monitor" />
-                  <JFXButton fx:id="textBtn" layoutX="195.0" text="textBtn" />
                </children>
             </AnchorPane>
             <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" VBox.vgrow="ALWAYS" />

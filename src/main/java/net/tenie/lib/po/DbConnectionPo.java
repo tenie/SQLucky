@@ -146,7 +146,7 @@ public class DbConnectionPo {
 			logger.info(driver);
 			logger.info(getJdbcUrl());
 			logger.info(user);
-			logger.info(passWord);
+//			logger.info(passWord);
 			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
 				conn = dbinfo.getconn();
