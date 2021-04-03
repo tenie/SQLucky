@@ -63,7 +63,7 @@ public class DBinfoTreeFilter {
 //		clean.setLayoutX(x);
 //		clean.setLayoutY(4);
 		 
-		AnchorPane.setRightAnchor(clean, 15.0);
+		AnchorPane.setLeftAnchor(clean, 210.0);
 		AnchorPane.setTopAnchor(clean, 5.0); 
 		clean.setMaxSize(12, 12);
 		
