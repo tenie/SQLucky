@@ -5,11 +5,11 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.sf.jsqlparser.JSQLParserException;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.util.TablesNamesFinder;
+//import net.sf.jsqlparser.JSQLParserException;
+//import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+//import net.sf.jsqlparser.statement.Statement;
+//import net.sf.jsqlparser.statement.select.Select;
+//import net.sf.jsqlparser.util.TablesNamesFinder;
 import net.tenie.lib.db.h2.SqlTextDao;
 import net.tenie.lib.tools.StrUtils;
 
@@ -130,20 +130,20 @@ public class ParseSQL {
 		return val;
 	}
 
-	public static List<String> test_select_table(String sql) throws JSQLParserException {
-		Statement statement = CCJSqlParserUtil.parse(sql);
-		Select selectStatement = (Select) statement;
-		TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-		return tablesNamesFinder.getTableList(selectStatement);
-	}
-
-	public static String tabName(Statement selectStatement) {
-		TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-		List<String> val = tablesNamesFinder.getTableList(selectStatement);
-		if (val != null && val.size() > 0) {
-			return val.get(0);
-		}
-		return "";
-	}
+//	public static List<String> test_select_table(String sql) throws JSQLParserException {
+//		Statement statement = CCJSqlParserUtil.parse(sql);
+//		Select selectStatement = (Select) statement;
+//		TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+//		return tablesNamesFinder.getTableList(selectStatement);
+//	}
+//
+//	public static String tabName(Statement selectStatement) {
+//		TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
+//		List<String> val = tablesNamesFinder.getTableList(selectStatement);
+//		if (val != null && val.size() > 0) {
+//			return val.get(0);
+//		}
+//		return "";
+//	}
 
 }
