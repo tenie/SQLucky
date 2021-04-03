@@ -180,6 +180,48 @@
 					</options>
 				</configuration>
 			</plugin>
+			
+			<!-- 安装依赖 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-install-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>db2</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>com.ibm.db2.jcc</groupId>
+							<artifactId>db2jcc4</artifactId>
+							<version>10.1</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/lib/db2jcc4-10.1.jar</file>
+							<createChecksum>true</createChecksum>
+							<generatePom>true</generatePom>
+						</configuration>
+					</execution>
+					<execution>
+						<id>mysql</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>install-file</goal>
+						</goals>
+						<configuration>
+							<groupId>mysql</groupId>
+							<artifactId>mysql-connector-java</artifactId>
+							<version>5.1.35</version>
+							<packaging>jar</packaging>
+							<file>${basedir}/lib/mysql-connector-java-5.1.35.jar</file>
+							<createChecksum>true</createChecksum>
+							<generatePom>true</generatePom>
+						</configuration>
+			
+					</execution>
+				</executions>
+			</plugin>
+			
 		</plugins>
 	</build>
 

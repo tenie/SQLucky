@@ -5,7 +5,7 @@
 ---
 > 依赖:
 
-    Java 1.8
+    Java 16
     maven
     git
     
@@ -14,7 +14,8 @@
      
     $ git clone git@github.com:tenie/SQLucky.git
     $ cd  SQLucky
-    $ mvn clean jfx:run
+    $ mvn clean
+    $ mvn javafx:run
 
 ## demo截图 ##
 ![image](https://github.com/tenie/SQLucky/blob/main/demo.png)
