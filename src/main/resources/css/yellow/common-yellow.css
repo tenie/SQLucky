@@ -389,7 +389,7 @@ FlowPane TextField{
 
 /* tree 过滤清空按钮*/
 .myCleanBtn{
-	 -fx-background-color: #1B1B1B;
+	 -fx-background-color: #363636;
 	 -fx-padding: 1;
 	 -fx-background-radius: 10px;
 }

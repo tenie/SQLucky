@@ -57,11 +57,8 @@ public class DBinfoTreeFilter {
 		x += 35;
 		txt.setLayoutX(x);
 		txt.setLayoutY(1);
-
-//		x += 180;
-		Button clean = new Button();
-//		clean.setLayoutX(x);
-//		clean.setLayoutY(4);
+ 
+		Button clean = new Button(); 
 		 
 		AnchorPane.setLeftAnchor(clean, 210.0);
 		AnchorPane.setTopAnchor(clean, 5.0); 
@@ -69,11 +66,18 @@ public class DBinfoTreeFilter {
 		
 		clean.setGraphic(ImageViewGenerator.svgImageUnactive("times-circle" , 14));
 		clean.getStyleClass().add("myCleanBtn");
+		clean.setVisible(false); //clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
 		
 		clean.setOnAction(e->{
 			txt.clear();
 		});
 		
+		filter.setOnMouseEntered(e->{
+			clean.setVisible(true);
+		});
+		filter.setOnMouseExited(e->{
+			clean.setVisible(false);
+		});
 		
 		filter.getChildren().addAll(query, txt , clean);
 		
