@@ -121,7 +121,29 @@
 	</dependencies>
 
 	<build>
-		<plugins>
+		<plugins> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <!-- This copies all of the jar files declared by the Maven build into a single directory.
+                        This makes it easy to assemble the final installer package -->
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <!-- The JavaFX libraries are bundled into the custom JVM, so we don't want to duplicate
+                            them in the bundled app and installer. This command skips all of the JavaFX by groupId. -->
+                           <!--  <excludeGroupIds>org.openjfx</excludeGroupIds> -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
