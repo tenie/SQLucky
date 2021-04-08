@@ -3,7 +3,11 @@ package net.tenie.lib.db;
 import java.sql.*;
 import java.util.Properties;
 import java.util.logging.Logger;
-
+/**
+ * 动态加载 jdbc驱动
+ * @author tenie
+ *
+ */
 class DriverShim implements Driver {
 	private Driver driver;
 	DriverShim(Driver d) {
