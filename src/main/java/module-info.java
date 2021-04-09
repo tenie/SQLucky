@@ -29,7 +29,7 @@ open module SQLucky {
 	requires reactfx;
 	requires flowless;
 	requires sql.formatter;
-	requires slf4j.api;
+	requires org.slf4j;
 	exports net.tenie.fx.controller  to    javafx.fxml;
     exports net.tenie.fx.main        to    javafx.graphics;
 }

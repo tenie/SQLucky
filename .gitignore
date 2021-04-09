@@ -3,6 +3,7 @@ scenicView.properties
 *.class
 *build/
 *.classpath
+*.classpath_bak
 *.factorypath
 *target/
 *.settings/
