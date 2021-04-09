@@ -1,0 +1,13 @@
+--name ${app.name} 
+--icon ${project.basedir}/src/main/resources/image/SQL6.png
+--name ${app.name}
+--vendor ${app.vendor}
+--dest ${project.build.directory}
+--app-version ${app.version}
+--temp ${project.build.directory}/installer-work
+--description "${project.description}"
+--copyright "(C) ${app.vendor}" 
+--runtime-image ${project.build.directory}/jvm-image
+--module-path "${local.modules.path}"
+--java-options "--add-opens javafx.controls/javafx.scene.control=SQLucky --add-opens java.base/java.lang.reflect=com.jfoenix --add-exports javafx.graphics/com.sun.javafx.application=SQLucky --add-opens java.base/java.lang=com.jfoenix"
+-m SQLucky/net.tenie.fx.main.MainMyDB 
