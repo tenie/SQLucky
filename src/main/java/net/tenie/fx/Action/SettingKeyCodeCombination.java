@@ -30,6 +30,7 @@ import net.tenie.lib.tools.StrUtils;
 /*   @author tenie */
 public final class SettingKeyCodeCombination {
 	private static Logger logger = LogManager.getLogger(SettingKeyCodeCombination.class);
+	public static double v = 0.2;
 	public static void Setting() {
 		Scene scene = ComponentGetter.primaryscene;
 		
@@ -101,8 +102,11 @@ public final class SettingKeyCodeCombination {
 		});
 
 		// 查找
+		
 		scene.getAccelerators().put(F3, () -> {
 			FindReplaceEditor.findSelectedString();
+			v += 0.01;
+			ComponentGetter.treeAreaDetailPane.setDividerPosition(v);
 		});
 
 		// 运行SQL
