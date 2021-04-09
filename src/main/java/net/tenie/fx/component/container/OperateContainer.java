@@ -22,7 +22,7 @@ public class OperateContainer {
 		treeAreaDetailPane.setShowDetailNode(true);
 		treeAreaDetailPane.setMasterNode(codeCtr.getContainer());
 		treeAreaDetailPane.setDetailNode(dbinfoCtr.getContainer());
-		treeAreaDetailPane.setDividerPosition(0.22);
+//		treeAreaDetailPane.setDividerPosition(0.22);
 
 		container.getChildren().add(treeAreaDetailPane);
 
