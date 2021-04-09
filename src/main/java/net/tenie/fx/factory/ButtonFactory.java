@@ -94,9 +94,7 @@ public class ButtonFactory {
 	// 代码区
 	// codeArea 代码区域 按钮初始化
 	public static void codeAreabtnInit(AnchorPane pn) {
-//			pn.prefHeight(35.0);
-//			pn.setMinHeight(35.0);
-			
+
 			JFXButton runbtn = new JFXButton();
 			runbtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
 			runbtn.setTooltip(MyTooltipTool.instance("run sql      ctrl + Enter "));
