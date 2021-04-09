@@ -8,11 +8,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.SettingKeyCodeCombination;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.lib.db.h2.H2Db;
@@ -62,17 +64,16 @@ public class MainMyDB extends Application {
 			ComponentGetter.primaryStage = primaryStage;
 			CommonAction.setTheme(Theme);
 			primaryStage.show();
-			logger.info("展示界面");
-			
-			// 设置链接窗口和代码窗口的占比
-			
-			double wi = ComponentGetter.masterDetailPane.getWidth();
-			double tbp = 250.0; // ComponentGetter.treeBtnPane.getWidth();
-			double val =  tbp / wi;  
-			logger.info("设置窗口比例 :" + val);
-			ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
-			
-//			logger.info("cssStr ==" + cssStr);
+			Platform.runLater(() -> {  
+				logger.info("展示界面");
+				// 设置链接窗口和代码窗口的占比 
+				double wi = ComponentGetter.masterDetailPane.getWidth();
+				double tbp = 250.0;
+				double val =  tbp / wi;  
+				logger.info("设置窗口比例 :" + val);
+				ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
+			});
+			 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
