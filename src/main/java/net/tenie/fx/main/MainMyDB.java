@@ -64,15 +64,7 @@ public class MainMyDB extends Application {
 			ComponentGetter.primaryStage = primaryStage;
 			CommonAction.setTheme(Theme);
 			primaryStage.show();
-			Platform.runLater(() -> {  
-				logger.info("展示界面");
-				// 设置链接窗口和代码窗口的占比 
-				double wi = ComponentGetter.masterDetailPane.getWidth();
-				double tbp = 250.0;
-				double val =  tbp / wi;  
-				logger.info("设置窗口比例 :" + val);
-				ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
-			});
+			 
 			 
 		} catch (Exception e) {
 			e.printStackTrace();

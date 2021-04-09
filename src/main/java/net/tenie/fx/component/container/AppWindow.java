@@ -33,6 +33,16 @@ public class AppWindow {
 
 		ComponentGetter.masterDetailPane = masterDetailPane;
 		mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
+		// 设置tree 面板的显示比例
+		masterDetailPane.widthProperty().addListener((ob, ov ,nv)->{
+				if (nv.doubleValue() > 1) {
+					double wi = ComponentGetter.masterDetailPane.getWidth();
+					double tbp = 250.0;
+					double val =  tbp / wi;  
+					System.out.println("设置窗口比例 :" + val);
+					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
+				}
+		}); 
 
 	}
 
