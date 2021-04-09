@@ -22,6 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.container.AppWindow;
@@ -47,6 +48,9 @@ public final class ComponentGetter {
 
 	public static MasterDetailPane masterDetailPane;
 	public static MasterDetailPane treeAreaDetailPane;
+	
+	public static VBox mainWindow;
+	public static FlowPane treeBtnPane;
 
 	public static Scene primaryscene;
 	public static Stage primaryStage;

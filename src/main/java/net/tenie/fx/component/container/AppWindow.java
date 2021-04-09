@@ -16,6 +16,7 @@ public class AppWindow {
 
 	public AppWindow() {
 		mainWindow = new VBox();
+		ComponentGetter.mainWindow = mainWindow;
 
 		mainMenuBar = new MenuBarContainer();
 		masterDetailPane = new MasterDetailPane(Side.BOTTOM);

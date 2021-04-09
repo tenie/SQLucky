@@ -41,6 +41,7 @@ public class DBinfoContainer {
 
 		ComponentGetter.treeView = treeView;
 		ComponentGetter.dbInfoTree = dbInfoTree;
+		ComponentGetter.treeBtnPane = treeBtnPane;
 	}
 
 	

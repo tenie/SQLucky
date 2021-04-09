@@ -65,9 +65,11 @@ public class MainMyDB extends Application {
 			logger.info("展示界面");
 			
 			// 设置链接窗口和代码窗口的占比
-			logger.info("设置窗口比例");
+			
 			double wi = ComponentGetter.masterDetailPane.getWidth();
-			double val = 245 / wi ;  
+			double tbp = ComponentGetter.treeBtnPane.getWidth();
+			double val =  tbp / wi;  
+			logger.info("设置窗口比例 :" + val);
 			ComponentGetter.treeAreaDetailPane.setDividerPosition(val );
 			
 //			logger.info("cssStr ==" + cssStr);
