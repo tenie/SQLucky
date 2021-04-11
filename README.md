@@ -3,6 +3,11 @@
 > 简介:
     数据库工具
 ---
+
+> 下载:
+   [链接](https://github.com/tenie/SQLucky/releases/)
+---
+
 > 依赖:
 
     Java 16
