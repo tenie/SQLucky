@@ -199,23 +199,32 @@ public final class ComponentGetter {
 	}
 	
 	// 获取 当前table view 的控制面板
-	public static AnchorPane dataFlowPane() {
-		VBox vb = (VBox) dataTab.getSelectionModel().getSelectedItem().getContent();
-		AnchorPane fp = (AnchorPane) vb.getChildren().get(0);
-		return fp;
+	public static AnchorPane dataPane() {
+		if(   dataTab == null  
+		   || dataTab.getSelectionModel() == null
+		   || dataTab.getSelectionModel().getSelectedItem() == null) return null;  
+		Node vb =  dataTab.getSelectionModel().getSelectedItem().getContent();
+		if(vb != null) { 
+			VBox vbx = (VBox) vb;
+			AnchorPane fp = (AnchorPane) vbx.getChildren().get(0);
+			return fp;
+		}
+		return null;
 	}
 
 	// 获取当前table view 的保存按钮
-	public static Button dataFlowSaveBtn() {
-		AnchorPane fp = ComponentGetter.dataFlowPane();
+	public static Button dataPaneSaveBtn() {
+		AnchorPane fp = ComponentGetter.dataPane();
+		if(fp == null ) return null;
 		return (Button) fp.getChildren().get(0);
 	}
 	
 	// 获取当前table view 的详细按钮
-		public static Button dataFlowDetailBtn() {
-			AnchorPane fp = ComponentGetter.dataFlowPane();
-			return (Button) fp.getChildren().get(1);
-		}
+	public static Button dataPaneDetailBtn() {
+		AnchorPane fp = ComponentGetter.dataPane();
+		if(fp == null ) return null;
+		return (Button) fp.getChildren().get(1);
+	}
 
 	// 获取当前的表格
 	public static FilteredTableView<ObservableList<StringProperty>> dataTableView() {
@@ -238,7 +247,8 @@ public final class ComponentGetter {
 
 	// 获取当前数据页面 中的 某个按钮
 	public static Button getDataOptionBtn(String btnName) {
-		AnchorPane fp = ComponentGetter.dataFlowPane();
+		AnchorPane fp = ComponentGetter.dataPane();
+		if(fp == null ) return null;
 		Optional<Node> fn = fp.getChildren().stream().filter(v -> {
 			return v.getId().equals(btnName);
 		}).findFirst();

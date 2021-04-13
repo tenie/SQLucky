@@ -22,6 +22,14 @@ public class DbTableDatePo {
 		fields = FXCollections.observableArrayList();
 		allDatas = FXCollections.observableArrayList();
 	}
+	
+	public static DbTableDatePo executeInfoPo() {
+		DbTableDatePo ddlDmlpo = new DbTableDatePo(); 
+		ddlDmlpo.addField("Current Time");
+		ddlDmlpo.addField("Execute SQL Info");
+		ddlDmlpo.addField("Execute SQL");
+		return ddlDmlpo;
+	}
 
 	// 生成一个错误的对象
 	public static DbTableDatePo errObj(String errorMessage) {

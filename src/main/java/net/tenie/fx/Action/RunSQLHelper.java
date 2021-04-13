@@ -46,6 +46,7 @@ import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.PropertyPo.CacheTableDate;
+import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTextField2TableCell;
@@ -146,11 +147,11 @@ public class RunSQLHelper {
 		String sqlstr;
 		String sql;
 		int sqllenght = allsqls.size();
-		DbTableDatePo ddlDmlpo = new DbTableDatePo(); 
-		ddlDmlpo.addField("Current Time");
-		ddlDmlpo.addField("Execute SQL Info");
-		ddlDmlpo.addField("Execute SQL");
-		
+//		DbTableDatePo ddlDmlpo = new DbTableDatePo(); 
+//		ddlDmlpo.addField("Current Time");
+//		ddlDmlpo.addField("Execute SQL Info");
+//		ddlDmlpo.addField("Execute SQL");
+		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
 		
 
 		for (int i = 0; i < sqllenght; i++) {
@@ -219,7 +220,7 @@ public class RunSQLHelper {
 	}
 	
 	// 字段值被修改还原, 不允许修改
-	private static   StringProperty createReadOnlyStringProperty(String val ) {
+	public static   StringProperty createReadOnlyStringProperty(String val ) {
 		StringProperty sp =  new StringProperty() { 
 			@Override
 			public String get() { 
@@ -399,6 +400,16 @@ public class RunSQLHelper {
 		if (stopbtn == null) {
 			stopbtn = stop;
 		}
+		
+
+		if (runbtn == null) {
+			runbtn =   AllButtons.btns.get("runbtn");
+			otherbtn = AllButtons.btns.get("runFunPro");
+		}
+		if (stopbtn == null) {
+			stopbtn = AllButtons.btns.get("stopbtn");
+		}
+		
 		runbtn.setDisable(stopbtn.disabledProperty().getValue());
 		otherbtn.setDisable(stopbtn.disabledProperty().getValue());
 		stopbtn.setDisable(!runbtn.disabledProperty().getValue());

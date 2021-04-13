@@ -298,6 +298,20 @@ public class DBinfoTree {
 						item.setDisable(false);
 					});
 				}
+				
+				// 如果是table 节点 启用add new column
+				TreeNodePo nd = newValue.getValue();  
+				if( nd.getType() == TreeItemType.TABLE) {
+					MenuItem item  = contextMenu.getItems().get(1);
+					item.setDisable(false);
+					item.setOnAction(e->{
+						DbConnectionPo  dbc =nd.getConnpo();
+						String schema = nd.getTable().getTableSchema();
+						String tablename = nd.getTable().getTableName();
+						MenuFactory.addNewColumn(tablename, schema, dbc);
+					});
+					
+				}
 
 			}
 		};

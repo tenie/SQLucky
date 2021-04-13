@@ -127,14 +127,9 @@ public class MenuFactory {
 		
 		MenuItem addColumn = new MenuItem("Add New Column"); 
 		addColumn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
-		addColumn.setOnAction(e -> {  
-			RsVal rv = CommonAction.tableInfo();
-			Consumer< String >  caller = x ->{
-				if(StrUtils.isNullOrEmpty(x.trim())) return;
-				RsVal rv2= exportSQL(ADD_COLUMN, x);
-				execExportSql(rv2.sql, rv2.conn,  rv.dbconnPo);
-			};
-			ModalDialog.showExecWindow(rv.tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
+		addColumn.setOnAction(e -> {
+			//TODO
+			addNewColumn();
 		});
 		
 		
@@ -194,20 +189,18 @@ public class MenuFactory {
 
 	
 	// 导出SQL
-	private static RsVal exportSQL(int ty, String colname) {
-		RsVal rv = CommonAction.tableInfo();
+	private static RsVal exportSQL(int ty, String colname, RsVal rv ) { 
 		try {
 			// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
-
 			String sql = "";
 			if (DROP_COLUMN == ty) {
-				sql = rv.dbc.getExportDDL().exportAlterTableDropColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName,
+				sql = rv.dbconnPo.getExportDDL().exportAlterTableDropColumn(rv.conn, rv.dbconnPo.getDefaultSchema(), rv.tableName,
 						colname);
 			} else if (ALTER_COLUMN == ty) {
-				sql = rv.dbc.getExportDDL().exportAlterTableModifyColumn(rv.conn, rv.dbc.getDefaultSchema(),
+				sql = rv.dbconnPo.getExportDDL().exportAlterTableModifyColumn(rv.conn, rv.dbconnPo.getDefaultSchema(),
 						rv.tableName, colname);
 			} else if (ADD_COLUMN == ty) {
-				sql = rv.dbc.getExportDDL().exportAlterTableAddColumn(rv.conn, rv.dbc.getDefaultSchema(), rv.tableName,
+				sql = rv.dbconnPo.getExportDDL().exportAlterTableAddColumn(rv.conn, rv.dbconnPo.getDefaultSchema(), rv.tableName,
 						colname);
 			}
 
@@ -217,6 +210,12 @@ public class MenuFactory {
 			
 		}
 		return rv;
+	
+	}
+	
+	private static RsVal exportSQL(int ty, String colname) {
+		RsVal rv = CommonAction.tableInfo();
+		return exportSQL(ty, colname, rv); 
 	}
 	// 执行导出的sql
 	public static void  execExportSql(String sql, Connection conn, DbConnectionPo dbconnPo) {
@@ -238,6 +237,13 @@ public class MenuFactory {
 				ConnectionEditor.ConnectionInfoSetting();
 			});
 			add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+			
+			MenuItem addtabNewCol = new MenuItem("Table Add New Column");
+			addtabNewCol.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+//			addtabNewCol.setOnAction(e -> {
+////				ConnectionEditor.ConnectionInfoSetting();
+//				addNewColumn();
+//			});
 
 			MenuItem link = new MenuItem("Open Connection");
 			link.setOnAction(CommonEventHandler.openConnEvent());
@@ -257,7 +263,7 @@ public class MenuFactory {
 			});
 			delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
 
-			contextMenu.getItems().addAll(add, link, unlink, Edit, delete);
+			contextMenu.getItems().addAll(add, addtabNewCol, link, unlink, Edit, delete);
 
 			return contextMenu;
 		}
@@ -298,6 +304,37 @@ public class MenuFactory {
 
 			return contextMenu;
 		}
+	
+	
+	public static void addNewColumn() { 
+		RsVal rv = CommonAction.tableInfo();
+		Consumer< String >  caller = x ->{
+			if(StrUtils.isNullOrEmpty(x.trim())) return;
+			RsVal rv2= exportSQL(ADD_COLUMN, x);
+			execExportSql(rv2.sql, rv2.conn,  rv.dbconnPo);
+		};
+		ModalDialog.showExecWindow(rv.tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
+	
+	}
+	
+	
+	//添加新字段
+	public static void addNewColumn(String tableName , String schema, DbConnectionPo  dbc ) { 
+
+		Connection conn = dbc.getConn();
+		Consumer< String >  caller = x ->{
+			if(StrUtils.isNullOrEmpty(x.trim())) return;
+			String colname = x.trim(); 
+			String sql =  dbc.getExportDDL().exportAlterTableAddColumn (
+					conn, 
+					schema,
+					tableName, 
+					colname);
+			execExportSql(sql, conn, dbc);
+		};
+		ModalDialog.showExecWindow(tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
+	
+	}
 }
 
 

@@ -3,6 +3,7 @@ package net.tenie.fx.Action;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -43,9 +44,14 @@ public class ButtonAction {
 			// 待保存数据
 			Map<String, ObservableList<StringProperty>> modifyData = CacheTableDate.getModifyData(tabId);
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
-			DbTableDatePo ddlDmlpo = new DbTableDatePo();
-			ddlDmlpo.addField("Info");
-			ddlDmlpo.addField("Status");
+//			DbTableDatePo ddlDmlpo = new DbTableDatePo();
+			DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
+//			ddlDmlpo.addField("Info");
+//			ddlDmlpo.addField("Status");
+//			ddlDmlpo.addField("Current Time");
+//			ddlDmlpo.addField("Execute SQL Info");
+//			ddlDmlpo.addField("Execute SQL");
+			
 
 			if (!modifyData.isEmpty()) {
 				for (String key : modifyData.keySet()) {
@@ -56,17 +62,29 @@ public class ButtonAction {
 					try {
 						String msg = UpdateDao.execUpdate(conn, tabName, newd, old, fpos);
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
-						val.add(new SimpleStringProperty(msg));
-						val.add(new SimpleStringProperty("success"));
-						val.add(new SimpleStringProperty(""));
+						val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+						val.add(RunSQLHelper.createReadOnlyStringProperty(msg)); 
+						val.add(RunSQLHelper.createReadOnlyStringProperty("success")); 
+						val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
+						
+//						val.add(new SimpleStringProperty(msg));
+//						val.add(new SimpleStringProperty("success"));
+//						val.add(new SimpleStringProperty(""));
 						ddlDmlpo.addData(val);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 						saveBtn.setDisable(true);
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
-						val.add(new SimpleStringProperty(e1.getMessage()));
-						val.add(new SimpleStringProperty("fail."));
-						val.add(new SimpleStringProperty(""));
+						
+						val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+						val.add(RunSQLHelper.createReadOnlyStringProperty(e1.getMessage())); 
+						val.add(RunSQLHelper.createReadOnlyStringProperty("fail")); 
+						val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
+						
+						
+//						val.add(new SimpleStringProperty(e1.getMessage()));
+//						val.add(new SimpleStringProperty("fail."));
+//						val.add(new SimpleStringProperty(""));
 						ddlDmlpo.addData(val);
 					}
 				}

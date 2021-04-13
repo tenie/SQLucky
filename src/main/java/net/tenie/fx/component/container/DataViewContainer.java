@@ -184,7 +184,7 @@ public class DataViewContainer {
 	                           this.setText((rowIndex+1)+"");
 	                           this.setOnMouseClicked(e -> {
 	     		               	  if (e.getClickCount() == 2) {
-	     		               		  JFXButton btn = (JFXButton) ComponentGetter.dataFlowSaveBtn();
+	     		               		  JFXButton btn = (JFXButton) ComponentGetter.dataPaneSaveBtn();
 	     		               	      TableRowDataDetail.show(btn); 
 	     		               	  }
 	     	                 } ); 

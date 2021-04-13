@@ -142,7 +142,8 @@ public final class SettingKeyCodeCombination {
 
 		// save file
 		scene.getAccelerators().put(ctrlS, () -> {
-			CommonAction.saveSqlAction();
+//			CommonAction.saveSqlAction();
+			CommonAction.ctrlAndSAction();
 
 		});
 

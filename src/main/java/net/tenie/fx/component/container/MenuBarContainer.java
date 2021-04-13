@@ -69,8 +69,9 @@ public class MenuBarContainer {
 
 		MenuItem Save = new MenuItem(MenuItemNameFormat("Save"));
 		Save.setGraphic(ImageViewGenerator.svgImageDefActive("floppy-o"));
-		Save.setAccelerator(KeyCombination.keyCombination("shortcut+S"));
-		Save.setOnAction(value -> {
+		//Save.setAccelerator(KeyCombination.keyCombination("shortcut+S"));
+		Save.setOnAction(value -> { 
+			// 保存sql文本到硬盘
 			CommonAction.saveSqlAction();
 		});
 

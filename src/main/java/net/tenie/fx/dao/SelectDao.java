@@ -153,7 +153,7 @@ public class SelectDao {
 					Platform.runLater(() -> val.setValue("<null>"));
 				}
 				
-				ComponentGetter.dataFlowSaveBtn().setDisable(false);
+				ComponentGetter.dataPaneSaveBtn().setDisable(false);
 
 				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();
 				if (!CacheTableDate.exist(tabId, rowNo)) {

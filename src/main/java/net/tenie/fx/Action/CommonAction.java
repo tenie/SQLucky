@@ -87,27 +87,56 @@ public class CommonAction {
 		String connName = CacheTableDate.getConnName(tableId);
 		String tableName =  CacheTableDate.getTableName(tableId);
 		Connection conn = CacheTableDate.getDBConn(tableId);
-		 
-//		DbConnectionPo getCurrentConnectPO()
-		
+				
 		ObservableList<ObservableList<StringProperty>> alldata = CacheTableDate.getData(tableId);
 		DbConnectionPo  dbc = DBConns.get(connName); 
 		
-		Button saveBtn = ComponentGetter.dataFlowSaveBtn();
+		Button saveBtn = ComponentGetter.dataPaneSaveBtn();
 		FilteredTableView<ObservableList<StringProperty>> dataTableView =
 				         ComponentGetter.dataTableView();
 		RsVal rv = new RsVal();
 		rv.conn = conn; 
-		rv.dbconnPo = DBConns.get(connName);
+		rv.dbconnPo = dbc; 
 		rv.tableName = tableName;
-		rv.dbc =  dbc; 
+//		rv.dbc =  dbc; 
 		rv.alldata = alldata;
 		rv.saveBtn = saveBtn;
 		rv.dataTableView = dataTableView;
 		return rv;
 	}
 	
+	public static RsVal tableInfo(String tableName, String connName, Connection conn ) {
+
+		DbConnectionPo  dbc = DBConns.get(connName);  
+		RsVal rv = new RsVal();
+		rv.conn = conn; 
+		rv.dbconnPo = dbc;   
+		rv.tableName = tableName; 
+		rv.alldata = null;
+		rv.saveBtn = null;
+		rv.dataTableView = null;
+		return rv;
+	}
 	
+	
+	// ctrl + S 按钮触发, 保存数据或sql文本
+	public static void ctrlAndSAction() {
+		boolean showStatus = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
+		// 如果现在数据表格中的<保存按钮>是亮的(面板还要显示着), 就保存数据 
+		if(showStatus) {
+			Button btn = ComponentGetter.dataPaneSaveBtn();
+			if(btn != null && ! btn.isDisable()) {
+				ButtonAction.dataSave(btn); 
+				return ;
+			}
+		}
+		// 保存sql文本到硬盘
+		saveSqlAction();
+		
+		
+	}
+	
+	// 保存sql文本到硬盘
 	public static void saveSqlAction() {
 		try {
 			String sql = SqlEditor.getCurrentCodeAreaSQLText();
@@ -620,7 +649,7 @@ public class CommonAction {
 
 	// 查看表明细(一行数据) 快捷键
 	public static void shortcutShowDataDatil() {
-		AnchorPane fp = ComponentGetter.dataFlowPane();
+		AnchorPane fp = ComponentGetter.dataPane();
 		Button btn = (Button) fp.getChildren().get(1);
 		MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
 		Event.fireEvent(btn, me);
