@@ -13,6 +13,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.Action.TreeObjAction;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -288,7 +289,7 @@ public class DBinfoTree {
 				if (!DBinfoTree.isConns(newValue)) {
 					ContextMenu contextMenu = treeView.getContextMenu();
 					for (MenuItem item : contextMenu.getItems()) {
-						if (!item.getText().equals("Add Connection")) {
+						if (! "Add Connection".equals(  item.getText() )) {
 							item.setDisable(true);
 						}
 					}
@@ -302,13 +303,13 @@ public class DBinfoTree {
 				// 如果是table 节点 启用add new column
 				TreeNodePo nd = newValue.getValue();  
 				if( nd.getType() == TreeItemType.TABLE) {
-					MenuItem item  = contextMenu.getItems().get(1);
+					MenuItem item  = contextMenu.getItems().get(6);
 					item.setDisable(false);
 					item.setOnAction(e->{
 						DbConnectionPo  dbc =nd.getConnpo();
 						String schema = nd.getTable().getTableSchema();
 						String tablename = nd.getTable().getTableName();
-						MenuFactory.addNewColumn(tablename, schema, dbc);
+						MenuAction.addNewColumn(tablename, schema, dbc);
 					});
 					
 				}

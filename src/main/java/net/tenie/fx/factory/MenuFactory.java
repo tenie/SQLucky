@@ -21,10 +21,12 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TableColumn;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.Action.RsVal;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.PropertyPo.CacheTableDate;
@@ -43,9 +45,7 @@ import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
 public class MenuFactory {
-	static final int DROP_COLUMN = 1;
-	static final int ALTER_COLUMN = 2;
-	static final int ADD_COLUMN = 3;
+	
 	/**
 	 * 数据表中列的右键弹出菜单
 	 * @param colname
@@ -101,74 +101,39 @@ public class MenuFactory {
 //		dropCol.getStyleClass().add("myMenuItem");
 		dropCol.setGraphic(ImageViewGenerator.svgImageDefActive("eraser"));
 		dropCol.setOnAction(e ->  {
-			RsVal rv = exportSQL(DROP_COLUMN, colname);
-			if(StrUtils.isNotNullOrEmpty(rv.sql)) {
-				// 要被执行的函数
-				Consumer< String >  caller = x ->{ 
-					execExportSql(rv.sql, rv.conn ,rv.dbconnPo);
-				};
-				ModalDialog.showComfirmExec("Confirm drop!", "Execute Sql: " + rv.sql +" ?", caller);		
-			} 
-			
+			MenuAction.dropColumn(colname);
 		});
 		
 		MenuItem alterColumn = new MenuItem("Alter Column Date Type"); 
 		alterColumn.setGraphic(ImageViewGenerator.svgImageDefActive("exchange"));
-		alterColumn.setOnAction(e -> { 
-			
-			Consumer< String >  caller = x ->{ 
-				if(StrUtils.isNullOrEmpty(x.trim())) return;
-				String str = colname + " " + x;
-				RsVal rv = exportSQL(ALTER_COLUMN, str);
-				execExportSql(rv.sql, rv.conn, rv.dbconnPo);
-			};
-			ModalDialog.showExecWindow("Alter "+colname +" Date Type: input words like 'CHAR(10) ", "", caller);
+		alterColumn.setOnAction(e -> {
+			MenuAction.alterColumn(colname);
 		});
 		
 		MenuItem addColumn = new MenuItem("Add New Column"); 
 		addColumn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
-		addColumn.setOnAction(e -> {
-			//TODO
-			addNewColumn();
-		});
-		
+		addColumn.setOnAction(e -> { 
+			MenuAction.addNewColumn();
+		}); 
 		
 		Menu updateMenu = new Menu("Update Column Data");
 		updateMenu.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
 		MenuItem updateTableColumn = new MenuItem("Update: Table is  Column Value"); 
 		updateTableColumn.setGraphic(ImageViewGenerator.svgImageDefActive("table"));
-		updateTableColumn.setOnAction(e -> {  
-			RsVal rv = CommonAction.tableInfo();
-			String sql = "UPDATE " + rv.tableName + " SET " + colname + " = " ;
-			Consumer< String >  caller = x ->{
-				if(StrUtils.isNullOrEmpty(x.trim())) return;
-				String strsql = sql + x;
-				execExportSql(strsql, rv.conn,  rv.dbconnPo);
-			};
-			ModalDialog.showExecWindow("Execute : "+ sql +" ? : input your value", "", caller);
+		updateTableColumn.setOnAction(e -> {
+			MenuAction.updateTableColumn(colname);
 		});
 		
 		MenuItem updateCurrentPageColumn = new MenuItem("Update: Current All Data is  Column Value"); 
 		updateCurrentPageColumn.setGraphic(ImageViewGenerator.svgImageDefActive("file-text-o"));
-		updateCurrentPageColumn.setOnAction(e -> {  
-			RsVal rv = CommonAction.tableInfo();
-			Consumer< String >  caller = x ->{
-				if(StrUtils.isNullOrEmpty(x.trim())) return;
-				ButtonAction.updateAllColumn(colIdx, x);
-			};
-			ModalDialog.showExecWindow("Execute : Update Current "+ rv.tableName +" Column :" +colname+" data ? : input your value", "", caller);
+		updateCurrentPageColumn.setOnAction(e -> { 
+			MenuAction.updateCurrentColumn(colname, colIdx);
 		});
 		
 		MenuItem updateSelectColumn = new MenuItem("Update: Selected Data is Column Value"); 
 		updateSelectColumn.setGraphic(ImageViewGenerator.svgImageDefActive("indent"));
 		updateSelectColumn.setOnAction(e -> {
-			RsVal rv = CommonAction.tableInfo();
-			Consumer< String >  caller = x ->{
-				if(StrUtils.isNullOrEmpty(x.trim())) return;
-				ButtonAction.updateSelectedDataColumn(colIdx, x);
-			};
-			ModalDialog.showExecWindow("Execute : Update Selected "+ rv.tableName +" Column :" +colname+" data ? : input your value", "", caller);
-		
+			MenuAction.updateSelectColumn(colname, colIdx);
 		});
 		
 		updateMenu.getItems().addAll(updateTableColumn, updateCurrentPageColumn, updateSelectColumn);
@@ -185,45 +150,7 @@ public class MenuFactory {
 		return cm;
 	}
 	
-
-
-	
-	// 导出SQL
-	private static RsVal exportSQL(int ty, String colname, RsVal rv ) { 
-		try {
-			// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
-			String sql = "";
-			if (DROP_COLUMN == ty) {
-				sql = rv.dbconnPo.getExportDDL().exportAlterTableDropColumn(rv.conn, rv.dbconnPo.getDefaultSchema(), rv.tableName,
-						colname);
-			} else if (ALTER_COLUMN == ty) {
-				sql = rv.dbconnPo.getExportDDL().exportAlterTableModifyColumn(rv.conn, rv.dbconnPo.getDefaultSchema(),
-						rv.tableName, colname);
-			} else if (ADD_COLUMN == ty) {
-				sql = rv.dbconnPo.getExportDDL().exportAlterTableAddColumn(rv.conn, rv.dbconnPo.getDefaultSchema(), rv.tableName,
-						colname);
-			}
-
-			rv.sql = sql;
-		} catch (Exception e) {
-			MyAlert.errorAlert( e.getMessage());		
-			
-		}
-		return rv;
-	
-	}
-	
-	private static RsVal exportSQL(int ty, String colname) {
-		RsVal rv = CommonAction.tableInfo();
-		return exportSQL(ty, colname, rv); 
-	}
-	// 执行导出的sql
-	public static void  execExportSql(String sql, Connection conn, DbConnectionPo dbconnPo) {
-//		String idx =  "" + ComponentGetter.dataTab.getSelectionModel().getSelectedIndex();
-		JFXButton runFunPro = AllButtons.btns.get("runFunPro");
-		RunSQLHelper.runSQLMethod(dbconnPo, conn, sql, "", runFunPro);
-		
-	}
+ 
 	
 	
 	
@@ -240,6 +167,8 @@ public class MenuFactory {
 			
 			MenuItem addtabNewCol = new MenuItem("Table Add New Column");
 			addtabNewCol.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+			addtabNewCol.setId("tableAddNewCol");
+			
 //			addtabNewCol.setOnAction(e -> {
 ////				ConnectionEditor.ConnectionInfoSetting();
 //				addNewColumn();
@@ -263,7 +192,7 @@ public class MenuFactory {
 			});
 			delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
 
-			contextMenu.getItems().addAll(add, addtabNewCol, link, unlink, Edit, delete);
+			contextMenu.getItems().addAll(add, link, unlink, Edit, delete, new SeparatorMenuItem(), addtabNewCol);
 
 			return contextMenu;
 		}
@@ -306,37 +235,11 @@ public class MenuFactory {
 		}
 	
 	
-	public static void addNewColumn() { 
-		RsVal rv = CommonAction.tableInfo();
-		Consumer< String >  caller = x ->{
-			if(StrUtils.isNullOrEmpty(x.trim())) return;
-			RsVal rv2= exportSQL(ADD_COLUMN, x);
-			execExportSql(rv2.sql, rv2.conn,  rv.dbconnPo);
-		};
-		ModalDialog.showExecWindow(rv.tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
-	
-	}
 	
 	
-	//添加新字段
-	public static void addNewColumn(String tableName , String schema, DbConnectionPo  dbc ) { 
-
-		Connection conn = dbc.getConn();
-		Consumer< String >  caller = x ->{
-			if(StrUtils.isNullOrEmpty(x.trim())) return;
-			String colname = x.trim(); 
-			String sql =  dbc.getExportDDL().exportAlterTableAddColumn (
-					conn, 
-					schema,
-					tableName, 
-					colname);
-			execExportSql(sql, conn, dbc);
-		};
-		ModalDialog.showExecWindow(tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
 	
-	}
+	
 }
-
 
 
 

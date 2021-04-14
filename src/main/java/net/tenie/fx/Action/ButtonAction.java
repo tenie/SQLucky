@@ -180,7 +180,7 @@ public class ButtonAction {
 	// 获取tree 节点中的 table
 	public static void findTable() {
 		RsVal rv = CommonAction.tableInfo();
-		DbConnectionPo dbcp = rv.dbc;
+		DbConnectionPo dbcp = rv.dbconnPo;
 		if(dbcp == null ) {
 			return ;
 		}
