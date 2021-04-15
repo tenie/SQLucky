@@ -587,7 +587,7 @@ public class RunSQLHelper {
 		
 		col.setMinWidth(witdth);
 		col.setPrefWidth(witdth);
-		col.setCellValueFactory(new StringPropertyListValueFactory(colIdx, table));
+		col.setCellValueFactory(new StringPropertyListValueFactory(colIdx));
  
 		// 右点菜单
 		ContextMenu cm =MenuFactory.DataTableColumnContextMenu(colname, type, col, colIdx);

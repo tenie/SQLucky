@@ -28,34 +28,13 @@ public class DeleteDao {
 		String msg = "";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		try {
-//			int valsLen = fpos.size();
+		try { 
 			String condition = DaoTools.conditionStr(vals, fpos);
 
 			// 校验 更新sql 会更1条以上, 如果查到一天以上给予提示确认!
 			String select = "Select count(*) as val from " + tableName + " where " + condition;
 			pstmt = conn.prepareStatement(select);
-			DaoTools.conditionSetVal(pstmt, vals, fpos);
-//			int idx = 0;
-//			for (int i = 0; i < valsLen; i++) {
-//				idx++;
-//				String val = vals.get(i).get();
-//				String type = fpos.get(i).getColumnClassName().get();
-//				if (StrUtils.isNullOrEmpty(val) || "<null>".equals(val)) {
-//					idx--;
-//					continue;
-//				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
-//						|| type.equals("java.sql.Date")) {
-//					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
-//					Timestamp ts = new Timestamp(dv.getTime());
-//					pstmt.setTimestamp(idx, ts);
-//					logger.info(idx + "  " + ts);
-//				} else {
-//					Object obj = BuildObject.buildObj(type, val);
-//					pstmt.setObject(idx, obj);
-//					logger.info(idx + "  " + obj);
-//				}
-//			}
+			DaoTools.deleteConditionSetVal(pstmt, vals, fpos);
 			
 			boolean tf = true;
 			logger.info("sql = " + select);
@@ -78,28 +57,7 @@ public class DeleteDao {
 
 			logger.info("sql = " + sql);
 			pstmt = conn.prepareStatement(sql);
-			DaoTools.conditionSetVal(pstmt, vals, fpos);
-//			// 赋值
-//			idx = 0;
-//			// where 部分
-//			for (int i = 0; i < valsLen; i++) {
-//				idx++;
-//				String val = vals.get(i).get();
-//				String type = fpos.get(i).getColumnClassName().get();
-//				if ("<null>".equals(val)) {
-//					idx--;
-//					continue;
-//				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
-//						|| type.equals("java.sql.Date")) {
-//					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
-//					Timestamp ts = new Timestamp(dv.getTime());
-//					pstmt.setTimestamp(idx, ts);
-//				} else {
-//
-//					Object obj = BuildObject.buildObj(type, val);
-//					pstmt.setObject(idx, obj);
-//				}
-//			}
+			DaoTools.deleteConditionSetVal(pstmt, vals, fpos); 
 
 			// 更新
 			int i = pstmt.executeUpdate();

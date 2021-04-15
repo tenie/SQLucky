@@ -24,6 +24,7 @@ import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.window.TableRowDataDetail;
 import net.tenie.lib.tools.StrUtils;
 
 public class ButtonFactory {
@@ -254,32 +255,36 @@ public class ButtonFactory {
 		fp.prefHeight(25);
 		JFXButton saveBtn = new JFXButton();
 		saveBtn.setGraphic(ImageViewGenerator.svgImageDefActive("save"));
-		saveBtn.setOnMouseClicked(CommonEventHandler.saveDate(saveBtn));
+		saveBtn.setOnMouseClicked( e->{ 
+				ButtonAction.dataSave(saveBtn);
+		});
 		saveBtn.setTooltip(MyTooltipTool.instance("Save data"));
 		saveBtn.setDisable(true);
 		saveBtn.setId(AllButtons.SAVE);
 
 		JFXButton detailBtn = new JFXButton();
 		detailBtn.setGraphic(ImageViewGenerator.svgImageDefActive("search-plus")); 
-		detailBtn.setOnMouseClicked(CommonEventHandler.showLineDetail(detailBtn));
+		detailBtn.setOnMouseClicked( e->{
+			TableRowDataDetail.show(saveBtn);
+		});
 		detailBtn.setTooltip(MyTooltipTool.instance("current line detail "));
 		detailBtn.setDisable(disable);
 		
 		JFXButton tableSQLBtn = new JFXButton();
 		tableSQLBtn.setGraphic(ImageViewGenerator.svgImageDefActive("table")); 
-//		tableSQLBtn.setOnMouseClicked(CommonEventHandler.showLineDetail(detailBtn));
 		tableSQLBtn.setOnMouseClicked( e->{
 			ButtonAction.findTable();
 		});
-		tableSQLBtn.setTooltip(MyTooltipTool.instance("current line detail "));
+		tableSQLBtn.setTooltip(MyTooltipTool.instance("Table SQL"));
 		tableSQLBtn.setDisable(disable);
 		
 
 		// refresh
 		JFXButton refreshBtn = new JFXButton();
-		refreshBtn.setGraphic(ImageViewGenerator.svgImageDefActive("refresh"));
-
-		refreshBtn.setOnMouseClicked(CommonEventHandler.refreshData(refreshBtn));
+		refreshBtn.setGraphic(ImageViewGenerator.svgImageDefActive("refresh")); 
+		refreshBtn.setOnMouseClicked( e->{ 
+			ButtonAction.refreshData(refreshBtn) ;
+		});
 		refreshBtn.setTooltip(MyTooltipTool.instance("refresh table "));
 		refreshBtn.setDisable(disable);
 
@@ -287,22 +292,27 @@ public class ButtonFactory {
 		JFXButton addBtn = new JFXButton();
 		addBtn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square"));
 
-		addBtn.setOnMouseClicked(CommonEventHandler.addData(addBtn));
+		addBtn.setOnMouseClicked(e->{ 
+			ButtonAction.addData(addBtn);
+		});
 		addBtn.setTooltip(MyTooltipTool.instance("add new data "));
 		addBtn.setDisable(disable);
 
 		JFXButton minusBtn = new JFXButton();
 		minusBtn.setGraphic(ImageViewGenerator.svgImage("minus-square", "#EC7774"));
 
-		minusBtn.setOnMouseClicked(CommonEventHandler.deleteData(minusBtn));
+		minusBtn.setOnMouseClicked( e->{ 
+			ButtonAction.deleteData(); 
+		});
 		minusBtn.setTooltip(MyTooltipTool.instance("delete data "));
 		minusBtn.setDisable(disable);
 
 //	    	 files-o
 		JFXButton copyBtn = new JFXButton();
 		copyBtn.setGraphic(ImageViewGenerator.svgImageDefActive("files-o"));
-
-		copyBtn.setOnMouseClicked(CommonEventHandler.copyData(copyBtn));
+		copyBtn.setOnMouseClicked( e->{ 
+			ButtonAction.copyData();
+		});
 		copyBtn.setTooltip(MyTooltipTool.instance("copy selected row data "));
 		copyBtn.setDisable(disable);
 

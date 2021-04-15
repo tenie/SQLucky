@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -208,177 +209,13 @@ public class CommonEventHandler {
 			}
 		};
 	}
+ 
 
-	public static EventHandler<Event> saveDate(JFXButton saveBtn) {
-		return new EventHandler<Event>() {
-			public void handle(Event e) {
-				ButtonAction.dataSave(saveBtn); 
-			}
-		};
-	}
+	
+ 
 
-	// Show line data
-	public static EventHandler<Event> showLineDetail(JFXButton saveBtn) {
-		return new EventHandler<Event>() {
-			public void handle(Event e) {
-				TableRowDataDetail.show(saveBtn);
-			}
-		};
-	}
 
-	public static EventHandler<Event> refreshData(JFXButton btn) {
-		return new EventHandler<Event>() {
-			public void handle(Event e) {
-
-				String id = btn.getParent().getId();
-				Tab tb = CacheTableDate.getTab(id);
-				String sql = CacheTableDate.getSelectSQl(id);
-				Connection conn = CacheTableDate.getDBConn(id);
-			    String connName = 	CacheTableDate.getConnName(id);
-//			    DBConns.get(connName);
-				if (conn != null) {
-					// 关闭当前tab
-					CommonUtility.setTabName(tb, "");
-					String idx = "" + ComponentGetter.dataTab.getSelectionModel().getSelectedIndex();
-					JFXButton runFunPro = AllButtons.btns.get("runFunPro");
-					RunSQLHelper.runSQLMethod( DBConns.get(connName), conn, sql, idx, runFunPro);
-				}
-			}
-		};
-	}
-
-	// 添加一行数据
-	public static EventHandler<Event> addData(JFXButton btn) {
-		return new EventHandler<Event>() {
-			public void handle(Event e) {
-				VBox vbox = (VBox) btn.getParent().getParent();
-				FilteredTableView<ObservableList<StringProperty>> tbv = (FilteredTableView<ObservableList<StringProperty>>) vbox
-						.getChildren().get(1);
-				tbv.scrollTo(0);
-				String tabid = btn.getParent().getId();
-				int newLineidx = ConfigVal.newLineIdx++;
-				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tabid);
-				ObservableList<StringProperty> item = FXCollections.observableArrayList();
-				for (int i = 0; i < fs.size(); i++) {
-					SimpleStringProperty sp = new SimpleStringProperty();
-					// 添加监听. 保存时使用 newLineIdx
-					CommonUtility.newStringPropertyChangeListener(sp, fs.get(i).getColumnType().get());
-					item.add(sp);
-				}
-				item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
-				CacheTableDate.appendDate(tabid, newLineidx, item); // 可以防止在map中被覆盖
-				tbv.getItems().add(0, item);
-
-				// 发生亮起保存按钮
-				AnchorPane fp = ComponentGetter.dataAnchorPane(tbv);
-				fp.getChildren().get(0).setDisable(false);
-			}
-
-		};
-	}
-
-	public static EventHandler<Event> deleteData(JFXButton btn) {
-		return new EventHandler<Event>() {
-			public void handle(Event e) {
-				// 获取当前的table view
-				FilteredTableView<ObservableList<StringProperty>> table = ComponentGetter.dataTableView();
-				String tabId = table.getId();
-
-				String tabName = CacheTableDate.getTableName(tabId);
-				Connection conn = CacheTableDate.getDBConn(tabId);
-				ObservableList<SqlFieldPo> fpos = CacheTableDate.getCols(tabId);
-
-				ObservableList<ObservableList<StringProperty>> vals = table.getSelectionModel().getSelectedItems();
-				List<String> temp = new ArrayList<>();
-
-				// 执行sql 后的信息 (主要是错误后显示到界面上)
-				DbTableDatePo ddlDmlpo = new DbTableDatePo();
-				ddlDmlpo.addField("Info");
-				ddlDmlpo.addField("Status");
-
-				try {
-					for (int i = 0; i < vals.size(); i++) {
-						ObservableList<StringProperty> sps = vals.get(i);
-						String ro = sps.get(sps.size() - 1).get();
-						temp.add(ro);
-						String msg = DeleteDao.execDelete(conn, tabName, sps, fpos);
-						ObservableList<StringProperty> val = FXCollections.observableArrayList();
-						val.add(new SimpleStringProperty(msg));
-						val.add(new SimpleStringProperty("success"));
-						val.add(new SimpleStringProperty(""));
-						ddlDmlpo.addData(val);
-
-					}
-					for (String str : temp) {
-						CacheTableDate.deleteTabDataRowNo(tabId, str);
-					}
-
-				} catch (Exception e1) {
-					ObservableList<StringProperty> val = FXCollections.observableArrayList();
-					val.add(new SimpleStringProperty(e1.getMessage()));
-					val.add(new SimpleStringProperty("fail."));
-					val.add(new SimpleStringProperty(""));
-					ddlDmlpo.addData(val);
-				} finally {
-					RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
-				}
-			}
-
-		};
-	}
-
-	// 复制选择的 行数据 插入到表格末尾
-	public static EventHandler<Event> copyData(JFXButton btn) {
-		return new EventHandler<Event>() {
-			public void handle(Event e) {
-				// 获取当前的table view
-				FilteredTableView<ObservableList<StringProperty>> table = ComponentGetter.dataTableView();
-
-				String tabId = table.getId();
-
-//				String tabName = CacheTableDate.getTableNam e(tabId);
-//				Connection conn = CacheTableDate.getDBConn(tabId);
-				// 获取字段属性信息
-				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tabId);
-				
-				// 选中的行数据
-				ObservableList<ObservableList<StringProperty>> vals = ComponentGetter.dataTableViewSelectedItems();// table.getSelectionModel().getSelectedItems();
-//				int seIdx = table.getSelectionModel().getSelectedIndex();
-//				List<String> temp = new ArrayList<>();
-
-				try {
-					// 遍历选中的行
-					for (int i = 0; i < vals.size(); i++) {
-						// 一行数据, 提醒: 最后一列是行号
-						ObservableList<StringProperty> sps = vals.get(i);
-						// copy 一行
-						ObservableList<StringProperty> item = FXCollections.observableArrayList();
-						int newLineidx = ConfigVal.newLineIdx++;
-//						for (StringProperty strp : sps) {
-						for (int j = 0 ; j < fs.size(); j++) {
-							StringProperty strp = sps.get(j);
-						 
-							StringProperty newsp = new SimpleStringProperty(strp.get());
-							int dataType = fs.get(j).getColumnType().get();
-							CommonUtility.newStringPropertyChangeListener(newsp, dataType);
-							item.add(newsp);
-						}
-						item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 新行的行号没什么用
-						CacheTableDate.appendDate(tabId, newLineidx, item); // 可以防止在map中被覆盖
-						table.getItems().add(item);
-
-					}
-					table.scrollTo(table.getItems().size() - 1);
-
-					// 保存按钮亮起
-					ComponentGetter.dataPaneSaveBtn().setDisable(false);
-				} catch (Exception e2) {
-					MyAlert.errorAlert( e2.getMessage());
-				}
-			}
-
-		};
-	}
+ 
 
 	private static ObservableList<ObservableList<StringProperty>> getValsHelper(boolean isSelected, String tableid) {
 		ObservableList<ObservableList<StringProperty>> vals = null;

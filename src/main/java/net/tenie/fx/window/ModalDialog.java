@@ -569,6 +569,7 @@ public class ModalDialog {
 		final Stage stage = new Stage();
 		
 		JFXButton btn = new JFXButton("Cancel");
+		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(value -> {
 			stage.close();
 		});

@@ -53,6 +53,7 @@ public final class SettingKeyCodeCombination {
 		KeyCodeCombination F3 = new KeyCodeCombination(KeyCode.F3);
 		KeyCodeCombination F1 = new KeyCodeCombination(KeyCode.F1);
 		KeyCodeCombination F2 = new KeyCodeCombination(KeyCode.F2);
+		KeyCodeCombination F4 = new KeyCodeCombination(KeyCode.F4);
 
 		KeyCodeCombination ctrlO = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.SHORTCUT_DOWN);
 		
@@ -187,18 +188,12 @@ public final class SettingKeyCodeCombination {
 		
 		// 书签查找
 		scene.getAccelerators().put(F2, () -> {  
-			ButtonAction.nextBookmark(true);
+			ButtonAction.nextBookmark(true); 
+		});
+		
+		scene.getAccelerators().put(F4, () -> {  
 			
-			
-//			setFontSize(12);
-//			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
-//				logger.info(code.getStyle());
-//				String txt = code.getText();  
-//				code.replaceText(0, txt.length(), txt);
-//				SqlCodeAreaHighLightingHelper.applyHighlighting(code);
-//			}
-//			
-
+			System.out.println( ComponentGetter.dataTab.getTabs().size());
 		});
 		
 	}

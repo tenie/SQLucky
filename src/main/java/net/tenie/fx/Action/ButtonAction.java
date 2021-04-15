@@ -16,16 +16,24 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.MyCodeArea;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.TreeItem.TreeObjCache;
+import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.config.DBConns;
+import net.tenie.fx.dao.DeleteDao;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.po.TablePo;
 import net.tenie.lib.tools.StrUtils;
@@ -44,14 +52,7 @@ public class ButtonAction {
 			// 待保存数据
 			Map<String, ObservableList<StringProperty>> modifyData = CacheTableDate.getModifyData(tabId);
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
-//			DbTableDatePo ddlDmlpo = new DbTableDatePo();
 			DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
-//			ddlDmlpo.addField("Info");
-//			ddlDmlpo.addField("Status");
-//			ddlDmlpo.addField("Current Time");
-//			ddlDmlpo.addField("Execute SQL Info");
-//			ddlDmlpo.addField("Execute SQL");
-			
 
 			if (!modifyData.isEmpty()) {
 				for (String key : modifyData.keySet()) {
@@ -81,10 +82,6 @@ public class ButtonAction {
 						val.add(RunSQLHelper.createReadOnlyStringProperty("fail")); 
 						val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
 						
-						
-//						val.add(new SimpleStringProperty(e1.getMessage()));
-//						val.add(new SimpleStringProperty("fail."));
-//						val.add(new SimpleStringProperty(""));
 						ddlDmlpo.addData(val);
 					}
 				}
@@ -139,6 +136,141 @@ public class ButtonAction {
 
 	} 
 	
+	public static void deleteData() { 
+		// 获取当前的table view
+		FilteredTableView<ObservableList<StringProperty>> table = ComponentGetter.dataTableView();
+		String tabId = table.getId();
+
+		String tabName = CacheTableDate.getTableName(tabId);
+		Connection conn = CacheTableDate.getDBConn(tabId);
+		ObservableList<SqlFieldPo> fpos = CacheTableDate.getCols(tabId);
+
+		ObservableList<ObservableList<StringProperty>> vals = table.getSelectionModel().getSelectedItems();
+		List<String> temp = new ArrayList<>();
+
+		// 执行sql 后的信息 (主要是错误后显示到界面上)
+		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
+
+		try {
+			for (int i = 0; i < vals.size(); i++) {
+				ObservableList<StringProperty> sps = vals.get(i);
+				String ro = sps.get(sps.size() - 1).get();
+				temp.add(ro);
+				String msg = DeleteDao.execDelete(conn, tabName, sps, fpos);
+				ObservableList<StringProperty> val = FXCollections.observableArrayList();
+
+				val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+				val.add(RunSQLHelper.createReadOnlyStringProperty(msg)); 
+				val.add(RunSQLHelper.createReadOnlyStringProperty("success")); 
+				val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
+				
+				ddlDmlpo.addData(val);
+
+			}
+			for (String str : temp) {
+				CacheTableDate.deleteTabDataRowNo(tabId, str);
+			}
+
+		} catch (Exception e1) {
+			ObservableList<StringProperty> val = FXCollections.observableArrayList();					
+			val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+			val.add(RunSQLHelper.createReadOnlyStringProperty(e1.getMessage() )); 
+			val.add(RunSQLHelper.createReadOnlyStringProperty("fail.")); 
+			val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
+			
+			ddlDmlpo.addData(val);
+		} finally {
+			RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
+		}
+	
+	}
+	// 复制选择的 行数据 插入到表格末尾
+	public static void copyData() {
+
+		// 获取当前的table view
+		FilteredTableView<ObservableList<StringProperty>> table = ComponentGetter.dataTableView();
+
+		String tabId = table.getId();
+		// 获取字段属性信息
+		ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tabId);
+		
+		// 选中的行数据
+		ObservableList<ObservableList<StringProperty>> vals = ComponentGetter.dataTableViewSelectedItems();
+		try {
+			// 遍历选中的行
+			for (int i = 0; i < vals.size(); i++) {
+				// 一行数据, 提醒: 最后一列是行号
+				ObservableList<StringProperty> sps = vals.get(i);
+				// copy 一行
+				ObservableList<StringProperty> item = FXCollections.observableArrayList();
+				int newLineidx = ConfigVal.newLineIdx++;
+				for (int j = 0 ; j < fs.size(); j++) {
+					StringProperty strp = sps.get(j);
+				 
+					StringProperty newsp = new SimpleStringProperty(strp.get());
+					int dataType = fs.get(j).getColumnType().get();
+					CommonUtility.newStringPropertyChangeListener(newsp, dataType);
+					item.add(newsp);
+				}
+				item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 新行的行号没什么用
+				CacheTableDate.appendDate(tabId, newLineidx, item); // 可以防止在map中被覆盖
+				table.getItems().add(item);
+
+			}
+			table.scrollTo(table.getItems().size() - 1);
+
+			// 保存按钮亮起
+			ComponentGetter.dataPaneSaveBtn().setDisable(false);
+		} catch (Exception e2) {
+			MyAlert.errorAlert( e2.getMessage());
+		}
+	
+	}
+	
+	//refreshData
+	public static void refreshData(Button btn) {
+		String id = btn.getParent().getId();
+		Tab tb = CacheTableDate.getTab(id);
+		String sql = CacheTableDate.getSelectSQl(id);
+		Connection conn = CacheTableDate.getDBConn(id);
+	    String connName = 	CacheTableDate.getConnName(id);
+//	    DBConns.get(connName);
+		if (conn != null) {
+			// 关闭当前tab
+			CommonUtility.setTabName(tb, "");
+			String idx = "" + ComponentGetter.dataTab.getSelectionModel().getSelectedIndex();
+			JFXButton runFunPro = AllButtons.btns.get("runFunPro");
+			RunSQLHelper.runSQLMethod( DBConns.get(connName), conn, sql, idx, runFunPro);
+		}	
+	}
+	
+	//addData // 添加一行数据
+	public static void addData(Button btn) {
+		var vbox = (VBox) btn.getParent().getParent();
+		var tbv = (FilteredTableView<ObservableList<StringProperty>>) vbox.getChildren().get(1);
+		tbv.scrollTo(0);
+		String tabid = btn.getParent().getId();
+		int newLineidx = ConfigVal.newLineIdx++;
+		ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tabid);
+		ObservableList<StringProperty> item = FXCollections.observableArrayList();
+		for (int i = 0; i < fs.size(); i++) {
+			SimpleStringProperty sp = new SimpleStringProperty();
+			// 添加监听. 保存时使用 newLineIdx
+			CommonUtility.newStringPropertyChangeListener(sp, fs.get(i).getColumnType().get());
+			item.add(sp);
+		}
+		item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
+		CacheTableDate.appendDate(tabid, newLineidx, item); // 可以防止在map中被覆盖
+		tbv.getItems().add(0, item);
+
+		// 发生亮起保存按钮
+		AnchorPane fp = ComponentGetter.dataAnchorPane(tbv);
+		fp.getChildren().get(0).setDisable(false);
+	
+	}
+	
+	
+	
 	// 判断是否需要删除两边的单引号'
 	private static String needTrimChar(String value) {
 		String rs = value;
@@ -154,6 +286,9 @@ public class ButtonAction {
 	public static void updateAllColumn(int colIdx,String value) {
 		RsVal rv = CommonAction.tableInfo();
 		value = needTrimChar(value);
+		if("null".equals(value)) {
+			value = "<null>";
+		}
 		FilteredTableView<ObservableList<StringProperty>> dataTableView = rv.dataTableView;
 		ObservableList<ObservableList<StringProperty>> alls = dataTableView.getItems();
 		for(ObservableList<StringProperty> ls : alls) {
@@ -167,6 +302,9 @@ public class ButtonAction {
 	public static void updateSelectedDataColumn(int colIdx,String value) {
 		RsVal rv = CommonAction.tableInfo();
 		value = needTrimChar(value);
+		if("null".equals(value)) {
+			value = "<null>";
+		}
 		 
 		ObservableList<ObservableList<StringProperty>> alls = ComponentGetter.dataTableViewSelectedItems();
 		for(ObservableList<StringProperty> ls : alls) {
@@ -177,7 +315,7 @@ public class ButtonAction {
 	}
 	
 	
-	// 获取tree 节点中的 table
+	// 获取tree 节点中的 table 的sql
 	public static void findTable() {
 		RsVal rv = CommonAction.tableInfo();
 		DbConnectionPo dbcp = rv.dbconnPo;

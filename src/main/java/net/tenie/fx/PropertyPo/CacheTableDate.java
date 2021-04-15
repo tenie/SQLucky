@@ -95,6 +95,7 @@ public class CacheTableDate {
 				selectSql.remove(tab);
 				connName.remove(tab);
 				removeHelper(appendData, tab);
+				System.gc();
 			}
 		};
 		t.start();

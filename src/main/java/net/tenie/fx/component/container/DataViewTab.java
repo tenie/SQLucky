@@ -1,11 +1,17 @@
 package net.tenie.fx.component.container;
 
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.controlsfx.control.MaskerPane;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
@@ -16,6 +22,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
@@ -25,6 +32,24 @@ import net.tenie.fx.component.SqlEditor;
 
 /*   @author tenie */
 public class DataViewTab {
+	
+	private String tabId ;
+	private String sqlStr;
+	private String connName;
+	// table id + row num 组成key ,保存对于行的数据
+	private static Map<String, ObservableList<StringProperty>> newLineDate = new HashMap<>();
+	// table id + row num 组成key ,保存对于行的原始数据
+	private static Map<String, ObservableList<StringProperty>> oldval = new HashMap<>();
+	// 表字段的信息
+	private static  ObservableList<SqlFieldPo> tabCol = FXCollections.observableArrayList();
+	// 表格数据
+	private static  ObservableList<ObservableList<StringProperty>> tabData =  FXCollections.observableArrayList();
+	// 待insert的 数据
+	private static Map<String, ObservableList<StringProperty>> appendData = new HashMap<>();
+	
+	// 数据连接对象
+	private static  Connection  dbconns ;
+	
 
 	// 创建Tab
 	public static Tab createTab(TabPane dataTab, String tabName) {

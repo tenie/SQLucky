@@ -16,30 +16,8 @@ import net.tenie.lib.reflex.BuildObject;
 import net.tenie.lib.tools.StrUtils;
 
 public class DaoTools {
-	private static Logger logger = LogManager.getLogger(DaoTools.class);
-//	public static String conditionStr(ObservableList<StringProperty> vals, ObservableList<SqlFieldPo> fpos) {
-//		StringBuffer str = new StringBuffer(" ");// "where ";
-//		for (int i = 0; i < fpos.size(); i++) {
-//			String val = vals.get(i).get();
-//			String field = fpos.get(i).getColumnLabel().get();
-//			if (StrUtils.isNullOrEmpty(val) || "<null>".equals(val)) {
-//				str.append(field + " is null and ");
-//			} else {
-//				str.append(field + " = ?  and ");
-//			}
-//
-//		}
-//		String rs = str.toString();
-//		String t = " and ";
-//		if (rs.endsWith(t)) {
-//			rs = rs.substring(0, rs.length() - t.length());
-//		}
-//
-//		return rs;
-//	}
+		private static Logger logger = LogManager.getLogger(DaoTools.class);
 	
-	
-		
 		// where 后面的字段 处理, <null> 设置成is null, 时间类型 直接字符串拼接
 		public static String conditionStr(ObservableList<StringProperty> vals, ObservableList<SqlFieldPo> fpos) {
 			StringBuffer str = new StringBuffer(" ");// "where ";
@@ -107,14 +85,14 @@ public class DaoTools {
 		}
 		
 		
-		public static void conditionSetVal(PreparedStatement pstmt , ObservableList<StringProperty> vals,ObservableList<SqlFieldPo> fpos) throws Exception {
+		public static void deleteConditionSetVal(PreparedStatement pstmt , ObservableList<StringProperty> vals,ObservableList<SqlFieldPo> fpos) throws Exception {
 			int valsLen = fpos.size();
 			int idx = 0;
 			for (int i = 0; i < valsLen; i++) {
 				idx++;
 				String val = vals.get(i).get();
 				String type = fpos.get(i).getColumnClassName().get();
-				if (StrUtils.isNullOrEmpty(val) || "<null>".equals(val)) {
+				if ( "<null>".equals(val)) {
 					idx--;
 					continue;
 				}else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
