@@ -19,9 +19,11 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.PropertyPo.CacheTableDate;
+import net.tenie.fx.PropertyPo.CacheTabView;
+//import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.lib.tools.StrUtils;
 
 /*   
@@ -38,13 +40,17 @@ public class TableRowDataDetail {
 		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 
 		String id = saveBtn.getParent().getId();
-		ObservableList<SqlFieldPo> fields = CacheTableDate.getCols(id);
+//		ObservableList<SqlFieldPo> fields = CacheTableDate.getCols(id);
+		DataViewTab dvt = CacheTabView.getDataViewTab(id);
+		ObservableList<SqlFieldPo> fields =  CacheTabView.getFields(id);
+		
 		ObservableList<StringProperty> rowValues = null;
 
 		if (currentRowNo < 0) {
 			rowValues = FXCollections.observableArrayList();
 		} else {
-			rowValues = CacheTableDate.getData(id).get(currentRowNo);
+			rowValues = CacheTabView.getRowValues(id, currentRowNo);
+//					CacheTableDate.getData(id).get(currentRowNo);
 		}
 
 		FlowPane fp = new FlowPane();

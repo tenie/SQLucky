@@ -32,6 +32,7 @@ public class AppWindow {
 		VBox.setVgrow(masterDetailPane, Priority.ALWAYS);
 
 		ComponentGetter.masterDetailPane = masterDetailPane;
+		ComponentGetter.dataView = dataView;
 		mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
 		// 设置tree 面板的显示比例
 		masterDetailPane.widthProperty().addListener((ob, ov ,nv)->{

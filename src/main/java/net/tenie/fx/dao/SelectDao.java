@@ -18,7 +18,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import net.tenie.fx.PropertyPo.CacheTableDate;
+import net.tenie.fx.PropertyPo.CacheTabView;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.ComponentGetter;
@@ -32,7 +32,7 @@ public class SelectDao {
 	private static Logger logger = LogManager.getLogger(SelectDao.class);
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
 	public static DbTableDatePo selectSql(Connection conn, String sql, int limit,
-			FilteredTableView<ObservableList<StringProperty>> table) throws SQLException {
+			String tableid) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		// DB对象
 		PreparedStatement pstate = null;
@@ -70,9 +70,9 @@ public class SelectDao {
 			
 			// 数据
 			if (limit > 0) {
-				execRs(limit, rs, dpo, table);
+				execRs(limit, rs, dpo, tableid);
 			} else {
-				execRs(rs, dpo, table);
+				execRs(rs, dpo, tableid);
 			}
 
 		} catch (SQLException e) {
@@ -85,7 +85,7 @@ public class SelectDao {
 	}
 
 	private static void execRs(int limit, ResultSet rs, DbTableDatePo dpo,
-			FilteredTableView<ObservableList<StringProperty>> table) throws SQLException {
+			String tableid) throws SQLException {
 		int idx = 1;
 		int rowNo = 0;
 		ObservableList<SqlFieldPo> fpo = dpo.getFields();
@@ -114,7 +114,7 @@ public class SelectDao {
 				}
 				
 				
-				addStringPropertyChangeListener(val, rn, table.getId(), i, vals, dbtype);
+				addStringPropertyChangeListener(val, rn, tableid, i, vals, dbtype);
 				vals.add(val);
 			}
 
@@ -127,9 +127,9 @@ public class SelectDao {
 		}
 	}
 
-	private static void execRs(ResultSet rs, DbTableDatePo dpo, FilteredTableView<ObservableList<StringProperty>> table)
+	private static void execRs(ResultSet rs, DbTableDatePo dpo, String tableid)
 			throws SQLException {
-		execRs(Integer.MAX_VALUE, rs, dpo, table);
+		execRs(Integer.MAX_VALUE, rs, dpo, tableid);
 	}
 
 	
@@ -154,9 +154,10 @@ public class SelectDao {
 				}
 				
 				ComponentGetter.dataPaneSaveBtn().setDisable(false);
+				
 
 				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();
-				if (!CacheTableDate.exist(tabId, rowNo)) {
+				if (!CacheTabView.exist(tabId, rowNo)) {
 					for (int i = 0; i < vals.size(); i++) {
 						if (i == idx) {
 							oldDate.add(new SimpleStringProperty(oldValue));
@@ -164,9 +165,9 @@ public class SelectDao {
 							oldDate.add(new SimpleStringProperty(vals.get(i).get()));
 						}
 					}
-					CacheTableDate.addData(tabId, rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
+					CacheTabView.addData(tabId, rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
 				} else {
-					CacheTableDate.addData(tabId, rowNo, vals);
+					CacheTabView.addData(tabId, rowNo, vals);
 				}
 			}
 		};

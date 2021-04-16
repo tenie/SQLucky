@@ -211,7 +211,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
-				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
 
 			} // 过程
 			else if (parentItem.getValue().getType() != null
@@ -227,7 +227,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
-				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
 
 			} // trigger
 			else if (parentItem.getValue().getType() != null
@@ -242,7 +242,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				} 
-				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
 
 			}// index
 			else if (parentItem.getValue().getType() != null
@@ -257,7 +257,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
-				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
 
 			}// Sequence
 			else if (parentItem.getValue().getType() != null
@@ -272,7 +272,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				} 
-				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
 
 			}
 

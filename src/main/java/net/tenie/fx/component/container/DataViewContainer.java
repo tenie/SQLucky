@@ -1,5 +1,6 @@
 package net.tenie.fx.component.container;
 
+import java.util.HashMap;
 import java.util.List;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -24,7 +25,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.PropertyPo.CacheTableDate;
+import net.tenie.fx.PropertyPo.CacheTabView;
+//import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
@@ -60,76 +62,55 @@ public class DataViewContainer {
 		DraggingTabPaneSupport support2 = new DraggingTabPaneSupport();
 		support2.addSupport(dataView);
 	}
-
-	public static void showTableDate(DataTabDataPo rsval,   String time , String rows, String connName) {
-		showTableDate(rsval, -1, true, time, rows, connName );
+	
+	public void renewTabPane() { 
+		TabPanContainer.getChildren().remove(dataView);
+		dataView = new TabPane();
+		TabPanContainer.getChildren().add(dataView);
+		ComponentGetter.dataTab = dataView;
+		CacheTabView.setTabViews(new HashMap<>());
 	}
 
-	public static void showTableDate(DataTabDataPo rsval, int idx, boolean disable, String time , String rows, String connName) {
-		Platform.runLater(() -> {
-			List<FilteredTableView<ObservableList<StringProperty>>> allTable = rsval.getNewtables();
-			List<String> names = rsval.getTableNames();
-			// 只能在fx线程中操作控件
-			TabPane dataTabPane = ComponentGetter.dataTab;
-			for (int i = 0; i < allTable.size(); i++) {
-				FilteredTableView<ObservableList<StringProperty>> table = allTable.get(i);
+	public static void showTableDate(DataViewTab dvt, String time , String rows) {
+		showTableDate(dvt, -1, true, time, rows );
+	}
+
+	public static void showTableDate(DataViewTab dvt, int idx, boolean disable, String time , String rows) {
+		Platform.runLater(() -> { 
+			 dvt.createTab(idx, disable, time , rows);
+				// 只能在fx线程中操作控件
+//				TabPane dataTabPane = ComponentGetter.dataTab; 
+//				FilteredTableView<ObservableList<StringProperty>> table =  dvt.getTable() ; 
 				// 添加一个新的tab页， 把view 放入其中
-				String tn = names.get(i);
-				String excInfoTitle = ConfigVal.EXEC_INFO_TITLE;
+//				String tn = dvt.getTabName(); // names.get(i);
+//				String excInfoTitle = ConfigVal.EXEC_INFO_TITLE;
 				// 如果是要添加一个info的Tab, 先看有没有旧的复用
-				if( excInfoTitle.equals(tn) && ComponentGetter.dataTab.getTabs().size() > 0) { 
-						Tab tab0 =ComponentGetter.dataTab.getTabs().get(0); 
-						String title = CommonUtility.tabText(tab0); 
-						if( excInfoTitle.equals(title) ) {
-							// 新的table数据放入复用的table中
-							VBox vb = (VBox) tab0.getContent();
-							FilteredTableView<ObservableList<StringProperty>> vbt  = 
-									(FilteredTableView<ObservableList<StringProperty>>) vb.getChildren().get(1);
-							vbt.getItems().addAll( 0, table.getItems()) ;
-							dataTabPane.getSelectionModel().select(tab0);
-						}else {
-							addNewDateTab(dataTabPane, table, tn, 0, disable, time , rows, connName);
-						}
-						
-				}else {
-					addNewDateTab(dataTabPane, table, tn, idx, disable, time , rows, connName);
-				}
-				
-			}
+//				if( excInfoTitle.equals(tn) && ComponentGetter.dataTab.getTabs().size() > 0) {
+//						Tab tab0 =ComponentGetter.dataTab.getTabs().get(0); 
+//						String title = CommonUtility.tabText(tab0); 
+//						if( excInfoTitle.equals(title) ) {
+//							// 新的table数据放入复用的table中
+//							VBox vb = (VBox) tab0.getContent();
+//							FilteredTableView<ObservableList<StringProperty>> vbt  = 
+//									(FilteredTableView<ObservableList<StringProperty>>) vb.getChildren().get(1);
+//							vbt.getItems().addAll( 0, table.getItems()) ;
+//							dataTabPane.getSelectionModel().select(tab0);
+//						}else {
+////							addNewDateTab( dvt, tn, 0, disable, time , rows);
+//							 dvt.createTab(0, disable, time, rows);
+//						}
+//						
+//				}else {
+////					addNewDateTab( dvt, tn, idx, disable, time , rows);
+//					 dvt.createTab(idx, disable, time , rows);
+//				}
+ 
 		});
 	}
 
-	// dataTab add content 添加一个tab页， 把TableView放如页中
-	private static void addNewDateTab(TabPane dataTab, FilteredTableView<ObservableList<StringProperty>> tbv,
-			String tabName, int idx, boolean disable , String time , String rows, String connName) {
-		Tab nwTab = DataViewTab.createTab(dataTab, tabName);
-		nwTab.setId(tbv.getId());
-		CacheTableDate.saveTab(tbv.getId(), nwTab);
-		// 构建数据Tab页中的表
-		VBox vb = generateDataPane(tbv.getId(), disable, tbv ,   time ,   rows, connName);
+ 
 
-		if (idx > -1) {
-			dataTab.getTabs().add(idx, nwTab);
-		} else {
-			dataTab.getTabs().add(nwTab);
-		}
 
-		dataTab.getSelectionModel().select(nwTab);
-		nwTab.setContent(vb);
-	}
-
-	// 数据tab中的组件
-	public static VBox generateDataPane(String id, boolean disable, TableView<ObservableList<StringProperty>> tbv , String time , String rows, String connName) {
-		VBox vb = new VBox();
-		// 表格上面的按钮
-		AnchorPane fp = ButtonFactory.getDataTableOptionBtnsPane(disable, time, rows, connName);
-		fp.setId(id);
-		vb.setId(id);
-		vb.getChildren().add(fp);
-		vb.getChildren().add(tbv);
-		VBox.setVgrow(tbv, Priority.ALWAYS);
-		return vb;
-	}
 
 
 

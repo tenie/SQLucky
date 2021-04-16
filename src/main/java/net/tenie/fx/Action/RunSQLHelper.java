@@ -45,7 +45,8 @@ import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.PropertyPo.CacheTableDate;
+import net.tenie.fx.PropertyPo.CacheTabView;
+//import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
@@ -104,7 +105,7 @@ public class RunSQLHelper {
 		if (conn == null)
 			return;
 		// 等待加载动画
-		Tab waitTb = DataViewTab.maskTab(WAITTB_NAME);
+		Tab waitTb = new DataViewTab().maskTab(WAITTB_NAME);
 		addWaitingPane(waitTb, tidx);
 		List<sqlData> allsqls = new ArrayList<>();
 		try {
@@ -112,10 +113,8 @@ public class RunSQLHelper {
 			if (StrUtils.isNotNullOrEmpty(sqlstr)) {
 //				selectAction(sqlstr, conn); // 执行刷新查询sql
 				allsqls = epurateSql(sqlstr);
-			} else {
-				// 获取文本编辑中选中的sql文本来执行sql
-				// 获取sql 语句
-				
+			} else { 
+				// 获取sql 语句 
 				//执行存储过程函数等
 				if(StrUtils.isNotNullOrEmpty(btn)) {  
 					String str = SqlEditor.getCurrentCodeAreaSQLText();
@@ -130,9 +129,6 @@ public class RunSQLHelper {
 			execSqlList(allsqls, conn, dpo);
 
 		} catch (Exception e) {
-//			Platform.runLater(() -> { 
-//				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
-//			});
 			e.printStackTrace();
 		} finally {
 			rmWaitingPane(waitTb);
@@ -143,14 +139,9 @@ public class RunSQLHelper {
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
 	private static void execSqlList(List<sqlData> allsqls, Connection conn, DbConnectionPo dpo) throws SQLException {
-//    	List<String > allsqls = tdpo.getSql(); 
 		String sqlstr;
 		String sql;
 		int sqllenght = allsqls.size();
-//		DbTableDatePo ddlDmlpo = new DbTableDatePo(); 
-//		ddlDmlpo.addField("Current Time");
-//		ddlDmlpo.addField("Execute SQL Info");
-//		ddlDmlpo.addField("Execute SQL");
 		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
 		
 
@@ -200,14 +191,6 @@ public class RunSQLHelper {
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
-//				StringProperty sp = new SimpleStringProperty(msg);
-//				ChangeListener<String> cl = new ChangeListener<String>() {
-//					@Override
-//					public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//						System.out.println(newValue);
-//					}};
-//				sp.addListener(cl );
-//				val.add(sp);
 				val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
 				val.add(createReadOnlyStringProperty(msg)); 
 				val.add(createReadOnlyStringProperty(sqlstr)); 
@@ -263,61 +246,71 @@ public class RunSQLHelper {
 	// 展示信息窗口,
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo) {
 		// 有数据才展示
-		if (ddlDmlpo.getAllDatas().size() > 0) {
-			DataTabDataPo tdpo = new DataTabDataPo();
-			tdpo.addTableName(ConfigVal.EXEC_INFO_TITLE);
+		if (ddlDmlpo.getAllDatas().size() > 0) {  
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 表内容可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
-			// table 添加列和数据
-			TableAddVal(table, ddlDmlpo, new ArrayList<String>());
-			tdpo.addTableView(table);
+			// table 添加列和数据 
+			ObservableList<SqlFieldPo> colss = ddlDmlpo.getFields();
+			ObservableList<ObservableList<StringProperty>> rs = ddlDmlpo.getAllDatas();
+			var ls = createTableCol( colss, new ArrayList<String>());
+			table.getColumns().addAll(ls);
+			table.setItems(rs); 
+			
+			DataViewTab dvt = new DataViewTab(table ,table.getId(), ConfigVal.EXEC_INFO_TITLE,  colss, rs); 
 			// 渲染界面
 			if (!thread.isInterrupted())
-				DataViewContainer.showTableDate(tdpo , "", "", connName);
+				DataViewContainer.showTableDate(dvt , "", "");
+//			ddlDmlpo.clean();
 
 		}
 	}
  
 
 	private static void selectAction(String sql, Connection conn) throws Exception {
-		try { //, int tidx
-			DataTabDataPo tdpo = new DataTabDataPo();
+		try {
+//			DataTabDataPo tdpo = new DataTabDataPo();
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 获取表名
 			String tableName = ParseSQL.tabName(sql);
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			tdpo.addTableName(tableName);
-			DbTableDatePo dpo = SelectDao.selectSql(conn, sql, ConfigVal.MaxRows, table);
+//			tdpo.addTableName(tableName);
+			DbTableDatePo dpo = SelectDao.selectSql(conn, sql, ConfigVal.MaxRows, table.getId());
 			DataViewContainer.setTabRowWith(table, dpo.getAllDatasSize());
-			//TODO 保存查询信息
-			CacheTableDate.saveTableName(table.getId(), tableName);
-			CacheTableDate.saveSelectSQl(table.getId(), sql);
-			CacheTableDate.saveDBConn(table.getId(), conn);
-			// 获取链接名称  
-			CacheTableDate.saveConnName(table.getId(), ComponentGetter.getCurrentConnectName());;
-			// 查询的 的语句可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(true));
-
 			
-			//根据表明获取tablepo对象
+			//
+			String connectName = ComponentGetter.getCurrentConnectName();
+			ObservableList<ObservableList<StringProperty>> rs = dpo.getAllDatas();
+			ObservableList<SqlFieldPo> colss = dpo.getFields();
+			
+			DataViewTab dvt = new DataViewTab(dpo, table ,table.getId(), tableName,
+										      sql, conn, connectName, colss, rs ); 
+			//缓存
+			CacheTabView.addDataViewTab( dvt ,table.getId());
+			// 查询的 的语句可以被修改
+			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
+			
+			//根据表名获取tablepo对象
 			List<String> keys = findPrimaryKeys(conn, tableName);
-			// table 添加列和数据
-			TableAddVal(table, dpo ,keys);
-			tdpo.addTableView(table);
+			// table 添加列和数据 
+			// 表格添加列
+			var ls = createTableCol( colss, keys);
+			table.getColumns().addAll(ls);
+			table.setItems(rs);  
+//			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted())
-				DataViewContainer.showTableDate(tdpo, tidx, false, dpo.getExecTime()+"", dpo.getRows()+"", connName);
-		} catch (Exception e) {
-//			Platform.runLater(() -> {
-//				ModalDialog.showErrorMsg("Sql Error", e.getMessage());
-//			});
+				DataViewContainer.showTableDate(dvt, tidx, false, dpo.getExecTime()+"", dpo.getRows()+"");
+//			dpo.clean();
+		} catch (Exception e) { 
 			e.printStackTrace();
 			throw e;
 		}
 	}
 	
+	
+	// 根据表名获取表的主键字段名称集合
 	private static List<String> findPrimaryKeys(Connection conn, String tableName ){
 		
 		String schemaName = "";
@@ -360,17 +353,7 @@ public class RunSQLHelper {
 		
 		return keys;
 	}
-
-	private static void TableAddVal(FilteredTableView<ObservableList<StringProperty>> table, DbTableDatePo dpo, List<String> keys ) {
-		ObservableList<SqlFieldPo> colss = dpo.getFields();
-		// 表格添加列
-		tableAddColumn(table, colss, keys);
-		// 数据添加到表格 更简洁的api
-		ObservableList<ObservableList<StringProperty>> rs = dpo.getAllDatas();
-		CacheTableDate.addData(table.getId(), rs);
-		table.setItems(rs); // FXCollections.observableArrayList(rs)
-	}
-
+ 
 	// 在子线程执行 运行sql 的任务
 	public static Thread createThread(DbConnectionPo dpo, Connection conn, String sql, String tabIdx, JFXButton run,
 			Consumer<Map<String, Object>> action) {
@@ -392,15 +375,7 @@ public class RunSQLHelper {
 	}
 
 	// 设置 按钮状态
-	public static void settingBtn(JFXButton run, JFXButton stop,JFXButton btn) {
-		if (runbtn == null) {
-			runbtn = run;
-			otherbtn = btn;
-		}
-		if (stopbtn == null) {
-			stopbtn = stop;
-		}
-		
+	public static void settingBtn() { 
 
 		if (runbtn == null) {
 			runbtn =   AllButtons.btns.get("runbtn");
@@ -422,9 +397,7 @@ public class RunSQLHelper {
 		stop.setDisable(stopt);
 	}
 
-	public static void settingBtn() {
-		settingBtn(null, null , null);
-	}
+	 
 
 //    检查db连接状态
 	private static boolean checkDBconn() {
@@ -484,7 +457,7 @@ public class RunSQLHelper {
 		if (checkDBconn())
 			return;
 		DbConnectionPo dpo = DBConns.get(getComboBoxDbConnName());
-		Connection conn = dpo.getConn(); // getComboBoxDbConn(); // 获取连接
+		Connection conn = dpo.getConn();
 		try {
 			if (conn == null) {
 				return;
@@ -496,7 +469,7 @@ public class RunSQLHelper {
 			return;
 		}
 
-		settingBtn(run, stop , btn );
+		settingBtn();
 		CommonAction.showDetailPane();
 		
 		thread = createThread( dpo, conn, sql, tabIdx, run, RunSQLHelper::runMain);
@@ -514,9 +487,7 @@ public class RunSQLHelper {
 
 	// stop 入口
 	public static void stopSQLMethod(JFXButton run, JFXButton stop, JFXButton btn) {
-
-		if (thread != null && !stop.disabledProperty().getValue()) {
-//   		 	 settingBtn(run, stop); 
+		if (thread != null && !stop.disabledProperty().getValue()) { 
 			thread.interrupt();
 			logger.info("线程是否被中断：" + thread.isInterrupted());// true
 			if (thread.isInterrupted()) {
@@ -526,14 +497,13 @@ public class RunSQLHelper {
 	}
 
 	// table 添加列
-	private static void tableAddColumn(TableView<ObservableList<StringProperty>> table, ObservableList<SqlFieldPo> cols,  List<String> keys ) {
-
-		CacheTableDate.addCols(table.getId(), cols); // 列名缓存
+	private static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableCol( ObservableList<SqlFieldPo> cols,  List<String> keys ) {
 		int len = cols.size();
+		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList = FXCollections.observableArrayList();
 		for (int i = 0; i < len; i++) {
 			String colname = cols.get(i).getColumnLabel().get();
 			int type = cols.get(i).getColumnType().get();
-			FilteredTableColumn col = null;
+			FilteredTableColumn<ObservableList<StringProperty>, String> col = null;
 			String tyNa = cols.get(i).getColumnTypeName().get() + "(" + cols.get(i).getColumnDisplaySize().get();
 			if (cols.get(i).getScale() != null && cols.get(i).getScale().get() > 0) {
 				tyNa += ", " + cols.get(i).getScale().get();
@@ -545,17 +515,20 @@ public class RunSQLHelper {
 				iskey = true;
 			}
 			if (len == 2 && i == 1) {
-				col = createColumn(colname, type, tyNa, i, table, true , iskey);
+				col = createColumn(colname, type, tyNa, i,  true , iskey);
 			} else {
-				col = createColumn(colname, type, tyNa, i, table, false , iskey);
-			}
-			table.getColumns().add(col);
+				col = createColumn(colname, type, tyNa, i,  false , iskey);
+			} 
+			colList.add(col);
 		}
+		
+		return colList;
+		
 	}
 
 	// 创建列
 	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int type, String typeName,
-			int colIdx, TableView<ObservableList<StringProperty>> table, boolean augmentation, boolean iskey) {
+			int colIdx,  boolean augmentation, boolean iskey) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col =
 				new FilteredTableColumn<ObservableList<StringProperty>, String>();
 //		col.setCellFactory(MyTextField2TableCell.forTableColumn());
@@ -610,7 +583,7 @@ public class RunSQLHelper {
 			logger.info("idVal = " + idVal);
 			// 删除缓存
 			if (idVal != null) {
-				CacheTableDate.clear(idVal);
+//				CacheTabView.clear(idVal); //TODO clear?
 			}
 		}
 	}
@@ -637,13 +610,6 @@ public class RunSQLHelper {
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTab;
 			dataTab.getTabs().remove(waitTb);
-//			if (dataTab.getTabs().size() == 1) {
-//				waitTb.setContent(null);
-////		   			waitTb.setText("");
-//				CommonUtility.setTabName(waitTb, "");
-//			} else if (dataTab.getTabs().size() > 1) {
-//				dataTab.getTabs().remove(waitTb);
-//			}
 		});
 
 	}
@@ -709,21 +675,6 @@ public class RunSQLHelper {
 		// 去除注释, 包注释字符串转换为空白字符串
 		str = StrUtils.trimCommentToSpace(str, "--");
 //		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-//		List<String> sqls = StrUtils.findSQLFromTxt(str);
-//		
-//		if(sqls.size()> 0) {
-//			for (String s : sqls) { 
-//				String trimSql = s.trim();
-//				if (trimSql.length() > 1) {
-//					sqlData sq = new sqlData(trimSql, start, s.length());
-//					sds.add(sq);
-//					start +=  s.length()+1; 
-//				}
-//			}
-//		}else {
-//			sqlData sq = new sqlData(str, start, str.length());
-//			sds.add(sq);
-//		}
 		sds = epurateSql(str, start);
 		return sds;
 	}

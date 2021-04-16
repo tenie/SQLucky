@@ -18,6 +18,12 @@ public class DbTableDatePo {
 	// 行数
 	private int rows = 0;
 	
+	public void clean() {
+		fields.clear();
+		allDatas.clear();
+		fields = null;
+		allDatas = null;
+	}
 	public DbTableDatePo() {
 		fields = FXCollections.observableArrayList();
 		allDatas = FXCollections.observableArrayList();

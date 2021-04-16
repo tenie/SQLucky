@@ -26,6 +26,6 @@ public class TreeObjAction {
 			createTableSql = SqlFormatter.format(createTableSql);
 			table.setDdl(createTableSql);
 		}
-		DataViewTab.showDdlPanel(title, createTableSql);
+		new DataViewTab().showDdlPanel(title, createTableSql);
 	}
 }

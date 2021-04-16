@@ -27,7 +27,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
-import net.tenie.fx.PropertyPo.CacheTableDate;
+import net.tenie.fx.PropertyPo.CacheTabView;
+//import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.CommonFileChooser;
@@ -66,12 +67,15 @@ public class CommonEventHandler {
 	/**
 	 * 数据table关闭的时候 
 	 */
-	public static EventHandler<Event> dataTabCloseReq(TabPane tabPane, Tab tb) {
+	public static EventHandler<Event> dataTabCloseReq( Tab tb) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
+				TabPane tabPane = ComponentGetter.dataTab;
 				CommonAction.clearDataTable(tabPane, tb);
 				if(tabPane.getTabs().size() == 1) {
 					CommonAction.hideBottom();
+					//TODO
+					ComponentGetter.dataView.renewTabPane();
 				} 
 			}
 		};
@@ -222,7 +226,7 @@ public class CommonEventHandler {
 		if (isSelected) {
 			vals = ComponentGetter.dataTableViewSelectedItems();
 		} else {
-			vals = CacheTableDate.getData(tableid);
+			vals =  CacheTabView.getTabData(tableid);//CacheTableDate.getData(tableid);
 		}
 		return vals;
 	}
@@ -239,8 +243,8 @@ public class CommonEventHandler {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				String tableid = ComponentGetter.dataTableViewID();
-				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tableid);
-				String tableName = CacheTableDate.getTableName(tableid);
+				ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tableid);//CacheTableDate.getCols(tableid);
+				String tableName = CacheTabView.getTableName(tableid);                 //CacheTableDate.getTableName(tableid);
 				final ObservableList<ObservableList<StringProperty>> fvals = getValsHelper(isSelected, tableid);
 
 				final File ff = getFileHelper(isFile);
@@ -275,7 +279,7 @@ public class CommonEventHandler {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				String tableid = ComponentGetter.dataTableViewID();
-				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tableid);
+				ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tableid); //CacheTableDate.getCols(tableid);
 				
 				ObservableList<ObservableList<StringProperty>> vals = getValsHelper(isSelected, tableid);
 				final File ff = getFileHelper(isFile);
@@ -308,7 +312,7 @@ public class CommonEventHandler {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				String tableid = ComponentGetter.dataTableViewID();
-				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tableid); 
+				ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tableid); //CacheTableDate.getCols(tableid); 
 
 				ObservableList<ObservableList<StringProperty>> vals = getValsHelper(isSelected, tableid);
 				final File ff = getFileHelper(isFile);
@@ -342,7 +346,7 @@ public class CommonEventHandler {
 			public void handle(ActionEvent e) {
 				// 通过id 从缓存中获取数据
 				String tableid = ComponentGetter.dataTableViewID();
-				ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tableid);
+				ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tableid); //CacheTableDate.getCols(tableid);
 
 				ObservableList<ObservableList<StringProperty>> vals = getValsHelper(isSelected, tableid);
 				final File ff = getFileHelper(isFile);

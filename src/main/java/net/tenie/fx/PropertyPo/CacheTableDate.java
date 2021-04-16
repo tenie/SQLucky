@@ -17,6 +17,7 @@ import net.tenie.fx.dao.DeleteDao;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
+@Deprecated
 public class CacheTableDate {
 	private static Logger logger = LogManager.getLogger(CacheTableDate.class);
 	private static Map<String, String> tabNames = new HashMap<>();

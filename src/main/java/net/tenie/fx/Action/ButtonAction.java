@@ -19,7 +19,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.PropertyPo.CacheTableDate;
+import net.tenie.fx.PropertyPo.CacheTabView;
+//import net.tenie.fx.PropertyPo.CacheTabView;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.AllButtons;
@@ -43,21 +44,21 @@ public class ButtonAction {
 	
 	public static void dataSave(Button saveBtn) {
 		String tabId = saveBtn.getParent().getId();
-		String tabName = CacheTableDate.getTableName(tabId);
-//		ObservableList<ObservableList<StringProperty>> alldata = CacheTableDate.getData(tabId);
-		Connection conn = CacheTableDate.getDBConn(tabId);
+		String tabName = CacheTabView.getTableName(tabId);
+//		ObservableList<ObservableList<StringProperty>> alldata = CacheTabView.getData(tabId);
+		Connection conn = CacheTabView.getDbConn(tabId);
 		if (tabName != null && tabName.length() > 0) {
 			// 字段
-			ObservableList<SqlFieldPo> fpos = CacheTableDate.getCols(tabId);
+			ObservableList<SqlFieldPo> fpos = CacheTabView.getFields(tabId);
 			// 待保存数据
-			Map<String, ObservableList<StringProperty>> modifyData = CacheTableDate.getModifyData(tabId);
+			Map<String, ObservableList<StringProperty>> modifyData = CacheTabView.getModifyData(tabId);
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
 			DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
 
 			if (!modifyData.isEmpty()) {
 				for (String key : modifyData.keySet()) {
 					// 获取对应旧数据
-					ObservableList<StringProperty> old = CacheTableDate.getold(key);
+					ObservableList<StringProperty> old = CacheTabView.getold(tabId, key);
 					ObservableList<StringProperty> newd = modifyData.get(key);
 					// 拼接update sql
 					try {
@@ -85,11 +86,11 @@ public class ButtonAction {
 						ddlDmlpo.addData(val);
 					}
 				}
-				CacheTableDate.rmUpdateData(tabId);
+				CacheTabView.rmUpdateData(tabId);
 			}
 
 			// 插入操作
-			List<ObservableList<StringProperty>> dataList = CacheTableDate.getAppendData(tabId);
+			List<ObservableList<StringProperty>> dataList = CacheTabView.getAppendData(tabId);
 			for (ObservableList<StringProperty> os : dataList) {
 				try {
 					String msg = InsertDao.execInsert(conn, tabName, os, fpos);
@@ -100,7 +101,7 @@ public class ButtonAction {
 					ddlDmlpo.addData(val);
 
 					// 删除缓存数据
-					CacheTableDate.rmAppendData(tabId);
+					CacheTabView.rmAppendData(tabId);
 					// 对insert 的数据保存后 , 不能再修改
 					List<StringProperty> templs = new ArrayList<>();
 					for (int i = 0; i < fpos.size(); i++) {
@@ -141,11 +142,13 @@ public class ButtonAction {
 		FilteredTableView<ObservableList<StringProperty>> table = ComponentGetter.dataTableView();
 		String tabId = table.getId();
 
-		String tabName = CacheTableDate.getTableName(tabId);
-		Connection conn = CacheTableDate.getDBConn(tabId);
-		ObservableList<SqlFieldPo> fpos = CacheTableDate.getCols(tabId);
+		String tabName = CacheTabView.getTableName(tabId);
+		Connection conn = CacheTabView.getDbConn(tabId);
+		ObservableList<SqlFieldPo> fpos = CacheTabView.getFields(tabId);
 
 		ObservableList<ObservableList<StringProperty>> vals = table.getSelectionModel().getSelectedItems();
+		
+		// 行号集合
 		List<String> temp = new ArrayList<>();
 
 		// 执行sql 后的信息 (主要是错误后显示到界面上)
@@ -168,7 +171,7 @@ public class ButtonAction {
 
 			}
 			for (String str : temp) {
-				CacheTableDate.deleteTabDataRowNo(tabId, str);
+				CacheTabView.deleteTabDataRowNo(tabId, str);
 			}
 
 		} catch (Exception e1) {
@@ -192,7 +195,7 @@ public class ButtonAction {
 
 		String tabId = table.getId();
 		// 获取字段属性信息
-		ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tabId);
+		ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tabId);
 		
 		// 选中的行数据
 		ObservableList<ObservableList<StringProperty>> vals = ComponentGetter.dataTableViewSelectedItems();
@@ -213,7 +216,7 @@ public class ButtonAction {
 					item.add(newsp);
 				}
 				item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 新行的行号没什么用
-				CacheTableDate.appendDate(tabId, newLineidx, item); // 可以防止在map中被覆盖
+				CacheTabView.appendDate(tabId, newLineidx, item); // 可以防止在map中被覆盖
 				table.getItems().add(item);
 
 			}
@@ -230,15 +233,18 @@ public class ButtonAction {
 	//refreshData
 	public static void refreshData(Button btn) {
 		String id = btn.getParent().getId();
-		Tab tb = CacheTableDate.getTab(id);
-		String sql = CacheTableDate.getSelectSQl(id);
-		Connection conn = CacheTableDate.getDBConn(id);
-	    String connName = 	CacheTableDate.getConnName(id);
+		Tab tb = CacheTabView.getTab(id);
+		String sql = CacheTabView.getSelectSQl(id);
+		Connection conn = CacheTabView.getDbConn(id);
+	    String connName = 	CacheTabView.getConnName(id);
 //	    DBConns.get(connName);
 		if (conn != null) {
-			// 关闭当前tab
-			CommonUtility.setTabName(tb, "");
-			String idx = "" + ComponentGetter.dataTab.getSelectionModel().getSelectedIndex();
+			//TODO 关闭当前tab
+//			CommonUtility.setTabName(tb, "");
+			var dataTab = ComponentGetter.dataTab;
+			int selidx = dataTab.getSelectionModel().getSelectedIndex();
+			String idx = "" + selidx;
+			dataTab.getTabs().remove(selidx);
 			JFXButton runFunPro = AllButtons.btns.get("runFunPro");
 			RunSQLHelper.runSQLMethod( DBConns.get(connName), conn, sql, idx, runFunPro);
 		}	
@@ -251,7 +257,7 @@ public class ButtonAction {
 		tbv.scrollTo(0);
 		String tabid = btn.getParent().getId();
 		int newLineidx = ConfigVal.newLineIdx++;
-		ObservableList<SqlFieldPo> fs = CacheTableDate.getCols(tabid);
+		ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tabid);
 		ObservableList<StringProperty> item = FXCollections.observableArrayList();
 		for (int i = 0; i < fs.size(); i++) {
 			SimpleStringProperty sp = new SimpleStringProperty();
@@ -260,7 +266,7 @@ public class ButtonAction {
 			item.add(sp);
 		}
 		item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
-		CacheTableDate.appendDate(tabid, newLineidx, item); // 可以防止在map中被覆盖
+		CacheTabView.appendDate(tabid, newLineidx, item); // 可以防止在map中被覆盖
 		tbv.getItems().add(0, item);
 
 		// 发生亮起保存按钮

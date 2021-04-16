@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.DBinfoTree;
+import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.lib.po.DbConnectionPo;
@@ -42,6 +43,8 @@ public final class ComponentGetter {
 	public static PopupFilter<ObservableList<StringProperty>, String> popupFirstNameFilter;
 	public static TabPane dataTab;
 	public static TabPane mainTabPane;
+	public static DataViewContainer dataView;
+	
 	public static TreeView<TreeNodePo> treeView;
 	public static DBinfoTree dbInfoTree;
 	public static TextField dbInfoFilter;
@@ -73,6 +76,11 @@ public final class ComponentGetter {
 	// file 编码
 	public static Map<String, String> fileEncode = new HashMap<>();
 	
+	
+	// 数据tab集合
+	public static ObservableList<Tab>  allDataTabs() {
+		return ComponentGetter.dataTab.getTabs();
+	}
 	
 	public static String getFileEncode(String name) {
 		String val = fileEncode.get(name);

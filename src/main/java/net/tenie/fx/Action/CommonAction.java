@@ -42,7 +42,8 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import net.tenie.fx.PropertyPo.CacheTableDate;
+import net.tenie.fx.PropertyPo.CacheTabView;
+//import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.CommonFileChooser;
@@ -84,16 +85,15 @@ public class CommonAction {
 	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
 	public static RsVal tableInfo() {
 		String tableId = ComponentGetter.currentDataTabID();
-		String connName = CacheTableDate.getConnName(tableId);
-		String tableName =  CacheTableDate.getTableName(tableId);
-		Connection conn = CacheTableDate.getDBConn(tableId);
+		String connName =  CacheTabView.getConnName(tableId); // CacheTableDate.getConnName(tableId);
+		String tableName = CacheTabView.getTableName(tableId); // CacheTableDate.getTableName(tableId);
+		Connection conn =  CacheTabView.getDbConn(tableId); //  CacheTableDate.getDBConn(tableId);   
 				
-		ObservableList<ObservableList<StringProperty>> alldata = CacheTableDate.getData(tableId);
+		var alldata =   CacheTabView.getTabData(tableId); //CacheTableDate.getData(tableId);
 		DbConnectionPo  dbc = DBConns.get(connName); 
 		
 		Button saveBtn = ComponentGetter.dataPaneSaveBtn();
-		FilteredTableView<ObservableList<StringProperty>> dataTableView =
-				         ComponentGetter.dataTableView();
+		var dataTableView = ComponentGetter.dataTableView();
 		RsVal rv = new RsVal();
 		rv.conn = conn; 
 		rv.dbconnPo = dbc; 
@@ -1235,7 +1235,7 @@ public class CommonAction {
 		long begintime = System.currentTimeMillis();
 		String idVal = tb.getId();
 		if (idVal != null) {
-			CacheTableDate.clear(idVal);
+			CacheTabView.clear(idVal);
 		}
 		tb.setContent(null); 
 		long endtime = System.currentTimeMillis();
