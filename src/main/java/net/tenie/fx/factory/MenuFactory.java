@@ -155,19 +155,21 @@ public class MenuFactory {
 	
 	
 	
-//	treeView 右键菜单
+//	treeView 右键菜单 TreeMenu
+	@Deprecated 
 	public static ContextMenu CreateTreeViewConnMenu() {
 			ContextMenu contextMenu = new ContextMenu();
-
-			MenuItem add = new MenuItem("Add Connection");
-			add.setOnAction(e -> {
-				ConnectionEditor.ConnectionInfoSetting();
-			});
-			add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+//
+//			MenuItem add = new MenuItem("Add Connection");
+//			add.setOnAction(e -> {
+//				ConnectionEditor.ConnectionInfoSetting();
+//			});
+//			add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
 			
 			MenuItem addtabNewCol = new MenuItem("Table Add New Column");
 			addtabNewCol.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
 			addtabNewCol.setId("tableAddNewCol");
+			addtabNewCol.setDisable(true);
 			
 //			addtabNewCol.setOnAction(e -> {
 ////				ConnectionEditor.ConnectionInfoSetting();
@@ -177,22 +179,32 @@ public class MenuFactory {
 			MenuItem link = new MenuItem("Open Connection");
 			link.setOnAction(CommonEventHandler.openConnEvent());
 			link.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
-
+			link.setDisable(true);
+			link.setId("OpenConnection");
+			
 			MenuItem unlink = new MenuItem("Close Connection");
 			unlink.setOnAction(CommonEventHandler.closeConnEvent());
 			unlink.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
-
+			unlink.setDisable(true);
+			unlink.setId("CloseConnection");
+			
 			MenuItem Edit = new MenuItem("Edit Connection");
 			Edit.setOnAction(CommonEventHandler.editConnEvent());
 			Edit.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
-
+			Edit.setDisable(true);
+			Edit.setId("EditConnection");
+			
 			MenuItem delete = new MenuItem("Delete Connection");
 			delete.setOnAction(e -> {
 				ConnectionEditor.ConnectionInfoSetting();
 			});
 			delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
-
-			contextMenu.getItems().addAll(add, link, unlink, Edit, delete, new SeparatorMenuItem(), addtabNewCol);
+			delete.setDisable(true);
+			delete.setId("DeleteConnection");
+			
+			contextMenu.getItems().addAll(
+//					add,
+					link, unlink, Edit, delete, new SeparatorMenuItem(), addtabNewCol);
 
 			return contextMenu;
 		}

@@ -26,6 +26,7 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.MenuFactory;
 import net.tenie.fx.factory.TaskCellFactory;
+import net.tenie.fx.factory.TreeMenu;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.po.DBOptionHelper;
@@ -38,7 +39,9 @@ import net.tenie.lib.tools.StrUtils;
 public class DBinfoTree {
 
 	public static TreeView<TreeNodePo> DBinfoTreeView;
-	public static ContextMenu contextMenu;
+//	public static ContextMenu contextMenu;
+	private  TreeMenu  menu;
+	
 	private TreeView<TreeNodePo> treeView;
 	private ObservableList<TreeItem<TreeNodePo>> connsNode;
 	// 缓存 激活的ConnItemContainer
@@ -79,10 +82,12 @@ public class DBinfoTree {
 				treeViewDoubleClick(e);
 			});
 			// 右键菜单
-			contextMenu = MenuFactory.CreateTreeViewConnMenu();	//CreateConnMenu(); // ComponentGetter.getConnMenu();
+			menu = new TreeMenu();
+			ContextMenu	contextMenu = menu.getContextMenu(); //MenuFactory.CreateTreeViewConnMenu();	//CreateConnMenu(); // ComponentGetter.getConnMenu();
 			treeView.setContextMenu(contextMenu);
 			// 选中监听事件
 			treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
+			treeView.getSelectionModel().select(rootNode);
 		} finally {
 			H2Db.closeConn();
 		}
@@ -280,76 +285,34 @@ public class DBinfoTree {
 	}
 
 	// treeView 右键菜单属性设置
-	public static ChangeListener<TreeItem<TreeNodePo>> treeViewContextMenu(TreeView<TreeNodePo> treeView) {
+	public   ChangeListener<TreeItem<TreeNodePo>> treeViewContextMenu(TreeView<TreeNodePo> treeView) {
 		return new ChangeListener<TreeItem<TreeNodePo>>() {
 			@Override
 			public void changed(ObservableValue<? extends TreeItem<TreeNodePo>> observable,
 					TreeItem<TreeNodePo> oldValue, TreeItem<TreeNodePo> newValue) {
-				// 非连接节点禁用右键的菜单
-				if (!DBinfoTree.isConns(newValue)) {
-					ContextMenu contextMenu = treeView.getContextMenu();
-					for (MenuItem item : contextMenu.getItems()) {
-						if (! "Add Connection".equals(  item.getText() )) {
-							item.setDisable(true);
-						}
-					}
-				} else {
-					ContextMenu contextMenu = treeView.getContextMenu();
-					contextMenu.getItems().forEach(item -> {
-						item.setDisable(false);
-					});
-				}
 				
 				// 如果是table 节点 启用add new column
-				TreeNodePo nd = newValue.getValue();  
-				if( nd.getType() == TreeItemType.TABLE) {
-					MenuItem item  = contextMenu.getItems().get(6);
-					item.setDisable(false);
-					item.setOnAction(e->{
-						DbConnectionPo  dbc =nd.getConnpo();
-						String schema = nd.getTable().getTableSchema();
-						String tablename = nd.getTable().getTableName();
-						MenuAction.addNewColumn(tablename, schema, dbc);
-					});
-					
+				TreeNodePo nd = newValue != null ? newValue.getValue() : null;
+				
+				if (DBinfoTree.isConns(newValue)) {
+					menu.setConnectDisable(false);
+					menu.setTableDisable(true);
+				}else if(nd != null && nd.getType() == TreeItemType.TABLE) {
+					menu.setConnectDisable(true);
+					menu.setTableDisable(false);
+					DbConnectionPo  dbc =nd.getConnpo();
+					String schema = nd.getTable().getTableSchema();
+					String tablename = nd.getTable().getTableName();
+					menu.setAddNewColAction(dbc, schema, tablename);
+				}else {
+					menu.setConnectDisable(true);
+					menu.setTableDisable(true);
 				}
 
 			}
 		};
 	}
-
-//	// treeView 右键菜单
-//	public static ContextMenu CreateTreeViewConnMenu() {
-//		contextMenu = new ContextMenu();
-//
-//		MenuItem add = new MenuItem("Add Connection");
-//		add.setOnAction(e -> {
-//			ConnectionEditor.ConnectionInfoSetting();
-//		});
-//		add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
-//
-//		MenuItem link = new MenuItem("Open Connection");
-//		link.setOnAction(CommonEventHandler.openConnEvent());
-//		link.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
-//
-//		MenuItem unlink = new MenuItem("Close Connection");
-//		unlink.setOnAction(CommonEventHandler.closeConnEvent());
-//		unlink.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
-//
-//		MenuItem Edit = new MenuItem("Edit Connection");
-//		Edit.setOnAction(CommonEventHandler.editConnEvent());
-//		Edit.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
-//
-//		MenuItem delete = new MenuItem("Delete Connection");
-//		delete.setOnAction(e -> {
-//			ConnectionEditor.ConnectionInfoSetting();
-//		});
-//		delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
-//
-//		contextMenu.getItems().addAll(add, link, unlink, Edit, delete);
-//
-//		return contextMenu;
-//	}
+ 
 
 	public TreeView<TreeNodePo> getTreeView() {
 		return treeView;
