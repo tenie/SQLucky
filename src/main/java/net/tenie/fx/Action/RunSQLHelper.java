@@ -41,7 +41,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
-import net.tenie.fx.PropertyPo.DataTabDataPo;
+//import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -145,8 +145,7 @@ public class RunSQLHelper {
 		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
 		
 
-		for (int i = 0; i < sqllenght; i++) {
-//			sqlstr = allsqls.get(i);
+		for (int i = 0; i < sqllenght; i++) { 
 			sqlstr = allsqls.get(i).sql;
 			sql = StrUtils.trimComment(sqlstr, "--");
 			int type = ParseSQL.parseType(sql);
@@ -253,16 +252,15 @@ public class RunSQLHelper {
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
 			// table 添加列和数据 
 			ObservableList<SqlFieldPo> colss = ddlDmlpo.getFields();
-			ObservableList<ObservableList<StringProperty>> rs = ddlDmlpo.getAllDatas();
-			var ls = createTableCol( colss, new ArrayList<String>());
-			table.getColumns().addAll(ls);
-			table.setItems(rs); 
+			ObservableList<ObservableList<StringProperty>> alldata = ddlDmlpo.getAllDatas();
+			var cols = createTableCol( colss, new ArrayList<String>());
+			table.getColumns().addAll(cols);
+			table.setItems(alldata); 
 			
-			DataViewTab dvt = new DataViewTab(table ,table.getId(), ConfigVal.EXEC_INFO_TITLE,  colss, rs); 
+			DataViewTab dvt = new DataViewTab(table ,table.getId(), ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
 			// 渲染界面
 			if (!thread.isInterrupted())
 				DataViewContainer.showTableDate(dvt , "", "");
-//			ddlDmlpo.clean();
 
 		}
 	}
@@ -276,16 +274,26 @@ public class RunSQLHelper {
 			String tableName = ParseSQL.tabName(sql);
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 //			tdpo.addTableName(tableName);
-			DbTableDatePo dpo = SelectDao.selectSql(conn, sql, ConfigVal.MaxRows, table.getId());
-			DataViewContainer.setTabRowWith(table, dpo.getAllDatasSize());
+			DataViewTab dvt = new DataViewTab();
+//			DbTableDatePo dpo = 
+			SelectDao.selectSql(conn, sql, ConfigVal.MaxRows, table.getId(), dvt);
+			
+			DataViewContainer.setTabRowWith(table, dvt.getRawData().size()); //dpo.getAllDatasSize());
 			
 			//
 			String connectName = ComponentGetter.getCurrentConnectName();
-			ObservableList<ObservableList<StringProperty>> rs = dpo.getAllDatas();
-			ObservableList<SqlFieldPo> colss = dpo.getFields();
+			dvt.setSqlStr(sql);
+			dvt.setTable(table);
+			dvt.setTabId( table.getId());
+			dvt.setTabName(tableName);
+			dvt.setConnName(connectName);
+			dvt.setDbconns(conn); 
 			
-			DataViewTab dvt = new DataViewTab(dpo, table ,table.getId(), tableName,
-										      sql, conn, connectName, colss, rs ); 
+			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
+			ObservableList<SqlFieldPo> colss = dvt.getColss();
+			
+//			DataViewTab dvt = new DataViewTab(dpo, table ,table.getId(), tableName,
+//										      sql, conn, connectName, colss, rs ); 
 			//缓存
 			CacheTabView.addDataViewTab( dvt ,table.getId());
 			// 查询的 的语句可以被修改
@@ -297,11 +305,11 @@ public class RunSQLHelper {
 			// 表格添加列
 			var ls = createTableCol( colss, keys);
 			table.getColumns().addAll(ls);
-			table.setItems(rs);  
+			table.setItems(allRawData);  
 //			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted())
-				DataViewContainer.showTableDate(dvt, tidx, false, dpo.getExecTime()+"", dpo.getRows()+"");
+				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");
 //			dpo.clean();
 		} catch (Exception e) { 
 			e.printStackTrace();

@@ -16,6 +16,7 @@ import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.TreeItem.MyTreeItem;
+import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
  
@@ -40,6 +41,7 @@ public class DBinfoTreeFilter {
 		filter.setPrefHeight(30);
 		filter.setMinHeight(30);
 		JFXButton query = new JFXButton();
+		ButtonFactory.btns.add(query);
 //		JFXTextField txt = new JFXTextField();
 		query.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
 		query.setOnAction(e -> {

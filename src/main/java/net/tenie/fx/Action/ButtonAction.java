@@ -42,8 +42,9 @@ import net.tenie.lib.tools.StrUtils;
 public class ButtonAction {
 	
 	
-	public static void dataSave(Button saveBtn) {
-		String tabId = saveBtn.getParent().getId();
+	public static void dataSave() {
+		Button saveBtn = ComponentGetter.dataPaneSaveBtn();
+		String tabId = ComponentGetter.currentDataTabID(); //saveBtn.getParent().getId();
 		String tabName = CacheTabView.getTableName(tabId);
 //		ObservableList<ObservableList<StringProperty>> alldata = CacheTabView.getData(tabId);
 		Connection conn = CacheTabView.getDbConn(tabId);
@@ -231,9 +232,9 @@ public class ButtonAction {
 	}
 	
 	//refreshData
-	public static void refreshData(Button btn) {
-		String id = btn.getParent().getId();
-		Tab tb = CacheTabView.getTab(id);
+	public static void refreshData() {
+		String id = ComponentGetter.currentDataTabID(); //btn.getParent().getId();
+//		Tab tb = CacheTabView.getTab(id);
 		String sql = CacheTabView.getSelectSQl(id);
 		Connection conn = CacheTabView.getDbConn(id);
 	    String connName = 	CacheTabView.getConnName(id);
@@ -251,11 +252,11 @@ public class ButtonAction {
 	}
 	
 	//addData // 添加一行数据
-	public static void addData(Button btn) {
-		var vbox = (VBox) btn.getParent().getParent();
+	public static void addData() {
+		var vbox = ComponentGetter.currentDataVbox();//(VBox) btn.getParent().getParent();
 		var tbv = (FilteredTableView<ObservableList<StringProperty>>) vbox.getChildren().get(1);
 		tbv.scrollTo(0);
-		String tabid = btn.getParent().getId();
+		String tabid = ComponentGetter.currentDataTabID() ;// btn.getParent().getId();
 		int newLineidx = ConfigVal.newLineIdx++;
 		ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tabid);
 		ObservableList<StringProperty> item = FXCollections.observableArrayList();
@@ -301,7 +302,7 @@ public class ButtonAction {
 			StringProperty  tmp = ls.get(colIdx);
 			tmp.setValue(value);
 		}
-		dataSave(rv.saveBtn);
+		dataSave();
 	}
 	
 	// 更新查询结果中选中的数据 对应列的值
@@ -317,7 +318,7 @@ public class ButtonAction {
 			StringProperty  tmp = ls.get(colIdx);
 			tmp.setValue(value);
 		}
-		dataSave(rv.saveBtn);
+		dataSave();
 	}
 	
 	

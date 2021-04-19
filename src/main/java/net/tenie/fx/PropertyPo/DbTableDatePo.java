@@ -7,7 +7,9 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/*   @author tenie */
+/*   
+ * 查询表的 字段 和 查询数据
+ * @author tenie */
 public class DbTableDatePo {
 	// 字段
 	private ObservableList<SqlFieldPo> fields;
@@ -20,7 +22,12 @@ public class DbTableDatePo {
 	
 	public void clean() {
 		fields.clear();
+		allDatas.forEach(val ->{
+			val.clear();
+		});
+		
 		allDatas.clear();
+		
 		fields = null;
 		allDatas = null;
 	}

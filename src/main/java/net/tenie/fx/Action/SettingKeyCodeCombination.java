@@ -193,7 +193,8 @@ public final class SettingKeyCodeCombination {
 		
 		scene.getAccelerators().put(F4, () -> {  
 			
-			System.out.println( ComponentGetter.dataTab.getTabs().size());
+//			System.out.println( ComponentGetter.dataTab.getTabs().size());
+			System.out.println( ComponentGetter.currentDataTabID());
 		});
 		
 	}

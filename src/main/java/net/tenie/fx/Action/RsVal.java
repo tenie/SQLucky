@@ -16,6 +16,5 @@ public class RsVal {
 	public Connection conn;
 	public DbConnectionPo dbconnPo;
 	public ObservableList<ObservableList<StringProperty>> alldata;
-	public Button saveBtn;
 	public FilteredTableView<ObservableList<StringProperty>> dataTableView;
 }

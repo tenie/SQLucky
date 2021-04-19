@@ -23,31 +23,32 @@ import net.tenie.fx.config.ConfigVal;
 // 图片加载类
 public final class ImageViewGenerator {
 
-	private static Map<String, ImageView> imgMap = new HashMap<String, ImageView>();
+//	private static Map<String, ImageView> imgMap = new HashMap<String, ImageView>();
 //	private static Map<String, Region> RegionMap = new HashMap<>();
-	public static List<Region> svgActiveImage = new ArrayList<>();
 	
-	private static Map<String, Label> fontImgMap = new HashMap<String, Label>();
-	private static final Font GLYPH_FONTAWESOME;
-	private static final Map<String, Character> GLYPH_MAP;
+//	public static List<Region> svgActiveImage = new ArrayList<>();
+	
+//	private static Map<String, Label> fontImgMap = new HashMap<String, Label>();
+//	private static final Font GLYPH_FONTAWESOME;
+//	private static final Map<String, Character> GLYPH_MAP;
 	static {
 		// 加载字体库文件
-		GLYPH_FONTAWESOME = Font
-				.loadFont(ImageViewGenerator.class.getResourceAsStream("/image/fontawesome-webfont.ttf"), -1);
-		GLYPH_MAP = new HashMap<String, Character>();
+//		GLYPH_FONTAWESOME = Font
+//				.loadFont(ImageViewGenerator.class.getResourceAsStream("/image/fontawesome-webfont.ttf"), -1);
+//		GLYPH_MAP = new HashMap<String, Character>();
 	}
 
 	//修改所以按钮颜色
-	public static void changeSvgColor() {
-		String color = "#1C94FF";
-		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
-			color = "#FDA232";
-		}  
-		List<Region> lsrsg = ImageViewGenerator.svgActiveImage;
-		for(Region reg :lsrsg) { 
-			reg.setStyle("-fx-background-color: " + color + ";");
-		}
-	}
+//	public static void changeSvgColor() {
+//		String color = "#1C94FF";
+//		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+//			color = "#FDA232";
+//		}  
+//		List<Region> lsrsg = ImageViewGenerator.svgActiveImage;
+//		for(Region reg :lsrsg) { 
+//			reg.setStyle("-fx-background-color: " + color + ";");
+//		}
+//	}
 	
 	// 修改颜色
 	public static void changeColor(Node node, String color) {
@@ -68,7 +69,7 @@ public final class ImageViewGenerator {
 			defColorStr = "#FDA232";
 		} 
 		Region rs = svgImage(name, 16, defColorStr);  
-		svgActiveImage.add(rs);
+//		svgActiveImage.add(rs);
 		return rs;
 	}
 
@@ -97,47 +98,43 @@ public final class ImageViewGenerator {
 		return svgShape;
 	}
 
-	public static ImageView svgImage2(String name) {
-		ImageView iv = imgMap.get(name + ".svg");
-		if (iv == null) {
-			InputStream imageData = ImageViewGenerator.class.getClassLoader()
-					.getResourceAsStream("image/" + name + ".svg");
-			Image image = new Image(imageData, 20.0, 20.0, false, false);
-
-			iv = new ImageView(image);
-		}
-		return iv;
-	}
+//	public static ImageView svgImage2(String name) {
+//		ImageView iv = imgMap.get(name + ".svg");
+//		if (iv == null) {
+//			InputStream imageData = ImageViewGenerator.class.getClassLoader()
+//					.getResourceAsStream("image/" + name + ".svg");
+//			Image image = new Image(imageData, 20.0, 20.0, false, false);
+//
+//			iv = new ImageView(image);
+//		}
+//		return iv;
+//	}
 
 	// 获取 png 图片
-	public static ImageView imageName(String name) {
-		ImageView rootIcon = imgMap.get(name);
-		if (rootIcon == null) {
-			rootIcon = new ImageView(new Image(ImageViewGenerator.class.getResourceAsStream(name)));
-		}
-		return rootIcon;
-	}
+//	public static ImageView imageName(String name) {
+//		ImageView rootIcon = imgMap.get(name);
+//		if (rootIcon == null) {
+//			rootIcon = new ImageView(new Image(ImageViewGenerator.class.getResourceAsStream(name)));
+//		}
+//		return rootIcon;
+//	}
 
 	// 获取字体图标
-	public static Label fontImgName(String name, int sizeFactor, Color color) {
-		Label rootIcon = fontImgMap.get(name);
-		if (rootIcon == null) {
-			Label lbl = new Label();
-			Font f = Font.font(GLYPH_FONTAWESOME.getFamily(), sizeFactor);
+//	public static Label fontImgName(String name, int sizeFactor, Color color) { 
+//			Label lbl = new Label();
+//			Font f = Font.font(GLYPH_FONTAWESOME.getFamily(), sizeFactor);
+//
+//			lbl.setFont(f);
+//			lbl.setText(getfont(name));
+//			if (color != null) {
+//				lbl.setTextFill(color);
+//			} 
+//		return lbl;
+//	}
 
-			lbl.setFont(f);
-			lbl.setText(getfont(name));
-			if (color != null) {
-				lbl.setTextFill(color);
-			}
-			rootIcon = lbl;
-		}
-		return rootIcon;
-	}
-
-	public static Label fontImgName(String name, int sizeFactor) {
-		return fontImgName(name, sizeFactor, Color.DARKGRAY);
-	}
+//	public static Label fontImgName(String name, int sizeFactor) {
+//		return fontImgName(name, sizeFactor, Color.DARKGRAY);
+//	}
 
 	// 修改 Label中字体颜色
 	public static void changeColor(Label lb, Color color) {
@@ -302,2058 +299,2058 @@ public final class ImageViewGenerator {
 	}
 
 	// 获取 font字符
-	public static String getfont(String name) {
-		Character val = GLYPH_MAP.get(name);
-		if (val == null) {
-			// TODO
-			switch (name) {
-			case "glass":
-				GLYPH_MAP.put("glass", '\uf000');
-				break;
-			case "music":
-				GLYPH_MAP.put("music", '\uf001');
-				break;
-			case "search":
-				GLYPH_MAP.put("search", '\uf002');
-				break;
-			case "envelope-o":
-				GLYPH_MAP.put("envelope-o", '\uf003');
-				break;
-			case "heart":
-				GLYPH_MAP.put("heart", '\uf004');
-				break;
-			case "star":
-				GLYPH_MAP.put("star", '\uf005');
-				break;
-			case "star-o":
-				GLYPH_MAP.put("star-o", '\uf006');
-				break;
-			case "user":
-				GLYPH_MAP.put("user", '\uf007');
-				break;
-			case "film":
-				GLYPH_MAP.put("film", '\uf008');
-				break;
-			case "th-large":
-				GLYPH_MAP.put("th-large", '\uf009');
-				break;
-			case "th":
-				GLYPH_MAP.put("th", '\uf00a');
-				break;
-			case "th-list":
-				GLYPH_MAP.put("th-list", '\uf00b');
-				break;
-			case "check":
-				GLYPH_MAP.put("check", '\uf00c');
-				break;
-			case "times":
-				GLYPH_MAP.put("times", '\uf00d');
-				break; // remove close ,
-			case "search-plus":
-				GLYPH_MAP.put("search-plus", '\uf00e');
-				break;
-			case "search-minus":
-				GLYPH_MAP.put("search-minus", '\uf010');
-				break;
-			case "power-off":
-				GLYPH_MAP.put("power-off", '\uf011');
-				break;
-			case "signal":
-				GLYPH_MAP.put("signal", '\uf012');
-				break;
-			case "cog":
-				GLYPH_MAP.put("cog", '\uf013');
-				break;
-			case "gear":
-				GLYPH_MAP.put("gear", '\uf013');
-				break;
-			case "trash-o":
-				GLYPH_MAP.put("trash-o", '\uf014');
-				break;
-			case "home":
-				GLYPH_MAP.put("home", '\uf015');
-				break;
-			case "file-o":
-				GLYPH_MAP.put("file-o", '\uf016');
-				break;
-			case "clock-o":
-				GLYPH_MAP.put("clock-o", '\uf017');
-				break;
-			case "road":
-				GLYPH_MAP.put("road", '\uf018');
-				break;
-			case "download":
-				GLYPH_MAP.put("download", '\uf019');
-				break;
-			case "arrow-circle-o-down":
-				GLYPH_MAP.put("arrow-circle-o-down", '\uf01a');
-				break;
-			case "arrow-circle-o-up":
-				GLYPH_MAP.put("arrow-circle-o-up", '\uf01b');
-				break;
-			case "inbox":
-				GLYPH_MAP.put("inbox", '\uf01c');
-				break;
-			case "play-circle-o":
-				GLYPH_MAP.put("play-circle-o", '\uf01d');
-				break;
-			case "repeat":
-				GLYPH_MAP.put("repeat", '\uf01e');
-				break; // rotate-right ,
-			case "refresh":
-				GLYPH_MAP.put("refresh", '\uf021');
-				break;
-			case "list-alt":
-				GLYPH_MAP.put("list-alt", '\uf022');
-				break;
-			case "lock":
-				GLYPH_MAP.put("lock", '\uf023');
-				break;
-			case "flag":
-				GLYPH_MAP.put("flag", '\uf024');
-				break;
-			case "headphones":
-				GLYPH_MAP.put("headphones", '\uf025');
-				break;
-			case "volume-off":
-				GLYPH_MAP.put("volume-off", '\uf026');
-				break;
-			case "volume-down":
-				GLYPH_MAP.put("volume-down", '\uf027');
-				break;
-			case "volume-up":
-				GLYPH_MAP.put("volume-up", '\uf028');
-				break;
-			case "qrcode":
-				GLYPH_MAP.put("qrcode", '\uf029');
-				break;
-			case "barcode":
-				GLYPH_MAP.put("barcode", '\uf02a');
-				break;
-			case "tag":
-				GLYPH_MAP.put("tag", '\uf02b');
-				break;
-			case "tags":
-				GLYPH_MAP.put("tags", '\uf02c');
-				break;
-			case "book":
-				GLYPH_MAP.put("book", '\uf02d');
-				break;
-			case "bookmark":
-				GLYPH_MAP.put("bookmark", '\uf02e');
-				break;
-			case "print":
-				GLYPH_MAP.put("print", '\uf02f');
-				break;
-			case "camera":
-				GLYPH_MAP.put("camera", '\uf030');
-				break;
-			case "font":
-				GLYPH_MAP.put("font", '\uf031');
-				break;
-			case "bold":
-				GLYPH_MAP.put("bold", '\uf032');
-				break;
-			case "italic":
-				GLYPH_MAP.put("italic", '\uf033');
-				break;
-			case "text-height":
-				GLYPH_MAP.put("text-height", '\uf034');
-				break;
-			case "text-width":
-				GLYPH_MAP.put("text-width", '\uf035');
-				break;
-			case "align-left":
-				GLYPH_MAP.put("align-left", '\uf036');
-				break;
-			case "align-center":
-				GLYPH_MAP.put("align-center", '\uf037');
-				break;
-			case "align-right":
-				GLYPH_MAP.put("align-right", '\uf038');
-				break;
-			case "align-justify":
-				GLYPH_MAP.put("align-justify", '\uf039');
-				break;
-			case "list":
-				GLYPH_MAP.put("list", '\uf03a');
-				break;
-			case "outdent":
-				GLYPH_MAP.put("outdent", '\uf03b');
-				break; // dedent ,
-			case "indent":
-				GLYPH_MAP.put("indent", '\uf03c');
-				break;
-			case "video-camera":
-				GLYPH_MAP.put("video-camera", '\uf03d');
-				break;
-			case "picture-o":
-				GLYPH_MAP.put("picture-o", '\uf03e');
-				break; // photo! image!
-			case "pencil":
-				GLYPH_MAP.put("pencil", '\uf040');
-				break;
-			case "map-marker":
-				GLYPH_MAP.put("map-marker", '\uf041');
-				break;
-			case "adjust":
-				GLYPH_MAP.put("adjust", '\uf042');
-				break;
-			case "tint":
-				GLYPH_MAP.put("tint", '\uf043');
-				break;
-			case "pencil-square-o":
-				GLYPH_MAP.put("pencil-square-o", '\uf044');
-				break; // edit ,
-			case "edit":
-				GLYPH_MAP.put("edit", '\uf044');
-				break; // ,
-			case "share-square-o":
-				GLYPH_MAP.put("share-square-o", '\uf045');
-				break;
-			case "check-square-o":
-				GLYPH_MAP.put("check-square-o", '\uf046');
-				break;
-			case "arrows":
-				GLYPH_MAP.put("arrows", '\uf047');
-				break;
-			case "step-backward":
-				GLYPH_MAP.put("step-backward", '\uf048');
-				break;
-			case "fast-backward":
-				GLYPH_MAP.put("fast-backward", '\uf049');
-				break;
-			case "backward":
-				GLYPH_MAP.put("backward", '\uf04a');
-				break;
-			case "play":
-				GLYPH_MAP.put("play", '\uf04b');
-				break;
-			case "pause":
-				GLYPH_MAP.put("pause", '\uf04c');
-				break;
-			case "stop":
-				GLYPH_MAP.put("stop", '\uf04d');
-				break;
-			case "forward":
-				GLYPH_MAP.put("forward", '\uf04e');
-				break;
-			case "fast-forward":
-				GLYPH_MAP.put("fast-forward", '\uf050');
-				break;
-			case "step-forward":
-				GLYPH_MAP.put("step-forward", '\uf051');
-				break;
-			case "eject":
-				GLYPH_MAP.put("eject", '\uf052');
-				break;
-			case "chevron-left":
-				GLYPH_MAP.put("chevron-left", '\uf053');
-				break;
-			case "chevron-right":
-				GLYPH_MAP.put("chevron-right", '\uf054');
-				break;
-			case "plus-circle":
-				GLYPH_MAP.put("plus-circle", '\uf055');
-				break;
-			case "minus-circle":
-				GLYPH_MAP.put("minus-circle", '\uf056');
-				break;
-			case "times-circle":
-				GLYPH_MAP.put("times-circle", '\uf057');
-				break;
-			case "check-circle":
-				GLYPH_MAP.put("check-circle", '\uf058');
-				break;
-			case "question-circle":
-				GLYPH_MAP.put("question-circle", '\uf059');
-				break;
-			case "info-circle":
-				GLYPH_MAP.put("info-circle", '\uf05a');
-				break;
-			case "crosshairs":
-				GLYPH_MAP.put("crosshairs", '\uf05b');
-				break;
-			case "times-circle-o":
-				GLYPH_MAP.put("times-circle-o", '\uf05c');
-				break;
-			case "check-circle-o":
-				GLYPH_MAP.put("check-circle-o", '\uf05d');
-				break;
-			case "ban":
-				GLYPH_MAP.put("ban", '\uf05e');
-				break;
-			case "arrow-left":
-				GLYPH_MAP.put("arrow-left", '\uf060');
-				break;
-			case "arrow-right":
-				GLYPH_MAP.put("arrow-right", '\uf061');
-				break;
-			case "arrow-up":
-				GLYPH_MAP.put("arrow-up", '\uf062');
-				break;
-			case "arrow-down":
-				GLYPH_MAP.put("arrow-down", '\uf063');
-				break;
-			case "share":
-				GLYPH_MAP.put("share", '\uf064');
-				break; // mail-forward ,
-			case "expand":
-				GLYPH_MAP.put("expand", '\uf065');
-				break;
-			case "compress":
-				GLYPH_MAP.put("compress", '\uf066');
-				break;
-			case "plus":
-				GLYPH_MAP.put("plus", '\uf067');
-				break;
-			case "minus":
-				GLYPH_MAP.put("minus", '\uf068');
-				break;
-			case "asterisk":
-				GLYPH_MAP.put("asterisk", '\uf069');
-				break;
-			case "exclamation-circle":
-				GLYPH_MAP.put("exclamation-circle", '\uf06a');
-				break;
-			case "gift":
-				GLYPH_MAP.put("gift", '\uf06b');
-				break;
-			case "leaf":
-				GLYPH_MAP.put("leaf", '\uf06c');
-				break;
-			case "fire":
-				GLYPH_MAP.put("fire", '\uf06d');
-				break;
-			case "eye":
-				GLYPH_MAP.put("eye", '\uf06e');
-				break;
-			case "eye-slash":
-				GLYPH_MAP.put("eye-slash", '\uf070');
-				break;
-			case "exclamation-triangle":
-				GLYPH_MAP.put("exclamation-triangle", '\uf071');
-				break; // warning ,
-			case "plane":
-				GLYPH_MAP.put("plane", '\uf072');
-				break;
-			case "calendar":
-				GLYPH_MAP.put("calendar", '\uf073');
-				break;
-			case "random":
-				GLYPH_MAP.put("random", '\uf074');
-				break;
-			case "comment":
-				GLYPH_MAP.put("comment", '\uf075');
-				break;
-			case "magnet":
-				GLYPH_MAP.put("magnet", '\uf076');
-				break;
-			case "chevron-up":
-				GLYPH_MAP.put("chevron-up", '\uf077');
-				break;
-			case "chevron-down":
-				GLYPH_MAP.put("chevron-down", '\uf078');
-				break;
-			case "retweet":
-				GLYPH_MAP.put("retweet", '\uf079');
-				break;
-			case "shopping-cart":
-				GLYPH_MAP.put("shopping-cart", '\uf07a');
-				break;
-			case "folder":
-				GLYPH_MAP.put("folder", '\uf07b');
-				break;
-			case "folder-open":
-				GLYPH_MAP.put("folder-open", '\uf07c');
-				break;
-			case "arrows-v":
-				GLYPH_MAP.put("arrows-v", '\uf07d');
-				break;
-			case "arrows-h":
-				GLYPH_MAP.put("arrows-h", '\uf07e');
-				break;
-			case "bar-chart":
-				GLYPH_MAP.put("bar-chart", '\uf080');
-				break; // bar-chart-o ,
-			case "twitter-square":
-				GLYPH_MAP.put("twitter-square", '\uf081');
-				break;
-			case "facebook-square":
-				GLYPH_MAP.put("facebook-square", '\uf082');
-				break;
-			case "camera-retro":
-				GLYPH_MAP.put("camera-retro", '\uf083');
-				break;
-			case "key":
-				GLYPH_MAP.put("key", '\uf084');
-				break;
-			case "cogs":
-				GLYPH_MAP.put("cogs", '\uf085');
-				break; // gears ,
-			case "gears":
-				GLYPH_MAP.put("gears", '\uf085');
-				break; // gears ,
-			case "comments":
-				GLYPH_MAP.put("comments", '\uf086');
-				break;
-			case "thumbs-o-up":
-				GLYPH_MAP.put("thumbs-o-up", '\uf087');
-				break;
-			case "thumbs-o-down":
-				GLYPH_MAP.put("thumbs-o-down", '\uf088');
-				break;
-			case "star-half":
-				GLYPH_MAP.put("star-half", '\uf089');
-				break;
-			case "heart-o":
-				GLYPH_MAP.put("heart-o", '\uf08a');
-				break;
-			case "sign-out":
-				GLYPH_MAP.put("sign-out", '\uf08b');
-				break;
-			case "linkedin-square":
-				GLYPH_MAP.put("linkedin-square", '\uf08c');
-				break;
-			case "thumb-tack":
-				GLYPH_MAP.put("thumb-tack", '\uf08d');
-				break;
-			case "external-link":
-				GLYPH_MAP.put("external-link", '\uf08e');
-				break;
-			case "sign-in":
-				GLYPH_MAP.put("sign-in", '\uf090');
-				break;
-			case "trophy":
-				GLYPH_MAP.put("trophy", '\uf091');
-				break;
-			case "github-square":
-				GLYPH_MAP.put("github-square", '\uf092');
-				break;
-			case "upload":
-				GLYPH_MAP.put("upload", '\uf093');
-				break;
-			case "lemon-o":
-				GLYPH_MAP.put("lemon-o", '\uf094');
-				break;
-			case "phone":
-				GLYPH_MAP.put("phone", '\uf095');
-				break;
-			case "square-o":
-				GLYPH_MAP.put("square-o", '\uf096');
-				break;
-			case "bookmark-o":
-				GLYPH_MAP.put("bookmark-o", '\uf097');
-				break;
-			case "phone-square":
-				GLYPH_MAP.put("phone-square", '\uf098');
-				break;
-			case "twitter":
-				GLYPH_MAP.put("twitter", '\uf099');
-				break;
-			case "facebook":
-				GLYPH_MAP.put("facebook", '\uf09a');
-				break; // facebook-f ,
-			case "github":
-				GLYPH_MAP.put("github", '\uf09b');
-				break;
-			case "unlock":
-				GLYPH_MAP.put("unlock", '\uf09c');
-				break;
-			case "credit-card":
-				GLYPH_MAP.put("credit-card", '\uf09d');
-				break;
-			case "rss":
-				GLYPH_MAP.put("rss", '\uf09e');
-				break; // feed ,
-			case "hdd-o":
-				GLYPH_MAP.put("hdd-o", '\uf0a0');
-				break;
-			case "bullhorn":
-				GLYPH_MAP.put("bullhorn", '\uf0a1');
-				break;
-			case "bell":
-				GLYPH_MAP.put("bell", '\uf0f3');
-				break;
-			case "certificate":
-				GLYPH_MAP.put("certificate", '\uf0a3');
-				break;
-			case "hand-o-right":
-				GLYPH_MAP.put("hand-o-right", '\uf0a4');
-				break;
-			case "hand-o-left":
-				GLYPH_MAP.put("hand-o-left", '\uf0a5');
-				break;
-			case "hand-o-up":
-				GLYPH_MAP.put("hand-o-up", '\uf0a6');
-				break;
-			case "hand-o-down":
-				GLYPH_MAP.put("hand-o-down", '\uf0a7');
-				break;
-			case "arrow-circle-left":
-				GLYPH_MAP.put("arrow-circle-left", '\uf0a8');
-				break;
-			case "arrow-circle-right":
-				GLYPH_MAP.put("arrow-circle-right", '\uf0a9');
-				break;
-			case "arrow-circle-up":
-				GLYPH_MAP.put("arrow-circle-up", '\uf0aa');
-				break;
-			case "arrow-circle-down":
-				GLYPH_MAP.put("arrow-circle-down", '\uf0ab');
-				break;
-			case "globe":
-				GLYPH_MAP.put("globe", '\uf0ac');
-				break;
-			case "wrench":
-				GLYPH_MAP.put("wrench", '\uf0ad');
-				break;
-			case "tasks":
-				GLYPH_MAP.put("tasks", '\uf0ae');
-				break;
-			case "filter":
-				GLYPH_MAP.put("filter", '\uf0b0');
-				break;
-			case "briefcase":
-				GLYPH_MAP.put("briefcase", '\uf0b1');
-				break;
-			case "arrows-alt":
-				GLYPH_MAP.put("arrows-alt", '\uf0b2');
-				break;
-			case "users":
-				GLYPH_MAP.put("users", '\uf0c0');
-				break; // group ,
-			case "link":
-				GLYPH_MAP.put("link", '\uf0c1');
-				break; // chain ,
-			case "cloud":
-				GLYPH_MAP.put("cloud", '\uf0c2');
-				break;
-			case "flask":
-				GLYPH_MAP.put("flask", '\uf0c3');
-				break;
-			case "scissors":
-				GLYPH_MAP.put("scissors", '\uf0c4');
-				break; // cut ,
-			case "files-o":
-				GLYPH_MAP.put("files-o", '\uf0c5');
-				break; // copy ,
-			case "paperclip":
-				GLYPH_MAP.put("paperclip", '\uf0c6');
-				break;
-			case "floppy-o":
-				GLYPH_MAP.put("floppy-o", '\uf0c7');
-				break; // ,
-			case "save":
-				GLYPH_MAP.put("save", '\uf0c7');
-				break;
-			case "square":
-				GLYPH_MAP.put("square", '\uf0c8');
-				break;
-			case "bars":
-				GLYPH_MAP.put("bars", '\uf0c9');
-				break; // navicon! reorder ,
-			case "list-ul":
-				GLYPH_MAP.put("list-ul", '\uf0ca');
-				break;
-			case "list-ol":
-				GLYPH_MAP.put("list-ol", '\uf0cb');
-				break;
-			case "strikethrough":
-				GLYPH_MAP.put("strikethrough", '\uf0cc');
-				break;
-			case "underline":
-				GLYPH_MAP.put("underline", '\uf0cd');
-				break;
-			case "table":
-				GLYPH_MAP.put("table", '\uf0ce');
-				break;
-			case "magic":
-				GLYPH_MAP.put("magic", '\uf0d0');
-				break;
-			case "truck":
-				GLYPH_MAP.put("truck", '\uf0d1');
-				break;
-			case "pinterest":
-				GLYPH_MAP.put("pinterest", '\uf0d2');
-				break;
-			case "pinterest-square":
-				GLYPH_MAP.put("pinterest-square", '\uf0d3');
-				break;
-			case "google-plus-square":
-				GLYPH_MAP.put("google-plus-square", '\uf0d4');
-				break;
-			case "google-plus":
-				GLYPH_MAP.put("google-plus", '\uf0d5');
-				break;
-			case "money":
-				GLYPH_MAP.put("money", '\uf0d6');
-				break;
-			case "caret-down":
-				GLYPH_MAP.put("caret-down", '\uf0d7');
-				break;
-			case "caret-up":
-				GLYPH_MAP.put("caret-up", '\uf0d8');
-				break;
-			case "caret-left":
-				GLYPH_MAP.put("caret-left", '\uf0d9');
-				break;
-			case "caret-right":
-				GLYPH_MAP.put("caret-right", '\uf0da');
-				break;
-			case "columns":
-				GLYPH_MAP.put("columns", '\uf0db');
-				break;
-			case "sort":
-				GLYPH_MAP.put("sort", '\uf0dc');
-				break; // unsorted ,
-			case "sort-desc":
-				GLYPH_MAP.put("sort-desc", '\uf0dd');
-				break; // sort-down ,
-			case "sort-asc":
-				GLYPH_MAP.put("sort-asc", '\uf0de');
-				break; // sort-up ,
-			case "envelope":
-				GLYPH_MAP.put("envelope", '\uf0e0');
-				break;
-			case "linkedin":
-				GLYPH_MAP.put("linkedin", '\uf0e1');
-				break;
-			case "undo":
-				GLYPH_MAP.put("undo", '\uf0e2');
-				break; // rotate-left ,
-			case "gavel":
-				GLYPH_MAP.put("gavel", '\uf0e3');
-				break; // legal ,
-			case "tachometer":
-				GLYPH_MAP.put("tachometer", '\uf0e4');
-				break; // dashboard ,
-			case "comment-o":
-				GLYPH_MAP.put("comment-o", '\uf0e5');
-				break;
-			case "comments-o":
-				GLYPH_MAP.put("comments-o", '\uf0e6');
-				break;
-			case "bolt":
-				GLYPH_MAP.put("bolt", '\uf0e7');
-				break; // flash ,
-			case "sitemap":
-				GLYPH_MAP.put("sitemap", '\uf0e8');
-				break;
-			case "umbrella":
-				GLYPH_MAP.put("umbrella", '\uf0e9');
-				break;
-			case "clipboard":
-				GLYPH_MAP.put("clipboard", '\uf0ea');
-				break;// paste ,
-			case "lightbulb-o":
-				GLYPH_MAP.put("lightbulb-o", '\uf0eb');
-				break;
-			case "exchange":
-				GLYPH_MAP.put("exchange", '\uf0ec');
-				break;
-			case "cloud-download":
-				GLYPH_MAP.put("cloud-download", '\uf0ed');
-				break;
-			case "cloud-upload":
-				GLYPH_MAP.put("cloud-upload", '\uf0ee');
-				break;
-			case "user-md":
-				GLYPH_MAP.put("user-md", '\uf0f0');
-				break;
-			case "stethoscope":
-				GLYPH_MAP.put("stethoscope", '\uf0f1');
-				break;
-			case "suitcase":
-				GLYPH_MAP.put("suitcase", '\uf0f2');
-				break;
-			case "bell-o":
-				GLYPH_MAP.put("bell-o", '\uf0a2');
-				break;
-			case "coffee":
-				GLYPH_MAP.put("coffee", '\uf0f4');
-				break;
-			case "cutlery":
-				GLYPH_MAP.put("cutlery", '\uf0f5');
-				break;
-			case "file-text-o":
-				GLYPH_MAP.put("file-text-o", '\uf0f6');
-				break;
-			case "building-o":
-				GLYPH_MAP.put("building-o", '\uf0f7');
-				break;
-			case "hospital-o":
-				GLYPH_MAP.put("hospital-o", '\uf0f8');
-				break;
-			case "ambulance":
-				GLYPH_MAP.put("ambulance", '\uf0f9');
-				break;
-			case "medkit":
-				GLYPH_MAP.put("medkit", '\uf0fa');
-				break;
-			case "fighter-jet":
-				GLYPH_MAP.put("fighter-jet", '\uf0fb');
-				break;
-			case "beer":
-				GLYPH_MAP.put("beer", '\uf0fc');
-				break;
-			case "h-square":
-				GLYPH_MAP.put("h-square", '\uf0fd');
-				break;
-			case "plus-square":
-				GLYPH_MAP.put("plus-square", '\uf0fe');
-				break;
-			case "angle-double-left":
-				GLYPH_MAP.put("angle-double-left", '\uf100');
-				break;
-			case "angle-double-right":
-				GLYPH_MAP.put("angle-double-right", '\uf101');
-				break;
-			case "angle-double-up":
-				GLYPH_MAP.put("angle-double-up", '\uf102');
-				break;
-			case "angle-double-down":
-				GLYPH_MAP.put("angle-double-down", '\uf103');
-				break;
-			case "angle-left":
-				GLYPH_MAP.put("angle-left", '\uf104');
-				break;
-			case "angle-right":
-				GLYPH_MAP.put("angle-right", '\uf105');
-				break;
-			case "angle-up":
-				GLYPH_MAP.put("angle-up", '\uf106');
-				break;
-			case "angle-down":
-				GLYPH_MAP.put("angle-down", '\uf107');
-				break;
-			case "desktop":
-				GLYPH_MAP.put("desktop", '\uf108');
-				break;
-			case "laptop":
-				GLYPH_MAP.put("laptop", '\uf109');
-				break;
-			case "tablet":
-				GLYPH_MAP.put("tablet", '\uf10a');
-				break;
-			case "mobile":
-				GLYPH_MAP.put("mobile", '\uf10b');
-				break; // mobile-phone ,
-			case "circle-o":
-				GLYPH_MAP.put("circle-o", '\uf10c');
-				break;
-			case "quote-left":
-				GLYPH_MAP.put("quote-left", '\uf10d');
-				break;
-			case "quote-right":
-				GLYPH_MAP.put("quote-right", '\uf10e');
-				break;
-			case "spinner":
-				GLYPH_MAP.put("spinner", '\uf110');
-				break;
-			case "circle":
-				GLYPH_MAP.put("circle", '\uf111');
-				break;
-			case "reply":
-				GLYPH_MAP.put("reply", '\uf112');
-				break; // mail-reply ,
-			case "github-alt":
-				GLYPH_MAP.put("github-alt", '\uf113');
-				break;
-			case "folder-o":
-				GLYPH_MAP.put("folder-o", '\uf114');
-				break;
-			case "folder-open-o":
-				GLYPH_MAP.put("folder-open-o", '\uf115');
-				break;
-			case "smile-o":
-				GLYPH_MAP.put("smile-o", '\uf118');
-				break;
-			case "frown-o":
-				GLYPH_MAP.put("frown-o", '\uf119');
-				break;
-			case "meh-o":
-				GLYPH_MAP.put("meh-o", '\uf11a');
-				break;
-			case "gamepad":
-				GLYPH_MAP.put("gamepad", '\uf11b');
-				break;
-			case "keyboard-o":
-				GLYPH_MAP.put("keyboard-o", '\uf11c');
-				break;
-			case "flag-o":
-				GLYPH_MAP.put("flag-o", '\uf11d');
-				break;
-			case "flag-checkered":
-				GLYPH_MAP.put("flag-checkered", '\uf11e');
-				break;
-			case "terminal":
-				GLYPH_MAP.put("terminal", '\uf120');
-				break;
-			case "code":
-				GLYPH_MAP.put("code", '\uf121');
-				break;
-			case "reply-all":
-				GLYPH_MAP.put("reply-all", '\uf122');
-				break; // mail-reply-all ,
-			case "star-half-o":
-				GLYPH_MAP.put("star-half-o", '\uf123');
-				break; // star-half-empty! star-half-full ,
-			case "location-arrow":
-				GLYPH_MAP.put("location-arrow", '\uf124');
-				break;
-			case "crop":
-				GLYPH_MAP.put("crop", '\uf125');
-				break;
-			case "code-fork":
-				GLYPH_MAP.put("code-fork", '\uf126');
-				break;
-			case "chain-broken":
-				GLYPH_MAP.put("chain-broken", '\uf127');
-				break; // unlink ,
-			case "unlink":
-				GLYPH_MAP.put("unlink", '\uf127');
-				break;
-			case "question":
-				GLYPH_MAP.put("question", '\uf128');
-				break;
-			case "info":
-				GLYPH_MAP.put("info", '\uf129');
-				break;
-			case "exclamation":
-				GLYPH_MAP.put("exclamation", '\uf12a');
-				break;
-			case "superscript":
-				GLYPH_MAP.put("superscript", '\uf12b');
-				break;
-			case "subscript":
-				GLYPH_MAP.put("subscript", '\uf12c');
-				break;
-			case "eraser":
-				GLYPH_MAP.put("eraser", '\uf12d');
-				break;
-			case "puzzle-piece":
-				GLYPH_MAP.put("puzzle-piece", '\uf12e');
-				break;
-			case "microphone":
-				GLYPH_MAP.put("microphone", '\uf130');
-				break;
-			case "microphone-slash":
-				GLYPH_MAP.put("microphone-slash", '\uf131');
-				break;
-			case "shield":
-				GLYPH_MAP.put("shield", '\uf132');
-				break;
-			case "calendar-o":
-				GLYPH_MAP.put("calendar-o", '\uf133');
-				break;
-			case "fire-extinguisher":
-				GLYPH_MAP.put("fire-extinguisher", '\uf134');
-				break;
-			case "rocket":
-				GLYPH_MAP.put("rocket", '\uf135');
-				break;
-			case "maxcdn":
-				GLYPH_MAP.put("maxcdn", '\uf136');
-				break;
-			case "chevron-circle-left":
-				GLYPH_MAP.put("chevron-circle-left", '\uf137');
-				break;
-			case "chevron-circle-right":
-				GLYPH_MAP.put("chevron-circle-right", '\uf138');
-				break;
-			case "chevron-circle-up":
-				GLYPH_MAP.put("chevron-circle-up", '\uf139');
-				break;
-			case "chevron-circle-down":
-				GLYPH_MAP.put("chevron-circle-down", '\uf13a');
-				break;
-			case "html5":
-				GLYPH_MAP.put("html5", '\uf13b');
-				break;
-			case "css3":
-				GLYPH_MAP.put("css3", '\uf13c');
-				break;
-			case "anchor":
-				GLYPH_MAP.put("anchor", '\uf13d');
-				break;
-			case "unlock-alt":
-				GLYPH_MAP.put("unlock-alt", '\uf13e');
-				break;
-			case "bullseye":
-				GLYPH_MAP.put("bullseye", '\uf140');
-				break;
-			case "ellipsis-h":
-				GLYPH_MAP.put("ellipsis-h", '\uf141');
-				break;
-			case "ellipsis-v":
-				GLYPH_MAP.put("ellipsis-v", '\uf142');
-				break;
-			case "rss-square":
-				GLYPH_MAP.put("rss-square", '\uf143');
-				break;
-			case "play-circle":
-				GLYPH_MAP.put("play-circle", '\uf144');
-				break;
-			case "ticket":
-				GLYPH_MAP.put("ticket", '\uf145');
-				break;
-			case "minus-square":
-				GLYPH_MAP.put("minus-square", '\uf146');
-				break;
-			case "minus-square-o":
-				GLYPH_MAP.put("minus-square-o", '\uf147');
-				break;
-			case "level-up":
-				GLYPH_MAP.put("level-up", '\uf148');
-				break;
-			case "level-down":
-				GLYPH_MAP.put("level-down", '\uf149');
-				break;
-			case "check-square":
-				GLYPH_MAP.put("check-square", '\uf14a');
-				break;
-			case "pencil-square":
-				GLYPH_MAP.put("pencil-square", '\uf14b');
-				break;
-			case "external-link-square":
-				GLYPH_MAP.put("external-link-square", '\uf14c');
-				break;
-			case "share-square":
-				GLYPH_MAP.put("share-square", '\uf14d');
-				break;
-			case "compass":
-				GLYPH_MAP.put("compass", '\uf14e');
-				break;
-			case "caret-square-o-down":
-				GLYPH_MAP.put("caret-square-o-down", '\uf150');
-				break; // toggle-down ,
-			case "caret-square-o-up":
-				GLYPH_MAP.put("caret-square-o-up", '\uf151');
-				break; // toggle-up ,
-			case "caret-square-o-right":
-				GLYPH_MAP.put("caret-square-o-right", '\uf152');
-				break; // toggle-right ,
-			case "eur":
-				GLYPH_MAP.put("eur", '\uf153');
-				break; // euro ,
-			case "gbp":
-				GLYPH_MAP.put("gbp", '\uf154');
-				break;
-			case "usd":
-				GLYPH_MAP.put("usd", '\uf155');
-				break; // dollar ,
-			case "inr":
-				GLYPH_MAP.put("inr", '\uf156');
-				break; // rupee ,
-			case "jpy":
-				GLYPH_MAP.put("jpy", '\uf157');
-				break; // cny! rmb! yen!
-			case "rub":
-				GLYPH_MAP.put("rub", '\uf158');
-				break; // ruble! rouble ,
-			case "krw":
-				GLYPH_MAP.put("krw", '\uf159');
-				break; // won ,
-			case "btc":
-				GLYPH_MAP.put("btc", '\uf15a');
-				break; // bitcoin ,
-			case "file":
-				GLYPH_MAP.put("file", '\uf15b');
-				break;
-			case "file-text":
-				GLYPH_MAP.put("file-text", '\uf15c');
-				break;
-			case "sort-alpha-asc":
-				GLYPH_MAP.put("sort-alpha-asc", '\uf15d');
-				break;
-			case "sort-alpha-desc":
-				GLYPH_MAP.put("sort-alpha-desc", '\uf15e');
-				break;
-			case "sort-amount-asc":
-				GLYPH_MAP.put("sort-amount-asc", '\uf160');
-				break;
-			case "sort-amount-desc":
-				GLYPH_MAP.put("sort-amount-desc", '\uf161');
-				break;
-			case "sort-numeric-asc":
-				GLYPH_MAP.put("sort-numeric-asc", '\uf162');
-				break;
-			case "sort-numeric-desc":
-				GLYPH_MAP.put("sort-numeric-desc", '\uf163');
-				break;
-			case "thumbs-up":
-				GLYPH_MAP.put("thumbs-up", '\uf164');
-				break;
-			case "thumbs-down":
-				GLYPH_MAP.put("thumbs-down", '\uf165');
-				break;
-			case "youtube-square":
-				GLYPH_MAP.put("youtube-square", '\uf166');
-				break;
-			case "youtube":
-				GLYPH_MAP.put("youtube", '\uf167');
-				break;
-			case "xing":
-				GLYPH_MAP.put("xing", '\uf168');
-				break;
-			case "xing-square":
-				GLYPH_MAP.put("xing-square", '\uf169');
-				break;
-			case "youtube-play":
-				GLYPH_MAP.put("youtube-play", '\uf16a');
-				break;
-			case "dropbox":
-				GLYPH_MAP.put("dropbox", '\uf16b');
-				break;
-			case "stack-overflow":
-				GLYPH_MAP.put("stack-overflow", '\uf16c');
-				break;
-			case "instagram":
-				GLYPH_MAP.put("instagram", '\uf16d');
-				break;
-			case "flickr":
-				GLYPH_MAP.put("flickr", '\uf16e');
-				break;
-			case "adn":
-				GLYPH_MAP.put("adn", '\uf170');
-				break;
-			case "bitbucket":
-				GLYPH_MAP.put("bitbucket", '\uf171');
-				break;
-			case "bitbucket-square":
-				GLYPH_MAP.put("bitbucket-square", '\uf172');
-				break;
-			case "tumblr":
-				GLYPH_MAP.put("tumblr", '\uf173');
-				break;
-			case "tumblr-square":
-				GLYPH_MAP.put("tumblr-square", '\uf174');
-				break;
-			case "long-arrow-down":
-				GLYPH_MAP.put("long-arrow-down", '\uf175');
-				break;
-			case "long-arrow-up":
-				GLYPH_MAP.put("long-arrow-up", '\uf176');
-				break;
-			case "long-arrow-left":
-				GLYPH_MAP.put("long-arrow-left", '\uf177');
-				break;
-			case "long-arrow-right":
-				GLYPH_MAP.put("long-arrow-right", '\uf178');
-				break;
-			case "apple":
-				GLYPH_MAP.put("apple", '\uf179');
-				break;
-			case "windows":
-				GLYPH_MAP.put("windows", '\uf17a');
-				break;
-			case "android":
-				GLYPH_MAP.put("android", '\uf17b');
-				break;
-			case "linux":
-				GLYPH_MAP.put("linux", '\uf17c');
-				break;
-			case "dribbble":
-				GLYPH_MAP.put("dribbble", '\uf17d');
-				break;
-			case "skype":
-				GLYPH_MAP.put("skype", '\uf17e');
-				break;
-			case "foursquare":
-				GLYPH_MAP.put("foursquare", '\uf180');
-				break;
-			case "trello":
-				GLYPH_MAP.put("trello", '\uf181');
-				break;
-			case "female":
-				GLYPH_MAP.put("female", '\uf182');
-				break;
-			case "male":
-				GLYPH_MAP.put("male", '\uf183');
-				break;
-			case "gratipay":
-				GLYPH_MAP.put("gratipay", '\uf184');
-				break; // gittip ,
-			case "sun-o":
-				GLYPH_MAP.put("sun-o", '\uf185');
-				break;
-			case "moon-o":
-				GLYPH_MAP.put("moon-o", '\uf186');
-				break;
-			case "archive":
-				GLYPH_MAP.put("archive", '\uf187');
-				break;
-			case "bug":
-				GLYPH_MAP.put("bug", '\uf188');
-				break;
-			case "vk":
-				GLYPH_MAP.put("vk", '\uf189');
-				break;
-			case "weibo":
-				GLYPH_MAP.put("weibo", '\uf18a');
-				break;
-			case "renren":
-				GLYPH_MAP.put("renren", '\uf18b');
-				break;
-			case "pagelines":
-				GLYPH_MAP.put("pagelines", '\uf18c');
-				break;
-			case "stack-exchange":
-				GLYPH_MAP.put("stack-exchange", '\uf18d');
-				break;
-			case "arrow-circle-o-right":
-				GLYPH_MAP.put("arrow-circle-o-right", '\uf18e');
-				break;
-			case "arrow-circle-o-left":
-				GLYPH_MAP.put("arrow-circle-o-left", '\uf190');
-				break;
-			case "caret-square-o-left":
-				GLYPH_MAP.put("caret-square-o-left", '\uf191');
-				break; // toggle-left ,
-			case "dot-circle-o":
-				GLYPH_MAP.put("dot-circle-o", '\uf192');
-				break;
-			case "wheelchair":
-				GLYPH_MAP.put("wheelchair", '\uf193');
-				break;
-			case "vimeo-square":
-				GLYPH_MAP.put("vimeo-square", '\uf194');
-				break;
-			case "try":
-				GLYPH_MAP.put("try", '\uf195');
-				break; // turkish-lira ,
-			case "plus-square-o":
-				GLYPH_MAP.put("plus-square-o", '\uf196');
-				break;
-			case "space-shuttle":
-				GLYPH_MAP.put("space-shuttle", '\uf197');
-				break;
-			case "slack":
-				GLYPH_MAP.put("slack", '\uf198');
-				break;
-			case "envelope-square":
-				GLYPH_MAP.put("envelope-square", '\uf199');
-				break;
-			case "wordpress":
-				GLYPH_MAP.put("wordpress", '\uf19a');
-				break;
-			case "openid":
-				GLYPH_MAP.put("openid", '\uf19b');
-				break;
-			case "university":
-				GLYPH_MAP.put("university", '\uf19c');
-				break; // institution! bank ,
-			case "graduation-cap":
-				GLYPH_MAP.put("graduation-cap", '\uf19d');
-				break; // mortar-board ,
-			case "yahoo":
-				GLYPH_MAP.put("yahoo", '\uf19e');
-				break;
-			case "google":
-				GLYPH_MAP.put("google", '\uf1a0');
-				break;
-			case "reddit":
-				GLYPH_MAP.put("reddit", '\uf1a1');
-				break;
-			case "reddit-square":
-				GLYPH_MAP.put("reddit-square", '\uf1a2');
-				break;
-			case "stumbleupon-circle":
-				GLYPH_MAP.put("stumbleupon-circle", '\uf1a3');
-				break;
-			case "stumbleupon":
-				GLYPH_MAP.put("stumbleupon", '\uf1a4');
-				break;
-			case "delicious":
-				GLYPH_MAP.put("delicious", '\uf1a5');
-				break;
-			case "digg":
-				GLYPH_MAP.put("digg", '\uf1a6');
-				break;
-			case "pied-piper-pp":
-				GLYPH_MAP.put("pied-piper-pp", '\uf1a7');
-				break;
-			case "pied-piper-alt":
-				GLYPH_MAP.put("pied-piper-alt", '\uf1a8');
-				break;
-			case "drupal":
-				GLYPH_MAP.put("drupal", '\uf1a9');
-				break;
-			case "joomla":
-				GLYPH_MAP.put("joomla", '\uf1aa');
-				break;
-			case "language":
-				GLYPH_MAP.put("language", '\uf1ab');
-				break;
-			case "fax":
-				GLYPH_MAP.put("fax", '\uf1ac');
-				break;
-			case "building":
-				GLYPH_MAP.put("building", '\uf1ad');
-				break;
-			case "child":
-				GLYPH_MAP.put("child", '\uf1ae');
-				break;
-			case "paw":
-				GLYPH_MAP.put("paw", '\uf1b0');
-				break;
-			case "spoon":
-				GLYPH_MAP.put("spoon", '\uf1b1');
-				break;
-			case "cube":
-				GLYPH_MAP.put("cube", '\uf1b2');
-				break;
-			case "cubes":
-				GLYPH_MAP.put("cubes", '\uf1b3');
-				break;
-			case "behance":
-				GLYPH_MAP.put("behance", '\uf1b4');
-				break;
-			case "behance-square":
-				GLYPH_MAP.put("behance-square", '\uf1b5');
-				break;
-			case "steam":
-				GLYPH_MAP.put("steam", '\uf1b6');
-				break;
-			case "steam-square":
-				GLYPH_MAP.put("steam-square", '\uf1b7');
-				break;
-			case "recycle":
-				GLYPH_MAP.put("recycle", '\uf1b8');
-				break;
-			case "car":
-				GLYPH_MAP.put("car", '\uf1b9');
-				break; // automobile ,
-			case "taxi":
-				GLYPH_MAP.put("taxi", '\uf1ba');
-				break; // cab ,
-			case "tree":
-				GLYPH_MAP.put("tree", '\uf1bb');
-				break;
-			case "spotify":
-				GLYPH_MAP.put("spotify", '\uf1bc');
-				break;
-			case "deviantart":
-				GLYPH_MAP.put("deviantart", '\uf1bd');
-				break;
-			case "soundcloud":
-				GLYPH_MAP.put("soundcloud", '\uf1be');
-				break;
-			case "database":
-				GLYPH_MAP.put("database", '\uf1c0');
-				break;
-			case "file-pdf-o":
-				GLYPH_MAP.put("file-pdf-o", '\uf1c1');
-				break;
-			case "file-word-o":
-				GLYPH_MAP.put("file-word-o", '\uf1c2');
-				break;
-			case "file-excel-o":
-				GLYPH_MAP.put("file-excel-o", '\uf1c3');
-				break;
-			case "file-powerpoint-o":
-				GLYPH_MAP.put("file-powerpoint-o", '\uf1c4');
-				break;
-			case "file-image-o":
-				GLYPH_MAP.put("file-image-o", '\uf1c5');
-				break; // file-photo-o! file-picture-o ,
-			case "file-archive-o":
-				GLYPH_MAP.put("file-archive-o", '\uf1c6');
-				break; // file-zip-o ,
-			case "file-audio-o":
-				GLYPH_MAP.put("file-audio-o", '\uf1c7');
-				break; // file-sound-o ,
-			case "file-video-o":
-				GLYPH_MAP.put("file-video-o", '\uf1c8');
-				break; // file-movie-o ,
-			case "file-code-o":
-				GLYPH_MAP.put("file-code-o", '\uf1c9');
-				break;
-			case "vine":
-				GLYPH_MAP.put("vine", '\uf1ca');
-				break;
-			case "codepen":
-				GLYPH_MAP.put("codepen", '\uf1cb');
-				break;
-			case "jsfiddle":
-				GLYPH_MAP.put("jsfiddle", '\uf1cc');
-				break;
-			case "life-ring":
-				GLYPH_MAP.put("life-ring", '\uf1cd');
-				break; // life-bouy! life-buoy! life-saver! support ,
-			case "circle-o-notch":
-				GLYPH_MAP.put("circle-o-notch", '\uf1ce');
-				break;
-			case "rebel":
-				GLYPH_MAP.put("rebel", '\uf1d0');
-				break; // ra! resistance!
-			case "empire":
-				GLYPH_MAP.put("empire", '\uf1d1');
-				break; // ge ,
-			case "git-square":
-				GLYPH_MAP.put("git-square", '\uf1d2');
-				break;
-			case "git":
-				GLYPH_MAP.put("git", '\uf1d3');
-				break;
-			case "hacker-news":
-				GLYPH_MAP.put("hacker-news", '\uf1d4');
-				break; // y-combinator-square! yc-square ,
-			case "tencent-weibo":
-				GLYPH_MAP.put("tencent-weibo", '\uf1d5');
-				break;
-			case "qq":
-				GLYPH_MAP.put("qq", '\uf1d6');
-				break;
-			case "weixin":
-				GLYPH_MAP.put("weixin", '\uf1d7');
-				break; // wechat ,
-			case "paper-plane":
-				GLYPH_MAP.put("paper-plane", '\uf1d8');
-				break; // send ,
-			case "paper-plane-o":
-				GLYPH_MAP.put("paper-plane-o", '\uf1d9');
-				break; // send-o ,
-			case "history":
-				GLYPH_MAP.put("history", '\uf1da');
-				break;
-			case "circle-thin":
-				GLYPH_MAP.put("circle-thin", '\uf1db');
-				break;
-			case "header":
-				GLYPH_MAP.put("header", '\uf1dc');
-				break;
-			case "paragraph":
-				GLYPH_MAP.put("paragraph", '\uf1dd');
-				break;
-			case "sliders":
-				GLYPH_MAP.put("sliders", '\uf1de');
-				break;
-			case "share-alt":
-				GLYPH_MAP.put("share-alt", '\uf1e0');
-				break;
-			case "share-alt-square":
-				GLYPH_MAP.put("share-alt-square", '\uf1e1');
-				break;
-			case "bomb":
-				GLYPH_MAP.put("bomb", '\uf1e2');
-				break;
-			case "futbol-o":
-				GLYPH_MAP.put("futbol-o", '\uf1e3');
-				break; // soccer-ball-o ,
-			case "tty":
-				GLYPH_MAP.put("tty", '\uf1e4');
-				break;
-			case "binoculars":
-				GLYPH_MAP.put("binoculars", '\uf1e5');
-				break;
-			case "plug":
-				GLYPH_MAP.put("plug", '\uf1e6');
-				break;
-			case "slideshare":
-				GLYPH_MAP.put("slideshare", '\uf1e7');
-				break;
-			case "twitch":
-				GLYPH_MAP.put("twitch", '\uf1e8');
-				break;
-			case "yelp":
-				GLYPH_MAP.put("yelp", '\uf1e9');
-				break;
-			case "newspaper-o":
-				GLYPH_MAP.put("newspaper-o", '\uf1ea');
-				break;
-			case "wifi":
-				GLYPH_MAP.put("wifi", '\uf1eb');
-				break;
-			case "calculator":
-				GLYPH_MAP.put("calculator", '\uf1ec');
-				break;
-			case "paypal":
-				GLYPH_MAP.put("paypal", '\uf1ed');
-				break;
-			case "google-wallet":
-				GLYPH_MAP.put("google-wallet", '\uf1ee');
-				break;
-			case "cc-visa":
-				GLYPH_MAP.put("cc-visa", '\uf1f0');
-				break;
-			case "cc-mastercard":
-				GLYPH_MAP.put("cc-mastercard", '\uf1f1');
-				break;
-			case "cc-discover":
-				GLYPH_MAP.put("cc-discover", '\uf1f2');
-				break;
-			case "cc-amex":
-				GLYPH_MAP.put("cc-amex", '\uf1f3');
-				break;
-			case "cc-paypal":
-				GLYPH_MAP.put("cc-paypal", '\uf1f4');
-				break;
-			case "cc-stripe":
-				GLYPH_MAP.put("cc-stripe", '\uf1f5');
-				break;
-			case "bell-slash":
-				GLYPH_MAP.put("bell-slash", '\uf1f6');
-				break;
-			case "bell-slash-o":
-				GLYPH_MAP.put("bell-slash-o", '\uf1f7');
-				break;
-			case "trash":
-				GLYPH_MAP.put("trash", '\uf1f8');
-				break;
-			case "copyright":
-				GLYPH_MAP.put("copyright", '\uf1f9');
-				break;
-			case "at":
-				GLYPH_MAP.put("at", '\uf1fa');
-				break;
-			case "eyedropper":
-				GLYPH_MAP.put("eyedropper", '\uf1fb');
-				break;
-			case "paint-brush":
-				GLYPH_MAP.put("paint-brush", '\uf1fc');
-				break;
-			case "birthday-cake":
-				GLYPH_MAP.put("birthday-cake", '\uf1fd');
-				break;
-			case "area-chart":
-				GLYPH_MAP.put("area-chart", '\uf1fe');
-				break;
-			case "pie-chart":
-				GLYPH_MAP.put("pie-chart", '\uf200');
-				break;
-			case "line-chart":
-				GLYPH_MAP.put("line-chart", '\uf201');
-				break;
-			case "lastfm":
-				GLYPH_MAP.put("lastfm", '\uf202');
-				break;
-			case "lastfm-square":
-				GLYPH_MAP.put("lastfm-square", '\uf203');
-				break;
-			case "toggle-off":
-				GLYPH_MAP.put("toggle-off", '\uf204');
-				break;
-			case "toggle-on":
-				GLYPH_MAP.put("toggle-on", '\uf205');
-				break;
-			case "bicycle":
-				GLYPH_MAP.put("bicycle", '\uf206');
-				break;
-			case "bus":
-				GLYPH_MAP.put("bus", '\uf207');
-				break;
-			case "ioxhost":
-				GLYPH_MAP.put("ioxhost", '\uf208');
-				break;
-			case "angellist":
-				GLYPH_MAP.put("angellist", '\uf209');
-				break;
-			case "cc":
-				GLYPH_MAP.put("cc", '\uf20a');
-				break;
-			case "ils":
-				GLYPH_MAP.put("ils", '\uf20b');
-				break; // shekel! sheqel ,
-			case "meanpath":
-				GLYPH_MAP.put("meanpath", '\uf20c');
-				break;
-			case "buysellads":
-				GLYPH_MAP.put("buysellads", '\uf20d');
-				break;
-			case "connectdevelop":
-				GLYPH_MAP.put("connectdevelop", '\uf20e');
-				break;
-			case "dashcube":
-				GLYPH_MAP.put("dashcube", '\uf210');
-				break;
-			case "forumbee":
-				GLYPH_MAP.put("forumbee", '\uf211');
-				break;
-			case "leanpub":
-				GLYPH_MAP.put("leanpub", '\uf212');
-				break;
-			case "sellsy":
-				GLYPH_MAP.put("sellsy", '\uf213');
-				break;
-			case "shirtsinbulk":
-				GLYPH_MAP.put("shirtsinbulk", '\uf214');
-				break;
-			case "simplybuilt":
-				GLYPH_MAP.put("simplybuilt", '\uf215');
-				break;
-			case "skyatlas":
-				GLYPH_MAP.put("skyatlas", '\uf216');
-				break;
-			case "cart-plus":
-				GLYPH_MAP.put("cart-plus", '\uf217');
-				break;
-			case "cart-arrow-down":
-				GLYPH_MAP.put("cart-arrow-down", '\uf218');
-				break;
-			case "diamond":
-				GLYPH_MAP.put("diamond", '\uf219');
-				break;
-			case "ship":
-				GLYPH_MAP.put("ship", '\uf21a');
-				break;
-			case "user-secret":
-				GLYPH_MAP.put("user-secret", '\uf21b');
-				break;
-			case "motorcycle":
-				GLYPH_MAP.put("motorcycle", '\uf21c');
-				break;
-			case "street-view":
-				GLYPH_MAP.put("street-view", '\uf21d');
-				break;
-			case "heartbeat":
-				GLYPH_MAP.put("heartbeat", '\uf21e');
-				break;
-			case "venus":
-				GLYPH_MAP.put("venus", '\uf221');
-				break;
-			case "mars":
-				GLYPH_MAP.put("mars", '\uf222');
-				break;
-			case "mercury":
-				GLYPH_MAP.put("mercury", '\uf223');
-				break;
-			case "transgender":
-				GLYPH_MAP.put("transgender", '\uf224');
-				break; // intersex ,
-			case "transgender-alt":
-				GLYPH_MAP.put("transgender-alt", '\uf225');
-				break;
-			case "venus-double":
-				GLYPH_MAP.put("venus-double", '\uf226');
-				break;
-			case "mars-double":
-				GLYPH_MAP.put("mars-double", '\uf227');
-				break;
-			case "venus-mars":
-				GLYPH_MAP.put("venus-mars", '\uf228');
-				break;
-			case "mars-stroke":
-				GLYPH_MAP.put("mars-stroke", '\uf229');
-				break;
-			case "mars-stroke-v":
-				GLYPH_MAP.put("mars-stroke-v", '\uf22a');
-				break;
-			case "mars-stroke-h":
-				GLYPH_MAP.put("mars-stroke-h", '\uf22b');
-				break;
-			case "neuter":
-				GLYPH_MAP.put("neuter", '\uf22c');
-				break;
-			case "genderless":
-				GLYPH_MAP.put("genderless", '\uf22d');
-				break;
-			case "facebook-official":
-				GLYPH_MAP.put("facebook-official", '\uf230');
-				break;
-			case "pinterest-p":
-				GLYPH_MAP.put("pinterest-p", '\uf231');
-				break;
-			case "whatsapp":
-				GLYPH_MAP.put("whatsapp", '\uf232');
-				break;
-			case "server":
-				GLYPH_MAP.put("server", '\uf233');
-				break;
-			case "user-plus":
-				GLYPH_MAP.put("user-plus", '\uf234');
-				break;
-			case "user-times":
-				GLYPH_MAP.put("user-times", '\uf235');
-				break;
-			case "bed":
-				GLYPH_MAP.put("bed", '\uf236');
-				break; // hotel ,
-			case "viacoin":
-				GLYPH_MAP.put("viacoin", '\uf237');
-				break;
-			case "train":
-				GLYPH_MAP.put("train", '\uf238');
-				break;
-			case "subway":
-				GLYPH_MAP.put("subway", '\uf239');
-				break;
-			case "medium":
-				GLYPH_MAP.put("medium", '\uf23a');
-				break;
-			case "y-combinator":
-				GLYPH_MAP.put("y-combinator", '\uf23b');
-				break; // yc ,
-			case "optin-monster":
-				GLYPH_MAP.put("optin-monster", '\uf23c');
-				break;
-			case "opencart":
-				GLYPH_MAP.put("opencart", '\uf23d');
-				break;
-			case "expeditedssl":
-				GLYPH_MAP.put("expeditedssl", '\uf23e');
-				break;
-			case "battery-full":
-				GLYPH_MAP.put("battery-full", '\uf240');
-				break; // battery-4! battery ,
-			case "battery-three-quarters":
-				GLYPH_MAP.put("battery-three-quarters", '\uf241');
-				break; // battery-3 ,
-			case "battery-half":
-				GLYPH_MAP.put("battery-half", '\uf242');
-				break; // battery-2 ,
-			case "battery-quarter":
-				GLYPH_MAP.put("battery-quarter", '\uf243');
-				break; // battery-1 ,
-			case "battery-empty":
-				GLYPH_MAP.put("battery-empty", '\uf244');
-				break; // battery-0 ,
-			case "mouse-pointer":
-				GLYPH_MAP.put("mouse-pointer", '\uf245');
-				break;
-			case "i-cursor":
-				GLYPH_MAP.put("i-cursor", '\uf246');
-				break;
-			case "object-group":
-				GLYPH_MAP.put("object-group", '\uf247');
-				break;
-			case "object-ungroup":
-				GLYPH_MAP.put("object-ungroup", '\uf248');
-				break;
-			case "sticky-note":
-				GLYPH_MAP.put("sticky-note", '\uf249');
-				break;
-			case "sticky-note-o":
-				GLYPH_MAP.put("sticky-note-o", '\uf24a');
-				break;
-			case "cc-jcb":
-				GLYPH_MAP.put("cc-jcb", '\uf24b');
-				break;
-			case "cc-diners-club":
-				GLYPH_MAP.put("cc-diners-club", '\uf24c');
-				break;
-			case "clone":
-				GLYPH_MAP.put("clone", '\uf24d');
-				break;
-			case "balance-scale":
-				GLYPH_MAP.put("balance-scale", '\uf24e');
-				break;
-			case "hourglass-o":
-				GLYPH_MAP.put("hourglass-o", '\uf250');
-				break;
-			case "hourglass-start":
-				GLYPH_MAP.put("hourglass-start", '\uf251');
-				break; // hourglass-1 ,
-			case "hourglass-half":
-				GLYPH_MAP.put("hourglass-half", '\uf252');
-				break; // hourglass-2 ,
-			case "hourglass-end":
-				GLYPH_MAP.put("hourglass-end", '\uf253');
-				break; // hourglass-3 ,
-			case "hourglass":
-				GLYPH_MAP.put("hourglass", '\uf254');
-				break;
-			case "hand-rock-o":
-				GLYPH_MAP.put("hand-rock-o", '\uf255');
-				break; // hand-grab-o ,
-			case "hand-paper-o":
-				GLYPH_MAP.put("hand-paper-o", '\uf256');
-				break; // hand-stop-o ,
-			case "hand-scissors-o":
-				GLYPH_MAP.put("hand-scissors-o", '\uf257');
-				break;
-			case "hand-lizard-o":
-				GLYPH_MAP.put("hand-lizard-o", '\uf258');
-				break;
-			case "hand-spock-o":
-				GLYPH_MAP.put("hand-spock-o", '\uf259');
-				break;
-			case "hand-pointer-o":
-				GLYPH_MAP.put("hand-pointer-o", '\uf25a');
-				break;
-			case "hand-peace-o":
-				GLYPH_MAP.put("hand-peace-o", '\uf25b');
-				break;
-			case "trademark":
-				GLYPH_MAP.put("trademark", '\uf25c');
-				break;
-			case "registered":
-				GLYPH_MAP.put("registered", '\uf25d');
-				break;
-			case "creative-commons":
-				GLYPH_MAP.put("creative-commons", '\uf25e');
-				break;
-			case "gg":
-				GLYPH_MAP.put("gg", '\uf260');
-				break;
-			case "gg-circle":
-				GLYPH_MAP.put("gg-circle", '\uf261');
-				break;
-			case "tripadvisor":
-				GLYPH_MAP.put("tripadvisor", '\uf262');
-				break;
-			case "odnoklassniki":
-				GLYPH_MAP.put("odnoklassniki", '\uf263');
-				break;
-			case "odnoklassniki-square":
-				GLYPH_MAP.put("odnoklassniki-square", '\uf264');
-				break;
-			case "get-pocket":
-				GLYPH_MAP.put("get-pocket", '\uf265');
-				break;
-			case "wikipedia-w":
-				GLYPH_MAP.put("wikipedia-w", '\uf266');
-				break;
-			case "safari":
-				GLYPH_MAP.put("safari", '\uf267');
-				break;
-			case "chrome":
-				GLYPH_MAP.put("chrome", '\uf268');
-				break;
-			case "firefox":
-				GLYPH_MAP.put("firefox", '\uf269');
-				break;
-			case "opera":
-				GLYPH_MAP.put("opera", '\uf26a');
-				break;
-			case "internet-explorer":
-				GLYPH_MAP.put("internet-explorer", '\uf26b');
-				break;
-			case "television":
-				GLYPH_MAP.put("television", '\uf26c');
-				break; // tv ,
-			case "contao":
-				GLYPH_MAP.put("contao", '\uf26d');
-				break;
-			case "500px":
-				GLYPH_MAP.put("500px", '\uf26e');
-				break;
-			case "amazon":
-				GLYPH_MAP.put("amazon", '\uf270');
-				break;
-			case "calendar-plus-o":
-				GLYPH_MAP.put("calendar-plus-o", '\uf271');
-				break;
-			case "calendar-minus-o":
-				GLYPH_MAP.put("calendar-minus-o", '\uf272');
-				break;
-			case "calendar-times-o":
-				GLYPH_MAP.put("calendar-times-o", '\uf273');
-				break;
-			case "calendar-check-o":
-				GLYPH_MAP.put("calendar-check-o", '\uf274');
-				break;
-			case "industry":
-				GLYPH_MAP.put("industry", '\uf275');
-				break;
-			case "map-pin":
-				GLYPH_MAP.put("map-pin", '\uf276');
-				break;
-			case "map-signs":
-				GLYPH_MAP.put("map-signs", '\uf277');
-				break;
-			case "map-o":
-				GLYPH_MAP.put("map-o", '\uf278');
-				break;
-			case "map":
-				GLYPH_MAP.put("map", '\uf279');
-				break;
-			case "commenting":
-				GLYPH_MAP.put("commenting", '\uf27a');
-				break;
-			case "commenting-o":
-				GLYPH_MAP.put("commenting-o", '\uf27b');
-				break;
-			case "houzz":
-				GLYPH_MAP.put("houzz", '\uf27c');
-				break;
-			case "vimeo":
-				GLYPH_MAP.put("vimeo", '\uf27d');
-				break;
-			case "black-tie":
-				GLYPH_MAP.put("black-tie", '\uf27e');
-				break;
-			case "fonticons":
-				GLYPH_MAP.put("fonticons", '\uf280');
-				break;
-			case "reddit-alien":
-				GLYPH_MAP.put("reddit-alien", '\uf281');
-				break;
-			case "edge":
-				GLYPH_MAP.put("edge", '\uf282');
-				break;
-			case "credit-card-alt":
-				GLYPH_MAP.put("credit-card-alt", '\uf283');
-				break;
-			case "codiepie":
-				GLYPH_MAP.put("codiepie", '\uf284');
-				break;
-			case "modx":
-				GLYPH_MAP.put("modx", '\uf285');
-				break;
-			case "fort-awesome":
-				GLYPH_MAP.put("fort-awesome", '\uf286');
-				break;
-			case "usb":
-				GLYPH_MAP.put("usb", '\uf287');
-				break;
-			case "product-hunt":
-				GLYPH_MAP.put("product-hunt", '\uf288');
-				break;
-			case "mixcloud":
-				GLYPH_MAP.put("mixcloud", '\uf289');
-				break;
-			case "scribd":
-				GLYPH_MAP.put("scribd", '\uf28a');
-				break;
-			case "pause-circle":
-				GLYPH_MAP.put("pause-circle", '\uf28b');
-				break;
-			case "pause-circle-o":
-				GLYPH_MAP.put("pause-circle-o", '\uf28c');
-				break;
-			case "stop-circle":
-				GLYPH_MAP.put("stop-circle", '\uf28d');
-				break;
-			case "stop-circle-o":
-				GLYPH_MAP.put("stop-circle-o", '\uf28e');
-				break;
-			case "shopping-bag":
-				GLYPH_MAP.put("shopping-bag", '\uf290');
-				break;
-			case "shopping-basket":
-				GLYPH_MAP.put("shopping-basket", '\uf291');
-				break;
-			case "hashtag":
-				GLYPH_MAP.put("hashtag", '\uf292');
-				break;
-			case "bluetooth":
-				GLYPH_MAP.put("bluetooth", '\uf293');
-				break;
-			case "bluetooth-b":
-				GLYPH_MAP.put("bluetooth-b", '\uf294');
-				break;
-			case "percent":
-				GLYPH_MAP.put("percent", '\uf295');
-				break;
-			case "gitlab":
-				GLYPH_MAP.put("gitlab", '\uf296');
-				break;
-			case "wpbeginner":
-				GLYPH_MAP.put("wpbeginner", '\uf297');
-				break;
-			case "wpforms":
-				GLYPH_MAP.put("wpforms", '\uf298');
-				break;
-			case "envira":
-				GLYPH_MAP.put("envira", '\uf299');
-				break;
-			case "universal-access":
-				GLYPH_MAP.put("universal-access", '\uf29a');
-				break;
-			case "wheelchair-alt":
-				GLYPH_MAP.put("wheelchair-alt", '\uf29b');
-				break;
-			case "question-circle-o":
-				GLYPH_MAP.put("question-circle-o", '\uf29c');
-				break;
-			case "blind":
-				GLYPH_MAP.put("blind", '\uf29d');
-				break;
-			case "audio-description":
-				GLYPH_MAP.put("audio-description", '\uf29e');
-				break;
-			case "volume-control-phone":
-				GLYPH_MAP.put("volume-control-phone", '\uf2a0');
-				break;
-			case "braille":
-				GLYPH_MAP.put("braille", '\uf2a1');
-				break;
-			case "assistive-listening-systems":
-				GLYPH_MAP.put("assistive-listening-systems", '\uf2a2');
-				break;
-			case "american-sign-language-interpreting":
-				GLYPH_MAP.put("american-sign-language-interpreting", '\uf2a3');
-				break; // asl-interpreting ,
-			case "deaf":
-				GLYPH_MAP.put("deaf", '\uf2a4');
-				break; // deafness! hard-of-hearing ,
-			case "glide":
-				GLYPH_MAP.put("glide", '\uf2a5');
-				break;
-			case "glide-g":
-				GLYPH_MAP.put("glide-g", '\uf2a6');
-				break;
-			case "sign-language":
-				GLYPH_MAP.put("sign-language", '\uf2a7');
-				break; // signing ,
-			case "low-vision":
-				GLYPH_MAP.put("low-vision", '\uf2a8');
-				break;
-			case "viadeo":
-				GLYPH_MAP.put("viadeo", '\uf2a9');
-				break;
-			case "viadeo-square":
-				GLYPH_MAP.put("viadeo-square", '\uf2aa');
-				break;
-			case "snapchat":
-				GLYPH_MAP.put("snapchat", '\uf2ab');
-				break;
-			case "snapchat-ghost":
-				GLYPH_MAP.put("snapchat-ghost", '\uf2ac');
-				break;
-			case "snapchat-square":
-				GLYPH_MAP.put("snapchat-square", '\uf2ad');
-				break;
-			case "pied-piper":
-				GLYPH_MAP.put("pied-piper", '\uf2ae');
-				break;
-			case "first-order":
-				GLYPH_MAP.put("first-order", '\uf2b0');
-				break;
-			case "yoast":
-				GLYPH_MAP.put("yoast", '\uf2b1');
-				break;
-			case "themeisle":
-				GLYPH_MAP.put("themeisle", '\uf2b2');
-				break;
-			case "google-plus-official":
-				GLYPH_MAP.put("google-plus-official", '\uf2b3');
-				break; // google-plus-circle ,
-			case "font-awesome":
-				GLYPH_MAP.put("font-awesome", '\uf2b4');
-				break; // fa ,
-			case "handshake-o":
-				GLYPH_MAP.put("handshake-o", '\uf2b5');
-				break;
-			case "envelope-open":
-				GLYPH_MAP.put("envelope-open", '\uf2b6');
-				break;
-			case "envelope-open-o":
-				GLYPH_MAP.put("envelope-open-o", '\uf2b7');
-				break;
-			case "linode":
-				GLYPH_MAP.put("linode", '\uf2b8');
-				break;
-			case "address-book":
-				GLYPH_MAP.put("address-book", '\uf2b9');
-				break;
-			case "address-book-o":
-				GLYPH_MAP.put("address-book-o", '\uf2ba');
-				break;
-			case "address-card":
-				GLYPH_MAP.put("address-card", '\uf2bb');
-				break; // vcard ,
-			case "address-card-o":
-				GLYPH_MAP.put("address-card-o", '\uf2bc');
-				break; // vcard-o ,
-			case "user-circle":
-				GLYPH_MAP.put("user-circle", '\uf2bd');
-				break;
-			case "user-circle-o":
-				GLYPH_MAP.put("user-circle-o", '\uf2be');
-				break;
-			case "user-o":
-				GLYPH_MAP.put("user-o", '\uf2c0');
-				break;
-			case "id-badge":
-				GLYPH_MAP.put("id-badge", '\uf2c1');
-				break;
-			case "id-card":
-				GLYPH_MAP.put("id-card", '\uf2c2');
-				break; // drivers-license ,
-			case "id-card-o":
-				GLYPH_MAP.put("id-card-o", '\uf2c3');
-				break; // drivers-license-o ,
-			case "quora":
-				GLYPH_MAP.put("quora", '\uf2c4');
-				break;
-			case "free-code-camp":
-				GLYPH_MAP.put("free-code-camp", '\uf2c5');
-				break;
-			case "telegram":
-				GLYPH_MAP.put("telegram", '\uf2c6');
-				break;
-			case "thermometer-full":
-				GLYPH_MAP.put("thermometer-full", '\uf2c7');
-				break; // thermometer-4! thermometer ,
-			case "thermometer-three-quarters":
-				GLYPH_MAP.put("thermometer-three-quarters", '\uf2c8');
-				break; // thermometer-3 ,
-			case "thermometer-half":
-				GLYPH_MAP.put("thermometer-half", '\uf2c9');
-				break; // thermometer-2 ,
-			case "thermometer-quarter":
-				GLYPH_MAP.put("thermometer-quarter", '\uf2ca');
-				break; // thermometer-1 ,
-			case "thermometer-empty":
-				GLYPH_MAP.put("thermometer-empty", '\uf2cb');
-				break; // thermometer-0 ,
-			case "shower":
-				GLYPH_MAP.put("shower", '\uf2cc');
-				break;
-			case "bath":
-				GLYPH_MAP.put("bath", '\uf2cd');
-				break; // bathtub s15 ,
-			case "podcast":
-				GLYPH_MAP.put("podcast", '\uf2ce');
-				break;
-			case "window-maximize":
-				GLYPH_MAP.put("window-maximize", '\uf2d0');
-				break;
-			case "window-minimize":
-				GLYPH_MAP.put("window-minimize", '\uf2d1');
-				break;
-			case "window-restore":
-				GLYPH_MAP.put("window-restore", '\uf2d2');
-				break;
-			case "window-close":
-				GLYPH_MAP.put("window-close", '\uf2d3');
-				break; // times-rectangle ,
-			case "window-close-o":
-				GLYPH_MAP.put("window-close-o", '\uf2d4');
-				break; // times-rectangle-o ,
-			case "bandcamp":
-				GLYPH_MAP.put("bandcamp", '\uf2d5');
-				break;
-			case "grav":
-				GLYPH_MAP.put("grav", '\uf2d6');
-				break;
-			case "etsy":
-				GLYPH_MAP.put("etsy", '\uf2d7');
-				break;
-			case "imdb":
-				GLYPH_MAP.put("imdb", '\uf2d8');
-				break;
-			case "ravelry":
-				GLYPH_MAP.put("ravelry", '\uf2d9');
-				break;
-			case "eercast":
-				GLYPH_MAP.put("eercast", '\uf2da');
-				break;
-			case "microchip":
-				GLYPH_MAP.put("microchip", '\uf2db');
-				break;
-			case "snowflake-o":
-				GLYPH_MAP.put("snowflake-o", '\uf2dc');
-				break;
-			case "superpowers":
-				GLYPH_MAP.put("superpowers", '\uf2dd');
-				break;
-			case "wpexplorer":
-				GLYPH_MAP.put("wpexplorer", '\uf2de');
-				break;
-			case "meetup":
-				GLYPH_MAP.put("meetup", '\uf2e0');
-				break;
-			default:
-				GLYPH_MAP.put(name, '\uf04d');
-			}
-			// TODO
-			val = GLYPH_MAP.get(name);
-		}
-		return String.valueOf(val);
-	}
+//	public static String getfont(String name) {
+//		Character val = GLYPH_MAP.get(name);
+//		if (val == null) {
+//			// TODO
+//			switch (name) {
+//			case "glass":
+//				GLYPH_MAP.put("glass", '\uf000');
+//				break;
+//			case "music":
+//				GLYPH_MAP.put("music", '\uf001');
+//				break;
+//			case "search":
+//				GLYPH_MAP.put("search", '\uf002');
+//				break;
+//			case "envelope-o":
+//				GLYPH_MAP.put("envelope-o", '\uf003');
+//				break;
+//			case "heart":
+//				GLYPH_MAP.put("heart", '\uf004');
+//				break;
+//			case "star":
+//				GLYPH_MAP.put("star", '\uf005');
+//				break;
+//			case "star-o":
+//				GLYPH_MAP.put("star-o", '\uf006');
+//				break;
+//			case "user":
+//				GLYPH_MAP.put("user", '\uf007');
+//				break;
+//			case "film":
+//				GLYPH_MAP.put("film", '\uf008');
+//				break;
+//			case "th-large":
+//				GLYPH_MAP.put("th-large", '\uf009');
+//				break;
+//			case "th":
+//				GLYPH_MAP.put("th", '\uf00a');
+//				break;
+//			case "th-list":
+//				GLYPH_MAP.put("th-list", '\uf00b');
+//				break;
+//			case "check":
+//				GLYPH_MAP.put("check", '\uf00c');
+//				break;
+//			case "times":
+//				GLYPH_MAP.put("times", '\uf00d');
+//				break; // remove close ,
+//			case "search-plus":
+//				GLYPH_MAP.put("search-plus", '\uf00e');
+//				break;
+//			case "search-minus":
+//				GLYPH_MAP.put("search-minus", '\uf010');
+//				break;
+//			case "power-off":
+//				GLYPH_MAP.put("power-off", '\uf011');
+//				break;
+//			case "signal":
+//				GLYPH_MAP.put("signal", '\uf012');
+//				break;
+//			case "cog":
+//				GLYPH_MAP.put("cog", '\uf013');
+//				break;
+//			case "gear":
+//				GLYPH_MAP.put("gear", '\uf013');
+//				break;
+//			case "trash-o":
+//				GLYPH_MAP.put("trash-o", '\uf014');
+//				break;
+//			case "home":
+//				GLYPH_MAP.put("home", '\uf015');
+//				break;
+//			case "file-o":
+//				GLYPH_MAP.put("file-o", '\uf016');
+//				break;
+//			case "clock-o":
+//				GLYPH_MAP.put("clock-o", '\uf017');
+//				break;
+//			case "road":
+//				GLYPH_MAP.put("road", '\uf018');
+//				break;
+//			case "download":
+//				GLYPH_MAP.put("download", '\uf019');
+//				break;
+//			case "arrow-circle-o-down":
+//				GLYPH_MAP.put("arrow-circle-o-down", '\uf01a');
+//				break;
+//			case "arrow-circle-o-up":
+//				GLYPH_MAP.put("arrow-circle-o-up", '\uf01b');
+//				break;
+//			case "inbox":
+//				GLYPH_MAP.put("inbox", '\uf01c');
+//				break;
+//			case "play-circle-o":
+//				GLYPH_MAP.put("play-circle-o", '\uf01d');
+//				break;
+//			case "repeat":
+//				GLYPH_MAP.put("repeat", '\uf01e');
+//				break; // rotate-right ,
+//			case "refresh":
+//				GLYPH_MAP.put("refresh", '\uf021');
+//				break;
+//			case "list-alt":
+//				GLYPH_MAP.put("list-alt", '\uf022');
+//				break;
+//			case "lock":
+//				GLYPH_MAP.put("lock", '\uf023');
+//				break;
+//			case "flag":
+//				GLYPH_MAP.put("flag", '\uf024');
+//				break;
+//			case "headphones":
+//				GLYPH_MAP.put("headphones", '\uf025');
+//				break;
+//			case "volume-off":
+//				GLYPH_MAP.put("volume-off", '\uf026');
+//				break;
+//			case "volume-down":
+//				GLYPH_MAP.put("volume-down", '\uf027');
+//				break;
+//			case "volume-up":
+//				GLYPH_MAP.put("volume-up", '\uf028');
+//				break;
+//			case "qrcode":
+//				GLYPH_MAP.put("qrcode", '\uf029');
+//				break;
+//			case "barcode":
+//				GLYPH_MAP.put("barcode", '\uf02a');
+//				break;
+//			case "tag":
+//				GLYPH_MAP.put("tag", '\uf02b');
+//				break;
+//			case "tags":
+//				GLYPH_MAP.put("tags", '\uf02c');
+//				break;
+//			case "book":
+//				GLYPH_MAP.put("book", '\uf02d');
+//				break;
+//			case "bookmark":
+//				GLYPH_MAP.put("bookmark", '\uf02e');
+//				break;
+//			case "print":
+//				GLYPH_MAP.put("print", '\uf02f');
+//				break;
+//			case "camera":
+//				GLYPH_MAP.put("camera", '\uf030');
+//				break;
+//			case "font":
+//				GLYPH_MAP.put("font", '\uf031');
+//				break;
+//			case "bold":
+//				GLYPH_MAP.put("bold", '\uf032');
+//				break;
+//			case "italic":
+//				GLYPH_MAP.put("italic", '\uf033');
+//				break;
+//			case "text-height":
+//				GLYPH_MAP.put("text-height", '\uf034');
+//				break;
+//			case "text-width":
+//				GLYPH_MAP.put("text-width", '\uf035');
+//				break;
+//			case "align-left":
+//				GLYPH_MAP.put("align-left", '\uf036');
+//				break;
+//			case "align-center":
+//				GLYPH_MAP.put("align-center", '\uf037');
+//				break;
+//			case "align-right":
+//				GLYPH_MAP.put("align-right", '\uf038');
+//				break;
+//			case "align-justify":
+//				GLYPH_MAP.put("align-justify", '\uf039');
+//				break;
+//			case "list":
+//				GLYPH_MAP.put("list", '\uf03a');
+//				break;
+//			case "outdent":
+//				GLYPH_MAP.put("outdent", '\uf03b');
+//				break; // dedent ,
+//			case "indent":
+//				GLYPH_MAP.put("indent", '\uf03c');
+//				break;
+//			case "video-camera":
+//				GLYPH_MAP.put("video-camera", '\uf03d');
+//				break;
+//			case "picture-o":
+//				GLYPH_MAP.put("picture-o", '\uf03e');
+//				break; // photo! image!
+//			case "pencil":
+//				GLYPH_MAP.put("pencil", '\uf040');
+//				break;
+//			case "map-marker":
+//				GLYPH_MAP.put("map-marker", '\uf041');
+//				break;
+//			case "adjust":
+//				GLYPH_MAP.put("adjust", '\uf042');
+//				break;
+//			case "tint":
+//				GLYPH_MAP.put("tint", '\uf043');
+//				break;
+//			case "pencil-square-o":
+//				GLYPH_MAP.put("pencil-square-o", '\uf044');
+//				break; // edit ,
+//			case "edit":
+//				GLYPH_MAP.put("edit", '\uf044');
+//				break; // ,
+//			case "share-square-o":
+//				GLYPH_MAP.put("share-square-o", '\uf045');
+//				break;
+//			case "check-square-o":
+//				GLYPH_MAP.put("check-square-o", '\uf046');
+//				break;
+//			case "arrows":
+//				GLYPH_MAP.put("arrows", '\uf047');
+//				break;
+//			case "step-backward":
+//				GLYPH_MAP.put("step-backward", '\uf048');
+//				break;
+//			case "fast-backward":
+//				GLYPH_MAP.put("fast-backward", '\uf049');
+//				break;
+//			case "backward":
+//				GLYPH_MAP.put("backward", '\uf04a');
+//				break;
+//			case "play":
+//				GLYPH_MAP.put("play", '\uf04b');
+//				break;
+//			case "pause":
+//				GLYPH_MAP.put("pause", '\uf04c');
+//				break;
+//			case "stop":
+//				GLYPH_MAP.put("stop", '\uf04d');
+//				break;
+//			case "forward":
+//				GLYPH_MAP.put("forward", '\uf04e');
+//				break;
+//			case "fast-forward":
+//				GLYPH_MAP.put("fast-forward", '\uf050');
+//				break;
+//			case "step-forward":
+//				GLYPH_MAP.put("step-forward", '\uf051');
+//				break;
+//			case "eject":
+//				GLYPH_MAP.put("eject", '\uf052');
+//				break;
+//			case "chevron-left":
+//				GLYPH_MAP.put("chevron-left", '\uf053');
+//				break;
+//			case "chevron-right":
+//				GLYPH_MAP.put("chevron-right", '\uf054');
+//				break;
+//			case "plus-circle":
+//				GLYPH_MAP.put("plus-circle", '\uf055');
+//				break;
+//			case "minus-circle":
+//				GLYPH_MAP.put("minus-circle", '\uf056');
+//				break;
+//			case "times-circle":
+//				GLYPH_MAP.put("times-circle", '\uf057');
+//				break;
+//			case "check-circle":
+//				GLYPH_MAP.put("check-circle", '\uf058');
+//				break;
+//			case "question-circle":
+//				GLYPH_MAP.put("question-circle", '\uf059');
+//				break;
+//			case "info-circle":
+//				GLYPH_MAP.put("info-circle", '\uf05a');
+//				break;
+//			case "crosshairs":
+//				GLYPH_MAP.put("crosshairs", '\uf05b');
+//				break;
+//			case "times-circle-o":
+//				GLYPH_MAP.put("times-circle-o", '\uf05c');
+//				break;
+//			case "check-circle-o":
+//				GLYPH_MAP.put("check-circle-o", '\uf05d');
+//				break;
+//			case "ban":
+//				GLYPH_MAP.put("ban", '\uf05e');
+//				break;
+//			case "arrow-left":
+//				GLYPH_MAP.put("arrow-left", '\uf060');
+//				break;
+//			case "arrow-right":
+//				GLYPH_MAP.put("arrow-right", '\uf061');
+//				break;
+//			case "arrow-up":
+//				GLYPH_MAP.put("arrow-up", '\uf062');
+//				break;
+//			case "arrow-down":
+//				GLYPH_MAP.put("arrow-down", '\uf063');
+//				break;
+//			case "share":
+//				GLYPH_MAP.put("share", '\uf064');
+//				break; // mail-forward ,
+//			case "expand":
+//				GLYPH_MAP.put("expand", '\uf065');
+//				break;
+//			case "compress":
+//				GLYPH_MAP.put("compress", '\uf066');
+//				break;
+//			case "plus":
+//				GLYPH_MAP.put("plus", '\uf067');
+//				break;
+//			case "minus":
+//				GLYPH_MAP.put("minus", '\uf068');
+//				break;
+//			case "asterisk":
+//				GLYPH_MAP.put("asterisk", '\uf069');
+//				break;
+//			case "exclamation-circle":
+//				GLYPH_MAP.put("exclamation-circle", '\uf06a');
+//				break;
+//			case "gift":
+//				GLYPH_MAP.put("gift", '\uf06b');
+//				break;
+//			case "leaf":
+//				GLYPH_MAP.put("leaf", '\uf06c');
+//				break;
+//			case "fire":
+//				GLYPH_MAP.put("fire", '\uf06d');
+//				break;
+//			case "eye":
+//				GLYPH_MAP.put("eye", '\uf06e');
+//				break;
+//			case "eye-slash":
+//				GLYPH_MAP.put("eye-slash", '\uf070');
+//				break;
+//			case "exclamation-triangle":
+//				GLYPH_MAP.put("exclamation-triangle", '\uf071');
+//				break; // warning ,
+//			case "plane":
+//				GLYPH_MAP.put("plane", '\uf072');
+//				break;
+//			case "calendar":
+//				GLYPH_MAP.put("calendar", '\uf073');
+//				break;
+//			case "random":
+//				GLYPH_MAP.put("random", '\uf074');
+//				break;
+//			case "comment":
+//				GLYPH_MAP.put("comment", '\uf075');
+//				break;
+//			case "magnet":
+//				GLYPH_MAP.put("magnet", '\uf076');
+//				break;
+//			case "chevron-up":
+//				GLYPH_MAP.put("chevron-up", '\uf077');
+//				break;
+//			case "chevron-down":
+//				GLYPH_MAP.put("chevron-down", '\uf078');
+//				break;
+//			case "retweet":
+//				GLYPH_MAP.put("retweet", '\uf079');
+//				break;
+//			case "shopping-cart":
+//				GLYPH_MAP.put("shopping-cart", '\uf07a');
+//				break;
+//			case "folder":
+//				GLYPH_MAP.put("folder", '\uf07b');
+//				break;
+//			case "folder-open":
+//				GLYPH_MAP.put("folder-open", '\uf07c');
+//				break;
+//			case "arrows-v":
+//				GLYPH_MAP.put("arrows-v", '\uf07d');
+//				break;
+//			case "arrows-h":
+//				GLYPH_MAP.put("arrows-h", '\uf07e');
+//				break;
+//			case "bar-chart":
+//				GLYPH_MAP.put("bar-chart", '\uf080');
+//				break; // bar-chart-o ,
+//			case "twitter-square":
+//				GLYPH_MAP.put("twitter-square", '\uf081');
+//				break;
+//			case "facebook-square":
+//				GLYPH_MAP.put("facebook-square", '\uf082');
+//				break;
+//			case "camera-retro":
+//				GLYPH_MAP.put("camera-retro", '\uf083');
+//				break;
+//			case "key":
+//				GLYPH_MAP.put("key", '\uf084');
+//				break;
+//			case "cogs":
+//				GLYPH_MAP.put("cogs", '\uf085');
+//				break; // gears ,
+//			case "gears":
+//				GLYPH_MAP.put("gears", '\uf085');
+//				break; // gears ,
+//			case "comments":
+//				GLYPH_MAP.put("comments", '\uf086');
+//				break;
+//			case "thumbs-o-up":
+//				GLYPH_MAP.put("thumbs-o-up", '\uf087');
+//				break;
+//			case "thumbs-o-down":
+//				GLYPH_MAP.put("thumbs-o-down", '\uf088');
+//				break;
+//			case "star-half":
+//				GLYPH_MAP.put("star-half", '\uf089');
+//				break;
+//			case "heart-o":
+//				GLYPH_MAP.put("heart-o", '\uf08a');
+//				break;
+//			case "sign-out":
+//				GLYPH_MAP.put("sign-out", '\uf08b');
+//				break;
+//			case "linkedin-square":
+//				GLYPH_MAP.put("linkedin-square", '\uf08c');
+//				break;
+//			case "thumb-tack":
+//				GLYPH_MAP.put("thumb-tack", '\uf08d');
+//				break;
+//			case "external-link":
+//				GLYPH_MAP.put("external-link", '\uf08e');
+//				break;
+//			case "sign-in":
+//				GLYPH_MAP.put("sign-in", '\uf090');
+//				break;
+//			case "trophy":
+//				GLYPH_MAP.put("trophy", '\uf091');
+//				break;
+//			case "github-square":
+//				GLYPH_MAP.put("github-square", '\uf092');
+//				break;
+//			case "upload":
+//				GLYPH_MAP.put("upload", '\uf093');
+//				break;
+//			case "lemon-o":
+//				GLYPH_MAP.put("lemon-o", '\uf094');
+//				break;
+//			case "phone":
+//				GLYPH_MAP.put("phone", '\uf095');
+//				break;
+//			case "square-o":
+//				GLYPH_MAP.put("square-o", '\uf096');
+//				break;
+//			case "bookmark-o":
+//				GLYPH_MAP.put("bookmark-o", '\uf097');
+//				break;
+//			case "phone-square":
+//				GLYPH_MAP.put("phone-square", '\uf098');
+//				break;
+//			case "twitter":
+//				GLYPH_MAP.put("twitter", '\uf099');
+//				break;
+//			case "facebook":
+//				GLYPH_MAP.put("facebook", '\uf09a');
+//				break; // facebook-f ,
+//			case "github":
+//				GLYPH_MAP.put("github", '\uf09b');
+//				break;
+//			case "unlock":
+//				GLYPH_MAP.put("unlock", '\uf09c');
+//				break;
+//			case "credit-card":
+//				GLYPH_MAP.put("credit-card", '\uf09d');
+//				break;
+//			case "rss":
+//				GLYPH_MAP.put("rss", '\uf09e');
+//				break; // feed ,
+//			case "hdd-o":
+//				GLYPH_MAP.put("hdd-o", '\uf0a0');
+//				break;
+//			case "bullhorn":
+//				GLYPH_MAP.put("bullhorn", '\uf0a1');
+//				break;
+//			case "bell":
+//				GLYPH_MAP.put("bell", '\uf0f3');
+//				break;
+//			case "certificate":
+//				GLYPH_MAP.put("certificate", '\uf0a3');
+//				break;
+//			case "hand-o-right":
+//				GLYPH_MAP.put("hand-o-right", '\uf0a4');
+//				break;
+//			case "hand-o-left":
+//				GLYPH_MAP.put("hand-o-left", '\uf0a5');
+//				break;
+//			case "hand-o-up":
+//				GLYPH_MAP.put("hand-o-up", '\uf0a6');
+//				break;
+//			case "hand-o-down":
+//				GLYPH_MAP.put("hand-o-down", '\uf0a7');
+//				break;
+//			case "arrow-circle-left":
+//				GLYPH_MAP.put("arrow-circle-left", '\uf0a8');
+//				break;
+//			case "arrow-circle-right":
+//				GLYPH_MAP.put("arrow-circle-right", '\uf0a9');
+//				break;
+//			case "arrow-circle-up":
+//				GLYPH_MAP.put("arrow-circle-up", '\uf0aa');
+//				break;
+//			case "arrow-circle-down":
+//				GLYPH_MAP.put("arrow-circle-down", '\uf0ab');
+//				break;
+//			case "globe":
+//				GLYPH_MAP.put("globe", '\uf0ac');
+//				break;
+//			case "wrench":
+//				GLYPH_MAP.put("wrench", '\uf0ad');
+//				break;
+//			case "tasks":
+//				GLYPH_MAP.put("tasks", '\uf0ae');
+//				break;
+//			case "filter":
+//				GLYPH_MAP.put("filter", '\uf0b0');
+//				break;
+//			case "briefcase":
+//				GLYPH_MAP.put("briefcase", '\uf0b1');
+//				break;
+//			case "arrows-alt":
+//				GLYPH_MAP.put("arrows-alt", '\uf0b2');
+//				break;
+//			case "users":
+//				GLYPH_MAP.put("users", '\uf0c0');
+//				break; // group ,
+//			case "link":
+//				GLYPH_MAP.put("link", '\uf0c1');
+//				break; // chain ,
+//			case "cloud":
+//				GLYPH_MAP.put("cloud", '\uf0c2');
+//				break;
+//			case "flask":
+//				GLYPH_MAP.put("flask", '\uf0c3');
+//				break;
+//			case "scissors":
+//				GLYPH_MAP.put("scissors", '\uf0c4');
+//				break; // cut ,
+//			case "files-o":
+//				GLYPH_MAP.put("files-o", '\uf0c5');
+//				break; // copy ,
+//			case "paperclip":
+//				GLYPH_MAP.put("paperclip", '\uf0c6');
+//				break;
+//			case "floppy-o":
+//				GLYPH_MAP.put("floppy-o", '\uf0c7');
+//				break; // ,
+//			case "save":
+//				GLYPH_MAP.put("save", '\uf0c7');
+//				break;
+//			case "square":
+//				GLYPH_MAP.put("square", '\uf0c8');
+//				break;
+//			case "bars":
+//				GLYPH_MAP.put("bars", '\uf0c9');
+//				break; // navicon! reorder ,
+//			case "list-ul":
+//				GLYPH_MAP.put("list-ul", '\uf0ca');
+//				break;
+//			case "list-ol":
+//				GLYPH_MAP.put("list-ol", '\uf0cb');
+//				break;
+//			case "strikethrough":
+//				GLYPH_MAP.put("strikethrough", '\uf0cc');
+//				break;
+//			case "underline":
+//				GLYPH_MAP.put("underline", '\uf0cd');
+//				break;
+//			case "table":
+//				GLYPH_MAP.put("table", '\uf0ce');
+//				break;
+//			case "magic":
+//				GLYPH_MAP.put("magic", '\uf0d0');
+//				break;
+//			case "truck":
+//				GLYPH_MAP.put("truck", '\uf0d1');
+//				break;
+//			case "pinterest":
+//				GLYPH_MAP.put("pinterest", '\uf0d2');
+//				break;
+//			case "pinterest-square":
+//				GLYPH_MAP.put("pinterest-square", '\uf0d3');
+//				break;
+//			case "google-plus-square":
+//				GLYPH_MAP.put("google-plus-square", '\uf0d4');
+//				break;
+//			case "google-plus":
+//				GLYPH_MAP.put("google-plus", '\uf0d5');
+//				break;
+//			case "money":
+//				GLYPH_MAP.put("money", '\uf0d6');
+//				break;
+//			case "caret-down":
+//				GLYPH_MAP.put("caret-down", '\uf0d7');
+//				break;
+//			case "caret-up":
+//				GLYPH_MAP.put("caret-up", '\uf0d8');
+//				break;
+//			case "caret-left":
+//				GLYPH_MAP.put("caret-left", '\uf0d9');
+//				break;
+//			case "caret-right":
+//				GLYPH_MAP.put("caret-right", '\uf0da');
+//				break;
+//			case "columns":
+//				GLYPH_MAP.put("columns", '\uf0db');
+//				break;
+//			case "sort":
+//				GLYPH_MAP.put("sort", '\uf0dc');
+//				break; // unsorted ,
+//			case "sort-desc":
+//				GLYPH_MAP.put("sort-desc", '\uf0dd');
+//				break; // sort-down ,
+//			case "sort-asc":
+//				GLYPH_MAP.put("sort-asc", '\uf0de');
+//				break; // sort-up ,
+//			case "envelope":
+//				GLYPH_MAP.put("envelope", '\uf0e0');
+//				break;
+//			case "linkedin":
+//				GLYPH_MAP.put("linkedin", '\uf0e1');
+//				break;
+//			case "undo":
+//				GLYPH_MAP.put("undo", '\uf0e2');
+//				break; // rotate-left ,
+//			case "gavel":
+//				GLYPH_MAP.put("gavel", '\uf0e3');
+//				break; // legal ,
+//			case "tachometer":
+//				GLYPH_MAP.put("tachometer", '\uf0e4');
+//				break; // dashboard ,
+//			case "comment-o":
+//				GLYPH_MAP.put("comment-o", '\uf0e5');
+//				break;
+//			case "comments-o":
+//				GLYPH_MAP.put("comments-o", '\uf0e6');
+//				break;
+//			case "bolt":
+//				GLYPH_MAP.put("bolt", '\uf0e7');
+//				break; // flash ,
+//			case "sitemap":
+//				GLYPH_MAP.put("sitemap", '\uf0e8');
+//				break;
+//			case "umbrella":
+//				GLYPH_MAP.put("umbrella", '\uf0e9');
+//				break;
+//			case "clipboard":
+//				GLYPH_MAP.put("clipboard", '\uf0ea');
+//				break;// paste ,
+//			case "lightbulb-o":
+//				GLYPH_MAP.put("lightbulb-o", '\uf0eb');
+//				break;
+//			case "exchange":
+//				GLYPH_MAP.put("exchange", '\uf0ec');
+//				break;
+//			case "cloud-download":
+//				GLYPH_MAP.put("cloud-download", '\uf0ed');
+//				break;
+//			case "cloud-upload":
+//				GLYPH_MAP.put("cloud-upload", '\uf0ee');
+//				break;
+//			case "user-md":
+//				GLYPH_MAP.put("user-md", '\uf0f0');
+//				break;
+//			case "stethoscope":
+//				GLYPH_MAP.put("stethoscope", '\uf0f1');
+//				break;
+//			case "suitcase":
+//				GLYPH_MAP.put("suitcase", '\uf0f2');
+//				break;
+//			case "bell-o":
+//				GLYPH_MAP.put("bell-o", '\uf0a2');
+//				break;
+//			case "coffee":
+//				GLYPH_MAP.put("coffee", '\uf0f4');
+//				break;
+//			case "cutlery":
+//				GLYPH_MAP.put("cutlery", '\uf0f5');
+//				break;
+//			case "file-text-o":
+//				GLYPH_MAP.put("file-text-o", '\uf0f6');
+//				break;
+//			case "building-o":
+//				GLYPH_MAP.put("building-o", '\uf0f7');
+//				break;
+//			case "hospital-o":
+//				GLYPH_MAP.put("hospital-o", '\uf0f8');
+//				break;
+//			case "ambulance":
+//				GLYPH_MAP.put("ambulance", '\uf0f9');
+//				break;
+//			case "medkit":
+//				GLYPH_MAP.put("medkit", '\uf0fa');
+//				break;
+//			case "fighter-jet":
+//				GLYPH_MAP.put("fighter-jet", '\uf0fb');
+//				break;
+//			case "beer":
+//				GLYPH_MAP.put("beer", '\uf0fc');
+//				break;
+//			case "h-square":
+//				GLYPH_MAP.put("h-square", '\uf0fd');
+//				break;
+//			case "plus-square":
+//				GLYPH_MAP.put("plus-square", '\uf0fe');
+//				break;
+//			case "angle-double-left":
+//				GLYPH_MAP.put("angle-double-left", '\uf100');
+//				break;
+//			case "angle-double-right":
+//				GLYPH_MAP.put("angle-double-right", '\uf101');
+//				break;
+//			case "angle-double-up":
+//				GLYPH_MAP.put("angle-double-up", '\uf102');
+//				break;
+//			case "angle-double-down":
+//				GLYPH_MAP.put("angle-double-down", '\uf103');
+//				break;
+//			case "angle-left":
+//				GLYPH_MAP.put("angle-left", '\uf104');
+//				break;
+//			case "angle-right":
+//				GLYPH_MAP.put("angle-right", '\uf105');
+//				break;
+//			case "angle-up":
+//				GLYPH_MAP.put("angle-up", '\uf106');
+//				break;
+//			case "angle-down":
+//				GLYPH_MAP.put("angle-down", '\uf107');
+//				break;
+//			case "desktop":
+//				GLYPH_MAP.put("desktop", '\uf108');
+//				break;
+//			case "laptop":
+//				GLYPH_MAP.put("laptop", '\uf109');
+//				break;
+//			case "tablet":
+//				GLYPH_MAP.put("tablet", '\uf10a');
+//				break;
+//			case "mobile":
+//				GLYPH_MAP.put("mobile", '\uf10b');
+//				break; // mobile-phone ,
+//			case "circle-o":
+//				GLYPH_MAP.put("circle-o", '\uf10c');
+//				break;
+//			case "quote-left":
+//				GLYPH_MAP.put("quote-left", '\uf10d');
+//				break;
+//			case "quote-right":
+//				GLYPH_MAP.put("quote-right", '\uf10e');
+//				break;
+//			case "spinner":
+//				GLYPH_MAP.put("spinner", '\uf110');
+//				break;
+//			case "circle":
+//				GLYPH_MAP.put("circle", '\uf111');
+//				break;
+//			case "reply":
+//				GLYPH_MAP.put("reply", '\uf112');
+//				break; // mail-reply ,
+//			case "github-alt":
+//				GLYPH_MAP.put("github-alt", '\uf113');
+//				break;
+//			case "folder-o":
+//				GLYPH_MAP.put("folder-o", '\uf114');
+//				break;
+//			case "folder-open-o":
+//				GLYPH_MAP.put("folder-open-o", '\uf115');
+//				break;
+//			case "smile-o":
+//				GLYPH_MAP.put("smile-o", '\uf118');
+//				break;
+//			case "frown-o":
+//				GLYPH_MAP.put("frown-o", '\uf119');
+//				break;
+//			case "meh-o":
+//				GLYPH_MAP.put("meh-o", '\uf11a');
+//				break;
+//			case "gamepad":
+//				GLYPH_MAP.put("gamepad", '\uf11b');
+//				break;
+//			case "keyboard-o":
+//				GLYPH_MAP.put("keyboard-o", '\uf11c');
+//				break;
+//			case "flag-o":
+//				GLYPH_MAP.put("flag-o", '\uf11d');
+//				break;
+//			case "flag-checkered":
+//				GLYPH_MAP.put("flag-checkered", '\uf11e');
+//				break;
+//			case "terminal":
+//				GLYPH_MAP.put("terminal", '\uf120');
+//				break;
+//			case "code":
+//				GLYPH_MAP.put("code", '\uf121');
+//				break;
+//			case "reply-all":
+//				GLYPH_MAP.put("reply-all", '\uf122');
+//				break; // mail-reply-all ,
+//			case "star-half-o":
+//				GLYPH_MAP.put("star-half-o", '\uf123');
+//				break; // star-half-empty! star-half-full ,
+//			case "location-arrow":
+//				GLYPH_MAP.put("location-arrow", '\uf124');
+//				break;
+//			case "crop":
+//				GLYPH_MAP.put("crop", '\uf125');
+//				break;
+//			case "code-fork":
+//				GLYPH_MAP.put("code-fork", '\uf126');
+//				break;
+//			case "chain-broken":
+//				GLYPH_MAP.put("chain-broken", '\uf127');
+//				break; // unlink ,
+//			case "unlink":
+//				GLYPH_MAP.put("unlink", '\uf127');
+//				break;
+//			case "question":
+//				GLYPH_MAP.put("question", '\uf128');
+//				break;
+//			case "info":
+//				GLYPH_MAP.put("info", '\uf129');
+//				break;
+//			case "exclamation":
+//				GLYPH_MAP.put("exclamation", '\uf12a');
+//				break;
+//			case "superscript":
+//				GLYPH_MAP.put("superscript", '\uf12b');
+//				break;
+//			case "subscript":
+//				GLYPH_MAP.put("subscript", '\uf12c');
+//				break;
+//			case "eraser":
+//				GLYPH_MAP.put("eraser", '\uf12d');
+//				break;
+//			case "puzzle-piece":
+//				GLYPH_MAP.put("puzzle-piece", '\uf12e');
+//				break;
+//			case "microphone":
+//				GLYPH_MAP.put("microphone", '\uf130');
+//				break;
+//			case "microphone-slash":
+//				GLYPH_MAP.put("microphone-slash", '\uf131');
+//				break;
+//			case "shield":
+//				GLYPH_MAP.put("shield", '\uf132');
+//				break;
+//			case "calendar-o":
+//				GLYPH_MAP.put("calendar-o", '\uf133');
+//				break;
+//			case "fire-extinguisher":
+//				GLYPH_MAP.put("fire-extinguisher", '\uf134');
+//				break;
+//			case "rocket":
+//				GLYPH_MAP.put("rocket", '\uf135');
+//				break;
+//			case "maxcdn":
+//				GLYPH_MAP.put("maxcdn", '\uf136');
+//				break;
+//			case "chevron-circle-left":
+//				GLYPH_MAP.put("chevron-circle-left", '\uf137');
+//				break;
+//			case "chevron-circle-right":
+//				GLYPH_MAP.put("chevron-circle-right", '\uf138');
+//				break;
+//			case "chevron-circle-up":
+//				GLYPH_MAP.put("chevron-circle-up", '\uf139');
+//				break;
+//			case "chevron-circle-down":
+//				GLYPH_MAP.put("chevron-circle-down", '\uf13a');
+//				break;
+//			case "html5":
+//				GLYPH_MAP.put("html5", '\uf13b');
+//				break;
+//			case "css3":
+//				GLYPH_MAP.put("css3", '\uf13c');
+//				break;
+//			case "anchor":
+//				GLYPH_MAP.put("anchor", '\uf13d');
+//				break;
+//			case "unlock-alt":
+//				GLYPH_MAP.put("unlock-alt", '\uf13e');
+//				break;
+//			case "bullseye":
+//				GLYPH_MAP.put("bullseye", '\uf140');
+//				break;
+//			case "ellipsis-h":
+//				GLYPH_MAP.put("ellipsis-h", '\uf141');
+//				break;
+//			case "ellipsis-v":
+//				GLYPH_MAP.put("ellipsis-v", '\uf142');
+//				break;
+//			case "rss-square":
+//				GLYPH_MAP.put("rss-square", '\uf143');
+//				break;
+//			case "play-circle":
+//				GLYPH_MAP.put("play-circle", '\uf144');
+//				break;
+//			case "ticket":
+//				GLYPH_MAP.put("ticket", '\uf145');
+//				break;
+//			case "minus-square":
+//				GLYPH_MAP.put("minus-square", '\uf146');
+//				break;
+//			case "minus-square-o":
+//				GLYPH_MAP.put("minus-square-o", '\uf147');
+//				break;
+//			case "level-up":
+//				GLYPH_MAP.put("level-up", '\uf148');
+//				break;
+//			case "level-down":
+//				GLYPH_MAP.put("level-down", '\uf149');
+//				break;
+//			case "check-square":
+//				GLYPH_MAP.put("check-square", '\uf14a');
+//				break;
+//			case "pencil-square":
+//				GLYPH_MAP.put("pencil-square", '\uf14b');
+//				break;
+//			case "external-link-square":
+//				GLYPH_MAP.put("external-link-square", '\uf14c');
+//				break;
+//			case "share-square":
+//				GLYPH_MAP.put("share-square", '\uf14d');
+//				break;
+//			case "compass":
+//				GLYPH_MAP.put("compass", '\uf14e');
+//				break;
+//			case "caret-square-o-down":
+//				GLYPH_MAP.put("caret-square-o-down", '\uf150');
+//				break; // toggle-down ,
+//			case "caret-square-o-up":
+//				GLYPH_MAP.put("caret-square-o-up", '\uf151');
+//				break; // toggle-up ,
+//			case "caret-square-o-right":
+//				GLYPH_MAP.put("caret-square-o-right", '\uf152');
+//				break; // toggle-right ,
+//			case "eur":
+//				GLYPH_MAP.put("eur", '\uf153');
+//				break; // euro ,
+//			case "gbp":
+//				GLYPH_MAP.put("gbp", '\uf154');
+//				break;
+//			case "usd":
+//				GLYPH_MAP.put("usd", '\uf155');
+//				break; // dollar ,
+//			case "inr":
+//				GLYPH_MAP.put("inr", '\uf156');
+//				break; // rupee ,
+//			case "jpy":
+//				GLYPH_MAP.put("jpy", '\uf157');
+//				break; // cny! rmb! yen!
+//			case "rub":
+//				GLYPH_MAP.put("rub", '\uf158');
+//				break; // ruble! rouble ,
+//			case "krw":
+//				GLYPH_MAP.put("krw", '\uf159');
+//				break; // won ,
+//			case "btc":
+//				GLYPH_MAP.put("btc", '\uf15a');
+//				break; // bitcoin ,
+//			case "file":
+//				GLYPH_MAP.put("file", '\uf15b');
+//				break;
+//			case "file-text":
+//				GLYPH_MAP.put("file-text", '\uf15c');
+//				break;
+//			case "sort-alpha-asc":
+//				GLYPH_MAP.put("sort-alpha-asc", '\uf15d');
+//				break;
+//			case "sort-alpha-desc":
+//				GLYPH_MAP.put("sort-alpha-desc", '\uf15e');
+//				break;
+//			case "sort-amount-asc":
+//				GLYPH_MAP.put("sort-amount-asc", '\uf160');
+//				break;
+//			case "sort-amount-desc":
+//				GLYPH_MAP.put("sort-amount-desc", '\uf161');
+//				break;
+//			case "sort-numeric-asc":
+//				GLYPH_MAP.put("sort-numeric-asc", '\uf162');
+//				break;
+//			case "sort-numeric-desc":
+//				GLYPH_MAP.put("sort-numeric-desc", '\uf163');
+//				break;
+//			case "thumbs-up":
+//				GLYPH_MAP.put("thumbs-up", '\uf164');
+//				break;
+//			case "thumbs-down":
+//				GLYPH_MAP.put("thumbs-down", '\uf165');
+//				break;
+//			case "youtube-square":
+//				GLYPH_MAP.put("youtube-square", '\uf166');
+//				break;
+//			case "youtube":
+//				GLYPH_MAP.put("youtube", '\uf167');
+//				break;
+//			case "xing":
+//				GLYPH_MAP.put("xing", '\uf168');
+//				break;
+//			case "xing-square":
+//				GLYPH_MAP.put("xing-square", '\uf169');
+//				break;
+//			case "youtube-play":
+//				GLYPH_MAP.put("youtube-play", '\uf16a');
+//				break;
+//			case "dropbox":
+//				GLYPH_MAP.put("dropbox", '\uf16b');
+//				break;
+//			case "stack-overflow":
+//				GLYPH_MAP.put("stack-overflow", '\uf16c');
+//				break;
+//			case "instagram":
+//				GLYPH_MAP.put("instagram", '\uf16d');
+//				break;
+//			case "flickr":
+//				GLYPH_MAP.put("flickr", '\uf16e');
+//				break;
+//			case "adn":
+//				GLYPH_MAP.put("adn", '\uf170');
+//				break;
+//			case "bitbucket":
+//				GLYPH_MAP.put("bitbucket", '\uf171');
+//				break;
+//			case "bitbucket-square":
+//				GLYPH_MAP.put("bitbucket-square", '\uf172');
+//				break;
+//			case "tumblr":
+//				GLYPH_MAP.put("tumblr", '\uf173');
+//				break;
+//			case "tumblr-square":
+//				GLYPH_MAP.put("tumblr-square", '\uf174');
+//				break;
+//			case "long-arrow-down":
+//				GLYPH_MAP.put("long-arrow-down", '\uf175');
+//				break;
+//			case "long-arrow-up":
+//				GLYPH_MAP.put("long-arrow-up", '\uf176');
+//				break;
+//			case "long-arrow-left":
+//				GLYPH_MAP.put("long-arrow-left", '\uf177');
+//				break;
+//			case "long-arrow-right":
+//				GLYPH_MAP.put("long-arrow-right", '\uf178');
+//				break;
+//			case "apple":
+//				GLYPH_MAP.put("apple", '\uf179');
+//				break;
+//			case "windows":
+//				GLYPH_MAP.put("windows", '\uf17a');
+//				break;
+//			case "android":
+//				GLYPH_MAP.put("android", '\uf17b');
+//				break;
+//			case "linux":
+//				GLYPH_MAP.put("linux", '\uf17c');
+//				break;
+//			case "dribbble":
+//				GLYPH_MAP.put("dribbble", '\uf17d');
+//				break;
+//			case "skype":
+//				GLYPH_MAP.put("skype", '\uf17e');
+//				break;
+//			case "foursquare":
+//				GLYPH_MAP.put("foursquare", '\uf180');
+//				break;
+//			case "trello":
+//				GLYPH_MAP.put("trello", '\uf181');
+//				break;
+//			case "female":
+//				GLYPH_MAP.put("female", '\uf182');
+//				break;
+//			case "male":
+//				GLYPH_MAP.put("male", '\uf183');
+//				break;
+//			case "gratipay":
+//				GLYPH_MAP.put("gratipay", '\uf184');
+//				break; // gittip ,
+//			case "sun-o":
+//				GLYPH_MAP.put("sun-o", '\uf185');
+//				break;
+//			case "moon-o":
+//				GLYPH_MAP.put("moon-o", '\uf186');
+//				break;
+//			case "archive":
+//				GLYPH_MAP.put("archive", '\uf187');
+//				break;
+//			case "bug":
+//				GLYPH_MAP.put("bug", '\uf188');
+//				break;
+//			case "vk":
+//				GLYPH_MAP.put("vk", '\uf189');
+//				break;
+//			case "weibo":
+//				GLYPH_MAP.put("weibo", '\uf18a');
+//				break;
+//			case "renren":
+//				GLYPH_MAP.put("renren", '\uf18b');
+//				break;
+//			case "pagelines":
+//				GLYPH_MAP.put("pagelines", '\uf18c');
+//				break;
+//			case "stack-exchange":
+//				GLYPH_MAP.put("stack-exchange", '\uf18d');
+//				break;
+//			case "arrow-circle-o-right":
+//				GLYPH_MAP.put("arrow-circle-o-right", '\uf18e');
+//				break;
+//			case "arrow-circle-o-left":
+//				GLYPH_MAP.put("arrow-circle-o-left", '\uf190');
+//				break;
+//			case "caret-square-o-left":
+//				GLYPH_MAP.put("caret-square-o-left", '\uf191');
+//				break; // toggle-left ,
+//			case "dot-circle-o":
+//				GLYPH_MAP.put("dot-circle-o", '\uf192');
+//				break;
+//			case "wheelchair":
+//				GLYPH_MAP.put("wheelchair", '\uf193');
+//				break;
+//			case "vimeo-square":
+//				GLYPH_MAP.put("vimeo-square", '\uf194');
+//				break;
+//			case "try":
+//				GLYPH_MAP.put("try", '\uf195');
+//				break; // turkish-lira ,
+//			case "plus-square-o":
+//				GLYPH_MAP.put("plus-square-o", '\uf196');
+//				break;
+//			case "space-shuttle":
+//				GLYPH_MAP.put("space-shuttle", '\uf197');
+//				break;
+//			case "slack":
+//				GLYPH_MAP.put("slack", '\uf198');
+//				break;
+//			case "envelope-square":
+//				GLYPH_MAP.put("envelope-square", '\uf199');
+//				break;
+//			case "wordpress":
+//				GLYPH_MAP.put("wordpress", '\uf19a');
+//				break;
+//			case "openid":
+//				GLYPH_MAP.put("openid", '\uf19b');
+//				break;
+//			case "university":
+//				GLYPH_MAP.put("university", '\uf19c');
+//				break; // institution! bank ,
+//			case "graduation-cap":
+//				GLYPH_MAP.put("graduation-cap", '\uf19d');
+//				break; // mortar-board ,
+//			case "yahoo":
+//				GLYPH_MAP.put("yahoo", '\uf19e');
+//				break;
+//			case "google":
+//				GLYPH_MAP.put("google", '\uf1a0');
+//				break;
+//			case "reddit":
+//				GLYPH_MAP.put("reddit", '\uf1a1');
+//				break;
+//			case "reddit-square":
+//				GLYPH_MAP.put("reddit-square", '\uf1a2');
+//				break;
+//			case "stumbleupon-circle":
+//				GLYPH_MAP.put("stumbleupon-circle", '\uf1a3');
+//				break;
+//			case "stumbleupon":
+//				GLYPH_MAP.put("stumbleupon", '\uf1a4');
+//				break;
+//			case "delicious":
+//				GLYPH_MAP.put("delicious", '\uf1a5');
+//				break;
+//			case "digg":
+//				GLYPH_MAP.put("digg", '\uf1a6');
+//				break;
+//			case "pied-piper-pp":
+//				GLYPH_MAP.put("pied-piper-pp", '\uf1a7');
+//				break;
+//			case "pied-piper-alt":
+//				GLYPH_MAP.put("pied-piper-alt", '\uf1a8');
+//				break;
+//			case "drupal":
+//				GLYPH_MAP.put("drupal", '\uf1a9');
+//				break;
+//			case "joomla":
+//				GLYPH_MAP.put("joomla", '\uf1aa');
+//				break;
+//			case "language":
+//				GLYPH_MAP.put("language", '\uf1ab');
+//				break;
+//			case "fax":
+//				GLYPH_MAP.put("fax", '\uf1ac');
+//				break;
+//			case "building":
+//				GLYPH_MAP.put("building", '\uf1ad');
+//				break;
+//			case "child":
+//				GLYPH_MAP.put("child", '\uf1ae');
+//				break;
+//			case "paw":
+//				GLYPH_MAP.put("paw", '\uf1b0');
+//				break;
+//			case "spoon":
+//				GLYPH_MAP.put("spoon", '\uf1b1');
+//				break;
+//			case "cube":
+//				GLYPH_MAP.put("cube", '\uf1b2');
+//				break;
+//			case "cubes":
+//				GLYPH_MAP.put("cubes", '\uf1b3');
+//				break;
+//			case "behance":
+//				GLYPH_MAP.put("behance", '\uf1b4');
+//				break;
+//			case "behance-square":
+//				GLYPH_MAP.put("behance-square", '\uf1b5');
+//				break;
+//			case "steam":
+//				GLYPH_MAP.put("steam", '\uf1b6');
+//				break;
+//			case "steam-square":
+//				GLYPH_MAP.put("steam-square", '\uf1b7');
+//				break;
+//			case "recycle":
+//				GLYPH_MAP.put("recycle", '\uf1b8');
+//				break;
+//			case "car":
+//				GLYPH_MAP.put("car", '\uf1b9');
+//				break; // automobile ,
+//			case "taxi":
+//				GLYPH_MAP.put("taxi", '\uf1ba');
+//				break; // cab ,
+//			case "tree":
+//				GLYPH_MAP.put("tree", '\uf1bb');
+//				break;
+//			case "spotify":
+//				GLYPH_MAP.put("spotify", '\uf1bc');
+//				break;
+//			case "deviantart":
+//				GLYPH_MAP.put("deviantart", '\uf1bd');
+//				break;
+//			case "soundcloud":
+//				GLYPH_MAP.put("soundcloud", '\uf1be');
+//				break;
+//			case "database":
+//				GLYPH_MAP.put("database", '\uf1c0');
+//				break;
+//			case "file-pdf-o":
+//				GLYPH_MAP.put("file-pdf-o", '\uf1c1');
+//				break;
+//			case "file-word-o":
+//				GLYPH_MAP.put("file-word-o", '\uf1c2');
+//				break;
+//			case "file-excel-o":
+//				GLYPH_MAP.put("file-excel-o", '\uf1c3');
+//				break;
+//			case "file-powerpoint-o":
+//				GLYPH_MAP.put("file-powerpoint-o", '\uf1c4');
+//				break;
+//			case "file-image-o":
+//				GLYPH_MAP.put("file-image-o", '\uf1c5');
+//				break; // file-photo-o! file-picture-o ,
+//			case "file-archive-o":
+//				GLYPH_MAP.put("file-archive-o", '\uf1c6');
+//				break; // file-zip-o ,
+//			case "file-audio-o":
+//				GLYPH_MAP.put("file-audio-o", '\uf1c7');
+//				break; // file-sound-o ,
+//			case "file-video-o":
+//				GLYPH_MAP.put("file-video-o", '\uf1c8');
+//				break; // file-movie-o ,
+//			case "file-code-o":
+//				GLYPH_MAP.put("file-code-o", '\uf1c9');
+//				break;
+//			case "vine":
+//				GLYPH_MAP.put("vine", '\uf1ca');
+//				break;
+//			case "codepen":
+//				GLYPH_MAP.put("codepen", '\uf1cb');
+//				break;
+//			case "jsfiddle":
+//				GLYPH_MAP.put("jsfiddle", '\uf1cc');
+//				break;
+//			case "life-ring":
+//				GLYPH_MAP.put("life-ring", '\uf1cd');
+//				break; // life-bouy! life-buoy! life-saver! support ,
+//			case "circle-o-notch":
+//				GLYPH_MAP.put("circle-o-notch", '\uf1ce');
+//				break;
+//			case "rebel":
+//				GLYPH_MAP.put("rebel", '\uf1d0');
+//				break; // ra! resistance!
+//			case "empire":
+//				GLYPH_MAP.put("empire", '\uf1d1');
+//				break; // ge ,
+//			case "git-square":
+//				GLYPH_MAP.put("git-square", '\uf1d2');
+//				break;
+//			case "git":
+//				GLYPH_MAP.put("git", '\uf1d3');
+//				break;
+//			case "hacker-news":
+//				GLYPH_MAP.put("hacker-news", '\uf1d4');
+//				break; // y-combinator-square! yc-square ,
+//			case "tencent-weibo":
+//				GLYPH_MAP.put("tencent-weibo", '\uf1d5');
+//				break;
+//			case "qq":
+//				GLYPH_MAP.put("qq", '\uf1d6');
+//				break;
+//			case "weixin":
+//				GLYPH_MAP.put("weixin", '\uf1d7');
+//				break; // wechat ,
+//			case "paper-plane":
+//				GLYPH_MAP.put("paper-plane", '\uf1d8');
+//				break; // send ,
+//			case "paper-plane-o":
+//				GLYPH_MAP.put("paper-plane-o", '\uf1d9');
+//				break; // send-o ,
+//			case "history":
+//				GLYPH_MAP.put("history", '\uf1da');
+//				break;
+//			case "circle-thin":
+//				GLYPH_MAP.put("circle-thin", '\uf1db');
+//				break;
+//			case "header":
+//				GLYPH_MAP.put("header", '\uf1dc');
+//				break;
+//			case "paragraph":
+//				GLYPH_MAP.put("paragraph", '\uf1dd');
+//				break;
+//			case "sliders":
+//				GLYPH_MAP.put("sliders", '\uf1de');
+//				break;
+//			case "share-alt":
+//				GLYPH_MAP.put("share-alt", '\uf1e0');
+//				break;
+//			case "share-alt-square":
+//				GLYPH_MAP.put("share-alt-square", '\uf1e1');
+//				break;
+//			case "bomb":
+//				GLYPH_MAP.put("bomb", '\uf1e2');
+//				break;
+//			case "futbol-o":
+//				GLYPH_MAP.put("futbol-o", '\uf1e3');
+//				break; // soccer-ball-o ,
+//			case "tty":
+//				GLYPH_MAP.put("tty", '\uf1e4');
+//				break;
+//			case "binoculars":
+//				GLYPH_MAP.put("binoculars", '\uf1e5');
+//				break;
+//			case "plug":
+//				GLYPH_MAP.put("plug", '\uf1e6');
+//				break;
+//			case "slideshare":
+//				GLYPH_MAP.put("slideshare", '\uf1e7');
+//				break;
+//			case "twitch":
+//				GLYPH_MAP.put("twitch", '\uf1e8');
+//				break;
+//			case "yelp":
+//				GLYPH_MAP.put("yelp", '\uf1e9');
+//				break;
+//			case "newspaper-o":
+//				GLYPH_MAP.put("newspaper-o", '\uf1ea');
+//				break;
+//			case "wifi":
+//				GLYPH_MAP.put("wifi", '\uf1eb');
+//				break;
+//			case "calculator":
+//				GLYPH_MAP.put("calculator", '\uf1ec');
+//				break;
+//			case "paypal":
+//				GLYPH_MAP.put("paypal", '\uf1ed');
+//				break;
+//			case "google-wallet":
+//				GLYPH_MAP.put("google-wallet", '\uf1ee');
+//				break;
+//			case "cc-visa":
+//				GLYPH_MAP.put("cc-visa", '\uf1f0');
+//				break;
+//			case "cc-mastercard":
+//				GLYPH_MAP.put("cc-mastercard", '\uf1f1');
+//				break;
+//			case "cc-discover":
+//				GLYPH_MAP.put("cc-discover", '\uf1f2');
+//				break;
+//			case "cc-amex":
+//				GLYPH_MAP.put("cc-amex", '\uf1f3');
+//				break;
+//			case "cc-paypal":
+//				GLYPH_MAP.put("cc-paypal", '\uf1f4');
+//				break;
+//			case "cc-stripe":
+//				GLYPH_MAP.put("cc-stripe", '\uf1f5');
+//				break;
+//			case "bell-slash":
+//				GLYPH_MAP.put("bell-slash", '\uf1f6');
+//				break;
+//			case "bell-slash-o":
+//				GLYPH_MAP.put("bell-slash-o", '\uf1f7');
+//				break;
+//			case "trash":
+//				GLYPH_MAP.put("trash", '\uf1f8');
+//				break;
+//			case "copyright":
+//				GLYPH_MAP.put("copyright", '\uf1f9');
+//				break;
+//			case "at":
+//				GLYPH_MAP.put("at", '\uf1fa');
+//				break;
+//			case "eyedropper":
+//				GLYPH_MAP.put("eyedropper", '\uf1fb');
+//				break;
+//			case "paint-brush":
+//				GLYPH_MAP.put("paint-brush", '\uf1fc');
+//				break;
+//			case "birthday-cake":
+//				GLYPH_MAP.put("birthday-cake", '\uf1fd');
+//				break;
+//			case "area-chart":
+//				GLYPH_MAP.put("area-chart", '\uf1fe');
+//				break;
+//			case "pie-chart":
+//				GLYPH_MAP.put("pie-chart", '\uf200');
+//				break;
+//			case "line-chart":
+//				GLYPH_MAP.put("line-chart", '\uf201');
+//				break;
+//			case "lastfm":
+//				GLYPH_MAP.put("lastfm", '\uf202');
+//				break;
+//			case "lastfm-square":
+//				GLYPH_MAP.put("lastfm-square", '\uf203');
+//				break;
+//			case "toggle-off":
+//				GLYPH_MAP.put("toggle-off", '\uf204');
+//				break;
+//			case "toggle-on":
+//				GLYPH_MAP.put("toggle-on", '\uf205');
+//				break;
+//			case "bicycle":
+//				GLYPH_MAP.put("bicycle", '\uf206');
+//				break;
+//			case "bus":
+//				GLYPH_MAP.put("bus", '\uf207');
+//				break;
+//			case "ioxhost":
+//				GLYPH_MAP.put("ioxhost", '\uf208');
+//				break;
+//			case "angellist":
+//				GLYPH_MAP.put("angellist", '\uf209');
+//				break;
+//			case "cc":
+//				GLYPH_MAP.put("cc", '\uf20a');
+//				break;
+//			case "ils":
+//				GLYPH_MAP.put("ils", '\uf20b');
+//				break; // shekel! sheqel ,
+//			case "meanpath":
+//				GLYPH_MAP.put("meanpath", '\uf20c');
+//				break;
+//			case "buysellads":
+//				GLYPH_MAP.put("buysellads", '\uf20d');
+//				break;
+//			case "connectdevelop":
+//				GLYPH_MAP.put("connectdevelop", '\uf20e');
+//				break;
+//			case "dashcube":
+//				GLYPH_MAP.put("dashcube", '\uf210');
+//				break;
+//			case "forumbee":
+//				GLYPH_MAP.put("forumbee", '\uf211');
+//				break;
+//			case "leanpub":
+//				GLYPH_MAP.put("leanpub", '\uf212');
+//				break;
+//			case "sellsy":
+//				GLYPH_MAP.put("sellsy", '\uf213');
+//				break;
+//			case "shirtsinbulk":
+//				GLYPH_MAP.put("shirtsinbulk", '\uf214');
+//				break;
+//			case "simplybuilt":
+//				GLYPH_MAP.put("simplybuilt", '\uf215');
+//				break;
+//			case "skyatlas":
+//				GLYPH_MAP.put("skyatlas", '\uf216');
+//				break;
+//			case "cart-plus":
+//				GLYPH_MAP.put("cart-plus", '\uf217');
+//				break;
+//			case "cart-arrow-down":
+//				GLYPH_MAP.put("cart-arrow-down", '\uf218');
+//				break;
+//			case "diamond":
+//				GLYPH_MAP.put("diamond", '\uf219');
+//				break;
+//			case "ship":
+//				GLYPH_MAP.put("ship", '\uf21a');
+//				break;
+//			case "user-secret":
+//				GLYPH_MAP.put("user-secret", '\uf21b');
+//				break;
+//			case "motorcycle":
+//				GLYPH_MAP.put("motorcycle", '\uf21c');
+//				break;
+//			case "street-view":
+//				GLYPH_MAP.put("street-view", '\uf21d');
+//				break;
+//			case "heartbeat":
+//				GLYPH_MAP.put("heartbeat", '\uf21e');
+//				break;
+//			case "venus":
+//				GLYPH_MAP.put("venus", '\uf221');
+//				break;
+//			case "mars":
+//				GLYPH_MAP.put("mars", '\uf222');
+//				break;
+//			case "mercury":
+//				GLYPH_MAP.put("mercury", '\uf223');
+//				break;
+//			case "transgender":
+//				GLYPH_MAP.put("transgender", '\uf224');
+//				break; // intersex ,
+//			case "transgender-alt":
+//				GLYPH_MAP.put("transgender-alt", '\uf225');
+//				break;
+//			case "venus-double":
+//				GLYPH_MAP.put("venus-double", '\uf226');
+//				break;
+//			case "mars-double":
+//				GLYPH_MAP.put("mars-double", '\uf227');
+//				break;
+//			case "venus-mars":
+//				GLYPH_MAP.put("venus-mars", '\uf228');
+//				break;
+//			case "mars-stroke":
+//				GLYPH_MAP.put("mars-stroke", '\uf229');
+//				break;
+//			case "mars-stroke-v":
+//				GLYPH_MAP.put("mars-stroke-v", '\uf22a');
+//				break;
+//			case "mars-stroke-h":
+//				GLYPH_MAP.put("mars-stroke-h", '\uf22b');
+//				break;
+//			case "neuter":
+//				GLYPH_MAP.put("neuter", '\uf22c');
+//				break;
+//			case "genderless":
+//				GLYPH_MAP.put("genderless", '\uf22d');
+//				break;
+//			case "facebook-official":
+//				GLYPH_MAP.put("facebook-official", '\uf230');
+//				break;
+//			case "pinterest-p":
+//				GLYPH_MAP.put("pinterest-p", '\uf231');
+//				break;
+//			case "whatsapp":
+//				GLYPH_MAP.put("whatsapp", '\uf232');
+//				break;
+//			case "server":
+//				GLYPH_MAP.put("server", '\uf233');
+//				break;
+//			case "user-plus":
+//				GLYPH_MAP.put("user-plus", '\uf234');
+//				break;
+//			case "user-times":
+//				GLYPH_MAP.put("user-times", '\uf235');
+//				break;
+//			case "bed":
+//				GLYPH_MAP.put("bed", '\uf236');
+//				break; // hotel ,
+//			case "viacoin":
+//				GLYPH_MAP.put("viacoin", '\uf237');
+//				break;
+//			case "train":
+//				GLYPH_MAP.put("train", '\uf238');
+//				break;
+//			case "subway":
+//				GLYPH_MAP.put("subway", '\uf239');
+//				break;
+//			case "medium":
+//				GLYPH_MAP.put("medium", '\uf23a');
+//				break;
+//			case "y-combinator":
+//				GLYPH_MAP.put("y-combinator", '\uf23b');
+//				break; // yc ,
+//			case "optin-monster":
+//				GLYPH_MAP.put("optin-monster", '\uf23c');
+//				break;
+//			case "opencart":
+//				GLYPH_MAP.put("opencart", '\uf23d');
+//				break;
+//			case "expeditedssl":
+//				GLYPH_MAP.put("expeditedssl", '\uf23e');
+//				break;
+//			case "battery-full":
+//				GLYPH_MAP.put("battery-full", '\uf240');
+//				break; // battery-4! battery ,
+//			case "battery-three-quarters":
+//				GLYPH_MAP.put("battery-three-quarters", '\uf241');
+//				break; // battery-3 ,
+//			case "battery-half":
+//				GLYPH_MAP.put("battery-half", '\uf242');
+//				break; // battery-2 ,
+//			case "battery-quarter":
+//				GLYPH_MAP.put("battery-quarter", '\uf243');
+//				break; // battery-1 ,
+//			case "battery-empty":
+//				GLYPH_MAP.put("battery-empty", '\uf244');
+//				break; // battery-0 ,
+//			case "mouse-pointer":
+//				GLYPH_MAP.put("mouse-pointer", '\uf245');
+//				break;
+//			case "i-cursor":
+//				GLYPH_MAP.put("i-cursor", '\uf246');
+//				break;
+//			case "object-group":
+//				GLYPH_MAP.put("object-group", '\uf247');
+//				break;
+//			case "object-ungroup":
+//				GLYPH_MAP.put("object-ungroup", '\uf248');
+//				break;
+//			case "sticky-note":
+//				GLYPH_MAP.put("sticky-note", '\uf249');
+//				break;
+//			case "sticky-note-o":
+//				GLYPH_MAP.put("sticky-note-o", '\uf24a');
+//				break;
+//			case "cc-jcb":
+//				GLYPH_MAP.put("cc-jcb", '\uf24b');
+//				break;
+//			case "cc-diners-club":
+//				GLYPH_MAP.put("cc-diners-club", '\uf24c');
+//				break;
+//			case "clone":
+//				GLYPH_MAP.put("clone", '\uf24d');
+//				break;
+//			case "balance-scale":
+//				GLYPH_MAP.put("balance-scale", '\uf24e');
+//				break;
+//			case "hourglass-o":
+//				GLYPH_MAP.put("hourglass-o", '\uf250');
+//				break;
+//			case "hourglass-start":
+//				GLYPH_MAP.put("hourglass-start", '\uf251');
+//				break; // hourglass-1 ,
+//			case "hourglass-half":
+//				GLYPH_MAP.put("hourglass-half", '\uf252');
+//				break; // hourglass-2 ,
+//			case "hourglass-end":
+//				GLYPH_MAP.put("hourglass-end", '\uf253');
+//				break; // hourglass-3 ,
+//			case "hourglass":
+//				GLYPH_MAP.put("hourglass", '\uf254');
+//				break;
+//			case "hand-rock-o":
+//				GLYPH_MAP.put("hand-rock-o", '\uf255');
+//				break; // hand-grab-o ,
+//			case "hand-paper-o":
+//				GLYPH_MAP.put("hand-paper-o", '\uf256');
+//				break; // hand-stop-o ,
+//			case "hand-scissors-o":
+//				GLYPH_MAP.put("hand-scissors-o", '\uf257');
+//				break;
+//			case "hand-lizard-o":
+//				GLYPH_MAP.put("hand-lizard-o", '\uf258');
+//				break;
+//			case "hand-spock-o":
+//				GLYPH_MAP.put("hand-spock-o", '\uf259');
+//				break;
+//			case "hand-pointer-o":
+//				GLYPH_MAP.put("hand-pointer-o", '\uf25a');
+//				break;
+//			case "hand-peace-o":
+//				GLYPH_MAP.put("hand-peace-o", '\uf25b');
+//				break;
+//			case "trademark":
+//				GLYPH_MAP.put("trademark", '\uf25c');
+//				break;
+//			case "registered":
+//				GLYPH_MAP.put("registered", '\uf25d');
+//				break;
+//			case "creative-commons":
+//				GLYPH_MAP.put("creative-commons", '\uf25e');
+//				break;
+//			case "gg":
+//				GLYPH_MAP.put("gg", '\uf260');
+//				break;
+//			case "gg-circle":
+//				GLYPH_MAP.put("gg-circle", '\uf261');
+//				break;
+//			case "tripadvisor":
+//				GLYPH_MAP.put("tripadvisor", '\uf262');
+//				break;
+//			case "odnoklassniki":
+//				GLYPH_MAP.put("odnoklassniki", '\uf263');
+//				break;
+//			case "odnoklassniki-square":
+//				GLYPH_MAP.put("odnoklassniki-square", '\uf264');
+//				break;
+//			case "get-pocket":
+//				GLYPH_MAP.put("get-pocket", '\uf265');
+//				break;
+//			case "wikipedia-w":
+//				GLYPH_MAP.put("wikipedia-w", '\uf266');
+//				break;
+//			case "safari":
+//				GLYPH_MAP.put("safari", '\uf267');
+//				break;
+//			case "chrome":
+//				GLYPH_MAP.put("chrome", '\uf268');
+//				break;
+//			case "firefox":
+//				GLYPH_MAP.put("firefox", '\uf269');
+//				break;
+//			case "opera":
+//				GLYPH_MAP.put("opera", '\uf26a');
+//				break;
+//			case "internet-explorer":
+//				GLYPH_MAP.put("internet-explorer", '\uf26b');
+//				break;
+//			case "television":
+//				GLYPH_MAP.put("television", '\uf26c');
+//				break; // tv ,
+//			case "contao":
+//				GLYPH_MAP.put("contao", '\uf26d');
+//				break;
+//			case "500px":
+//				GLYPH_MAP.put("500px", '\uf26e');
+//				break;
+//			case "amazon":
+//				GLYPH_MAP.put("amazon", '\uf270');
+//				break;
+//			case "calendar-plus-o":
+//				GLYPH_MAP.put("calendar-plus-o", '\uf271');
+//				break;
+//			case "calendar-minus-o":
+//				GLYPH_MAP.put("calendar-minus-o", '\uf272');
+//				break;
+//			case "calendar-times-o":
+//				GLYPH_MAP.put("calendar-times-o", '\uf273');
+//				break;
+//			case "calendar-check-o":
+//				GLYPH_MAP.put("calendar-check-o", '\uf274');
+//				break;
+//			case "industry":
+//				GLYPH_MAP.put("industry", '\uf275');
+//				break;
+//			case "map-pin":
+//				GLYPH_MAP.put("map-pin", '\uf276');
+//				break;
+//			case "map-signs":
+//				GLYPH_MAP.put("map-signs", '\uf277');
+//				break;
+//			case "map-o":
+//				GLYPH_MAP.put("map-o", '\uf278');
+//				break;
+//			case "map":
+//				GLYPH_MAP.put("map", '\uf279');
+//				break;
+//			case "commenting":
+//				GLYPH_MAP.put("commenting", '\uf27a');
+//				break;
+//			case "commenting-o":
+//				GLYPH_MAP.put("commenting-o", '\uf27b');
+//				break;
+//			case "houzz":
+//				GLYPH_MAP.put("houzz", '\uf27c');
+//				break;
+//			case "vimeo":
+//				GLYPH_MAP.put("vimeo", '\uf27d');
+//				break;
+//			case "black-tie":
+//				GLYPH_MAP.put("black-tie", '\uf27e');
+//				break;
+//			case "fonticons":
+//				GLYPH_MAP.put("fonticons", '\uf280');
+//				break;
+//			case "reddit-alien":
+//				GLYPH_MAP.put("reddit-alien", '\uf281');
+//				break;
+//			case "edge":
+//				GLYPH_MAP.put("edge", '\uf282');
+//				break;
+//			case "credit-card-alt":
+//				GLYPH_MAP.put("credit-card-alt", '\uf283');
+//				break;
+//			case "codiepie":
+//				GLYPH_MAP.put("codiepie", '\uf284');
+//				break;
+//			case "modx":
+//				GLYPH_MAP.put("modx", '\uf285');
+//				break;
+//			case "fort-awesome":
+//				GLYPH_MAP.put("fort-awesome", '\uf286');
+//				break;
+//			case "usb":
+//				GLYPH_MAP.put("usb", '\uf287');
+//				break;
+//			case "product-hunt":
+//				GLYPH_MAP.put("product-hunt", '\uf288');
+//				break;
+//			case "mixcloud":
+//				GLYPH_MAP.put("mixcloud", '\uf289');
+//				break;
+//			case "scribd":
+//				GLYPH_MAP.put("scribd", '\uf28a');
+//				break;
+//			case "pause-circle":
+//				GLYPH_MAP.put("pause-circle", '\uf28b');
+//				break;
+//			case "pause-circle-o":
+//				GLYPH_MAP.put("pause-circle-o", '\uf28c');
+//				break;
+//			case "stop-circle":
+//				GLYPH_MAP.put("stop-circle", '\uf28d');
+//				break;
+//			case "stop-circle-o":
+//				GLYPH_MAP.put("stop-circle-o", '\uf28e');
+//				break;
+//			case "shopping-bag":
+//				GLYPH_MAP.put("shopping-bag", '\uf290');
+//				break;
+//			case "shopping-basket":
+//				GLYPH_MAP.put("shopping-basket", '\uf291');
+//				break;
+//			case "hashtag":
+//				GLYPH_MAP.put("hashtag", '\uf292');
+//				break;
+//			case "bluetooth":
+//				GLYPH_MAP.put("bluetooth", '\uf293');
+//				break;
+//			case "bluetooth-b":
+//				GLYPH_MAP.put("bluetooth-b", '\uf294');
+//				break;
+//			case "percent":
+//				GLYPH_MAP.put("percent", '\uf295');
+//				break;
+//			case "gitlab":
+//				GLYPH_MAP.put("gitlab", '\uf296');
+//				break;
+//			case "wpbeginner":
+//				GLYPH_MAP.put("wpbeginner", '\uf297');
+//				break;
+//			case "wpforms":
+//				GLYPH_MAP.put("wpforms", '\uf298');
+//				break;
+//			case "envira":
+//				GLYPH_MAP.put("envira", '\uf299');
+//				break;
+//			case "universal-access":
+//				GLYPH_MAP.put("universal-access", '\uf29a');
+//				break;
+//			case "wheelchair-alt":
+//				GLYPH_MAP.put("wheelchair-alt", '\uf29b');
+//				break;
+//			case "question-circle-o":
+//				GLYPH_MAP.put("question-circle-o", '\uf29c');
+//				break;
+//			case "blind":
+//				GLYPH_MAP.put("blind", '\uf29d');
+//				break;
+//			case "audio-description":
+//				GLYPH_MAP.put("audio-description", '\uf29e');
+//				break;
+//			case "volume-control-phone":
+//				GLYPH_MAP.put("volume-control-phone", '\uf2a0');
+//				break;
+//			case "braille":
+//				GLYPH_MAP.put("braille", '\uf2a1');
+//				break;
+//			case "assistive-listening-systems":
+//				GLYPH_MAP.put("assistive-listening-systems", '\uf2a2');
+//				break;
+//			case "american-sign-language-interpreting":
+//				GLYPH_MAP.put("american-sign-language-interpreting", '\uf2a3');
+//				break; // asl-interpreting ,
+//			case "deaf":
+//				GLYPH_MAP.put("deaf", '\uf2a4');
+//				break; // deafness! hard-of-hearing ,
+//			case "glide":
+//				GLYPH_MAP.put("glide", '\uf2a5');
+//				break;
+//			case "glide-g":
+//				GLYPH_MAP.put("glide-g", '\uf2a6');
+//				break;
+//			case "sign-language":
+//				GLYPH_MAP.put("sign-language", '\uf2a7');
+//				break; // signing ,
+//			case "low-vision":
+//				GLYPH_MAP.put("low-vision", '\uf2a8');
+//				break;
+//			case "viadeo":
+//				GLYPH_MAP.put("viadeo", '\uf2a9');
+//				break;
+//			case "viadeo-square":
+//				GLYPH_MAP.put("viadeo-square", '\uf2aa');
+//				break;
+//			case "snapchat":
+//				GLYPH_MAP.put("snapchat", '\uf2ab');
+//				break;
+//			case "snapchat-ghost":
+//				GLYPH_MAP.put("snapchat-ghost", '\uf2ac');
+//				break;
+//			case "snapchat-square":
+//				GLYPH_MAP.put("snapchat-square", '\uf2ad');
+//				break;
+//			case "pied-piper":
+//				GLYPH_MAP.put("pied-piper", '\uf2ae');
+//				break;
+//			case "first-order":
+//				GLYPH_MAP.put("first-order", '\uf2b0');
+//				break;
+//			case "yoast":
+//				GLYPH_MAP.put("yoast", '\uf2b1');
+//				break;
+//			case "themeisle":
+//				GLYPH_MAP.put("themeisle", '\uf2b2');
+//				break;
+//			case "google-plus-official":
+//				GLYPH_MAP.put("google-plus-official", '\uf2b3');
+//				break; // google-plus-circle ,
+//			case "font-awesome":
+//				GLYPH_MAP.put("font-awesome", '\uf2b4');
+//				break; // fa ,
+//			case "handshake-o":
+//				GLYPH_MAP.put("handshake-o", '\uf2b5');
+//				break;
+//			case "envelope-open":
+//				GLYPH_MAP.put("envelope-open", '\uf2b6');
+//				break;
+//			case "envelope-open-o":
+//				GLYPH_MAP.put("envelope-open-o", '\uf2b7');
+//				break;
+//			case "linode":
+//				GLYPH_MAP.put("linode", '\uf2b8');
+//				break;
+//			case "address-book":
+//				GLYPH_MAP.put("address-book", '\uf2b9');
+//				break;
+//			case "address-book-o":
+//				GLYPH_MAP.put("address-book-o", '\uf2ba');
+//				break;
+//			case "address-card":
+//				GLYPH_MAP.put("address-card", '\uf2bb');
+//				break; // vcard ,
+//			case "address-card-o":
+//				GLYPH_MAP.put("address-card-o", '\uf2bc');
+//				break; // vcard-o ,
+//			case "user-circle":
+//				GLYPH_MAP.put("user-circle", '\uf2bd');
+//				break;
+//			case "user-circle-o":
+//				GLYPH_MAP.put("user-circle-o", '\uf2be');
+//				break;
+//			case "user-o":
+//				GLYPH_MAP.put("user-o", '\uf2c0');
+//				break;
+//			case "id-badge":
+//				GLYPH_MAP.put("id-badge", '\uf2c1');
+//				break;
+//			case "id-card":
+//				GLYPH_MAP.put("id-card", '\uf2c2');
+//				break; // drivers-license ,
+//			case "id-card-o":
+//				GLYPH_MAP.put("id-card-o", '\uf2c3');
+//				break; // drivers-license-o ,
+//			case "quora":
+//				GLYPH_MAP.put("quora", '\uf2c4');
+//				break;
+//			case "free-code-camp":
+//				GLYPH_MAP.put("free-code-camp", '\uf2c5');
+//				break;
+//			case "telegram":
+//				GLYPH_MAP.put("telegram", '\uf2c6');
+//				break;
+//			case "thermometer-full":
+//				GLYPH_MAP.put("thermometer-full", '\uf2c7');
+//				break; // thermometer-4! thermometer ,
+//			case "thermometer-three-quarters":
+//				GLYPH_MAP.put("thermometer-three-quarters", '\uf2c8');
+//				break; // thermometer-3 ,
+//			case "thermometer-half":
+//				GLYPH_MAP.put("thermometer-half", '\uf2c9');
+//				break; // thermometer-2 ,
+//			case "thermometer-quarter":
+//				GLYPH_MAP.put("thermometer-quarter", '\uf2ca');
+//				break; // thermometer-1 ,
+//			case "thermometer-empty":
+//				GLYPH_MAP.put("thermometer-empty", '\uf2cb');
+//				break; // thermometer-0 ,
+//			case "shower":
+//				GLYPH_MAP.put("shower", '\uf2cc');
+//				break;
+//			case "bath":
+//				GLYPH_MAP.put("bath", '\uf2cd');
+//				break; // bathtub s15 ,
+//			case "podcast":
+//				GLYPH_MAP.put("podcast", '\uf2ce');
+//				break;
+//			case "window-maximize":
+//				GLYPH_MAP.put("window-maximize", '\uf2d0');
+//				break;
+//			case "window-minimize":
+//				GLYPH_MAP.put("window-minimize", '\uf2d1');
+//				break;
+//			case "window-restore":
+//				GLYPH_MAP.put("window-restore", '\uf2d2');
+//				break;
+//			case "window-close":
+//				GLYPH_MAP.put("window-close", '\uf2d3');
+//				break; // times-rectangle ,
+//			case "window-close-o":
+//				GLYPH_MAP.put("window-close-o", '\uf2d4');
+//				break; // times-rectangle-o ,
+//			case "bandcamp":
+//				GLYPH_MAP.put("bandcamp", '\uf2d5');
+//				break;
+//			case "grav":
+//				GLYPH_MAP.put("grav", '\uf2d6');
+//				break;
+//			case "etsy":
+//				GLYPH_MAP.put("etsy", '\uf2d7');
+//				break;
+//			case "imdb":
+//				GLYPH_MAP.put("imdb", '\uf2d8');
+//				break;
+//			case "ravelry":
+//				GLYPH_MAP.put("ravelry", '\uf2d9');
+//				break;
+//			case "eercast":
+//				GLYPH_MAP.put("eercast", '\uf2da');
+//				break;
+//			case "microchip":
+//				GLYPH_MAP.put("microchip", '\uf2db');
+//				break;
+//			case "snowflake-o":
+//				GLYPH_MAP.put("snowflake-o", '\uf2dc');
+//				break;
+//			case "superpowers":
+//				GLYPH_MAP.put("superpowers", '\uf2dd');
+//				break;
+//			case "wpexplorer":
+//				GLYPH_MAP.put("wpexplorer", '\uf2de');
+//				break;
+//			case "meetup":
+//				GLYPH_MAP.put("meetup", '\uf2e0');
+//				break;
+//			default:
+//				GLYPH_MAP.put(name, '\uf04d');
+//			}
+//			// TODO
+//			val = GLYPH_MAP.get(name);
+//		}
+//		return String.valueOf(val);
+//	}
 
 }

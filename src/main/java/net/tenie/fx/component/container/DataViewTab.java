@@ -1,7 +1,9 @@
 package net.tenie.fx.component.container;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -13,6 +15,8 @@ import com.jfoenix.controls.JFXButton;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
@@ -24,8 +28,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.PropertyPo.DataTabDataPo;
-import net.tenie.fx.PropertyPo.DbTableDatePo;
+//import net.tenie.fx.PropertyPo.DataTabDataPo;
+//import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
@@ -42,6 +46,12 @@ public class DataViewTab {
 	private String tabName ;
 	private String sqlStr;
 	private String connName;
+	
+	// sql执行时间
+	private double execTime = 0;
+	// 行数
+	private int rows = 0;
+	
 	// table id + row num 组成key ,保存对于行的数据
 	private  Map<String, ObservableList<StringProperty>> newLineDate = new HashMap<>();
 	// table id + row num 组成key ,保存对于行的原始数据
@@ -53,6 +63,9 @@ public class DataViewTab {
 	// 待insert的 数据
 	private  Map<String, ObservableList<StringProperty>> appendData = new HashMap<>();
 	
+	// 操作按钮
+	private   List<ButtonBase> btns = new ArrayList<>();
+	
 	// 数据连接对象
 	private Connection  dbconns ;
 	// 列
@@ -62,16 +75,52 @@ public class DataViewTab {
 	
 	//VBox
 	private VBox dataPane;
+	// 按钮
+	private AnchorPane fp; 
 	// tab
 	private Tab tab ;
 	// tab中的表格
 	private FilteredTableView<ObservableList<StringProperty>> table ;
 	
-	//
-	private DataTabDataPo tdpo ;
-	private DbTableDatePo dpo;
+	public void clean() {
+		fp.getChildren().clear(); 
+		dataPane.getChildren().clear();
+		dataPane = null;
+		fp = null;
+		tab.setContent(null);
+		tab = null;
+		table.getItems().clear();
+		table= null;
+		rawData.forEach(v ->{
+			v.clear();
+		});
+		rawData.clear();
+		rawData =null;
+		colss.clear();
+		colss =null;
+		dbconns = null;
+		appendData.clear();
+		appendData = null;
+		tabData.forEach(v ->{
+			v.clear();
+		});
+		tabData.clear();
+		tabData = null;
+		tabCol.clear();
+		tabCol = null;
+		oldval.clear();
+		oldval= null;
+		newLineDate.clear(); 
+		newLineDate = null;
+		btns.clear();
+		btns = null;
+		
+	}
 	
-	public DataViewTab(DbTableDatePo dpo, FilteredTableView<ObservableList<StringProperty>> table , String tabId, 
+	//
+//	private DataTabDataPo tdpo ; 
+	
+	public DataViewTab( FilteredTableView<ObservableList<StringProperty>> table , String tabId, 
 			            String tabName, String sqlStr,  Connection  dbconns,  String connName,
 			            ObservableList<SqlFieldPo> colss, ObservableList<ObservableList<StringProperty>> rawData) {
 		this.table = table;
@@ -81,8 +130,7 @@ public class DataViewTab {
 		this.dbconns = dbconns;
 		this.connName = connName;
 		this.colss = colss;
-		this.rawData = rawData;  
-		this.dpo = dpo;
+		this.rawData = rawData;   
 	}
 	
 	public DataViewTab( FilteredTableView<ObservableList<StringProperty>> table , String tabId, 
@@ -102,8 +150,8 @@ public class DataViewTab {
 		 tab = createTab(tabName); 
 		 tab.setId(tabId);
 		// 构建数据Tab页中的表
-		 VBox vb = generateDataPane( disable,   time ,   rows);
-		 tab.setContent(vb);
+		 generateDataPane( disable,   time ,   rows);
+		 tab.setContent(dataPane);
 		 var dataTab = ComponentGetter.dataTab ;
 		 if (idx > -1) {
 			 	
@@ -120,7 +168,7 @@ public class DataViewTab {
 	public  VBox generateDataPane(  boolean disable,   String time , String rows) {
 		dataPane = new VBox();
 		// 表格上面的按钮
-		AnchorPane fp = ButtonFactory.getDataTableOptionBtnsPane(disable, time, rows, connName);
+		fp = ButtonFactory.getDataTableOptionBtnsPane(disable, time, rows, connName, btns);
 		fp.setId(tabId);
 		dataPane.setId(tabId);
 		dataPane.getChildren().add(fp);
@@ -180,6 +228,7 @@ public class DataViewTab {
 			});
 			editBtn.setTooltip(MyTooltipTool.instance("Edit"));
 			editBtn.setId(AllButtons.SAVE);
+			btns.add(editBtn);
 			//隐藏按钮
 			JFXButton hideBottom = new JFXButton(); 
 			hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
@@ -199,7 +248,7 @@ public class DataViewTab {
 		closeAll.setOnAction(e -> {
 				// 清空缓存
 				for(Tab tab: ComponentGetter.dataTab.getTabs()) {
-					CommonAction.clearDataTable(ComponentGetter.dataTab, tab);
+					CommonAction.clearDataTable(tab);
 				}
 				ComponentGetter.dataTab.getTabs().clear(); 
 				CommonAction.hideBottom();
@@ -212,7 +261,7 @@ public class DataViewTab {
 				// 清空缓存
 				for(Tab tab: ComponentGetter.dataTab.getTabs()) {
 					if( ! Objects.equals(tab, tb)) {
-						CommonAction.clearDataTable(ComponentGetter.dataTab, tab);
+						CommonAction.clearDataTable( tab);
 					}
 					
 				}
@@ -294,12 +343,12 @@ public class DataViewTab {
 	public void setTable(FilteredTableView<ObservableList<StringProperty>> table) {
 		this.table = table;
 	}
-	public DataTabDataPo getTdpo() {
-		return tdpo;
-	}
-	public void setTdpo(DataTabDataPo tdpo) {
-		this.tdpo = tdpo;
-	}
+//	public DataTabDataPo getTdpo() {
+//		return tdpo;
+//	}
+//	public void setTdpo(DataTabDataPo tdpo) {
+//		this.tdpo = tdpo;
+//	}
 
 	public ObservableList<SqlFieldPo> getColss() {
 		return colss;
@@ -357,12 +406,30 @@ public class DataViewTab {
 		this.dataPane = dataPane;
 	}
 
-	public DbTableDatePo getDpo() {
-		return dpo;
+	 
+
+	public double getExecTime() {
+		return execTime;
 	}
 
-	public void setDpo(DbTableDatePo dpo) {
-		this.dpo = dpo;
+	public void setExecTime(double execTime) {
+		this.execTime = execTime;
+	}
+
+	public int getRows() {
+		return rows;
+	}
+
+	public void setRows(int rows) {
+		this.rows = rows;
+	}
+
+	public List<ButtonBase> getBtns() {
+		return btns;
+	}
+
+	public void setBtns(List<ButtonBase> btns) {
+		this.btns = btns;
 	}
 
 }

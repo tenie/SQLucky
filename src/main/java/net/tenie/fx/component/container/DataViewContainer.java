@@ -27,7 +27,7 @@ import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.PropertyPo.CacheTabView;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
-import net.tenie.fx.PropertyPo.DataTabDataPo;
+//import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
@@ -61,14 +61,6 @@ public class DataViewContainer {
 		ComponentGetter.dataTab = dataView;
 		DraggingTabPaneSupport support2 = new DraggingTabPaneSupport();
 		support2.addSupport(dataView);
-	}
-	
-	public void renewTabPane() { 
-		TabPanContainer.getChildren().remove(dataView);
-		dataView = new TabPane();
-		TabPanContainer.getChildren().add(dataView);
-		ComponentGetter.dataTab = dataView;
-		CacheTabView.setTabViews(new HashMap<>());
 	}
 
 	public static void showTableDate(DataViewTab dvt, String time , String rows) {
@@ -165,8 +157,8 @@ public class DataViewContainer {
 	                           this.setText((rowIndex+1)+"");
 	                           this.setOnMouseClicked(e -> {
 	     		               	  if (e.getClickCount() == 2) {
-	     		               		  JFXButton btn = (JFXButton) ComponentGetter.dataPaneSaveBtn();
-	     		               	      TableRowDataDetail.show(btn); 
+//	     		               		  JFXButton btn = (JFXButton) ComponentGetter.dataPaneSaveBtn();
+	     		               	      TableRowDataDetail.show(); 
 	     		               	  }
 	     	                 } ); 
 	                    }

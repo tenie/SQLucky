@@ -17,7 +17,7 @@ public class MenuAction {
 	static final int ADD_COLUMN = 3;
 	
 	//添加新字段
-	public static void addNewColumn(String tableName , String schema, DbConnectionPo  dbc ) {
+	public static void addNewColumn(DbConnectionPo  dbc ,String schema ,String tablename  ) {
 
 		Connection conn = dbc.getConn();
 		Consumer< String >  caller = x ->{
@@ -26,11 +26,11 @@ public class MenuAction {
 			String sql =  dbc.getExportDDL().exportAlterTableAddColumn (
 					conn, 
 					schema,
-					tableName, 
+					tablename, 
 					colname);
 			execExportSql(sql, conn, dbc);
 		};
-		ModalDialog.showExecWindow(tableName +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
+		ModalDialog.showExecWindow(tablename +" add column : input words like 'MY_COL CHAR(10)'", "", caller);
 	
 	}
 	public static void addNewColumn() { 
@@ -140,6 +140,17 @@ public class MenuAction {
 	private static RsVal exportSQL(int ty, String colname) {
 		RsVal rv = CommonAction.tableInfo();
 		return exportSQL(ty, colname, rv); 
+	}
+	
+	// 删表
+	public static void dropTable(DbConnectionPo  dbc ,String schema ,String tablename  ) { 
+		Connection conn = dbc.getConn();  
+		String sql =  dbc.getExportDDL().exportDropTable(schema, tablename);
+		Consumer< String >  caller = x ->{ 
+			execExportSql(sql, conn, dbc);
+		};
+		ModalDialog.myConfirmation("Execue :" + sql + " ?", caller); 
+		 
 	}
 
 		

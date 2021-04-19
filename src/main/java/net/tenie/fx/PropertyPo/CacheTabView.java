@@ -12,6 +12,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Tab;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.lib.tools.StrUtils;
@@ -36,6 +37,12 @@ public class CacheTabView {
 	public static DataViewTab   getDataViewTab(String id) {
 		return tabViews.get(id); 
 	}
+	
+	// 获取缓存key
+	public static Set<String> getKey(){
+		return tabViews.keySet();
+	}
+	
 	
 	// 获取字段
 	public static ObservableList<SqlFieldPo>  getFields(String id) {
@@ -194,20 +201,7 @@ public class CacheTabView {
 		 
 		
 	}
-	
-	
-//	private static Map<String, ObservableList<StringProperty>> getDataHelper(String id,
-//			Map<String, ObservableList<StringProperty>> val) {
-//		Map<String, ObservableList<StringProperty>> nrs = new HashMap<>();
-//		Set<String> keys = val.keySet();
-//		for (String s : keys) {
-//			if (StrUtils.beginWith(s, tab + "_")) {
-//				nrs.put(s, val.get(s));
-//			}
-//		}
-//		return nrs;
-//	}
-	
+		
 	public static Map<String, ObservableList<StringProperty>>  getOldval(String id){
 		DataViewTab dvt = getDataViewTab(id);
 		if(dvt != null) { 
@@ -248,49 +242,23 @@ public class CacheTabView {
 	}
 	
 	
+	public static List<ButtonBase> optionBtns(String id){
+		DataViewTab dvt = getDataViewTab(id);
+		List<ButtonBase> val =  new ArrayList<>();
+		if(dvt != null) { 
+			  val = dvt.getBtns();
+		}
+		return val;
+	}
 	
 	// 清除不需要内存
 	public static void clear(String id) {
 		
 		DataViewTab dvt = getDataViewTab(id);
 		if(dvt != null) {
-			dvt.setAppendData(null);
-			dvt.setColss(null);
-			dvt.setConnName(null);
-			dvt.setDataPane(null);
-			dvt.setDbconns(null);
-			dvt.setNewLineDate(null);
-			dvt.setOldval(null);
-			dvt.setRawData(null);
-			dvt.setSqlStr(null);
-			dvt.setTab(null);
-			dvt.setTabCol(null);
-			dvt.setTabData(null);
-			dvt.setTabId(null);
-			dvt.setTable(null);
-			dvt.setTabName(null);
-			dvt.setTdpo(null);
-			var dpo = dvt.getDpo();
-			dpo.clean();
-			dvt.setDpo(null);
+			dvt.clean();
 		}
 		tabViews.remove(id);
-//		Thread t = new Thread() {
-//			public void run() {
-//				logger.info("Thread-clear Cache Data");
-//				tabNames.remove(tab);
-//				removeHelper(newLineDate, tab);
-//				removeHelper(oldval, tab);
-//				tabCol.remove(tab);
-//				tabData.remove(tab);
-//				dbconns.remove(tab);
-//				selectSql.remove(tab);
-//				connName.remove(tab);
-//				removeHelper(appendData, tab);
-////				System.gc();
-//			}
-//		};
-//		t.start();
 
 	}
 	

@@ -56,6 +56,7 @@ import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
+import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
@@ -92,7 +93,7 @@ public class CommonAction {
 		var alldata =   CacheTabView.getTabData(tableId); //CacheTableDate.getData(tableId);
 		DbConnectionPo  dbc = DBConns.get(connName); 
 		
-		Button saveBtn = ComponentGetter.dataPaneSaveBtn();
+//		Button saveBtn = ComponentGetter.dataPaneSaveBtn();
 		var dataTableView = ComponentGetter.dataTableView();
 		RsVal rv = new RsVal();
 		rv.conn = conn; 
@@ -100,7 +101,7 @@ public class CommonAction {
 		rv.tableName = tableName;
 //		rv.dbc =  dbc; 
 		rv.alldata = alldata;
-		rv.saveBtn = saveBtn;
+//		rv.saveBtn = saveBtn;
 		rv.dataTableView = dataTableView;
 		return rv;
 	}
@@ -113,7 +114,7 @@ public class CommonAction {
 		rv.dbconnPo = dbc;   
 		rv.tableName = tableName; 
 		rv.alldata = null;
-		rv.saveBtn = null;
+//		rv.saveBtn = null;
 		rv.dataTableView = null;
 		return rv;
 	}
@@ -126,7 +127,7 @@ public class CommonAction {
 		if(showStatus) {
 			Button btn = ComponentGetter.dataPaneSaveBtn();
 			if(btn != null && ! btn.isDisable()) {
-				ButtonAction.dataSave(btn); 
+				ButtonAction.dataSave(); 
 				return ;
 			}
 		}
@@ -807,12 +808,22 @@ public class CommonAction {
 		
 		SqlEditor.changeThemeAllCodeArea() ;
 		
+		
 		// 修改按钮颜色
-		ImageViewGenerator.changeSvgColor();
-//		List<Region> lsrsg = ImageViewGenerator.svgActiveImage;
-//		for(Region reg :lsrsg) {
-//			reg.setStyle("-fx-background-color: " + color + ";");
-//		}
+		changeSvgColor();
+	}
+	
+	public static void changeSvgColor() {
+		String color = "#1C94FF";
+		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+			color = "#FDA232";
+		}
+	
+		List<ButtonBase> lsrsg = 	ButtonFactory.btns;
+		lsrsg.addAll(ComponentGetter.dataPaneBtns()); 
+		for(ButtonBase reg :lsrsg) {
+			reg.getGraphic().setStyle("-fx-background-color: " + color + ";");
+		}
 	}
 	
 	public static void setOpenfileDir(String val) {
@@ -1231,16 +1242,22 @@ public class CommonAction {
 	 
 	
 	// 关闭 数据页, 清理缓存
-	public static void clearDataTable(TabPane tabPane, Tab tb) {
+	public static void clearDataTable(Tab tb) {
+		TabPane tabPane = ComponentGetter.dataTab; 
 		long begintime = System.currentTimeMillis();
 		String idVal = tb.getId();
 		if (idVal != null) {
 			CacheTabView.clear(idVal);
 		}
 		tb.setContent(null); 
+		tabPane.getTabs().remove(tb);
 		long endtime = System.currentTimeMillis();
 		long costTime = (endtime - begintime);
 		logger.info("关闭使用时间 = "+ costTime);
+		
+		if(tabPane.getTabs().size() == 0) {
+			CommonAction.hideBottom(); 
+		} 
 	}
 
 

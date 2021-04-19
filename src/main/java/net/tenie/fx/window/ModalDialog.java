@@ -194,6 +194,32 @@ public class ModalDialog {
 			e.printStackTrace();
 		}
 	}
+	
+	// 根据给定的node 创建 模态框
+		public ModalDialog(Parent node, String title) {
+			try {
+				
+				final Stage stage = new Stage();
+				Scene scene = new Scene(node);
+				 
+				CommonAction.loadCss(scene);
+				Image img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
+				stage.getIcons().add(img);
+
+				stage.initModality(Modality.WINDOW_MODAL);
+				stage.setTitle(title);
+
+				stage.setScene(scene);
+
+				stage.show();
+//				tv.getSelectionModel().select(0);
+				stage.setOnCloseRequest(v -> {
+
+				});
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 	public static Stage CreateModalWindow() {
 
@@ -600,8 +626,43 @@ public class ModalDialog {
 	}
 	
 	
+	public static void myConfirmation(String promptInfo,  Consumer< String >  caller) {
+		Label space = new Label(""); 
+		Label tit = new Label(promptInfo); 
+		final Stage stage = new Stage();
+		
+		JFXButton btn = new JFXButton("Cancel");
+		btn.getStyleClass().add("myAlertBtn");
+		btn.setOnAction(value -> {
+			stage.close();
+		});
+		
+		JFXButton okbtn = new JFXButton("OK");
+		okbtn.setOnAction(value -> {
+			caller.accept("");
+			stage.close();
+		});
+		
+		List<Node> nds = new ArrayList<>();
+		nds.add( space); 
+		nds.add( tit); 
+		
+		List<Node> btns = new ArrayList<>();
+		btns.add( btn);
+		btns.add( okbtn);
+		
+		
+		Node vb = setVboxShape(stage, INFO, nds, btns);
+		Scene scene = new Scene((Parent) vb);
+		
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setScene(scene);
+		setSceneAndShow(scene, stage);  
+	}
+	
+	
 
-	// 确认对话框
+	// javafx 默认的确认对话框
 	public static boolean Confirmation(String msg) {
 		boolean tf = false;
 		Alert alert = new Alert(AlertType.CONFIRMATION);

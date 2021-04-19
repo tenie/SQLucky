@@ -7,11 +7,16 @@ import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.window.ConnectionEditor;
+import net.tenie.fx.window.TableRowDataDetail;
 import net.tenie.lib.po.DbConnectionPo;
+import net.tenie.lib.po.TablePo;
 
 public class TreeMenu {
 	private ContextMenu contextMenu;
 	private MenuItem tableAddNewCol ;
+	private MenuItem tableShow;
+	private MenuItem tableDrop;
+	
 	private MenuItem link;
 	private MenuItem unlink;
 	private MenuItem Edit;
@@ -20,17 +25,7 @@ public class TreeMenu {
 	
 	public TreeMenu() {
 
-		contextMenu = new ContextMenu(); 
-		
-	    tableAddNewCol = new MenuItem("Table Add New Column");
-	    tableAddNewCol.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
-	    tableAddNewCol.setId("tableAddNewCol");
-	    tableAddNewCol.setDisable(true);
-		
-//		addtabNewCol.setOnAction(e -> {
-////			ConnectionEditor.ConnectionInfoSetting();
-//			addNewColumn();
-//		});
+		contextMenu = new ContextMenu();  
 
 		link = new MenuItem("Open Connection");
 		link.setOnAction(CommonEventHandler.openConnEvent());
@@ -58,9 +53,26 @@ public class TreeMenu {
 		delete.setDisable(true);
 		delete.setId("DeleteConnection");
 		
+		
+		tableAddNewCol = new MenuItem("Table Add New Column");
+	    tableAddNewCol.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+	    tableAddNewCol.setId("tableAddNewCol");
+	    tableAddNewCol.setDisable(true);
+	    
+	    tableShow = new MenuItem("Show Table Field Type");
+	    tableShow.setGraphic(ImageViewGenerator.svgImageDefActive("search-plus"));
+	    tableShow.setId("tableShow");
+	    tableShow.setDisable(true);
+	    
+	    tableDrop = new MenuItem("Drop table");
+	    tableDrop.setGraphic(ImageViewGenerator.svgImageDefActive("minus-square"));
+	    tableDrop.setId("tableDrop");
+	    tableDrop.setDisable(true);
+		
 		contextMenu.getItems().addAll(
 //				add,
-				link, unlink, Edit, delete, new SeparatorMenuItem(), tableAddNewCol);
+				link, unlink, Edit, delete, new SeparatorMenuItem(),
+				tableAddNewCol, tableShow, tableDrop);
 	
 	}
 	
@@ -74,14 +86,23 @@ public class TreeMenu {
 	
 	public void setTableDisable(boolean tf) {
 		tableAddNewCol.setDisable(tf);
+		tableDrop.setDisable(tf);
+		tableShow.setDisable(tf);
 		 
 	}
 	
-	public void setAddNewColAction(DbConnectionPo  dbc ,String schema ,String tablename  ) { 
+	public void setTableAction(DbConnectionPo  dbc ,String schema ,String tablename ) {
 		tableAddNewCol.setOnAction(e->{ 
-			MenuAction.addNewColumn(tablename, schema, dbc);
+			MenuAction.addNewColumn(dbc, schema, tablename);
 		});
 	 
+		tableDrop.setOnAction(e->{ 
+			MenuAction.dropTable(dbc, schema, tablename);
+		});
+	 
+		tableShow.setOnAction(e->{ 
+			TableRowDataDetail.showTableFieldType(dbc, schema, tablename); 
+		});
 	}
 	
 

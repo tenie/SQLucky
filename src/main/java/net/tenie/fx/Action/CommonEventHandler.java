@@ -69,14 +69,9 @@ public class CommonEventHandler {
 	 */
 	public static EventHandler<Event> dataTabCloseReq( Tab tb) {
 		return new EventHandler<Event>() {
-			public void handle(Event e) {
-				TabPane tabPane = ComponentGetter.dataTab;
-				CommonAction.clearDataTable(tabPane, tb);
-				if(tabPane.getTabs().size() == 1) {
-					CommonAction.hideBottom();
-					//TODO
-					ComponentGetter.dataView.renewTabPane();
-				} 
+			public void handle(Event e) { 
+				CommonAction.clearDataTable( tb);
+				 
 			}
 		};
 	}

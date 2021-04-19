@@ -14,6 +14,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
@@ -24,6 +25,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+import net.tenie.fx.PropertyPo.CacheTabView;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.DBinfoTree;
@@ -34,7 +36,9 @@ import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -205,6 +209,12 @@ public final class ComponentGetter {
 		
 		return id;
 	}
+	//  获取当前数据表的Tab 中的 vbox
+	public static VBox currentDataVbox() {
+		Tab tab = dataTab.getSelectionModel().getSelectedItem();
+		VBox vb = (VBox) tab.getContent();
+		return vb;
+	}
 	
 	// 获取 当前table view 的控制面板
 	public static AnchorPane dataPane() {
@@ -263,6 +273,17 @@ public final class ComponentGetter {
 		Button btn = (Button) fn.get();
 
 		return btn;
+	}
+	
+	// 获取所有按钮
+	public static List<ButtonBase>  dataPaneBtns() {
+	 
+		List<ButtonBase> ls = new ArrayList<>();
+		for( String key :CacheTabView.getKey()) {
+			ls.addAll(CacheTabView.optionBtns(key) );
+		} 
+		return ls;
+//		return (Button) fp.getChildren().get(0);
 	}
 
 }

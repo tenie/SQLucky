@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
+
+import net.tenie.fx.window.MyAlert;
 /*   @author tenie */
 public class SqlCodeAreaHighLightingHelper {
 
@@ -88,8 +90,13 @@ public class SqlCodeAreaHighLightingHelper {
     	
     }
     public static void applyFindWordHighlighting(CodeArea codeArea,String str) {
-    	StyleSpans<Collection<String>> highlighting  = findEqualyWord(str, codeArea.getText()); 
-    	codeArea.setStyleSpans(0, highlighting);
+    	try {
+    		StyleSpans<Collection<String>> highlighting  = findEqualyWord(str, codeArea.getText()); 
+        	codeArea.setStyleSpans(0, highlighting);
+		} catch (Exception e) {
+			e.printStackTrace();
+			MyAlert.errorAlert(e.getMessage());
+		} 
     	
     }  
     public static void applyErrorHighlighting( int begin , int length) {

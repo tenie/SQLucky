@@ -104,7 +104,14 @@ public class DBinfoTree {
 
 	// 判断treeItem是一个连接的根节点
 	public static boolean isConns(TreeItem<TreeNodePo> item) {
-		return DBinfoTreeView.getRoot().getChildren().contains(item);
+		boolean tf = false;
+		if(DBinfoTreeView !=null && DBinfoTreeView.getRoot() != null && item !=null) {
+			if(DBinfoTreeView.getRoot().getChildren() !=null ) {
+				return  DBinfoTreeView.getRoot().getChildren().contains(item);
+			}
+		}
+		
+		return tf;
 	}
 
 	// 删除 取连接节点 根据名字
@@ -303,7 +310,7 @@ public class DBinfoTree {
 					DbConnectionPo  dbc =nd.getConnpo();
 					String schema = nd.getTable().getTableSchema();
 					String tablename = nd.getTable().getTableName();
-					menu.setAddNewColAction(dbc, schema, tablename);
+					menu.setTableAction(dbc, schema, tablename);
 				}else {
 					menu.setConnectDisable(true);
 					menu.setTableDisable(true);
