@@ -9,7 +9,6 @@ import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableRowDataDetail;
 import net.tenie.lib.po.DbConnectionPo;
-import net.tenie.lib.po.TablePo;
 
 public class TreeMenu {
 	private ContextMenu contextMenu;
@@ -28,19 +27,26 @@ public class TreeMenu {
 		contextMenu = new ContextMenu();  
 
 		link = new MenuItem("Open Connection");
-		link.setOnAction(CommonEventHandler.openConnEvent());
+		link.setOnAction(e->{
+			ConnectionEditor.openDbConn();
+		});
 		link.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
 		link.setDisable(true);
 		link.setId("OpenConnection");
 		
 	    unlink = new MenuItem("Close Connection");
-		unlink.setOnAction(CommonEventHandler.closeConnEvent());
+		unlink.setOnAction(e->{
+			ConnectionEditor.closeDbConn();
+		});
 		unlink.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
 		unlink.setDisable(true);
 		unlink.setId("CloseConnection");
 		
 	    Edit = new MenuItem("Edit Connection");
-		Edit.setOnAction(CommonEventHandler.editConnEvent());
+		Edit.setOnAction(e->{
+			ConnectionEditor.closeDbConn();
+			ConnectionEditor.editDbConn();
+		});
 		Edit.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
 		Edit.setDisable(true);
 		Edit.setId("EditConnection");

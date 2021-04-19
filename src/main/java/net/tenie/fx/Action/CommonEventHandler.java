@@ -86,22 +86,22 @@ public class CommonEventHandler {
 	}
 
 	// 打开连接按钮点击事件
-	public static EventHandler openConnEvent() {
-		return new EventHandler() {
-			public void handle(Event e) {
-				ConnectionEditor.openDbConn();
-			}
-		};
-	}
+//	public static EventHandler openConnEvent() {
+//		return new EventHandler() {
+//			public void handle(Event e) {
+//				ConnectionEditor.openDbConn();
+//			}
+//		};
+//	}
 
 	// 断开连接按钮点击事件
-	public static EventHandler closeConnEvent() {
-		return new EventHandler() {
-			public void handle(Event e) {
-				ConnectionEditor.closeDbConn();
-			}
-		};
-	}
+//	public static EventHandler closeConnEvent() {
+//		return new EventHandler() {
+//			public void handle(Event e) {
+//				ConnectionEditor.closeDbConn();
+//			}
+//		};
+//	}
 
 	// 断开所有连接按钮点击事件
 	public static EventHandler<Event> closeAllConnEvent() {
@@ -122,14 +122,14 @@ public class CommonEventHandler {
 	}
 
 	// 编辑连接节点信息
-	public static EventHandler editConnEvent() {
-		return new EventHandler() {
-			public void handle(Event e) {
-				ConnectionEditor.closeDbConn();
-				ConnectionEditor.editDbConn();
-			}
-		};
-	}
+//	public static EventHandler editConnEvent() {
+//		return new EventHandler() {
+//			public void handle(Event e) {
+//				ConnectionEditor.closeDbConn();
+//				ConnectionEditor.editDbConn();
+//			}
+//		};
+//	}
 
 	// 添加code area 面板
 	public static EventHandler<Event> addCodeTab() {

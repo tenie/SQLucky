@@ -66,7 +66,7 @@ public class ConnectionDao {
 	/**
 	 * 查询
 	 */
-	public static  List<DbConnectionPo> selectData(Connection conn) {
+	public static  List<DbConnectionPo> recoverConnObj(Connection conn) {
 		String sql = "SELECT * FROM  CONNECTION_INFO ORDER BY ORDER_TAG";
 		List<DbConnectionPo> datas =  new ArrayList<DbConnectionPo>();
 		try {

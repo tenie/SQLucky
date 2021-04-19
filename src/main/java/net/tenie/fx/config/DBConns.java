@@ -150,15 +150,15 @@ public final class DBConns {
 	}
 
 	// TEST
-	public static Connection aliveConn() {
-		Connection conn = null;
-		for (String key : set) {
-			DbConnectionPo po = dbs.get(key);
-			if (po.isAlive()) {
-				conn = po.getConn();
-			}
-		}
-		return conn;
-	}
+//	public static Connection aliveConn() {
+//		Connection conn = null;
+//		for (String key : set) {
+//			DbConnectionPo po = dbs.get(key);
+//			if (po.isAlive()) {
+//				conn = po.getConn();
+//			}
+//		}
+//		return conn;
+//	}
 
 }

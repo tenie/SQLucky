@@ -413,7 +413,7 @@ public class ConnectionEditor {
 		}
 		DBConns.flushChoiceBoxGraphic();
 	}
-
+	// 打开连接按钮点击事件
 	public static void openDbConn() {
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();

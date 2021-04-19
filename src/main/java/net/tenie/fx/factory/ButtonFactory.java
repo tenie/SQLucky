@@ -29,6 +29,7 @@ import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableRowDataDetail;
 import net.tenie.lib.tools.StrUtils;
 
@@ -50,13 +51,17 @@ public class ButtonFactory {
 		// open连接
 		JFXButton openConn = new JFXButton();
 		openConn.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
-		openConn.setOnMouseClicked(CommonEventHandler.openConnEvent());
+		openConn.setOnMouseClicked(e->{
+			ConnectionEditor.openDbConn();
+		});
 		openConn.setTooltip(MyTooltipTool.instance("Open DB Connection"));
 		btns.add(openConn);
 		// 断开连接
 		JFXButton closeConn = new JFXButton();
 		closeConn.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
-		closeConn.setOnMouseClicked(CommonEventHandler.closeConnEvent());
+		closeConn.setOnMouseClicked(e->{
+			ConnectionEditor.closeDbConn();
+		});
 		closeConn.setTooltip(MyTooltipTool.instance("Close DB Connection"));
 		btns.add(closeConn);
 
@@ -68,7 +73,10 @@ public class ButtonFactory {
 
 		JFXButton editConn = new JFXButton();
 		editConn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
-		editConn.setOnMouseClicked(CommonEventHandler.editConnEvent());
+		editConn.setOnMouseClicked(e->{
+			ConnectionEditor.closeDbConn();
+			ConnectionEditor.editDbConn();
+		});
 		editConn.setTooltip(MyTooltipTool.instance("Edit DB Connection"));
 		btns.add(editConn);
 

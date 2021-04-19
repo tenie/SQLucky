@@ -102,7 +102,7 @@ public class DbConnectionPo {
 		this.connName = connName;
 		this.host = host;
 		this.port = port;
-		this.defaultSchema = defaultSchema;
+		this.defaultSchema = defaultSchema.trim();
 		this.dbVendor = dbVendor;
 		this.driver = driver;
 		this.user = user;

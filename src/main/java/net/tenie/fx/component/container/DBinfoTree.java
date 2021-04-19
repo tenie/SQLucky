@@ -61,7 +61,7 @@ public class DBinfoTree {
 		try {
 			// 恢复数据中保存的连接数据
 			Connection H2conn = H2Db.getConn();
-			List<DbConnectionPo> datas = ConnectionDao.selectData(H2conn);
+			List<DbConnectionPo> datas = ConnectionDao.recoverConnObj(H2conn);
 			if (datas != null && datas.size() > 0) {
 				for (DbConnectionPo po : datas) {
 					MyTreeItem<TreeNodePo> item = new MyTreeItem<>(
