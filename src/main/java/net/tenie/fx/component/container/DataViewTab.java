@@ -170,10 +170,10 @@ public class DataViewTab {
 	}
 
 	// 数据tab中的组件
-	public  VBox generateDataPane(  boolean disable,   String time , String rows) {
+	public  VBox generateDataPane( boolean disable,   String time , String rows) {
 		dataPane = new VBox();
 		// 表格上面的按钮
-		fp = ButtonFactory.getDataTableOptionBtnsPane(disable, time, rows, connName, btns);
+		fp = ButtonFactory.getDataTableOptionBtnsPane(tabId, disable, time, rows, connName, btns);
 		fp.setId(tabId);
 		dataPane.setId(tabId);
 		dataPane.getChildren().add(fp);
@@ -250,26 +250,32 @@ public class DataViewTab {
 	public  ContextMenu tableViewMenu(Tab tb) {
 		ContextMenu contextMenu = new ContextMenu();
 		MenuItem closeAll = new MenuItem("Close ALl");
-		closeAll.setOnAction(e -> {
-				// 清空缓存
+		closeAll.setOnAction(e -> { 
+				List<Tab> ls = new ArrayList<>();
 				for(Tab tab: ComponentGetter.dataTab.getTabs()) {
-					CommonAction.clearDataTable(tab);
+					ls.add(tab); 
 				}
-				ComponentGetter.dataTab.getTabs().clear(); 
-				CommonAction.hideBottom();
+				ls.forEach(tab->{
+					CommonAction.clearDataTable(tab);
+				}); 
+				ComponentGetter.dataTab.getTabs().clear();  
 		});
 
 		MenuItem closeOther = new MenuItem("Close Other");
 		closeOther.setOnAction(e -> {
 			int size = ComponentGetter.dataTab.getTabs().size();
-			if (size > 1) {
-				// 清空缓存
+			if (size > 1) { 
+				List<Tab> ls = new ArrayList<>();
 				for(Tab tab: ComponentGetter.dataTab.getTabs()) {
-					if( ! Objects.equals(tab, tb)) {
-						CommonAction.clearDataTable( tab);
-					}
 					
+					if( ! Objects.equals(tab, tb)) {
+						ls.add(tab); 
+					} 
 				}
+				ls.forEach(tab->{
+					CommonAction.clearDataTable(tab);
+				});
+				
 				ComponentGetter.dataTab.getTabs().clear(); 
 				ComponentGetter.dataTab.getTabs().add(tb);
 				

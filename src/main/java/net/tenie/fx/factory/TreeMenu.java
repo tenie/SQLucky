@@ -6,9 +6,12 @@ import java.util.List;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TreeItem;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableDataDetail;
 
@@ -70,10 +73,7 @@ public class TreeMenu {
 		
 		
 		refresh = new MenuItem("Refresh");
-		refresh.setOnAction(e -> {
-			ConnectionEditor.closeDbConn();
-			ConnectionEditor.openDbConn();
-		});
+		
 		refresh.setGraphic(ImageViewGenerator.svgImageDefActive("refresh"));
 		refresh.setDisable(true);
 		refresh.setId("DeleteConnection");
@@ -105,8 +105,11 @@ public class TreeMenu {
 	
 	}
 	
-	public void setConnectDisable(boolean tf) {
+	public void setLinkDisable(boolean tf) {
 		link.setDisable(tf);
+	}
+	
+	public void setConnectDisable(boolean tf) { 
 		unlink.setDisable(tf);
 		Edit.setDisable(tf);
 		delete.setDisable(tf); 
@@ -137,6 +140,15 @@ public class TreeMenu {
 		});
 	}
 	
+	public void setRefreshAction(TreeItem<TreeNodePo> newValue) {
+		
+		refresh.setOnAction(e -> {
+			DBinfoTree.DBinfoTreeView.getSelectionModel().select(newValue);
+			ConnectionEditor.closeDbConn();
+			ConnectionEditor.openDbConn();
+		});
+		
+	}
 
 
 	public ContextMenu getContextMenu() {
@@ -146,6 +158,70 @@ public class TreeMenu {
 
 	public void setContextMenu(ContextMenu contextMenu) {
 		this.contextMenu = contextMenu;
+	}
+
+	public MenuItem getTableAddNewCol() {
+		return tableAddNewCol;
+	}
+
+	public void setTableAddNewCol(MenuItem tableAddNewCol) {
+		this.tableAddNewCol = tableAddNewCol;
+	}
+
+	public MenuItem getTableShow() {
+		return tableShow;
+	}
+
+	public void setTableShow(MenuItem tableShow) {
+		this.tableShow = tableShow;
+	}
+
+	public MenuItem getTableDrop() {
+		return tableDrop;
+	}
+
+	public void setTableDrop(MenuItem tableDrop) {
+		this.tableDrop = tableDrop;
+	}
+
+	public MenuItem getLink() {
+		return link;
+	}
+
+	public void setLink(MenuItem link) {
+		this.link = link;
+	}
+
+	public MenuItem getUnlink() {
+		return unlink;
+	}
+
+	public void setUnlink(MenuItem unlink) {
+		this.unlink = unlink;
+	}
+
+	public MenuItem getEdit() {
+		return Edit;
+	}
+
+	public void setEdit(MenuItem edit) {
+		Edit = edit;
+	}
+
+	public MenuItem getDelete() {
+		return delete;
+	}
+
+	public void setDelete(MenuItem delete) {
+		this.delete = delete;
+	}
+
+	public MenuItem getRefresh() {
+		return refresh;
+	}
+
+	public void setRefresh(MenuItem refresh) {
+		this.refresh = refresh;
 	}
 	
 	

@@ -64,6 +64,7 @@ import net.tenie.fx.config.Db2ErrorCode;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.fx.dao.SelectDao;
+import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.factory.MenuFactory;
 import net.tenie.fx.factory.StringPropertyListValueFactory;
 import net.tenie.fx.utility.CommonUtility;
@@ -593,17 +594,36 @@ public class RunSQLHelper {
 		}
 		// 判断是否已经到达最大tab显示页面
 		// 删除旧的 tab
-		while (dataTab.getTabs().size() > ConfigVal.maxDataTab) {
-
-			Tab nd = dataTab.getTabs().get(0);
+		List<Tab> ls = new ArrayList<>();
+		for(int i = 0; i < dataTab.getTabs().size() ;i++) {
+			Tab nd = dataTab.getTabs().get(i);
 			String idVal = nd.getId();
-			dataTab.getTabs().remove(0);
-			logger.info("idVal = " + idVal);
-			// 删除缓存
-			if (idVal != null) {
-//				CacheTabView.clear(idVal); //TODO clear?
+			Boolean tf = ButtonFactory.lockObj.get(idVal);
+			if(tf != null && tf) {
+				logger.info("lock idVal = " + idVal);
+			}else {
+				ls.add(nd);
 			}
 		}
+		ls.forEach(nd->{
+			String idVal = nd.getId();
+			dataTab.getTabs().remove(nd);
+			CacheTabView.clear(idVal); //TODO clear?
+			
+		});
+		
+//		while (dataTab.getTabs().size() > ConfigVal.maxDataTab) {
+//
+//			Tab nd = dataTab.getTabs().get(0);
+//			
+//			String idVal = nd.getId();
+//			dataTab.getTabs().remove(0);
+//			logger.info("idVal = " + idVal);
+//			// 删除缓存
+//			if (idVal != null) {
+//				CacheTabView.clear(idVal); //TODO clear?
+//			}
+//		}
 	}
 
 	// 等待加载动画 页面

@@ -3,6 +3,8 @@ package net.tenie.fx.component.container;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -285,12 +287,23 @@ public class DBinfoTree {
 				
 				// 如果是table 节点 启用add new column
 				TreeNodePo nd = newValue != null ? newValue.getValue() : null;
+				if(newValue == null ||  DBinfoTreeView == null) return;
 				// 获取链接的TreeItem
-				
-				
-				if (DBinfoTree.isConns(newValue)) {
+				if(Objects.equals(newValue,  DBinfoTreeView.getRoot())) { // root
+					menu.setConnectDisable(true);
+					menu.setTableDisable(true); 
+					menu.setRefreshDisable(true);
+					menu.setLinkDisable(true);
+				}else if (DBinfoTree.isConns(newValue)) {
+					if(newValue.getChildren().size() == 0) {
+						menu.setLinkDisable(false);
+						menu.setRefreshDisable(true);
+					}else {
+						menu.setLinkDisable(true);
+						menu.setRefreshDisable(false);
+					}
 					menu.setConnectDisable(false);
-					menu.setTableDisable(true);
+					menu.setTableDisable(true); 
 				}else if(nd != null && nd.getType() == TreeItemType.TABLE) {
 					menu.setConnectDisable(true);
 					menu.setTableDisable(false);
@@ -301,20 +314,39 @@ public class DBinfoTree {
 				}else {
 					menu.setConnectDisable(true);
 					menu.setTableDisable(true); 
-					menu.setRefreshDisable(true);
+					menu.setRefreshDisable(false);
+					menu.setLinkDisable(true);
 				}
 				
-				if( !DBinfoTree.isConns(newValue)) {
-					menu.setRefreshDisable(false);
+				 
+				
+				
+				if(! menu.getRefresh().isDisable()) {
+					TreeItem<TreeNodePo>  connItem = ConnItem(newValue);
+					menu.setRefreshAction(connItem);
 				}
 
 			}
 		};
 	}
-	private void  ConnItem(TreeItem<TreeNodePo> newValue) {
-		TreeItem<TreeNodePo>  connItem ;
+	private TreeItem<TreeNodePo>   ConnItem(TreeItem<TreeNodePo> newValue) {
+		if(DBinfoTree.isConns(newValue) ) return newValue;
+		TreeItem<TreeNodePo>  connItem  = null;
+		TreeItem<TreeNodePo> parent = newValue.getParent();
+		while(parent !=null  ) {
+			if(    parent.getValue().getType() != null 
+				&& parent.getValue().getType() == TreeItemType.SCHEMA_ROOT ) {
+				
+				 return parent.getParent();
+			}else {
+				parent = parent.getParent();
+			}
+		}
 		
 		
+		
+		
+		return connItem;
 //		do {
 //			if(newValue)
 //		}while();

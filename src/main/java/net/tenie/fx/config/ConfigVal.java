@@ -23,7 +23,7 @@ public class ConfigVal {
 	public static String ph = "";
 	public static boolean del = false;
 	// 数据table 最大显示页面个数
-	public static final int maxDataTab = 10;
+	public static final int maxDataTab = 1;
 	// 代码显示个数计数
 	public static int pageSize = -1;
 	// sql 查询获取最大行

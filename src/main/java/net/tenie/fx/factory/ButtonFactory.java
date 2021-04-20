@@ -1,7 +1,9 @@
 package net.tenie.fx.factory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -34,7 +36,7 @@ import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.StrUtils;
 
 public class ButtonFactory {
-	
+	public static  Map<String, Boolean> lockObj = new HashMap<>();
 	public static  List<ButtonBase> btns = new ArrayList<>();
 	
 	// 连接区
@@ -282,7 +284,7 @@ public class ButtonFactory {
 		}
 	// 数据区
 	// 数据表格 操作按钮们
-	public static AnchorPane getDataTableOptionBtnsPane(boolean disable, String time , String rows, String connName, List<ButtonBase> optionBtns) {
+	public static AnchorPane getDataTableOptionBtnsPane(String id, boolean disable, String time , String rows, String connName, List<ButtonBase> optionBtns) {
 
 		AnchorPane fp = new AnchorPane();
 		fp.prefHeight(25);
@@ -412,6 +414,22 @@ public class ButtonFactory {
 		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom()); 
 		optionBtns.add(hideBottom);
+		// 锁
+		JFXButton lockbtn = new JFXButton(); 
+		lockbtn.setDisable(disable);
+		lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+		lockbtn.setOnMouseClicked(e->{
+			Boolean tf = lockObj.get(id);
+			if(tf) {
+				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+			}else {
+				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+			}
+			lockObj.put(id, !tf);
+			
+		}); 
+		lockObj.put(id, false);
+		optionBtns.add(lockbtn);
 		
 		//计时/查询行数
 		String info = ""; //time+ " ms / "+rows+" rows";
@@ -423,7 +441,7 @@ public class ButtonFactory {
 		
 		
 		fp.getChildren().addAll(saveBtn, detailBtn, tableSQLBtn, refreshBtn, addBtn, minusBtn, copyBtn, exportBtn, 
-				hideBottom, lb);
+				hideBottom, lockbtn, lb);
 		Double fix = 30.0;
 		int i = 0;
 		AnchorPane.setLeftAnchor(detailBtn , fix * ++i ) ;
@@ -436,8 +454,10 @@ public class ButtonFactory {
 		AnchorPane.setLeftAnchor(exportBtn , fix * ++i);
 		
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
+		AnchorPane.setRightAnchor(lockbtn, 35.0);
+		
 		AnchorPane.setTopAnchor(lb, 3.0);
-		AnchorPane.setRightAnchor(lb, 35.0);
+		AnchorPane.setRightAnchor(lb, 70.0);
 		
 		return fp;
 	}
