@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ButtonBase;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.lib.tools.StrUtils;
@@ -247,6 +248,15 @@ public class CacheTabView {
 		List<ButtonBase> val =  new ArrayList<>();
 		if(dvt != null) { 
 			  val = dvt.getBtns();
+		}
+		return val;
+	}
+	
+	public static List<MenuItem> MenuItems(String id){
+		DataViewTab dvt = getDataViewTab(id);
+		List<MenuItem> val =  new ArrayList<>();
+		if(dvt != null) { 
+			val =  dvt.getMenuItems();
 		}
 		return val;
 	}

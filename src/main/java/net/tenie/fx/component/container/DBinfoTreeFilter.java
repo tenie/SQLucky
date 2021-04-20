@@ -10,6 +10,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
@@ -17,7 +18,6 @@ import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.TreeItem.MyTreeItem;
 import net.tenie.fx.factory.ButtonFactory;
-import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
  
 /*   @author tenie */

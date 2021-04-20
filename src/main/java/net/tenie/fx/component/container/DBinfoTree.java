@@ -15,6 +15,10 @@ import javafx.scene.input.MouseEvent;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.Action.TreeObjAction;
+import net.tenie.fx.PropertyPo.DBOptionHelper;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
+import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
@@ -29,10 +33,6 @@ import net.tenie.fx.factory.TaskCellFactory;
 import net.tenie.fx.factory.TreeMenu;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.po.DBOptionHelper;
-import net.tenie.lib.po.DbConnectionPo;
-import net.tenie.lib.po.FuncProcTriggerPo;
-import net.tenie.lib.po.TablePo;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
@@ -42,14 +42,14 @@ public class DBinfoTree {
 //	public static ContextMenu contextMenu;
 	private  TreeMenu  menu;
 	
-	private TreeView<TreeNodePo> treeView;
+//	private TreeView<TreeNodePo> treeView;
 	private ObservableList<TreeItem<TreeNodePo>> connsNode;
 	// 缓存 激活的ConnItemContainer
 	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
 	
 	
 	public DBinfoTree() {
-		treeView = createConnsTreeView();
+		 createConnsTreeView();
 	}
 
 	// db节点view
@@ -163,7 +163,8 @@ public class DBinfoTree {
 				ConnectionEditor.openConn(item);
 //				item.setExpanded(true);
 			} // Schemas 双击, 打开非默认的schema
-			else if (parentItem != null && "Schemas".equals(parentItem.getValue().getName())) {
+			else if (parentItem != null && 
+					 parentItem.getValue().getType() == TreeItemType.SCHEMA_ROOT ) {
 				DbConnectionPo po = ComponentGetter.getSchameIsConnObj(item);
 				// 获取当前schema node 所在的连接节点
 				TreeItem<TreeNodePo> connRoot = item.getParent().getParent();
@@ -185,14 +186,6 @@ public class DBinfoTree {
 					 parentItem.getValue().getType() == TreeItemType.TABLE_ROOT) {
 				DbConnectionPo dpo = item.getValue().getConnpo();
 				TablePo table = item.getValue().getTable();
-//				String createTableSql = table.getDdl();
-//				if (StrUtils.isNullOrEmpty(createTableSql)) {
-//					createTableSql = DBOptionHelper.getCreateTableSQL(dpo, table.getTableSchema(),
-//							table.getTableName());
-//					createTableSql = SqlFormatter.format(createTableSql);
-//					table.setDdl(createTableSql);
-//				}
-//				DataViewTab.showDdlPanel(item.getValue().getName(), createTableSql);
 				TreeObjAction.showTableSql(dpo, table, item.getValue().getName());
 			}
 			// 视图
@@ -201,14 +194,6 @@ public class DBinfoTree {
 				DbConnectionPo dpo = item.getValue().getConnpo(); 
 				TablePo table = item.getValue().getTable();
 				TreeObjAction.showTableSql(dpo, table, item.getValue().getName());
-//				String sqlStr = table.getDdl();
-//				if (StrUtils.isNullOrEmpty(sqlStr)) {
-//					sqlStr = DBOptionHelper.getViewSQL(dpo, table.getTableSchema(), table.getTableName());
-//					sqlStr = SqlFormatter.format(sqlStr);
-//					table.setDdl(sqlStr);
-//				}
-//				DataViewTab.showDdlPanel(item.getValue().getName(), sqlStr);
-
 			}
 			// 函数
 			else if (parentItem.getValue().getType() != null
@@ -300,6 +285,8 @@ public class DBinfoTree {
 				
 				// 如果是table 节点 启用add new column
 				TreeNodePo nd = newValue != null ? newValue.getValue() : null;
+				// 获取链接的TreeItem
+				
 				
 				if (DBinfoTree.isConns(newValue)) {
 					menu.setConnectDisable(false);
@@ -313,20 +300,33 @@ public class DBinfoTree {
 					menu.setTableAction(dbc, schema, tablename);
 				}else {
 					menu.setConnectDisable(true);
-					menu.setTableDisable(true);
+					menu.setTableDisable(true); 
+					menu.setRefreshDisable(true);
+				}
+				
+				if( !DBinfoTree.isConns(newValue)) {
+					menu.setRefreshDisable(false);
 				}
 
 			}
 		};
 	}
+	private void  ConnItem(TreeItem<TreeNodePo> newValue) {
+		TreeItem<TreeNodePo>  connItem ;
+		
+		
+//		do {
+//			if(newValue)
+//		}while();
+	}
  
 
-	public TreeView<TreeNodePo> getTreeView() {
-		return treeView;
-	}
-
-	public void setTreeView(TreeView<TreeNodePo> treeView) {
-		this.treeView = treeView;
-	}
+//	public TreeView<TreeNodePo> getTreeView() {
+//		return treeView;
+//	}
+//
+//	public void setTreeView(TreeView<TreeNodePo> treeView) {
+//		this.treeView = treeView;
+//	}
  
 }

@@ -1,4 +1,4 @@
-package net.tenie.fx.service;
+package net.tenie.fx.utility;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

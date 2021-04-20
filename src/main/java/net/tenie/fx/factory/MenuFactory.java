@@ -29,6 +29,7 @@ import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.Action.RsVal;
 import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
@@ -41,7 +42,6 @@ import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.DBTools;
-import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
 public class MenuFactory {
@@ -53,7 +53,7 @@ public class MenuFactory {
 	 * @param col
 	 * @return
 	 */
-	public static ContextMenu DataTableColumnContextMenu(String colname, int type, FilteredTableColumn<ObservableList<StringProperty>, String> col, int colIdx) {
+	public static ContextMenu DataTableColumnContextMenu(String colname, int type, FilteredTableColumn<ObservableList<StringProperty>, String> col, int colIdx, List<MenuItem> menuList) {
 		
 		// 过滤框
 		PopupFilter<ObservableList<StringProperty>, String> popupFilter ;
@@ -78,19 +78,26 @@ public class MenuFactory {
 		miActive.setOnAction(e -> { // 粘贴板赋值
 			CommonUtility.setClipboardVal(colname);
 		});
-		Menu copyColData = new Menu("Copy Column Data");
+		menuList.add(miActive);
+		
+		Menu copyColData = new Menu("Copy Column Data"); 
 		copyColData.setGraphic(ImageViewGenerator.svgImageDefActive("columns"));
+		menuList.add(copyColData);
+		
 		
 		MenuItem selectCopyColData = new MenuItem("Copy Select Column Data");
 		selectCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
 		selectCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(true, false ,  colname)  );
+		menuList.add(selectCopyColData);
 		
 		MenuItem AllCopyColData = new MenuItem("Copy All Column Data");
 		AllCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
 		AllCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(false, false ,  colname)  );
 		copyColData.getItems().addAll(selectCopyColData, AllCopyColData);
+		menuList.add(AllCopyColData);
 		
 		MenuItem filter = new MenuItem("Filter");
+		menuList.add(filter);
 		filter.setGraphic(ImageViewGenerator.svgImageDefActive("filter"));
 		filter.setOnAction(e->{
 			popupFilter.showPopup();
@@ -98,6 +105,7 @@ public class MenuFactory {
 		
 		// drop column
 		MenuItem dropCol = new MenuItem("Drop Column: "+ colname);
+		menuList.add(dropCol);
 //		dropCol.getStyleClass().add("myMenuItem");
 		dropCol.setGraphic(ImageViewGenerator.svgImageDefActive("eraser"));
 		dropCol.setOnAction(e ->  {
@@ -105,32 +113,38 @@ public class MenuFactory {
 		});
 		
 		MenuItem alterColumn = new MenuItem("Alter Column Date Type"); 
+		menuList.add(alterColumn);
 		alterColumn.setGraphic(ImageViewGenerator.svgImageDefActive("exchange"));
 		alterColumn.setOnAction(e -> {
 			MenuAction.alterColumn(colname);
 		});
 		
 		MenuItem addColumn = new MenuItem("Add New Column"); 
+		menuList.add(addColumn);
 		addColumn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
 		addColumn.setOnAction(e -> { 
 			MenuAction.addNewColumn();
 		}); 
 		
 		Menu updateMenu = new Menu("Update Column Data");
+		menuList.add(updateMenu);
 		updateMenu.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
 		MenuItem updateTableColumn = new MenuItem("Update: Table is  Column Value"); 
+		menuList.add(updateTableColumn);
 		updateTableColumn.setGraphic(ImageViewGenerator.svgImageDefActive("table"));
 		updateTableColumn.setOnAction(e -> {
 			MenuAction.updateTableColumn(colname);
 		});
 		
 		MenuItem updateCurrentPageColumn = new MenuItem("Update: Current All Data is  Column Value"); 
+		menuList.add(updateCurrentPageColumn);
 		updateCurrentPageColumn.setGraphic(ImageViewGenerator.svgImageDefActive("file-text-o"));
 		updateCurrentPageColumn.setOnAction(e -> { 
 			MenuAction.updateCurrentColumn(colname, colIdx);
 		});
 		
 		MenuItem updateSelectColumn = new MenuItem("Update: Selected Data is Column Value"); 
+		menuList.add(updateSelectColumn);
 		updateSelectColumn.setGraphic(ImageViewGenerator.svgImageDefActive("indent"));
 		updateSelectColumn.setOnAction(e -> {
 			MenuAction.updateSelectColumn(colname, colIdx);

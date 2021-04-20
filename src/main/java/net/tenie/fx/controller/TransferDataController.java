@@ -48,6 +48,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -69,7 +70,6 @@ import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportDDL;
-import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
 public class TransferDataController implements Initializable {

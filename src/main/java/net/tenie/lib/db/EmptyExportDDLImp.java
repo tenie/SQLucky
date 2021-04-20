@@ -2,8 +2,9 @@ package net.tenie.lib.db;
 
 import java.sql.Connection;
 import java.util.List;
-import net.tenie.lib.po.FuncProcTriggerPo;
-import net.tenie.lib.po.TablePo;
+
+import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
+import net.tenie.fx.PropertyPo.TablePo;
 /* 
  *  * @author tenie 
  *  

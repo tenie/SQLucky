@@ -4,9 +4,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
+import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.config.DbVendor;
-import net.tenie.lib.po.FuncProcTriggerPo;
-import net.tenie.lib.po.TablePo;
 /* 
  *  * @author tenie 
  *  
@@ -200,19 +200,19 @@ public class ExportSqlH2Imp implements ExportDDL {
 
 	@Override
 	public String exportAlterTableAddColumn(Connection conn, String schema, String tableName, String newCol) {
-		String sql = "ALTER TABLE "+schema+"."+tableName+" ADD    " + newCol +";";
+		String sql = "ALTER TABLE "+tableName+" ADD    " + newCol +";";
 		return sql;
 	}
 
 	@Override
 	public String exportAlterTableDropColumn(Connection conn, String schema, String tableName, String col) {
-		String sql = "ALTER TABLE "+schema+"."+tableName+" DROP COLUMN   " + col +";";
+		String sql = "ALTER TABLE "+tableName+" DROP COLUMN   " + col +";";
 		return sql;
 	}
 
 	@Override
 	public String exportAlterTableModifyColumn(Connection conn, String schema, String tableName, String col) {
-		String sql = "ALTER TABLE "+schema+"."+tableName+" MODIFY COLUMN  " + col +";";
+		String sql = "ALTER TABLE "+tableName+" MODIFY COLUMN  " + col +";";
 		return sql;
 	}
 
@@ -230,43 +230,43 @@ public class ExportSqlH2Imp implements ExportDDL {
 
 	@Override
 	public String exportDropTable(String schema , String name) {
-		String sql = "DROP TABLE " + schema + "." + name.trim();
+		String sql = "DROP TABLE "  + name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropView(String schema, String name) {
-		String sql = "DROP VIEW " + schema + "." + name.trim();
+		String sql = "DROP VIEW "  + name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropFunction(String schema, String name) {
-		String sql = "DROP  FUNCTION " + schema + "." + name.trim();
+		String sql = "DROP  FUNCTION "  + name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropProcedure(String schema, String name) {
-		String sql = "DROP  PROCEDURE " + schema + "." + name.trim();
+		String sql = "DROP  PROCEDURE "  + name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropIndex(String schema, String name) {
-		String sql = "DROP INDEX " + schema + "." + name.trim();
+		String sql = "DROP INDEX "  + name.trim();
 		return sql;
 	}
  
 	@Override
 	public String exportDropSequence(String schema, String name) {
-		String sql = "DROP sequence " + schema + "." + name.trim() ;
+		String sql = "DROP sequence "  + name.trim() ;
 		return sql;
 	}
 
 	@Override
 	public String exportDropTrigger(String schema, String name) {
-		String sql = "DROP TRIGGER " + schema + "." + name.trim();
+		String sql = "DROP TRIGGER "  + name.trim();
 		return sql;
 	}
 

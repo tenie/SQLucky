@@ -1,4 +1,4 @@
-package net.tenie.fx.service;
+package net.tenie.fx.utility;
 
 import java.sql.Connection;
 import java.util.HashMap;

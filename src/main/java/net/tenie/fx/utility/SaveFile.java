@@ -1,4 +1,4 @@
-package net.tenie.lib.io;
+package net.tenie.fx.utility;
 
 import java.io.File;
 import java.io.IOException;

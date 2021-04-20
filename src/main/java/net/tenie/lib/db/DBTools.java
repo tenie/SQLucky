@@ -15,9 +15,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.tenie.fx.PropertyPo.DbTableDatePo;
+import net.tenie.fx.PropertyPo.RsData;
+import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.main.MainMyDB;
-import net.tenie.lib.po.RsData;
-import net.tenie.lib.po.SqlFieldPo;
 import net.tenie.lib.tools.StrUtils;
 
 public class DBTools {
@@ -328,7 +328,7 @@ public class DBTools {
 	public static List<String> conversionSqlFieldPo(List<SqlFieldPo> v) {
 		List<String> rs = new ArrayList<String>();
 		for (SqlFieldPo po : v) {
-			String na = po.getColumnLabel();
+			String na = po.getColumnLabel().get();
 			rs.add(na);
 		}
 		return rs;

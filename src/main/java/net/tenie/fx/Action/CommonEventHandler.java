@@ -42,11 +42,11 @@ import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.fx.utility.SaveFile;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.MyAlert;
-import net.tenie.fx.window.TableRowDataDetail;
-import net.tenie.lib.io.SaveFile;
+import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */

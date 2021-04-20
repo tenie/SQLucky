@@ -10,9 +10,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.component.ImageViewGenerator;
-//import net.tenie.fx.component.ShareComponnet;
-import net.tenie.lib.po.DbConnectionPo;
 
 /*   @author tenie */
 public final class DBConns {

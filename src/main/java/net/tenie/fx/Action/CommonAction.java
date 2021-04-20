@@ -43,6 +43,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
@@ -57,11 +58,11 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
+import net.tenie.fx.factory.TreeMenu;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.fx.utility.SaveFile;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.lib.io.SaveFile;
-import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
@@ -711,12 +712,12 @@ public class CommonAction {
 		JFXButton btn = AllButtons.btns.get("hideLeft");
 		if (ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue()) {
 			ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
-			btn.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-right"));// .fontImgName("caret-square-o-right",
-																							// 16, Color.ROYALBLUE));
+			btn.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-right"));
+																							
 		} else {
 			ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
-			btn.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-left"));// .fontImgName("caret-square-o-left",
-																						// 16, Color.ROYALBLUE));
+			btn.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-left"));
+																					
 		}
 	}
 
@@ -818,12 +819,24 @@ public class CommonAction {
 		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
 			color = "#FDA232";
 		}
-	
-		List<ButtonBase> lsrsg = 	ButtonFactory.btns;
-		lsrsg.addAll(ComponentGetter.dataPaneBtns()); 
-		for(ButtonBase reg :lsrsg) {
+		
+		
+		List<ButtonBase> allBtns = 	ButtonFactory.btns; // 
+		allBtns.addAll(ComponentGetter.dataPaneBtns());  //数据面板中的按钮 
+		for(ButtonBase reg :allBtns) {
 			reg.getGraphic().setStyle("-fx-background-color: " + color + ";");
 		}
+		
+		// 树右键菜单
+		for(MenuItem it :TreeMenu.menuItems) {
+			it.getGraphic().setStyle("-fx-background-color: " + color + ";");
+		}
+		
+		// datapane menuitem
+		for(MenuItem it: ComponentGetter.dataPaneMenuItems()) {
+			it.getGraphic().setStyle("-fx-background-color: " + color + ";");
+		}
+		
 	}
 	
 	public static void setOpenfileDir(String val) {

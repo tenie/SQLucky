@@ -2,11 +2,11 @@ package net.tenie.fx.Action;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 
+import net.tenie.fx.PropertyPo.DBOptionHelper;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.config.CommonConst;
-import net.tenie.lib.po.DBOptionHelper;
-import net.tenie.lib.po.DbConnectionPo;
-import net.tenie.lib.po.TablePo;
 import net.tenie.lib.tools.StrUtils;
 
 public class TreeObjAction {

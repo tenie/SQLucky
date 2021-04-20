@@ -63,8 +63,11 @@ public class DataViewTab {
 	// 待insert的 数据
 	private  Map<String, ObservableList<StringProperty>> appendData = new HashMap<>();
 	
+	
 	// 操作按钮
 	private   List<ButtonBase> btns = new ArrayList<>();
+	// 列的 menuItem 
+	private   List<MenuItem> menuItems = new ArrayList<>();
 	
 	// 数据连接对象
 	private Connection  dbconns ;
@@ -83,6 +86,8 @@ public class DataViewTab {
 	private FilteredTableView<ObservableList<StringProperty>> table ;
 	
 	public void clean() {
+		menuItems.clear();
+		menuItems = null;
 		fp.getChildren().clear(); 
 		dataPane.getChildren().clear();
 		dataPane = null;
@@ -430,6 +435,14 @@ public class DataViewTab {
 
 	public void setBtns(List<ButtonBase> btns) {
 		this.btns = btns;
+	}
+
+	public List<MenuItem> getMenuItems() {
+		return menuItems;
+	}
+
+	public void setMenuItems(List<MenuItem> menuItems) {
+		this.menuItems = menuItems;
 	}
 
 }

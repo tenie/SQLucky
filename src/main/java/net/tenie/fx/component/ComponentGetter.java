@@ -17,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -26,13 +27,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
 import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
-import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
 import java.io.File;
@@ -283,7 +284,15 @@ public final class ComponentGetter {
 			ls.addAll(CacheTabView.optionBtns(key) );
 		} 
 		return ls;
-//		return (Button) fp.getChildren().get(0);
+	}
+	// 获取数据面板中所有右键按钮
+	public static List<MenuItem>  dataPaneMenuItems() {
+		 
+		List<MenuItem> ls = new ArrayList<>();
+		for( String key :CacheTabView.getKey()) {
+			ls.addAll(CacheTabView.MenuItems(key) );
+		} 
+		return ls;
 	}
 
 }

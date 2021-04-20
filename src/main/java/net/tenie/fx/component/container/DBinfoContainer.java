@@ -31,7 +31,7 @@ public class DBinfoContainer {
 		treeBtnPane = new FlowPane();
 
 		dbInfoTree = new DBinfoTree();
-		treeView = dbInfoTree.getTreeView();
+		treeView =  DBinfoTree.DBinfoTreeView ; //.getTreeView();
 		dbf  = new DBinfoTreeFilter(); 		
 		filter = dbf.createFilterPane(treeView);
 		container.getChildren().addAll(treeBtnPane, treeView, filter);

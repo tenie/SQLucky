@@ -30,7 +30,7 @@ import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.fx.window.TableRowDataDetail;
+import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.StrUtils;
 
 public class ButtonFactory {
@@ -300,7 +300,7 @@ public class ButtonFactory {
 		JFXButton detailBtn = new JFXButton();
 		detailBtn.setGraphic(ImageViewGenerator.svgImageDefActive("search-plus")); 
 		detailBtn.setOnMouseClicked( e->{
-			TableRowDataDetail.show();
+			TableDataDetail.show();
 		});
 		detailBtn.setTooltip(MyTooltipTool.instance("current line detail "));
 		detailBtn.setDisable(disable);

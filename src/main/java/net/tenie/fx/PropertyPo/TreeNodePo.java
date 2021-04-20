@@ -5,9 +5,6 @@ import java.io.Serializable;
 import javafx.scene.Node;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
-import net.tenie.lib.po.DbConnectionPo;
-import net.tenie.lib.po.FuncProcTriggerPo;
-import net.tenie.lib.po.TablePo;
 
 /*   @author tenie */
 public class TreeNodePo implements Serializable {

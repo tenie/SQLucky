@@ -44,8 +44,10 @@ import javafx.scene.control.TreeItem;
 //import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
@@ -66,12 +68,10 @@ import net.tenie.fx.factory.MenuFactory;
 import net.tenie.fx.factory.StringPropertyListValueFactory;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.MyPopupNumberFilter;
+import net.tenie.fx.utility.ParseSQL;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.Dbinfo;
-import net.tenie.lib.db.sql.ParseSQL;
-import net.tenie.lib.po.DbConnectionPo;
-import net.tenie.lib.po.TablePrimaryKeysPo;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
@@ -253,11 +253,14 @@ public class RunSQLHelper {
 			// table 添加列和数据 
 			ObservableList<SqlFieldPo> colss = ddlDmlpo.getFields();
 			ObservableList<ObservableList<StringProperty>> alldata = ddlDmlpo.getAllDatas();
-			var cols = createTableCol( colss, new ArrayList<String>());
+			DataViewTab dvt = new DataViewTab(table ,table.getId(), ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
+			CacheTabView.addDataViewTab( dvt ,table.getId());
+			
+			var cols = createTableCol( colss, new ArrayList<String>(), true, dvt);
 			table.getColumns().addAll(cols);
 			table.setItems(alldata); 
 			
-			DataViewTab dvt = new DataViewTab(table ,table.getId(), ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
+			
 			// 渲染界面
 			if (!thread.isInterrupted())
 				DataViewContainer.showTableDate(dvt , "", "");
@@ -303,7 +306,7 @@ public class RunSQLHelper {
 			List<String> keys = findPrimaryKeys(conn, tableName);
 			// table 添加列和数据 
 			// 表格添加列
-			var ls = createTableCol( colss, keys);
+			var ls = createTableCol( colss, keys, false , dvt);
 			table.getColumns().addAll(ls);
 			table.setItems(allRawData);  
 //			tdpo.addTableView(table);
@@ -505,7 +508,7 @@ public class RunSQLHelper {
 	}
 
 	// table 添加列
-	private static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableCol( ObservableList<SqlFieldPo> cols,  List<String> keys ) {
+	private static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableCol( ObservableList<SqlFieldPo> cols,  List<String> keys , boolean isInfo, DataViewTab dvt) {
 		int len = cols.size();
 		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList = FXCollections.observableArrayList();
 		for (int i = 0; i < len; i++) {
@@ -517,16 +520,20 @@ public class RunSQLHelper {
 				tyNa += ", " + cols.get(i).getScale().get();
 			}
 			tyNa += ")"; 
-
-			boolean iskey = false;
-			if(keys.contains(colname)) {
-				iskey = true;
+			if(isInfo) {
+				col = createColumn(colname, type, tyNa, i,  true , false , isInfo, dvt);
+			}else {
+				boolean iskey = false;
+				if(keys.contains(colname)) {
+					iskey = true;
+				}
+				if (len == 2 && i == 1) {
+					col = createColumn(colname, type, tyNa, i,  true , iskey , isInfo, dvt);
+				} else {
+					col = createColumn(colname, type, tyNa, i,  false , iskey , isInfo, dvt);
+				} 
 			}
-			if (len == 2 && i == 1) {
-				col = createColumn(colname, type, tyNa, i,  true , iskey);
-			} else {
-				col = createColumn(colname, type, tyNa, i,  false , iskey);
-			} 
+			
 			colList.add(col);
 		}
 		
@@ -536,15 +543,14 @@ public class RunSQLHelper {
 
 	// 创建列
 	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int type, String typeName,
-			int colIdx,  boolean augmentation, boolean iskey) {
+			int colIdx,  boolean augmentation, boolean iskey, boolean isInfo, DataViewTab dvt ) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col =
 				new FilteredTableColumn<ObservableList<StringProperty>, String>();
 //		col.setCellFactory(MyTextField2TableCell.forTableColumn());
 		col.setCellFactory(TextField2TableCell.forTableColumn());
 //		col.setEditable(true);
 		col.setText(colname);
-		Label label  = new Label();
-		label.setTooltip(new Tooltip(typeName)); 
+		Label label  = new Label(); 
 		if(iskey) {
 			label.setGraphic(ImageViewGenerator.svgImage("material-vpn-key", 10, "#1C92FB")); 
 		}else {
@@ -569,10 +575,14 @@ public class RunSQLHelper {
 		col.setMinWidth(witdth);
 		col.setPrefWidth(witdth);
 		col.setCellValueFactory(new StringPropertyListValueFactory(colIdx));
- 
+		List<MenuItem> menuList = new ArrayList<>();
 		// 右点菜单
-		ContextMenu cm =MenuFactory.DataTableColumnContextMenu(colname, type, col, colIdx);
-		col.setContextMenu(cm); 
+		if(! isInfo) { 
+			ContextMenu cm =MenuFactory.DataTableColumnContextMenu(colname, type, col, colIdx , menuList);
+			col.setContextMenu(cm); 
+			label.setTooltip(new Tooltip(typeName)); 
+		}
+		dvt.getMenuItems().addAll(menuList);
 		return col;
 	}
 

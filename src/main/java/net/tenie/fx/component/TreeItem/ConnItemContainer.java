@@ -3,11 +3,12 @@ package net.tenie.fx.component.TreeItem;
 import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.config.DbVendor;
-import net.tenie.lib.po.DbConnectionPo;
 
 public class ConnItemContainer {
 	private TreeItem<TreeNodePo> parentNode;
@@ -118,12 +119,12 @@ public class ConnItemContainer {
 		
 		// 创建一个schema node , 将数据库数据放入
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
-				new TreeNodePo( nodeName, ImageViewGenerator.svgImage("th-list", "#FFD700"), connpo));
+				new TreeNodePo( nodeName, TreeItemType.SCHEMA_ROOT, ImageViewGenerator.svgImage("th-list", "#FFD700"), connpo));
 		// 获取schema 数据
 		Set<String> set = connpo.settingSchema();
 		for (String sche : set) {
 			TreeItem<TreeNodePo> item = new TreeItem<>(
-					new TreeNodePo(sche, ImageViewGenerator.svgImageUnactive("database"), connpo));
+					new TreeNodePo(sche, TreeItemType.SCHEMA, ImageViewGenerator.svgImageUnactive("database"), connpo));
 			schemas.getChildren().add(item);
 		}
 		return schemas;

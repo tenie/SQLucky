@@ -5,11 +5,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
-import net.tenie.lib.po.TablePo;
-import net.tenie.lib.po.myEntry;
-import net.tenie.lib.po.TableFieldPo;
+import net.tenie.fx.PropertyPo.TableFieldPo;
+import net.tenie.fx.PropertyPo.TablePo;
+import net.tenie.fx.PropertyPo.myEntry;
+
+import java.util.Set;
 /* 
  *  * @author tenie 
  *  

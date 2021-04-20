@@ -1,4 +1,4 @@
-package net.tenie.fx.service;
+package net.tenie.fx.utility;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

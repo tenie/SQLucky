@@ -3,10 +3,14 @@ package net.tenie.lib.db;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
+import net.tenie.fx.PropertyPo.TableFieldPo;
+import net.tenie.fx.PropertyPo.TablePo;
+import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.fx.config.DbVendor;
-import net.tenie.lib.po.FuncProcTriggerPo;
-import net.tenie.lib.po.TablePo;
+import net.tenie.lib.tools.StrUtils;
 /* 
  *  * @author tenie 
  *  
@@ -127,12 +131,56 @@ public class ExportSqlSqliteImp implements ExportDDL {
 			// 表对象 主键赋值
 			Dbinfo.fetchTablePrimaryKeys(conn, v);
 			// 表对象ddl语句
-		    ddl = fdb2.createTab(v); 
+		    ddl = createTab(v); 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ddl;
 	}
+	
+	private String createTab(TablePo tab) {
+		Set<TableFieldPo> fls = tab.getFields();
+		String tableName = tab.getTableName();  
+		String sql = "CREATE TABLE " +tableName + " ( \n";
+		String keysql = "";
+		// 字段
+		for (TableFieldPo po : fls) {
+			// not null
+			String notnull = "N".equals(po.getIsNullable()) ? "not null " : " ";
+			// default
+			String defVal = StrUtils.isNullOrEmpty(po.getDefaultVal()) ? "" : " default " + po.getDefaultVal();
+
+			String fieldName = po.getFieldName();
+			sql += "	" + fieldName + " " + po.getType()  + notnull + " " + defVal + " ,\n";
+ 
+		}
+		// 获取主键
+		ArrayList<TablePrimaryKeysPo> ls = tab.getPrimaryKeys();
+		String pkn = "";
+		if (ls.size() > 0) {
+			for (TablePrimaryKeysPo kp : ls) {
+				keysql += kp.getColumnName() + ",";
+				pkn = kp.getPkName();
+			}
+		}
+		// 有主键就加上
+		if (!StrUtils.isNullOrEmpty(keysql)) { 
+			keysql =  " PRIMARY KEY ( " + keysql.substring(0, keysql.length() - 1) + " )";
+			
+			if(StrUtils.isNotNullOrEmpty(pkn)) {
+				keysql =  " CONSTRAINT " + pkn +  keysql;
+			}
+			sql += keysql + " \n" + ") \n";
+			
+			
+		} else {
+			sql = sql.substring(0, sql.length() - 2) + " \n )";
+		}
+		  
+		
+		return sql;
+	}
+	
 
 	@Override
 	public String exportCreateView(Connection conn, String schema, String obj) {
@@ -212,43 +260,43 @@ public class ExportSqlSqliteImp implements ExportDDL {
 
 	@Override
 	public String exportDropTable(String schema , String name) {
-		String sql = "DROP TABLE " + schema + "." + name.trim();
+		String sql = "DROP TABLE " +  name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropView(String schema, String name) {
-		String sql = "DROP VIEW " + schema + "." + name.trim();
+		String sql = "DROP VIEW " +   name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropFunction(String schema, String name) {
-		String sql = "DROP  FUNCTION " + schema + "." + name.trim();
+		String sql = "DROP  FUNCTION " +  name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropProcedure(String schema, String name) {
-		String sql = "DROP  PROCEDURE " + schema + "." + name.trim();
+		String sql = "DROP  PROCEDURE " +   name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropIndex(String schema, String name) {
-		String sql = "DROP INDEX " + schema + "." + name.trim();
+		String sql = "DROP INDEX " +  name.trim();
 		return sql;
 	}
  
 	@Override
 	public String exportDropSequence(String schema, String name) {
-		String sql = "DROP sequence " + schema + "." + name.trim() ;
+		String sql = "DROP sequence " +  name.trim() ;
 		return sql;
 	}
 
 	@Override
 	public String exportDropTrigger(String schema, String name) {
-		String sql = "DROP TRIGGER " + schema + "." + name.trim();
+		String sql = "DROP TRIGGER " +  name.trim();
 		return sql;
 	}
 

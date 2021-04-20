@@ -16,11 +16,11 @@ import java.util.Map.Entry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.lib.po.RsData;
-import net.tenie.lib.po.TablePo;
-import net.tenie.lib.po.TablePrimaryKeysPo;
-import net.tenie.lib.po.myEntry;
-import net.tenie.lib.po.TableFieldPo;
+import net.tenie.fx.PropertyPo.RsData;
+import net.tenie.fx.PropertyPo.TableFieldPo;
+import net.tenie.fx.PropertyPo.TablePo;
+import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
+import net.tenie.fx.PropertyPo.myEntry;
 import net.tenie.lib.tools.StrUtils;
 /* 
  *  * @author tenie 
@@ -153,8 +153,7 @@ public class FetchDB2InfoImp {
 	public String createTab(String schema, TablePo tab) {
 		Set<TableFieldPo> fls = tab.getFields();
 		String tableName = tab.getTableName();
-
-		Boolean hasItemID = false;
+ 
 
 		String sql = "CREATE TABLE " + schema+"."+tableName + " ( \n";
 		String keysql = "";
@@ -171,10 +170,50 @@ public class FetchDB2InfoImp {
 			String fieldName = po.getFieldName();
 			sql += "	" + fieldName + " " + po.getType() + typeLength + notnull + " " + defVal + " ,\n";
 
-			if ("ITEM_ID".equals(fieldName.toUpperCase())) {
-				hasItemID = true;
+		}
+		// 获取主键
+		ArrayList<TablePrimaryKeysPo> ls = tab.getPrimaryKeys();
+		String pkn = "";
+		if (ls.size() > 0) {
+			for (TablePrimaryKeysPo kp : ls) {
+				keysql += kp.getColumnName() + ",";
+				pkn = kp.getPkName();
 			}
+		}
+		// 有主键就加上
+		if (!StrUtils.isNullOrEmpty(keysql)) {
+//			String keyName = pkn; 
+			keysql = " PRIMARY KEY ( " + keysql.substring(0, keysql.length() - 1) + " )";
+			
+			if(StrUtils.isNotNullOrEmpty(pkn)) {
+				keysql =  " CONSTRAINT " + pkn +  keysql;
+			}
+			 
+			sql += keysql + " \n" + ") \n";
+		} else {
+			sql = sql.substring(0, sql.length() - 2) + " \n )";
+		}
+		 
+		return sql;
+	} 
+	public String createTab(TablePo tab) {
+		Set<TableFieldPo> fls = tab.getFields();
+		String tableName = tab.getTableName();  
+		String sql = "CREATE TABLE " + tableName + " ( \n";
+		String keysql = "";
+		// 字段
+		for (TableFieldPo po : fls) {
+			// not null
+			String notnull = "N".equals(po.getIsNullable()) ? "not null " : " ";
+			// default
+			String defVal = StrUtils.isNullOrEmpty(po.getDefaultVal()) ? "" : " default " + po.getDefaultVal();
 
+			// 字段类型type长度
+			String typeLength = getTypeLength(po);
+
+			String fieldName = po.getFieldName();
+			sql += "	" + fieldName + " " + po.getType() + typeLength + notnull + " " + defVal + " ,\n";
+  
 		}
 		// 获取主键
 		ArrayList<TablePrimaryKeysPo> ls = tab.getPrimaryKeys();
@@ -193,10 +232,12 @@ public class FetchDB2InfoImp {
 		} else {
 			sql = sql.substring(0, sql.length() - 2) + " \n )";
 		}
+		String seq = ";";
 		 
-		return sql;
+
+		return sql + seq;
 	}
-	public String createTab(TablePo tab) {
+	public String createTab_ft(TablePo tab) {
 		Set<TableFieldPo> fls = tab.getFields();
 		String tableName = tab.getTableName();
 

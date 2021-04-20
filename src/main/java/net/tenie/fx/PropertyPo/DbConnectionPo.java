@@ -1,4 +1,4 @@
-package net.tenie.lib.po;
+package net.tenie.fx.PropertyPo;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.config.DbVendor;
+import net.tenie.fx.utility.ParseSQL;
 import net.tenie.lib.db.ExportSqlDB2Imp;
 import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.db.ExportDefaultImp;
@@ -21,7 +22,6 @@ import net.tenie.lib.db.ExportDDL;
 import net.tenie.lib.db.ExportSqlH2Imp;
 import net.tenie.lib.db.ExportSqlMySqlImp;
 import net.tenie.lib.db.ExportSqlSqliteImp;
-import net.tenie.lib.db.sql.ParseSQL;
 
 /*   @author tenie */
 public class DbConnectionPo {

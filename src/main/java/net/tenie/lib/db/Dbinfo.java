@@ -17,13 +17,13 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.lib.po.TablePo;
-import net.tenie.lib.po.TablePrimaryKeysPo;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.fx.PropertyPo.DbSchemaPo;
+import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
+import net.tenie.fx.PropertyPo.TableFieldPo;
+import net.tenie.fx.PropertyPo.TablePo;
+import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.lib.tools.StrUtils;
-import net.tenie.lib.po.DbConnectionPo;
-import net.tenie.lib.po.DbSchemaPo;
-import net.tenie.lib.po.FuncProcTriggerPo;
-import net.tenie.lib.po.TableFieldPo;
 
 /**
  * 获取表的连接

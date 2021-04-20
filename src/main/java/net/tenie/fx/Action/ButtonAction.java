@@ -20,9 +20,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.CacheTabView;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.MyCodeArea;
@@ -35,8 +37,6 @@ import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.window.MyAlert;
-import net.tenie.lib.po.DbConnectionPo;
-import net.tenie.lib.po.TablePo;
 import net.tenie.lib.tools.StrUtils;
 
 public class ButtonAction {

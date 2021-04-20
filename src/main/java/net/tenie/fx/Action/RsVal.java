@@ -7,7 +7,7 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
-import net.tenie.lib.po.DbConnectionPo;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 
 public class RsVal {
 	public String tableId;

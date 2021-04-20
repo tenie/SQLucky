@@ -1,4 +1,4 @@
-package net.tenie.lib.po;
+package net.tenie.fx.PropertyPo;
 
 import java.util.List;
 

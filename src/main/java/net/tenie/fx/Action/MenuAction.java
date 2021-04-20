@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 
 import com.jfoenix.controls.JFXButton;
 
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.MyAlert;
-import net.tenie.lib.po.DbConnectionPo;
 import net.tenie.lib.tools.StrUtils;
 
 public class MenuAction {
@@ -149,7 +149,7 @@ public class MenuAction {
 		Consumer< String >  caller = x ->{ 
 			execExportSql(sql, conn, dbc);
 		};
-		ModalDialog.myConfirmation("Execue :" + sql + " ?", caller); 
+		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
 		 
 	}
 

@@ -36,7 +36,7 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.DraggingTabPaneSupport;
-import net.tenie.fx.window.TableRowDataDetail;
+import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.StrUtils;
 
 /*   
@@ -158,7 +158,7 @@ public class DataViewContainer {
 	                           this.setOnMouseClicked(e -> {
 	     		               	  if (e.getClickCount() == 2) {
 //	     		               		  JFXButton btn = (JFXButton) ComponentGetter.dataPaneSaveBtn();
-	     		               	      TableRowDataDetail.show(); 
+	     		               	      TableDataDetail.show(); 
 	     		               	  }
 	     	                 } ); 
 	                    }

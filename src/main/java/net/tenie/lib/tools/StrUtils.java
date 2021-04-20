@@ -14,9 +14,9 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.MyRange;
 import net.tenie.fx.config.ConfigVal;
-import net.tenie.lib.po.DbConnectionPo;
 
 /*   @author tenie */
 public class StrUtils {

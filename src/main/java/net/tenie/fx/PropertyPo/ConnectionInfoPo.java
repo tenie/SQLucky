@@ -1,4 +1,4 @@
-package net.tenie.fx.dao.h2.po;
+package net.tenie.fx.PropertyPo;
 
 import java.util.Date;
 

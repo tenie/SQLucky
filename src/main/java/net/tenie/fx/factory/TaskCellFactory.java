@@ -21,12 +21,12 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.lib.po.DbConnectionPo;
 
 /*   @author tenie */
 public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<TreeNodePo>> {

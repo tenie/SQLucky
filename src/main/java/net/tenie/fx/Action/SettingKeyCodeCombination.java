@@ -24,7 +24,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.lib.io.SaveFile;
+import net.tenie.fx.utility.SaveFile;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */

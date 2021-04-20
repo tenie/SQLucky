@@ -1,4 +1,4 @@
-package net.tenie.lib.db.sql;
+package net.tenie.fx.utility;
 
 import java.util.List;
 
