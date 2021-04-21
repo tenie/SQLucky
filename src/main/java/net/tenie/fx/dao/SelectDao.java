@@ -81,6 +81,7 @@ public class SelectDao {
 			
 			dvt.setColss(fields);
 			dvt.setRawData(val);
+			dvt.setRows(val.size());
 		} catch (SQLException e) {
 			throw e;
 		} finally {

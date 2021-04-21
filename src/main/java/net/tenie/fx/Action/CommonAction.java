@@ -53,6 +53,8 @@ import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.component.container.DBinfoTree;
+import net.tenie.fx.component.container.MenuBarContainer;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
@@ -837,6 +839,15 @@ public class CommonAction {
 			it.getGraphic().setStyle("-fx-background-color: " + color + ";");
 		}
 		
+		for(MenuItem it: MenuBarContainer.barMenus) {
+			if(it.getGraphic() != null)
+				it.getGraphic().setStyle("-fx-background-color: " + color + ";");
+		}
+		if( DBinfoTree.icon != null ) {
+			DBinfoTree.icon.setStyle("-fx-background-color: " + color + ";");
+			
+		}
+		
 	}
 	
 	public static void setOpenfileDir(String val) {
@@ -1272,6 +1283,26 @@ public class CommonAction {
 			CommonAction.hideBottom(); 
 		} 
 	}
+	
+	public static void clearDataTable(int tbIdx) {
+		TabPane tabPane = ComponentGetter.dataTab; 
+		var tb = tabPane.getTabs().get(tbIdx);
+		long begintime = System.currentTimeMillis();
+		String idVal = tb.getId();
+		if (idVal != null) {
+			CacheTabView.clear(idVal);
+		}
+		tb.setContent(null); 
+		tabPane.getTabs().remove(tb);
+		long endtime = System.currentTimeMillis();
+		long costTime = (endtime - begintime);
+		logger.info("关闭使用时间 = "+ costTime);
+		
+		if(tabPane.getTabs().size() == 0) {
+			CommonAction.hideBottom(); 
+		} 
+	}
+	
 
 
 	public static void demo() {

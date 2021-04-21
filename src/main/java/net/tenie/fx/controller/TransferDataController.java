@@ -64,7 +64,7 @@ import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.fx.dao.TransferTabeDataDao;
-import net.tenie.fx.factory.TaskCellFactory;
+import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.MyAlert;

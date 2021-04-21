@@ -232,22 +232,18 @@ public class ButtonAction {
 	}
 	
 	//refreshData
-	public static void refreshData() {
-		String id = ComponentGetter.currentDataTabID(); //btn.getParent().getId();
-//		Tab tb = CacheTabView.getTab(id);
+	public static void refreshData(boolean isLock) {
+		String id = ComponentGetter.currentDataTabID(); 
 		String sql = CacheTabView.getSelectSQl(id);
 		Connection conn = CacheTabView.getDbConn(id);
 	    String connName = 	CacheTabView.getConnName(id);
-//	    DBConns.get(connName);
 		if (conn != null) {
 			//TODO 关闭当前tab
-//			CommonUtility.setTabName(tb, "");
 			var dataTab = ComponentGetter.dataTab;
-			int selidx = dataTab.getSelectionModel().getSelectedIndex();
-			String idx = "" + selidx;
-			dataTab.getTabs().remove(selidx);
-			JFXButton runFunPro = AllButtons.btns.get("runFunPro");
-			RunSQLHelper.runSQLMethod( DBConns.get(connName), conn, sql, idx, runFunPro);
+			int selidx = dataTab.getSelectionModel().getSelectedIndex(); 
+//			dataTab.getTabs().remove(selidx); 
+			CommonAction.clearDataTable(selidx);
+			RunSQLHelper.runSQLMethodRefresh( DBConns.get(connName), conn, sql, selidx+"", isLock);
 		}	
 	}
 	

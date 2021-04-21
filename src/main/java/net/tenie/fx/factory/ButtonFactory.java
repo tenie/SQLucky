@@ -163,9 +163,15 @@ public class ButtonFactory {
 			btns.add(runFunPro);
 
 			
-			runbtn.setOnMouseClicked(RunSQLHelper.runSQL(runbtn, stopbtn, runFunPro));
-			runFunPro.setOnMouseClicked(RunSQLHelper.runSQL(runFunPro, stopbtn, runbtn));
-			stopbtn.setOnMouseClicked(RunSQLHelper.stopSQL(runbtn, stopbtn, runFunPro));
+			runbtn.setOnMouseClicked(e->{
+				RunSQLHelper.runSQLMethod();
+			});
+			runFunPro.setOnMouseClicked(e->{
+				RunSQLHelper.runFuncSQLMethod();
+			});
+			stopbtn.setOnMouseClicked(e->{
+				RunSQLHelper.stopSQLMethod();
+			});
 			
 			JFXButton hideLeft = new JFXButton();
 			hideLeft.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-left"));// fontImgName("caret-square-o-left",
@@ -284,7 +290,7 @@ public class ButtonFactory {
 		}
 	// 数据区
 	// 数据表格 操作按钮们
-	public static AnchorPane getDataTableOptionBtnsPane(String id, boolean disable, String time , String rows, String connName, List<ButtonBase> optionBtns) {
+	public static AnchorPane getDataTableOptionBtnsPane(String id, boolean disable, String time , String rows, String connName, List<ButtonBase> optionBtns , boolean isLock) {
 
 		AnchorPane fp = new AnchorPane();
 		fp.prefHeight(25);
@@ -323,7 +329,8 @@ public class ButtonFactory {
 		JFXButton refreshBtn = new JFXButton();
 		refreshBtn.setGraphic(ImageViewGenerator.svgImageDefActive("refresh")); 
 		refreshBtn.setOnMouseClicked( e->{ 
-			ButtonAction.refreshData() ;
+			Boolean islock = lockObj.get(id);
+			ButtonAction.refreshData(islock) ;
 		});
 		refreshBtn.setTooltip(MyTooltipTool.instance("refresh table "));
 		refreshBtn.setDisable(disable);
@@ -417,7 +424,12 @@ public class ButtonFactory {
 		// 锁
 		JFXButton lockbtn = new JFXButton(); 
 		lockbtn.setDisable(disable);
-		lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+		if(isLock) {
+			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+		}else {
+			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+		}
+		lockObj.put(id, isLock);
 		lockbtn.setOnMouseClicked(e->{
 			Boolean tf = lockObj.get(id);
 			if(tf) {
@@ -428,8 +440,16 @@ public class ButtonFactory {
 			lockObj.put(id, !tf);
 			
 		}); 
-		lockObj.put(id, false);
+		
 		optionBtns.add(lockbtn);
+		
+		//保存按钮监听 : 保存亮起, 锁住
+		saveBtn.disableProperty().addListener(e->{
+			if( ! saveBtn.disableProperty().getValue() ) {
+				setLockBtn(id, true, lockbtn);
+			}
+		});
+		
 		
 		//计时/查询行数
 		String info = ""; //time+ " ms / "+rows+" rows";
@@ -460,5 +480,15 @@ public class ButtonFactory {
 		AnchorPane.setRightAnchor(lb, 70.0);
 		
 		return fp;
+	}
+	
+	private static  void setLockBtn(String id, Boolean islock , Button lockbtn) { 
+		if(islock) {
+			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+		}else {
+			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+			
+		}
+		lockObj.put(id, islock);
 	}
 }

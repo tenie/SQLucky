@@ -1,3 +1,15 @@
+
+/* tabpane 选择tab按钮 .tab-down-button */
+.control-buttons-tab .arrow {
+	-fx-background-color: #1C94FF; 
+}
+
+/*
+.control-buttons-tab .tab-down-button {
+	-fx-background-color:  #333333; 
+}*/
+
+
 /*  搜索框 */
 .myFindTextField{  
 	-fx-border-color: #5E6060 ;

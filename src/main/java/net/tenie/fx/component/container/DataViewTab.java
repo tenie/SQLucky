@@ -46,6 +46,7 @@ public class DataViewTab {
 	private String tabName ;
 	private String sqlStr;
 	private String connName;
+	private boolean isLock = false;
 	
 	// sql执行时间
 	private double execTime = 0;
@@ -155,7 +156,7 @@ public class DataViewTab {
 		 tab = createTab(tabName); 
 		 tab.setId(tabId);
 		// 构建数据Tab页中的表
-		 generateDataPane( disable,   time ,   rows);
+		 generateDataPane( disable,   time ,   rows );
 		 tab.setContent(dataPane);
 		 var dataTab = ComponentGetter.dataTab ;
 		 if (idx > -1) {
@@ -173,7 +174,7 @@ public class DataViewTab {
 	public  VBox generateDataPane( boolean disable,   String time , String rows) {
 		dataPane = new VBox();
 		// 表格上面的按钮
-		fp = ButtonFactory.getDataTableOptionBtnsPane(tabId, disable, time, rows, connName, btns);
+		fp = ButtonFactory.getDataTableOptionBtnsPane(tabId, disable, time, rows, connName, btns , isLock);
 		fp.setId(tabId);
 		dataPane.setId(tabId);
 		dataPane.getChildren().add(fp);
@@ -449,6 +450,14 @@ public class DataViewTab {
 
 	public void setMenuItems(List<MenuItem> menuItems) {
 		this.menuItems = menuItems;
+	}
+
+	public boolean isLock() {
+		return isLock;
+	}
+
+	public void setLock(boolean isLock) {
+		this.isLock = isLock;
 	}
 
 }

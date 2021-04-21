@@ -83,41 +83,40 @@ public class RunSQLHelper {
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
 	private static final String WAITTB_NAME = "Loading...";
-	private static String connName = "";
+//	private static String connName = "";
 	// 新tab页插入的位置
 	private static int tidx = -1;
 	
+	// 参数
+	private static String sqlstr = null;
+	private static Connection conn = null;
+	private static String tabIdx = null;
+	private static Boolean isFunc = null;
+	private static DbConnectionPo dpo = null;
+	private static Boolean isRefresh = false;
+	private static boolean isLock =false;
+	
+	
 
 	@SuppressWarnings("restriction")
-	private static void runMain(Map<String, Object> val) { // throws Exception
-		if (val == null)
-			return;
-		String sqlstr = (String) val.get("sql");
-		Connection conn = (Connection) val.get("conn");
-		String tabIdx = (String) val.get("tabIdx");
-		String btn = (String)val.get("btn"); 
-		DbConnectionPo dpo = (DbConnectionPo)val.get("dpo"); 
-		 
+	private static void runMain(String s) {	 
 		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
 			tidx = Integer.valueOf(tabIdx);
 		}else {
 			tidx = -1;
 		}
-		if (conn == null)
-			return;
+		if (conn == null) return;
 		// 等待加载动画
-		Tab waitTb = new DataViewTab().maskTab(WAITTB_NAME);
-		addWaitingPane(waitTb, tidx);
+		Tab waitTb =  addWaitingPane( tidx);
 		List<sqlData> allsqls = new ArrayList<>();
 		try {
-			// 执行刷新数据的时候, (执行缓存的sql)
-			if (StrUtils.isNotNullOrEmpty(sqlstr)) {
-//				selectAction(sqlstr, conn); // 执行刷新查询sql
+			// 执行缓存的sql 
+			if (StrUtils.isNotNullOrEmpty(sqlstr)) { 
 				allsqls = epurateSql(sqlstr);
 			} else { 
 				// 获取sql 语句 
 				//执行存储过程函数等
-				if(StrUtils.isNotNullOrEmpty(btn)) {  
+				if( isFunc ) {  
 					String str = SqlEditor.getCurrentCodeAreaSQLText();
 					sqlData sq = new sqlData(str, 0, str.length());
 					allsqls.add(sq);
@@ -145,7 +144,6 @@ public class RunSQLHelper {
 		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
 		
-
 		for (int i = 0; i < sqllenght; i++) { 
 			sqlstr = allsqls.get(i).sql;
 			sql = StrUtils.trimComment(sqlstr, "--");
@@ -202,46 +200,7 @@ public class RunSQLHelper {
 		showExecuteSQLInfo(ddlDmlpo);
 	}
 	
-	// 字段值被修改还原, 不允许修改
-	public static   StringProperty createReadOnlyStringProperty(String val ) {
-		StringProperty sp =  new StringProperty() { 
-			@Override
-			public String get() { 
-				return val;
-			}
-			
-			@Override
-			public void bind(ObservableValue<? extends String> arg0) { }
-			@Override
-			public boolean isBound() { 
-				return false;
-			}
-			@Override
-			public void unbind() { }
-
-			@Override
-			public Object getBean() { 
-				return null;
-			}
-			@Override
-			public String getName() { 
-				return null;
-			} 
-			@Override
-			public void addListener(ChangeListener<? super String> arg0) { } 
-			@Override
-			public void removeListener(ChangeListener<? super String> arg0) { } 
-			@Override
-			public void addListener(InvalidationListener arg0) { }
-			@Override
-			public void removeListener(InvalidationListener arg0) { } 		
-			@Override
-			public void set(String arg0) {}
-
-			 
-		}; 		
-		return sp;
-	}
+	
 	
 	// 展示信息窗口,
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo) {
@@ -259,8 +218,7 @@ public class RunSQLHelper {
 			
 			var cols = createTableCol( colss, new ArrayList<String>(), true, dvt);
 			table.getColumns().addAll(cols);
-			table.setItems(alldata); 
-			
+			table.setItems(alldata);  
 			
 			// 渲染界面
 			if (!thread.isInterrupted())
@@ -271,20 +229,17 @@ public class RunSQLHelper {
  
 
 	private static void selectAction(String sql, Connection conn) throws Exception {
-		try {
-//			DataTabDataPo tdpo = new DataTabDataPo();
+		try { 
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 获取表名
 			String tableName = ParseSQL.tabName(sql);
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-//			tdpo.addTableName(tableName);
 			DataViewTab dvt = new DataViewTab();
-//			DbTableDatePo dpo = 
+
 			SelectDao.selectSql(conn, sql, ConfigVal.MaxRows, table.getId(), dvt);
 			
 			DataViewContainer.setTabRowWith(table, dvt.getRawData().size()); //dpo.getAllDatasSize());
 			
-			//
 			String connectName = ComponentGetter.getCurrentConnectName();
 			dvt.setSqlStr(sql);
 			dvt.setTable(table);
@@ -292,14 +247,13 @@ public class RunSQLHelper {
 			dvt.setTabName(tableName);
 			dvt.setConnName(connectName);
 			dvt.setDbconns(conn); 
+			dvt.setLock(isLock);
 			
 			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
 			ObservableList<SqlFieldPo> colss = dvt.getColss();
-			
-//			DataViewTab dvt = new DataViewTab(dpo, table ,table.getId(), tableName,
-//										      sql, conn, connectName, colss, rs ); 
+			  
 			//缓存
-			CacheTabView.addDataViewTab( dvt ,table.getId());
+			CacheTabView.addDataViewTab( dvt , table.getId());
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
 			
@@ -312,9 +266,9 @@ public class RunSQLHelper {
 			table.setItems(allRawData);  
 //			tdpo.addTableView(table);
 			// 渲染界面
-			if (!thread.isInterrupted())
+			if (!thread.isInterrupted()) {
 				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");
-//			dpo.clean();
+			}
 		} catch (Exception e) { 
 			e.printStackTrace();
 			throw e;
@@ -367,28 +321,18 @@ public class RunSQLHelper {
 	}
  
 	// 在子线程执行 运行sql 的任务
-	public static Thread createThread(DbConnectionPo dpo, Connection conn, String sql, String tabIdx, JFXButton run,
-			Consumer<Map<String, Object>> action) {
-		connName = ComponentGetter.getCurrentConnectName();
+	public static Thread createThread(  Consumer<String> action) {
 		return new Thread() {
 			public void run() {
-				logger.info("线程启动了" + this.getName());
-				Map<String, Object> val = new HashMap<>();
-				val.put("sql", sql);
-				val.put("dpo", dpo);
-				val.put("conn", conn);
-				val.put("tabIdx", tabIdx);
-				val.put("btn", run.getId());
-				action.accept(val);
+				logger.info("线程启动了" + this.getName()); 
+				action.accept("");
 				logger.info("线程结束了" + this.getName());
-				logger.info(run.getId());
 			}
 		};
 	}
 
 	// 设置 按钮状态
 	public static void settingBtn() { 
-
 		if (runbtn == null) {
 			runbtn =   AllButtons.btns.get("runbtn");
 			otherbtn = AllButtons.btns.get("runFunPro");
@@ -407,9 +351,7 @@ public class RunSQLHelper {
 		run.setDisable(runt);
 		btn.setDisable(runt);
 		stop.setDisable(stopt);
-	}
-
-	 
+	} 
 
 //    检查db连接状态
 	private static boolean checkDBconn() {
@@ -431,13 +373,7 @@ public class RunSQLHelper {
 		return warn;
 	}
 
-	// 运行sql 事件
-	public static EventHandler<Event> runSQL(JFXButton run, JFXButton stop, JFXButton btn) {
-		return e -> {
-			runSQLMethod(run, stop, btn);
-		};
-
-	}
+ 
 
 	// 获取当前执行面板中的连接
 	public static Connection getComboBoxDbConn() {
@@ -454,26 +390,36 @@ public class RunSQLHelper {
 	}
 
 	// 运行 sql 入口
-	public static void runSQLMethod(DbConnectionPo dpo, Connection conn, String sql, String tabIdx, JFXButton run) {
+	public static void runSQLMethodRefresh(DbConnectionPo dpov, Connection connv, String sqlv, String tabIdxv, boolean isLockv ) {
 		settingBtn();
 		CommonAction.showDetailPane();
-		thread = createThread(dpo, conn, sql, tabIdx, run, RunSQLHelper::runMain);
+	    sqlstr = sqlv;
+	    dpo = dpov;
+	    conn = connv;
+	    tabIdx = tabIdxv;
+	    isFunc = false;
+	    isRefresh = true;
+	    isLock = isLockv;
+		thread = createThread( RunSQLHelper::runMain);
 		thread.start();
 	}
 
-	public static void runSQLMethod(JFXButton run, JFXButton stop, JFXButton btn) {
-		runSQLMethod(run, stop, btn, null, null);
+	public static void runSQLMethod( ) {
+		runSQLMethod(  null, null, false);
 	}
 
-	public static void runSQLMethod(JFXButton run, JFXButton stop, JFXButton btn, String sql, String tabIdx) {
+	public static void runFuncSQLMethod( ) {
+		runSQLMethod(  null, null, true);
+	}
+	public static void runSQLMethod( String sqlv, String tabIdxv, boolean isFuncv) {
 		if (checkDBconn())
 			return;
-		DbConnectionPo dpo = DBConns.get(getComboBoxDbConnName());
-		Connection conn = dpo.getConn();
+		DbConnectionPo dpov = DBConns.get(getComboBoxDbConnName());
+		Connection connv = dpov.getConn();
 		try {
-			if (conn == null) {
+			if (connv == null) {
 				return;
-			} else if (conn.isClosed()) {
+			} else if (connv.isClosed()) {
 				MyAlert.errorAlert( "Connect is Closed!");
 			}
 		} catch (Exception e) {
@@ -484,26 +430,27 @@ public class RunSQLHelper {
 		settingBtn();
 		CommonAction.showDetailPane();
 		
-		thread = createThread( dpo, conn, sql, tabIdx, run, RunSQLHelper::runMain);
+	    sqlstr = sqlv;
+	    dpo = dpov;
+	    conn = connv;
+	    tabIdx = tabIdxv;
+	    isFunc = isFuncv;
+	    isRefresh = false;
+	    isLock = false;  
+	    
+		thread = createThread( RunSQLHelper::runMain);
 		thread.start();
 	}
 
-	// stop 事件
-	public static EventHandler<Event> stopSQL(JFXButton run, JFXButton stop, JFXButton btn) {
-		return new EventHandler<Event>() {
-			public void handle(Event e) {
-				stopSQLMethod(run, stop, btn);
-			}
-		};
-	}
+ 
 
 	// stop 入口
-	public static void stopSQLMethod(JFXButton run, JFXButton stop, JFXButton btn) {
-		if (thread != null && !stop.disabledProperty().getValue()) { 
+	public static void stopSQLMethod() {
+		if (thread != null && !stopbtn.disabledProperty().getValue()) { 
 			thread.interrupt();
 			logger.info("线程是否被中断：" + thread.isInterrupted());// true
 			if (thread.isInterrupted()) {
-				settingBtn(run, true, stop, false, btn);
+				settingBtn(runbtn, true, stopbtn, false, otherbtn);
 			} 
 		}
 	}
@@ -592,6 +539,7 @@ public class RunSQLHelper {
 		if (dataTab.getTabs() != null) {
 			dataTab.getTabs().removeIf(t -> dataTab.getTabs().size() > 0 && CommonUtility.tabText(t).equals(""));
 		}
+		if(isRefresh) return;
 		// 判断是否已经到达最大tab显示页面
 		// 删除旧的 tab
 		List<Tab> ls = new ArrayList<>();
@@ -611,25 +559,16 @@ public class RunSQLHelper {
 			CacheTabView.clear(idVal); //TODO clear?
 			
 		});
-		
-//		while (dataTab.getTabs().size() > ConfigVal.maxDataTab) {
-//
-//			Tab nd = dataTab.getTabs().get(0);
-//			
-//			String idVal = nd.getId();
-//			dataTab.getTabs().remove(0);
-//			logger.info("idVal = " + idVal);
-//			// 删除缓存
-//			if (idVal != null) {
-//				CacheTabView.clear(idVal); //TODO clear?
-//			}
-//		}
 	}
 
 	// 等待加载动画 页面
-	private static void addWaitingPane(Tab waitTb, int tabIdx) {
+	private static Tab addWaitingPane( int tabIdx) {
+		Tab waitTb = new DataViewTab().maskTab(WAITTB_NAME);
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTab;
+			// 删除b不要的tab
+			deleteEmptyTab(dataTab);
+			
 
 			if (tabIdx > -1) {
 				dataTab.getTabs().add(tabIdx, waitTb);
@@ -637,10 +576,9 @@ public class RunSQLHelper {
 				dataTab.getTabs().add(waitTb);
 			}
 			dataTab.getSelectionModel().select(waitTb);
-			// 删除空白tab
-			deleteEmptyTab(dataTab);
+			
 		});
-
+	    return waitTb;
 	}
 
 	// 移除 等待加载动画 页面
@@ -716,6 +654,44 @@ public class RunSQLHelper {
 		sds = epurateSql(str, start);
 		return sds;
 	}
+	// 字段值被修改还原, 不允许修改
+			public static   StringProperty createReadOnlyStringProperty(String val ) {
+				StringProperty sp =  new StringProperty() {
+					@Override
+					public String get() { 
+						return val;
+					}
+					
+					@Override
+					public void bind(ObservableValue<? extends String> arg0) { }
+					@Override
+					public boolean isBound() { 
+						return false;
+					}
+					@Override
+					public void unbind() { }
+
+					@Override
+					public Object getBean() { 
+						return null;
+					}
+					@Override
+					public String getName() { 
+						return null;
+					} 
+					@Override
+					public void addListener(ChangeListener<? super String> arg0) { } 
+					@Override
+					public void removeListener(ChangeListener<? super String> arg0) { } 
+					@Override
+					public void addListener(InvalidationListener arg0) { }
+					@Override
+					public void removeListener(InvalidationListener arg0) { } 		
+					@Override
+					public void set(String arg0) {}  
+				}; 		
+				return sp;
+			}
 
 }
 
@@ -729,5 +705,6 @@ class sqlData{
 		begin = i;
 		length = len;
 	}
+
 }
 

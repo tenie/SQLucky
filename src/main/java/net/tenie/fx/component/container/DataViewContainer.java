@@ -69,34 +69,7 @@ public class DataViewContainer {
 
 	public static void showTableDate(DataViewTab dvt, int idx, boolean disable, String time , String rows) {
 		Platform.runLater(() -> { 
-			 dvt.createTab(idx, disable, time , rows);
-				// 只能在fx线程中操作控件
-//				TabPane dataTabPane = ComponentGetter.dataTab; 
-//				FilteredTableView<ObservableList<StringProperty>> table =  dvt.getTable() ; 
-				// 添加一个新的tab页， 把view 放入其中
-//				String tn = dvt.getTabName(); // names.get(i);
-//				String excInfoTitle = ConfigVal.EXEC_INFO_TITLE;
-				// 如果是要添加一个info的Tab, 先看有没有旧的复用
-//				if( excInfoTitle.equals(tn) && ComponentGetter.dataTab.getTabs().size() > 0) {
-//						Tab tab0 =ComponentGetter.dataTab.getTabs().get(0); 
-//						String title = CommonUtility.tabText(tab0); 
-//						if( excInfoTitle.equals(title) ) {
-//							// 新的table数据放入复用的table中
-//							VBox vb = (VBox) tab0.getContent();
-//							FilteredTableView<ObservableList<StringProperty>> vbt  = 
-//									(FilteredTableView<ObservableList<StringProperty>>) vb.getChildren().get(1);
-//							vbt.getItems().addAll( 0, table.getItems()) ;
-//							dataTabPane.getSelectionModel().select(tab0);
-//						}else {
-////							addNewDateTab( dvt, tn, 0, disable, time , rows);
-//							 dvt.createTab(0, disable, time, rows);
-//						}
-//						
-//				}else {
-////					addNewDateTab( dvt, tn, idx, disable, time , rows);
-//					 dvt.createTab(idx, disable, time , rows);
-//				}
- 
+			 dvt.createTab(idx, disable, time , rows); 
 		});
 	}
 

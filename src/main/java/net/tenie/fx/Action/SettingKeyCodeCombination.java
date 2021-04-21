@@ -108,15 +108,15 @@ public final class SettingKeyCodeCombination {
 
 		// 运行SQL
 		scene.getAccelerators().put(ctrlEnter, () -> {
-			boolean b = runbtn.disabledProperty().getValue();
+//			boolean b = runbtn.disabledProperty().getValue();
 			if (!runbtn.disabledProperty().getValue()) {
-				RunSQLHelper.runSQLMethod(runbtn, stopbtn, runFunPro);
+				RunSQLHelper.runSQLMethod();
 			}
 		});
 
 		// 停止真正运行的sql
 		scene.getAccelerators().put(ctrlI, () -> {
-			RunSQLHelper.stopSQLMethod(runbtn, stopbtn, runFunPro);
+			RunSQLHelper.stopSQLMethod();
 		});
 		// 添加代码窗口
 		scene.getAccelerators().put(ctrlT, () -> {

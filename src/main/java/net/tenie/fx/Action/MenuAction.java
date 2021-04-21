@@ -106,10 +106,8 @@ public class MenuAction {
 	
 		
 	// 执行导出的sql
-	public static void  execExportSql(String sql, Connection conn, DbConnectionPo dbconnPo) {
-//			String idx =  "" + ComponentGetter.dataTab.getSelectionModel().getSelectedIndex();
-		JFXButton runFunPro = AllButtons.btns.get("runFunPro");
-		RunSQLHelper.runSQLMethod(dbconnPo, conn, sql, "", runFunPro);
+	public static void  execExportSql(String sql, Connection conn, DbConnectionPo dbconnPo) { 
+		RunSQLHelper.runSQLMethodRefresh(dbconnPo, conn, sql, "", false);
 		
 	}
 	

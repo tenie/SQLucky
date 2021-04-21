@@ -3,6 +3,17 @@
 	
 }
 
+/* tabpane 选择tab按钮 .tab-down-button */
+.control-buttons-tab .arrow {
+	-fx-background-color: red; 
+}
+
+/*
+.control-buttons-tab .tab-down-button {
+	-fx-background-color:  #333333; 
+}*/
+
+
 /*书签*/
 .myLineBookMark{
 	 

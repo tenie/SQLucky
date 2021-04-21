@@ -28,9 +28,12 @@ import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 
-/*   @author tenie */
-public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<TreeNodePo>> {
-	private static Logger logger = LogManager.getLogger(TaskCellFactory.class);
+/**
+ * 把TreeNodePo对象的属性 赋值给 TreeItem显示(节点名称,图标)
+ *    @author tenie
+ *     */
+public class TreeNodeCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<TreeNodePo>> {
+	private static Logger logger = LogManager.getLogger(TreeNodeCellFactory.class);
 	private static final DataFormat JAVA_FORMAT = new DataFormat("application/x-java-serialized-object");
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
 	private TreeCell<TreeNodePo> dropZone;
@@ -68,7 +71,7 @@ public class TaskCellFactory implements Callback<TreeView<TreeNodePo>, TreeCell<
 					setGraphic(null);
 				} else {
 					setGraphic(item.getIcon());
-					setText(item.getName());
+					setText(item.getName()+"");
 
 				}
 			}

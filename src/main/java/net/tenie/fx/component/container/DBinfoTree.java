@@ -14,6 +14,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.Action.TreeObjAction;
@@ -31,7 +32,7 @@ import net.tenie.fx.component.TreeItem.MyTreeItem;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.MenuFactory;
-import net.tenie.fx.factory.TaskCellFactory;
+import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.factory.TreeMenu;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.db.h2.H2Db;
@@ -40,12 +41,13 @@ import net.tenie.lib.tools.StrUtils;
 /*   @author tenie */
 public class DBinfoTree {
 
-	public static TreeView<TreeNodePo> DBinfoTreeView;
+	public static TreeView<TreeNodePo> DBinfoTreeView; 
+	public static Region icon;
 //	public static ContextMenu contextMenu;
 	private  TreeMenu  menu;
 	
 //	private TreeView<TreeNodePo> treeView;
-	private ObservableList<TreeItem<TreeNodePo>> connsNode;
+//	private ObservableList<TreeItem<TreeNodePo>> connsNode;
 	// 缓存 激活的ConnItemContainer
 	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
 	
@@ -56,8 +58,9 @@ public class DBinfoTree {
 
 	// db节点view
 	public TreeView<TreeNodePo> createConnsTreeView() {
-		TreeItem<TreeNodePo> rootNode = new TreeItem<>(
-				new TreeNodePo("Connections", ImageViewGenerator.svgImageDefActive("windows-globe"))); //connectdevelop  windows-globe
+	    icon =  ImageViewGenerator.svgImageDefActive("windows-globe");
+		var rootNode = new TreeItem<>(
+				new TreeNodePo("Connections",  icon)); 
 		TreeView<TreeNodePo> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");
 		try {
@@ -74,7 +77,7 @@ public class DBinfoTree {
 				}
 
 			}
-			connsNode = rootNode.getChildren();
+//			connsNode = rootNode.getChildren();
 
 			// 展示连接
 			if (rootNode.getChildren().size() > 0)
@@ -94,7 +97,9 @@ public class DBinfoTree {
 			H2Db.closeConn();
 		}
 		DBinfoTreeView = treeView;
-		treeView.setCellFactory(new TaskCellFactory());
+		
+		// 显示设置, 从TreeNodePo中的对象显示为 TreeItem 的名称和图标
+		treeView.setCellFactory(new TreeNodeCellFactory());
 		return treeView;
 	}
 
