@@ -164,7 +164,7 @@ public class SqlCodeAreaHighLighting {
 					// 查找选中的字符 
 		    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str); 
 	  	    	}else {        
-		    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+//		    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
 		    	}
 			}
 			

@@ -140,7 +140,7 @@ public class SqlCodeAreaHighLightingHelper {
     
     }
 
-    public static void applyHighlighting(CodeArea codeArea) {    	
+    public static void applyHighlighting(CodeArea codeArea) { 
     	try {
     		if(codeArea.getText().length() > 0) {
     			Platform.runLater(() -> { 
