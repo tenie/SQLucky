@@ -504,7 +504,7 @@ public class CommonAction {
 		return strb2.toString();
 	}
 	
-	public static void addNewLine(KeyEvent e  ,CodeArea codeArea) {
+	public static void addNewLine(KeyEvent e, CodeArea codeArea) {
 
 		// 换行缩进, 和当前行的缩进保持一致
 		logger.info("换行缩进 : "+e.getCode() );

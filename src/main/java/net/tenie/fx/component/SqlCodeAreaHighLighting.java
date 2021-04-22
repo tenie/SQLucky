@@ -46,8 +46,7 @@ public class SqlCodeAreaHighLighting {
 	public StackPane getObj(String text, boolean editable) {
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new MyCodeArea();
-	    cl = CommonListener.codetxtChange(codeArea);
-	    
+	    cl = CommonListener.codetxtChange(codeArea); 
 	    // 行号主题色
 	    SqlEditor.changeCodeAreaLineNoThemeHelper(codeArea); 
 	    
@@ -66,24 +65,9 @@ public class SqlCodeAreaHighLighting {
 				} 
 			}else if(e.getCode() == KeyCode.ENTER ) { 
 				CommonAction.addNewLine(e, codeArea);
-//				codeArea.textProperty().removeListener(cl);
-//				Platform.runLater(() -> {
-//					codeArea.textProperty().addListener( cl );	
-//				}); 
 				
 			}else if(e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE ) {
-				// 删除选中字符串防止页面滚动, 自己删
-//				String seltxt = codeArea.getSelectedText();
-//				if(seltxt.length() > 0) {
-//					IndexRange idx = codeArea.getSelection(); 
-//					codeArea.selectRange(codeArea.getAnchor(), codeArea.getAnchor());
-//					e.consume(); 
-//					Platform.runLater(() -> {
-//						codeArea.deleteText(idx);
-//					});  
-//					
-//				}
-				
+				// 删除选中字符串防止页面滚动, 自己删			
 				codeArea.textProperty().removeListener(cl);
 				Platform.runLater(() -> {
 					codeArea.textProperty().addListener( cl );
@@ -100,8 +84,7 @@ public class SqlCodeAreaHighLighting {
 							codeArea.insertText(codeArea.getAnchor(), val);
 							e.consume(); 
 						}
-					}
-					
+					} 
 				}
 			}else if(e.getCode() == KeyCode.Z ) {  // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
 				if( e.isShortcutDown()) {
@@ -114,11 +97,9 @@ public class SqlCodeAreaHighLighting {
 			
 		});
 		//TODO 输入事件
-		codeArea.textProperty().addListener( cl );	
-//		codeArea.setOnKeyPressed(CommonEventHandler.codeAreaChange(codeArea)); 
+		codeArea.textProperty().addListener( cl );	 
 		codeArea.replaceText(0, 0, sampleCode);
-		if (text != null)
-			codeArea.appendText(text);
+		if (text != null) codeArea.appendText(text);
 		StackPane sp = new StackPane(new VirtualizedScrollPane<>(codeArea));
 		sp.getStyleClass().add("my-tag");
 		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
@@ -148,6 +129,8 @@ public class SqlCodeAreaHighLighting {
 		// 鼠标退出界面, 记录光标位置
 		codeArea.setOnMouseExited(mouseEvent->{
 			ComponentGetter.codeAreaAnchor =  codeArea.getAnchor();
+//			IndexRange ir = codeArea.getSelection();
+//			codeArea.selectRange(ir.getStart(), ir.getStart());
 		});
 		
 		

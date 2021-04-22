@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.fxmisc.richtext.Caret.CaretVisibility;
+import org.fxmisc.richtext.CodeArea;
+
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,6 +29,7 @@ import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.TreeItem.MyTreeItem;
@@ -168,6 +172,9 @@ public class DBinfoTree {
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
 				ConnectionEditor.openConn(item);
+				CodeArea codeArea  = SqlEditor.getCodeArea(); 
+				codeArea.requestFocus();
+				codeArea.setShowCaret(CaretVisibility.ON);;
 //				item.setExpanded(true);
 			} // Schemas 双击, 打开非默认的schema
 			else if (parentItem != null && 

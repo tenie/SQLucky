@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.Caret.CaretVisibility;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.event.Event;
@@ -192,9 +193,20 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		scene.getAccelerators().put(F4, () -> {  
-			
-//			System.out.println( ComponentGetter.dataTab.getTabs().size());
-			System.out.println( ComponentGetter.currentDataTabID());
+			 
+//			System.out.println( ComponentGetter.currentDataTabID());
+			CodeArea codeArea  = SqlEditor.getCodeArea(); 
+			 
+//			codeArea.setShowCaret(CaretVisibility.ON);;
+		System.out.println(codeArea.focusedProperty().get());
+		
+		codeArea.requestFocus();
+		System.out.println(codeArea.focusedProperty().get());
+//	    	codeArea.deselect();
+//	    	codeArea.setFocusTraversable(true);
+////	    	codeArea.getShowCaret()
+//	    	ComponentGetter.codeAreaAnchor =  codeArea.getAnchor();
+	    	
 		});
 		
 	}

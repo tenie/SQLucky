@@ -4,10 +4,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.fxmisc.richtext.Caret.CaretVisibility;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
+import javafx.application.Platform;
 import net.tenie.fx.window.MyAlert;
 /*   @author tenie */
 public class SqlCodeAreaHighLightingHelper {
@@ -55,7 +58,13 @@ public class SqlCodeAreaHighLightingHelper {
     
     public static  StyleSpans<Collection<String>> findEqualyWord(String str, String text) {
     	String mypatternString = patternString + "|(?<FINDWORD>(" + str.toUpperCase() + "))"; 
-    	Pattern pattern = Pattern.compile( mypatternString  );
+    	Pattern pattern = null;
+    	try {
+    		 pattern = Pattern.compile( mypatternString  );
+		} catch (Exception e) {
+			return null;
+		}  
+    	
     	Matcher matcher = pattern.matcher(text.toUpperCase());
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder
@@ -79,32 +88,137 @@ public class SqlCodeAreaHighLightingHelper {
         return spansBuilder.create();
       
     }
+    
+    public static  StyleSpans<Collection<String>> findErrorWord(String preTxt , String sufTxt, String errTxt){ 	 
+        Matcher matcher = PATTERN.matcher(preTxt.toUpperCase());
+        int lastKwEnd = 0;
+        var spansBuilder  = new StyleSpansBuilder<Collection<String>>();
+        while(matcher.find()) {
+            String styleClass =
+                    matcher.group("KEYWORD") != null ? "keyword" :
+                    matcher.group("PAREN") != null ? "paren" :
+                    matcher.group("BRACE") != null ? "brace" :
+                    matcher.group("BRACKET") != null ? "bracket" :
+                    matcher.group("SEMICOLON") != null ? "semicolon" :
+                    matcher.group("STRING") != null ? "string" :
+                    matcher.group("COMMENT") != null ? "comment" :
+                    null; 
+            /* never happens */ 
+            assert styleClass != null;
+            spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
+            spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
+            lastKwEnd = matcher.end();
+        }
+        spansBuilder.add(Collections.emptyList(), preTxt.length() - lastKwEnd);
+        
+        //  errorword
+        spansBuilder.add(Collections.singleton("errorword"), errTxt.length());
+        
+        // 后半部分
+        matcher = PATTERN.matcher(sufTxt.toUpperCase());  
+        lastKwEnd = 0; 
+        while(matcher.find()) {
+            String styleClass =
+                    matcher.group("KEYWORD") != null ? "keyword" :
+                    matcher.group("PAREN") != null ? "paren" :
+                    matcher.group("BRACE") != null ? "brace" :
+                    matcher.group("BRACKET") != null ? "bracket" :
+                    matcher.group("SEMICOLON") != null ? "semicolon" :
+                    matcher.group("STRING") != null ? "string" :
+                    matcher.group("COMMENT") != null ? "comment" :
+                    null; 
+            /* never happens */ 
+            assert styleClass != null; 
+            spansBuilder.add(Collections.emptyList(),  matcher.start() - lastKwEnd );
+            spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start() );
+            lastKwEnd = matcher.end();
+        }
+        
+        spansBuilder.add(Collections.emptyList(), sufTxt.length() - lastKwEnd);
+        
+        return spansBuilder.create();
+    
+    }
 
-    public static void applyHighlighting(CodeArea codeArea) {
-//    	codeArea.textProperty().removeListener();
-//    	StyleSpans<Collection<String>> highlighting  = findEqualyWord("foo", codeArea.getText());
-    	if(codeArea.getText().length() > 0) {
-    		StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
-            codeArea.setStyleSpans(0, highlighting);
-    	}
+    public static void applyHighlighting(CodeArea codeArea) {    	
+    	try {
+    		if(codeArea.getText().length() > 0) {
+    			Platform.runLater(() -> { 
+            		StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
+                    codeArea.setStyleSpans(0, highlighting);
+    			});    	    	
+        	}
+		} catch (Exception e) {
+			e.printStackTrace();
+			MyAlert.errorAlert(e.getMessage());
+		} 
     	
     }
     public static void applyFindWordHighlighting(CodeArea codeArea,String str) {
     	try {
     		StyleSpans<Collection<String>> highlighting  = findEqualyWord(str, codeArea.getText()); 
-        	codeArea.setStyleSpans(0, highlighting);
+        	if(highlighting !=null) { 
+        		Platform.runLater(() -> {
+        			codeArea.setStyleSpans(0, highlighting);
+        		});
+        	}
+        		
 		} catch (Exception e) {
 			e.printStackTrace();
 			MyAlert.errorAlert(e.getMessage());
 		} 
     	
     }  
-    public static void applyErrorHighlighting( int begin , int length) {
-    	CodeArea codeArea  = SqlEditor.getCodeArea();
-    	StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
-    	spansBuilder.add(Collections.singleton("errorword"), length);
-    	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
-    	codeArea.setStyleSpans(begin, highlighting);
+    public static void applyErrorHighlighting(int begin , int length , String str) {
+    	
+    	CodeArea codeArea = SqlEditor.getCodeArea();
+    	
+//    	try {
+//    		String preTxt = codeArea.getText().substring(0, begin);
+//    		String sufTxt = codeArea.getText().substring(begin+ length );
+//    		StyleSpans<Collection<String>> highlighting  = findErrorWord( preTxt ,sufTxt, str); 
+//        	if(highlighting !=null) { 
+//        		Platform.runLater(() -> {
+//        			codeArea.setStyleSpans(0, highlighting);
+//        		});
+//        	}
+//        		
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			MyAlert.errorAlert(e.getMessage());
+//		} 
+       
+    	
+//    	codeArea.requestFocus();
+//    	codeArea.setFocusTraversable(true); 
+//    	codeArea.selectRange(begin, begin);  
+    	    StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
+	    	spansBuilder.add(Collections.singleton("errorword"), length);
+	    	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
+	    	codeArea.setStyleSpans(begin, highlighting); 
+    	Platform.runLater(() -> {
+//    		    StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
+//    	    	spansBuilder.add(Collections.singleton("errorword"), length);
+//    	    	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
+//    	    	codeArea.setStyleSpans(begin, highlighting); 
+    		
+    		
+//        	try {
+//        		String preTxt = codeArea.getText().substring(0, begin);
+//        		String sufTxt = codeArea.getText().substring(begin+ length );
+//        		StyleSpans<Collection<String>> highlighting  = findErrorWord( preTxt ,sufTxt, str); 
+//            	if(highlighting !=null) {
+//            		Platform.runLater(() -> {
+//            			codeArea.setStyleSpans(0, highlighting);
+//            		});
+//            	}            		
+//    		} catch (Exception e) {
+//    			e.printStackTrace();
+//    			MyAlert.errorAlert(e.getMessage());
+//    		} 
+    		
+		});
+     
     	
     }
     
@@ -118,7 +232,7 @@ public class SqlCodeAreaHighLightingHelper {
             String styleClass =
                     matcher.group("KEYWORD") != null ? "keyword" :
                     matcher.group("PAREN") != null ? "paren" :
-                    matcher.group("BRACE") != null ? "brace" :
+                    matcher.group("BRACE") != null ? "brace" :	
                     matcher.group("BRACKET") != null ? "bracket" :
                     matcher.group("SEMICOLON") != null ? "semicolon" :
                     matcher.group("STRING") != null ? "string" :

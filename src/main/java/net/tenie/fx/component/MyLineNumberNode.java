@@ -8,9 +8,11 @@ import org.fxmisc.richtext.GenericStyledArea;
 import org.reactfx.collection.LiveList;
 import org.reactfx.value.Val;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -105,7 +107,16 @@ public class MyLineNumberNode implements IntFunction<Node> {
 		lineNo.setOnMouseClicked( mouseEvent -> {
 			//TODO 单击行号, 选中当前行
 			if (mouseEvent.getClickCount() == 1) {
-				this.area.selectLine();   
+				this.area.selectLine();  
+//				Platform.runLater(() -> {
+//					
+//					IndexRange ir = this.area.getSelection();
+//					int start = ir.getStart();
+//					int end   = ir.getEnd() + 1;
+//					this.area.selectRange(start, end);
+//					
+//				});
+				
 			}else if(mouseEvent.getClickCount() == 2) {// 双击加书签
 //				lineNo.getStyleClass().add("myLineBookMark");
 				

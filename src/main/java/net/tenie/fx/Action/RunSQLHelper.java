@@ -83,7 +83,7 @@ public class RunSQLHelper {
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
 	private static final String WAITTB_NAME = "Loading...";
-//	private static String connName = "";
+
 	// 新tab页插入的位置
 	private static int tidx = -1;
 	
@@ -181,10 +181,12 @@ public class RunSQLHelper {
 				if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
 					msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
 				}
-				int bg = allsqls.get(i).begin;
-				int len =  allsqls.get(i).length;
-				Platform.runLater(() -> {  
-					SqlCodeAreaHighLightingHelper.applyErrorHighlighting( bg, len);
+				int bg = allsqls.get(i).begin; 
+				sqlData sd = 	allsqls.get(i);
+				int len = 	sd.sql.length(); 
+				
+				Platform.runLater(() -> { 
+					SqlCodeAreaHighLightingHelper.applyErrorHighlighting( bg, len, sd.sql); 
 				});
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
