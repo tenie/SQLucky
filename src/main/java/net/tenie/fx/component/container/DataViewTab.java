@@ -289,7 +289,7 @@ public class DataViewTab {
 	}
 
 	public  Tab maskTab(String waittbName) {
-		Tab waitTb = createTab(waittbName);
+		Tab waitTb = new Tab(waittbName);
 		MaskerPane masker = new MaskerPane();
 		waitTb.setContent(masker);
 		return waitTb;

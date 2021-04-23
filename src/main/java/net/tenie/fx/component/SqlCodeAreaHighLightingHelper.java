@@ -139,11 +139,19 @@ public class SqlCodeAreaHighLightingHelper {
         return spansBuilder.create();
     
     }
+    private static void styleSpansNull(CodeArea codeArea) {
+    	    int length = codeArea.getText().length();
+    	    StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
+	    	spansBuilder.add(Collections.emptyList(), length);
+	    	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
+	    	codeArea.setStyleSpans(0, highlighting);  
+    }
+    
 
     public static void applyHighlighting(CodeArea codeArea) { 
     	try {
     		if(codeArea.getText().length() > 0) {
-    			Platform.runLater(() -> { 
+    			Platform.runLater(() -> {  
             		StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
                     codeArea.setStyleSpans(0, highlighting);
     			});    	    	

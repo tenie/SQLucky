@@ -70,7 +70,7 @@ import net.tenie.lib.tools.StrUtils;
 /*   @author tenie */
 public class CommonAction {
 	private static Logger logger = LogManager.getLogger(CommonAction.class);
-	
+	private static int windowsUiBugTag = 0;
 	public static void addCssClass(Node nd, String css) {
 		nd.getStyleClass().add(css);
 	}
@@ -727,10 +727,14 @@ public class CommonAction {
 		JFXButton btn = AllButtons.btns.get("hideBottom");
 		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		hideShowBottomHelper(showStatus, btn);
+		if(showStatus ) { 
+			CommonAction.escapeWindowsUiBug(); 
+			 
+		}
 
 	}
 	
-	// 显示或隐藏 数据面板, 修改控制按钮图标
+	//TODO 显示或隐藏 数据面板, 修改控制按钮图标
 	public static void hideShowBottomHelper(boolean isShow, JFXButton btn) {
 		ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
 		if (isShow) {
@@ -745,8 +749,11 @@ public class CommonAction {
 	public static void showDetailPane() {
 		JFXButton btn = AllButtons.btns.get("hideBottom");
 		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-		if (showStatus)
-			hideShowBottomHelper(true, btn);
+		if (showStatus) {
+			hideShowBottomHelper(true, btn); 
+			escapeWindowsUiBug();
+		}
+		
 	}
 
 	// 连接测试
@@ -1304,8 +1311,33 @@ public class CommonAction {
 	}
 	
 
-
-	public static void demo() {
+	// 避免windows UI bug, 选择一下输入框
+	public static void escapeWindowsUiBug() {
+		if( windowsUiBugTag == 0 ){
+			windowsUiBugTag = 1;
+			Platform.runLater(() -> {
+				ButtonFactory.rows.requestFocus();
+			 
+			});
+			Thread th = new Thread() {
+				public void run() {
+					try {
+						Thread.sleep(700);
+					} catch (InterruptedException e) { 
+						e.printStackTrace();
+					}
+					Platform.runLater(() -> {
+					    SqlEditor.getCodeArea().requestFocus(); 
+					 
+					});
+				}
+			};
+			th.start();
+		}
 		
+	}
+	
+	public static void demo() {
+	
 	}
 }

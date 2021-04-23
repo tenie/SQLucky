@@ -38,7 +38,8 @@ import net.tenie.lib.tools.StrUtils;
 public class ButtonFactory {
 	public static  Map<String, Boolean> lockObj = new HashMap<>();
 	public static  List<ButtonBase> btns = new ArrayList<>();
-	
+	public static TextField rows ;
+
 	// 连接区
 	// 操作按钮
 	public static void treeViewbtnInit(FlowPane pn) {
@@ -180,6 +181,7 @@ public class ButtonFactory {
 			hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
 			btns.add(hideLeft);
 			
+			//TODO hideBottom
 			JFXButton hideBottom = new JFXButton();
 			hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-up"));// fontImgName("caret-square-o-down",
 																								// 16, Color.ROYALBLUE));
@@ -197,27 +199,27 @@ public class ButtonFactory {
 
 			// 选择sql在哪个连接上执行
 			Label lbcnn = new Label("DB Connection: ");
-			JFXComboBox<Label> conns = new JFXComboBox<Label>();
-			lbcnn.setLabelFor(conns);
-			conns.setPrefHeight(25);
-			conns.setMinHeight(25);
-			conns.setMaxWidth(150);
-			conns.setMinWidth(150);
-			conns.getStyleClass().add("myComboBox");
-			conns.getStyleClass().add("my-tag");
+			JFXComboBox<Label> connsComboBox = new JFXComboBox<Label>();
+			lbcnn.setLabelFor(connsComboBox);
+			connsComboBox.setPrefHeight(25);
+			connsComboBox.setMinHeight(25);
+			connsComboBox.setMaxWidth(150);
+			connsComboBox.setMinWidth(150);
+			connsComboBox.getStyleClass().add("myComboBox");
+			connsComboBox.getStyleClass().add("my-tag");
 			
-			DBConns.flushChoiceBox(conns); // 填充内容
+			DBConns.flushChoiceBox(connsComboBox); // 填充内容
 			// change 事件
-			conns.getSelectionModel().selectedIndexProperty().addListener(CommonListener.choiceBoxChange());
-			conns.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
-			ComponentGetter.connComboBox = conns;
+			connsComboBox.getSelectionModel().selectedIndexProperty().addListener(CommonListener.choiceBoxChange());
+			connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
+			ComponentGetter.connComboBox = connsComboBox;
 			
 //			conns.getit
 //			AnchorPane.setTopAnchor(conns, 0.0);
 			
 			// sql 执行读取行数
 			Label lb = new Label("Max Rows: ");
-			TextField rows = new TextField();
+			rows = new TextField();
 //		    final TextField rows =  TextFieldFactory.numTextField();
 			
 			lb.setLabelFor(rows);
@@ -269,10 +271,10 @@ public class ButtonFactory {
 			lbcnn.setLayoutY(5);
 			y += fix + 100;
 			lbcnn.setLayoutX(y);
-			pn.getChildren().add(conns);
-			conns.setLayoutY(0);
+			pn.getChildren().add(connsComboBox);
+			connsComboBox.setLayoutY(0);
 			y += fix + 65;
-			conns.setLayoutX(y);
+			connsComboBox.setLayoutX(y);
 			pn.getChildren().add(lb);
 			lb.setLayoutY(5);
 			y += fix + 140;

@@ -685,8 +685,8 @@ public class ModalDialog {
 	// about window
 	public static void showAbout() { 
 		
-		Label tit = new Label(" ");  
-		Label text0 = new Label("#DataBase Tool #Open Source  #JAVA1.8 #JAVAFX ");  
+		Label tit = new Label("Version: 1.1");  
+		Label text0 = new Label("#DataBase Tool #Open Source  #JAVA16 #JAVAFX ");  
 		Label text1 = new Label("Author: tenie  Email: tenie@tenie.net");  
 		Label text2 = new Label("Github: https://github.com/tenie/SQLucky");  
 		

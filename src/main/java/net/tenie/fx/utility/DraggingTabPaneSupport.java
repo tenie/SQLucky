@@ -62,6 +62,7 @@ public class DraggingTabPaneSupport {
         }
 
         Node graphic = tab.getGraphic();
+        if(graphic == null ) return;
         graphic.setOnDragDetected(e -> {
             Dragboard dragboard = graphic.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();
@@ -94,9 +95,12 @@ public class DraggingTabPaneSupport {
     }
 
     private void removeDragHandlers(Tab tab) {
-        tab.getGraphic().setOnDragDetected(null);
-        tab.getGraphic().setOnDragOver(null);
-        tab.getGraphic().setOnDragDropped(null);
-        tab.getGraphic().setOnDragDone(null);
+    	if(tab != null && tab.getGraphic() != null) {
+    			tab.getGraphic().setOnDragDetected(null);
+    	        tab.getGraphic().setOnDragOver(null);
+    	        tab.getGraphic().setOnDragDropped(null);
+    	        tab.getGraphic().setOnDragDone(null);
+    	}
+       
     }
 }

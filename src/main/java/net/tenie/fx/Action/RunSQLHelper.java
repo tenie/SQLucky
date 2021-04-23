@@ -143,6 +143,7 @@ public class RunSQLHelper {
 		String sql;
 		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
+		List<sqlData> errObj = new ArrayList<>();
 		
 		for (int i = 0; i < sqllenght; i++) { 
 			sqlstr = allsqls.get(i).sql;
@@ -181,13 +182,13 @@ public class RunSQLHelper {
 				if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
 					msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
 				}
-				int bg = allsqls.get(i).begin; 
+//				int bg = allsqls.get(i).begin; 
 				sqlData sd = 	allsqls.get(i);
-				int len = 	sd.sql.length(); 
-				
-				Platform.runLater(() -> { 
-					SqlCodeAreaHighLightingHelper.applyErrorHighlighting( bg, len, sd.sql); 
-				});
+//				int len = 	sd.sql.length(); 
+				errObj.add(sd);
+//				Platform.runLater(() -> { 
+//					SqlCodeAreaHighLightingHelper.applyErrorHighlighting( bg, len, sd.sql); 
+//				});
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
@@ -200,6 +201,15 @@ public class RunSQLHelper {
 
 		}
 		showExecuteSQLInfo(ddlDmlpo);
+		Platform.runLater(() -> { 
+			if(errObj.size() > 0) {
+				for(sqlData sd : errObj) {
+					int bg = sd.begin;  
+					int len = 	sd.sql.length(); 
+					SqlCodeAreaHighLightingHelper.applyErrorHighlighting( bg, len, sd.sql); 
+				}
+			}
+		});
 	}
 	
 	
@@ -538,9 +548,9 @@ public class RunSQLHelper {
 
 	// 删除空白页
 	private static void deleteEmptyTab(TabPane dataTab) {
-		if (dataTab.getTabs() != null) {
-			dataTab.getTabs().removeIf(t -> dataTab.getTabs().size() > 0 && CommonUtility.tabText(t).equals(""));
-		}
+//		if (dataTab.getTabs() != null) {
+//			dataTab.getTabs().removeIf(t -> dataTab.getTabs().size() > 0 && CommonUtility.tabText(t).equals(""));
+//		}
 		if(isRefresh) return;
 		// 判断是否已经到达最大tab显示页面
 		// 删除旧的 tab

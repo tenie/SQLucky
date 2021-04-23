@@ -193,15 +193,28 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		scene.getAccelerators().put(F4, () -> {  
-			 
+			CommonAction.escapeWindowsUiBug();
+//			JFXComboBox<Label> connsComboBox = ButtonFactory.connsComboBox; 
+//			int i = connsComboBox.getSelectionModel().getSelectedIndex();
+//			if(i < 0) {
+//				connsComboBox.getSelectionModel().select(0);
+//			}else {
+//				connsComboBox.getSelectionModel().select(i);
+//			}
+			
+			
 //			System.out.println( ComponentGetter.currentDataTabID());
-			CodeArea codeArea  = SqlEditor.getCodeArea(); 
-			 
+//			CodeArea codeArea  = SqlEditor.getCodeArea(); 
+//			 
 //			codeArea.setShowCaret(CaretVisibility.ON);;
-		System.out.println(codeArea.focusedProperty().get());
-		
-		codeArea.requestFocus();
-		System.out.println(codeArea.focusedProperty().get());
+//			MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, codeArea);
+//			Event.fireEvent(codeArea, me);
+//			ButtonFactory.rows.requestFocus(); 
+//			codeArea.requestFocus();
+//		System.out.println(codeArea.focusedProperty().get());
+//		
+//		codeArea.requestFocus();
+//		System.out.println(codeArea.focusedProperty().get());
 //	    	codeArea.deselect();
 //	    	codeArea.setFocusTraversable(true);
 ////	    	codeArea.getShowCaret()
