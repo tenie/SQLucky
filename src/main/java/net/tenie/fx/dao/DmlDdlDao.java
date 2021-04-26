@@ -105,6 +105,12 @@ public class DmlDdlDao {
 		execDDL(conn, sql);
 		return "ok";
 	}
+	
+	public static String callFunc(Connection conn, String sql) throws SQLException {
+		execDDL(conn, sql);
+		return "ok";
+	}
+	
 
 	public static int execDML(Connection conn, String delSQl) throws SQLException {
 		Statement sm = null;

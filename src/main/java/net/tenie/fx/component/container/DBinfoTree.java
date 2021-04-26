@@ -218,11 +218,11 @@ public class DBinfoTree {
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
 					sqlStr = dpo.getExportDDL().exportCreateFunction(dpo.getConn(), fpt.getSchema(), fpt.getName());
 					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
-						sqlStr = SqlFormatter.format(sqlStr);
+//						sqlStr = SqlFormatter.format(sqlStr);
 						fpt.setDdl(sqlStr);
 					}
 				}
-				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, true);
 
 			} // 过程
 			else if (parentItem.getValue().getType() != null
@@ -234,11 +234,11 @@ public class DBinfoTree {
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
 					sqlStr = dpo.getExportDDL().exportCreateProcedure(dpo.getConn(), fpt.getSchema(), fpt.getName());
 					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
-						sqlStr = SqlFormatter.format(sqlStr);
+//						sqlStr = SqlFormatter.format(sqlStr);
 						fpt.setDdl(sqlStr);
 					}
 				}
-				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showProcedurePanel(item.getValue().getName(), sqlStr, true);
 
 			} // trigger
 			else if (parentItem.getValue().getType() != null
@@ -253,7 +253,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				} 
-				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
 
 			}// index
 			else if (parentItem.getValue().getType() != null
@@ -268,7 +268,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
-				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
 
 			}// Sequence
 			else if (parentItem.getValue().getType() != null
@@ -283,7 +283,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				} 
-				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr);
+				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
 
 			}
 

@@ -350,5 +350,11 @@ public class ExportDefaultImp implements ExportDDL {
 		return "";
 	}
 
+	@Override
+	public String exportCallFuncSql(String funcStr) {
+		String sql = "select "+funcStr+" from dual";
+		return sql;
+	}
+
 	
 }

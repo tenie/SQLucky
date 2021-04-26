@@ -24,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.PropertyPo.CacheTabView;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
@@ -100,8 +101,8 @@ public class DataViewContainer {
 //		};
 //		table.getSelectionModel().getSelectedItems().addListener(indicesListener);
 
-		int tableIdx = ConfigVal.tableIdx++;
-		table.setId(tableIdx + "");
+		String tableIdx = CommonAction.createTabId(); //ConfigVal.tableIdx++;
+		table.setId(tableIdx);
 		table.getStyleClass().add("myTableTag");
 		
 		

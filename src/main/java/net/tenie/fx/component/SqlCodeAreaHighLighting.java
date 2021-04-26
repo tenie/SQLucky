@@ -203,6 +203,14 @@ public class SqlCodeAreaHighLighting {
 		executor.shutdown();
 	}
 
+	public MyCodeArea getCodeArea() {
+		return codeArea;
+	}
+
+	public void setCodeArea(MyCodeArea codeArea) {
+		this.codeArea = codeArea;
+	}
+
 	 
 
 	 

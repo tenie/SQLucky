@@ -887,6 +887,32 @@ public class CommonAction {
 		return start + end;
 	}
 	
+	// 第一个括号内的字符串
+	public static String firstParenthesisInsideString(String text) {
+		int begin = text.indexOf("(");
+		int end = findBeginParenthesisRange(text, 0,"(", ")");
+		String str = text.substring(begin+1, end);
+		return str;
+	}
+	
+	//TODO 获取 IN 字段
+	public static List<String> findInField(String sql){
+		String pstr = firstParenthesisInsideString(sql);
+		 List<String> list = new ArrayList<>();
+		String[] sarr = pstr.split(",");
+		for(String str: sarr) {
+			str = str.trim();
+			if(str.length() > 0) {
+				 int idx = str.toUpperCase().indexOf("IN");
+				 if(idx == 0) {
+					 list.add(str);
+				 }
+			}
+		}
+		
+		return null;
+	}
+	
 	// 根据括号) 向前寻找配对的括号( 所在的位置.
 	public static int findEndParenthesisRange(String text, int start, String pb , String pe) {
 		String startStr = text.substring(0, start);
@@ -1315,21 +1341,37 @@ public class CommonAction {
 	public static void escapeWindowsUiBug() {
 		if( windowsUiBugTag == 0 ){
 			windowsUiBugTag = 1;
-			Platform.runLater(() -> {
-				ButtonFactory.rows.requestFocus();
-			 
-			});
+//			Platform.runLater(() -> {
+//				ButtonFactory.rows.requestFocus();
+//			 
+//			});
+			
 			Thread th = new Thread() {
 				public void run() {
 					try {
 						Thread.sleep(700);
-					} catch (InterruptedException e) { 
+						Platform.runLater(() -> {
+							ButtonFactory.rows.requestFocus();
+						 
+						});
+					} catch (InterruptedException e) {
 						e.printStackTrace();
-					}
-					Platform.runLater(() -> {
-					    SqlEditor.getCodeArea().requestFocus(); 
-					 
-					});
+					} 
+				}
+			};
+			th.start();
+			
+		    th = new Thread() {
+				public void run() {
+					try {
+						Thread.sleep(900);
+						Platform.runLater(() -> {
+						    SqlEditor.getCodeArea().requestFocus(); 
+						 
+						});
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					} 
 				}
 			};
 			th.start();
@@ -1337,7 +1379,20 @@ public class CommonAction {
 		
 	}
 	
+	public static String createTabId() {
+		int tableIdx = ConfigVal.tableIdx++; 
+		System.out.println(tableIdx);
+		return tableIdx + "";
+	}
+	
+	
 	public static void demo() {
 	
 	}
+	
+	/**
+	 * 	int tableIdx = ConfigVal.tableIdx++;
+		table.setId(tableIdx + "");
+		table.getStyleClass().add("myTableTag");
+	 */
 }

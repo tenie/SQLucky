@@ -507,4 +507,9 @@ public class ExportSqlMySqlImp implements ExportDDL {
 	public String getDbVendor() { 
 		return DbVendor.mysql;
 	}
+	@Override
+	public String exportCallFuncSql(String funcStr) {
+		String sql = "select "+funcStr+" from dual";
+		return sql;
+	}
 }

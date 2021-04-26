@@ -27,6 +27,7 @@ import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.MyCodeArea;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
@@ -424,24 +425,25 @@ public class ButtonFactory {
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom()); 
 		optionBtns.add(hideBottom);
 		// 锁
-		JFXButton lockbtn = new JFXButton(); 
-		lockbtn.setDisable(disable);
-		if(isLock) {
-			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
-		}else {
-			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
-		}
-		lockObj.put(id, isLock);
-		lockbtn.setOnMouseClicked(e->{
-			Boolean tf = lockObj.get(id);
-			if(tf) {
-				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
-			}else {
-				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
-			}
-			lockObj.put(id, !tf);
-			
-		}); 
+		JFXButton lockbtn = createLockBtn(disable, isLock, id);
+//		JFXButton lockbtn = new JFXButton(); 
+//		lockbtn.setDisable(disable);
+//		if(isLock) {
+//			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+//		}else {
+//			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+//		}
+//		lockObj.put(id, isLock);
+//		lockbtn.setOnMouseClicked(e->{
+//			Boolean tf = lockObj.get(id);
+//			if(tf) {
+//				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+//			}else {
+//				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+//			}
+//			lockObj.put(id, !tf);
+//			
+//		}); 
 		
 		optionBtns.add(lockbtn);
 		
@@ -482,6 +484,43 @@ public class ButtonFactory {
 		AnchorPane.setRightAnchor(lb, 70.0);
 		
 		return fp;
+	}
+	
+	
+
+	
+	
+	public static JFXButton createLockBtn(boolean disable, boolean isLock , String id) {
+		// 锁
+		JFXButton lockbtn = new JFXButton();
+		lockbtn.setDisable(disable);
+		if (isLock) {
+			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+		} else {
+			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+		}
+		lockObj.put(id, isLock);
+		lockbtn.setOnMouseClicked(e -> {
+			Boolean tf = lockObj.get(id);
+			if (tf) {
+				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+			} else {
+				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+			}
+			lockObj.put(id, !tf);
+
+		});
+		
+		return lockbtn;
+	}
+	
+	// 锁住<锁按钮>
+	public static void lockLockBtn(String id, JFXButton btn) {
+		boolean islock = lockObj.get(id);
+		if( ! islock) { 
+			lockObj.put(id, true);
+			btn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+		}
 	}
 	
 	private static  void setLockBtn(String id, Boolean islock , Button lockbtn) { 

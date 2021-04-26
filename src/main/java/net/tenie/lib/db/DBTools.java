@@ -14,9 +14,11 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.collections.ObservableList;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.RsData;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.main.MainMyDB;
 import net.tenie.lib.tools.StrUtils;
 
@@ -254,7 +256,7 @@ public class DBTools {
 	
 	
 
-	// 调用函数
+	// 调用过程
 	public static void CallProcedure(Connection conn, String sql) {
 		CallableStatement call = null;
 		try {
@@ -269,9 +271,27 @@ public class DBTools {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}
-
+		} 
 	}
+//	调用函数
+	public static void CallFunction(Connection conn, String sql) {
+		CallableStatement call = null;
+		try {
+			logger.debug("CallProcedure = " + sql);
+			call = conn.prepareCall(sql);
+			ResultSet	rs = call.executeQuery(); 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				call.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		} 
+	}
+	
 
 // drop table 
 	public static void dropTable(Connection conn, String tabName) throws SQLException {

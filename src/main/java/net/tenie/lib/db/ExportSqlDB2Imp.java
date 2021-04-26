@@ -408,7 +408,11 @@ public class ExportSqlDB2Imp implements ExportDDL {
 
 
 	
-
+	@Override
+	public String exportCallFuncSql(String funcStr) {
+		String sql = "values "+funcStr;
+		return sql;
+	}
 
 	
 

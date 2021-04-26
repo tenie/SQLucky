@@ -310,4 +310,9 @@ public class ExportSqlH2Imp implements ExportDDL {
 	public String getDbVendor() { 
 		return DbVendor.h2;
 	}
+	@Override
+	public String exportCallFuncSql(String funcStr) {
+		String sql = "select "+funcStr+" from dual";
+		return sql;
+	}
 }

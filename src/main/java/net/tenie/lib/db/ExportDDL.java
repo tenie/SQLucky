@@ -70,5 +70,6 @@ public interface ExportDDL {
 	String exportDropPrimaryKey(String schema, String name);
 
 	String exportDropForeignKey(String schema, String name);
-
+	
+	String exportCallFuncSql(String funcStr);
 }

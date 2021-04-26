@@ -1,5 +1,6 @@
 package net.tenie.fx.dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,6 +32,29 @@ import net.tenie.lib.tools.StrUtils;
 public class SelectDao {
 
 	private static Logger logger = LogManager.getLogger(SelectDao.class);
+	
+	public static ObservableList<SqlFieldPo> resultSetMetaData(ResultSet rs ) throws SQLException {
+		// 获取元数据
+		ResultSetMetaData mdata = rs.getMetaData();
+		// 获取元数据列数
+		Integer columnnums = Integer.valueOf(mdata.getColumnCount());
+		// 迭代元数据
+		ObservableList<SqlFieldPo> fields = FXCollections.observableArrayList();
+		for (int i = 1; i <= columnnums; i++) {
+			SqlFieldPo po = new SqlFieldPo();
+			po.setScale(mdata.getScale(i));
+			po.setColumnName(mdata.getColumnName(i));
+			po.setColumnClassName(mdata.getColumnClassName(i));
+			po.setColumnDisplaySize(mdata.getColumnDisplaySize(i));
+			po.setColumnLabel(mdata.getColumnLabel(i));
+			po.setColumnType(mdata.getColumnType(i));
+			po.setColumnTypeName(mdata.getColumnTypeName(i));
+			fields.add(po);
+
+		}
+		return fields;
+	}
+	
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
 	public static void selectSql(Connection conn, String sql, int limit,
 			String tableid , DataViewTab dvt ) throws SQLException {
@@ -41,8 +65,7 @@ public class SelectDao {
 		try {
 			pstate = conn.prepareStatement(sql);
 			// 计时
-			long startTime=System.currentTimeMillis();   //获取开始时间  
-			 
+			long startTime=System.currentTimeMillis();   //获取开始时间   
 		
 			// 处理结果集
 			rs = pstate.executeQuery();
@@ -50,26 +73,26 @@ public class SelectDao {
 			long usetime = endTime-startTime;
 			double vt = usetime / 1000.0;
 			logger.info("查询时间： "+usetime+"ms");
-			dvt.setExecTime(vt);
-			 
-			// 获取元数据
-			ResultSetMetaData mdata = rs.getMetaData();
-			// 获取元数据列数
-			Integer columnnums = Integer.valueOf(mdata.getColumnCount());
-			// 迭代元数据
-			ObservableList<SqlFieldPo> fields = FXCollections.observableArrayList();
-			for (int i = 1; i <= columnnums; i++) {
-				SqlFieldPo po = new SqlFieldPo();
-				po.setScale(mdata.getScale(i));
-				po.setColumnName(mdata.getColumnName(i));
-				po.setColumnClassName(mdata.getColumnClassName(i));
-				po.setColumnDisplaySize(mdata.getColumnDisplaySize(i));
-				po.setColumnLabel(mdata.getColumnLabel(i));
-				po.setColumnType(mdata.getColumnType(i));
-				po.setColumnTypeName(mdata.getColumnTypeName(i));
-				fields.add(po);
-				
-			}
+			dvt.setExecTime(vt); 
+//			// 获取元数据
+//			ResultSetMetaData mdata = rs.getMetaData();
+//			// 获取元数据列数
+//			Integer columnnums = Integer.valueOf(mdata.getColumnCount());
+//			// 迭代元数据
+//			ObservableList<SqlFieldPo> fields = FXCollections.observableArrayList();
+//			for (int i = 1; i <= columnnums; i++) {
+//				SqlFieldPo po = new SqlFieldPo();
+//				po.setScale(mdata.getScale(i));
+//				po.setColumnName(mdata.getColumnName(i));
+//				po.setColumnClassName(mdata.getColumnClassName(i));
+//				po.setColumnDisplaySize(mdata.getColumnDisplaySize(i));
+//				po.setColumnLabel(mdata.getColumnLabel(i));
+//				po.setColumnType(mdata.getColumnType(i));
+//				po.setColumnTypeName(mdata.getColumnTypeName(i));
+//				fields.add(po);
+//				
+//			}
+			ObservableList<SqlFieldPo> fields = resultSetMetaData(rs);
 			
 			ObservableList<ObservableList<StringProperty>>  val ;
 			// 数据
@@ -87,9 +110,54 @@ public class SelectDao {
 		} finally {
 			if (rs != null)
 				rs.close();
-		}
-//		return dpo;
+		} 
 	}
+	
+	
+	// 获取查询的结果, 返回字段名称的数据和 值的数据
+	public static void callProcedure(Connection conn, String sql ,String tableid , DataViewTab dvt ) throws SQLException {
+		// DB对象
+		CallableStatement call = null;
+		ResultSet rs = null;
+		try {
+			String callsql = "{call "+sql+"}";
+			call = conn.prepareCall(callsql);
+//			call.register
+			// 计时
+			long startTime=System.currentTimeMillis();   //获取开始时间   
+		
+			// 处理结果集
+		    call.execute(); 
+		    call.getObject(4)
+//		    call.registerOutParameter(0, null);
+//		    call.
+		    
+		    
+		    
+			long endTime=System.currentTimeMillis(); //获取结束时间
+			long usetime = endTime-startTime;
+			double vt = usetime / 1000.0;
+			logger.info("查询时间： "+usetime+"ms");
+			dvt.setExecTime(vt);  
+			// 字段信息
+			ObservableList<SqlFieldPo> fields = resultSetMetaData(rs);
+			
+			ObservableList<ObservableList<StringProperty>>  val ;
+			// 数据
+			 val = simpleExecRs(rs, fields); 
+			
+			dvt.setColss(fields);
+			dvt.setRawData(val);
+			dvt.setRows(val.size());
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null)
+				rs.close();
+		} 
+	}
+	
+	
 	
 	public static DbTableDatePo selectSqlField(Connection conn, String sql ) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
@@ -175,6 +243,47 @@ public class SelectDao {
 		return allDatas;
 	}
 
+	
+
+	public static ObservableList<ObservableList<StringProperty>>  simpleExecRs( ResultSet rs, ObservableList<SqlFieldPo> fpo ) throws SQLException {
+		int idx = 1;
+		int rowNo = 0; 
+		int columnnums = fpo.size(); 
+		ObservableList<ObservableList<StringProperty>> allDatas = FXCollections.observableArrayList();
+		while (rs.next()) {
+			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
+			int rn = rowNo++;
+			for (int i = 0; i < columnnums; i++) { 
+				int dbtype = fpo.get(i).getColumnType().get();
+				StringProperty val;
+				
+				Object obj = rs.getObject(i + 1);
+				if(obj == null) {
+					val = new SimpleStringProperty("<null>");
+				}else {
+					if (CommonUtility.isDateTime(dbtype)) {
+						java.sql.Timestamp ts = rs.getTimestamp(i + 1);
+						Date d = new Date(ts.getTime());
+						String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
+						val = new SimpleStringProperty(v);
+					} else {
+						String temp = rs.getString(i+1);
+						val = new SimpleStringProperty(temp); 
+					}
+				}
+				 
+				vals.add(val);
+			} 
+			vals.add(new SimpleStringProperty(rn + "")); 
+			allDatas.add(vals); 
+			idx++;
+		}
+		
+		return allDatas;
+	}
+
+	
+	
 	private static ObservableList<ObservableList<StringProperty>>   execRs(ResultSet rs, ObservableList<SqlFieldPo> fpo, String tableid)
 			throws SQLException {
 		return execRs(Integer.MAX_VALUE, rs, fpo, tableid);

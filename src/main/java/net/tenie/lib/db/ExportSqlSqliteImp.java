@@ -341,4 +341,9 @@ public class ExportSqlSqliteImp implements ExportDDL {
 		return DbVendor.sqlite;
 	}
 	
+	@Override
+	public String exportCallFuncSql(String funcStr) {
+		String sql = "select "+funcStr+" from dual";
+		return sql;
+	}
 }

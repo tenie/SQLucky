@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,6 +97,7 @@ public class RunSQLHelper {
 	private static DbConnectionPo dpo = null;
 	private static Boolean isRefresh = false;
 	private static boolean isLock =false;
+	private static boolean isCallFunc = false;
 	
 	
 
@@ -110,20 +113,22 @@ public class RunSQLHelper {
 		Tab waitTb =  addWaitingPane( tidx);
 		List<sqlData> allsqls = new ArrayList<>();
 		try {
-			// 执行缓存的sql 
-			if (StrUtils.isNotNullOrEmpty(sqlstr)) { 
-				allsqls = epurateSql(sqlstr);
-			} else { 
-				// 获取sql 语句 
-				//执行存储过程函数等
-				if( isFunc ) {  
+			// 获取sql 语句 
+			//执行存储过程函数等
+			if( isFunc ) { 
+				if (StrUtils.isNotNullOrEmpty(sqlstr)) {
+					sqlData sq = new sqlData(sqlstr, 0, sqlstr.length());
+					allsqls.add(sq );
+				}else {
 					String str = SqlEditor.getCurrentCodeAreaSQLText();
 					sqlData sq = new sqlData(str, 0, str.length());
 					allsqls.add(sq);
-				}else {
-					// 获取编辑界面中的文本
-					allsqls = willExecSql();
-				}  
+				}
+			}else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
+				allsqls = epurateSql(sqlstr);
+			} else { 
+				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
+				allsqls = willExecSql();
 			}
 			// 执行sql
 			execSqlList(allsqls, conn, dpo);
@@ -147,11 +152,16 @@ public class RunSQLHelper {
 		
 		for (int i = 0; i < sqllenght; i++) { 
 			sqlstr = allsqls.get(i).sql;
+//			boolean isCallfunc = allsqls.get(i).isCallfunc;
 			sql = StrUtils.trimComment(sqlstr, "--");
 			int type = ParseSQL.parseType(sql);
 			String msg = "";
 			try {
-				if (type == ParseSQL.SELECT) {
+				if( isCallFunc ) {
+//					msg = DmlDdlDao.callFunc(conn, sql);
+//TODO					
+					procedureAction(sql, conn);
+				}else if (type == ParseSQL.SELECT) {
 					  selectAction(sql, conn); 
 				} else {
 						if (type == ParseSQL.UPDATE) {
@@ -238,13 +248,65 @@ public class RunSQLHelper {
 
 		}
 	}
- 
+	
 
+	private static void procedureAction(String sql, Connection conn) throws Exception {
+		try { 
+			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			// 获取表名
+			String tableName = sql; ParseSQL.tabName(sql);
+			
+			logger.info("tableName= " + tableName + "\n sql = " + sql);
+			DataViewTab dvt = new DataViewTab();
+			
+//			SelectDao.callfunc(conn, sql, table.getId(), dvt);
+			
+			DataViewContainer.setTabRowWith(table, dvt.getRawData().size());
+			
+			String connectName = ComponentGetter.getCurrentConnectName();
+			dvt.setSqlStr(sql);
+			dvt.setTable(table);
+			dvt.setTabId( table.getId());
+			dvt.setTabName(tableName);
+			dvt.setConnName(connectName);
+			dvt.setDbconns(conn); 
+			dvt.setLock(isLock);
+			
+			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
+			ObservableList<SqlFieldPo> colss = dvt.getColss();
+			  
+			//缓存
+			CacheTabView.addDataViewTab( dvt , table.getId());
+			// 查询的 的语句可以被修改
+			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
+			
+			//根据表名获取tablepo对象
+			List<String> keys = findPrimaryKeys(conn, tableName);
+			// table 添加列和数据 
+			// 表格添加列
+			var ls = createTableCol( colss, keys, false , dvt);
+			table.getColumns().addAll(ls);
+			table.setItems(allRawData);  
+//			tdpo.addTableView(table);
+			// 渲染界面
+			if (!thread.isInterrupted()) {
+				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");
+			}
+		} catch (Exception e) { 
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
 	private static void selectAction(String sql, Connection conn) throws Exception {
 		try { 
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 获取表名
 			String tableName = ParseSQL.tabName(sql);
+			if(StrUtils.isNullOrEmpty(tableName)) {
+				tableName = "Table Name Not Finded";
+			}
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			DataViewTab dvt = new DataViewTab();
 
@@ -405,6 +467,7 @@ public class RunSQLHelper {
 	public static void runSQLMethodRefresh(DbConnectionPo dpov, Connection connv, String sqlv, String tabIdxv, boolean isLockv ) {
 		settingBtn();
 		CommonAction.showDetailPane();
+		
 	    sqlstr = sqlv;
 	    dpo = dpov;
 	    conn = connv;
@@ -412,6 +475,8 @@ public class RunSQLHelper {
 	    isFunc = false;
 	    isRefresh = true;
 	    isLock = isLockv;
+	    isCallFunc = false;
+	    
 		thread = createThread( RunSQLHelper::runMain);
 		thread.start();
 	}
@@ -423,6 +488,41 @@ public class RunSQLHelper {
 	public static void runFuncSQLMethod( ) {
 		runSQLMethod(  null, null, true);
 	}
+	
+	public static void callFuncMethod( String sqlv) {
+		if (checkDBconn())
+			return;
+		DbConnectionPo dpov = DBConns.get(getComboBoxDbConnName());
+		Connection connv = dpov.getConn();
+		try {
+			if (connv == null) {
+				return;
+			} else if (connv.isClosed()) {
+				MyAlert.errorAlert( "Connect is Closed!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+
+		settingBtn();
+		CommonAction.showDetailPane();
+		
+	    sqlstr = sqlv;
+	    dpo = dpov;
+	    conn = connv;
+	    tabIdx = null;
+	    isFunc = false;
+	    isRefresh = false;
+	    isLock = false;  
+	    isCallFunc = true;
+	    
+	    
+	    
+		thread = createThread( RunSQLHelper::runMain);
+		thread.start();
+	}
+	
 	public static void runSQLMethod( String sqlv, String tabIdxv, boolean isFuncv) {
 		if (checkDBconn())
 			return;
@@ -448,7 +548,8 @@ public class RunSQLHelper {
 	    tabIdx = tabIdxv;
 	    isFunc = isFuncv;
 	    isRefresh = false;
-	    isLock = false;  
+	    isLock = false; 
+	    isCallFunc = false;
 	    
 		thread = createThread( RunSQLHelper::runMain);
 		thread.start();
@@ -704,7 +805,23 @@ public class RunSQLHelper {
 				}; 		
 				return sp;
 			}
-
+public static void main(String[] args) {
+	String express = "(\\([\\w\\s\\,_]+\\))";
+	String st1 = "CREATE OR REPLACE PROCEDURE \"INFODMS\".\"P_CANCEL_BOOKINGORDER\"(IN AENTITY_CODE CHARACTER(80) ,\r\n"
+			+ "                                               OUT RETURN_CODE INTEGER,\r\n"
+			+ "                                               OUT RETURN_MSG VARCHAR(2) )"
+//			+ "adas()sadas\r\n"
+			+ "    LANGUAGE SQL";
+	String str2 = "111(dsd  sa)";
+//	Matcher match = Pattern.compile(express).matcher(st1);
+//	         
+//	while (match.find()) {
+//	    System.out.println(match.group(1));
+//	}
+	
+	String val = CommonAction.firstParenthesisInsideString(st1);
+	  System.out.println(val);
+}
 }
 
 
@@ -712,6 +829,7 @@ class sqlData{
 	String sql;
 	int begin;
 	int length;
+	boolean isCallfunc = false;
 	sqlData(String s, int i, int len){
 		sql = s;
 		begin = i;
