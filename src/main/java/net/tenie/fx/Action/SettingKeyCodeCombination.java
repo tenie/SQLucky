@@ -3,6 +3,7 @@ package net.tenie.fx.Action;
 import net.tenie.fx.component.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -26,6 +27,7 @@ import javafx.stage.Stage;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
+import net.tenie.fx.window.ProcedureExecuteWindow;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
@@ -192,8 +194,16 @@ public final class SettingKeyCodeCombination {
 			ButtonAction.nextBookmark(true); 
 		});
 		
-		scene.getAccelerators().put(F4, () -> {  
-			CommonAction.escapeWindowsUiBug();
+		scene.getAccelerators().put(F4, () -> {
+			List<String > fields = new ArrayList<>();
+			fields.add("111");
+			fields.add("222");
+			fields.add("33");
+			new ProcedureExecuteWindow(fields, "ffff");
+			
+			
+			
+//			CommonAction.escapeWindowsUiBug();
 //			JFXComboBox<Label> connsComboBox = ButtonFactory.connsComboBox; 
 //			int i = connsComboBox.getSelectionModel().getSelectedIndex();
 //			if(i < 0) {

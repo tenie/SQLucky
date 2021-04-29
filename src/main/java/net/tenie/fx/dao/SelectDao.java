@@ -114,7 +114,7 @@ public class SelectDao {
 	}
 	
 	
-	// 获取查询的结果, 返回字段名称的数据和 值的数据
+	//TODO 获取查询的结果, 返回字段名称的数据和 值的数据
 	public static void callProcedure(Connection conn, String sql ,String tableid , DataViewTab dvt ) throws SQLException {
 		// DB对象
 		CallableStatement call = null;
@@ -122,13 +122,14 @@ public class SelectDao {
 		try {
 			String callsql = "{call "+sql+"}";
 			call = conn.prepareCall(callsql);
-//			call.register
+//			java.sql.Types.VARCHAR;
+			call.registerOutParameter(3, java.sql.Types.VARCHAR);
 			// 计时
 			long startTime=System.currentTimeMillis();   //获取开始时间   
 		
 			// 处理结果集
 		    call.execute(); 
-		    call.getObject(4)
+		    call.getObject(4 );
 //		    call.registerOutParameter(0, null);
 //		    call.
 		    
