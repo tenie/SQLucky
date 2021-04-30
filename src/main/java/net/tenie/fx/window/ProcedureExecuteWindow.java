@@ -36,28 +36,45 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.PropertyPo.ProcedureFieldPo;
+import net.tenie.lib.tools.StrUtils;
 
 public class ProcedureExecuteWindow {
 	 private final ObservableList<Procedure> data  ;
+	 private static ObservableList<String> lsType = FXCollections.observableArrayList();
 	 
-	 private ObservableList<Procedure> generateData(List<String> fields) {
+	 static {
+		 lsType.add("String");
+		 lsType.add("Integer");
+		 lsType.add("Decimal");
+		 lsType.add("Time");
+	 }
+	 
+	 private ObservableList<Procedure> generateData(List<ProcedureFieldPo> fields) {
 	        ObservableList<Procedure> procedures = FXCollections.observableArrayList( );
 	        
 	        for (int i = 0; i < fields.size(); i++) { 
-	        	String name = fields.get(i);
-	            procedures.add(new Procedure(name,  "", ""));
+	        	ProcedureFieldPo field = fields.get(i);
+	            procedures.add(new Procedure(field.getName(),  "", ""));
 	        }
 
 	        return procedures;
 	    }
-	public ProcedureExecuteWindow(List<String> fields ,String procedureName ) { 
+
+	public ProcedureExecuteWindow(String sql ,String procedureName ) { 
+		sql = StrUtils.multiLineCommentToSpace(sql);
+		sql = StrUtils.trimCommentToSpace(sql, "--");
+		var fields = CommonAction.getProcedureFields(sql);
 		data =	generateData(fields);
 		VBox b = new VBox();
 		ProcedureTableView  table = new ProcedureTableView(); 
 		
 		Button btn = new Button("button");
 		btn.setOnAction(e->{
-			String val = table.getItems().get(0).getType().get();
+			String type = table.getItems().get(0).getType().get();
+			System.out.println(type);
+			String val = table.getItems().get(0).getValue().get();
 			System.out.println(val);
 		});
 //		StackPane   centerPane = new StackPane(table);
@@ -92,7 +109,7 @@ public class ProcedureExecuteWindow {
 				typeCol.setCellValueFactory(p -> p.getValue().getType());
 				new ChoiceBoxTableCell<String, String>();
 			
-				typeCol.setCellFactory( 	ComboBoxTableCell.forTableColumn( "Name 1", "Name 2", "Name 3", "Name 4") );
+				typeCol.setCellFactory( 	ComboBoxTableCell.forTableColumn(lsType ) );
 //				typeCol.setCellFactory(ComboBox2TableCell.forTableColumn("Name 1", "Name 2", "Name 3", "Name 4"));
 				typeCol.setPrefWidth(110);
 				typeCol.setEditable(true);

@@ -238,6 +238,10 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
+				
+				if( ! fpt.isProcedure()) {
+					fpt.setProcedure(true);
+				}
 				new DataViewTab().showProcedurePanel(item.getValue().getName(), sqlStr, true);
 
 			} // trigger

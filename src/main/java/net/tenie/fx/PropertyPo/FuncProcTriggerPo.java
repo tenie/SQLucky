@@ -1,5 +1,9 @@
 package net.tenie.fx.PropertyPo;
 
+import java.util.List;
+
+import net.tenie.fx.Action.CommonAction;
+
 /*   @author tenie */
 public class FuncProcTriggerPo {
 	private long id;
@@ -9,6 +13,9 @@ public class FuncProcTriggerPo {
 	private String type;
 	private String content;
 	private String ddl;
+	
+	private boolean isProcedure = false;
+	private List<ProcedureFieldPo> fields;
 
 	public String getDdl() {
 		return ddl;
@@ -64,6 +71,25 @@ public class FuncProcTriggerPo {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public boolean isProcedure() {
+		return isProcedure;
+	}
+
+	public void setProcedure(boolean isProcedure) {
+		this.isProcedure = isProcedure;
+	}
+
+	public List<ProcedureFieldPo> getFields() {
+		if(isProcedure && ddl !=null && ddl.length() > 0) {
+			String args = CommonAction.firstParenthesisInsideString(ddl);
+		}
+		return fields;
+	}
+
+	public void setFields(List<ProcedureFieldPo> fields) {
+		this.fields = fields;
 	}
 
 	@Override

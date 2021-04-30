@@ -492,7 +492,7 @@ public class Dbinfo {
 				po.setName(name);
 				po.setRemarks(remarks);
 				po.setSchema(schemaOrCatalog);
-
+				po.setProcedure(true);
 				ls.add(po);
 			}
 

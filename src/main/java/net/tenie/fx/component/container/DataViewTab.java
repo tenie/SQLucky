@@ -47,6 +47,7 @@ import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.window.ModalDialog;
+import net.tenie.fx.window.ProcedureExecuteWindow;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
@@ -207,7 +208,7 @@ public class DataViewTab {
 	public void showDdlPanel(String title, String ddl, boolean isRunFunc ) {
 		tab = createTab(title);
 		tabName = title;
-		VBox box = CreateDDLBox(ddl, isRunFunc, false);
+		VBox box = CreateDDLBox(ddl, isRunFunc, false, title);
 		tab.setContent(box);
 
 		ComponentGetter.dataTab.getTabs().add(tab);
@@ -218,7 +219,7 @@ public class DataViewTab {
 	public void showProcedurePanel(String title, String ddl, boolean isRunFunc ) {
 		tab = createTab(title);
 		tabName = title;
-		VBox box = CreateDDLBox(ddl, isRunFunc, true);
+		VBox box = CreateDDLBox(ddl, isRunFunc, true,title );
 		tab.setContent(box);
 
 		ComponentGetter.dataTab.getTabs().add(tab);
@@ -229,7 +230,7 @@ public class DataViewTab {
 
 	public void showEmptyPanel(String title, String message) {
 		Tab tb = createTab(title);
-		VBox box = CreateDDLBox(message, false, false);
+		VBox box = CreateDDLBox(message, false, false, title);
 		tb.setContent(box);
 
 		ComponentGetter.dataTab.getTabs().add(tb);
@@ -238,12 +239,12 @@ public class DataViewTab {
 
 	public SqlCodeAreaHighLighting sqlArea;
 	// 数据tab中的组件
-	public VBox CreateDDLBox(String ddl, boolean isRunFunc, boolean isProc) {
+	public VBox CreateDDLBox(String ddl, boolean isRunFunc, boolean isProc, String name) {
 		VBox vb = new VBox();
 	    sqlArea = new SqlCodeAreaHighLighting();
 		StackPane sp = sqlArea.getObj(ddl, false);
 		// 表格上面的按钮
-		AnchorPane fp = ddlOptionBtnsPane(ddl, isRunFunc, isProc);
+		AnchorPane fp = ddlOptionBtnsPane(ddl, isRunFunc, isProc, name);
 		vb.getChildren().add(fp);
 		vb.getChildren().add(sp);
 		VBox.setVgrow(sp, Priority.ALWAYS);
@@ -252,7 +253,7 @@ public class DataViewTab {
 
 
 	// TODO 数据表格 操作按钮们
-	public AnchorPane ddlOptionBtnsPane(String ddl, boolean isRunFunc ,boolean isProc ) {
+	public AnchorPane ddlOptionBtnsPane(String ddl, boolean isRunFunc ,boolean isProc, String name ) {
 		AnchorPane fp = new AnchorPane();
 		fp.prefHeight(25);
 //		JFXButton editBtn ;
@@ -314,10 +315,14 @@ public class DataViewTab {
 			runFuncBtn.setOnMouseClicked(e -> {
 				Consumer< String >  caller;
 				if(isProc) {
+					new ProcedureExecuteWindow(ddl, name);
+					
 					caller = x -> {
-						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();
-						String sql = dpo.getExportDDL().exportCallFuncSql(x);
-						RunSQLHelper.callFuncMethod(sql);
+						
+//						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();
+//						String sql = dpo.getExportDDL().exportCallFuncSql(x);
+						
+//						RunSQLHelper.callFuncMethod(sql);
 //						RunSQLHelper.runSQLMethodRefresh(dpo, dpo.getConn(), sql, null, false);
 					};
 				}else {
@@ -326,9 +331,10 @@ public class DataViewTab {
 						String sql = dpo.getExportDDL().exportCallFuncSql(x);
 						RunSQLHelper.runSQLMethodRefresh(dpo, dpo.getConn(), sql, null, false);
 					};
+					ModalDialog.showExecWindow("Run function", tabName+"()", caller);
 				}
 			   
-				ModalDialog.showExecWindow("Run function", tabName+"()", caller);
+				
 			
 			});
 			runFuncBtn.setTooltip(MyTooltipTool.instance("Run"));

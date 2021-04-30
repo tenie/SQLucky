@@ -73,19 +73,23 @@ public class ConnItemDbObjects {
 	// 构造一个有数据的对象
 	public void createConnItem(DbConnectionPo connpo , String schemaName) {
 
-		setTableNode(CreateTableNode(connpo, schemaName));
-		setViewNode(CreateViewNode(connpo, schemaName ));
-		setFuncNode(CreateFunctionNode(connpo, schemaName));
+		tableNode = CreateTableNode(connpo, schemaName);
+//		setTableNode(CreateTableNode(connpo, schemaName));
+		
+		viewNode = CreateViewNode(connpo, schemaName );
+//		setViewNode(CreateViewNode(connpo, schemaName ));
+		
+		funcNode = CreateFunctionNode(connpo, schemaName);
+//		setFuncNode(CreateFunctionNode(connpo, schemaName));
 		procNode = CreateProceduresNode(connpo, schemaName);
-		setProcNode(CreateProceduresNode(connpo, schemaName)); 
+//		setProcNode( CreateProceduresNode(connpo, schemaName)); 
 		triggerNode = CreateTriggerNode(connpo, schemaName); 
 		indexNode = CreateIndexNode(connpo, schemaName);
 		
 		
 		//book-perspective
 		
-		parentNode = new TreeItem<>(new TreeNodePo(schemaName, TreeItemType.SCHEMA,
-	    		ImageViewGenerator.svgImage("database", "#7CFC00 ") , connpo));
+		parentNode = new TreeItem<>(new TreeNodePo(schemaName, TreeItemType.SCHEMA, ImageViewGenerator.svgImage("database", "#7CFC00 ") , connpo));
 		
 		parentNode.getChildren().add(tableNode);
 		parentNode.getChildren().add(viewNode);

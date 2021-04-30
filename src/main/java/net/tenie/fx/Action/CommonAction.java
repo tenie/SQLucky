@@ -44,6 +44,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import net.tenie.fx.PropertyPo.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
@@ -887,11 +888,12 @@ public class CommonAction {
 		return start + end;
 	}
 	
-	// 第一个括号内的字符串
+	// 用在存储过程, 第一个括号内的字符串, 
 	public static String firstParenthesisInsideString(String text) {
-		int begin = text.indexOf("(");
-		int end = findBeginParenthesisRange(text, 0,"(", ")");
-		String str = text.substring(begin+1, end);
+		// 括号开始的位置, 不包括括号自己
+		int begin = text.indexOf("(") + 1;
+		int end = findBeginParenthesisRange(text, begin ,"(", ")");
+		String str = text.substring(begin, end);
 		return str;
 	}
 	
@@ -908,10 +910,49 @@ public class CommonAction {
 					 list.add(str);
 				 }
 			}
-		}
-		
-		return null;
+		} 
+		return list;
 	}
+	//TODO 从存储过程语句中提取参数
+	public static List<ProcedureFieldPo> getProcedureFields(String ddl){
+		 List<ProcedureFieldPo> rs = new ArrayList<>();
+		 String val = firstParenthesisInsideString(ddl);
+		 val = val !=null ? val.trim() : "";
+		 if(val.length() > 1) {
+			String args[] =  val.split(",");
+			for(int i=0; i<args.length; i++) {
+				String str = args[i].trim();
+			
+				String fields[] = str.split(" ");
+				String inout = fields[0].toUpperCase();
+				boolean in = inout.contains("IN");
+				boolean out = inout.contains("OUT");
+				
+				ProcedureFieldPo po = new ProcedureFieldPo();
+				po.setName(str); 
+				po.setIn(in);
+				po.setOut(out); 
+//				po.setType( fields[2]);
+				rs.add(po);
+			}
+		 }
+		 System.out.println(rs);
+		 return rs;
+	}
+	
+	public static void main(String[] args) {
+		String sql = "CREATE PROCEDURE P_GEN_PART_MONREPORT (\r\n"
+				+ "  IN AENTITY_CODE CHARACTER(8),\r\n"
+				+ "  INOUT RETURN_CODE INTEGER,\r\n"
+				+ "  OUT RETURN_MSG VARCHAR(60)\r\n"
+				+ ") BEGIN DECLARE CURYEAR CHAR(4);aaa";
+//		sql = "adasda()sddasd";
+//		String val = firstParenthesisInsideString(sql);
+//		System.out.println(val);
+		getProcedureFields(sql);
+		
+	}
+	
 	
 	// 根据括号) 向前寻找配对的括号( 所在的位置.
 	public static int findEndParenthesisRange(String text, int start, String pb , String pe) {

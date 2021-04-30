@@ -122,6 +122,8 @@ public class SelectDao {
 		try {
 			String callsql = "{call "+sql+"}";
 			call = conn.prepareCall(callsql);
+			
+			
 //			java.sql.Types.VARCHAR;
 			call.registerOutParameter(3, java.sql.Types.VARCHAR);
 			// 计时
