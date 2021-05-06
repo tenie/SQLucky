@@ -243,7 +243,7 @@ public class ButtonAction {
 			int selidx = dataTab.getSelectionModel().getSelectedIndex(); 
 //			dataTab.getTabs().remove(selidx); 
 			CommonAction.clearDataTable(selidx);
-			RunSQLHelper.runSQLMethodRefresh( DBConns.get(connName), conn, sql, selidx+"", isLock);
+			RunSQLHelper.runSQLMethodRefresh( DBConns.get(connName),  sql, selidx+"", isLock);
 		}	
 	}
 	

@@ -329,7 +329,7 @@ public class DataViewTab {
 					caller = x -> {
 						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();
 						String sql = dpo.getExportDDL().exportCallFuncSql(x);
-						RunSQLHelper.runSQLMethodRefresh(dpo, dpo.getConn(), sql, null, false);
+						RunSQLHelper.runSQLMethodRefresh(dpo, sql, null, false);
 					};
 					ModalDialog.showExecWindow("Run function", tabName+"()", caller);
 				}

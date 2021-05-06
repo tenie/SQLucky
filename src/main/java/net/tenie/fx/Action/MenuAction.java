@@ -107,7 +107,7 @@ public class MenuAction {
 		
 	// 执行导出的sql
 	public static void  execExportSql(String sql, Connection conn, DbConnectionPo dbconnPo) { 
-		RunSQLHelper.runSQLMethodRefresh(dbconnPo, conn, sql, "", false);
+		RunSQLHelper.runSQLMethodRefresh(dbconnPo, sql, "", false);
 		
 	}
 	

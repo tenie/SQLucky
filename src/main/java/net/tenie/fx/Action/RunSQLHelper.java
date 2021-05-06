@@ -90,8 +90,7 @@ public class RunSQLHelper {
 	private static int tidx = -1;
 	
 	// 参数
-	private static String sqlstr = null;
-	private static Connection conn = null;
+	private static String sqlstr = null; 
 	private static String tabIdx = null;
 	private static Boolean isFunc = null;
 	private static DbConnectionPo dpo = null;
@@ -108,7 +107,7 @@ public class RunSQLHelper {
 		}else {
 			tidx = -1;
 		}
-		if (conn == null) return;
+		
 		// 等待加载动画
 		Tab waitTb =  addWaitingPane( tidx);
 		List<sqlData> allsqls = new ArrayList<>();
@@ -131,7 +130,7 @@ public class RunSQLHelper {
 				allsqls = willExecSql();
 			}
 			// 执行sql
-			execSqlList(allsqls, conn, dpo);
+			execSqlList(allsqls, dpo);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -143,9 +142,10 @@ public class RunSQLHelper {
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static void execSqlList(List<sqlData> allsqls, Connection conn, DbConnectionPo dpo) throws SQLException {
+	private static void execSqlList(List<sqlData> allsqls,  DbConnectionPo dpo) throws SQLException {
 		String sqlstr;
 		String sql;
+		Connection conn = dpo.getConn();
 		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
 		List<sqlData> errObj = new ArrayList<>();
@@ -162,7 +162,7 @@ public class RunSQLHelper {
 //TODO					
 					procedureAction(sql, conn);
 				}else if (type == ParseSQL.SELECT) {
-					  selectAction(sql, conn); 
+					  selectAction(sql, dpo); 
 				} else {
 						if (type == ParseSQL.UPDATE) {
 							msg = DmlDdlDao.updateSql2(conn, sql);
@@ -299,8 +299,9 @@ public class RunSQLHelper {
 	}
 	
 	
-	private static void selectAction(String sql, Connection conn) throws Exception {
+	private static void selectAction(String sql, DbConnectionPo dpo ) throws Exception {
 		try { 
+		    Connection conn = dpo.getConn();
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 获取表名
 			String tableName = ParseSQL.tabName(sql);
@@ -310,7 +311,7 @@ public class RunSQLHelper {
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			DataViewTab dvt = new DataViewTab();
 
-			SelectDao.selectSql(conn, sql, ConfigVal.MaxRows, table.getId(), dvt);
+			SelectDao.selectSql(dpo, sql, ConfigVal.MaxRows, table.getId(), dvt);
 			
 			DataViewContainer.setTabRowWith(table, dvt.getRawData().size()); //dpo.getAllDatasSize());
 			
@@ -464,13 +465,12 @@ public class RunSQLHelper {
 	}
 
 	// 运行 sql 入口
-	public static void runSQLMethodRefresh(DbConnectionPo dpov, Connection connv, String sqlv, String tabIdxv, boolean isLockv ) {
+	public static void runSQLMethodRefresh(DbConnectionPo dpov , String sqlv, String tabIdxv, boolean isLockv ) {
 		settingBtn();
 		CommonAction.showDetailPane();
 		
 	    sqlstr = sqlv;
-	    dpo = dpov;
-	    conn = connv;
+	    dpo = dpov; 
 	    tabIdx = tabIdxv;
 	    isFunc = false;
 	    isRefresh = true;
@@ -509,8 +509,7 @@ public class RunSQLHelper {
 		CommonAction.showDetailPane();
 		
 	    sqlstr = sqlv;
-	    dpo = dpov;
-	    conn = connv;
+	    dpo = dpov; 
 	    tabIdx = null;
 	    isFunc = false;
 	    isRefresh = false;
@@ -543,8 +542,7 @@ public class RunSQLHelper {
 		CommonAction.showDetailPane();
 		
 	    sqlstr = sqlv;
-	    dpo = dpov;
-	    conn = connv;
+	    dpo = dpov; 
 	    tabIdx = tabIdxv;
 	    isFunc = isFuncv;
 	    isRefresh = false;

@@ -120,8 +120,7 @@ public class UpdateDao {
 //					logger.info(idx );
 					idx--;
 					continue;
-				} else {
-
+				} else { 
 					Object obj = BuildObject.buildObj(type, val);
 					pstmt.setObject(idx, obj);
 				}

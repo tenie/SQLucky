@@ -25,6 +25,9 @@ public class BuildObject {
 	}
 
 	public static Object buildObj(String classStr, Object parameterObj) throws Exception {
+		if(classStr.equals("java.lang.Object")) {
+			return parameterObj;
+		}
 		Class<?> classobj = Class.forName(classStr);
 		Constructor cs = classobj.getConstructor(parameterObj.getClass());
 		Object o = cs.newInstance(parameterObj);

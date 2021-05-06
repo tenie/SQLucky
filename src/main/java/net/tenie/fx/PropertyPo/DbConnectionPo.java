@@ -215,10 +215,10 @@ public class DbConnectionPo {
 
 	public String getJdbcUrl() {
 		if (jdbcUrl == null || jdbcUrl.length() == 0) {
-			if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
+			if (this.isH2()) {
 				jdbcUrl = "jdbc:h2:" + host;
 				defaultSchema = "PUBLIC";
-			}else if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
+			}else if (this.isSqlite()) {
 				jdbcUrl = "jdbc:sqlite:" + host;
 				defaultSchema = SQLITE_DATABASE;
 			} else {
@@ -359,5 +359,18 @@ public class DbConnectionPo {
 				+ ", comment=" + comment + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", recordVersion="
 				+ recordVersion + ", schemas=" + schemas + "]";
 	}
-
+	
+	public boolean isSqlite() {
+		if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isH2() {
+		if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
+			return true;
+		}
+		return false;
+	}
 }
