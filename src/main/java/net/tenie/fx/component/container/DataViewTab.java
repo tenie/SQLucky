@@ -71,7 +71,7 @@ public class DataViewTab {
 	// 表字段的信息
 	private ObservableList<SqlFieldPo> tabCol = FXCollections.observableArrayList();
 	// 表格数据
-	private ObservableList<ObservableList<StringProperty>> tabData = FXCollections.observableArrayList();
+//	private ObservableList<ObservableList<StringProperty>> tabData = FXCollections.observableArrayList();
 	// 待insert的 数据
 	private Map<String, ObservableList<StringProperty>> appendData = new HashMap<>();
 
@@ -117,11 +117,11 @@ public class DataViewTab {
 		dbconns = null;
 		appendData.clear();
 		appendData = null;
-		tabData.forEach(v -> {
-			v.clear();
-		});
-		tabData.clear();
-		tabData = null;
+//		tabData.forEach(v -> {
+//			v.clear();
+//		});
+//		tabData.clear();
+//		tabData = null;
 		tabCol.clear();
 		tabCol = null;
 		oldval.clear();
@@ -439,13 +439,13 @@ public class DataViewTab {
 		this.tabCol = tabCol;
 	}
 
-	public ObservableList<ObservableList<StringProperty>> getTabData() {
-		return tabData;
-	}
-
-	public void setTabData(ObservableList<ObservableList<StringProperty>> tabData) {
-		this.tabData = tabData;
-	}
+//	public ObservableList<ObservableList<StringProperty>> getTabData() {
+//		return tabData;
+//	}
+//
+//	public void setTabData(ObservableList<ObservableList<StringProperty>> tabData) {
+//		this.tabData = tabData;
+//	}
 
 	public ObservableList<ObservableList<StringProperty>> getRawData() {
 		return rawData;

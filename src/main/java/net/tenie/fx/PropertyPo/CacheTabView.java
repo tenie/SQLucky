@@ -112,7 +112,7 @@ public class CacheTabView {
 	public static ObservableList<ObservableList<StringProperty>>  getTabData(String id) {
 		DataViewTab dvt = getDataViewTab(id);
 		if(dvt != null) { 
-			return dvt.getTabData();
+			return dvt.getRawData();
 		}
 		return null;
 	}
