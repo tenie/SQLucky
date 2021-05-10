@@ -323,7 +323,7 @@ public class DataViewTab {
 						caller = x -> {
 						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();
 						String sql = dpo.getExportDDL().exportCallFuncSql(x);
-						RunSQLHelper.callProcedure(sql, dpo);
+//						RunSQLHelper.callProcedure(sql, dpo);
 						};
 						ModalDialog.showExecWindow("Run Procedure", name, caller);
 
