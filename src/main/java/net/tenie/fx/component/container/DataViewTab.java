@@ -315,16 +315,20 @@ public class DataViewTab {
 			runFuncBtn.setOnMouseClicked(e -> {
 				Consumer< String >  caller;
 				if(isProc) {
-					new ProcedureExecuteWindow(ddl, name);
-					
-					caller = x -> {
-						
-//						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();
-//						String sql = dpo.getExportDDL().exportCallFuncSql(x);
-						
-//						RunSQLHelper.callFuncMethod(sql);
-//						RunSQLHelper.runSQLMethodRefresh(dpo, dpo.getConn(), sql, null, false);
-					};
+					var fields = CommonAction.getProcedureFields(ddl);
+					if(fields.size() > 0) {
+						new ProcedureExecuteWindow(ddl, name, fields); 
+					} else {
+
+						caller = x -> {
+						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();
+						String sql = dpo.getExportDDL().exportCallFuncSql(x);
+						RunSQLHelper.callProcedure(sql, dpo);
+						};
+						ModalDialog.showExecWindow("Run Procedure", name, caller);
+
+					}
+					 
 				}else {
 					caller = x -> {
 						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();

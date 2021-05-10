@@ -37,6 +37,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.lib.tools.StrUtils;
 
@@ -62,10 +63,8 @@ public class ProcedureExecuteWindow {
 	        return procedures;
 	    }
 
-	public ProcedureExecuteWindow(String sql ,String procedureName ) { 
-		sql = StrUtils.multiLineCommentToSpace(sql);
-		sql = StrUtils.trimCommentToSpace(sql, "--");
-		var fields = CommonAction.getProcedureFields(sql);
+	public ProcedureExecuteWindow(String sql ,String procedureName, List<ProcedureFieldPo> fields ) {  
+//		var fields = CommonAction.getProcedureFields(sql);
 		data =	generateData(fields);
 		VBox b = new VBox();
 		ProcedureTableView  table = new ProcedureTableView(); 
@@ -76,6 +75,9 @@ public class ProcedureExecuteWindow {
 			System.out.println(type);
 			String val = table.getItems().get(0).getValue().get();
 			System.out.println(val);
+			
+//			RunSQLHelper.callProcedure(sql, fields);
+			
 		});
 //		StackPane   centerPane = new StackPane(table);
  

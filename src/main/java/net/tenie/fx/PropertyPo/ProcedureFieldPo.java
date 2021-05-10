@@ -4,8 +4,10 @@ public class ProcedureFieldPo {
 	private String name;
 	private String typeName;
 	private int type;
-	private boolean isOut;
+	private boolean isOut;  
 	private boolean isIn;
+	private String value;   // 调用存储过程时传递的值
+	
 	public String getName() {
 		return name;
 	}
@@ -36,11 +38,20 @@ public class ProcedureFieldPo {
 	public void setTypeName(String typeName) {
 		this.typeName = typeName;
 	}
+	public String getValue() {
+		return value;
+	}
+	public void setValue(String value) {
+		this.value = value;
+	}
 	@Override
 	public String toString() {
 		return "ProcedureFieldPo [name=" + name + ", typeName=" + typeName + ", type=" + type + ", isOut=" + isOut
-				+ ", isIn=" + isIn + "]";
+				+ ", isIn=" + isIn + ", value=" + value + "]";
 	}
+	
+	
+	 
 	
 	
 	

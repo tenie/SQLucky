@@ -913,9 +913,37 @@ public class CommonAction {
 		} 
 		return list;
 	}
+	
+	// 判断是否是没有参数的存储过程, 没有参数 返回true
+	public static boolean procedureIsNoParameter(String sqlddl) {
+//		sqlddl = StrUtils.pressString(sqlddl).toUpperCase();
+		if(sqlddl.indexOf("(") > -1) {
+			String tmp = sqlddl.substring(0, sqlddl.indexOf("("));
+			if(tmp.contains(" BEGIN ")) {
+				return true;
+			}else {
+				return false;
+			}
+			
+		}
+		return true;
+//		sqlddl = sqlddl.substring(0, sqlddl.indexOf(" BEGIN "));
+		 
+	}
+	
 	//TODO 从存储过程语句中提取参数
 	public static List<ProcedureFieldPo> getProcedureFields(String ddl){
 		 List<ProcedureFieldPo> rs = new ArrayList<>();
+		 ddl = StrUtils.multiLineCommentToSpace(ddl);
+		 ddl = StrUtils.trimCommentToSpace(ddl, "--");
+		 // 给ddl分词, 找到过程名称后面的参数列表
+		 ddl = StrUtils.pressString(ddl).toUpperCase();
+		 if( procedureIsNoParameter(ddl) ) { // 没有参数直接返回
+			 return rs;
+		 }
+		 
+//		 ddl = ddl.substring(0, ddl.indexOf(" BEGIN "));
+		 
 		 String val = firstParenthesisInsideString(ddl);
 		 val = val !=null ? val.trim() : "";
 		 if(val.length() > 1) {

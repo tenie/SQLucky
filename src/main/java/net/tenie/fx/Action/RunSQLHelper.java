@@ -45,6 +45,7 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
 //import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
+import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -92,11 +93,12 @@ public class RunSQLHelper {
 	// 参数
 	private static String sqlstr = null; 
 	private static String tabIdx = null;
-	private static Boolean isFunc = null;
+	private static Boolean isCreateFunc = null;
 	private static DbConnectionPo dpo = null;
 	private static Boolean isRefresh = false;
 	private static boolean isLock =false;
 	private static boolean isCallFunc = false;
+	private static List<ProcedureFieldPo> callProcedureFields = null;
 	
 	
 
@@ -113,8 +115,8 @@ public class RunSQLHelper {
 		List<sqlData> allsqls = new ArrayList<>();
 		try {
 			// 获取sql 语句 
-			//执行存储过程函数等
-			if( isFunc ) { 
+			//执行创建存储过程函数, 触发器等
+			if( isCreateFunc ) { 
 				if (StrUtils.isNotNullOrEmpty(sqlstr)) {
 					sqlData sq = new sqlData(sqlstr, 0, sqlstr.length());
 					allsqls.add(sq );
@@ -157,10 +159,10 @@ public class RunSQLHelper {
 			int type = ParseSQL.parseType(sql);
 			String msg = "";
 			try {
-				if( isCallFunc ) {
+				if( isCallFunc ) { // 调用存储过程
 //					msg = DmlDdlDao.callFunc(conn, sql);
 //TODO					
-					procedureAction(sql, conn);
+					procedureAction(sql, conn ,  callProcedureFields);
 				}else if (type == ParseSQL.SELECT) {
 					  selectAction(sql, dpo); 
 				} else {
@@ -250,7 +252,7 @@ public class RunSQLHelper {
 	}
 	
 
-	private static void procedureAction(String sql, Connection conn) throws Exception {
+	private static void procedureAction(String sql, Connection conn, List<ProcedureFieldPo> fields) throws Exception {
 		try { 
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 获取表名
@@ -258,8 +260,8 @@ public class RunSQLHelper {
 			
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			DataViewTab dvt = new DataViewTab();
-			
-//			SelectDao.callfunc(conn, sql, table.getId(), dvt);
+			//TODO callProcedure
+			SelectDao.callProcedure(conn, sql, table.getId(), dvt);
 			
 			DataViewContainer.setTabRowWith(table, dvt.getRawData().size());
 			
@@ -472,7 +474,7 @@ public class RunSQLHelper {
 	    sqlstr = sqlv;
 	    dpo = dpov; 
 	    tabIdx = tabIdxv;
-	    isFunc = false;
+	    isCreateFunc = false;
 	    isRefresh = true;
 	    isLock = isLockv;
 	    isCallFunc = false;
@@ -489,10 +491,9 @@ public class RunSQLHelper {
 		runSQLMethod(  null, null, true);
 	}
 	
-	public static void callFuncMethod( String sqlv) {
+	public static void callProcedure( String sqlv, DbConnectionPo dpov , List<ProcedureFieldPo> fields ) {
 		if (checkDBconn())
-			return;
-		DbConnectionPo dpov = DBConns.get(getComboBoxDbConnName());
+			return; 
 		Connection connv = dpov.getConn();
 		try {
 			if (connv == null) {
@@ -511,12 +512,10 @@ public class RunSQLHelper {
 	    sqlstr = sqlv;
 	    dpo = dpov; 
 	    tabIdx = null;
-	    isFunc = false;
+	    isCreateFunc = false;
 	    isRefresh = false;
 	    isLock = false;  
 	    isCallFunc = true;
-	    
-	    
 	    
 		thread = createThread( RunSQLHelper::runMain);
 		thread.start();
@@ -544,7 +543,7 @@ public class RunSQLHelper {
 	    sqlstr = sqlv;
 	    dpo = dpov; 
 	    tabIdx = tabIdxv;
-	    isFunc = isFuncv;
+	    isCreateFunc = isFuncv;
 	    isRefresh = false;
 	    isLock = false; 
 	    isCallFunc = false;

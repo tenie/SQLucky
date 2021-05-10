@@ -1,5 +1,6 @@
 package net.tenie.fx.Action;
 
+import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.*;
 import net.tenie.fx.component.container.DataViewTab;
@@ -33,6 +34,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
@@ -252,24 +254,27 @@ public final class SettingKeyCodeCombination {
 		
 	}
 	//TODO 获取查询的结果, 返回字段名称的数据和 值的数据
-		public static void callProcedure(Connection conn  ) throws SQLException {
+		public static void callProcedure(Connection conn   ) throws SQLException {
 			// DB对象
 			CallableStatement call = null;
 			ResultSet rs = null;
 			try {
-				String callsql = "{call   myProcedure4(?,?)}";
 				
+//				String callsql = "{call   myProcedure4(?,?)}";
+				String callsql = "{call   F_GETSEQDBID2(?,?)}";
 				call = conn.prepareCall(callsql);
-				call.setObject(1, "111");
-				call.setObject(2, "222");
-				
+				call.setObject(1, "ACCIDENT_VEHICLE_ACCOUNT");
+//				call.setObject(2, "222");
+				call.registerOutParameter(2, java.sql.Types.BIGINT);
 //				java.sql.Types.VARCHAR;
 //				call.registerOutParameter(3, java.sql.Types.VARCHAR);
  
 				// 处理结果集
 			    call.execute(); 
 			    
-//			    call.getObject(4 );
+
+	            Object objRtn =   call.getObject(2 );
+	            System.out.println(objRtn);
 //			    call.registerOutParameter(0, null);
 //			    call.
 			    
@@ -282,6 +287,58 @@ public final class SettingKeyCodeCombination {
 					rs.close();
 			} 
 		}
+		
+		
+		
+		public static List<String> callProcedure(Connection conn , String proName, List<ProcedureFieldPo> pfp ) throws SQLException {
+			// DB对象
+			CallableStatement call = null;
+			ResultSet rs = null;
+			List<String> val = new ArrayList<>();
+			try {
+				if(pfp.size() > 0) {
+					String callsql = "{call " + proName+ "(";
+					for(int i = 0 ; i < pfp.size(); i++) {
+						callsql += "? ,";
+					}
+					
+					callsql = callsql.substring(0, callsql.lastIndexOf(","));
+					callsql += " ) }"; 
+					call = conn.prepareCall(callsql);
+					
+					for(int i = 0 ; i < pfp.size(); i++) {
+						ProcedureFieldPo po = pfp.get(i);
+						if (po.isIn()) {
+							call.setObject( i+1, po.getValue());
+						}
+						if(po.isOut()) { 
+							call.registerOutParameter( i+1, CommonConst.PROCEDURE_TYPE.get(po.getTypeName()));
+						}
+					}
+					// 处理结果集
+				    call.execute();  
+				    for(int i = 0 ; i < pfp.size(); i++) {
+				    	ProcedureFieldPo po = pfp.get(i);
+				    	if(po.isOut()) { 
+				    		 Object objRtn =   call.getObject( i+1 );
+				    		 val.add(objRtn.toString());
+				    	}
+				    	
+					}
+					
+				}  
+				 
+ 
+			
+			return val;	 
+			} catch (SQLException e) {
+				throw e;
+			} finally {
+				if (rs != null)
+					rs.close();
+			} 
+		}	
+	
 	private static void fireEvent(JFXButton btn) {
 		btn.fireEvent(new Event(MouseEvent.MOUSE_CLICKED));
 	}

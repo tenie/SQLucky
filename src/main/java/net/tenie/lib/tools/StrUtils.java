@@ -145,12 +145,21 @@ public class StrUtils {
 	public static void main(String[] args) {
 //	testStrsToInts();
 //	test_trimChar();
-		String str = "CREATE PROCEDURE PROC_DATA_MIGRATION\r\n" + "/*根据结转时间\r\n" + "做数据结转*/\r\n" + "(\r\n"
-				+ "  in tab VARCHAR(100),\r\n" + "  /*表名*/\r\n"
-
-				+ ") LANGUAGE SQL SPECIFIC SQL170510154625700 begin IF TYPE = 1 THEN call sysproc.admin_cmd(";
-		rmMultiLineComment(str);
-
+//		String str = "CREATE PROCEDURE PROC_DATA_MIGRATION\r\n" + "/*根据结转时间\r\n" + "做数据结转*/\r\n" + "(\r\n"
+//				+ "  in tab VARCHAR(100),\r\n" + "  /*表名*/\r\n"
+//
+//				+ ") LANGUAGE SQL SPECIFIC SQL170510154625700 begin IF TYPE = 1 THEN call sysproc.admin_cmd(";
+//		rmMultiLineComment(str);
+		String ddl ="CREATE PROCEDURE myProcedure2\r\n"
+				+ "BEGIN \r\n"
+				+ "   DECLARE SQLSTATE CHAR(5); \r\n"
+				+ "   DECLARE L_VIN VARCHAR(17); \r\n"
+				+ "   DECLARE L_INSURANCE_BEGIN_DATE TIMESTAMP; \r\n"
+				+ "  DECLARE S_VIN VARCHAR(17); ";
+		 ddl = StrUtils.pressString(ddl).toUpperCase();
+		 ddl = ddl.substring(0, ddl.indexOf(" BEGIN "));
+		 System.out.println(ddl);
+		
 	}
 
 // 去除多行注释 /*  ??  */   "(/\\*[\\s\\S]*?\\*/)";
