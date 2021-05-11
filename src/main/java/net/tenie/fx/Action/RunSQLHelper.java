@@ -139,6 +139,8 @@ public class RunSQLHelper {
 		} finally {
 			rmWaitingPane(waitTb);
 			settingBtn();
+			callProcedureFields = null;
+			isCallFunc =false;
 		}
 		
 	}
@@ -251,17 +253,31 @@ public class RunSQLHelper {
 		}
 	}
 	
+	private static boolean hasOut(List<ProcedureFieldPo> fields) {
+		if(fields != null && fields.size() > 0) {
+			for(ProcedureFieldPo po : fields) {
+				if(po.isOut()) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 
 	private static void procedureAction(String sql, Connection conn, List<ProcedureFieldPo> fields) throws Exception {
+		String msg = "";
+		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
 		try { 
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 获取表名
-			String tableName = sql; ParseSQL.tabName(sql);
+			String tableName = sql; 
+//			ParseSQL.tabName(sql);
 			
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			DataViewTab dvt = new DataViewTab();
 			//TODO callProcedure
-			SelectDao.callProcedure(conn, sql, table.getId(), dvt);
+			SelectDao.callProcedure(conn, sql, table.getId(), dvt, fields );
 			
 			DataViewContainer.setTabRowWith(table, dvt.getRawData().size());
 			
@@ -292,11 +308,28 @@ public class RunSQLHelper {
 //			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted()) {
-				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");
+				if(hasOut(fields)) {
+					DataViewContainer.showTableDate(dvt, tidx, true, dvt.getExecTime()+"", dvt.getRows()+"");		
+				}else {
+					msg = "ok. ";
+				}
 			}
 		} catch (Exception e) { 
-			e.printStackTrace();
-			throw e;
+			e.printStackTrace(); 
+			msg = "failed : " + e.getMessage();
+			if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
+				msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
+			}   
+		}
+		
+		if(StrUtils.isNotNullOrEmpty(msg)) {
+			ObservableList<StringProperty> val = FXCollections.observableArrayList();
+			val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+			val.add(createReadOnlyStringProperty(msg)); 
+			val.add(createReadOnlyStringProperty("call procedure "+ sqlstr)); 
+			val.add(createReadOnlyStringProperty("" ));
+			ddlDmlpo.addData(val);
+			showExecuteSQLInfo(ddlDmlpo);
 		}
 	}
 	
@@ -516,6 +549,8 @@ public class RunSQLHelper {
 	    isRefresh = false;
 	    isLock = false;  
 	    isCallFunc = true;
+	    //TODO
+	    callProcedureFields = fields;
 	    
 		thread = createThread( RunSQLHelper::runMain);
 		thread.start();

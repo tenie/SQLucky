@@ -32,13 +32,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
+import net.tenie.fx.component.ComponentGetter;
 import net.tenie.lib.tools.StrUtils;
 
 public class ProcedureExecuteWindow {
@@ -63,35 +67,84 @@ public class ProcedureExecuteWindow {
 	        return procedures;
 	    }
 
-	public ProcedureExecuteWindow(String sql ,String procedureName, List<ProcedureFieldPo> fields ) {  
+	public ProcedureExecuteWindow(String procedureName, List<ProcedureFieldPo> fields ) {  
 //		var fields = CommonAction.getProcedureFields(sql);
+		final Stage stage = new Stage(); 
 		data =	generateData(fields);
 		VBox b = new VBox();
 		ProcedureTableView  table = new ProcedureTableView(); 
 		
-		Button btn = new Button("button");
+//		Button btn = new Button("button");
+		JFXButton btn = new JFXButton("Run");
 		btn.setOnAction(e->{
-			String type = table.getItems().get(0).getType().get();
-			System.out.println(type);
-			String val = table.getItems().get(0).getValue().get();
-			System.out.println(val);
 			
-//			RunSQLHelper.callProcedure(sql, fields);
-			
-		});
-//		StackPane   centerPane = new StackPane(table);
- 
-		VBox.setVgrow(btn, null);
-		b.getChildren().addAll(table, btn);
-		final Stage stage = new Stage(); 
-	 
-		Scene scene = new Scene( b);
+			var items = table.getItems();
+			for(int i = 0; i < fields.size() ; i++) {
+				ProcedureFieldPo pfpo = fields.get(i);
+				if(pfpo.isIn()) {
+					String tabval = items.get(i).getValue().get();
+					pfpo.setValue(tabval);  
+				}
+				if(pfpo.isOut()) {
+					String type = table.getItems().get(i).getType().get();
+//					pfpo.setTypeName(type);
+					if(StrUtils.isNullOrEmpty(type)) {
+						MyAlert.errorAlert("Out Field Must Has Type!");
+						return ;
+					}
+				}
+				
+				String type = table.getItems().get(i).getType().get();
+				pfpo.setTypeName(type);
+				
+			} 
+			DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO(); 
+			RunSQLHelper.callProcedure(procedureName, dpo, fields);
+		 
+			stage.close();
+		}); 
 		
-//		stage.initModality(Modality);
+		
+		JFXButton cancelBtn = new JFXButton("Cancel");
+		cancelBtn.getStyleClass().add("myAlertBtn");
+		cancelBtn.setOnAction(value -> {
+			stage.close();
+		});
+		AnchorPane foot = new AnchorPane(); 
+		foot.setMinHeight(40);
+		double i = 10.0;
+		foot.getChildren().add(cancelBtn); 
+		AnchorPane.setRightAnchor(cancelBtn, i);
+		AnchorPane.setTopAnchor(cancelBtn, 10.0);
+		i +=60; 
+		foot.getChildren().add(btn); 
+		AnchorPane.setRightAnchor(btn, i);
+		AnchorPane.setTopAnchor(btn, 10.0);
+		
+		VBox.setVgrow(foot, null);
+		b.getChildren().addAll(table, foot);
+		b.getStyleClass().add("myAlert");
+		
+	 
+		List<Node> nds = new ArrayList<>();
+		nds.add( table); 
+//		nds.add( tit); 
+		
+		List<Node> btns = new ArrayList<>();
+		btns.add( cancelBtn);
+		btns.add( btn);
+		
+		Node vb = ModalDialog.setVboxShape(0,0,stage, ModalDialog.INFO, nds, btns);
+		Scene scene = new Scene( (Parent) vb);
+//		Scene scene = new Scene( b);
+	
 		stage.setScene(scene);
 //		ModalDialog.setSceneAndShow(scene, stage);
-		stage.show();
-	
+//		CommonAction.loadCss(scene);
+//		stage.initStyle(StageStyle.UTILITY); 
+		stage.initModality(Modality.APPLICATION_MODAL);
+//		stage.show();
+		ModalDialog.setSceneAndShow(scene, stage);
 	}
 	 
 	 
@@ -102,6 +155,7 @@ public class ProcedureExecuteWindow {
 	      private final TableColumn2<Procedure, String> valueCol = new TableColumn2<>("Value");
 	      
 			public ProcedureTableView() {
+				this.getStyleClass().add("myTableTag");
 				this.setEditable(true);
 				parameterCol.setCellValueFactory(p -> p.getValue().getParameter());
 				parameterCol.setCellFactory(TextField2TableCell.forTableColumn());

@@ -425,7 +425,7 @@ public class ButtonFactory {
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom()); 
 		optionBtns.add(hideBottom);
 		// 锁
-		JFXButton lockbtn = createLockBtn(disable, isLock, id);
+		JFXButton lockbtn = createLockBtn(isLock, id);
 //		JFXButton lockbtn = new JFXButton(); 
 //		lockbtn.setDisable(disable);
 //		if(isLock) {
@@ -490,10 +490,10 @@ public class ButtonFactory {
 
 	
 	
-	public static JFXButton createLockBtn(boolean disable, boolean isLock , String id) {
+	public static JFXButton createLockBtn( boolean isLock , String id) {
 		// 锁
 		JFXButton lockbtn = new JFXButton();
-		lockbtn.setDisable(disable);
+//		lockbtn.setDisable(disable);
 		if (isLock) {
 			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
 		} else {

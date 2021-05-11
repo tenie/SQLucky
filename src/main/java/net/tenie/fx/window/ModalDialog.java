@@ -460,14 +460,20 @@ public class ModalDialog {
 		
 		return subWindow;
 	}
-	
-	//TODO 设置子窗口的外形
 	public static Node setVboxShape(Stage stage , Node title, List<Node> nds, List<Node> btns ) {
+		return setVboxShape(500, 80, stage, title, nds, btns);
+	}
+	//TODO 设置子窗口的外形
+	public static Node setVboxShape(double  width , double height, Stage stage , Node title, List<Node> nds, List<Node> btns ) {
+		
 		VBox subWindow = new VBox(); 
-		subWindow.setPrefWidth(500); 
-		subWindow.setPrefHeight(80);
-		subWindow.maxHeight(80);
-		subWindow.maxWidth(500);
+		if(width > 0 && height > 0) {
+			subWindow.setPrefWidth(width); 
+			subWindow.setPrefHeight(height);
+			subWindow.maxHeight(height);
+			subWindow.maxWidth(width);
+		}
+		
 		
 		// 内容
 		for(Node nd : nds) {

@@ -33,6 +33,7 @@ import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.Action.RsVal;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Action.myEvent;
+import net.tenie.fx.PropertyPo.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.DataTabDataPo;
 //import net.tenie.fx.PropertyPo.DbTableDatePo;
@@ -203,10 +204,16 @@ public class DataViewTab {
 
 	// 表, 视图 等 数据库对象的ddl语句
 	public void showDdlPanel(String title, String ddl) {
-		showDdlPanel(title, ddl, false);
+		showDdlPanel(title, ddl, false); 
+		
 	}
 	public void showDdlPanel(String title, String ddl, boolean isRunFunc ) {
 		tab = createTab(title);
+		if(StrUtils.isNullOrEmpty(tabId)) {
+			tabId  = CommonAction.createTabId();
+			CacheTabView.addDataViewTab( this , tabId);
+		}
+			
 		tabName = title;
 		VBox box = CreateDDLBox(ddl, isRunFunc, false, title);
 		tab.setContent(box);
@@ -218,6 +225,10 @@ public class DataViewTab {
 	
 	public void showProcedurePanel(String title, String ddl, boolean isRunFunc ) {
 		tab = createTab(title);
+		if(StrUtils.isNullOrEmpty(tabId)) {
+			tabId  = CommonAction.createTabId();
+			CacheTabView.addDataViewTab( this , tabId);
+		}
 		tabName = title;
 		VBox box = CreateDDLBox(ddl, isRunFunc, true,title );
 		tab.setContent(box);
@@ -225,6 +236,7 @@ public class DataViewTab {
 		ComponentGetter.dataTab.getTabs().add(tab);
 		CommonAction.showDetailPane();
 		ComponentGetter.dataTab.getSelectionModel().select(tab);
+		
 	}
 	
 
@@ -262,10 +274,11 @@ public class DataViewTab {
 			tabId = CommonAction.createTabId();
 			tab.setId(tabId);
 		} 
-		JFXButton lockbtn =ButtonFactory.createLockBtn(false, false, tabId);
-				
+		JFXButton lockbtn =ButtonFactory.createLockBtn(false, tabId);
+		btns.add(lockbtn);
 		// 保存
 		JFXButton saveBtn = new JFXButton();
+		btns.add(saveBtn);
 		saveBtn.setGraphic(ImageViewGenerator.svgImageDefActive("save"));
 		saveBtn.setOnMouseClicked(e -> { 
 			//TODO 保存存储过程
@@ -279,6 +292,7 @@ public class DataViewTab {
 		
 		//编辑
 		JFXButton editBtn = new JFXButton();
+		btns.add(editBtn);
 		editBtn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
 		editBtn.setOnMouseClicked(e -> {
 //			SqlEditor.createTabFromSqlFile(ddl, "", "");
@@ -297,6 +311,7 @@ public class DataViewTab {
 		
 		// 隐藏按钮
 		JFXButton hideBottom = new JFXButton();
+		btns.add(hideBottom);
 		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
 
@@ -313,33 +328,31 @@ public class DataViewTab {
 			JFXButton runFuncBtn = new JFXButton();
 			runFuncBtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
 			runFuncBtn.setOnMouseClicked(e -> {
-				Consumer< String >  caller;
-				if(isProc) {
+				Consumer<String> caller;
+				if (isProc) {
 					var fields = CommonAction.getProcedureFields(ddl);
-					if(fields.size() > 0) {
-						new ProcedureExecuteWindow(ddl, name, fields); 
+					if (fields.size() > 0) {
+						// 有参数的存储过程
+						new ProcedureExecuteWindow( name, fields);
 					} else {
-
+						// 调用无参数的存储过程
 						caller = x -> {
-						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();
-						String sql = dpo.getExportDDL().exportCallFuncSql(x);
-//						RunSQLHelper.callProcedure(sql, dpo);
+							DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO(); 
+							RunSQLHelper.callProcedure(name, dpo, fields);
 						};
 						ModalDialog.showExecWindow("Run Procedure", name, caller);
 
 					}
-					 
-				}else {
+
+				} else {
 					caller = x -> {
 						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();
 						String sql = dpo.getExportDDL().exportCallFuncSql(x);
 						RunSQLHelper.runSQLMethodRefresh(dpo, sql, null, false);
 					};
-					ModalDialog.showExecWindow("Run function", tabName+"()", caller);
+					ModalDialog.showExecWindow("Run function", tabName + "()", caller);
 				}
-			   
-				
-			
+
 			});
 			runFuncBtn.setTooltip(MyTooltipTool.instance("Run"));
 			btns.add(runFuncBtn);

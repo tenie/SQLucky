@@ -6,7 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,12 +21,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.PropertyPo.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
+import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.container.DataViewTab;
+import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
@@ -116,40 +121,128 @@ public class SelectDao {
 	}
 	
 	
-	//TODO 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void callProcedure(Connection conn, String sql ,String tableid , DataViewTab dvt ) throws SQLException {
+	
+	
+	public static List<String> callProcedure(Connection conn , String proName, List<ProcedureFieldPo> pfp ) throws SQLException {
 		// DB对象
 		CallableStatement call = null;
 		ResultSet rs = null;
+		List<String> val = new ArrayList<>();
 		try {
-			String callsql = "{call "+sql+"}";
-			call = conn.prepareCall(callsql);
-			
-			
-//			java.sql.Types.VARCHAR;
-			call.registerOutParameter(3, java.sql.Types.VARCHAR);
-			// 计时
-			long startTime=System.currentTimeMillis();   //获取开始时间   
+			if(pfp.size() > 0) {
+				String callsql = "{call " + proName+ "(";
+				for(int i = 0 ; i < pfp.size(); i++) {
+					callsql += "? ,";
+				}
+				
+				callsql = callsql.substring(0, callsql.lastIndexOf(","));
+				callsql += " ) }"; 
+				call = conn.prepareCall(callsql);
+				
+				for(int i = 0 ; i < pfp.size(); i++) {
+					ProcedureFieldPo po = pfp.get(i);
+					if (po.isIn()) {
+						call.setObject( i+1, po.getValue());
+					}
+					if(po.isOut()) { 
+						call.registerOutParameter( i+1, CommonConst.PROCEDURE_TYPE.get(po.getTypeName()));
+					}
+				}
+				// 处理结果集
+			    call.execute();  
+			    for(int i = 0 ; i < pfp.size(); i++) {
+			    	ProcedureFieldPo po = pfp.get(i);
+			    	if(po.isOut()) { 
+			    		 Object objRtn =   call.getObject( i+1 );
+			    		 val.add(objRtn.toString());
+			    	}
+			    	
+				}
+				
+			}  
+			 
+
 		
-			// 处理结果集
-		    call.execute(); 
-		    call.getObject(4 );
-//		    call.registerOutParameter(0, null);
-//		    call.
-		    
-		    
-		    
-			long endTime=System.currentTimeMillis(); //获取结束时间
-			long usetime = endTime-startTime;
-			double vt = usetime / 1000.0;
-			logger.info("查询时间： "+usetime+"ms");
-			dvt.setExecTime(vt);  
-			// 字段信息
-			ObservableList<SqlFieldPo> fields = resultSetMetaData(rs);
+		return val;	 
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			if (rs != null)
+				rs.close();
+		} 
+	}	
+
+	
+	//TODO 获取查询的结果, 返回字段名称的数据和 值的数据
+	public static void callProcedure(Connection conn, String proName ,String tableid , DataViewTab dvt ,List<ProcedureFieldPo> pfp  ) throws SQLException {
+		// DB对象
+		CallableStatement call = null;
+		ResultSet rs = null; 
+		ObservableList<SqlFieldPo> fields = FXCollections.observableArrayList();
+		ObservableList<ObservableList<StringProperty>>  val = FXCollections.observableArrayList();
+		ObservableList<StringProperty> rowval = FXCollections.observableArrayList();
+		try {
 			
-			ObservableList<ObservableList<StringProperty>>  val ;
+			if(pfp.size() > 0) {
+				String callsql = "{call " + proName+ "(";
+				for(int i = 0 ; i < pfp.size(); i++) {
+					callsql += "? ,";
+				}
+				
+				callsql = callsql.substring(0, callsql.lastIndexOf(","));
+				callsql += " ) }"; 
+				
+				call = conn.prepareCall(callsql);
+				
+				for(int i = 0 ; i < pfp.size(); i++) {
+					ProcedureFieldPo po = pfp.get(i);
+					if (po.isIn()) {
+						call.setObject( i+1, po.getValue());
+					}
+					if(po.isOut()) { 
+						call.registerOutParameter( i+1, CommonConst.PROCEDURE_TYPE.get(po.getTypeName()));
+					}
+				}
+				
+				// 计时
+				long startTime=System.currentTimeMillis();   //获取开始时间 
+				// 数据库调用
+				call.execute(); 
+				long endTime=System.currentTimeMillis(); //获取结束时间
+				long usetime = endTime-startTime;
+				double vt = usetime / 1000.0; 
+				logger.info("查询时间： "+usetime+"ms");
+				dvt.setExecTime(vt);  
+
+				// 处理结果集
+				for(int i = 0 ; i < pfp.size(); i++) {
+			    	ProcedureFieldPo po = pfp.get(i);
+			    	if(po.isOut()) {
+			    		 Object objRtn =   call.getObject( i+1 );
+			    		 rowval.add(RunSQLHelper.createReadOnlyStringProperty(objRtn.toString()));
+			    		 
+			    		// 字段信息
+			    		 SqlFieldPo sfpo  = new SqlFieldPo();
+			    		 sfpo.setScale(0);
+			    		 sfpo.setColumnName( po.getName());
+			    		 sfpo.setColumnClassName("");
+			    		 sfpo.setColumnDisplaySize(0);
+			    		 sfpo.setColumnLabel( po.getName());
+			    		 sfpo.setColumnType(po.getType());
+			    		 sfpo.setColumnTypeName(po.getTypeName());
+						 fields.add(sfpo);
+			    	}
+			    	
+				}
+				
+			}   
+			
+		
 			// 数据
-			 val = simpleExecRs(rs, fields); 
+//			 val = simpleExecRs(rs, fields); 
+			 if(rowval.size() > 0) {
+				 val.add(rowval);
+			 }
 			
 			dvt.setColss(fields);
 			dvt.setRawData(val);
