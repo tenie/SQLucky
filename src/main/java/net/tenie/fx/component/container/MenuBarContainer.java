@@ -46,6 +46,7 @@ public class MenuBarContainer {
 		mnHelp = createHelpMenu();
 
 		mainMenuBar.getMenus().addAll(mnfile, mnEdit, mnTools, mnHelp);
+		mainMenuBar.setUseSystemMenuBar(true);
 	}
 
 	// File 菜单创建

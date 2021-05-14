@@ -267,13 +267,11 @@ public class DataViewTab {
 	// TODO 数据表格 操作按钮们
 	public AnchorPane ddlOptionBtnsPane(String ddl, boolean isRunFunc ,boolean isProc, String name ) {
 		AnchorPane fp = new AnchorPane();
-		fp.prefHeight(25);
-//		JFXButton editBtn ;
-		// 锁 
 		if(StrUtils.isNullOrEmpty(tabId)) {
 			tabId = CommonAction.createTabId();
 			tab.setId(tabId);
 		} 
+		// 锁 
 		JFXButton lockbtn =ButtonFactory.createLockBtn(false, tabId);
 		btns.add(lockbtn);
 		// 保存
@@ -315,9 +313,7 @@ public class DataViewTab {
 		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
 
-		fp.getChildren().addAll(saveBtn, editBtn, hideBottom , lockbtn);
-		AnchorPane.setRightAnchor(hideBottom, 0.0);
-		AnchorPane.setRightAnchor(lockbtn, 30.0);
+		
 		
 		
 		double offset = 30.0;
@@ -329,6 +325,7 @@ public class DataViewTab {
 			runFuncBtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
 			runFuncBtn.setOnMouseClicked(e -> {
 				Consumer<String> caller;
+				ButtonFactory.lockLockBtn(tabId, lockbtn);
 				if (isProc) {
 					var fields = CommonAction.getProcedureFields(ddl);
 					if (fields.size() > 0) {
@@ -359,7 +356,11 @@ public class DataViewTab {
 			fp.getChildren().add(runFuncBtn);
 			AnchorPane.setLeftAnchor(runFuncBtn, offset + 30.0);
 		}
-
+		
+		fp.getChildren().addAll(saveBtn, editBtn, hideBottom , lockbtn);
+		fp.prefHeight(25); 
+		AnchorPane.setRightAnchor(hideBottom, 0.0);
+		AnchorPane.setRightAnchor(lockbtn, 30.0);
 		return fp;
 	}
 
