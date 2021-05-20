@@ -59,7 +59,7 @@ public class DataViewTab {
 	private String sqlStr;
 	private String connName;
 	private boolean isLock = false;
-
+	private DbConnectionPo dbConnection;
 	// sql执行时间
 	private double execTime = 0;
 	// 行数
@@ -591,4 +591,12 @@ public class DataViewTab {
 		this.isLock = isLock;
 	}
 
+	public DbConnectionPo getDbConnection() {
+		return dbConnection;
+	}
+
+	public void setDbConnection(DbConnectionPo dbConnection) {
+		this.dbConnection = dbConnection;
+	}
+	
 }

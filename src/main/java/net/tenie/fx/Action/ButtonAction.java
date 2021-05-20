@@ -32,6 +32,8 @@ import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.TreeItem.TreeObjCache;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.config.Db2ErrorCode;
+import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DeleteDao;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
@@ -48,6 +50,7 @@ public class ButtonAction {
 		String tabName = CacheTabView.getTableName(tabId);
 //		ObservableList<ObservableList<StringProperty>> alldata = CacheTabView.getData(tabId);
 		Connection conn = CacheTabView.getDbConn(tabId);
+		var dpo = CacheTabView.getDbConnection(tabId);
 		if (tabName != null && tabName.length() > 0) {
 			// 字段
 			ObservableList<SqlFieldPo> fpos = CacheTabView.getFields(tabId);
@@ -64,6 +67,7 @@ public class ButtonAction {
 					// 拼接update sql
 					try {
 						String msg = UpdateDao.execUpdate(conn, tabName, newd, old, fpos);
+						
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
 						val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
 						val.add(RunSQLHelper.createReadOnlyStringProperty(msg)); 
@@ -78,10 +82,13 @@ public class ButtonAction {
 						e1.printStackTrace();
 						saveBtn.setDisable(true);
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
-						
+						String 	msg = "failed : " + e1.getMessage();
+						if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
+							msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
+						}
 						val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-						val.add(RunSQLHelper.createReadOnlyStringProperty(e1.getMessage())); 
-						val.add(RunSQLHelper.createReadOnlyStringProperty("fail")); 
+						val.add(RunSQLHelper.createReadOnlyStringProperty(msg)); 
+						val.add(RunSQLHelper.createReadOnlyStringProperty("failed")); 
 						val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
 						
 						ddlDmlpo.addData(val);

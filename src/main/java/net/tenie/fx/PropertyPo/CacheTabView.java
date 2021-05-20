@@ -79,6 +79,15 @@ public class CacheTabView {
 		}
 		return null;
 	}
+//	 DbConnectionPo dpo
+	public static DbConnectionPo  getDbConnection(String id) {
+		DataViewTab dvt = getDataViewTab(id);
+		if(dvt != null) {
+			return dvt.getDbConnection();
+		}
+		return null;
+	}
+	
 	
 //	getTab
 	public static Tab  getTab(String id) {

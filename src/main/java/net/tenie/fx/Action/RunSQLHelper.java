@@ -356,7 +356,8 @@ public class RunSQLHelper {
 			dvt.setTabId( table.getId());
 			dvt.setTabName(tableName);
 			dvt.setConnName(connectName);
-			dvt.setDbconns(conn); 
+			dvt.setDbconns(conn);
+			dvt.setDbConnection(dpo);
 			dvt.setLock(isLock);
 			
 			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
