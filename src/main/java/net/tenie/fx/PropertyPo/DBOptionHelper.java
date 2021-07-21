@@ -1,5 +1,6 @@
 package net.tenie.fx.PropertyPo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public class DBOptionHelper {
 	static public List<TablePo> getTabsName(DbConnectionPo po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
-		List<TablePo> tbs = null;
+		List<TablePo> tbs = new ArrayList<>();
 		if (isNew || spo != null) {
 			tbs = spo.getTabs();
 			if (isNew || tbs == null) {
@@ -30,7 +31,7 @@ public class DBOptionHelper {
 	static public List<TablePo> getViewsName(DbConnectionPo po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
-		List<TablePo> views = null;
+		List<TablePo> views = new ArrayList<TablePo>();
 		if (isNew || spo != null) {
 			views = spo.getViews();
 			if (isNew || views == null) {
@@ -50,7 +51,7 @@ public class DBOptionHelper {
 	static public List<FuncProcTriggerPo> getFunctions(DbConnectionPo po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
-		List<FuncProcTriggerPo> val = null;
+		List<FuncProcTriggerPo> val = new ArrayList<>();
 		if (isNew || spo != null) {
 			val = spo.getFunctions();
 			if (isNew || val == null) {
@@ -70,7 +71,7 @@ public class DBOptionHelper {
 	static public List<FuncProcTriggerPo> getProcedures(DbConnectionPo po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
-		List<FuncProcTriggerPo> val = null;
+		List<FuncProcTriggerPo> val = new ArrayList<>();
 		if (isNew || spo != null) {
 			val = spo.getProcedures();
 			if (isNew || val == null) {
@@ -90,7 +91,7 @@ public class DBOptionHelper {
 	static public List<FuncProcTriggerPo> getTriggers(DbConnectionPo po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
-		List<FuncProcTriggerPo> val = null;
+		List<FuncProcTriggerPo> val =new ArrayList<>();
 		if (isNew || spo != null) {
 			val = spo.getTriggers();
 			if (isNew || val == null) {
@@ -110,7 +111,7 @@ public class DBOptionHelper {
 	static public List<FuncProcTriggerPo> getIndexs(DbConnectionPo po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
-		List<FuncProcTriggerPo> val = null;
+		List<FuncProcTriggerPo> val = new ArrayList<>();
 		if (isNew || spo != null) {
 			val = spo.getTriggers();
 			if (isNew || val == null) {
@@ -130,7 +131,7 @@ public class DBOptionHelper {
 	static public List<FuncProcTriggerPo> getSequences(DbConnectionPo po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
-		List<FuncProcTriggerPo> val = null;
+		List<FuncProcTriggerPo> val = new ArrayList<>();
 		if (isNew || spo != null) {
 			val = spo.getTriggers();
 			if (isNew || val == null) {

@@ -33,6 +33,7 @@ public class DbConnectionPo {
 	private String driver;
 	private String dbVendor;
 	private String defaultSchema;
+	private String dbName;
 	private String user;
 	private String passWord;
 	private String jdbcUrl;
@@ -87,7 +88,12 @@ public class DbConnectionPo {
 			exportDDL = new ExportSqlH2Imp();
 		}else if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 			exportDDL = new ExportSqlSqliteImp();
-		}  else {
+		}else if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
+			this.dbName = this.defaultSchema;
+			this.defaultSchema = "public";
+			
+			exportDDL = new ExportDefaultImp();
+		}   else {
 			exportDDL = new ExportDefaultImp();
 		}
 
@@ -221,6 +227,8 @@ public class DbConnectionPo {
 			}else if (this.isSqlite()) {
 				jdbcUrl = "jdbc:sqlite:" + host;
 				defaultSchema = SQLITE_DATABASE;
+			} else if (this.isPostgresql()) {
+				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + dbName;
 			} else {
 				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + defaultSchema;
 				if (otherParameter != null && otherParameter.length() > 0) {
@@ -351,6 +359,14 @@ public class DbConnectionPo {
 //		this.itemContainer = itemContainer;
 //	}
 
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
+
 	@Override
 	public String toString() {
 		return "DbConnectionPo [id=" + id + ", connName=" + connName + ", host=" + host + ", port=" + port + ", driver="
@@ -369,6 +385,13 @@ public class DbConnectionPo {
 	
 	public boolean isH2() {
 		if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean isPostgresql() {
+		if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
 			return true;
 		}
 		return false;

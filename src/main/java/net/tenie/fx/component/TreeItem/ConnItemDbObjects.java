@@ -170,6 +170,7 @@ public class ConnItemDbObjects {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("View", TreeItemType.VIEW_ROOT,
 				ImageViewGenerator.svgImage("object-group", "blue"), connpo));
 		List<TablePo> tabs = DBOptionHelper.getViewsName(connpo, sche, true);// connpo.getViews(sche);
+ 
 		for(TablePo po: tabs) {
 			po.setTableType(CommonConst.TYPE_VIEW);
 		}
@@ -306,9 +307,12 @@ public class ConnItemDbObjects {
 	// TreeItem 添加 子节点
 	public   void addFuncTreeItem(TreeItem<TreeNodePo> parent, List<FuncProcTriggerPo> tabs, String img,
 			TreeItemType type, DbConnectionPo connpo) {
-		for (FuncProcTriggerPo po : tabs) {
-			addTreeItem(parent, po, img, type, connpo);
+		if(tabs != null ) {
+			for (FuncProcTriggerPo po : tabs) {
+				addTreeItem(parent, po, img, type, connpo);
+			}
 		}
+		
 	}
 
 	// TreeItem 添加 子节点

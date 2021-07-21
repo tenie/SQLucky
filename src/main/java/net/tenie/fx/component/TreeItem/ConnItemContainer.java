@@ -116,6 +116,9 @@ public class ConnItemContainer {
 		if( DbVendor.mysql.toUpperCase().equals(connpo.getDbVendor().toUpperCase()) ){
 			nodeName = "Databases";
 		}
+		if( DbVendor.postgresql.toUpperCase().equals(connpo.getDbVendor().toUpperCase()) ){
+			nodeName = connpo.getDbName();
+		}
 		
 		// 创建一个schema node , 将数据库数据放入
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(

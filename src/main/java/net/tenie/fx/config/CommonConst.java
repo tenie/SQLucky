@@ -15,14 +15,6 @@ public class CommonConst {
 	public static Map<String, Integer> PROCEDURE_TYPE = new HashMap<>();
 	
 	static {
-		/**
-		 *  static {
-		 lsType.add("String");
-		 lsType.add("Integer");
-		 lsType.add("Decimal");
-		 lsType.add("Time");
-	 }
-		 */
 		PROCEDURE_TYPE.put("String", java.sql.Types.VARCHAR);
 		PROCEDURE_TYPE.put("Integer", java.sql.Types.BIGINT);
 		PROCEDURE_TYPE.put("Decimal", java.sql.Types.DOUBLE);

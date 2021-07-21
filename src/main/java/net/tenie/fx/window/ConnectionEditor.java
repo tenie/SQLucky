@@ -159,7 +159,9 @@ public class ConnectionEditor {
 				defaultSchema.setText("PUBLIC");
 				defaultSchema.setDisable(true);
 				
-			} else {
+			}else if( newValue.equals(DbVendor.postgresql)) {
+				lbdefaultSchemaStr.setText("DB Name");
+			}else {
 				lbhostStr.setText(hostStr);
 				host.setPromptText(hostStr);
 				port.setDisable(false);
@@ -240,7 +242,8 @@ public class ConnectionEditor {
 			}
 			
 			if (StrUtils.isNullOrEmpty(defaultSchema.getText())) {
-				MyAlert.errorAlert( "Schema is empty !");
+				var textval = lbdefaultSchemaStr.getText();
+				MyAlert.errorAlert( textval +" is empty !");
 				return null;
 			}
 			
