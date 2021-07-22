@@ -42,7 +42,7 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 //import net.tenie.fx.PropertyPo.CacheTableDate;

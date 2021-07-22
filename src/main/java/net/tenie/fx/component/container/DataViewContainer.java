@@ -26,7 +26,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
+import net.tenie.fx.Cache.CacheTabView;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
 //import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.component.AllButtons;
@@ -70,7 +71,7 @@ public class DataViewContainer {
 
 	public static void showTableDate(DataViewTab dvt, int idx, boolean disable, String time , String rows) {
 		Platform.runLater(() -> { 
-			 dvt.createTab(idx, disable, time , rows); 
+			dvt.createTab(idx, disable, time , rows); 
 		});
 	}
 

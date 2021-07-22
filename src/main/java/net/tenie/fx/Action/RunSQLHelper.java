@@ -38,8 +38,10 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
@@ -49,7 +51,8 @@ import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
+import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.component.AllButtons;
@@ -244,11 +247,15 @@ public class RunSQLHelper {
 			
 			var cols = createTableCol( colss, new ArrayList<String>(), true, dvt);
 			table.getColumns().addAll(cols);
-			table.setItems(alldata);  
-			
+			table.setItems(alldata); 
+//			table.scrollToColumnIndex(15); 
+//			table.scrollTo(30);
+
+			 
 			// 渲染界面
-			if (!thread.isInterrupted())
-				DataViewContainer.showTableDate(dvt , "", "");
+			if (!thread.isInterrupted()) {
+				DataViewContainer.showTableDate(dvt , "", ""); 				
+			}
 
 		}
 	}
@@ -304,12 +311,12 @@ public class RunSQLHelper {
 			// 表格添加列
 			var ls = createTableCol( colss, keys, false , dvt);
 			table.getColumns().addAll(ls);
-			table.setItems(allRawData);  
+			table.setItems(allRawData);   
 //			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted()) {
 				if(hasOut(fields)) {
-					DataViewContainer.showTableDate(dvt, tidx, true, dvt.getExecTime()+"", dvt.getRows()+"");		
+					DataViewContainer.showTableDate(dvt, tidx, true, dvt.getExecTime()+"", dvt.getRows()+"");
 				}else {
 					msg = "ok. ";
 				}
@@ -372,13 +379,17 @@ public class RunSQLHelper {
 			List<String> keys = findPrimaryKeys(conn, tableName);
 			// table 添加列和数据 
 			// 表格添加列
-			var ls = createTableCol( colss, keys, false , dvt);
-			table.getColumns().addAll(ls);
+			var tableColumns = createTableCol( colss, keys, false , dvt);
+			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);  
 //			tdpo.addTableView(table);
 			// 渲染界面
 			if (!thread.isInterrupted()) {
-				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");
+				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");			
+				// 水平滚顶条位置设置
+				Platform.runLater(() -> {  
+					CacheDataTableViewShapeChange.setHorizontal(dvt.getTabName(), dvt.getTable()); 					
+				});
 			}
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -636,6 +647,17 @@ public class RunSQLHelper {
 	}
 
 	// 创建列
+	/**
+	 * @param colname
+	 * @param type
+	 * @param typeName
+	 * @param colIdx
+	 * @param augmentation
+	 * @param iskey
+	 * @param isInfo
+	 * @param dvt
+	 * @return
+	 */
 	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int type, String typeName,
 			int colIdx,  boolean augmentation, boolean iskey, boolean isInfo, DataViewTab dvt ) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col =
@@ -651,23 +673,12 @@ public class RunSQLHelper {
 			label.setGraphic(ImageViewGenerator.svgImage("sort", 10, "#1C92FB")); 
 		}
 		col.setGraphic(label);
+				
+		String tableName = dvt.getTabName();
+		//设置列宽
+		CacheDataTableViewShapeChange.setColWidth(col, tableName, colname, augmentation); 
 		
-		int witdth;
-		if(colname.equals("Execute SQL Info")) {
-			witdth = 550;
-		}else if(colname.equals("Execute SQL")) {
-			witdth = 600;
-		}else {
-			witdth = (colname.length() * 10) + 15;
-			if (witdth < 90)
-				witdth = 100;
-			if (augmentation) {
-				witdth = 200;
-			}
-		}
 		
-		col.setMinWidth(witdth);
-		col.setPrefWidth(witdth);
 		col.setCellValueFactory(new StringPropertyListValueFactory(colIdx));
 		List<MenuItem> menuList = new ArrayList<>();
 		// 右点菜单
@@ -676,7 +687,8 @@ public class RunSQLHelper {
 			col.setContextMenu(cm); 
 			label.setTooltip(new Tooltip(typeName)); 
 		}
-		dvt.getMenuItems().addAll(menuList);
+		dvt.getMenuItems().addAll(menuList); 		
+		
 		return col;
 	}
 

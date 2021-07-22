@@ -19,7 +19,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.CacheTabView;
 import net.tenie.fx.PropertyPo.DbTableDatePo;

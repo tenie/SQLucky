@@ -50,7 +50,14 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-graphics</artifactId>
 			<version>${javafx.version}</version>
+		</dependency> 
+		<dependency>
+		    <groupId>org.openjfx</groupId>
+		    <artifactId>javafx-swing</artifactId>
+		    <version>16</version>
 		</dependency>
+		
+		
 
 		<!-- 控件库 -->
 		<dependency>

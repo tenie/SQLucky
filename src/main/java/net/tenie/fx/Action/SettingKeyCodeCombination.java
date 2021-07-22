@@ -24,6 +24,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -68,6 +69,7 @@ public final class SettingKeyCodeCombination {
 		KeyCodeCombination F1 = new KeyCodeCombination(KeyCode.F1);
 		KeyCodeCombination F2 = new KeyCodeCombination(KeyCode.F2);
 		KeyCodeCombination F4 = new KeyCodeCombination(KeyCode.F4);
+		KeyCodeCombination F9 = new KeyCodeCombination(KeyCode.F9);
 
 		KeyCodeCombination ctrlO = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.SHORTCUT_DOWN);
 		
@@ -89,14 +91,14 @@ public final class SettingKeyCodeCombination {
 
 		
 		
-//		scene.getAccelerators().put(F1, () -> {
-//			 for ( Tab t : ComponentGetter.dataTab.getTabs()) {
-//				 Tab t1 = t;
-//				 String title = CommonUtility.tabText(t1); 
-//				 logger.info( title);
-//			 }
+		scene.getAccelerators().put(F9, () -> {
+			VBox b = ComponentGetter.mainWindow;
+			ObservableList<Node> ls = b.parentProperty().get().getChildrenUnmodifiable();
+//			  n = ls.get(1);
 //			
-//		});
+//			n.autoHideProperty().set(false);
+			
+		});
 		
 		scene.getAccelerators().put(escbtn, () -> {
 			CommonAction.pressBtnESC();
@@ -176,6 +178,7 @@ public final class SettingKeyCodeCombination {
 		scene.getAccelerators().put(F1, () -> {
 			
 			ButtonAction.nextBookmark(false);
+			
 			
 //			VBox vb = new  VBox();
 //			vb.getChildren().add(new Label("sdsdsdssdsdsdssdsdsdssdsdsdssdsdsdssdsdsds"));

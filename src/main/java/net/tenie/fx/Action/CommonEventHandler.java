@@ -27,7 +27,7 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
-import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.Cache.CacheTabView;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.component.AllButtons;

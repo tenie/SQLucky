@@ -1,4 +1,4 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.fx.Cache;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -15,6 +15,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.lib.tools.StrUtils;
 

@@ -33,7 +33,7 @@ import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.Action.RsVal;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Action.myEvent;
-import net.tenie.fx.PropertyPo.CacheTabView;
+import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.DataTabDataPo;
 //import net.tenie.fx.PropertyPo.DbTableDatePo;
