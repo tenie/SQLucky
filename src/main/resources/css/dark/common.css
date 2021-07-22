@@ -192,10 +192,17 @@ FlowPane TextField{
 }
  
 
-/* 右键菜单  -fx-background-color: #323232;*/
+/* 右键菜单   	 -fx-background-color: #4E5254;*/
 .context-menu{
-	 -fx-background-color: #4E5254;
+	  -fx-background-color:  #17191a;
 }
+/* .context-menu .menu-item .right-container .arrow  {
+	 -fx-background-color: white;
+} */
+/* .context-menu .left-container .mark  {
+	 -fx-background-color: white;
+} */
+
 
 .myComboBox{
 	 

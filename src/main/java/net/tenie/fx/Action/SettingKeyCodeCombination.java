@@ -27,6 +27,7 @@ import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
@@ -94,6 +95,8 @@ public final class SettingKeyCodeCombination {
 		scene.getAccelerators().put(F9, () -> {
 			VBox b = ComponentGetter.mainWindow;
 			ObservableList<Node> ls = b.parentProperty().get().getChildrenUnmodifiable();
+//			ContextMenu cn = (ContextMenu) ls.get(1); 
+			
 //			  n = ls.get(1);
 //			
 //			n.autoHideProperty().set(false);

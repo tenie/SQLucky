@@ -264,7 +264,7 @@ FlowPane TextField{
 
 /* 右键菜单  */
 .context-menu{
-	 -fx-background-color: #000000;
+	 -fx-background-color: #292929;
 }
 
 .myComboBox{
@@ -406,6 +406,11 @@ FlowPane TextField{
 }
 
 
+
+/*  表格头, 分割线  */
+/* Rectangle{
+	-fx-fill: #323232; 
+} */
 
 /*  失去焦点隐藏
 .scroll-bar{ 
