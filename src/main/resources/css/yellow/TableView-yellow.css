@@ -49,7 +49,7 @@
 /* 表头 列 column-header table-column */
 .myTableTag .nested-column-header  .column-header {
 	-fx-background-color: #000000;
-	-fx-border-color: #000000 #000000 #000000 #000000;
+	-fx-border-color: #000000 #323232 #000000 #000000;
 }
 
  /* 表头中的文本  */
@@ -190,5 +190,14 @@
     -fx-background-radius: 0.5em;
 }
  
+ 
+ /* 数据表格操作按钮面板 */
+ .data-table-btn-anchor-pane{
+ 	 -fx-background-color: #0C0C0C;
+ }
+ 
+  .data-table-btn-anchor-pane > .menu-button{
+ 	 -fx-background-color: #0C0C0C;
+ }
 
  

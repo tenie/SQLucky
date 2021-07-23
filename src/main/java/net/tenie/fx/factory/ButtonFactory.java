@@ -295,7 +295,8 @@ public class ButtonFactory {
 	// 数据表格 操作按钮们
 	public static AnchorPane getDataTableOptionBtnsPane(String id, boolean disable, String time , String rows, String connName, List<ButtonBase> optionBtns , boolean isLock) {
 
-		AnchorPane fp = new AnchorPane();
+		AnchorPane fp = new AnchorPane(); 
+		CommonAction.addCssClass(fp, "data-table-btn-anchor-pane");
 		fp.prefHeight(25);
 		JFXButton saveBtn = new JFXButton();
 		saveBtn.setGraphic(ImageViewGenerator.svgImageDefActive("save"));

@@ -1,36 +1,25 @@
 package net.tenie.fx.component;
 
-import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.IndexRange;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.Tab;
 import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.config.CommonConst;
-import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.model.Paragraph;
 
 /*   @author tenie */
 public class SqlCodeAreaHighLighting {

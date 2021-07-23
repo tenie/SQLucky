@@ -8,9 +8,9 @@ import java.util.function.IntFunction;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
-
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.Priority;
@@ -33,6 +33,22 @@ public class SqlEditor {
 	public static List<CodeArea> allCodeArea = new ArrayList<>();
 	public static TabPane myTabPane;
 
+	// 当前文本框中文本重新高亮
+	public static void applyHighlighting() {
+		var codeArea = SqlEditor.getCodeArea();
+		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+	}
+	
+	// 获取当前选中的文本
+	public static IndexRange getSelection() {
+		var codeArea = SqlEditor.getCodeArea();
+		return codeArea.getSelection();
+	}
+	// 设置选中
+	public static void selectRange( IndexRange  ir) {
+		var codeArea = SqlEditor.getCodeArea();
+		codeArea.selectRange(ir.getStart(), ir.getEnd());
+	}
 	// 添加空文本的codeTab
 	public static Tab addCodeEmptyTabMethod() {
 
@@ -129,7 +145,7 @@ public class SqlEditor {
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
 	
-
+	// 获取当前在前台的文本框
 	public static CodeArea getCodeArea() {
 		StackPane p = getTabStackPane();
 		@SuppressWarnings("rawtypes")
@@ -143,6 +159,10 @@ public class SqlEditor {
 			VirtualizedScrollPane v = (VirtualizedScrollPane) p.getChildren().get(0);
 			CodeArea code = (CodeArea) v.getContent();
 			return code;  
+	}
+	// 当前文本框中, 取消选中的文本
+	public static void deselect() {
+		getCodeArea().deselect(); 
 	}
 
 //  获取Tab中的的code area

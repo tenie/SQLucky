@@ -5,8 +5,12 @@
 
 /* tabpane 选择tab按钮 .tab-down-button */
 .control-buttons-tab .arrow {
-	-fx-background-color: red; 
+	-fx-background-color: #FDA232; 
 }
+.control-buttons-tab .tab-down-button {
+	-fx-background-color: #000000; 
+}
+
 
 /*
 .control-buttons-tab .tab-down-button {
@@ -170,20 +174,20 @@ FlowPane TextField{
 }
 .connectionEditor  TextField{
     -fx-text-fill: white;
-    -fx-background-color: #1B1B1B;
+    -fx-background-color: #0C0C0C;
     -fx-border-color: #5E6060 ;
     -fx-border-radius: 3px; /* 圆角 */
 }
 
 .connectionEditor  PasswordField{
     -fx-text-fill: white;
-    -fx-background-color: #1B1B1B;
+    -fx-background-color: #0C0C0C;
     -fx-border-color: #5E6060 ;
     -fx-border-radius: 3px; /* 圆角 */
 }
 .connectionEditor  ChoiceBox{
     -fx-text-fill: white;
-    -fx-background-color: #1B1B1B;
+    -fx-background-color: #0C0C0C;
     -fx-border-color: #5E6060 ;
     -fx-border-radius: 3px; /* 圆角 */
 }
@@ -208,17 +212,17 @@ FlowPane TextField{
 /*  搜索框 */
 .myFindTextField{
 	-fx-text-fill: white;
-	-fx-background-color: #1B1B1B;
+	-fx-background-color: #0C0C0C;
 	-fx-border-color: #5E6060 ;
 	-fx-border-radius: 3px; /* 圆角 */
 }
 
 .myTextField{
 	-fx-text-fill: white;
-	-fx-background-color: #1B1B1B;
+	-fx-background-color: #0C0C0C;
     -fx-border-color:transparent transparent #FDA232 transparent;
     -fx-border-width: 1 1 1 1;
-    -fx-background-radius: 0px; /* 圆角 */
+    -fx-background-radius: 1px; /* 圆角 */
 }
 .myTextField:hover{
 	-fx-background-color: #323232;
@@ -276,7 +280,7 @@ FlowPane TextField{
      -fx-border-color: #FDA232;
      -fx-border-width: 0 0 1 0;
      -fx-background-radius: 0; 
-     -fx-background-color: #1B1B1B;   
+     -fx-background-color: #0C0C0C;   
      -fx-font-size: 12px;
      -fx-text-fill: #ffffff;
      -fx-background-insets: 0;

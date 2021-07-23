@@ -8,6 +8,11 @@
 	-fx-background-color: #1C94FF; 
 }
 
+.control-buttons-tab .tab-down-button {
+	-fx-background-color: #323232; 
+}
+
+
 /*
 .control-buttons-tab .tab-down-button {
 	-fx-background-color:  #333333; 

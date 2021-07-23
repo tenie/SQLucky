@@ -3,6 +3,11 @@
 .control-buttons-tab .arrow {
 	-fx-background-color: #1C94FF; 
 }
+.control-buttons-tab .tab-down-button {
+	-fx-background-color: #DCDCDC; 
+}
+
+
 
 /*
 .control-buttons-tab .tab-down-button {

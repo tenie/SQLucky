@@ -49,14 +49,16 @@ Pane VBox {
 /* 表头 列 column-header table-column */
 .myTableTag .nested-column-header  .column-header {
 	-fx-background-color: #2B2B2B;
-	-fx-border-color: #2B2B2B #2B2B2B #2B2B2B #3C3F41;
+	-fx-border-color: #2B2B2B  #3C3F41 #3C3F41 #2B2B2B ;
 }
 
  /* 表头中的文本  */
+ /*	
 .myTableTag    .label{
-/*	-fx-background-color: #2B2B2B;
-	 -fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41; */
+     -fx-background-color: #2B2B2B;
+	 -fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41; 
 }
+*/
  /* 表头  column-header table-column */
  .myTableTag  .column-header{
 	-fx-background-color: #2B2B2B;
@@ -64,7 +66,15 @@ Pane VBox {
 }
 
 
- /* 数据部分 */
+/* 表头 列 排序箭头  	-fx-border-color: #000000 #323232 #000000 #000000; */
+.myTableTag .nested-column-header  .column-header GridPane{
+	-fx-background-color: #2B2B2B;
+
+}
+
+
+
+ /* 数据部分  cell indexed-cell table-cell text-field-table-cell tableview2-cell table-column*/
 .myTableTag .clipped-container .sheet .table-row-cell{
 	 -fx-background-color: #2B2B2B;
 }
@@ -78,10 +88,14 @@ Pane VBox {
 /* 每个单元格背景色 */
  .myTableTag  .clipped-container .sheet .table-column {
 	-fx-background-color: #2B2B2B;
-	-fx-border-color: #323232  #323232  #2B2B2B #2B2B2B;
+	-fx-border-color: #323232  #3C3F41 #3C3F41  #2B2B2B ;
 } 
 
-
+/* 表格编号列
+.myTableTag  .row-header   .table-view2 .column-header-background  {
+	-fx-background-color: red;
+}
+*/
 
  /****** 表格过滤功能弹出框样式  原始/org/controlsfx/control/tableview2/popupfilter.css *****/
 .mypopup  .pop-up-filter { 

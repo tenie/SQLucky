@@ -51,7 +51,11 @@ import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.ProcedureExecuteWindow;
 import net.tenie.lib.tools.StrUtils;
 
-/*   @author tenie */
+/**
+ * 一个查询, 对应的一个数据表格, 对应的数据缓存 
+ * @author tenie
+ *
+ */
 public class DataViewTab {
 
 	private String tabId;

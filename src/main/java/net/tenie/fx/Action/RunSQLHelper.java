@@ -219,11 +219,11 @@ public class RunSQLHelper {
 		}
 		showExecuteSQLInfo(ddlDmlpo);
 		Platform.runLater(() -> { 
-			if(errObj.size() > 0) {
-				for(sqlData sd : errObj) {
-					int bg = sd.begin;  
-					int len = 	sd.sql.length(); 
-					SqlCodeAreaHighLightingHelper.applyErrorHighlighting( bg, len, sd.sql); 
+			if (errObj.size() > 0) {
+				for (sqlData sd : errObj) {
+					int bg = sd.begin;
+					int len = sd.sql.length();
+					SqlCodeAreaHighLightingHelper.applyErrorHighlighting(bg, len, sd.sql);
 				}
 			}
 		});
@@ -779,7 +779,7 @@ public class RunSQLHelper {
 			for (String s : sqls) { 
 				String trimSql = s.trim();
 				if (trimSql.length() > 1) {
-					sqlData sq = new sqlData(trimSql, start, s.length());
+					sqlData sq = new sqlData(s, start, s.length());
 					sds.add(sq);
 					start +=  s.length()+1; 
 				}

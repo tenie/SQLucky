@@ -72,17 +72,24 @@ import net.tenie.lib.tools.StrUtils;
 public class CommonAction {
 	private static Logger logger = LogManager.getLogger(CommonAction.class);
 	private static int windowsUiBugTag = 0;
+	
+	// 给控件加样式
 	public static void addCssClass(Node nd, String css) {
 		nd.getStyleClass().add(css);
 	}
 	
+	// 控件移除样式
 	public static void rmCssClass(Node nd, String css) {
 		nd.getStyleClass().remove(css);
 	}
 	
+	// 键盘ESC按下后: 查找表的输入框清空, 选中的文本取消选中, 查找替换面板关闭
 	public static void pressBtnESC() {
 		ComponentGetter.dbInfoFilter.setText("");
-		SqlEditor.getCodeArea().deselect();
+		
+		// 代码编辑内容, 取消选中, 高亮恢复复原
+		SqlEditor.deselect(); 
+		SqlEditor.applyHighlighting();
 		
 		// 隐藏查找, 替换窗口
 		hideFindReplaceWindow();
