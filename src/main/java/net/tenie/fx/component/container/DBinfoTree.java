@@ -37,7 +37,7 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.MenuFactory;
 import net.tenie.fx.factory.TreeNodeCellFactory;
-import net.tenie.fx.factory.TreeMenu;
+import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.tools.StrUtils;
@@ -48,7 +48,7 @@ public class DBinfoTree {
 	public static TreeView<TreeNodePo> DBinfoTreeView; 
 	public static Region icon;
 //	public static ContextMenu contextMenu;
-	private  TreeMenu  menu;
+	private  DBInfoTreeContextMenu  menu;
 	
 //	private TreeView<TreeNodePo> treeView;
 //	private ObservableList<TreeItem<TreeNodePo>> connsNode;
@@ -91,7 +91,7 @@ public class DBinfoTree {
 				treeViewDoubleClick(e);
 			});
 			// 右键菜单
-			menu = new TreeMenu();
+			menu = new DBInfoTreeContextMenu();
 			ContextMenu	contextMenu = menu.getContextMenu(); //MenuFactory.CreateTreeViewConnMenu();	//CreateConnMenu(); // ComponentGetter.getConnMenu();
 			treeView.setContextMenu(contextMenu);
 			// 选中监听事件

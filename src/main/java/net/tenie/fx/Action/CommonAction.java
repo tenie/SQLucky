@@ -51,6 +51,7 @@ import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
+import net.tenie.fx.component.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
@@ -61,7 +62,7 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
-import net.tenie.fx.factory.TreeMenu;
+import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
 import net.tenie.lib.db.h2.H2Db;
@@ -237,7 +238,7 @@ public class CommonAction {
 	}
 	
 	
-	// 代码格式化
+	// sql 压缩
 	public static void pressSqlText() {
 		CodeArea code = SqlEditor.getCodeArea();
 		String txt = code.getSelectedText();
@@ -825,8 +826,6 @@ public class CommonAction {
 		loadCss(ComponentGetter.primaryscene);
 		
 		SqlEditor.changeThemeAllCodeArea() ;
-		
-		
 		// 修改按钮颜色
 		changeSvgColor();
 	}
@@ -845,7 +844,7 @@ public class CommonAction {
 		}
 		
 		// 树右键菜单
-		for(MenuItem it :TreeMenu.menuItems) {
+		for(MenuItem it :DBInfoTreeContextMenu.menuItems) {
 			it.getGraphic().setStyle("-fx-background-color: " + color + ";");
 		}
 		
@@ -858,6 +857,14 @@ public class CommonAction {
 			if(it.getGraphic() != null)
 				it.getGraphic().setStyle("-fx-background-color: " + color + ";");
 		}
+		// sql编辑页面的右键按钮
+		for(MenuItem it: HighLightingSqlCodeAreaContextMenu.menuItems) {
+			if(it.getGraphic() != null)
+				it.getGraphic().setStyle("-fx-background-color: " + color + ";");
+		}
+		
+		
+		
 		if( DBinfoTree.icon != null ) {
 			DBinfoTree.icon.setStyle("-fx-background-color: " + color + ";");
 			
@@ -975,18 +982,18 @@ public class CommonAction {
 		 return rs;
 	}
 	
-	public static void main(String[] args) {
-		String sql = "CREATE PROCEDURE P_GEN_PART_MONREPORT (\r\n"
-				+ "  IN AENTITY_CODE CHARACTER(8),\r\n"
-				+ "  INOUT RETURN_CODE INTEGER,\r\n"
-				+ "  OUT RETURN_MSG VARCHAR(60)\r\n"
-				+ ") BEGIN DECLARE CURYEAR CHAR(4);aaa";
-//		sql = "adasda()sddasd";
-//		String val = firstParenthesisInsideString(sql);
-//		System.out.println(val);
-		getProcedureFields(sql);
-		
-	}
+//	public static void main(String[] args) {
+//		String sql = "CREATE PROCEDURE P_GEN_PART_MONREPORT (\r\n"
+//				+ "  IN AENTITY_CODE CHARACTER(8),\r\n"
+//				+ "  INOUT RETURN_CODE INTEGER,\r\n"
+//				+ "  OUT RETURN_MSG VARCHAR(60)\r\n"
+//				+ ") BEGIN DECLARE CURYEAR CHAR(4);aaa";
+////		sql = "adasda()sddasd";
+////		String val = firstParenthesisInsideString(sql);
+////		System.out.println(val);
+//		getProcedureFields(sql);
+//		
+//	}
 	
 	
 	// 根据括号) 向前寻找配对的括号( 所在的位置.

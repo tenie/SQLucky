@@ -43,7 +43,7 @@ import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyCodeArea;
 import net.tenie.fx.component.MyTooltipTool;
-import net.tenie.fx.component.SqlCodeAreaHighLighting;
+import net.tenie.fx.component.HighLightingSqlCodeArea;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
@@ -253,11 +253,11 @@ public class DataViewTab {
 		CommonAction.showDetailPane();
 	}
 
-	public SqlCodeAreaHighLighting sqlArea;
+	public HighLightingSqlCodeArea sqlArea;
 	// 数据tab中的组件
 	public VBox CreateDDLBox(String ddl, boolean isRunFunc, boolean isProc, String name) {
 		VBox vb = new VBox();
-	    sqlArea = new SqlCodeAreaHighLighting();
+	    sqlArea = new HighLightingSqlCodeArea();
 		StackPane sp = sqlArea.getObj(ddl, false);
 		// 表格上面的按钮
 		AnchorPane fp = ddlOptionBtnsPane(ddl, isRunFunc, isProc, name);

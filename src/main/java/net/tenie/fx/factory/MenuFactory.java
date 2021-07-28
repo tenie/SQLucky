@@ -228,7 +228,7 @@ public class MenuFactory {
 	public static ContextMenu CreateLineNoMenu(List<String> lineNoList , Label lineNo) {
 			ContextMenu contextMenu = new ContextMenu();
 
-			MenuItem add = new MenuItem("Add Bookmark");
+			MenuItem add = new MenuItem("Add/Remove Bookmark");
 			add.setOnAction(e -> { 
 				if(lineNoList.contains(lineNo.getText())) {
 					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("NULL",12));

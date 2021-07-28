@@ -799,7 +799,7 @@ public class RunSQLHelper {
 		List<sqlData> sds = new ArrayList<>();
 		
 		CodeArea code = SqlEditor.getCodeArea();
-		String str = SqlEditor.getCurrentCodeAreaSQLTextSelected(); 
+		String str = SqlEditor.getCurrentCodeAreaSQLSelectedText(); 
 		int start = 0;
 		if (str != null && str.length() > 0) {
 		    start = code.getSelection().getStart();
@@ -850,23 +850,23 @@ public class RunSQLHelper {
 				}; 		
 				return sp;
 			}
-public static void main(String[] args) {
-	String express = "(\\([\\w\\s\\,_]+\\))";
-	String st1 = "CREATE OR REPLACE PROCEDURE \"INFODMS\".\"P_CANCEL_BOOKINGORDER\"(IN AENTITY_CODE CHARACTER(80) ,\r\n"
-			+ "                                               OUT RETURN_CODE INTEGER,\r\n"
-			+ "                                               OUT RETURN_MSG VARCHAR(2) )"
-//			+ "adas()sadas\r\n"
-			+ "    LANGUAGE SQL";
-	String str2 = "111(dsd  sa)";
-//	Matcher match = Pattern.compile(express).matcher(st1);
-//	         
-//	while (match.find()) {
-//	    System.out.println(match.group(1));
-//	}
-	
-	String val = CommonAction.firstParenthesisInsideString(st1);
-	  System.out.println(val);
-}
+//		public static void main(String[] args) {
+//			String express = "(\\([\\w\\s\\,_]+\\))";
+//			String st1 = "CREATE OR REPLACE PROCEDURE \"INFODMS\".\"P_CANCEL_BOOKINGORDER\"(IN AENTITY_CODE CHARACTER(80) ,\r\n"
+//					+ "                                               OUT RETURN_CODE INTEGER,\r\n"
+//					+ "                                               OUT RETURN_MSG VARCHAR(2) )"
+//		//			+ "adas()sadas\r\n"
+//					+ "    LANGUAGE SQL";
+//			String str2 = "111(dsd  sa)";
+//		//	Matcher match = Pattern.compile(express).matcher(st1);
+//		//	         
+//		//	while (match.find()) {
+//		//	    System.out.println(match.group(1));
+//		//	}
+//			
+//			String val = CommonAction.firstParenthesisInsideString(st1);
+//			  System.out.println(val);
+//		}
 }
 
 

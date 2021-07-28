@@ -5,7 +5,9 @@ import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.*;
 import net.tenie.fx.component.container.DataViewTab;
 
+import java.io.File;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -38,6 +40,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.main.MainMyDB;
+import net.tenie.fx.main.Restart;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
 import net.tenie.fx.window.ProcedureExecuteWindow;
@@ -179,8 +183,40 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		scene.getAccelerators().put(F1, () -> {
-			
-			ButtonAction.nextBookmark(false);
+			try {
+				Restart.reboot();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				logger.info(" IOException " + e.getMessage() );
+			}  
+//			StringBuilder cmd = new StringBuilder();
+//
+//			cmd.append(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java ");
+//
+//			for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
+//				cmd.append(jvmArg + " ");
+//
+//			}
+//
+//			cmd.append("-cp ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
+//
+//			cmd.append(MainMyDB.class.getName()).append(" ");
+//
+////			for (String arg : args) {
+////				cmd.append(arg).append(" ");
+////
+////			}
+//			try {
+//				Runtime.getRuntime().exec(cmd.toString());
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//
+//	        System.out.println(cmd);
+//			System.exit(0);
+//			ButtonAction.nextBookmark(false);
 			
 			
 //			VBox vb = new  VBox();

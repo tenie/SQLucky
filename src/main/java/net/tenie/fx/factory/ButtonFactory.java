@@ -97,7 +97,7 @@ public class ButtonFactory {
 		shrink.setGraphic(ImageViewGenerator.svgImageDefActive("zero-fitscreen-24"));
 		shrink.setOnMouseClicked(e -> {
 			// 如果有选中的字符串, 进行查询
-			String str = SqlEditor.getCurrentCodeAreaSQLTextSelected();
+			String str = SqlEditor.getCurrentCodeAreaSQLSelectedText();
 			if (str.trim().length() > 0) {
 				ComponentGetter.dbInfoFilter.setText(str.trim());
 			} else {
@@ -149,7 +149,7 @@ public class ButtonFactory {
 			btns.add(saveSQL);
 
 			JFXButton formatSQL = new JFXButton();
-			formatSQL.setGraphic(ImageViewGenerator.svgImageDefActive("i-cursor"));
+			formatSQL.setGraphic(ImageViewGenerator.svgImageDefActive("paragraph")); // i-cursor
 			formatSQL.setOnMouseClicked(v -> {
 				CommonAction.formatSqlText();
 			});

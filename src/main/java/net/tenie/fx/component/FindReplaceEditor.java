@@ -11,6 +11,8 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
@@ -173,6 +175,7 @@ public class FindReplaceEditor {
 
 	public static AnchorPane createReplacePane(TextField findtf, JFXCheckBox cb) {
 		AnchorPane replaceAnchorPane = new AnchorPane();
+		CommonAction.addCssClass(replaceAnchorPane, "myFindPane");
 		replaceAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
 		query.setGraphic(ImageViewGenerator.svgImageDefActive("refresh"));
@@ -218,6 +221,7 @@ public class FindReplaceEditor {
 
 	public static AnchorPane createFindPane(boolean isReplace) {
 		AnchorPane findAnchorPane = new AnchorPane();
+		CommonAction.addCssClass(findAnchorPane, "myFindPane");
 		findAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
 		JFXCheckBox cb = new JFXCheckBox("Sensitive");

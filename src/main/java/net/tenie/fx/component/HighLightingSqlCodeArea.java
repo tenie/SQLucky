@@ -22,8 +22,8 @@ import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 
 /*   @author tenie */
-public class SqlCodeAreaHighLighting {
-	private static Logger logger = LogManager.getLogger(SqlCodeAreaHighLighting.class);
+public class HighLightingSqlCodeArea {
+	private static Logger logger = LogManager.getLogger(HighLightingSqlCodeArea.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
 
 	private MyCodeArea codeArea;
@@ -39,6 +39,8 @@ public class SqlCodeAreaHighLighting {
 	    // 行号主题色
 	    SqlEditor.changeCodeAreaLineNoThemeHelper(codeArea); 
 	    
+	    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(); 
+	    codeArea.setContextMenu(cm.getContextMenu());
 		// 事件KeyEvent 
 		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{

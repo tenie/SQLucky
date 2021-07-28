@@ -1,7 +1,12 @@
 package net.tenie.fx.main;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +29,8 @@ import javafx.scene.image.Image;
 
 /*   @author tenie */
 public class MainMyDB extends Application {
+	public static List<String> argsList = new ArrayList<>();
+	public static String userDir = "";
 	private AppWindow app;
 	private Scene scene;
 	private Image img;
@@ -74,7 +81,22 @@ public class MainMyDB extends Application {
 
 	}
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException { 
+		if(args != null && args.length > 0) {
+			argsList = Arrays.asList(args);
+		}
+		logger.info("args = " + Arrays.toString(args));
+//		File f = new File("");
+//		String cf = null;
+//		try {
+//		     cf = f.getCanonicalPath();
+//		} catch (IOException e) {
+//		     e.printStackTrace();
+//		}
+//		userDir = System.getProperty("user.dir");
+//	    System.out.println();//user.dir指定了当前的路径 
+//		System.out.println(cf);
+		userDir = System.getProperty("user.dir");
 		LauncherImpl.launchApplication(MainMyDB.class, MyPreloader.class, args);
 	}
 }

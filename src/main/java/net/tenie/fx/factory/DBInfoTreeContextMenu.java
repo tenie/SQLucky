@@ -15,7 +15,7 @@ import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableDataDetail;
 
-public class TreeMenu {
+public class DBInfoTreeContextMenu {
 	public static List<MenuItem> menuItems = new ArrayList<>();
 	private ContextMenu contextMenu;
 	private MenuItem tableAddNewCol ;
@@ -30,7 +30,7 @@ public class TreeMenu {
 	private MenuItem refresh;
 	
 	
-	public TreeMenu() {
+	public DBInfoTreeContextMenu() {
 
 		contextMenu = new ContextMenu();  
 

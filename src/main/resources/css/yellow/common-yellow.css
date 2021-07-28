@@ -2,6 +2,10 @@
 .my-tag{
 	
 }
+/* 查找替换面板 */
+.myFindPane{
+	-fx-background-color: #161616; 
+}
 
 /* tabpane 选择tab按钮 .tab-down-button */
 .control-buttons-tab .arrow {

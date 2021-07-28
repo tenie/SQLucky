@@ -39,11 +39,13 @@ public class SqlEditor {
 		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
 	}
 	
-	// 获取当前选中的文本
+	// 获取当前选中的区间
 	public static IndexRange getSelection() {
 		var codeArea = SqlEditor.getCodeArea();
 		return codeArea.getSelection();
 	}
+	
+	
 	// 设置选中
 	public static void selectRange( IndexRange  ir) {
 		var codeArea = SqlEditor.getCodeArea();
@@ -165,7 +167,7 @@ public class SqlEditor {
 		getCodeArea().deselect(); 
 	}
 
-//  获取Tab中的的code area
+   //  获取Tab中的的code area
 	public static CodeArea getCodeArea(Tab tb) {
 		StackPane p = getTabStackPane(tb);
 		@SuppressWarnings("rawtypes")
@@ -174,26 +176,25 @@ public class SqlEditor {
 		return code;
 	}
 
-// 获取area 中的文本
+    // 获取area 中的文本
 	public static String getCurrentTabSQLText(CodeArea code) {
 		String sqlText = code.getText();
 		return sqlText;
 	}
 
-// 获取tab 中的  area 中的文本
+    // 获取tab 中的  area 中的文本
 	public static String getTabSQLText(Tab tb) {
 		CodeArea code = getCodeArea(tb);
 		String sqlText = code.getText();
 		return sqlText;
 	}
 
-// get sql text
+	// 	get sql text
 	public static String getCurrentCodeAreaSQLText() {
 		CodeArea code = getCodeArea();
 		String sqlText = code.getText();
 		return sqlText;
-	}
-	
+	}  
 	// append txt
 	public static void appendStr(StackPane spCode  ,String str) {
 		if(str !=null) {
@@ -202,17 +203,37 @@ public class SqlEditor {
 		}
 		
 	}
+	// 清除所有文本
 	public static void cleanStr(StackPane spCode) {
 		CodeArea code = SqlEditor.getCodeArea(spCode);
 		code.clear();
 	}
 	
 
-// get select text
-	public static String getCurrentCodeAreaSQLTextSelected() {
+   // get select text
+	public static String getCurrentCodeAreaSQLSelectedText() {
 		CodeArea code = getCodeArea();
 		return code.getSelectedText();
 	}
+	
+	// 复制当前选中的文本
+	public static void copySelectionText() {
+		String txt = getCurrentCodeAreaSQLSelectedText();
+		CommonUtility.setClipboardVal(txt);
+	}
+	// 删除选中文本
+	public static void deleteSelectionText() { 
+		var codeArea = SqlEditor.getCodeArea();
+		IndexRange ir = codeArea.getSelection();
+		codeArea.deleteText(ir);
+	}
+	
+	// 剪切选中文本
+	public static void cutSelectionText() { 
+		 copySelectionText();
+		 deleteSelectionText(); 
+	}
+		
 
 	// 代码的容器
 	public static StackPane getTabStackPane(Tab tb) {
@@ -261,7 +282,7 @@ public class SqlEditor {
 
 //	代码框添加
 	public static StackPane SqlCodeArea() {
-		StackPane sp = new SqlCodeAreaHighLighting().getObj();
+		StackPane sp = new HighLightingSqlCodeArea().getObj();
 		return sp;
 	}
 	
@@ -280,7 +301,7 @@ public class SqlEditor {
 		}
 		return cas;
 	}
-	
+	// 改变样式
 	public static void changeThemeAllCodeArea() { 
 		TabPane myTabPane = ComponentGetter.mainTabPane;
 		if (myTabPane != null && myTabPane.getTabs().size() > 0) {
@@ -292,7 +313,7 @@ public class SqlEditor {
 			}
 		}
 	}
-	
+	// 改变样式
 	public static void changeCodeAreaLineNoThemeHelper(MyCodeArea codeArea ) {
 		MyLineNumberNode nbf = null;
 		List<String> lines = null;

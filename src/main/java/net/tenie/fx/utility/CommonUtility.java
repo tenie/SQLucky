@@ -1,5 +1,6 @@
 package net.tenie.fx.utility;
 
+import java.io.File;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +23,7 @@ import net.tenie.lib.tools.StrUtils;
 /*   @author tenie */
 public class CommonUtility {
 	private static Logger logger = LogManager.getLogger(CommonUtility.class);
+	
 	public static void runThread(Function<Object, Object> fun) {
 		Thread t = new Thread() {
 			public void run() {
@@ -30,7 +32,16 @@ public class CommonUtility {
 		};
 		t.start();
 	}
-
+	
+	// 检测文件是否存在
+	public static boolean checkFileExist(String fileName) {
+		File file = new File(fileName);
+		if (file.exists()) {
+			return true;
+		}
+		return false;
+	}
+	
 	// 获取Tab 中的文本
 	public static String tabText(Tab tb) {
 		String title = tb.getText();
