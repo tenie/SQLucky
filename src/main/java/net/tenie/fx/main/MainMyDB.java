@@ -86,17 +86,19 @@ public class MainMyDB extends Application {
 			argsList = Arrays.asList(args);
 		}
 		logger.info("args = " + Arrays.toString(args));
-//		File f = new File("");
-//		String cf = null;
-//		try {
-//		     cf = f.getCanonicalPath();
-//		} catch (IOException e) {
-//		     e.printStackTrace();
-//		}
+		File f = new File("");
+		String cf = null;
+		try {
+		     cf = f.getCanonicalPath();
+		} catch (IOException e) {
+		     e.printStackTrace();
+		}
 //		userDir = System.getProperty("user.dir");
 //	    System.out.println();//user.dir指定了当前的路径 
-//		System.out.println(cf);
+		System.out.println(cf);
 		userDir = System.getProperty("user.dir");
+		String val =System.getProperty("sun.java.command");
+		logger.info("\n\n\n sun.java.command = " + val + "\n\n\n");
 		LauncherImpl.launchApplication(MainMyDB.class, MyPreloader.class, args);
 	}
 }

@@ -32,12 +32,22 @@ public class Restart {
 			if ( CommonUtility.checkFileExist(file) ) {
 				cmd.append(file);
 				execCmdAndExit(cmd.toString());
-			}else {
-				runDev(args);
+			} 
+		}else if (ops.toLowerCase().startsWith("mac")  ) { 
+			String app = System.getProperty("java.home");
+//			String app  = "/Volumes/SQLucky/SQLucky.app/Contents/runtime/Contents/Home";
+			app = app.replace("runtime/Contents/Home", "MacOS/SQLucky");
+			
+			if ( CommonUtility.checkFileExist(app) ) {
+				logger.info("app = " + app);
+				execCmdAndExit(app); 
 			}
-		}else {
-			runDev(args);
+			
+			
 		}
+		 
+		runDev(args);
+		 
 
 		
 		
@@ -66,6 +76,14 @@ public class Restart {
 		}
 		
 		execCmdAndExit(cmd.toString());
+	}
+	public static void main(String[] args) {
+		String ops = System.getProperty("os.name");
+		String userDir = System.getProperty("user.dir");
+		String val =System.getProperty("sun.java.command");
+		System.out.println(ops);
+		System.out.println(userDir);
+		System.out.println(val);
 	}
 	
 }
