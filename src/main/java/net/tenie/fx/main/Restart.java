@@ -19,21 +19,23 @@ public class Restart {
 		String[] args = {};
 		if(MainMyDB.argsList != null && MainMyDB.argsList.size() > 0) {
 			 args =(String[]) MainMyDB.argsList.toArray();
-		}
+		} 
+		 
+		String userDir  = MainMyDB.userDir; 
+		String os_name = System.getProperty("os.name");
+		String java_home =  System.getProperty("java.home");
+		logger.info("userDir = " + userDir);
+		logger.info("os_name = " + os_name);
+		logger.info("java_home = " + java_home);
 		
-		StringBuilder cmd = new StringBuilder();
 		
-//		String home = System.getProperty("java.home") ;
-		String userDir  = MainMyDB.userDir;
-	
-		String ops = System.getProperty("os.name");
-		if (ops.toLowerCase().startsWith("win")  ) {
-			String  file = userDir + File.separator + "SQLucky.exe";
-			if ( CommonUtility.checkFileExist(file) ) {
-				cmd.append(file);
-				execCmdAndExit(cmd.toString());
+		if (os_name.toLowerCase().startsWith("win")  ) {
+			String  app = userDir + File.separator + "SQLucky.exe";
+			if ( CommonUtility.checkFileExist(app) ) { 
+				logger.info("app = " + app);
+				execCmdAndExit(app);
 			} 
-		}else if (ops.toLowerCase().startsWith("mac")  ) { 
+		}else if (os_name.toLowerCase().startsWith("mac")  ) {
 			String app = System.getProperty("java.home");
 //			String app  = "/Volumes/SQLucky/SQLucky.app/Contents/runtime/Contents/Home";
 			app = app.replace("runtime/Contents/Home", "MacOS/SQLucky");
@@ -42,8 +44,19 @@ public class Restart {
 				logger.info("app = " + app);
 				execCmdAndExit(app); 
 			}
+
+		}else if (os_name.toLowerCase().startsWith("linux")  ) {
 			
-			
+			String app = System.getProperty("java.home"); 
+			app += "/SQLucky";
+			logger.info("linux app = " + app);
+					
+//			String app = System.getProperty("java.home"); 
+//			app = app.replace("runtime/Contents/Home", "MacOS/SQLucky");
+//			if ( CommonUtility.checkFileExist(app) ) {
+//				logger.info("app = " + app);
+//				execCmdAndExit(app); 
+//			}
 		}
 		 
 		runDev(args);
