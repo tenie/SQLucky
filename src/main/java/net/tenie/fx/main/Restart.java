@@ -47,16 +47,16 @@ public class Restart {
 
 		}else if (os_name.toLowerCase().startsWith("linux")  ) {
 			
-			String app = System.getProperty("java.home"); 
-			app += "/SQLucky";
-			logger.info("linux app = " + app);
-					
 //			String app = System.getProperty("java.home"); 
-//			app = app.replace("runtime/Contents/Home", "MacOS/SQLucky");
-//			if ( CommonUtility.checkFileExist(app) ) {
-//				logger.info("app = " + app);
-//				execCmdAndExit(app); 
-//			}
+//			app += "/SQLucky";
+//			logger.info("linux app = " + app);
+					
+			String app = System.getProperty("java.home"); 
+			app = app.replace("lib/runtime", "bin/SQLucky");
+			if ( CommonUtility.checkFileExist(app) ) {
+				logger.info("app = " + app);
+				execCmdAndExit(app); 
+			}
 		}
 		 
 		runDev(args);
