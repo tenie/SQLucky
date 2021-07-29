@@ -631,22 +631,36 @@ public class ModalDialog {
 		setSceneAndShow(scene, stage);  
 	}
 	
-	
+	 
+	/**
+	 * 确认对话框
+	 * @param promptInfo  提示信息
+	 * @param caller      得到确认后的执行函数
+	 */
 	public static void myConfirmation(String promptInfo,  Consumer< String >  caller) {
+		myConfirmation(promptInfo, caller, null);
+	}
+	
+	public static void myConfirmation(String promptInfo,  Consumer< String >  okCaller, Consumer< String >  cancelCaller ) {
 		Label space = new Label(""); 
 		Label tit = new Label(promptInfo); 
 		final Stage stage = new Stage();
 		
 		JFXButton btn = new JFXButton("Cancel");
 		btn.getStyleClass().add("myAlertBtn");
-		btn.setOnAction(value -> {
+		btn.setOnAction(value -> { 
+			if(cancelCaller !=null) {
+				cancelCaller.accept("");
+			}
 			stage.close();
 		});
 		
 		JFXButton okbtn = new JFXButton("OK");
 		okbtn.setOnAction(value -> {
-			caller.accept("");
-			stage.close();
+			if(okCaller !=null) {
+				okCaller.accept("");
+			} 
+			stage.close(); 
 		});
 		
 		List<Node> nds = new ArrayList<>();
@@ -655,8 +669,7 @@ public class ModalDialog {
 		
 		List<Node> btns = new ArrayList<>();
 		btns.add( btn);
-		btns.add( okbtn);
-		
+		btns.add( okbtn); 
 		
 		Node vb = setVboxShape(stage, INFO, nds, btns);
 		Scene scene = new Scene((Parent) vb);
@@ -665,6 +678,7 @@ public class ModalDialog {
 		stage.setScene(scene);
 		setSceneAndShow(scene, stage);  
 	}
+	
 	
 	
 

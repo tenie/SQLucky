@@ -9,72 +9,53 @@ import org.apache.logging.log4j.Logger;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
 
-public class Restart {
-	
-	
-	
+public class Restart {	
 	private static Logger logger = LogManager.getLogger(Restart.class);
 	// 重启应用
-	public static void reboot() throws IOException, InterruptedException {
-		String[] args = {};
-		if(MainMyDB.argsList != null && MainMyDB.argsList.size() > 0) {
-			 args =(String[]) MainMyDB.argsList.toArray();
-		} 
-		 
-		String userDir  = MainMyDB.userDir; 
-		String os_name = System.getProperty("os.name");
-		String java_home =  System.getProperty("java.home");
-		logger.info("userDir = " + userDir);
-		logger.info("os_name = " + os_name);
-		logger.info("java_home = " + java_home);
-		
-		
-		if (os_name.toLowerCase().startsWith("win")  ) {
-			String  app = userDir + File.separator + "SQLucky.exe";
-			if ( CommonUtility.checkFileExist(app) ) { 
-				logger.info("app = " + app);
+	public static void reboot(){
+		try {
+			String os_name = System.getProperty("os.name");
+			String java_home = System.getProperty("java.home");
+			logger.info("os_name = " + os_name);
+			logger.info("java_home = " + java_home);
+
+			if (os_name.toLowerCase().startsWith("win")) {
+				String app = java_home.replace("runtime", "SQLucky.exe");
+				logger.info("win app = " + app);
 				execCmdAndExit(app);
-			} 
-		}else if (os_name.toLowerCase().startsWith("mac")  ) {
-			String app = System.getProperty("java.home");
-//			String app  = "/Volumes/SQLucky/SQLucky.app/Contents/runtime/Contents/Home";
-			app = app.replace("runtime/Contents/Home", "MacOS/SQLucky");
-			
-			if ( CommonUtility.checkFileExist(app) ) {
-				logger.info("app = " + app);
-				execCmdAndExit(app); 
+			} else if (os_name.toLowerCase().startsWith("mac")) {
+				String app = java_home.replace("runtime/Contents/Home", "MacOS/SQLucky");
+				logger.info("mac app = " + app);
+				execCmdAndExit(app);
+			} else if (os_name.toLowerCase().startsWith("linux")) {
+				String app = java_home.replace("lib/runtime", "bin/SQLucky");
+				logger.info(" linux app = " + app);
+				execCmdAndExit(app);
 			}
-
-		}else if (os_name.toLowerCase().startsWith("linux")  ) {
-			
-//			String app = System.getProperty("java.home"); 
-//			app += "/SQLucky";
-//			logger.info("linux app = " + app);
-					
-			String app = System.getProperty("java.home"); 
-			app = app.replace("lib/runtime", "bin/SQLucky");
-			if ( CommonUtility.checkFileExist(app) ) {
-				logger.info("app = " + app);
-				execCmdAndExit(app); 
-			}
+			runDev();
+		} catch (Exception e) {
+			logger.error(" Exception = " + e.getMessage());
+			e.printStackTrace();
 		}
-		 
-		runDev(args);
-		 
-
-		
-		
 	}
 	
 	private static void execCmdAndExit(String cmd) throws IOException {
 		if(StrUtils.isNotNullOrEmpty(cmd)) {
-			Runtime.getRuntime().exec(cmd.toString()); 
-			logger.info(" cmd " +cmd);
-			System.exit(0);
+			if ( CommonUtility.checkFileExist(cmd) ) {
+				Runtime.getRuntime().exec(cmd); 
+				logger.info(" 执行 app  " +cmd);
+				System.exit(0);
+			}else {
+				runDev(); 
+			}  
 		}		
 	}
 	
-	private static void runDev(String[] args ) throws IOException {
+	private static void runDev( ) throws IOException {
+		String[] args = {};
+		if(MainMyDB.argsList != null && MainMyDB.argsList.size() > 0) {
+			 args =(String[]) MainMyDB.argsList.toArray();
+		} 
 		StringBuilder cmd = new StringBuilder();
 		cmd.append(System.getProperty("java.home") 
 				+ File.separator + "bin" 
@@ -87,9 +68,12 @@ public class Restart {
 		for (String arg : args) {
 			cmd.append(arg).append(" "); 
 		}
+		logger.info(" cmd " +cmd);
+		Runtime.getRuntime().exec(cmd.toString()); 
 		
-		execCmdAndExit(cmd.toString());
+		System.exit(0);
 	}
+	
 	public static void main(String[] args) {
 		String ops = System.getProperty("os.name");
 		String userDir = System.getProperty("user.dir");

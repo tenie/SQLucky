@@ -298,21 +298,22 @@ public class MenuBarContainer {
 		barMenus.add(themeDark);
 		themeDark.setGraphic(ImageViewGenerator.svgImageDefActive("moon")); 
 		themeDark.setOnAction(value -> {
-			CommonAction.setTheme(CommonConst.THEME_DARK);
+			CommonAction.setThemeRestart(CommonConst.THEME_DARK);
+			
 		});
 		
 		MenuItem themeLight = new MenuItem(MenuItemNameFormat("Light"));
 		barMenus.add(themeLight);
 		themeLight.setGraphic(ImageViewGenerator.svgImageDefActive("sun")); 
 		themeLight.setOnAction(value -> {
-			CommonAction.setTheme(CommonConst.THEME_LIGHT);
+			CommonAction.setThemeRestart(CommonConst.THEME_LIGHT);
 		});
 		
 		MenuItem themeYellow = new MenuItem(MenuItemNameFormat("Yellow")); 
 		barMenus.add(themeYellow);
 		themeYellow.setGraphic(ImageViewGenerator.svgImageDefActive("adjust")); 
 		themeYellow.setOnAction(value -> {
-			CommonAction.setTheme(CommonConst.THEME_YELLOW);
+			CommonAction.setThemeRestart(CommonConst.THEME_YELLOW);
 		});
 		
 		Theme.getItems().addAll(themeDark , themeLight, themeYellow); 

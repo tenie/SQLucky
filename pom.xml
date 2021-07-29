@@ -15,20 +15,28 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>16</maven.compiler.release>
 		<javafx.version>16</javafx.version>
-		<jfoenix.version>9.0.10</jfoenix.version>
+
+		<jfoenix.version>9.0.10</jfoenix.version> 
 		<richtextfx.version>0.10.6</richtextfx.version>
 		<controlsfx.version>11.1.0</controlsfx.version>
-		<sql.formatter.version>1.0.4</sql.formatter.version>
+		<sql.formatter.version>2.0.0</sql.formatter.version>
 		<commons.io.version>2.8.0</commons.io.version>
-		<slf4j.api.version>1.7.30</slf4j.api.version>
+	    <slf4j.api.version>1.7.30</slf4j.api.version>
 		<log4j.version>2.14.1</log4j.version>
-
+		
 		<sqlite.jdbc.version>3.34.0</sqlite.jdbc.version>
 		<h2.jdbc.version>1.4.197</h2.jdbc.version>
-		<db2jcc4.version>10.1</db2jcc4.version>
+		<db2jcc4.version>10.1</db2jcc4.version> 
 		<mysql.jdbc.version>5.1.35</mysql.jdbc.version>
 
-
+		
+		<jvm.modules>com.jfoenix,org.controlsfx.controls,org.apache.logging.log4j,java.desktop,java.naming,java.security.jgss,java.transaction.xa,java.compiler,java.logging,java.management,java.rmi,java.scripting,java.xml,java.sql,javafx.base,javafx.graphics,javafx.swing,javafx.controls,javafx.fxml</jvm.modules>
+		<javafx.version>16</javafx.version>
+		<app.name>SQLucky</app.name>
+		<app.version>1.0</app.version>
+		<app.vendor>Tenie.net</app.vendor>
+		<project.description>SQLucky</project.description>
+		<non.modules.path>${project.build.directory}/non-mods</non.modules.path>
 	</properties>
 
 	<organization>
@@ -50,17 +58,15 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-graphics</artifactId>
 			<version>${javafx.version}</version>
-		</dependency> 
+		</dependency>
 		<dependency>
 		    <groupId>org.openjfx</groupId>
 		    <artifactId>javafx-swing</artifactId>
 		    <version>${javafx.version}</version>
 		</dependency>
-		
-		
 
 		<!-- 控件库 -->
-		<dependency>
+			<dependency>
 			<groupId>com.jfoenix</groupId>
 			<artifactId>jfoenix</artifactId>
 			<version>${jfoenix.version}</version>
@@ -108,27 +114,19 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.jdbc.version}</version>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<version>${h2.jdbc.version}</version>
-		</dependency>
-
-
+		</dependency> 
+		
+		
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>${sqlite.jdbc.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-		<dependency>
-			<groupId>org.postgresql</groupId>
-			<artifactId>postgresql</artifactId>
-			<version>42.2.23</version>
-		</dependency>
-
-
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -150,28 +148,49 @@
 	</dependencies>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration>
-							<!-- The JavaFX libraries are bundled into the custom JVM, so we don't 
-								want to duplicate them in the bundled app and installer. This command skips 
-								all of the JavaFX by groupId. -->
-							<!-- <excludeGroupIds>org.openjfx</excludeGroupIds> -->
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-
-
+	
+	  <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.xml</include>
+                <include>**/*.fxml</include>
+                <include>**/*.css</include>
+                <include>**/*.icns</include>
+                <include>**/*.png</include>
+                <include>**/*.ico</include>
+                <include>**/*.jpg</include>
+            </includes> 
+            <filtering>false</filtering>
+        </resource> 
+        
+         <resource> <!-- 配置文件 -->
+                <directory>${project.basedir}/config</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/packaging</targetPath>
+         </resource>
+    </resources>
+    
+		<plugins> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                           <!--  <excludeGroupIds>org.openjfx</excludeGroupIds> -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -230,7 +249,7 @@
 					</options>
 				</configuration>
 			</plugin>
-
+			
 			<!-- 安装依赖 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -267,12 +286,148 @@
 							<createChecksum>true</createChecksum>
 							<generatePom>true</generatePom>
 						</configuration>
-
+			
 					</execution>
 				</executions>
 			</plugin>
-
+			
+			<!-- 将自己的包放入到依赖目录 -->
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+								<copy todir="${project.build.directory}/non-mods">
+									<fileset dir="${project.build.directory}">
+										<include name="${project.artifactId}-${project.version}.jar" />
+									</fileset>
+								</copy>
+								
+								<copy todir="${project.build.directory}/mods">
+									<fileset dir="${project.build.directory}/dependency">
+										<include name="jfoenix*.jar" />
+										<include name="log4j-api*.jar" />
+										<include name="controlsfx*.jar" />
+										<include name="javafx-*.jar" /> 
+									</fileset>
+								</copy>
+								<copy todir="${project.build.directory}/non-mods">
+									<fileset dir="${project.build.directory}/dependency">
+										<include name="commons*.jar" />
+										<include name="db2jcc*.jar" />
+										<include name="flowless*.jar" />
+										<include name="h2*.jar" />   
+										<include name="log4j-core*.jar" />
+										<include name="log4j-slf4j-impl*.jar" />
+										<include name="mysql*.jar" />
+										<include name="reactfx*.jar" /> 
+										
+										<include name="richtextfx*.jar" />
+										<include name="slf4j-api*.jar" />
+										<include name="sql-formatter*.jar" />
+										<include name="sqlite-jdbc*.jar" /> 
+										
+										<include name="undofx*.jar" />
+										<include name="wellbehavedfx-*.jar" />
+										
+									</fileset>
+								</copy>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+			<plugin>
+				<!-- https://github.com/wiverson/jtoolprovider-plugin -->
+				<groupId>io.github.wiverson</groupId>
+				<artifactId>jtoolprovider-plugin</artifactId>
+				<version>1.0.34</version>
+				<executions>
+					<!-- 先生成一个jvm 镜像 -->
+					<execution>
+						<id>jlink</id>
+						<phase>package</phase>
+						<goals>
+							<goal>java-tool</goal>
+						</goals>
+						<configuration>
+							<toolName>jlink</toolName>
+							<removeDirectories>${project.build.directory}/jvm-image/</removeDirectories>
+							<modulePath>${local.modules.path}</modulePath>
+							<addModules>${jvm.modules}</addModules>
+							<output>${project.build.directory}/jvm-image</output>
+							<args>
+								<arg>--strip-native-commands</arg>
+								<arg>--no-header-files</arg>
+								<arg>--strip-debug</arg>
+								<arg>--no-man-pages</arg>
+								<arg>--compress=2</arg>
+							</args>
+						</configuration>
+					</execution>
+					
+					<execution>
+						<!-- 根据jlink的镜像 生成native 包 -->
+						<id>jpackage</id>
+						<phase>install</phase>
+						<goals>
+							<goal>java-tool</goal>
+						</goals>
+						<configuration>
+							<toolName>jpackage</toolName> <!-- jpackage 的参数(在下面文件里) -->
+							<removeDirectories>${project.build.directory}/sqlucky</removeDirectories>
+							<args>@${project.build.directory}/packaging/${platform}-jpackage.txt</args>
+						</configuration>
+					</execution>
+					 
+				</executions>
+			</plugin>
+			
 		</plugins>
 	</build>
-
+	<profiles> 
+        <profile>
+            <id>unix-active</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <platform>linux</platform>
+                <local.modules.path>${env.JAVA_HOME}/jmods:${project.build.directory}/dependency</local.modules.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows-active</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <platform>win</platform>
+                <local.modules.path>D:/Program Files/Java/jdk-16/jmods;${project.build.directory}/mods</local.modules.path>
+            </properties> 
+        </profile>
+        <profile>
+            <id>mac-active</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <platform>mac</platform> 
+                <local.modules.path>${env.JAVA_HOME}/jmods:${project.build.directory}/dependency</local.modules.path>
+            </properties>
+        </profile>
+    </profiles>
 </project>

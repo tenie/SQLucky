@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,6 +64,7 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
+import net.tenie.fx.main.Restart;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
 import net.tenie.lib.db.h2.H2Db;
@@ -183,37 +185,42 @@ public class CommonAction {
 	// 主窗口关闭事件处理逻辑
 	public static void mainPageClose() {
 		try {
-			ConnectionDao.refreshConnOrder(); 
-			TabPane mainTabPane = ComponentGetter.mainTabPane;
-			int SELECT_PANE = mainTabPane.getSelectionModel().getSelectedIndex();
-			Connection H2conn = H2Db.getConn();
-			SqlTextDao.deleteAll(H2conn);
-			for (Tab t : mainTabPane.getTabs()) {
-				String idval = t.getId();
-				if (StrUtils.isNotNullOrEmpty(idval)) {
-					String sql = SqlEditor.getTabSQLText(t);
-					if (StrUtils.isNotNullOrEmpty(sql)) {
-						CodeArea code = SqlEditor.getCodeArea(t);
-						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() -10 : 0;
-						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
-							idval = idval.substring(ConfigVal.SAVE_TAG.length());
-						} else {
-							idval = "";
-						}
-
-						String title = CommonUtility.tabText(t); 
-						String encode = ComponentGetter.getFileEncode(idval);
-						SqlTextDao.save(H2conn, title, sql, idval, encode, paragraph);
-					}
-				}
-			}
-			// 保存选择的pane 下标
-			SqlTextDao.saveConfig(H2conn, "SELECT_PANE", SELECT_PANE+"");
+			 saveApplicationStatusInfo();
 		} finally {
 			H2Db.closeConn();
 			System.exit(0);
 		}
 
+	}
+	
+	// 保存app状态
+	public static void saveApplicationStatusInfo() {
+		ConnectionDao.refreshConnOrder(); 
+		TabPane mainTabPane = ComponentGetter.mainTabPane;
+		int SELECT_PANE = mainTabPane.getSelectionModel().getSelectedIndex();
+		Connection H2conn = H2Db.getConn();
+		SqlTextDao.deleteAll(H2conn);
+		for (Tab t : mainTabPane.getTabs()) {
+			String idval = t.getId();
+			if (StrUtils.isNotNullOrEmpty(idval)) {
+				String sql = SqlEditor.getTabSQLText(t);
+				if (StrUtils.isNotNullOrEmpty(sql)) {
+					CodeArea code = SqlEditor.getCodeArea(t);
+					int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() -10 : 0;
+					if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
+						idval = idval.substring(ConfigVal.SAVE_TAG.length());
+					} else {
+						idval = "";
+					}
+
+					String title = CommonUtility.tabText(t); 
+					String encode = ComponentGetter.getFileEncode(idval);
+					SqlTextDao.save(H2conn, title, sql, idval, encode, paragraph);
+				}
+			}
+		}
+		// 保存选择的pane 下标
+		SqlTextDao.saveConfig(H2conn, "SELECT_PANE", SELECT_PANE+"");
 	}
 
 	// 代码格式化
@@ -811,24 +818,30 @@ public class CommonAction {
 			}
 		}
 	}
-	
-	
-	// 设置整体样式
-	public static void setTheme(String val ) {
-//		if(val.equals(ConfigVal.THEME)) {
-//			return ;
-//		}
+	// 保证theme状态
+	public static void saveThemeStatus(String val) {
 		ConfigVal.THEME = val;
 		Connection conn =  H2Db.getConn();
 		H2Db.setConfigVal(conn, "THEME", val) ;
 		H2Db.closeConn();
-		
-		loadCss(ComponentGetter.primaryscene);
-		
-		SqlEditor.changeThemeAllCodeArea() ;
-		// 修改按钮颜色
-		changeSvgColor();
 	}
+	
+	// 设置整体样式
+	public static void setTheme(String val ) {
+		saveThemeStatus(val); 
+		// 根据新状态加载新样式
+		loadCss(ComponentGetter.primaryscene); 
+		SqlEditor.changeThemeAllCodeArea() ; 
+		changeSvgColor(); // 修改按钮颜色
+	}
+	// 设置整体样式
+	public static void setThemeRestart(String val ) {
+		
+		// 询问是否重启app, 如果不重启再重新加载样式
+		CommonAction.changeThemeRestartApp( val ) ;
+		
+	}
+	
 	
 	public static void changeSvgColor() {
 		String color = "#1C94FF";
@@ -1467,6 +1480,32 @@ public class CommonAction {
 		System.out.println(tableIdx);
 		return tableIdx + "";
 	}
+	
+	// 从前应用
+	public static void restartApp() {
+		Consumer< String >  caller = x ->{ 
+			saveApplicationStatusInfo();
+			Restart.reboot();
+		};
+		ModalDialog.myConfirmation("Restart Application ? ", caller);
+	}
+	
+	public static void changeThemeRestartApp(String val ) {
+		Consumer< String >  ok = x ->{ 
+			saveThemeStatus(val);  
+			saveApplicationStatusInfo();
+			Restart.reboot();
+		};
+		Consumer< String >  cancel = x ->{ 
+			saveThemeStatus(val);  
+			loadCss(ComponentGetter.primaryscene); 
+			SqlEditor.changeThemeAllCodeArea() ;
+			// 修改按钮颜色
+			changeSvgColor();
+		};
+		ModalDialog.myConfirmation("Change Theme Restart Application Will Better, ok ? ", ok, cancel);
+	}
+	
 	
 	
 	public static void demo() {

@@ -35,8 +35,8 @@ public class CommonUtility {
 	
 	// 检测文件是否存在
 	public static boolean checkFileExist(String fileName) {
-		File file = new File(fileName);
-		if (file.exists()) {
+		File file = new File(fileName); 
+		if (file.exists() && file.isFile()) {
 			return true;
 		}
 		return false;

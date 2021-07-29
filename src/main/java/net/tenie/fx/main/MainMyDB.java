@@ -1,33 +1,29 @@
 package net.tenie.fx.main;
 
-import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.SettingKeyCodeCombination;
 import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.tools.StrUtils;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 
-/*   @author tenie */
+/**
+ * 启动入口
+ * @author tenie
+ *
+ */
 public class MainMyDB extends Application {
 	public static List<String> argsList = new ArrayList<>();
 	public static String userDir = "";
@@ -81,24 +77,7 @@ public class MainMyDB extends Application {
 
 	}
 
-	public static void main(String[] args) throws IOException { 
-		if(args != null && args.length > 0) {
-			argsList = Arrays.asList(args);
-		}
-		logger.info("args = " + Arrays.toString(args));
-		File f = new File("");
-		String cf = null;
-		try {
-		     cf = f.getCanonicalPath();
-		} catch (IOException e) {
-		     e.printStackTrace();
-		}
-//		userDir = System.getProperty("user.dir");
-//	    System.out.println();//user.dir指定了当前的路径 
-		System.out.println(cf);
-		userDir = System.getProperty("user.dir");
-		String val =System.getProperty("sun.java.command");
-		logger.info("\n\n\n sun.java.command = " + val + "\n\n\n");
+	public static void main(String[] args) throws IOException { 		    
 		LauncherImpl.launchApplication(MainMyDB.class, MyPreloader.class, args);
 	}
 }

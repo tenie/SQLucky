@@ -183,13 +183,14 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		scene.getAccelerators().put(F1, () -> {
-			try {
-				Restart.reboot();
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				logger.info(" IOException " + e.getMessage() );
-			}  
+//			CommonAction.restartApp() ;
+//			try {
+//				Restart.reboot();
+//			} catch (Exception e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//				logger.info(" IOException " + e.getMessage() );
+//			}  
 //			StringBuilder cmd = new StringBuilder();
 //
 //			cmd.append(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java ");
