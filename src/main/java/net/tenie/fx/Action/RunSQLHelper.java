@@ -388,7 +388,8 @@ public class RunSQLHelper {
 				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");			
 				// 水平滚顶条位置设置
 				Platform.runLater(() -> {  
-					CacheDataTableViewShapeChange.setHorizontal(dvt.getTabName(), dvt.getTable()); 					
+					CacheDataTableViewShapeChange.setHorizontal(dvt.getTabName(), dvt.getTable() ,  colss ); 		
+					
 				});
 			}
 		} catch (Exception e) { 
