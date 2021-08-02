@@ -2,7 +2,10 @@ package net.tenie.fx.Cache;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
+ 
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -10,8 +13,10 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.skin.NestedTableColumnHeader;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.myEvent;
@@ -109,8 +114,8 @@ public class CacheDataTableViewShapeChange {
 	 * @param colname
 	 * @param augmentation
 	 */
-	@SuppressWarnings("rawtypes")
-	static public void setColWidth(TableColumn col, String tableName, String colname, boolean augmentation) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	static public void setColWidth(FilteredTableColumn<ObservableList<StringProperty>, String>  col, String tableName, String colname, boolean augmentation) {
 		// 设置列的长度
 		Double width;
 		Double cacheWidth = CacheDataTableViewShapeChange.getWidth(tableName, colname);
@@ -138,6 +143,41 @@ public class CacheDataTableViewShapeChange {
 		col.widthProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
 			CacheDataTableViewShapeChange.saveWidth(tableName, colname, Double.valueOf(t1.longValue()));
 		});
+		
+		// 列被拖到位置事件
+//		col.get
+//		col.getSouthNode()t
+//		col.addEventHandler(MouseEvent.ANY, e ->{
+//				  String str = col.getText();
+//                  System.out.println("Cell row index: " + str);
+//			});
+		
+	}
+
+	
+	public static void  setTableHeader(FilteredTableView<ObservableList<StringProperty>>  table) {
+		
+//		NestedTableColumnHeader h2 =	 (impl.org.controlsfx.tableview2.NestedTableColumnHeader2) table.lookup(".column-header-background .nested-column-header");
+		
+//		var childs = h2.getChildrenUnmodifiable();
+//		for(Node cd : childs) {
+//			cd.setOnDragDetected(e->{ 
+//				System.out.println(  "???");
+//			});
+//		}
+//		
+//		var hds =	table.getColumns() ; //table.getRowHeader().getColumns();
+//		table.getColumns().get(0).cell
+//		for(TableColumn header : hds) {
+//			Node nd =  header.getStyleableNode();
+//			nd.setOnDragDetected(e->{ 
+//				System.out.println(  header.getText());
+//			});
+////			header.addEventHandler(MouseEvent.DRAG_DETECTED, e ->{
+////				  String str = header.getText();
+////                  System.out.println("Cell row index: " + str);
+////			});
+//		}
 	}
 
 }
