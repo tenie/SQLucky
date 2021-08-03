@@ -629,4 +629,21 @@ public class StrUtils {
 			rs = rs.substring(0, rs.length() - 1);
 		return rs;
 	}
+	
+	
+	// 字符串计数
+	public static int countSubString(String str, String sub) { 
+		if(StrUtils.isNullOrEmpty(sub) || StrUtils.isNullOrEmpty(str)) {
+			return 0;
+		}
+		int idx = str.indexOf(sub);
+		int count = 0;
+		while(idx > -1) {
+			count++;
+			idx = str.indexOf(sub, idx + sub.length());
+		}
+		System.out.println(count); 
+		return count ;
+		
+	}
 }

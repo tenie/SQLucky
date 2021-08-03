@@ -1,11 +1,9 @@
 package net.tenie.fx.Cache;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.application.Platform;
@@ -18,33 +16,38 @@ import javafx.scene.Parent;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.fx.utility.CommonUtility;
 
 public class CacheDataTableViewShapeChange {
 	static private Map<String, DataTableViewShapePo> tableColumnWidth = new HashMap<>();
 	static private Map<String, Double> tableScrollHorizontal = new HashMap<>();
 	static private Map<String, List<String>> colOrder = new HashMap<>();
 
+	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ObservableList<StringProperty>> table ) {
+		CommonUtility.platformAwait();
+		Platform.runLater(() -> { 
+			// 列移动缓存
+			CacheDataTableViewShapeChange.setTableHeader(table, tableName );
+			// 水平滚顶条的缓存
+			CacheDataTableViewShapeChange.setHorizontal(table, tableName );
+		});
+		
+	}
+	
+	
 	/**
 	 * 设置表的水平滚顶条位置
 	 * 
 	 * @param tableName
 	 * @param table
 	 */
-	static public void setHorizontal(String tableName, FilteredTableView<ObservableList<StringProperty>> table, ObservableList<SqlFieldPo> colss ) {
-		Platform.runLater(() -> {
+	public static void setHorizontal( FilteredTableView<ObservableList<StringProperty>> table ,  String tableName) {
 			ScrollBar horizontalBar = null;
 			// 获取到 ScrollBar的 父节点, 然后遍历子节点, 获取第三个元素就是 水平ScrollBar了
 			Node nodes = table.lookup(".virtual-flow");
-//			StackPane sp = (StackPane) table.lookup(".show-hide-columns-button");
-//			MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_PRESSED , sp);
-//			Event.fireEvent(sp, me  ); 
 			if (nodes instanceof Parent) {
 				javafx.scene.Parent p = (Parent) nodes;
 				ObservableList<Node> ls = p.getChildrenUnmodifiable();
-//				   System.out.println(ls.size());
-////				   for(Node n : ls) {
-////					   System.out.println(n.getClass());
-////				   }
 				if (ls.size() > 3 && ls.get(3) instanceof javafx.scene.control.ScrollBar) {
 					horizontalBar = (javafx.scene.control.ScrollBar) ls.get(3);
 				}
@@ -54,7 +57,7 @@ public class CacheDataTableViewShapeChange {
 				var val = getHorizontal(tableName);
 				if (val != null) {
 					Double maxval = horizontalBar.getMax();
-					if (val < maxval) {
+					if (val <= maxval) {
 						horizontalBar.setValue(val);
 					}
 				}
@@ -65,57 +68,6 @@ public class CacheDataTableViewShapeChange {
 				});
 
 			}
-			
-//			设置列头移动位置事件和缓存
-			Platform.runLater(() -> {
-				List<String> tmporder = colOrder.get(tableName);
-				if(tmporder !=null && tmporder.size()>0) { 
-					boolean same = true;
-					// 重新设置位置
-					for(SqlFieldPo col: colss) {
-						String colname =col.getColumnLabel().get(); 
-						// 看列名是否包含在缓存中的列名列表中
-						if( ! tmporder.contains(colname)) {
-							same = false;
-							break;
-						}
-					}
-					if(same) {
-						ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabcols = table.getColumns(); 
-
-					    ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabNewCos = FXCollections.observableArrayList();
-					    boolean positionSame = true;
-					    for(int i = 0 ; i < tmporder.size(); i++) {
-							String colname =  tmporder.get(i);
-							
-							var colm  = tabcols.get(i);
-							var colm_name = colm.getText(); 
-							
-							if(colm_name.equals( colname)) {
-								System.out.println("位置相同...");
-								tabNewCos.add(colm);  
-							}else {
-								positionSame = false;
-								colm =  gettableColumnByName(tabcols , colname );
-								tabNewCos.add(colm);
-								System.out.println("重新设置位置为= " + i);
-							} 
-							
-						}
-						if( positionSame ) {
-							tabNewCos.clear();
-						}else {
-							tabcols.clear();
-							tabcols.setAll(tabNewCos);
-						}
-					}
-				}
-				// 事件设置
-				CacheDataTableViewShapeChange.setTableHeader(table, tableName );
-				
-			});
-		});
-
 	}
 	
 	private static  TableColumn<ObservableList<StringProperty>, ?> gettableColumnByName(ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabcols ,String name){
@@ -201,16 +153,7 @@ public class CacheDataTableViewShapeChange {
 		// 添加外形拖尺寸变化事件
 		col.widthProperty().addListener((ChangeListener<Number>) (ov, t, t1) -> {
 			CacheDataTableViewShapeChange.saveWidth(tableName, colname, Double.valueOf(t1.longValue()));
-		});
-		
-		// 列被拖到位置事件
-//		col.get
-//		col.getSouthNode()t
-//		col.addEventHandler(MouseEvent.ANY, e ->{
-//				  String str = col.getText();
-//                  System.out.println("Cell row index: " + str);
-//			});
-		
+		});		
 	}
 
 	// tableview 每个列头的移动事件
@@ -221,11 +164,10 @@ public class CacheDataTableViewShapeChange {
 		for(var lb : ls) { 
 			var rd = lb.getOnMouseReleased();
 			lb.setOnMouseReleased(e->{ 
-				rd.handle(e);
-				System.out.println("2222 setOnMouseReleased setOnMouseReleased??");
+				rd.handle(e); 
 				List<String> col_list = new ArrayList<>();
 				for(var col :table.getColumns()) {
-					System.out.println(col.getText());
+//					System.out.println(col.getText());
 					col_list.add(col.getText());
 				} 
 				colOrder.put(tableName, col_list);
@@ -237,4 +179,48 @@ public class CacheDataTableViewShapeChange {
  
 	}
 
+	public static void colReorder(String tableName, ObservableList<SqlFieldPo> colss , FilteredTableView<ObservableList<StringProperty>> table) {
+		List<String> tmporder = colOrder.get(tableName);
+		if(tmporder !=null && tmporder.size()>0) {
+			boolean same = true;
+			// 重新设置位置
+			for(SqlFieldPo col: colss) {
+				String colname =col.getColumnLabel().get(); 
+				// 看列名是否包含在缓存中的列名列表中
+				if( ! tmporder.contains(colname)) {
+					same = false;
+					break;
+				}
+			}
+			if(same) {
+				ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabcols = table.getColumns(); 
+
+			    ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabNewCos = FXCollections.observableArrayList();
+			    boolean positionSame = true;
+			    for(int i = 0 ; i < tmporder.size(); i++) {
+					String colname =  tmporder.get(i);
+					
+					var colm  = tabcols.get(i);
+					var colm_name = colm.getText(); 
+					
+					if(colm_name.equals( colname)) {
+//						System.out.println("位置相同...");
+						tabNewCos.add(colm);  
+					}else {
+						positionSame = false;
+						colm =  gettableColumnByName(tabcols , colname );
+						tabNewCos.add(colm);
+//						System.out.println("重新设置位置为= " + i);
+					} 
+					
+				}
+				if( positionSame ) {
+					tabNewCos.clear();
+				}else {
+					tabcols.clear();
+					tabcols.setAll(tabNewCos);
+				}
+			}
+		}
+	}
 }

@@ -8,14 +8,19 @@ import java.util.function.IntFunction;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
+
+import com.jfoenix.controls.JFXButton;
+
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
@@ -307,12 +312,38 @@ public class SqlEditor {
 		if (myTabPane != null && myTabPane.getTabs().size() > 0) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for(Tab tb : tabs) { 
+				// 修改代码编辑区域的样式
 				MyCodeArea ac = (MyCodeArea) getCodeArea(tb); 
 				changeCodeAreaLineNoThemeHelper(ac);
-
+				// 修改查找替换的样式如果有的话
+				changeFindReplacePaneBtnColor(tb);
 			}
 		}
 	}
+	
+//	修改查找替换的样式如果有的话
+	private static void changeFindReplacePaneBtnColor(Tab tb) {
+		VBox vbx = (VBox) tb.getContent();
+		if(vbx.getChildren().size() > 1) {
+			String color = CommonAction.themeColor();
+			for(int i = 0 ; i< vbx.getChildren().size() -1 ; i++) {
+				Node nd  = vbx.getChildren().get(i);
+				if( nd instanceof AnchorPane) {
+					AnchorPane ap =  (AnchorPane) nd;
+					var apchs = ap.getChildren();
+					for(Node apnd : apchs ) {
+						if( apnd instanceof JFXButton) {
+							JFXButton btn = (JFXButton) apnd;
+							if(btn.getGraphic() != null)
+								btn.getGraphic().setStyle("-fx-background-color: " +  color + ";");
+						}
+					}
+				}
+				
+			}
+		}
+	}
+	
 	// 改变样式
 	public static void changeCodeAreaLineNoThemeHelper(MyCodeArea codeArea ) {
 		MyLineNumberNode nbf = null;

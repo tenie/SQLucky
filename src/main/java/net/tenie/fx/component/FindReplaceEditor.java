@@ -8,6 +8,7 @@ import com.jfoenix.controls.JFXCheckBox;
 
 import javafx.application.Platform;
 import javafx.scene.control.IndexRange;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -224,7 +225,7 @@ public class FindReplaceEditor {
 		CommonAction.addCssClass(findAnchorPane, "myFindPane");
 		findAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
-		JFXCheckBox cb = new JFXCheckBox("Sensitive");
+		JFXCheckBox cb = new JFXCheckBox("Sensitive");  
 		query.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
 
 		TextField tf = new TextField();
@@ -252,6 +253,25 @@ public class FindReplaceEditor {
 		up.setOnAction(v -> {
 			findStringFromCodeArea(tf.getText(), false, !cb.isSelected());
 		});
+		
+		// 计算查询字符串出现次数
+		JFXButton count = new JFXButton("Count");
+		count.setGraphic(ImageViewGenerator.svgImageDefActive("calculator")); 
+		Label countLabel = new Label(""); 
+		count.setOnAction(e->{
+			String sqlTxt = SqlEditor.getCurrentCodeAreaSQLText();
+			int countVal = 0;
+			if(tf.getText().length() == 0) {
+				countLabel.setText("");
+			}else {
+				if(cb.isSelected()) {
+					countVal = StrUtils.countSubString(sqlTxt, tf.getText());
+				}else {
+					countVal = StrUtils.countSubString(sqlTxt.toLowerCase() , tf.getText().toLowerCase());
+				}
+				countLabel.setText(countVal + "");
+			}			
+		});
 
 		int x = 0;
 		query.setLayoutX(x);
@@ -268,24 +288,35 @@ public class FindReplaceEditor {
 
 		x += 35;
 		cb.setLayoutX(x);
-		cb.setLayoutY(5);
+		cb.setLayoutY(3);
+		
+		x += 90;
+		count.setLayoutX(x);
+		count.setLayoutY(0);
+		x += 80;
+		countLabel.setLayoutX(x);
+		countLabel.setLayoutY(5);
+		
 
 		findAnchorPane.getChildren().add(query);
 		findAnchorPane.getChildren().add(tf);
 		findAnchorPane.getChildren().add(down);
 		findAnchorPane.getChildren().add(up);
 		findAnchorPane.getChildren().add(cb);
+		findAnchorPane.getChildren().add(count);
+		findAnchorPane.getChildren().add(countLabel);
 
 		JFXButton hideBottom = new JFXButton();
 		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("window-close"));// fontImgName("caret-square-o-down",
 																					// 16, Color.ROYALBLUE));
 		findAnchorPane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
-
+		
 		VBox b = SqlEditor.getTabVbox();
 		hideBottom.setOnAction(v -> {
 			delFindReplacePane();
 		});
+		// 加入到 代码编辑框上面
 		b.getChildren().add(0, findAnchorPane);
 		if (isReplace) {
 			b.getChildren().add(1, createReplacePane(tf, cb));

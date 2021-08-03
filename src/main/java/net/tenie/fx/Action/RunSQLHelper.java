@@ -379,18 +379,19 @@ public class RunSQLHelper {
 			List<String> keys = findPrimaryKeys(conn, tableName);
 			// table 添加列和数据 
 			// 表格添加列
-			var tableColumns = createTableCol( colss, keys, false , dvt);
+			var tableColumns = createTableCol( colss, keys, false , dvt);  
 			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);  
-//			tdpo.addTableView(table);
+
+			// 列顺序重排
+			CacheDataTableViewShapeChange.colReorder(dvt.getTabName(), colss, table);
 			// 渲染界面
 			if (!thread.isInterrupted()) {
 				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");			
 				// 水平滚顶条位置设置
-				Platform.runLater(() -> {  
-					CacheDataTableViewShapeChange.setHorizontal(dvt.getTabName(), dvt.getTable() ,  colss ); 		
+				CacheDataTableViewShapeChange.setDataTableViewShapeCache(dvt.getTabName(), dvt.getTable()); 		
 					
-				});
+				 
 			}
 		} catch (Exception e) { 
 			e.printStackTrace();

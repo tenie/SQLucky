@@ -842,13 +842,21 @@ public class CommonAction {
 		
 	}
 	
-	
-	public static void changeSvgColor() {
+	public static String themeColor() {
 		String color = "#1C94FF";
 		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
 			color = "#FDA232";
 		}
+		return color;
+	}
+	
+	public static void changeSvgColor() {
+//		String color = "#1C94FF";
+//		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+//			color = "#FDA232";
+//		}
 		
+		String color =  themeColor();
 		
 		List<ButtonBase> allBtns = 	ButtonFactory.btns; // 
 		allBtns.addAll(ComponentGetter.dataPaneBtns());  //数据面板中的按钮 
@@ -1512,9 +1520,4 @@ public class CommonAction {
 	
 	}
 	
-	/**
-	 * 	int tableIdx = ConfigVal.tableIdx++;
-		table.setId(tableIdx + "");
-		table.getStyleClass().add("myTableTag");
-	 */
 }

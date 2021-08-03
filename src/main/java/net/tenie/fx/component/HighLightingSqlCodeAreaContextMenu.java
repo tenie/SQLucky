@@ -67,11 +67,16 @@ public class HighLightingSqlCodeAreaContextMenu {
 			CommonAction.findReplace(false);
 		});
 		
+		MenuItem  replace = new MenuItem(" Replace ");   
+		replace.setOnAction(e->{
+			CommonAction.findReplace(true);
+		});
+		
 		
 		
 		contextMenu.getItems().addAll(copy, del, cut, new SeparatorMenuItem(), 
 				sqlFormat , formatAll, sqlUnformat, unformatAll, new SeparatorMenuItem(),
-				find);
+				find, replace);
 		menuItems.add(copy);
 		menuItems.add(del);
 		menuItems.add(cut);
@@ -82,6 +87,7 @@ public class HighLightingSqlCodeAreaContextMenu {
 		menuItems.add(unformatAll);
 		
 		menuItems.add(find);
+		menuItems.add(replace);
 		
 		// 菜单显示的时刻
 		contextMenu.setOnShowing(e->{

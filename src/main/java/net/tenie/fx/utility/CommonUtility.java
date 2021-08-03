@@ -1,6 +1,7 @@
 package net.tenie.fx.utility;
 
 import java.io.File;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
@@ -150,5 +151,19 @@ public class CommonUtility {
 	public static String getClipboardVal() {
 		return  javafx.scene.input.Clipboard.getSystemClipboard().getString();
 	}
-
+	
+	/**
+	 *  等待正在执行的Platform队列执行完毕 
+	 *  在 Platform.runLater中放入一个计数器, 等执行到这个计数器完成说明在它前面的任务已经完成了
+	 */
+	public static void platformAwait(){
+		CountDownLatch countDownLatch = new CountDownLatch(1);
+	    Platform.runLater(countDownLatch::countDown);
+	    try {
+			countDownLatch.await();
+		} catch (InterruptedException e) { 
+			e.printStackTrace();
+		}
+	}
+	
 }
