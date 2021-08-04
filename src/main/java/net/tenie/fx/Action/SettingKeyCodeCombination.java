@@ -146,14 +146,15 @@ public final class SettingKeyCodeCombination {
 			SqlEditor.addCodeEmptyTabMethod();
 		});
 		// close code tab
-		scene.getAccelerators().put(ctrlW, () -> {
-			SqlEditor.closeEditor();
+//		scene.getAccelerators().put(ctrlW, () -> {
+//			System.out.println("???");
+//			SqlEditor.closeEditor();
 			// 关闭数据窗口
 //			logger.info(ctrlW);
 //			Tab t = ComponentGetter.dataTab.getSelectionModel().getSelectedItem();
 //			ComponentGetter.dataTab.getTabs().remove(t);
 
-		});
+//		});
 		// 注释代码
 //		scene.getAccelerators().put(ctrlSLASH, () -> {
 //			CommonAction.addAnnotationSQLTextSelectText();

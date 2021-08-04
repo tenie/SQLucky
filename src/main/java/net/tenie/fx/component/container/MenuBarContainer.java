@@ -105,9 +105,9 @@ public class MenuBarContainer {
 			SqlEditor.addCodeEmptyTabMethod();
 		});
 
-		MenuItem cce = new MenuItem(MenuItemNameFormat("Close Code Editer"));
+		MenuItem cce = new MenuItem(MenuItemNameFormat("Close Data Table"));
 		barMenus.add(cce);
-		cce.setAccelerator(KeyCombination.keyCombination("shortcut+W"));
+		cce.setAccelerator(KeyCombination.keyCombination("alt+W"));
 		cce.setOnAction(value -> {
 //			SqlEditor.closeEditor();
 //			关闭数据显示tab页

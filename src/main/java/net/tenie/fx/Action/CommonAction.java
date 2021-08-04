@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Node;
@@ -496,90 +497,8 @@ public class CommonAction {
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
 	
-	private static String paragraphPrefixBlankStr(CodeArea codeArea, int anchor) {
-		int a = anchor;
-		int b = anchor + 1;
-		int len = codeArea.getText().length();
-		
-		StringBuilder strb2 = new StringBuilder("");
-	
-		while(true) {
-				if(a >= len) break;
-				 
-			    String sc =  codeArea.getText(a, b);  
-				if(" ".equals(sc) || "\t".equals(sc)) {
-					strb2.append(sc);
-				}else {
-					break;
-				} 
-				a++;
-				b++;
-				
-		}
-		
-		return strb2.toString();
-	}
-	
-	public static void addNewLine(KeyEvent e, CodeArea codeArea) {
 
-		// 换行缩进, 和当前行的缩进保持一致
-		logger.info("换行缩进 : "+e.getCode() );
-		String seltxt = codeArea.getSelectedText();
-		int idx = codeArea.getCurrentParagraph(); // 获取当前行号
-		int anchor =  codeArea.getAnchor(); //光标位置
-		
-		if(seltxt.length() == 0) {//没有选中文本, 存粹换行, 才进行缩进计算 
-			// 根据行号获取该行的文本
-			Paragraph<Collection<String>, String, Collection<String>>   p = codeArea.getParagraph(idx);
-			String ptxt = p.getText();
-			
-			// 获取文本开头的空白字符串
-			if(StrUtils.isNotNullOrEmpty(ptxt)) { 
-				
-				// 一行的前缀空白符
-				String strb = StrUtils.prefixBlankStr(ptxt);
-				int countSpace = strb.length();
-				
-				// 获取光标之后的空白符, 如果后面的字符包含空白符, 换行的时候需要修正前缀补充的字符, 补多了换行越来越长 
-//				String afterAnchorText =  codeArea.getText(anchor,codeArea.getText().length());
-//				String strafter = StrUtils.prefixBlankStr(afterAnchorText);
-				String strafter = paragraphPrefixBlankStr(codeArea , anchor);
-				
-				String fstr = "";
-				if(strafter.length() > 0 &&  strb.length() >  strafter.length()) {
-					fstr = strb.substring(0 , strb.length() - strafter.length());
-				}else {
-					fstr = strb;
-				}
-				
-				// 在新行插入空白字符串
-				if(fstr.length() > 0) {
-					e.consume();
-					String addstr = "\n"+fstr; 
-					codeArea.insertText(anchor , addstr);
-					codeArea.moveTo(idx + 1, countSpace);
-				}else {
-					//如果光标在起始位, 那么回车后光标移动到起始再会到回车后的位置, 目的是防止页面不滚动
-					if( anchor == 0) {
-						Platform.runLater(() -> {
-							codeArea.moveTo(0); // 光标移动到起始位置
-							Platform.runLater(() -> {
-							    codeArea.moveTo(1);
-							});  
-						});
-					}else {
-						e.consume();   
-						codeArea.insertText(anchor , "\n");
-					}
-				}
-				
-			}
-			
-		}
-		
-	
-	}
-	
+
 	// 代码添加注释-- 或去除注释
 	public static void addAnnotationSQLTextSelectText() {
 
@@ -1485,11 +1404,11 @@ public class CommonAction {
 	
 	public static String createTabId() {
 		int tableIdx = ConfigVal.tableIdx++; 
-		System.out.println(tableIdx);
+//		System.out.println(tableIdx);
 		return tableIdx + "";
 	}
 	
-	// 从前应用
+	// 重启应用
 	public static void restartApp() {
 		Consumer< String >  caller = x ->{ 
 			saveApplicationStatusInfo();

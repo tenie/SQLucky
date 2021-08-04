@@ -3,25 +3,26 @@ package net.tenie.fx.component;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
-import javafx.scene.control.IndexRange;
 import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 
-/*   @author tenie */
+/**
+ * sql文本编辑组件
+ * @author tenie
+ *
+ */
 public class HighLightingSqlCodeArea {
 	private static Logger logger = LogManager.getLogger(HighLightingSqlCodeArea.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
@@ -45,45 +46,41 @@ public class HighLightingSqlCodeArea {
 		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{
 			if(e.getCode() == KeyCode.TAB ) {
-				logger.info("文本缩进 : "+e.getCode() ); 
-				if (codeArea.getSelectedText().contains("\n") ) { 
-					e.consume();
-					if(e.isShiftDown()) {
-						CommonAction.minus4Space();
-					}else { 
-						CommonAction.add4Space();
-					}
-				} 
-			}else if(e.getCode() == KeyCode.ENTER ) { 
-				CommonAction.addNewLine(e, codeArea);
-				
-			}else if(e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE ) {
-				// 删除选中字符串防止页面滚动, 自己删			
-				codeArea.textProperty().removeListener(cl);
-				Platform.runLater(() -> {
-					codeArea.textProperty().addListener( cl );
-				});  
-			}else if(e.getCode() == KeyCode.V ) { // 黏贴的时候, 防止页面跳到自己黏贴
-				if( e.isShortcutDown()) {
-					String val =  CommonUtility.getClipboardVal();
-					logger.info("黏贴值==" + val);
-					if(val.length() > 0) {
-						String seltxt = codeArea.getSelectedText();
-						if(seltxt.length() > 0) {
-							IndexRange idx = codeArea.getSelection();
-							codeArea.deleteText(idx);
-							codeArea.insertText(codeArea.getAnchor(), val);
-							e.consume(); 
-						}
-					} 
-				}
-			}else if(e.getCode() == KeyCode.Z ) {  // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
-				if( e.isShortcutDown()) {
-					codeArea.textProperty().removeListener(cl);
-					Platform.runLater(() -> {
-						codeArea.textProperty().addListener( cl );
-					});  
-				}
+				SqlEditor.codeAreaTab(e, codeArea);
+			}
+			else if(e.getCode() == KeyCode.A ) {
+				SqlEditor.codeAreaCtrlShiftA(e, codeArea);
+			}
+			else if(e.getCode() == KeyCode.E ) {
+				SqlEditor.codeAreaCtrlShiftE(e, codeArea);
+			}
+			else if(e.getCode() == KeyCode.W ) {
+				SqlEditor.codeAreaCtrlShiftW(e, codeArea);				
+			}
+			else if(e.getCode() == KeyCode.U ) {
+				SqlEditor.codeAreaCtrlShiftU(e, codeArea);				
+			}
+			else if(e.getCode() == KeyCode.K ) {
+				SqlEditor.codeAreaCtrlShiftK(e, codeArea);				
+			}
+			else if(e.getCode() == KeyCode.D ) {
+				SqlEditor.codeAreaAltShiftD(e, codeArea);
+				SqlEditor.codeAreaCtrlShiftD(e, codeArea);		
+			} 
+			else if(e.getCode() == KeyCode.H ) {
+				SqlEditor.codeAreaCtrlShiftH(e, codeArea);				
+			}			
+			else if(e.getCode() == KeyCode.ENTER ) { 
+				SqlEditor.addNewLine(e, codeArea);	
+			}
+			else if(e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE ) {
+				SqlEditor.codeAreaBackspaceDelete(e, codeArea, cl);
+			}
+			else if(e.getCode() == KeyCode.V ) { // 黏贴的时候, 防止页面跳到自己黏贴
+				SqlEditor.codeAreaCtrlV(e, codeArea);
+			}
+			else if(e.getCode() == KeyCode.Z ) {  // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
+				SqlEditor.codeAreaCtrlZ(e, codeArea, cl);
 			}
 			
 		});
@@ -108,9 +105,8 @@ public class HighLightingSqlCodeArea {
 		codeArea.setOnDragEntered(e->{
 			String val = ComponentGetter.dragTreeItemName;
 			if(StrUtils.isNotNullOrEmpty(val)) {
-//				IndexRange i = codeArea.getSelection(); // 获取当前选中的区间
-//				int start = i.getStart();
 				int start =  ComponentGetter.codeAreaAnchor  ;  //codeArea.getAnchor();
+				logger.debug("ComponentGetter.codeAreaAnchor = " + start);
 				codeArea.insertText(start, " "+val);
 				codeArea.selectRange(start+1, start + 1 + val.length());
 			}
@@ -120,8 +116,6 @@ public class HighLightingSqlCodeArea {
 		// 鼠标退出界面, 记录光标位置
 		codeArea.setOnMouseExited(mouseEvent->{
 			ComponentGetter.codeAreaAnchor =  codeArea.getAnchor();
-//			IndexRange ir = codeArea.getSelection();
-//			codeArea.selectRange(ir.getStart(), ir.getStart());
 		});
 		
 		

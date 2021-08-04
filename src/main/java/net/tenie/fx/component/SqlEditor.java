@@ -2,20 +2,27 @@ package net.tenie.fx.component;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.IntFunction;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.LineNumberFactory;
+import org.fxmisc.richtext.model.Paragraph;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -37,6 +44,7 @@ import net.tenie.lib.tools.StrUtils;
 public class SqlEditor {
 	public static List<CodeArea> allCodeArea = new ArrayList<>();
 	public static TabPane myTabPane;
+	private static Logger logger = LogManager.getLogger(SqlEditor.class);
 
 	// 当前文本框中文本重新高亮
 	public static void applyHighlighting() {
@@ -364,5 +372,349 @@ public class SqlEditor {
 		codeArea.setMylineNumber(nbf);
 		 
 	}
+	
+	private static String paragraphPrefixBlankStr(CodeArea codeArea, int anchor) {
+		int a = anchor;
+		int b = anchor + 1;
+		int len = codeArea.getText().length();
+		
+		StringBuilder strb2 = new StringBuilder("");
+	
+		while(true) {
+				if(a >= len) break;
+				 
+			    String sc =  codeArea.getText(a, b);  
+				if(" ".equals(sc) || "\t".equals(sc)) {
+					strb2.append(sc);
+				}else {
+					break;
+				} 
+				a++;
+				b++;
+				
+		}
+		
+		return strb2.toString();
+	}
+	public static void addNewLine(KeyEvent e, CodeArea codeArea) {
+
+		// 换行缩进, 和当前行的缩进保持一致
+		logger.info("换行缩进 : "+e.getCode() );
+		String seltxt = codeArea.getSelectedText();
+		int idx = codeArea.getCurrentParagraph(); // 获取当前行号
+		int anchor =  codeArea.getAnchor(); //光标位置
+		
+		if(seltxt.length() == 0) {//没有选中文本, 存粹换行, 才进行缩进计算 
+			// 根据行号获取该行的文本
+			Paragraph<Collection<String>, String, Collection<String>>   p = codeArea.getParagraph(idx);
+			String ptxt = p.getText();
+			
+			// 获取文本开头的空白字符串
+			if(StrUtils.isNotNullOrEmpty(ptxt)) { 
+				
+				// 一行的前缀空白符
+				String strb = StrUtils.prefixBlankStr(ptxt);
+				int countSpace = strb.length();
+				
+				// 获取光标之后的空白符, 如果后面的字符包含空白符, 换行的时候需要修正前缀补充的字符, 补多了换行越来越长 
+//				String afterAnchorText =  codeArea.getText(anchor,codeArea.getText().length());
+//				String strafter = StrUtils.prefixBlankStr(afterAnchorText);
+				String strafter = paragraphPrefixBlankStr(codeArea , anchor);
+				
+				String fstr = "";
+				if(strafter.length() > 0 &&  strb.length() >  strafter.length()) {
+					fstr = strb.substring(0 , strb.length() - strafter.length());
+				}else {
+					fstr = strb;
+				}
+				
+				// 在新行插入空白字符串
+				if(fstr.length() > 0) {
+					e.consume();
+					String addstr = "\n"+fstr; 
+					codeArea.insertText(anchor , addstr);
+					codeArea.moveTo(idx + 1, countSpace);
+				}else {
+					//如果光标在起始位, 那么回车后光标移动到起始再会到回车后的位置, 目的是防止页面不滚动
+					if( anchor == 0) {
+						Platform.runLater(() -> {
+							codeArea.moveTo(0); // 光标移动到起始位置
+							Platform.runLater(() -> {
+							    codeArea.moveTo(1);
+							});  
+						});
+					}else {
+						e.consume();   
+						codeArea.insertText(anchor , "\n");
+					}
+				}
+				
+			}
+			
+		}  
+	}
+	
+	/**
+	 * 文本缩进
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaTab(KeyEvent e, CodeArea codeArea) { 
+		if (codeArea.getSelectedText().contains("\n") ) { 
+			logger.info("文本缩进 : "+e.getCode() ); 
+			e.consume();
+			if(e.isShiftDown()) {
+				CommonAction.minus4Space();
+			}else { 
+				CommonAction.add4Space();
+			}
+		} 
+	}
+	/**
+	 * 触发删除按钮
+	 * @param e
+	 * @param codeArea
+	 * @param cl
+	 */
+	public static void codeAreaBackspaceDelete(KeyEvent e, CodeArea codeArea, ChangeListener<String>  cl) { 
+		// 删除选中字符串防止页面滚动, 自己删			
+		codeArea.textProperty().removeListener(cl);
+		Platform.runLater(() -> {
+			codeArea.textProperty().addListener( cl );
+		});  
+	}
+	
+	/**
+	 *  黏贴的时候, 防止页面跳到自己黏贴
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlV(KeyEvent e, CodeArea codeArea) {
+		if( e.isShortcutDown()) {
+			String val =  CommonUtility.getClipboardVal();
+			logger.info("黏贴值==" + val);
+			if(val.length() > 0) {
+				String seltxt = codeArea.getSelectedText();
+				if(seltxt.length() > 0) {
+					IndexRange idx = codeArea.getSelection();
+					codeArea.deleteText(idx);
+					codeArea.insertText(codeArea.getAnchor(), val);
+					e.consume(); 
+				}
+			} 
+		}
+	}
+	/**
+	 * 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlZ(KeyEvent e, CodeArea codeArea, ChangeListener<String>  cl) {
+		
+		if( e.isShortcutDown()) {
+			codeArea.textProperty().removeListener(cl);
+			Platform.runLater(() -> {
+				codeArea.textProperty().addListener( cl );
+			});  
+		}
+	}
+	
+	/**
+	 * 移动光标到当前行的行首
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlShiftA(KeyEvent e, CodeArea codeArea) {
+		if(e.isShiftDown() && e.isControlDown()) {
+			logger.info("光标移动到行首"+e.getCode() ); 
+			moveAnchorToLineBegin(codeArea);
+		}
+	}
+	public static void moveAnchorToLineBegin(CodeArea codeArea ) {
+		int idx = codeArea.getCurrentParagraph(); // 获取当前行号
+		codeArea.moveTo(idx, 0);	
+	}
+	
+	/**
+	 * 移动光标到当前行的行尾
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlShiftE(KeyEvent e, CodeArea codeArea) {
+		if(e.isShiftDown() && e.isControlDown()) {
+			logger.info("光标移动到行尾"+e.getCode() ); 
+			moveAnchorToLineEnd(codeArea);
+		}
+	}
+	public static void moveAnchorToLineEnd(CodeArea codeArea ) {
+		int idx = codeArea.getCurrentParagraph(); // 获取当前行号
+		Paragraph<Collection<String>, String, Collection<String>>   p = codeArea.getParagraph(idx);
+		String ptxt = p.getText();
+		codeArea.moveTo(idx, ptxt.length()); 
+	}
+	/**
+	 * 操作当前行的光标之前的单词
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlShiftW(KeyEvent e, CodeArea codeArea) {
+		if(e.isShiftDown() && e.isControlDown()) {
+			logger.info("删除一个光标前的单词"+e.getCode() ); 
+			delAnchorBeforeWord(codeArea);
+		}
+	}
+	
+	public static void delAnchorBeforeWord(CodeArea codeArea ) {
+		int anchor =  codeArea.getAnchor(); //光标位置
+		String txt = codeArea.getText(0, anchor); 
+		
+		int[] a = {0, 0, 0};
+		a[0] = txt.lastIndexOf(" ");
+		a[1] = txt.lastIndexOf("\t");
+		a[2] = txt.lastIndexOf("\n") + 1;
+		int max = CommonUtility.getMax(a);
+		codeArea.deleteText(max, anchor);
+	}
+	
+	/**
+	 * 删除光标前一个字符
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlShiftH(KeyEvent e, CodeArea codeArea) {
+		if(e.isShiftDown() && e.isControlDown()) {
+			logger.info("删除一个光标前字符"+e.getCode() ); 
+			delAnchorBeforeChar(codeArea);
+		}
+	}
+	
+	public static void delAnchorBeforeChar(CodeArea codeArea ) {
+		int anchor =  codeArea.getAnchor(); //光标位置
+		String txt = codeArea.getText(anchor-1, anchor); 
+		if(!txt.equals("\n"))
+			codeArea.deleteText(anchor-1, anchor);
+	}
+	/**
+	 * 删除光标后一个单词
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaAltShiftD(KeyEvent e, CodeArea codeArea) {
+		if(e.isShiftDown() && e.isAltDown()) {
+			logger.info("删除一个光标后单词"+e.getCode() ); 
+			delAnchorAfterWord(codeArea);
+		}
+	}
+	public static void delAnchorAfterWord(CodeArea codeArea ) {
+		int anchor =  codeArea.getAnchor(); //光标位置
+		String txt = codeArea.getText(); 
+		int txtLen = txt.length();
+		int[] a = {0, 0, 0};
+		int val = 0;
+		val = txt.indexOf(" ", anchor) ;
+		a[0] = val  == -1 ? txtLen : val + 1;
+		val = txt.indexOf("\t", anchor) ;
+		a[1] = val  == -1 ? txtLen : val + 1;
+		val = txt.indexOf("\n", anchor) ;
+		a[2] = val  == -1 ? txtLen : val;
+		int min = CommonUtility.getMin(a);
+		codeArea.deleteText(anchor, min );
+	}
+	
+	/**
+	 * 删除一个光标后字符
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlShiftD(KeyEvent e, CodeArea codeArea) {
+		if(e.isShiftDown() && e.isControlDown()) {
+			logger.info("删除一个光标后字符"+e.getCode() ); 
+			delAnchorAfterChar(codeArea);
+		}
+	}
+	public static void delAnchorAfterChar(CodeArea codeArea ) {
+		int anchor =  codeArea.getAnchor(); //光标位置
+		String txt = codeArea.getText(anchor, anchor+1); 
+		if(!txt.equals("\n"))
+			codeArea.deleteText(anchor, anchor+1);
+	}
+	/**
+	 * 删除光标前的字符串
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlShiftU(KeyEvent e, CodeArea codeArea) {
+		if(e.isShiftDown() && e.isControlDown()) {
+			logger.info("删除光标前的字符串"+e.getCode()); 
+			delAnchorBeforeString(codeArea);
+		}
+	}
+	public static void delAnchorBeforeString(  CodeArea codeArea ) {
+		int anchor =  codeArea.getAnchor(); //光标位置
+		String txt = codeArea.getText(0, anchor); 
+		 
+		int idx = txt.lastIndexOf("\n");
+		if( idx == -1) {
+			idx = 0;
+		}else {
+			idx++;
+		}
+		codeArea.deleteText(idx, anchor);
+	}
+	/**
+	 * 删除光标后的字符串
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlShiftK(KeyEvent e, CodeArea codeArea) {
+		if(e.isShiftDown() && e.isControlDown()) { 
+			logger.info("删除光标后的字符串"+e.getCode());
+			delAnchorAfterString(codeArea);
+		}
+	}
+	
+	public static void delAnchorAfterString(  CodeArea codeArea ) {
+		int anchor =  codeArea.getAnchor(); //光标位置
+		String txt = codeArea.getText(); 
+		 
+		int idx = txt.indexOf("\n" , anchor);
+		if( idx == -1) {
+			idx = 0;
+		}else {
+			idx++;
+		}
+		codeArea.deleteText(anchor ,idx -1);
+	}
+	
+	
+//	public static void codeAreaCtrlShiftLeft(KeyEvent e, CodeArea codeArea) {
+//		logger.info("向左移动光标"+e.getCode() ); 
+//		if(e.isShiftDown() && e.isControlDown()) {
+//			int anchor =  codeArea.getAnchor(); //光标位置
+//			String txt = codeArea.getText(0, anchor); 
+//			
+//			int[] a = {0, 0, 0};
+//			a[0] = txt.lastIndexOf(" ");
+//			a[1] = txt.lastIndexOf("\t");
+//			a[2] = txt.lastIndexOf("\n");
+//			int max = CommonUtility.getMax(a);
+//			codeArea.moveTo(max); 
+//		}
+//	}
+	
+//	public static void codeAreaCtrlShiftRight(KeyEvent e, CodeArea codeArea) {
+//		logger.info("向左移动光标"+e.getCode() ); 
+//		if(e.isShiftDown() && e.isControlDown()) {
+//			int anchor =  codeArea.getAnchor(); //光标位置
+//			String txt = codeArea.getText(anchor); 
+//			
+//			int[] a = {0, 0, 0};
+//			a[0] = txt.indexOf(" ");
+//			a[1] = txt.indexOf("\t");
+//			a[2] = txt.indexOf("\n");
+//			int max = CommonUtility.getMin(a);
+//			codeArea.moveTo(anchor+max); 
+//		}
+//	}
 
 }
