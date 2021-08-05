@@ -234,6 +234,16 @@ public class SqlEditor {
 		String txt = getCurrentCodeAreaSQLSelectedText();
 		CommonUtility.setClipboardVal(txt);
 	}
+	
+	public static void pasteTextToCodeArea(){
+		String val = CommonUtility.getClipboardVal();
+		if(StrUtils.isNotNullOrEmpty(val)) {
+			var codeArea = SqlEditor.getCodeArea();
+			int i = codeArea.getAnchor();
+			codeArea.insertText(i, val);
+		}
+	}
+	
 	// 删除选中文本
 	public static void deleteSelectionText() { 
 		var codeArea = SqlEditor.getCodeArea();
@@ -685,7 +695,31 @@ public class SqlEditor {
 		}
 		codeArea.deleteText(anchor ,idx -1);
 	}
-	
+	/**
+	 * ctrl + d 
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codeAreaCtrlD(KeyEvent e, CodeArea codeArea) {
+		if( e.isControlDown()) {
+			logger.info("删除选中的内容或删除光标所在的行"+e.getCode() ); 
+			delLineOrSelectTxt(codeArea);
+		}
+	}
+	/**
+	 * 删除选中的内容或删除光标所在的行
+	 * @param codeArea
+	 */
+	public static void delLineOrSelectTxt(CodeArea codeArea) {
+		var selectTxt = codeArea.getSelectedText();
+		if(StrUtils.isNullOrEmpty(selectTxt)) {
+			moveAnchorToLineEnd(codeArea);
+			delAnchorBeforeString(codeArea);
+		}else {
+			// 删除选中的内容 
+			codeArea.deleteText( codeArea.getSelection());
+		}
+	}
 	
 //	public static void codeAreaCtrlShiftLeft(KeyEvent e, CodeArea codeArea) {
 //		logger.info("向左移动光标"+e.getCode() ); 

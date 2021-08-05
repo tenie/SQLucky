@@ -7,6 +7,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
 
 public class HighLightingSqlCodeAreaContextMenu {
@@ -17,25 +18,34 @@ public class HighLightingSqlCodeAreaContextMenu {
 		contextMenu = new ContextMenu();  
 		contextMenu.setMinWidth(200);
 		contextMenu.setPrefWidth(200);
-		MenuItem copy  = new MenuItem("Copy"); 
+		MenuItem copy  = new MenuItem("Copy                        (ctrl+C)"); 
+		copy.setGraphic(ImageViewGenerator.svgImageDefActive("files-o"));
 		copy.setOnAction(e->{
 			SqlEditor.copySelectionText();
 		});
-		copy.setGraphic(ImageViewGenerator.svgImageDefActive("files-o"));
 		
-		MenuItem del  = new MenuItem("Delete"); 
+		MenuItem Paste  = new MenuItem("Paste                       (ctrl+V)"); 
+		Paste.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+		Paste.setOnAction(e->{
+			SqlEditor.pasteTextToCodeArea();
+		});
+		
+		
+		
+		MenuItem del = new MenuItem("Delete                      (ctrl+D)"); 
 		del.setOnAction(e->{
-			SqlEditor.deleteSelectionText();
+//			SqlEditor.deleteSelectionText(); 
+			SqlEditor.delLineOrSelectTxt(SqlEditor.getCodeArea());
 		});
 		del.setGraphic(ImageViewGenerator.svgImageDefActive("eraser"));
 		
-		MenuItem  cut = new MenuItem("Cut"); 
+		MenuItem  cut = new MenuItem("Cut                         (ctrl+X)"); 
 		cut.setOnAction(e->{
 			SqlEditor.cutSelectionText();
 		});
 		cut.setGraphic(ImageViewGenerator.svgImageDefActive("scissors"));
 
-		MenuItem  sqlFormat = new MenuItem("Format  SQL  (ctrl+shif+F)"); 
+		MenuItem  sqlFormat = new MenuItem("Format  SQL            (ctrl+shif+F)"); 
 		sqlFormat.setGraphic(ImageViewGenerator.svgImageDefActive("paragraph")); 
 		sqlFormat.setOnAction(e->{
 			CommonAction.formatSqlText();
@@ -56,13 +66,13 @@ public class HighLightingSqlCodeAreaContextMenu {
 			CommonAction.pressSqlText();
 		});
 		
-		MenuItem  find = new MenuItem("Find  (ctrl+F)");  
+		MenuItem  find = new MenuItem("Find                        (ctrl+F)");  
 		find.setGraphic(ImageViewGenerator.svgImageDefActive("search")); 
 		find.setOnAction(e->{
 			CommonAction.findReplace(false);
 		});
 		
-		MenuItem  replace = new MenuItem("Replace (ctrl+R)");   
+		MenuItem  replace = new MenuItem("Replace                     (ctrl+R)");   
 		replace.setOnAction(e->{
 			CommonAction.findReplace(true);
 		});
@@ -74,7 +84,7 @@ public class HighLightingSqlCodeAreaContextMenu {
 			SqlEditor.moveAnchorToLineBegin(codeA);
 		});
 		
-		MenuItem  mvE = new MenuItem("Move to end of line (ctrl+shift+E)");   
+		MenuItem  mvE = new MenuItem("Move to end of line   (ctrl+shift+E)");   
 		mvE.setGraphic(ImageViewGenerator.svgImageDefActive( "step-forward")); 
 		mvE.setOnAction(e->{
 			var codeA = SqlEditor.getCodeArea();
@@ -83,13 +93,13 @@ public class HighLightingSqlCodeAreaContextMenu {
 		
 		
 		Menu enditLine = new Menu("Edit text on the line"); 
-		MenuItem  delWord = new MenuItem("Delete the word before the cursor (ctrl+shift+W)");   
+		MenuItem  delWord = new MenuItem("Delete the word before the cursor      (ctrl+shift+W)");   
 		delWord.setOnAction(e->{
 			var codeA = SqlEditor.getCodeArea();
 			SqlEditor.delAnchorBeforeWord(codeA);
 		});
 		
-		MenuItem  delChar = new MenuItem("Delete the character before the cursor(ctrl+shift+H)");   
+		MenuItem  delChar = new MenuItem("Delete the character before the cursor (ctrl+shift+H)");   
 		delChar.setOnAction(e->{
 			var codeA = SqlEditor.getCodeArea();
 			SqlEditor.delAnchorBeforeChar(codeA);
@@ -102,13 +112,13 @@ public class HighLightingSqlCodeAreaContextMenu {
 		});
 		
 		
-		MenuItem  delWordBackward = new MenuItem("Delete the word after the cursor (alt+shift+D)");   
+		MenuItem  delWordBackward = new MenuItem("Delete the word after the cursor        (alt+shift+D)");   
 		delWordBackward.setOnAction(e->{
 			var codeA = SqlEditor.getCodeArea();
 			SqlEditor.delAnchorAfterWord(codeA);
 		});
 		
-		MenuItem  delCharBackward = new MenuItem("Delete the character after the cursor (ctrl+shift+D)");   
+		MenuItem  delCharBackward = new MenuItem("Delete the character after the cursor  (ctrl+shift+D)");   
 		delCharBackward.setOnAction(e->{
 			var codeA = SqlEditor.getCodeArea();
 			SqlEditor.delAnchorAfterChar(codeA);
@@ -123,13 +133,14 @@ public class HighLightingSqlCodeAreaContextMenu {
 		
 		
 		
-		contextMenu.getItems().addAll(copy, del, cut, new SeparatorMenuItem(), 
+		contextMenu.getItems().addAll(copy, Paste, del, cut, new SeparatorMenuItem(), 
 				sqlFormat , formatAll, sqlUnformat, unformatAll, new SeparatorMenuItem(),
 				find, replace, new SeparatorMenuItem(),
 				mvB, mvE, enditLine
 				);
 		enditLine.getItems().addAll(delWord, delChar,delAllChar,  delWordBackward, delCharBackward, delAllCharBackward ); 
 				menuItems.add(copy);
+				menuItems.add(Paste);
 				menuItems.add(del);
 				menuItems.add(cut);
 				menuItems.add(sqlFormat);
@@ -153,7 +164,7 @@ public class HighLightingSqlCodeAreaContextMenu {
 			String str = SqlEditor.getCurrentCodeAreaSQLSelectedText();
 			if(StrUtils.isNotNullOrEmpty(str)) {
 				copy.setDisable(false);
-				del.setDisable(false);
+//				del.setDisable(false);
 				cut.setDisable(false);
 				sqlFormat.setDisable(false);
 				formatAll.setDisable(true);
@@ -161,13 +172,21 @@ public class HighLightingSqlCodeAreaContextMenu {
 				unformatAll.setDisable(true);
 			}else {
 				copy.setDisable(true);
-				del.setDisable(true);
+//				del.setDisable(true);
 				cut.setDisable(true);
 				sqlFormat.setDisable(true);
 				formatAll.setDisable(false);
 				sqlUnformat.setDisable(true);
 				unformatAll.setDisable(false);
 			}
+			
+			String val = CommonUtility.getClipboardVal();
+			if(StrUtils.isNotNullOrEmpty(val)) {
+				Paste.setDisable(false);
+			}else {
+				Paste.setDisable(true);
+			}
+			
 		});
 	}
 	

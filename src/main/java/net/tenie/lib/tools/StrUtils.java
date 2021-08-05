@@ -646,4 +646,14 @@ public class StrUtils {
 		return count ;
 		
 	}
+	
+	public static  String MenuItemNameFormat(String name) {
+		String str =MenuItemNameFormat(name, 30);
+		return str;
+	}
+	
+	public static  String MenuItemNameFormat(String name ,int size) {
+		String str = String.format("  %-"+size+"s", name);
+		return str;
+	}
 }
