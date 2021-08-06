@@ -82,23 +82,6 @@ public class SelectDao {
 			logger.info("查询时间： "+usetime+"ms");
 			dvt.setExecTime(vt); 
 //			// 获取元数据
-//			ResultSetMetaData mdata = rs.getMetaData();
-//			// 获取元数据列数
-//			Integer columnnums = Integer.valueOf(mdata.getColumnCount());
-//			// 迭代元数据
-//			ObservableList<SqlFieldPo> fields = FXCollections.observableArrayList();
-//			for (int i = 1; i <= columnnums; i++) {
-//				SqlFieldPo po = new SqlFieldPo();
-//				po.setScale(mdata.getScale(i));
-//				po.setColumnName(mdata.getColumnName(i));
-//				po.setColumnClassName(mdata.getColumnClassName(i));
-//				po.setColumnDisplaySize(mdata.getColumnDisplaySize(i));
-//				po.setColumnLabel(mdata.getColumnLabel(i));
-//				po.setColumnType(mdata.getColumnType(i));
-//				po.setColumnTypeName(mdata.getColumnTypeName(i));
-//				fields.add(po);
-//				
-//			}
 			ObservableList<SqlFieldPo> fields = resultSetMetaData(rs);
 			
 			ObservableList<ObservableList<StringProperty>>  val ;
