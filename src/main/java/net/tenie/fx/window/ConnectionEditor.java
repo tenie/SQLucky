@@ -1,5 +1,6 @@
 package net.tenie.fx.window;
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.function.Function;
 
@@ -14,6 +15,7 @@ import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -31,6 +33,7 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
@@ -85,7 +88,7 @@ public class ConnectionEditor {
 	}
 
 	public static void ConnectionInfoSetting(boolean isEdit, String connNameVal, String userVal, String passwordVal,
-			String hostVal, String portVal, String dbDriverVal, String defaultSchemaVal, DbConnectionPo dp) {
+			String hostVal, String portVal, String dbDriverVal, String defaultSchemaVal,String dbName, DbConnectionPo dp) {
 		VBox vb = new VBox();
 		Label title = new Label("Edit Connection Info");
 		title.setPadding(new Insets(15));
@@ -127,6 +130,9 @@ public class ConnectionEditor {
 		host.setPromptText(hostStr);
 		host.setText(hostVal);
 		host.lengthProperty().addListener(CommonListener.textFieldLimit(host, 100));
+		
+		
+		
 
 		TextField port = new TextField();
 		port.setPromptText(portStr);
@@ -148,9 +154,33 @@ public class ConnectionEditor {
 		defaultSchema.setPromptText(defaultSchemaStr);
 		defaultSchema.setText(defaultSchemaVal);
 		defaultSchema.lengthProperty().addListener(CommonListener.textFieldLimit(defaultSchema, 50));
-
+		
+		// 获取db file
+		Button h2FilePath = new Button("...");
+		h2FilePath.setVisible(false);
+		h2FilePath.setOnAction(e->{
+			String fp = "";
+			File f = CommonFileChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
+			if (f != null) { 
+			    fp = f.getAbsolutePath();
+			}
+			host.setText(fp);
+			
+				
+		});
+		
+		
+		
 		dbDriver.valueProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
 
+		h2FilePath.setVisible(false);
+		
+		lbhostStr.setText(hostStr);
+		host.setPromptText(hostStr);
+		port.setDisable(false);
+
+		defaultSchema.setText(defaultSchemaVal);
+		defaultSchema.setDisable(false);
 			if (newValue.equals(DbVendor.h2) ||newValue.equals(DbVendor.sqlite) ) {
 				lbhostStr.setText("DB File");
 				host.setPromptText("DB File");
@@ -158,16 +188,12 @@ public class ConnectionEditor {
 
 				defaultSchema.setText("PUBLIC");
 				defaultSchema.setDisable(true);
+				h2FilePath.setVisible(true);
 				
 			}else if( newValue.equals(DbVendor.postgresql)) {
 				lbdefaultSchemaStr.setText("DB Name");
-			}else {
-				lbhostStr.setText(hostStr);
-				host.setPromptText(hostStr);
-				port.setDisable(false);
-
-				defaultSchema.setText(defaultSchemaVal);
-				defaultSchema.setDisable(false);
+				defaultSchema.setPromptText("DB Name");
+				defaultSchema.setText( dbName); 
 				
 			}
 			
@@ -188,32 +214,9 @@ public class ConnectionEditor {
 			});
 		}
 
-		int i = 0;
-		int j = 0;
-
-		grid.add(lbconnNameStr, 0, i++);
-		grid.add(connectionName, 1, j++);
-
-		grid.add(lbdbDriverStr, 0, i++);
-		grid.add(dbDriver, 1, j++);
-
-		grid.add(lbhostStr, 0, i++);
-		grid.add(host, 1, j++);
-
-		grid.add(lbportStr, 0, i++);
-		grid.add(port, 1, j++);
-
-		grid.add(lbdefaultSchemaStr, 0, i++);
-		grid.add(defaultSchema, 1, j++);
-
-		grid.add(lbuserStr, 0, i++);
-		grid.add(user, 1, j++);
-
-		grid.add(lbpasswordStr, 0, i++);
-		grid.add(password, 1, j++);
-
-		Function<String, DbConnectionPo> call = x -> {
-
+		
+		// 方法
+		Function<String, DbConnectionPo> call = x -> { 
 			String connName = connectionName.getText();
 			// check date
 			if (StrUtils.isNullOrEmpty(connName)) {
@@ -229,11 +232,9 @@ public class ConnectionEditor {
 					MyAlert.errorAlert( "DB File is empty !");
 				} else {
 					MyAlert.errorAlert( "host is empty !");
-				}
-
+				} 
 				return null;
-			}
-
+			} 
 			if (!dbDriver.getValue().equals(DbVendor.h2) && !dbDriver.getValue().equals(DbVendor.sqlite) ) {
 				if (StrUtils.isNullOrEmpty(port.getText())) {
 					MyAlert.errorAlert( "port is empty !");
@@ -270,10 +271,9 @@ public class ConnectionEditor {
 			}
 
 			// 连接信息保存
-
 			DbConnectionPo connpo = new DbConnectionPo(connName, DbVendor.getDriver(dbDriver.getValue()),
 					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
-					defaultSchema.getText());
+					defaultSchema.getText(), defaultSchema.getText());
 			if (dp != null) {
 				dp.closeConn();
 				connpo.setId(dp.getId());
@@ -281,53 +281,20 @@ public class ConnectionEditor {
 			return connpo;
 
 		};
-
-		Button testBtn = new Button("Test");
-		grid.add(testBtn, 0, i);
-
-		testBtn.setOnMouseClicked(e -> {
-			testBtn.setStyle("-fx-background-color: red ");
-			logger.info("Test connection~~");
-			DbConnectionPo connpo = call.apply("");
-			if (connpo != null) {
-				CommonAction.isAliveTestAlert(connpo, testBtn);
-			}
-		});
-
-		Button saveBtn = new Button("Save");
-		grid.add(saveBtn, 1, i);
-		saveBtn.setOnMouseClicked(e -> {
-
-			DbConnectionPo connpo = call.apply("");
-			
-			if (connpo != null) {
-				
-				DBConns.add(connpo.getConnName(), connpo);
-				// 缓存数据
-				connpo = ConnectionDao.createOrUpdate(H2Db.getConn(), connpo);
-				H2Db.closeConn();
-				
-				// 先删除树中的节点
-				if (dp != null) {
-					DBConns.remove(dp.getConnName());
-//					DBinfoTree.rmTreeItemByName(dp.getConnName());
-					TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
-					val.getValue().setName(connectionName.getText() );
-					ComponentGetter.treeView.refresh();
-				}else {
-					TreeItem<TreeNodePo> item = new TreeItem<>(
-							new TreeNodePo(connectionName.getText(), ImageViewGenerator.svgImageUnactive("unlink")));
-					DBinfoTree.treeRootAddItem(item); 
-				}
-			
-				 
-			} else {
-				return;
-			}
-			stage.close();
-
-		});
-
+//TODO
+		Button testBtn = createTestBtn( call );//new Button("Test");
+		Button saveBtn = createSaveBtn( call , connectionName ,  dp, stage) ; // new Button("Save"); 
+//		Button h2FilePath = new Button("...");
+		
+		layout( grid, lbconnNameStr,   connectionName, 
+					  lbdbDriverStr,   dbDriver,
+					  lbhostStr,       host, h2FilePath,
+					  lbportStr,       port,
+					  lbdefaultSchemaStr,   defaultSchema, 
+					  lbuserStr,       user,
+					  lbpasswordStr,   password, 
+					  testBtn,         saveBtn );
+	
 		// 默认焦点
 		Platform.runLater(() -> connectionName.requestFocus());
 //		ModalDialog.windowShell(stage, ModalDialog.INFO);
@@ -337,12 +304,13 @@ public class ConnectionEditor {
 
 	// 连接设置界面
 	public static void ConnectionInfoSetting() {
-		ConnectionInfoSetting(false, "", "", "", "", "", "", "", null);
+		ConnectionInfoSetting(false, "", "", "", "", "", "", "", "", null);
 	}
 
 	public static void ConnectionInfoSetting(DbConnectionPo dp) {
-		ConnectionInfoSetting(true, dp.getConnName(), dp.getUser(), dp.getPassWord(), dp.getHost(), dp.getPort(),
-				dp.getDbVendor(), dp.getDefaultSchema(), dp);
+		if(dp != null)
+			ConnectionInfoSetting(true, dp.getConnName(), dp.getUser(), dp.getPassWord(), dp.getHost(), dp.getPort(),
+				dp.getDbVendor(), dp.getDefaultSchema(), dp.getDbName(), dp);
 	}
 
 	public static void editDbConn() {
@@ -397,7 +365,7 @@ public class ConnectionEditor {
 		String str = val.getValue().getName();
 		logger.info(str);
 		DbConnectionPo dp = DBConns.get(str);
-		if (dp.isAlive()) {
+		if (dp != null && dp.isAlive()) {
 			// 关闭连接
 			dp.closeConn();
 			// 修改颜色
@@ -446,6 +414,7 @@ public class ConnectionEditor {
 			public void run() {
 				DbConnectionPo po1 = null;
 				try {
+					 
 					logger.info("backRunOpenConn()");
 					String connName = item.getValue().getName();
 					DbConnectionPo po = DBConns.get(connName);
@@ -471,6 +440,13 @@ public class ConnectionEditor {
 						});
 
 					}
+				} catch (Exception e) { 
+					Platform.runLater(() -> {
+						MyAlert.errorAlert( " Error !");
+						item.getValue().setIcon(ImageViewGenerator.svgImage("unlink", "red"));
+						ComponentGetter.treeView.refresh();
+					});
+					
 				} finally {
 					DBConns.flushChoiceBoxGraphic();
 					po1.setConning(false);
@@ -480,4 +456,91 @@ public class ConnectionEditor {
 		};
 		t.start();
 	}
+	
+	
+	public static Button createTestBtn(Function<String, DbConnectionPo> call ) {
+		Button testBtn = new Button("Test"); 
+		testBtn.setOnMouseClicked(e -> {
+			testBtn.setStyle("-fx-background-color: red ");
+			logger.info("Test connection~~");
+			DbConnectionPo connpo = call.apply("");
+			if (connpo != null) {
+				CommonAction.isAliveTestAlert(connpo, testBtn);
+			}
+		});
+		return testBtn;
+	}
+	
+	public static Button createSaveBtn(Function<String, DbConnectionPo> call , TextField connectionName ,DbConnectionPo dp, Stage stage) {
+		Button saveBtn = new Button("Save");
+		saveBtn.setOnMouseClicked(e -> {
+			DbConnectionPo connpo = call.apply("");
+			if (connpo != null) {  
+				// 先删除树中的节点
+				if (dp != null) {
+					DBConns.remove(dp.getConnName());
+//					DBinfoTree.rmTreeItemByName(dp.getConnName());
+					TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+					val.getValue().setName(connectionName.getText() );
+					ComponentGetter.treeView.refresh();
+				}else {
+					TreeItem<TreeNodePo> item = new TreeItem<>(
+							new TreeNodePo(connectionName.getText(), ImageViewGenerator.svgImageUnactive("unlink")));
+					DBinfoTree.treeRootAddItem(item); 
+				}
+			
+				// 缓存数据
+				DBConns.add(connpo.getConnName(), connpo);
+				connpo = ConnectionDao.createOrUpdate(H2Db.getConn(), connpo);
+				H2Db.closeConn();
+			} else {
+				return;
+			}
+			stage.close();
+
+		});
+		return saveBtn;
+	}
+	//TODO
+	public static void layout(GridPane grid  , 
+			Control lbconnNameStr, Control connectionName, 
+			Control lbdbDriverStr, Control dbDriver,
+			Control lbhostStr, Control host,  Control h2FilePath,
+			Control lbportStr, Control port,
+			Control lbdefaultSchemaStr, Control defaultSchema, 
+			Control lbuserStr, Control user,
+			Control lbpasswordStr, Control password, 
+			Control testBtn, Control saveBtn
+			) {
+		int i = 0;
+		int j = 0;
+//	 
+		grid.add(lbconnNameStr, 0, i++);
+		grid.add(connectionName, 1, j++);
+
+		grid.add(lbdbDriverStr, 0, i++);
+		grid.add(dbDriver, 1, j++);
+
+		grid.add(lbhostStr, 0, i++);
+		int tmp = j++;
+		grid.add(host, 1, tmp);
+		grid.add(h2FilePath, 2, tmp);
+		
+
+		grid.add(lbportStr, 0, i++);
+		grid.add(port, 1, j++);
+
+		grid.add(lbdefaultSchemaStr, 0, i++);
+		grid.add(defaultSchema, 1, j++);
+
+		grid.add(lbuserStr, 0, i++);
+		grid.add(user, 1, j++);
+
+		grid.add(lbpasswordStr, 0, i++);
+		grid.add(password, 1, j++);
+		
+		grid.add(testBtn, 0, i); 
+		grid.add(saveBtn, 1, i);
+	}
+	
 }

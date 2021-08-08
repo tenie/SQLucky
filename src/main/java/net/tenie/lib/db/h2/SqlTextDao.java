@@ -30,6 +30,7 @@ public class SqlTextDao {
 				"  `DRIVER` VARCHAR(200) ,\n" + 
 				"  `VENDOR` VARCHAR(100)  ,\n" + 
 				"  `SCHEMA` VARCHAR(200)  ,\n" + 
+				"  `DB_NAME` VARCHAR(200)  ,\n" + 
 				"  `COMMENT` VARCHAR(200) DEFAULT NULL,\n" +  
 				"  `CREATED_AT` DATETIME DEFAULT NULL,\n" + 
 				"  `UPDATED_AT` DATETIME DEFAULT NULL,\n" + 

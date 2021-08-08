@@ -1,9 +1,14 @@
 package net.tenie.lib.db.h2;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.io.FileUtils;
 
 import net.tenie.lib.db.DBTools;
@@ -46,6 +51,20 @@ public class H2Db {
 		}
 	}
 
+	private static List<String> updateSQL(){
+		List<String> ls = new ArrayList<>(); 
+		String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/updatesql.txt";
+		File fl = new File(path);
+		if(fl.exists()) {
+			try {
+				ls = FileUtils.readLines(fl, "UTF-8");
+				FileUtils.forceDelete(fl);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return ls;
+	}
 	// 检查表是否存在
 	private static boolean tabExist(Connection conn, String tablename) {
 		try {
@@ -80,17 +99,28 @@ public class H2Db {
 		 String  UPDATE_SQL = getConfigVal(conn , "UPDATE_SQL"); 
 		 if(UPDATE_SQL != null &&  UPDATE_SQL.length() > 0) {
 			 String[] sql = UPDATE_SQL.split(";");
-			 for(String s : sql) {
-				 try {
-					if(s.length()> 0) {
-						DBTools.execDDL(conn, s);
+				for (String s : sql) {
+					try {
+						if (s.length() > 0) {
+							DBTools.execDDL(conn, s);
+						}
+
+					} catch (SQLException e) {
+						e.printStackTrace();
 					}
-					
-				} catch (SQLException e) { 
-					e.printStackTrace();
 				}
-			 }
 			 setConfigVal(conn,  "UPDATE_SQL", "");
 		 }
+		 
+		List<String> ls =  updateSQL();
+		for(String sql : ls) {
+			try {
+				if (sql.length() > 0) {
+					DBTools.execDDL(conn, sql);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

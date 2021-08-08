@@ -80,7 +80,8 @@ public class ConnectionDao {
 							rd.getString("USER"),
 							rd.getString("PASS_WORD"),
 							rd.getString("VENDOR"), //dbDriver.getValue(),
-							rd.getString("SCHEMA") //defaultSchema.getText()													    
+							rd.getString("SCHEMA"), //defaultSchema.getText()	
+							rd.getString("DB_NAME")
 							);
 		    	  po.setId(rd.getInteger("ID"));
 		    	  po.setComment( rd.getString("COMMENT"));
@@ -107,6 +108,7 @@ public class ConnectionDao {
 		    String dbVendor =     po.getDbVendor();
 		    String defaultSchema =po.getDefaultSchema();
 		    String comment =      po.getComment();
+		    String dbName =      po.getDbName();
 //		    Date createdAt =      po.getCreatedAt();
 //		    Date updatedAt =      po.getUpdatedAt();
 //		    Integer recordVersion =  po.getRecordVersion(); 
@@ -123,6 +125,7 @@ public class ConnectionDao {
 							+ " VENDOR = '"+ dbVendor +"' , "
 							
 							+ " SCHEMA = '"+ defaultSchema +"', "
+							+ " DB_NAME = '"+ dbName +"', "
 							+ " UPDATED_AT = '"+StrUtils.dateToStrL(new Date()) +"'";  
 							if(  StrUtils.isNotNullOrEmpty(comment)) {
 								sql  += ", COMMENT = '"+comment+"' ";
@@ -132,7 +135,7 @@ public class ConnectionDao {
 			}else {
 				// 插入
 			    sql  = " INSERT INTO CONNECTION_INFO "
-						+ "(CONN_NAME , USER, PASS_WORD, HOST, PORT, DRIVER,VENDOR, SCHEMA, CREATED_AT ";
+						+ "(CONN_NAME , USER, PASS_WORD, HOST, PORT, DRIVER,VENDOR, SCHEMA, DB_NAME, CREATED_AT ";
 						if(  StrUtils.isNotNullOrEmpty(comment)) {
 							sql  += ", COMMENT ";
 						}
@@ -146,6 +149,7 @@ public class ConnectionDao {
 						+"'"+ driver +"' , "
 						+"'"+ dbVendor +"' , "
 						+"'"+ defaultSchema +"', "
+						+"'"+ dbName +"', "
 						+"'"+StrUtils.dateToStrL(new Date()) +"'";  
 						if(  StrUtils.isNotNullOrEmpty(comment)) {
 							sql  += ", '"+comment+"' ";

@@ -68,7 +68,9 @@ public class DbConnectionPo {
 				sopo.getUser(),
 				sopo.getPassWord(),
 				sopo.getDbVendor(),
-				schema);
+				schema,
+				sopo.getDbName()
+				);
 		
 		return val;
 	}
@@ -89,8 +91,8 @@ public class DbConnectionPo {
 		}else if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 			exportDDL = new ExportSqlSqliteImp();
 		}else if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
-			this.dbName = this.defaultSchema;
-			this.defaultSchema = "public";
+//			this.dbName = this.defaultSchema;
+//			this.defaultSchema = "public";
 			
 			exportDDL = new ExportDefaultImp();
 		}   else {
@@ -101,18 +103,25 @@ public class DbConnectionPo {
 	}
 
 	public DbConnectionPo(String connName, String driver, String host, String port, String user, String passWord,
-			String dbVendor, String defaultSchema
+			String dbVendor, String defaultSchema,String dbName
 
 	) {
 		super();
 		this.connName = connName;
 		this.host = host;
 		this.port = port;
-		this.defaultSchema = defaultSchema.trim();
+//		this.defaultSchema = defaultSchema.trim();
 		this.dbVendor = dbVendor;
+		if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
+			this.defaultSchema = "public";
+		} else {
+			this.defaultSchema = defaultSchema.trim();
+		}
+
 		this.driver = driver;
 		this.user = user;
 		this.passWord = passWord;
+		this.dbName = dbName;
 
 		setExportDDL(dbVendor);
 	}
