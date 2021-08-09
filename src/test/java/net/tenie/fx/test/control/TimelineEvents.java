@@ -17,13 +17,16 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+/**
+ * 动画demo
+ * 
+ * @author tenie
+ *
+ */
 public class TimelineEvents extends Application {
 
-	// main timeline
 	private Timeline timeline;
 	private AnimationTimer timer;
-
-	// variable for storing actual frame
 	private Integer i = 0;
 
 	@Override
@@ -56,7 +59,7 @@ public class TimelineEvents extends Application {
 		timeline.setCycleCount(Timeline.INDEFINITE);
 		timeline.setAutoReverse(true);
 
-//You can add a specific action when each frame is started.
+		//You can add a specific action when each frame is started.
 		timer = new AnimationTimer() {
 			@Override
 			public void handle(long l) {
@@ -73,7 +76,7 @@ public class TimelineEvents extends Application {
 		// create a keyFrame, the keyValue is reached at time 2s
 		Duration duration = Duration.millis(2000);
 		// one can add a specific action when the keyframe is reached
-		EventHandler onFinished = new EventHandler<ActionEvent>() {
+		EventHandler<ActionEvent> onFinished = new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent t) {
 				stack.setTranslateX(java.lang.Math.random() * 200 - 100);
 				// reset counter
