@@ -6,22 +6,22 @@ import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
-//import net.tenie.fx.PropertyPo.CacheTableDate;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.dao.UpdateDao;
+import javafx.util.Duration;
 import net.tenie.lib.tools.StrUtils;
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class CommonUtility {
 	private static Logger logger = LogManager.getLogger(CommonUtility.class);
 	
@@ -186,5 +186,29 @@ public class CommonUtility {
 		}
 		System.out.println(min);
 		return min;
+	}
+	/**
+	 * node 进行旋转的动画, 设置旋转100次
+	 * @param pointer
+	 */
+	public static void rotateTransition(Node pointer) {
+		// 播放持续时间
+		double play_time = 2.0;
+		// 开始角度
+		double fromAngle = 0.0;
+		// 结束角度
+		double toAngle = 720.0;
+		// 根据旋转角度大小计算动画播放持续时间
+//        play_time =Math.abs(toAngle-fromAngle)*0.05;
+		// Duration.seconds(3)设置动画持续时间
+		RotateTransition rotateTransition = new RotateTransition(Duration.seconds(play_time), pointer);
+		// 设置旋转角度
+		rotateTransition.setFromAngle(fromAngle);
+		rotateTransition.setToAngle(toAngle);
+		// 只播放次数
+		rotateTransition.setCycleCount(100);
+		// 每次旋转后是否改变旋转方向
+		rotateTransition.setAutoReverse(false);
+		rotateTransition.play();
 	}
 }

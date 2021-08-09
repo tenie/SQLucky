@@ -3,15 +3,14 @@ package net.tenie.fx.window;
 import java.io.File;
 import java.sql.Connection;
 import java.util.function.Function;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -38,13 +37,12 @@ import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
-import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.fx.main.MainMyDB;
+import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.tools.StrUtils;
 
@@ -58,8 +56,8 @@ public class ConnectionEditor {
 
 		Scene scene = new Scene(vb);
 		
-		vb.setPrefWidth(400);
-		vb.maxWidth(400);
+		vb.setPrefWidth(450);
+		vb.maxWidth(450);
 		AnchorPane bottomPane = new AnchorPane();
 		bottomPane.setPadding(new Insets(10));
 
@@ -119,12 +117,16 @@ public class ConnectionEditor {
 		Label lbpasswordStr = new Label(passwordStr);
 
 		TextField connectionName = new TextField();
+		connectionName.setPrefWidth(250);
+		connectionName.setMinWidth(250);
 		connectionName.setPromptText(connNameStr);
 		connectionName.setText(connNameVal);
 		connectionName.lengthProperty().addListener(CommonListener.textFieldLimit(connectionName, 100));
 
 		ChoiceBox<String> dbDriver = new ChoiceBox<String>(FXCollections.observableArrayList(DbVendor.getAll()));
 		dbDriver.setTooltip(MyTooltipTool.instance("Select DB Type"));
+		dbDriver.setPrefWidth(250);
+		dbDriver.setMinWidth(250);
 
 		TextField host = new TextField();
 		host.setPromptText(hostStr);
@@ -160,9 +162,18 @@ public class ConnectionEditor {
 		h2FilePath.setVisible(false);
 		h2FilePath.setOnAction(e->{
 			String fp = "";
-			File f = CommonFileChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
+			File f = CommonFileChooser.showOpenAllFile("Open", new Stage());
 			if (f != null) { 
 			    fp = f.getAbsolutePath();
+			}
+			if (dbDriver.getValue().equals(DbVendor.h2)  ) {
+				if(fp.endsWith(".mv.db"))
+					fp= fp.substring(0, fp.lastIndexOf(".mv.db"));
+				if(fp.endsWith(".trace.db"))
+					fp= fp.substring(0, fp.lastIndexOf(".trace.db"));
+				if(fp.endsWith(".db"))
+					fp= fp.substring(0, fp.lastIndexOf(".db"));
+				
 			}
 			host.setText(fp);
 			
@@ -284,7 +295,6 @@ public class ConnectionEditor {
 //TODO
 		Button testBtn = createTestBtn( call );//new Button("Test");
 		Button saveBtn = createSaveBtn( call , connectionName ,  dp, stage) ; // new Button("Save"); 
-//		Button h2FilePath = new Button("...");
 		
 		layout( grid, lbconnNameStr,   connectionName, 
 					  lbdbDriverStr,   dbDriver,
@@ -406,8 +416,10 @@ public class ConnectionEditor {
 	}
 
 	// 子线程打开db连接backRunOpenConn
-	public static void backRunOpenConn(TreeItem<TreeNodePo> item) {
-		item.getValue().setIcon(ImageViewGenerator.svgImage("spinner", "red"));
+	public static void backRunOpenConn(TreeItem<TreeNodePo> item) { 
+		Node nd = ImageViewGenerator.svgImage("spinner", "red");
+		CommonUtility.rotateTransition(nd);
+		item.getValue().setIcon( nd);
 		ComponentGetter.treeView.refresh();
 
 		Thread t = new Thread() {

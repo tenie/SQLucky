@@ -1,15 +1,14 @@
 package net.tenie.fx.component;
 
 import java.io.File;
-
-import org.apache.commons.io.FileUtils;
-
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import net.tenie.fx.config.ConfigVal;
-import net.tenie.lib.tools.StrUtils;
 
-/*   @author tenie */
+/**
+ * 操作系统的文件选择窗口
+ * @author tenie
+ *
+ */
 public final class CommonFileChooser {
 	// save file
 	private static FileChooser fileChooser = new FileChooser();
@@ -17,21 +16,39 @@ public final class CommonFileChooser {
 	// default configure
 	private static void configureFileChooser(final FileChooser fileChooser, String title) {
 		fileChooser.setTitle(title);
-
-//	        fileChooser.setInitialDirectory( new File(System.getProperty("user.home"))  );
 		File dir =  ComponentGetter.getOpenfileDir();
 		
 		fileChooser.setInitialDirectory( dir);
 		fileChooser.getExtensionFilters().clear();
-		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("sql", "*.sql"),
-				new FileChooser.ExtensionFilter("txt", "*.txt"), new FileChooser.ExtensionFilter("csv", "*.csv"),
+		fileChooser.getExtensionFilters().addAll(
+				new FileChooser.ExtensionFilter("sql", "*.sql"),
+				new FileChooser.ExtensionFilter("txt", "*.txt"), 
+				new FileChooser.ExtensionFilter("csv", "*.csv"),
 				new FileChooser.ExtensionFilter("All", "*.*"));
 	}
 
+	private static void allFileChooser(final FileChooser fileChooser, String title) {
+		fileChooser.setTitle(title);
+	    fileChooser.setInitialDirectory( new File(System.getProperty("user.home"))  );
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().addAll( 
+				new FileChooser.ExtensionFilter("All", "*.*"));
+	}
+	
+	
 	public static FileChooser getDefaultFileChooser(String title) {
 		configureFileChooser(fileChooser, title);
 		return fileChooser;
 	}
+	
+	public static FileChooser getAllFileChooser(String title) {
+		allFileChooser(fileChooser, title);
+		return fileChooser;
+	}
+	
+	
+	
+	
 
 	// new
 	public static FileChooser getFileChooser(String title) {
@@ -68,6 +85,13 @@ public final class CommonFileChooser {
 	// 打开sql文件
 	public static File showOpenSqlFile(String title, Stage stage) {
 		FileChooser fc = getDefaultFileChooser(title);
+		File file = fc.showOpenDialog(stage);
+		return file;
+	}
+
+	// 所以类型的文件
+	public static File showOpenAllFile(String title, Stage stage) {
+		FileChooser fc = getAllFileChooser(title); 
 		File file = fc.showOpenDialog(stage);
 		return file;
 	}
