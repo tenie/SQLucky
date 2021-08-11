@@ -20,6 +20,7 @@ import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.db.ExportDefaultImp;
 import net.tenie.lib.db.ExportDDL;
 import net.tenie.lib.db.ExportSqlH2Imp;
+import net.tenie.lib.db.ExportSqlMariadbImp;
 import net.tenie.lib.db.ExportSqlMySqlImp;
 import net.tenie.lib.db.ExportSqlSqliteImp;
 
@@ -86,7 +87,9 @@ public class DbConnectionPo {
 			exportDDL = new ExportSqlDB2Imp();
 		} else if (DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())) {
 			exportDDL = new ExportSqlMySqlImp();
-		} else if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
+		} else if (DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())) {
+			exportDDL = new ExportSqlMariadbImp();
+		}else if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
 			exportDDL = new ExportSqlH2Imp();
 		}else if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 			exportDDL = new ExportSqlSqliteImp();
@@ -306,7 +309,7 @@ public class DbConnectionPo {
 
 	public Map<String, DbSchemaPo> getSchemas() {
 		try { 
-			if (schemas == null) { 
+			if (schemas == null || schemas.isEmpty()) { 
 				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 					Map<String, DbSchemaPo> sch = new HashMap<>();
 					DbSchemaPo sp = new DbSchemaPo();

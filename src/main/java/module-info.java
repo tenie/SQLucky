@@ -9,7 +9,8 @@ open module SQLucky {
 	requires java.rmi;
 	requires java.scripting;
 	requires java.xml;
-    requires java.sql; 
+    requires java.sql;
+    requires java.sql.rowset;
     
 	requires javafx.base;
 	requires javafx.graphics;

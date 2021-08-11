@@ -369,13 +369,14 @@ public class ConnectionEditor {
 			closeDbConnHelper(val);
 		}
 		DBConns.flushChoiceBoxGraphic();
+		ComponentGetter.treeView.refresh();
 	}
 
 	private static void closeDbConnHelper(TreeItem<TreeNodePo> val) {
 		String str = val.getValue().getName();
 		logger.info(str);
 		DbConnectionPo dp = DBConns.get(str);
-		if (dp != null && dp.isAlive()) {
+		if (dp != null ) {
 			// 关闭连接
 			dp.closeConn();
 			// 修改颜色
@@ -393,6 +394,7 @@ public class ConnectionEditor {
 			closeDbConnHelper(val);
 		}
 		DBConns.flushChoiceBoxGraphic();
+		ComponentGetter.treeView.refresh();
 	}
 	// 打开连接按钮点击事件
 	public static void openDbConn() {
@@ -453,6 +455,8 @@ public class ConnectionEditor {
 
 					}
 				} catch (Exception e) { 
+					e.printStackTrace();
+					logger.debug(e.getMessage());
 					Platform.runLater(() -> {
 						MyAlert.errorAlert( " Error !");
 						item.getValue().setIcon(ImageViewGenerator.svgImage("unlink", "red"));

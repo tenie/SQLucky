@@ -23,6 +23,7 @@ import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
 import net.tenie.fx.PropertyPo.TableFieldPo;
 import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
+import net.tenie.fx.config.DbVendor;
 import net.tenie.lib.tools.StrUtils;
 
 /**
@@ -140,12 +141,14 @@ public class Dbinfo {
 	}
 
 	// jdbc方式: 获取schemas Connection conn ,String DbVendor
-	public static Map<String, DbSchemaPo> fetchSchemasInfo(Connection conn, String DbVendor) throws Exception {
+	public static Map<String, DbSchemaPo> fetchSchemasInfo(Connection conn, String dbVendor) throws Exception {
 		ResultSet rs = null;
 		Map<String, DbSchemaPo> pos = new HashMap<String, DbSchemaPo>();
 		try {
 			DatabaseMetaData dmd = conn.getMetaData();
-			if ("mysql".equals(DbVendor)) {
+			if (    DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())
+				||  DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())
+					) {
 				rs = dmd.getCatalogs();
 			} else {
 				rs = dmd.getSchemas(); // 默认 db2

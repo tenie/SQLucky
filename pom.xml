@@ -50,14 +50,14 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-graphics</artifactId>
 			<version>${javafx.version}</version>
-		</dependency> 
-		<dependency>
-		    <groupId>org.openjfx</groupId>
-		    <artifactId>javafx-swing</artifactId>
-		    <version>${javafx.version}</version>
 		</dependency>
-		
-		
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-swing</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+
+
 
 		<!-- 控件库 -->
 		<dependency>
@@ -99,14 +99,21 @@
 
 		<!-- 数据库 JDBC -->
 		<dependency>
-			<groupId>com.ibm.db2.jcc</groupId>
-			<artifactId>db2jcc4</artifactId>
-			<version>${db2jcc4.version}</version>
+			<groupId>com.ibm.db2</groupId>
+			<artifactId>jcc</artifactId>
+			<version>11.5.6.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql.jdbc.version}</version>
+			<version>8.0.26</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mariadb.jdbc</groupId>
+			<artifactId>mariadb-java-client</artifactId>
+			<version>2.7.3</version>
 		</dependency>
 
 		<dependency>
@@ -115,13 +122,12 @@
 			<version>${h2.jdbc.version}</version>
 		</dependency>
 
-
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>${sqlite.jdbc.version}</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
@@ -231,46 +237,7 @@
 				</configuration>
 			</plugin>
 
-			<!-- 安装依赖 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-install-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>db2</id>
-						<phase>clean</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>com.ibm.db2.jcc</groupId>
-							<artifactId>db2jcc4</artifactId>
-							<version>10.1</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/lib/db2jcc4-10.1.jar</file>
-							<createChecksum>true</createChecksum>
-							<generatePom>true</generatePom>
-						</configuration>
-					</execution>
-					<execution>
-						<id>mysql</id>
-						<phase>clean</phase>
-						<goals>
-							<goal>install-file</goal>
-						</goals>
-						<configuration>
-							<groupId>mysql</groupId>
-							<artifactId>mysql-connector-java</artifactId>
-							<version>5.1.35</version>
-							<packaging>jar</packaging>
-							<file>${basedir}/lib/mysql-connector-java-5.1.35.jar</file>
-							<createChecksum>true</createChecksum>
-							<generatePom>true</generatePom>
-						</configuration>
 
-					</execution>
-				</executions>
-			</plugin>
 
 		</plugins>
 	</build>

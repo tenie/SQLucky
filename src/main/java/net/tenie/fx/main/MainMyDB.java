@@ -76,8 +76,19 @@ public class MainMyDB extends Application {
 		}
 
 	}
+	
+	public static void printPath() {
+		String  modulePath = System.getProperty("jdk.module.path");
+		String[] ls  = modulePath.split(";");
+		for(String path : ls) {
+			logger.info(path);
+		}
+	}
+	
 
-	public static void main(String[] args) throws IOException { 		    
+	public static void main(String[] args) throws IOException {
+//		System.out.println(System.getProperty("jdk.module.path"));
+		printPath();
 		LauncherImpl.launchApplication(MainMyDB.class, MyPreloader.class, args);
 	}
 }
