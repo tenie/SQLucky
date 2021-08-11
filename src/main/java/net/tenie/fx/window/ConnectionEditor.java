@@ -63,14 +63,14 @@ public class ConnectionEditor {
 
 		vb.getChildren().add(bottomPane);
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-		KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
+//		KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
 		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {
 			stage.close();
 		});
-		scene.getAccelerators().put(enterbtn, () -> {
-			stage.close();
-		});
+//		scene.getAccelerators().put(enterbtn, () -> {
+//			stage.close();
+//		});
 		scene.getAccelerators().put(spacebtn, () -> {
 			stage.close();
 		});
