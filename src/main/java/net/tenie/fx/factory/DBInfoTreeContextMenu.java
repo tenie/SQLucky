@@ -64,7 +64,7 @@ public class DBInfoTreeContextMenu {
 		
 	    delete = new MenuItem("Delete Connection");
 		delete.setOnAction(e -> {
-			ConnectionEditor.ConnectionInfoSetting();
+			ConnectionEditor.deleteDbConn();
 		});
 		delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
 		delete.setDisable(true);

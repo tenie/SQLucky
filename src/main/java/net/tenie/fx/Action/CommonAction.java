@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -47,6 +48,7 @@ import javafx.scene.input.MouseEvent;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
+import net.tenie.fx.PropertyPo.ScriptPo;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
@@ -59,9 +61,11 @@ import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.MenuBarContainer;
+import net.tenie.fx.component.container.ScriptTree;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
@@ -196,33 +200,90 @@ public class CommonAction {
 	
 	// 保存app状态
 	public static void saveApplicationStatusInfo() {
-		ConnectionDao.refreshConnOrder(); 
-		TabPane mainTabPane = ComponentGetter.mainTabPane;
-		int SELECT_PANE = mainTabPane.getSelectionModel().getSelectedIndex();
-		Connection H2conn = H2Db.getConn();
-		SqlTextDao.deleteAll(H2conn);
-		for (Tab t : mainTabPane.getTabs()) {
-			String idval = t.getId();
-			if (StrUtils.isNotNullOrEmpty(idval)) {
-				String sql = SqlEditor.getTabSQLText(t);
-				if (StrUtils.isNotNullOrEmpty(sql)) {
-					CodeArea code = SqlEditor.getCodeArea(t);
-					int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() -10 : 0;
-					if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
-						idval = idval.substring(ConfigVal.SAVE_TAG.length());
-					} else {
-						idval = "";
-					}
+		try {
+			ConnectionDao.refreshConnOrder();
+			TabPane mainTabPane = ComponentGetter.mainTabPane;
+			int SELECT_PANE = mainTabPane.getSelectionModel().getSelectedIndex();
+			Connection H2conn = H2Db.getConn();
+			SqlTextDao.deleteAll(H2conn);
+			for (Tab t : mainTabPane.getTabs()) {
+				String idval = t.getId();
+				if (StrUtils.isNotNullOrEmpty(idval)) {
+					String sql = SqlEditor.getTabSQLText(t);
+					if (StrUtils.isNotNullOrEmpty(sql)) {
+						CodeArea code = SqlEditor.getCodeArea(t);
+						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
+						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
+							idval = idval.substring(ConfigVal.SAVE_TAG.length());
+						} else {
+							idval = "";
+						}
 
-					String title = CommonUtility.tabText(t); 
-					String encode = ComponentGetter.getFileEncode(idval);
-					SqlTextDao.save(H2conn, title, sql, idval, encode, paragraph);
+						String title = CommonUtility.tabText(t);
+						String encode = ComponentGetter.getFileEncode(idval);
+						SqlTextDao.save(H2conn, title, sql, idval, encode, paragraph);
+					}
 				}
 			}
+			// 保存选择的pane 下标
+			SqlTextDao.saveConfig(H2conn, "SELECT_PANE", SELECT_PANE + "");
+
+		} finally {
+			H2Db.closeConn();
 		}
-		// 保存选择的pane 下标
-		SqlTextDao.saveConfig(H2conn, "SELECT_PANE", SELECT_PANE+"");
+
 	}
+		
+	// 保存脚本文件内容
+	public static List<ScriptPo>  saveScriptArchive() {
+		List<ScriptPo> val = new ArrayList<>();
+		try {
+			TabPane mainTabPane = ComponentGetter.mainTabPane;
+			Connection H2conn = H2Db.getConn();
+			for (Tab t : mainTabPane.getTabs()) {
+				String idval = t.getId();
+				if (StrUtils.isNotNullOrEmpty(idval)) {
+					String sql = SqlEditor.getTabSQLText(t);
+					if (StrUtils.isNotNullOrEmpty(sql)) {
+						CodeArea code = SqlEditor.getCodeArea(t);
+						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
+						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
+							idval = idval.substring(ConfigVal.SAVE_TAG.length());
+						} else {
+							idval = "";
+						}
+
+						String title = CommonUtility.tabText(t); 
+						String encode = ComponentGetter.getFileEncode(idval);
+						ScriptPo po= SqlTextDao.scriptArchive(H2conn, title, sql, idval, encode, paragraph);
+						if(po != null && po.getId() > -1) { 
+							val.add(po);
+						}
+					}
+				}
+			}
+		} finally {
+			H2Db.closeConn();
+		}
+		return val;
+	}
+	
+	//TODO archive script
+	public static void archiveAllScript() {
+		List<ScriptPo> vals = CommonAction.saveScriptArchive();  
+		for(var val : vals) { 
+			TreeItem<ScriptPo> ti = new TreeItem<>(val); 
+			ScriptTree.treeRootAddItem(ti);
+		}
+		
+		TabPane mainTabPane = ComponentGetter.mainTabPane;
+		mainTabPane.getTabs().clear();
+		MainTabs.clear();
+		SqlEditor.addCodeEmptyTabMethod();
+		var stp = ComponentGetter.scriptTitledPane;
+		stp.setExpanded(true);
+	}
+	
 
 	// 代码格式化
 	public static void formatSqlText() {

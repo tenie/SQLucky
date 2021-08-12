@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.fx.PropertyPo.ScriptPo;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportSqlMySqlImp;
 /*   @author tenie */
@@ -48,6 +49,20 @@ public class SqlTextDao {
 				 
 				"  PRIMARY KEY (`TITLE_NAME`)\n" + 
 				") ";
+		
+		String scriptArchive = 
+				"CREATE TABLE `SCRIPT_ARCHIVE` (\n" +
+				"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+				"  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n" + 
+				"  `SQL_TEXT` CLOB, \n" +
+				"  `FILE_NAME` VARCHAR(1000) ,\n" + 
+				"  `ENCODE` VARCHAR(100) ,\n" + 
+				"  `PARAGRAPH` INT(11) DEFAULT '0',\n" + 
+				 
+				"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
+				") ";
+		
+		
 		String configTable = 
 						"CREATE TABLE `APP_CONFIG` (\n" +  
 						"  `NAME` VARCHAR(1000)   NOT NULL,\n" + 
@@ -57,6 +72,8 @@ public class SqlTextDao {
 		try {
 			DBTools.execDDL(conn, sql);
 			DBTools.execDDL(conn, sql2);
+			DBTools.execDDL(conn, scriptArchive);
+			
 			DBTools.execDDL(conn, configTable);
 			saveConfig(conn, "THEME", "DARK");
 		} catch (SQLException e) { 
@@ -76,7 +93,6 @@ public class SqlTextDao {
 //	}
 	public static void save(Connection conn , String title, String txt, String filename, String encode, int paragraph) {
 		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH) values ( ? , ?, ?, ?, ?)";
-		int i = 0;
 		PreparedStatement sm = null; 
 		try { 
 			sm = conn.prepareStatement(sql);
@@ -85,7 +101,7 @@ public class SqlTextDao {
 			sm.setString(3, filename);
 			sm.setString(4, encode);
 			sm.setInt(5, paragraph);
-		    i = sm.executeUpdate();
+		    sm.executeUpdate();
 		} catch (SQLException e) { 
 			e.printStackTrace(); 
 		}finally { 
@@ -96,6 +112,42 @@ public class SqlTextDao {
 					e.printStackTrace();
 				}
 		}
+	}
+//	int val = DBTools.execInsertReturnId(conn, sql);
+	public static ScriptPo scriptArchive(Connection conn , String title, String txt, String filename, String encode, int paragraph) {
+		String sql = "insert into SCRIPT_ARCHIVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH) values ( ? , ?, ?, ?, ?)";
+		PreparedStatement sm = null; 
+		Integer id = -1;
+		
+		
+		try {  
+			sm = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			sm.setString(1, title);
+			sm.setString(2, txt);
+			sm.setString(3, filename);
+			sm.setString(4, encode);
+			sm.setInt(5, paragraph);
+			
+		    id = DBTools.execInsertReturnId(sm);
+		} catch (SQLException e) { 
+			e.printStackTrace(); 
+		}finally { 
+			if(sm!=null)
+				try {
+					sm.close();
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
+		}
+		ScriptPo po = new ScriptPo();
+		po.setId(id);
+		po.setTitle(title);
+		po.setFileName(filename);
+		po.setEncode(encode);
+		po.setParagraph(paragraph);
+		po.setText(txt);
+		
+		return po;
 	}
 	
 	
@@ -167,6 +219,54 @@ public class SqlTextDao {
 		}
 		return vals;
 	}
+	
+	public static void delScriptPo(Integer id) {
+		String sql = "delete   from   SCRIPT_ARCHIVE  where id = " + id ;
+		var conn = H2Db.getConn();
+		try {
+			DBTools.execDDL(conn,  sql);
+		} catch (SQLException e) { 
+			e.printStackTrace();
+		}finally {
+			H2Db.closeConn();
+		}
+	}
+	
+	public static List<ScriptPo> readScriptPo(Connection conn) {
+		String sql = "select   *   from   SCRIPT_ARCHIVE " ;
+		List<ScriptPo> vals = new ArrayList<>();
+		
+		Statement sm = null; 
+		ResultSet rs = null;
+		try { 
+			sm = conn.createStatement();
+			logger.info("执行   "+ sql);
+		    rs =  sm.executeQuery(sql);  
+		    while(rs.next()) {
+		    	ScriptPo po = new ScriptPo();
+		    	po.setId(rs.getInt("ID"));
+		    	po.setTitle( rs.getString("TITLE_NAME"));
+		    	po.setText( rs.getString("SQL_TEXT"));
+		    	po.setFileName( rs.getString("FILE_NAME"));
+		    	po.setEncode( rs.getString("ENCODE"));
+		    	po.setParagraph(rs.getInt("PARAGRAPH"));
+		    	vals.add(po); 
+		    }
+		} catch (SQLException e) { 
+			e.printStackTrace(); 
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (sm != null)
+					sm.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return vals;
+	}
+	
 	
 	public static void deleteAll(Connection conn ) {
 		try {

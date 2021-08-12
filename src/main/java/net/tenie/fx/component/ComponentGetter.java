@@ -21,6 +21,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
@@ -65,6 +66,10 @@ public final class ComponentGetter {
 
 	public static ComboBox<Label> connComboBox;
 	public static volatile AppWindow app;
+	
+	
+	public static TitledPane scriptTitledPane;
+	public static TitledPane dbTitledPane;
 	
 	// 数据同步界面
 	public static Stage dataTransferStage;

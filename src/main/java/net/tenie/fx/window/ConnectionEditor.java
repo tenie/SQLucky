@@ -2,6 +2,7 @@ package net.tenie.fx.window;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,6 +43,7 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
+import net.tenie.fx.main.Restart;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.tools.StrUtils;
@@ -334,31 +336,49 @@ public class ConnectionEditor {
 	}
 
 	public static void deleteDbConn() {
-		try {
-			logger.info("deleteDbConn()");
-			TreeView<TreeNodePo> treeView = ComponentGetter.treeView;
-			TreeItem<TreeNodePo> rootNode = treeView.getRoot();
-			ObservableList<TreeItem<TreeNodePo>> ls = rootNode.getChildren();
 
-			// 获取选择的节点是不是 连接节点
-			TreeItem<TreeNodePo> selectItem = treeView.getSelectionModel().getSelectedItem();
-			Connection h2conn = H2Db.getConn();
-			for (TreeItem<TreeNodePo> val : ls) {
-				if (val.equals(selectItem)) {
-					DbConnectionPo po = DBConns.get(val.getValue().getName()); // 找到连接对象
-					if (po != null) {
-						po.closeConn(); // 关闭它的连接 if(po.getId() !=null )
-						ConnectionDao.delete(h2conn, po.getId()); // 删除连接对象在数据库中的数据
-						DBConns.remove(po.getConnName());
-						// 删除节点
-						ls.remove(val);
-						break;
-					}
+		DbConnectionPo po = null;
+		TreeItem<TreeNodePo> treeNode = null;
+
+		logger.info("deleteDbConn()");
+		TreeView<TreeNodePo> treeView = ComponentGetter.treeView;
+		TreeItem<TreeNodePo> rootNode = treeView.getRoot();
+		ObservableList<TreeItem<TreeNodePo>> ls = rootNode.getChildren();
+
+		// 获取选择的节点是不是 连接节点
+		TreeItem<TreeNodePo> selectItem = treeView.getSelectionModel().getSelectedItem();
+
+		for (TreeItem<TreeNodePo> val : ls) {
+			if (val.equals(selectItem)) {
+				po = DBConns.get(val.getValue().getName()); // 找到连接对象
+				if (po != null) {
+					treeNode = val;
+					break;
 				}
 			}
-		} finally {
-			H2Db.closeConn();
 		}
+		final DbConnectionPo tmpPo = po;
+		final TreeItem<TreeNodePo> tmpTreeNode = treeNode;
+		Consumer<String> ok = x -> {
+			try {
+				if (tmpPo != null ) {
+					Connection h2conn = H2Db.getConn();
+					tmpPo.closeConn(); // 关闭它的连接 if(po.getId() !=null )
+					ConnectionDao.delete(h2conn, tmpPo.getId()); // 删除连接对象在数据库中的数据
+					DBConns.remove(tmpPo.getConnName());
+					// 删除节点
+					ls.remove(tmpTreeNode);
+				}
+			} finally {
+				H2Db.closeConn();
+			}
+
+		};
+		// TODO
+		if (tmpPo != null) {
+			ModalDialog.myConfirmation("OK to delete " + tmpPo.getConnName() + " ?", ok);
+		}
+
 	}
 
 	public static void closeAllDbConn() {

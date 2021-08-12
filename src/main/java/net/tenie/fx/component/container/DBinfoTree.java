@@ -4,24 +4,18 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import org.fxmisc.richtext.Caret.CaretVisibility;
 import org.fxmisc.richtext.CodeArea;
-
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
-import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.Action.TreeObjAction;
-import net.tenie.fx.PropertyPo.DBOptionHelper;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
 import net.tenie.fx.PropertyPo.TablePo;
@@ -35,23 +29,22 @@ import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.TreeItem.MyTreeItem;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.fx.factory.MenuFactory;
 import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.tools.StrUtils;
 
-/*   @author tenie */
+/**
+ * 链接节点树
+ * @author tenie
+ *
+ */
 public class DBinfoTree {
 
 	public static TreeView<TreeNodePo> DBinfoTreeView; 
 	public static Region icon;
-//	public static ContextMenu contextMenu;
 	private  DBInfoTreeContextMenu  menu;
-	
-//	private TreeView<TreeNodePo> treeView;
-//	private ObservableList<TreeItem<TreeNodePo>> connsNode;
 	// 缓存 激活的ConnItemContainer
 	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
 	
@@ -67,8 +60,33 @@ public class DBinfoTree {
 				new TreeNodePo("Connections",  icon)); 
 		TreeView<TreeNodePo> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");
+		
+		recoverNode(rootNode);// 恢复数据中保存的连接数据
+		// 展示连接
+		if (rootNode.getChildren().size() > 0)
+			treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+		// 双击
+		treeView.setOnMouseClicked(e -> {
+			treeViewDoubleClick(e);
+		});
+		// 右键菜单
+		menu = new DBInfoTreeContextMenu();
+		ContextMenu	contextMenu = menu.getContextMenu();
+		treeView.setContextMenu(contextMenu);
+		// 选中监听事件
+		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
+		treeView.getSelectionModel().select(rootNode);
+
+		DBinfoTreeView = treeView;
+		
+		// 显示设置, 从TreeNodePo中的对象显示为 TreeItem 的名称和图标
+		treeView.setCellFactory(new TreeNodeCellFactory());
+		return treeView;
+	}
+	
+	// 恢复数据中保存的连接数据
+	public static void recoverNode(TreeItem<TreeNodePo> rootNode) {  
 		try {
-			// 恢复数据中保存的连接数据
 			Connection H2conn = H2Db.getConn();
 			List<DbConnectionPo> datas = ConnectionDao.recoverConnObj(H2conn);
 			if (datas != null && datas.size() > 0) {
@@ -76,36 +94,14 @@ public class DBinfoTree {
 					MyTreeItem<TreeNodePo> item = new MyTreeItem<>(
 							new TreeNodePo(po.getConnName(), ImageViewGenerator.svgImageUnactive("unlink")));
 					rootNode.getChildren().add(item);
-					DBConns.add(po.getConnName(), po);
-
-				}
-
-			}
-//			connsNode = rootNode.getChildren();
-
-			// 展示连接
-			if (rootNode.getChildren().size() > 0)
-				treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
-			// 双击
-			treeView.setOnMouseClicked(e -> {
-				treeViewDoubleClick(e);
-			});
-			// 右键菜单
-			menu = new DBInfoTreeContextMenu();
-			ContextMenu	contextMenu = menu.getContextMenu(); //MenuFactory.CreateTreeViewConnMenu();	//CreateConnMenu(); // ComponentGetter.getConnMenu();
-			treeView.setContextMenu(contextMenu);
-			// 选中监听事件
-			treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
-			treeView.getSelectionModel().select(rootNode);
+					DBConns.add(po.getConnName(), po); 
+				} 
+			} 
 		} finally {
 			H2Db.closeConn();
 		}
-		DBinfoTreeView = treeView;
-		
-		// 显示设置, 从TreeNodePo中的对象显示为 TreeItem 的名称和图标
-		treeView.setCellFactory(new TreeNodeCellFactory());
-		return treeView;
 	}
+	
 
 	// 所有连接节点
 	public static ObservableList<TreeItem<TreeNodePo>> allconnsItem() {
@@ -358,23 +354,7 @@ public class DBinfoTree {
 				parent = parent.getParent();
 			}
 		}
-		
-		
-		
-		
 		return connItem;
-//		do {
-//			if(newValue)
-//		}while();
 	}
- 
-
-//	public TreeView<TreeNodePo> getTreeView() {
-//		return treeView;
-//	}
-//
-//	public void setTreeView(TreeView<TreeNodePo> treeView) {
-//		this.treeView = treeView;
-//	}
  
 }

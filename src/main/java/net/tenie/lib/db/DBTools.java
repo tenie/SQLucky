@@ -180,7 +180,8 @@ public class DBTools {
 				sm.close();
 		}
 	}
-
+	
+	// 执行插入返回id
 	public static int execInsertReturnId(Connection conn, String sql) throws SQLException {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -203,6 +204,26 @@ public class DBTools {
 		}
 		return id;
 	}
+	public static int execInsertReturnId( PreparedStatement pstmt) throws SQLException {
+		 
+		ResultSet rs = null;
+		int id = -1;
+		try {  
+			pstmt.execute();
+			rs = pstmt.getGeneratedKeys();
+			if (rs.next()) {
+				id = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (rs != null)
+				rs.close();
+		}
+		return id;
+	}
+	
 
 	/**
 	 * 批量执行

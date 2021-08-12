@@ -1,4 +1,12 @@
- 
+.titledPane-color {
+ 	-fx-color: #2B2B2B ;
+}
+
+.titledPane-color .title:hover{
+ 	-fx-color: #2B2B2B ;
+ 	-fx-background-color: #2B2B2B  ;
+}
+
 
 /* tree  */
 .tree-view, .tree-cell {

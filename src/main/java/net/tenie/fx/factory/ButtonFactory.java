@@ -43,7 +43,8 @@ public class ButtonFactory {
 
 	// 连接区
 	// 操作按钮
-	public static void treeViewbtnInit(FlowPane pn) {
+	public static FlowPane createTreeViewbtn() {
+		FlowPane pn = new FlowPane();
 		// 页面初始化: 添加组件
 		JFXButton addConnbtn = new JFXButton();
 
@@ -82,14 +83,7 @@ public class ButtonFactory {
 			ConnectionEditor.editDbConn();
 		});
 		editConn.setTooltip(MyTooltipTool.instance("Edit DB Connection"));
-		btns.add(editConn);
-
-		// 删除连接
-		JFXButton deleteConn = new JFXButton();
-		deleteConn.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
-		deleteConn.setOnMouseClicked(CommonEventHandler.deleteConnEvent());
-		deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
-		btns.add(deleteConn);
+		btns.add(editConn); 
 
 		// 收缩树 zero-fitscreen-24
 		JFXButton shrink = new JFXButton();
@@ -105,7 +99,26 @@ public class ButtonFactory {
 			}
 		});
 		shrink.setTooltip(MyTooltipTool.instance("Select Words Find It In DB Tree"));
+		
+		
+		// 删除连接
+		JFXButton deleteConn = new JFXButton();
+		deleteConn.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
+		deleteConn.setOnMouseClicked(CommonEventHandler.deleteConnEvent());
+		deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
+		btns.add(deleteConn);
 
+		
+		// 脚本
+		JFXButton script = new JFXButton();
+		script.setGraphic(ImageViewGenerator.svgImageDefActive("entypo-download"));
+		script.setOnMouseClicked(e->{
+			  CommonAction.archiveAllScript();
+			
+		});
+		script.setTooltip(MyTooltipTool.instance("Archive Script "));
+		btns.add(script);
+		
 		pn.getChildren().add(addConnbtn);
 		pn.getChildren().add(editConn);
 		pn.getChildren().add(shrink);
@@ -115,7 +128,8 @@ public class ButtonFactory {
 		pn.getChildren().add(closeALlConn);
 
 		pn.getChildren().add(deleteConn);
-
+		pn.getChildren().add(script);
+		return pn;
 	}
 
 	// 代码区

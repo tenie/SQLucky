@@ -1,4 +1,4 @@
-package net.tenie.fx.test.control;
+package net.tenie.fx.test.app;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

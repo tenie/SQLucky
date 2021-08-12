@@ -3,6 +3,9 @@ package net.tenie.fx.component.container;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 
+import javafx.scene.control.Accordion;
+import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
@@ -24,24 +27,57 @@ public class DBinfoContainer {
 	private TreeView<TreeNodePo> treeView;
 	private AnchorPane filter;
 	private DBinfoTree dbInfoTree;
+	private ScriptTree scriptTree;   //脚本
 	private DBinfoTreeFilter dbf;
 	
 	public DBinfoContainer() {
 		container = new VBox();
-		treeBtnPane = new FlowPane();
-
+		treeBtnPane = ButtonFactory.createTreeViewbtn();  
 		dbInfoTree = new DBinfoTree();
-		treeView =  DBinfoTree.DBinfoTreeView ; //.getTreeView();
+		treeView =  DBinfoTree.DBinfoTreeView ; 
+
+		scriptTree = new ScriptTree();
+		var ScripttreeView =  ScriptTree.ScriptTreeView ;  
+		
 		dbf  = new DBinfoTreeFilter(); 		
 		filter = dbf.createFilterPane(treeView);
-		container.getChildren().addAll(treeBtnPane, treeView, filter);
-		VBox.setVgrow(treeView, Priority.ALWAYS);
-
-		ButtonFactory.treeViewbtnInit(treeBtnPane);
+		
+		// 
+		Accordion ad = new Accordion();
+		TitledPane dbTitledPane = new TitledPane();
+		ad.setExpandedPane(dbTitledPane);
+		CommonAction.addCssClass(dbTitledPane, "titledPane-color");
+		dbTitledPane.setText("DB Config");
+		TitledPane scriptTitledPane = new TitledPane();
+		CommonAction.addCssClass(scriptTitledPane, "titledPane-color");
+		scriptTitledPane.setText("Script");
+		ad.getPanes().add(dbTitledPane);
+		ad.getPanes().add(scriptTitledPane);
+		
+		VBox testvb = new VBox();
+		testvb.getChildren().add(new Label("???????") );
+		scriptTitledPane.setContent(ScripttreeView);
+		
+		
+//		VBox containerVBox = new VBox();
+//		containerVBox.getChildren().addAll(treeView, filter);
+		dbTitledPane.setContent( treeView);
+		
+		container.getChildren().addAll(treeBtnPane, ad , filter);
+//		container.getChildren().addAll(treeBtnPane, treeView, filter);
+		
+		
+//		VBox.setMargin(containerVBox, null);
+		
+		VBox.setVgrow(ad, Priority.ALWAYS);
+ 
 
 		ComponentGetter.treeView = treeView;
 		ComponentGetter.dbInfoTree = dbInfoTree;
 		ComponentGetter.treeBtnPane = treeBtnPane;
+		
+		ComponentGetter.dbTitledPane = dbTitledPane;
+		ComponentGetter.scriptTitledPane = scriptTitledPane;
 	}
 
 	
