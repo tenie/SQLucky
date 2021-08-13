@@ -5,6 +5,7 @@ import javafx.geometry.Side;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.SqlEditor;
 
 /*   @author tenie */
 public class OperateContainer {
@@ -15,8 +16,11 @@ public class OperateContainer {
 
 	public OperateContainer() {
 		container = new HBox();
-		dbinfoCtr = new DBinfoContainer();
+		
 		codeCtr = new CodeContainer();
+		dbinfoCtr = new DBinfoContainer();
+
+		SqlEditor.codeAreaRecover(); // 还原上次的sql代码
 
 		treeAreaDetailPane = new MasterDetailPane(Side.LEFT);
 		treeAreaDetailPane.setShowDetailNode(true);

@@ -121,6 +121,14 @@ public class DBTools {
 				pstmt.close();
 		}
 	}
+	
+	public static void execDDLNoErr(Connection conn, String sql)  {
+		try {
+			execDDL(conn, sql);
+		} catch (Exception e) { 
+		}
+	}
+	
 	// 返回第一个字段的字符串值
 	public static String selectOne(Connection conn, String sql) {
 		ResultSet rs = null;

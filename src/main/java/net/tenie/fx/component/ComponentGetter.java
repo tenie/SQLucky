@@ -84,7 +84,7 @@ public final class ComponentGetter {
 	public static String  dragTreeItemName;
 	
 	// file 编码
-	public static Map<String, String> fileEncode = new HashMap<>();
+//	public static Map<String, String> fileEncode = new HashMap<>();
 	
 	
 	// 数据tab集合
@@ -92,13 +92,13 @@ public final class ComponentGetter {
 		return ComponentGetter.dataTab.getTabs();
 	}
 	
-	public static String getFileEncode(String name) {
-		String val = fileEncode.get(name);
-		if(val == null) {
-			val = "UTF-8";
-		}
-		return val;
-	}
+//	public static String getFileEncode(String name) {
+//		String val = fileEncode.get(name);
+//		if(val == null) {
+//			val = "UTF-8";
+//		}
+//		return val;
+//	}
 	
 	// 获取打开文件的目录
 	public static File getOpenfileDir() { 

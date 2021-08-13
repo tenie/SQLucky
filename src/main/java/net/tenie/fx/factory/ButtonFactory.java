@@ -113,7 +113,7 @@ public class ButtonFactory {
 		JFXButton script = new JFXButton();
 		script.setGraphic(ImageViewGenerator.svgImageDefActive("entypo-download"));
 		script.setOnMouseClicked(e->{
-			  CommonAction.archiveAllScript();
+//			  CommonAction.archiveAllScript();
 			
 		});
 		script.setTooltip(MyTooltipTool.instance("Archive Script "));
@@ -134,8 +134,8 @@ public class ButtonFactory {
 
 	// 代码区
 	// codeArea 代码区域 按钮初始化
-	public static void codeAreabtnInit(AnchorPane pn) {
-
+	public static AnchorPane codeAreabtnInit() {
+		    AnchorPane pn = new AnchorPane();
 			JFXButton runbtn = new JFXButton();
 			runbtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
 			runbtn.setTooltip(MyTooltipTool.instance("run sql      ctrl + Enter "));
@@ -304,6 +304,7 @@ public class ButtonFactory {
 			AllButtons.btns.put("runFunPro", runFunPro);
 			AllButtons.btns.put("addcodeArea", addcodeArea);
 
+			return pn;
 		}
 	// 数据区
 	// 数据表格 操作按钮们

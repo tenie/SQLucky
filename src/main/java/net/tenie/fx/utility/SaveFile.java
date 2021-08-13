@@ -18,8 +18,8 @@ public class SaveFile {
 	public static void save(File file, String data ) throws IOException {
 		FileUtils.writeStringToFile( file,  data,"UTF-8" ); 
 	}
-	public static void save(String fileName, String data ) throws IOException {
-		String encode = ComponentGetter.getFileEncode(fileName);
+	public static void saveByEncode(String fileName, String data , String encode ) throws IOException {
+//		String encode = ComponentGetter.getFileEncode(fileName);
 		if(StrUtils.isNotNullOrEmpty(encode)) {
 			save(fileName, data, encode );
 		}else {

@@ -17,66 +17,65 @@ import net.tenie.lib.db.ExportSqlMySqlImp;
 /*   @author tenie */
 public class SqlTextDao {
 	private static Logger logger = LogManager.getLogger(SqlTextDao.class);
+	public static final String CONNECTION_INFO = 
+			"CREATE TABLE `CONNECTION_INFO` (\n" + 
+			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+			"  `CONN_NAME` VARCHAR(1000)   NOT NULL,\n" + 
+			"  `USER` VARCHAR(1000)   NOT NULL,\n" + 
+			"  `PASS_WORD` VARCHAR(1000)   NOT NULL,\n" + 
+			"  `HOST` VARCHAR(200) ,\n" + 
+			"  `PORT` VARCHAR(10) , \n" + 
+			"  `DRIVER` VARCHAR(200) ,\n" + 
+			"  `VENDOR` VARCHAR(100)  ,\n" + 
+			"  `SCHEMA` VARCHAR(200)  ,\n" + 
+			"  `DB_NAME` VARCHAR(200)  ,\n" + 
+			"  `COMMENT` VARCHAR(200) DEFAULT NULL,\n" +  
+			"  `CREATED_AT` DATETIME DEFAULT NULL,\n" + 
+			"  `UPDATED_AT` DATETIME DEFAULT NULL,\n" + 
+			"  `RECORD_VERSION` INT(11) DEFAULT '0',\n" + 
+			"  `ORDER_TAG` DOUBLE(11) DEFAULT '99',\n" + 
+			"  PRIMARY KEY (`ID`,`CONN_NAME`)\n" + 
+			") ";
+	public static  final String SQL_TEXT_SAVE = 
+			"CREATE TABLE `SQL_TEXT_SAVE` (\n" +  
+			"  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n" + 
+			"  `SQL_TEXT` CLOB, \n" +
+			"  `FILE_NAME` VARCHAR(1000) ,\n" + 
+			"  `ENCODE` VARCHAR(100) ,\n" + 
+			"  `PARAGRAPH` INT(11) DEFAULT '0',\n" + 
+			"  `SCRIPT_ID` INT(11) NOT NULL ,\n" + 
+			
+			"  PRIMARY KEY (`TITLE_NAME`)\n" + 
+			") ";
 	
+	public static final  String SCRIPT_ARCHIVE = 
+			"CREATE TABLE `SCRIPT_ARCHIVE` (\n" +
+			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+			"  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n" + 
+			"  `SQL_TEXT` CLOB, \n" +
+			"  `FILE_NAME` VARCHAR(1000) ,\n" + 
+			"  `ENCODE` VARCHAR(100) ,\n" + 
+			"  `PARAGRAPH` INT(11) DEFAULT '0',\n" + 
+			 
+			"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
+			") ";
+	
+	
+	public static final  String APP_CONFIG = 
+					"CREATE TABLE `APP_CONFIG` (\n" +  
+					"  `NAME` VARCHAR(1000)   NOT NULL,\n" + 
+					"  `VAL`  VARCHAR(1000), \n" + 
+					"  PRIMARY KEY (`NAME`)\n" + 
+					") ";
 	// 建表 
 	public static void createTab(Connection conn) {
-		String sql = 
-				"CREATE TABLE `CONNECTION_INFO` (\n" + 
-				"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
-				"  `CONN_NAME` VARCHAR(1000)   NOT NULL,\n" + 
-				"  `USER` VARCHAR(1000)   NOT NULL,\n" + 
-				"  `PASS_WORD` VARCHAR(1000)   NOT NULL,\n" + 
-				"  `HOST` VARCHAR(200) ,\n" + 
-				"  `PORT` VARCHAR(10) , \n" + 
-				"  `DRIVER` VARCHAR(200) ,\n" + 
-				"  `VENDOR` VARCHAR(100)  ,\n" + 
-				"  `SCHEMA` VARCHAR(200)  ,\n" + 
-				"  `DB_NAME` VARCHAR(200)  ,\n" + 
-				"  `COMMENT` VARCHAR(200) DEFAULT NULL,\n" +  
-				"  `CREATED_AT` DATETIME DEFAULT NULL,\n" + 
-				"  `UPDATED_AT` DATETIME DEFAULT NULL,\n" + 
-				"  `RECORD_VERSION` INT(11) DEFAULT '0',\n" + 
-				"  `ORDER_TAG` DOUBLE(11) DEFAULT '99',\n" + 
-				"  PRIMARY KEY (`ID`,`CONN_NAME`)\n" + 
-				") ";
-		String sql2 = 
-				"CREATE TABLE `SQL_TEXT_SAVE` (\n" +  
-				"  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n" + 
-				"  `SQL_TEXT` CLOB, \n" +
-				"  `FILE_NAME` VARCHAR(1000) ,\n" + 
-				"  `ENCODE` VARCHAR(100) ,\n" + 
-				"  `PARAGRAPH` INT(11) DEFAULT '0',\n" + 
-				 
-				"  PRIMARY KEY (`TITLE_NAME`)\n" + 
-				") ";
-		
-		String scriptArchive = 
-				"CREATE TABLE `SCRIPT_ARCHIVE` (\n" +
-				"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
-				"  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n" + 
-				"  `SQL_TEXT` CLOB, \n" +
-				"  `FILE_NAME` VARCHAR(1000) ,\n" + 
-				"  `ENCODE` VARCHAR(100) ,\n" + 
-				"  `PARAGRAPH` INT(11) DEFAULT '0',\n" + 
-				 
-				"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
-				") ";
-		
-		
-		String configTable = 
-						"CREATE TABLE `APP_CONFIG` (\n" +  
-						"  `NAME` VARCHAR(1000)   NOT NULL,\n" + 
-						"  `VAL`  VARCHAR(1000), \n" + 
-						"  PRIMARY KEY (`NAME`)\n" + 
-						") ";
 		try {
-			DBTools.execDDL(conn, sql);
-			DBTools.execDDL(conn, sql2);
-			DBTools.execDDL(conn, scriptArchive);
-			
-			DBTools.execDDL(conn, configTable);
+			DBTools.execDDLNoErr(conn, CONNECTION_INFO);
+			DBTools.execDDLNoErr(conn, SQL_TEXT_SAVE);
+			DBTools.execDDLNoErr(conn, SCRIPT_ARCHIVE); 
+			DBTools.execDDLNoErr(conn, APP_CONFIG);
 			saveConfig(conn, "THEME", "DARK");
-		} catch (SQLException e) { 
+		} catch (Exception e) { 
 			e.printStackTrace();
 		}
 	}
@@ -91,8 +90,8 @@ public class SqlTextDao {
 //			e.printStackTrace();
 //		} 
 //	}
-	public static void save(Connection conn , String title, String txt, String filename, String encode, int paragraph) {
-		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH) values ( ? , ?, ?, ?, ?)";
+	public static void save(Connection conn , String title, String txt, String filename, String encode, int paragraph, int scriptId) {
+		String sql = "insert into SQL_TEXT_SAVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH ,SCRIPT_ID) values ( ?, ? , ?, ?, ?, ?)";
 		PreparedStatement sm = null; 
 		try { 
 			sm = conn.prepareStatement(sql);
@@ -101,6 +100,7 @@ public class SqlTextDao {
 			sm.setString(3, filename);
 			sm.setString(4, encode);
 			sm.setInt(5, paragraph);
+			sm.setInt(6, scriptId);
 		    sm.executeUpdate();
 		} catch (SQLException e) { 
 			e.printStackTrace(); 
@@ -117,9 +117,7 @@ public class SqlTextDao {
 	public static ScriptPo scriptArchive(Connection conn , String title, String txt, String filename, String encode, int paragraph) {
 		String sql = "insert into SCRIPT_ARCHIVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH) values ( ? , ?, ?, ?, ?)";
 		PreparedStatement sm = null; 
-		Integer id = -1;
-		
-		
+		Integer id = -1;  
 		try {  
 			sm = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 			sm.setString(1, title);
@@ -149,6 +147,49 @@ public class SqlTextDao {
 		
 		return po;
 	}
+	
+	public static ScriptPo scriptArchive( String title, String txt, String filename, String encode, int paragraph) {
+		ScriptPo po = null ;
+		try{
+			 po = scriptArchive(H2Db.getConn(),  title, txt, filename, encode, paragraph);
+		}finally {
+			H2Db.closeConn();
+		}
+		if( po == null) {
+			po = new ScriptPo();
+		}
+		return  po;
+	}
+	
+	public static void updateScriptArchive(ScriptPo po) {
+		PreparedStatement sm = null; 
+		String sql = "update SCRIPT_ARCHIVE set TITLE_NAME = ?, "
+				   + " SQL_TEXT = ?, FILE_NAME = ? , ENCODE = ?, PARAGRAPH = ? where id = ?";
+		try {  
+			var conn = H2Db.getConn();
+			sm = conn.prepareStatement(sql);
+			sm.setString(1, po.getTitle());
+			sm.setString(2, po.getText());
+			sm.setString(3, po.getFileName());
+			sm.setString(4, po.getEncode());
+			sm.setInt(5, po.getParagraph());
+			sm.setInt(6, po.getId());
+			
+			sm.execute(); 
+		} catch (SQLException e) { 
+			e.printStackTrace(); 
+		}finally { 
+			if(sm!=null)
+				try {
+					sm.close();
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
+			H2Db.closeConn();
+		}
+		
+	}
+		
 	
 	
 	public static String readConfig(Connection conn, String name) {
@@ -198,7 +239,7 @@ public class SqlTextDao {
 		    	po.setFileName( rs.getString("FILE_NAME"));
 		    	po.setEncode( rs.getString("ENCODE"));
 		    	po.setParagraph(rs.getInt("PARAGRAPH"));
-		    	
+		    	po.setScriptId(rs.getInt("SCRIPT_ID"));
 		    	vals.add(po);
 		    }
 		} catch (SQLException e) { 

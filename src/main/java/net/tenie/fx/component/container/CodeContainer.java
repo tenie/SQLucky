@@ -33,13 +33,12 @@ public class CodeContainer {
 
 	public CodeContainer() {
 		container = new VBox();
-		operateBtnPane = new AnchorPane();
-		ButtonFactory.codeAreabtnInit(operateBtnPane);
+		operateBtnPane = ButtonFactory.codeAreabtnInit();
+		
 		mainTabPane = new TabPane();
 		ComponentGetter.mainTabPane = mainTabPane;
 
 		SqlEditor.myTabPane = mainTabPane;
-		SqlEditor.codeAreaRecover(); // 还原上次的sql代码
 		dtps.addSupport(mainTabPane);
 
 		VBox.setVgrow(mainTabPane, Priority.ALWAYS);

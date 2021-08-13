@@ -20,8 +20,17 @@ public class ScriptPo implements Serializable {
 	private String text;
 	private String fileName;
 	private String encode;
-	private int paragraph;
+	private Integer paragraph;
 	
+	public ScriptPo() {
+		this.id = null;
+		this.title = "";
+		this.text = "";
+		this.fileName = "";
+		this.encode = "UTF-8";
+		this.paragraph = 0;
+		
+	}
 	
 	public Integer getId() {
 		return id;
@@ -54,10 +63,10 @@ public class ScriptPo implements Serializable {
 	public void setFileName(String fileName) {
 		this.fileName = fileName;
 	}
-	public int getParagraph() {
+	public Integer getParagraph() {
 		return paragraph;
 	}
-	public void setParagraph(int paragraph) {
+	public void setParagraph(Integer paragraph) {
 		this.paragraph = paragraph;
 	}
 	

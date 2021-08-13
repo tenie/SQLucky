@@ -1,23 +1,22 @@
 package net.tenie.fx.factory;
 
-
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.util.Callback;
-import net.tenie.fx.PropertyPo.ScriptPo;
+import net.tenie.fx.component.MyTab;
 
 /**
  * 
  * @author tenie
  *
  */
-public class ScriptNodeCellFactory implements Callback<TreeView<ScriptPo>, TreeCell<ScriptPo>> {
+public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeCell<MyTab>> {
 //	private static Logger logger = LogManager.getLogger(ScriptNodeCellFactory.class);
  
 
 	@Override
-	public TreeCell<ScriptPo> call(TreeView<ScriptPo> treeView) {
-		TreeCell<ScriptPo> cell = new TreeCell<ScriptPo>() {
+	public TreeCell<MyTab> call(TreeView<MyTab> treeView) {
+		TreeCell<MyTab> cell = new TreeCell<MyTab>() {
 //			private TextField textField;
 
 //			@Override
@@ -40,14 +39,14 @@ public class ScriptNodeCellFactory implements Callback<TreeView<ScriptPo>, TreeC
 //			}
 
 			@Override
-			public void updateItem(ScriptPo item, boolean empty) {
+			public void updateItem(MyTab item, boolean empty) {
 				super.updateItem(item, empty);
 				if (empty) {
 					setText(null);
 					setGraphic(null);
 				} else {
 //					setGraphic(item.getIcon());
-					setText(item.getTitle());
+					setText(item.getScriptPo().getTitle());
 
 				}
 			}
@@ -65,9 +64,9 @@ public class ScriptNodeCellFactory implements Callback<TreeView<ScriptPo>, TreeC
 //				});
 //			}
 
-			private String getString() {
-				return getItem() == null ? "" : getItem().getTitle();
-			}
+//			private String getString() {
+//				return getItem() == null ? "" : getItem().getScriptPo().getTitle();
+//			}
 
 		};
  

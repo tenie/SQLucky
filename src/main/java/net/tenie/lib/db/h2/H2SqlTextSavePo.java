@@ -6,8 +6,15 @@ public class H2SqlTextSavePo {
 	private String fileName;
 	private String encode;
 	private int paragraph;
+	private Integer scriptId;
 	
 	
+	public Integer getScriptId() {
+		return scriptId;
+	}
+	public void setScriptId(Integer scriptId) {
+		this.scriptId = scriptId;
+	}
 	public String getEncode() {
 		return encode;
 	}

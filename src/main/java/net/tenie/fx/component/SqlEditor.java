@@ -29,6 +29,8 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.PropertyPo.ScriptPo;
+import net.tenie.fx.component.container.ScriptTabTree;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
@@ -65,7 +67,7 @@ public class SqlEditor {
 		codeArea.selectRange(ir.getStart(), ir.getEnd());
 	}
 	// 添加空文本的codeTab
-	public static Tab addCodeEmptyTabMethod() {
+	public static MyTab addCodeEmptyTabMethod() {
 
 		int size = myTabPane.getTabs().size();
 		if (ConfigVal.pageSize < 0) {
@@ -73,50 +75,72 @@ public class SqlEditor {
 		}
 		ConfigVal.pageSize++;
 		String labe = "Untitled" + ConfigVal.pageSize + "*";
-		Tab nwTab = new Tab();
-		CommonUtility.setTabName(nwTab, labe);
-		// 添加到缓存
-		MainTabs.add(nwTab);
+//		String tabId = ConfigVal.SQL_AREA_TAG + ConfigVal.pageSize;
+//		Tab nwTab = new Tab();
+		MyTab nwTab = new MyTab(labe);
+//		CommonUtility.setTabName(nwTab, labe);
+//		// 添加到缓存
+//		MainTabs.add(nwTab);
 
-		StackPane pane = SqlCodeArea();
-		VBox vbox = new VBox();
-		vbox.getChildren().add(pane);
-		VBox.setVgrow(pane, Priority.ALWAYS);
-		nwTab.setContent(vbox);
+//		StackPane pane = SqlCodeArea();
+//		VBox vbox = new VBox();
+//		vbox.getChildren().add(pane);
+//		VBox.setVgrow(pane, Priority.ALWAYS);
+//		nwTab.setContent(vbox);
 
-//			关闭前事件
-		nwTab.setOnCloseRequest(CommonEventHandler.tabCloseReq(myTabPane));
-		// 选中事件
-		nwTab.setOnSelectionChanged(value -> {
-			MainTabInfo ti = MainTabs.get(nwTab);
-			if (ti != null) {
-				DBConns.changeChoiceBox(ti.getTabConnIdx());
-			}
+		// 关闭前事件
+//		nwTab.setOnCloseRequest(CommonEventHandler.tabCloseReq(myTabPane));
+//		// 选中事件
+//		nwTab.setOnSelectionChanged(value -> {
+//			MainTabInfo ti = MainTabs.get(nwTab);
+//			if (ti != null) {
+//				DBConns.changeChoiceBox(ti.getTabConnIdx());
+//			}
+//
+//		});
 
-		});
-
-		nwTab.setId(ConfigVal.SQL_AREA_TAG + ConfigVal.pageSize);
+//		nwTab.setId(ConfigVal.SQL_AREA_TAG + ConfigVal.pageSize);
 		myTabPane.getTabs().add(size, nwTab);// 在指定位置添加Tab
 		myTabPane.getSelectionModel().select(size);
+		ScriptTabTree.treeRootAddItem(nwTab);
 		return nwTab;
 	}
+	
+	// 添加空文本的codeTab
+		public static void myTabPaneAddMyTab(MyTab nwTab) { 
+			if( myTabPane.getTabs().contains(nwTab) == false ) {
+				myTabPane.getTabs().add( nwTab);// 在指定位置添加Tab 
+			} 
+			myTabPane.getSelectionModel().select(nwTab);
+		}
+	
+	
 
-	// 从h2中获取上次的code area val
+	//TODO 从h2中获取上次的code area val
 	public static void codeAreaRecover() {
 		try {
 			Connection H2conn = H2Db.getConn();
 			List<H2SqlTextSavePo> ls = SqlTextDao.read(H2conn);
 			if (ls != null && ls.size() > 0) {
 				for (H2SqlTextSavePo po : ls) {
-					Tab tab = addCodeEmptyTabMethod();
-					setTabSQLText(tab, po.getText(), po.getParagraph());
-					if (StrUtils.isNotNullOrEmpty(po.getFileName())) {
+//					Tab tab = addCodeEmptyTabMethod();
+					ScriptPo spo = new ScriptPo();
+					spo.setEncode(po.getEncode());
+					spo.setFileName(po.getFileName());
+					spo.setId(po.getScriptId());
+					spo.setParagraph(po.getParagraph());
+					spo.setText(po.getText());
+					spo.setTitle(po.getTitle());
+					MyTab tab = new MyTab(spo);
+					myTabPaneAddMyTab(tab);
+//					setTabSQLText(tab, po.getText(), po.getParagraph());
+//					if (StrUtils.isNotNullOrEmpty(po.getFileName())) {
 						// String file = FilenameUtils.getName(po.getFileName());
-						tab.setId(ConfigVal.SAVE_TAG + po.getFileName());
+//						tab.setId(ConfigVal.SAVE_TAG + po.getFileName());
 //							tab.setText(po.getTitle()); 
-						CommonUtility.setTabName(tab, po.getTitle());
-						ComponentGetter.fileEncode.put(  po.getFileName(), po.getEncode());
-					}
+//						CommonUtility.setTabName(tab, po.getTitle());
+//						ComponentGetter.fileEncode.put(  po.getFileName(), po.getEncode());
+//					}
 
 				}
 				// 初始化上次选中页面

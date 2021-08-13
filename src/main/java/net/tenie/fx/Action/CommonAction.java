@@ -57,6 +57,7 @@ import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.DBinfoTree;
@@ -160,25 +161,29 @@ public class CommonAction {
 	public static void saveSqlAction() {
 		try {
 			String sql = SqlEditor.getCurrentCodeAreaSQLText();
-			Tab tb = SqlEditor.mainTabPaneSelectedTab();
-			logger.info(tb.getId());
-			String tbid = tb.getId();
-			String fileName = "";
-			if (StrUtils.beginWith(tbid, ConfigVal.SAVE_TAG)) {
-				fileName = tbid.substring(ConfigVal.SAVE_TAG.length());
-				SaveFile.save(fileName, sql);
+			MyTab tb = (MyTab) SqlEditor.mainTabPaneSelectedTab();
+			var scriptPo = tb.getScriptPo();
+//			logger.info(tb.getId());
+//			String tbid = tb.getId();
+			String fileName = scriptPo.getFileName();
+//			if (StrUtils.beginWith(tbid, ConfigVal.SAVE_TAG)) {
+			if (StrUtils.isNotNullOrEmpty(fileName)) {
+//				fileName = tbid.substring(ConfigVal.SAVE_TAG.length());
+				SaveFile.saveByEncode(fileName, sql, scriptPo.getEncode());
 				CommonUtility.setTabName(SqlEditor.mainTabPaneSelectedTab(), FilenameUtils.getName(fileName));
 
 			} else {
 				File file = CommonFileChooser.showSaveDefault("Save", ComponentGetter.primaryStage);
 				if (file != null) {
 					SaveFile.save(file, sql);
-					fileName = SaveFile.fileName(file.getPath());
-					CommonUtility.setTabName(SqlEditor.mainTabPaneSelectedTab(), fileName);
-					SqlEditor.mainTabPaneSelectedTab().setId(ConfigVal.SAVE_TAG + file.getPath());
+					String name = SaveFile.fileName(file.getPath());
+					CommonUtility.setTabName(SqlEditor.mainTabPaneSelectedTab(), name);
+//					SqlEditor.mainTabPaneSelectedTab().setId(ConfigVal.SAVE_TAG + file.getPath());
+					scriptPo.setFileName(file.getPath());
 					fileName = file.getPath();
 				}
 			}
+			tb.syncScriptPo();
 			setOpenfileDir(fileName);
 
 		} catch (Exception e1) {
@@ -207,21 +212,24 @@ public class CommonAction {
 			Connection H2conn = H2Db.getConn();
 			SqlTextDao.deleteAll(H2conn);
 			for (Tab t : mainTabPane.getTabs()) {
-				String idval = t.getId();
-				if (StrUtils.isNotNullOrEmpty(idval)) {
+				//TODO close save
+				MyTab mtab = (MyTab) t;
+				var spo = mtab.getScriptPo();
+				String fp = spo.getFileName(); 
+				if (spo != null ) {
 					String sql = SqlEditor.getTabSQLText(t);
 					if (StrUtils.isNotNullOrEmpty(sql)) {
 						CodeArea code = SqlEditor.getCodeArea(t);
 						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
-						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
-							idval = idval.substring(ConfigVal.SAVE_TAG.length());
-						} else {
-							idval = "";
-						}
+//						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
+//							idval = idval.substring(ConfigVal.SAVE_TAG.length());
+//						} else {
+//							idval = "";
+//						}
 
-						String title = CommonUtility.tabText(t);
-						String encode = ComponentGetter.getFileEncode(idval);
-						SqlTextDao.save(H2conn, title, sql, idval, encode, paragraph);
+						String title =  spo.getTitle(); // CommonUtility.tabText(t);
+						String encode = spo.getEncode(); //ComponentGetter.getFileEncode(idval);
+						SqlTextDao.save(H2conn, title, sql, fp, encode, paragraph, spo.getId());
 					}
 				}
 			}
@@ -235,54 +243,56 @@ public class CommonAction {
 	}
 		
 	// 保存脚本文件内容
-	public static List<ScriptPo>  saveScriptArchive() {
-		List<ScriptPo> val = new ArrayList<>();
-		try {
-			TabPane mainTabPane = ComponentGetter.mainTabPane;
-			Connection H2conn = H2Db.getConn();
-			for (Tab t : mainTabPane.getTabs()) {
-				String idval = t.getId();
-				if (StrUtils.isNotNullOrEmpty(idval)) {
-					String sql = SqlEditor.getTabSQLText(t);
-					if (StrUtils.isNotNullOrEmpty(sql)) {
-						CodeArea code = SqlEditor.getCodeArea(t);
-						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
-						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
-							idval = idval.substring(ConfigVal.SAVE_TAG.length());
-						} else {
-							idval = "";
-						}
-
-						String title = CommonUtility.tabText(t); 
-						String encode = ComponentGetter.getFileEncode(idval);
-						ScriptPo po= SqlTextDao.scriptArchive(H2conn, title, sql, idval, encode, paragraph);
-						if(po != null && po.getId() > -1) { 
-							val.add(po);
-						}
-					}
-				}
-			}
-		} finally {
-			H2Db.closeConn();
-		}
-		return val;
-	}
+//	public static List<ScriptPo>  saveScriptArchive() {
+//		List<ScriptPo> val = new ArrayList<>();
+//		try {
+//			TabPane mainTabPane = ComponentGetter.mainTabPane;
+//			Connection H2conn = H2Db.getConn();
+//			for (Tab t : mainTabPane.getTabs()) {
+////				String idval = t.getId();
+//				MyTab mtab = (MyTab) t;
+//				var 
+//				if (StrUtils.isNotNullOrEmpty(idval)) {
+//					String sql = SqlEditor.getTabSQLText(t);
+//					if (StrUtils.isNotNullOrEmpty(sql)) {
+//						CodeArea code = SqlEditor.getCodeArea(t);
+//						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
+//						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
+//							idval = idval.substring(ConfigVal.SAVE_TAG.length());
+//						} else {
+//							idval = "";
+//						}
+//
+//						String title = CommonUtility.tabText(t); 
+//						String encode = ComponentGetter.getFileEncode(idval);
+//						ScriptPo po= SqlTextDao.scriptArchive(H2conn, title, sql, idval, encode, paragraph);
+//						if(po != null && po.getId() > -1) { 
+//							val.add(po);
+//						}
+//					}
+//				}
+//			}
+//		} finally {
+//			H2Db.closeConn();
+//		}
+//		return val;
+//	}
 	
 	//TODO archive script
-	public static void archiveAllScript() {
-		List<ScriptPo> vals = CommonAction.saveScriptArchive();  
-		for(var val : vals) { 
-			TreeItem<ScriptPo> ti = new TreeItem<>(val); 
-			ScriptTree.treeRootAddItem(ti);
-		}
-		
-		TabPane mainTabPane = ComponentGetter.mainTabPane;
-		mainTabPane.getTabs().clear();
-		MainTabs.clear();
-		SqlEditor.addCodeEmptyTabMethod();
-		var stp = ComponentGetter.scriptTitledPane;
-		stp.setExpanded(true);
-	}
+//	public static void archiveAllScript() {
+//		List<ScriptPo> vals = CommonAction.saveScriptArchive();  
+//		for(var val : vals) { 
+//			TreeItem<ScriptPo> ti = new TreeItem<>(val); 
+//			ScriptTree.treeRootAddItem(ti);
+//		}
+//		
+//		TabPane mainTabPane = ComponentGetter.mainTabPane;
+//		mainTabPane.getTabs().clear();
+//		MainTabs.clear();
+//		SqlEditor.addCodeEmptyTabMethod();
+//		var stp = ComponentGetter.scriptTitledPane;
+//		stp.setExpanded(true);
+//	}
 	
 
 	// 代码格式化
@@ -625,7 +635,7 @@ public class CommonAction {
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
 	}
 
-	// 打开sql文件
+	//TODO 打开sql文件
 	public static void openSqlFile(String encode) {
 		try {
 			File f = CommonFileChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
@@ -634,7 +644,7 @@ public class CommonAction {
 			String val = FileUtils.readFileToString(f, encode);
 			String id = "";
 			String tabName = "";
-			ComponentGetter.fileEncode.put( f.getPath(), encode);
+//			ComponentGetter.fileEncode.put( f.getPath(), encode);
 			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
 				id = ConfigVal.SAVE_TAG + f.getPath();
 				tabName = SaveFile.fileName(f.getPath());
@@ -1337,7 +1347,7 @@ public class CommonAction {
 				"";
 		try {
 			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
-			SaveFile.save( path , val);
+			SaveFile.saveByEncode( path , val,"UTF-8");
 			loadCss(ComponentGetter.primaryscene);  
 			
 		} catch (IOException e) { 

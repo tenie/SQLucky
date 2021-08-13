@@ -51,19 +51,7 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class CommonEventHandler {
-	/**
-	 * tab 关闭时：阻止关闭最后一个
-	 */
-	public static EventHandler<Event> tabCloseReq(TabPane myTabPane) {
-		return new EventHandler<Event>() {
-			public void handle(Event e) {
-				if (myTabPane.getTabs().size() == 1) { // 如果只有一个窗口就不能关闭
-					e.consume();
-				}
-			}
-		};
-	}
-
+	
 	/**
 	 * 数据table关闭的时候 
 	 */

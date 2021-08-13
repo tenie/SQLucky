@@ -22,9 +22,13 @@ public class H2Db {
 		try {
 			if (conn == null) { 
 				conn =  execConn() ;
+				// 第一次启动
 				if (!tabExist(conn, "CONNECTION_INFO")) {
 					SqlTextDao.createTab(conn);
-				} 
+				}else {// 之后的启动, 更新脚本
+					UpdateScript.execUpdate(conn);
+					
+				}
 			}else if( conn.isClosed()) {
 				conn =  execConn() ;
 			}
@@ -66,7 +70,7 @@ public class H2Db {
 		return ls;
 	}
 	// 检查表是否存在
-	private static boolean tabExist(Connection conn, String tablename) {
+	public static boolean tabExist(Connection conn, String tablename) {
 		try {
 			DatabaseMetaData dmd = conn.getMetaData();
 			ResultSet tablesResultSet = dmd.getTables(null, null, tablename, new String[] { "TABLE" });
