@@ -38,7 +38,7 @@ public class AppWindow {
 		masterDetailPane.widthProperty().addListener((ob, ov ,nv)->{
 				if (nv.doubleValue() > 1) {
 					double wi = ComponentGetter.masterDetailPane.getWidth();
-					double tbp = 265.0;
+					double tbp = 270.0;
 					double val =  tbp / wi;  
 					System.out.println("设置窗口比例 :" + val);
 					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);

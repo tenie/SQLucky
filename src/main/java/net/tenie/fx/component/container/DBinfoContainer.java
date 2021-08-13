@@ -53,21 +53,14 @@ public class DBinfoContainer {
 		scriptTitledPane.setText("Script");
 		ad.getPanes().add(dbTitledPane);
 		ad.getPanes().add(scriptTitledPane);
-		
-		VBox testvb = new VBox();
-		testvb.getChildren().add(new Label("???????") );
+		 
 		scriptTitledPane.setContent(ScripttreeView);
-		
-		
-//		VBox containerVBox = new VBox();
-//		containerVBox.getChildren().addAll(treeView, filter);
+	
 		dbTitledPane.setContent( treeView);
 		
 		container.getChildren().addAll(treeBtnPane, ad , filter);
 //		container.getChildren().addAll(treeBtnPane, treeView, filter);
-		
-		
-//		VBox.setMargin(containerVBox, null);
+		 
 		
 		VBox.setVgrow(ad, Priority.ALWAYS);
  
