@@ -161,12 +161,12 @@ public class SqlTextDao {
 		return  po;
 	}
 	
-	public static void updateScriptArchive(ScriptPo po) {
+	public static void updateScriptArchive(Connection conn, ScriptPo po) {
 		PreparedStatement sm = null; 
 		String sql = "update SCRIPT_ARCHIVE set TITLE_NAME = ?, "
 				   + " SQL_TEXT = ?, FILE_NAME = ? , ENCODE = ?, PARAGRAPH = ? where id = ?";
 		try {  
-			var conn = H2Db.getConn();
+//			var conn = H2Db.getConn();
 			sm = conn.prepareStatement(sql);
 			sm.setString(1, po.getTitle());
 			sm.setString(2, po.getText());
@@ -185,7 +185,27 @@ public class SqlTextDao {
 				} catch (SQLException e) { 
 					e.printStackTrace();
 				}
-			H2Db.closeConn();
+//			H2Db.closeConn();
+		}
+		
+	}
+	public static void deleteScriptArchive(Connection conn, ScriptPo po) {
+		PreparedStatement sm = null; 
+		String sql = "delete from  SCRIPT_ARCHIVE  where id = ?";
+		try {
+			sm = conn.prepareStatement(sql); 
+			sm.setInt(1, po.getId());
+			
+			sm.execute(); 
+		} catch (SQLException e) { 
+			e.printStackTrace(); 
+		}finally { 
+			if(sm!=null)
+				try {
+					sm.close();
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
 		}
 		
 	}

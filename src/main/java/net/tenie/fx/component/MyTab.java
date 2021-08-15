@@ -19,6 +19,7 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
 
 public class MyTab extends Tab {
@@ -87,14 +88,23 @@ public class MyTab extends Tab {
 		return title;
 	}
 	
-	public void syncScriptPo() {
+	public void syncScriptPo(Connection conn) {
 		String sql = getTabSqlText();
 		String title =   getTabTitle();
 		
 		scriptPo.setText(sql);
 		scriptPo.setTitle(title); 
-		SqlTextDao.updateScriptArchive(scriptPo); 
+		SqlTextDao.updateScriptArchive(conn , scriptPo); 
 		ScriptTabTree.ScriptTreeView.refresh();
+	}
+	
+	public void saveScriptPo(Connection conn) {
+		String sql = getTabSqlText();
+		String title =   getTabTitle();
+		
+		scriptPo.setText(sql);
+		scriptPo.setTitle(title); 
+		SqlTextDao.updateScriptArchive(conn, scriptPo); 
 	}
 	
 	/**
@@ -103,7 +113,14 @@ public class MyTab extends Tab {
 	public  EventHandler<Event> tabCloseReq(TabPane myTabPane) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
-				syncScriptPo();
+				try {
+					syncScriptPo(H2Db.getConn());
+				} finally {
+					H2Db.closeConn();
+				}
+				
+				
+				
 //				 // 如果只有一个窗口就不能关闭 
 //				if (myTabPane.getTabs().size() == 1) {
 //  					e.consume();

@@ -20,7 +20,7 @@ public class OperateContainer {
 		codeCtr = new CodeContainer();
 		dbinfoCtr = new DBinfoContainer();
 
-		SqlEditor.codeAreaRecover(); // 还原上次的sql代码
+//		SqlEditor.codeAreaRecover(); // 还原上次的sql代码
 
 		treeAreaDetailPane = new MasterDetailPane(Side.LEFT);
 		treeAreaDetailPane.setShowDetailNode(true);

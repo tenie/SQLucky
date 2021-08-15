@@ -17,6 +17,7 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.factory.ScriptTabNodeCellFactory;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
+import net.tenie.lib.db.h2.H2SqlTextSavePo;
 import net.tenie.lib.db.h2.SqlTextDao;
 import net.tenie.lib.tools.StrUtils;
 
@@ -36,9 +37,7 @@ public class ScriptTabTree {
 		var rootNode = new TreeItem<>(new MyTab());
 		TreeView<MyTab> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");
-		treeView.setShowRoot(false);
-		
-		recoverScriptNode(rootNode);
+		treeView.setShowRoot(false); 
 		// 展示连接
 		if (rootNode.getChildren().size() > 0)
 			treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
@@ -59,7 +58,8 @@ public class ScriptTabTree {
 		// 显示设置, 从TreeNodePo中的对象显示为 TreeItem 的名称和图标
 		treeView.setCellFactory(new ScriptTabNodeCellFactory());
 		 
-		
+
+		recoverScriptNode(rootNode);
 		return treeView;
 	}
 	
@@ -67,15 +67,36 @@ public class ScriptTabTree {
 	// 恢复数据中保存的连接数据
 	public static void recoverScriptNode(TreeItem<MyTab> rootNode) {
 		try {
-			Connection H2conn = H2Db.getConn();
+			Connection H2conn = H2Db.getConn(); 
+			List<H2SqlTextSavePo> ls = SqlTextDao.read(H2conn);
+			List<Integer> ids = new ArrayList<>();
+			for(H2SqlTextSavePo sqlpo : ls) {
+				ids.add(sqlpo.getScriptId());
+			}
 			List<ScriptPo> datas = SqlTextDao.readScriptPo(H2conn);
 			if (datas != null && datas.size() > 0) {
 				for (ScriptPo po : datas) {
 					MyTab tb = new MyTab(po);
 					TreeItem<MyTab> item = new TreeItem<>(tb);
 					rootNode.getChildren().add(item);
+					// 恢复代码编辑框
+					if(ids.contains(po.getId())) {
+						SqlEditor.myTabPaneAddMyTab(tb);
+					}
+				} 
+				// 初始化上次选中页面
+				String SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
+				if(StrUtils.isNotNullOrEmpty(SELECT_PANE)) {
+					ComponentGetter.mainTabPane.getSelectionModel().select(Integer.valueOf(SELECT_PANE));
 				}
+			} 
+			if(ls == null || ls.size() ==0 ) {
+				// 触发鼠标点击事件, 增加一个 代码窗口 , 如果窗口中是空的情况下
+				SqlEditor.addCodeEmptyTabMethod();
 			}
+			
+			
+			
 		} finally {
 			H2Db.closeConn();
 		}

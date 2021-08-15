@@ -183,12 +183,14 @@ public class CommonAction {
 					fileName = file.getPath();
 				}
 			}
-			tb.syncScriptPo();
+			tb.syncScriptPo(H2Db.getConn());
 			setOpenfileDir(fileName);
 
 		} catch (Exception e1) {
 			MyAlert.errorAlert( e1.getMessage());
 			e1.printStackTrace();
+		}finally {
+			H2Db.closeConn();
 		}
 
 	}
@@ -214,22 +216,22 @@ public class CommonAction {
 			for (Tab t : mainTabPane.getTabs()) {
 				//TODO close save
 				MyTab mtab = (MyTab) t;
+				mtab.saveScriptPo(H2conn);
 				var spo = mtab.getScriptPo();
 				String fp = spo.getFileName(); 
 				if (spo != null ) {
 					String sql = SqlEditor.getTabSQLText(t);
-					if (StrUtils.isNotNullOrEmpty(sql)) {
+					if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
 						CodeArea code = SqlEditor.getCodeArea(t);
 						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
-//						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
-//							idval = idval.substring(ConfigVal.SAVE_TAG.length());
-//						} else {
-//							idval = "";
-//						}
-
-						String title =  spo.getTitle(); // CommonUtility.tabText(t);
-						String encode = spo.getEncode(); //ComponentGetter.getFileEncode(idval);
+						String title =  spo.getTitle();
+						String encode = spo.getEncode();
 						SqlTextDao.save(H2conn, title, sql, fp, encode, paragraph, spo.getId());
+					}else {
+						// 内容为空的删除
+						if(fp == null || fp.trim().length() == 0) {
+							SqlTextDao.deleteScriptArchive(H2conn, spo);
+						}
 					}
 				}
 			}
