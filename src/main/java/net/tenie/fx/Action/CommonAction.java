@@ -62,6 +62,7 @@ import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.MenuBarContainer;
+import net.tenie.fx.component.container.ScriptTabTree;
 import net.tenie.fx.component.container.ScriptTree;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
@@ -227,16 +228,28 @@ public class CommonAction {
 						String title =  spo.getTitle();
 						String encode = spo.getEncode();
 						SqlTextDao.save(H2conn, title, sql, fp, encode, paragraph, spo.getId());
-					}else {
-						// 内容为空的删除
-						if(fp == null || fp.trim().length() == 0) {
-							SqlTextDao.deleteScriptArchive(H2conn, spo);
-						}
 					}
+//					else {
+//						// 内容为空的删除
+//						if(fp == null || fp.trim().length() == 0) {
+//							SqlTextDao.deleteScriptArchive(H2conn, spo);
+//						}
+//					}
 				}
 			}
 			// 保存选择的pane 下标
 			SqlTextDao.saveConfig(H2conn, "SELECT_PANE", SELECT_PANE + "");
+			
+			// 删除 script tree view 中的空内容tab
+			var childs = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
+			for(var tv :childs) {
+				var mytab = tv.getValue();
+				var scpo = mytab.getScriptPo();
+				var sqltxt = scpo.getText();
+				if(sqltxt == null || sqltxt.trim().length() == 0) {
+					SqlTextDao.deleteScriptArchive(H2conn, scpo); 
+				}
+			}
 
 		} finally {
 			H2Db.closeConn();
