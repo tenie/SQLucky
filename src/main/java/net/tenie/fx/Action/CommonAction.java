@@ -242,13 +242,23 @@ public class CommonAction {
 			
 			// 删除 script tree view 中的空内容tab
 			var childs = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
-			for(var tv :childs) {
+			for(int i = 0; i < childs.size() ; i++) {
+//			for(var tv :childs) {
+				var tv = childs.get(i);
 				var mytab = tv.getValue();
 				var scpo = mytab.getScriptPo();
 				var sqltxt = scpo.getText();
 				if(sqltxt == null || sqltxt.trim().length() == 0) {
 					SqlTextDao.deleteScriptArchive(H2conn, scpo); 
+				}else {
+					String fp = scpo.getFileName();
+					if(StrUtils.isNullOrEmpty(fp)) {
+						scpo.setTitle("Untitled_"+i+"*");
+						SqlTextDao.updateScriptArchive(H2conn , scpo);  
+					}
 				}
+				
+				
 			}
 
 		} finally {

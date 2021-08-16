@@ -74,7 +74,7 @@ public class SqlEditor {
 			ConfigVal.pageSize = size;
 		}
 		ConfigVal.pageSize++;
-		String labe = "Untitled" + ConfigVal.pageSize + "*";
+		String labe = "Untitled_" + ConfigVal.pageSize + "*";
 //		String tabId = ConfigVal.SQL_AREA_TAG + ConfigVal.pageSize;
 //		Tab nwTab = new Tab();
 		MyTab nwTab = new MyTab(labe);
