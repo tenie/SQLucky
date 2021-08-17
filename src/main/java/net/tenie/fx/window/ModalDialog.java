@@ -642,10 +642,8 @@ public class ModalDialog {
 	}
 	
 	public static void myConfirmation(String promptInfo,  Consumer< String >  okCaller, Consumer< String >  cancelCaller ) {
-		Label space = new Label(""); 
-		Label tit = new Label(promptInfo); 
 		final Stage stage = new Stage();
-		
+	
 		JFXButton btn = new JFXButton("Cancel");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(value -> { 
@@ -654,7 +652,7 @@ public class ModalDialog {
 			}
 			stage.close();
 		});
-		
+
 		JFXButton okbtn = new JFXButton("OK");
 		okbtn.setOnAction(value -> {
 			if(okCaller !=null) {
@@ -663,14 +661,22 @@ public class ModalDialog {
 			stage.close(); 
 		});
 		
-		List<Node> nds = new ArrayList<>();
-		nds.add( space); 
-		nds.add( tit); 
-		
 		List<Node> btns = new ArrayList<>();
 		btns.add( btn);
 		btns.add( okbtn); 
 		
+		myConfirmation(promptInfo, stage, btns);
+	}
+	
+	
+	public static void myConfirmation(String promptInfo, Stage stage  , List<Node> btns ) {
+		Label space = new Label(""); 
+		Label tit = new Label(promptInfo); 
+		
+		List<Node> nds = new ArrayList<>();
+		nds.add( space); 
+		nds.add( tit); 
+
 		Node vb = setVboxShape(stage, INFO, nds, btns);
 		Scene scene = new Scene((Parent) vb);
 		
@@ -678,7 +684,6 @@ public class ModalDialog {
 		stage.setScene(scene);
 		setSceneAndShow(scene, stage);  
 	}
-	
 	
 	
 

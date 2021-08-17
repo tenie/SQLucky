@@ -15,6 +15,10 @@ public final class CommonFileChooser {
 
 	// default configure
 	private static void configureFileChooser(final FileChooser fileChooser, String title) {
+		configureFileChooser(fileChooser, title , null);
+	}
+	
+	private static void configureFileChooser(final FileChooser fileChooser, String title, String filename) {
 		fileChooser.setTitle(title);
 		File dir =  ComponentGetter.getOpenfileDir();
 		
@@ -24,7 +28,10 @@ public final class CommonFileChooser {
 				new FileChooser.ExtensionFilter("sql", "*.sql"),
 				new FileChooser.ExtensionFilter("txt", "*.txt"), 
 				new FileChooser.ExtensionFilter("csv", "*.csv"),
-				new FileChooser.ExtensionFilter("All", "*.*"));
+				new FileChooser.ExtensionFilter("All", "*.*")); 
+		if(filename !=null ) {
+			fileChooser.setInitialFileName(filename);
+		}
 	}
 
 	private static void allFileChooser(final FileChooser fileChooser, String title) {
@@ -38,6 +45,11 @@ public final class CommonFileChooser {
 	
 	public static FileChooser getDefaultFileChooser(String title) {
 		configureFileChooser(fileChooser, title);
+		return fileChooser;
+	}
+	
+	public static FileChooser getFileChooserInitFileName(String title, String filename) {
+		configureFileChooser(fileChooser, title, filename);
 		return fileChooser;
 	}
 	
@@ -68,6 +80,11 @@ public final class CommonFileChooser {
 	// 获取保存的文件绝对路径名(默认)
 	public static File showSaveDefault(String title, Stage stage) {
 		FileChooser fc = getDefaultFileChooser(title);
+		File file = fc.showSaveDialog(stage);
+		return file;
+	}
+	public static File showSaveDefault(String title, String fileName, Stage stage) {
+		FileChooser fc = getFileChooserInitFileName(title, fileName);
 		File file = fc.showSaveDialog(stage);
 		return file;
 	}

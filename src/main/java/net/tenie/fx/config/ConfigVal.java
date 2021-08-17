@@ -32,7 +32,7 @@ public class ConfigVal {
 	// sql txt area tag
 	public static String SQL_AREA_TAG = "code";
 	// sql text save tag
-	public static String SAVE_TAG = "code_save_";
+//	public static String SAVE_TAG = "code_save_";
 
 	// data table tag
 	public static volatile int tableIdx = 0;

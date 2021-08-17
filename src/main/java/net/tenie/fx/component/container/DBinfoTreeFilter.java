@@ -85,7 +85,7 @@ public class DBinfoTreeFilter {
 		
 		
 		txt.textProperty().addListener((o, oldVal, newVal) -> {
-
+			ComponentGetter.dbTitledPane.setExpanded(true);
 			// 缓存
 			ObservableList<TreeItem<TreeNodePo>> connNodes = treeView.getRoot().getChildren();
 			if (temp.size() < connNodes.size()) {

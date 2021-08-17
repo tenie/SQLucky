@@ -113,7 +113,7 @@ public class ButtonFactory {
 		JFXButton script = new JFXButton();
 		script.setGraphic(ImageViewGenerator.svgImageDefActive("entypo-download"));
 		script.setOnMouseClicked(e->{
-//			  CommonAction.archiveAllScript();
+			  CommonAction.archiveAllScript();
 			
 		});
 		script.setTooltip(MyTooltipTool.instance("Archive Script "));

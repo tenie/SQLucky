@@ -10,8 +10,7 @@ import net.tenie.fx.component.MyTab;
  * @author tenie
  *
  */
-public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeCell<MyTab>> {
-//	private static Logger logger = LogManager.getLogger(ScriptNodeCellFactory.class);
+public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeCell<MyTab>> { 
  
 
 	@Override

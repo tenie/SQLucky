@@ -107,6 +107,19 @@ public class SqlEditor {
 	}
 	
 	// 添加空文本的codeTab
+		public static MyTab addMyTabByScriptPo(ScriptPo scpo) {
+
+			int size = myTabPane.getTabs().size(); 
+			ConfigVal.pageSize++; 
+			MyTab nwTab = new MyTab(scpo); 
+			myTabPane.getTabs().add(size, nwTab);// 在指定位置添加Tab
+			myTabPane.getSelectionModel().select(size);
+			ScriptTabTree.treeRootAddItem(nwTab);
+			return nwTab;
+		}
+	
+	
+	// 添加空文本的codeTab
 		public static void myTabPaneAddMyTab(MyTab nwTab) { 
 			if( myTabPane.getTabs().contains(nwTab) == false ) {
 				myTabPane.getTabs().add( nwTab);// 在指定位置添加Tab 
@@ -160,29 +173,34 @@ public class SqlEditor {
 		}
 	}
 
-	public static void createTabFromSqlFile(String val, String tabName, String id) {
-		Tab tab = SqlEditor.addCodeEmptyTabMethod();
-		if (StrUtils.isNotNullOrEmpty(val))
-			setTabSQLText(tab, val);
-		if (StrUtils.isNotNullOrEmpty(tabName))
-			CommonUtility.setTabName(tab, tabName);
-		if (StrUtils.isNotNullOrEmpty(id))
-			tab.setId(id);
-	}
-
-	// 设置tab 中的 area 中的文本
-	public static void setTabSQLText(Tab tb, String text) {
-		CodeArea code = getCodeArea(tb);
-		code.appendText(text);
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+//	public static void createTabFromSqlFile(String val, String tabName) {
+//		MyTab tab = SqlEditor.addCodeEmptyTabMethod();
+//		if (StrUtils.isNotNullOrEmpty(val))
+//			setTabSQLText(tab, val);
+//		if (StrUtils.isNotNullOrEmpty(tabName))
+//			CommonUtility.setTabName(tab, tabName);  
+//	}
+	
+	public static void createTabFromSqlFile(ScriptPo scpo) {
+		addMyTabByScriptPo(scpo);
 	}
 	
-	public static void setTabSQLText(Tab tb, String text, int paragraph) {
+
+	// 设置tab 中的 area 中的文本
+	public static void setTabSQLText(MyTab tb, String text) {
 		CodeArea code = getCodeArea(tb);
 		code.appendText(text);
-		code.showParagraphAtTop(paragraph);
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		tb.refreshMyTab();
 	}
+	
+//	public static void setTabSQLText2(MyTab tb, String text, int paragraph) {
+//		CodeArea code = getCodeArea(tb);
+//		code.appendText(text);
+//		code.showParagraphAtTop(paragraph);
+//		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+//		tb.refreshMyTab();
+//	}
 	
 	// 获取当前在前台的文本框
 	public static CodeArea getCodeArea() {

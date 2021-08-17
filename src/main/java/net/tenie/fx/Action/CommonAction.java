@@ -63,11 +63,9 @@ import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.MenuBarContainer;
 import net.tenie.fx.component.container.ScriptTabTree;
-import net.tenie.fx.component.container.ScriptTree;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
-import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
@@ -159,27 +157,29 @@ public class CommonAction {
 	}
 	
 	// 保存sql文本到硬盘
-	public static void saveSqlAction() {
-		try {
-			String sql = SqlEditor.getCurrentCodeAreaSQLText();
+	public static void saveSqlAction() { 
 			MyTab tb = (MyTab) SqlEditor.mainTabPaneSelectedTab();
+			saveSqlAction(tb);
+	}
+	
+	// 保存sql文本到硬盘
+	public static void saveSqlAction(MyTab tb) {
+		try {			
+			String sql   = SqlEditor.getTabSQLText(tb); 
 			var scriptPo = tb.getScriptPo();
-//			logger.info(tb.getId());
-//			String tbid = tb.getId();
 			String fileName = scriptPo.getFileName();
-//			if (StrUtils.beginWith(tbid, ConfigVal.SAVE_TAG)) {
 			if (StrUtils.isNotNullOrEmpty(fileName)) {
-//				fileName = tbid.substring(ConfigVal.SAVE_TAG.length());
 				SaveFile.saveByEncode(fileName, sql, scriptPo.getEncode());
-				CommonUtility.setTabName(SqlEditor.mainTabPaneSelectedTab(), FilenameUtils.getName(fileName));
+				CommonUtility.setTabName(tb, FilenameUtils.getName(fileName));
 
 			} else {
-				File file = CommonFileChooser.showSaveDefault("Save", ComponentGetter.primaryStage);
+				String title = scriptPo.getTitle();
+				title = StrUtils.trimRightChar(title, "*");
+				File file = CommonFileChooser.showSaveDefault("Save", title,ComponentGetter.primaryStage);
 				if (file != null) {
 					SaveFile.save(file, sql);
 					String name = SaveFile.fileName(file.getPath());
-					CommonUtility.setTabName(SqlEditor.mainTabPaneSelectedTab(), name);
-//					SqlEditor.mainTabPaneSelectedTab().setId(ConfigVal.SAVE_TAG + file.getPath());
+					CommonUtility.setTabName(tb, name);
 					scriptPo.setFileName(file.getPath());
 					fileName = file.getPath();
 				}
@@ -192,9 +192,12 @@ public class CommonAction {
 			e1.printStackTrace();
 		}finally {
 			H2Db.closeConn();
-		}
-
+		} 
 	}
+	
+	
+	
+	
 	// 主窗口关闭事件处理逻辑
 	public static void mainPageClose() {
 		try {
@@ -229,12 +232,7 @@ public class CommonAction {
 						String encode = spo.getEncode();
 						SqlTextDao.save(H2conn, title, sql, fp, encode, paragraph, spo.getId());
 					}
-//					else {
-//						// 内容为空的删除
-//						if(fp == null || fp.trim().length() == 0) {
-//							SqlTextDao.deleteScriptArchive(H2conn, spo);
-//						}
-//					}
+
 				}
 			}
 			// 保存选择的pane 下标
@@ -242,6 +240,7 @@ public class CommonAction {
 			
 			// 删除 script tree view 中的空内容tab
 			var childs = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
+			int idx = 1;
 			for(int i = 0; i < childs.size() ; i++) {
 //			for(var tv :childs) {
 				var tv = childs.get(i);
@@ -253,12 +252,11 @@ public class CommonAction {
 				}else {
 					String fp = scpo.getFileName();
 					if(StrUtils.isNullOrEmpty(fp)) {
-						scpo.setTitle("Untitled_"+i+"*");
+						scpo.setTitle("Untitled_"+ idx +"*");
 						SqlTextDao.updateScriptArchive(H2conn , scpo);  
+						idx++;
 					}
-				}
-				
-				
+				}				
 			}
 
 		} finally {
@@ -304,20 +302,18 @@ public class CommonAction {
 //	}
 	
 	//TODO archive script
-//	public static void archiveAllScript() {
-//		List<ScriptPo> vals = CommonAction.saveScriptArchive();  
-//		for(var val : vals) { 
-//			TreeItem<ScriptPo> ti = new TreeItem<>(val); 
-//			ScriptTree.treeRootAddItem(ti);
-//		}
-//		
-//		TabPane mainTabPane = ComponentGetter.mainTabPane;
-//		mainTabPane.getTabs().clear();
-//		MainTabs.clear();
+	public static void archiveAllScript() {
+		TabPane mainTabPane = ComponentGetter.mainTabPane;
+		var tabs = mainTabPane.getTabs(); 
+		for(var tab : tabs) { 
+			MyTab mtb = (MyTab) tab;
+			mtb.refreshMyTab();
+		} 
+		tabs.clear();
 //		SqlEditor.addCodeEmptyTabMethod();
-//		var stp = ComponentGetter.scriptTitledPane;
-//		stp.setExpanded(true);
-//	}
+		var stp = ComponentGetter.scriptTitledPane;
+		stp.setExpanded(true);
+	}
 	
 
 	// 代码格式化
@@ -666,16 +662,26 @@ public class CommonAction {
 			File f = CommonFileChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
 			if (f == null)
 				return;
-			String val = FileUtils.readFileToString(f, encode);
-			String id = "";
+			String val = FileUtils.readFileToString(f, encode); 
 			String tabName = "";
 //			ComponentGetter.fileEncode.put( f.getPath(), encode);
 			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
-				id = ConfigVal.SAVE_TAG + f.getPath();
+//				id = ConfigVal.SAVE_TAG + f.getPath();
 				tabName = SaveFile.fileName(f.getPath());
 				setOpenfileDir(f.getPath());
 			}
-			SqlEditor.createTabFromSqlFile(val, tabName, id);
+			ScriptPo scpo = new ScriptPo();
+			scpo.setEncode(encode);
+			scpo.setFileName(f.getAbsolutePath());
+			scpo.setText(val);
+			scpo.setTitle(tabName);
+			MyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
+			if(mt != null) { // 如果已经存在就不用重新打开
+				SqlEditor.myTabPaneAddMyTab(mt);
+			}else {
+				SqlEditor.createTabFromSqlFile(scpo);
+			}
+			
 		} catch (IOException e) {
 			MyAlert.errorAlert( e.getMessage());
 			e.printStackTrace();

@@ -3,18 +3,28 @@ package net.tenie.fx.component.container;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ScriptPo;
+import net.tenie.fx.PropertyPo.TreeItemType;
+import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.factory.ScriptTabNodeCellFactory;
+import net.tenie.fx.factory.ScriptTreeContextMenu;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.H2SqlTextSavePo;
@@ -26,7 +36,7 @@ public class ScriptTabTree {
 
 	public static TreeView<MyTab> ScriptTreeView; 
 	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
-	
+	private  ScriptTreeContextMenu  menu;
 	
 	public ScriptTabTree() {
 		 createScriptTreeView();
@@ -46,16 +56,16 @@ public class ScriptTabTree {
 			treeViewDoubleClick(e);
 		});
 		// 右键菜单
-//			menu = new ScriptTreeContextMenu();
-//			ContextMenu	contextMenu = menu.getContextMenu(); 
-//			treeView.setContextMenu(contextMenu);
+		menu = new ScriptTreeContextMenu(rootNode );
+		ContextMenu	contextMenu = menu.getContextMenu(); 
+		treeView.setContextMenu(contextMenu);
 		// 选中监听事件
-//			treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
+//		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
 		treeView.getSelectionModel().select(rootNode);
 
 		ScriptTreeView = treeView;
 
-		// 显示设置, 从TreeNodePo中的对象显示为 TreeItem 的名称和图标
+		// 显示设置
 		treeView.setCellFactory(new ScriptTabNodeCellFactory());
 		 
 
@@ -66,59 +76,61 @@ public class ScriptTabTree {
 	
 	// 恢复数据中保存的连接数据
 	public static void recoverScriptNode(TreeItem<MyTab> rootNode) {
+		List<ScriptPo> datas ;
+		List<H2SqlTextSavePo> ls;
+		String SELECT_PANE ;
 		try {
-			Connection H2conn = H2Db.getConn(); 
-			List<H2SqlTextSavePo> ls = SqlTextDao.read(H2conn);
-			List<Integer> ids = new ArrayList<>();
-			for(H2SqlTextSavePo sqlpo : ls) {
-				ids.add(sqlpo.getScriptId());
-			}
-			List<ScriptPo> datas = SqlTextDao.readScriptPo(H2conn);
-			if (datas != null && datas.size() > 0) {
-				for (ScriptPo po : datas) {
-					MyTab tb = new MyTab(po);
-					TreeItem<MyTab> item = new TreeItem<>(tb);
-					rootNode.getChildren().add(item);
-					// 恢复代码编辑框
-					if(ids.contains(po.getId())) {
-						SqlEditor.myTabPaneAddMyTab(tb);
-					}
-				} 
-				// 初始化上次选中页面
-				String SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
-				if(StrUtils.isNotNullOrEmpty(SELECT_PANE)) {
-					ComponentGetter.mainTabPane.getSelectionModel().select(Integer.valueOf(SELECT_PANE));
-				}
-			} 
-			if(ls == null || ls.size() ==0 ) {
-				// 触发鼠标点击事件, 增加一个 代码窗口 , 如果窗口中是空的情况下
-				SqlEditor.addCodeEmptyTabMethod();
-			}
-			
-			
-			
+			Connection H2conn = H2Db.getConn();
+			ls = SqlTextDao.read(H2conn);
+			SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
+			datas = SqlTextDao.readScriptPo(H2conn);
 		} finally {
 			H2Db.closeConn();
 		}
+		
+		List<Integer> ids = new ArrayList<>();
+		for (H2SqlTextSavePo sqlpo : ls) {
+			ids.add(sqlpo.getScriptId());
+		}
+
+		if (datas != null && datas.size() > 0) {
+			ConfigVal.pageSize = datas.size();
+			for (ScriptPo po : datas) {
+				MyTab tb = new MyTab(po);
+				TreeItem<MyTab> item = new TreeItem<>(tb);
+				rootNode.getChildren().add(item);
+				// 恢复代码编辑框
+				if (ids.contains(po.getId())) {
+					SqlEditor.myTabPaneAddMyTab(tb);
+				}
+			}
+
+		}
+
+		// 初始化上次选中页面
+		if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) {
+			int ts = ComponentGetter.mainTabPane.getTabs().size();
+			int sps = Integer.valueOf(SELECT_PANE);
+			if (ts > sps) {
+				ComponentGetter.mainTabPane.getSelectionModel().select(sps);
+			}
+
+			// 如果窗口中是空的情况下 , 增加一个 代码窗口
+			if (ts == 0) {
+				SqlEditor.addCodeEmptyTabMethod();
+			}
+
+		}
+
 	}
 
 	// 所有连接节点
-	public static ObservableList<TreeItem<MyTab>> allconnsItem() {
+	public static ObservableList<TreeItem<MyTab>> allTreeItem() {
 		ObservableList<TreeItem<MyTab>> val = ScriptTreeView.getRoot().getChildren();
 		return val;
 	}
 
-	 
-
-	// 删除 取连接节点 根据名字
-//	public static void rmTreeItemByName(String name) {
-//		ObservableList<TreeItem<String>> ls = allconnsItem();
-//		ls.removeIf(item -> {
-//			return item.getValue().getName().equals(name);
-//		});
-//	}
-
-	 
+	   
 
 	// 获取当前选中的节点
 	public static TreeItem<MyTab> getScriptViewCurrentItem() {
@@ -126,16 +138,7 @@ public class ScriptTabTree {
 		return ctt;
 	}
 
-	// 根据名称获取连接节点
-//	public static TreeItem<String> getTreeItemByName(String name) {
-//		ObservableList<TreeItem<String>> ls = allconnsItem();
-//		for (TreeItem<String> item : ls) {
-//			if (item.getValue().getName().equals(name)) {
-//				return item;
-//			}
-//		}
-//		return null;
-//	}
+	 
 
 	// 给root节点加元素 
 	public static void treeRootAddItem(TreeItem<MyTab> item) { 
@@ -151,20 +154,71 @@ public class ScriptTabTree {
 	// tree view 双击事件
 	public void treeViewDoubleClick(MouseEvent mouseEvent) { 
 		if (mouseEvent.getClickCount() == 2) {
-			TreeItem<MyTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
-			var mytab = item.getValue(); 
-			SqlEditor.myTabPaneAddMyTab(mytab);
-			// 删除节点
-//			ScriptTreeView.getRoot().getChildren().remove(item);
-//			SqlTextDao.delScriptPo(po.getId());
+//			TreeItem<MyTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
+//			var mytab = item.getValue(); 
+//			SqlEditor.myTabPaneAddMyTab(mytab);
+			openMyTab();
 		}
 	}
+	
+	public static void openMyTab() {
+		TreeItem<MyTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
+		var mytab = item.getValue(); 
+		SqlEditor.myTabPaneAddMyTab(mytab);
+	}
+	 
+	public static  List<ScriptPo>  allScriptPo() {
+		 ObservableList<TreeItem<MyTab>> ls = allTreeItem();
+		 List<ScriptPo> list = new ArrayList<>();
+		 for(var ti: ls) {
+			 var mytb = ti.getValue();
+			 list.add(mytb.getScriptPo());
+		 }
+		 
+		 return list;
+	}
+	public static  List<MyTab>  allMyTab() {
+		 ObservableList<TreeItem<MyTab>> ls = allTreeItem();
+		 List<MyTab> list = new ArrayList<>();
+		 for(var ti: ls) {
+			 var mytb = ti.getValue();
+			 list.add(mytb);
+		 } 
+		 return list;
+	}
 
+	
+	public static MyTab findMyTabByScriptPo(ScriptPo scpo) {
+		 ObservableList<TreeItem<MyTab>> ls = allTreeItem();
+		 for(var ti: ls) {
+			 var mytb = ti.getValue();
+			 var tmp =  mytb.getScriptPo();
+			 if(tmp.equals(scpo)) {
+				 return mytb;
+			 }
+					 
+		 } 
+		 return null;
+	}
+	
 	// treeView 右键菜单属性设置
-//	public   ChangeListener<TreeItem<TreeNodePo>> treeViewContextMenu(TreeView<TreeNodePo> treeView) { }
-//	private TreeItem<TreeNodePo>   ConnItem(TreeItem<TreeNodePo> newValue) { }
- 
-
- 
+//		public   ChangeListener<TreeItem<MyTab>> treeViewContextMenu(TreeView<MyTab> treeView) {
+//			return new ChangeListener<TreeItem<MyTab>>() {
+//				@Override
+//				public void changed(ObservableValue<? extends TreeItem<MyTab>> observable,
+//						TreeItem<MyTab> oldValue, TreeItem<MyTab> newValue) {
+//					
+//				 
+//					 
+//					
+//					
+////					if(! menu.getRefresh().isDisable()) {
+////						TreeItem<TreeNodePo>  connItem = ConnItem(newValue);
+////						menu.setRefreshAction(connItem);
+////					}
+//
+//				}
+//			};
+//		}
  
 }

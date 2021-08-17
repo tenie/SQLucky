@@ -43,7 +43,12 @@ public class MyTab extends Tab {
 	
 	public MyTab(ScriptPo po) {
 		super();
-		scriptPo = po; 
+		if(po.getId() == null ) { 
+			scriptPo = SqlTextDao.scriptArchive(po.getTitle(), po.getText()	, po.getFileName(),
+					po.getEncode(), po.getParagraph());
+		}else {
+			scriptPo = po;
+		}
 		createMyTab();
 	}
 	
@@ -75,7 +80,7 @@ public class MyTab extends Tab {
 		}); 
 		
 		// 设置sql 文本
-		SqlEditor.setTabSQLText(this, scriptPo.getText(), scriptPo.getParagraph());
+		SqlEditor.setTabSQLText(this, scriptPo.getText());
 	}
 	
 	
@@ -90,12 +95,24 @@ public class MyTab extends Tab {
 	
 	public void syncScriptPo(Connection conn) {
 		String sql = getTabSqlText();
-		String title =   getTabTitle();
+		String title = getTabTitle();
 		
 		scriptPo.setText(sql);
 		scriptPo.setTitle(title); 
 		SqlTextDao.updateScriptArchive(conn , scriptPo); 
 		ScriptTabTree.ScriptTreeView.refresh();
+	}
+		
+	
+	public void refreshMyTab() {
+		try {
+			Connection conn = H2Db.getConn();
+			syncScriptPo(conn);
+		} finally {
+			H2Db.closeConn();
+		}
+		
+		
 	}
 	
 	public void saveScriptPo(Connection conn) {

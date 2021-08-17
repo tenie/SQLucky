@@ -131,12 +131,14 @@ public class StrUtils {
 	private static void test_trimChar() {
 
 		String rs = "";
-		String value = "'1111";
-		char c1 = value.charAt(0);
-		char c2 = value.charAt(value.length() - 1);
-		if (c1 == c2 && c1 == '\'') {
-			rs = StrUtils.trimChar(value, "'");
-		}
+		String value = "1111'";
+		rs = StrUtils.trimChar(value, "'");
+		
+//		char c1 = value.charAt(0);
+//		char c2 = value.charAt(value.length() - 1);
+//		if (c1 == c2 && c1 == '\'') {
+//			rs = StrUtils.trimChar(value, "'");
+//		}
 		System.out.println(rs);
 //		String v = trimChar("'1111''", "'");
 //		System.out.println(v);
@@ -144,21 +146,22 @@ public class StrUtils {
 
 	public static void main(String[] args) {
 //	testStrsToInts();
-//	test_trimChar();
+	test_trimChar();
 //		String str = "CREATE PROCEDURE PROC_DATA_MIGRATION\r\n" + "/*根据结转时间\r\n" + "做数据结转*/\r\n" + "(\r\n"
 //				+ "  in tab VARCHAR(100),\r\n" + "  /*表名*/\r\n"
 //
 //				+ ") LANGUAGE SQL SPECIFIC SQL170510154625700 begin IF TYPE = 1 THEN call sysproc.admin_cmd(";
 //		rmMultiLineComment(str);
-		String ddl ="CREATE PROCEDURE myProcedure2\r\n"
-				+ "BEGIN \r\n"
-				+ "   DECLARE SQLSTATE CHAR(5); \r\n"
-				+ "   DECLARE L_VIN VARCHAR(17); \r\n"
-				+ "   DECLARE L_INSURANCE_BEGIN_DATE TIMESTAMP; \r\n"
-				+ "  DECLARE S_VIN VARCHAR(17); ";
-		 ddl = StrUtils.pressString(ddl).toUpperCase();
-		 ddl = ddl.substring(0, ddl.indexOf(" BEGIN "));
-		 System.out.println(ddl);
+		
+//	String ddl ="CREATE PROCEDURE myProcedure2\r\n"
+//				+ "BEGIN \r\n"
+//				+ "   DECLARE SQLSTATE CHAR(5); \r\n"
+//				+ "   DECLARE L_VIN VARCHAR(17); \r\n"
+//				+ "   DECLARE L_INSURANCE_BEGIN_DATE TIMESTAMP; \r\n"
+//				+ "  DECLARE S_VIN VARCHAR(17); ";
+//		 ddl = StrUtils.pressString(ddl).toUpperCase();
+//		 ddl = ddl.substring(0, ddl.indexOf(" BEGIN "));
+//		 System.out.println(ddl);
 		
 	}
 
@@ -193,15 +196,27 @@ public class StrUtils {
 	public static String trimChar(String str, String tag) {
 		String rs = "";
 		str = str.trim();
-		if (str.indexOf("'") == 0) {
+		if (str.indexOf(tag) == 0) {
 			rs = str.substring(1);
+		}else {
+			rs = str;
 		}
-		if (rs.lastIndexOf("'") == rs.length() - 1) {
+		if (rs.lastIndexOf(tag) == rs.length() - 1) {
 			rs = rs.substring(0, rs.length() - 1);
 		}
 
 		return rs;
 	}
+	
+	public static String trimRightChar(String str, String tag) { 
+		String rs = str.trim(); 
+		if (rs.lastIndexOf(tag) == rs.length() - 1) {
+			rs = rs.substring(0, rs.length() - 1);
+		} 
+		return rs;
+	}
+	
+	
 
 	// 下划线 轉 驼峰命名
 	public static String underlineCaseCamel(String str) {

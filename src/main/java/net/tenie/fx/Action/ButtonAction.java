@@ -309,8 +309,8 @@ public class ButtonAction {
 	}
 	
 	// 更新查询结果中选中的数据 对应列的值
-	public static void updateSelectedDataColumn(int colIdx,String value) {
-		RsVal rv = CommonAction.tableInfo();
+	 public static void updateSelectedDataColumn(int colIdx,String value) {
+//		RsVal rv = CommonAction.tableInfo();
 		value = needTrimChar(value);
 		if("null".equals(value)) {
 			value = "<null>";
