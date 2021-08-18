@@ -58,8 +58,8 @@ GridPane {
 	 -fx-background-color:#4B4B4B;
 }
 .myAlert {
-/* -fx-border-color: #4C708C; */
- -fx-background-color: #3C3F41;
+/* -fx-border-color: #4C708C;   #3C3F41*/
+ -fx-background-color: #17181A;
 }
 .myAlert  TextField{
  -fx-text-fill: white;

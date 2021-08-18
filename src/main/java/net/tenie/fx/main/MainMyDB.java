@@ -8,6 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
@@ -18,6 +19,7 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.lib.db.h2.H2Db;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 /**
  * 启动入口
@@ -59,14 +61,18 @@ public class MainMyDB extends Application {
 			// 图标
 			primaryStage.getIcons().add(img);
 			primaryStage.setTitle("SQLucky");
-			primaryStage.setScene(scene);
+			primaryStage.setScene(scene); 
 
-			primaryStage.setMaximized(true);
-			primaryStage.setResizable(true);
+
 			primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
 			ComponentGetter.primaryStage = primaryStage;
 			CommonAction.setTheme(Theme);
 			primaryStage.show();
+			Platform.runLater(() -> { 
+				primaryStage.setMaximized(true);
+				primaryStage.setResizable(true);
+			});
+			
 			 
 			 
 		} catch (Exception e) {
