@@ -38,8 +38,21 @@ public class H2Db {
 		return conn;
 	}
 	
+	public static boolean isDev() {
+		String  modulePath = System.getProperty("jdk.module.path");
+		String[] ls  = modulePath.split(";");
+		if(ls.length > 1) {
+			return true;
+		}
+		return false;
+	}
+	
 	private  static Connection execConn() {
-		String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/";
+		String dir = "/.sqlucky/";
+		if(isDev()) {
+			dir = "/.sqlucky_dev/";
+		}
+		String path = FileUtils.getUserDirectoryPath() + dir;
 		Dbinfo dbinfo = new Dbinfo("org.h2.Driver", "jdbc:h2:" + path + "h2db", "sa", "xyz123qweasd");
 		Connection connection = dbinfo.getconn();
 		return connection;

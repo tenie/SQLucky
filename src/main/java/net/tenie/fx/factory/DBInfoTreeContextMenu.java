@@ -25,6 +25,8 @@ public class DBInfoTreeContextMenu {
 	private MenuItem link;
 	private MenuItem unlink;
 	private MenuItem Edit;
+	private MenuItem Add;
+	
 	private MenuItem delete;
 	
 	private MenuItem refresh;
@@ -61,6 +63,16 @@ public class DBInfoTreeContextMenu {
 		Edit.setDisable(true);
 		Edit.setId("EditConnection");
 		menuItems.add(Edit);
+		
+		Add = new MenuItem("Add");
+		Add.setOnAction(e->{
+			ConnectionEditor.ConnectionInfoSetting();
+		});
+		Add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+//		Add.setDisable(true);
+		Add.setId("AddConnection");
+		menuItems.add(Add);
+		
 		
 	    delete = new MenuItem("Delete Connection");
 		delete.setOnAction(e -> {
@@ -100,7 +112,7 @@ public class DBInfoTreeContextMenu {
 		
 		contextMenu.getItems().addAll(
 //				add,
-				link, unlink, Edit, delete, new SeparatorMenuItem(), refresh, new SeparatorMenuItem(),
+				link, unlink, Edit, Add, delete, new SeparatorMenuItem(), refresh, new SeparatorMenuItem(),
 				tableAddNewCol, tableShow, tableDrop);
 	
 	}
