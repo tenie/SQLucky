@@ -30,7 +30,7 @@ public class DBinfoContainer {
 	private TreeView<TreeNodePo> treeView;
 	private AnchorPane filter;
 	private DBinfoTree dbInfoTree;
-//	private ScriptTree scriptTree;   //脚本
+	private ScriptTabTree scriptTabTree;   //脚本
 	private DBinfoTreeFilter dbf;
 	
 	public DBinfoContainer() {
@@ -42,8 +42,7 @@ public class DBinfoContainer {
 		dbInfoTree = new DBinfoTree();
 		treeView =  DBinfoTree.DBinfoTreeView ;  
 		// 脚本
-//		scriptTree = new ScriptTree();
-		var scriptTree = new ScriptTabTree();
+		scriptTabTree = new ScriptTabTree();
 		var scriptTreeView =  ScriptTabTree.ScriptTreeView ;
 		// 查询过滤
 		dbf  = new DBinfoTreeFilter(); 		
@@ -53,7 +52,6 @@ public class DBinfoContainer {
 		Accordion ad = createAccordion(scriptTreeView, treeView);
 		
 		container.getChildren().addAll(treeBtnPane, ad , filter);
-//		container.getChildren().addAll(treeBtnPane, treeView, filter); 
 		
 		VBox.setVgrow(ad, Priority.ALWAYS);
  
@@ -70,13 +68,17 @@ public class DBinfoContainer {
 		Accordion ad = new Accordion();
 		// 数据库连接信息
 		TitledPane dbTitledPane = new TitledPane();
-		dbTitledPane.setText("DB Config");
+		dbTitledPane.setText("DB Config"); 
+		dbTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("info-circle", 14)); 
 		CommonAction.addCssClass(dbTitledPane, "titledPane-color");
 		dbTitledPane.setContent( DBtreeView);
+		
+		
 
 		// 脚本文件
 		TitledPane scriptTitledPane = new TitledPane();
 		scriptTitledPane.setText("Script");
+		scriptTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("icomoon-files-empty", 14));
 		CommonAction.addCssClass(scriptTitledPane, "titledPane-color");
 		scriptTitledPane.setContent(scriptTreeView);
 		
@@ -136,6 +138,16 @@ public class DBinfoContainer {
 
 	public void setDbInfoTree(DBinfoTree dbInfoTree) {
 		this.dbInfoTree = dbInfoTree;
+	}
+
+
+	public ScriptTabTree getScriptTabTree() {
+		return scriptTabTree;
+	}
+
+
+	public void setScriptTabTree(ScriptTabTree scriptTabTree) {
+		this.scriptTabTree = scriptTabTree;
 	}
 
 }

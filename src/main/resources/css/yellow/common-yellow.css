@@ -2,6 +2,14 @@
 .my-tag{
 	
 }
+
+/* titledPane 背景色*/
+.titledPane-color .title{ 
+	 -fx-background-color: #000000 ;
+	 -fx-border-color: #323232 transparent #323232 transparent ; 
+	 -fx-border-width: 1 0 1 0; 
+}
+
 /* 查找替换面板 */
 .myFindPane{
 	-fx-background-color: #161616; 

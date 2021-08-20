@@ -54,26 +54,25 @@ public class ConfigVal {
 	// 打开文件目录缓存
 	public static String openfileDir = "";
 	
-	static {  
-
+	static {
+		    cssList.add(ConfigVal.class.getResource("/css/application.css").toExternalForm());	
 		    cssList.add(ConfigVal.class.getResource("/css/dark/common.css").toExternalForm());	
-		    cssList.add(ConfigVal.class.getResource("/css/dark/sql-keywords.css").toExternalForm());
-		    
+		    cssList.add(ConfigVal.class.getResource("/css/dark/sql-keywords.css").toExternalForm());	    
 			cssList.add(ConfigVal.class.getResource("/css/dark/treeView.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/dark/TableView.css").toExternalForm());
 			cssList.add(ConfigVal.class.getResource("/css/dark/tabPane.css").toExternalForm());
 			 
-			
+			cssListLight.add(ConfigVal.class.getResource("/css/application.css").toExternalForm());	
 			cssListLight.add(ConfigVal.class.getResource("/css/light/common-light.css").toExternalForm());
 			cssListLight.add(ConfigVal.class.getResource("/css/light/sql-keywords-light.css").toExternalForm());
 			cssListLight.add(ConfigVal.class.getResource("/css/light/tabPane-light.css").toExternalForm());
 			
+			cssListYellow.add(ConfigVal.class.getResource("/css/application.css").toExternalForm());	
 			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/common-yellow.css").toExternalForm());
 			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/sql-keywords-yellow.css").toExternalForm());
 			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/treeView-yellow.css").toExternalForm());
 			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/TableView-yellow.css").toExternalForm());
-			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/tabPane-yellow.css").toExternalForm());
-			 
+			cssListYellow.add(ConfigVal.class.getResource("/css/yellow/tabPane-yellow.css").toExternalForm());	 
 	}
 	
 	

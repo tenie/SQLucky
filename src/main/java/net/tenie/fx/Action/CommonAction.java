@@ -912,6 +912,11 @@ public class CommonAction {
 			
 		}
 		
+		// 连接和脚本 pane
+		ComponentGetter.dbTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
+		ComponentGetter.scriptTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
+		
+		
 	}
 	
 	public static void setOpenfileDir(String val) {

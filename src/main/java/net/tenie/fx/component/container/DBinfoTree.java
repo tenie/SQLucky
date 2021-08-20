@@ -60,6 +60,7 @@ public class DBinfoTree {
 				new TreeNodePo("Connections",  icon)); 
 		TreeView<TreeNodePo> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");
+		treeView.setShowRoot(false);
 		
 		recoverNode(rootNode);// 恢复数据中保存的连接数据
 		// 展示连接

@@ -3,6 +3,19 @@
 	
 }
 
+.accordion .content{
+	 -fx-background-color:  #2B2B2B;
+	 -fx-border-color:  #2B2B2B;
+}	
+
+/* titledPane 背景色*/
+.titledPane-color .title{ 
+    -fx-background-color:  #2E2E2E;
+	 -fx-border-color: #4C4C4C transparent #4C4C4C transparent ; 
+	  -fx-border-width: 1 0 1 0;
+}
+
+
 /* tabpane 选择tab按钮 .tab-down-button */
 .control-buttons-tab .arrow {
 	-fx-background-color: #1C94FF; 
