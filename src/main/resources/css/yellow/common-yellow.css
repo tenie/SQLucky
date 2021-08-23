@@ -414,13 +414,15 @@ FlowPane TextField{
   -fx-font-weight:bold; 
  }
 
-/* tree 过滤清空按钮*/
+/* tree 过滤清空按钮  #363636*/
 .myCleanBtn{
-	 -fx-background-color: #363636;
+	 -fx-background-color:  transparent ;
 	 -fx-padding: 1;
 	 -fx-background-radius: 10px;
 }
-
+.myCleanBtn:hover{
+	-fx-background-color:  transparent;
+}
 
 
 /*  表格头, 分割线  */

@@ -191,7 +191,7 @@ public class SqlEditor {
 		CodeArea code = getCodeArea(tb);
 		code.appendText(text);
 		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
-		tb.refreshMyTab();
+		tb.syncScriptPo();
 	}
 	
 //	public static void setTabSQLText2(MyTab tb, String text, int paragraph) {

@@ -69,6 +69,7 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
+import net.tenie.fx.main.MainMyDB;
 import net.tenie.fx.main.Restart;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
@@ -307,10 +308,9 @@ public class CommonAction {
 		var tabs = mainTabPane.getTabs(); 
 		for(var tab : tabs) { 
 			MyTab mtb = (MyTab) tab;
-			mtb.refreshMyTab();
+			mtb.syncScriptPo();
 		} 
 		tabs.clear();
-//		SqlEditor.addCodeEmptyTabMethod();
 		var stp = ComponentGetter.scriptTitledPane;
 		stp.setExpanded(true);
 	}
@@ -913,8 +913,13 @@ public class CommonAction {
 		}
 		
 		// 连接和脚本 pane
-		ComponentGetter.dbTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
-		ComponentGetter.scriptTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
+		MainMyDB.imgInfo.setStyle("-fx-background-color: " + color + ";");
+		MainMyDB.imgLeft.setStyle("-fx-background-color: " + color + ";");
+		MainMyDB.imgRight.setStyle("-fx-background-color: " + color + ";");
+		MainMyDB.imgScript.setStyle("-fx-background-color: " + color + ";");
+		
+//		ComponentGetter.dbTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
+//		ComponentGetter.scriptTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
 		
 		
 	}

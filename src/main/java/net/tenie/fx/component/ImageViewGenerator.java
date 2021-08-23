@@ -62,19 +62,25 @@ public final class ImageViewGenerator {
 	public static Region svgImageUnactive(String name, int size) {
 		return svgImage(name, size, "#A9A9A9");
 	}
-
-	public static Region svgImageDefActive(String name) {
+	
+	
+	public static String getColor() {
 		String defColorStr = "#1C94FF";
 		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
 			defColorStr = "#FDA232";
 		} 
-		Region rs = svgImage(name, 16, defColorStr);  
-//		svgActiveImage.add(rs);
+		return defColorStr;
+	}
+
+	public static Region svgImageDefActive(String name) {
+		String defColorStr = getColor();
+		Region rs = svgImage(name, 16, defColorStr);   
 		return rs;
 	}
 
 	public static Region svgImageDefActive(String name, double size) {
-		return svgImage(name, size, "#13B7FE");
+		String defColorStr = getColor();
+		return svgImage(name, size, defColorStr);
 	}
 
 	public static Region svgImage(String name, String color) {
@@ -145,8 +151,10 @@ public final class ImageViewGenerator {
 		switch (name) {
 		case "NULL":
 			return ""; 
-				
-			
+		case "angle-right":
+			return "M1171 960q0 13-10 23l-466 466q-10 10-23 10t-23-10l-50-50q-10-10-10-23t10-23l393-393-393-393q-10-10-10-23t10-23l50-50q10-10 23-10t23 10l466 466q10 10 10 23z"; 			
+		case "chevron-right":
+			return "M1363 877l-742 742q-19 19-45 19t-45-19l-166-166q-19-19-19-45t19-45l531-531-531-531q-19-19-19-45t19-45l166-166q19-19 45-19t45 19l742 742q19 19 19 45t-19 45z"; 	
 		case "entypo-download":
 			return "M972.667 578c12 6.667 21 17.333 27 32 6 14.667 7 28 3 40l-28 154c-2.667 13.333-10 24.333-22 33-12 8.667-25.333 13-40 13h-816c-14.667 0-28-4.333-40-13s-19.333-19.667-22-33l-28-154c-6.667-32 4-56 32-72l158-108h98l-170 130h178c5.333 0 9.333 2.667 12 8l40 110h300l40-110c5.333-5.333 9.333-8 12-8h178l-170-130h98l160 108m-208-322l-260 244-260-244h166V0h190v256h164"; 
 				

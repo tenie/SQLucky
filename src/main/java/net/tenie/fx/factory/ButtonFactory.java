@@ -9,6 +9,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
 
+import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ComboBox;
@@ -19,6 +20,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
@@ -113,7 +115,7 @@ public class ButtonFactory {
 		JFXButton script = new JFXButton();
 		script.setGraphic(ImageViewGenerator.svgImageDefActive("entypo-download"));
 		script.setOnMouseClicked(e->{
-			  CommonAction.archiveAllScript();
+		   CommonAction.archiveAllScript(); 
 			
 		});
 		script.setTooltip(MyTooltipTool.instance("Archive Script "));

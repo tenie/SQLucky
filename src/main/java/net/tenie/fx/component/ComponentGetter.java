@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ComboBox;
@@ -68,6 +69,7 @@ public final class ComponentGetter {
 	public static volatile AppWindow app;
 	
 	
+	public static Accordion infoAccordion;
 	public static TitledPane scriptTitledPane;
 	public static TitledPane dbTitledPane;
 	

@@ -11,6 +11,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
@@ -61,6 +62,8 @@ public class DBinfoContainer {
 		ComponentGetter.treeBtnPane = treeBtnPane;
 		
 		
+		ComponentGetter.infoAccordion = ad;
+		
 	}
 
 	
@@ -69,7 +72,7 @@ public class DBinfoContainer {
 		// 数据库连接信息
 		TitledPane dbTitledPane = new TitledPane();
 		dbTitledPane.setText("DB Config"); 
-		dbTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("info-circle", 14)); 
+//		dbTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("info-circle", 14)); 
 		CommonAction.addCssClass(dbTitledPane, "titledPane-color");
 		dbTitledPane.setContent( DBtreeView);
 		
@@ -78,7 +81,7 @@ public class DBinfoContainer {
 		// 脚本文件
 		TitledPane scriptTitledPane = new TitledPane();
 		scriptTitledPane.setText("Script");
-		scriptTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("icomoon-files-empty", 14));
+//		scriptTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("icomoon-files-empty", 14));
 		CommonAction.addCssClass(scriptTitledPane, "titledPane-color");
 		scriptTitledPane.setContent(scriptTreeView);
 		
@@ -104,6 +107,7 @@ public class DBinfoContainer {
 		
 		ComponentGetter.dbTitledPane = dbTitledPane;
 		ComponentGetter.scriptTitledPane = scriptTitledPane;
+		   
 		return ad;
 	}
 	

@@ -98,10 +98,12 @@ MenuButton{
 }
  
 
-/* tree 过滤清空按钮*/
+/* tree 过滤清空按钮 #DDDDDD*/
 .myCleanBtn{
-	 -fx-background-color: #DDDDDD;
+	 -fx-background-color: transparent;
      -fx-background-radius: 10px;
 	 -fx-padding: 1;
 }
-
+.myCleanBtn:hover{
+	-fx-background-color:  transparent;
+}

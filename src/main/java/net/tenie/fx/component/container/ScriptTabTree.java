@@ -5,14 +5,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import com.jfoenix.controls.JFXButton;
+
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ScriptPo;
 import net.tenie.fx.PropertyPo.TreeItemType;
@@ -26,6 +31,7 @@ import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.factory.ScriptTabNodeCellFactory;
 import net.tenie.fx.factory.ScriptTreeContextMenu;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.fx.window.ModalDialog;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.H2SqlTextSavePo;
 import net.tenie.lib.db.h2.SqlTextDao;
@@ -199,6 +205,73 @@ public class ScriptTabTree {
 					 
 		 } 
 		 return null;
+	}
+	
+	// 关闭一个脚本 Node cell
+	public static void closeAction(TreeItem<MyTab> rootNode) {
+
+		ObservableList<TreeItem<MyTab>>  myTabItemList = rootNode.getChildren();
+		TreeItem<MyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
+		MyTab tb = ctt.getValue();
+		
+		String title = CommonUtility.tabText(tb);
+		String sql = SqlEditor.getTabSQLText(tb);
+		if (title.endsWith("*") && sql.trim().length() > 0) {
+			// 是否保存
+			final Stage stage = new Stage();
+
+			// 1 保存
+			JFXButton okbtn = new JFXButton("Yes");
+			okbtn.getStyleClass().add("myAlertBtn");
+			okbtn.setOnAction(value -> {
+				CommonAction.saveSqlAction(tb);
+				removeNode(myTabItemList, ctt, tb);
+				stage.close();
+			});
+
+			// 2 不保存
+			JFXButton Nobtn = new JFXButton("No");
+			Nobtn.setOnAction(value -> {
+				removeNode(myTabItemList, ctt, tb);
+				stage.close();
+			});
+			// 取消
+			JFXButton cancelbtn = new JFXButton("Cancel"); 
+			cancelbtn.setOnAction(value -> { 
+				stage.close();
+			});
+
+			List<Node> btns = new ArrayList<>();
+
+			
+			
+			btns.add(cancelbtn);
+			btns.add(Nobtn);
+			btns.add(okbtn);
+
+			ModalDialog.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns);
+		}else {
+			removeNode(myTabItemList, ctt, tb);
+		}
+		
+
+	}
+	
+	// 从ScriptTabTree 中移除一个节点
+	public static void removeNode(ObservableList<TreeItem<MyTab>>  myTabItemList, TreeItem<MyTab> ctt, MyTab tb ) {
+		try { 
+			
+			var conn = H2Db.getConn();
+			if (SqlEditor.myTabPane.getTabs().contains(tb)) {
+				SqlEditor.myTabPane.getTabs().remove(tb);
+			}
+			myTabItemList.remove(ctt);
+
+			var scpo = tb.getScriptPo();
+			SqlTextDao.deleteScriptArchive(conn, scpo);
+		} finally {
+			H2Db.closeConn();
+		}
 	}
 	
 	// treeView 右键菜单属性设置
