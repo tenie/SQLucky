@@ -317,6 +317,7 @@ public class DBinfoTree {
 					}
 					menu.setConnectDisable(false);
 					menu.setTableDisable(true); 
+				// TABLE 
 				}else if(nd != null && nd.getType() == TreeItemType.TABLE) {
 					menu.setConnectDisable(true);
 					menu.setTableDisable(false);
@@ -324,6 +325,41 @@ public class DBinfoTree {
 					String schema = nd.getTable().getTableSchema();
 					String tablename = nd.getTable().getTableName();
 					menu.setTableAction(dbc, schema, tablename);
+				}else if(nd != null && nd.getType() == TreeItemType.VIEW) {
+					//TODO  
+					menu.setConnectDisable(true);
+					menu.setViewFuncProcTriDisable(false);
+					DbConnectionPo  dbc =nd.getConnpo();
+					String schema = nd.getTable().getTableSchema();
+					String viewName = nd.getTable().getTableName();
+					menu.setViewAction(dbc, schema, viewName);
+				}else if(nd != null && nd.getType() == TreeItemType.FUNCTION) {
+					//TODO  
+					menu.setConnectDisable(true);
+					menu.setViewFuncProcTriDisable(false);
+					DbConnectionPo  dbc =nd.getConnpo();
+					 
+					String schema = nd.getFuncProTri().getSchema();
+					String funcName = nd.getFuncProTri().getName();
+					menu.setFuncAction(dbc, schema, funcName);
+				}else if(nd != null && nd.getType() == TreeItemType.PROCEDURE) {
+					//TODO  
+					menu.setConnectDisable(true);
+					menu.setViewFuncProcTriDisable(false);
+					DbConnectionPo  dbc =nd.getConnpo();
+					
+					String schema = nd.getFuncProTri().getSchema();
+					String procName = nd.getFuncProTri().getName();
+					menu.setProcAction(dbc, schema, procName);
+				}else if(nd != null && nd.getType() == TreeItemType.TRIGGER) {
+					//TODO  
+					menu.setConnectDisable(true);
+					menu.setViewFuncProcTriDisable(false);
+					DbConnectionPo  dbc =nd.getConnpo();
+					
+					String schema = nd.getFuncProTri().getSchema();
+					String triggerName = nd.getFuncProTri().getName();
+					menu.setTriggerAction(dbc, schema, triggerName);
 				}else {
 					menu.setConnectDisable(true);
 					menu.setTableDisable(true); 

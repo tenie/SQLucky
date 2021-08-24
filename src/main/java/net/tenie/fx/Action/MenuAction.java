@@ -150,6 +150,50 @@ public class MenuAction {
 		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
 		 
 	}
+	
+	// 删视图
+	public static void dropView(DbConnectionPo  dbc ,String schema ,String viewName  ) { 
+		Connection conn = dbc.getConn();  
+		String sql =  dbc.getExportDDL().exportDropView(schema, viewName);
+		Consumer< String >  caller = x ->{ 
+			execExportSql(sql, conn, dbc);
+		};
+		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
+		 
+	}
+	
+	// 删函数
+	public static void dropFunc(DbConnectionPo  dbc ,String schema ,String funcName  ) { 
+		Connection conn = dbc.getConn();  
+		String sql =  dbc.getExportDDL().exportDropFunction(schema, funcName);
+		Consumer< String >  caller = x ->{ 
+			execExportSql(sql, conn, dbc);
+		};
+		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
+		 
+	}
+
+	// 删函过程
+	public static void dropProc(DbConnectionPo  dbc ,String schema ,String funcName  ) { 
+		Connection conn = dbc.getConn();  
+		String sql =  dbc.getExportDDL().exportDropProcedure(schema, funcName);
+		Consumer< String >  caller = x ->{ 
+			execExportSql(sql, conn, dbc);
+		};
+		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
+		 
+	}
+
+	// 删函触发器
+	public static void dropTrigger(DbConnectionPo  dbc ,String schema ,String funcName  ) { 
+		Connection conn = dbc.getConn();  
+		String sql =  dbc.getExportDDL().exportDropTrigger(schema, funcName);
+		Consumer< String >  caller = x ->{ 
+			execExportSql(sql, conn, dbc);
+		};
+		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
+		 
+	}
 
 		
 }

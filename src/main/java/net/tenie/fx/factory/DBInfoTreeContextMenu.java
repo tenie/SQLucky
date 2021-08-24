@@ -104,7 +104,7 @@ public class DBInfoTreeContextMenu {
 	    tableShow.setDisable(true);
 	    menuItems.add(tableShow);
 	    
-	    tableDrop = new MenuItem("Drop table");
+	    tableDrop = new MenuItem("Drop ");
 	    tableDrop.setGraphic(ImageViewGenerator.svgImageDefActive("minus-square"));
 	    tableDrop.setId("tableDrop");
 	    tableDrop.setDisable(true);
@@ -127,11 +127,20 @@ public class DBInfoTreeContextMenu {
 		delete.setDisable(tf); 
 	}
 	
+	// 设置选中 Table 时右键菜单的可以和禁用
 	public void setTableDisable(boolean tf) {
 		tableAddNewCol.setDisable(tf);
 		tableDrop.setDisable(tf);
 		tableShow.setDisable(tf); 
 	}
+	
+	// 设置选中 视图/函数 时右键菜单的可以和禁用
+	public void setViewFuncProcTriDisable(boolean tf) {
+		tableDrop.setDisable(tf);
+	}
+	
+	 
+	
 	public void setRefreshDisable(boolean tf) {
 		refresh.setDisable(tf);
 	}
@@ -151,6 +160,36 @@ public class DBInfoTreeContextMenu {
 			TableDataDetail.showTableFieldType(dbc, schema, tablename); 
 		});
 	}
+	
+	// 设置选中视图时 对应的按钮action
+	public void setViewAction(DbConnectionPo  dbc ,String schema ,String viewName ) {
+		tableDrop.setOnAction(e->{ 
+			MenuAction.dropView(dbc, schema, viewName);
+		});
+	  
+	}
+	// 设置选中函数时 对应的按钮action
+	public void setFuncAction(DbConnectionPo  dbc ,String schema ,String viewName ) {
+		tableDrop.setOnAction(e->{ 
+			MenuAction.dropFunc(dbc, schema, viewName);
+		});
+	  
+	}
+	
+	public void setProcAction(DbConnectionPo  dbc ,String schema ,String viewName ) {
+		tableDrop.setOnAction(e->{ 
+			MenuAction.dropProc(dbc, schema, viewName);
+		});
+	  
+	}
+	
+	public void setTriggerAction(DbConnectionPo  dbc ,String schema ,String viewName ) {
+		tableDrop.setOnAction(e->{ 
+			MenuAction.dropTrigger(dbc, schema, viewName);
+		});
+	  
+	}
+	
 	
 	public void setRefreshAction(TreeItem<TreeNodePo> newValue) {
 		
