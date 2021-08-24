@@ -64,7 +64,7 @@ public class DBInfoTreeContextMenu {
 		Edit.setId("EditConnection");
 		menuItems.add(Edit);
 		
-		Add = new MenuItem("Add");
+		Add = new MenuItem("Add Connection");
 		Add.setOnAction(e->{
 			ConnectionEditor.ConnectionInfoSetting();
 		});

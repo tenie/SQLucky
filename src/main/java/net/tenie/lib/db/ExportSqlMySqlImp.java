@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
+import net.tenie.fx.PropertyPo.RsData;
 import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.config.DbVendor;
 
@@ -21,9 +22,7 @@ public class ExportSqlMySqlImp implements ExportDDL {
 	private static Logger logger = LogManager.getLogger(ExportSqlMySqlImp.class);
 
 	private FetchDB2InfoImp fdb2;
-
-	private List<TablePo> allTableObjs = new ArrayList<>();
-	private List<TablePo> allViewObjs = new ArrayList<>();
+ 
 
 	public ExportSqlMySqlImp() {
 		fdb2 = new FetchDB2InfoImp();
@@ -55,7 +54,7 @@ public class ExportSqlMySqlImp implements ExportDDL {
 //				});
 //			}
 			// 缓存数据
-			allTableObjs = vals;
+//			allTableObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -78,7 +77,7 @@ public class ExportSqlMySqlImp implements ExportDDL {
 					v.setDdl(ddl);
 				});
 			}
-			allViewObjs = vals;
+//			allViewObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,7 +107,14 @@ public class ExportSqlMySqlImp implements ExportDDL {
 		}
 		return null;
 	}
-
+// 获取 mysql 版本
+	public String getVersion(Connection conn) {
+		String sql = "select version()";
+		String v  = ""; 
+		v  = DBTools.selectOne(conn, sql);
+		 
+		return v;
+	}
 	/**
 	 * 过程对象
 	 */
@@ -116,8 +122,15 @@ public class ExportSqlMySqlImp implements ExportDDL {
 	public List<FuncProcTriggerPo> allProcedureObj(Connection conn, String schema) {
 		try {
 			// 函数名称
+			String ver = getVersion(conn);
+
 			String sql = "  select  name,  comment  from mysql.proc where db = '" + schema
 					+ "' and `type` = 'PROCEDURE'";
+			if(ver.startsWith("8")) {
+			      sql = "SELECT   ROUTINE_NAME as name  , ROUTINE_COMMENT as comment "
+						+ "    FROM INFORMATION_SCHEMA.ROUTINES where ROUTINE_TYPE = 'PROCEDURE' and  ROUTINE_SCHEMA ='"+schema+"'" ;
+				
+			}
 			List<FuncProcTriggerPo> vals = fetchAllProcedures(conn, schema, sql);
 			if (vals != null && vals.size() > 0) {
 				vals.forEach(v -> {

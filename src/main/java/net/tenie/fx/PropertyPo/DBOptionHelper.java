@@ -13,15 +13,15 @@ public class DBOptionHelper {
 		DbSchemaPo spo = map.get(schemasName);
 		List<TablePo> tbs = new ArrayList<>();
 		if (spo != null) {
-			tbs = spo.getTabs();
-			if ( tbs == null) {
+//			tbs = spo.getTabs();
+//			if ( tbs == null) {
 				try {
 					tbs = po.getExportDDL().allTableObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				spo.setTabs(tbs);
-			}
+//			}
 		}
 
 		return tbs;
@@ -33,15 +33,15 @@ public class DBOptionHelper {
 		DbSchemaPo spo = map.get(schemasName);
 		List<TablePo> views = new ArrayList<TablePo>();
 		if (  spo != null) {
-			views = spo.getViews();
-			if (  views == null) {
+//			views = spo.getViews();
+//			if (  views == null) {
 				try {
 					views = po.getExportDDL().allViewObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				spo.setTabs(views);
-			}
+//			}
 		}
 
 		return views;
@@ -53,15 +53,15 @@ public class DBOptionHelper {
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
 		if ( spo != null) {
-			val = spo.getFunctions();
-			if ( val == null) {
+//			val = spo.getFunctions();
+//			if ( val == null) {
 				try {
 					val = po.getExportDDL().allFunctionObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				spo.setFunctions(val);
-			}
+//			}
 		}
 
 		return val;
@@ -73,15 +73,15 @@ public class DBOptionHelper {
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
 		if ( spo != null) {
-			val = spo.getProcedures();
-			if ( val == null) {
+//			val = spo.getProcedures();
+//			if ( val == null) {
 				try {
 					val = po.getExportDDL().allProcedureObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				spo.setProcedures(val);
-			}
+//			}
 		}
 
 		return val;
@@ -93,15 +93,15 @@ public class DBOptionHelper {
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val =new ArrayList<>();
 		if ( spo != null) {
-			val = spo.getTriggers();
-			if (  val == null) {
+//			val = spo.getTriggers();
+//			if (  val == null) {
 				try {
 					val = po.getExportDDL().allTriggerObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				spo.setTriggers(val);
-			}
+//			}
 		}
 
 		return val;
@@ -113,15 +113,15 @@ public class DBOptionHelper {
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
 		if ( spo != null) {
-			val = spo.getTriggers();
-			if (  val == null) {
+//			val = spo.getTriggers();
+//			if (  val == null) {
 				try {
 					val = po.getExportDDL().allIndexObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				spo.setTriggers(val);
-			}
+//			}
 		}
 
 		return val;
@@ -133,15 +133,15 @@ public class DBOptionHelper {
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
 		if (isNew || spo != null) {
-			val = spo.getTriggers();
-			if (isNew || val == null) {
+//			val = spo.getTriggers();
+//			if (isNew || val == null) {
 				try {
 					val = po.getExportDDL().allSequenceObj(po.getConn(), schemasName);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 				spo.setTriggers(val);
-			}
+//			}
 		}
 
 		return val;

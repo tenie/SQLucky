@@ -34,6 +34,7 @@ public class ConnItemContainer {
 		String defSch = connpo.getDefaultSchema();
 		schemaNode = CreateSchemaNode(connpo);
 		moveSchemaToTop(defSch, schemaNode);
+		// 创建子节点
 		ConnItemDbObjects ci = showConnNode(connpo, defSch);
 		// 将自己缓存到数对象中
 //		ComponentGetter.dbInfoTree.getConnItemParent().add(this);

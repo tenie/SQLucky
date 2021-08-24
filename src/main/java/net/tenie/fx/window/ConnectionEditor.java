@@ -402,7 +402,8 @@ public class ConnectionEditor {
 			// 修改颜色
 			val.getValue().setIcon(ImageViewGenerator.svgImageUnactive("unlink"));
 			// 删除子节点
-			val.getChildren().remove(0, val.getChildren().size());
+//			val.getChildren().remove(0, val.getChildren().size());
+			val.getChildren().clear();
 
 		}
 	}
