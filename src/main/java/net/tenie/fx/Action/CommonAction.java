@@ -57,6 +57,7 @@ import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.MyPopupWindow;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
@@ -102,6 +103,9 @@ public class CommonAction {
 		
 		// 隐藏查找, 替换窗口
 		hideFindReplaceWindow();
+		
+		// 提示窗口
+		MyPopupWindow.hide();
 	}
 	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
 	public static RsVal tableInfo() {
@@ -1544,11 +1548,28 @@ public class CommonAction {
 		};
 		ModalDialog.myConfirmation("Change Theme Restart Application Will Better, ok ? ", ok, cancel);
 	}
-	
-	
-	
-	public static void demo() {
-	
+	// 获取当前连接下拉选中的连接名称
+	public static String getComboBoxDbConnName() {
+		var v = ComponentGetter.connComboBox.getValue();
+		if (v != null) {
+			String connboxVal = ComponentGetter.connComboBox.getValue().getText();
+			return connboxVal;
+		}
+
+		return null;
 	}
+	
+	
+	// 获取当前连接下拉选值的对应连接对象
+	public static DbConnectionPo getDbConnectionPoByComboBoxDbConnName() {
+		var name = CommonAction.getComboBoxDbConnName();
+		if(StrUtils.isNotNullOrEmpty(name)) {
+			DbConnectionPo dpov = DBConns.get(name);
+			return dpov;
+		}
+		return null; 
+	}
+	
+	public static void demo() {}
 	
 }

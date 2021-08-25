@@ -10,12 +10,20 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
 
-public class HighLightingSqlCodeAreaContextMenu {
+public class SqlCodeAreaProposeInput {
 	public static List<MenuItem> menuItems = new ArrayList<>();
-	ContextMenu contextMenu; 
+	private static  ContextMenu contextMenu = new ContextMenu();  
 	
-	public HighLightingSqlCodeAreaContextMenu() {
-		contextMenu = new ContextMenu();  
+	
+	public static ContextMenu getPropseInput() {
+		
+		return contextMenu;
+	}
+	
+	
+	
+	
+	public SqlCodeAreaProposeInput() { 
 //		contextMenu.setMinWidth(200);
 		contextMenu.setPrefWidth(200);
 		MenuItem copy  = new MenuItem("Copy                        (ctrl+C)"); 

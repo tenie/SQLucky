@@ -26,6 +26,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,6 +38,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
@@ -97,8 +99,10 @@ public final class SettingKeyCodeCombination {
 		
 		
 		scene.getAccelerators().put(F9, () -> {
-			VBox b = ComponentGetter.mainWindow;
-			ObservableList<Node> ls = b.parentProperty().get().getChildrenUnmodifiable();
+		
+			
+//			VBox b = ComponentGetter.mainWindow;
+//			ObservableList<Node> ls = b.parentProperty().get().getChildrenUnmodifiable();
 //			ContextMenu cn = (ContextMenu) ls.get(1); 
 			
 //			  n = ls.get(1);
@@ -184,6 +188,33 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		scene.getAccelerators().put(F1, () -> {
+			
+			// test caret
+			var codeArea = SqlEditor.getCodeArea();
+			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
+			double x = bd.getCenterX();
+			double y = bd.getCenterY();
+			double z = bd.getCenterZ();
+			
+			System.out.println(x);
+			System.out.println(y);
+			System.out.println(z);
+			
+//			 HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(); 
+//			 var cont = cm.getContextMenu();
+//			 cont.setAnchorX(x);
+//			 cont.setAnchorY(y+6);
+//			 cont.show( ComponentGetter.primaryStage);
+			
+//			Label l = new Label("1111"); 
+			MyPopupWindow.showPop(x, y+7, "");
+//		   final Popup popup = new Popup();
+//		   popup.setX(x); 
+//		   popup.setY(y);
+//		   popup.getContent().addAll(l );
+//		   popup.show( ComponentGetter.primaryStage);
+
+			
 //			CommonAction.restartApp() ;
 //			try {
 //				Restart.reboot();

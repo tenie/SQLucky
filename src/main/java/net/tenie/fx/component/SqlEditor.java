@@ -18,6 +18,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Tab;
@@ -504,6 +505,38 @@ public class SqlEditor {
 			}
 			
 		}  
+	}
+	
+	public static void callPopup(CodeArea codeArea) {
+		Platform.runLater(()->{
+			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
+			double x = bd.getCenterX();
+			double y = bd.getCenterY(); 
+			int anchor = codeArea.getAnchor();
+			String str = "";
+			for(int i = 1 ; anchor-i > 0 ; i++) {
+				var tmp = codeArea.getText(anchor-i, anchor);
+				int tmplen = tmp.length();
+				int idx =    anchor - tmplen ;
+				if(tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") ||   idx <= 0   ) {
+					str = tmp;
+					break;
+				}
+			}
+			MyPopupWindow.showPop(x, y+7 , str);
+		});
+	
+	}
+	
+	/**
+	 * 自动补全提示
+	 * @param e
+	 * @param codeArea
+	 */
+	public static void codePopup(KeyEvent e, CodeArea codeArea) { 
+		if(e.isAltDown()) {
+			callPopup(codeArea);
+		} 
 	}
 	
 	/**

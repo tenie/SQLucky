@@ -13,7 +13,7 @@ public class DBOptionHelper {
 		DbSchemaPo spo = map.get(schemasName);
 		List<TablePo> tbs = new ArrayList<>();
 		if (spo != null) {
-//			tbs = spo.getTabs();
+			tbs = spo.getTabs();
 //			if ( tbs == null) {
 				try {
 					tbs = po.getExportDDL().allTableObj(po.getConn(), schemasName);
@@ -40,7 +40,7 @@ public class DBOptionHelper {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				spo.setTabs(views);
+				spo.setViews(views);
 //			}
 		}
 
@@ -120,7 +120,8 @@ public class DBOptionHelper {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				spo.setTriggers(val);
+				//TODO 缓存
+//				spo.setTriggers(val);
 //			}
 		}
 
@@ -140,7 +141,8 @@ public class DBOptionHelper {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				spo.setTriggers(val);
+				//TODO 缓存
+//				spo.setTriggers(val);
 //			}
 		}
 

@@ -45,8 +45,41 @@ public class HighLightingSqlCodeArea {
 		// 事件KeyEvent 
 		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{
+			
+			// 控制按键没有按下的情况
+//			if( ! e.isShiftDown() &&
+//				! e.isAltDown() &&
+//				! e.isControlDown() &&
+//				! e.isShortcutDown() &&
+//				! e.isMetaDown()
+//					) {
+//				var inputCode = e.getCode();
+//				if(inputCode.equals(KeyCode.SPACE)) { 
+//					Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
+//					double x = bd.getCenterX();
+//					double y = bd.getCenterY();
+//					double z = bd.getCenterZ();
+//					MyPopupWindow.showPop(x, y+7);
+//				} 
+//				
+//			}
+			
+			if(MyPopupWindow.isShow()) {
+				if(e.getCode() == KeyCode.BACK_SPACE ) {
+					MyPopupWindow.hide();
+					SqlEditor.callPopup(codeArea); 
+				}else {
+					MyPopupWindow.hide();
+					SqlEditor.callPopup(codeArea); 
+				}
+			}
+			
+			
 			if(e.getCode() == KeyCode.TAB ) {
 				SqlEditor.codeAreaTab(e, codeArea);
+			}
+			else if(e.getCode() == KeyCode.SLASH ) {
+				SqlEditor.codePopup(e, codeArea);
 			}
 			else if(e.getCode() == KeyCode.A ) {
 				SqlEditor.codeAreaCtrlShiftA(e, codeArea);
@@ -122,7 +155,7 @@ public class HighLightingSqlCodeArea {
 		 
 		// 当鼠标释放, 判断是否为双击, 是双击选中对应的内容, 在判断有没有选择的文本, 有的话就修改所有相同的文本
 		codeArea.setOnMouseReleased(mouseEvent->{
-			
+			MyPopupWindow.hide();
 			String str  = codeArea.getSelectedText();
 			String trimStr = str.trim();
 			int strSz = trimStr.length(); 

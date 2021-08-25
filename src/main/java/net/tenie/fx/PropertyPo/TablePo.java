@@ -16,6 +16,12 @@ public class TablePo {
 	private LinkedHashSet<TableFieldPo> fields;
 	private ArrayList<TablePrimaryKeysPo> primaryKeys;
 	private String ddl;
+	
+	public TablePo() {}
+	
+	public TablePo(String name) {
+		tableName = name;
+	}
 
 	public String getDdl() {
 		return ddl;

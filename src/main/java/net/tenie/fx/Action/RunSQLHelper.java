@@ -128,6 +128,7 @@ public class RunSQLHelper {
 					sqlData sq = new sqlData(str, 0, str.length());
 					allsqls.add(sq);
 				}
+			// 执行传入的sql, 非界面上的sql
 			}else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
 				allsqls = epurateSql(sqlstr);
 			} else { 
@@ -199,13 +200,8 @@ public class RunSQLHelper {
 				if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
 					msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
 				}
-//				int bg = allsqls.get(i).begin; 
 				sqlData sd = 	allsqls.get(i);
-//				int len = 	sd.sql.length(); 
 				errObj.add(sd);
-//				Platform.runLater(() -> { 
-//					SqlCodeAreaHighLightingHelper.applyErrorHighlighting( bg, len, sd.sql); 
-//				});
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
@@ -218,15 +214,19 @@ public class RunSQLHelper {
 
 		}
 		showExecuteSQLInfo(ddlDmlpo);
-		Platform.runLater(() -> { 
-			if (errObj.size() > 0) {
-				for (sqlData sd : errObj) {
-					int bg = sd.begin;
-					int len = sd.sql.length();
-					SqlCodeAreaHighLightingHelper.applyErrorHighlighting(bg, len, sd.sql);
+		// 如果是执行的界面上的sql, 那么对错误的sql渲染为红色
+		if (StrUtils.isNullOrEmpty(RunSQLHelper.sqlstr)) {
+			Platform.runLater(() -> { 
+				if (errObj.size() > 0) {
+					for (sqlData sd : errObj) {
+						int bg = sd.begin;
+						int len = sd.sql.length();
+						SqlCodeAreaHighLightingHelper.applyErrorHighlighting(bg, len, sd.sql);
+					}
 				}
-			}
-		});
+			});
+		}
+		
 	}
 	
 	
@@ -508,10 +508,7 @@ public class RunSQLHelper {
 		return conn;
 	}
 
-	public static String getComboBoxDbConnName() {
-		String connboxVal = ComponentGetter.connComboBox.getValue().getText();
-		return connboxVal;
-	}
+
 
 	// 运行 sql 入口
 	public static void runSQLMethodRefresh(DbConnectionPo dpov , String sqlv, String tabIdxv, boolean isLockv ) {
@@ -573,7 +570,7 @@ public class RunSQLHelper {
 	public static void runSQLMethod( String sqlv, String tabIdxv, boolean isFuncv) {
 		if (checkDBconn())
 			return;
-		DbConnectionPo dpov = DBConns.get(getComboBoxDbConnName());
+		DbConnectionPo dpov = CommonAction.getDbConnectionPoByComboBoxDbConnName();
 		Connection connv = dpov.getConn();
 		try {
 			if (connv == null) {
