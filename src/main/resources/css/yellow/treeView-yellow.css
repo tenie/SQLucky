@@ -13,6 +13,13 @@
     -fx-background-color: #000000 ;
     -fx-text-fill: white ;
 }
+
+/* 自动补全 窗口*/
+.auto-comolete  .tree-cell {
+    -fx-background-color: #323232 ;
+    -fx-text-fill: white ;
+}
+
 /* check box tree */
 /*.clipped-container{
 	 -fx-color: #000000 ;
@@ -37,6 +44,14 @@
     -fx-font-weight: bold ;
     -fx-background-color: #363636 ;
 }
+
+
+/* 自动补全 窗口*/
+.auto-comolete .tree-cell:selected {
+    -fx-font-weight: bold ;
+    -fx-background-color: #1D1D1D ;
+}
+
 .tree-cell:hover { 
     -fx-background-color: #363636  ;
 }

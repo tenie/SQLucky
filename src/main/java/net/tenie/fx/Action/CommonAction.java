@@ -57,7 +57,7 @@ import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.MyPopupWindow;
+import net.tenie.fx.component.MyAutoComplete;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
@@ -105,7 +105,7 @@ public class CommonAction {
 		hideFindReplaceWindow();
 		
 		// 提示窗口
-		MyPopupWindow.hide();
+		MyAutoComplete.hide();
 	}
 	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
 	public static RsVal tableInfo() {

@@ -9,7 +9,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-public class TestTextField extends Application {
+public class inputTextField extends Application {
 
     public static void main(String[] args) {
         Application.launch(args);

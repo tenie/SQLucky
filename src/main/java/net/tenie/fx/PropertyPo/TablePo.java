@@ -16,11 +16,17 @@ public class TablePo {
 	private LinkedHashSet<TableFieldPo> fields;
 	private ArrayList<TablePrimaryKeysPo> primaryKeys;
 	private String ddl;
+	private Boolean dbObj = true;
 	
 	public TablePo() {}
 	
-	public TablePo(String name) {
+	public TablePo(String name ) {
 		tableName = name;
+	}
+	public static TablePo noDbObj(String name ) {
+		TablePo po = new TablePo(name);
+		po.setDbObj(false);
+		return po;
 	}
 
 	public String getDdl() {
@@ -122,6 +128,14 @@ public class TablePo {
 
 	public void setTableType(String tableType) {
 		this.tableType = tableType;
+	}
+
+	public Boolean getDbObj() {
+		return dbObj;
+	}
+
+	public void setDbObj(Boolean dbObj) {
+		this.dbObj = dbObj;
 	}
 
 }

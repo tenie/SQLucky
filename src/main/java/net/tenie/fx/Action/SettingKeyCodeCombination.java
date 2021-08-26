@@ -229,7 +229,7 @@ public final class SettingKeyCodeCombination {
 //			 cont.show( ComponentGetter.primaryStage);
 			
 //			Label l = new Label("1111"); 
-			MyPopupWindow.showPop(x, y+7, "");
+			MyAutoComplete.showPop(x, y+7, "");
 //		   final Popup popup = new Popup();
 //		   popup.setX(x); 
 //		   popup.setY(y);

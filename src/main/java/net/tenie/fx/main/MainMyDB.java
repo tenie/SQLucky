@@ -12,6 +12,7 @@ import javafx.application.Platform;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.Action.Log4jPrintStream;
 import net.tenie.fx.Action.SettingKeyCodeCombination;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
@@ -48,6 +49,11 @@ public class MainMyDB extends Application {
 	@SuppressWarnings("exports")
 	public static final Region imgLeft = ImageViewGenerator.svgImageDefActive("chevron-circle-down", 14);
 	 
+	
+	
+	static {
+		Log4jPrintStream.redirectSystemOut();
+	}
 	@Override
 	public void init() throws Exception {
 		
@@ -149,7 +155,7 @@ public class MainMyDB extends Application {
 		String  modulePath = System.getProperty("jdk.module.path");
 		String[] ls  = modulePath.split(";");
 		for(String path : ls) {
-			logger.info(path);
+			System.out.println(path);
 		}
 	}
 	

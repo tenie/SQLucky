@@ -383,7 +383,8 @@ public class DBTools {
 		return rs;
 	}
 
- 
+//	public static 
+//	  select   *   from   INFODMS.TT_ACTIVITY_MODEL    where   1=2
  
 
 }

@@ -13,6 +13,13 @@
     -fx-background-color: #2B2B2B ;
     -fx-text-fill: white ;
 }
+/* 自动补全 窗口*/
+.auto-comolete  .tree-cell {
+    -fx-background-color: #323232 ;
+    -fx-text-fill: white ;
+}
+
+
 .transferDataTree .tree-cell {
    -fx-background-color: #3C3F41 ;
    -fx-text-fill: white ;
@@ -43,6 +50,13 @@
     -fx-font-weight: bold ;
     -fx-background-color: #164b72 ;
 }
+
+/* 自动补全 窗口*/
+.auto-comolete .tree-cell:selected {
+    -fx-font-weight: bold ;
+    -fx-background-color: #164b72 ;
+}
+
 .tree-cell:hover { 
     -fx-background-color: #2F65CA  ;
 }

@@ -32,7 +32,7 @@ import net.tenie.fx.dao.ConnectionDao;
  * 把TablePo对象的属性 赋值给 TreeItem显示(节点名称,图标)
  *    @author tenie
  *     */
-public class TreeNodeCellFactory2 implements Callback<TreeView<TablePo>, TreeCell<TablePo>> {
+public class AutoCompleteCellFactory implements Callback<TreeView<TablePo>, TreeCell<TablePo>> {
  	@Override
 	public TreeCell<TablePo> call(TreeView<TablePo> treeView) {
 		TreeCell<TablePo> cell = new TreeCell<TablePo>() {
@@ -47,8 +47,10 @@ public class TreeNodeCellFactory2 implements Callback<TreeView<TablePo>, TreeCel
 				} else {
 					if(item != null ) {
 						setText(item.getTableName());
+						setGraphic(null);
 					}else {
 						setText("root");
+						setGraphic(null);
 					}
 //					setGraphic(item.getIcon());
 					

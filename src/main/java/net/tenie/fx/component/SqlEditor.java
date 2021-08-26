@@ -325,10 +325,16 @@ public class SqlEditor {
 	}
 
 	// 获取当前选中的代码Tab
-	public static Tab mainTabPaneSelectedTab() {
+	public static Tab mainTabPaneSelectedTab() { 
 		return myTabPane.getSelectionModel().getSelectedItem();
 	}
-
+	
+	public static MyTab currentMyTab() { 
+		Tab currentTab = myTabPane.getSelectionModel().getSelectedItem();
+		MyTab rs = (MyTab) currentTab;
+		return rs;
+	}
+	
 	// 获取tab的内容 VBox
 	public static VBox getTabVbox(Tab tb) {
 		return (VBox) tb.getContent();
@@ -532,19 +538,19 @@ public class SqlEditor {
 				var tmp = codeArea.getText(anchor-i, anchor);
 				int tmplen = tmp.length();
 				int idx =    anchor - tmplen ;
-				System.out.println(tmp 
-						+ tmp.startsWith(" ") + 
-						tmp.startsWith("\t") + 
-						tmp.startsWith("\n") +
-						(idx <= 0) +" ==="
-						);
+//				System.out.println(tmp 
+//						+ tmp.startsWith(" ") + 
+//						tmp.startsWith("\t") + 
+//						tmp.startsWith("\n") +
+//						(idx <= 0) +" ==="
+//						);
 				
 				if(tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") ||   idx <= 0   ) {
 					str = tmp;
 					break;
 				}
 			}
-			MyPopupWindow.showPop(x, y+7 , str);
+			MyAutoComplete.showPop(x, y+9 , str);
 		});
 	}
 	

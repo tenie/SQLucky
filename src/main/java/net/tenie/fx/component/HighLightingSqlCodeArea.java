@@ -82,12 +82,12 @@ public class HighLightingSqlCodeArea {
 //				
 //			}
 			
-			if(MyPopupWindow.isShow()) {
+			if(MyAutoComplete.isShow()) {
 				if(e.getCode() == KeyCode.BACK_SPACE ) {
-					MyPopupWindow.hide();
+					MyAutoComplete.hide();
 					SqlEditor.callPopup(codeArea); 
 				}else {
-					MyPopupWindow.hide();
+					MyAutoComplete.hide();
 					SqlEditor.callPopup(codeArea); 
 				}
 			}
@@ -174,7 +174,7 @@ public class HighLightingSqlCodeArea {
 		 
 		// 当鼠标释放, 判断是否为双击, 是双击选中对应的内容, 在判断有没有选择的文本, 有的话就修改所有相同的文本
 		codeArea.setOnMouseReleased(mouseEvent->{
-			MyPopupWindow.hide();
+			MyAutoComplete.hide();
 			String str  = codeArea.getSelectedText();
 			String trimStr = str.trim();
 			int strSz = trimStr.length(); 
