@@ -96,10 +96,9 @@ public class HighLightingSqlCodeArea {
 			if(e.getCode() == KeyCode.TAB ) {
 				SqlEditor.codeAreaTab(e, codeArea);
 			}
-//			else if(e.getCode() == KeyCode.SLASH ) {
-////				SqlEditor.codePopup(e, codeArea);
-//				e.consume();
-//			}
+			else if(e.getCode() == KeyCode.PERIOD ) { 
+				SqlEditor.callPopup( codeArea);
+			}
 			else if(e.getCode() == KeyCode.A ) {
 				SqlEditor.codeAreaCtrlShiftA(e, codeArea);
 			}

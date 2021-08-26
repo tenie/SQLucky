@@ -26,7 +26,7 @@ public class H2Db {
 				if (!tabExist(conn, "CONNECTION_INFO")) {
 					SqlTextDao.createTab(conn);
 				}else {// 之后的启动, 更新脚本
-					UpdateScript.execUpdate(conn);
+//					UpdateScript.execUpdate(conn);
 					
 				}
 			}else if( conn.isClosed()) {
@@ -53,7 +53,7 @@ public class H2Db {
 			dir = "/.sqlucky_dev/";
 		}
 		String path = FileUtils.getUserDirectoryPath() + dir;
-		Dbinfo dbinfo = new Dbinfo("org.h2.Driver", "jdbc:h2:" + path + "h2db", "sa", "xyz123qweasd");
+		Dbinfo dbinfo = new Dbinfo("org.h2.Driver", "jdbc:h2:" + path + "h2db2", "sa", "xyz123qweasd");
 		Connection connection = dbinfo.getconn();
 		return connection;
 	}

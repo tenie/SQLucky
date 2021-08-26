@@ -42,10 +42,41 @@ public class MyAutoComplete {
 	private static Map<Integer, Set<TablePo> > pageTables = new HashMap<>();
 	
 	static {
-		keyWords.add( TablePo.noDbObj("SELECT"));
-		keyWords.add( TablePo.noDbObj("FROM"));
-		keyWords.add( TablePo.noDbObj("WHERE"));
-		keyWords.add( TablePo.noDbObj("LEFT JOIN"));
+		keyWords.add( TablePo.noDbObj("SELECT * FROM "));
+		keyWords.add( TablePo.noDbObj("SELECT "));
+		keyWords.add( TablePo.noDbObj("FROM "));
+		keyWords.add( TablePo.noDbObj("WHERE "));
+		keyWords.add( TablePo.noDbObj("LEFT JOIN   ON "));
+		keyWords.add( TablePo.noDbObj("CASE WHEN   THEN   ELSE   END AS  "));
+		keyWords.add( TablePo.noDbObj("ORDER BY "));
+		keyWords.add( TablePo.noDbObj("GROUP BY "));
+		keyWords.add( TablePo.noDbObj("VALUES"));
+		keyWords.add( TablePo.noDbObj("CREATE "));
+		keyWords.add( TablePo.noDbObj("SEQUENCE "));
+		keyWords.add( TablePo.noDbObj("INSERT INTO  "));
+		keyWords.add( TablePo.noDbObj("UPDATE  SET  ,  WHERE  "));
+		keyWords.add( TablePo.noDbObj("DROP  "));
+		keyWords.add( TablePo.noDbObj("FETCH FIRST 1 ROWS ONLY  "));
+		keyWords.add( TablePo.noDbObj("LIMIT 1  "));
+		keyWords.add( TablePo.noDbObj("CURRENT DATE  "));
+		keyWords.add( TablePo.noDbObj("CURRENT TIME  "));
+		keyWords.add( TablePo.noDbObj("CURRENT TIMESTAMP  "));
+		keyWords.add( TablePo.noDbObj("BETWEEN   AND   "));
+		keyWords.add( TablePo.noDbObj("DAY (CURRENT TIMESTAMP)   "));
+		keyWords.add( TablePo.noDbObj("MONTH (CURRENT TIMESTAMP)   "));
+		keyWords.add( TablePo.noDbObj("YEAR (CURRENT TIMESTAMP)   "));
+		keyWords.add( TablePo.noDbObj("DATE (CURRENT TIMESTAMP)   "));
+		keyWords.add( TablePo.noDbObj("TIME (CURRENT TIMESTAMP)  "));
+		keyWords.add( TablePo.noDbObj("DATE('2000-01-01 00.00.59')  "));
+		keyWords.add( TablePo.noDbObj("SYSPROC.ADMIN_CMD ( ' REORG TABLE DB2INST1.MY_TABLE' );  "));
+//		
+//		
+		//
+//		
+		
+		keyWords.add( TablePo.noDbObj("ROUND(3.14555,4)   -- ==  3.14560  \n"));
+		keyWords.add( TablePo.noDbObj("CAST( ROUND(3.14555,4) as numeric(20,4) ) -- == 3.1456 \n")); 
+		
 		
 		vb = new VBox();
 		vb.getStyleClass().add("my-tag"); 
