@@ -211,4 +211,29 @@ public class CommonUtility {
 		rotateTransition.setAutoReverse(false);
 		rotateTransition.play();
 	}
+	
+	public static  boolean isMacOS() {
+		String os_name = System.getProperty("os.name");
+		if (os_name.toLowerCase().startsWith("mac")) {
+			return true;
+		}
+		return false;
+	}
+
+	public static   boolean isWinOS() {
+		String os_name = System.getProperty("os.name");
+		if (os_name.toLowerCase().startsWith("win")) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static   boolean isLinuxOS() {
+		String os_name = System.getProperty("os.name");
+		if (os_name.toLowerCase().startsWith("linux")) {
+			return true;
+		}
+		return false;
+	}
+
 }

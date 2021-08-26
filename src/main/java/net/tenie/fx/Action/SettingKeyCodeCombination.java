@@ -23,6 +23,7 @@ import org.fxmisc.richtext.Caret.CaretVisibility;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -61,6 +62,7 @@ public final class SettingKeyCodeCombination {
 		KeyCombination cx = KeyCombination.keyCombination("shortcut+X");
 
 		KeyCodeCombination ctrlEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.SHORTCUT_DOWN);
+		KeyCodeCombination altSlash = new KeyCodeCombination(KeyCode.SLASH, KeyCodeCombination.ALT_DOWN);
 		KeyCodeCombination ctrlT = new KeyCodeCombination(KeyCode.T, KeyCodeCombination.SHORTCUT_DOWN);
 		KeyCodeCombination ctrlI = new KeyCodeCombination(KeyCode.I, KeyCodeCombination.SHORTCUT_DOWN);
 		KeyCodeCombination ctrlW = new KeyCodeCombination(KeyCode.W, KeyCodeCombination.SHORTCUT_DOWN);
@@ -96,7 +98,27 @@ public final class SettingKeyCodeCombination {
 		JFXButton stopbtn = AllButtons.btns.get("stopbtn");
 		JFXButton runFunPro = AllButtons.btns.get("runFunPro");
 
-		
+		scene.getAccelerators().put(altSlash, () -> {
+			var codeArea = SqlEditor.getCodeArea();
+			if ( CommonUtility.isMacOS() ) {
+				Platform.runLater(()->{
+					int ar = codeArea.getAnchor();
+					String str = codeArea.getText(ar -1 , ar);
+					if(str.equals("÷")) {
+						codeArea.deleteText(ar - 1, ar);
+					}
+				});  
+			}
+			
+//			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
+//			double x = bd.getCenterX();
+//			double y = bd.getCenterY();
+			if (codeArea.isFocused()) {
+				SqlEditor.callPopup( codeArea);
+			}
+			
+			
+		});
 		
 		scene.getAccelerators().put(F9, () -> {
 		

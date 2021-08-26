@@ -507,26 +507,7 @@ public class SqlEditor {
 		}  
 	}
 	
-	public static void callPopup(CodeArea codeArea) {
-		Platform.runLater(()->{
-			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
-			double x = bd.getCenterX();
-			double y = bd.getCenterY(); 
-			int anchor = codeArea.getAnchor();
-			String str = "";
-			for(int i = 1 ; anchor-i > 0 ; i++) {
-				var tmp = codeArea.getText(anchor-i, anchor);
-				int tmplen = tmp.length();
-				int idx =    anchor - tmplen ;
-				if(tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") ||   idx <= 0   ) {
-					str = tmp;
-					break;
-				}
-			}
-			MyPopupWindow.showPop(x, y+7 , str);
-		});
-	
-	}
+
 	
 	/**
 	 * 自动补全提示
@@ -534,9 +515,37 @@ public class SqlEditor {
 	 * @param codeArea
 	 */
 	public static void codePopup(KeyEvent e, CodeArea codeArea) { 
-		if(e.isAltDown()) {
+		if(e.isAltDown()) { 
 			callPopup(codeArea);
+			
 		} 
+	}
+	
+	public static void callPopup(CodeArea codeArea) {
+		Platform.runLater(()->{
+			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
+			double x = bd.getCenterX();
+			double y = bd.getCenterY(); 
+			int anchor = codeArea.getAnchor();
+			String str = "";
+			for(int i = 1 ; anchor-i >= 0 ; i++) {
+				var tmp = codeArea.getText(anchor-i, anchor);
+				int tmplen = tmp.length();
+				int idx =    anchor - tmplen ;
+				System.out.println(tmp 
+						+ tmp.startsWith(" ") + 
+						tmp.startsWith("\t") + 
+						tmp.startsWith("\n") +
+						(idx <= 0) +" ==="
+						);
+				
+				if(tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") ||   idx <= 0   ) {
+					str = tmp;
+					break;
+				}
+			}
+			MyPopupWindow.showPop(x, y+7 , str);
+		});
 	}
 	
 	/**

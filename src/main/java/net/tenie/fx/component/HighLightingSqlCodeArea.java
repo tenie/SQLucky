@@ -43,6 +43,24 @@ public class HighLightingSqlCodeArea {
 	    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(); 
 	    codeArea.setContextMenu(cm.getContextMenu());
 		// 事件KeyEvent 
+//		codeArea.addEventFilter(KeyEvent.ANY, event -> {
+//			boolean willConsume = false;
+//			if (event.getEventType() == KeyEvent.KEY_PRESSED) { 
+//				if (event.getCode() == KeyCode.SLASH) {
+//					if (event.isAltDown()) {
+//						willConsume = true;
+//					} else {
+//						willConsume = false;
+//					}
+//				}
+//			} else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
+//				willConsume = false;
+//			}
+//
+//			if (willConsume) {
+//				event.consume();
+//			}
+//		});
 		// 文本缩进
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{
 			
@@ -78,9 +96,10 @@ public class HighLightingSqlCodeArea {
 			if(e.getCode() == KeyCode.TAB ) {
 				SqlEditor.codeAreaTab(e, codeArea);
 			}
-			else if(e.getCode() == KeyCode.SLASH ) {
-				SqlEditor.codePopup(e, codeArea);
-			}
+//			else if(e.getCode() == KeyCode.SLASH ) {
+////				SqlEditor.codePopup(e, codeArea);
+//				e.consume();
+//			}
 			else if(e.getCode() == KeyCode.A ) {
 				SqlEditor.codeAreaCtrlShiftA(e, codeArea);
 			}

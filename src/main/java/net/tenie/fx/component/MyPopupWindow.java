@@ -130,8 +130,8 @@ public class MyPopupWindow {
 		if( tmpls != null && tmpls.size()>0) {
 			rootNode.getChildren().clear();
 			for (var tb : tmpls) {
-				if( tb.getTableName().contains(filterStr) ){
-//					System.out.println(filterStr + " === " + tb.getTableName()); 
+				if( tb.getTableName().toUpperCase().contains(filterStr) ){
+					System.out.println(filterStr + " === " + tb.getTableName()); 
 					TreeItem<TablePo> item = new TreeItem<>(tb);
 					rootNode.getChildren().add(item);
 					tf = true;
@@ -175,13 +175,23 @@ public class MyPopupWindow {
 		if(filterStr.length() > 0 ) {
 			start = anc - filterStr.length();
 		}
+		if(filterStr.length() > 0 ) {
+			int begin = anc - filterStr.length(); 
+			if(begin < 0) {
+				begin = 0;
+			}
+			codeArea.deleteText(begin, anc); 
+			codeArea.insertText(begin, selectVal);
+			return;
+		}
 		
 		String caStr = codeArea.getText(start, end);
-		if(StrUtils.isNotNullOrEmpty(caStr)) {
+		if(StrUtils.isNotNullOrEmpty(caStr.trim())) {
 			caStr = caStr.toUpperCase();
+			String tmp_selectVal = selectVal.toUpperCase();
 			for(int i = 0 ; i < len -1; i++) {
 				String tmp = caStr.substring(i);
-				if(selectVal.startsWith(tmp)) {
+				if(tmp_selectVal.startsWith(tmp)) {
 					int begin = start - i;
 					if(begin < 0) {
 						begin = 0;
@@ -193,15 +203,7 @@ public class MyPopupWindow {
 	 		}
 			
 		}
-		if(filterStr.length() > 0 ) {
-			int begin = anc - filterStr.length(); 
-			if(begin < 0) {
-				begin = 0;
-			}
-			codeArea.deleteText(begin, anc); 
-			codeArea.insertText(begin, selectVal);
-			return;
-		}
+		
 		// 没有匹配到直接输入
 		codeArea.insertText(anc, selectVal);
 		
