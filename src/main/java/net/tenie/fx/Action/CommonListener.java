@@ -85,6 +85,7 @@ public class CommonListener {
 	}
 
 // ChoiceBox change 
+	@SuppressWarnings("rawtypes")
 	public static ChangeListener choiceBoxChange() {
 		return new ChangeListener() {
 			@Override

@@ -1,48 +1,22 @@
 package net.tenie.fx.factory;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-
 import org.controlsfx.control.tableview2.FilteredTableColumn;
-import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupStringFilter;
-
-import com.jfoenix.controls.JFXButton;
-
-import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.TableColumn;
 import net.tenie.fx.Action.ButtonAction;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
-import net.tenie.fx.Action.RsVal;
-import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
-//import net.tenie.fx.PropertyPo.CacheTableDate;
-import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.config.DBConns;
-import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.MyPopupNumberFilter;
-import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.fx.window.ModalDialog;
-import net.tenie.fx.window.MyAlert;
-import net.tenie.lib.db.DBTools;
-import net.tenie.lib.tools.StrUtils;
 
 public class MenuFactory {
 	
@@ -59,13 +33,13 @@ public class MenuFactory {
 		PopupFilter<ObservableList<StringProperty>, String> popupFilter ;
 		if (CommonUtility.isNum(type)) {
 			// 过滤框
-			popupFilter = new MyPopupNumberFilter(col);
+			popupFilter = new MyPopupNumberFilter<>(col);
 			col.setOnFilterAction(e -> popupFilter.showPopup());
 			popupFilter.getStyleClass().add("mypopup");
 
 		} else {
 			// 过滤框
-			popupFilter = new PopupStringFilter(col);
+			popupFilter = new PopupStringFilter<>(col);
 			col.setOnFilterAction(e -> popupFilter.showPopup());
 			popupFilter.getStyleClass().add("mypopup");
 		}

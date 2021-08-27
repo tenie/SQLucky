@@ -7,6 +7,7 @@ import java.util.Map;
 /*   @author tenie */
 public class BuildObject {
 	// 根据类名和类的字段生成bean对象
+	@SuppressWarnings("deprecation")
 	public static Object buildObject(String classname, Map<String, Object> fieldname) throws Exception {
 		Class<?> classobj = Class.forName(classname);
 		Object obj = classobj.newInstance();
@@ -24,6 +25,7 @@ public class BuildObject {
 		return obj;
 	}
 
+	@SuppressWarnings("rawtypes")
 	public static Object buildObj(String classStr, Object parameterObj) throws Exception {
 		if(classStr.equals("java.lang.Object")) {
 			return parameterObj;

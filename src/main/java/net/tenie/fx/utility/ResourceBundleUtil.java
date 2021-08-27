@@ -61,7 +61,7 @@ public final class ResourceBundleUtil
         }
         catch (MissingResourceException e)
         {
-            return new Integer(-1);
+            return -1;
         }
     }
  

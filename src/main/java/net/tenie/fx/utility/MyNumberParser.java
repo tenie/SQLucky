@@ -9,18 +9,20 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import static impl.org.controlsfx.i18n.Localization.asKey;
 import static impl.org.controlsfx.i18n.Localization.localize;
 
-/*   @author tenie */
 /**
- * 字符串作为数字来过滤, 对字符串<null>做了特殊处理, 参考NumberParser
+ * 
+ * @author tenie
+ *字符串作为数字来过滤, 对字符串<null>做了特殊处理, 参考NumberParser
+ * @param <T>
  */
-public class MyNumberParser<T extends String> implements Parser<T> {
+public class MyNumberParser<T> implements Parser<T> {
 
 	private String errorString = "";
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Predicate<T> parse(String text) {
 		errorString = "";
@@ -76,7 +78,7 @@ public class MyNumberParser<T extends String> implements Parser<T> {
 		return text.substring(startIndex, text.length()).trim();
 	}
 
-	private double convert(String numText) {
+    double convert(String numText) {
 		return Double.parseDouble(numText);
 	}
 

@@ -9,39 +9,27 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckTreeView;
-import org.fxmisc.richtext.CodeArea;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXComboBox;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.CheckBoxTreeItem;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -55,18 +43,11 @@ import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.SqlEditor;
-import net.tenie.fx.component.TreeItem.ConnItemContainer;
-import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
-import net.tenie.fx.component.TreeItem.MyTreeItem;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
-import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.dao.GenerateSQLString;
-import net.tenie.fx.dao.TransferTabeDataDao;
-import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportDDL;
@@ -617,17 +598,17 @@ public class TransferDataController implements Initializable {
 	}
 	
 	// 获取连接名称list
-	private ObservableList<Label> getConnComboBoxList() {
-		ComboBox<Label> connComboBox = ComponentGetter.connComboBox;
-		ObservableList<Label> sos = connComboBox.getItems();
-		ObservableList<Label> newVal = FXCollections.observableArrayList();
-		for(Label label : sos) {
-			Label la = new Label(label.getText());
-			
-			newVal.add(la);
-		}
-		return newVal;
-	}
+//	private ObservableList<Label> getConnComboBoxList() {
+//		ComboBox<Label> connComboBox = ComponentGetter.connComboBox;
+//		ObservableList<Label> sos = connComboBox.getItems();
+//		ObservableList<Label> newVal = FXCollections.observableArrayList();
+//		for(Label label : sos) {
+//			Label la = new Label(label.getText());
+//			
+//			newVal.add(la);
+//		}
+//		return newVal;
+//	}
 	
 	// 获取schema名称列表
 	private ObservableList<TreeItem<TreeNodePo>> getSchemaComboBoxList(String dbName) {
@@ -838,6 +819,7 @@ public class TransferDataController implements Initializable {
 	
 	
 	
+	@SuppressWarnings("exports")
 	public   DbTableDatePo insertData(Connection conn, Connection toConn , String tableName,  String schename , String targetSchename, int amount , boolean isThrow) throws SQLException {
 		String sorTable =  getTableName(schename, tableName, tarDbpo);  
 		String sql = "select   *   from   "+sorTable+"    where   1=1  ";

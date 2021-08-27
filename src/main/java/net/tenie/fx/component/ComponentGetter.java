@@ -6,9 +6,6 @@ import org.apache.commons.io.FileUtils;
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
-
-import com.jfoenix.controls.JFXTextField;
-
 import javafx.scene.layout.VBox;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -37,15 +34,16 @@ import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.lib.tools.StrUtils;
-
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public final class ComponentGetter {
 	public static PopupFilter<ObservableList<StringProperty>, String> popupFirstNameFilter;
 	public static TabPane dataTab;
@@ -253,6 +251,7 @@ public final class ComponentGetter {
 	}
 
 	// 获取当前的表格
+	@SuppressWarnings("unchecked")
 	public static FilteredTableView<ObservableList<StringProperty>> dataTableView() {
 		VBox vb = (VBox) dataTab.getSelectionModel().getSelectedItem().getContent();
 		FilteredTableView<ObservableList<StringProperty>> table = (FilteredTableView<ObservableList<StringProperty>>) vb

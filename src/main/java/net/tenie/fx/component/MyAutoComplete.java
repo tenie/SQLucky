@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
@@ -26,6 +27,7 @@ import net.tenie.fx.PropertyPo.DbSchemaPo;
 import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.factory.TreeNodeCellFactory;
+import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.factory.AutoCompleteCellFactory;
 import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.tools.StrUtils;
@@ -38,6 +40,7 @@ public class MyAutoComplete {
 	private static TreeView<TablePo> treeView ;
 	private	static List<TablePo> tmpls = new ArrayList<>();
 	private static String filterStr = "";
+	private static int anchor ;
 	
 	private static Map<Integer, Set<TablePo> > pageTables = new HashMap<>();
 	
@@ -56,6 +59,16 @@ public class MyAutoComplete {
 		keyWords.add( TablePo.noDbObj("INSERT INTO  "));
 		keyWords.add( TablePo.noDbObj("UPDATE  SET  ,  WHERE  "));
 		keyWords.add( TablePo.noDbObj("DROP  "));
+		keyWords.add( TablePo.noDbObj("DELETE FROM  "));
+		keyWords.add( TablePo.noDbObj("DISTINCT  "));
+		keyWords.add( TablePo.noDbObj("LIKE '%%' "));
+		keyWords.add( TablePo.noDbObj("UNION ALL  "));
+		keyWords.add( TablePo.noDbObj("HAVING  "));
+		keyWords.add( TablePo.noDbObj("EXISTS  "));
+		keyWords.add( TablePo.noDbObj("ALTER TABLE  "));
+		keyWords.add( TablePo.noDbObj("WITH   AS  "));
+		
+		
 		keyWords.add( TablePo.noDbObj("FETCH FIRST 1 ROWS ONLY  "));
 		keyWords.add( TablePo.noDbObj("LIMIT 1  "));
 		keyWords.add( TablePo.noDbObj("CURRENT DATE  "));
@@ -117,14 +130,29 @@ public class MyAutoComplete {
 		
 	}
 	
+	
 	public static void hide() {
 		if(pop !=null ) {
 			pop.hide();
 			pop.getContent().clear();
 			pop = null;
-		}
-	
+		} 
 	}
+	// 按backspace按键的时候, 隐藏提示窗口的策略
+	public static void backSpaceHide(MyCodeArea codeArea) {
+		if(isShow()) {
+			int acr  = codeArea.getAnchor();
+			int begin = 0;
+			if(acr > 0) {
+				begin = acr - 1;
+			} 
+			String tmp = codeArea.getText(begin, acr);
+			if(tmp.startsWith(".") || tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") ||   begin <= 0   ) {
+				hide();
+			}
+		} 
+	}
+		
 	
 	public static boolean isShow() {
 		if(pop == null ) {
@@ -138,18 +166,9 @@ public class MyAutoComplete {
 	 
 
 	public static void showPop(double x, double y, String fStr) {
+		System.out.println("fStr === " + fStr);
 		filterStr = fStr.trim().toUpperCase();
-		String tmpFilterStr = filterStr;
-			
-	    pop = new Popup();
-		pop.setX(x);
-		pop.setY(y);
-//		pop.setWidth(100);
-//		pop.setHeight(100);
-//		pop.setHideOnEscape(true);
-		pop.setAutoHide(true); 
-		pop.getContent().add(vb);
-		
+		String tmpFilterStr = filterStr; 
 		if(! isShow()) {
 			tmpls = new ArrayList<>();
 			if(tmpFilterStr.contains(".")) {
@@ -171,29 +190,34 @@ public class MyAutoComplete {
 					tmpls.addAll(keyWords  ) ;  
 				}
 			}
-			
-			
-		
 		}  
 		
 		boolean tf =false;
 		if( tmpls != null && tmpls.size()>0) {
 			rootNode.getChildren().clear();
-			for(int i =0 ; i< tmpls.size() ; i++) {
-//			for (var tb : tmpls) {
+			for(int i =0 ; i< tmpls.size() ; i++) { 
 				var tb = tmpls.get(i);
 				if( tb.getTableName().toUpperCase().contains(tmpFilterStr) ){
-					System.out.println(tmpFilterStr + " === " + tb.getTableName()); 
+//					System.out.println(tmpFilterStr + " === " + tb.getTableName()); 
 					TreeItem<TablePo> item = new TreeItem<>(tb);
 					rootNode.getChildren().add(item);
 					tf = true;
-					if(rootNode.getChildren().size() > 30) {
+					if(rootNode.getChildren().size() > 100) {
 						break;
 					}
 				}
 				
 			} 	
 			if(tf) {
+			    pop = new Popup();
+				pop.setX(x);
+				pop.setY(y);
+//				pop.setWidth(100);
+//				pop.setHeight(100);
+//				pop.setHideOnEscape(true);
+				pop.setAutoHide(true); 
+				pop.getContent().add(vb);
+				
 				pop.show(ComponentGetter.primaryStage); 
 				Platform.runLater(() -> { 
 					treeView.getSelectionModel().select(0); 
@@ -217,11 +241,10 @@ public class MyAutoComplete {
 		return null;
 	}
 	
-	public static void cacheTablePo (TablePo tabpo) { 
-		// 是db对象的时候 才缓存
-		if( tabpo.getDbObj() ) {
-			var fs = tabpo.getFields();
-			
+	public static void cacheTablePo (TablePo tabpo) {
+		
+		Consumer< String >  caller = x ->{ 
+			var fs = tabpo.getFields(); 
 			if( fs == null || fs .size() == 0) {
 				DbConnectionPo dpov = CommonAction.getDbConnectionPoByComboBoxDbConnName();
 				if(dpov != null) {
@@ -248,10 +271,14 @@ public class MyAutoComplete {
 					for(var f : fis) {
 						var colName = f.getColumnName();
 						tmppos.add( TablePo.noDbObj(colName));
-					}
-//					tmppos.add(tabpo);
+					} 
 				}
 			}	
+		};
+		
+		// 是db对象的时候 才缓存
+		if( tabpo.getDbObj()) {
+			CommonUtility.runThread(caller);
 		}
 			
 	}
@@ -263,13 +290,6 @@ public class MyAutoComplete {
 			if( pageTables.containsKey(id) ) {
 				Set<TablePo> setpo = pageTables.get(id);
 				return setpo;
-//				for(var po : setpo) {
-//					var fs = po.getFields();
-//					for(var f : fs) {
-//						var colName = f.getColumnName();
-//						cacheFs.add( TablePo.noDbObj(colName));
-//					}
-//				}
 			}
 		}
 		return cacheFs;

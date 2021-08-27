@@ -14,7 +14,8 @@ import javafx.stage.Stage;
 
 public class MCVE extends Application {
 
-    public void start(Stage stage) {
+    @SuppressWarnings("unchecked")
+	public void start(Stage stage) {
 
         VBox view = new VBox();
         view.setPrefSize(600, 400);

@@ -1,25 +1,11 @@
 package net.tenie.fx.window;
 
-import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 import org.controlsfx.control.tableview2.TableColumn2;
 import org.controlsfx.control.tableview2.TableView2;
-import org.controlsfx.control.tableview2.cell.ComboBox2TableCell;
 import org.controlsfx.control.tableview2.cell.TextField2TableCell; 
-
 import com.jfoenix.controls.JFXButton;
-
-import javafx.beans.Observable;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -27,18 +13,12 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.ChoiceBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
@@ -154,6 +134,7 @@ public class ProcedureExecuteWindow {
 	      private final TableColumn2<Procedure, String> typeCol = new TableColumn2<>("Type");
 	      private final TableColumn2<Procedure, String> valueCol = new TableColumn2<>("Value");
 	      
+			@SuppressWarnings("unchecked")
 			public ProcedureTableView() {
 				this.getStyleClass().add("myTableTag");
 				this.setEditable(true);
@@ -184,11 +165,7 @@ public class ProcedureExecuteWindow {
 	        private final StringProperty parameter = new SimpleStringProperty();
 	        private final StringProperty type = new SimpleStringProperty();
 	        private final StringProperty value = new SimpleStringProperty();
-//	        private final IntegerProperty age = new SimpleIntegerProperty();
-//	        private final StringProperty city = new SimpleStringProperty();
-//	        private final BooleanProperty active = new SimpleBooleanProperty();
-//	        private final ObjectProperty<LocalDate> birthday = new SimpleObjectProperty<>();
-	        
+
 	        public Procedure(String p , String t, String v){
 	        	parameter.set(p);
 	        	type.set(t);

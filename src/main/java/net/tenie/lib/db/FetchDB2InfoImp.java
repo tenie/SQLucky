@@ -1,21 +1,14 @@
 package net.tenie.lib.db;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Map.Entry;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import net.tenie.fx.PropertyPo.RsData;
 import net.tenie.fx.PropertyPo.TableFieldPo;
 import net.tenie.fx.PropertyPo.TablePo;
@@ -64,7 +57,7 @@ public class FetchDB2InfoImp {
 
 				String v1 = rs.getString(1);
 				String v2 = rs.getString(2);
-				myEntry e = new myEntry(v1, v2);
+				myEntry<String, String> e = new myEntry<>(v1, v2);
 				ls.add(e);
 			}
 		} catch (Exception e) {

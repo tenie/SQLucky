@@ -5,7 +5,6 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.SkinBase;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.VBox;
@@ -14,12 +13,14 @@ import javafx.stage.Stage;
 
 public class TableViewSample extends Application {
 
-    private final TableView table = new TableView();
+    @SuppressWarnings("rawtypes")
+	private final TableView table = new TableView();
     public static void main(String[] args) {
         launch(args);
     }
 
-    @Override
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
     public void start(Stage stage) {
         Scene scene = new Scene(new Group());
         stage.setTitle("Table View Sample");

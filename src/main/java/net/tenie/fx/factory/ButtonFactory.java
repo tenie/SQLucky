@@ -7,12 +7,8 @@ import java.util.Map;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
-
-import javafx.application.Platform;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
@@ -20,7 +16,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
@@ -29,7 +24,6 @@ import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.MyCodeArea;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
@@ -136,6 +130,7 @@ public class ButtonFactory {
 
 	// 代码区
 	// codeArea 代码区域 按钮初始化
+	@SuppressWarnings("unchecked")
 	public static AnchorPane codeAreabtnInit() {
 		    AnchorPane pn = new AnchorPane();
 			JFXButton runbtn = new JFXButton();

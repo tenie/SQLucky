@@ -2,6 +2,7 @@ package net.tenie.fx.utility;
 
 import java.io.File;
 import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
@@ -29,6 +30,15 @@ public class CommonUtility {
 		Thread t = new Thread() {
 			public void run() {
 				fun.apply(null);
+			}
+		};
+		t.start();
+	}
+	
+	public static void runThread(Consumer< String >  caller) {
+		Thread t = new Thread() {
+			public void run() {
+				caller.accept("");
 			}
 		};
 		t.start();

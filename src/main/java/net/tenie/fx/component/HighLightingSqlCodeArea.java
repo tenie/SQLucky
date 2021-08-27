@@ -3,6 +3,9 @@ package net.tenie.fx.component;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
+
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -12,6 +15,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
+import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -42,62 +46,43 @@ public class HighLightingSqlCodeArea {
 	    
 	    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(); 
 	    codeArea.setContextMenu(cm.getContextMenu());
-		// 事件KeyEvent 
-//		codeArea.addEventFilter(KeyEvent.ANY, event -> {
-//			boolean willConsume = false;
-//			if (event.getEventType() == KeyEvent.KEY_PRESSED) { 
-//				if (event.getCode() == KeyCode.SLASH) {
-//					if (event.isAltDown()) {
-//						willConsume = true;
-//					} else {
-//						willConsume = false;
-//					}
-//				}
-//			} else if (event.getEventType() == KeyEvent.KEY_RELEASED) {
-//				willConsume = false;
-//			}
-//
-//			if (willConsume) {
-//				event.consume();
-//			}
-//		});
-		// 文本缩进
+		// 事件KeyEvent  
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED , e->{
-			
-			// 控制按键没有按下的情况
-//			if( ! e.isShiftDown() &&
-//				! e.isAltDown() &&
-//				! e.isControlDown() &&
-//				! e.isShortcutDown() &&
-//				! e.isMetaDown()
-//					) {
-//				var inputCode = e.getCode();
-//				if(inputCode.equals(KeyCode.SPACE)) { 
-//					Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
-//					double x = bd.getCenterX();
-//					double y = bd.getCenterY();
-//					double z = bd.getCenterZ();
-//					MyPopupWindow.showPop(x, y+7);
-//				} 
-//				
-//			}
-			
+				
+			// 提示框还在的情况下又有输入 
 			if(MyAutoComplete.isShow()) {
-				if(e.getCode() == KeyCode.BACK_SPACE ) {
-					MyAutoComplete.hide();
-					SqlEditor.callPopup(codeArea); 
-				}else {
-					MyAutoComplete.hide();
-					SqlEditor.callPopup(codeArea); 
+				// 输入的是退格键, 需要判断是否要隐藏提示框
+				if (e.getCode() == KeyCode.BACK_SPACE) {
+					MyAutoComplete.backSpaceHide(codeArea);  
 				}
+				if(MyAutoComplete.isShow()) {
+					MyAutoComplete.hide();
+					SqlEditor.callPopup(codeArea);
+				} 
 			}
 			
-			
+			// 文本缩进
 			if(e.getCode() == KeyCode.TAB ) {
 				SqlEditor.codeAreaTab(e, codeArea);
 			}
-			else if(e.getCode() == KeyCode.PERIOD ) { 
-				SqlEditor.callPopup( codeArea);
+			//  按 "." 跳出补全提示框
+			else if(e.getCode() == KeyCode.PERIOD ){ 
+				int anchor = codeArea.getAnchor();
+				Consumer< String >  caller = x ->{ 
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException e1) { 
+						e1.printStackTrace();
+					}
+					Platform.runLater(()->{
+						int lateAnchor = codeArea.getAnchor();
+						if((lateAnchor-1) == anchor) {
+							SqlEditor.callPopup( codeArea);
+						}
+					});
+				};
+				CommonUtility.runThread(caller);
+				
 			}
 			else if(e.getCode() == KeyCode.A ) {
 				SqlEditor.codeAreaCtrlShiftA(e, codeArea);
@@ -124,8 +109,8 @@ public class HighLightingSqlCodeArea {
 			else if(e.getCode() == KeyCode.ENTER ) { 
 				SqlEditor.addNewLine(e, codeArea);	
 			}
-			else if(e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE ) {
-				SqlEditor.codeAreaBackspaceDelete(e, codeArea, cl);
+			else if (e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE) {
+				SqlEditor.codeAreaBackspaceDelete(e, codeArea, cl); 
 			}
 			else if(e.getCode() == KeyCode.V ) { // 黏贴的时候, 防止页面跳到自己黏贴
 				SqlEditor.codeAreaCtrlV(e, codeArea);

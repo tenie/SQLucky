@@ -6,26 +6,18 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
 import org.controlsfx.control.tableview2.FilteredTableView;
-
-import com.jfoenix.controls.JFXButton;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
-//import net.tenie.fx.PropertyPo.CacheTabView;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TablePo;
-import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.MyCodeArea;
 import net.tenie.fx.component.SqlEditor;
@@ -256,7 +248,8 @@ public class ButtonAction {
 	
 	//addData // 添加一行数据
 	public static void addData() {
-		var vbox = ComponentGetter.currentDataVbox();//(VBox) btn.getParent().getParent();
+		var vbox = ComponentGetter.currentDataVbox();
+		@SuppressWarnings("unchecked")
 		var tbv = (FilteredTableView<ObservableList<StringProperty>>) vbox.getChildren().get(1);
 		tbv.scrollTo(0);
 		String tabid = ComponentGetter.currentDataTabID() ;// btn.getParent().getId();
