@@ -103,19 +103,17 @@ public class ScriptTabTree {
 
 		}
 
+		int ts = ComponentGetter.mainTabPane.getTabs().size();
 		// 初始化上次选中页面
-		if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) {
-			int ts = ComponentGetter.mainTabPane.getTabs().size();
+		if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) { 
 			int sps = Integer.valueOf(SELECT_PANE);
 			if (ts > sps) {
 				ComponentGetter.mainTabPane.getSelectionModel().select(sps);
-			}
-
-			// 如果窗口中是空的情况下 , 增加一个 代码窗口
-			if (ts == 0) {
-				SqlEditor.addCodeEmptyTabMethod();
-			}
-
+			}  
+		}	
+		// 没有tab被添加, 添加一新的
+		if (ts == 0) {
+			SqlEditor.addCodeEmptyTabMethod();
 		}
 
 	}
