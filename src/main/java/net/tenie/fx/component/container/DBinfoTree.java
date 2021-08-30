@@ -166,6 +166,7 @@ public class DBinfoTree {
 		if (mouseEvent.getClickCount() == 2) {
 			TreeItem<TreeNodePo> item = DBinfoTree.getTrewViewCurrentItem();
 			TreeItem<TreeNodePo> parentItem = item.getParent();
+			if(parentItem == null ) return ;
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
 				ConnectionEditor.openConn(item);

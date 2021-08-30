@@ -3,31 +3,21 @@ package net.tenie.fx.component.container;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-
 import com.jfoenix.controls.JFXButton;
-
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ScriptPo;
-import net.tenie.fx.PropertyPo.TreeItemType;
-import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.config.ConfigVal;
-import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.factory.ScriptTabNodeCellFactory;
 import net.tenie.fx.factory.ScriptTreeContextMenu;
 import net.tenie.fx.utility.CommonUtility;
@@ -160,9 +150,6 @@ public class ScriptTabTree {
 	// tree view 双击事件
 	public void treeViewDoubleClick(MouseEvent mouseEvent) { 
 		if (mouseEvent.getClickCount() == 2) {
-//			TreeItem<MyTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
-//			var mytab = item.getValue(); 
-//			SqlEditor.myTabPaneAddMyTab(mytab);
 			openMyTab();
 		}
 	}
@@ -170,7 +157,9 @@ public class ScriptTabTree {
 	public static void openMyTab() {
 		TreeItem<MyTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
 		var mytab = item.getValue(); 
-		SqlEditor.myTabPaneAddMyTab(mytab);
+		if(mytab != null && mytab.getScriptPo() != null) {
+			SqlEditor.myTabPaneAddMyTab(mytab);
+		}
 	}
 	 
 	public static  List<ScriptPo>  allScriptPo() {

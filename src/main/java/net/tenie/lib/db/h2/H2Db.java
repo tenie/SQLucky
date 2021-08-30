@@ -8,9 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.io.FileUtils;
-
+import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.Dbinfo;
 
@@ -40,7 +39,11 @@ public class H2Db {
 	
 	public static boolean isDev() {
 		String  modulePath = System.getProperty("jdk.module.path");
-		String[] ls  = modulePath.split(";");
+		String strSplit = ":";
+		if(CommonUtility.isWinOS()) {
+			strSplit = ";";
+		}
+		String[] ls  = modulePath.split( strSplit );
 		if(ls.length > 1) {
 			return true;
 		}

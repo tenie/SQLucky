@@ -25,7 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 
 /**
  * 启动入口
@@ -53,7 +52,9 @@ public class MainMyDB extends Application {
 	
 	
 	static {
-		Log4jPrintStream.redirectSystemOut();
+		if( ! H2Db.isDev()) {
+			Log4jPrintStream.redirectSystemOut();
+		} 
 	}
 	@Override
 	public void init() throws Exception {
@@ -160,18 +161,8 @@ public class MainMyDB extends Application {
 
 	}
 	
-	public static void printPath() {
-		String  modulePath = System.getProperty("jdk.module.path");
-		String[] ls  = modulePath.split(";");
-		for(String path : ls) {
-			System.out.println(path);
-		}
-	}
 	
-
 	public static void main(String[] args) throws IOException {
-//		System.out.println(System.getProperty("jdk.module.path"));
-		printPath();
 		LauncherImpl.launchApplication(MainMyDB.class, MyPreloader.class, args);
 	}
 }
