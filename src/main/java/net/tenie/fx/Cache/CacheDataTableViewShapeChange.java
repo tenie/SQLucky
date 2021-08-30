@@ -181,7 +181,11 @@ public class CacheDataTableViewShapeChange {
 
 	public static void colReorder(String tableName, ObservableList<SqlFieldPo> colss , FilteredTableView<ObservableList<StringProperty>> table) {
 		List<String> tmporder = colOrder.get(tableName);
-		if(tmporder !=null && tmporder.size()>0) {
+		ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabcols = table.getColumns(); 
+		if(tmporder !=null 
+				&& tmporder.size()>0
+				&& colss.size() > 0 
+				&& tabcols.size() > 0 ) {
 			boolean same = true;
 			// 重新设置位置
 			for(SqlFieldPo col: colss) {
@@ -192,9 +196,7 @@ public class CacheDataTableViewShapeChange {
 					break;
 				}
 			}
-			if(same) {
-				ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabcols = table.getColumns(); 
-
+			if(same) { 
 			    ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabNewCos = FXCollections.observableArrayList();
 			    boolean positionSame = true;
 			    for(int i = 0 ; i < tmporder.size(); i++) {

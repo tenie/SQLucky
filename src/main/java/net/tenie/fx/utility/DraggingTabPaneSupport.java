@@ -91,7 +91,9 @@ public class DraggingTabPaneSupport {
                 currentDraggingTab.getTabPane().getSelectionModel().select(currentDraggingTab);
             }
         });
-        graphic.setOnDragDone(e -> currentDraggingTab = null);
+        graphic.setOnDragDone(e -> {
+        	currentDraggingTab = null;
+        });
     }
 
     private void removeDragHandlers(Tab tab) {

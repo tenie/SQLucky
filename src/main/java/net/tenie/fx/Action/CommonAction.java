@@ -1166,6 +1166,7 @@ public class CommonAction {
 		charList.add("\"");
 		charList.add("'");
 		charList.add("`");
+		charList.add("%");
 		 
 		
 	}
@@ -1221,7 +1222,18 @@ public class CommonAction {
 						int end = start + endIdx;
 						IndexRange ir = CommonAction.findStringRange(codeArea.getText(), end, v);
 						if ( (ir.getStart() + ir.getEnd()) > 0) {
-							codeArea.selectRange(ir.getStart(), ir.getEnd());
+							int st = ir.getStart();
+							int en =ir.getEnd();
+//							codeArea.selectRange(ir.getStart(), ir.getEnd());
+							String tmpcheck = codeArea.getText(ir.getStart(), ir.getEnd());
+							if(tmpcheck.endsWith(v)) {
+								en--;
+							}
+							if(tmpcheck.startsWith(v)) {
+								st++;
+							}
+							codeArea.selectRange(st, en);
+							
 						}
 
 						tf = false; 

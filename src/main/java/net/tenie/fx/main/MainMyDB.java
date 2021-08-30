@@ -16,6 +16,7 @@ import net.tenie.fx.Action.Log4jPrintStream;
 import net.tenie.fx.Action.SettingKeyCodeCombination;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.lib.db.h2.H2Db;
@@ -88,7 +89,7 @@ public class MainMyDB extends Application {
 			CommonAction.setTheme(Theme);
 			primaryStage.show();
 			
-			// 外形设置
+			// 在stage show之后 需要初始化的内容, 如: 外观, 事件
 			Platform.runLater(() -> { 
 				primaryStage.setMaximized(true);
 				primaryStage.setResizable(true);
@@ -137,7 +138,15 @@ public class MainMyDB extends Application {
 					Node2.getChildren().clear();
 					Node2.getChildren().add(imgScript);
 				});
-				
+				// 双击添加新codearea
+				var mainTabPane = ComponentGetter.mainTabPane ;
+				Node tabHeader = mainTabPane.lookup(".tab-header-area");
+				tabHeader.setOnMouseClicked(mouseEvent->{
+					if (mouseEvent.getClickCount() == 2) {
+						SqlEditor.addCodeEmptyTabMethod();
+					}
+				});
+				 
 				
 			});
 			

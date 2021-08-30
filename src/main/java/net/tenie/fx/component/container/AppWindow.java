@@ -1,10 +1,17 @@
 package net.tenie.fx.component.container;
 
 import org.controlsfx.control.MasterDetailPane;
+
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
 import javafx.geometry.Side;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.MyTab;
 
 /*   @author tenie */
 public class AppWindow {
@@ -44,6 +51,32 @@ public class AppWindow {
 					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
 				}
 		}); 
+		
+		// tab 被拖拽后, script tree 跟着一起变换位置
+		ComponentGetter.mainTabPane.getTabs().addListener((Change<? extends Tab> tmpTab) -> {
+			    boolean tf = false;
+	            while (tmpTab.next()) {
+	                if (tmpTab.wasAdded()) {
+	                	tf = true;
+	                	System.out.println("\n=========== mainTabPane.setOnDragDone =========\n ");
+	                } 
+	            }
+	            if(tf) {//TODO
+	            	Platform.runLater(()->{
+	            		ObservableList<Tab> tabs = ComponentGetter.mainTabPane.getTabs();
+		            	ObservableList<TreeItem<MyTab>> treeItems = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
+		            	for(int i = 0 ; i < tabs.size(); i++) {
+		            		MyTab mt = (MyTab) tabs.get(i);
+		            		TreeItem<MyTab> itm = treeItems.get(i);
+		            		MyTab imtMt = itm.getValue();
+		            		
+		            		
+		            	}
+	            	}); 
+	            	
+	            }
+	            
+	        });
 
 	}
 
