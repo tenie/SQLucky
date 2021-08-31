@@ -108,6 +108,14 @@ public final class SettingKeyCodeCombination {
 						codeArea.deleteText(ar - 1, ar);
 					}
 				});  
+			}else if ( CommonUtility.isLinuxOS() ) {
+				Platform.runLater(()->{
+					int ar = codeArea.getAnchor();
+					String str = codeArea.getText(ar -1 , ar);
+					if(str.equals("/")) {
+						codeArea.deleteText(ar - 1, ar);
+					}
+				});  
 			}
 			
 //			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
