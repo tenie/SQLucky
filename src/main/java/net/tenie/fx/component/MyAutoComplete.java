@@ -52,6 +52,12 @@ public class MyAutoComplete {
 		keyWords.add( TablePo.noDbObj("LEFT JOIN   ON "));
 		keyWords.add( TablePo.noDbObj("CASE WHEN   THEN   ELSE   END AS  "));
 		keyWords.add( TablePo.noDbObj("ORDER BY "));
+		keyWords.add( TablePo.noDbObj("ORDER BY  DESC "));
+		keyWords.add( TablePo.noDbObj("DESC "));
+		keyWords.add( TablePo.noDbObj("ORDER BY ASC "));
+		keyWords.add( TablePo.noDbObj("ASC "));
+		
+		
 		keyWords.add( TablePo.noDbObj("GROUP BY "));
 		keyWords.add( TablePo.noDbObj("VALUES"));
 		keyWords.add( TablePo.noDbObj("CREATE "));
