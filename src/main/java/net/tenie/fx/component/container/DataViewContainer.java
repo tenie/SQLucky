@@ -86,7 +86,7 @@ public class DataViewContainer {
 		FilteredTableView<ObservableList<StringProperty>> table = new FilteredTableView<ObservableList<StringProperty>>();
 
 		table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
-
+		table.setPlaceholder(new Label());
 		// 可以选中多行
 		table.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
 				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));

@@ -3,13 +3,14 @@ package net.tenie.fx.component;
 import javafx.scene.control.Tooltip;
 import javafx.util.Duration;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
+//import java.lang.reflect.Constructor;
+//import java.lang.reflect.Field;
 
 public class MyTooltipTool {
 	
 	public static Tooltip instance(String msg){
 		Tooltip tt = new Tooltip(msg); 
+		tt.setShowDelay(new Duration(100));
 //		setTipTime(tt, 100000); 
 		return tt;
 	}

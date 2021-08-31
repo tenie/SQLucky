@@ -70,9 +70,13 @@ public class TreeNodeCellFactory implements Callback<TreeView<TreeNodePo>, TreeC
 					setText(null);
 					setGraphic(null);
 				} else {
-					setGraphic(item.getIcon());
-					setText(item.getName()+"");
-
+					if(item != null) {
+						setGraphic(item.getIcon());
+						setText(item.getName()+"");
+					} else {
+						setText(null);
+						setGraphic(null);
+					}
 				}
 			}
 

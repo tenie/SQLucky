@@ -13,23 +13,31 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.Tooltip;
+import javafx.util.Duration;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.utility.CommonUtility;
+import net.tenie.lib.tools.StrUtils;
 
 public class CacheDataTableViewShapeChange {
 	static private Map<String, DataTableViewShapePo> tableColumnWidth = new HashMap<>();
 	static private Map<String, Double> tableScrollHorizontal = new HashMap<>();
 	static private Map<String, List<String>> colOrder = new HashMap<>();
 
-	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ObservableList<StringProperty>> table ) {
+	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ObservableList<StringProperty>> table , ObservableList<SqlFieldPo> colss) {
 		CommonUtility.platformAwait();
 		Platform.runLater(() -> { 
 			// 列移动缓存
 			CacheDataTableViewShapeChange.setTableHeader(table, tableName );
 			// 水平滚顶条的缓存
 			CacheDataTableViewShapeChange.setHorizontal(table, tableName );
+			
+			// 添加 tooltip
+			CacheDataTableViewShapeChange.setTableHeaderTooltip(table , colss);
 		});
 		
 	}
@@ -171,23 +179,57 @@ public class CacheDataTableViewShapeChange {
 					col_list.add(col.getText());
 				} 
 				colOrder.put(tableName, col_list);
-			});
-			
- 
-		}
-		
- 
+			}); 
+		} 
 	}
-
+	
+	// 设置 tooltip
+	public static void  setTableHeaderTooltip(FilteredTableView<ObservableList<StringProperty>>  table, ObservableList<SqlFieldPo> colss) {
+		Node colHeader =    table.lookup(".nested-column-header");
+		javafx.scene.Parent p = (Parent) colHeader;
+		ObservableList<Node> ls = p.getChildrenUnmodifiable(); 
+		for(var lb : ls) { 
+			Label label = (Label) lb.lookup(".label");
+			if(label != null) {
+				String name = label.getText();
+				if( StrUtils.isNotNullOrEmpty(name) ) {
+					String typeName = findColType(colss, name);
+					var ttip = MyTooltipTool.instance(typeName);
+					label.setTooltip(ttip); 
+				}				
+			}
+		}  
+	}
+	
+	private static String findColType(ObservableList<SqlFieldPo> colss , String name) {
+		if(colss != null ) {
+			for(var po:colss) {
+				String poname = po.getColumnLabel().get();
+				if(name.equals(poname)) {
+					String tyNa = po.getColumnTypeName().get() + "(" + po.getColumnDisplaySize().get();
+					if (po.getScale() != null && po.getScale().get() > 0) {
+						tyNa += ", " +po.getScale().get();
+					}
+					tyNa += ")"; 
+					return tyNa;
+				}
+			}
+		}
+		return "";
+	}
+	
+	// 重新设置位置
 	public static void colReorder(String tableName, ObservableList<SqlFieldPo> colss , FilteredTableView<ObservableList<StringProperty>> table) {
 		List<String> tmporder = colOrder.get(tableName);
+		
 		ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabcols = table.getColumns(); 
-		if(tmporder !=null 
-				&& tmporder.size()>0
+		if(        tmporder !=null 
+				&& tmporder.size()>0 
 				&& colss.size() > 0 
-				&& tabcols.size() > 0 ) {
-			boolean same = true;
-			// 重新设置位置
+				&& tabcols.size() > 0
+				&& tmporder.size() == colss.size() ) {
+			boolean same = true; 
+
 			for(SqlFieldPo col: colss) {
 				String colname =col.getColumnLabel().get(); 
 				// 看列名是否包含在缓存中的列名列表中

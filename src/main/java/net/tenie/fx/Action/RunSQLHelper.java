@@ -45,6 +45,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
+import javafx.util.Duration;
 //import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
@@ -389,7 +390,7 @@ public class RunSQLHelper {
 			if (!thread.isInterrupted()) {
 				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");			
 				// 水平滚顶条位置设置
-				CacheDataTableViewShapeChange.setDataTableViewShapeCache(dvt.getTabName(), dvt.getTable()); 		
+				CacheDataTableViewShapeChange.setDataTableViewShapeCache(dvt.getTabName(), dvt.getTable(), colss); 		
 					
 				 
 			}
@@ -619,22 +620,17 @@ public class RunSQLHelper {
 			String colname = cols.get(i).getColumnLabel().get();
 			int type = cols.get(i).getColumnType().get();
 			FilteredTableColumn<ObservableList<StringProperty>, String> col = null;
-			String tyNa = cols.get(i).getColumnTypeName().get() + "(" + cols.get(i).getColumnDisplaySize().get();
-			if (cols.get(i).getScale() != null && cols.get(i).getScale().get() > 0) {
-				tyNa += ", " + cols.get(i).getScale().get();
-			}
-			tyNa += ")"; 
 			if(isInfo) {
-				col = createColumn(colname, type, tyNa, i,  true , false , isInfo, dvt);
+				col = createColumn(colname, type, i,  true , false , isInfo, dvt);
 			}else {
 				boolean iskey = false;
 				if(keys.contains(colname)) {
 					iskey = true;
 				}
 				if (len == 2 && i == 1) {
-					col = createColumn(colname, type, tyNa, i,  true , iskey , isInfo, dvt);
+					col = createColumn(colname, type, i,  true , iskey , isInfo, dvt);
 				} else {
-					col = createColumn(colname, type, tyNa, i,  false , iskey , isInfo, dvt);
+					col = createColumn(colname, type, i,  false , iskey , isInfo, dvt);
 				} 
 			}
 			
@@ -657,7 +653,7 @@ public class RunSQLHelper {
 	 * @param dvt
 	 * @return
 	 */
-	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int type, String typeName,
+	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int type,
 			int colIdx,  boolean augmentation, boolean iskey, boolean isInfo, DataViewTab dvt ) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col =
 				new FilteredTableColumn<ObservableList<StringProperty>, String>();
@@ -683,8 +679,7 @@ public class RunSQLHelper {
 		// 右点菜单
 		if(! isInfo) { 
 			ContextMenu cm =MenuFactory.DataTableColumnContextMenu(colname, type, col, colIdx , menuList);
-			col.setContextMenu(cm); 
-			label.setTooltip(new Tooltip(typeName)); 
+			col.setContextMenu(cm);
 		}
 		dvt.getMenuItems().addAll(menuList); 		
 		
