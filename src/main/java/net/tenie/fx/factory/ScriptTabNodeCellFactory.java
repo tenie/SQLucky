@@ -1,12 +1,20 @@
 package net.tenie.fx.factory;
 
+import java.util.Objects;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.DataFormat;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTab;
@@ -18,47 +26,19 @@ import net.tenie.fx.component.container.ScriptTabTree;
  *
  */
 public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeCell<MyTab>> { 
- 
+	private static Logger logger = LogManager.getLogger(ScriptTabNodeCellFactory.class);
+	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
+	private TreeCell<MyTab> dropZone;
+	private TreeItem<MyTab> draggedItem;
 
 	@Override
 	public TreeCell<MyTab> call(TreeView<MyTab> treeView) {
 		Button clean = new Button(); 
 		TreeCell<MyTab> cell = new TreeCell<MyTab>() {
 		
-//			private TextField textField;
-
-//			@Override
-//			public void startEdit() {
-//				super.startEdit();
-//
-////				if (textField == null) {
-////					createTextField();
-////				}
-//				setText(null);
-//				setGraphic(textField);
-//				textField.selectAll();
-//			}
-
-//			@Override
-//			public void cancelEdit() {
-//				super.cancelEdit();
-//				setText(getItem().getTitle());
-////				setGraphic(getItem().getIcon());
-//			}
-			
-			
 			@Override
 			public void updateItem(MyTab item, boolean empty) {
-				super.updateItem(item, empty);
-//				if (empty) {
-//					setText(null);
-//					setGraphic(null);
-//				} else {
-////					setGraphic(item.getIcon());
-//					setText(item.getScriptPo().getTitle());
-//
-//				}
-				
+				super.updateItem(item, empty);				
 				// 给cell 内容添加 button
 				   // If the cell is empty we don't show anything.
 	            if (isEmpty()) {
@@ -94,18 +74,6 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 				
 			}
 
-//			private void createTextField() {
-//				textField = new TextField(getString());
-//				textField.setOnKeyReleased((KeyEvent t) -> {
-//					if (t.getCode() == KeyCode.ENTER) {
-//						ScriptPo item = getItem();
-//						item.setTitle(textField.getText());
-//						commitEdit(item);
-//					} else if (t.getCode() == KeyCode.ESCAPE) {
-//						cancelEdit();
-//					}
-//				});
-//			}
 
 //			private String getString() {
 //				return getItem() == null ? "" : getItem().getScriptPo().getTitle();
@@ -138,7 +106,94 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 			clean.setVisible(false);
 		});
 		
+		cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
+		cell.setOnDragOver((DragEvent event) -> dragOver(event, cell, treeView));
+		cell.setOnDragDropped((DragEvent event) -> drop(event, cell, treeView));
+		cell.setOnDragDone((DragEvent event) -> clearDropLocation());
+		
 		return cell;
+	}
+	
+
+	// 发现拖动 当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个
+	private void dragDetected(MouseEvent event, TreeCell<MyTab> treeCell, TreeView<MyTab> treeView) {
+		logger.info("dragDetected"); 
+		
+		draggedItem = treeCell.getTreeItem();
+
+		// root can't be dragged
+		if (draggedItem.getParent() == null) { 
+			return;
+		} 
+			
+		Dragboard db = treeCell.startDragAndDrop(TransferMode.ANY);
+
+		ClipboardContent content = new ClipboardContent();
+		content.put(DataFormat.PLAIN_TEXT, draggedItem.getValue().getScriptPo().getTitle());
+		db.setContent(content);
+		db.setDragView(treeCell.snapshot(null, null));
+		event.consume();
+	
+	}
+
+	private void dragOver(DragEvent event, TreeCell<MyTab> treeCell, TreeView<MyTab> treeView) {
+  
+		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT))
+			return;
+		TreeItem<MyTab> thisItem = treeCell.getTreeItem();
+
+		// can't drop on itself
+		if (draggedItem == null || thisItem == null || thisItem == draggedItem)
+			return;
+		// ignore if this is the root
+		if (draggedItem.getParent() == null) {
+			clearDropLocation();
+			return;
+		}
+
+		event.acceptTransferModes(TransferMode.ANY);
+		if (!Objects.equals(dropZone, treeCell)) {
+			clearDropLocation();
+			this.dropZone = treeCell;
+			dropZone.setStyle(DROP_HINT_STYLE);
+		}
+		
+		 
+	}
+
+	// 放下后执行
+	private void drop(DragEvent event, TreeCell<MyTab> treeCell, TreeView<MyTab> treeView) {
+		logger.info("drop");
+		Dragboard db = event.getDragboard();
+		boolean success = false;
+		if (!db.hasContent(DataFormat.PLAIN_TEXT))
+			return;
+
+		TreeItem<MyTab> thisItem = treeCell.getTreeItem();
+		TreeItem<MyTab> droppedItemParent = draggedItem.getParent();
+
+//		// 只能同一个父节点下换位置, 否则不动
+		if (Objects.equals(droppedItemParent, thisItem.getParent())) {
+			droppedItemParent.getChildren().remove(draggedItem);
+			int indexInParent = thisItem.getParent().getChildren().indexOf(thisItem);
+			thisItem.getParent().getChildren().add(indexInParent + 1, draggedItem);
+			
+
+		}
+		if (Objects.equals(droppedItemParent, thisItem)) {
+			droppedItemParent.getChildren().remove(draggedItem);
+			droppedItemParent.getChildren().add(0, draggedItem);
+
+		}
+
+		treeView.getSelectionModel().select(draggedItem);
+		event.setDropCompleted(success);
+	}
+
+	private void clearDropLocation() {
+		logger.info("clearDropLocation"); 
+		if (dropZone != null)
+			dropZone.setStyle("");
 	}
 	    
 }

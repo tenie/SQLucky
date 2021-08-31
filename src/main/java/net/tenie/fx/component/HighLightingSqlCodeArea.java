@@ -12,6 +12,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
@@ -157,41 +158,42 @@ public class HighLightingSqlCodeArea {
 		
 		 
 		// 当鼠标释放, 判断是否为双击, 是双击选中对应的内容, 在判断有没有选择的文本, 有的话就修改所有相同的文本
-		codeArea.setOnMouseReleased(mouseEvent->{
-			MyAutoComplete.hide();
-			String str  = codeArea.getSelectedText();
-			String trimStr = str.trim();
-			int strSz = trimStr.length(); 
-			boolean isContinue = true;
-			if (mouseEvent.getClickCount() == 2) {
-				if(trimStr.length() == 0) {
-					// 选中的内容为空白符, 就选中当前行
-					codeArea.selectLine();
-				}else {
-					// 针对括号() {} []的双击, 选中括号内的文本
-					isContinue = CommonAction.selectSQLDoubleClicked(codeArea); // 如果选中了内容, 就会返回false
+		codeArea.setOnMouseReleased(mouseEvent -> {
+			if (mouseEvent.getButton() == MouseButton.PRIMARY) {  // 鼠标左键
+				if (mouseEvent.getClickCount() == 1) {
+					MyAutoComplete.hide();
+				} 
+				String str = codeArea.getSelectedText();
+				String trimStr = str.trim();
+				int strSz = trimStr.length();
+				boolean isContinue = true;
+				if (mouseEvent.getClickCount() == 2) {
+					if (trimStr.length() == 0) {
+						// 选中的内容为空白符, 就选中当前行
+						codeArea.selectLine();
+					} else {
+						// 针对括号() {} []的双击, 选中括号内的文本
+						isContinue = CommonAction.selectSQLDoubleClicked(codeArea); // 如果选中了内容, 就会返回false
+					}
+
+				} else if (mouseEvent.getClickCount() == 1) { // 鼠标单击
+					// 单击 括号() {} []的双击, 找到下一个括号, 对括号添加选中样式
+					isContinue = CommonAction.oneClickedFindParenthesis(codeArea);
+
 				}
-				
-			}else if (mouseEvent.getClickCount() == 1) { //鼠标单击
-					//单击  括号() {} []的双击, 找到下一个括号, 对括号添加选中样式
-				isContinue = CommonAction.oneClickedFindParenthesis(codeArea);  
-				  
-				
+
+				// 上面已经选中了东西这里就不继续往下走了
+				if (isContinue) {
+					if (strSz > 0 && !"*".equals(trimStr)) {
+						// 查找选中的字符
+						SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str);
+					} else {
+//			    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+					}
+				}
+
 			}
-			
-			// 上面已经选中了东西这里就不继续往下走了
-			if(isContinue){ 
-				if(strSz > 0 && !"*".equals(trimStr)) {
-					// 查找选中的字符 
-		    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str); 
-	  	    	}else {        
-//		    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
-		    	}
-			}
-			
-	    	
-	    	
-	    	
+
 		});
 		
 

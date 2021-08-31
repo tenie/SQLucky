@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.util.Duration;
 import net.tenie.lib.tools.StrUtils;
+import javafx.scene.input.Clipboard;
 
 /**
  * 
@@ -159,7 +160,19 @@ public class CommonUtility {
 	
 	// 获取剪贴板的值
 	public static String getClipboardVal() {
-		return  javafx.scene.input.Clipboard.getSystemClipboard().getString();
+		var cbd = Clipboard.getSystemClipboard();
+		if(cbd != null && cbd.hasString()) {
+			return cbd.getString();
+		}
+		return "";
+	}
+	
+	public static boolean clipboardHasString() {
+		var cbd = Clipboard.getSystemClipboard(); 
+		if(cbd != null) {
+			return cbd.hasString();
+		}
+		return false;
 	}
 	
 	/**

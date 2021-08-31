@@ -180,8 +180,8 @@ public class HighLightingSqlCodeAreaContextMenu {
 				unformatAll.setDisable(false);
 			}
 			
-			String val = CommonUtility.getClipboardVal();
-			if(StrUtils.isNotNullOrEmpty(val)) {
+			boolean hasVal = CommonUtility.clipboardHasString();
+			if(hasVal) {
 				Paste.setDisable(false);
 			}else {
 				Paste.setDisable(true);
