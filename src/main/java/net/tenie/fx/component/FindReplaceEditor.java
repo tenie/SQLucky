@@ -3,6 +3,8 @@ package net.tenie.fx.component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
+
+import com.ibm.db2.cmx.runtime.internal.repository.util.StreamUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 
@@ -18,6 +20,7 @@ import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public class FindReplaceEditor {
+	private static String f3Str = "";
 	private static Logger logger = LogManager.getLogger(FindReplaceEditor.class);
 	public static void findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
 		CodeArea code = SqlEditor.getCodeArea();
@@ -71,8 +74,14 @@ public class FindReplaceEditor {
 	public static void findSelectedString() {
 		CodeArea code = SqlEditor.getCodeArea();
 		String text = code.getSelectedText();
-		if (StrUtils.isNullOrEmpty(text))
-			return;
+		if (StrUtils.isNullOrEmpty(text)) {
+			if(StrUtils.isNotNullOrEmpty(f3Str)) {
+				text = f3Str;
+			}
+		}else {
+			f3Str = text;
+		}
+			
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 
