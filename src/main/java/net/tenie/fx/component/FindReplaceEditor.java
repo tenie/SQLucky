@@ -3,11 +3,8 @@ package net.tenie.fx.component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
-
-import com.ibm.db2.cmx.runtime.internal.repository.util.StreamUtils;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
-
 import javafx.application.Platform;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
@@ -15,7 +12,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
