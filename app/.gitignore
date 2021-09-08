@@ -1,0 +1,17 @@
+scenicView.properties
+*/target/
+*.class
+*build/
+*.classpath
+*.classpath_bak
+*.factorypath
+*target/
+*.settings/
+*.project
+.idea/
+.sts4-cache/
+*.iml
+dependency-reduced-pom.xml
+.apt_generated/
+.apt_generated_tests/
+*.db
