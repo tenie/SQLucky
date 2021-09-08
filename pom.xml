@@ -7,7 +7,7 @@
   <modules>
 	 <module>plugin-sdk</module>  
 	 <module>plugin/note</module> 
-	  <module>app</module>   
+	 <module>app</module>   
   </modules>
 	
  
