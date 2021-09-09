@@ -4,13 +4,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		  <groupId>net.tenie</groupId>
-		  <artifactId>SQLucky-pom</artifactId>
-		  <version>1.0</version> 
+		<groupId>net.tenie</groupId>
+		<artifactId>SQLucky-pom</artifactId>
+		<version>1.0</version>
 	</parent>
-	<groupId>net.tenie</groupId>
 	<artifactId>SQLucky</artifactId>
-	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<name>SQLucky</name>
@@ -44,14 +42,14 @@
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-plugin-sdk</artifactId>
 			<version>1.0</version>
-		</dependency>	
-		
- 		<dependency>
+		</dependency>
+
+		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-plugin-note</artifactId>
 			<version>1.0</version>
-		</dependency>	 
-		
+		</dependency>
+
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
@@ -173,30 +171,15 @@
 
 	<build>
 		<plugins>
-		<!-- 	<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>package</phase>
-						<goals>
-							<goal>copy-dependencies</goal>
-						</goals>
-						<configuration> 
-						</configuration>
-					</execution>
-				</executions>
-			</plugin> -->
-
-
+			<!-- 编译插件, 指定编译版本, 和编译时参数 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
+					<!-- 指定编译版本 -->
 					<release>${maven.compiler.release}</release>
-
+					<!-- 编译时参数 --> 
 					<compilerArgs>
 						<arg>--add-exports</arg>
 						<arg>javafx.graphics/com.sun.javafx.application=SQLucky</arg>
@@ -207,10 +190,10 @@
 						<arg>--add-exports</arg>
 						<arg>org.controlsfx.controls/impl.org.controlsfx.i18n=SQLucky</arg>
 					</compilerArgs>
-
 				</configuration>
 			</plugin>
 			<plugin>
+				<!-- javafx 插件, 启用应用 -->
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
 				<version>0.0.5</version>
