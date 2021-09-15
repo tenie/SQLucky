@@ -15,7 +15,7 @@ import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.MyPopupNumberFilter;
 
 public class MenuFactory {

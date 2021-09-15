@@ -8,7 +8,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 
 public class SqlCodeAreaProposeInput {

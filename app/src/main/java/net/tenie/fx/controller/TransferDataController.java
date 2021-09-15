@@ -50,7 +50,7 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.GenerateSQLString;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportDDL;

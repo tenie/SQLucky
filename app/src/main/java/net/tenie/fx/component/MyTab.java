@@ -24,7 +24,7 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
 import net.tenie.fx.config.MainTabs;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
 

@@ -16,7 +16,7 @@ import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.dao.GenerateSQLString;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
 import net.tenie.fx.window.ConnectionEditor;
 

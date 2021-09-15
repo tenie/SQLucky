@@ -30,7 +30,7 @@ import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DeleteDao;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.window.MyAlert;
 
 

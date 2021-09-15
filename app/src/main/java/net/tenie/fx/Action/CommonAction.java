@@ -72,7 +72,7 @@ import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.main.MainMyDB;
 import net.tenie.fx.main.Restart;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;

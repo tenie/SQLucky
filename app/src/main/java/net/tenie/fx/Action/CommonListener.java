@@ -1,19 +1,23 @@
 package net.tenie.fx.Action;
 
+import java.util.function.Consumer;
+
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.component.HighLightingSqlCodeArea;
+import net.tenie.fx.component.MyAutoComplete;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
-import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.window.ConnectionEditor;
 
 
@@ -24,14 +28,24 @@ public class CommonListener {
 		return new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				Tab tb = SqlEditor.mainTabPaneSelectedTab();
-				if (tb != null) {
-					String title = CommonUtility.tabText(tb);  
-					if (!title.endsWith("*")) { 
-						CommonUtility.setTabName(tb, title + "*");
+				Consumer< String >  caller = x ->{
+					Tab tb = SqlEditor.mainTabPaneSelectedTab();
+					if (tb != null) {
+						Platform.runLater(()->{
+							String title = CommonUtility.tabText(tb);  
+							if (!title.endsWith("*")) { 
+								CommonUtility.setTabName(tb, title + "*");
+							}
+							obj.highLighting();
+						});
+
+						// 缓存单词
+						MyAutoComplete.cacheTextWord();
+						
 					}
-					obj.highLighting();
-				}
+				};
+				
+				CommonUtility.delayRunThread(caller, 800);
 			}
 		};
 	}

@@ -24,7 +24,7 @@ import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.ScriptTabTree;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.TableDataDetail;

@@ -149,9 +149,9 @@ public class SqlCodeAreaHighLightingHelper {
     public static void applyHighlighting(CodeArea codeArea) { 
     	try {
     		if(codeArea.getText().length() > 0) {
+    			StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
     			Platform.runLater(() -> {  
-            		StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
-                    codeArea.setStyleSpans(0, highlighting);
+            		 codeArea.setStyleSpans(0, highlighting);
     			});    	    	
         	}
 		} catch (Exception e) {
@@ -176,16 +176,12 @@ public class SqlCodeAreaHighLightingHelper {
     	
     }  
     public static void applyErrorHighlighting(CodeArea codeArea , int begin , int length , String str) {
-    	
-//    	CodeArea codeArea = SqlEditor.getCodeArea();
- 
 	    StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
     	spansBuilder.add(Collections.singleton("errorword"), length);
     	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
-    	codeArea.setStyleSpans(begin, highlighting); 
-    	 
-     
-    	
+    	Platform.runLater(() -> {
+    		codeArea.setStyleSpans(begin, highlighting); 
+		});   	
     }
     
     private static StyleSpans<Collection<String>> computeHighlighting(String text) {

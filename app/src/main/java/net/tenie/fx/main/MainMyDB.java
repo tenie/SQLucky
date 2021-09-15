@@ -56,6 +56,7 @@ public class MainMyDB extends Application {
 		if( ! H2Db.isDev()) {
 			Log4jPrintStream.redirectSystemOut();
 		} 
+//		Log4jPrintStream.redirectSystemOut();
 	}
 	@Override
 	public void init() throws Exception {

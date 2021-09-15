@@ -24,7 +24,7 @@ import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
 import net.tenie.fx.window.ModalDialog;

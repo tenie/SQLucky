@@ -21,7 +21,7 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 /*   @author tenie */
 public final class SettingKeyCodeCombination {

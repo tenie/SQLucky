@@ -21,7 +21,7 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbSchemaPo;
 import net.tenie.fx.PropertyPo.TablePo;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.factory.AutoCompleteCellFactory;
 import net.tenie.lib.db.Dbinfo;
 
@@ -164,7 +164,7 @@ public class MyAutoComplete {
 	 
 
 	public static void showPop(double x, double y, String fStr) {
-		System.out.println("fStr === " + fStr);
+//		System.out.println("fStr === " + fStr);
 		filterStr = fStr.trim().toUpperCase();
 		String tmpFilterStr = filterStr; 
 		if(! isShow()) {
@@ -186,6 +186,7 @@ public class MyAutoComplete {
 					}
 				}else {
 					tmpls.addAll(keyWords  ) ;  
+					tmpls.addAll(getCacheTableFields()  ) ;  
 				}
 			}
 		}  

@@ -6,7 +6,7 @@ import java.util.Map;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 /*   @author tenie */
 public class MainTabs {

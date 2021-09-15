@@ -38,7 +38,7 @@ import net.tenie.fx.PropertyPo.ScriptPo;
 import net.tenie.fx.component.container.ScriptTabTree;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.H2SqlTextSavePo;
 import net.tenie.lib.db.h2.SqlTextDao;

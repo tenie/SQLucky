@@ -1,6 +1,8 @@
 package net.tenie.Sqlucky.sdk.utility;
 
 import java.io.File;
+import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -26,6 +28,40 @@ import javafx.scene.input.Clipboard;
  */
 public class CommonUtility {
 	private static Logger logger = LogManager.getLogger(CommonUtility.class);
+	private static ArrayBlockingQueue<Consumer< String >> queue = new ArrayBlockingQueue<>(1);
+	
+	/**
+	 * 延迟执行, 如果有任务在队列中, 会抛弃任务不执行
+	 * @param caller
+	 * @param milliseconds
+	 */
+	public static void delayRunThread(Consumer< String >  caller, int milliseconds) {
+		if ( queue.isEmpty() ) {
+			 queue.offer(caller);
+			 
+			 Thread t = new Thread() {
+					public void run() { 
+						
+						try {
+							Thread.sleep(milliseconds);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						var cl = queue.poll();
+						if(cl != null) {
+							cl.accept("");
+						}
+					}
+				};
+				t.start();
+			 
+		}else {
+			System.out.println("delayRunThread");
+			return ;
+			
+		}  
+		
+	}
 	
 	public static void runThread(Function<Object, Object> fun) {
 		Thread t = new Thread() {

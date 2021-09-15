@@ -21,7 +21,7 @@ import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.MyTooltipTool;
-import net.tenie.fx.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 
 public class CacheDataTableViewShapeChange {
