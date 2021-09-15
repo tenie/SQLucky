@@ -20,7 +20,7 @@ import net.tenie.fx.PropertyPo.RsData;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.main.MainMyDB;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class DBTools {
 

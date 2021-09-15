@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ButtonBase;
@@ -18,7 +16,6 @@ import javafx.scene.control.Tab;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.container.DataViewTab;
-import net.tenie.lib.tools.StrUtils;
 
 
 /*   @author tenie */

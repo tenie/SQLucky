@@ -11,6 +11,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.ScriptPo;
 import net.tenie.fx.component.ComponentGetter;
@@ -25,7 +26,7 @@ import net.tenie.fx.window.ModalDialog;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.H2SqlTextSavePo;
 import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.lib.tools.StrUtils;
+
 
 /*   @author tenie */
 public class ScriptTabTree {

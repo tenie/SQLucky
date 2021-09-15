@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 //import net.sf.jsqlparser.statement.select.Select;
 //import net.sf.jsqlparser.util.TablesNamesFinder;
 import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
 public class ParseSQL {

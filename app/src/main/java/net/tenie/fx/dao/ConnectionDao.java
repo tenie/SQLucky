@@ -20,7 +20,7 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.controller.TransferDataController;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ConnectionDao {
 	private static Logger logger = LogManager.getLogger(ConnectionDao.class);

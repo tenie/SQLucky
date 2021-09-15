@@ -24,7 +24,7 @@ import net.tenie.fx.PropertyPo.TableFieldPo;
 import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.fx.config.DbVendor;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 获取表的连接

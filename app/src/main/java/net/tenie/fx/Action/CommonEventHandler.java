@@ -2,52 +2,24 @@ package net.tenie.fx.Action;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import org.controlsfx.control.tableview2.FilteredTableView;
-import org.fxmisc.richtext.CodeArea;
-import com.jfoenix.controls.JFXButton;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TableView;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.WindowEvent;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
-//import net.tenie.fx.PropertyPo.CacheTableDate;
-import net.tenie.fx.PropertyPo.DbTableDatePo;
-import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
-import net.tenie.fx.config.ConfigVal;
-import net.tenie.fx.config.DBConns;
-import net.tenie.fx.dao.DeleteDao;
 import net.tenie.fx.dao.GenerateSQLString;
-import net.tenie.fx.dao.InsertDao;
-import net.tenie.fx.dao.UpdateDao;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
 import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.fx.window.ModalDialog;
-import net.tenie.fx.window.MyAlert;
-import net.tenie.fx.window.TableDataDetail;
-import net.tenie.lib.tools.StrUtils;
+
 
 /*   @author tenie */
 public class CommonEventHandler {
@@ -172,36 +144,6 @@ public class CommonEventHandler {
 			}
 		};
 	}
-
-	//TODO 代码输入时, 修改tab 的名称加上* ,意味未保存
-	public static EventHandler<KeyEvent> codeAreaChange(CodeArea code) {
-		return new EventHandler<KeyEvent>() {
-			public void handle(KeyEvent e) {  
-				String s = e.getCode().getName();
-				KeyCode kc =  e.getCode();
-				if(	KeyCode.TAB == kc) {
-					e.consume();					 
-				} else {
-//					logger.info(s);
-					Tab tb = SqlEditor.mainTabPaneSelectedTab();
-					if (tb != null) {
-						String title = CommonUtility.tabText(tb);  
-						if (!title.endsWith("*")) { 
-							CommonUtility.setTabName(tb, title + "*");
-						}
-						SqlCodeAreaHighLightingHelper.applyHighlighting(code);
-					}
-				}
-
-			}
-		};
-	}
- 
-
-	
- 
-
-
  
 
 	private static ObservableList<ObservableList<StringProperty>> getValsHelper(boolean isSelected, String tableid) {

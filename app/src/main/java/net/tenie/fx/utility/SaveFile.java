@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.ComponentGetter;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 /*   @author tenie */
 public class SaveFile {
 	private static Logger logger = LogManager.getLogger(CommonAction.class);

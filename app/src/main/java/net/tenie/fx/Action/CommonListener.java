@@ -1,41 +1,36 @@
 package net.tenie.fx.Action;
 
-import org.fxmisc.richtext.CodeArea;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
-import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
+import net.tenie.fx.component.HighLightingSqlCodeArea;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.lib.tools.StrUtils;
+
 
 /*   @author tenie */
 public class CommonListener {
 	
-	public static ChangeListener< String> codetxtChange(CodeArea codeArea){
+	public static ChangeListener< String> codetxtChange(HighLightingSqlCodeArea obj){
 		return new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//				SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
 				Tab tb = SqlEditor.mainTabPaneSelectedTab();
 				if (tb != null) {
 					String title = CommonUtility.tabText(tb);  
 					if (!title.endsWith("*")) { 
 						CommonUtility.setTabName(tb, title + "*");
 					}
-					SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+					obj.highLighting();
 				}
 			}
 		};

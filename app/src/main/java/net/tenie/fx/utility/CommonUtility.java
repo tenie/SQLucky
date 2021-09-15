@@ -16,7 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.util.Duration;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import javafx.scene.input.Clipboard;
 
 /**
@@ -26,6 +26,10 @@ import javafx.scene.input.Clipboard;
  */
 public class CommonUtility {
 	private static Logger logger = LogManager.getLogger(CommonUtility.class);
+	
+	// 队列
+//	private static 
+	
 	
 	public static void runThread(Function<Object, Object> fun) {
 		Thread t = new Thread() {

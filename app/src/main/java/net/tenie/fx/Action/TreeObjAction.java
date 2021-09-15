@@ -2,12 +2,13 @@ package net.tenie.fx.Action;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.DBOptionHelper;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.config.CommonConst;
-import net.tenie.lib.tools.StrUtils;
+
 
 public class TreeObjAction {
 	public static void showTableSql(DbConnectionPo dpo ,TablePo table, String title) {

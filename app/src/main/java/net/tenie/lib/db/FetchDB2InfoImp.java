@@ -14,7 +14,7 @@ import net.tenie.fx.PropertyPo.TableFieldPo;
 import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.fx.PropertyPo.myEntry;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 /* 
  *  * @author tenie 
  *  

@@ -46,7 +46,7 @@ import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.main.Restart;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
 public class ConnectionEditor {

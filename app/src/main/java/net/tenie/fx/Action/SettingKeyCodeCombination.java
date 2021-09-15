@@ -1,54 +1,27 @@
 package net.tenie.fx.Action;
 
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.*;
-import net.tenie.fx.component.container.DataViewTab;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.Caret.CaretVisibility;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.geometry.Bounds;
-import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
-import net.tenie.fx.main.MainMyDB;
-import net.tenie.fx.main.Restart;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.fx.utility.SaveFile;
-import net.tenie.fx.window.ProcedureExecuteWindow;
-import net.tenie.lib.tools.StrUtils;
 
 /*   @author tenie */
 public final class SettingKeyCodeCombination {
@@ -229,79 +202,8 @@ public final class SettingKeyCodeCombination {
 			System.out.println(x);
 			System.out.println(y);
 			System.out.println(z);
-			
-//			 HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(); 
-//			 var cont = cm.getContextMenu();
-//			 cont.setAnchorX(x);
-//			 cont.setAnchorY(y+6);
-//			 cont.show( ComponentGetter.primaryStage);
-			
-//			Label l = new Label("1111"); 
-			MyAutoComplete.showPop(x, y+7, "");
-//		   final Popup popup = new Popup();
-//		   popup.setX(x); 
-//		   popup.setY(y);
-//		   popup.getContent().addAll(l );
-//		   popup.show( ComponentGetter.primaryStage);
-
-			
-//			CommonAction.restartApp() ;
-//			try {
-//				Restart.reboot();
-//			} catch (Exception e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//				logger.info(" IOException " + e.getMessage() );
-//			}  
-//			StringBuilder cmd = new StringBuilder();
-//
-//			cmd.append(System.getProperty("java.home") + File.separator + "bin" + File.separator + "java ");
-//
-//			for (String jvmArg : ManagementFactory.getRuntimeMXBean().getInputArguments()) {
-//				cmd.append(jvmArg + " ");
-//
-//			}
-//
-//			cmd.append("-cp ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-//
-//			cmd.append(MainMyDB.class.getName()).append(" ");
-//
-////			for (String arg : args) {
-////				cmd.append(arg).append(" ");
-////
-////			}
-//			try {
-//				Runtime.getRuntime().exec(cmd.toString());
-//			} catch (IOException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//
-//	        System.out.println(cmd);
-//			System.exit(0);
-//			ButtonAction.nextBookmark(false);
-			
-			
-//			VBox vb = new  VBox();
-//			vb.getChildren().add(new Label("sdsdsdssdsdsdssdsdsdssdsdsdssdsdsdssdsdsds"));
-//			
-//		    Stage stage = new Stage();
-//		    Scene scene2 = new Scene(vb); 
-//			stage.setScene(scene2);
-//			ModalDialog.windowShell(stage, ModalDialog.ERROR);
 			 
-//			System.out.println(1111);
-//			runbtn.setDisable(true);
-//			setFontSize(20);
-//			for(CodeArea code : SqlEditor.getAllCodeArea() ) {
-//				
-//				logger.info(code.getStyle());
-//				String txt = code.getText();
-//				code.replaceText(0, txt.length(), txt);
-//				SqlCodeAreaHighLightingHelper.applyHighlighting(code);
-//			}
-//			
-
+			MyAutoComplete.showPop(x, y+7, ""); 
 		});
 		
 		

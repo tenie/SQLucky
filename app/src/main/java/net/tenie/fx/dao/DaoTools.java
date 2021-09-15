@@ -13,7 +13,7 @@ import javafx.collections.ObservableList;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.lib.reflex.BuildObject;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class DaoTools {
 		private static Logger logger = LogManager.getLogger(DaoTools.class);

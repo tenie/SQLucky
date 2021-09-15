@@ -4,7 +4,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
 public class GenerateSQLString {

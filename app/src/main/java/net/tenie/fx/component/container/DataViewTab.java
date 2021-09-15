@@ -27,6 +27,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
@@ -49,7 +50,7 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.ProcedureExecuteWindow;
-import net.tenie.lib.tools.StrUtils;
+
 
 /**
  * 一个查询, 对应的一个数据表格, 对应的数据缓存 
@@ -173,7 +174,7 @@ public class DataViewTab {
 		// 构建数据Tab页中的表
 		generateDataPane(disable, time, rows);
 		tab.setContent(dataPane);
-		var dataTab = ComponentGetter.dataTab;
+		var dataTab = ComponentGetter.dataTabPane;
 		if (idx > -1) {
 
 			dataTab.getTabs().add(idx, tab);
@@ -222,9 +223,9 @@ public class DataViewTab {
 		VBox box = CreateDDLBox(ddl, isRunFunc, false, title);
 		tab.setContent(box);
 
-		ComponentGetter.dataTab.getTabs().add(tab);
+		ComponentGetter.dataTabPane.getTabs().add(tab);
 		CommonAction.showDetailPane();
-		ComponentGetter.dataTab.getSelectionModel().select(tab);
+		ComponentGetter.dataTabPane.getSelectionModel().select(tab);
 	}
 	
 	public void showProcedurePanel(String title, String ddl, boolean isRunFunc ) {
@@ -237,9 +238,9 @@ public class DataViewTab {
 		VBox box = CreateDDLBox(ddl, isRunFunc, true,title );
 		tab.setContent(box);
 
-		ComponentGetter.dataTab.getTabs().add(tab);
+		ComponentGetter.dataTabPane.getTabs().add(tab);
 		CommonAction.showDetailPane();
-		ComponentGetter.dataTab.getSelectionModel().select(tab);
+		ComponentGetter.dataTabPane.getSelectionModel().select(tab);
 		
 	}
 	
@@ -249,7 +250,7 @@ public class DataViewTab {
 		VBox box = CreateDDLBox(message, false, false, title);
 		tb.setContent(box);
 
-		ComponentGetter.dataTab.getTabs().add(tb);
+		ComponentGetter.dataTabPane.getTabs().add(tb);
 		CommonAction.showDetailPane();
 	}
 
@@ -258,7 +259,7 @@ public class DataViewTab {
 	public VBox CreateDDLBox(String ddl, boolean isRunFunc, boolean isProc, String name) {
 		VBox vb = new VBox();
 	    sqlArea = new HighLightingSqlCodeArea();
-		StackPane sp = sqlArea.getObj(ddl, false);
+		StackPane sp = sqlArea.getCodeAreaPane(ddl, false);
 		// 表格上面的按钮
 		AnchorPane fp = ddlOptionBtnsPane(ddl, isRunFunc, isProc, name);
 		vb.getChildren().add(fp);
@@ -374,21 +375,21 @@ public class DataViewTab {
 		MenuItem closeAll = new MenuItem("Close ALl");
 		closeAll.setOnAction(e -> {
 			List<Tab> ls = new ArrayList<>();
-			for (Tab tab : ComponentGetter.dataTab.getTabs()) {
+			for (Tab tab : ComponentGetter.dataTabPane.getTabs()) {
 				ls.add(tab);
 			}
 			ls.forEach(tab -> {
 				CommonAction.clearDataTable(tab);
 			});
-			ComponentGetter.dataTab.getTabs().clear();
+			ComponentGetter.dataTabPane.getTabs().clear();
 		});
 
 		MenuItem closeOther = new MenuItem("Close Other");
 		closeOther.setOnAction(e -> {
-			int size = ComponentGetter.dataTab.getTabs().size();
+			int size = ComponentGetter.dataTabPane.getTabs().size();
 			if (size > 1) {
 				List<Tab> ls = new ArrayList<>();
-				for (Tab tab : ComponentGetter.dataTab.getTabs()) {
+				for (Tab tab : ComponentGetter.dataTabPane.getTabs()) {
 
 					if (!Objects.equals(tab, tb)) {
 						ls.add(tab);
@@ -398,8 +399,8 @@ public class DataViewTab {
 					CommonAction.clearDataTable(tab);
 				});
 
-				ComponentGetter.dataTab.getTabs().clear();
-				ComponentGetter.dataTab.getTabs().add(tb);
+				ComponentGetter.dataTabPane.getTabs().clear();
+				ComponentGetter.dataTabPane.getTabs().add(tb);
 
 			}
 

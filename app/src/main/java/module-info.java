@@ -32,8 +32,8 @@ open module SQLucky {
 	requires flowless;
 	requires sql.formatter;
 	requires org.slf4j;
-	requires SQLucky.plugin.sdk;
-	uses  net.tenie.plugin.sdk.PluginDelegate;
+	requires SQLucky.sdk;
+	uses  net.tenie.Sqlucky.sdk.PluginDelegate;
 	exports net.tenie.fx.controller  to    javafx.fxml;
     exports net.tenie.fx.main        to    javafx.graphics;
 }

@@ -11,8 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.lib.tools.StrUtils;
+
 
 /*   @author tenie */
 public class FindReplaceEditor {
@@ -168,8 +169,8 @@ public class FindReplaceEditor {
 			if (start > -1) {
 				selectRange(code, start, start + length);
 			}
-		}
-		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(code, str);
+		} 
+		SqlEditor.currentSqlCodeAreaHighLighting(str);
 	}
 
 	public static void delFindReplacePane() {

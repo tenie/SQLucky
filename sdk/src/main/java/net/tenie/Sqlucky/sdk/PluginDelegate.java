@@ -1,4 +1,4 @@
-package net.tenie.plugin.sdk;
+package net.tenie.Sqlucky.sdk;
 
 public interface PluginDelegate {
 	String pluginName();

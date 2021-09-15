@@ -16,7 +16,7 @@ import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.lib.reflex.BuildObject;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
 public class UpdateDao {

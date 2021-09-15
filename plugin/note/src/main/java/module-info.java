@@ -4,9 +4,10 @@ open module SQLucky.plugin.note{
     requires javafx.controls;
     requires javafx.fxml;  
     requires javafx.swing;  
-	requires SQLucky.plugin.sdk;
+    requires java.sql;
+	requires SQLucky.sdk;
 	         
 	
 	exports net.tenie.plugin.note.impl;
-    provides net.tenie.plugin.sdk.PluginDelegate with net.tenie.plugin.note.impl.NoteDelegateImpl;
+    provides net.tenie.Sqlucky.sdk.PluginDelegate with net.tenie.plugin.note.impl.NoteDelegateImpl;
 }

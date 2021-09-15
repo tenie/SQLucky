@@ -15,6 +15,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.TreeObjAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
@@ -33,7 +34,7 @@ import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.tools.StrUtils;
+
 
 /**
  * 链接节点树

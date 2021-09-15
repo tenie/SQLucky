@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class Restart {	
 	private static Logger logger = LogManager.getLogger(Restart.class);

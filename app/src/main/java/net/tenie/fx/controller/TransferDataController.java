@@ -34,6 +34,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
@@ -41,7 +42,9 @@ import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.HighLightingSqlCodeArea;
 import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.fx.component.MyCodeArea;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
@@ -51,7 +54,7 @@ import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportDDL;
-import net.tenie.lib.tools.StrUtils;
+
 
 public class TransferDataController implements Initializable {
 	private static Logger logger = LogManager.getLogger(TransferDataController.class);
@@ -102,6 +105,7 @@ public class TransferDataController implements Initializable {
 	@FXML private TextField	amountTxt;
 	
 	private StackPane spCode ;
+	private MyCodeArea CodeArea;
 	
 	private CheckTreeView<String> checkTreeView;
 	private CheckBoxTreeItem<String> root;
@@ -153,14 +157,16 @@ public class TransferDataController implements Initializable {
 	// 输出log 
 	private void moniterAppendStr(String str) {
 		Platform.runLater(() -> { 
-			SqlEditor.appendStr(spCode, str+"\n");
+//			SqlEditor.appendStr(spCode, str+"\n");
+			CodeArea.appendText(str+"\n");
 		});
 		
 	}
 	// 清除log
 	private void moniterCleanStr() {
 		Platform.runLater(() -> { 
-			SqlEditor.cleanStr(spCode); 
+//			SqlEditor.cleanStr(spCode); 
+			CodeArea.clear();
 		}); 
 		errorMsg.clear();
 	}
@@ -268,7 +274,10 @@ public class TransferDataController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		filterTxtInitialize();
 		setGraphicAndCss(); 
-		spCode = SqlEditor.SqlCodeArea(); 
+//		spCode = SqlEditor.SqlCodeArea(); 
+		var sqlCodeArea = new HighLightingSqlCodeArea();
+		spCode  = sqlCodeArea.getCodeAreaPane();
+		CodeArea = sqlCodeArea.getCodeArea();
 		setAction();  
 		 
 		soDB.setItems(DBConns.getChoiceBoxItems());

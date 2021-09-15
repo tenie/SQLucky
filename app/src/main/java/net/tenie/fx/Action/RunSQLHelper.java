@@ -4,63 +4,42 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.cell.TextField2TableCell;
-import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
-import org.controlsfx.control.tableview2.filter.popupfilter.PopupStringFilter;
 import org.fxmisc.richtext.CodeArea;
-
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.ReadOnlyStringProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.Tooltip;
 import javafx.scene.control.TreeItem;
-import javafx.util.Duration;
-//import net.tenie.fx.PropertyPo.DataTabDataPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
-//import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.MyTextField2TableCell;
-import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DataViewContainer;
@@ -74,13 +53,10 @@ import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.factory.MenuFactory;
 import net.tenie.fx.factory.StringPropertyListValueFactory;
-import net.tenie.fx.utility.CommonUtility;
-import net.tenie.fx.utility.MyPopupNumberFilter;
 import net.tenie.fx.utility.ParseSQL;
-import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.MyAlert;
 import net.tenie.lib.db.Dbinfo;
-import net.tenie.lib.tools.StrUtils;
+
 
 /*   @author tenie */
 public class RunSQLHelper {
@@ -222,7 +198,7 @@ public class RunSQLHelper {
 					for (sqlData sd : errObj) {
 						int bg = sd.begin;
 						int len = sd.sql.length();
-						SqlCodeAreaHighLightingHelper.applyErrorHighlighting(bg, len, sd.sql);
+						SqlEditor.ErrorHighlighting(bg, len, sd.sql);
 					}
 				}
 			});
@@ -717,7 +693,7 @@ public class RunSQLHelper {
 	private static Tab addWaitingPane( int tabIdx) {
 		Tab waitTb = new DataViewTab().maskTab(WAITTB_NAME);
 		Platform.runLater(() -> {
-			TabPane dataTab = ComponentGetter.dataTab;
+			TabPane dataTab = ComponentGetter.dataTabPane;
 			// 删除b不要的tab
 			deleteEmptyTab(dataTab);
 			
@@ -736,7 +712,7 @@ public class RunSQLHelper {
 	// 移除 等待加载动画 页面
 	private static void rmWaitingPane(Tab waitTb) {
 		Platform.runLater(() -> {
-			TabPane dataTab = ComponentGetter.dataTab;
+			TabPane dataTab = ComponentGetter.dataTabPane;
 			dataTab.getTabs().remove(waitTb);
 		});
 
@@ -745,7 +721,7 @@ public class RunSQLHelper {
 	private static List<sqlData> epurateSql(String str) {
 		List<sqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = StrUtils.findSQLFromTxt(str);
+		List<String> sqls = SqlEditor.findSQLFromTxt(str);
 		
 		if(sqls.size()> 0) {
 			for (String s : sqls) { 
@@ -767,7 +743,7 @@ public class RunSQLHelper {
 	private static List<sqlData> epurateSql(String str, int start) {
 		List<sqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = StrUtils.findSQLFromTxt(str);
+		List<String> sqls = SqlEditor.findSQLFromTxt(str);
 		
 		if(sqls.size()> 0) {
 			for (String s : sqls) { 
@@ -801,7 +777,7 @@ public class RunSQLHelper {
 			str = SqlEditor.getCurrentCodeAreaSQLText();
 		}
 		// 去除注释, 包注释字符串转换为空白字符串
-		str = StrUtils.trimCommentToSpace(str, "--");
+		str = SqlEditor.trimCommentToSpace(str, "--");
 //		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		sds = epurateSql(str, start);
 		return sds;

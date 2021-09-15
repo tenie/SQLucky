@@ -1,14 +1,15 @@
 package net.tenie.plugin.note.impl;
 
-import net.tenie.plugin.sdk.AppComponent;
-import net.tenie.plugin.sdk.PluginDelegate;
+import net.tenie.Sqlucky.sdk.AppComponent;
+import net.tenie.Sqlucky.sdk.PluginDelegate;
 
 public class NoteDelegateImpl implements PluginDelegate {
-
+	public static AppComponent appCom ;
 	@Override
 	public void load(AppComponent cpn) {
 		System.out.println("load:  NoteDelegateImp...");
 		System.out.println(cpn);
+		appCom = cpn;
 	}
 
 	@Override

@@ -9,28 +9,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-
 import javafx.application.Platform;
-import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
-import javafx.stage.PopupWindow;
-import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbSchemaPo;
 import net.tenie.fx.PropertyPo.TablePo;
-import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.factory.AutoCompleteCellFactory;
 import net.tenie.lib.db.Dbinfo;
-import net.tenie.lib.tools.StrUtils;
 
 public class MyAutoComplete {
 	private static List<TablePo> keyWords = new ArrayList<>();
@@ -40,7 +33,6 @@ public class MyAutoComplete {
 	private static TreeView<TablePo> treeView ;
 	private	static List<TablePo> tmpls = new ArrayList<>();
 	private static String filterStr = "";
-	private static int anchor ;
 	
 	private static Map<Integer, Set<TablePo> > pageTables = new HashMap<>();
 	
@@ -247,7 +239,7 @@ public class MyAutoComplete {
 		return null;
 	}
 	
-	public static void cacheTablePo (TablePo tabpo) {
+	public static void cacheTablePo(TablePo tabpo) {
 		
 		Consumer< String >  caller = x ->{ 
 			var fs = tabpo.getFields(); 
@@ -263,7 +255,7 @@ public class MyAutoComplete {
 				
 				
 			}
-			if(fs !=null  && fs.size() > 0) {  
+			if(fs !=null  && fs.size() > 0) {
 				Integer id = getMyTabId();
 				if(id != null) {
 					Set<TablePo> tmppos ;
@@ -287,6 +279,34 @@ public class MyAutoComplete {
 			CommonUtility.runThread(caller);
 		}
 			
+	}
+	
+	// 缓存页面单词
+	public static void cacheTextWord() {
+		var mtb = SqlEditor.currentMyTab(); 
+		String text = mtb.getSqlCodeArea().getCodeArea().getText();
+		Consumer< String >  caller = x ->{ 
+			Integer id = getMyTabId(); 
+			if(id != null) { 
+				Set<TablePo> tmppos ;
+				if( pageTables.containsKey(id) ) {
+					tmppos = pageTables.get(id); 
+				}else {
+					tmppos = new HashSet<>(); 
+					pageTables.put(id, tmppos);
+				}
+				
+				// 获取词组
+				var words = StrUtils.splitWordByStr(text); 
+				for(var word : words) { 
+					tmppos.add( TablePo.noDbObj(word));
+				} 
+			}
+		};
+		if( StrUtils.isNotNullOrEmpty(text)) {
+			CommonUtility.runThread(caller);			
+		}
+		
 	}
 	
 	public static Collection<TablePo> getCacheTableFields() {

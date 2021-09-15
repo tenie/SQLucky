@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.IntFunction;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,20 +30,19 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.PropertyPo.MyRange;
 import net.tenie.fx.PropertyPo.ScriptPo;
 import net.tenie.fx.component.container.ScriptTabTree;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
-import net.tenie.fx.config.DBConns;
-import net.tenie.fx.config.MainTabInfo;
-import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.H2SqlTextSavePo;
 import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.lib.tools.StrUtils;
+
 
 /*   @author tenie */
 public class SqlEditor {
@@ -51,8 +52,7 @@ public class SqlEditor {
 
 	// 当前文本框中文本重新高亮
 	public static void applyHighlighting() {
-		var codeArea = SqlEditor.getCodeArea();
-		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+		currentSqlCodeAreaHighLighting();
 	}
 	
 	// 获取当前选中的区间
@@ -191,44 +191,36 @@ public class SqlEditor {
 	public static void setTabSQLText(MyTab tb, String text) {
 		CodeArea code = getCodeArea(tb);
 		code.appendText(text);
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		tb.getSqlCodeArea().highLighting();
 		tb.syncScriptPo();
 	}
 	
-//	public static void setTabSQLText2(MyTab tb, String text, int paragraph) {
-//		CodeArea code = getCodeArea(tb);
-//		code.appendText(text);
-//		code.showParagraphAtTop(paragraph);
-//		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
-//		tb.refreshMyTab();
-//	}
+ 
 	
 	// 获取当前在前台的文本框
 	public static CodeArea getCodeArea() {
-		StackPane p = getTabStackPane();
-		@SuppressWarnings("rawtypes")
-		VirtualizedScrollPane v = (VirtualizedScrollPane) p.getChildren().get(0);
-		CodeArea code = (CodeArea) v.getContent();
-		return code;
+		var mtb = currentMyTab();
+		return mtb.getSqlCodeArea().getCodeArea();
 	}
 	
-	public static CodeArea getCodeArea(StackPane p) {  
-			@SuppressWarnings("rawtypes")
-			VirtualizedScrollPane v = (VirtualizedScrollPane) p.getChildren().get(0);
-			CodeArea code = (CodeArea) v.getContent();
-			return code;  
-	}
+//	public static CodeArea getCodeArea(StackPane p) {
+//			@SuppressWarnings("rawtypes")
+//			VirtualizedScrollPane v = (VirtualizedScrollPane) p.getChildren().get(0);
+//			CodeArea code = (CodeArea) v.getContent();
+//			return code;  
+//	}
 	// 当前文本框中, 取消选中的文本
 	public static void deselect() {
 		getCodeArea().deselect(); 
 	}
 
    //  获取Tab中的的code area
-	public static CodeArea getCodeArea(Tab tb) {
-		StackPane p = getTabStackPane(tb);
-		@SuppressWarnings("rawtypes")
-		VirtualizedScrollPane v = (VirtualizedScrollPane) p.getChildren().get(0);
-		CodeArea code = (CodeArea) v.getContent();
+	public static CodeArea getCodeArea(MyTab tb) {
+//		StackPane p = getTabStackPane(tb);
+//		@SuppressWarnings("rawtypes")
+//		VirtualizedScrollPane v = (VirtualizedScrollPane) p.getChildren().get(0);
+//		CodeArea code = (CodeArea) v.getContent();
+		var code = tb.getSqlCodeArea().getCodeArea();
 		return code;
 	}
 
@@ -239,7 +231,7 @@ public class SqlEditor {
 	}
 
     // 获取tab 中的  area 中的文本
-	public static String getTabSQLText(Tab tb) {
+	public static String getTabSQLText(MyTab tb) {
 		CodeArea code = getCodeArea(tb);
 		String sqlText = code.getText();
 		return sqlText;
@@ -252,18 +244,18 @@ public class SqlEditor {
 		return sqlText;
 	}  
 	// append txt
-	public static void appendStr(StackPane spCode  ,String str) {
-		if(str !=null) {
-			CodeArea code = SqlEditor.getCodeArea(spCode);
-			code.appendText(str);
-		}
-		
-	}
+//	public static void appendStr(StackPane spCode  ,String str) {
+//		if(str !=null) {
+//			CodeArea code = SqlEditor.getCodeArea(spCode);
+//			code.appendText(str);
+//		}
+//		
+//	}
 	// 清除所有文本
-	public static void cleanStr(StackPane spCode) {
-		CodeArea code = SqlEditor.getCodeArea(spCode);
-		code.clear();
-	}
+//	public static void cleanStr(StackPane spCode) {
+//		CodeArea code = SqlEditor.getCodeArea(spCode);
+//		code.clear();
+//	}
 	
 
    // get select text
@@ -302,7 +294,7 @@ public class SqlEditor {
 		
 
 	// 代码的容器
-	public static StackPane getTabStackPane(Tab tb) {
+	public static StackPane getTabStackPane(MyTab tb) {
 		VBox vb = (VBox) tb.getContent();
 		StackPane sp = null;
 		if (vb.getChildren().size() > 1) {
@@ -315,14 +307,14 @@ public class SqlEditor {
 		return sp;
 	}
 
-	public static StackPane getTabStackPane() {
-		Tab tb = mainTabPaneSelectedTab();
-		VBox vb = (VBox) tb.getContent();
-		StackPane sp = null;
-		int chsz = vb.getChildren().size();
-		sp = (StackPane) vb.getChildren().get(chsz - 1);
-		return sp;
-	}
+//	public static StackPane getTabStackPane() {
+//		Tab tb = mainTabPaneSelectedTab();
+//		VBox vb = (VBox) tb.getContent();
+//		StackPane sp = null;
+//		int chsz = vb.getChildren().size();
+//		sp = (StackPane) vb.getChildren().get(chsz - 1);
+//		return sp;
+//	}
 
 	// 获取当前选中的代码Tab
 	public static Tab mainTabPaneSelectedTab() { 
@@ -334,6 +326,25 @@ public class SqlEditor {
 		MyTab rs = (MyTab) currentTab;
 		return rs;
 	}
+	
+	public static void currentSqlCodeAreaHighLighting() {
+		MyTab mtb = currentMyTab();
+		var area = mtb.getSqlCodeArea();
+		area.highLighting();
+	} 
+	
+	public static void ErrorHighlighting( int begin , int length , String str) {
+		MyTab mtb = currentMyTab();
+		var area = mtb.getSqlCodeArea();
+		area.errorHighLighting(begin, length, str);
+	}
+	
+	public static void currentSqlCodeAreaHighLighting(String str) {
+		MyTab mtb = currentMyTab();
+		var area = mtb.getSqlCodeArea();
+		area.highLighting(str);
+	}
+	
 	
 	// 获取tab的内容 VBox
 	public static VBox getTabVbox(Tab tb) {
@@ -353,34 +364,52 @@ public class SqlEditor {
 	}
 
 //	代码框添加
-	public static StackPane SqlCodeArea() {
-		StackPane sp = new HighLightingSqlCodeArea().getObj();
-		return sp;
-	}
+//	public static StackPane SqlCodeArea() {
+//		StackPane sp = new HighLightingSqlCodeArea().getObj();
+//		return sp;
+//	}
 	
  
 	
 	// 获取所有的CodeArea
-	public static List<CodeArea> getAllCodeArea() {
-		List<CodeArea> cas = new ArrayList<>();
+	public static List<MyTab> getAllgetMyTabs() {
+		List<MyTab> cas = new ArrayList<>();
 		TabPane myTabPane = ComponentGetter.mainTabPane;
 		if (myTabPane.getTabs().size() > 1) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for(Tab tb : tabs) { 
-				CodeArea ac = getCodeArea(tb);
-				cas.add(ac);
+				MyTab mtb = (MyTab) tb;
+//				CodeArea ac = getCodeArea(mtb);
+				cas.add(mtb);
 			}
 		}
 		return cas;
 	}
+	
+//	public static List<CodeArea> getAllCodeArea() {
+//		List<CodeArea> cas = new ArrayList<>();
+//		TabPane myTabPane = ComponentGetter.mainTabPane;
+//		if (myTabPane.getTabs().size() > 1) {
+//			ObservableList<Tab> tabs = myTabPane.getTabs();
+//			for(Tab tb : tabs) { 
+//				MyTab mtb = (MyTab) tb;
+//				CodeArea ac = getCodeArea(mtb);
+//				cas.add(ac);
+//			}
+//		}
+//		return cas;
+//	}
+	
+	
 	// 改变样式
 	public static void changeThemeAllCodeArea() { 
 		TabPane myTabPane = ComponentGetter.mainTabPane;
 		if (myTabPane != null && myTabPane.getTabs().size() > 0) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for(Tab tb : tabs) { 
+				MyTab mtb = (MyTab) tb;
 				// 修改代码编辑区域的样式
-				MyCodeArea ac = (MyCodeArea) getCodeArea(tb); 
+				MyCodeArea ac = (MyCodeArea) getCodeArea(mtb); 
 				changeCodeAreaLineNoThemeHelper(ac);
 				// 修改查找替换的样式如果有的话
 				changeFindReplacePaneBtnColor(tb);
@@ -810,6 +839,120 @@ public class SqlEditor {
 			codeArea.deleteText( codeArea.getSelection());
 		}
 	}
+	
+	
+	/*
+	 * 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况 1. 先在原始文本中找到sql的字符串, 替换为空白字符串,
+	 * 得到一个新文本 2. 在新文本中根据 ; 分割字符串, 得到每个分割出来的子串在文本中的区间 3. 根据区间, 在原始文本中 提炼出sql语句
+	 */
+	public static List<String> findSQLFromTxt(String text) {
+		String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
+		String patternString = "(?<STRING>" + STRING_PATTERN + ")";
+		Pattern PATTERN = Pattern.compile(patternString);
+		Matcher matcher = PATTERN.matcher(text);
+		String txtTmp = "";
+		int lastKwEnd = 0;
+		// 把匹配到的sql的字符串替换为对应长度的空白字符串, 得到一个和原始文本一样长度的新字符串
+		while (matcher.find()) {
+//			 String styleClass = matcher.group("STRING") != null ? "string" : null;
+			int start = matcher.start();
+			int end = matcher.end();
+			int len = end - start;
+			String space = createSpaceStr(len);
+			String tmp = text.substring(start, end);
+//			 logger.info("len = "+len+" ; tmp = " + tmp); 
+			txtTmp += text.substring(lastKwEnd, start) + space;
+			lastKwEnd = end;
+		}
+		if (lastKwEnd > 0) {
+			String txtEnd = text.substring(lastKwEnd, text.length());
+			txtTmp += txtEnd;
+		} else {
+			txtTmp = text;
+		}
+//		logger.info("txtTmp = " + txtTmp);
+
+		// TODO 在新字符上面, 提取字sql语句的区间
+		String str = txtTmp;
+		// 根据区间提炼出真正要执行的sql语句
+		List<String> sqls = new ArrayList<>();
+		if (str.contains(";")) {
+			List<MyRange> idxs = new ArrayList<>();
+			String[] all = str.split(";"); // 分割多个语句
+			if (all != null && all.length > 0) {
+				int ss = 0;
+				for (int i = 0; i < all.length; i++) {
+					String s = all[i];
+					int end = ss + s.length();
+					if (end > str.length()) {
+						end--;
+					}
+					MyRange mr = new MyRange(ss, end);
+					ss = end + 1;
+					idxs.add(mr);
+				}
+			}
+			for (MyRange mr : idxs) {
+				int s = mr.getStart();
+				int e = mr.getEnd();
+				String tmps = text.substring(s, e);
+				sqls.add(tmps);
+			}
+		} else {
+			sqls.add(text);
+		}
+
+		return sqls;
+	}
+	
+	private static String createSpaceStr(int len) {
+		String space = "";
+		for (int j = 0; j < len; j++) {
+			space += " ";
+		}
+		return space;
+	}
+	
+	
+	// 将注释部分转换为空格字符,保持字符串的长度
+		public static String trimCommentToSpace(String sql, String symbol) {
+			if (!sql.contains(symbol))
+				return sql;
+			// 在symbol前插入换行符, 之后就是对行的处理
+			String str = sql.replaceAll(symbol, "\n" + symbol);
+			if (str.contains("\r")) {
+				str = str.replace("\r", "");
+			}
+
+			String[] sa = str.split("\n");
+			String nstr = "";
+			if (sa != null && sa.length > 1) {
+				// 遍历行
+				for (int i = 0; i < sa.length; i++) {
+					String temp = sa[i];
+					// 如果不是以symbol开头的字符串就保持到nstr字符串
+					if (! StrUtils.beginWith(temp, symbol)) {
+						nstr += temp + "\n";
+					} else {
+						// 生成空白行的字符串
+//							String space = ""; 
+//							for(int j = 0 ; j < temp.length(); j++){
+//								space += " ";
+//							}
+						String space = createSpaceStr(temp.length());
+
+						nstr = nstr.substring(0, nstr.length() - 1);
+						nstr += space + "\n";
+					}
+				}
+			}
+			if ("".equals(nstr)) {
+				nstr = sql;
+			}
+//				return nstr.trim();
+			return nstr;
+		}
+
 	
 //	public static void codeAreaCtrlShiftLeft(KeyEvent e, CodeArea codeArea) {
 //		logger.info("向左移动光标"+e.getCode() ); 

@@ -4,8 +4,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.fxmisc.richtext.Caret.CaretVisibility;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -177,55 +175,15 @@ public class SqlCodeAreaHighLightingHelper {
 		} 
     	
     }  
-    public static void applyErrorHighlighting(int begin , int length , String str) {
+    public static void applyErrorHighlighting(CodeArea codeArea , int begin , int length , String str) {
     	
-    	CodeArea codeArea = SqlEditor.getCodeArea();
-    	
-//    	try {
-//    		String preTxt = codeArea.getText().substring(0, begin);
-//    		String sufTxt = codeArea.getText().substring(begin+ length );
-//    		StyleSpans<Collection<String>> highlighting  = findErrorWord( preTxt ,sufTxt, str); 
-//        	if(highlighting !=null) { 
-//        		Platform.runLater(() -> {
-//        			codeArea.setStyleSpans(0, highlighting);
-//        		});
-//        	}
-//        		
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			MyAlert.errorAlert(e.getMessage());
-//		} 
-       
-    	
-//    	codeArea.requestFocus();
-//    	codeArea.setFocusTraversable(true); 
-//    	codeArea.selectRange(begin, begin);  
-    	    StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
-	    	spansBuilder.add(Collections.singleton("errorword"), length);
-	    	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
-	    	codeArea.setStyleSpans(begin, highlighting); 
-    	Platform.runLater(() -> {
-//    		    StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
-//    	    	spansBuilder.add(Collections.singleton("errorword"), length);
-//    	    	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
-//    	    	codeArea.setStyleSpans(begin, highlighting); 
-    		
-    		
-//        	try {
-//        		String preTxt = codeArea.getText().substring(0, begin);
-//        		String sufTxt = codeArea.getText().substring(begin+ length );
-//        		StyleSpans<Collection<String>> highlighting  = findErrorWord( preTxt ,sufTxt, str); 
-//            	if(highlighting !=null) {
-//            		Platform.runLater(() -> {
-//            			codeArea.setStyleSpans(0, highlighting);
-//            		});
-//            	}            		
-//    		} catch (Exception e) {
-//    			e.printStackTrace();
-//    			MyAlert.errorAlert(e.getMessage());
-//    		} 
-    		
-		});
+//    	CodeArea codeArea = SqlEditor.getCodeArea();
+ 
+	    StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
+    	spansBuilder.add(Collections.singleton("errorword"), length);
+    	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
+    	codeArea.setStyleSpans(begin, highlighting); 
+    	 
      
     	
     }

@@ -6,9 +6,10 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.lib.tools.StrUtils;
+
 
 public class SqlCodeAreaProposeInput {
 	public static List<MenuItem> menuItems = new ArrayList<>();

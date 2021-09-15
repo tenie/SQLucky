@@ -40,7 +40,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.tenie</groupId>
-			<artifactId>SQLucky-plugin-sdk</artifactId>
+			<artifactId>SQLucky-sdk</artifactId>
 			<version>1.0</version>
 		</dependency>
 

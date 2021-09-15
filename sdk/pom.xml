@@ -8,10 +8,10 @@
 		  <artifactId>SQLucky-pom</artifactId>
 		  <version>1.0</version> 
 	</parent>
-	<artifactId>SQLucky-plugin-sdk</artifactId>
+	<artifactId>SQLucky-sdk</artifactId>
 	<packaging>jar</packaging>
 
-	<name>SQLucky-plugin-sdk</name>
+	<name>SQLucky-sdk</name>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

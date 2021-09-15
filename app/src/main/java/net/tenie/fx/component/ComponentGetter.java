@@ -25,6 +25,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -33,7 +34,7 @@ import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
-import net.tenie.lib.tools.StrUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ import java.util.Optional;
  */
 public final class ComponentGetter {
 	public static PopupFilter<ObservableList<StringProperty>, String> popupFirstNameFilter;
-	public static TabPane dataTab;
+	public static TabPane dataTabPane;
 	public static TabPane mainTabPane;
 	public static DataViewContainer dataView;
 	
@@ -89,7 +90,7 @@ public final class ComponentGetter {
 	
 	// 数据tab集合
 	public static ObservableList<Tab>  allDataTabs() {
-		return ComponentGetter.dataTab.getTabs();
+		return ComponentGetter.dataTabPane.getTabs();
 	}
 	
 //	public static String getFileEncode(String name) {
@@ -204,7 +205,7 @@ public final class ComponentGetter {
 	
 	// 获取当前数据表的Tab
 	public static Tab currentDataTab() {
-		Tab tab = dataTab.getSelectionModel().getSelectedItem();
+		Tab tab = dataTabPane.getSelectionModel().getSelectedItem();
 		return tab;
 	}
 	
@@ -217,17 +218,17 @@ public final class ComponentGetter {
 	}
 	//  获取当前数据表的Tab 中的 vbox
 	public static VBox currentDataVbox() {
-		Tab tab = dataTab.getSelectionModel().getSelectedItem();
+		Tab tab = dataTabPane.getSelectionModel().getSelectedItem();
 		VBox vb = (VBox) tab.getContent();
 		return vb;
 	}
 	
 	// 获取 当前table view 的控制面板
 	public static AnchorPane dataPane() {
-		if(   dataTab == null  
-		   || dataTab.getSelectionModel() == null
-		   || dataTab.getSelectionModel().getSelectedItem() == null) return null;  
-		Node vb =  dataTab.getSelectionModel().getSelectedItem().getContent();
+		if(   dataTabPane == null  
+		   || dataTabPane.getSelectionModel() == null
+		   || dataTabPane.getSelectionModel().getSelectedItem() == null) return null;  
+		Node vb =  dataTabPane.getSelectionModel().getSelectedItem().getContent();
 		if(vb != null) { 
 			VBox vbx = (VBox) vb;
 			AnchorPane fp = (AnchorPane) vbx.getChildren().get(0);
@@ -253,7 +254,7 @@ public final class ComponentGetter {
 	// 获取当前的表格
 	@SuppressWarnings("unchecked")
 	public static FilteredTableView<ObservableList<StringProperty>> dataTableView() {
-		VBox vb = (VBox) dataTab.getSelectionModel().getSelectedItem().getContent();
+		VBox vb = (VBox) dataTabPane.getSelectionModel().getSelectedItem().getContent();
 		FilteredTableView<ObservableList<StringProperty>> table = (FilteredTableView<ObservableList<StringProperty>>) vb
 				.getChildren().get(1);
 		return table;

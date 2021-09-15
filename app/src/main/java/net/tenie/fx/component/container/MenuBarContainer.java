@@ -17,6 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
@@ -27,7 +28,7 @@ import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
 import net.tenie.fx.window.ModalDialog;
-import net.tenie.lib.tools.StrUtils;
+
 
 /*   @author tenie */
 public class MenuBarContainer {
@@ -112,19 +113,19 @@ public class MenuBarContainer {
 		cce.setOnAction(value -> {
 //			SqlEditor.closeEditor();
 //			关闭数据显示tab页
-			Tab t = ComponentGetter.dataTab.getSelectionModel().getSelectedItem();
+			Tab t = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
 			if( t != null) {
 				// tab 名称
 				String title = CommonUtility.tabText(t);
-				ComponentGetter.dataTab.getTabs().remove(t); 
+				ComponentGetter.dataTabPane.getTabs().remove(t); 
 				//都关闭页, 隐藏下半窗体
-				int tabSize = ComponentGetter.dataTab.getTabs().size();
+				int tabSize = ComponentGetter.dataTabPane.getTabs().size();
 				if( tabSize == 0) {
 					CommonAction.hideBottom();
 				}else {
 					//选择最后一个
 					if( ConfigVal.EXEC_INFO_TITLE.equals(title) ) {
-						ComponentGetter.dataTab.getSelectionModel().select(tabSize -1 );
+						ComponentGetter.dataTabPane.getSelectionModel().select(tabSize -1 );
 					}
 					 
 				}

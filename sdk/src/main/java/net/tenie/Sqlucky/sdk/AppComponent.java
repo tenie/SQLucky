@@ -1,4 +1,4 @@
-package net.tenie.plugin.sdk;
+package net.tenie.Sqlucky.sdk;
 
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TabPane;
@@ -6,10 +6,10 @@ import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
 
 public interface AppComponent {
-	TabPane dataTab();
+	TabPane dataTabPane();
 	TabPane mainTabPane();
 	Stage primaryStage();
-	Accordion infoAccordion();
-	
+	Accordion infoAccordion();	
 	void addTitledPane(TitledPane tp);
+	void addIconBySvg(String name, String svg);
 }

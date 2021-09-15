@@ -13,6 +13,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
@@ -31,7 +32,7 @@ import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
 import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.window.MyAlert;
-import net.tenie.lib.tools.StrUtils;
+
 
 public class ButtonAction {
 	
@@ -238,7 +239,7 @@ public class ButtonAction {
 	    String connName = 	CacheTabView.getConnName(id);
 		if (conn != null) {
 			//TODO 关闭当前tab
-			var dataTab = ComponentGetter.dataTab;
+			var dataTab = ComponentGetter.dataTabPane;
 			int selidx = dataTab.getSelectionModel().getSelectedIndex(); 
 //			dataTab.getTabs().remove(selidx); 
 			CommonAction.clearDataTable(selidx);

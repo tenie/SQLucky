@@ -30,6 +30,8 @@ import net.tenie.lib.db.h2.SqlTextDao;
 
 public class MyTab extends Tab {
 	private ScriptPo scriptPo;
+	private HighLightingSqlCodeArea sqlCodeArea;
+	
 	
 	public MyTab() {
 		super();
@@ -37,12 +39,6 @@ public class MyTab extends Tab {
 
 	public MyTab(String TabName) {
 		super();
-//		scriptPo = new ScriptPo();
-//		scriptPo.setTitle(TabName);  
-		
-//		scriptPo 保存
-//		Connection conn , String title, String txt, String filename, String encode, int paragraph) {
-		
 		scriptPo = SqlTextDao.scriptArchive(TabName, ""	, "", "UTF-8", 0);
 		createMyTab();
 	}
@@ -67,8 +63,9 @@ public class MyTab extends Tab {
 		CommonUtility.setTabName(this, TabName);
 		// 添加到缓存
 		MainTabs.add(this);
-
-		StackPane pane = SqlEditor.SqlCodeArea();
+ 
+		sqlCodeArea = new HighLightingSqlCodeArea();
+		StackPane pane = sqlCodeArea.getCodeAreaPane();
 		VBox vbox = new VBox();
 		vbox.getChildren().add(pane);
 		VBox.setVgrow(pane, Priority.ALWAYS);
@@ -243,5 +240,13 @@ public class MyTab extends Tab {
 		this.scriptPo = scriptPo;
 	}
 
+	public HighLightingSqlCodeArea getSqlCodeArea() {
+		return sqlCodeArea;
+	}
 
+	public void setSqlCodeArea(HighLightingSqlCodeArea sqlCodeArea) {
+		this.sqlCodeArea = sqlCodeArea;
+	}
+
+	
 }

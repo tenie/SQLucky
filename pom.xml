@@ -5,7 +5,7 @@
   <version>1.0</version>
   <packaging>pom</packaging>
   <modules>
-	 <module>plugin-sdk</module>  
+	 <module>sdk</module>  
 	 <module>plugin/note</module> 
 	 <module>app</module>   
   </modules>

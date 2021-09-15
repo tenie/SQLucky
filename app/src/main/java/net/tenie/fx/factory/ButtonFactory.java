@@ -30,7 +30,7 @@ import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableDataDetail;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ButtonFactory {
 	public static  Map<String, Boolean> lockObj = new HashMap<>();

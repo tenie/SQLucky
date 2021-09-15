@@ -45,6 +45,7 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
@@ -59,7 +60,6 @@ import net.tenie.fx.component.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.component.MyAutoComplete;
 import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.SqlCodeAreaHighLightingHelper;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.MenuBarContainer;
@@ -76,7 +76,7 @@ import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.lib.tools.StrUtils;
+
 
 /*   @author tenie */
 public class CommonAction {
@@ -229,9 +229,9 @@ public class CommonAction {
 				var spo = mtab.getScriptPo();
 				String fp = spo.getFileName(); 
 				if (spo != null ) {
-					String sql = SqlEditor.getTabSQLText(t);
+					String sql = SqlEditor.getTabSQLText(mtab);
 					if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
-						CodeArea code = SqlEditor.getCodeArea(t);
+						CodeArea code = SqlEditor.getCodeArea(mtab);
 						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
 						String title =  spo.getTitle();
 						String encode = spo.getEncode();
@@ -338,7 +338,7 @@ public class CommonAction {
 			code.clear();
 			code.appendText(rs);
 		}
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		SqlEditor.currentSqlCodeAreaHighLighting();
 	}
 	
 	
@@ -359,8 +359,8 @@ public class CommonAction {
 			String rs = StrUtils.pressString(txt); //  SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
-		}
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		} 
+		SqlEditor.currentSqlCodeAreaHighLighting();
 	}
 	
 
@@ -378,7 +378,7 @@ public class CommonAction {
 		code.deleteText(start, end);
 		 
 		code.insertText(start, text.toUpperCase());
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		SqlEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	// 代码小写
@@ -394,8 +394,8 @@ public class CommonAction {
 		// 将原文本删除
 		code.deleteText(start, end);
 		 
-		code.insertText(start, text.toLowerCase());
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		code.insertText(start, text.toLowerCase()); 
+		SqlEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	// 驼峰命名转下划线
@@ -412,8 +412,8 @@ public class CommonAction {
 		code.deleteText(start, end);
 	 
 		text = StrUtils.CamelCaseUnderline(text);
-		code.insertText(start, text);
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		code.insertText(start, text); 
+		SqlEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	// 下划线 轉 驼峰命名
@@ -431,7 +431,7 @@ public class CommonAction {
 		// 插入 注释过的文本
 		text = StrUtils.underlineCaseCamel(text);
 		code.insertText(start, text);
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		SqlEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	public static void selectTextAddString() {
@@ -488,7 +488,7 @@ public class CommonAction {
 			// 插入 注释过的文本
 			code.insertText(start, valStr);
 		}
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		SqlEditor.currentSqlCodeAreaHighLighting();
 	}
 	// 添加tab符号
 	public static void add4Space() { 
@@ -590,7 +590,7 @@ public class CommonAction {
 		code.insertText(start, valStr);
 		
 		code.selectRange(start, start+valStr.length()); 
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		SqlEditor.currentSqlCodeAreaHighLighting();
 	}
 	
 
@@ -657,7 +657,7 @@ public class CommonAction {
 			// 插入 注释过的文本
 			code.insertText(start, valStr);
 		}
-		SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+		SqlEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	//TODO 打开sql文件
@@ -1005,7 +1005,7 @@ public class CommonAction {
 	public static List<ProcedureFieldPo> getProcedureFields(String ddl){
 		 List<ProcedureFieldPo> rs = new ArrayList<>();
 		 ddl = StrUtils.multiLineCommentToSpace(ddl);
-		 ddl = StrUtils.trimCommentToSpace(ddl, "--");
+		 ddl = SqlEditor.trimCommentToSpace(ddl, "--");
 		 // 给ddl分词, 找到过程名称后面的参数列表
 		 ddl = StrUtils.pressString(ddl).toUpperCase();
 		 if( procedureIsNoParameter(ddl) ) { // 没有参数直接返回
@@ -1437,11 +1437,13 @@ public class CommonAction {
 			sz = 10;
 		}
 		setFontSize(sz);
-		for(CodeArea code : SqlEditor.getAllCodeArea() ) {
+		for(MyTab mtb : SqlEditor.getAllgetMyTabs() ) {
+			var obj = mtb.getSqlCodeArea();
+			var code = obj.getCodeArea();
 			logger.info(code.getStyle());
 			String txt = code.getText();  
 			code.replaceText(0, txt.length(), txt);
-			SqlCodeAreaHighLightingHelper.applyHighlighting(code);
+			obj.highLighting();
 		}
 		
 		ConfigVal.FONT_SIZE = sz;
@@ -1451,7 +1453,7 @@ public class CommonAction {
 	
 	// 关闭 数据页, 清理缓存
 	public static void clearDataTable(Tab tb) {
-		TabPane tabPane = ComponentGetter.dataTab; 
+		TabPane tabPane = ComponentGetter.dataTabPane; 
 		long begintime = System.currentTimeMillis();
 		String idVal = tb.getId();
 		if (idVal != null) {
@@ -1469,7 +1471,7 @@ public class CommonAction {
 	}
 	
 	public static void clearDataTable(int tbIdx) {
-		TabPane tabPane = ComponentGetter.dataTab; 
+		TabPane tabPane = ComponentGetter.dataTabPane; 
 		var tb = tabPane.getTabs().get(tbIdx);
 		long begintime = System.currentTimeMillis();
 		String idVal = tb.getId();

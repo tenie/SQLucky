@@ -30,7 +30,7 @@ import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ScriptTreeContextMenu {
 //	public static List<MenuItem> menuItems = new ArrayList<>();

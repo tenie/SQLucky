@@ -1,0 +1,284 @@
+package net.tenie.plugin.note.component;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+import com.jfoenix.controls.JFXButton;
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
+import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.PropertyPo.ScriptPo;
+import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.component.TreeItem.ConnItemContainer;
+import net.tenie.fx.config.ConfigVal;
+import net.tenie.fx.factory.ScriptTabNodeCellFactory;
+import net.tenie.fx.factory.ScriptTreeContextMenu;
+import net.tenie.fx.utility.CommonUtility;
+import net.tenie.fx.window.ModalDialog;
+import net.tenie.lib.db.h2.H2Db;
+import net.tenie.lib.db.h2.H2SqlTextSavePo;
+import net.tenie.lib.db.h2.SqlTextDao;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+
+/*   @author tenie */
+public class NoteTree {
+
+	public static TreeView<NoteTab> ScriptTreeView; 
+	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
+	private  ScriptTreeContextMenu  menu;
+	
+	public NoteTree() {
+		 createScriptTreeView();
+	}
+
+	// db节点view
+	public TreeView<NoteTab> createScriptTreeView() {
+		var rootNode = new TreeItem<>(new NoteTab());
+		TreeView<NoteTab> treeView = new TreeView<>(rootNode);
+		treeView.getStyleClass().add("my-tag");
+		treeView.setShowRoot(false); 
+		// 展示连接
+		if (rootNode.getChildren().size() > 0)
+			treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+		// 双击
+		treeView.setOnMouseClicked(e -> {
+			treeViewDoubleClick(e);
+		});
+		// 右键菜单
+		menu = new ScriptTreeContextMenu(rootNode );
+		ContextMenu	contextMenu = menu.getContextMenu(); 
+		treeView.setContextMenu(contextMenu);
+		// 选中监听事件
+//		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
+		treeView.getSelectionModel().select(rootNode);
+
+		ScriptTreeView = treeView;
+
+		// 显示设置
+		treeView.setCellFactory(new ScriptTabNodeCellFactory());
+		 
+
+		recoverScriptNode(rootNode);
+		return treeView;
+	}
+	
+	
+	// 恢复数据中保存的连接数据
+	public static void recoverScriptNode(TreeItem<NoteTab> rootNode) {
+		List<ScriptPo> datas ;
+		List<H2SqlTextSavePo> ls;
+		String SELECT_PANE ;
+		try {
+			Connection H2conn = H2Db.getConn();
+			ls = SqlTextDao.read(H2conn);
+			SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
+			datas = SqlTextDao.readScriptPo(H2conn);
+		} finally {
+			H2Db.closeConn();
+		}
+		
+		List<Integer> ids = new ArrayList<>();
+		for (H2SqlTextSavePo sqlpo : ls) {
+			ids.add(sqlpo.getScriptId());
+		}
+
+		if (datas != null && datas.size() > 0) {
+			ConfigVal.pageSize = datas.size();
+			for (ScriptPo po : datas) {
+				NoteTab tb = new NoteTab(po);
+				TreeItem<NoteTab> item = new TreeItem<>(tb);
+				rootNode.getChildren().add(item);
+				// 恢复代码编辑框
+				if (ids.contains(po.getId())) {
+					SqlEditor.myTabPaneAddMyTab(tb);
+				}
+			}
+
+		}
+
+		int ts = ComponentGetter.mainTabPane.getTabs().size();
+		// 初始化上次选中页面
+		if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) { 
+			int sps = Integer.valueOf(SELECT_PANE);
+			if (ts > sps) {
+				ComponentGetter.mainTabPane.getSelectionModel().select(sps);
+			}  
+		}	
+		// 没有tab被添加, 添加一新的
+		if (ts == 0) {
+			SqlEditor.addCodeEmptyTabMethod();
+		}
+
+	}
+
+	// 所有连接节点
+	public static ObservableList<TreeItem<NoteTab>> allTreeItem() {
+		ObservableList<TreeItem<NoteTab>> val = ScriptTreeView.getRoot().getChildren();
+		return val;
+	}
+
+	   
+
+	// 获取当前选中的节点
+	public static TreeItem<NoteTab> getScriptViewCurrentItem() {
+		TreeItem<NoteTab> ctt = ScriptTreeView.getSelectionModel().getSelectedItem();
+		return ctt;
+	}
+
+	 
+
+	// 给root节点加元素 
+	public static void treeRootAddItem(TreeItem<NoteTab> item) { 
+		TreeItem<NoteTab> rootNode = ScriptTreeView.getRoot();
+		rootNode.getChildren().add(item);		
+	}
+	// 给root节点加元素 
+		public static void treeRootAddItem(NoteTab  mytab) {
+			TreeItem<NoteTab> item = new TreeItem<NoteTab> (mytab); 
+			treeRootAddItem(item);
+		}
+
+	// tree view 双击事件
+	public void treeViewDoubleClick(MouseEvent mouseEvent) { 
+		if (mouseEvent.getClickCount() == 2) {
+			openMyTab();
+		}
+	}
+	
+	public static void openMyTab() {
+		TreeItem<NoteTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
+		var mytab = item.getValue(); 
+		if(mytab != null && mytab.getScriptPo() != null) {
+			SqlEditor.myTabPaneAddMyTab(mytab);
+		}
+	}
+	 
+	public static  List<ScriptPo>  allScriptPo() {
+		 ObservableList<TreeItem<NoteTab>> ls = allTreeItem();
+		 List<ScriptPo> list = new ArrayList<>();
+		 for(var ti: ls) {
+			 var mytb = ti.getValue();
+			 list.add(mytb.getScriptPo());
+		 }
+		 
+		 return list;
+	}
+	public static  List<NoteTab>  allMyTab() {
+		 ObservableList<TreeItem<NoteTab>> ls = allTreeItem();
+		 List<NoteTab> list = new ArrayList<>();
+		 for(var ti: ls) {
+			 var mytb = ti.getValue();
+			 list.add(mytb);
+		 } 
+		 return list;
+	}
+
+	
+	public static NoteTab findMyTabByScriptPo(ScriptPo scpo) {
+		 ObservableList<TreeItem<NoteTab>> ls = allTreeItem();
+		 for(var ti: ls) {
+			 var mytb = ti.getValue();
+			 var tmp =  mytb.getScriptPo();
+			 if(tmp.equals(scpo)) {
+				 return mytb;
+			 }
+					 
+		 } 
+		 return null;
+	}
+	
+	// 关闭一个脚本 Node cell
+	public static void closeAction(TreeItem<NoteTab> rootNode) {
+
+		ObservableList<TreeItem<NoteTab>>  myTabItemList = rootNode.getChildren();
+		TreeItem<NoteTab> ctt = NoteTree.ScriptTreeView.getSelectionModel().getSelectedItem();
+		NoteTab tb = ctt.getValue();
+		
+		String title = CommonUtility.tabText(tb);
+		String sql = SqlEditor.getTabSQLText(tb);
+		if (title.endsWith("*") && sql.trim().length() > 0) {
+			// 是否保存
+			final Stage stage = new Stage();
+
+			// 1 保存
+			JFXButton okbtn = new JFXButton("Yes");
+			okbtn.getStyleClass().add("myAlertBtn");
+			okbtn.setOnAction(value -> {
+				CommonAction.saveSqlAction(tb);
+				removeNode(myTabItemList, ctt, tb);
+				stage.close();
+			});
+
+			// 2 不保存
+			JFXButton Nobtn = new JFXButton("No");
+			Nobtn.setOnAction(value -> {
+				removeNode(myTabItemList, ctt, tb);
+				stage.close();
+			});
+			// 取消
+			JFXButton cancelbtn = new JFXButton("Cancel"); 
+			cancelbtn.setOnAction(value -> { 
+				stage.close();
+			});
+
+			List<Node> btns = new ArrayList<>();
+
+			
+			
+			btns.add(cancelbtn);
+			btns.add(Nobtn);
+			btns.add(okbtn);
+
+			ModalDialog.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns);
+		}else {
+			removeNode(myTabItemList, ctt, tb);
+		}
+		
+
+	}
+	
+	// 从ScriptTabTree 中移除一个节点
+	public static void removeNode(ObservableList<TreeItem<NoteTab>>  myTabItemList, TreeItem<NoteTab> ctt, NoteTab tb ) {
+		try { 
+			
+			var conn = H2Db.getConn();
+			if (SqlEditor.myTabPane.getTabs().contains(tb)) {
+				SqlEditor.myTabPane.getTabs().remove(tb);
+			}
+			myTabItemList.remove(ctt);
+
+			var scpo = tb.getScriptPo();
+			SqlTextDao.deleteScriptArchive(conn, scpo);
+		} finally {
+			H2Db.closeConn();
+		}
+	}
+	
+	// treeView 右键菜单属性设置
+//		public   ChangeListener<TreeItem<MyTab>> treeViewContextMenu(TreeView<MyTab> treeView) {
+//			return new ChangeListener<TreeItem<MyTab>>() {
+//				@Override
+//				public void changed(ObservableValue<? extends TreeItem<MyTab>> observable,
+//						TreeItem<MyTab> oldValue, TreeItem<MyTab> newValue) {
+//					
+//				 
+//					 
+//					
+//					
+////					if(! menu.getRefresh().isDisable()) {
+////						TreeItem<TreeNodePo>  connItem = ConnItem(newValue);
+////						menu.setRefreshAction(connItem);
+////					}
+//
+//				}
+//			};
+//		}
+ 
+}

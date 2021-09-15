@@ -14,10 +14,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.lib.tools.StrUtils;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -31,17 +32,16 @@ import org.fxmisc.richtext.CodeArea;
 public class HighLightingSqlCodeArea {
 	private static Logger logger = LogManager.getLogger(HighLightingSqlCodeArea.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
-
+	private StackPane codeAreaPane;
 	private MyCodeArea codeArea;
 	private ExecutorService executor; 
 	private ChangeListener<String>  cl;
 	
 
-
-	public StackPane getObj(String text, boolean editable) {
+	public HighLightingSqlCodeArea() {
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new MyCodeArea();
-	    cl = CommonListener.codetxtChange(codeArea); 
+	    cl = CommonListener.codetxtChange(this); 
 	    // 行号主题色
 	    SqlEditor.changeCodeAreaLineNoThemeHelper(codeArea); 
 	    
@@ -124,11 +124,7 @@ public class HighLightingSqlCodeArea {
 		//TODO 输入事件
 		codeArea.textProperty().addListener( cl );	 
 		codeArea.replaceText(0, 0, sampleCode);
-		if (text != null) codeArea.appendText(text);
-		StackPane sp = new StackPane(new VirtualizedScrollPane<>(codeArea));
-		sp.getStyleClass().add("my-tag");
-		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
-		codeArea.setEditable(editable);
+		
 		 
 	    // 中午输入法显示问题
 		codeArea.setInputMethodRequests(new InputMethodRequestsObject(codeArea));
@@ -186,41 +182,52 @@ public class HighLightingSqlCodeArea {
 				if (isContinue) {
 					if (strSz > 0 && !"*".equals(trimStr)) {
 						// 查找选中的字符
-						SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str);
-					} else {
-//			    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
-					}
+						highLighting( str);
+					} 
 				}
 
 			}
 
 		});
 		
-
-
-		// 选中事件
-//		codeArea.selectedTextProperty().addListener(new ChangeListener<String>() {
-//		    @Override
-//		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-//		    	
-//		    	
-//		    	String str = newValue.trim();
-//		    	if(str.length() > 0) {
-//		    		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, ); 
-//		    	}else {
-//		    		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
-//		    	}
-//		    	
-//		    
-//		    }
-//		});
+	}
+	
+	public StackPane getCodeAreaPane() {
+		if( codeAreaPane == null) { 
+			return getCodeAreaPane(null, true);
+		}else {
+			return codeAreaPane;
+		}
+	}
+	public StackPane getCodeAreaPane(String text, boolean editable) {
+		if( codeAreaPane == null) { 
+			codeAreaPane = new StackPane(new VirtualizedScrollPane<>(codeArea));
+			codeAreaPane.getStyleClass().add("my-tag");
+		}
 		
-		return sp;
+		if (text != null) {
+			codeArea.appendText(text); 
+			highLighting();
+		}
+		codeArea.setEditable(editable);
+		
+		return codeAreaPane;
+	}
+	
+	
+	public void highLighting(String str) {
+		SqlCodeAreaHighLightingHelper.applyFindWordHighlighting(codeArea, str);
+	}
+	public void highLighting() {
+		SqlCodeAreaHighLightingHelper.applyHighlighting(codeArea);
+	}
+	
+	public void errorHighLighting( int begin , int length , String str) {
+		SqlCodeAreaHighLightingHelper.applyErrorHighlighting(codeArea , begin ,   length ,  str);
 	}
 
-	public StackPane getObj() {
-		return getObj(null, true);
-	}
+	
+	
 
 	public void stop() {
 		executor.shutdown();

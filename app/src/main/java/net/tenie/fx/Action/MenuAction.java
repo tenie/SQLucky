@@ -5,11 +5,12 @@ import java.util.function.Consumer;
 
 import com.jfoenix.controls.JFXButton;
 
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.MyAlert;
-import net.tenie.lib.tools.StrUtils;
+
 
 public class MenuAction {
 	static final int DROP_COLUMN = 1;

@@ -2,7 +2,7 @@ package net.tenie.fx.factory;
 
 import java.util.ServiceLoader;
 
-import net.tenie.plugin.sdk.PluginDelegate;
+import net.tenie.Sqlucky.sdk.PluginDelegate;
 
 public class ServiceLoad {
 	public static void myLoader(){

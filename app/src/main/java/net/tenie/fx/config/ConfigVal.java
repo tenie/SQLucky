@@ -1,17 +1,8 @@
 package net.tenie.fx.config;
 
-import java.io.File;
-import java.nio.file.Paths;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
-
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.SqlEditor;
-import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.tools.StrUtils;
+ 
 
 /*   @author tenie */
 public class ConfigVal {

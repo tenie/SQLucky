@@ -32,7 +32,7 @@ import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.config.CommonConst;
 import net.tenie.fx.config.ConfigVal;
 import net.tenie.fx.utility.CommonUtility;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
 public class SelectDao {

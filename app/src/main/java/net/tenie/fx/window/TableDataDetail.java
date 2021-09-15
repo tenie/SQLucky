@@ -26,7 +26,7 @@ import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.ComponentGetter;
 import net.tenie.fx.component.ImageViewGenerator;
 import net.tenie.fx.dao.SelectDao;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   
  * 行数据 显示窗口

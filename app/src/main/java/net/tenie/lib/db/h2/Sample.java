@@ -13,7 +13,7 @@ import java.util.List;
 import net.tenie.fx.PropertyPo.TableFieldPo;
 import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class Sample
 {

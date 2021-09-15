@@ -23,7 +23,7 @@ import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.component.ComponentGetter;
-import net.tenie.lib.tools.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ProcedureExecuteWindow {
 	 private final ObservableList<Procedure> data  ;

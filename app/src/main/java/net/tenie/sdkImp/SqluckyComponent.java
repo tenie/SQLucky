@@ -4,38 +4,44 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
-import net.tenie.plugin.sdk.AppComponent;
+import net.tenie.Sqlucky.sdk.AppComponent;
+import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.ImageViewGenerator; 
 
 public class SqluckyComponent implements AppComponent {
 
 	@Override
-	public TabPane dataTab() {
-		// TODO Auto-generated method stub
-		return null;
+	public TabPane dataTabPane() { 
+		return ComponentGetter.dataTabPane;
 	}
 
 	@Override
 	public TabPane mainTabPane() {
-		// TODO Auto-generated method stub
-		return null;
+		return ComponentGetter.mainTabPane;
 	}
 
 	@Override
 	public Stage primaryStage() {
-		// TODO Auto-generated method stub
-		return null;
+		 
+		return ComponentGetter.primaryStage;
 	}
 
 	@Override
-	public Accordion infoAccordion() {
-		// TODO Auto-generated method stub
-		return null;
+	public Accordion infoAccordion() { 
+		return  ComponentGetter.infoAccordion;
 	}
 
 	@Override
 	public void addTitledPane(TitledPane tp) {
-		// TODO Auto-generated method stub
-		
+		Accordion ad = ComponentGetter.infoAccordion;
+		if(ad != null) {
+			ad.getPanes().add(tp);
+		} 
+	}
+
+	@Override
+	public void addIconBySvg(String name, String svg) {
+		ImageViewGenerator.addSvgStr(name, svg);		
 	}
 
 }

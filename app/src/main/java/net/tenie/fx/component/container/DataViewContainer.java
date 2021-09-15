@@ -1,45 +1,23 @@
 package net.tenie.fx.component.container;
 
-import java.util.HashMap;
-import java.util.List;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
-import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
-import javafx.scene.control.TableView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
-import net.tenie.fx.Cache.CacheTabView;
-//import net.tenie.fx.PropertyPo.CacheTableDate;
-//import net.tenie.fx.PropertyPo.DataTabDataPo;
-import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.MyTooltipTool;
-import net.tenie.fx.config.ConfigVal;
-import net.tenie.fx.factory.ButtonFactory;
-import net.tenie.fx.utility.CommonUtility;
 import net.tenie.fx.utility.DraggingTabPaneSupport;
 import net.tenie.fx.window.TableDataDetail;
-import net.tenie.lib.tools.StrUtils;
 
 /*   
  * 展示(数据, ddl等)面板的容器
@@ -60,7 +38,7 @@ public class DataViewContainer {
 		VBox.setVgrow(dataView, Priority.ALWAYS);
 		HBox.setHgrow(TabPanContainer, Priority.ALWAYS);
 
-		ComponentGetter.dataTab = dataView;
+		ComponentGetter.dataTabPane = dataView;
 		DraggingTabPaneSupport support2 = new DraggingTabPaneSupport();
 		support2.addSupport(dataView);
 	}
