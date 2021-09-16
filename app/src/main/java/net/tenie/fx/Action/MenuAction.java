@@ -2,14 +2,11 @@ package net.tenie.fx.Action;
 
 import java.sql.Connection;
 import java.util.function.Consumer;
-
-import com.jfoenix.controls.JFXButton;
-
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
-import net.tenie.fx.component.AllButtons;
+import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.window.ModalDialog;
-import net.tenie.fx.window.MyAlert;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 
 
 public class MenuAction {
@@ -35,7 +32,7 @@ public class MenuAction {
 	
 	}
 	public static void addNewColumn() { 
-		RsVal rv = CommonAction.tableInfo();
+		RsVal rv = DataViewTab.tableInfo();
 		Consumer< String >  caller = x ->{
 			if(StrUtils.isNullOrEmpty(x.trim())) return;
 			RsVal rv2= exportSQL(ADD_COLUMN, x);
@@ -73,7 +70,7 @@ public class MenuAction {
 	}
 	// 更新表中字段的值
 	public static void updateTableColumn(String colname) { 
-		RsVal rv = CommonAction.tableInfo();
+		RsVal rv = DataViewTab.tableInfo();
 		String sql = "UPDATE " + rv.tableName + " SET " + colname + " = " ;
 		Consumer< String >  caller = x ->{
 			if(StrUtils.isNullOrEmpty(x.trim())) return;
@@ -85,7 +82,7 @@ public class MenuAction {
 	}
 	// 更新查询结果中字段的值
 	public static void updateCurrentColumn(String colname, int colIdx) { 
-		RsVal rv = CommonAction.tableInfo();
+		RsVal rv = DataViewTab.tableInfo();
 		Consumer< String >  caller = x ->{
 			if(StrUtils.isNullOrEmpty(x.trim())) return;
 			ButtonAction.updateAllColumn(colIdx, x);
@@ -95,7 +92,7 @@ public class MenuAction {
 	
 	// 更新选中数据的字段的值
 	public static void updateSelectColumn(String colname, int colIdx) { 
-		RsVal rv = CommonAction.tableInfo();
+		RsVal rv = DataViewTab.tableInfo();
 		Consumer< String >  caller = x ->{
 			if(StrUtils.isNullOrEmpty(x.trim())) return;
 			ButtonAction.updateSelectedDataColumn(colIdx, x);
@@ -137,7 +134,7 @@ public class MenuAction {
 	
 	}
 	private static RsVal exportSQL(int ty, String colname) {
-		RsVal rv = CommonAction.tableInfo();
+		RsVal rv = DataViewTab.tableInfo();
 		return exportSQL(ty, colname, rv); 
 	}
 	

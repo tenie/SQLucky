@@ -13,8 +13,8 @@ import javafx.scene.control.MenuItem;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.MyPopupNumberFilter;
 
@@ -128,7 +128,7 @@ public class MenuFactory {
 		
 		cm.getItems().addAll(filter, miActive, copyColData,   dropCol, alterColumn, addColumn, updateMenu);
 		cm.setOnShowing(e->{
-			ObservableList<ObservableList<StringProperty>> alls = ComponentGetter.dataTableViewSelectedItems();
+			ObservableList<ObservableList<StringProperty>> alls = DataViewTab.dataTableViewSelectedItems();
 			if( alls.size() == 0) {
 				updateSelectColumn.setDisable(true);
 			}else {
@@ -198,41 +198,7 @@ public class MenuFactory {
 //		}
 	
 	
-	//行号 右键菜单
-	public static ContextMenu CreateLineNoMenu(List<String> lineNoList , Label lineNo) {
-			ContextMenu contextMenu = new ContextMenu();
 
-			MenuItem add = new MenuItem("Add/Remove Bookmark");
-			add.setOnAction(e -> { 
-				if(lineNoList.contains(lineNo.getText())) {
-					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("NULL",12));
-					lineNoList.remove(lineNo.getText());
-				}else {
-					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right", 12));
-					lineNoList.add(lineNo.getText());
-				} 
-				
-			});
-			add.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right"));
-
-			MenuItem next = new MenuItem("Next");
-			next.setOnAction(e->{
-				ButtonAction.nextBookmark(true);
-			});
-			next.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-down"));
-
-			MenuItem previous = new MenuItem("Previous");
-			previous.setOnAction(e->{
-				ButtonAction.nextBookmark(false);
-			});
-			previous.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-up"));
-
-			 
-
-			contextMenu.getItems().addAll(add, next, previous);
-
-			return contextMenu;
-		}
 	
 	
 	

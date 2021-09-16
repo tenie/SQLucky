@@ -88,8 +88,7 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.api.version}</version>
 		</dependency>
-
-		<!-- 数据库 JDBC -->  
+ 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
@@ -111,14 +110,21 @@
 
 	<build>
 		<plugins> 
+			<!-- 编译插件, 指定编译版本, 和编译时参数 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<release>${maven.compiler.release}</release> 
+					<!-- 指定编译版本 -->
+					<release>${maven.compiler.release}</release>
+					<!-- 编译时参数 --> 
+					<compilerArgs>
+						<arg>--add-exports</arg>
+						<arg>javafx.graphics/com.sun.javafx.application=SQLucky.sdk</arg>
+					</compilerArgs>
 				</configuration>
-			</plugin> 
+			</plugin>
 
 		</plugins>
 	</build>

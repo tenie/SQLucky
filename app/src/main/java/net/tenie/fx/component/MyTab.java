@@ -20,7 +20,7 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.PropertyPo.ScriptPo;
 import net.tenie.fx.component.container.ScriptTabTree;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
 import net.tenie.fx.config.MainTabs;
@@ -30,7 +30,7 @@ import net.tenie.lib.db.h2.SqlTextDao;
 
 public class MyTab extends Tab {
 	private ScriptPo scriptPo;
-	private HighLightingSqlCodeArea sqlCodeArea;
+	private HighLightingCodeArea sqlCodeArea;
 	
 	
 	public MyTab() {
@@ -63,8 +63,12 @@ public class MyTab extends Tab {
 		CommonUtility.setTabName(this, TabName);
 		// 添加到缓存
 		MainTabs.add(this);
- 
-		sqlCodeArea = new HighLightingSqlCodeArea();
+		MyAutoComplete myAuto = new MyAutoComplete();
+		sqlCodeArea = new HighLightingCodeArea(myAuto);
+//		右键菜单
+		HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(sqlCodeArea);  
+		sqlCodeArea.setContextMenu(cm);
+		
 		StackPane pane = sqlCodeArea.getCodeAreaPane();
 		VBox vbox = new VBox();
 		vbox.getChildren().add(pane);
@@ -240,11 +244,11 @@ public class MyTab extends Tab {
 		this.scriptPo = scriptPo;
 	}
 
-	public HighLightingSqlCodeArea getSqlCodeArea() {
+	public HighLightingCodeArea getSqlCodeArea() {
 		return sqlCodeArea;
 	}
 
-	public void setSqlCodeArea(HighLightingSqlCodeArea sqlCodeArea) {
+	public void setSqlCodeArea(HighLightingCodeArea sqlCodeArea) {
 		this.sqlCodeArea = sqlCodeArea;
 	}
 

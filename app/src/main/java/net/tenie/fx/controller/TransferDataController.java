@@ -41,17 +41,17 @@ import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.HighLightingSqlCodeArea;
-import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.MyCodeArea;
-import net.tenie.fx.component.SqlEditor;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.fx.component.HighLightingCodeArea;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
+import net.tenie.fx.component.container.DBinfoTree;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.window.MyAlert;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportDDL;
 
@@ -275,7 +275,7 @@ public class TransferDataController implements Initializable {
 		filterTxtInitialize();
 		setGraphicAndCss(); 
 //		spCode = SqlEditor.SqlCodeArea(); 
-		var sqlCodeArea = new HighLightingSqlCodeArea();
+		var sqlCodeArea = new HighLightingCodeArea(null);
 		spCode  = sqlCodeArea.getCodeAreaPane();
 		CodeArea = sqlCodeArea.getCodeArea();
 		setAction();  
@@ -317,7 +317,7 @@ public class TransferDataController implements Initializable {
 					}
 					
 					if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
-						TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
+						TreeItem<TreeNodePo> schemaNode = DBinfoTree.getSchemaNode(dbname, schename);
 
 						addNodeHelper(schemaNode, TABLE);
 					}
@@ -337,7 +337,7 @@ public class TransferDataController implements Initializable {
 						schename = soSC.getValue().getText();
 					}
 					if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
-						TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
+						TreeItem<TreeNodePo> schemaNode = DBinfoTree.getSchemaNode(dbname, schename);
 						
 						addNodeHelper(schemaNode, TABLE);
 					}
@@ -625,7 +625,7 @@ public class TransferDataController implements Initializable {
 	    ObservableList<TreeItem<TreeNodePo> > temp = FXCollections.observableArrayList();
 	    ObservableList<TreeItem<TreeNodePo> > newVal = FXCollections.observableArrayList();
 	    
-	    TreeItem<TreeNodePo>  connNode = ComponentGetter.getConnNode(dbName);
+	    TreeItem<TreeNodePo>  connNode = DBinfoTree.getConnNode(dbName);
 	    if(connNode !=null) {
 	    	if(connNode.getChildren().size() > 0) {
 	    		temp = connNode.getChildren().get(0).getChildren();
@@ -678,7 +678,7 @@ public class TransferDataController implements Initializable {
 				String dbname = soDB.getValue().getText();
 				String schename = soSC.getValue().getText();
 				if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
-					TreeItem<TreeNodePo> schemaNode = ComponentGetter.getSchemaNode(dbname, schename);
+					TreeItem<TreeNodePo> schemaNode = DBinfoTree.getSchemaNode(dbname, schename);
 					
 					addNodeHelper(schemaNode, nodeType);
 				}

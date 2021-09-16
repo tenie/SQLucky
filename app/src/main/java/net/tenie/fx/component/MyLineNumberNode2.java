@@ -1,48 +1,48 @@
 package net.tenie.fx.component;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.IntFunction;
-
-import org.fxmisc.richtext.GenericStyledArea;
+import org.fxmisc.richtext.CodeArea;
 import org.reactfx.collection.LiveList;
 import org.reactfx.value.Val;
-
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.IndexRange;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
-import net.tenie.fx.factory.MenuFactory;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
-/*   @author tenie */
 /**
  *  代码行号
  * @author tenie
  *
  */
-public class MyLineNumberNode implements IntFunction<Node> {
+public class MyLineNumberNode2 implements IntFunction<Node> {
 
-	private GenericStyledArea<?, ?, ?> area;
+	private MyCodeArea  area;
 	private static final Insets DEFAULT_INSETS = new Insets(0.0, 5.0, 0.0, 5.0);
 	private static   Paint DEFAULT_TEXT_FILL = Color.web("#606366");
 	private static final Font DEFAULT_FONT = Font.font("monospace", FontPosture.ITALIC, 13);
 	private static   Background DEFAULT_BACKGROUND = new Background(
 			new BackgroundFill(Color.web("#313335"), null, null));
-	public static MyLineNumberNode get(GenericStyledArea<?, ?, ?> area, String textcolor, String backgroundcolor) {
+	public static MyLineNumberNode2 get(CodeArea  area, String textcolor, String backgroundcolor) {
 		DEFAULT_TEXT_FILL = Color.web(textcolor);
 		DEFAULT_BACKGROUND  = new Background( new BackgroundFill(Color.web(backgroundcolor ), null, null));
 		return get(area, digits -> "%1$" + digits + "s");
 	}
 	
-	public static MyLineNumberNode get(GenericStyledArea<?, ?, ?> area, String textcolor, String backgroundcolor, List<String> lines) {
+	public static MyLineNumberNode2 get(CodeArea  area, String textcolor, String backgroundcolor, List<String> lines) {
 		DEFAULT_TEXT_FILL = Color.web(textcolor);
 		DEFAULT_BACKGROUND  = new Background( new BackgroundFill(Color.web(backgroundcolor ), null, null));
 		if(lines !=null) {	
@@ -57,11 +57,11 @@ public class MyLineNumberNode implements IntFunction<Node> {
 //		return get(area, digits -> "%1$" + digits + "s");
 //	}
 
-	public static  MyLineNumberNode get(GenericStyledArea<?, ?, ?> area, IntFunction<String> format) {
-		return new MyLineNumberNode(area, format);
+	public static  MyLineNumberNode2 get(CodeArea area, IntFunction<String> format) {
+		return new MyLineNumberNode2(area, format);
 	}
-	public static  MyLineNumberNode get(GenericStyledArea<?, ?, ?> area, IntFunction<String> format, List<String> lines ) {
-		return new MyLineNumberNode(area, format, lines);
+	public static  MyLineNumberNode2 get(CodeArea area, IntFunction<String> format, List<String> lines ) {
+		return new MyLineNumberNode2(area, format, lines);
 	}
 
 	private final Val<Integer> nParagraphs;
@@ -76,17 +76,17 @@ public class MyLineNumberNode implements IntFunction<Node> {
 	}
 	
 
-	private MyLineNumberNode(GenericStyledArea<?, ?, ?> area, IntFunction<String> format , List<String> lines) {
+	private MyLineNumberNode2(CodeArea area, IntFunction<String> format , List<String> lines) {
 		nParagraphs = LiveList.sizeOf(area.getParagraphs());
 		this.format = format;
-		this.area = area;
+		this.area = (MyCodeArea) area;
 		this.lineNoList = lines;
 	}
 	
-	private MyLineNumberNode(GenericStyledArea<?, ?, ?> area, IntFunction<String> format) {
+	private MyLineNumberNode2(CodeArea area, IntFunction<String> format) {
 		nParagraphs = LiveList.sizeOf(area.getParagraphs());
 		this.format = format;
-		this.area = area;
+		this.area = (MyCodeArea) area;
 	}
 	
 
@@ -103,7 +103,7 @@ public class MyLineNumberNode implements IntFunction<Node> {
 		lineNo.getStyleClass().add("myLineNumberlineno");
 //		lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("NULL"));
 		
-		lineNo.setContextMenu( MenuFactory.CreateLineNoMenu(lineNoList, lineNo) );
+		lineNo.setContextMenu(  CreateLineNoMenu(lineNoList, lineNo) );
 		lineNo.setOnMouseClicked( mouseEvent -> {
 			//TODO 单击行号, 选中当前行
 			if (mouseEvent.getClickCount() == 1) {
@@ -148,5 +148,83 @@ public class MyLineNumberNode implements IntFunction<Node> {
 		int digits = (int) Math.floor(Math.log10(max)) + 1;
 		return String.format(format.apply(digits), x);
 	}
+	//行号 右键菜单
+	public   ContextMenu CreateLineNoMenu(List<String> lineNoList , Label lineNo) {
+			ContextMenu contextMenu = new ContextMenu();
 
+			MenuItem add = new MenuItem("Add/Remove Bookmark");
+			add.setOnAction(e -> { 
+				if(lineNoList.contains(lineNo.getText())) {
+					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("NULL",12));
+					lineNoList.remove(lineNo.getText());
+				}else {
+					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right", 12));
+					lineNoList.add(lineNo.getText());
+				} 
+				
+			});
+			add.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right"));
+
+			MenuItem next = new MenuItem("Next");
+			next.setOnAction(e->{
+				nextBookmark(true);
+			});
+			next.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-down"));
+
+			MenuItem previous = new MenuItem("Previous");
+			previous.setOnAction(e->{
+				nextBookmark(false);
+			});
+			previous.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-up"));
+
+			 
+
+			contextMenu.getItems().addAll(add, next, previous);
+
+			return contextMenu;
+		}
+
+	/**
+	 * bookmark next
+	 * @param isNext true: 从上往下找
+	 */
+	public   void nextBookmark( boolean isNext) {
+		  
+		MyCodeArea codeArea =     area; // SqlEditor.getCodeArea();  
+		int idx = codeArea.getCurrentParagraph(); // 获取当前行号
+		List<String> strs = codeArea.getMylineNumber().getLineNoList();
+		
+		
+		int moveto = -1;
+		if(strs !=null && strs.size() > 0) {
+			List<Integer> rs = StrUtils.StrListToIntList(strs);
+			if(! isNext) {
+				rs.sort(Comparator.comparing(Integer::intValue).reversed()); 
+			} 
+			moveto = rs.get(0) - 1;
+			for(Integer v : rs) {
+				int i = v - 1;
+				
+				if(isNext) {
+					if(idx < i ) {
+						moveto = i ; 
+						break;
+					}
+				}else {
+					if(idx > i ) {
+						moveto = i ; 
+						break;
+					}
+				}
+				
+				
+			}
+		}
+		if(moveto > -1 ) {
+			codeArea.moveTo(moveto, 0);
+			codeArea.showParagraphAtTop(moveto < 10 ? 0 : (moveto - 9));
+		}
+	
+	}
 }
+

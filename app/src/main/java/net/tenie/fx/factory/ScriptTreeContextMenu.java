@@ -19,7 +19,7 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.DBinfoTree;

@@ -6,7 +6,7 @@
   <packaging>pom</packaging>
   <modules>
 	 <module>sdk</module>  
-	 <module>plugin/note</module> 
+<!-- 	 <module>plugin/note</module>  -->
 	 <module>app</module>   
   </modules>
 	

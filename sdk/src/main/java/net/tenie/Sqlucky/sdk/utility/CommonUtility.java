@@ -1,12 +1,16 @@
 package net.tenie.Sqlucky.sdk.utility;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javafx.animation.RotateTransition;
@@ -15,9 +19,13 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.util.Duration;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.config.CommonConst;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import javafx.scene.input.Clipboard;
 
@@ -30,6 +38,56 @@ public class CommonUtility {
 	private static Logger logger = LogManager.getLogger(CommonUtility.class);
 	private static ArrayBlockingQueue<Consumer< String >> queue = new ArrayBlockingQueue<>(1);
 	
+	
+	// 加载css样式
+		public static void loadCss(Scene scene) {
+//			if(scene ==null) return;
+			scene.getStylesheets().clear();
+			logger.info(ConfigVal.THEME);
+			if(ConfigVal.THEME.equals( CommonConst.THEME_DARK )) {
+				scene.getStylesheets().addAll(ConfigVal.cssList);
+			}else if(ConfigVal.THEME.equals( CommonConst.THEME_LIGHT)) { 
+				scene.getStylesheets().addAll(ConfigVal.cssListLight); 
+				
+			}else if(ConfigVal.THEME.equals( CommonConst.THEME_YELLOW)) { 
+				scene.getStylesheets().addAll(ConfigVal.cssListYellow); 
+				
+			}
+			
+			// 加载自定义的css
+			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css"; 
+			File cssf = new File(path); 
+			if( ! cssf.exists() ) { 
+				setFontSize(14);
+			}
+			String uri = Paths.get(path).toUri().toString();  
+			 
+			scene.getStylesheets().add(uri);
+			
+		     
+		}
+		
+		// 设置字符大小
+		static public void setFontSize(int i) { 
+			String val = 
+					"/*"+i+"*/ \n" +
+					".myLineNumberlineno{ \n" + 
+					"	-fx-font-size :	"+i+"; \n" + 
+					"} \n" +
+					".code-area{\n"+
+					"	-fx-font-size :	"+i+"; \n" +
+				    "} \n" +
+					"";
+			try {
+				String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
+				SaveFile.saveByEncode( path , val,"UTF-8");
+				loadCss(ComponentGetter.primaryscene);  
+				
+			} catch (IOException e) { 
+				e.printStackTrace();
+			}
+		}
+		 
 	/**
 	 * 延迟执行, 如果有任务在队列中, 会抛弃任务不执行
 	 * @param caller

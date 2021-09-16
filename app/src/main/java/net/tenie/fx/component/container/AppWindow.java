@@ -1,10 +1,15 @@
 package net.tenie.fx.component.container;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.controlsfx.control.MasterDetailPane;
 import javafx.geometry.Side;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.fx.component.AppWindowComponentGetter;
 
 /*   @author tenie */
 public class AppWindow {
@@ -32,7 +37,7 @@ public class AppWindow {
 		VBox.setVgrow(masterDetailPane, Priority.ALWAYS);
 
 		ComponentGetter.masterDetailPane = masterDetailPane;
-		ComponentGetter.dataView = dataView;
+		AppWindowComponentGetter.dataView = dataView;
 		mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
 		// 设置tree 面板的显示比例
 		masterDetailPane.widthProperty().addListener((ob, ov ,nv)->{
@@ -46,6 +51,28 @@ public class AppWindow {
 		}); 
 	}
 
+ 
+	static {
+		ConfigVal.cssList.add(AppWindow.class.getResource("/css/application.css").toExternalForm());	
+		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/common.css").toExternalForm());	
+		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/sql-keywords.css").toExternalForm());	    
+		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/treeView.css").toExternalForm());
+		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/TableView.css").toExternalForm());
+		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/tabPane.css").toExternalForm());
+		 
+		ConfigVal.cssListLight.add(AppWindow.class.getResource("/css/application.css").toExternalForm());	
+		ConfigVal.cssListLight.add(AppWindow.class.getResource("/css/light/common-light.css").toExternalForm());
+		ConfigVal.cssListLight.add(AppWindow.class.getResource("/css/light/sql-keywords-light.css").toExternalForm());
+		ConfigVal.cssListLight.add(AppWindow.class.getResource("/css/light/tabPane-light.css").toExternalForm());
+		
+		ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/application.css").toExternalForm());	
+		ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/yellow/common-yellow.css").toExternalForm());
+		ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/yellow/sql-keywords-yellow.css").toExternalForm());
+		ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/yellow/treeView-yellow.css").toExternalForm());
+		ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/yellow/TableView-yellow.css").toExternalForm());
+		ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/yellow/tabPane-yellow.css").toExternalForm());	 
+}
+	
 	public VBox getMainWindow() {
 		return mainWindow;
 	}

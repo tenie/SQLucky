@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.lib.reflex.BuildObject;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;

@@ -1,9 +1,8 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.Sqlucky.sdk.po;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+
 
 /*   @author tenie */
 // table view 共用

@@ -6,19 +6,18 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.CommonAction; 
 
-
-public class HighLightingSqlCodeAreaContextMenu {
+public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 	public static List<MenuItem> menuItems = new ArrayList<>();
-	ContextMenu contextMenu; 
+ 
 	
-	public HighLightingSqlCodeAreaContextMenu() {
-		contextMenu = new ContextMenu();  
-//		contextMenu.setMinWidth(200);
-		contextMenu.setPrefWidth(200);
+	public HighLightingSqlCodeAreaContextMenu(HighLightingCodeArea codeArea) {
+		super();
+		this.setPrefWidth(200);
 		MenuItem copy  = new MenuItem("Copy                        (ctrl+C)"); 
 		copy.setGraphic(ImageViewGenerator.svgImageDefActive("files-o"));
 		copy.setOnAction(e->{
@@ -36,7 +35,7 @@ public class HighLightingSqlCodeAreaContextMenu {
 		MenuItem del = new MenuItem("Delete                      (ctrl+D)"); 
 		del.setOnAction(e->{
 //			SqlEditor.deleteSelectionText(); 
-			SqlEditor.delLineOrSelectTxt(SqlEditor.getCodeArea());
+			codeArea.delLineOrSelectTxt();
 		});
 		del.setGraphic(ImageViewGenerator.svgImageDefActive("eraser"));
 		
@@ -80,61 +79,53 @@ public class HighLightingSqlCodeAreaContextMenu {
 		
 		MenuItem  mvB = new MenuItem("Move to begin of line (ctrl+shift+A)");   
 		mvB.setGraphic(ImageViewGenerator.svgImageDefActive("step-backward")); 
-		mvB.setOnAction(e->{
-			var codeA = SqlEditor.getCodeArea();
-			SqlEditor.moveAnchorToLineBegin(codeA);
+		mvB.setOnAction(e->{ 
+			codeArea.moveAnchorToLineBegin( );
 		});
 		
 		MenuItem  mvE = new MenuItem("Move to end of line   (ctrl+shift+E)");   
 		mvE.setGraphic(ImageViewGenerator.svgImageDefActive( "step-forward")); 
-		mvE.setOnAction(e->{
-			var codeA = SqlEditor.getCodeArea();
-			SqlEditor.moveAnchorToLineEnd(codeA);
+		mvE.setOnAction(e->{ 
+			codeArea.moveAnchorToLineEnd( );
 		});
 		
 		
 		Menu enditLine = new Menu("Edit text on the line"); 
 		MenuItem  delWord = new MenuItem("Delete the word before the cursor      (ctrl+shift+W)");   
-		delWord.setOnAction(e->{
-			var codeA = SqlEditor.getCodeArea();
-			SqlEditor.delAnchorBeforeWord(codeA);
+		delWord.setOnAction(e->{  
+			codeArea.delAnchorBeforeWord( );
 		});
 		
 		MenuItem  delChar = new MenuItem("Delete the character before the cursor (ctrl+shift+H)");   
-		delChar.setOnAction(e->{
-			var codeA = SqlEditor.getCodeArea();
-			SqlEditor.delAnchorBeforeChar(codeA);
+		delChar.setOnAction(e->{ 
+			codeArea.delAnchorBeforeChar( );
 		});
 		
 		MenuItem  delAllChar = new MenuItem("Delete all characters before the cursor(ctrl+shift+U)");   
-		delAllChar.setOnAction(e->{
-			var codeA = SqlEditor.getCodeArea();
-			SqlEditor.delAnchorBeforeString(codeA);
+		delAllChar.setOnAction(e->{ 
+			codeArea.delAnchorBeforeString( );
 		});
 		
 		
 		MenuItem  delWordBackward = new MenuItem("Delete the word after the cursor        (alt+shift+D)");   
-		delWordBackward.setOnAction(e->{
-			var codeA = SqlEditor.getCodeArea();
-			SqlEditor.delAnchorAfterWord(codeA);
+		delWordBackward.setOnAction(e->{ 
+			codeArea.delAnchorAfterWord( );
 		});
 		
 		MenuItem  delCharBackward = new MenuItem("Delete the character after the cursor  (ctrl+shift+D)");   
-		delCharBackward.setOnAction(e->{
-			var codeA = SqlEditor.getCodeArea();
-			SqlEditor.delAnchorAfterChar(codeA);
+		delCharBackward.setOnAction(e->{ 
+			codeArea.delAnchorAfterChar( );
 		});
 		MenuItem  delAllCharBackward = new MenuItem("Delete all characters after the cursor (ctrl+shift+K)");   
-		delAllCharBackward.setOnAction(e->{
-			var codeA = SqlEditor.getCodeArea();
-			SqlEditor.delAnchorAfterString(codeA);
+		delAllCharBackward.setOnAction(e->{ 
+			codeArea.delAnchorAfterString( );
 		});
 		
 		
 		
 		
 		
-		contextMenu.getItems().addAll(copy, Paste, del, cut, new SeparatorMenuItem(), 
+		this.getItems().addAll(copy, Paste, del, cut, new SeparatorMenuItem(), 
 				sqlFormat , formatAll, sqlUnformat, unformatAll, new SeparatorMenuItem(),
 				find, replace, new SeparatorMenuItem(),
 				mvB, mvE, enditLine
@@ -161,7 +152,7 @@ public class HighLightingSqlCodeAreaContextMenu {
 				
 		
 		// 菜单显示的时刻
-		contextMenu.setOnShowing(e->{
+		this.setOnShowing(e->{
 			String str = SqlEditor.getCurrentCodeAreaSQLSelectedText();
 			if(StrUtils.isNotNullOrEmpty(str)) {
 				copy.setDisable(false);
@@ -191,13 +182,7 @@ public class HighLightingSqlCodeAreaContextMenu {
 		});
 	}
 	
-	public ContextMenu getContextMenu() {
-		return contextMenu;
-	}
-	public void setContextMenu(ContextMenu contextMenu) {
-		this.contextMenu = contextMenu;
-	}
-
+ 
 
 
 }

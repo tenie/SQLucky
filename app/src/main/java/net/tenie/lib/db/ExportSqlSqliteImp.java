@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Set;
 
 import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
-import net.tenie.fx.PropertyPo.TableFieldPo;
-import net.tenie.fx.PropertyPo.TablePo;
-import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.fx.config.DbVendor;
+import net.tenie.Sqlucky.sdk.po.TableFieldPo;
+import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 /* 
  *  * @author tenie 

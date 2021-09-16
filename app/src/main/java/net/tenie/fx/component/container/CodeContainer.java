@@ -1,26 +1,11 @@
 package net.tenie.fx.component.container;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXTextField;
-
-import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.component.AllButtons;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.SqlEditor;
-import net.tenie.fx.config.ConfigVal;
-import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.utility.DraggingTabPaneSupport;
 

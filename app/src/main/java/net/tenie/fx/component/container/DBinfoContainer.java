@@ -17,8 +17,9 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.PropertyPo.ScriptPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.SqlEditor;
@@ -58,8 +59,8 @@ public class DBinfoContainer {
 		VBox.setVgrow(ad, Priority.ALWAYS);
  
 
-		ComponentGetter.treeView = treeView;
-		ComponentGetter.dbInfoTree = dbInfoTree;
+		AppWindowComponentGetter.treeView = treeView;
+		AppWindowComponentGetter.dbInfoTree = dbInfoTree;
 		ComponentGetter.treeBtnPane = treeBtnPane;
 		
 		

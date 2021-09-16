@@ -22,7 +22,9 @@ import javafx.stage.Stage;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.fx.config.DBConns;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ProcedureExecuteWindow {
@@ -78,7 +80,7 @@ public class ProcedureExecuteWindow {
 				pfpo.setTypeName(type);
 				
 			} 
-			DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO(); 
+			DbConnectionPo dpo = DBConns.getCurrentConnectPO(); 
 			RunSQLHelper.callProcedure(procedureName, dpo, fields);
 		 
 			stage.close();
@@ -114,7 +116,7 @@ public class ProcedureExecuteWindow {
 		btns.add( cancelBtn);
 		btns.add( btn);
 		
-		Node vb = ModalDialog.setVboxShape(0,0,stage, ModalDialog.INFO, nds, btns);
+		Node vb = DialogTools.setVboxShape(0,0,stage, ModalDialog.INFO, nds, btns);
 		Scene scene = new Scene( (Parent) vb);
 //		Scene scene = new Scene( b);
 	
@@ -124,7 +126,7 @@ public class ProcedureExecuteWindow {
 //		stage.initStyle(StageStyle.UTILITY); 
 		stage.initModality(Modality.APPLICATION_MODAL);
 //		stage.show();
-		ModalDialog.setSceneAndShow(scene, stage);
+		DialogTools.setSceneAndShow(scene, stage);
 	}
 	 
 	 

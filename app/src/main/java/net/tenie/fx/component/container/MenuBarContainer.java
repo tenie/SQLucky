@@ -1,29 +1,24 @@
 package net.tenie.fx.component.container;
 
 import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.SqlEditor;
-import net.tenie.fx.config.CommonConst;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.config.CommonConst;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;

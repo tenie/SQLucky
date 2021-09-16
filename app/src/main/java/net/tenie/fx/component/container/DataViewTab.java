@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.controlsfx.control.MaskerPane;
@@ -16,6 +17,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.ContextMenu;
@@ -40,11 +42,11 @@ import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.AllButtons;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
 import net.tenie.fx.component.MyTooltipTool;
-import net.tenie.fx.component.HighLightingSqlCodeArea;
+import net.tenie.fx.component.HighLightingCodeArea;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
@@ -254,11 +256,11 @@ public class DataViewTab {
 		CommonAction.showDetailPane();
 	}
 
-	public HighLightingSqlCodeArea sqlArea;
+	public HighLightingCodeArea sqlArea;
 	// 数据tab中的组件
 	public VBox CreateDDLBox(String ddl, boolean isRunFunc, boolean isProc, String name) {
 		VBox vb = new VBox();
-	    sqlArea = new HighLightingSqlCodeArea();
+	    sqlArea = new HighLightingCodeArea(null);
 		StackPane sp = sqlArea.getCodeAreaPane(ddl, false);
 		// 表格上面的按钮
 		AnchorPane fp = ddlOptionBtnsPane(ddl, isRunFunc, isProc, name);
@@ -339,7 +341,7 @@ public class DataViewTab {
 					} else {
 						// 调用无参数的存储过程
 						caller = x -> {
-							DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO(); 
+							DbConnectionPo dpo = DBConns.getCurrentConnectPO(); 
 							RunSQLHelper.callProcedure(name, dpo, fields);
 						};
 						ModalDialog.showExecWindow("Run Procedure", name, caller);
@@ -348,7 +350,7 @@ public class DataViewTab {
 
 				} else {
 					caller = x -> {
-						DbConnectionPo dpo = ComponentGetter.getCurrentConnectPO();
+						DbConnectionPo dpo = DBConns.getCurrentConnectPO();
 						String sql = dpo.getExportDDL().exportCallFuncSql(x);
 						RunSQLHelper.runSQLMethodRefresh(dpo, sql, null, false);
 					};
@@ -604,4 +606,140 @@ public class DataViewTab {
 		this.dbConnection = dbConnection;
 	}
 	
+	
+	// 获取当前数据表的Tab
+	public static Tab currentDataTab() {
+		Tab tab = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
+		return tab;
+	}
+	
+	// 获取数据页的id
+	public static String currentDataTabID() {
+		Tab tab = currentDataTab();
+		String id = tab.getId();
+		
+		return id;
+	}
+	
+	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
+	public static RsVal tableInfo() {
+		String tableId = DataViewTab.currentDataTabID();
+		String connName =  CacheTabView.getConnName(tableId); // CacheTableDate.getConnName(tableId);
+		String tableName = CacheTabView.getTableName(tableId); // CacheTableDate.getTableName(tableId);
+		Connection conn =  CacheTabView.getDbConn(tableId); //  CacheTableDate.getDBConn(tableId);   
+				
+		var alldata =   CacheTabView.getTabData(tableId); //CacheTableDate.getData(tableId);
+		DbConnectionPo  dbc = DBConns.get(connName); 
+		
+//		Button saveBtn = ComponentGetter.dataPaneSaveBtn();
+		var dataTableView = dataTableView();
+		RsVal rv = new RsVal();
+		rv.conn = conn; 
+		rv.dbconnPo = dbc; 
+		rv.tableName = tableName;
+//		rv.dbc =  dbc; 
+		rv.alldata = alldata;
+//		rv.saveBtn = saveBtn;
+		rv.dataTableView = dataTableView;
+		return rv;
+	}
+	
+	public static RsVal tableInfo(String tableName, String connName, Connection conn ) {
+
+		DbConnectionPo  dbc = DBConns.get(connName);  
+		RsVal rv = new RsVal();
+		rv.conn = conn; 
+		rv.dbconnPo = dbc;   
+		rv.tableName = tableName; 
+		rv.alldata = null;
+//		rv.saveBtn = null;
+		rv.dataTableView = null;
+		return rv;
+	}
+	
+//  获取当前数据表的Tab 中的 vbox
+	public static VBox currentDataVbox() {
+		Tab tab = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
+		VBox vb = (VBox) tab.getContent();
+		return vb;
+	}
+	
+	// 获取 当前table view 的控制面板
+	public static AnchorPane dataPane() {
+		if(   ComponentGetter.dataTabPane == null  
+		   || ComponentGetter.dataTabPane.getSelectionModel() == null
+		   || ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem() == null) return null;  
+		Node vb =  ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem().getContent();
+		if(vb != null) { 
+			VBox vbx = (VBox) vb;
+			AnchorPane fp = (AnchorPane) vbx.getChildren().get(0);
+			return fp;
+		}
+		return null;
+	}
+	
+	// 获取当前table view 的保存按钮
+	public static Button dataPaneSaveBtn() {
+		AnchorPane fp = dataPane();
+		if(fp == null ) return null;
+		return (Button) fp.getChildren().get(0);
+	}
+	
+	// 获取当前table view 的详细按钮
+	public static Button dataPaneDetailBtn() {
+		AnchorPane fp = dataPane();
+		if(fp == null ) return null;
+		return (Button) fp.getChildren().get(1);
+	}
+	
+	// 获取当前的表格
+	@SuppressWarnings("unchecked")
+	public static FilteredTableView<ObservableList<StringProperty>> dataTableView() {
+		VBox vb = (VBox) ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem().getContent();
+		FilteredTableView<ObservableList<StringProperty>> table = (FilteredTableView<ObservableList<StringProperty>>) vb
+				.getChildren().get(1);
+		return table;
+	}
+
+	// 获取当前表格选择的数据
+	public static ObservableList<ObservableList<StringProperty>> dataTableViewSelectedItems() {
+		ObservableList<ObservableList<StringProperty>> vals = dataTableView().getSelectionModel().getSelectedItems();
+		return vals;
+	}
+
+	// 获取当前表格id
+	public static String dataTableViewID() {
+		return dataTableView().getId();
+	}
+
+	// 获取当前数据页面 中的 某个按钮
+	public static Button getDataOptionBtn(String btnName) {
+		AnchorPane fp = dataPane();
+		if(fp == null ) return null;
+		Optional<Node> fn = fp.getChildren().stream().filter(v -> {
+			return v.getId().equals(btnName);
+		}).findFirst();
+		Button btn = (Button) fn.get();
+
+		return btn;
+	}
+	
+	// 获取所有按钮
+	public static List<ButtonBase>  dataPaneBtns() {
+	 
+		List<ButtonBase> ls = new ArrayList<>();
+		for( String key :CacheTabView.getKey()) {
+			ls.addAll(CacheTabView.optionBtns(key) );
+		} 
+		return ls;
+	}
+	// 获取数据面板中所有右键按钮
+	public static List<MenuItem>  dataPaneMenuItems() {
+		 
+		List<MenuItem> ls = new ArrayList<>();
+		for( String key :CacheTabView.getKey()) {
+			ls.addAll(CacheTabView.MenuItems(key) );
+		} 
+		return ls;
+	}
 }

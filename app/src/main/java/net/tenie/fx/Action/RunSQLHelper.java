@@ -31,20 +31,21 @@ import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
-import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.component.AllButtons;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
+import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.container.DataViewTab;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.Db2ErrorCode;
 import net.tenie.fx.config.DbVendor;
@@ -54,7 +55,7 @@ import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.factory.MenuFactory;
 import net.tenie.fx.factory.StringPropertyListValueFactory;
 import net.tenie.fx.utility.ParseSQL;
-import net.tenie.fx.window.MyAlert;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.lib.db.Dbinfo;
 
 
@@ -265,7 +266,7 @@ public class RunSQLHelper {
 			
 			DataViewContainer.setTabRowWith(table, dvt.getRawData().size());
 			
-			String connectName = ComponentGetter.getCurrentConnectName();
+			String connectName = DBConns.getCurrentConnectName();
 			dvt.setSqlStr(sql);
 			dvt.setTable(table);
 			dvt.setTabId( table.getId());
@@ -334,7 +335,7 @@ public class RunSQLHelper {
 			
 			DataViewContainer.setTabRowWith(table, dvt.getRawData().size()); //dpo.getAllDatasSize());
 			
-			String connectName = ComponentGetter.getCurrentConnectName();
+			String connectName = DBConns.getCurrentConnectName();
 			dvt.setSqlStr(sql);
 			dvt.setTable(table);
 			dvt.setTabId( table.getId());
@@ -388,7 +389,7 @@ public class RunSQLHelper {
 			schemaName = arrs[0];
 			tempTableName = arrs[1];
 		}
-		TreeNodePo tnp = ComponentGetter.getSchemaTableNodePo(schemaName);
+		TreeNodePo tnp = DBinfoTree.getSchemaTableNodePo(schemaName);
 		if(tnp != null && tnp.getConnItem() != null && tnp.getConnItem().getTableNode() !=null) {
 			ConnItemDbObjects ci =tnp.getConnItem(); 
 			ObservableList<TreeItem<TreeNodePo>>  tabs = ci.getTableNode().getChildren(); 
@@ -837,6 +838,8 @@ public class RunSQLHelper {
 //			String val = CommonAction.firstParenthesisInsideString(st1);
 //			  System.out.println(val);
 //		}
+			
+		
 }
 
 

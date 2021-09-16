@@ -13,8 +13,9 @@ import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.component.CommonFileChooser;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
@@ -149,9 +150,9 @@ public class CommonEventHandler {
 	private static ObservableList<ObservableList<StringProperty>> getValsHelper(boolean isSelected, String tableid) {
 		ObservableList<ObservableList<StringProperty>> vals = null;
 		if (isSelected) {
-			vals = ComponentGetter.dataTableViewSelectedItems();
+			vals = DataViewTab.dataTableViewSelectedItems();
 		} else {
-			vals =  CacheTabView.getTabData(tableid);//CacheTableDate.getData(tableid);
+			vals =  CacheTabView.getTabData(tableid);
 		}
 		return vals;
 	}
@@ -167,7 +168,7 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> InsertSQLClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				String tableid = ComponentGetter.dataTableViewID();
+				String tableid = DataViewTab.dataTableViewID();
 				ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tableid);//CacheTableDate.getCols(tableid);
 				String tableName = CacheTabView.getTableName(tableid);                 //CacheTableDate.getTableName(tableid);
 				final ObservableList<ObservableList<StringProperty>> fvals = getValsHelper(isSelected, tableid);
@@ -203,7 +204,7 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> csvStrClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				String tableid = ComponentGetter.dataTableViewID();
+				String tableid = DataViewTab.dataTableViewID();
 				ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tableid); //CacheTableDate.getCols(tableid);
 				
 				ObservableList<ObservableList<StringProperty>> vals = getValsHelper(isSelected, tableid);
@@ -236,7 +237,7 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> txtStrClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				String tableid = ComponentGetter.dataTableViewID();
+				String tableid = DataViewTab.dataTableViewID();
 				ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tableid); //CacheTableDate.getCols(tableid); 
 
 				ObservableList<ObservableList<StringProperty>> vals = getValsHelper(isSelected, tableid);
@@ -270,7 +271,7 @@ public class CommonEventHandler {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				// 通过id 从缓存中获取数据
-				String tableid = ComponentGetter.dataTableViewID();
+				String tableid = DataViewTab.dataTableViewID();
 				ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tableid); //CacheTableDate.getCols(tableid);
 
 				ObservableList<ObservableList<StringProperty>> vals = getValsHelper(isSelected, tableid);

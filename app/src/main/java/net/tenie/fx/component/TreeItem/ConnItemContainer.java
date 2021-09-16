@@ -6,8 +6,9 @@ import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.config.DbVendor;
 
 public class ConnItemContainer {
@@ -78,7 +79,7 @@ public class ConnItemContainer {
 		for (int i = 0; i < schemaNode.getChildren().size(); i++) {
 			String scheName = schemaNode.getChildren().get(i).getValue().getName();
 			if (itemName.equals(scheName)) {
-				ComponentGetter.treeView.getSelectionModel()
+				AppWindowComponentGetter.treeView.getSelectionModel()
 						.select(schemaNode.getChildren().get(i).getValue().getConnItem().getTableNode());
 			}
 		}

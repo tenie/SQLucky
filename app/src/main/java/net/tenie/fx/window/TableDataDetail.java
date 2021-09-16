@@ -23,8 +23,9 @@ import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.dao.SelectDao;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -60,12 +61,12 @@ public class TableDataDetail {
 	}
 	 	
 	public static void show() {
-		VBox vb = ComponentGetter.currentDataVbox();
+		VBox vb = DataViewTab.currentDataVbox();
 		@SuppressWarnings("unchecked")
 		var tb = (TableView<ObservableList<StringProperty>>) vb.getChildren().get(1);
 		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 
-		String id = ComponentGetter.currentDataTabID() ;  
+		String id = DataViewTab.currentDataTabID() ;  
 		
 		ObservableList<SqlFieldPo> fields =  CacheTabView.getFields(id);
 		

@@ -5,8 +5,8 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator; 
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator; 
 
 public class SqluckyComponent implements AppComponent {
 

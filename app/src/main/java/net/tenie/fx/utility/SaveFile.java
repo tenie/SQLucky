@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 /*   @author tenie */
 public class SaveFile {

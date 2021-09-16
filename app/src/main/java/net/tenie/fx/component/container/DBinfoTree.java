@@ -11,6 +11,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
@@ -19,11 +20,12 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.TreeObjAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
-import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
@@ -156,7 +158,7 @@ public class DBinfoTree {
 
 	// 给root节点加元素（db连接节点）
 	public static void treeRootAddItem(TreeItem<TreeNodePo> item) {
-		TreeView<TreeNodePo> treeView = ComponentGetter.treeView;
+		TreeView<TreeNodePo> treeView = AppWindowComponentGetter.treeView;
 		TreeItem<TreeNodePo> rootNode = treeView.getRoot();
 		rootNode.getChildren().add(item);
 		treeView.getSelectionModel().select(item); // 选择新加的节点
@@ -178,7 +180,7 @@ public class DBinfoTree {
 			} // Schemas 双击, 打开非默认的schema
 			else if (parentItem != null && 
 					 parentItem.getValue().getType() == TreeItemType.SCHEMA_ROOT ) {
-				DbConnectionPo po = ComponentGetter.getSchameIsConnObj(item);
+				DbConnectionPo po = getSchameIsConnObj(item);
 				// 获取当前schema node 所在的连接节点
 				TreeItem<TreeNodePo> connRoot = item.getParent().getParent();
 				// 获取当前节点的schema name
@@ -396,4 +398,63 @@ public class DBinfoTree {
 		return connItem;
 	}
  
+	
+	// 根据链接名称,获取链接Node 
+	public static TreeItem<TreeNodePo>  getConnNode(String dbName){
+//			TreeItem<TreeNodePo> conn =
+		TreeItem<TreeNodePo> root  = AppWindowComponentGetter.treeView.getRoot();
+		 // 遍历tree root 找到对于的数据库节点
+	    for(  TreeItem<TreeNodePo>  connNode : root.getChildren()) {
+	    	if(connNode.getValue().getName().equals(dbName)) { 
+	    		return connNode; 
+	    	}
+	    		
+	    } 
+	    return null;
+	}
+	// 获取schema节点的 TreeNodePo
+	public static TreeNodePo getSchemaTableNodePo(String schema) {
+		Label lb = ComponentGetter.connComboBox.getValue();
+		if( lb != null) {
+			String str = lb.getText();
+			TreeItem<TreeNodePo> tnp = DBinfoTree.getConnNode(str);
+			if(StrUtils.isNullOrEmpty(schema)) {
+				DbConnectionPo  dbpo = DBConns.get(str);
+				schema =  dbpo.getDefaultSchema();
+			} 
+
+			if(tnp != null ) {
+				if(tnp.getChildren().size() > 0) {
+					ObservableList<TreeItem<TreeNodePo>> lsShc = tnp.getChildren().get(0).getChildren();
+				    for(TreeItem<TreeNodePo> sche : lsShc) {
+				    	if(sche.getValue().getName().equals(schema) ) {
+				    		return sche.getValue();
+				    	}
+				    } 
+				}
+				
+			}
+		}
+		return null;
+	}
+	// 根据链接名称,获取链接Node 
+	public static TreeItem<TreeNodePo>  getSchemaNode(String dbName, String SchemaName){
+		TreeItem<TreeNodePo> connNode = getConnNode(dbName);
+		if(connNode!=null ) {
+			TreeItem<TreeNodePo> schemaParent =	connNode.getChildren().get(0);
+			for(TreeItem<TreeNodePo> schNode : schemaParent.getChildren()) {
+				if(schNode.getValue().getName().equals(SchemaName)) {
+					return schNode;
+				}
+			}
+		}
+		
+		return null;
+	}
+
+	// 获取库的连接对象
+	public static DbConnectionPo getSchameIsConnObj(TreeItem<TreeNodePo> item) {
+		String connName = item.getParent().getParent().getValue().getName();
+		return DBConns.get(connName);
+	}
 }

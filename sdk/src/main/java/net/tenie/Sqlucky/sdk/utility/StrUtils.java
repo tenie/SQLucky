@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 
 //import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.MyRange;
-//import net.tenie.fx.config.ConfigVal;
+//import net.tenie.Sqlucky.sdk.config.ConfigVal;
 
 /*   @author tenie */
 public class StrUtils {

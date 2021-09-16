@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-import net.tenie.fx.PropertyPo.TableFieldPo;
-import net.tenie.fx.PropertyPo.TablePo;
-import net.tenie.fx.PropertyPo.TablePrimaryKeysPo;
+import net.tenie.Sqlucky.sdk.po.TableFieldPo;
+import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class Sample

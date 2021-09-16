@@ -19,9 +19,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.main.MainMyDB;
 
 public class DataTransferWindow {
@@ -44,7 +45,7 @@ public class DataTransferWindow {
 			stage.show();
 		}
 		
-		CommonAction.loadCss(scene);
+		CommonUtility.loadCss(scene);
 	}
 	
 	// 根据给定的fxml 创建 模态框
@@ -60,7 +61,7 @@ public class DataTransferWindow {
 			URL url = getClass().getResource(fxml);
 			Parent root = FXMLLoader.load(url);
 		    scene = new Scene(root);
-		    CommonAction.loadCss(scene); 
+		    CommonUtility.loadCss(scene); 
 			stage.setScene(scene);
 			stage.show();
 			

@@ -33,17 +33,19 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.CommonFileChooser;
-import net.tenie.fx.component.ComponentGetter;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.container.DBinfoTree;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.main.Restart;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -77,7 +79,7 @@ public class ConnectionEditor {
 			stage.close();
 		});
 
-		CommonAction.loadCss(scene);
+		CommonUtility.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 		
@@ -341,7 +343,7 @@ public class ConnectionEditor {
 		TreeItem<TreeNodePo> treeNode = null;
 
 		logger.info("deleteDbConn()");
-		TreeView<TreeNodePo> treeView = ComponentGetter.treeView;
+		TreeView<TreeNodePo> treeView = AppWindowComponentGetter.treeView;
 		TreeItem<TreeNodePo> rootNode = treeView.getRoot();
 		ObservableList<TreeItem<TreeNodePo>> ls = rootNode.getChildren();
 
@@ -382,14 +384,14 @@ public class ConnectionEditor {
 	}
 
 	public static void closeAllDbConn() {
-		TreeView<TreeNodePo> treeView = ComponentGetter.treeView;
+		TreeView<TreeNodePo> treeView = AppWindowComponentGetter.treeView;
 		TreeItem<TreeNodePo> rootNode = treeView.getRoot();
 		ObservableList<TreeItem<TreeNodePo>> ls = rootNode.getChildren();
 		for (TreeItem<TreeNodePo> val : ls) {
 			closeDbConnHelper(val);
 		}
 		DBConns.flushChoiceBoxGraphic();
-		ComponentGetter.treeView.refresh();
+		AppWindowComponentGetter.treeView.refresh();
 	}
 
 	private static void closeDbConnHelper(TreeItem<TreeNodePo> val) {
@@ -415,7 +417,7 @@ public class ConnectionEditor {
 			closeDbConnHelper(val);
 		}
 		DBConns.flushChoiceBoxGraphic();
-		ComponentGetter.treeView.refresh();
+		AppWindowComponentGetter.treeView.refresh();
 	}
 	// 打开连接按钮点击事件
 	public static void openDbConn() {
@@ -443,7 +445,7 @@ public class ConnectionEditor {
 		Node nd = ImageViewGenerator.svgImage("spinner", "red");
 		CommonUtility.rotateTransition(nd);
 		item.getValue().setIcon( nd);
-		ComponentGetter.treeView.refresh();
+		AppWindowComponentGetter.treeView.refresh();
 
 		Thread t = new Thread() {
 			public void run() {
@@ -470,7 +472,7 @@ public class ConnectionEditor {
 						Platform.runLater(() -> {
 							MyAlert.errorAlert( " Cannot connect ip:" + po.getHost() + " port:" + po.getPort() + "  !");
 							item.getValue().setIcon(ImageViewGenerator.svgImageUnactive("unlink"));
-							ComponentGetter.treeView.refresh();
+							AppWindowComponentGetter.treeView.refresh();
 
 						});
 
@@ -481,7 +483,7 @@ public class ConnectionEditor {
 					Platform.runLater(() -> {
 						MyAlert.errorAlert( " Error !");
 						item.getValue().setIcon(ImageViewGenerator.svgImage("unlink", "red"));
-						ComponentGetter.treeView.refresh();
+						AppWindowComponentGetter.treeView.refresh();
 					});
 					
 				} finally {
@@ -519,7 +521,7 @@ public class ConnectionEditor {
 //					DBinfoTree.rmTreeItemByName(dp.getConnName());
 					TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
 					val.getValue().setName(connectionName.getText() );
-					ComponentGetter.treeView.refresh();
+					AppWindowComponentGetter.treeView.refresh();
 				}else {
 					TreeItem<TreeNodePo> item = new TreeItem<>(
 							new TreeNodePo(connectionName.getText(), ImageViewGenerator.svgImageUnactive("unlink")));

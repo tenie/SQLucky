@@ -1,7 +1,6 @@
 package net.tenie.fx.component.TreeItem;
 
 import java.util.List;
-import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -9,11 +8,11 @@ import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.DBOptionHelper;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
-import net.tenie.fx.PropertyPo.TablePo;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ImageViewGenerator;
-import net.tenie.fx.config.CommonConst;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.config.CommonConst;
+import net.tenie.Sqlucky.sdk.po.TablePo;
 
 /*   @author tenie */
 public class ConnItemDbObjects {

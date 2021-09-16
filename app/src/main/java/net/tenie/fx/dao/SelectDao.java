@@ -9,11 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.tableview2.FilteredTableView;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -27,10 +24,10 @@ import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.container.DataViewTab;
-import net.tenie.fx.config.CommonConst;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.config.CommonConst;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -402,7 +399,7 @@ public class SelectDao {
 					Platform.runLater(() -> val.setValue("<null>"));
 				}
 				
-				ComponentGetter.dataPaneSaveBtn().setDisable(false);
+				DataViewTab.dataPaneSaveBtn().setDisable(false);
 				
 
 				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();

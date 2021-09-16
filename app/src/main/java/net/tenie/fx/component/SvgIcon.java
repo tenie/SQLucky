@@ -2,27 +2,11 @@ package net.tenie.fx.component;
 
 import java.util.HashMap;
 import java.util.Map;
-import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.SVGPath;
-import net.tenie.fx.config.CommonConst;
-import net.tenie.fx.config.ConfigVal;
 
-/*   @author tenie */
-// 图片加载类
-public final class ImageViewGenerator {
-	private static Map<String, String> svgObj = new HashMap<String, String>();
-//	private static Map<String, ImageView> imgMap = new HashMap<String, ImageView>();
-//	private static Map<String, Region> RegionMap = new HashMap<>();
+public class SvgIcon {
+	public static Map<String, String> svgObj = new HashMap<String, String>();
 	
-//	public static List<Region> svgActiveImage = new ArrayList<>();
-	
-//	private static Map<String, Label> fontImgMap = new HashMap<String, Label>();
-//	private static final Font GLYPH_FONTAWESOME;
-//	private static final Map<String, Character> GLYPH_MAP;
-	static {
+	static { 
 		   svgObj.put( "NULL", 
 				  ""); 
 			svgObj.put( "angle-right", 
@@ -202,133 +186,10 @@ public final class ImageViewGenerator {
 //		GLYPH_FONTAWESOME = Font
 //				.loadFont(ImageViewGenerator.class.getResourceAsStream("/image/fontawesome-webfont.ttf"), -1);
 //		GLYPH_MAP = new HashMap<String, Character>();
-	}
-
-	//修改所以按钮颜色
-//	public static void changeSvgColor() {
-//		String color = "#1C94FF";
-//		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
-//			color = "#FDA232";
-//		}  
-//		List<Region> lsrsg = ImageViewGenerator.svgActiveImage;
-//		for(Region reg :lsrsg) { 
-//			reg.setStyle("-fx-background-color: " + color + ";");
-//		}
-//	}
 	
-	// 修改颜色
-	public static void changeColor(Node node, String color) {
-		node.setStyle("-fx-background-color: " + color + ";");
-	}
-
-	public static Region svgImageUnactive(String name) {
-		return svgImage(name, 16, "#A9A9A9");
 	}
 	
-	public static Region svgImageUnactive(String name, int size) {
-		return svgImage(name, size, "#A9A9A9");
-	}
-	
-	
-	public static String getColor() {
-		String defColorStr = "#1C94FF";
-		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
-			defColorStr = "#FDA232";
-		} 
-		return defColorStr;
-	}
 
-	public static Region svgImageDefActive(String name) {
-		String defColorStr = getColor();
-		Region rs = svgImage(name, 16, defColorStr);   
-		return rs;
-	}
-
-	public static Region svgImageDefActive(String name, double size) {
-		String defColorStr = getColor();
-		return svgImage(name, size, defColorStr);
-	}
-
-	public static Region svgImage(String name, String color) {
-		return svgImage(name, 16, color);
-	}
-
-	// svg 图片
-	public static Region svgImage(String name, double size, String color) {
-//		Region svgShape = RegionMap.get(name + size + color + ".svg");
-//		if (svgShape == null) {
-			SVGPath p = new SVGPath();
-			p.setContent(getSvgStr(name));
-
-			Region svgShape = new Region();
-			svgShape.setShape(p);
-			svgShape.setMinSize(size, size);
-			svgShape.setPrefSize(size, size);
-			svgShape.setMaxSize(size, size);
-			svgShape.setStyle("-fx-background-color: " + color + ";");
-//		}
-		return svgShape;
-	}
-
-//	public static ImageView svgImage2(String name) {
-//		ImageView iv = imgMap.get(name + ".svg");
-//		if (iv == null) {
-//			InputStream imageData = ImageViewGenerator.class.getClassLoader()
-//					.getResourceAsStream("image/" + name + ".svg");
-//			Image image = new Image(imageData, 20.0, 20.0, false, false);
-//
-//			iv = new ImageView(image);
-//		}
-//		return iv;
-//	}
-
-	// 获取 png 图片
-//	public static ImageView imageName(String name) {
-//		ImageView rootIcon = imgMap.get(name);
-//		if (rootIcon == null) {
-//			rootIcon = new ImageView(new Image(ImageViewGenerator.class.getResourceAsStream(name)));
-//		}
-//		return rootIcon;
-//	}
-
-	// 获取字体图标
-//	public static Label fontImgName(String name, int sizeFactor, Color color) { 
-//			Label lbl = new Label();
-//			Font f = Font.font(GLYPH_FONTAWESOME.getFamily(), sizeFactor);
-//
-//			lbl.setFont(f);
-//			lbl.setText(getfont(name));
-//			if (color != null) {
-//				lbl.setTextFill(color);
-//			} 
-//		return lbl;
-//	}
-
-//	public static Label fontImgName(String name, int sizeFactor) {
-//		return fontImgName(name, sizeFactor, Color.DARKGRAY);
-//	}
-
-	// 修改 Label中字体颜色
-	public static void changeColor(Label lb, Color color) {
-		lb.setTextFill(color);
-	}
-
-	//svgObj
-	public static String getSvgStr(String name) {
-		String val = svgObj.get(name);
-		if(val == null) {
-			val = "";
-		}
-		return val;		
-	}
-	
-	public static void addSvgStr(String name, String val) {
-		if( !svgObj.containsKey(name)) {
-			svgObj.put(name, val);
-		}
-		
-	}
-	
 //	public static String getSvgStr2(String name) {
 //		switch (name) {
 //		case "NULL":

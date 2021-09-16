@@ -1,4 +1,4 @@
-package net.tenie.fx.config;
+package net.tenie.Sqlucky.sdk.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,11 +14,10 @@ public class CommonConst {
 	
 	public static Map<String, Integer> PROCEDURE_TYPE = new HashMap<>();
 	
-	static {
-		PROCEDURE_TYPE.put("String", java.sql.Types.VARCHAR);
-		PROCEDURE_TYPE.put("Integer", java.sql.Types.BIGINT);
-		PROCEDURE_TYPE.put("Decimal", java.sql.Types.DOUBLE);
-		PROCEDURE_TYPE.put("Time",  java.sql.Types.TIMESTAMP);
-	}
-	
+//	static {
+//		PROCEDURE_TYPE.put("String", java.sql.Types.VARCHAR);
+//		PROCEDURE_TYPE.put("Integer", java.sql.Types.BIGINT);
+//		PROCEDURE_TYPE.put("Decimal", java.sql.Types.DOUBLE);
+//		PROCEDURE_TYPE.put("Time",  java.sql.Types.TIMESTAMP);
+//	}
 }

@@ -20,12 +20,16 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbSchemaPo;
-import net.tenie.fx.PropertyPo.TablePo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.factory.AutoCompleteCellFactory;
 import net.tenie.lib.db.Dbinfo;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.CodeArea.AutoCompleteCellFactory;
+import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
+import net.tenie.Sqlucky.sdk.myinterface.AutoComplete;
+import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
-public class MyAutoComplete {
+
+public class MyAutoComplete implements AutoComplete{
 	private static List<TablePo> keyWords = new ArrayList<>();
 	private static Popup pop ;
 	private static VBox vb ;
@@ -102,7 +106,10 @@ public class MyAutoComplete {
 		VBox.setVgrow(treeView, Priority.ALWAYS);
 
 		treeView.setCellFactory(new AutoCompleteCellFactory());
-
+		
+	}
+	
+	public MyAutoComplete() { 
 		// 鼠标点击的时候
 		treeView.setOnMouseClicked(e -> {
 			var it = treeView.getSelectionModel().getSelectedItem();
@@ -129,7 +136,7 @@ public class MyAutoComplete {
 	}
 	
 	
-	public static void hide() {
+	public   void hide() {
 		if(pop !=null ) {
 			pop.hide();
 			pop.getContent().clear();
@@ -137,7 +144,7 @@ public class MyAutoComplete {
 		} 
 	}
 	// 按backspace按键的时候, 隐藏提示窗口的策略
-	public static void backSpaceHide(MyCodeArea codeArea) {
+	public   void backSpaceHide(MyCodeArea codeArea) {
 		if(isShow()) {
 			int acr  = codeArea.getAnchor();
 			int begin = 0;
@@ -152,7 +159,7 @@ public class MyAutoComplete {
 	}
 		
 	
-	public static boolean isShow() {
+	public   boolean isShow() {
 		if(pop == null ) {
 			return false;
 		}else {
@@ -163,7 +170,7 @@ public class MyAutoComplete {
 	
 	 
 
-	public static void showPop(double x, double y, String fStr) {
+	public   void showPop(double x, double y, String fStr) {
 //		System.out.println("fStr === " + fStr);
 		filterStr = fStr.trim().toUpperCase();
 		String tmpFilterStr = filterStr; 
@@ -228,7 +235,7 @@ public class MyAutoComplete {
 		}  
 	}
 	
-	public static Integer getMyTabId() {
+	public   Integer getMyTabId() {
 		MyTab tb = SqlEditor.currentMyTab(); 
 		if(tb != null) {
 			var scpo = tb.getScriptPo();
@@ -240,7 +247,7 @@ public class MyAutoComplete {
 		return null;
 	}
 	
-	public static void cacheTablePo(TablePo tabpo) {
+	public   void cacheTablePo(TablePo tabpo) {
 		
 		Consumer< String >  caller = x ->{ 
 			var fs = tabpo.getFields(); 
@@ -283,7 +290,7 @@ public class MyAutoComplete {
 	}
 	
 	// 缓存页面单词
-	public static void cacheTextWord() {
+	public   void cacheTextWord() {
 		var mtb = SqlEditor.currentMyTab(); 
 		String text = mtb.getSqlCodeArea().getCodeArea().getText();
 		Consumer< String >  caller = x ->{ 
@@ -310,7 +317,7 @@ public class MyAutoComplete {
 		
 	}
 	
-	public static Collection<TablePo> getCacheTableFields() {
+	public    Collection<TablePo> getCacheTableFields() {
 		List<TablePo> cacheFs= new ArrayList<>();
 		Integer id = getMyTabId();
 		if(id != null) {
@@ -323,7 +330,7 @@ public class MyAutoComplete {
 	}
 	
 	//替换输入
-	public static void codeAreaReplaceString( String selectVal , TablePo tabpo ) {
+	public   void codeAreaReplaceString( String selectVal , TablePo tabpo ) {
 		// 缓存表(表字段)
 		cacheTablePo(tabpo);
 		
@@ -353,22 +360,7 @@ public class MyAutoComplete {
 		}else if(filterStr.length() == 0 ){ 
 			codeArea.insertText(anc, selectVal);
 		}
-//		else if(StrUtils.isNotNullOrEmpty(caStr.trim())) {
-//			caStr = caStr.toUpperCase();
-//			String tmp_selectVal = selectVal.toUpperCase();
-//			for(int i = 0 ; i < len -1; i++) {
-//				String tmp = caStr.substring(i);
-//				if(tmp_selectVal.startsWith(tmp)) {
-//					int begin = start - i;
-//					if(begin < 0) {
-//						begin = 0;
-//					}
-//					codeArea.deleteText(begin, end);
-//					codeArea.insertText(begin, selectVal); 
-//				}
-//	 		}
-//			
-//		}
+ 
 		else {
 			// 没有匹配到直接输入
 			codeArea.insertText(anc, selectVal);
@@ -377,5 +369,6 @@ public class MyAutoComplete {
 		
 		
 	}
-	
+
+ 
 }

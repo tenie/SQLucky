@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.utility.ParseSQL;

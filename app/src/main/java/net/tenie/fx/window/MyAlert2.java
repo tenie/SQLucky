@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.fx.Action.CommonAction;
 
-public class MyAlert {
+public class MyAlert2 {
 	public static void infoAlert(String title, String containTxt) {
 		showErrorMsg(containTxt, ModalDialog.INFO);
 	}
@@ -53,12 +53,12 @@ public class MyAlert {
 		List<Node> btns = new ArrayList<>();
 		btns.add( btn); 
 		
-		Node vb = ModalDialog.setVboxShape(stage, tit, nds, btns);
+		Node vb = DialogTools.setVboxShape(stage, tit, nds, btns);
 		Scene scene = new Scene((Parent) vb);
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-		ModalDialog.setSceneAndShow(scene, stage);
+		DialogTools.setSceneAndShow(scene, stage);
 	}
 	
 //	public static void ModalDialogApp(VBox node) {

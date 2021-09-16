@@ -4,7 +4,7 @@ import org.controlsfx.control.MasterDetailPane;
 import javafx.geometry.Side;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.SqlEditor;
 
 /*   @author tenie */

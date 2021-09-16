@@ -12,10 +12,9 @@ import javafx.scene.control.TextField;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
-import net.tenie.fx.component.HighLightingSqlCodeArea;
-import net.tenie.fx.component.MyAutoComplete;
+import net.tenie.fx.component.HighLightingCodeArea;
 import net.tenie.fx.component.SqlEditor;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.window.ConnectionEditor;
@@ -24,31 +23,6 @@ import net.tenie.fx.window.ConnectionEditor;
 /*   @author tenie */
 public class CommonListener {
 	
-	public static ChangeListener< String> codetxtChange(HighLightingSqlCodeArea obj){
-		return new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				Consumer< String >  caller = x ->{
-					Tab tb = SqlEditor.mainTabPaneSelectedTab();
-					if (tb != null) {
-						Platform.runLater(()->{
-							String title = CommonUtility.tabText(tb);  
-							if (!title.endsWith("*")) { 
-								CommonUtility.setTabName(tb, title + "*");
-							}
-							obj.highLighting();
-						});
-
-						// 缓存单词
-						MyAutoComplete.cacheTextWord();
-						
-					}
-				};
-				
-				CommonUtility.delayRunThread(caller, 800);
-			}
-		};
-	}
 	
 	// 文本框只能输入ip字符串
 	public static ChangeListener<String> textFieldIp(TextField rows) {

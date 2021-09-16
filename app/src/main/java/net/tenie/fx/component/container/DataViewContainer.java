@@ -15,7 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.utility.DraggingTabPaneSupport;
 import net.tenie.fx.window.TableDataDetail;
 

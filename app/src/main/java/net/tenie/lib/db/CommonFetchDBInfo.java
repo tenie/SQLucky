@@ -7,9 +7,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.fx.Action.SettingKeyCodeCombination;
 import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
-import net.tenie.fx.PropertyPo.TablePo;
 /*   
  * @author tenie 
  * */

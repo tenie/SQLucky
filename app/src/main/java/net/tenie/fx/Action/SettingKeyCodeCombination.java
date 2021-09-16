@@ -2,6 +2,8 @@ package net.tenie.fx.Action;
 
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.component.*;
+import net.tenie.fx.config.DBConns;
+
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -19,8 +21,9 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
-import net.tenie.fx.config.CommonConst;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.config.CommonConst;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 /*   @author tenie */
@@ -95,7 +98,9 @@ public final class SettingKeyCodeCombination {
 //			double x = bd.getCenterX();
 //			double y = bd.getCenterY();
 			if (codeArea.isFocused()) {
-				SqlEditor.callPopup( codeArea);
+				SqlEditor.currentMyTab().getSqlCodeArea().callPopup();
+				
+//				SqlEditor.callPopup( codeArea);
 			}
 			
 			
@@ -203,13 +208,15 @@ public final class SettingKeyCodeCombination {
 			System.out.println(y);
 			System.out.println(z);
 			 
-			MyAutoComplete.showPop(x, y+7, ""); 
+//			MyAutoComplete.showPop(x, y+7, ""); 
+			SqlEditor.currentMyTab().getSqlCodeArea().getMyAuto().showPop(x, y+7, ""); 
 		});
 		
 		
 		// 书签查找
 		scene.getAccelerators().put(F2, () -> {  
-			ButtonAction.nextBookmark(true); 
+//			ButtonAction.nextBookmark(true);
+			SqlEditor.currentMyTab().getSqlCodeArea().getCodeArea().getMylineNumber().nextBookmark(true);
 		});
 		
 		
@@ -218,7 +225,7 @@ public final class SettingKeyCodeCombination {
 		scene.getAccelerators().put(F4, () -> {
 			
 			try {
-				callProcedure(ComponentGetter.getCurrentConnectPO().getConn());
+				callProcedure(DBConns.getCurrentConnectPO().getConn());
 			} catch (SQLException e) { 
 				e.printStackTrace();
 			}

@@ -11,7 +11,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 
 /*   @author tenie */
 public final class DBConns {
@@ -159,5 +160,19 @@ public final class DBConns {
 //		}
 //		return conn;
 //	}
+	
+	// 当前选中的数据库连接名称
+	public static String getCurrentConnectName() {
+		Label lb = ComponentGetter.connComboBox.getValue();
+		String str = "";
+		if( lb != null) {
+		   str = lb.getText(); 
+		}
+		return str;
+	}
+	public static DbConnectionPo getCurrentConnectPO() {
+		String connName = getCurrentConnectName();
+		return DBConns.get(connName);
+	}
 
 }

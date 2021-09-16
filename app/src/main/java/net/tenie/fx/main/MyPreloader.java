@@ -11,7 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 
 public class MyPreloader extends Preloader {
 private Stage preloaderStage;
@@ -24,7 +24,7 @@ private Stage preloaderStage;
        loading.setMaxWidth(Region.USE_PREF_SIZE);
        loading.setMaxHeight(Region.USE_PREF_SIZE);
        loading.setStyle("-fx-background-color: #000000;");
-       Image i = new Image( MainMyDB.class.getResourceAsStream("/image/SQL6preLoad.png")); 
+       Image i = new Image( MyPreloader.class.getResourceAsStream("/image/SQL6preLoad.png")); 
        
       
        ProgressBar prob = new ProgressBar();
@@ -34,7 +34,7 @@ private Stage preloaderStage;
        loading.getChildren().add( prob);
        BorderPane root = new BorderPane(loading);
        Scene scene = new Scene(root);
-       scene.getStylesheets().add(ConfigVal.class.getResource("/css/ProgressBar.css").toExternalForm());
+       scene.getStylesheets().add(MyPreloader.class.getResource("/css/ProgressBar.css").toExternalForm());
        
        primaryStage.setWidth(280);
        primaryStage.setHeight(245);

@@ -1,8 +1,13 @@
 package net.tenie.fx.component;
 
 import java.io.File;
+
+import org.apache.commons.io.FileUtils;
+
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 操作系统的文件选择窗口
@@ -10,6 +15,23 @@ import javafx.stage.Stage;
  *
  */
 public final class CommonFileChooser {
+	
+	// 获取打开文件的目录
+	public static File getOpenfileDir() { 
+//		return  FileUtils.getUserDirectory();
+			if(StrUtils.isNullOrEmpty(ConfigVal.openfileDir)) {
+				return  FileUtils.getUserDirectory();
+			}else {
+				 
+				File f = new File(ConfigVal.openfileDir);
+				if(f.isFile()) {
+					String fp = f.getParent(); 
+				    f =  new File(fp);
+				} 
+				return  f;
+			} 
+	}
+	
 	// save file
 	private static FileChooser fileChooser = new FileChooser();
 
@@ -20,7 +42,7 @@ public final class CommonFileChooser {
 	
 	private static void configureFileChooser(final FileChooser fileChooser, String title, String filename) {
 		fileChooser.setTitle(title);
-		File dir =  ComponentGetter.getOpenfileDir();
+		File dir =  getOpenfileDir();
 		
 		fileChooser.setInitialDirectory( dir);
 		fileChooser.getExtensionFilters().clear();

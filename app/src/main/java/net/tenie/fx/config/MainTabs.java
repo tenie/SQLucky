@@ -5,7 +5,7 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 /*   @author tenie */

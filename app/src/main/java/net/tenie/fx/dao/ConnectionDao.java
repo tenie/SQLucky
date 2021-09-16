@@ -15,9 +15,8 @@ import javafx.scene.control.TreeView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.RsData;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.config.DBConns;
-import net.tenie.fx.controller.TransferDataController;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -36,7 +35,7 @@ public class ConnectionDao {
 	public static void refreshConnOrder() {
 		try {  
 			logger.info("refreshConnOrder");
-			TreeView<TreeNodePo> treeView = ComponentGetter.treeView ;
+			TreeView<TreeNodePo> treeView = AppWindowComponentGetter.treeView ;
 			TreeItem<TreeNodePo>  root = treeView.getRoot();
 			ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
 			int size = ls.size();

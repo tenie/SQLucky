@@ -29,8 +29,8 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.window.ModalDialog;
-import net.tenie.fx.window.MyAlert;
-
+import net.tenie.Sqlucky.sdk.config.CommonConst;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
@@ -53,19 +53,20 @@ import net.tenie.fx.PropertyPo.ScriptPo;
 //import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
+import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.CommonFileChooser;
-import net.tenie.fx.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.HighLightingSqlCodeAreaContextMenu;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.MyAutoComplete;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.DBinfoTree;
+import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.component.container.MenuBarContainer;
 import net.tenie.fx.component.container.ScriptTabTree;
-import net.tenie.fx.config.CommonConst;
-import net.tenie.fx.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
@@ -105,51 +106,16 @@ public class CommonAction {
 		hideFindReplaceWindow();
 		
 		// 提示窗口
-		MyAutoComplete.hide();
+		SqlEditor.currentMyTab().getSqlCodeArea().getMyAuto().hide();
+//		MyAutoComplete.hide();
 	}
-	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
-	public static RsVal tableInfo() {
-		String tableId = ComponentGetter.currentDataTabID();
-		String connName =  CacheTabView.getConnName(tableId); // CacheTableDate.getConnName(tableId);
-		String tableName = CacheTabView.getTableName(tableId); // CacheTableDate.getTableName(tableId);
-		Connection conn =  CacheTabView.getDbConn(tableId); //  CacheTableDate.getDBConn(tableId);   
-				
-		var alldata =   CacheTabView.getTabData(tableId); //CacheTableDate.getData(tableId);
-		DbConnectionPo  dbc = DBConns.get(connName); 
-		
-//		Button saveBtn = ComponentGetter.dataPaneSaveBtn();
-		var dataTableView = ComponentGetter.dataTableView();
-		RsVal rv = new RsVal();
-		rv.conn = conn; 
-		rv.dbconnPo = dbc; 
-		rv.tableName = tableName;
-//		rv.dbc =  dbc; 
-		rv.alldata = alldata;
-//		rv.saveBtn = saveBtn;
-		rv.dataTableView = dataTableView;
-		return rv;
-	}
-	
-	public static RsVal tableInfo(String tableName, String connName, Connection conn ) {
-
-		DbConnectionPo  dbc = DBConns.get(connName);  
-		RsVal rv = new RsVal();
-		rv.conn = conn; 
-		rv.dbconnPo = dbc;   
-		rv.tableName = tableName; 
-		rv.alldata = null;
-//		rv.saveBtn = null;
-		rv.dataTableView = null;
-		return rv;
-	}
-	
-	
+ 
 	// ctrl + S 按钮触发, 保存数据或sql文本
 	public static void ctrlAndSAction() {
 		boolean showStatus = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		// 如果现在数据表格中的<保存按钮>是亮的(面板还要显示着), 就保存数据 
 		if(showStatus) {
-			Button btn = ComponentGetter.dataPaneSaveBtn();
+			Button btn = DataViewTab.dataPaneSaveBtn();
 			if(btn != null && ! btn.isDisable()) {
 				ButtonAction.dataSave(); 
 				return ;
@@ -694,7 +660,7 @@ public class CommonAction {
 
 	// 查看表明细(一行数据) 快捷键
 	public static void shortcutShowDataDatil() {
-		AnchorPane fp = ComponentGetter.dataPane();
+		AnchorPane fp = DataViewTab.dataPane();
 		Button btn = (Button) fp.getChildren().get(1);
 		MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
 		Event.fireEvent(btn, me);
@@ -820,7 +786,7 @@ public class CommonAction {
 	}
 	//收缩treeview
 	public static void shrinkTreeView() {
-		TreeItem<TreeNodePo>  root =ComponentGetter.treeView.getRoot();
+		TreeItem<TreeNodePo>  root = AppWindowComponentGetter.treeView.getRoot();
 		shrinkUnfoldTreeViewHelper(root, false);
 	}
 	 
@@ -828,7 +794,7 @@ public class CommonAction {
 	
 	//展开treeview
 	public static void unfoldTreeView() {
-		TreeItem<TreeNodePo>  root =ComponentGetter.treeView.getRoot();
+		TreeItem<TreeNodePo>  root = AppWindowComponentGetter.treeView.getRoot();
 		root.setExpanded(true);
 		shrinkUnfoldTreeViewHelper(root, true);
 	}
@@ -855,7 +821,7 @@ public class CommonAction {
 	public static void setTheme(String val ) {
 		saveThemeStatus(val); 
 		// 根据新状态加载新样式
-		loadCss(ComponentGetter.primaryscene); 
+		CommonUtility.loadCss(ComponentGetter.primaryscene); 
 		SqlEditor.changeThemeAllCodeArea() ; 
 		changeSvgColor(); // 修改按钮颜色
 	}
@@ -884,7 +850,7 @@ public class CommonAction {
 		String color =  themeColor();
 		
 		List<ButtonBase> allBtns = 	ButtonFactory.btns; // 
-		allBtns.addAll(ComponentGetter.dataPaneBtns());  //数据面板中的按钮 
+		allBtns.addAll(DataViewTab.dataPaneBtns());  //数据面板中的按钮 
 		for(ButtonBase reg :allBtns) {
 			reg.getGraphic().setStyle("-fx-background-color: " + color + ";");
 		}
@@ -895,7 +861,7 @@ public class CommonAction {
 		}
 		
 		// datapane menuitem
-		for(MenuItem it: ComponentGetter.dataPaneMenuItems()) {
+		for(MenuItem it: DataViewTab.dataPaneMenuItems()) {
 			it.getGraphic().setStyle("-fx-background-color: " + color + ";");
 		}
 		
@@ -1149,268 +1115,14 @@ public class CommonAction {
 	}
 	
 	
-	static Map<String, String> charMap = new HashMap<>();
-	static Map<String, String> charMapPre = new HashMap<>(); 
-	static List<String> charList = new ArrayList<>();
 	
 	
-	static {
-		charMap.put("(" , ")");
-		charMap.put("[" , "]");
-		charMap.put("{" , "}"); 
-		
-		charMapPre.put(")" , "("); 
-		charMapPre.put("]" , "[");
-		charMapPre.put("}" , "{");
-		
-		charList.add("\"");
-		charList.add("'");
-		charList.add("`");
-		charList.add("%");
-		 
-		
-	}
 	
-	
-	// 针对括号() {} []的双击, 选中括号内的文本
-	 // 如果选中了内容, 就会返回false
-	public static boolean selectSQLDoubleClicked( CodeArea codeArea) {
-		boolean tf = true;
-		String str  = codeArea.getSelectedText();
-		String trimStr = str.trim();
-		int strSz = trimStr.length();
-		if(strSz > 0 ) {
-			IndexRange i = codeArea.getSelection(); // 获取当前选中的区间 
-    		int start = i.getStart();
-    		Set<String> keys = charMap.keySet();
-    		
-    		for(String key : keys) { 
-    			if(trimStr.endsWith(key)) { 
-    				String val = charMap.get(key);
-    	    		int endIdx = str.lastIndexOf(key);
-    	    		int is = start + endIdx +1; 
-    	    		int end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, key , val );
-    	    		if( end != 0 && end > is) {
-    	    			codeArea.selectRange(is, end);
-    	    		}
-    	    		tf = false;
-    	    		break;
-    			}
-    		}
-    		
-    		if(tf) {
-    			keys = charMapPre.keySet();
-    			for(String key : keys) { 
-        			if(trimStr.endsWith(key)) { 
-        				String val = charMapPre.get(key);        	    		
-        	    		int endIdx = str.lastIndexOf(key);
-        	    		int end = start + endIdx ; 
-        	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, key , val);
-        	    		if( end > is) {
-        	    			codeArea.selectRange(is, end);
-        	    		}
-        	    		
-        	    		tf = false;
-        	    		break;
-        			}
-        		}
-    		}
-			if (tf) {
-				for(String v: charList) {
-					if (trimStr.endsWith( v)) {
-						int endIdx = str.lastIndexOf(v);
-						int end = start + endIdx;
-						IndexRange ir = CommonAction.findStringRange(codeArea.getText(), end, v);
-						if ( (ir.getStart() + ir.getEnd()) > 0) {
-							int st = ir.getStart();
-							int en =ir.getEnd();
-//							codeArea.selectRange(ir.getStart(), ir.getEnd());
-							String tmpcheck = codeArea.getText(ir.getStart(), ir.getEnd());
-							if(tmpcheck.endsWith(v)) {
-								en--;
-							}
-							if(tmpcheck.startsWith(v)) {
-								st++;
-							}
-							codeArea.selectRange(st, en);
-							
-						}
 
-						tf = false; 
-						break;
-					}
-				} 
-			} 
-    		
-    		if(tf) {
-    			if(trimStr.toUpperCase().endsWith("SELECT")) {
-    	    		int endIdx = str.toUpperCase().lastIndexOf("SELECT"); 
-    	    		int is = start + endIdx + 6; 
-    	    		int end = CommonAction.findBeginStringRange(codeArea.getText(), is, "SELECT", "FROM");
-    	    		if( end != 0 && end > is) {
-    	    			codeArea.selectRange(is - 6 , end + 4);
-    	    		}
-    	    		tf = false; 
-    			}else if(trimStr.toUpperCase().endsWith("FROM")) {
-    	    		int endIdx = str.toUpperCase().lastIndexOf("FROM");
-    	    		int end = start + endIdx ; 
-    	    		int is = CommonAction.findEndStringRange(codeArea.getText(), end, "FROM", "SELECT");
-    	    		if( end > is) {
-    	    			codeArea.selectRange(is - 6, end + 5);
-    	    		}
-    	    		tf = false; 
-    			} 
-    			
-    		} 
-    		
-    		if(tf) {
-    			if(trimStr.toUpperCase().endsWith("CASE")) {
-    	    		int endIdx = str.toUpperCase().lastIndexOf("CASE");
-    	    		int is = start + endIdx + 4; 
-    	    		int end = CommonAction.findBeginStringRange(codeArea.getText(), is, "CASE", "END");
-    	    		if( end != 0 && end > is) {
-    	    			codeArea.selectRange(is - 4, end + 3);
-    	    		}
-    	    		tf = false; 
-    			}else if(trimStr.toUpperCase().endsWith("END")) {
-    	    		int endIdx = str.toUpperCase().lastIndexOf("END");
-    	    		int end = start + endIdx ; 
-    	    		int is = CommonAction.findEndStringRange(codeArea.getText(), end, "END", "CASE");
-    	    		if( end > is) {
-    	    			codeArea.selectRange(is - 4, end + 4);
-    	    		}
-    	    		tf = false; 
-    			}   
-    		} 
-    		 
-    	} 
-		return tf;
-	}
 	
 	
-    public static void  setStyleSpans(CodeArea codeArea , int idx, int size) {
-    	StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
-		spansBuilder.add(Collections.emptyList(), 0);
-        spansBuilder.add(Collections.singleton("findparenthesis"),  size);
-        codeArea.setStyleSpans( idx , spansBuilder.create());
-    }
-	
-	// 鼠标单击找到括号对, 标记一下
-	public static boolean  oneClickedFindParenthesis( CodeArea codeArea) {
-		boolean tf = true;
-	
-		int anchor = codeArea.getAnchor();
-		int start = anchor == 0 ? anchor : anchor - 1 ; 
-		int end = anchor +1;
-		
-		String text = codeArea.getText();
-		if(text.length() == anchor) {
-			return false;
-		}
-	 
-		
-		String str  = codeArea.getText(start, end);// codeArea.getSelectedText();
-		String trimStr = str.trim();
-		int strSz = trimStr.length();
-//		logger.info("单击选中 |"+ trimStr+"|" );
-		if(strSz > 0 ) { 
-			logger.info("鼠标单击找到括号对, 标记一下 |"+ trimStr+"|" );
-			
-    		Set<String> keys = charMap.keySet();
-    		
-    		for(String key : keys) { 
-    			if(trimStr.endsWith(key)) { 
-    				String val = charMap.get(key);
-    	    		int endIdx = str.lastIndexOf(key);
-    	    		int is = start + endIdx +1; 
-    	    		end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, key , val );
-    	    		if( end != 0 && end > is) {
-    	    			
-    	    			setStyleSpans( codeArea, is -1, 1);
-    	    			setStyleSpans( codeArea, end, 1);
-    	    			
-    	    			
-    	    		}
-    	    		tf = false;
-    	    		break;
-    			}
-    		}
-    		
-    		if(tf) {
-    			keys = charMapPre.keySet();
-    			for(String key : keys) { 
-        			if(trimStr.endsWith(key)) { 
-        				String val = charMapPre.get(key);        	    		
-        	    		int endIdx = str.lastIndexOf(key);
-        	    	    end = start + endIdx ; 
-        	    		int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, key , val);
-        	    		if( end > is) {
-        	    			setStyleSpans( codeArea, is -1, 1);
-        	    			setStyleSpans( codeArea, end, 1);
-        	    			
-        	    		}
-        	    		
-        	    		tf = false;
-        	    		break;
-        			}
-        		}
-    		}
-    		
-    		 
-    		
-	   }
-	return tf;
-	}
 	
 	
-	// 加载css样式
-	public static void loadCss(Scene scene) {
-//		if(scene ==null) return;
-		scene.getStylesheets().clear();
-		logger.info(ConfigVal.THEME);
-		if(ConfigVal.THEME.equals( CommonConst.THEME_DARK )) {
-			scene.getStylesheets().addAll(ConfigVal.cssList);
-		}else if(ConfigVal.THEME.equals( CommonConst.THEME_LIGHT)) { 
-			scene.getStylesheets().addAll(ConfigVal.cssListLight); 
-			
-		}else if(ConfigVal.THEME.equals( CommonConst.THEME_YELLOW)) { 
-			scene.getStylesheets().addAll(ConfigVal.cssListYellow); 
-			
-		}
-		
-		// 加载自定义的css
-		String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css"; 
-		File cssf = new File(path); 
-		if( ! cssf.exists() ) { 
-			setFontSize(14);
-		}
-		String uri = Paths.get(path).toUri().toString();  
-		 
-		scene.getStylesheets().add(uri);
-		
-	     
-	}
-	
-	// 设置字符大小
-	static public void setFontSize(int i) { 
-		String val = 
-				"/*"+i+"*/ \n" +
-				".myLineNumberlineno{ \n" + 
-				"	-fx-font-size :	"+i+"; \n" + 
-				"} \n" +
-				".code-area{\n"+
-				"	-fx-font-size :	"+i+"; \n" +
-			    "} \n" +
-				"";
-		try {
-			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
-			SaveFile.saveByEncode( path , val,"UTF-8");
-			loadCss(ComponentGetter.primaryscene);  
-			
-		} catch (IOException e) { 
-			e.printStackTrace();
-		}
-	}
 	//TODO 改变字体大小
 	public static void changeFontSize(boolean isPlus) {
 		// 获取当前的 size
@@ -1436,7 +1148,7 @@ public class CommonAction {
 		if(sz < 10) {
 			sz = 10;
 		}
-		setFontSize(sz);
+		CommonUtility.setFontSize(sz);
 		for(MyTab mtb : SqlEditor.getAllgetMyTabs() ) {
 			var obj = mtb.getSqlCodeArea();
 			var code = obj.getCodeArea();
@@ -1555,7 +1267,7 @@ public class CommonAction {
 		};
 		Consumer< String >  cancel = x ->{ 
 			saveThemeStatus(val);  
-			loadCss(ComponentGetter.primaryscene); 
+			CommonUtility.loadCss(ComponentGetter.primaryscene); 
 			SqlEditor.changeThemeAllCodeArea() ;
 			// 修改按钮颜色
 			changeSvgColor();
@@ -1583,6 +1295,10 @@ public class CommonAction {
 		}
 		return null; 
 	}
+	
+	
+	
+	
 	
 	public static void demo() {}
 	

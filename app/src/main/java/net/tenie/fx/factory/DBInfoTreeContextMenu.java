@@ -10,7 +10,7 @@ import javafx.scene.control.TreeItem;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableDataDetail;
