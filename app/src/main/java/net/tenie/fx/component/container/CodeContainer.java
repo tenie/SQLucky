@@ -5,7 +5,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.utility.DraggingTabPaneSupport;
 
@@ -23,7 +23,6 @@ public class CodeContainer {
 		mainTabPane = new TabPane();
 		ComponentGetter.mainTabPane = mainTabPane;
 
-		SqlEditor.myTabPane = mainTabPane;
 		dtps.addSupport(mainTabPane);
 
 		VBox.setVgrow(mainTabPane, Priority.ALWAYS);

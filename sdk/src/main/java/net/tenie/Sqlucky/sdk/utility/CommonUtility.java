@@ -3,13 +3,10 @@ package net.tenie.Sqlucky.sdk.utility;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,7 +23,6 @@ import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import javafx.scene.input.Clipboard;
 
 /**
@@ -38,7 +34,13 @@ public class CommonUtility {
 	private static Logger logger = LogManager.getLogger(CommonUtility.class);
 	private static ArrayBlockingQueue<Consumer< String >> queue = new ArrayBlockingQueue<>(1);
 	
-	
+	public static String themeColor() {
+		String color = "#1C94FF";
+		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+			color = "#FDA232";
+		}
+		return color;
+	}
 	// 加载css样式
 		public static void loadCss(Scene scene) {
 //			if(scene ==null) return;
@@ -352,5 +354,8 @@ public class CommonUtility {
 		}
 		return false;
 	}
-
+	// 给控件加样式
+	public static void addCssClass(Node nd, String css) {
+		nd.getStyleClass().add(css);
+	}
 }

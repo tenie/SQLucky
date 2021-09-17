@@ -10,10 +10,10 @@ import javafx.scene.control.TreeItem;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableDataDetail;
+import net.tenie.lib.tools.IconGenerator;
 
 public class DBInfoTreeContextMenu {
 	public static List<MenuItem> menuItems = new ArrayList<>();
@@ -40,7 +40,7 @@ public class DBInfoTreeContextMenu {
 		link.setOnAction(e->{
 			ConnectionEditor.openDbConn();
 		});
-		link.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
+		link.setGraphic(IconGenerator.svgImageDefActive("link"));
 		link.setDisable(true);
 		link.setId("OpenConnection");
 		menuItems.add(link);
@@ -49,7 +49,7 @@ public class DBInfoTreeContextMenu {
 		unlink.setOnAction(e->{
 			ConnectionEditor.closeDbConn();
 		});
-		unlink.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
+		unlink.setGraphic(IconGenerator.svgImageDefActive("unlink"));
 		unlink.setDisable(true);
 		unlink.setId("CloseConnection");
 		menuItems.add(unlink);
@@ -59,7 +59,7 @@ public class DBInfoTreeContextMenu {
 			ConnectionEditor.closeDbConn();
 			ConnectionEditor.editDbConn();
 		});
-		Edit.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
+		Edit.setGraphic(IconGenerator.svgImageDefActive("edit"));
 		Edit.setDisable(true);
 		Edit.setId("EditConnection");
 		menuItems.add(Edit);
@@ -68,7 +68,7 @@ public class DBInfoTreeContextMenu {
 		Add.setOnAction(e->{
 			ConnectionEditor.ConnectionInfoSetting();
 		});
-		Add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+		Add.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 //		Add.setDisable(true);
 		Add.setId("AddConnection");
 		menuItems.add(Add);
@@ -78,7 +78,7 @@ public class DBInfoTreeContextMenu {
 		delete.setOnAction(e -> {
 			ConnectionEditor.deleteDbConn();
 		});
-		delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
+		delete.setGraphic(IconGenerator.svgImageDefActive("trash"));
 		delete.setDisable(true);
 		delete.setId("DeleteConnection");
 		menuItems.add(delete);
@@ -86,26 +86,26 @@ public class DBInfoTreeContextMenu {
 		
 		refresh = new MenuItem("Refresh");
 		
-		refresh.setGraphic(ImageViewGenerator.svgImageDefActive("refresh"));
+		refresh.setGraphic(IconGenerator.svgImageDefActive("refresh"));
 		refresh.setDisable(true);
 		refresh.setId("DeleteConnection");
 		menuItems.add(refresh);
 		
 		
 		tableAddNewCol = new MenuItem("Table Add New Column");
-	    tableAddNewCol.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+	    tableAddNewCol.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 	    tableAddNewCol.setId("tableAddNewCol");
 	    tableAddNewCol.setDisable(true);
 	    menuItems.add(tableAddNewCol);
 	    
 	    tableShow = new MenuItem("Show Table Field Type");
-	    tableShow.setGraphic(ImageViewGenerator.svgImageDefActive("search-plus"));
+	    tableShow.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
 	    tableShow.setId("tableShow");
 	    tableShow.setDisable(true);
 	    menuItems.add(tableShow);
 	    
 	    tableDrop = new MenuItem("Drop ");
-	    tableDrop.setGraphic(ImageViewGenerator.svgImageDefActive("minus-square"));
+	    tableDrop.setGraphic(IconGenerator.svgImageDefActive("minus-square"));
 	    tableDrop.setId("tableDrop");
 	    tableDrop.setDisable(true);
 	    menuItems.add(tableDrop);

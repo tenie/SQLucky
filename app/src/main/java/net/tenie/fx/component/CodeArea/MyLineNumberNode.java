@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.component.CodeArea;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -19,16 +19,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
-import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
+import net.tenie.Sqlucky.sdk.SqluckyLineNumberNode;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.lib.tools.IconGenerator;
 
 /**
  *  代码行号
  * @author tenie
  *
  */
-public class MyLineNumberNode2 implements IntFunction<Node> {
+public class MyLineNumberNode implements SqluckyLineNumberNode {
 
 	private MyCodeArea  area;
 	private static final Insets DEFAULT_INSETS = new Insets(0.0, 5.0, 0.0, 5.0);
@@ -36,13 +36,13 @@ public class MyLineNumberNode2 implements IntFunction<Node> {
 	private static final Font DEFAULT_FONT = Font.font("monospace", FontPosture.ITALIC, 13);
 	private static   Background DEFAULT_BACKGROUND = new Background(
 			new BackgroundFill(Color.web("#313335"), null, null));
-	public static MyLineNumberNode2 get(CodeArea  area, String textcolor, String backgroundcolor) {
+	public static MyLineNumberNode get(CodeArea  area, String textcolor, String backgroundcolor) {
 		DEFAULT_TEXT_FILL = Color.web(textcolor);
 		DEFAULT_BACKGROUND  = new Background( new BackgroundFill(Color.web(backgroundcolor ), null, null));
 		return get(area, digits -> "%1$" + digits + "s");
 	}
 	
-	public static MyLineNumberNode2 get(CodeArea  area, String textcolor, String backgroundcolor, List<String> lines) {
+	public static MyLineNumberNode get(CodeArea  area, String textcolor, String backgroundcolor, List<String> lines) {
 		DEFAULT_TEXT_FILL = Color.web(textcolor);
 		DEFAULT_BACKGROUND  = new Background( new BackgroundFill(Color.web(backgroundcolor ), null, null));
 		if(lines !=null) {	
@@ -57,11 +57,11 @@ public class MyLineNumberNode2 implements IntFunction<Node> {
 //		return get(area, digits -> "%1$" + digits + "s");
 //	}
 
-	public static  MyLineNumberNode2 get(CodeArea area, IntFunction<String> format) {
-		return new MyLineNumberNode2(area, format);
+	public static  MyLineNumberNode get(CodeArea area, IntFunction<String> format) {
+		return new MyLineNumberNode(area, format);
 	}
-	public static  MyLineNumberNode2 get(CodeArea area, IntFunction<String> format, List<String> lines ) {
-		return new MyLineNumberNode2(area, format, lines);
+	public static  MyLineNumberNode get(CodeArea area, IntFunction<String> format, List<String> lines ) {
+		return new MyLineNumberNode(area, format, lines);
 	}
 
 	private final Val<Integer> nParagraphs;
@@ -76,14 +76,14 @@ public class MyLineNumberNode2 implements IntFunction<Node> {
 	}
 	
 
-	private MyLineNumberNode2(CodeArea area, IntFunction<String> format , List<String> lines) {
+	private MyLineNumberNode(CodeArea area, IntFunction<String> format , List<String> lines) {
 		nParagraphs = LiveList.sizeOf(area.getParagraphs());
 		this.format = format;
 		this.area = (MyCodeArea) area;
 		this.lineNoList = lines;
 	}
 	
-	private MyLineNumberNode2(CodeArea area, IntFunction<String> format) {
+	private MyLineNumberNode(CodeArea area, IntFunction<String> format) {
 		nParagraphs = LiveList.sizeOf(area.getParagraphs());
 		this.format = format;
 		this.area = (MyCodeArea) area;
@@ -121,10 +121,10 @@ public class MyLineNumberNode2 implements IntFunction<Node> {
 //				lineNo.getStyleClass().add("myLineBookMark");
 				
 				if(lineNoList.contains(lineNo.getText())) {
-					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("NULL",12));
+					lineNo.setGraphic(IconGenerator.svgImageDefActive("NULL",12));
 					lineNoList.remove(lineNo.getText());
 				}else {
-					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right", 12));
+					lineNo.setGraphic(IconGenerator.svgImageDefActive("chevron-circle-right", 12));
 					lineNoList.add(lineNo.getText());
 				} 
 			} 
@@ -137,9 +137,9 @@ public class MyLineNumberNode2 implements IntFunction<Node> {
 		
 		// 刷新的时候, 看是否要加上图标
 		if(lineNoList.contains(lineNo.getText())) {
-			lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right",12));
+			lineNo.setGraphic(IconGenerator.svgImageDefActive("chevron-circle-right",12));
 		}else {
-			lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("NULL",12));
+			lineNo.setGraphic(IconGenerator.svgImageDefActive("NULL",12));
 		}
 		return lineNo;
 	}
@@ -155,27 +155,27 @@ public class MyLineNumberNode2 implements IntFunction<Node> {
 			MenuItem add = new MenuItem("Add/Remove Bookmark");
 			add.setOnAction(e -> { 
 				if(lineNoList.contains(lineNo.getText())) {
-					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("NULL",12));
+					lineNo.setGraphic(IconGenerator.svgImageDefActive("NULL",12));
 					lineNoList.remove(lineNo.getText());
 				}else {
-					lineNo.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right", 12));
+					lineNo.setGraphic(IconGenerator.svgImageDefActive("chevron-circle-right", 12));
 					lineNoList.add(lineNo.getText());
 				} 
 				
 			});
-			add.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-right"));
+			add.setGraphic(IconGenerator.svgImageDefActive("chevron-circle-right"));
 
 			MenuItem next = new MenuItem("Next");
 			next.setOnAction(e->{
 				nextBookmark(true);
 			});
-			next.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-down"));
+			next.setGraphic(IconGenerator.svgImageDefActive("chevron-circle-down"));
 
 			MenuItem previous = new MenuItem("Previous");
 			previous.setOnAction(e->{
 				nextBookmark(false);
 			});
-			previous.setGraphic(ImageViewGenerator.svgImageDefActive("chevron-circle-up"));
+			previous.setGraphic(IconGenerator.svgImageDefActive("chevron-circle-up"));
 
 			 
 

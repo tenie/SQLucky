@@ -1,31 +1,26 @@
 package net.tenie.fx.component.container;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextField;
-
 import javafx.application.Platform;
 import javafx.scene.control.Accordion;
-import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.PropertyPo.ScriptPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.MyTooltipTool;
-import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.factory.ButtonFactory;
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class DBinfoContainer {
 	private VBox container;
 	private FlowPane treeBtnPane;
@@ -75,7 +70,7 @@ public class DBinfoContainer {
 		TitledPane dbTitledPane = new TitledPane();
 		dbTitledPane.setText("DB Config"); 
 //		dbTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("info-circle", 14)); 
-		CommonAction.addCssClass(dbTitledPane, "titledPane-color");
+		CommonUtility.addCssClass(dbTitledPane, "titledPane-color");
 		dbTitledPane.setContent( DBtreeView);
 		
 		
@@ -84,28 +79,44 @@ public class DBinfoContainer {
 		TitledPane scriptTitledPane = new TitledPane();
 		scriptTitledPane.setText("Script");
 //		scriptTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("icomoon-files-empty", 14));
-		CommonAction.addCssClass(scriptTitledPane, "titledPane-color");
+		CommonUtility.addCssClass(scriptTitledPane, "titledPane-color");
 		scriptTitledPane.setContent(scriptTreeView);
 		
 		ad.setExpandedPane(dbTitledPane);
 		ad.getPanes().add(dbTitledPane);
 		ad.getPanes().add(scriptTitledPane);
 		
-		dbTitledPane.expandedProperty().addListener((obs, oldValue, newValue) -> {
-			if(newValue == false) {
-				if( scriptTitledPane.isExpanded() == false) {
-					Platform.runLater(() -> {scriptTitledPane.setExpanded(true); }); 
-				}
-			} 
-		});
 		
-		scriptTitledPane.expandedProperty().addListener((obs, oldValue, newValue) -> {
-			if(newValue == false) {
-				if( scriptTitledPane.isExpanded() == false) {
-					Platform.runLater(() -> {dbTitledPane.setExpanded(true); }); 
-				}
-			} 
+		ad.expandedPaneProperty().addListener((obj, o, n )->{
+//			System.out.println(o);
+//			System.out.println(n);
+//			System.out.println(ad.getExpandedPane());
+//			System.out.println("----------------------\n");
+			if(ad.getExpandedPane() == null && n == null) { 
+				Platform.runLater(() -> { 
+					if(ad.getExpandedPane() == null) { 
+						dbTitledPane.setExpanded(true); 
+					}
+				}); 
+			}
 		});
+//		
+//		dbTitledPane.expandedProperty().addListener((obs, oldValue, newValue) -> {
+//			if(newValue == false) {
+//				
+//				if( scriptTitledPane.isExpanded() == false) {
+//					Platform.runLater(() -> {scriptTitledPane.setExpanded(true); }); 
+//				}
+//			} 
+//		});
+		
+//		scriptTitledPane.expandedProperty().addListener((obs, oldValue, newValue) -> {
+//			if(newValue == false) {
+//				if( scriptTitledPane.isExpanded() == false) {
+//					Platform.runLater(() -> {dbTitledPane.setExpanded(true); }); 
+//				}
+//			} 
+//		});
 		
 		ComponentGetter.dbTitledPane = dbTitledPane;
 		ComponentGetter.scriptTitledPane = scriptTitledPane;

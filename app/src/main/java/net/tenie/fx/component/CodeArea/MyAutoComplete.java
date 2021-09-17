@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.component.CodeArea;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -9,6 +9,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
+
+import org.fxmisc.richtext.CodeArea;
+
 import javafx.application.Platform;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -21,10 +24,11 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbSchemaPo;
 import net.tenie.lib.db.Dbinfo;
+import net.tenie.Sqlucky.sdk.AutoComplete;
+import net.tenie.Sqlucky.sdk.SqluckyCodeArea;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.CodeArea.AutoCompleteCellFactory;
-import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
-import net.tenie.Sqlucky.sdk.myinterface.AutoComplete;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
@@ -144,8 +148,9 @@ public class MyAutoComplete implements AutoComplete{
 		} 
 	}
 	// 按backspace按键的时候, 隐藏提示窗口的策略
-	public   void backSpaceHide(MyCodeArea codeArea) {
+	public   void backSpaceHide(SqluckyCodeArea sqluckyCodeArea) {
 		if(isShow()) {
+			CodeArea codeArea = sqluckyCodeArea.getCodeArea();
 			int acr  = codeArea.getAnchor();
 			int begin = 0;
 			if(acr > 0) {
@@ -236,11 +241,11 @@ public class MyAutoComplete implements AutoComplete{
 	}
 	
 	public   Integer getMyTabId() {
-		MyTab tb = SqlEditor.currentMyTab(); 
+		SqluckyTab tb = SqlcukyEditor.currentMyTab(); 
 		if(tb != null) {
-			var scpo = tb.getScriptPo();
+			var scpo = tb.getDocumentPo();
 			if(scpo != null) {
-				Integer id = tb.getScriptPo().getId();
+				Integer id = tb.getDocumentPo().getId();
 				return id;
 			} 
 		} 
@@ -291,7 +296,7 @@ public class MyAutoComplete implements AutoComplete{
 	
 	// 缓存页面单词
 	public   void cacheTextWord() {
-		var mtb = SqlEditor.currentMyTab(); 
+		var mtb = SqlcukyEditor.currentMyTab(); 
 		String text = mtb.getSqlCodeArea().getCodeArea().getText();
 		Consumer< String >  caller = x ->{ 
 			Integer id = getMyTabId(); 
@@ -335,7 +340,7 @@ public class MyAutoComplete implements AutoComplete{
 		cacheTablePo(tabpo);
 		
 		int len = selectVal.length();
-		var codeArea = SqlEditor.getCodeArea();
+		var codeArea = SqlcukyEditor.getCodeArea();
 		int anc = codeArea.getAnchor();
 		
 		int start = 0;

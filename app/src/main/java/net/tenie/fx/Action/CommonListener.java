@@ -1,26 +1,25 @@
 package net.tenie.fx.Action;
 
-import java.util.function.Consumer;
-
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
-import net.tenie.fx.component.HighLightingCodeArea;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.window.ConnectionEditor;
 
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class CommonListener {
 	
 	
@@ -90,11 +89,11 @@ public class CommonListener {
 					DbConnectionPo cnnpo = DBConns.get(newValue.getText());
 					if (cnnpo != null && !cnnpo.isAlive() && !cnnpo.isConnIng()) {
 						//清除查找字符串
-						IndexRange ir = SqlEditor.getSelection();
+						IndexRange ir = SqlcukyEditor.getSelection();
 						CommonAction.pressBtnESC();	
 						CommonAction.shrinkTreeView();
 						ConnectionEditor.openConn(cnnpo.getConnName());
-						SqlEditor.selectRange(ir);
+						SqlcukyEditor.selectRange(ir);
 					}
 				}
 			    

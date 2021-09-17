@@ -1,8 +1,6 @@
-package net.tenie.fx.factory;
+package net.tenie.plugin.note.component;
 
 import java.util.Objects;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
@@ -16,28 +14,28 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
-import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.container.ScriptTabTree;
-import net.tenie.lib.tools.IconGenerator;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+
 
 /**
  * 
  * @author tenie
  *
  */
-public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeCell<MyTab>> { 
-	private static Logger logger = LogManager.getLogger(ScriptTabNodeCellFactory.class);
+public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, TreeCell<SqluckyTab>> { 
+//	private static Logger logger = LogManager.getLogger(NoteTabNodeCellFactory.class);
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
-	private TreeCell<MyTab> dropZone;
-	private TreeItem<MyTab> draggedItem;
+	private TreeCell<SqluckyTab> dropZone;
+	private TreeItem<SqluckyTab> draggedItem;
 
 	@Override
-	public TreeCell<MyTab> call(TreeView<MyTab> treeView) {
+	public TreeCell<SqluckyTab> call(TreeView<SqluckyTab> treeView) {
 		Button clean = new Button(); 
-		TreeCell<MyTab> cell = new TreeCell<MyTab>() {
+		TreeCell<SqluckyTab> cell = new TreeCell<SqluckyTab>() {
 		
 			@Override
-			public void updateItem(MyTab item, boolean empty) {
+			public void updateItem(SqluckyTab item, boolean empty) {
 				super.updateItem(item, empty);				
 				// 给cell 内容添加 button
 				   // If the cell is empty we don't show anything.
@@ -81,12 +79,12 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 
 		};
 		clean.setMaxSize(12, 12); 
-  		clean.setGraphic(IconGenerator.svgImageUnactive("times-circle" , 14));
+  		clean.setGraphic(ComponentGetter.getIconUnActive("times-circle"));
   		clean.getStyleClass().add("myCleanBtn");
   		clean.setVisible(false); //clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
   		clean.setOnAction(e->{
-  			var rootNode =ScriptTabTree.ScriptTreeView.getRoot();
-  			ScriptTabTree.closeAction(rootNode);
+  			var rootNode = NoteTabTree.NoteTabTreeView.getRoot();
+  			NoteTabTree.closeAction(rootNode);
   		});
   		
   		cell.setOnMouseClicked(e->{ 
@@ -116,9 +114,7 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 	
 
 	// 发现拖动 当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个
-	private void dragDetected(MouseEvent event, TreeCell<MyTab> treeCell, TreeView<MyTab> treeView) {
-		logger.info("dragDetected"); 
-		
+	private void dragDetected(MouseEvent event, TreeCell<SqluckyTab> treeCell, TreeView<SqluckyTab> treeView) {
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
@@ -136,11 +132,11 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 	
 	}
 
-	private void dragOver(DragEvent event, TreeCell<MyTab> treeCell, TreeView<MyTab> treeView) {
+	private void dragOver(DragEvent event, TreeCell<SqluckyTab> treeCell, TreeView<SqluckyTab> treeView) {
   
 		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT))
 			return;
-		TreeItem<MyTab> thisItem = treeCell.getTreeItem();
+		TreeItem<SqluckyTab> thisItem = treeCell.getTreeItem();
 
 		// can't drop on itself
 		if (draggedItem == null || thisItem == null || thisItem == draggedItem)
@@ -162,15 +158,14 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 	}
 
 	// 放下后执行
-	private void drop(DragEvent event, TreeCell<MyTab> treeCell, TreeView<MyTab> treeView) {
-		logger.info("drop");
+	private void drop(DragEvent event, TreeCell<SqluckyTab> treeCell, TreeView<SqluckyTab> treeView) {
 		Dragboard db = event.getDragboard();
 		boolean success = false;
 		if (!db.hasContent(DataFormat.PLAIN_TEXT))
 			return;
 
-		TreeItem<MyTab> thisItem = treeCell.getTreeItem();
-		TreeItem<MyTab> droppedItemParent = draggedItem.getParent();
+		TreeItem<SqluckyTab> thisItem = treeCell.getTreeItem();
+		TreeItem<SqluckyTab> droppedItemParent = draggedItem.getParent();
 
 //		// 只能同一个父节点下换位置, 否则不动
 		if (Objects.equals(droppedItemParent, thisItem.getParent())) {
@@ -191,7 +186,6 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 	}
 
 	private void clearDropLocation() {
-		logger.info("clearDropLocation"); 
 		if (dropZone != null)
 			dropZone.setStyle("");
 	}

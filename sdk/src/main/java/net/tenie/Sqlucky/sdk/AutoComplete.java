@@ -1,13 +1,11 @@
-package net.tenie.Sqlucky.sdk.myinterface;
+package net.tenie.Sqlucky.sdk;
 
 import java.util.Collection;
-
-import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 
 public interface AutoComplete {
 	public   void hide();
-	public   void backSpaceHide(MyCodeArea codeArea);
+	public   void backSpaceHide(SqluckyCodeArea codeArea);
 	public   boolean isShow();
 	public   void showPop(double x, double y, String fStr);
 	public   Integer getMyTabId();

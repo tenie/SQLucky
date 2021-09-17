@@ -1,35 +1,16 @@
 package net.tenie.sdkImp;
 
 import javafx.scene.control.Accordion;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TitledPane;
-import javafx.stage.Stage;
+import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.AppComponent;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator; 
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.fx.component.MyTab;
+import net.tenie.lib.tools.IconGenerator; 
 
-public class SqluckyComponent implements AppComponent {
-
-	@Override
-	public TabPane dataTabPane() { 
-		return ComponentGetter.dataTabPane;
-	}
-
-	@Override
-	public TabPane mainTabPane() {
-		return ComponentGetter.mainTabPane;
-	}
-
-	@Override
-	public Stage primaryStage() {
-		 
-		return ComponentGetter.primaryStage;
-	}
-
-	@Override
-	public Accordion infoAccordion() { 
-		return  ComponentGetter.infoAccordion;
-	}
+public class SqluckyComponent implements AppComponent { 
 
 	@Override
 	public void addTitledPane(TitledPane tp) {
@@ -41,7 +22,32 @@ public class SqluckyComponent implements AppComponent {
 
 	@Override
 	public void addIconBySvg(String name, String svg) {
-		ImageViewGenerator.addSvgStr(name, svg);		
+		IconGenerator.addSvgStr(name, svg);		
+	}
+
+	@Override
+	public SqluckyTab sqluckyTab() { 
+		return new MyTab();
+	}
+
+	@Override
+	public SqluckyTab sqluckyTab(String TabName) { 
+		return new MyTab(TabName);
+	}
+
+	@Override
+	public SqluckyTab sqluckyTab(DocumentPo po) { 
+		return new MyTab(po);
+	}
+
+	@Override
+	public Region getIconUnactive(String name) {
+		return IconGenerator.svgImageUnactive( name); 
+	}
+
+	@Override
+	public Region getIconDefActive(String name) {
+		return IconGenerator.svgImageDefActive( name); 
 	}
 
 }

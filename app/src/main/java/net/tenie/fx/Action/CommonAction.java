@@ -2,71 +2,47 @@ package net.tenie.fx.Action;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.window.ModalDialog;
-import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.tableview2.FilteredTableView;
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.model.Paragraph;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
-
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
-
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
-import net.tenie.fx.PropertyPo.ScriptPo;
-//import net.tenie.fx.PropertyPo.CacheTableDate;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.CommonFileChooser;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
-import net.tenie.fx.component.HighLightingSqlCodeAreaContextMenu;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
-import net.tenie.fx.component.MyAutoComplete;
 import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.component.container.MenuBarContainer;
 import net.tenie.fx.component.container.ScriptTabTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
@@ -77,17 +53,18 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.SaveFile;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
+import net.tenie.lib.tools.IconGenerator;
 
 
-/*   @author tenie */
+/**
+ *    @author tenie
+ *    
+ */
 public class CommonAction {
 	private static Logger logger = LogManager.getLogger(CommonAction.class);
 	private static int windowsUiBugTag = 0;
 	
-	// 给控件加样式
-	public static void addCssClass(Node nd, String css) {
-		nd.getStyleClass().add(css);
-	}
+	
 	
 	// 控件移除样式
 	public static void rmCssClass(Node nd, String css) {
@@ -99,14 +76,14 @@ public class CommonAction {
 		ComponentGetter.dbInfoFilter.setText("");
 		
 		// 代码编辑内容, 取消选中, 高亮恢复复原
-		SqlEditor.deselect(); 
-		SqlEditor.applyHighlighting();
+		SqlcukyEditor.deselect(); 
+		SqlcukyEditor.applyHighlighting();
 		
 		// 隐藏查找, 替换窗口
 		hideFindReplaceWindow();
 		
 		// 提示窗口
-		SqlEditor.currentMyTab().getSqlCodeArea().getMyAuto().hide();
+		SqlcukyEditor.currentMyTab().getSqlCodeArea().hideAutoComplete();
 //		MyAutoComplete.hide();
 	}
  
@@ -129,15 +106,15 @@ public class CommonAction {
 	
 	// 保存sql文本到硬盘
 	public static void saveSqlAction() { 
-			MyTab tb = (MyTab) SqlEditor.mainTabPaneSelectedTab();
+			MyTab tb = (MyTab) SqlcukyEditor.mainTabPaneSelectedTab();
 			saveSqlAction(tb);
 	}
 	
 	// 保存sql文本到硬盘
 	public static void saveSqlAction(MyTab tb) {
 		try {			
-			String sql   = SqlEditor.getTabSQLText(tb); 
-			var scriptPo = tb.getScriptPo();
+			String sql   =  tb.getTabSqlText();// SqlEditor.getTabSQLText(tb); 
+			var scriptPo = tb.getDocumentPo();
 			String fileName = scriptPo.getFileName();
 			if (StrUtils.isNotNullOrEmpty(fileName)) {
 				SaveFile.saveByEncode(fileName, sql, scriptPo.getEncode());
@@ -192,12 +169,12 @@ public class CommonAction {
 				//TODO close save
 				MyTab mtab = (MyTab) t;
 				mtab.saveScriptPo(H2conn);
-				var spo = mtab.getScriptPo();
+				var spo = mtab.getDocumentPo();
 				String fp = spo.getFileName(); 
 				if (spo != null ) {
-					String sql = SqlEditor.getTabSQLText(mtab);
+					String sql = mtab.getTabSqlText() ;// SqlEditor.getTabSQLText(mtab);
 					if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
-						CodeArea code = SqlEditor.getCodeArea(mtab);
+						CodeArea code = mtab.getCodeArea(); //SqlEditor.getCodeArea(mtab);
 						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
 						String title =  spo.getTitle();
 						String encode = spo.getEncode();
@@ -216,7 +193,7 @@ public class CommonAction {
 //			for(var tv :childs) {
 				var tv = childs.get(i);
 				var mytab = tv.getValue();
-				var scpo = mytab.getScriptPo();
+				var scpo = mytab.getDocumentPo();
 				var sqltxt = scpo.getText();
 				if(sqltxt == null || sqltxt.trim().length() == 0) {
 					SqlTextDao.deleteScriptArchive(H2conn, scpo); 
@@ -288,7 +265,7 @@ public class CommonAction {
 
 	// 代码格式化
 	public static void formatSqlText() {
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String txt = code.getSelectedText();
 		if (StrUtils.isNotNullOrEmpty(txt)) {
 			IndexRange i = code.getSelection();
@@ -299,18 +276,18 @@ public class CommonAction {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqlEditor.getCurrentCodeAreaSQLText();
+			txt = SqlcukyEditor.getCurrentCodeAreaSQLText();
 			String rs = SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
 		}
-		SqlEditor.currentSqlCodeAreaHighLighting();
+		SqlcukyEditor.currentSqlCodeAreaHighLighting();
 	}
 	
 	
 	// sql 压缩
 	public static void pressSqlText() {
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String txt = code.getSelectedText();
 		if (StrUtils.isNotNullOrEmpty(txt)) {
 			IndexRange i = code.getSelection();
@@ -321,19 +298,19 @@ public class CommonAction {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqlEditor.getCurrentCodeAreaSQLText();
+			txt = SqlcukyEditor.getCurrentCodeAreaSQLText();
 			String rs = StrUtils.pressString(txt); //  SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
 		} 
-		SqlEditor.currentSqlCodeAreaHighLighting();
+		SqlcukyEditor.currentSqlCodeAreaHighLighting();
 	}
 	
 
 	// 代码大写
 	public static void UpperCaseSQLTextSelectText() {
 
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -344,13 +321,13 @@ public class CommonAction {
 		code.deleteText(start, end);
 		 
 		code.insertText(start, text.toUpperCase());
-		SqlEditor.currentSqlCodeAreaHighLighting();
+		SqlcukyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	// 代码小写
 	public static void LowerCaseSQLTextSelectText() {
 
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -361,13 +338,13 @@ public class CommonAction {
 		code.deleteText(start, end);
 		 
 		code.insertText(start, text.toLowerCase()); 
-		SqlEditor.currentSqlCodeAreaHighLighting();
+		SqlcukyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	// 驼峰命名转下划线
 	public static void CamelCaseUnderline() {
 
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -379,13 +356,13 @@ public class CommonAction {
 	 
 		text = StrUtils.CamelCaseUnderline(text);
 		code.insertText(start, text); 
-		SqlEditor.currentSqlCodeAreaHighLighting();
+		SqlcukyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	// 下划线 轉 驼峰命名
 	public static void underlineCaseCamel() {
 
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -397,11 +374,11 @@ public class CommonAction {
 		// 插入 注释过的文本
 		text = StrUtils.underlineCaseCamel(text);
 		code.insertText(start, text);
-		SqlEditor.currentSqlCodeAreaHighLighting();
+		SqlcukyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	public static void selectTextAddString() {
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();
@@ -454,7 +431,7 @@ public class CommonAction {
 			// 插入 注释过的文本
 			code.insertText(start, valStr);
 		}
-		SqlEditor.currentSqlCodeAreaHighLighting();
+		SqlcukyEditor.currentSqlCodeAreaHighLighting();
 	}
 	// 添加tab符号
 	public static void add4Space() { 
@@ -462,7 +439,7 @@ public class CommonAction {
 		String replaceStr1 = "\n    ";
 		String replaceStr2 = "    ";
 		
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();
@@ -499,7 +476,7 @@ public class CommonAction {
 	}
 	// 减少前置tab符号
 	public static void minus4Space() {  
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd(); 
@@ -556,7 +533,7 @@ public class CommonAction {
 		code.insertText(start, valStr);
 		
 		code.selectRange(start, start+valStr.length()); 
-		SqlEditor.currentSqlCodeAreaHighLighting();
+		SqlcukyEditor.currentSqlCodeAreaHighLighting();
 	}
 	
 
@@ -564,7 +541,7 @@ public class CommonAction {
 	// 代码添加注释-- 或去除注释
 	public static void addAnnotationSQLTextSelectText() {
 
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();
@@ -623,7 +600,7 @@ public class CommonAction {
 			// 插入 注释过的文本
 			code.insertText(start, valStr);
 		}
-		SqlEditor.currentSqlCodeAreaHighLighting();
+		SqlcukyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	//TODO 打开sql文件
@@ -640,16 +617,16 @@ public class CommonAction {
 				tabName = SaveFile.fileName(f.getPath());
 				setOpenfileDir(f.getPath());
 			}
-			ScriptPo scpo = new ScriptPo();
+			DocumentPo scpo = new DocumentPo();
 			scpo.setEncode(encode);
 			scpo.setFileName(f.getAbsolutePath());
 			scpo.setText(val);
 			scpo.setTitle(tabName);
 			MyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
 			if(mt != null) { // 如果已经存在就不用重新打开
-				SqlEditor.myTabPaneAddMyTab(mt);
+				mt.mainTabPaneAddMyTab();
 			}else {
-				SqlEditor.createTabFromSqlFile(scpo);
+				MyTab.createTabFromSqlFile(scpo);
 			}
 			
 		} catch (IOException e) {
@@ -667,7 +644,7 @@ public class CommonAction {
 	}
 
 	public static void hideFindReplaceWindow() {
-		VBox b = SqlEditor.getTabVbox();
+		VBox b = SqlcukyEditor.getTabVbox();
 		int bsize = b.getChildren().size();
 		if (bsize > 1) { 
 				FindReplaceEditor.delFindReplacePane();
@@ -676,7 +653,7 @@ public class CommonAction {
 	}
 	
 	public static void findReplace(boolean isReplace) {
-		VBox b = SqlEditor.getTabVbox();
+		VBox b = SqlcukyEditor.getTabVbox();
 		int bsize = b.getChildren().size();
 		if (bsize > 1) {
 			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
@@ -703,16 +680,16 @@ public class CommonAction {
 		boolean bootp = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		if (leftp || bootp) {
 			ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
-			btnLeft.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-right"));
+			btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
 
 			ComponentGetter.masterDetailPane.setShowDetailNode(false);
-			btnBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-up"));
+			btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
 		} else {
 			ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
-			btnLeft.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-left"));
+			btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
 
 			ComponentGetter.masterDetailPane.setShowDetailNode(true);
-			btnBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
+			btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
 		}
 
 	}
@@ -721,11 +698,11 @@ public class CommonAction {
 		JFXButton btn = AllButtons.btns.get("hideLeft");
 		if (ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue()) {
 			ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
-			btn.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-right"));
+			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
 																							
 		} else {
 			ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
-			btn.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-left"));
+			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
 																					
 		}
 	}
@@ -745,9 +722,9 @@ public class CommonAction {
 	public static void hideShowBottomHelper(boolean isShow, JFXButton btn) {
 		ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
 		if (isShow) {
-			btn.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
+			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
 		} else {
-			btn.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-up"));
+			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
 		}
 
 	}
@@ -822,7 +799,7 @@ public class CommonAction {
 		saveThemeStatus(val); 
 		// 根据新状态加载新样式
 		CommonUtility.loadCss(ComponentGetter.primaryscene); 
-		SqlEditor.changeThemeAllCodeArea() ; 
+		SqlcukyEditor.changeThemeAllCodeArea() ; 
 		changeSvgColor(); // 修改按钮颜色
 	}
 	// 设置整体样式
@@ -833,13 +810,13 @@ public class CommonAction {
 		
 	}
 	
-	public static String themeColor() {
-		String color = "#1C94FF";
-		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
-			color = "#FDA232";
-		}
-		return color;
-	}
+//	public static String themeColor() {
+//		String color = "#1C94FF";
+//		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+//			color = "#FDA232";
+//		}
+//		return color;
+//	}
 	
 	public static void changeSvgColor() {
 //		String color = "#1C94FF";
@@ -847,7 +824,7 @@ public class CommonAction {
 //			color = "#FDA232";
 //		}
 		
-		String color =  themeColor();
+		String color =  CommonUtility.themeColor();
 		
 		List<ButtonBase> allBtns = 	ButtonFactory.btns; // 
 		allBtns.addAll(DataViewTab.dataPaneBtns());  //数据面板中的按钮 
@@ -883,10 +860,14 @@ public class CommonAction {
 		}
 		
 		// 连接和脚本 pane
-		MainMyDB.imgInfo.setStyle("-fx-background-color: " + color + ";");
-		MainMyDB.imgLeft.setStyle("-fx-background-color: " + color + ";");
-		MainMyDB.imgRight.setStyle("-fx-background-color: " + color + ";");
-		MainMyDB.imgScript.setStyle("-fx-background-color: " + color + ";");
+		ComponentGetter.iconInfo.setStyle("-fx-background-color: " + color + ";");
+		ComponentGetter.iconLeft.setStyle("-fx-background-color: " + color + ";");
+		ComponentGetter.iconRight.setStyle("-fx-background-color: " + color + ";");
+		ComponentGetter.iconScript.setStyle("-fx-background-color: " + color + ";");
+		 
+		for(var icon: ComponentGetter.icons) {
+			icon.setStyle("-fx-background-color: " + color + ";");
+		}
 		
 //		ComponentGetter.dbTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
 //		ComponentGetter.scriptTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
@@ -971,7 +952,7 @@ public class CommonAction {
 	public static List<ProcedureFieldPo> getProcedureFields(String ddl){
 		 List<ProcedureFieldPo> rs = new ArrayList<>();
 		 ddl = StrUtils.multiLineCommentToSpace(ddl);
-		 ddl = SqlEditor.trimCommentToSpace(ddl, "--");
+		 ddl = SqlcukyEditor.trimCommentToSpace(ddl, "--");
 		 // 给ddl分词, 找到过程名称后面的参数列表
 		 ddl = StrUtils.pressString(ddl).toUpperCase();
 		 if( procedureIsNoParameter(ddl) ) { // 没有参数直接返回
@@ -1149,7 +1130,7 @@ public class CommonAction {
 			sz = 10;
 		}
 		CommonUtility.setFontSize(sz);
-		for(MyTab mtb : SqlEditor.getAllgetMyTabs() ) {
+		for(SqluckyTab mtb : SqlcukyEditor.getAllgetMyTabs() ) {
 			var obj = mtb.getSqlCodeArea();
 			var code = obj.getCodeArea();
 			logger.info(code.getStyle());
@@ -1231,7 +1212,7 @@ public class CommonAction {
 					try {
 						Thread.sleep(900);
 						Platform.runLater(() -> {
-						    SqlEditor.getCodeArea().requestFocus(); 
+						    SqlcukyEditor.getCodeArea().requestFocus(); 
 						 
 						});
 					} catch (InterruptedException e) {
@@ -1268,7 +1249,7 @@ public class CommonAction {
 		Consumer< String >  cancel = x ->{ 
 			saveThemeStatus(val);  
 			CommonUtility.loadCss(ComponentGetter.primaryscene); 
-			SqlEditor.changeThemeAllCodeArea() ;
+			SqlcukyEditor.changeThemeAllCodeArea() ;
 			// 修改按钮颜色
 			changeSvgColor();
 		};

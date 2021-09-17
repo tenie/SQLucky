@@ -10,14 +10,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 
 public class MyAlert {
 	public static void infoAlert(String title, String containTxt) {
-		showErrorMsg(containTxt, DialogTools.INFO);
+		showErrorMsg(containTxt,ComponentGetter.INFO);
 	}
 
 	public static void errorAlert( String containTxt) {
-		showErrorMsg( containTxt , DialogTools.ERROR);  
+		showErrorMsg( containTxt , ComponentGetter.ERROR);  
 	}
 	
 	

@@ -1,20 +1,13 @@
 package net.tenie.Sqlucky.sdk.subwindow;
 
-import java.io.File;
-import java.nio.file.Paths;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -22,35 +15,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
-import net.tenie.Sqlucky.sdk.config.CommonConst;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class DialogTools {
 	private static Logger logger = LogManager.getLogger(DialogTools.class);
-	public static Label INFO ;
-	public static Label ABOUT ;
-	public static Label WARN ;
-	public static Label ERROR ;
-	public static Label EMPTY ;
-	
-	
-	static {
-		INFO = new Label("Info");
-		INFO.setGraphic( ImageViewGenerator.svgImage("info-circle", "#7CFC00"));
 		
-		ABOUT = new Label("About");
-		ABOUT.setGraphic( ImageViewGenerator.svgImage("info-circle", "#7CFC00"));
-		
-		WARN = new Label("Warn");
-		WARN.setGraphic( ImageViewGenerator.svgImage("info-circle", "#FFD700"));
-		ERROR = new Label("Error");
-		ERROR.setGraphic( ImageViewGenerator.svgImage("info-circle", "red"));
-		EMPTY = new Label("");
-	}
-	
-	
 	public static Node setVboxShape(Stage stage , Node title, List<Node> nds, List<Node> btns ) {
 		return setVboxShape(500, 80, stage, title, nds, btns);
 	}
@@ -127,7 +97,7 @@ public class DialogTools {
 		
 		AnchorPane pn = new AnchorPane();  
 		JFXButton btn = new JFXButton(); 
-		btn.setGraphic(ImageViewGenerator.svgImageUnactive("window-close"));
+		btn.setGraphic(ComponentGetter.getIconUnActive("window-close"));
 		AnchorPane.setRightAnchor(btn, 0.0);
 //		Label titlb = new Label(title);
 		AnchorPane.setTopAnchor(title, 4.0);

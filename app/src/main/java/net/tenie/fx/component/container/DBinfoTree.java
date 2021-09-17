@@ -24,9 +24,8 @@ import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.TreeItem.MyTreeItem;
@@ -36,6 +35,7 @@ import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.db.h2.H2Db;
+import net.tenie.lib.tools.IconGenerator;
 
 
 /**
@@ -58,7 +58,7 @@ public class DBinfoTree {
 
 	// db节点view
 	public TreeView<TreeNodePo> createConnsTreeView() {
-	    icon =  ImageViewGenerator.svgImageDefActive("windows-globe");
+	    icon =  IconGenerator.svgImageDefActive("windows-globe");
 		var rootNode = new TreeItem<>(
 				new TreeNodePo("Connections",  icon)); 
 		TreeView<TreeNodePo> treeView = new TreeView<>(rootNode);
@@ -96,7 +96,7 @@ public class DBinfoTree {
 			if (datas != null && datas.size() > 0) {
 				for (DbConnectionPo po : datas) {
 					MyTreeItem<TreeNodePo> item = new MyTreeItem<>(
-							new TreeNodePo(po.getConnName(), ImageViewGenerator.svgImageUnactive("unlink")));
+							new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
 					rootNode.getChildren().add(item);
 					DBConns.add(po.getConnName(), po); 
 				} 
@@ -173,7 +173,7 @@ public class DBinfoTree {
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
 				ConnectionEditor.openConn(item);
-				CodeArea codeArea  = SqlEditor.getCodeArea(); 
+				CodeArea codeArea  = SqlcukyEditor.getCodeArea(); 
 				codeArea.requestFocus();
 				codeArea.setShowCaret(CaretVisibility.ON);;
 //				item.setExpanded(true);

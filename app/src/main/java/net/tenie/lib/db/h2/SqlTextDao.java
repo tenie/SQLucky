@@ -7,14 +7,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.fx.PropertyPo.ScriptPo;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportSqlMySqlImp;
-/*   @author tenie */
+
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class SqlTextDao {
 	private static Logger logger = LogManager.getLogger(SqlTextDao.class);
 	public static final String CONNECTION_INFO = 
@@ -113,8 +117,9 @@ public class SqlTextDao {
 				}
 		}
 	}
-//	int val = DBTools.execInsertReturnId(conn, sql);
-	public static ScriptPo scriptArchive(Connection conn , String title, String txt, String filename, String encode, int paragraph) {
+	
+	
+	public static DocumentPo scriptArchive(Connection conn , String title, String txt, String filename, String encode, int paragraph) {
 		String sql = "insert into SCRIPT_ARCHIVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH) values ( ? , ?, ?, ?, ?)";
 		PreparedStatement sm = null; 
 		Integer id = -1;  
@@ -137,7 +142,7 @@ public class SqlTextDao {
 					e.printStackTrace();
 				}
 		}
-		ScriptPo po = new ScriptPo();
+		DocumentPo po = new DocumentPo();
 		po.setId(id);
 		po.setTitle(title);
 		po.setFileName(filename);
@@ -148,20 +153,20 @@ public class SqlTextDao {
 		return po;
 	}
 	
-	public static ScriptPo scriptArchive( String title, String txt, String filename, String encode, int paragraph) {
-		ScriptPo po = null ;
+	public static DocumentPo scriptArchive( String title, String txt, String filename, String encode, int paragraph) {
+		DocumentPo po = null ;
 		try{
 			 po = scriptArchive(H2Db.getConn(),  title, txt, filename, encode, paragraph);
 		}finally {
 			H2Db.closeConn();
 		}
 		if( po == null) {
-			po = new ScriptPo();
+			po = new DocumentPo();
 		}
 		return  po;
 	}
 	
-	public static void updateScriptArchive(Connection conn, ScriptPo po) {
+	public static void updateScriptArchive(Connection conn, DocumentPo po) {
 		PreparedStatement sm = null; 
 		String sql = "update SCRIPT_ARCHIVE set TITLE_NAME = ?, "
 				   + " SQL_TEXT = ?, FILE_NAME = ? , ENCODE = ?, PARAGRAPH = ? where id = ?";
@@ -189,7 +194,7 @@ public class SqlTextDao {
 		}
 		
 	}
-	public static void deleteScriptArchive(Connection conn, ScriptPo po) {
+	public static void deleteScriptArchive(Connection conn, DocumentPo po) {
 		PreparedStatement sm = null; 
 		String sql = "delete from  SCRIPT_ARCHIVE  where id = ?";
 		try {
@@ -293,9 +298,9 @@ public class SqlTextDao {
 		}
 	}
 	
-	public static List<ScriptPo> readScriptPo(Connection conn) {
+	public static List<DocumentPo> readScriptPo(Connection conn) {
 		String sql = "select   *   from   SCRIPT_ARCHIVE " ;
-		List<ScriptPo> vals = new ArrayList<>();
+		List<DocumentPo> vals = new ArrayList<>();
 		
 		Statement sm = null; 
 		ResultSet rs = null;
@@ -304,7 +309,7 @@ public class SqlTextDao {
 			logger.info("执行   "+ sql);
 		    rs =  sm.executeQuery(sql);  
 		    while(rs.next()) {
-		    	ScriptPo po = new ScriptPo();
+		    	DocumentPo po = new DocumentPo();
 		    	po.setId(rs.getInt("ID"));
 		    	po.setTitle( rs.getString("TITLE_NAME"));
 		    	po.setText( rs.getString("SQL_TEXT"));

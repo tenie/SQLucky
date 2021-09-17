@@ -1,4 +1,4 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.Sqlucky.sdk.po;
 
 public class MyRange {
 	private int start;

@@ -13,10 +13,10 @@ import javafx.scene.control.MenuItem;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.MyPopupNumberFilter;
+import net.tenie.lib.tools.IconGenerator;
 
 public class MenuFactory {
 	
@@ -48,31 +48,31 @@ public class MenuFactory {
 		ContextMenu cm = new ContextMenu();
 		MenuItem miActive = new MenuItem("Copy Column Name");
 //		miActive.getStyleClass().add("myMenuItem");
-		miActive.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+		miActive.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 		miActive.setOnAction(e -> { // 粘贴板赋值
 			CommonUtility.setClipboardVal(colname);
 		});
 		menuList.add(miActive);
 		
 		Menu copyColData = new Menu("Copy Column Data"); 
-		copyColData.setGraphic(ImageViewGenerator.svgImageDefActive("columns"));
+		copyColData.setGraphic(IconGenerator.svgImageDefActive("columns"));
 		menuList.add(copyColData);
 		
 		
 		MenuItem selectCopyColData = new MenuItem("Copy Select Column Data");
-		selectCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+		selectCopyColData.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 		selectCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(true, false ,  colname)  );
 		menuList.add(selectCopyColData);
 		
 		MenuItem AllCopyColData = new MenuItem("Copy All Column Data");
-		AllCopyColData.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+		AllCopyColData.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 		AllCopyColData.setOnAction(CommonEventHandler.columnDataClipboard(false, false ,  colname)  );
 		copyColData.getItems().addAll(selectCopyColData, AllCopyColData);
 		menuList.add(AllCopyColData);
 		
 		MenuItem filter = new MenuItem("Filter");
 		menuList.add(filter);
-		filter.setGraphic(ImageViewGenerator.svgImageDefActive("filter"));
+		filter.setGraphic(IconGenerator.svgImageDefActive("filter"));
 		filter.setOnAction(e->{
 			popupFilter.showPopup();
 		});
@@ -81,45 +81,45 @@ public class MenuFactory {
 		MenuItem dropCol = new MenuItem("Drop Column: "+ colname);
 		menuList.add(dropCol);
 //		dropCol.getStyleClass().add("myMenuItem");
-		dropCol.setGraphic(ImageViewGenerator.svgImageDefActive("eraser"));
+		dropCol.setGraphic(IconGenerator.svgImageDefActive("eraser"));
 		dropCol.setOnAction(e ->  {
 			MenuAction.dropColumn(colname);
 		});
 		
 		MenuItem alterColumn = new MenuItem("Alter Column Date Type"); 
 		menuList.add(alterColumn);
-		alterColumn.setGraphic(ImageViewGenerator.svgImageDefActive("exchange"));
+		alterColumn.setGraphic(IconGenerator.svgImageDefActive("exchange"));
 		alterColumn.setOnAction(e -> {
 			MenuAction.alterColumn(colname);
 		});
 		
 		MenuItem addColumn = new MenuItem("Add New Column"); 
 		menuList.add(addColumn);
-		addColumn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+		addColumn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 		addColumn.setOnAction(e -> { 
 			MenuAction.addNewColumn();
 		}); 
 		
 		Menu updateMenu = new Menu("Update Column Data");
 		menuList.add(updateMenu);
-		updateMenu.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
+		updateMenu.setGraphic(IconGenerator.svgImageDefActive("edit"));
 		MenuItem updateTableColumn = new MenuItem("Update: Table is  Column Value"); 
 		menuList.add(updateTableColumn);
-		updateTableColumn.setGraphic(ImageViewGenerator.svgImageDefActive("table"));
+		updateTableColumn.setGraphic(IconGenerator.svgImageDefActive("table"));
 		updateTableColumn.setOnAction(e -> {
 			MenuAction.updateTableColumn(colname);
 		});
 		
 		MenuItem updateCurrentPageColumn = new MenuItem("Update: Current All Data is  Column Value"); 
 		menuList.add(updateCurrentPageColumn);
-		updateCurrentPageColumn.setGraphic(ImageViewGenerator.svgImageDefActive("file-text-o"));
+		updateCurrentPageColumn.setGraphic(IconGenerator.svgImageDefActive("file-text-o"));
 		updateCurrentPageColumn.setOnAction(e -> { 
 			MenuAction.updateCurrentColumn(colname, colIdx);
 		});
 		
 		MenuItem updateSelectColumn = new MenuItem("Update: Selected Data is Column Value"); 
 		menuList.add(updateSelectColumn);
-		updateSelectColumn.setGraphic(ImageViewGenerator.svgImageDefActive("indent"));
+		updateSelectColumn.setGraphic(IconGenerator.svgImageDefActive("indent"));
 		updateSelectColumn.setOnAction(e -> {
 			MenuAction.updateSelectColumn(colname, colIdx);
 		});

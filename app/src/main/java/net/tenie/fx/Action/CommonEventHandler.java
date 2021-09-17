@@ -13,8 +13,8 @@ import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.component.CommonFileChooser;
+import net.tenie.fx.component.MyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.component.SqlEditor;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -96,7 +96,7 @@ public class CommonEventHandler {
 	public static EventHandler<Event> addCodeTab() {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
-				SqlEditor.addCodeEmptyTabMethod();
+				MyTab.addCodeEmptyTabMethod();
 			}
 		};
 	}

@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.CodeArea;
+package net.tenie.fx.component;
  
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,16 +18,16 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class CodeAreaHighLightingHelper {
+public class CodeAreaHighLightingHelper2 {
 
 	private List<String> keywords ; 
 	
 	
-	public CodeAreaHighLightingHelper(List<String> ks) {
+	public CodeAreaHighLightingHelper2(List<String> ks) {
 		keywords = ks;
 	}
 	
-	public CodeAreaHighLightingHelper() {  
+	public CodeAreaHighLightingHelper2() {  
 	  keywords = new ArrayList<>(Arrays.asList(  "SELECT", "FROM", "UPDATE", "WHERE", "CASE", "CHAR", "OR",
 			"LEFT", "RIGHT", "DOUBLE", "INNER", "JOIN", "EXISTS", "FLOAT", "ALTER", "TABLE", "DATA", "TYPE", "INT",
 			"VARCHAR", "LONG", "SET", "SHORT", "TIMESTAMP", "GROUP", "BY", "ON", "AS", "DECIMAL", "PRIMARY", "NULL",

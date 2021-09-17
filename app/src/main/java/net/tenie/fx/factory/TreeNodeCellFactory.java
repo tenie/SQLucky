@@ -24,7 +24,7 @@ import javafx.util.Callback;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 

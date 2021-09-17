@@ -8,8 +8,8 @@ import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.config.DbVendor;
+import net.tenie.lib.tools.IconGenerator;
 
 public class ConnItemContainer {
 	private TreeItem<TreeNodePo> parentNode;
@@ -94,7 +94,7 @@ public class ConnItemContainer {
 			for (int i = 0; i < ls.size(); i++) {
 				TreeItem<TreeNodePo> val = ls.get(i);
 				if (val.getValue().getName().equals(defSch)) {
-					val.getValue().setIcon(ImageViewGenerator.svgImage("database", "#7CFC00 "));
+					val.getValue().setIcon(IconGenerator.svgImage("database", "#7CFC00 "));
 					ls.remove(i);
 					ls.add(0, val);
 					break;
@@ -107,7 +107,7 @@ public class ConnItemContainer {
 	public static TreeItem<TreeNodePo> CreateEmptySchemaNode(DbConnectionPo connpo) {
 
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
-				new TreeNodePo("Schemas", ImageViewGenerator.svgImage("th-list", "#FFD700"), connpo));
+				new TreeNodePo("Schemas", IconGenerator.svgImage("th-list", "#FFD700"), connpo));
 		return schemas;
 	}
 
@@ -125,12 +125,12 @@ public class ConnItemContainer {
 		
 		// 创建一个schema node , 将数据库数据放入
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
-				new TreeNodePo( nodeName, TreeItemType.SCHEMA_ROOT, ImageViewGenerator.svgImage("th-list", "#FFD700"), connpo));
+				new TreeNodePo( nodeName, TreeItemType.SCHEMA_ROOT, IconGenerator.svgImage("th-list", "#FFD700"), connpo));
 		// 获取schema 数据
 		Set<String> set = connpo.settingSchema();
 		for (String sche : set) {
 			TreeItem<TreeNodePo> item = new TreeItem<>(
-					new TreeNodePo(sche, TreeItemType.SCHEMA, ImageViewGenerator.svgImageUnactive("database"), connpo));
+					new TreeNodePo(sche, TreeItemType.SCHEMA, IconGenerator.svgImageUnactive("database"), connpo));
 			schemas.getChildren().add(item);
 		}
 		return schemas;

@@ -20,10 +20,10 @@ import javafx.stage.StageStyle;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.main.MainMyDB;
+import net.tenie.lib.tools.IconGenerator;
 
 public class DataTransferWindow {
 	Stage stage;
@@ -88,7 +88,7 @@ public class DataTransferWindow {
 
 		AnchorPane closepane = new AnchorPane();
 		JFXButton hideBottom = new JFXButton();
-		hideBottom.setGraphic(ImageViewGenerator.svgImageUnactive("window-close"));
+		hideBottom.setGraphic(IconGenerator.svgImageUnactive("window-close"));
 		closepane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 		hideBottom.setOnAction(v -> {

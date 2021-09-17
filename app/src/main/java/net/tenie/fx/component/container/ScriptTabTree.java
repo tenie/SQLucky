@@ -13,12 +13,12 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.PropertyPo.ScriptPo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.fx.factory.ScriptTabNodeCellFactory;
 import net.tenie.fx.factory.ScriptTreeContextMenu;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -73,7 +73,7 @@ public class ScriptTabTree {
 	
 	// 恢复数据中保存的连接数据
 	public static void recoverScriptNode(TreeItem<MyTab> rootNode) {
-		List<ScriptPo> datas ;
+		List<DocumentPo> datas ;
 		List<H2SqlTextSavePo> ls;
 		String SELECT_PANE ;
 		try {
@@ -92,13 +92,13 @@ public class ScriptTabTree {
 
 		if (datas != null && datas.size() > 0) {
 			ConfigVal.pageSize = datas.size();
-			for (ScriptPo po : datas) {
+			for (DocumentPo po : datas) {
 				MyTab tb = new MyTab(po);
 				TreeItem<MyTab> item = new TreeItem<>(tb);
 				rootNode.getChildren().add(item);
 				// 恢复代码编辑框
 				if (ids.contains(po.getId())) {
-					SqlEditor.myTabPaneAddMyTab(tb);
+					tb.mainTabPaneAddMyTab();
 				}
 			}
 
@@ -114,7 +114,7 @@ public class ScriptTabTree {
 		}	
 		// 没有tab被添加, 添加一新的
 		if (ts == 0) {
-			SqlEditor.addCodeEmptyTabMethod();
+			MyTab.addCodeEmptyTabMethod();
 		}
 
 	}
@@ -156,17 +156,17 @@ public class ScriptTabTree {
 	public static void openMyTab() {
 		TreeItem<MyTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
 		var mytab = item.getValue(); 
-		if(mytab != null && mytab.getScriptPo() != null) {
-			SqlEditor.myTabPaneAddMyTab(mytab);
+		if(mytab != null && mytab.getDocumentPo() != null) {
+			mytab.mainTabPaneAddMyTab();
 		}
 	}
 	 
-	public static  List<ScriptPo>  allScriptPo() {
+	public static  List<DocumentPo>  allScriptPo() {
 		 ObservableList<TreeItem<MyTab>> ls = allTreeItem();
-		 List<ScriptPo> list = new ArrayList<>();
+		 List<DocumentPo> list = new ArrayList<>();
 		 for(var ti: ls) {
 			 var mytb = ti.getValue();
-			 list.add(mytb.getScriptPo());
+			 list.add(mytb.getDocumentPo());
 		 }
 		 
 		 return list;
@@ -182,11 +182,11 @@ public class ScriptTabTree {
 	}
 
 	
-	public static MyTab findMyTabByScriptPo(ScriptPo scpo) {
+	public static MyTab findMyTabByScriptPo(DocumentPo scpo) {
 		 ObservableList<TreeItem<MyTab>> ls = allTreeItem();
 		 for(var ti: ls) {
 			 var mytb = ti.getValue();
-			 var tmp =  mytb.getScriptPo();
+			 var tmp =  mytb.getDocumentPo();
 			 if(tmp.equals(scpo)) {
 				 return mytb;
 			 }
@@ -203,7 +203,7 @@ public class ScriptTabTree {
 		MyTab tb = ctt.getValue();
 		
 		String title = CommonUtility.tabText(tb);
-		String sql = SqlEditor.getTabSQLText(tb);
+		String sql = tb.getTabSqlText(); // SqlEditor.getTabSQLText(tb);
 		if (title.endsWith("*") && sql.trim().length() > 0) {
 			// 是否保存
 			final Stage stage = new Stage();
@@ -248,14 +248,14 @@ public class ScriptTabTree {
 	// 从ScriptTabTree 中移除一个节点
 	public static void removeNode(ObservableList<TreeItem<MyTab>>  myTabItemList, TreeItem<MyTab> ctt, MyTab tb ) {
 		try { 
-			
+			var myTabPane = ComponentGetter.mainTabPane;
 			var conn = H2Db.getConn();
-			if (SqlEditor.myTabPane.getTabs().contains(tb)) {
-				SqlEditor.myTabPane.getTabs().remove(tb);
+			if (myTabPane.getTabs().contains(tb)) {
+				myTabPane.getTabs().remove(tb);
 			}
 			myTabItemList.remove(ctt);
 
-			var scpo = tb.getScriptPo();
+			var scpo = tb.getDocumentPo();
 			SqlTextDao.deleteScriptArchive(conn, scpo);
 		} finally {
 			H2Db.closeConn();

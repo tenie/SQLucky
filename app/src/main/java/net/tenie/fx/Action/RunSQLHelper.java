@@ -38,8 +38,7 @@ import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.DataViewContainer;
@@ -57,6 +56,7 @@ import net.tenie.fx.factory.StringPropertyListValueFactory;
 import net.tenie.fx.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.lib.db.Dbinfo;
+import net.tenie.lib.tools.IconGenerator;
 
 
 /*   @author tenie */
@@ -102,7 +102,7 @@ public class RunSQLHelper {
 					sqlData sq = new sqlData(sqlstr, 0, sqlstr.length());
 					allsqls.add(sq );
 				}else {
-					String str = SqlEditor.getCurrentCodeAreaSQLText();
+					String str = SqlcukyEditor.getCurrentCodeAreaSQLText();
 					sqlData sq = new sqlData(str, 0, str.length());
 					allsqls.add(sq);
 				}
@@ -199,7 +199,7 @@ public class RunSQLHelper {
 					for (sqlData sd : errObj) {
 						int bg = sd.begin;
 						int len = sd.sql.length();
-						SqlEditor.ErrorHighlighting(bg, len, sd.sql);
+						SqlcukyEditor.ErrorHighlighting(bg, len, sd.sql);
 					}
 				}
 			});
@@ -640,9 +640,9 @@ public class RunSQLHelper {
 		col.setText(colname);
 		Label label  = new Label(); 
 		if(iskey) {
-			label.setGraphic(ImageViewGenerator.svgImage("material-vpn-key", 10, "#1C92FB")); 
+			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#1C92FB")); 
 		}else {
-			label.setGraphic(ImageViewGenerator.svgImage("sort", 10, "#1C92FB")); 
+			label.setGraphic(IconGenerator.svgImage("sort", 10, "#1C92FB")); 
 		}
 		col.setGraphic(label);
 				
@@ -722,7 +722,7 @@ public class RunSQLHelper {
 	private static List<sqlData> epurateSql(String str) {
 		List<sqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = SqlEditor.findSQLFromTxt(str);
+		List<String> sqls = SqlcukyEditor.findSQLFromTxt(str);
 		
 		if(sqls.size()> 0) {
 			for (String s : sqls) { 
@@ -744,7 +744,7 @@ public class RunSQLHelper {
 	private static List<sqlData> epurateSql(String str, int start) {
 		List<sqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = SqlEditor.findSQLFromTxt(str);
+		List<String> sqls = SqlcukyEditor.findSQLFromTxt(str);
 		
 		if(sqls.size()> 0) {
 			for (String s : sqls) { 
@@ -769,16 +769,16 @@ public class RunSQLHelper {
 	public static List<sqlData> willExecSql() {
 		List<sqlData> sds = new ArrayList<>();
 		
-		CodeArea code = SqlEditor.getCodeArea();
-		String str = SqlEditor.getCurrentCodeAreaSQLSelectedText(); 
+		CodeArea code = SqlcukyEditor.getCodeArea();
+		String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText(); 
 		int start = 0;
 		if (str != null && str.length() > 0) {
 		    start = code.getSelection().getStart();
 		} else {
-			str = SqlEditor.getCurrentCodeAreaSQLText();
+			str = SqlcukyEditor.getCurrentCodeAreaSQLText();
 		}
 		// 去除注释, 包注释字符串转换为空白字符串
-		str = SqlEditor.trimCommentToSpace(str, "--");
+		str = SqlcukyEditor.trimCommentToSpace(str, "--");
 //		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		sds = epurateSql(str, start);
 		return sds;

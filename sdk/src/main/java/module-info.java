@@ -35,8 +35,6 @@ open module SQLucky.sdk {
 	exports net.tenie.Sqlucky.sdk.subwindow;
 	exports net.tenie.Sqlucky.sdk.config;
 	exports net.tenie.Sqlucky.sdk.component;
-	exports net.tenie.Sqlucky.sdk.myinterface;
-	exports net.tenie.Sqlucky.sdk.component.CodeArea;
 	exports net.tenie.Sqlucky.sdk.po;
 	exports net.tenie.Sqlucky.sdk;
 }

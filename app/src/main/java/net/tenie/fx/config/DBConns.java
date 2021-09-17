@@ -11,8 +11,8 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.lib.tools.IconGenerator;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 
 /*   @author tenie */
 public final class DBConns {
@@ -27,9 +27,9 @@ public final class DBConns {
 					if (item.getText().length() > 0) {
 						DbConnectionPo po = dbs.get(item.getText());
 						if (po != null && po.isAlive()) {
-							item.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
+							item.setGraphic(IconGenerator.svgImageDefActive("link"));
 						} else {
-							item.setGraphic(ImageViewGenerator.svgImageUnactive("unlink"));
+							item.setGraphic(IconGenerator.svgImageUnactive("unlink"));
 						}
 					}
 				});
@@ -82,10 +82,10 @@ public final class DBConns {
 			String name = po.getConnName();
 			Label lb = new Label(name);
 			if (po.isAlive()) {
-				lb.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
+				lb.setGraphic(IconGenerator.svgImageDefActive("link"));
 				aliveList.add(lb);
 			} else {
-				lb.setGraphic(ImageViewGenerator.svgImageUnactive("unlink"));
+				lb.setGraphic(IconGenerator.svgImageUnactive("unlink"));
 				list.add(lb);
 			}
 			

@@ -24,9 +24,9 @@ import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.dao.SelectDao;
+import net.tenie.lib.tools.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   
@@ -172,7 +172,7 @@ public class TableDataDetail {
 				FlowPane topfp = new FlowPane();
 				topfp.setPadding(new Insets(8, 5, 8, 8));
 				Label lb = new Label();
-				lb.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
+				lb.setGraphic(IconGenerator.svgImageDefActive("search"));
 				TextField filterField = new TextField();
 
 				filterField.getStyleClass().add("myTextField");

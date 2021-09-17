@@ -14,11 +14,11 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.TreeItem.MyTreeItem;
 import net.tenie.fx.factory.ButtonFactory;
+import net.tenie.lib.tools.IconGenerator;
 
  
 /*   @author tenie */
@@ -44,7 +44,7 @@ public class DBinfoTreeFilter {
 		JFXButton query = new JFXButton();
 		ButtonFactory.btns.add(query);
 //		JFXTextField txt = new JFXTextField();
-		query.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
+		query.setGraphic(IconGenerator.svgImageDefActive("search"));
 		query.setOnAction(e -> {
 			txt.requestFocus();
 		});
@@ -67,7 +67,7 @@ public class DBinfoTreeFilter {
 		AnchorPane.setTopAnchor(clean, 5.0); 
 		clean.setMaxSize(12, 12);
 		
-		clean.setGraphic(ImageViewGenerator.svgImageUnactive("times-circle" , 14));
+		clean.setGraphic(IconGenerator.svgImageUnactive("times-circle" , 14));
 		clean.getStyleClass().add("myCleanBtn");
 		clean.setVisible(false); //clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
 		
@@ -116,7 +116,7 @@ public class DBinfoTreeFilter {
 				}
 				// 创建一个新的树根, 将查询数据挂在新的上面
 				TreeItem<TreeNodePo> rootNode = new TreeItem<>(
-						new TreeNodePo("Connections", ImageViewGenerator.svgImageDefActive("windows-globe")));
+						new TreeNodePo("Connections", IconGenerator.svgImageDefActive("windows-globe")));
 				rootNode.getChildren().addAll(filtList);
 				treeView.setRoot(rootNode); // 使用新的树根
 				
@@ -185,7 +185,7 @@ public class DBinfoTreeFilter {
 				// schema数据对象有数据的 情况, 创建一个新的连接节点并返回它
 				if(tempcip.getSchemaNode().getChildren().size() > 0) {
 					MyTreeItem<TreeNodePo> newConn = new MyTreeItem<TreeNodePo>(
-							new TreeNodePo(connpo.getConnName(), ImageViewGenerator.svgImage("link", "#7CFC00")));
+							new TreeNodePo(connpo.getConnName(), IconGenerator.svgImage("link", "#7CFC00")));
 					
 					newConn.getChildren().add(tempcip.getSchemaNode());
 					newConn.getValue().setConnItemContainer(tempcip); 

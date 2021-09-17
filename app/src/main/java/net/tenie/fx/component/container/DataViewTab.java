@@ -8,12 +8,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
-
 import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.tableview2.FilteredTableView;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -43,15 +40,15 @@ import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
-import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
 import net.tenie.fx.component.MyTooltipTool;
-import net.tenie.fx.component.HighLightingCodeArea;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
+import net.tenie.fx.component.CodeArea.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.ProcedureExecuteWindow;
+import net.tenie.lib.tools.IconGenerator;
 
 
 /**
@@ -284,7 +281,7 @@ public class DataViewTab {
 		// 保存
 		JFXButton saveBtn = new JFXButton();
 		btns.add(saveBtn);
-		saveBtn.setGraphic(ImageViewGenerator.svgImageDefActive("save"));
+		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
 		saveBtn.setOnMouseClicked(e -> { 
 			//TODO 保存存储过程
 			RunSQLHelper.runSQLMethod(sqlArea.getCodeArea().getText(), null, true);
@@ -298,7 +295,7 @@ public class DataViewTab {
 		//编辑
 		JFXButton editBtn = new JFXButton();
 		btns.add(editBtn);
-		editBtn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
+		editBtn.setGraphic(IconGenerator.svgImageDefActive("edit"));
 		editBtn.setOnMouseClicked(e -> {
 //			SqlEditor.createTabFromSqlFile(ddl, "", "");
 			if (sqlArea != null) {
@@ -317,7 +314,7 @@ public class DataViewTab {
 		// 隐藏按钮
 		JFXButton hideBottom = new JFXButton();
 		btns.add(hideBottom);
-		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
+		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
 
 		
@@ -329,7 +326,7 @@ public class DataViewTab {
 		// 运行按钮
 		if (isRunFunc) {
 			JFXButton runFuncBtn = new JFXButton();
-			runFuncBtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
+			runFuncBtn.setGraphic(IconGenerator.svgImageDefActive("play"));
 			runFuncBtn.setOnMouseClicked(e -> {
 				Consumer<String> caller;
 				ButtonFactory.lockLockBtn(tabId, lockbtn);

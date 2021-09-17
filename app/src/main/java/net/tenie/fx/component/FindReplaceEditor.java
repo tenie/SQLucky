@@ -11,9 +11,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.lib.tools.IconGenerator;
 
 
 /*   @author tenie */
@@ -21,7 +23,7 @@ public class FindReplaceEditor {
 	private static String f3Str = "";
 	private static Logger logger = LogManager.getLogger(FindReplaceEditor.class);
 	public static void findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		int idx = code.getCaretPosition();
 		String selTex = code.getSelectedText();
 		String findStr = findtf.getText();
@@ -32,7 +34,7 @@ public class FindReplaceEditor {
 	}
 
 	public static void replaceString(String str, String strNew, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
@@ -70,7 +72,7 @@ public class FindReplaceEditor {
 
 	// F3 字符串查找
 	public static void findSelectedString() {
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text)) {
 			if(StrUtils.isNotNullOrEmpty(f3Str)) {
@@ -92,13 +94,13 @@ public class FindReplaceEditor {
 	public static void findStringFromCodeArea(String str, boolean forward, boolean sensitive) {
 		if (StrUtils.isNullOrEmpty(str))
 			return;
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		int idx = code.getCaretPosition();
 		findString(str, idx, sensitive, forward); 
 	}
 
 	public static String codeStr(boolean sensitive) {
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			text = text.toUpperCase();
@@ -111,7 +113,7 @@ public class FindReplaceEditor {
 	}
 
 	public static void replaceStringAll(String str, String strNew, boolean sensitive) {
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
@@ -143,7 +145,7 @@ public class FindReplaceEditor {
 
 	// 查找
 	public static void findString(String str, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
@@ -171,11 +173,11 @@ public class FindReplaceEditor {
 				selectRange(code, start, start + length);
 			}
 		} 
-		SqlEditor.currentSqlCodeAreaHighLighting(str);
+		SqlcukyEditor.currentSqlCodeAreaHighLighting(str);
 	}
 
 	public static void delFindReplacePane() {
-		VBox x = SqlEditor.getTabVbox();
+		VBox x = SqlcukyEditor.getTabVbox();
 		while (x.getChildren().size() > 1) {
 			x.getChildren().remove(0);
 		}
@@ -183,10 +185,10 @@ public class FindReplaceEditor {
 
 	public static AnchorPane createReplacePane(TextField findtf, JFXCheckBox cb) {
 		AnchorPane replaceAnchorPane = new AnchorPane();
-		CommonAction.addCssClass(replaceAnchorPane, "myFindPane");
+		CommonUtility.addCssClass(replaceAnchorPane, "myFindPane");
 		replaceAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
-		query.setGraphic(ImageViewGenerator.svgImageDefActive("refresh"));
+		query.setGraphic(IconGenerator.svgImageDefActive("refresh"));
 		TextField tf = new TextField();
 		tf.setPrefWidth(250);
 		tf.setPrefHeight(15);
@@ -229,17 +231,17 @@ public class FindReplaceEditor {
 
 	public static AnchorPane createFindPane(boolean isReplace) {
 		AnchorPane findAnchorPane = new AnchorPane();
-		CommonAction.addCssClass(findAnchorPane, "myFindPane");
+		CommonUtility.addCssClass(findAnchorPane, "myFindPane");
 		findAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
 		JFXCheckBox cb = new JFXCheckBox("Sensitive");  
-		query.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
+		query.setGraphic(IconGenerator.svgImageDefActive("search"));
 
 		TextField tf = new TextField();
 		query.setOnAction(v -> {
 			findStringFromCodeArea(tf.getText(), true, !cb.isSelected());
 		});
-		CodeArea code = SqlEditor.getCodeArea();
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		tf.setText(code.getSelectedText());
 		tf.setPrefWidth(250);
 		tf.setPrefHeight(15);
@@ -250,23 +252,23 @@ public class FindReplaceEditor {
 
 		// "arrow-down"
 		JFXButton down = new JFXButton();
-		down.setGraphic(ImageViewGenerator.svgImageDefActive("arrow-down"));
+		down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
 		down.setOnAction(v -> {
 			findStringFromCodeArea(tf.getText(), true, !cb.isSelected());
 		});
 
 		JFXButton up = new JFXButton();
-		up.setGraphic(ImageViewGenerator.svgImageDefActive("arrow-up"));
+		up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
 		up.setOnAction(v -> {
 			findStringFromCodeArea(tf.getText(), false, !cb.isSelected());
 		});
 		
 		// 计算查询字符串出现次数
 		JFXButton count = new JFXButton("Count");
-		count.setGraphic(ImageViewGenerator.svgImageDefActive("calculator")); 
+		count.setGraphic(IconGenerator.svgImageDefActive("calculator")); 
 		Label countLabel = new Label(""); 
 		count.setOnAction(e->{
-			String sqlTxt = SqlEditor.getCurrentCodeAreaSQLText();
+			String sqlTxt = SqlcukyEditor.getCurrentCodeAreaSQLText();
 			int countVal = 0;
 			if(tf.getText().length() == 0) {
 				countLabel.setText("");
@@ -314,12 +316,12 @@ public class FindReplaceEditor {
 		findAnchorPane.getChildren().add(countLabel);
 
 		JFXButton hideBottom = new JFXButton();
-		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("window-close"));// fontImgName("caret-square-o-down",
+		hideBottom.setGraphic(IconGenerator.svgImageDefActive("window-close"));// fontImgName("caret-square-o-down",
 																					// 16, Color.ROYALBLUE));
 		findAnchorPane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 		
-		VBox b = SqlEditor.getTabVbox();
+		VBox b = SqlcukyEditor.getTabVbox();
 		hideBottom.setOnAction(v -> {
 			delFindReplacePane();
 		});

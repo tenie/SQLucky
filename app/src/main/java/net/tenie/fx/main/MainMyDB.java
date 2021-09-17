@@ -15,12 +15,13 @@ import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
 import net.tenie.fx.Action.SettingKeyCodeCombination;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.H2Db;
+import net.tenie.lib.tools.IconGenerator;
+import net.tenie.sdkImp.SqluckyComponent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -41,16 +42,7 @@ public class MainMyDB extends Application {
 	private String Theme;
 	private static Logger logger = LogManager.getLogger(MainMyDB.class);
 	
-	@SuppressWarnings("exports")
-	public static final Region imgInfo = ImageViewGenerator.svgImageDefActive("info-circle", 14);  
-	@SuppressWarnings("exports")
-	public static final Region imgScript = ImageViewGenerator.svgImageDefActive("icomoon-files-empty", 14);
-	@SuppressWarnings("exports")
-	public static final Region imgRight = ImageViewGenerator.svgImageDefActive("chevron-circle-right", 14);
-	@SuppressWarnings("exports")
-	public static final Region imgLeft = ImageViewGenerator.svgImageDefActive("chevron-circle-down", 14);
-	 
-	
+
 	
 	static {
 		if( ! H2Db.isDev()) {
@@ -73,7 +65,11 @@ public class MainMyDB extends Application {
 		ComponentGetter.primaryscene = scene;
 		SettingKeyCodeCombination.Setting();
 		img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
-//		Thread.sleep(1000); 
+
+		SqluckyComponent sqluckyComponent = new SqluckyComponent();
+		ComponentGetter.appComponent = sqluckyComponent;
+		// 加载插件
+		ServiceLoad.myLoader();
 		logger.info("完成初始化"); 
 	}
 
@@ -102,59 +98,59 @@ public class MainMyDB extends Application {
 				final StackPane Node = (StackPane)dbTitledPane.lookup(".arrow-button");
 				Node.getChildren().clear(); 
 			
-				Node.getChildren().add(imgInfo);
+				Node.getChildren().add(ComponentGetter.iconInfo);
 				
 				var title = 	dbTitledPane.lookup(".title");
 				title.setOnMouseEntered( e->{ 
 					Node.getChildren().clear();
 					if(dbTitledPane.isExpanded()) {
-						Node.getChildren().add(imgLeft);
+						Node.getChildren().add(ComponentGetter.iconLeft);
 					}else {
-						Node.getChildren().add(imgRight);
+						Node.getChildren().add(ComponentGetter.iconRight);
 					}
 					
 				});
 				
 				title.setOnMouseExited( e->{ 
 					Node.getChildren().clear();
-					Node.getChildren().add(imgInfo);
+					Node.getChildren().add(ComponentGetter.iconInfo);
 				});
 				
 				
 				
 				final StackPane  Node2 = (StackPane)scriptTitledPane.lookup(".arrow-button");
 				Node2.getChildren().clear();  
-				Node2.getChildren().add(imgScript);
+				Node2.getChildren().add(ComponentGetter.iconScript);
 				
 				
 				var title2 = scriptTitledPane.lookup(".title");
 				title2.setOnMouseEntered( e->{ 
 					Node2.getChildren().clear();
 					if(scriptTitledPane.isExpanded()) {
-						Node2.getChildren().add(imgLeft);
+						Node2.getChildren().add(ComponentGetter.iconLeft);
 					}else {
-						Node2.getChildren().add(imgRight);
+						Node2.getChildren().add(ComponentGetter.iconRight);
 					}
 				});
 				
 				title2.setOnMouseExited( e->{ 
 					Node2.getChildren().clear();
-					Node2.getChildren().add(imgScript);
+					Node2.getChildren().add(ComponentGetter.iconScript);
 				});
 				// 双击添加新codearea
 				var mainTabPane = ComponentGetter.mainTabPane ;
 				Node tabHeader = mainTabPane.lookup(".tab-header-area");
 				tabHeader.setOnMouseClicked(mouseEvent->{
 					if (mouseEvent.getClickCount() == 2) {
-						SqlEditor.addCodeEmptyTabMethod();
+						MyTab.addCodeEmptyTabMethod();
 					}
 				});
 				 
 				
-			});
+			}); 
+			 
+			ServiceLoad.myShowed(); 
 			
-			 
-			 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -164,8 +160,7 @@ public class MainMyDB extends Application {
 	}
 	
 	
-	public static void main(String[] args) throws IOException {
-		ServiceLoad.myLoader();
+	public static void main(String[] args) throws IOException { 
 		LauncherImpl.launchApplication(MainMyDB.class, MyPreloader.class, args);
 	}
 }

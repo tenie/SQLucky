@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.lib.tools.IconGenerator;
 
 public class DialogTools {
 	public static Node setVboxShape(Stage stage , Node title, List<Node> nds, List<Node> btns ) {
@@ -96,7 +96,7 @@ public class DialogTools {
 		
 		AnchorPane pn = new AnchorPane();  
 		JFXButton btn = new JFXButton(); 
-		btn.setGraphic(ImageViewGenerator.svgImageUnactive("window-close"));
+		btn.setGraphic(IconGenerator.svgImageUnactive("window-close"));
 		AnchorPane.setRightAnchor(btn, 0.0);
 //		Label titlb = new Label(title);
 		AnchorPane.setTopAnchor(title, 4.0);

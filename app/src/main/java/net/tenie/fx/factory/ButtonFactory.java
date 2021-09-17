@@ -23,13 +23,14 @@ import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableDataDetail;
+import net.tenie.lib.tools.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ButtonFactory {
@@ -44,14 +45,14 @@ public class ButtonFactory {
 		// 页面初始化: 添加组件
 		JFXButton addConnbtn = new JFXButton();
 
-		addConnbtn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
+		addConnbtn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 		addConnbtn.setOnMouseClicked(CommonEventHandler.addConnEvent());
 		addConnbtn.setTooltip(MyTooltipTool.instance("Add new DB Connection"));
 		btns.add(addConnbtn);
 
 		// open连接
 		JFXButton openConn = new JFXButton();
-		openConn.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
+		openConn.setGraphic(IconGenerator.svgImageDefActive("link"));
 		openConn.setOnMouseClicked(e->{
 			ConnectionEditor.openDbConn();
 		});
@@ -59,7 +60,7 @@ public class ButtonFactory {
 		btns.add(openConn);
 		// 断开连接
 		JFXButton closeConn = new JFXButton();
-		closeConn.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
+		closeConn.setGraphic(IconGenerator.svgImageDefActive("unlink"));
 		closeConn.setOnMouseClicked(e->{
 			ConnectionEditor.closeDbConn();
 		});
@@ -67,13 +68,13 @@ public class ButtonFactory {
 		btns.add(closeConn);
 
 		JFXButton closeALlConn = new JFXButton();
-		closeALlConn.setGraphic(ImageViewGenerator.svgImageDefActive("power-off"));
+		closeALlConn.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 		closeALlConn.setOnMouseClicked(CommonEventHandler.closeAllConnEvent());
 		closeALlConn.setTooltip(MyTooltipTool.instance("Close All DB Connection"));
 		btns.add(closeALlConn);
 
 		JFXButton editConn = new JFXButton();
-		editConn.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
+		editConn.setGraphic(IconGenerator.svgImageDefActive("edit"));
 		editConn.setOnMouseClicked(e->{
 			ConnectionEditor.closeDbConn();
 			ConnectionEditor.editDbConn();
@@ -84,10 +85,10 @@ public class ButtonFactory {
 		// 收缩树 zero-fitscreen-24
 		JFXButton shrink = new JFXButton();
 		btns.add(shrink);
-		shrink.setGraphic(ImageViewGenerator.svgImageDefActive("zero-fitscreen-24"));
+		shrink.setGraphic(IconGenerator.svgImageDefActive("zero-fitscreen-24"));
 		shrink.setOnMouseClicked(e -> {
 			// 如果有选中的字符串, 进行查询
-			String str = SqlEditor.getCurrentCodeAreaSQLSelectedText();
+			String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
 			if (str.trim().length() > 0) {
 				ComponentGetter.dbInfoFilter.setText(str.trim());
 			} else {
@@ -99,7 +100,7 @@ public class ButtonFactory {
 		
 		// 删除连接
 		JFXButton deleteConn = new JFXButton();
-		deleteConn.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
+		deleteConn.setGraphic(IconGenerator.svgImageDefActive("trash"));
 		deleteConn.setOnMouseClicked(CommonEventHandler.deleteConnEvent());
 		deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
 		btns.add(deleteConn);
@@ -107,7 +108,7 @@ public class ButtonFactory {
 		
 		// 脚本
 		JFXButton script = new JFXButton();
-		script.setGraphic(ImageViewGenerator.svgImageDefActive("entypo-download"));
+		script.setGraphic(IconGenerator.svgImageDefActive("entypo-download"));
 		script.setOnMouseClicked(e->{
 		   CommonAction.archiveAllScript(); 
 			
@@ -134,33 +135,33 @@ public class ButtonFactory {
 	public static AnchorPane codeAreabtnInit() {
 		    AnchorPane pn = new AnchorPane();
 			JFXButton runbtn = new JFXButton();
-			runbtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
+			runbtn.setGraphic(IconGenerator.svgImageDefActive("play"));
 			runbtn.setTooltip(MyTooltipTool.instance("run sql      ctrl + Enter "));
 			btns.add(runbtn);
 			
 			
 			JFXButton stopbtn = new JFXButton();
-			stopbtn.setGraphic(ImageViewGenerator.svgImage("stop", "red"));
+			stopbtn.setGraphic(IconGenerator.svgImage("stop", "red"));
 			stopbtn.setTooltip(MyTooltipTool.instance("stop         ctrl + I "));
 //			btns.add(stopbtn);
 			
 			stopbtn.setDisable(true);
 			// add panel
 			JFXButton addcodeArea = new JFXButton();
-			addcodeArea.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square"));
+			addcodeArea.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
 			addcodeArea.setOnMouseClicked(CommonEventHandler.addCodeTab());
 			addcodeArea.setTooltip(MyTooltipTool.instance("add new code area panel     ctrl + T "));
 			btns.add(addcodeArea);
 			
 			
 			JFXButton saveSQL = new JFXButton();
-			saveSQL.setGraphic(ImageViewGenerator.svgImageDefActive("save"));
+			saveSQL.setGraphic(IconGenerator.svgImageDefActive("save"));
 			saveSQL.setOnMouseClicked(CommonEventHandler.saveSQl());
 			saveSQL.setTooltip(MyTooltipTool.instance("Save sql to file ctrl + S"));
 			btns.add(saveSQL);
 
 			JFXButton formatSQL = new JFXButton();
-			formatSQL.setGraphic(ImageViewGenerator.svgImageDefActive("paragraph")); // i-cursor
+			formatSQL.setGraphic(IconGenerator.svgImageDefActive("paragraph")); // i-cursor
 			formatSQL.setOnMouseClicked(v -> {
 				CommonAction.formatSqlText();
 			});
@@ -170,7 +171,7 @@ public class ButtonFactory {
 			
 			// 执行存储过程
 			JFXButton runFunPro = new JFXButton();
-			runFunPro.setGraphic(ImageViewGenerator.svgImageDefActive("bolt"));
+			runFunPro.setGraphic(IconGenerator.svgImageDefActive("bolt"));
 			runFunPro.setId("runFunPro");
 			runFunPro.setTooltip(MyTooltipTool.instance("Execut Create Program DDL"));
 			btns.add(runFunPro);
@@ -187,7 +188,7 @@ public class ButtonFactory {
 			});
 			
 			JFXButton hideLeft = new JFXButton();
-			hideLeft.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-left"));// fontImgName("caret-square-o-left",
+			hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));// fontImgName("caret-square-o-left",
 																								// 16, Color.ROYALBLUE));
 			hideLeft.setOnMouseClicked(CommonEventHandler.hideLift());
 			hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
@@ -195,7 +196,7 @@ public class ButtonFactory {
 			
 			//TODO hideBottom
 			JFXButton hideBottom = new JFXButton();
-			hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-up"));// fontImgName("caret-square-o-down",
+			hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));// fontImgName("caret-square-o-down",
 																								// 16, Color.ROYALBLUE));
 			hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
 			hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
@@ -308,10 +309,10 @@ public class ButtonFactory {
 	public static AnchorPane getDataTableOptionBtnsPane(String id, boolean disable, String time , String rows, String connName, List<ButtonBase> optionBtns , boolean isLock) {
 
 		AnchorPane fp = new AnchorPane(); 
-		CommonAction.addCssClass(fp, "data-table-btn-anchor-pane");
+		CommonUtility.addCssClass(fp, "data-table-btn-anchor-pane");
 		fp.prefHeight(25);
 		JFXButton saveBtn = new JFXButton();
-		saveBtn.setGraphic(ImageViewGenerator.svgImageDefActive("save"));
+		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
 		saveBtn.setOnMouseClicked( e->{ 
 				ButtonAction.dataSave();
 		});
@@ -322,7 +323,7 @@ public class ButtonFactory {
 		
 
 		JFXButton detailBtn = new JFXButton();
-		detailBtn.setGraphic(ImageViewGenerator.svgImageDefActive("search-plus")); 
+		detailBtn.setGraphic(IconGenerator.svgImageDefActive("search-plus")); 
 		detailBtn.setOnMouseClicked( e->{
 			TableDataDetail.show();
 		});
@@ -332,7 +333,7 @@ public class ButtonFactory {
 		
 		
 		JFXButton tableSQLBtn = new JFXButton();
-		tableSQLBtn.setGraphic(ImageViewGenerator.svgImageDefActive("table")); 
+		tableSQLBtn.setGraphic(IconGenerator.svgImageDefActive("table")); 
 		tableSQLBtn.setOnMouseClicked( e->{
 			ButtonAction.findTable();
 		});
@@ -343,7 +344,7 @@ public class ButtonFactory {
 
 		// refresh
 		JFXButton refreshBtn = new JFXButton();
-		refreshBtn.setGraphic(ImageViewGenerator.svgImageDefActive("refresh")); 
+		refreshBtn.setGraphic(IconGenerator.svgImageDefActive("refresh")); 
 		refreshBtn.setOnMouseClicked( e->{ 
 			Boolean islock = lockObj.get(id);
 			ButtonAction.refreshData(islock) ;
@@ -355,7 +356,7 @@ public class ButtonFactory {
 
 		// 添加一行数据
 		JFXButton addBtn = new JFXButton();
-		addBtn.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square"));
+		addBtn.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
 
 		addBtn.setOnMouseClicked(e->{ 
 			ButtonAction.addData();
@@ -365,7 +366,7 @@ public class ButtonFactory {
 		optionBtns.add(addBtn);
 
 		JFXButton minusBtn = new JFXButton();
-		minusBtn.setGraphic(ImageViewGenerator.svgImage("minus-square", "#EC7774"));
+		minusBtn.setGraphic(IconGenerator.svgImage("minus-square", "#EC7774"));
 
 		minusBtn.setOnMouseClicked( e->{ 
 			ButtonAction.deleteData(); 
@@ -376,7 +377,7 @@ public class ButtonFactory {
 
 //	    	 files-o
 		JFXButton copyBtn = new JFXButton();
-		copyBtn.setGraphic(ImageViewGenerator.svgImageDefActive("files-o"));
+		copyBtn.setGraphic(IconGenerator.svgImageDefActive("files-o"));
 		copyBtn.setOnMouseClicked( e->{ 
 			ButtonAction.copyData();
 		});
@@ -386,7 +387,7 @@ public class ButtonFactory {
 		
 
 		MenuButton exportBtn = new MenuButton();
-		exportBtn.setGraphic(ImageViewGenerator.svgImageDefActive("share-square-o"));
+		exportBtn.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
 		exportBtn.setTooltip(MyTooltipTool.instance("Export data"));
 		exportBtn.setDisable(disable);
 		optionBtns.add(exportBtn);
@@ -434,7 +435,7 @@ public class ButtonFactory {
 		
 		//隐藏按钮
 		JFXButton hideBottom = new JFXButton(); 
-		hideBottom.setGraphic(ImageViewGenerator.svgImageDefActive("caret-square-o-down"));
+		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom()); 
 		optionBtns.add(hideBottom);
 		// 锁
@@ -508,17 +509,17 @@ public class ButtonFactory {
 		JFXButton lockbtn = new JFXButton();
 //		lockbtn.setDisable(disable);
 		if (isLock) {
-			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+			lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
 		} else {
-			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+			lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
 		}
 		lockObj.put(id, isLock);
 		lockbtn.setOnMouseClicked(e -> {
 			Boolean tf = lockObj.get(id);
 			if (tf) {
-				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+				lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
 			} else {
-				lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+				lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
 			}
 			lockObj.put(id, !tf);
 
@@ -532,15 +533,15 @@ public class ButtonFactory {
 		boolean islock = lockObj.get(id);
 		if( ! islock) { 
 			lockObj.put(id, true);
-			btn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+			btn.setGraphic(IconGenerator.svgImageDefActive("lock"));
 		}
 	}
 	
 	private static  void setLockBtn(String id, Boolean islock , Button lockbtn) { 
 		if(islock) {
-			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("lock"));
+			lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
 		}else {
-			lockbtn.setGraphic(ImageViewGenerator.svgImageDefActive("unlock"));
+			lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
 			
 		}
 		lockObj.put(id, islock);

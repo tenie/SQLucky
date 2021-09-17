@@ -36,7 +36,6 @@ import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.container.DBinfoTree;
@@ -48,6 +47,7 @@ import net.tenie.fx.main.Restart;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
+import net.tenie.lib.tools.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
@@ -94,7 +94,7 @@ public class ConnectionEditor {
 		VBox vb = new VBox();
 		Label title = new Label("Edit Connection Info");
 		title.setPadding(new Insets(15));
-		title.setGraphic(ImageViewGenerator.svgImageDefActive("gears"));
+		title.setGraphic(IconGenerator.svgImageDefActive("gears"));
 		vb.getChildren().add(title);
 
 		GridPane grid = new GridPane();
@@ -402,7 +402,7 @@ public class ConnectionEditor {
 			// 关闭连接
 			dp.closeConn();
 			// 修改颜色
-			val.getValue().setIcon(ImageViewGenerator.svgImageUnactive("unlink"));
+			val.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
 			// 删除子节点
 //			val.getChildren().remove(0, val.getChildren().size());
 			val.getChildren().clear();
@@ -442,7 +442,7 @@ public class ConnectionEditor {
 
 	// 子线程打开db连接backRunOpenConn
 	public static void backRunOpenConn(TreeItem<TreeNodePo> item) { 
-		Node nd = ImageViewGenerator.svgImage("spinner", "red");
+		Node nd = IconGenerator.svgImage("spinner", "red");
 		CommonUtility.rotateTransition(nd);
 		item.getValue().setIcon( nd);
 		AppWindowComponentGetter.treeView.refresh();
@@ -464,14 +464,14 @@ public class ConnectionEditor {
 						TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
 						Platform.runLater(() -> {
 							item.getChildren().add(s);
-							item.getValue().setIcon(ImageViewGenerator.svgImage("link", "#7CFC00"));							
+							item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00"));							
 							connItemContainer.selectTable(po.getDefaultSchema());
 							DBConns.flushChoiceBox(connName);
 						});
 					} else {
 						Platform.runLater(() -> {
 							MyAlert.errorAlert( " Cannot connect ip:" + po.getHost() + " port:" + po.getPort() + "  !");
-							item.getValue().setIcon(ImageViewGenerator.svgImageUnactive("unlink"));
+							item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
 							AppWindowComponentGetter.treeView.refresh();
 
 						});
@@ -482,7 +482,7 @@ public class ConnectionEditor {
 					logger.debug(e.getMessage());
 					Platform.runLater(() -> {
 						MyAlert.errorAlert( " Error !");
-						item.getValue().setIcon(ImageViewGenerator.svgImage("unlink", "red"));
+						item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
 						AppWindowComponentGetter.treeView.refresh();
 					});
 					
@@ -524,7 +524,7 @@ public class ConnectionEditor {
 					AppWindowComponentGetter.treeView.refresh();
 				}else {
 					TreeItem<TreeNodePo> item = new TreeItem<>(
-							new TreeNodePo(connectionName.getText(), ImageViewGenerator.svgImageUnactive("unlink")));
+							new TreeNodePo(connectionName.getText(), IconGenerator.svgImageUnactive("unlink")));
 					DBinfoTree.treeRootAddItem(item); 
 				}
 			

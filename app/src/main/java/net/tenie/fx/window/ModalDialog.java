@@ -4,10 +4,10 @@ import javafx.stage.*;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.main.MainMyDB;
+import net.tenie.lib.tools.IconGenerator;
 import javafx.scene.*;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
@@ -70,15 +70,15 @@ public class ModalDialog {
 	
 	static {
 		INFO = new Label("Info");
-		INFO.setGraphic( ImageViewGenerator.svgImage("info-circle", "#7CFC00"));
+		INFO.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00"));
 		
 		ABOUT = new Label("About");
-		ABOUT.setGraphic( ImageViewGenerator.svgImage("info-circle", "#7CFC00"));
+		ABOUT.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00"));
 		
 		WARN = new Label("Warn");
-		WARN.setGraphic( ImageViewGenerator.svgImage("info-circle", "#FFD700"));
+		WARN.setGraphic( IconGenerator.svgImage("info-circle", "#FFD700"));
 		ERROR = new Label("Error");
-		ERROR.setGraphic( ImageViewGenerator.svgImage("info-circle", "red"));
+		ERROR.setGraphic( IconGenerator.svgImage("info-circle", "red"));
 		EMPTY = new Label("");
 	}
 	
@@ -234,7 +234,7 @@ public class ModalDialog {
 
 		AnchorPane closepane = new AnchorPane();
 		JFXButton hideBottom = new JFXButton();
-		hideBottom.setGraphic(ImageViewGenerator.svgImageUnactive("window-close"));
+		hideBottom.setGraphic(IconGenerator.svgImageUnactive("window-close"));
 		closepane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 		hideBottom.setOnAction(v -> {
@@ -574,7 +574,7 @@ public class ModalDialog {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Confirmation");
 		alert.setHeaderText(msg);
-		alert.setGraphic(ImageViewGenerator.svgImageDefActive("question-circle", 25));
+		alert.setGraphic(IconGenerator.svgImageDefActive("question-circle", 25));
 		ButtonType buttonTypeOne = new ButtonType("Continue", ButtonData.OK_DONE);
 		ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 
@@ -600,7 +600,7 @@ public class ModalDialog {
 		final Stage stage = new Stage(); 
 		
 		JFXButton okbtn = new JFXButton("OK");
-		CommonAction.addCssClass(okbtn, "myAlertBtn");
+		CommonUtility.addCssClass(okbtn, "myAlertBtn");
 		okbtn.setOnAction(value -> {
 			stage.close();
 		}); 

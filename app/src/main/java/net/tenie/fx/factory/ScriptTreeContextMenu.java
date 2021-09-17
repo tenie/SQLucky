@@ -19,9 +19,8 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
 import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.SqlEditor;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.ScriptTabTree;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -30,6 +29,7 @@ import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
+import net.tenie.lib.tools.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ScriptTreeContextMenu {
@@ -56,7 +56,7 @@ public class ScriptTreeContextMenu {
 	 
 		MenuItem New = new MenuItem("New");
 		New.setOnAction(e -> {
-			SqlEditor.addCodeEmptyTabMethod();
+			MyTab.addCodeEmptyTabMethod();
 		}); 
 		
 		MenuItem save = new MenuItem("Save");
@@ -77,7 +77,7 @@ public class ScriptTreeContextMenu {
 			TreeItem<MyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
 			MyTab tb = ctt.getValue(); 
 			try {
-				String fn = tb.getScriptPo().getFileName();
+				String fn = tb.getDocumentPo().getFileName();
 				if(StrUtils.isNotNullOrEmpty(fn)) {
 					File file = new File(fn); 
 					Desktop.getDesktop().open(file.getParentFile());

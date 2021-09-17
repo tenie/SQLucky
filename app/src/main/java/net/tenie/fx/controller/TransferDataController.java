@@ -42,9 +42,8 @@ import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.component.HighLightingCodeArea;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
-import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
+import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
+import net.tenie.fx.component.CodeArea.MyCodeArea;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
@@ -54,6 +53,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.ExportDDL;
+import net.tenie.lib.tools.IconGenerator;
 
 
 public class TransferDataController implements Initializable {
@@ -236,15 +236,15 @@ public class TransferDataController implements Initializable {
 	
 	//设置 图标 css
 	private void setGraphicAndCss() {
-		CommonAction.addCssClass(monBtn, "transfer-btn");  
-		CommonAction.addCssClass(amountTxt, "myTextField");
+		CommonUtility.addCssClass(monBtn, "transfer-btn");  
+		CommonUtility.addCssClass(amountTxt, "myTextField");
 		
-		title.setGraphic(ImageViewGenerator.svgImageDefActive("gears"));
-		queryLabel.setGraphic(ImageViewGenerator.svgImageDefActive("search"));
-		execBtn.setGraphic(ImageViewGenerator.svgImageDefActive("play"));
-		stopBtn.setGraphic(ImageViewGenerator.svgImage("stop", "red")); 
-		hideBtn.setGraphic(ImageViewGenerator.svgImageUnactive("circle-o"));
-		monBtn.setGraphic(ImageViewGenerator.svgImageDefActive("laptop"));
+		title.setGraphic(IconGenerator.svgImageDefActive("gears"));
+		queryLabel.setGraphic(IconGenerator.svgImageDefActive("search"));
+		execBtn.setGraphic(IconGenerator.svgImageDefActive("play"));
+		stopBtn.setGraphic(IconGenerator.svgImage("stop", "red")); 
+		hideBtn.setGraphic(IconGenerator.svgImageUnactive("circle-o"));
+		monBtn.setGraphic(IconGenerator.svgImageDefActive("laptop"));
 	}
 	
 	// 设置按钮 输入框 的action

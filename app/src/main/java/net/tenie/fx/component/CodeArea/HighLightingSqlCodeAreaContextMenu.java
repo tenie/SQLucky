@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.component.CodeArea;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,10 +6,11 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import net.tenie.Sqlucky.sdk.component.ImageViewGenerator;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction; 
+import net.tenie.fx.Action.CommonAction;
+import net.tenie.lib.tools.IconGenerator; 
 
 public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 	public static List<MenuItem> menuItems = new ArrayList<>();
@@ -19,15 +20,15 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 		super();
 		this.setPrefWidth(200);
 		MenuItem copy  = new MenuItem("Copy                        (ctrl+C)"); 
-		copy.setGraphic(ImageViewGenerator.svgImageDefActive("files-o"));
+		copy.setGraphic(IconGenerator.svgImageDefActive("files-o"));
 		copy.setOnAction(e->{
-			SqlEditor.copySelectionText();
+			SqlcukyEditor.copySelectionText();
 		});
 		
 		MenuItem Paste  = new MenuItem("Paste                       (ctrl+V)"); 
-		Paste.setGraphic(ImageViewGenerator.svgImageDefActive("clipboard"));
+		Paste.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 		Paste.setOnAction(e->{
-			SqlEditor.pasteTextToCodeArea();
+			SqlcukyEditor.pasteTextToCodeArea();
 		});
 		
 		
@@ -37,16 +38,16 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 //			SqlEditor.deleteSelectionText(); 
 			codeArea.delLineOrSelectTxt();
 		});
-		del.setGraphic(ImageViewGenerator.svgImageDefActive("eraser"));
+		del.setGraphic(IconGenerator.svgImageDefActive("eraser"));
 		
 		MenuItem  cut = new MenuItem("Cut                         (ctrl+X)"); 
 		cut.setOnAction(e->{
-			SqlEditor.cutSelectionText();
+			SqlcukyEditor.cutSelectionText();
 		});
-		cut.setGraphic(ImageViewGenerator.svgImageDefActive("scissors"));
+		cut.setGraphic(IconGenerator.svgImageDefActive("scissors"));
 
 		MenuItem  sqlFormat = new MenuItem("Format  SQL            (ctrl+shif+F)"); 
-		sqlFormat.setGraphic(ImageViewGenerator.svgImageDefActive("paragraph")); 
+		sqlFormat.setGraphic(IconGenerator.svgImageDefActive("paragraph")); 
 		sqlFormat.setOnAction(e->{
 			CommonAction.formatSqlText();
 		}); 
@@ -67,7 +68,7 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 		});
 		
 		MenuItem  find = new MenuItem("Find                        (ctrl+F)");  
-		find.setGraphic(ImageViewGenerator.svgImageDefActive("search")); 
+		find.setGraphic(IconGenerator.svgImageDefActive("search")); 
 		find.setOnAction(e->{
 			CommonAction.findReplace(false);
 		});
@@ -78,13 +79,13 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 		});
 		
 		MenuItem  mvB = new MenuItem("Move to begin of line (ctrl+shift+A)");   
-		mvB.setGraphic(ImageViewGenerator.svgImageDefActive("step-backward")); 
+		mvB.setGraphic(IconGenerator.svgImageDefActive("step-backward")); 
 		mvB.setOnAction(e->{ 
 			codeArea.moveAnchorToLineBegin( );
 		});
 		
 		MenuItem  mvE = new MenuItem("Move to end of line   (ctrl+shift+E)");   
-		mvE.setGraphic(ImageViewGenerator.svgImageDefActive( "step-forward")); 
+		mvE.setGraphic(IconGenerator.svgImageDefActive( "step-forward")); 
 		mvE.setOnAction(e->{ 
 			codeArea.moveAnchorToLineEnd( );
 		});
@@ -153,7 +154,7 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 		
 		// 菜单显示的时刻
 		this.setOnShowing(e->{
-			String str = SqlEditor.getCurrentCodeAreaSQLSelectedText();
+			String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
 			if(StrUtils.isNotNullOrEmpty(str)) {
 				copy.setDisable(false);
 //				del.setDisable(false);

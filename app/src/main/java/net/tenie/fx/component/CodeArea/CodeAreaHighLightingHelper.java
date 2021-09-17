@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.component.CodeArea;
  
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,8 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class CodeAreaHighLightingHelper {
+public class CodeAreaHighLightingHelper { 
+
 
 	private List<String> keywords ; 
 	
@@ -220,4 +221,5 @@ public class CodeAreaHighLightingHelper {
         spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
         return spansBuilder.create();
     } 
+
 }

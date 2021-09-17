@@ -2,16 +2,12 @@ package net.tenie.fx.PropertyPo;
 
 import java.io.Serializable;
 
-import javafx.scene.Node;
-import net.tenie.fx.component.TreeItem.ConnItemContainer;
-import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
-
 /**
  * 脚本po
  * @author tenie
  *
  */
-public class ScriptPo implements Serializable {
+public class ScriptPo2 implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -22,7 +18,7 @@ public class ScriptPo implements Serializable {
 	private String encode;
 	private Integer paragraph;
 	
-	public ScriptPo() {
+	public ScriptPo2() {
 		this.id = null;
 		this.title = "";
 		this.text = "";
@@ -86,7 +82,7 @@ public class ScriptPo implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ScriptPo other = (ScriptPo) obj;
+		ScriptPo2 other = (ScriptPo2) obj;
 		if (fileName == null) {
 			if (other.fileName != null)
 				return false;

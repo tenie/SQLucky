@@ -22,6 +22,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -75,7 +76,7 @@ public final class SettingKeyCodeCombination {
 		JFXButton runFunPro = AllButtons.btns.get("runFunPro");
 
 		scene.getAccelerators().put(altSlash, () -> {
-			var codeArea = SqlEditor.getCodeArea();
+			var codeArea = SqlcukyEditor.getCodeArea();
 			if ( CommonUtility.isMacOS() ) {
 				Platform.runLater(()->{
 					int ar = codeArea.getAnchor();
@@ -98,7 +99,7 @@ public final class SettingKeyCodeCombination {
 //			double x = bd.getCenterX();
 //			double y = bd.getCenterY();
 			if (codeArea.isFocused()) {
-				SqlEditor.currentMyTab().getSqlCodeArea().callPopup();
+				SqlcukyEditor.currentMyTab().getSqlCodeArea().callPopup();
 				
 //				SqlEditor.callPopup( codeArea);
 			}
@@ -155,7 +156,7 @@ public final class SettingKeyCodeCombination {
 		});
 		// 添加代码窗口
 		scene.getAccelerators().put(ctrlT, () -> {
-			SqlEditor.addCodeEmptyTabMethod();
+			MyTab.addCodeEmptyTabMethod();
 		});
 		// close code tab
 //		scene.getAccelerators().put(ctrlW, () -> {
@@ -198,7 +199,7 @@ public final class SettingKeyCodeCombination {
 		scene.getAccelerators().put(F1, () -> {
 			
 			// test caret
-			var codeArea = SqlEditor.getCodeArea();
+			var codeArea = SqlcukyEditor.getCodeArea();
 			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
 			double x = bd.getCenterX();
 			double y = bd.getCenterY();
@@ -209,14 +210,14 @@ public final class SettingKeyCodeCombination {
 			System.out.println(z);
 			 
 //			MyAutoComplete.showPop(x, y+7, ""); 
-			SqlEditor.currentMyTab().getSqlCodeArea().getMyAuto().showPop(x, y+7, ""); 
+			SqlcukyEditor.currentMyTab().getSqlCodeArea().showAutoComplete(x, y, ""); 
 		});
 		
 		
 		// 书签查找
 		scene.getAccelerators().put(F2, () -> {  
 //			ButtonAction.nextBookmark(true);
-			SqlEditor.currentMyTab().getSqlCodeArea().getCodeArea().getMylineNumber().nextBookmark(true);
+			SqlcukyEditor.currentMyTab().getSqlCodeArea().nextBookmark(true);
 		});
 		
 		

@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.fx.component.CodeArea;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -26,9 +26,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.CodeArea.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.CodeArea.MyLineNumberNode;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -44,7 +44,7 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
  * @author tenie
  *
  */
-public class HighLightingCodeArea {
+public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	private static Logger logger = LogManager.getLogger(HighLightingCodeArea.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
 	private StackPane codeAreaPane;
@@ -54,13 +54,19 @@ public class HighLightingCodeArea {
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto ;
 	
-	public MyAutoComplete getMyAuto() {
-		return myAuto;
+	public void  hideAutoComplete() {
+		myAuto.hide();
 	}
-
-	public void setMyAuto(MyAutoComplete myAuto) {
-		this.myAuto = myAuto;
+	
+	public void showAutoComplete(double x , double y , String str) {
+		myAuto.showPop(x, y+7, str); 
 	}
+	
+	public void nextBookmark(boolean tf) {
+		codeArea.getMylineNumber().nextBookmark(tf);
+	}
+	
+	 
 
 	public void setContextMenu(ContextMenu cm) {
 	    if(cm != null) {
@@ -70,13 +76,13 @@ public class HighLightingCodeArea {
 //    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
 
 	public HighLightingCodeArea(MyAutoComplete myAuto) {
-//		this.myAuto = myAuto;
+		this.myAuto = myAuto;
 		highLightingHelper = new CodeAreaHighLightingHelper();
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new MyCodeArea();
 	    cl = (obj, o ,n ) ->{ 
 			Consumer< String >  caller = x ->{
-				Tab tb = SqlEditor.mainTabPaneSelectedTab();
+				Tab tb = SqlcukyEditor.mainTabPaneSelectedTab();
 				if (tb != null) {
 					Platform.runLater(()->{
 						String title = CommonUtility.tabText(tb);  
@@ -409,10 +415,7 @@ public class HighLightingCodeArea {
 		return codeArea;
 	}
 
-	public void setCodeArea(MyCodeArea codeArea) {
-		this.codeArea = codeArea;
-	}
-
+ 
 	 
 //	public static ChangeListener< String> codetxtChange(HighLightingCodeArea obj){
 //		return new ChangeListener<String>() {
