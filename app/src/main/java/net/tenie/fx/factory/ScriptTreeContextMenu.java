@@ -1,35 +1,14 @@
 package net.tenie.fx.factory;
 
-import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.jfoenix.controls.JFXButton;
-
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
-import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.MenuAction;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
-import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.MyTab;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
-import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.ScriptTabTree;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.fx.window.ModalDialog;
-import net.tenie.fx.window.TableDataDetail;
-import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.lib.tools.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ScriptTreeContextMenu {

@@ -1,6 +1,9 @@
 package net.tenie.Sqlucky.sdk.po;
 
+import java.io.File;
 import java.io.Serializable;
+
+import javafx.scene.layout.Region;
 
 /**
  * 脚本po
@@ -17,7 +20,8 @@ public class DocumentPo implements Serializable {
 	private String fileFullName;       //文件全路径名称
 	private String encode;
 	private Integer paragraph;
-	private boolean isDir;
+	private File file;
+	private Region icon;
 	
 	public DocumentPo() {
 		this.id = null;
@@ -26,7 +30,8 @@ public class DocumentPo implements Serializable {
 		this.fileFullName = "";
 		this.encode = "UTF-8";
 		this.paragraph = 0;
-		this.isDir = false;
+		this.file = null;
+		this.icon = null;
 		
 	}
 	
@@ -68,21 +73,12 @@ public class DocumentPo implements Serializable {
 		this.paragraph = paragraph;
 	}
 
-	
-	public boolean isDir() {
-		return isDir;
-	}
-
-	public void setDir(boolean isDir) {
-		this.isDir = isDir;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + ((file == null) ? 0 : file.hashCode());
 		result = prime * result + ((fileFullName == null) ? 0 : fileFullName.hashCode());
-		result = prime * result + (isDir ? 1231 : 1237);
 		return result;
 	}
 
@@ -95,16 +91,41 @@ public class DocumentPo implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DocumentPo other = (DocumentPo) obj;
+		if (file == null) {
+			if (other.file != null)
+				return false;
+		} else if (!file.equals(other.file))
+			return false;
 		if (fileFullName == null) {
 			if (other.fileFullName != null)
 				return false;
 		} else if (!fileFullName.equals(other.fileFullName))
 			return false;
-		if (isDir != other.isDir)
-			return false;
 		return true;
 	}
 
+	public File getFile() {
+		return file;
+	}
+
+	public void setFile(File file) {
+		this.file = file;
+	}
+
+	public Region getIcon() {
+		return icon;
+	}
+
+	public void setIcon(Region icon) {
+		this.icon = icon;
+	}
+
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+	
+	 
  
 	
 

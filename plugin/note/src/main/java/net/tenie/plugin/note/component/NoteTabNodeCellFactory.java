@@ -1,5 +1,6 @@
 package net.tenie.plugin.note.component;
 
+import java.io.File;
 import java.util.Objects;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,9 +14,11 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 
 
 /**
@@ -52,7 +55,18 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 	                	 AnchorPane pn = new AnchorPane();
 
 //	                    CheckBox checkBox = new CheckBox();
-	                    Label label = new Label(item.getDocumentPo().getTitle());
+	                	DocumentPo po =  item.getDocumentPo();
+	                	File file = po.getFile();
+	                	Region icon ;
+	                	if(file.isFile()) {
+	    					  icon =  ComponentGetter.appComponent.getIconDefActive("file-o");
+	    					 
+	    				}else {
+	    					  icon =  ComponentGetter.appComponent.getIconDefActive("folder");
+	    					 
+	    				}
+	                    Label label = new Label(po.getTitle());
+	                    label.setGraphic(icon);
 //	                    Button clean = new Button();  
 	                    
 	                    pn.getChildren().add(label);

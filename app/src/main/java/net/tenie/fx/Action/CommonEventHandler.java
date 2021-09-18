@@ -12,13 +12,13 @@ import javafx.stage.WindowEvent;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
-import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.fx.component.MyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.dao.GenerateSQLString;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.utility.SaveFile;
+import net.tenie.Sqlucky.sdk.utility.SaveFile;
 import net.tenie.fx.window.ConnectionEditor;
 
 
@@ -160,7 +160,7 @@ public class CommonEventHandler {
 	private static File getFileHelper(boolean isFile) {
 		File file = null;
 		if (isFile) {
-			file = CommonFileChooser.showSaveDefault("Save", ComponentGetter.primaryStage);
+			file = FileOrDirectoryChooser.showSaveDefault("Save", ComponentGetter.primaryStage);
 		}
 		return file;
 	}

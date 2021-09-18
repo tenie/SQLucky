@@ -6,7 +6,7 @@ open module SQLucky.plugin.note{
     requires javafx.swing;  
 //    requires java.sql;
 	requires SQLucky.sdk;
-	
+	requires org.apache.commons.io;
 	requires com.jfoenix;  
 	         
 	

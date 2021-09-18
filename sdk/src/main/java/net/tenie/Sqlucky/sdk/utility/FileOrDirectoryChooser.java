@@ -1,20 +1,18 @@
-package net.tenie.fx.component;
+package net.tenie.Sqlucky.sdk.utility;
 
 import java.io.File;
-
 import org.apache.commons.io.FileUtils;
-
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 操作系统的文件选择窗口
  * @author tenie
  *
  */
-public final class CommonFileChooser {
+public final class FileOrDirectoryChooser {
 	
 	// 获取打开文件的目录
 	public static File getOpenfileDir() { 
@@ -33,7 +31,8 @@ public final class CommonFileChooser {
 	}
 	
 	// save file
-	private static FileChooser fileChooser = new FileChooser();
+	private static FileChooser fileChooser = new FileChooser(); 
+	private static DirectoryChooser directoryChooser  = new DirectoryChooser();
 
 	// default configure
 	private static void configureFileChooser(final FileChooser fileChooser, String title) {
@@ -53,6 +52,7 @@ public final class CommonFileChooser {
 				new FileChooser.ExtensionFilter("All", "*.*")); 
 		if(filename !=null ) {
 			fileChooser.setInitialFileName(filename);
+			 
 		}
 	}
 
@@ -63,6 +63,26 @@ public final class CommonFileChooser {
 		fileChooser.getExtensionFilters().addAll( 
 				new FileChooser.ExtensionFilter("All", "*.*"));
 	}
+	
+	
+	// 选择目录
+	public static DirectoryChooser getDirChooser(String title) {
+		directoryChooser.setTitle(title);
+		File dir =  getOpenfileDir();
+		
+		directoryChooser.setInitialDirectory( dir);
+//		directoryChooser.getExtensionFilters().clear();
+//		fileChooser.getExtensionFilters().addAll(
+//				new FileChooser.ExtensionFilter("sql", "*.sql"),
+//				new FileChooser.ExtensionFilter("txt", "*.txt"), 
+//				new FileChooser.ExtensionFilter("csv", "*.csv"),
+//				new FileChooser.ExtensionFilter("All", "*.*")); 
+//		if(filename !=null ) {
+//			fileChooser.setInitialFileName(filename);
+//			 
+//		}
+		return directoryChooser;	
+  }
 	
 	
 	public static FileChooser getDefaultFileChooser(String title) {
@@ -98,13 +118,24 @@ public final class CommonFileChooser {
 		}
 		return rs;
 	}
-
+	
+	
+	// 显示目录选择窗口
+	public static File showDirChooser(String title, Stage stage) {
+		DirectoryChooser fc = getDirChooser(title);
+		File file =  fc.showDialog(stage);
+		return file;
+	}
+	
 	// 获取保存的文件绝对路径名(默认)
 	public static File showSaveDefault(String title, Stage stage) {
 		FileChooser fc = getDefaultFileChooser(title);
 		File file = fc.showSaveDialog(stage);
 		return file;
 	}
+	
+	
+	
 	public static File showSaveDefault(String title, String fileName, Stage stage) {
 		FileChooser fc = getFileChooserInitFileName(title, fileName);
 		File file = fc.showSaveDialog(stage);

@@ -30,7 +30,6 @@ import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
@@ -49,8 +48,9 @@ import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.main.MainMyDB;
 import net.tenie.fx.main.Restart;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.utility.SaveFile;
+import net.tenie.Sqlucky.sdk.utility.SaveFile;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
 import net.tenie.lib.tools.IconGenerator;
@@ -123,7 +123,7 @@ public class CommonAction {
 			} else {
 				String title = scriptPo.getTitle();
 				title = StrUtils.trimRightChar(title, "*");
-				File file = CommonFileChooser.showSaveDefault("Save", title,ComponentGetter.primaryStage);
+				File file = FileOrDirectoryChooser.showSaveDefault("Save", title, ComponentGetter.primaryStage);
 				if (file != null) {
 					SaveFile.save(file, sql);
 					String name = SaveFile.fileName(file.getPath());
@@ -606,7 +606,7 @@ public class CommonAction {
 	//TODO 打开sql文件
 	public static void openSqlFile(String encode) {
 		try {
-			File f = CommonFileChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
+			File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
 			if (f == null)
 				return;
 			String val = FileUtils.readFileToString(f, encode); 

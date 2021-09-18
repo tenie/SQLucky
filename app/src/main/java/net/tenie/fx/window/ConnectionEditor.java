@@ -34,7 +34,6 @@ import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.component.CommonFileChooser;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
@@ -45,6 +44,7 @@ import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.main.Restart;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.tools.IconGenerator;
@@ -166,7 +166,7 @@ public class ConnectionEditor {
 		h2FilePath.setVisible(false);
 		h2FilePath.setOnAction(e->{
 			String fp = "";
-			File f = CommonFileChooser.showOpenAllFile("Open", new Stage());
+			File f = FileOrDirectoryChooser.showOpenAllFile("Open", new Stage());
 			if (f != null) { 
 			    fp = f.getAbsolutePath();
 			}

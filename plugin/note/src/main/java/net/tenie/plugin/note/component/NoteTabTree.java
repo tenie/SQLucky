@@ -1,6 +1,5 @@
 package net.tenie.plugin.note.component;
 
-import java.awt.Desktop;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +16,12 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.SaveFile;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+
 
 /**
  * 
@@ -29,6 +32,7 @@ public class NoteTabTree {
 
 	public static TreeView<SqluckyTab> NoteTabTreeView;
 //	private ContextMenu  menu;
+	private static TreeItem<SqluckyTab> rootNode;
 	
 	public NoteTabTree() {
 		 createScriptTreeView();
@@ -37,7 +41,7 @@ public class NoteTabTree {
 	// db节点view
 	public TreeView<SqluckyTab> createScriptTreeView() {
 		SqluckyTab stab = ComponentGetter.appComponent.sqluckyTab();
-		var rootNode = new TreeItem<>(stab);
+		rootNode = new TreeItem<>(stab);
 		TreeView<SqluckyTab> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");
 		treeView.setShowRoot(false); 
@@ -277,7 +281,8 @@ public class NoteTabTree {
 		 
 		MenuItem Open = new MenuItem("Open Folder");
 		Open.setOnAction(e -> {
-//			ScriptTabTree.openMyTab();
+//			openNoteDir();
+			openNoteDir();
 		}); 
 		 
 		
@@ -306,4 +311,45 @@ public class NoteTabTree {
 	
 		return contextMenu;
 	}
+	
+	//TODO 打开sql文件
+	public static void openNoteDir() {
+		try {
+			File f = FileOrDirectoryChooser.showDirChooser("Select Directory", ComponentGetter.primaryStage );
+			if (f == null) return;
+			System.out.println(f.getPath());
+			String dirPath = f.getPath();
+			
+			
+			String tabName = "";
+			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
+				tabName = SaveFile.fileName(f.getPath());
+			}
+			DocumentPo scpo = new DocumentPo();
+//			scpo.setEncode(encode);
+			scpo.setFileFullName(f.getAbsolutePath());
+//			scpo.setText(val);
+			scpo.setTitle(tabName);
+			scpo.setFile(f);
+		    
+			File[] files = f.listFiles();
+			for(var file : files) {
+				DocumentPo fileNode = new DocumentPo(); 
+				fileNode.setFileFullName(file.getAbsolutePath());  
+				fileNode.setTitle(file.getName());
+				fileNode.setFile(file);
+				
+				
+				SqluckyTab mtb = ComponentGetter.appComponent.sqluckyTab(fileNode); 
+				TreeItem<SqluckyTab> item = new TreeItem<>(mtb);
+				rootNode.getChildren().add(item);
+			}
+			
+			
+		} catch (Exception e) {
+			MyAlert.errorAlert( e.getMessage());
+			e.printStackTrace();
+		}
+	}
+	
 }
