@@ -394,14 +394,27 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	
 	
 	public void highLighting(String str) {
-		highLightingHelper.applyFindWordHighlighting(codeArea, str);
+		try {
+			highLightingHelper.applyFindWordHighlighting(codeArea, str);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 	public void highLighting() {
-		highLightingHelper.applyHighlighting(codeArea);
+		try {
+			highLightingHelper.applyHighlighting(codeArea);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void errorHighLighting( int begin , int length , String str) {
-		highLightingHelper.applyErrorHighlighting(codeArea , begin ,   length ,  str);
+		try {
+			highLightingHelper.applyErrorHighlighting(codeArea , begin ,   length ,  str);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	

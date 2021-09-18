@@ -115,7 +115,7 @@ public class CommonAction {
 		try {			
 			String sql   =  tb.getTabSqlText();// SqlEditor.getTabSQLText(tb); 
 			var scriptPo = tb.getDocumentPo();
-			String fileName = scriptPo.getFileName();
+			String fileName = scriptPo.getFileFullName();
 			if (StrUtils.isNotNullOrEmpty(fileName)) {
 				SaveFile.saveByEncode(fileName, sql, scriptPo.getEncode());
 				CommonUtility.setTabName(tb, FilenameUtils.getName(fileName));
@@ -128,7 +128,7 @@ public class CommonAction {
 					SaveFile.save(file, sql);
 					String name = SaveFile.fileName(file.getPath());
 					CommonUtility.setTabName(tb, name);
-					scriptPo.setFileName(file.getPath());
+					scriptPo.setFileFullName(file.getPath());
 					fileName = file.getPath();
 				}
 			}
@@ -170,7 +170,7 @@ public class CommonAction {
 				MyTab mtab = (MyTab) t;
 				mtab.saveScriptPo(H2conn);
 				var spo = mtab.getDocumentPo();
-				String fp = spo.getFileName(); 
+				String fp = spo.getFileFullName(); 
 				if (spo != null ) {
 					String sql = mtab.getTabSqlText() ;// SqlEditor.getTabSQLText(mtab);
 					if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
@@ -198,7 +198,7 @@ public class CommonAction {
 				if(sqltxt == null || sqltxt.trim().length() == 0) {
 					SqlTextDao.deleteScriptArchive(H2conn, scpo); 
 				}else {
-					String fp = scpo.getFileName();
+					String fp = scpo.getFileFullName();
 					if(StrUtils.isNullOrEmpty(fp)) {
 						scpo.setTitle("Untitled_"+ idx +"*");
 						SqlTextDao.updateScriptArchive(H2conn , scpo);  
@@ -619,7 +619,7 @@ public class CommonAction {
 			}
 			DocumentPo scpo = new DocumentPo();
 			scpo.setEncode(encode);
-			scpo.setFileName(f.getAbsolutePath());
+			scpo.setFileFullName(f.getAbsolutePath());
 			scpo.setText(val);
 			scpo.setTitle(tabName);
 			MyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);

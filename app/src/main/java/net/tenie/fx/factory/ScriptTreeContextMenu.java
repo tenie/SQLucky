@@ -76,16 +76,13 @@ public class ScriptTreeContextMenu {
 		folder.setOnAction(e -> {
 			TreeItem<MyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
 			MyTab tb = ctt.getValue(); 
-			try {
-				String fn = tb.getDocumentPo().getFileName();
-				if(StrUtils.isNotNullOrEmpty(fn)) {
-					File file = new File(fn); 
-					Desktop.getDesktop().open(file.getParentFile());
-				}
-				
-			} catch (IOException e1) {
-				e1.printStackTrace();
+			String fn = tb.getDocumentPo().getFileFullName();
+			if(StrUtils.isNotNullOrEmpty(fn)) {
+				File file = new File(fn); 
+				CommonUtility.openExplorer(file.getParentFile());
 			}
+				
+			
 		}); 
 		
 		contextMenu.getItems().addAll( 

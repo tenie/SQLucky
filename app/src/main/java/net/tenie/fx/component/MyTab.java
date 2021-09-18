@@ -58,7 +58,7 @@ public class MyTab extends Tab implements SqluckyTab {
 	public MyTab(DocumentPo po) {
 		super();
 		if(po.getId() == null ) { 
-			scriptPo = SqlTextDao.scriptArchive(po.getTitle(), po.getText()	, po.getFileName(),
+			scriptPo = SqlTextDao.scriptArchive(po.getTitle(), po.getText()	, po.getFileFullName(),
 					po.getEncode(), po.getParagraph());
 		}else {
 			scriptPo = po;

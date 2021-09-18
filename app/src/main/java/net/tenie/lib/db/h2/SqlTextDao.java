@@ -145,7 +145,7 @@ public class SqlTextDao {
 		DocumentPo po = new DocumentPo();
 		po.setId(id);
 		po.setTitle(title);
-		po.setFileName(filename);
+		po.setFileFullName(filename);
 		po.setEncode(encode);
 		po.setParagraph(paragraph);
 		po.setText(txt);
@@ -175,7 +175,7 @@ public class SqlTextDao {
 			sm = conn.prepareStatement(sql);
 			sm.setString(1, po.getTitle());
 			sm.setString(2, po.getText());
-			sm.setString(3, po.getFileName());
+			sm.setString(3, po.getFileFullName());
 			sm.setString(4, po.getEncode());
 			sm.setInt(5, po.getParagraph());
 			sm.setInt(6, po.getId());
@@ -313,7 +313,7 @@ public class SqlTextDao {
 		    	po.setId(rs.getInt("ID"));
 		    	po.setTitle( rs.getString("TITLE_NAME"));
 		    	po.setText( rs.getString("SQL_TEXT"));
-		    	po.setFileName( rs.getString("FILE_NAME"));
+		    	po.setFileFullName( rs.getString("FILE_NAME"));
 		    	po.setEncode( rs.getString("ENCODE"));
 		    	po.setParagraph(rs.getInt("PARAGRAPH"));
 		    	vals.add(po); 

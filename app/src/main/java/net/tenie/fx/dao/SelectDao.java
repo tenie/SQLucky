@@ -95,6 +95,7 @@ public class SelectDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
+			System.out.println("finally");
 			if (rs != null)
 				rs.close();
 		} 

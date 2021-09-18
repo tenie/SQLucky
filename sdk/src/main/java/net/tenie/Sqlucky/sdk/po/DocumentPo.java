@@ -12,9 +12,9 @@ public class DocumentPo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-	private String title;
+	private String title;          // 文件名
 	private String text;
-	private String fileName;
+	private String fileFullName;       //文件全路径名称
 	private String encode;
 	private Integer paragraph;
 	private boolean isDir;
@@ -23,7 +23,7 @@ public class DocumentPo implements Serializable {
 		this.id = null;
 		this.title = "";
 		this.text = "";
-		this.fileName = "";
+		this.fileFullName = "";
 		this.encode = "UTF-8";
 		this.paragraph = 0;
 		this.isDir = false;
@@ -55,11 +55,11 @@ public class DocumentPo implements Serializable {
 	public void setText(String text) {
 		this.text = text;
 	}
-	public String getFileName() {
-		return fileName;
+	public String getFileFullName() {
+		return fileFullName;
 	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setFileFullName(String fileName) {
+		this.fileFullName = fileName;
 	}
 	public Integer getParagraph() {
 		return paragraph;
@@ -81,7 +81,7 @@ public class DocumentPo implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((fileName == null) ? 0 : fileName.hashCode());
+		result = prime * result + ((fileFullName == null) ? 0 : fileFullName.hashCode());
 		result = prime * result + (isDir ? 1231 : 1237);
 		return result;
 	}
@@ -95,10 +95,10 @@ public class DocumentPo implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		DocumentPo other = (DocumentPo) obj;
-		if (fileName == null) {
-			if (other.fileName != null)
+		if (fileFullName == null) {
+			if (other.fileFullName != null)
 				return false;
-		} else if (!fileName.equals(other.fileName))
+		} else if (!fileFullName.equals(other.fileFullName))
 			return false;
 		if (isDir != other.isDir)
 			return false;

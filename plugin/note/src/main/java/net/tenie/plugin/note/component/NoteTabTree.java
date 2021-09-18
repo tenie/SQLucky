@@ -1,5 +1,7 @@
 package net.tenie.plugin.note.component;
 
+import java.awt.Desktop;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import com.jfoenix.controls.JFXButton;
@@ -15,6 +17,8 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 
@@ -45,7 +49,7 @@ public class NoteTabTree {
 			treeViewDoubleClick(e);
 		});
 		// 右键菜单
-		ContextMenu contextMenu = contextMenu();
+		ContextMenu contextMenu = createContextMenu();
 //		menu = new ScriptTreeContextMenu(rootNode );
 //		ContextMenu	contextMenu = menu.getContextMenu(); 
 		treeView.setContextMenu(contextMenu);
@@ -261,7 +265,7 @@ public class NoteTabTree {
 //		}
  
 	// 菜单
-	public ContextMenu contextMenu() { 
+	public ContextMenu createContextMenu() { 
 
 		ContextMenu contextMenu = new ContextMenu();  
 		
@@ -272,37 +276,33 @@ public class NoteTabTree {
 //		}); 
 		 
 		MenuItem Open = new MenuItem("Open Folder");
-//		Open.setOnAction(e -> {
+		Open.setOnAction(e -> {
 //			ScriptTabTree.openMyTab();
-//		}); 
-		
-	 
- 
-			
-		
+		}); 
 		 
 		
 		MenuItem showInFolder = new MenuItem("Show In Folder");
-//		folder.setOnAction(e -> {
-//			TreeItem<SqluckyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
-//			SqluckyTab tb = ctt.getValue(); 
-//			try {
-//				String fn = tb.getDocumentPo().getFileName();
-//				if(StrUtils.isNotNullOrEmpty(fn)) {
-//					File file = new File(fn); 
-//					Desktop.getDesktop().open(file.getParentFile());
-//				}
-//				
-//			} catch (IOException e1) {
-//				e1.printStackTrace();
-//			}
-//		}); 
+		showInFolder.setOnAction(e -> {
+			TreeItem<SqluckyTab> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
+			SqluckyTab tb = ctt.getValue(); 
+			try {
+				String fn = tb.getDocumentPo().getFileFullName();
+				if(StrUtils.isNotNullOrEmpty(fn)) {
+					File file = new File(fn); 
+					CommonUtility.openExplorer(file.getParentFile());
+				}
+				
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}); 
 		
 		contextMenu.getItems().addAll( 
-				showInFolder, 
-				new SeparatorMenuItem(), 
 				Open, 
-				close );
+				close  , 
+				new SeparatorMenuItem(), 
+				showInFolder
+				);
 	
 		return contextMenu;
 	}

@@ -1,5 +1,7 @@
 package net.tenie.Sqlucky.sdk.utility;
 
+import java.awt.Desktop;
+import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
@@ -358,4 +360,17 @@ public class CommonUtility {
 	public static void addCssClass(Node nd, String css) {
 		nd.getStyleClass().add(css);
 	}
+	
+	// 打开系统的文件窗口
+	public static void openExplorer(File file) { 
+		EventQueue.invokeLater(() -> {
+			try {
+				Desktop.getDesktop().open(file);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+
+	}
+	
 }

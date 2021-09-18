@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,6 +32,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.ProcedureFieldPo;
+import net.tenie.fx.PropertyPo.SqlData;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -67,7 +70,7 @@ public class RunSQLHelper {
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
 	private static final String WAITTB_NAME = "Loading...";
-
+	ExecutorService service = Executors.newFixedThreadPool(1);
 	// 新tab页插入的位置
 	private static int tidx = -1;
 	
@@ -93,17 +96,17 @@ public class RunSQLHelper {
 		
 		// 等待加载动画
 		Tab waitTb =  addWaitingPane( tidx);
-		List<sqlData> allsqls = new ArrayList<>();
+		List<SqlData> allsqls = new ArrayList<>();
 		try {
 			// 获取sql 语句 
 			//执行创建存储过程函数, 触发器等
 			if( isCreateFunc ) { 
 				if (StrUtils.isNotNullOrEmpty(sqlstr)) {
-					sqlData sq = new sqlData(sqlstr, 0, sqlstr.length());
+					SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
 					allsqls.add(sq );
 				}else {
 					String str = SqlcukyEditor.getCurrentCodeAreaSQLText();
-					sqlData sq = new sqlData(str, 0, str.length());
+					SqlData sq = new SqlData(str, 0, str.length());
 					allsqls.add(sq);
 				}
 			// 执行传入的sql, 非界面上的sql
@@ -128,13 +131,13 @@ public class RunSQLHelper {
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static void execSqlList(List<sqlData> allsqls,  DbConnectionPo dpo) throws SQLException {
+	private static void execSqlList(List<SqlData> allsqls,  DbConnectionPo dpo) throws SQLException {
 		String sqlstr;
 		String sql;
 		Connection conn = dpo.getConn();
 		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
-		List<sqlData> errObj = new ArrayList<>();
+		List<SqlData> errObj = new ArrayList<>();
 		
 		for (int i = 0; i < sqllenght; i++) { 
 			sqlstr = allsqls.get(i).sql;
@@ -178,7 +181,7 @@ public class RunSQLHelper {
 				if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
 					msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
 				}
-				sqlData sd = 	allsqls.get(i);
+				SqlData sd = 	allsqls.get(i);
 				errObj.add(sd);
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
@@ -196,7 +199,7 @@ public class RunSQLHelper {
 		if (StrUtils.isNullOrEmpty(RunSQLHelper.sqlstr)) {
 			Platform.runLater(() -> { 
 				if (errObj.size() > 0) {
-					for (sqlData sd : errObj) {
+					for (SqlData sd : errObj) {
 						int bg = sd.begin;
 						int len = sd.sql.length();
 						SqlcukyEditor.ErrorHighlighting(bg, len, sd.sql);
@@ -719,8 +722,8 @@ public class RunSQLHelper {
 
 	}
 	
-	private static List<sqlData> epurateSql(String str) {
-		List<sqlData> sds = new ArrayList<>();
+	private static List<SqlData> epurateSql(String str) {
+		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		List<String> sqls = SqlcukyEditor.findSQLFromTxt(str);
 		
@@ -728,12 +731,12 @@ public class RunSQLHelper {
 			for (String s : sqls) { 
 				String trimSql = s.trim();
 				if (trimSql.length() > 1) {
-					sqlData sq = new sqlData(trimSql, 0, 0);
+					SqlData sq = new SqlData(trimSql, 0, 0);
 					sds.add(sq); 
 				}
 			}
 		}else {
-			sqlData sq = new sqlData(str, 0,0);
+			SqlData sq = new SqlData(str, 0,0);
 			sds.add(sq);
 		}
 
@@ -741,8 +744,8 @@ public class RunSQLHelper {
 	}
 
 	// 将sql 字符串根据;分割成多个字符串 并计算其他信息
-	private static List<sqlData> epurateSql(String str, int start) {
-		List<sqlData> sds = new ArrayList<>();
+	private static List<SqlData> epurateSql(String str, int start) {
+		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		List<String> sqls = SqlcukyEditor.findSQLFromTxt(str);
 		
@@ -750,13 +753,13 @@ public class RunSQLHelper {
 			for (String s : sqls) { 
 				String trimSql = s.trim();
 				if (trimSql.length() > 1) {
-					sqlData sq = new sqlData(s, start, s.length());
+					SqlData sq = new SqlData(s, start, s.length());
 					sds.add(sq);
 					start +=  s.length()+1; 
 				}
 			}
 		}else {
-			sqlData sq = new sqlData(str, start, str.length());
+			SqlData sq = new SqlData(str, start, str.length());
 			sds.add(sq);
 		}
 
@@ -766,8 +769,8 @@ public class RunSQLHelper {
 	/**
 	 * 获取要执行的sql, 去除无效的(如-- 开头的)
 	 */
-	public static List<sqlData> willExecSql() {
-		List<sqlData> sds = new ArrayList<>();
+	public static List<SqlData> willExecSql() {
+		List<SqlData> sds = new ArrayList<>();
 		
 		CodeArea code = SqlcukyEditor.getCodeArea();
 		String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText(); 
@@ -784,75 +787,45 @@ public class RunSQLHelper {
 		return sds;
 	}
 	// 字段值被修改还原, 不允许修改
-			public static   StringProperty createReadOnlyStringProperty(String val ) {
-				StringProperty sp =  new StringProperty() {
-					@Override
-					public String get() { 
-						return val;
-					}
-					
-					@Override
-					public void bind(ObservableValue<? extends String> arg0) { }
-					@Override
-					public boolean isBound() { 
-						return false;
-					}
-					@Override
-					public void unbind() { }
-
-					@Override
-					public Object getBean() { 
-						return null;
-					}
-					@Override
-					public String getName() { 
-						return null;
-					} 
-					@Override
-					public void addListener(ChangeListener<? super String> arg0) { } 
-					@Override
-					public void removeListener(ChangeListener<? super String> arg0) { } 
-					@Override
-					public void addListener(InvalidationListener arg0) { }
-					@Override
-					public void removeListener(InvalidationListener arg0) { } 		
-					@Override
-					public void set(String arg0) {}  
-				}; 		
-				return sp;
+	public static   StringProperty createReadOnlyStringProperty(String val ) {
+		StringProperty sp =  new StringProperty() {
+			@Override
+			public String get() { 
+				return val;
 			}
-//		public static void main(String[] args) {
-//			String express = "(\\([\\w\\s\\,_]+\\))";
-//			String st1 = "CREATE OR REPLACE PROCEDURE \"INFODMS\".\"P_CANCEL_BOOKINGORDER\"(IN AENTITY_CODE CHARACTER(80) ,\r\n"
-//					+ "                                               OUT RETURN_CODE INTEGER,\r\n"
-//					+ "                                               OUT RETURN_MSG VARCHAR(2) )"
-//		//			+ "adas()sadas\r\n"
-//					+ "    LANGUAGE SQL";
-//			String str2 = "111(dsd  sa)";
-//		//	Matcher match = Pattern.compile(express).matcher(st1);
-//		//	         
-//		//	while (match.find()) {
-//		//	    System.out.println(match.group(1));
-//		//	}
-//			
-//			String val = CommonAction.firstParenthesisInsideString(st1);
-//			  System.out.println(val);
-//		}
+			
+			@Override
+			public void bind(ObservableValue<? extends String> arg0) { }
+			@Override
+			public boolean isBound() { 
+				return false;
+			}
+			@Override
+			public void unbind() { }
+
+			@Override
+			public Object getBean() { 
+				return null;
+			}
+			@Override
+			public String getName() { 
+				return null;
+			} 
+			@Override
+			public void addListener(ChangeListener<? super String> arg0) { } 
+			@Override
+			public void removeListener(ChangeListener<? super String> arg0) { } 
+			@Override
+			public void addListener(InvalidationListener arg0) { }
+			@Override
+			public void removeListener(InvalidationListener arg0) { } 		
+			@Override
+			public void set(String arg0) {}  
+		}; 		
+		return sp;
+	}
 			
 		
 }
-
-
-class sqlData{
-	String sql;
-	int begin;
-	int length;
-	boolean isCallfunc = false;
-	sqlData(String s, int i, int len){
-		sql = s;
-		begin = i;
-		length = len;
-	}
-
-}
+ 
 
