@@ -1,5 +1,6 @@
 package net.tenie.fx.component;
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
@@ -33,13 +35,17 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
 
 public class MyTab extends Tab implements SqluckyTab {
-	private DocumentPo scriptPo;
+	private DocumentPo docPo;
 	private HighLightingCodeArea sqlCodeArea;
 	private VBox vbox;
+	private Boolean savePo = true;
+	
+	private boolean isModify = false;
 	
 	public CodeArea getCodeArea() {
 		return sqlCodeArea.getCodeArea();
@@ -48,28 +54,49 @@ public class MyTab extends Tab implements SqluckyTab {
 	public MyTab() {
 		super();
 	}
+	public MyTab(boolean save) {
+		super();
+		this.savePo = save;
+	}
 
 	public MyTab(String TabName) {
 		super();
-		scriptPo = SqlTextDao.scriptArchive(TabName, ""	, "", "UTF-8", 0);
+		docPo = SqlTextDao.scriptArchive(TabName, ""	, "", "UTF-8", 0);
 		createMyTab();
 	}
 	
 	public MyTab(DocumentPo po) {
 		super();
 		if(po.getId() == null ) { 
-			scriptPo = SqlTextDao.scriptArchive(po.getTitle(), po.getText()	, po.getFileFullName(),
+			docPo = SqlTextDao.scriptArchive(po.getTitle(), po.getText()	, po.getFileFullName(),
 					po.getEncode(), po.getParagraph());
 		}else {
-			scriptPo = po;
+			docPo = po;
 		}
 		createMyTab();
+	}
+	
+	public MyTab(DocumentPo po, boolean save) {
+		super();
+		this.savePo = save;
+		if(save) {
+			if(po.getId() == null ) { 
+				docPo = SqlTextDao.scriptArchive(po.getTitle(), po.getText()	, po.getFileFullName(),
+						po.getEncode(), po.getParagraph());
+			}else {
+				docPo = po;
+			}
+			createMyTab();
+		}else {
+			docPo = po;
+			createMyTab();
+		}
 	}
 	
  
 	
 	private void createMyTab() {
-		String TabName = scriptPo.getTitle();
+		String TabName = docPo.getTitle();
 		var myTabPane = ComponentGetter.mainTabPane;
 		// 	名称
 		CommonUtility.setTabName(this, TabName);
@@ -99,7 +126,7 @@ public class MyTab extends Tab implements SqluckyTab {
 		}); 
 		
 		// 设置sql 文本
-		setTabSQLText( scriptPo.getText());
+		setTabSQLText( docPo.getText());
 		
 		// 右键菜单
 		this.setContextMenu(MyTabMenu());
@@ -128,9 +155,11 @@ public class MyTab extends Tab implements SqluckyTab {
 		String sql = getTabSqlText();
 		String title = getTabTitle();
 		
-		scriptPo.setText(sql);
-		scriptPo.setTitle(title); 
-		SqlTextDao.updateScriptArchive(conn , scriptPo); 
+		docPo.setText(sql);
+		docPo.setTitle(title); 
+		if(savePo) { 
+			SqlTextDao.updateScriptArchive(conn , docPo); 
+		}
 		ScriptTabTree.ScriptTreeView.refresh();
 	}
 	
@@ -150,9 +179,9 @@ public class MyTab extends Tab implements SqluckyTab {
 		String sql = getTabSqlText();
 		String title =   getTabTitle();
 		
-		scriptPo.setText(sql);
-		scriptPo.setTitle(title); 
-		SqlTextDao.updateScriptArchive(conn, scriptPo); 
+		docPo.setText(sql);
+		docPo.setTitle(title); 
+		SqlTextDao.updateScriptArchive(conn, docPo); 
 	}
 	
 	
@@ -262,11 +291,11 @@ public class MyTab extends Tab implements SqluckyTab {
 	}
 
 	public DocumentPo getDocumentPo() {
-		return scriptPo;
+		return docPo;
 	}
 
 	public void setScriptPo(DocumentPo scriptPo) {
-		this.scriptPo = scriptPo;
+		this.docPo = scriptPo;
 	}
 
 	public SqluckyCodeAreaHolder getSqlCodeArea() {
@@ -308,10 +337,14 @@ public class MyTab extends Tab implements SqluckyTab {
 		addMyTabByScriptPo(scpo);
 	}
 	
-	// 添加空文本的codeTab
+	//TODO 添加空文本的codeTab
 	public  void mainTabPaneAddMyTab() { 
 		var myTabPane = ComponentGetter.mainTabPane;
 		if( myTabPane.getTabs().contains(this) == false ) {
+			var code = sqlCodeArea.getCodeArea();
+			if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
+				setTabSQLText( docPo.getText());
+			}
 			myTabPane.getTabs().add( this);// 在指定位置添加Tab 
 		} 
 		myTabPane.getSelectionModel().select(this);
@@ -325,8 +358,42 @@ public class MyTab extends Tab implements SqluckyTab {
 	public String getTitle() {
 		return CommonUtility.tabText(this);
 	}
+	
+	public void setFile(File file) {
+		docPo.setFile(file);
+	}
+	
+	public File getFile() {
+		return docPo.getFile();
+	}
+	
+	public Region getIcon() {
+		return docPo.getIcon();
+	}
 
+	public void setIcon(Region icon) {
+		docPo.setIcon(icon);
+	}
+	
+	public String getFileText() {
+		return docPo.getText();
+	}
+	public void setFileText(String text) { 
+		docPo.setText(text);
+	}
+
+	public boolean isModify() {
+		return isModify;
+	}
+
+	public void setModify(boolean isModify) {
+		this.isModify = isModify;
+	}
  
+	public void saveTextAction() {
+		CommonAction.saveSqlAction(this);
+	}
+	
 	// 设置tab 中的 area 中的文本
 //	public static void setTabSQLText(MyTab tb, String text) {
 //		CodeArea code = getCodeArea(tb);

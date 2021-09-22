@@ -26,6 +26,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.component.MyTab;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
@@ -83,11 +84,13 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	    cl = (obj, o ,n ) ->{ 
 			Consumer< String >  caller = x ->{
 				Tab tb = SqlcukyEditor.mainTabPaneSelectedTab();
+				MyTab mtb = (MyTab) tb;
 				if (tb != null) {
 					Platform.runLater(()->{
 						String title = CommonUtility.tabText(tb);  
 						if (!title.endsWith("*")) { 
 							CommonUtility.setTabName(tb, title + "*");
+							mtb.setModify(true);
 						}
 						this.highLighting();
 					});

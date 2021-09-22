@@ -8,6 +8,7 @@ import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.fx.component.MyTab;
+import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.tools.IconGenerator; 
 
 public class SqluckyComponent implements AppComponent { 
@@ -27,17 +28,17 @@ public class SqluckyComponent implements AppComponent {
 
 	@Override
 	public SqluckyTab sqluckyTab() { 
-		return new MyTab();
+		return new MyTab(false);
 	}
-
-	@Override
-	public SqluckyTab sqluckyTab(String TabName) { 
-		return new MyTab(TabName);
-	}
+//
+//	@Override
+//	public SqluckyTab sqluckyTab(String TabName) { 
+//		return new MyTab(TabName);
+//	}
 
 	@Override
 	public SqluckyTab sqluckyTab(DocumentPo po) { 
-		return new MyTab(po);
+		return new MyTab(po, false);
 	}
 
 	@Override
@@ -48,6 +49,33 @@ public class SqluckyComponent implements AppComponent {
 	@Override
 	public Region getIconDefActive(String name) {
 		return IconGenerator.svgImageDefActive( name); 
+	}
+
+	@Override
+	public void saveData(String name, String key, String value) {
+		try {
+			StringBuilder strb = new StringBuilder();
+			strb.append(name);
+			strb.append("-");
+			strb.append(key); 
+			H2Db.setConfigVal(H2Db.getConn(), strb.toString(), value);
+		} finally {
+			H2Db.closeConn();
+		} 
+	}
+	public String fetchData(String name, String key) {
+		String val = "";
+		try {
+			StringBuilder strb = new StringBuilder();
+			strb.append(name);
+			strb.append("-");
+			strb.append(key); 
+			val = H2Db.getConfigVal(H2Db.getConn(), strb.toString());
+		} finally {
+			H2Db.closeConn();
+		} 
+		
+		return val;
 	}
 
 }

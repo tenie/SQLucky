@@ -145,7 +145,7 @@ public class MenuAction {
 		Consumer< String >  caller = x ->{ 
 			execExportSql(sql, conn, dbc);
 		};
-		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
+		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller); 
 		 
 	}
 	
@@ -156,7 +156,7 @@ public class MenuAction {
 		Consumer< String >  caller = x ->{ 
 			execExportSql(sql, conn, dbc);
 		};
-		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
+		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller); 
 		 
 	}
 	
@@ -167,7 +167,7 @@ public class MenuAction {
 		Consumer< String >  caller = x ->{ 
 			execExportSql(sql, conn, dbc);
 		};
-		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
+		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller); 
 		 
 	}
 
@@ -178,7 +178,7 @@ public class MenuAction {
 		Consumer< String >  caller = x ->{ 
 			execExportSql(sql, conn, dbc);
 		};
-		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
+		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller); 
 		 
 	}
 
@@ -189,7 +189,7 @@ public class MenuAction {
 		Consumer< String >  caller = x ->{ 
 			execExportSql(sql, conn, dbc);
 		};
-		ModalDialog.myConfirmation("Execute : '" + sql + "' ?", caller); 
+		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller); 
 		 
 	}
 

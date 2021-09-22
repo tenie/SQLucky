@@ -2,6 +2,8 @@ package net.tenie.Sqlucky.sdk.subwindow;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -52,5 +54,59 @@ public class MyAlert {
 		stage.setScene(scene);
 		DialogTools.setSceneAndShow(scene, stage);
 	}
-	 
+	
+
+	/**
+	 * 确认对话框
+	 * @param promptInfo  提示信息
+	 * @param caller      得到确认后的执行函数
+	 */
+	public static void myConfirmation(String promptInfo,  Consumer< String >  caller) {
+		myConfirmation(promptInfo, caller, null);
+	}
+	
+	public static void myConfirmation(String promptInfo,  Consumer< String >  okCaller, Consumer< String >  cancelCaller ) {
+		final Stage stage = new Stage();
+	
+		JFXButton btn = new JFXButton("Cancel");
+		btn.getStyleClass().add("myAlertBtn");
+		btn.setOnAction(value -> { 
+			if(cancelCaller !=null) {
+				cancelCaller.accept("");
+			}
+			stage.close();
+		});
+
+		JFXButton okbtn = new JFXButton("OK");
+		okbtn.setOnAction(value -> {
+			if(okCaller !=null) {
+				okCaller.accept("");
+			} 
+			stage.close(); 
+		});
+		
+		List<Node> btns = new ArrayList<>();
+		btns.add( btn);
+		btns.add( okbtn); 
+		
+		myConfirmation(promptInfo, stage, btns);
+	}
+	
+	
+	public static void myConfirmation(String promptInfo, Stage stage  , List<Node> btns ) {
+		Label space = new Label(""); 
+		Label tit = new Label(promptInfo); 
+		
+		List<Node> nds = new ArrayList<>();
+		nds.add( space); 
+		nds.add( tit); 
+
+		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.INFO, nds, btns);
+		Scene scene = new Scene((Parent) vb);
+		
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setScene(scene);
+		DialogTools.setSceneAndShow(scene, stage);  
+	}
+	
 }

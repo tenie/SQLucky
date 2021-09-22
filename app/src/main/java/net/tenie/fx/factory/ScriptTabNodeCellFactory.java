@@ -51,7 +51,7 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 
 	                    // A custom HBox that will contain your check box, label and
 	                    // button.
-	                	 AnchorPane pn = new AnchorPane();
+	                	AnchorPane pn = new AnchorPane();
 
 //	                    CheckBox checkBox = new CheckBox();
 	                    Label label = new Label(item.getDocumentPo().getTitle());

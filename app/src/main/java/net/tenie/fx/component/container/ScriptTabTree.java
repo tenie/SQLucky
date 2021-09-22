@@ -19,6 +19,7 @@ import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.fx.factory.ScriptTabNodeCellFactory;
 import net.tenie.fx.factory.ScriptTreeContextMenu;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -237,7 +238,7 @@ public class ScriptTabTree {
 			btns.add(Nobtn);
 			btns.add(okbtn);
 
-			ModalDialog.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns);
+			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns);
 		}else {
 			removeNode(myTabItemList, ctt, tb);
 		}

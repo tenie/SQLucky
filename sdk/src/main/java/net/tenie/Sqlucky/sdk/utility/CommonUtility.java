@@ -375,6 +375,22 @@ public class CommonUtility {
 
 	}
 	
+	//
+	public static String  readFileText(File file, String encode) {
+		String val = "";
+		try { 
+			if( ! file.exists()) return val;
+			val = FileUtils.readFileToString(file, encode); 
+			
+		} catch (IOException e) { 
+			e.printStackTrace();
+		}
+		 return val;
+	}
+
+	
+	
+	
 	public static void folderMethod1(String path) {
         int fileNum = 0, folderNum = 0;
         File file = new File(path);

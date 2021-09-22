@@ -135,6 +135,8 @@ public class SqlcukyEditor {
 	// 获取当前选中的代码Tab
 	public static Tab mainTabPaneSelectedTab() { 
 		var myTabPane = ComponentGetter.mainTabPane;
+//		SqluckyTab rstab = (SqluckyTab) myTabPane.getSelectionModel().getSelectedItem();
+//		return rstab;
 		return myTabPane.getSelectionModel().getSelectedItem();
 	}
 	

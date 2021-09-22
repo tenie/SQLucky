@@ -90,7 +90,7 @@ public class CommonAction {
 	// ctrl + S 按钮触发, 保存数据或sql文本
 	public static void ctrlAndSAction() {
 		boolean showStatus = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-		// 如果现在数据表格中的<保存按钮>是亮的(面板还要显示着), 就保存数据 
+		// 如果现在数据表格中的<保存按钮>是亮的(面板还要显示着), 就保存数据库数据 
 		if(showStatus) {
 			Button btn = DataViewTab.dataPaneSaveBtn();
 			if(btn != null && ! btn.isDisable()) {
@@ -122,6 +122,7 @@ public class CommonAction {
 
 			} else {
 				String title = scriptPo.getTitle();
+				tb.setModify(false);
 				title = StrUtils.trimRightChar(title, "*");
 				File file = FileOrDirectoryChooser.showSaveDefault("Save", title, ComponentGetter.primaryStage);
 				if (file != null) {
@@ -171,7 +172,7 @@ public class CommonAction {
 				mtab.saveScriptPo(H2conn);
 				var spo = mtab.getDocumentPo();
 				String fp = spo.getFileFullName(); 
-				if (spo != null ) {
+				if (spo != null && spo.getId() != null ) {
 					String sql = mtab.getTabSqlText() ;// SqlEditor.getTabSQLText(mtab);
 					if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
 						CodeArea code = mtab.getCodeArea(); //SqlEditor.getCodeArea(mtab);
@@ -1237,7 +1238,7 @@ public class CommonAction {
 			saveApplicationStatusInfo();
 			Restart.reboot();
 		};
-		ModalDialog.myConfirmation("Restart Application ? ", caller);
+		MyAlert.myConfirmation("Restart Application ? ", caller);
 	}
 	
 	public static void changeThemeRestartApp(String val ) {
@@ -1253,7 +1254,7 @@ public class CommonAction {
 			// 修改按钮颜色
 			changeSvgColor();
 		};
-		ModalDialog.myConfirmation("Change Theme Restart Application Will Better, ok ? ", ok, cancel);
+		MyAlert.myConfirmation("Change Theme Restart Application Will Better, ok ? ", ok, cancel);
 	}
 	// 获取当前连接下拉选中的连接名称
 	public static String getComboBoxDbConnName() {

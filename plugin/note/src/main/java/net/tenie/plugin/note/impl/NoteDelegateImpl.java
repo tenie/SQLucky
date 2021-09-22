@@ -10,7 +10,7 @@ import net.tenie.plugin.note.component.NoteTabTree;
 
 public class NoteDelegateImpl implements PluginDelegate { 
 	TitledPane NotePane;
-	
+	public static final String pluginName = "net.tenie.plugin.note";
 	@Override
 	public void load() {
 		System.out.println("load:  NoteDelegateImp..."); 
@@ -65,7 +65,7 @@ public class NoteDelegateImpl implements PluginDelegate {
 
 	@Override
 	public String pluginName() { 
-		return "note";
+		return pluginName;
 	}
 
 }

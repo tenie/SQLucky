@@ -11,7 +11,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -19,8 +19,8 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.SaveFile;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.plugin.note.impl.NoteDelegateImpl;
 
 
 /**
@@ -49,13 +49,11 @@ public class NoteTabTree {
 		if (rootNode.getChildren().size() > 0)
 			treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
 		// 双击
-		treeView.setOnMouseClicked(e -> {
-			treeViewDoubleClick(e);
-		});
+//		treeView.setOnMouseClicked(e -> {
+//			treeViewDoubleClick(e);
+//		});
 		// 右键菜单
 		ContextMenu contextMenu = createContextMenu();
-//		menu = new ScriptTreeContextMenu(rootNode );
-//		ContextMenu	contextMenu = menu.getContextMenu(); 
 		treeView.setContextMenu(contextMenu);
 		// 选中监听事件
 //		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
@@ -66,59 +64,21 @@ public class NoteTabTree {
 		// 显示设置
 		treeView.setCellFactory(new NoteTabNodeCellFactory());
 		 
-
-//		recoverScriptNode(rootNode);
+		String filePath = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "dir_path");
+		
+		recoverNode(rootNode, filePath);
 		return treeView;
 	}
 	
 	
 //	// 恢复数据中保存的连接数据
-//	public static void recoverScriptNode(TreeItem<SqluckyTab> rootNode) {
-//		List<DocumentPo> datas ;
-//		List<H2SqlTextSavePo> ls;
-//		String SELECT_PANE ;
-//		try {
-//			Connection H2conn = H2Db.getConn();
-//			ls = SqlTextDao.read(H2conn);
-//			SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
-//			datas = SqlTextDao.readScriptPo(H2conn);
-//		} finally {
-//			H2Db.closeConn();
-//		}
-//		
-//		List<Integer> ids = new ArrayList<>();
-//		for (H2SqlTextSavePo sqlpo : ls) {
-//			ids.add(sqlpo.getScriptId());
-//		}
-//
-//		if (datas != null && datas.size() > 0) {
-//			ConfigVal.pageSize = datas.size();
-//			for (DocumentPo po : datas) {
-//				MyTab tb = new MyTab(po);
-//				TreeItem<SqluckyTab> item = new TreeItem<>(tb);
-//				rootNode.getChildren().add(item);
-//				// 恢复代码编辑框
-//				if (ids.contains(po.getId())) {
-//					MyTab.myTabPaneAddMyTab(tb);
-//				}
-//			}
-//
-//		}
-//
-//		int ts = ComponentGetter.mainTabPane.getTabs().size();
-//		// 初始化上次选中页面
-//		if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) { 
-//			int sps = Integer.valueOf(SELECT_PANE);
-//			if (ts > sps) {
-//				ComponentGetter.mainTabPane.getSelectionModel().select(sps);
-//			}  
-//		}	
-//		// 没有tab被添加, 添加一新的
-//		if (ts == 0) {
-//			MyTab.addCodeEmptyTabMethod();
-//		}
-//
-//	}
+	public static void recoverNode(TreeItem<SqluckyTab> rootNode, String filePath) { 
+		File file = new File(filePath);
+		if(file.exists()) {
+			openNoteDir(rootNode , file);
+		}
+		
+	}
 
 	// 所有连接节点
 	public static ObservableList<TreeItem<SqluckyTab>> allTreeItem() {
@@ -148,11 +108,11 @@ public class NoteTabTree {
 		}
 
 	// tree view 双击事件
-	public void treeViewDoubleClick(MouseEvent mouseEvent) { 
-		if (mouseEvent.getClickCount() == 2) {
-			openMyTab();
-		}
-	}
+//	public void treeViewDoubleClick(MouseEvent mouseEvent) { 
+//		if (mouseEvent.getClickCount() == 2) {
+//			openMyTab();
+//		}
+//	}
 	
 	public static void openMyTab() {
 		TreeItem<SqluckyTab> item = NoteTabTreeView.getSelectionModel().getSelectedItem();
@@ -196,32 +156,24 @@ public class NoteTabTree {
 		 return null;
 	}
 	
-	// 关闭一个脚本 Node cell
-	public static void closeAction(TreeItem<SqluckyTab> rootNode) {
-
-		ObservableList<TreeItem<SqluckyTab>>  myTabItemList = rootNode.getChildren();
-		TreeItem<SqluckyTab> ctt = NoteTabTree.NoteTabTreeView.getSelectionModel().getSelectedItem();
-		SqluckyTab tb = ctt.getValue();
-		
-		String title = tb.getTitle(); //CommonUtility.tabText(tb);
-		String sql = tb.getTabSqlText(); // SqlEditor.getTabSQLText(tb);
-		if (title.endsWith("*") && sql.trim().length() > 0) {
+	public static void closeNodeConfirmation( TreeItem<SqluckyTab> treeitem) {
+		SqluckyTab stb = treeitem.getValue();
+		if(stb.isModify() ) {
 			// 是否保存
-			final Stage stage = new Stage();
-
+			final Stage stage = new Stage(); 
 			// 1 保存
 			JFXButton okbtn = new JFXButton("Yes");
 			okbtn.getStyleClass().add("myAlertBtn");
-			okbtn.setOnAction(value -> {
-//				CommonAction.saveSqlAction(tb);
-//				removeNode(myTabItemList, ctt, tb);
+			okbtn.setOnAction(value -> { 
+				stb.saveTextAction(); 
+				rootNode.getChildren().remove(treeitem);
 				stage.close();
 			});
 
 			// 2 不保存
 			JFXButton Nobtn = new JFXButton("No");
-			Nobtn.setOnAction(value -> {
-//				removeNode(myTabItemList, ctt, tb);
+			Nobtn.setOnAction(value -> { 
+				rootNode.getChildren().remove(treeitem);
 				stage.close();
 			});
 			// 取消
@@ -230,22 +182,98 @@ public class NoteTabTree {
 				stage.close();
 			});
 
-			List<Node> btns = new ArrayList<>();
-
-			
-			
+			List<Node> btns = new ArrayList<>();  
 			btns.add(cancelbtn);
 			btns.add(Nobtn);
 			btns.add(okbtn);
-
-//			ModalDialog.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns);
+			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(stb.getTitle(), "*") + "?", stage, btns);
+			
 		}else {
-//			removeNode(myTabItemList, ctt, tb);
+			rootNode.getChildren().remove(treeitem);
 		}
+	}
+	
+	// 关闭一个脚本 Node cell
+	public static void closeAction(TreeItem<SqluckyTab> node) {
+		
+		SqluckyTab stb = node.getValue();
+		File nodeFile = stb.getFile();
+		if(nodeFile.isFile()) { 
+			closeNodeConfirmation(node);
+		}else if( nodeFile.isDirectory()) {
+			if(node.getChildren().size() == 0){
+				rootNode.getChildren().remove(node);
+			}else {
+				for(var subNode : node.getChildren()) {
+					closeAction(subNode);
+				}
+			}
+		}
+//		
+//		ObservableList<TreeItem<SqluckyTab>>  myTabItemList = node.getChildren();
+//		TreeItem<SqluckyTab> ctt = NoteTabTree.NoteTabTreeView.getSelectionModel().getSelectedItem();
+//		SqluckyTab tb = ctt.getValue();
+//		
+//		String title = tb.getTitle(); //CommonUtility.tabText(tb);
+//		String sql = tb.getTabSqlText(); // SqlEditor.getTabSQLText(tb);
+//		if (title.endsWith("*") && sql.trim().length() > 0) {
+//			// 是否保存
+//			final Stage stage = new Stage();
+//
+//			// 1 保存
+//			JFXButton okbtn = new JFXButton("Yes");
+//			okbtn.getStyleClass().add("myAlertBtn");
+//			okbtn.setOnAction(value -> {
+////				CommonAction.saveSqlAction(tb);
+////				removeNode(myTabItemList, ctt, tb);
+//				stage.close();
+//			});
+//
+//			// 2 不保存
+//			JFXButton Nobtn = new JFXButton("No");
+//			Nobtn.setOnAction(value -> {
+////				removeNode(myTabItemList, ctt, tb);
+//				stage.close();
+//			});
+//			// 取消
+//			JFXButton cancelbtn = new JFXButton("Cancel"); 
+//			cancelbtn.setOnAction(value -> { 
+//				stage.close();
+//			});
+//
+//			List<Node> btns = new ArrayList<>();
+//
+//			
+//			
+//			btns.add(cancelbtn);
+//			btns.add(Nobtn);
+//			btns.add(okbtn);
+//
+//			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns);
+//		}else {
+////			removeNode(myTabItemList, ctt, tb);
+//		}
 		
 
 	}
 	
+	// 从ScriptTabTree 中移除一个节点
+//		public static void removeNode(ObservableList<TreeItem<MyTab>>  myTabItemList, TreeItem<MyTab> ctt, MyTab tb ) {
+//			try { 
+//				var myTabPane = ComponentGetter.mainTabPane;
+//				var conn = H2Db.getConn();
+//				if (myTabPane.getTabs().contains(tb)) {
+//					myTabPane.getTabs().remove(tb);
+//				}
+//				myTabItemList.remove(ctt);
+//
+//				var scpo = tb.getDocumentPo();
+//				SqlTextDao.deleteScriptArchive(conn, scpo);
+//			} finally {
+//				H2Db.closeConn();
+//			}
+//		}
+		
 	 
 	
 	// treeView 右键菜单属性设置
@@ -273,16 +301,19 @@ public class NoteTabTree {
 
 		ContextMenu contextMenu = new ContextMenu();  
 		
-		MenuItem close = new MenuItem("Close");
-//		MenuItem close.setOnAction(e -> {
-//			ScriptTabTree.closeAction(rootNode);
-//			// closeAction(rootNode);
-//		}); 
+		MenuItem close = new MenuItem("Clean ");
+	    close.setOnAction(e -> {
+			rootNode.getChildren().clear();
+			ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path", "");
+		}); 
 		 
 		MenuItem Open = new MenuItem("Open Folder");
 		Open.setOnAction(e -> {
-//			openNoteDir();
-			openNoteDir();
+			if(rootNode.getChildren().size() >= 0) {
+				rootNode.getChildren().clear();
+			}
+			String filePath = openNoteDir(rootNode , null);
+			ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path", filePath);
 		}); 
 		 
 		
@@ -313,43 +344,46 @@ public class NoteTabTree {
 	}
 	
 	//TODO 打开sql文件
-	public static void openNoteDir() {
+	public static String openNoteDir(TreeItem<SqluckyTab> node , File openFile) {
+		String filePath = "";
 		try {
-			File f = FileOrDirectoryChooser.showDirChooser("Select Directory", ComponentGetter.primaryStage );
-			if (f == null) return;
-			System.out.println(f.getPath());
-			String dirPath = f.getPath();
-			
-			
-			String tabName = "";
-			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
-				tabName = SaveFile.fileName(f.getPath());
+			File f = openFile;
+			if(openFile == null) {
+				f = FileOrDirectoryChooser.showDirChooser("Select Directory", ComponentGetter.primaryStage );
+				if (f == null) return filePath;  
+				if(f.exists()) {
+					filePath = f.getAbsolutePath();
+				}
 			}
-			DocumentPo scpo = new DocumentPo();
-//			scpo.setEncode(encode);
-			scpo.setFileFullName(f.getAbsolutePath());
-//			scpo.setText(val);
-			scpo.setTitle(tabName);
-			scpo.setFile(f);
-		    
+			
 			File[] files = f.listFiles();
 			for(var file : files) {
 				DocumentPo fileNode = new DocumentPo(); 
 				fileNode.setFileFullName(file.getAbsolutePath());  
 				fileNode.setTitle(file.getName());
-				fileNode.setFile(file);
-				
-				
+//				fileNode.setFile(file); 
 				SqluckyTab mtb = ComponentGetter.appComponent.sqluckyTab(fileNode); 
+				
+				mtb.setFile(file);
+				Region icon ;
+				if(file.isFile()) {
+					  icon =  ComponentGetter.appComponent.getIconDefActive("file-text-o");
+					 
+				}else {
+					  icon =  ComponentGetter.appComponent.getIconDefActive("folder");
+					 
+				}
+				mtb.setIcon(icon);
+				
 				TreeItem<SqluckyTab> item = new TreeItem<>(mtb);
-				rootNode.getChildren().add(item);
-			}
-			
+				node.getChildren().add(item);  
+			} 
 			
 		} catch (Exception e) {
 			MyAlert.errorAlert( e.getMessage());
 			e.printStackTrace();
 		}
+		return filePath;
 	}
 	
 }

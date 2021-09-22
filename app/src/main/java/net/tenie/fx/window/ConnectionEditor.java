@@ -378,7 +378,7 @@ public class ConnectionEditor {
 		};
 		// TODO
 		if (tmpPo != null) {
-			ModalDialog.myConfirmation("OK to delete " + tmpPo.getConnName() + " ?", ok);
+			MyAlert.myConfirmation("OK to delete " + tmpPo.getConnName() + " ?", ok);
 		}
 
 	}

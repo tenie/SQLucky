@@ -19,6 +19,8 @@ import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
 /**
@@ -45,26 +47,15 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 	            if (isEmpty()) {
 	                setGraphic(null);
 	                setText(null);
-	            } else {
-	                // We only show the custom cell if it is a leaf, meaning it has
-	                // no children.
-	                if (this.getTreeItem().isLeaf()) {
+	            } else {	                
+//	                if (this.getTreeItem().isLeaf()) {   // We only show the custom cell if it is a leaf, meaning it has no children.
 
 	                    // A custom HBox that will contain your check box, label and
 	                    // button.
-	                	 AnchorPane pn = new AnchorPane();
-
-//	                    CheckBox checkBox = new CheckBox();
+	                    AnchorPane pn = new AnchorPane();
 	                	DocumentPo po =  item.getDocumentPo();
-	                	File file = po.getFile();
-	                	Region icon ;
-	                	if(file.isFile()) {
-	    					  icon =  ComponentGetter.appComponent.getIconDefActive("file-o");
-	    					 
-	    				}else {
-	    					  icon =  ComponentGetter.appComponent.getIconDefActive("folder");
-	    					 
-	    				}
+	                	Region icon = item.getIcon();
+	                	
 	                    Label label = new Label(po.getTitle());
 	                    label.setGraphic(icon);
 //	                    Button clean = new Button();  
@@ -76,14 +67,12 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 	                    setGraphic(pn);
 	                    
 	                    setText(null);
-	                } else {
-	                    // If this is the root we just display the text.
-//	                    setGraphic(null);
-	                    setText(item.getDocumentPo().getTitle());
-	                }
+//	                } else {
+//	                    // If this is the root we just display the text.
+////	                    setGraphic(null);
+//	                    setText(item.getDocumentPo().getTitle());
+//	                }
 	            }
-				
-				
 			}
 
 
@@ -97,8 +86,8 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
   		clean.getStyleClass().add("myCleanBtn");
   		clean.setVisible(false); //clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
   		clean.setOnAction(e->{
-  			var rootNode = NoteTabTree.NoteTabTreeView.getRoot();
-  			NoteTabTree.closeAction(rootNode);
+  			var it = cell.getTreeItem();
+  			NoteTabTree.closeAction(it);
   		});
   		
   		cell.setOnMouseClicked(e->{ 
@@ -118,6 +107,41 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 			clean.setVisible(false);
 		});
 		
+		cell.setOnMouseClicked(e->{
+			if(e.getClickCount() == 2) {
+				SqluckyTab stb = cell.getTreeItem().getValue();
+				File file = stb.getFile();
+				if(! file.exists()) return;
+				if(file.isFile()) {
+					if(StrUtils.isNotNullOrEmpty(file.getAbsolutePath() ) ){
+						String fp = file.getAbsolutePath().toLowerCase();
+						if(fp.endsWith(".md") 
+						   || fp.endsWith(".text") 
+						   || fp.endsWith(".sql") 
+						   || fp.endsWith(".txt") 
+					    ) {
+							String  val = CommonUtility.readFileText(file, "UTF-8");
+							stb.setFileText(val);
+							stb.mainTabPaneAddMyTab();
+							
+						}else {
+							CommonUtility.openExplorer(file);
+						}
+						
+					}else {
+						CommonUtility.openExplorer(file);
+					}
+					
+				}else if(file.isDirectory()) {
+					if(cell.getTreeItem().getChildren().size() == 0) {
+						NoteTabTree.openNoteDir(cell.getTreeItem(), file);
+						cell.getTreeItem().setExpanded(true);
+					}
+					
+				}
+				
+			}
+		});
 		cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
 		cell.setOnDragOver((DragEvent event) -> dragOver(event, cell, treeView));
 		cell.setOnDragDropped((DragEvent event) -> drop(event, cell, treeView));
@@ -132,7 +156,7 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
-		if (draggedItem.getParent() == null) { 
+		if (draggedItem == null && draggedItem.getParent() == null) { 
 			return;
 		} 
 			

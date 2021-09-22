@@ -12,10 +12,13 @@ public interface AppComponent {
 	void addTitledPane(TitledPane tp);
 	void addIconBySvg(String name, String svg);
 	SqluckyTab sqluckyTab();
-	SqluckyTab sqluckyTab(String TabName);
+//	SqluckyTab sqluckyTab(String TabName);
 	SqluckyTab sqluckyTab(DocumentPo po);
 	
 	public Region getIconUnactive(String name);
 	public Region getIconDefActive(String name);
+	
+	public void saveData(String name, String key, String value);
+	public String fetchData(String name, String key);
 	
 }
