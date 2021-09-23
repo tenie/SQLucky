@@ -14,6 +14,8 @@ import java.util.function.Function;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
@@ -333,6 +335,18 @@ public class CommonUtility {
 		// 每次旋转后是否改变旋转方向
 		rotateTransition.setAutoReverse(false);
 		rotateTransition.play();
+	}
+	
+	public static void fadeTransition(Node node , double ms ) {
+		   // 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
+        FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
+        fadeTransition.setFromValue(0.0);   // 设置起始透明度为1.0，表示不透明
+        fadeTransition.setToValue(1.0);     // 设置结束透明度为0.0，表示透明
+        fadeTransition.setCycleCount(1);     // 设置循环周期为无限
+        fadeTransition.setAutoReverse(true);    // 设置自动反转
+        fadeTransition.setNode(node);         // 设置动画应用的节点
+        fadeTransition.play();                  // 播放动画
+
 	}
 	
 	public static  boolean isMacOS() {

@@ -168,8 +168,7 @@ public class DataViewTab {
 	}
 
 	public Tab createTab(int idx, boolean disable, String time, String rows) {
-		tab = createTab(tabName);
-		tab.setId(tabId);
+		tab = createTab(tabName); 
 		// 构建数据Tab页中的表
 		generateDataPane(disable, time, rows);
 		tab.setContent(dataPane);
@@ -201,22 +200,27 @@ public class DataViewTab {
 	// 创建Tab
 	public Tab createTab(String tabName) {
 		tab = new Tab(tabName);
+		if(StrUtils.isNullOrEmpty(tabId)) {
+			tabId  = CommonAction.createTabId();
+			CacheTabView.addDataViewTab( this , tabId);
+		}
+		tab.setId(tabId);
 		tab.setOnCloseRequest(CommonEventHandler.dataTabCloseReq(tab));
 		tab.setContextMenu(tableViewMenu(tab));
 		return tab;
 	}
 
-	// 表, 视图 等 数据库对象的ddl语句
+	//TODO 表, 视图 等 数据库对象的ddl语句
 	public void showDdlPanel(String title, String ddl) {
 		showDdlPanel(title, ddl, false); 
 		
 	}
 	public void showDdlPanel(String title, String ddl, boolean isRunFunc ) {
 		tab = createTab(title);
-		if(StrUtils.isNullOrEmpty(tabId)) {
-			tabId  = CommonAction.createTabId();
-			CacheTabView.addDataViewTab( this , tabId);
-		}
+//		if(StrUtils.isNullOrEmpty(tabId)) {
+//			tabId  = CommonAction.createTabId();
+//			CacheTabView.addDataViewTab( this , tabId);
+//		}
 			
 		tabName = title;
 		VBox box = CreateDDLBox(ddl, isRunFunc, false, title);
@@ -229,10 +233,7 @@ public class DataViewTab {
 	
 	public void showProcedurePanel(String title, String ddl, boolean isRunFunc ) {
 		tab = createTab(title);
-		if(StrUtils.isNullOrEmpty(tabId)) {
-			tabId  = CommonAction.createTabId();
-			CacheTabView.addDataViewTab( this , tabId);
-		}
+		
 		tabName = title;
 		VBox box = CreateDDLBox(ddl, isRunFunc, true,title );
 		tab.setContent(box);

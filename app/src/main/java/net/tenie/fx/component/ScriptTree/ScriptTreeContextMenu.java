@@ -1,4 +1,4 @@
-package net.tenie.fx.factory;
+package net.tenie.fx.component.ScriptTree;
 
 import java.io.File;
 import javafx.scene.control.ContextMenu;
@@ -7,12 +7,14 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.container.ScriptTabTree;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class ScriptTreeContextMenu {
-//	public static List<MenuItem> menuItems = new ArrayList<>();
 	private ContextMenu contextMenu;  
 	private MenuItem close; 
 	

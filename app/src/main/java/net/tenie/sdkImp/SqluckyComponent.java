@@ -1,6 +1,7 @@
 package net.tenie.sdkImp;
 
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.AppComponent;
@@ -9,6 +10,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.fx.component.MyTab;
 import net.tenie.lib.db.h2.H2Db;
+import net.tenie.lib.db.h2.SqlTextDao;
 import net.tenie.lib.tools.IconGenerator; 
 
 public class SqluckyComponent implements AppComponent { 
@@ -76,6 +78,16 @@ public class SqluckyComponent implements AppComponent {
 		} 
 		
 		return val;
+	}
+
+	@Override
+	public void tabPaneRemoveSqluckyTab(SqluckyTab stb) {
+		var myTabPane = ComponentGetter.mainTabPane; 
+		Tab tb = (Tab) stb;
+		if (myTabPane.getTabs().contains(tb)) {
+			myTabPane.getTabs().remove(tb);
+		}
+		
 	}
 
 }

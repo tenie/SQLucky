@@ -88,14 +88,8 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
   		clean.setOnAction(e->{
   			var it = cell.getTreeItem();
   			NoteTabTree.closeAction(it);
-  		});
-  		
-  		cell.setOnMouseClicked(e->{ 
-			if(cell.isSelected()) {
-				clean.setVisible(true);
-			}
-		
-		});
+  		}); 
+  		 
   		cell.setOnMouseEntered(e->{
 			if(cell.isSelected()) {
 				clean.setVisible(true);
@@ -108,6 +102,10 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 		});
 		
 		cell.setOnMouseClicked(e->{
+			if(cell.isSelected()) {
+				clean.setVisible(true);
+			}
+			
 			if(e.getClickCount() == 2) {
 				SqluckyTab stb = cell.getTreeItem().getValue();
 				File file = stb.getFile();

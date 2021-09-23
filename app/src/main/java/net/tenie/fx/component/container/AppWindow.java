@@ -11,6 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.lib.tools.IconGenerator;
 
@@ -51,7 +52,12 @@ public class AppWindow {
 					System.out.println("设置窗口比例 :" + val);
 					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
 				}
-		}); 
+		});  
+		CommonUtility.fadeTransition(operate.getContainer(), 2000); 
+		CommonUtility.fadeTransition(dataView.getContainer(), 2000); 
+		CommonUtility.fadeTransition(mainMenuBar.getMainMenuBar(), 2000); 
+		CommonUtility.fadeTransition(masterDetailPane, 2000); 
+		CommonUtility.fadeTransition(mainWindow, 3000); 
 	}
 
  

@@ -1,4 +1,4 @@
-package net.tenie.fx.component.container;
+package net.tenie.fx.component.ScriptTree;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -15,21 +15,21 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTab;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.fx.factory.ScriptTabNodeCellFactory;
-import net.tenie.fx.factory.ScriptTreeContextMenu;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.window.ModalDialog;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.H2SqlTextSavePo;
 import net.tenie.lib.db.h2.SqlTextDao;
 
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class ScriptTabTree {
 
 	public static TreeView<MyTab> ScriptTreeView; 

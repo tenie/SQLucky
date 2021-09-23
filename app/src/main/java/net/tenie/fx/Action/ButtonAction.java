@@ -49,7 +49,7 @@ public class ButtonAction {
 			// 待保存数据
 			Map<String, ObservableList<StringProperty>> modifyData = CacheTabView.getModifyData(tabId);
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
-			DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
+			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 
 			if (!modifyData.isEmpty()) {
 				for (String key : modifyData.keySet()) {
@@ -152,7 +152,7 @@ public class ButtonAction {
 		List<String> temp = new ArrayList<>();
 
 		// 执行sql 后的信息 (主要是错误后显示到界面上)
-		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
+		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 
 		try {
 			for (int i = 0; i < vals.size(); i++) {

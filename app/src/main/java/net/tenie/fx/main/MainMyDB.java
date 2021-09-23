@@ -10,6 +10,7 @@ import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
@@ -79,17 +80,22 @@ public class MainMyDB extends Application {
 //			String cssStr = ConfigVal.class.getResource("/css/common.css").toExternalForm();
 			// 图标
 			primaryStage.getIcons().add(img);
-			primaryStage.setTitle("SQLucky");
-			primaryStage.setScene(scene); 
+			primaryStage.setTitle("SQLucky"); 
+//			primaryStage.initStyle(StageStyle);
+//			primaryStage.setScene(scene); 
 
+//			primaryStage.setMaximized(true);
+//			primaryStage.setResizable(true);
 
 			primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
 			ComponentGetter.primaryStage = primaryStage;
 			CommonAction.setTheme(Theme);
 			primaryStage.show();
 			
+			
 			// 在stage show之后 需要初始化的内容, 如: 外观, 事件
 			Platform.runLater(() -> { 
+				primaryStage.setScene(scene); 
 				primaryStage.setMaximized(true);
 				primaryStage.setResizable(true);
 				var dbTitledPane     = ComponentGetter.dbTitledPane  ;

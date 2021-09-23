@@ -136,12 +136,11 @@ public class RunSQLHelper {
 		String sql;
 		Connection conn = dpo.getConn();
 		int sqllenght = allsqls.size();
-		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
+		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		List<SqlData> errObj = new ArrayList<>();
 		
 		for (int i = 0; i < sqllenght; i++) { 
-			sqlstr = allsqls.get(i).sql;
-//			boolean isCallfunc = allsqls.get(i).isCallfunc;
+			sqlstr = allsqls.get(i).sql; 
 			sql = StrUtils.trimComment(sqlstr, "--");
 			int type = ParseSQL.parseType(sql);
 			String msg = "";
@@ -194,6 +193,7 @@ public class RunSQLHelper {
 			}
 
 		}
+		// 如果 ddlDmlpo 中有 msg的信息 就会显示到界面上
 		showExecuteSQLInfo(ddlDmlpo);
 		// 如果是执行的界面上的sql, 那么对错误的sql渲染为红色
 		if (StrUtils.isNullOrEmpty(RunSQLHelper.sqlstr)) {
@@ -215,7 +215,7 @@ public class RunSQLHelper {
 	// 展示信息窗口,
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo) {
 		// 有数据才展示
-		if (ddlDmlpo.getAllDatas().size() > 0) {  
+		if (ddlDmlpo.getAllDatas().size() > 0) {
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 表内容可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
@@ -255,7 +255,7 @@ public class RunSQLHelper {
 
 	private static void procedureAction(String sql, Connection conn, List<ProcedureFieldPo> fields) throws Exception {
 		String msg = "";
-		DbTableDatePo ddlDmlpo = DbTableDatePo.executeInfoPo();
+		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		try { 
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			// 获取表名
@@ -666,11 +666,8 @@ public class RunSQLHelper {
 		return col;
 	}
 
-	// 删除空白页
+	// 删除空白页, 保留锁定页
 	private static void deleteEmptyTab(TabPane dataTab) {
-//		if (dataTab.getTabs() != null) {
-//			dataTab.getTabs().removeIf(t -> dataTab.getTabs().size() > 0 && CommonUtility.tabText(t).equals(""));
-//		}
 		if(isRefresh) return;
 		// 判断是否已经到达最大tab显示页面
 		// 删除旧的 tab
@@ -693,15 +690,13 @@ public class RunSQLHelper {
 		});
 	}
 
-	// 等待加载动画 页面
+	// 等待加载动画 页面, 删除不要的页面, 保留 锁定的页面
 	private static Tab addWaitingPane( int tabIdx) {
 		Tab waitTb = new DataViewTab().maskTab(WAITTB_NAME);
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTabPane;
-			// 删除b不要的tab
+			// 删除不要的tab, 保留 锁定的tab
 			deleteEmptyTab(dataTab);
-			
-
 			if (tabIdx > -1) {
 				dataTab.getTabs().add(tabIdx, waitTb);
 			} else {

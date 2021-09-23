@@ -14,6 +14,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.factory.ButtonFactory;
 
 /**
@@ -60,6 +61,12 @@ public class DBinfoContainer {
 		
 		
 		ComponentGetter.infoAccordion = ad;
+		
+		CommonUtility.fadeTransition(treeBtnPane, 1000); 
+		CommonUtility.fadeTransition(ad, 1000);  
+		CommonUtility.fadeTransition(treeView, 1000); 
+		CommonUtility.fadeTransition(filter, 1000); 
+		
 		
 	}
 

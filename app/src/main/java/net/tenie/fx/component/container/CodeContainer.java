@@ -6,6 +6,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.utility.DraggingTabPaneSupport;
 
@@ -31,6 +32,11 @@ public class CodeContainer {
 		// tab 拖拽
 		DraggingTabPaneSupport support1 = new DraggingTabPaneSupport();
 		support1.addSupport(mainTabPane);
+		
+		
+		CommonUtility.fadeTransition(operateBtnPane, 1000); 
+		CommonUtility.fadeTransition(mainTabPane, 1000); 
+		
 	}
 
 	

@@ -25,7 +25,7 @@ import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.CodeArea.MyAutoComplete;
-import net.tenie.fx.component.container.ScriptTabTree;
+import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -290,22 +290,6 @@ public class MyTab extends Tab implements SqluckyTab {
 		return contextMenu;
 	}
 
-	public DocumentPo getDocumentPo() {
-		return docPo;
-	}
-
-	public void setScriptPo(DocumentPo scriptPo) {
-		this.docPo = scriptPo;
-	}
-
-	public SqluckyCodeAreaHolder getSqlCodeArea() {
-		return sqlCodeArea;
-	}
-
-	public void setSqlCodeArea(HighLightingCodeArea sqlCodeArea) {
-		this.sqlCodeArea = sqlCodeArea;
-	}
-
 	// 添加空文本的codeTab
 	public static MyTab addCodeEmptyTabMethod() {
 		var myTabPane = ComponentGetter.mainTabPane;
@@ -354,6 +338,23 @@ public class MyTab extends Tab implements SqluckyTab {
 		return vbox;
 	}
 
+	public DocumentPo getDocumentPo() {
+		return docPo;
+	}
+
+	public void setScriptPo(DocumentPo scriptPo) {
+		this.docPo = scriptPo;
+	}
+
+	public SqluckyCodeAreaHolder getSqlCodeArea() {
+		return sqlCodeArea;
+	}
+
+	public void setSqlCodeArea(HighLightingCodeArea sqlCodeArea) {
+		this.sqlCodeArea = sqlCodeArea;
+	}
+
+	
 	@Override
 	public String getTitle() {
 		return CommonUtility.tabText(this);
@@ -364,10 +365,12 @@ public class MyTab extends Tab implements SqluckyTab {
 	}
 	
 	public File getFile() {
+		if(docPo == null ) return null;
 		return docPo.getFile();
 	}
 	
 	public Region getIcon() {
+		if(docPo == null ) return null;
 		return docPo.getIcon();
 	}
 
@@ -376,6 +379,7 @@ public class MyTab extends Tab implements SqluckyTab {
 	}
 	
 	public String getFileText() {
+		if(docPo == null ) return "";
 		return docPo.getText();
 	}
 	public void setFileText(String text) { 

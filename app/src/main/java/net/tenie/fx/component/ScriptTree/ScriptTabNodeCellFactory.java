@@ -1,4 +1,4 @@
-package net.tenie.fx.factory;
+package net.tenie.fx.component.ScriptTree;
 
 import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
@@ -17,7 +17,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.container.ScriptTabTree;
 import net.tenie.lib.tools.IconGenerator;
 
 /**

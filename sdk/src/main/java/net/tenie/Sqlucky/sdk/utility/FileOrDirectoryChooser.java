@@ -55,6 +55,10 @@ public final class FileOrDirectoryChooser {
 			 
 		}
 	}
+	
+	
+
+	
 
 	private static void allFileChooser(final FileChooser fileChooser, String title) {
 		fileChooser.setTitle(title);
@@ -100,6 +104,23 @@ public final class FileOrDirectoryChooser {
 		return fileChooser;
 	}
 	
+	 
+	public static FileChooser getFileChooser( String title, String filename, File dir) {
+		fileChooser.setTitle(title);
+//		File dir =  new File(openPath);
+		
+		fileChooser.setInitialDirectory( dir);
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().addAll(
+				new FileChooser.ExtensionFilter("txt", "*.txt"), 
+				new FileChooser.ExtensionFilter(".md", "*.md"), 
+				new FileChooser.ExtensionFilter("sql", "*.sql"), 
+				new FileChooser.ExtensionFilter("All", "*.*")); 
+		if(filename !=null ) {
+			fileChooser.setInitialFileName(filename); 
+		}
+		return fileChooser;
+	}
 	
 	
 	

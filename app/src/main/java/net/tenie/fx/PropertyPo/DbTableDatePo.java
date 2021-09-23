@@ -36,7 +36,7 @@ public class DbTableDatePo {
 		allDatas = FXCollections.observableArrayList();
 	}
 	
-	public static DbTableDatePo executeInfoPo() {
+	public static DbTableDatePo setExecuteInfoPo() {
 		DbTableDatePo ddlDmlpo = new DbTableDatePo(); 
 		ddlDmlpo.addField("Current Time");
 		ddlDmlpo.addField("Execute SQL Info");
