@@ -82,7 +82,7 @@ public class MainMyDB extends Application {
 			primaryStage.getIcons().add(img);
 			primaryStage.setTitle("SQLucky"); 
 //			primaryStage.initStyle(StageStyle);
-//			primaryStage.setScene(scene); 
+			primaryStage.setScene(scene); 
 
 //			primaryStage.setMaximized(true);
 //			primaryStage.setResizable(true);
@@ -95,7 +95,7 @@ public class MainMyDB extends Application {
 			
 			// 在stage show之后 需要初始化的内容, 如: 外观, 事件
 			Platform.runLater(() -> { 
-				primaryStage.setScene(scene); 
+//				primaryStage.setScene(scene); 
 				primaryStage.setMaximized(true);
 				primaryStage.setResizable(true);
 				var dbTitledPane     = ComponentGetter.dbTitledPane  ;

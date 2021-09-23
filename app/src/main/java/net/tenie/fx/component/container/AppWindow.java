@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.controlsfx.control.MasterDetailPane;
+
+import javafx.application.Platform;
 import javafx.geometry.Side;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
@@ -25,6 +27,8 @@ public class AppWindow {
 
 	public AppWindow() {
 		mainWindow = new VBox();
+//		mainWindow.getStyleClass().add("main-background");
+		CommonUtility.addCssClass(mainWindow, "main-background");
 		ComponentGetter.mainWindow = mainWindow;
 
 		mainMenuBar = new MenuBarContainer();
@@ -42,7 +46,7 @@ public class AppWindow {
 
 		ComponentGetter.masterDetailPane = masterDetailPane;
 		AppWindowComponentGetter.dataView = dataView;
-		mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
+//		mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
 		// 设置tree 面板的显示比例
 		masterDetailPane.widthProperty().addListener((ob, ov ,nv)->{
 				if (nv.doubleValue() > 1) {
@@ -53,10 +57,18 @@ public class AppWindow {
 					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
 				}
 		});  
-		CommonUtility.fadeTransition(operate.getContainer(), 2000); 
-		CommonUtility.fadeTransition(dataView.getContainer(), 2000); 
-		CommonUtility.fadeTransition(mainMenuBar.getMainMenuBar(), 2000); 
-		CommonUtility.fadeTransition(masterDetailPane, 2000); 
+		Platform.runLater(()->{
+//			CommonUtility.platformAwait();
+			mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
+			CommonUtility.fadeTransition(operate.getContainer(), 3500); 
+			CommonUtility.fadeTransition(dataView.getContainer(), 3500); 
+			CommonUtility.fadeTransition(mainMenuBar.getMainMenuBar(), 3500); 
+			CommonUtility.fadeTransition(masterDetailPane, 3500); 
+		});
+		
+		
+		
+		
 		CommonUtility.fadeTransition(mainWindow, 3000); 
 	}
 

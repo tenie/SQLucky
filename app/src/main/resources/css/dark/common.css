@@ -3,6 +3,10 @@
 	
 }
 
+.main-background{
+	 -fx-background-color:  #2E2E2E;
+}
+
 .accordion .content{
 	 -fx-background-color:  #2B2B2B;
 	 -fx-border-color:  #2B2B2B;

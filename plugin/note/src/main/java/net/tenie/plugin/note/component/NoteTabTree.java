@@ -359,15 +359,19 @@ public class NoteTabTree {
 				);
 		contextMenu.setOnShowing(e->{
 			var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
-			SqluckyTab stb = itm.getValue();
 			
-			if( itm.getValue() !=null && 
+			if( itm != null &&
+				itm.getValue() !=null && 
 				itm.getValue().getFile() != null &&
 				itm.getValue().getFile().isFile()) {
 				deleteFile.setDisable(false);
+				showInFolder.setDisable(false);
 			}else {
 				deleteFile.setDisable(true);
+				showInFolder.setDisable(true);
 			}
+			 
+			
 		});
 		return contextMenu;
 	}
