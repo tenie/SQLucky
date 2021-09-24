@@ -274,7 +274,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
     				String val = charMap.get(key);
     	    		int endIdx = str.lastIndexOf(key);
     	    		int is = start + endIdx +1; 
-    	    		int end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, key , val );
+    	    		int end = CommonUtility.findBeginParenthesisRange(codeArea.getText(), is, key , val );
     	    		if( end != 0 && end > is) {
     	    			codeArea.selectRange(is, end);
     	    		}
@@ -512,7 +512,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	    				String val = charMap.get(key);
 	    	    		int endIdx = str.lastIndexOf(key);
 	    	    		int is = start + endIdx +1; 
-	    	    		end = CommonAction.findBeginParenthesisRange(codeArea.getText(), is, key , val );
+	    	    		end = CommonUtility.findBeginParenthesisRange(codeArea.getText(), is, key , val );
 	    	    		if( end != 0 && end > is) {
 	    	    			
 	    	    			setStyleSpans( codeArea, is -1, 1);

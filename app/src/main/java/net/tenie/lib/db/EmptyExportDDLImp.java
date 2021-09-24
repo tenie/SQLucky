@@ -3,8 +3,9 @@ package net.tenie.lib.db;
 import java.sql.Connection;
 import java.util.List;
 
+import net.tenie.Sqlucky.sdk.db.ExportDDL;
+import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
 /* 
  *  * @author tenie 
  *  

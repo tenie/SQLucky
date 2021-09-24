@@ -42,8 +42,6 @@ public class DBinfoTreeFilter {
 		filter.setPrefHeight(30);
 		filter.setMinHeight(30);
 		JFXButton query = new JFXButton();
-		ButtonFactory.btns.add(query);
-//		JFXTextField txt = new JFXTextField();
 		query.setGraphic(IconGenerator.svgImageDefActive("search"));
 		query.setOnAction(e -> {
 			txt.requestFocus();
@@ -185,7 +183,7 @@ public class DBinfoTreeFilter {
 				// schema数据对象有数据的 情况, 创建一个新的连接节点并返回它
 				if(tempcip.getSchemaNode().getChildren().size() > 0) {
 					MyTreeItem<TreeNodePo> newConn = new MyTreeItem<TreeNodePo>(
-							new TreeNodePo(connpo.getConnName(), IconGenerator.svgImage("link", "#7CFC00")));
+							new TreeNodePo(connpo.getConnName(), IconGenerator.svgImage("link", "#7CFC00", false)));
 					
 					newConn.getChildren().add(tempcip.getSchemaNode());
 					newConn.getValue().setConnItemContainer(tempcip); 

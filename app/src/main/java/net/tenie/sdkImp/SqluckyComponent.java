@@ -42,7 +42,9 @@ public class SqluckyComponent implements AppComponent {
 	public SqluckyTab sqluckyTab(DocumentPo po) { 
 		return new MyTab(po, false);
 	}
-
+	/**
+	 * 获取图标
+	 */
 	@Override
 	public Region getIconUnactive(String name) {
 		return IconGenerator.svgImageUnactive( name); 

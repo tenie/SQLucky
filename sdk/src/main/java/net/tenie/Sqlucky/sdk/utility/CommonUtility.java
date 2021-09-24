@@ -5,8 +5,10 @@ import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
@@ -21,15 +23,19 @@ import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import javafx.scene.input.Clipboard;
+import javafx.scene.input.MouseEvent;
 
 /**
  * 
@@ -455,4 +461,118 @@ public class CommonUtility {
             System.out.println("文件不存在!");
         }
     }
+	
+
+	// 用在存储过程, 第一个括号内的字符串, 
+	public static String firstParenthesisInsideString(String text) {
+		// 括号开始的位置, 不包括括号自己
+		int begin = text.indexOf("(") + 1;
+		int end = findBeginParenthesisRange(text, begin ,"(", ")");
+		String str = text.substring(begin, end);
+		return str;
+	}
+	
+	//TODO 获取 IN 字段
+	public static List<String> findInField(String sql){
+		String pstr = firstParenthesisInsideString(sql);
+		 List<String> list = new ArrayList<>();
+		String[] sarr = pstr.split(",");
+		for(String str: sarr) {
+			str = str.trim();
+			if(str.length() > 0) {
+				 int idx = str.toUpperCase().indexOf("IN");
+				 if(idx == 0) {
+					 list.add(str);
+				 }
+			}
+		} 
+		return list;
+	}
+	
+	// 判断是否是没有参数的存储过程, 没有参数 返回true
+	public static boolean procedureIsNoParameter(String sqlddl) {
+//		sqlddl = StrUtils.pressString(sqlddl).toUpperCase();
+		if(sqlddl.indexOf("(") > -1) {
+			String tmp = sqlddl.substring(0, sqlddl.indexOf("("));
+			if(tmp.contains(" BEGIN ")) {
+				return true;
+			}else {
+				return false;
+			}
+			
+		}
+		return true;
+//		sqlddl = sqlddl.substring(0, sqlddl.indexOf(" BEGIN "));
+		 
+	}
+	
+	//TODO 从存储过程语句中提取参数
+	public static List<ProcedureFieldPo> getProcedureFields(String ddl){
+		 List<ProcedureFieldPo> rs = new ArrayList<>();
+		 ddl = StrUtils.multiLineCommentToSpace(ddl);
+		 ddl = SqlcukyEditor.trimCommentToSpace(ddl, "--");
+		 // 给ddl分词, 找到过程名称后面的参数列表
+		 ddl = StrUtils.pressString(ddl).toUpperCase();
+		 if( procedureIsNoParameter(ddl) ) { // 没有参数直接返回
+			 return rs;
+		 }
+		 
+//		 ddl = ddl.substring(0, ddl.indexOf(" BEGIN "));
+		 
+		 String val = firstParenthesisInsideString(ddl);
+		 val = val !=null ? val.trim() : "";
+		 if(val.length() > 1) {
+			String args[] =  val.split(",");
+			for(int i=0; i<args.length; i++) {
+				String str = args[i].trim();
+			
+				String fields[] = str.split(" ");
+				String inout = fields[0].toUpperCase();
+				boolean in = inout.contains("IN");
+				boolean out = inout.contains("OUT");
+				
+				ProcedureFieldPo po = new ProcedureFieldPo();
+				po.setName(str); 
+				po.setIn(in);
+				po.setOut(out); 
+//				po.setType( fields[2]);
+				rs.add(po);
+			}
+		 }
+		 System.out.println(rs);
+		 return rs;
+	}
+
+	// 根据括号( 寻找配对的 结束)括号所在的位置.
+	public static int findBeginParenthesisRange(String text, int start, String pb , String pe) {
+		String startStr = text.substring(start);
+		int end = 0;
+		int strSz =  startStr.length();
+		if( strSz == 0) return end;
+		if( ! startStr.contains(pe))  return end;
+		int idx = 1;
+		for(int i = 0; i < startStr.length(); i++ ) {
+			if(idx == 0) break;
+			String tmp = startStr.substring(i, i+1);
+			
+			if( pe.equals(tmp)) {
+				idx--;
+				end = i;
+			}else if( pb.equals(tmp) ) {
+				idx++;
+			}
+		} 
+		return start + end;
+	}
+	
+	
+	// 鼠标等待
+	public static void setCursor(Cursor cursorVal) {
+		Platform.runLater(()->{
+			ComponentGetter.primaryscene.addEventHandler(MouseEvent.ANY,e->{ 
+				ComponentGetter.primaryscene.setCursor(cursorVal);
+			});
+		});
+		
+	}
 }

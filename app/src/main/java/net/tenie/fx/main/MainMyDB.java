@@ -19,6 +19,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.tools.IconGenerator;
@@ -28,6 +29,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
 /**
  * 启动入口
@@ -39,6 +41,7 @@ public class MainMyDB extends Application {
 	public static String userDir = "";
 	private AppWindow app;
 	private Scene scene;
+	private Scene tmpscene;
 	private Image img;
 	private String Theme;
 	private static Logger logger = LogManager.getLogger(MainMyDB.class);
@@ -61,14 +64,20 @@ public class MainMyDB extends Application {
 		H2Db.closeConn();
 		ConfigVal.THEME = Theme;
 		app = new AppWindow();
-		scene = new Scene(app.getMainWindow());
+//		scene = new Scene(app.getMainWindow());
 //		scene.getStylesheets().addAll(ConfigVal.cssList);
-		ComponentGetter.primaryscene = scene;
+//		ComponentGetter.primaryscene = scene;
 		SettingKeyCodeCombination.Setting();
 		img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
 
 		SqluckyComponent sqluckyComponent = new SqluckyComponent();
 		ComponentGetter.appComponent = sqluckyComponent;
+		
+		
+		tmpscene = app.getTmpScene();
+		CommonUtility.loadCss(tmpscene); 
+		scene = app.getAppScene();
+		CommonAction.setTheme(Theme);
 		// 加载插件
 		ServiceLoad.myLoader();
 		logger.info("完成初始化"); 
@@ -78,24 +87,27 @@ public class MainMyDB extends Application {
 	public void start(Stage primaryStage) {
 		try {
 //			String cssStr = ConfigVal.class.getResource("/css/common.css").toExternalForm();
+			
 			// 图标
 			primaryStage.getIcons().add(img);
 			primaryStage.setTitle("SQLucky"); 
 //			primaryStage.initStyle(StageStyle);
-			primaryStage.setScene(scene); 
+			
+			primaryStage.setScene(tmpscene); 
+//			primaryStage.setScene(scene); 
 
 //			primaryStage.setMaximized(true);
 //			primaryStage.setResizable(true);
 
 			primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
-			ComponentGetter.primaryStage = primaryStage;
-			CommonAction.setTheme(Theme);
+			ComponentGetter.primaryStage = primaryStage; 
+//			CommonAction.setTheme(Theme);
 			primaryStage.show();
 			
 			
 			// 在stage show之后 需要初始化的内容, 如: 外观, 事件
 			Platform.runLater(() -> { 
-//				primaryStage.setScene(scene); 
+				primaryStage.setScene(scene); 
 				primaryStage.setMaximized(true);
 				primaryStage.setResizable(true);
 				var dbTitledPane     = ComponentGetter.dbTitledPane  ;

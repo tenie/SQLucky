@@ -5,15 +5,21 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import com.jfoenix.controls.JFXButton;
+
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -281,11 +287,16 @@ public class NoteTabTree {
 	    
 		MenuItem Open = new MenuItem("Open Folder");
 		Open.setOnAction(e -> {
-			if(rootNode.getChildren().size() >= 0) {
-				rootNode.getChildren().clear();
+			File f = FileOrDirectoryChooser.showDirChooser("Select Directory", ComponentGetter.primaryStage );
+			if(f !=null && f.exists() ) {
+				filePath = f.getAbsolutePath();
+				if(rootNode.getChildren().size() >= 0) {
+					rootNode.getChildren().clear();
+				}
+				openNoteDir(rootNode, f);
+				ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path", filePath);
+			
 			}
-		    filePath = openNoteDir(rootNode , null);
-			ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path", filePath);
 		}); 
 		 
 		MenuItem close = new MenuItem("Close");
@@ -365,11 +376,18 @@ public class NoteTabTree {
 				itm.getValue().getFile() != null &&
 				itm.getValue().getFile().isFile()) {
 				deleteFile.setDisable(false);
-				showInFolder.setDisable(false);
 			}else {
 				deleteFile.setDisable(true);
+			}
+			
+			if( itm != null &&
+				itm.getValue() !=null && 
+				itm.getValue().getFile() != null ) {
+				showInFolder.setDisable(false);
+			}else {
 				showInFolder.setDisable(true);
 			}
+			
 			 
 			
 		});
@@ -377,33 +395,36 @@ public class NoteTabTree {
 	}
 	
 	//TODO 打开sql文件
-	public static String openNoteDir(TreeItem<SqluckyTab> node , File openFile) {
-		String filePath = "";
+	public static void openNoteDir(TreeItem<SqluckyTab> node , File openFile) {
 		try {
-			File f = openFile;
-			if(openFile == null) {
-				f = FileOrDirectoryChooser.showDirChooser("Select Directory", ComponentGetter.primaryStage );
-				if (f == null) return filePath;  
-				if(f.exists()) {
-					filePath = f.getAbsolutePath();
+			Consumer< String >  caller  = x->{
+				File[] files = openFile.listFiles();
+				if(files == null) return ;
+				List<TreeItem<SqluckyTab>> ls = new ArrayList<>();
+				for(var file : files) {
+					TreeItem<SqluckyTab> item = createItemNode(node, file);
+					if(item !=null) {
+						ls.add(item);
+					}
+					
+				} 
+				if(ls.size() > 0) {
+					Platform.runLater(()->{
+						node.getChildren().addAll(ls); 
+					}); 
 				}
-			}
+			};
 			
-			File[] files = f.listFiles();
-			if(files == null) return filePath;
-			for(var file : files) {
-				createItemNode(node, file);
-			} 
+			CommonUtility.runThread(caller);
+			
 			
 		} catch (Exception e) {
-			MyAlert.errorAlert( e.getMessage());
 			e.printStackTrace();
 		}
-		return filePath;
 	}
 	
 	
-	public static void createItemNode(TreeItem<SqluckyTab> node , File file) {
+	public static TreeItem<SqluckyTab> createItemNode(TreeItem<SqluckyTab> node , File file) {
 		if( file.exists() ) {
 			DocumentPo fileNode = new DocumentPo(); 
 			fileNode.setFileFullName(file.getAbsolutePath());  
@@ -422,8 +443,9 @@ public class NoteTabTree {
 			mtb.setIcon(icon);
 			
 			TreeItem<SqluckyTab> item = new TreeItem<>(mtb);
-			node.getChildren().add(item);  
+			return item;
 		}
+		return null;
 		
 	}
 	

@@ -7,6 +7,7 @@ import org.controlsfx.control.MasterDetailPane;
 
 import javafx.application.Platform;
 import javafx.geometry.Side;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -24,6 +25,8 @@ public class AppWindow {
 	private MasterDetailPane masterDetailPane;
 	private OperateContainer operate;
 	private DataViewContainer dataView;
+	private Scene appScene;
+	
 
 	public AppWindow() {
 		mainWindow = new VBox();
@@ -57,6 +60,8 @@ public class AppWindow {
 					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
 				}
 		});  
+		appScene = new Scene(mainWindow); 
+		ComponentGetter.primaryscene = appScene;
 		Platform.runLater(()->{
 //			CommonUtility.platformAwait();
 			mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
@@ -64,12 +69,9 @@ public class AppWindow {
 			CommonUtility.fadeTransition(dataView.getContainer(), 3500); 
 			CommonUtility.fadeTransition(mainMenuBar.getMainMenuBar(), 3500); 
 			CommonUtility.fadeTransition(masterDetailPane, 3500); 
-		});
+		});  
 		
-		
-		
-		
-		CommonUtility.fadeTransition(mainWindow, 3000); 
+		CommonUtility.fadeTransition(mainWindow, 2500); 
 	}
 
  
@@ -95,15 +97,15 @@ public class AppWindow {
 
 		 
 		ComponentGetter.INFO = new Label("Info");
-		ComponentGetter.INFO.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00"));
+		ComponentGetter.INFO.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00", false));
 		
 		ComponentGetter.ABOUT = new Label("About");
-		ComponentGetter.ABOUT.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00"));
+		ComponentGetter.ABOUT.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00", false));
 		
 		ComponentGetter.WARN = new Label("Warn");
-		ComponentGetter.WARN.setGraphic( IconGenerator.svgImage("info-circle", "#FFD700"));
+		ComponentGetter.WARN.setGraphic( IconGenerator.svgImage("info-circle", "#FFD700", false));
 		ComponentGetter.ERROR = new Label("Error");
-		ComponentGetter.ERROR.setGraphic( IconGenerator.svgImage("info-circle", "red"));
+		ComponentGetter.ERROR.setGraphic( IconGenerator.svgImage("info-circle", "red", false));
 		ComponentGetter.EMPTY = new Label("");
 		
 		 
@@ -156,5 +158,22 @@ public class AppWindow {
 	public void setDataView(DataViewContainer dataView) {
 		this.dataView = dataView;
 	}
+
+	public Scene getAppScene() {
+		return appScene;
+	}
+
+	public void setAppScene(Scene appScene) {
+		this.appScene = appScene;
+	}
+	
+	
+	public Scene getTmpScene() {
+		VBox tmpbox = new VBox(); 
+		tmpbox.getStyleClass().add("main-background");
+		Scene tmpscene = new Scene( tmpbox);
+		return tmpscene;
+	}
+
 
 }

@@ -442,7 +442,7 @@ public class ConnectionEditor {
 
 	// 子线程打开db连接backRunOpenConn
 	public static void backRunOpenConn(TreeItem<TreeNodePo> item) { 
-		Node nd = IconGenerator.svgImage("spinner", "red");
+		Node nd = IconGenerator.svgImage("spinner", "red", false);
 		CommonUtility.rotateTransition(nd);
 		item.getValue().setIcon( nd);
 		AppWindowComponentGetter.treeView.refresh();
@@ -464,7 +464,7 @@ public class ConnectionEditor {
 						TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
 						Platform.runLater(() -> {
 							item.getChildren().add(s);
-							item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00"));							
+							item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00", false));							
 							connItemContainer.selectTable(po.getDefaultSchema());
 							DBConns.flushChoiceBox(connName);
 						});
@@ -482,7 +482,7 @@ public class ConnectionEditor {
 					logger.debug(e.getMessage());
 					Platform.runLater(() -> {
 						MyAlert.errorAlert( " Error !");
-						item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
+						item.getValue().setIcon(IconGenerator.svgImage("unlink", "red", false));
 						AppWindowComponentGetter.treeView.refresh();
 					});
 					

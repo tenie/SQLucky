@@ -37,4 +37,5 @@ open module SQLucky.sdk {
 	exports net.tenie.Sqlucky.sdk.component;
 	exports net.tenie.Sqlucky.sdk.po;
 	exports net.tenie.Sqlucky.sdk;
+	exports net.tenie.Sqlucky.sdk.db;
 }

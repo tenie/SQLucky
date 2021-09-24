@@ -1,8 +1,9 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.Sqlucky.sdk.po;
 
 import java.util.List;
 
-import net.tenie.fx.Action.CommonAction;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+ 
 
 /*   @author tenie */
 public class FuncProcTriggerPo {
@@ -83,7 +84,7 @@ public class FuncProcTriggerPo {
 
 	public List<ProcedureFieldPo> getFields() {
 		if(isProcedure && ddl !=null && ddl.length() > 0) {
-			String args = CommonAction.firstParenthesisInsideString(ddl);
+			String args = CommonUtility.firstParenthesisInsideString(ddl);
 		}
 		return fields;
 	}

@@ -3,6 +3,7 @@ package net.tenie.fx.PropertyPo;
 import java.io.Serializable;
 
 import javafx.scene.Node;
+import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;

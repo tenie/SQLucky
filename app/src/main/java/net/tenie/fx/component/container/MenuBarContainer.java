@@ -28,8 +28,7 @@ import net.tenie.lib.tools.IconGenerator;
 
 /*   @author tenie */
 public class MenuBarContainer {
-	private static Logger logger = LogManager.getLogger(MenuBarContainer.class);
-	public static List<MenuItem> barMenus = new ArrayList<>();
+	private static Logger logger = LogManager.getLogger(MenuBarContainer.class); 
 	private MenuBar mainMenuBar;
 	private Menu mnfile;
 	private Menu mnEdit;
@@ -52,7 +51,6 @@ public class MenuBarContainer {
 		Menu mn = new Menu("File");
 
 		MenuItem open = new MenuItem(StrUtils.MenuItemNameFormat("Open"));
-		barMenus.add(open);
 		open.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
 		open.setAccelerator(KeyCombination.keyCombination("shortcut+O"));
 		open.setOnAction(value -> {
@@ -60,12 +58,10 @@ public class MenuBarContainer {
 		});
 		
 		Menu openEncoding = new Menu(StrUtils.MenuItemNameFormat("Open With Encoding "));
-		barMenus.add(openEncoding);
 		openEncoding.setGraphic(IconGenerator.svgImageDefActive("folder-open")); 
 		 
 		
 		MenuItem openGBK = new MenuItem(StrUtils.MenuItemNameFormat("GBK"));
-		barMenus.add(openGBK);
 		openGBK.setGraphic(IconGenerator.svgImageDefActive("folder-open")); 
 		openGBK.setOnAction(value -> {
 			CommonAction.openSqlFile("GBK");
@@ -73,16 +69,13 @@ public class MenuBarContainer {
 		openEncoding.getItems().addAll(openGBK );
 
 		MenuItem Save = new MenuItem(StrUtils.MenuItemNameFormat("Save"));
-		barMenus.add(Save);
 		Save.setGraphic(IconGenerator.svgImageDefActive("floppy-o"));
-		//Save.setAccelerator(KeyCombination.keyCombination("shortcut+S"));
 		Save.setOnAction(value -> { 
 			// 保存sql文本到硬盘
 			CommonAction.saveSqlAction();
 		});
 
 		MenuItem exit = new MenuItem("Exit");
-		barMenus.add(exit);
 		exit.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 		exit.setAccelerator(KeyCombination.keyCombination("shortcut+Q"));
 		exit.setOnAction((ActionEvent t) -> {
@@ -97,14 +90,12 @@ public class MenuBarContainer {
 		Menu mn = new Menu("Edit");
 
 		MenuItem nce = new MenuItem(StrUtils.MenuItemNameFormat("Add Code Editer"));
-		barMenus.add(nce);
 		nce.setAccelerator(KeyCombination.keyCombination("shortcut+T"));
 		nce.setOnAction(value -> {
 			MyTab.addCodeEmptyTabMethod();
 		});
 
 		MenuItem cce = new MenuItem(StrUtils.MenuItemNameFormat("Close Data Table"));
-		barMenus.add(cce);
 		cce.setAccelerator(KeyCombination.keyCombination("alt+W"));
 		cce.setOnAction(value -> {
 //			SqlEditor.closeEditor();
@@ -131,7 +122,6 @@ public class MenuBarContainer {
 		});
 
 		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
-		barMenus.add(Find);
 		Find.setGraphic(IconGenerator.svgImageDefActive("search"));
 		Find.setAccelerator(KeyCombination.keyCombination("shortcut+F"));
 		Find.setOnAction(value -> {
@@ -139,21 +129,18 @@ public class MenuBarContainer {
 		});
 
 		MenuItem FindReplace = new MenuItem(StrUtils.MenuItemNameFormat("Replace"));
-		barMenus.add(FindReplace);
 		FindReplace.setAccelerator(KeyCombination.keyCombination("shortcut+R"));
 		FindReplace.setOnAction(value -> {
 			CommonAction.findReplace(true);
 		});
 
 		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format Text"));
-		barMenus.add(Format);
 		Format.setAccelerator(KeyCombination.keyCombination("shortcut+shift+F"));
 		Format.setOnAction(value -> {
 			CommonAction.formatSqlText();
 		});
 
 		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Comment Code"));
-		barMenus.add(commentCode);
 		commentCode.setAccelerator(KeyCombination.keyCombination("shortcut+/"));
 		commentCode.setOnAction(value -> {
 			CommonAction.addAnnotationSQLTextSelectText();
@@ -161,14 +148,12 @@ public class MenuBarContainer {
 
 		// 大写
 		MenuItem UpperCase = new MenuItem(StrUtils.MenuItemNameFormat("Upper Case"));
-		barMenus.add(UpperCase);
 		UpperCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+X"));
 		UpperCase.setOnAction(value -> {
 			CommonAction.UpperCaseSQLTextSelectText();
 		});
 
 		MenuItem LowerCase = new MenuItem(StrUtils.MenuItemNameFormat("Lower Case"));
-		barMenus.add(LowerCase);
 		LowerCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+Y"));
 		LowerCase.setOnAction(value -> {
 			CommonAction.LowerCaseSQLTextSelectText();
@@ -176,14 +161,12 @@ public class MenuBarContainer {
 
 		// Underscore to hump
 		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underscore To Hump"));
-		barMenus.add(underscore);
 		underscore.setAccelerator(KeyCombination.keyCombination("shortcut+shift+R"));
 		underscore.setOnAction(value -> {
 			CommonAction.underlineCaseCamel();
 		});
 
 		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underscore"));
-		barMenus.add(Hump);
 		Hump.setAccelerator(KeyCombination.keyCombination("shortcut+shift+T"));
 		Hump.setOnAction(value -> {
 			CommonAction.CamelCaseUnderline();
@@ -198,7 +181,6 @@ public class MenuBarContainer {
 		Menu mn = new Menu("Tools");
 		// 数据迁移
 		MenuItem dataTransfer = new MenuItem(StrUtils.MenuItemNameFormat("Data TransFer"));
-		barMenus.add(dataTransfer);
 		dataTransfer.setGraphic(IconGenerator.svgImageDefActive("mfglabs-random"));
 		dataTransfer.setOnAction(value -> {
 			//TODO 
@@ -209,61 +191,52 @@ public class MenuBarContainer {
 			
 		});
 		MenuItem addDB = new MenuItem(StrUtils.MenuItemNameFormat("Add New DB Connection"));
-		barMenus.add(addDB);
 		addDB.setOnAction(value -> {
 			ConnectionEditor.ConnectionInfoSetting();
 		});
 		addDB.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 
 		MenuItem editConn = new MenuItem(StrUtils.MenuItemNameFormat("Edit DB Connection"));
-		barMenus.add(editConn);
 		editConn.setOnAction(value -> {
 			ConnectionEditor.editDbConn();
 		});
 		editConn.setGraphic(IconGenerator.svgImageDefActive("edit"));
 
 		MenuItem openConn = new MenuItem(StrUtils.MenuItemNameFormat("Open DB Connection"));
-		barMenus.add(openConn);
 		openConn.setOnAction(value -> {
 			ConnectionEditor.openDbConn();
 		});
 		openConn.setGraphic(IconGenerator.svgImageDefActive("link"));
 
 		MenuItem closeConn = new MenuItem(StrUtils.MenuItemNameFormat("Close DB Connection"));
-		barMenus.add(closeConn);
 		closeConn.setOnAction(value -> {
 			ConnectionEditor.closeDbConn();
 		});
 		closeConn.setGraphic(IconGenerator.svgImageDefActive("unlink"));
 
 		MenuItem closeALlConn = new MenuItem(StrUtils.MenuItemNameFormat("Close All DB Connections"));
-		barMenus.add(closeALlConn);
 		closeALlConn.setOnAction(value -> {
 			ConnectionEditor.closeAllDbConn();
 		});
 		closeALlConn.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 
 		MenuItem deleteConn = new MenuItem(StrUtils.MenuItemNameFormat("Delete DB Connection"));
-		barMenus.add(deleteConn);
 		deleteConn.setOnAction(value -> {
 			ConnectionEditor.deleteDbConn();
 		});
 		deleteConn.setGraphic(IconGenerator.svgImageDefActive("trash"));
 
 		MenuItem hideLeft = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show DB Info Panel"));
-		barMenus.add(hideLeft);
 		hideLeft.setOnAction(value -> {
 			CommonAction.hideLeft();
 		});
 
 		MenuItem hideBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show Data View Panel"));
-		barMenus.add(hideBottom);
 		hideBottom.setOnAction(value -> {
 			CommonAction.hideBottom();
 		});
 
 		MenuItem hideLeftBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show All Panels"));
-		barMenus.add(hideLeftBottom);
 		hideLeftBottom.setAccelerator(KeyCombination.keyCombination("shortcut+H"));
 		hideLeftBottom.setGraphic(IconGenerator.svgImageDefActive("arrows-alt"));
 		hideLeftBottom.setOnAction(value -> {
@@ -271,29 +244,22 @@ public class MenuBarContainer {
 		});
 		
 		MenuItem EnCoding = new MenuItem(StrUtils.MenuItemNameFormat("EnCoding"));
-		barMenus.add(EnCoding);
 		EnCoding.setGraphic(IconGenerator.svgImageDefActive("mfglabs-random"));
 		EnCoding.setOnAction(value -> {
 			String txt = SqlcukyEditor.getCurrentCodeAreaSQLText();
-//			logger.info(txt);
 		    try {
 				String unicode = new String(txt.getBytes(""),"GBK");
 				logger.info(unicode);
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			} 
-		   
-//			String txt
+			}
 		});
 		
 		// 主题变化
 		Menu Theme = new Menu(StrUtils.MenuItemNameFormat("Theme"));
-		barMenus.add(Theme);
 		Theme.setGraphic(IconGenerator.svgImageDefActive("icomoon-contrast")); 
 		
 		MenuItem themeDark = new MenuItem(StrUtils.MenuItemNameFormat("Dark")); 
-		barMenus.add(themeDark);
 		themeDark.setGraphic(IconGenerator.svgImageDefActive("moon")); 
 		themeDark.setOnAction(value -> {
 			CommonAction.setThemeRestart(CommonConst.THEME_DARK);
@@ -301,14 +267,12 @@ public class MenuBarContainer {
 		});
 		
 		MenuItem themeLight = new MenuItem(StrUtils.MenuItemNameFormat("Light"));
-		barMenus.add(themeLight);
 		themeLight.setGraphic(IconGenerator.svgImageDefActive("sun")); 
 		themeLight.setOnAction(value -> {
 			CommonAction.setThemeRestart(CommonConst.THEME_LIGHT);
 		});
 		
 		MenuItem themeYellow = new MenuItem(StrUtils.MenuItemNameFormat("Yellow")); 
-		barMenus.add(themeYellow);
 		themeYellow.setGraphic(IconGenerator.svgImageDefActive("adjust")); 
 		themeYellow.setOnAction(value -> {
 			CommonAction.setThemeRestart(CommonConst.THEME_YELLOW);
@@ -318,12 +282,9 @@ public class MenuBarContainer {
 		
 		//TODO 字体大小
 		Menu fontSize = new Menu(StrUtils.MenuItemNameFormat("Code Font Size"));
-		barMenus.add(fontSize);
 		fontSize.setGraphic(IconGenerator.svgImageDefActive("text-height")); 
 		
-		MenuItem fontSizePlus = new MenuItem(StrUtils.MenuItemNameFormat("Code Font Size +")); 
-		barMenus.add(fontSizePlus);
-//		KeyCodeCombination ctrlR = new KeyCodeCombination(KeyCode.EQUALS, KeyCodeCombination.SHORTCUT_DOWN);
+		MenuItem fontSizePlus = new MenuItem(StrUtils.MenuItemNameFormat("Code Font Size +"));
 		fontSizePlus.setAccelerator(KeyCombination.keyCombination( "shortcut+EQUALS") );
 		fontSizePlus.setGraphic(IconGenerator.svgImageDefActive("plus-circle")); 
 		fontSizePlus.setOnAction(value -> {
@@ -331,7 +292,6 @@ public class MenuBarContainer {
 		});
 		
 		MenuItem fontSizeMinus = new MenuItem(StrUtils.MenuItemNameFormat("Code Font Size -")); 
-		barMenus.add(fontSizeMinus);
 		fontSizeMinus.setAccelerator(KeyCombination.keyCombination("shortcut+MINUS"));
 		fontSizeMinus.setGraphic(IconGenerator.svgImageDefActive("minus-circle")); 
 		fontSizeMinus.setOnAction(value -> {
@@ -356,7 +316,6 @@ public class MenuBarContainer {
 		Menu mn = new Menu("Help");
 
 		MenuItem about = new MenuItem(StrUtils.MenuItemNameFormat("About"));
-		barMenus.add(about);
 		about.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
 		about.setOnAction(value -> {
 			ModalDialog.showAbout();

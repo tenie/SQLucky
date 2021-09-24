@@ -68,19 +68,7 @@ public class ModalDialog {
 	public static Label EMPTY ;
 	
 	
-	static {
-		INFO = new Label("Info");
-		INFO.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00"));
-		
-		ABOUT = new Label("About");
-		ABOUT.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00"));
-		
-		WARN = new Label("Warn");
-		WARN.setGraphic( IconGenerator.svgImage("info-circle", "#FFD700"));
-		ERROR = new Label("Error");
-		ERROR.setGraphic( IconGenerator.svgImage("info-circle", "red"));
-		EMPTY = new Label("");
-	}
+ 
 	
 
 	// 根据给定的fxml 创建 模态框

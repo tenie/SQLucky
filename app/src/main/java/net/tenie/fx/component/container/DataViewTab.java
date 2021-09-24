@@ -26,6 +26,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
@@ -332,7 +333,7 @@ public class DataViewTab {
 				Consumer<String> caller;
 				ButtonFactory.lockLockBtn(tabId, lockbtn);
 				if (isProc) {
-					var fields = CommonAction.getProcedureFields(ddl);
+					var fields = CommonUtility.getProcedureFields(ddl);
 					if (fields.size() > 0) {
 						// 有参数的存储过程
 						new ProcedureExecuteWindow( name, fields);

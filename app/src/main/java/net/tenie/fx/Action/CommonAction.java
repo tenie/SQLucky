@@ -26,7 +26,6 @@ import javafx.scene.input.MouseEvent;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
-import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.AppWindowComponentGetter;
@@ -42,6 +41,7 @@ import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.component.container.MenuBarContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
@@ -810,69 +810,12 @@ public class CommonAction {
 		CommonAction.changeThemeRestartApp( val ) ;
 		
 	}
-	
-//	public static String themeColor() {
-//		String color = "#1C94FF";
-//		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
-//			color = "#FDA232";
-//		}
-//		return color;
-//	}
-	
+		
 	public static void changeSvgColor() {
-//		String color = "#1C94FF";
-//		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
-//			color = "#FDA232";
-//		}
-		
 		String color =  CommonUtility.themeColor();
-		
-		List<ButtonBase> allBtns = 	ButtonFactory.btns; // 
-		allBtns.addAll(DataViewTab.dataPaneBtns());  //数据面板中的按钮 
-		for(ButtonBase reg :allBtns) {
-			reg.getGraphic().setStyle("-fx-background-color: " + color + ";");
-		}
-		
-		// 树右键菜单
-		for(MenuItem it :DBInfoTreeContextMenu.menuItems) {
-			it.getGraphic().setStyle("-fx-background-color: " + color + ";");
-		}
-		
-		// datapane menuitem
-		for(MenuItem it: DataViewTab.dataPaneMenuItems()) {
-			it.getGraphic().setStyle("-fx-background-color: " + color + ";");
-		}
-		
-		for(MenuItem it: MenuBarContainer.barMenus) {
-			if(it.getGraphic() != null)
-				it.getGraphic().setStyle("-fx-background-color: " + color + ";");
-		}
-		// sql编辑页面的右键按钮
-		for(MenuItem it: HighLightingSqlCodeAreaContextMenu.menuItems) {
-			if(it.getGraphic() != null)
-				it.getGraphic().setStyle("-fx-background-color: " + color + ";");
-		}
-		
-		
-		
-		if( DBinfoTree.icon != null ) {
-			DBinfoTree.icon.setStyle("-fx-background-color: " + color + ";");
-			
-		}
-		
-		// 连接和脚本 pane
-		ComponentGetter.iconInfo.setStyle("-fx-background-color: " + color + ";");
-		ComponentGetter.iconLeft.setStyle("-fx-background-color: " + color + ";");
-		ComponentGetter.iconRight.setStyle("-fx-background-color: " + color + ";");
-		ComponentGetter.iconScript.setStyle("-fx-background-color: " + color + ";");
-		 
-		for(var icon: ComponentGetter.icons) {
+		for(var icon : IconGenerator.icons) {
 			icon.setStyle("-fx-background-color: " + color + ";");
 		}
-		
-//		ComponentGetter.dbTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
-//		ComponentGetter.scriptTitledPane.getGraphic().setStyle("-fx-background-color: " + color + ";");
-		
 		
 	}
 	
@@ -884,107 +827,6 @@ public class CommonAction {
 	}
 	
 	
-	// 根据括号( 寻找配对的 结束)括号所在的位置.
-	public static int findBeginParenthesisRange(String text, int start, String pb , String pe) {
-		String startStr = text.substring(start);
-		int end = 0;
-		int strSz =  startStr.length();
-		if( strSz == 0) return end;
-		if( ! startStr.contains(pe))  return end;
-		int idx = 1;
-		for(int i = 0; i < startStr.length(); i++ ) {
-			if(idx == 0) break;
-			String tmp = startStr.substring(i, i+1);
-			
-			if( pe.equals(tmp)) {
-				idx--;
-				end = i;
-			}else if( pb.equals(tmp) ) {
-				idx++;
-			}
-		} 
-		return start + end;
-	}
-	
-	// 用在存储过程, 第一个括号内的字符串, 
-	public static String firstParenthesisInsideString(String text) {
-		// 括号开始的位置, 不包括括号自己
-		int begin = text.indexOf("(") + 1;
-		int end = findBeginParenthesisRange(text, begin ,"(", ")");
-		String str = text.substring(begin, end);
-		return str;
-	}
-	
-	//TODO 获取 IN 字段
-	public static List<String> findInField(String sql){
-		String pstr = firstParenthesisInsideString(sql);
-		 List<String> list = new ArrayList<>();
-		String[] sarr = pstr.split(",");
-		for(String str: sarr) {
-			str = str.trim();
-			if(str.length() > 0) {
-				 int idx = str.toUpperCase().indexOf("IN");
-				 if(idx == 0) {
-					 list.add(str);
-				 }
-			}
-		} 
-		return list;
-	}
-	
-	// 判断是否是没有参数的存储过程, 没有参数 返回true
-	public static boolean procedureIsNoParameter(String sqlddl) {
-//		sqlddl = StrUtils.pressString(sqlddl).toUpperCase();
-		if(sqlddl.indexOf("(") > -1) {
-			String tmp = sqlddl.substring(0, sqlddl.indexOf("("));
-			if(tmp.contains(" BEGIN ")) {
-				return true;
-			}else {
-				return false;
-			}
-			
-		}
-		return true;
-//		sqlddl = sqlddl.substring(0, sqlddl.indexOf(" BEGIN "));
-		 
-	}
-	
-	//TODO 从存储过程语句中提取参数
-	public static List<ProcedureFieldPo> getProcedureFields(String ddl){
-		 List<ProcedureFieldPo> rs = new ArrayList<>();
-		 ddl = StrUtils.multiLineCommentToSpace(ddl);
-		 ddl = SqlcukyEditor.trimCommentToSpace(ddl, "--");
-		 // 给ddl分词, 找到过程名称后面的参数列表
-		 ddl = StrUtils.pressString(ddl).toUpperCase();
-		 if( procedureIsNoParameter(ddl) ) { // 没有参数直接返回
-			 return rs;
-		 }
-		 
-//		 ddl = ddl.substring(0, ddl.indexOf(" BEGIN "));
-		 
-		 String val = firstParenthesisInsideString(ddl);
-		 val = val !=null ? val.trim() : "";
-		 if(val.length() > 1) {
-			String args[] =  val.split(",");
-			for(int i=0; i<args.length; i++) {
-				String str = args[i].trim();
-			
-				String fields[] = str.split(" ");
-				String inout = fields[0].toUpperCase();
-				boolean in = inout.contains("IN");
-				boolean out = inout.contains("OUT");
-				
-				ProcedureFieldPo po = new ProcedureFieldPo();
-				po.setName(str); 
-				po.setIn(in);
-				po.setOut(out); 
-//				po.setType( fields[2]);
-				rs.add(po);
-			}
-		 }
-		 System.out.println(rs);
-		 return rs;
-	}
 	
 //	public static void main(String[] args) {
 //		String sql = "CREATE PROCEDURE P_GEN_PART_MONREPORT (\r\n"

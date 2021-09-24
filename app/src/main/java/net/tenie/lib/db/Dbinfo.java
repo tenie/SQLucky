@@ -19,8 +19,8 @@ import org.apache.logging.log4j.Logger;
 
 import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbSchemaPo;
-import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
 import net.tenie.fx.config.DbVendor;
+import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;

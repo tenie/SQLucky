@@ -30,8 +30,8 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
+import javafx.scene.layout.Region;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
-import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.PropertyPo.SqlData;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -47,6 +47,7 @@ import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.Db2ErrorCode;
@@ -642,10 +643,10 @@ public class RunSQLHelper {
 //		col.setEditable(true);
 		col.setText(colname);
 		Label label  = new Label(); 
-		if(iskey) {
-			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#1C92FB")); 
+		if(iskey) {// #F0F0F0    1C92FB ##6EB842  #7CFC00
+			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#FF6600" , false)); 
 		}else {
-			label.setGraphic(IconGenerator.svgImage("sort", 10, "#1C92FB")); 
+//			label.setGraphic(IconGenerator.svgImage("sort", 10, "blue" , false)); 
 		}
 		col.setGraphic(label);
 				

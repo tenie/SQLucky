@@ -3,6 +3,10 @@
 	
 }
 
+.main-background{
+	 -fx-background-color:  #000000 ;
+}
+
 /* titledPane 背景色*/
 .titledPane-color .title{ 
 	 -fx-background-color: #000000 ;

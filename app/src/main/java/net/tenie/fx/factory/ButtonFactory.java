@@ -1,10 +1,8 @@
 package net.tenie.fx.factory;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import javafx.scene.control.Button;
@@ -35,7 +33,6 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ButtonFactory {
 	public static  Map<String, Boolean> lockObj = new HashMap<>();
-	public static  List<ButtonBase> btns = new ArrayList<>();
 	public static TextField rows ;
 
 	// 连接区
@@ -48,7 +45,7 @@ public class ButtonFactory {
 		addConnbtn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 		addConnbtn.setOnMouseClicked(CommonEventHandler.addConnEvent());
 		addConnbtn.setTooltip(MyTooltipTool.instance("Add new DB Connection"));
-		btns.add(addConnbtn);
+//		btns.add(addConnbtn);
 
 		// open连接
 		JFXButton openConn = new JFXButton();
@@ -57,7 +54,7 @@ public class ButtonFactory {
 			ConnectionEditor.openDbConn();
 		});
 		openConn.setTooltip(MyTooltipTool.instance("Open DB Connection"));
-		btns.add(openConn);
+//		btns.add(openConn);
 		// 断开连接
 		JFXButton closeConn = new JFXButton();
 		closeConn.setGraphic(IconGenerator.svgImageDefActive("unlink"));
@@ -65,13 +62,13 @@ public class ButtonFactory {
 			ConnectionEditor.closeDbConn();
 		});
 		closeConn.setTooltip(MyTooltipTool.instance("Close DB Connection"));
-		btns.add(closeConn);
+//		btns.add(closeConn);
 
 		JFXButton closeALlConn = new JFXButton();
 		closeALlConn.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 		closeALlConn.setOnMouseClicked(CommonEventHandler.closeAllConnEvent());
 		closeALlConn.setTooltip(MyTooltipTool.instance("Close All DB Connection"));
-		btns.add(closeALlConn);
+//		btns.add(closeALlConn);
 
 		JFXButton editConn = new JFXButton();
 		editConn.setGraphic(IconGenerator.svgImageDefActive("edit"));
@@ -80,11 +77,11 @@ public class ButtonFactory {
 			ConnectionEditor.editDbConn();
 		});
 		editConn.setTooltip(MyTooltipTool.instance("Edit DB Connection"));
-		btns.add(editConn); 
+//		btns.add(editConn); 
 
 		// 收缩树 zero-fitscreen-24
 		JFXButton shrink = new JFXButton();
-		btns.add(shrink);
+//		btns.add(shrink);
 		shrink.setGraphic(IconGenerator.svgImageDefActive("zero-fitscreen-24"));
 		shrink.setOnMouseClicked(e -> {
 			// 如果有选中的字符串, 进行查询
@@ -103,7 +100,7 @@ public class ButtonFactory {
 		deleteConn.setGraphic(IconGenerator.svgImageDefActive("trash"));
 		deleteConn.setOnMouseClicked(CommonEventHandler.deleteConnEvent());
 		deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
-		btns.add(deleteConn);
+//		btns.add(deleteConn);
 
 		
 		// 脚本
@@ -114,7 +111,7 @@ public class ButtonFactory {
 			
 		});
 		script.setTooltip(MyTooltipTool.instance("Archive Script "));
-		btns.add(script);
+//		btns.add(script);
 		
 		pn.getChildren().add(addConnbtn);
 		pn.getChildren().add(editConn);
@@ -137,11 +134,11 @@ public class ButtonFactory {
 			JFXButton runbtn = new JFXButton();
 			runbtn.setGraphic(IconGenerator.svgImageDefActive("play"));
 			runbtn.setTooltip(MyTooltipTool.instance("run sql      ctrl + Enter "));
-			btns.add(runbtn);
+//			btns.add(runbtn);
 			
 			
 			JFXButton stopbtn = new JFXButton();
-			stopbtn.setGraphic(IconGenerator.svgImage("stop", "red"));
+			stopbtn.setGraphic(IconGenerator.svgImage("stop", "red", false));
 			stopbtn.setTooltip(MyTooltipTool.instance("stop         ctrl + I "));
 //			btns.add(stopbtn);
 			
@@ -151,14 +148,14 @@ public class ButtonFactory {
 			addcodeArea.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
 			addcodeArea.setOnMouseClicked(CommonEventHandler.addCodeTab());
 			addcodeArea.setTooltip(MyTooltipTool.instance("add new code area panel     ctrl + T "));
-			btns.add(addcodeArea);
+//			btns.add(addcodeArea);
 			
 			
 			JFXButton saveSQL = new JFXButton();
 			saveSQL.setGraphic(IconGenerator.svgImageDefActive("save"));
 			saveSQL.setOnMouseClicked(CommonEventHandler.saveSQl());
 			saveSQL.setTooltip(MyTooltipTool.instance("Save sql to file ctrl + S"));
-			btns.add(saveSQL);
+//			btns.add(saveSQL);
 
 			JFXButton formatSQL = new JFXButton();
 			formatSQL.setGraphic(IconGenerator.svgImageDefActive("paragraph")); // i-cursor
@@ -166,7 +163,7 @@ public class ButtonFactory {
 				CommonAction.formatSqlText();
 			});
 			formatSQL.setTooltip(MyTooltipTool.instance("Format code   ctrl + shif + F  "));
-			btns.add(formatSQL);
+//			btns.add(formatSQL);
 			
 			
 			// 执行存储过程
@@ -174,7 +171,7 @@ public class ButtonFactory {
 			runFunPro.setGraphic(IconGenerator.svgImageDefActive("bolt"));
 			runFunPro.setId("runFunPro");
 			runFunPro.setTooltip(MyTooltipTool.instance("Execut Create Program DDL"));
-			btns.add(runFunPro);
+//			btns.add(runFunPro);
 
 			
 			runbtn.setOnMouseClicked(e->{
@@ -192,7 +189,7 @@ public class ButtonFactory {
 																								// 16, Color.ROYALBLUE));
 			hideLeft.setOnMouseClicked(CommonEventHandler.hideLift());
 			hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
-			btns.add(hideLeft);
+//			btns.add(hideLeft);
 			
 			//TODO hideBottom
 			JFXButton hideBottom = new JFXButton();
@@ -200,7 +197,7 @@ public class ButtonFactory {
 																								// 16, Color.ROYALBLUE));
 			hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
 			hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
-			btns.add(hideBottom);
+//			btns.add(hideBottom);
 			
 			
 			pn.getChildren().add(hideLeft);
@@ -366,7 +363,7 @@ public class ButtonFactory {
 		optionBtns.add(addBtn);
 
 		JFXButton minusBtn = new JFXButton();
-		minusBtn.setGraphic(IconGenerator.svgImage("minus-square", "#EC7774"));
+		minusBtn.setGraphic(IconGenerator.svgImage("minus-square", "#EC7774" , false));
 
 		minusBtn.setOnMouseClicked( e->{ 
 			ButtonAction.deleteData(); 

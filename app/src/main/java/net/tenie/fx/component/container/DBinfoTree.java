@@ -19,11 +19,11 @@ import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.TreeObjAction;
 import net.tenie.fx.PropertyPo.DbConnectionPo;
-import net.tenie.fx.PropertyPo.FuncProcTriggerPo;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
@@ -46,7 +46,7 @@ import net.tenie.lib.tools.IconGenerator;
 public class DBinfoTree {
 
 	public static TreeView<TreeNodePo> DBinfoTreeView; 
-	public static Region icon;
+//	public static Region icon;
 	private  DBInfoTreeContextMenu  menu;
 	// 缓存 激活的ConnItemContainer
 	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
@@ -58,9 +58,8 @@ public class DBinfoTree {
 
 	// db节点view
 	public TreeView<TreeNodePo> createConnsTreeView() {
-	    icon =  IconGenerator.svgImageDefActive("windows-globe");
-		var rootNode = new TreeItem<>(
-				new TreeNodePo("Connections",  icon)); 
+		Region icon =  IconGenerator.svgImageDefActive("windows-globe");
+		var rootNode = new TreeItem<>(new TreeNodePo("Connections",  icon)); 
 		TreeView<TreeNodePo> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");
 		treeView.setShowRoot(false);

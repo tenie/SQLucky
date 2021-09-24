@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.config.DbVendor;
@@ -19,7 +20,6 @@ import net.tenie.fx.utility.ParseSQL;
 import net.tenie.lib.db.ExportSqlDB2Imp;
 import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.db.ExportDefaultImp;
-import net.tenie.lib.db.ExportDDL;
 import net.tenie.lib.db.ExportSqlH2Imp;
 import net.tenie.lib.db.ExportSqlMariadbImp;
 import net.tenie.lib.db.ExportSqlMySqlImp;

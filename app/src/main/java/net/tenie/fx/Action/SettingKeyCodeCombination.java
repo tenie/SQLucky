@@ -1,6 +1,5 @@
 package net.tenie.fx.Action;
 
-import net.tenie.fx.PropertyPo.ProcedureFieldPo;
 import net.tenie.fx.component.*;
 import net.tenie.fx.config.DBConns;
 
@@ -25,6 +24,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 /*   @author tenie */

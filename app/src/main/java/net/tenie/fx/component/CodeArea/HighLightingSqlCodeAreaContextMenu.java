@@ -13,7 +13,6 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.lib.tools.IconGenerator; 
 
 public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
-	public static List<MenuItem> menuItems = new ArrayList<>();
  
 	
 	public HighLightingSqlCodeAreaContextMenu(HighLightingCodeArea codeArea) {
@@ -131,26 +130,7 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 				find, replace, new SeparatorMenuItem(),
 				mvB, mvE, enditLine
 				);
-		enditLine.getItems().addAll(delWord, delChar,delAllChar,  delWordBackward, delCharBackward, delAllCharBackward ); 
-				menuItems.add(copy);
-				menuItems.add(Paste);
-				menuItems.add(del);
-				menuItems.add(cut);
-				menuItems.add(sqlFormat);
-				menuItems.add(formatAll);
-				menuItems.add(sqlUnformat);
-				menuItems.add(unformatAll);
-
-				menuItems.add(find);
-				menuItems.add(replace);
-
-				menuItems.add(mvB);
-				menuItems.add(mvE);
-				menuItems.add(delWord);
-				menuItems.add(delChar);
-				menuItems.add(delWordBackward);
-				menuItems.add(delCharBackward);
-				
+		enditLine.getItems().addAll(delWord, delChar,delAllChar,  delWordBackward, delCharBackward, delAllCharBackward );				
 		
 		// 菜单显示的时刻
 		this.setOnShowing(e->{

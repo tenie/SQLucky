@@ -46,13 +46,13 @@ import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.CodeArea.MyCodeArea;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.lib.db.DBTools;
-import net.tenie.lib.db.ExportDDL;
 import net.tenie.lib.tools.IconGenerator;
 
 
@@ -242,7 +242,7 @@ public class TransferDataController implements Initializable {
 		title.setGraphic(IconGenerator.svgImageDefActive("gears"));
 		queryLabel.setGraphic(IconGenerator.svgImageDefActive("search"));
 		execBtn.setGraphic(IconGenerator.svgImageDefActive("play"));
-		stopBtn.setGraphic(IconGenerator.svgImage("stop", "red")); 
+		stopBtn.setGraphic(IconGenerator.svgImage("stop", "red" , false)); 
 		hideBtn.setGraphic(IconGenerator.svgImageUnactive("circle-o"));
 		monBtn.setGraphic(IconGenerator.svgImageDefActive("laptop"));
 	}

@@ -16,7 +16,7 @@ import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.IconGenerator;
 
 public class DBInfoTreeContextMenu {
-	public static List<MenuItem> menuItems = new ArrayList<>();
+//	public static List<MenuItem> menuItems = new ArrayList<>();
 	private ContextMenu contextMenu;
 	private MenuItem tableAddNewCol ;
 	private MenuItem tableShow;
@@ -43,7 +43,6 @@ public class DBInfoTreeContextMenu {
 		link.setGraphic(IconGenerator.svgImageDefActive("link"));
 		link.setDisable(true);
 		link.setId("OpenConnection");
-		menuItems.add(link);
 		
 	    unlink = new MenuItem("Close Connection");
 		unlink.setOnAction(e->{
@@ -52,7 +51,6 @@ public class DBInfoTreeContextMenu {
 		unlink.setGraphic(IconGenerator.svgImageDefActive("unlink"));
 		unlink.setDisable(true);
 		unlink.setId("CloseConnection");
-		menuItems.add(unlink);
 		
 	    Edit = new MenuItem("Edit Connection");
 		Edit.setOnAction(e->{
@@ -62,7 +60,6 @@ public class DBInfoTreeContextMenu {
 		Edit.setGraphic(IconGenerator.svgImageDefActive("edit"));
 		Edit.setDisable(true);
 		Edit.setId("EditConnection");
-		menuItems.add(Edit);
 		
 		Add = new MenuItem("Add Connection");
 		Add.setOnAction(e->{
@@ -71,7 +68,6 @@ public class DBInfoTreeContextMenu {
 		Add.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 //		Add.setDisable(true);
 		Add.setId("AddConnection");
-		menuItems.add(Add);
 		
 		
 	    delete = new MenuItem("Delete Connection");
@@ -81,7 +77,6 @@ public class DBInfoTreeContextMenu {
 		delete.setGraphic(IconGenerator.svgImageDefActive("trash"));
 		delete.setDisable(true);
 		delete.setId("DeleteConnection");
-		menuItems.add(delete);
 		
 		
 		refresh = new MenuItem("Refresh");
@@ -89,26 +84,22 @@ public class DBInfoTreeContextMenu {
 		refresh.setGraphic(IconGenerator.svgImageDefActive("refresh"));
 		refresh.setDisable(true);
 		refresh.setId("DeleteConnection");
-		menuItems.add(refresh);
 		
 		
 		tableAddNewCol = new MenuItem("Table Add New Column");
 	    tableAddNewCol.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 	    tableAddNewCol.setId("tableAddNewCol");
 	    tableAddNewCol.setDisable(true);
-	    menuItems.add(tableAddNewCol);
 	    
 	    tableShow = new MenuItem("Show Table Field Type");
 	    tableShow.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
 	    tableShow.setId("tableShow");
 	    tableShow.setDisable(true);
-	    menuItems.add(tableShow);
 	    
 	    tableDrop = new MenuItem("Drop ");
 	    tableDrop.setGraphic(IconGenerator.svgImageDefActive("minus-square"));
 	    tableDrop.setId("tableDrop");
 	    tableDrop.setDisable(true);
-	    menuItems.add(tableDrop);
 		
 		contextMenu.getItems().addAll(
 //				add,

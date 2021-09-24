@@ -77,18 +77,13 @@ public final class ComponentGetter {
 	public static   Region iconRight;
 	public static   Region iconLeft;
 	
-	public static List<Node> icons = new ArrayList<>();
-	
-
 	public static Region getIconUnActive(String name) {
 		var rs = appComponent.getIconUnactive(name);
-//		icons.add(rs);
 		return rs;
 	}
 	 
 	public static Region getIconDefActive(String name) {
 		var rs = appComponent.getIconDefActive(name);
-		icons.add(rs);
 		return rs;
 	}
 	
