@@ -9,6 +9,8 @@ import org.apache.logging.log4j.Logger;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.fx.Action.CommonAction;
@@ -91,17 +93,26 @@ public class MainMyDB extends Application {
 			// 图标
 			primaryStage.getIcons().add(img);
 			primaryStage.setTitle("SQLucky"); 
+//			primaryStage.
+//			primaryStage.centerOnScreen();
 //			primaryStage.initStyle(StageStyle);
+			
+			
+			
 			
 			primaryStage.setScene(tmpscene); 
 //			primaryStage.setScene(scene); 
 
-//			primaryStage.setMaximized(true);
+			primaryStage.setMaximized(true);
 //			primaryStage.setResizable(true);
 
 			primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
 			ComponentGetter.primaryStage = primaryStage; 
 //			CommonAction.setTheme(Theme);
+			 
+			 primaryStage.setX(500); 
+//			 primaryStage.setY(100);
+			
 			primaryStage.show();
 			
 			
@@ -110,6 +121,8 @@ public class MainMyDB extends Application {
 				primaryStage.setScene(scene); 
 				primaryStage.setMaximized(true);
 				primaryStage.setResizable(true);
+//				 primaryStage.setX(500); 
+//				 primaryStage.setY(500);
 				var dbTitledPane     = ComponentGetter.dbTitledPane  ;
 				var scriptTitledPane = ComponentGetter.scriptTitledPane;
 				

@@ -11,7 +11,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 
 public class MyPreloader extends Preloader {
 private Stage preloaderStage;

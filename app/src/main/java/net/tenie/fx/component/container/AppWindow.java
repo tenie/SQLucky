@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -60,7 +61,10 @@ public class AppWindow {
 					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
 				}
 		});  
-		appScene = new Scene(mainWindow); 
+		BorderPane root = new BorderPane();
+		root.setCenter(mainWindow);
+		appScene = new Scene(root); 
+//		appScene = new Scene(mainWindow); 
 		ComponentGetter.primaryscene = appScene;
 		Platform.runLater(()->{
 //			CommonUtility.platformAwait();
@@ -170,8 +174,10 @@ public class AppWindow {
 	
 	public Scene getTmpScene() {
 		VBox tmpbox = new VBox(); 
+		BorderPane root = new BorderPane(tmpbox);
+		root.setCenter(tmpbox);
 		tmpbox.getStyleClass().add("main-background");
-		Scene tmpscene = new Scene( tmpbox);
+		Scene tmpscene = new Scene( root);
 		return tmpscene;
 	}
 
