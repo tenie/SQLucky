@@ -4,10 +4,6 @@ import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
-import javafx.scene.Cursor;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -21,12 +17,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
-import net.tenie.fx.config.DBConns;
-import net.tenie.fx.dao.ConnectionDao;
 
 /**
  * 把TreeNodePo对象的属性 赋值给 TreeItem显示(节点名称,图标)

@@ -6,11 +6,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.DBOptionHelper;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.lib.tools.IconGenerator;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 
@@ -37,13 +37,13 @@ public class ConnItemDbObjects {
 	
 	
 	
-	private DbConnectionPo connpo;
+	private SqluckyConnector connpo;
 
 	public ConnItemDbObjects () {
 		
 	}
 	// 初始化一个空的对象
-	public void  initConnItem(DbConnectionPo connpo, String schemaName ) {
+	public void  initConnItem(SqluckyConnector connpo, String schemaName ) {
 		this.connpo  = connpo;
 		tableNode = CreateTableNode();
 		viewNode = CreateViewNode();
@@ -62,7 +62,7 @@ public class ConnItemDbObjects {
 		setParentNode(cinewParentNode);
 	}
 
-	public ConnItemDbObjects(DbConnectionPo connpo, String schemaName ) {
+	public ConnItemDbObjects(SqluckyConnector connpo, String schemaName ) {
 		this.connpo  = connpo;
 		this.schemaName = schemaName;
 		createConnItem(connpo, schemaName);
@@ -70,7 +70,7 @@ public class ConnItemDbObjects {
 	}
 	 
 	// 构造一个有数据的对象
-	public void createConnItem(DbConnectionPo connpo , String schemaName) {
+	public void createConnItem(SqluckyConnector connpo , String schemaName) {
 
 		tableNode = CreateTableNode(connpo, schemaName);
 //		setTableNode(CreateTableNode(connpo, schemaName));
@@ -133,7 +133,7 @@ public class ConnItemDbObjects {
 	}
 	
 	// 创建表格节点
-	public   TreeItem<TreeNodePo> CreateTableNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateTableNode(SqluckyConnector connpo, String sche) {
 		TreeItem<TreeNodePo> Table = CreateTableNode();
 		List<TablePo> tabs = DBOptionHelper.getTabsName(connpo, sche);
 		// 缓存起来
@@ -166,7 +166,7 @@ public class ConnItemDbObjects {
 		return Table;
 	}
 
-	public   TreeItem<TreeNodePo> CreateViewNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateViewNode(SqluckyConnector connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("View", TreeItemType.VIEW_ROOT,
 				IconGenerator.svgImage("object-group", "blue", false), connpo));
 		List<TablePo> tabs = DBOptionHelper.getViewsName(connpo, sche);// connpo.getViews(sche);
@@ -188,7 +188,7 @@ public class ConnItemDbObjects {
 	}
 
 	// 创建function节点
-	public   TreeItem<TreeNodePo> CreateFunctionNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateFunctionNode(SqluckyConnector connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Function", TreeItemType.FUNCTION_ROOT,
 				IconGenerator.svgImage("gears", "blue", false), connpo));
 		List<FuncProcTriggerPo> vals = DBOptionHelper.getFunctions(connpo, sche);// connpo.getFunctions(sche);
@@ -205,7 +205,7 @@ public class ConnItemDbObjects {
 	}
 
 	// 创建Procedure节点
-	public   TreeItem<TreeNodePo> CreateProceduresNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateProceduresNode(SqluckyConnector connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Procedure", TreeItemType.PROCEDURE_ROOT,
 				IconGenerator.svgImage("puzzle-piece", "blue", false), connpo));
 		List<FuncProcTriggerPo> vals = DBOptionHelper.getProcedures(connpo, sche); // connpo.getProcedures(sche);
@@ -230,7 +230,7 @@ public class ConnItemDbObjects {
 	}
 	
 	// 触发器
-	public   TreeItem<TreeNodePo> CreateTriggerNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateTriggerNode(SqluckyConnector connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Trigger", TreeItemType.TRIGGER_ROOT,
 				IconGenerator.svgImage("originals-ray-gun", "blue", false), connpo));
 		List<FuncProcTriggerPo> vals = DBOptionHelper.getTriggers(connpo, sche); // connpo.getProcedures(sche);
@@ -243,7 +243,7 @@ public class ConnItemDbObjects {
 
 	
 	// 索引
-	public   TreeItem<TreeNodePo> CreateIndexNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateIndexNode(SqluckyConnector connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Index", TreeItemType.INDEX_ROOT,
 				IconGenerator.svgImage("book-perspective", "blue", false), connpo));
 		List<FuncProcTriggerPo> vals = DBOptionHelper.getIndexs(connpo, sche); // connpo.getProcedures(sche);
@@ -261,7 +261,7 @@ public class ConnItemDbObjects {
 	}
 	
 	// seq
-	public   TreeItem<TreeNodePo> CreateSequenceNode(DbConnectionPo connpo, String sche) {
+	public   TreeItem<TreeNodePo> CreateSequenceNode(SqluckyConnector connpo, String sche) {
 		TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Sequence", TreeItemType.SEQUENCE_ROOT,
 				IconGenerator.svgImage("foundation-die-six", "blue", false), connpo));
 		List<FuncProcTriggerPo> vals = DBOptionHelper.getSequences(connpo, sche, true); // connpo.getProcedures(sche);
@@ -306,7 +306,7 @@ public class ConnItemDbObjects {
 
 	// TreeItem 添加 子节点
 	public   void addFuncTreeItem(TreeItem<TreeNodePo> parent, List<FuncProcTriggerPo> tabs, String img,
-			TreeItemType type, DbConnectionPo connpo) {
+			TreeItemType type, SqluckyConnector connpo) {
 		if(tabs != null ) {
 			for (FuncProcTriggerPo po : tabs) {
 				addTreeItem(parent, po, img, type, connpo);
@@ -317,7 +317,7 @@ public class ConnItemDbObjects {
 
 	// TreeItem 添加 子节点
 	public   void addTreeItem(TreeItem<TreeNodePo> parent, FuncProcTriggerPo fpt, String img, TreeItemType type,
-			DbConnectionPo connpo) {
+			SqluckyConnector connpo) {
 		TreeNodePo po = new TreeNodePo(fpt.getName());
 		po.setType(type);
 		po.setConnpo(connpo);
@@ -388,11 +388,11 @@ public class ConnItemDbObjects {
 		this.schemaName = schemaName;
 	}
 
-	public DbConnectionPo getConnpo() {
+	public SqluckyConnector getConnpo() {
 		return connpo;
 	}
 
-	public void setConnpo(DbConnectionPo connpo) {
+	public void setConnpo(SqluckyConnector connpo) {
 		this.connpo = connpo;
 	}
 	public TreeItem<TreeNodePo> getTriggerNode() {

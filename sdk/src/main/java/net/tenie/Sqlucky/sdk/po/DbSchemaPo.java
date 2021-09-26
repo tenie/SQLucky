@@ -1,13 +1,14 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.Sqlucky.sdk.po;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
-
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class DbSchemaPo {
 	private String schemaName;
 	private List<TablePo> tabs;

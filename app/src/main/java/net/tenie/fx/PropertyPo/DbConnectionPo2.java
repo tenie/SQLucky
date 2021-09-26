@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.config.DbVendor;
-import net.tenie.fx.utility.ParseSQL;
 import net.tenie.lib.db.ExportSqlDB2Imp;
 import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.db.ExportDefaultImp;
@@ -25,9 +23,13 @@ import net.tenie.lib.db.ExportSqlMariadbImp;
 import net.tenie.lib.db.ExportSqlMySqlImp;
 import net.tenie.lib.db.ExportSqlSqliteImp;
 
-/*   @author tenie */
-public class DbConnectionPo {
-	private static Logger logger = LogManager.getLogger(DbConnectionPo.class);
+/**
+ * 
+ * @author tenie
+ *
+ */
+public class DbConnectionPo2 implements SqluckyConnector {
+	private static Logger logger = LogManager.getLogger(DbConnectionPo2.class);
 	private Integer id;
 	private String connName; // 连接名称
 	private String host;
@@ -61,8 +63,8 @@ public class DbConnectionPo {
 		return connectionIng.get();
 	}
 
-	public static DbConnectionPo copyObj(DbConnectionPo sopo, String schema) {
-		DbConnectionPo val = new DbConnectionPo(  
+	public static DbConnectionPo2 copyObj(DbConnectionPo2 sopo, String schema) {
+		DbConnectionPo2 val = new DbConnectionPo2(  
 				sopo.getConnName()+"Copy",
 				sopo.getDriver(),
 				sopo.getHost(),
@@ -106,7 +108,7 @@ public class DbConnectionPo {
 		return exportDDL;
 	}
 
-	public DbConnectionPo(String connName, String driver, String host, String port, String user, String passWord,
+	public DbConnectionPo2(String connName, String driver, String host, String port, String user, String passWord,
 			String dbVendor, String defaultSchema,String dbName
 
 	) {
@@ -409,4 +411,16 @@ public class DbConnectionPo {
 		}
 		return false;
 	}
+
+	@Override
+	public SqluckyConnector copyObj(SqluckyConnector sopo, String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+//	@Override
+//	public SqluckyConnector copyObj(SqluckyConnector sopo, String schema) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 }

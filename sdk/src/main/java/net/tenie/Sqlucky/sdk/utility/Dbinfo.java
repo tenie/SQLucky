@@ -1,4 +1,4 @@
-package net.tenie.lib.db;
+package net.tenie.Sqlucky.sdk.utility;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import net.tenie.fx.config.DbVendor;
+//import net.tenie.fx.config.DbVendor;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
@@ -144,13 +144,13 @@ public class Dbinfo {
 		Map<String, DbSchemaPo> pos = new HashMap<String, DbSchemaPo>();
 		try {
 			DatabaseMetaData dmd = conn.getMetaData();
-			if (    DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())
-				||  DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())
-					) {
-				rs = dmd.getCatalogs();
-			} else {
-				rs = dmd.getSchemas(); // 默认 db2
-			}
+//			if (    DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())
+//				||  DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())
+//					) {
+//				rs = dmd.getCatalogs();
+//			} else {
+//				rs = dmd.getSchemas(); // 默认 db2
+//			}
 
 			while (rs.next()) {
 				DbSchemaPo po = new DbSchemaPo();
@@ -669,7 +669,7 @@ public class Dbinfo {
 		PreparedStatement sm = null;
 		PreparedStatement sm2 = null;
 		try {
-			conn = ConnectionPool.getDirectConn(h2Url, h2User, h2Password);
+//			conn = ConnectionPool.getDirectConn(h2Url, h2User, h2Password);
 			String tableSQl = "insert into mytables (table_name, table_comment) values ( ?,?)";
 			String fieldSQl = "insert into mytables_field (table_id, field_name,field_comment,TYPE_NAME,IS_NULLABLE) "
 					+ "values (?, ?, ?, ?, ?)";

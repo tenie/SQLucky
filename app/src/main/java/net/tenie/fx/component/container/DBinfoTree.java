@@ -18,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.TreeObjAction;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -26,6 +25,7 @@ import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.TreeItem.MyTreeItem;
@@ -91,9 +91,9 @@ public class DBinfoTree {
 	public static void recoverNode(TreeItem<TreeNodePo> rootNode) {  
 		try {
 			Connection H2conn = H2Db.getConn();
-			List<DbConnectionPo> datas = ConnectionDao.recoverConnObj(H2conn);
+			List<SqluckyConnector> datas = ConnectionDao.recoverConnObj(H2conn);
 			if (datas != null && datas.size() > 0) {
-				for (DbConnectionPo po : datas) {
+				for (SqluckyConnector po : datas) {
 					MyTreeItem<TreeNodePo> item = new MyTreeItem<>(
 							new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
 					rootNode.getChildren().add(item);
@@ -179,7 +179,7 @@ public class DBinfoTree {
 			} // Schemas 双击, 打开非默认的schema
 			else if (parentItem != null && 
 					 parentItem.getValue().getType() == TreeItemType.SCHEMA_ROOT ) {
-				DbConnectionPo po = getSchameIsConnObj(item);
+				SqluckyConnector po = getSchameIsConnObj(item);
 				// 获取当前schema node 所在的连接节点
 				TreeItem<TreeNodePo> connRoot = item.getParent().getParent();
 				// 获取当前节点的schema name
@@ -198,21 +198,21 @@ public class DBinfoTree {
 			// 表格
 			else if (parentItem.getValue().getType() != null && 
 					 parentItem.getValue().getType() == TreeItemType.TABLE_ROOT) {
-				DbConnectionPo dpo = item.getValue().getConnpo();
+				SqluckyConnector dpo = item.getValue().getConnpo();
 				TablePo table = item.getValue().getTable();
 				TreeObjAction.showTableSql(dpo, table, item.getValue().getName());
 			}
 			// 视图
 			else if (parentItem.getValue().getType() != null && 
 					 parentItem.getValue().getType() == TreeItemType.VIEW_ROOT) {
-				DbConnectionPo dpo = item.getValue().getConnpo(); 
+				SqluckyConnector dpo = item.getValue().getConnpo(); 
 				TablePo table = item.getValue().getTable();
 				TreeObjAction.showTableSql(dpo, table, item.getValue().getName());
 			}
 			// 函数
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.FUNCTION_ROOT) {
-				DbConnectionPo dpo = item.getValue().getConnpo();
+				SqluckyConnector dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl();
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
@@ -227,7 +227,7 @@ public class DBinfoTree {
 			} // 过程
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.PROCEDURE_ROOT) {
-				DbConnectionPo dpo = item.getValue().getConnpo();
+				SqluckyConnector dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl(); 
 				
@@ -247,7 +247,7 @@ public class DBinfoTree {
 			} // trigger
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.TRIGGER_ROOT) {
-				DbConnectionPo dpo = item.getValue().getConnpo();
+				SqluckyConnector dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl(); 
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
@@ -262,7 +262,7 @@ public class DBinfoTree {
 			}// index
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.INDEX_ROOT) {
-				DbConnectionPo dpo = item.getValue().getConnpo();
+				SqluckyConnector dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl(); 
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
@@ -277,7 +277,7 @@ public class DBinfoTree {
 			}// Sequence
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.SEQUENCE_ROOT) {
-				DbConnectionPo dpo = item.getValue().getConnpo();
+				SqluckyConnector dpo = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl();  
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
@@ -324,7 +324,7 @@ public class DBinfoTree {
 				}else if(nd != null && nd.getType() == TreeItemType.TABLE) {
 					menu.setConnectDisable(true);
 					menu.setTableDisable(false);
-					DbConnectionPo  dbc =nd.getConnpo();
+					SqluckyConnector  dbc =nd.getConnpo();
 					String schema = nd.getTable().getTableSchema();
 					String tablename = nd.getTable().getTableName();
 					menu.setTableAction(dbc, schema, tablename);
@@ -332,7 +332,7 @@ public class DBinfoTree {
 					//TODO  
 					menu.setConnectDisable(true);
 					menu.setViewFuncProcTriDisable(false);
-					DbConnectionPo  dbc =nd.getConnpo();
+					SqluckyConnector  dbc =nd.getConnpo();
 					String schema = nd.getTable().getTableSchema();
 					String viewName = nd.getTable().getTableName();
 					menu.setViewAction(dbc, schema, viewName);
@@ -340,7 +340,7 @@ public class DBinfoTree {
 					//TODO  
 					menu.setConnectDisable(true);
 					menu.setViewFuncProcTriDisable(false);
-					DbConnectionPo  dbc =nd.getConnpo();
+					SqluckyConnector  dbc =nd.getConnpo();
 					 
 					String schema = nd.getFuncProTri().getSchema();
 					String funcName = nd.getFuncProTri().getName();
@@ -349,7 +349,7 @@ public class DBinfoTree {
 					//TODO  
 					menu.setConnectDisable(true);
 					menu.setViewFuncProcTriDisable(false);
-					DbConnectionPo  dbc =nd.getConnpo();
+					SqluckyConnector  dbc =nd.getConnpo();
 					
 					String schema = nd.getFuncProTri().getSchema();
 					String procName = nd.getFuncProTri().getName();
@@ -358,7 +358,7 @@ public class DBinfoTree {
 					//TODO  
 					menu.setConnectDisable(true);
 					menu.setViewFuncProcTriDisable(false);
-					DbConnectionPo  dbc =nd.getConnpo();
+					SqluckyConnector  dbc =nd.getConnpo();
 					
 					String schema = nd.getFuncProTri().getSchema();
 					String triggerName = nd.getFuncProTri().getName();
@@ -418,7 +418,7 @@ public class DBinfoTree {
 			String str = lb.getText();
 			TreeItem<TreeNodePo> tnp = DBinfoTree.getConnNode(str);
 			if(StrUtils.isNullOrEmpty(schema)) {
-				DbConnectionPo  dbpo = DBConns.get(str);
+				SqluckyConnector  dbpo = DBConns.get(str);
 				schema =  dbpo.getDefaultSchema();
 			} 
 
@@ -452,7 +452,7 @@ public class DBinfoTree {
 	}
 
 	// 获取库的连接对象
-	public static DbConnectionPo getSchameIsConnObj(TreeItem<TreeNodePo> item) {
+	public static SqluckyConnector getSchameIsConnObj(TreeItem<TreeNodePo> item) {
 		String connName = item.getParent().getParent().getValue().getName();
 		return DBConns.get(connName);
 	}

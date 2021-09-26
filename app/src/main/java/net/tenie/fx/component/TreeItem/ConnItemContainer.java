@@ -3,21 +3,25 @@ package net.tenie.fx.component.TreeItem;
 import java.util.Set;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.lib.tools.IconGenerator;
-
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class ConnItemContainer {
 	private TreeItem<TreeNodePo> parentNode;
 	private TreeItem<TreeNodePo> schemaNode;
-	private DbConnectionPo connpo;
+	private SqluckyConnector connpo;
 
 	// 创建空的对象, 包含一个空的schema Node
-	public ConnItemContainer(DbConnectionPo connpo) {
+	public ConnItemContainer(SqluckyConnector connpo) {
 		this.connpo = connpo;
 		schemaNode = CreateEmptySchemaNode(connpo);
 //		this.connpo.setItemContainer(this);
@@ -29,7 +33,7 @@ public class ConnItemContainer {
 	 * @param connpo 数据库连接对象, 用于初始化整个节点数据
 	 * @param node   父节点缓存
 	 */
-	public ConnItemContainer(DbConnectionPo connpo, TreeItem<TreeNodePo> node) {
+	public ConnItemContainer(SqluckyConnector connpo, TreeItem<TreeNodePo> node) {
 		this.parentNode = node;
 		this.connpo = connpo;
 		String defSch = connpo.getDefaultSchema();
@@ -43,7 +47,7 @@ public class ConnItemContainer {
 		schemaNode.getValue().setConnItem(ci);
 	}
 
-	public ConnItemDbObjects showConnNode(DbConnectionPo connpo, String schemaName) {
+	public ConnItemDbObjects showConnNode(SqluckyConnector connpo, String schemaName) {
 		ConnItemDbObjects ci = new ConnItemDbObjects(connpo, schemaName);
 		addConnItem(ci);
 		return ci;
@@ -104,7 +108,7 @@ public class ConnItemContainer {
 	}
 
 	// 创建表节点, 空的节点, 没有子节点
-	public static TreeItem<TreeNodePo> CreateEmptySchemaNode(DbConnectionPo connpo) {
+	public static TreeItem<TreeNodePo> CreateEmptySchemaNode(SqluckyConnector connpo) {
 
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
 				new TreeNodePo("Schemas", IconGenerator.svgImage("th-list", "#FFD700", false), connpo));
@@ -112,7 +116,7 @@ public class ConnItemContainer {
 	}
 
 	// 获取所有的schema, 并构建node
-	public static TreeItem<TreeNodePo> CreateSchemaNode(DbConnectionPo connpo) {
+	public static TreeItem<TreeNodePo> CreateSchemaNode(SqluckyConnector connpo) {
 		//判断是不是mysql
 		String nodeName = "Schemas";
 		if(    DbVendor.mysql.toUpperCase().equals(connpo.getDbVendor().toUpperCase())
@@ -145,7 +149,7 @@ public class ConnItemContainer {
 		this.schemaNode = schemaNode;
 	}
 
-	public DbConnectionPo getConnpo() {
+	public SqluckyConnector getConnpo() {
 		return connpo;
 	}
 
@@ -157,7 +161,7 @@ public class ConnItemContainer {
 		this.parentNode = parentNode;
 	}
 
-	public void setConnpo(DbConnectionPo connpo) {
+	public void setConnpo(SqluckyConnector connpo) {
 		this.connpo = connpo;
 	}
 

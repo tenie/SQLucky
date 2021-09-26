@@ -38,7 +38,6 @@ import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
 import net.tenie.fx.Cache.CacheTabView;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
@@ -47,6 +46,7 @@ import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.fx.config.DBConns;
@@ -79,7 +79,7 @@ public class RunSQLHelper {
 	private static String sqlstr = null; 
 	private static String tabIdx = null;
 	private static Boolean isCreateFunc = null;
-	private static DbConnectionPo dpo = null;
+	private static SqluckyConnector dpo = null;
 	private static Boolean isRefresh = false;
 	private static boolean isLock =false;
 	private static boolean isCallFunc = false;
@@ -132,7 +132,7 @@ public class RunSQLHelper {
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static void execSqlList(List<SqlData> allsqls,  DbConnectionPo dpo) throws SQLException {
+	private static void execSqlList(List<SqlData> allsqls,  SqluckyConnector dpo) throws SQLException {
 		String sqlstr;
 		String sql;
 		Connection conn = dpo.getConn();
@@ -323,7 +323,7 @@ public class RunSQLHelper {
 	}
 	
 	
-	private static void selectAction(String sql, DbConnectionPo dpo ) throws Exception {
+	private static void selectAction(String sql, SqluckyConnector dpo ) throws Exception {
 		try { 
 		    Connection conn = dpo.getConn();
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
@@ -471,7 +471,7 @@ public class RunSQLHelper {
 			return warn;
 		} 
 		String val = conns.getValue().getText();
-		DbConnectionPo po = DBConns.get(val);
+		SqluckyConnector po = DBConns.get(val);
 		if (po == null || !po.isAlive()) {
 			warn = true;
 			MyAlert.errorAlert( "please ,  connect DB !");
@@ -493,7 +493,7 @@ public class RunSQLHelper {
 
 
 	// 运行 sql 入口
-	public static void runSQLMethodRefresh(DbConnectionPo dpov , String sqlv, String tabIdxv, boolean isLockv ) {
+	public static void runSQLMethodRefresh(SqluckyConnector dpov , String sqlv, String tabIdxv, boolean isLockv ) {
 		settingBtn();
 		CommonAction.showDetailPane();
 		
@@ -517,7 +517,7 @@ public class RunSQLHelper {
 		runSQLMethod(  null, null, true);
 	}
 	
-	public static void callProcedure( String sqlv, DbConnectionPo dpov , List<ProcedureFieldPo> fields ) {
+	public static void callProcedure( String sqlv, SqluckyConnector dpov , List<ProcedureFieldPo> fields ) {
 		if (checkDBconn())
 			return; 
 		Connection connv = dpov.getConn();
@@ -552,7 +552,7 @@ public class RunSQLHelper {
 	public static void runSQLMethod( String sqlv, String tabIdxv, boolean isFuncv) {
 		if (checkDBconn())
 			return;
-		DbConnectionPo dpov = CommonAction.getDbConnectionPoByComboBoxDbConnName();
+		SqluckyConnector dpov = CommonAction.getDbConnectionPoByComboBoxDbConnName();
 		Connection connv = dpov.getConn();
 		try {
 			if (connv == null) {

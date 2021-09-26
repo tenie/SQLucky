@@ -7,9 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.window.ConnectionEditor;
@@ -86,7 +86,7 @@ public class CommonListener {
 			public void changed(ObservableValue<? extends Label> observable, Label oldValue, Label newValue) {
 				System.out.println("choiceBoxChange2");
 				if (newValue != null) {
-					DbConnectionPo cnnpo = DBConns.get(newValue.getText());
+					SqluckyConnector cnnpo = DBConns.get(newValue.getText());
 					if (cnnpo != null && !cnnpo.isAlive() && !cnnpo.isConnIng()) {
 						//清除查找字符串
 						IndexRange ir = SqlcukyEditor.getSelection();

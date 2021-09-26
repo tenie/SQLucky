@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
-
 import org.fxmisc.richtext.CodeArea;
-
 import javafx.application.Platform;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -21,14 +19,14 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
-import net.tenie.fx.PropertyPo.DbSchemaPo;
 import net.tenie.lib.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.AutoComplete;
 import net.tenie.Sqlucky.sdk.SqluckyCodeArea;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
@@ -186,7 +184,7 @@ public class MyAutoComplete implements AutoComplete{
 				var fs = getCacheTableFields();
 				tmpls.addAll(fs);
 			}else {
-				DbConnectionPo po = CommonAction.getDbConnectionPoByComboBoxDbConnName();
+				SqluckyConnector po = CommonAction.getDbConnectionPoByComboBoxDbConnName();
 				if (po != null) {
 					Map<String, DbSchemaPo> map = po.getSchemas();
 					DbSchemaPo spo = map.get(po.getDefaultSchema());
@@ -257,7 +255,7 @@ public class MyAutoComplete implements AutoComplete{
 		Consumer< String >  caller = x ->{ 
 			var fs = tabpo.getFields(); 
 			if( fs == null || fs .size() == 0) {
-				DbConnectionPo dpov = CommonAction.getDbConnectionPoByComboBoxDbConnName();
+				SqluckyConnector dpov = CommonAction.getDbConnectionPoByComboBoxDbConnName();
 				if(dpov != null) {
 					Connection connv = dpov.getConn();
 					try {

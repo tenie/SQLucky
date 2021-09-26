@@ -1,14 +1,11 @@
 package net.tenie.fx.factory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.Action.MenuAction;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.window.ConnectionEditor;
@@ -16,7 +13,6 @@ import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.IconGenerator;
 
 public class DBInfoTreeContextMenu {
-//	public static List<MenuItem> menuItems = new ArrayList<>();
 	private ContextMenu contextMenu;
 	private MenuItem tableAddNewCol ;
 	private MenuItem tableShow;
@@ -138,7 +134,7 @@ public class DBInfoTreeContextMenu {
 	
 	
 	
-	public void setTableAction(DbConnectionPo  dbc ,String schema ,String tablename ) {
+	public void setTableAction(SqluckyConnector  dbc ,String schema ,String tablename ) {
 		tableAddNewCol.setOnAction(e->{ 
 			MenuAction.addNewColumn(dbc, schema, tablename);
 		});
@@ -153,28 +149,28 @@ public class DBInfoTreeContextMenu {
 	}
 	
 	// 设置选中视图时 对应的按钮action
-	public void setViewAction(DbConnectionPo  dbc ,String schema ,String viewName ) {
+	public void setViewAction(SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
 			MenuAction.dropView(dbc, schema, viewName);
 		});
 	  
 	}
 	// 设置选中函数时 对应的按钮action
-	public void setFuncAction(DbConnectionPo  dbc ,String schema ,String viewName ) {
+	public void setFuncAction(SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
 			MenuAction.dropFunc(dbc, schema, viewName);
 		});
 	  
 	}
 	
-	public void setProcAction(DbConnectionPo  dbc ,String schema ,String viewName ) {
+	public void setProcAction(SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
 			MenuAction.dropProc(dbc, schema, viewName);
 		});
 	  
 	}
 	
-	public void setTriggerAction(DbConnectionPo  dbc ,String schema ,String viewName ) {
+	public void setTriggerAction(SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
 			MenuAction.dropTrigger(dbc, schema, viewName);
 		});

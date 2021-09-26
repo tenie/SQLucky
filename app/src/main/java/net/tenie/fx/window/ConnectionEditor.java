@@ -31,7 +31,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.fx.PropertyPo.DbConnectionPo2;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -39,6 +39,7 @@ import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
@@ -90,7 +91,7 @@ public class ConnectionEditor {
 	}
 
 	public static void ConnectionInfoSetting(boolean isEdit, String connNameVal, String userVal, String passwordVal,
-			String hostVal, String portVal, String dbDriverVal, String defaultSchemaVal,String dbName, DbConnectionPo dp) {
+			String hostVal, String portVal, String dbDriverVal, String defaultSchemaVal,String dbName, SqluckyConnector dp) {
 		VBox vb = new VBox();
 		Label title = new Label("Edit Connection Info");
 		title.setPadding(new Insets(15));
@@ -231,7 +232,7 @@ public class ConnectionEditor {
 
 		
 		// 方法
-		Function<String, DbConnectionPo> call = x -> { 
+		Function<String, SqluckyConnector> call = x -> { 
 			String connName = connectionName.getText();
 			// check date
 			if (StrUtils.isNullOrEmpty(connName)) {
@@ -285,8 +286,8 @@ public class ConnectionEditor {
 				}
 			}
 
-			// 连接信息保存
-			DbConnectionPo connpo = new DbConnectionPo(connName, DbVendor.getDriver(dbDriver.getValue()),
+			//TODO 连接信息保存
+			SqluckyConnector connpo = new DbConnectionPo2(connName, DbVendor.getDriver(dbDriver.getValue()),
 					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
 					defaultSchema.getText(), defaultSchema.getText());
 			if (dp != null) {
@@ -321,7 +322,7 @@ public class ConnectionEditor {
 		ConnectionInfoSetting(false, "", "", "", "", "", "", "", "", null);
 	}
 
-	public static void ConnectionInfoSetting(DbConnectionPo dp) {
+	public static void ConnectionInfoSetting(SqluckyConnector dp) {
 		if(dp != null)
 			ConnectionInfoSetting(true, dp.getConnName(), dp.getUser(), dp.getPassWord(), dp.getHost(), dp.getPort(),
 				dp.getDbVendor(), dp.getDefaultSchema(), dp.getDbName(), dp);
@@ -331,7 +332,7 @@ public class ConnectionEditor {
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
 			String str = val.getValue().getName();
-			DbConnectionPo dp = DBConns.get(str);
+			SqluckyConnector dp = DBConns.get(str);
 			ConnectionEditor.ConnectionInfoSetting(dp);
 			 
 		}
@@ -339,7 +340,7 @@ public class ConnectionEditor {
 
 	public static void deleteDbConn() {
 
-		DbConnectionPo po = null;
+		SqluckyConnector po = null;
 		TreeItem<TreeNodePo> treeNode = null;
 
 		logger.info("deleteDbConn()");
@@ -359,7 +360,7 @@ public class ConnectionEditor {
 				}
 			}
 		}
-		final DbConnectionPo tmpPo = po;
+		final SqluckyConnector tmpPo = po;
 		final TreeItem<TreeNodePo> tmpTreeNode = treeNode;
 		Consumer<String> ok = x -> {
 			try {
@@ -397,7 +398,7 @@ public class ConnectionEditor {
 	private static void closeDbConnHelper(TreeItem<TreeNodePo> val) {
 		String str = val.getValue().getName();
 		logger.info(str);
-		DbConnectionPo dp = DBConns.get(str);
+		SqluckyConnector dp = DBConns.get(str);
 		if (dp != null ) {
 			// 关闭连接
 			dp.closeConn();
@@ -449,12 +450,12 @@ public class ConnectionEditor {
 
 		Thread t = new Thread() {
 			public void run() {
-				DbConnectionPo po1 = null;
+				SqluckyConnector po1 = null;
 				try {
 					 
 					logger.info("backRunOpenConn()");
 					String connName = item.getValue().getName();
-					DbConnectionPo po = DBConns.get(connName);
+					SqluckyConnector po = DBConns.get(connName);
 					po1 = po;
 					po.setConning(true);
 
@@ -497,12 +498,12 @@ public class ConnectionEditor {
 	}
 	
 	
-	public static Button createTestBtn(Function<String, DbConnectionPo> call ) {
+	public static Button createTestBtn(Function<String, SqluckyConnector> call ) {
 		Button testBtn = new Button("Test"); 
 		testBtn.setOnMouseClicked(e -> {
 			testBtn.setStyle("-fx-background-color: red ");
 			logger.info("Test connection~~");
-			DbConnectionPo connpo = call.apply("");
+			SqluckyConnector connpo = call.apply("");
 			if (connpo != null) {
 				CommonAction.isAliveTestAlert(connpo, testBtn);
 			}
@@ -510,10 +511,10 @@ public class ConnectionEditor {
 		return testBtn;
 	}
 	
-	public static Button createSaveBtn(Function<String, DbConnectionPo> call , TextField connectionName ,DbConnectionPo dp, Stage stage) {
+	public static Button createSaveBtn(Function<String, SqluckyConnector> call , TextField connectionName ,SqluckyConnector dp, Stage stage) {
 		Button saveBtn = new Button("Save");
 		saveBtn.setOnMouseClicked(e -> {
-			DbConnectionPo connpo = call.apply("");
+			SqluckyConnector connpo = call.apply("");
 			if (connpo != null) {  
 				// 先删除树中的节点
 				if (dp != null) {

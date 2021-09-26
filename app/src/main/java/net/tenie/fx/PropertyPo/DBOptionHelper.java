@@ -4,14 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class DBOptionHelper {
 
 	// 返回 指定schema中所有的表
-	static public List<TablePo> getTabsName(DbConnectionPo po, String schemasName) {
+	static public List<TablePo> getTabsName(SqluckyConnector po, String schemasName) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<TablePo> tbs = new ArrayList<>();
@@ -31,7 +37,7 @@ public class DBOptionHelper {
 	}
 
 	// 返回 指定schema中所有的view
-	static public List<TablePo> getViewsName(DbConnectionPo po, String schemasName) {
+	static public List<TablePo> getViewsName(SqluckyConnector po, String schemasName) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<TablePo> views = new ArrayList<TablePo>();
@@ -51,7 +57,7 @@ public class DBOptionHelper {
 	}
 
 	// 返回 指定schema中所有的Function
-	static public List<FuncProcTriggerPo> getFunctions(DbConnectionPo po, String schemasName) {
+	static public List<FuncProcTriggerPo> getFunctions(SqluckyConnector po, String schemasName) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
@@ -71,7 +77,7 @@ public class DBOptionHelper {
 	}
 
 	// 返回 指定schema中所有的Procedures
-	static public List<FuncProcTriggerPo> getProcedures(DbConnectionPo po, String schemasName) {
+	static public List<FuncProcTriggerPo> getProcedures(SqluckyConnector po, String schemasName) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
@@ -91,7 +97,7 @@ public class DBOptionHelper {
 	}
 
 	// 返回 指定schema中所有的 trigger
-	static public List<FuncProcTriggerPo> getTriggers(DbConnectionPo po, String schemasName) {
+	static public List<FuncProcTriggerPo> getTriggers(SqluckyConnector po, String schemasName) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val =new ArrayList<>();
@@ -111,7 +117,7 @@ public class DBOptionHelper {
 	}
 	
 	// 返回 指定schema中所有的 INDEX
-	static public List<FuncProcTriggerPo> getIndexs(DbConnectionPo po, String schemasName ) {
+	static public List<FuncProcTriggerPo> getIndexs(SqluckyConnector po, String schemasName ) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
@@ -132,7 +138,7 @@ public class DBOptionHelper {
 	}
 	
 	// 返回 指定schema中所有的 Sequence
-	static public List<FuncProcTriggerPo> getSequences(DbConnectionPo po, String schemasName, boolean isNew) {
+	static public List<FuncProcTriggerPo> getSequences(SqluckyConnector po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
@@ -156,27 +162,27 @@ public class DBOptionHelper {
 	
 
 //	 获取表的建表语句
-	public static String getCreateTableSQL(DbConnectionPo cp, String schema, String tab) {
+	public static String getCreateTableSQL(SqluckyConnector cp, String schema, String tab) {
 		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
 		return ddl;
 	}
 
 //	 获取视图的语句
-	public static String getViewSQL(DbConnectionPo cp, String schema, String viewName) {
+	public static String getViewSQL(SqluckyConnector cp, String schema, String viewName) {
 		String ddl = cp.getExportDDL().exportCreateView(cp.getConn(), schema, viewName);
 		return ddl;
 
 	}
 
 //	 获取函数的语句
-	public static String getFunctionSQL(DbConnectionPo cp, String schema, String funcName) {
+	public static String getFunctionSQL(SqluckyConnector cp, String schema, String funcName) {
 		String ddl = cp.getExportDDL().exportCreateFunction(cp.getConn(), schema, funcName);
 		return ddl;
 
 	}
 
 //	 获取函数的语句
-	public static String getProceduresSQL(DbConnectionPo cp, String schema, String name) {
+	public static String getProceduresSQL(SqluckyConnector cp, String schema, String name) {
 		String ddl = cp.getExportDDL().exportCreateProcedure(cp.getConn(), schema, name);
 		return ddl;
 

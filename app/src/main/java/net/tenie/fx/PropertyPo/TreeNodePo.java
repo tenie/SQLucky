@@ -3,6 +3,7 @@ package net.tenie.fx.PropertyPo;
 import java.io.Serializable;
 
 import javafx.scene.Node;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
@@ -19,7 +20,7 @@ public class TreeNodePo implements Serializable {
 	private String TableDDL;
 	private TablePo table;
 	private FuncProcTriggerPo funcProTri;
-	private DbConnectionPo connpo;
+	private SqluckyConnector connpo;
 	private ConnItemContainer connItemContainer;
 	private ConnItemDbObjects connItem;
 	
@@ -30,14 +31,14 @@ public class TreeNodePo implements Serializable {
 		this.icon = cion;
 	}
 
-	public TreeNodePo(String name, Node cion, DbConnectionPo connpo) {
+	public TreeNodePo(String name, Node cion, SqluckyConnector connpo) {
 		super();
 		this.name = name;
 		this.icon = cion;
 		this.connpo = connpo;
 	}
 
-	public TreeNodePo(String name, TreeItemType type, DbConnectionPo connpo) {
+	public TreeNodePo(String name, TreeItemType type, SqluckyConnector connpo) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -51,7 +52,7 @@ public class TreeNodePo implements Serializable {
 		this.icon = cion;
 	}
 
-	public TreeNodePo(String name, TreeItemType type, Node cion, DbConnectionPo connpo) {
+	public TreeNodePo(String name, TreeItemType type, Node cion, SqluckyConnector connpo) {
 		super();
 		this.name = name;
 		this.type = type;
@@ -75,11 +76,11 @@ public class TreeNodePo implements Serializable {
 		this.connItem = connItem;
 	}
 
-	public DbConnectionPo getConnpo() {
+	public SqluckyConnector getConnpo() {
 		return connpo;
 	}
 
-	public void setConnpo(DbConnectionPo connpo) {
+	public void setConnpo(SqluckyConnector connpo) {
 		this.connpo = connpo;
 	}
 

@@ -3,9 +3,9 @@ package net.tenie.fx.Action;
 import java.sql.Connection;
 import java.util.function.Consumer;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.window.ModalDialog;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 
 
@@ -15,7 +15,7 @@ public class MenuAction {
 	static final int ADD_COLUMN = 3;
 	
 	//添加新字段
-	public static void addNewColumn(DbConnectionPo  dbc ,String schema ,String tablename  ) {
+	public static void addNewColumn(SqluckyConnector  dbc ,String schema ,String tablename  ) {
 
 		Connection conn = dbc.getConn();
 		Consumer< String >  caller = x ->{
@@ -104,7 +104,7 @@ public class MenuAction {
 	
 		
 	// 执行导出的sql
-	public static void  execExportSql(String sql, Connection conn, DbConnectionPo dbconnPo) { 
+	public static void  execExportSql(String sql, Connection conn, SqluckyConnector dbconnPo) { 
 		RunSQLHelper.runSQLMethodRefresh(dbconnPo, sql, "", false);
 		
 	}
@@ -139,7 +139,7 @@ public class MenuAction {
 	}
 	
 	// 删表
-	public static void dropTable(DbConnectionPo  dbc ,String schema ,String tablename  ) { 
+	public static void dropTable(SqluckyConnector  dbc ,String schema ,String tablename  ) { 
 		Connection conn = dbc.getConn();  
 		String sql =  dbc.getExportDDL().exportDropTable(schema, tablename);
 		Consumer< String >  caller = x ->{ 
@@ -150,7 +150,7 @@ public class MenuAction {
 	}
 	
 	// 删视图
-	public static void dropView(DbConnectionPo  dbc ,String schema ,String viewName  ) { 
+	public static void dropView(SqluckyConnector  dbc ,String schema ,String viewName  ) { 
 		Connection conn = dbc.getConn();  
 		String sql =  dbc.getExportDDL().exportDropView(schema, viewName);
 		Consumer< String >  caller = x ->{ 
@@ -161,7 +161,7 @@ public class MenuAction {
 	}
 	
 	// 删函数
-	public static void dropFunc(DbConnectionPo  dbc ,String schema ,String funcName  ) { 
+	public static void dropFunc(SqluckyConnector  dbc ,String schema ,String funcName  ) { 
 		Connection conn = dbc.getConn();  
 		String sql =  dbc.getExportDDL().exportDropFunction(schema, funcName);
 		Consumer< String >  caller = x ->{ 
@@ -172,7 +172,7 @@ public class MenuAction {
 	}
 
 	// 删函过程
-	public static void dropProc(DbConnectionPo  dbc ,String schema ,String funcName  ) { 
+	public static void dropProc(SqluckyConnector  dbc ,String schema ,String funcName  ) { 
 		Connection conn = dbc.getConn();  
 		String sql =  dbc.getExportDDL().exportDropProcedure(schema, funcName);
 		Consumer< String >  caller = x ->{ 
@@ -183,7 +183,7 @@ public class MenuAction {
 	}
 
 	// 删函触发器
-	public static void dropTrigger(DbConnectionPo  dbc ,String schema ,String funcName  ) { 
+	public static void dropTrigger(SqluckyConnector  dbc ,String schema ,String funcName  ) { 
 		Connection conn = dbc.getConn();  
 		String sql =  dbc.getExportDDL().exportDropTrigger(schema, funcName);
 		Consumer< String >  caller = x ->{ 

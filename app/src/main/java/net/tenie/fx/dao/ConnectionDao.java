@@ -5,20 +5,18 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.RsData;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.config.DBConns;
 import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.h2.H2Db;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ConnectionDao {
@@ -43,7 +41,7 @@ public class ConnectionDao {
 			for(int i = 0; i < size; i++) {
 				TreeItem<TreeNodePo> nopo = ls.get(i);
 				String name = nopo.getValue().getName();
-				DbConnectionPo  po = DBConns.get(name);
+				SqluckyConnector  po = DBConns.get(name);
 				int id = po.getId();
 				updateDataOrder(conn, id, i);
 			}
@@ -65,13 +63,13 @@ public class ConnectionDao {
 	/**
 	 * 查询
 	 */
-	public static  List<DbConnectionPo> recoverConnObj(Connection conn) {
+	public static  List<SqluckyConnector> recoverConnObj(Connection conn) {
 		String sql = "SELECT * FROM  CONNECTION_INFO ORDER BY ORDER_TAG";
-		List<DbConnectionPo> datas =  new ArrayList<DbConnectionPo>();
+		List<SqluckyConnector> datas =  new ArrayList<SqluckyConnector>();
 		try {
 		    List<RsData>  rs = DBTools.selectSql(conn, sql);
 		    for(RsData rd: rs) {
-		    	  DbConnectionPo po = new DbConnectionPo(
+		    	  SqluckyConnector po = new DbConnectionPo2(
 		    			  	rd.getString("CONN_NAME"),
 		    			  	rd.getString("DRIVER"), //DbVendor.getDriver(dbDriver.getValue()),
 							rd.getString("HOST"),
@@ -96,7 +94,7 @@ public class ConnectionDao {
 	}
 	
 	// 保存
-		public static DbConnectionPo createOrUpdate(Connection conn ,  DbConnectionPo po) {
+		public static SqluckyConnector createOrUpdate(Connection conn ,  SqluckyConnector po) {
 			Integer id =          po.getId(); 
 		    String connName =     po.getConnName();
 		    String user =         po.getUser();

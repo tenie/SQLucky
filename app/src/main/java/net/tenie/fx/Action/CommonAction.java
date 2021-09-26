@@ -3,8 +3,6 @@ package net.tenie.fx.Action;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -13,7 +11,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.window.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -25,7 +22,6 @@ import com.jfoenix.controls.JFXButton;
 import javafx.scene.input.MouseEvent;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.AppWindowComponentGetter;
@@ -33,20 +29,15 @@ import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
-import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.DataViewTab;
-import net.tenie.fx.component.container.MenuBarContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
-import net.tenie.fx.factory.DBInfoTreeContextMenu;
-import net.tenie.fx.main.MainMyDB;
 import net.tenie.fx.main.Restart;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -742,7 +733,7 @@ public class CommonAction {
 	}
 
 	// 连接测试
-	public static boolean isAliveTestAlert(DbConnectionPo connpo, Button testBtn) {
+	public static boolean isAliveTestAlert(SqluckyConnector connpo, Button testBtn) {
 		Thread t = new Thread() {
 			public void run() {
 				connpo.getConn();
@@ -1111,10 +1102,10 @@ public class CommonAction {
 	
 	
 	// 获取当前连接下拉选值的对应连接对象
-	public static DbConnectionPo getDbConnectionPoByComboBoxDbConnName() {
+	public static SqluckyConnector getDbConnectionPoByComboBoxDbConnName() {
 		var name = CommonAction.getComboBoxDbConnName();
 		if(StrUtils.isNotNullOrEmpty(name)) {
-			DbConnectionPo dpov = DBConns.get(name);
+			SqluckyConnector dpov = DBConns.get(name);
 			return dpov;
 		}
 		return null; 

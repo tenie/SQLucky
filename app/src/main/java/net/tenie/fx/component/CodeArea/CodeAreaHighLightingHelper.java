@@ -68,13 +68,25 @@ public class CodeAreaHighLightingHelper {
 	}
 	
 	private Pattern getPattern(String patternString) { 
-       Pattern pattern = Pattern.compile(patternString  );
+	   Pattern pattern = null;
+	   try {
+		    pattern = Pattern.compile(patternString  );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+      
        return pattern;
     }
     
 	private Pattern getPattern() { 
     	String patternString = getPatternString("");
-        Pattern pattern = Pattern.compile(patternString  );
+    	Pattern pattern = null;
+    	try {
+    		pattern = Pattern.compile(patternString  );
+		} catch (Exception e) {
+		    e.printStackTrace();
+		}
+        
         return pattern;
      }
  
@@ -83,7 +95,7 @@ public class CodeAreaHighLightingHelper {
     	String mypatternString = "|(?<FINDWORD>(" + str.toUpperCase() + "))"; 
     	mypatternString = getPatternString(mypatternString); 
     	Pattern pattern = getPattern(mypatternString); 
-    	
+    	if(pattern == null ) return null;
     	Matcher matcher = pattern.matcher(text.toUpperCase());
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder
@@ -109,8 +121,9 @@ public class CodeAreaHighLightingHelper {
     }
     
     public   StyleSpans<Collection<String>> findErrorWord(String preTxt , String sufTxt, String errTxt){
-    	var PATTERN = getPattern();
-    	Matcher matcher = PATTERN.matcher(preTxt.toUpperCase());
+    	var pattern = getPattern();
+    	if(pattern == null ) return null;
+    	Matcher matcher = pattern.matcher(preTxt.toUpperCase());
         int lastKwEnd = 0;
         var spansBuilder  = new StyleSpansBuilder<Collection<String>>();
         while(matcher.find()) {
@@ -135,7 +148,7 @@ public class CodeAreaHighLightingHelper {
         spansBuilder.add(Collections.singleton("errorword"), errTxt.length());
         
         // 后半部分
-        matcher = PATTERN.matcher(sufTxt.toUpperCase());  
+        matcher = pattern.matcher(sufTxt.toUpperCase());  
         lastKwEnd = 0; 
         while(matcher.find()) {
             String styleClass =
@@ -164,13 +177,13 @@ public class CodeAreaHighLightingHelper {
     	try {
     		if(codeArea.getText().length() > 0) {
     			StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
+    			if(highlighting == null ) return;
     			Platform.runLater(() -> {  
             		 codeArea.setStyleSpans(0, highlighting);
     			});    	    	
         	}
 		} catch (Exception e) {
 			e.printStackTrace();
-			MyAlert.errorAlert(e.getMessage());
 		} 
     	
     }
@@ -185,7 +198,6 @@ public class CodeAreaHighLightingHelper {
         		
 		} catch (Exception e) {
 			e.printStackTrace();
-			MyAlert.errorAlert(e.getMessage());
 		} 
     	
     }  
@@ -199,8 +211,9 @@ public class CodeAreaHighLightingHelper {
     }
     
     private StyleSpans<Collection<String>> computeHighlighting(String text) {
-    	var PATTERN = getPattern();
-        Matcher matcher = PATTERN.matcher(text.toUpperCase());
+    	var pattern = getPattern();
+    	if(pattern == null ) return null;
+        Matcher matcher = pattern.matcher(text.toUpperCase());
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder
                 = new StyleSpansBuilder<>();

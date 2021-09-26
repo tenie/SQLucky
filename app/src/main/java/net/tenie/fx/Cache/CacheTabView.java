@@ -13,12 +13,16 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.container.DataViewTab;
 
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class CacheTabView {
 	private static Logger logger = LogManager.getLogger(CacheTabView.class);
 	private static Map<String, DataViewTab> tabViews = new HashMap<>();
@@ -70,7 +74,7 @@ public class CacheTabView {
 		}
 		return "";
 	}
-//	Connection  dbconns 
+	
 	public static Connection  getDbConn(String id) {
 		DataViewTab dvt = getDataViewTab(id);
 		if(dvt != null) {
@@ -78,8 +82,8 @@ public class CacheTabView {
 		}
 		return null;
 	}
-//	 DbConnectionPo dpo
-	public static DbConnectionPo  getDbConnection(String id) {
+	
+	public static SqluckyConnector  getDbConnection(String id) {
 		DataViewTab dvt = getDataViewTab(id);
 		if(dvt != null) {
 			return dvt.getDbConnection();

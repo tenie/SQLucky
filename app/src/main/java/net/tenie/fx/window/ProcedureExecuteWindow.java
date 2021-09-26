@@ -20,8 +20,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
@@ -80,7 +80,7 @@ public class ProcedureExecuteWindow {
 				pfpo.setTypeName(type);
 				
 			} 
-			DbConnectionPo dpo = DBConns.getCurrentConnectPO(); 
+			SqluckyConnector dpo = DBConns.getCurrentConnectPO(); 
 			RunSQLHelper.callProcedure(procedureName, dpo, fields);
 		 
 			stage.close();

@@ -21,7 +21,6 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -30,21 +29,16 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.Action.RsVal;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.Action.myEvent;
 import net.tenie.fx.Cache.CacheTabView;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
-//import net.tenie.fx.PropertyPo.DataTabDataPo;
-//import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.AllButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.CodeArea.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.window.ModalDialog;
@@ -64,7 +58,7 @@ public class DataViewTab {
 	private String sqlStr;
 	private String connName;
 	private boolean isLock = false;
-	private DbConnectionPo dbConnection;
+	private SqluckyConnector dbConnection;
 	// sql执行时间
 	private double execTime = 0;
 	// 行数
@@ -340,7 +334,7 @@ public class DataViewTab {
 					} else {
 						// 调用无参数的存储过程
 						caller = x -> {
-							DbConnectionPo dpo = DBConns.getCurrentConnectPO(); 
+							SqluckyConnector dpo = DBConns.getCurrentConnectPO(); 
 							RunSQLHelper.callProcedure(name, dpo, fields);
 						};
 						ModalDialog.showExecWindow("Run Procedure", name, caller);
@@ -349,7 +343,7 @@ public class DataViewTab {
 
 				} else {
 					caller = x -> {
-						DbConnectionPo dpo = DBConns.getCurrentConnectPO();
+						SqluckyConnector dpo = DBConns.getCurrentConnectPO();
 						String sql = dpo.getExportDDL().exportCallFuncSql(x);
 						RunSQLHelper.runSQLMethodRefresh(dpo, sql, null, false);
 					};
@@ -597,11 +591,11 @@ public class DataViewTab {
 		this.isLock = isLock;
 	}
 
-	public DbConnectionPo getDbConnection() {
+	public SqluckyConnector getDbConnection() {
 		return dbConnection;
 	}
 
-	public void setDbConnection(DbConnectionPo dbConnection) {
+	public void setDbConnection(SqluckyConnector dbConnection) {
 		this.dbConnection = dbConnection;
 	}
 	
@@ -628,7 +622,7 @@ public class DataViewTab {
 		Connection conn =  CacheTabView.getDbConn(tableId); //  CacheTableDate.getDBConn(tableId);   
 				
 		var alldata =   CacheTabView.getTabData(tableId); //CacheTableDate.getData(tableId);
-		DbConnectionPo  dbc = DBConns.get(connName); 
+		SqluckyConnector  dbc = DBConns.get(connName); 
 		
 //		Button saveBtn = ComponentGetter.dataPaneSaveBtn();
 		var dataTableView = dataTableView();
@@ -645,7 +639,7 @@ public class DataViewTab {
 	
 	public static RsVal tableInfo(String tableName, String connName, Connection conn ) {
 
-		DbConnectionPo  dbc = DBConns.get(connName);  
+		SqluckyConnector  dbc = DBConns.get(connName);  
 		RsVal rv = new RsVal();
 		rv.conn = conn; 
 		rv.dbconnPo = dbc;   

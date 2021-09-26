@@ -1,7 +1,6 @@
 package net.tenie.fx.component.container;
 
 import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXTextField;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -11,17 +10,20 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.TreeItem.MyTreeItem;
-import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.lib.tools.IconGenerator;
 
  
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class DBinfoTreeFilter {
 	 AnchorPane filter;
 	 private  ObservableList<TreeItem<TreeNodePo>> temp  = FXCollections.observableArrayList();
@@ -143,7 +145,7 @@ public class DBinfoTreeFilter {
 				ObservableList<TreeItem<TreeNodePo>> vals = cip.getSchemaNode().getChildren();
 				
 				ConnItemContainer tempcip = new ConnItemContainer(cip.getConnpo());
-				DbConnectionPo connpo = tempcip.getConnpo();
+				SqluckyConnector connpo = tempcip.getConnpo();
 				 
 				// 2. 遍历每个schema节点
 				for (int i = 0; i < vals.size(); i++) {

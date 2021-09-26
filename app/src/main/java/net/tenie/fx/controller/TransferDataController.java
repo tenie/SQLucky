@@ -37,7 +37,6 @@ import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -47,6 +46,7 @@ import net.tenie.fx.component.CodeArea.MyCodeArea;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.GenerateSQLString;
@@ -381,14 +381,15 @@ public class TransferDataController implements Initializable {
 	}
 	
 	// 复制一个链接对象
-	private DbConnectionPo getNewDbConnectionPo(String dbName , String schema) {
-		DbConnectionPo soDbpo = DBConns.get(dbName);
-		DbConnectionPo nDBpo  = DbConnectionPo.copyObj(soDbpo, schema);
+	private SqluckyConnector getNewDbConnectionPo(String dbName , String schema) {
+		SqluckyConnector soDbpo = DBConns.get(dbName);
+		//todo
+		SqluckyConnector nDBpo  = soDbpo.copyObj(soDbpo, schema);
 		return nDBpo;
 	}
 	
-	private DbConnectionPo soDbpo;
-	private DbConnectionPo tarDbpo;
+	private SqluckyConnector soDbpo;
+	private SqluckyConnector tarDbpo;
 //	private Connection  soConn;
 //	private Connection  tarConn;
 	
@@ -940,7 +941,7 @@ public class TransferDataController implements Initializable {
 		}
 	}
 	
-	private String getTableName(String sch, String tn ,DbConnectionPo  dbpo) {
+	private String getTableName(String sch, String tn ,SqluckyConnector  dbpo) {
 		String rs = sch+"."+tn;
 		if(   DbVendor.h2.toUpperCase().equals( dbpo.getDbVendor().toUpperCase() ) 
 				   || DbVendor.sqlite.toUpperCase().equals(dbpo.getDbVendor().toUpperCase()) ){

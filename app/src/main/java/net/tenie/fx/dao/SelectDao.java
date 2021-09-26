@@ -20,13 +20,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Cache.CacheTabView;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -59,7 +59,7 @@ public class SelectDao {
 	}
 	
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void selectSql(DbConnectionPo dpo , String sql, int limit,
+	public static void selectSql(SqluckyConnector dpo , String sql, int limit,
 			String tableid , DataViewTab dvt ) throws SQLException {
 //		DbTableDatePo dpo = new DbTableDatePo();
 		Connection conn =dpo.getConn();
@@ -275,7 +275,7 @@ public class SelectDao {
 	
 
 	private static ObservableList<ObservableList<StringProperty>>  execRs(int limit, ResultSet rs, ObservableList<SqlFieldPo> fpo,
-			String tableid, DbConnectionPo dpo) throws SQLException {
+			String tableid, SqluckyConnector dpo) throws SQLException {
 		int idx = 1;
 		int rowNo = 0;
 //		ObservableList<SqlFieldPo> fpo = dpo.getFields();
@@ -295,20 +295,17 @@ public class SelectDao {
 					val = new SimpleStringProperty("<null>");
 				}else {
 					if (CommonUtility.isDateTime(dbtype)) {
-//						java.sql.Timestamp ts = rs.getTimestamp(i + 1);
-//						Date d = new Date(ts.getTime());
-//						String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
-//						val = new SimpleStringProperty(v);
 						//sqlite 
-						if(dpo.isSqlite()) {
-							var v = rs.getString(i + 1);
-							val = new SimpleStringProperty(v);
-						}else {
-							java.sql.Date dv= rs.getDate(i + 1);
-							Date d = new Date(dv.getTime());
-							String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
-							val = new SimpleStringProperty(v);
-						}
+//						if(dpo.isSqlite()) {
+//							var v = rs.getString(i + 1);
+//							val = new SimpleStringProperty(v);
+//						}else {
+//							java.sql.Date dv= rs.getDate(i + 1);
+//							Date d = new Date(dv.getTime());
+//							String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
+//							val = new SimpleStringProperty(v);
+//						}
+					val = 	dpo.DateToStringStringProperty(rs.getDate(i + 1));
 						
 					} else {
 						String temp = rs.getString(i+1);
@@ -322,7 +319,6 @@ public class SelectDao {
 			}
 
 			vals.add(new SimpleStringProperty(rn + ""));
-//			dpo.addData(vals);
 			allDatas.add(vals);
 
 			if (idx == limit)
@@ -374,7 +370,7 @@ public class SelectDao {
 
 	
 	
-	private static ObservableList<ObservableList<StringProperty>>   execRs(ResultSet rs, ObservableList<SqlFieldPo> fpo, String tableid, DbConnectionPo dpo)
+	private static ObservableList<ObservableList<StringProperty>>   execRs(ResultSet rs, ObservableList<SqlFieldPo> fpo, String tableid, SqluckyConnector dpo)
 			throws SQLException {
 		return execRs(Integer.MAX_VALUE, rs, fpo, tableid, dpo);
 	}

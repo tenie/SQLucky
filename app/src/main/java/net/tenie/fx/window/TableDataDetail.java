@@ -20,10 +20,9 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Cache.CacheTabView;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.dao.SelectDao;
 import net.tenie.lib.tools.IconGenerator;
@@ -35,7 +34,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * */
 public class TableDataDetail {
 	
-	public static void showTableFieldType(DbConnectionPo  dbc ,String schema ,String tablename ) { 
+	public static void showTableFieldType(SqluckyConnector  dbc ,String schema ,String tablename ) { 
 		String sql = "SELECT * FROM "+ tablename + " WHERE 1=2";
 		try {
 			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);  

@@ -15,13 +15,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.TreeItem.TreeObjCache;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.Db2ErrorCode;
@@ -321,7 +321,7 @@ public class ButtonAction {
 	// 获取tree 节点中的 table 的sql
 	public static void findTable() {
 		RsVal rv = DataViewTab.tableInfo();
-		DbConnectionPo dbcp = rv.dbconnPo;
+		SqluckyConnector dbcp = rv.dbconnPo;
 		if(dbcp == null ) {
 			return ;
 		}

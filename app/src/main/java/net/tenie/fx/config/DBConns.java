@@ -1,23 +1,25 @@
 package net.tenie.fx.config;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
-import com.jfoenix.controls.JFXComboBox;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import net.tenie.fx.PropertyPo.DbConnectionPo;
 import net.tenie.lib.tools.IconGenerator;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public final class DBConns {
 	private static LinkedHashSet<String> set = new LinkedHashSet<String>();
-	private static Map<String, DbConnectionPo> dbs = new HashMap<String, DbConnectionPo>();
+	private static Map<String, SqluckyConnector> dbs = new HashMap<String, SqluckyConnector>();
 	private static ComboBox<Label> cb;
 
 	public static void flushChoiceBoxGraphic() {
@@ -25,7 +27,7 @@ public final class DBConns {
 			Platform.runLater(() -> {
 				cb.getItems().forEach(item -> {
 					if (item.getText().length() > 0) {
-						DbConnectionPo po = dbs.get(item.getText());
+						SqluckyConnector po = dbs.get(item.getText());
 						if (po != null && po.isAlive()) {
 							item.setGraphic(IconGenerator.svgImageDefActive("link"));
 						} else {
@@ -78,7 +80,7 @@ public final class DBConns {
 		ObservableList<Label> aliveList = FXCollections.observableArrayList();
 		aliveList.add(new Label(""));
 		for (String key : DBConns.allNames()) {
-			DbConnectionPo po = dbs.get(key);
+			SqluckyConnector po = dbs.get(key);
 			String name = po.getConnName();
 			Label lb = new Label(name);
 			if (po.isAlive()) {
@@ -104,7 +106,7 @@ public final class DBConns {
 		}
 	}
 
-	public static void add(String name, DbConnectionPo o) {
+	public static void add(String name, SqluckyConnector o) {
 		set.add(name);
 		dbs.put(name, o);
 		flushChoiceBox(cb);
@@ -133,7 +135,7 @@ public final class DBConns {
 	
 	
 
-	public static DbConnectionPo get(String name) {
+	public static SqluckyConnector get(String name) {
 		return dbs.get(name);
 	}
 
@@ -141,7 +143,7 @@ public final class DBConns {
 		return set;
 	}
 
-	public static Map<String, DbConnectionPo> all() {
+	public static Map<String, SqluckyConnector> all() {
 		return dbs;
 	}
 
@@ -170,7 +172,7 @@ public final class DBConns {
 		}
 		return str;
 	}
-	public static DbConnectionPo getCurrentConnectPO() {
+	public static SqluckyConnector getCurrentConnectPO() {
 		String connName = getCurrentConnectName();
 		return DBConns.get(connName);
 	}
