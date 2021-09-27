@@ -8,8 +8,7 @@ import java.sql.Statement;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-//import net.tenie.fx.PropertyPo.CacheTableDate;
-import net.tenie.fx.PropertyPo.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 
 /*   @author tenie */
 public class DmlDdlDao {

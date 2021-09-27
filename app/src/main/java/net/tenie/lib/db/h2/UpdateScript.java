@@ -2,7 +2,7 @@ package net.tenie.lib.db.h2;
 
 import java.sql.Connection;
 
-import net.tenie.lib.db.DBTools;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
 
 public class UpdateScript {
 	

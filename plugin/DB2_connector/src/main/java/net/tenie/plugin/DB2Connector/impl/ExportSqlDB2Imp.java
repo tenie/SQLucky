@@ -1,4 +1,4 @@
-package net.tenie.lib.db;
+package net.tenie.plugin.DB2Connector.impl;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import java.util.List;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.fx.config.DbVendor;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 /* 
  *  @author tenie 
  *  
@@ -402,7 +402,7 @@ public class ExportSqlDB2Imp implements ExportDDL {
 
 	@Override
 	public String getDbVendor() { 
-		return DbVendor.db2;
+		return "db2";
 	}
 
 

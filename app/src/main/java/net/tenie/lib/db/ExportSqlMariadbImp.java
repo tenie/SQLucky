@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
+import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
 import net.tenie.fx.config.DbVendor;
 
 /* 
@@ -21,13 +23,13 @@ import net.tenie.fx.config.DbVendor;
 public class ExportSqlMariadbImp implements ExportDDL {
 	private static Logger logger = LogManager.getLogger(ExportSqlMariadbImp.class);
 
-	private FetchDB2InfoImp fdb2;
+	private FetchDBInfoCommonTools fdb2;
 
 	private List<TablePo> allTableObjs = new ArrayList<>();
 	private List<TablePo> allViewObjs = new ArrayList<>();
 
 	public ExportSqlMariadbImp() {
-		fdb2 = new FetchDB2InfoImp();
+		fdb2 = new FetchDBInfoCommonTools();
 
 	}
 
@@ -506,7 +508,7 @@ public class ExportSqlMariadbImp implements ExportDDL {
 	}
 	@Override
 	public String getDbVendor() { 
-		return DbVendor.mariadb;
+		return "mariadb";
 	}
 	@Override
 	public String exportCallFuncSql(String funcStr) {

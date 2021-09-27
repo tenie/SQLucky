@@ -10,6 +10,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
@@ -17,73 +19,77 @@ import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 public abstract class DbConnector implements SqluckyConnector { 
 
 	private static Logger logger = LogManager.getLogger(DbConnector.class);
-	private Integer id;
-	private String connName; // 连接名称
-	private String host;
-	private String port;
-	private String driver;
-	private String dbVendor;
-	private String defaultSchema;
-	private String dbName;
-	private String user;
-	private String passWord;
-	private String jdbcUrl;
-	private String otherParameter; // 可以为空,
-	private String comment; // 可以为空,
-	private Date createdAt;
-	private Date updatedAt;
-	private Integer recordVersion;
-	private Connection conn;
-	private Map<String, DbSchemaPo> schemas;
-	private ExportDDL exportDDL;
+//	private Integer id;
+//	private String connName; // 连接名称
+//	private String host;
+//	private String port;
+//	private String driver;
+//	private String dbVendor;
+//	private String defaultSchema;
+//	private String dbName;
+//	private String user;
+//	private String passWord;
+//	private String jdbcUrl;
+//	private String otherParameter; // 可以为空,
+//	private String comment; // 可以为空,
+//	private Date createdAt;
+//	private Date updatedAt;
+//	private Integer recordVersion;
+//	private Connection conn;
+	private DBConnectorInfoPo connPo;
+	
+	
 	
 	private String SQLITE_DATABASE = "SQLITE DATABASE";
 
 	
 
-	public DbConnector copyObj(SqluckyConnector sopo, String schema) {
-		DbConnector val = null;
-//				new DbConnector(  
-//				sopo.getConnName()+"Copy",
-//				sopo.getDriver(),
-//				sopo.getHost(),
-//				sopo.getPort(),
-//				sopo.getUser(),
-//				sopo.getPassWord(),
-//				sopo.getDbVendor(),
-//				schema,
-//				sopo.getDbName()
-//				);
-//		
-		return val;
-	}
+//	public DbConnector copyObj(SqluckyConnector sopo, String schema) {
+//		DbConnector val = null;
+////				new DbConnector(  
+////				sopo.getConnName()+"Copy",
+////				sopo.getDriver(),
+////				sopo.getHost(),
+////				sopo.getPort(),
+////				sopo.getUser(),
+////				sopo.getPassWord(),
+////				sopo.getDbVendor(),
+////				schema,
+////				sopo.getDbName()
+////				);
+////		
+//		return val;
+//	}
 	 
  
-	
-
-	public DbConnector(String connName, String driver, String host, String port, String user, String passWord,
-			String dbVendor, String defaultSchema,String dbName
-
-	) {
+	public DbConnector(DBConnectorInfoPo connPo) {
 		super();
-		this.connName = connName;
-		this.host = host;
-		this.port = port;
-//		this.defaultSchema = defaultSchema.trim();
-		this.dbVendor = dbVendor;
-//		if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			this.defaultSchema = "public";
-//		} else {
-//			this.defaultSchema = defaultSchema.trim();
-//		}
-		this.defaultSchema = defaultSchema.trim();
-		this.driver = driver;
-		this.user = user;
-		this.passWord = passWord;
-		this.dbName = dbName;
-
-//		setExportDDL(dbVendor);
+		this.connPo = connPo;
 	}
+
+//	public DbConnector(String connName, String driver, String host, String port, String user, String passWord,
+//			String dbVendor, String defaultSchema,String dbName
+//
+//	) {
+//		super();
+//		this.connName = connName;
+//		this.host = host;
+//		this.port = port;
+////		this.defaultSchema = defaultSchema.trim();
+//		this.dbVendor = dbVendor;
+////		if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
+////			this.defaultSchema = "public";
+////		} else {
+////			this.defaultSchema = defaultSchema.trim();
+////		}
+//		this.defaultSchema = defaultSchema.trim();
+//		this.driver = driver;
+//		this.user = user;
+//		this.passWord = passWord;
+//		this.dbName = dbName;
+//
+////		setExportDDL(dbVendor);
+//	}
 
 	// 正在连接中, 原子操作
 	private AtomicBoolean connectionIng = new AtomicBoolean(false);
@@ -98,7 +104,7 @@ public abstract class DbConnector implements SqluckyConnector {
 	// 判断是否连接着
 	public boolean isAlive() {
 		boolean tf = false; 
-		if (conn != null) {
+		if (this.connPo.getConn() != null) {
 			tf = true;
 		}
 		return tf;
@@ -127,10 +133,10 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 
 	public Connection getConn() {
-		if (conn == null) {
-			logger.info(driver);
+		if (this.connPo.getConn() == null) {
+			logger.info(this.connPo.getDriver());
 			logger.info(getJdbcUrl());
-			logger.info(user);
+			logger.info(this.connPo.getUser());
 //			logger.info(passWord);
 //			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 //				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
@@ -141,15 +147,15 @@ public abstract class DbConnector implements SqluckyConnector {
 //			}			
 		}
 
-		return conn;
+		return this.connPo.getConn();
 	}
 
 	// 关闭连接
 	public void closeConn() {
 		try {
-			if (conn != null) {
-				conn.close();
-				conn = null;
+			if (this.connPo.getConn() != null) {
+				this.connPo.getConn().close();
+				this.connPo.setConn(null);
 			}
 
 		} catch (SQLException e) {
@@ -159,120 +165,129 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 
 	public String getDbVendor() {
-		return dbVendor;
+		return this.connPo.getDbVendor();
 	}
 
 	public void setDbVendor(String dbVendor) {
-		this.dbVendor = dbVendor;
+//		this.dbVendor = dbVendor;
+		this.connPo.setDbVendor(dbVendor);
 	}
 
 	public String getUser() {
-		return user;
+		return this.connPo.getUser();
 	}
 
 	public void setUser(String user) {
-		this.user = user;
+//		this.user = user;
+		this.connPo.setUser(user);
 	}
 
 	public Integer getId() {
-		return id;
+		return this.connPo.getId();
 	}
 
 	public void setId(Integer id) {
-		this.id = id;
+//		this.id = id;
+		this.connPo.setId(id);
 	}
 
 	public String getPassWord() {
-		return passWord;
+		return this.connPo.getPassWord();
 	}
 
 	public void setPassWord(String passWord) {
-		this.passWord = passWord;
+//		this.passWord = passWord;
+		this.connPo.setPassWord(passWord);
 	}
 
 	public String getComment() {
-		return comment;
+		return this.connPo.getComment();
 	}
 
 	public void setComment(String comment) {
-		this.comment = comment;
+//		this.comment = comment;
+		this.connPo.setComment(comment);
 	}
 
 	public String getJdbcUrl() {
-		if (jdbcUrl == null || jdbcUrl.length() == 0) {
-			if (this.isH2()) {
-				jdbcUrl = "jdbc:h2:" + host;
-				defaultSchema = "PUBLIC";
-			}else if (this.isSqlite()) {
-				jdbcUrl = "jdbc:sqlite:" + host;
-				defaultSchema = SQLITE_DATABASE;
-			} else if (this.isPostgresql()) {
-				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + dbName;
-			} else {
-				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + defaultSchema;
-				if (otherParameter != null && otherParameter.length() > 0) {
-					jdbcUrl += "?" + getOtherParameter();
-				}
-			}
-
-		}
-
-		logger.info(jdbcUrl);
-
-		return jdbcUrl;
+		return this.connPo.getJdbcUrl();
+//		if (jdbcUrl == null || jdbcUrl.length() == 0) {
+//			if (this.isH2()) {
+//				jdbcUrl = "jdbc:h2:" + host;
+//				defaultSchema = "PUBLIC";
+//			}else if (this.isSqlite()) {
+//				jdbcUrl = "jdbc:sqlite:" + host;
+//				defaultSchema = SQLITE_DATABASE;
+//			} else if (this.isPostgresql()) {
+//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + dbName;
+//			} else {
+//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + defaultSchema;
+//				if (otherParameter != null && otherParameter.length() > 0) {
+//					jdbcUrl += "?" + getOtherParameter();
+//				}
+//			}
+//
+//		}
+//
+//		logger.info(jdbcUrl);
+//
+//		return jdbcUrl;
 	}
 
-	public void setJdbcUrl(String jdbcUrl) {
-		this.jdbcUrl = jdbcUrl;
-	}
+//	public void setJdbcUrl(String jdbcUrl) {
+////		this.jdbcUrl = jdbcUrl;
+//		this.connPo.setJdbcUrl(jdbcUrl);
+//	}
 
-	public String getOtherParameter() {
-		return otherParameter;
-	}
-
-	public void setOtherParameter(String otherParameter) {
-		this.otherParameter = otherParameter;
-	}
+//	public String getOtherParameter() {
+//		return otherParameter;
+//	}
+//
+//	public void setOtherParameter(String otherParameter) {
+//		this.otherParameter = otherParameter;
+//	}
 
 	public String getDriver() {
-		return driver;
+//		return driver;
+		return this.connPo.getDriver();
 	}
 
 	public void setDriver(String driver) {
-		this.driver = driver;
+//		this.driver = driver;
+		this.connPo.setDriver(driver);
 	}
 
 	public String getConnName() {
-		return connName;
+		return this.connPo.getConnName();
 	}
 
-	public void setConnName(String connName) {
-		this.connName = connName;
-	}
+//	public void setConnName(String connName) {
+////		this.connName = connName;
+//	}
 
 	public String getHost() {
-		return host;
+		return this.connPo.getHost();
 	}
 
-	public void setHost(String host) {
-		this.host = host;
-	}
+//	public void setHost(String host) {
+//		this.host = host;
+//	}
 
 	public String getPort() {
-		return port;
+		return this.connPo.getPort();
 	}
 
-	public void setPort(String port) {
-		this.port = port;
-	}
+//	public void setPort(String port) {
+//		this.port = port;
+//	}
 
 	public String getDefaultSchema() {
-		return defaultSchema;
+		return this.connPo.getDefaultSchema();
 	}
 
-	public void setDefaultSchema(String defaultSchema) {
-		this.defaultSchema = defaultSchema;
-	}
+//	public void setDefaultSchema(String defaultSchema) {
+//		this.defaultSchema = defaultSchema;
+//	}
 
 //	public Map<String, DbSchemaPo> getSchemas() {
 //		try { 
@@ -316,40 +331,40 @@ public abstract class DbConnector implements SqluckyConnector {
 	
 
 	public void setSchemas(Map<String, DbSchemaPo> schemas) {
-		this.schemas = schemas;
+		this.connPo.setSchemas(schemas);// = schemas;
 	}
 
-	public Date getCreatedAt() {
-		return createdAt;
-	}
+//	public Date getCreatedAt() {
+//		return createdAt;
+//	}
+//
+//	public void setCreatedAt(Date createdAt) {
+//		this.createdAt = createdAt;
+//	}
+//
+//	public Date getUpdatedAt() {
+//		return updatedAt;
+//	}
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
+//	public void setUpdatedAt(Date updatedAt) {
+//		this.updatedAt = updatedAt;
+//	}
 
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-
-	public Integer getRecordVersion() {
-		return recordVersion;
-	}
-
-	public void setRecordVersion(Integer recordVersion) {
-		this.recordVersion = recordVersion;
-	}
+//	public Integer getRecordVersion() {
+//		return recordVersion;
+//	}
+//
+//	public void setRecordVersion(Integer recordVersion) {
+//		this.recordVersion = recordVersion;
+//	}
 
 	public ExportDDL getExportDDL() {
-		return exportDDL;
+		return this.connPo.getExportDDL();
 	}
 
-	public void setExportDDL(ExportDDL exportDDL) {
-		this.exportDDL = exportDDL;
-	}
+//	public void setExportDDL(ExportDDL exportDDL) {
+//		this.exportDDL = exportDDL;
+//	}
 
 	
 //	public ConnItemContainer getItemContainer() {
@@ -361,47 +376,53 @@ public abstract class DbConnector implements SqluckyConnector {
 //	}
 
 	public String getDbName() {
-		return dbName;
+		return this.connPo.getDbName();
 	}
 
-	public void setDbName(String dbName) {
-		this.dbName = dbName;
-	}
+//	public void setDbName(String dbName) {
+//		this.dbName = dbName;
+//	}
 
 	@Override
 	public String toString() {
-		return "DbConnectionPo [id=" + id + ", connName=" + connName + ", host=" + host + ", port=" + port + ", driver="
-				+ driver + ", dbVendor=" + dbVendor + ", defaultSchema=" + defaultSchema + ", user=" + user
-				+ ", passWord=" + passWord + ", jdbcUrl=" + jdbcUrl + ", otherParameter=" + otherParameter
-				+ ", comment=" + comment + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", recordVersion="
-				+ recordVersion + ", schemas=" + schemas + "]";
+		return this.connPo.toString();
+	}
+
+
+	public DBConnectorInfoPo getConnPo() {
+		return connPo;
+	}
+
+
+	public void setConnPo(DBConnectorInfoPo connPo) {
+		this.connPo = connPo;
 	}
 	
-	public boolean isSqlite() {
-//		if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			return true;
-//		}
-		return false;
-	}
+//	public boolean isSqlite() {
+////		if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
+////			return true;
+////		}
+//		return false;
+//	}
 	
-	public boolean isH2() {
-//		if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			return true;
-//		}
-		return false;
-	}
+//	public boolean isH2() {
+////		if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
+////			return true;
+////		}
+//		return false;
+//	}
 	
-	public boolean isPostgresql() {
-//		if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			return true;
-//		}
-		return false;
-	}
+//	public boolean isPostgresql() {
+////		if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
+////			return true;
+////		}
+//		return false;
+//	}
 
 //	@Override
 //	public SqluckyConnector copyObj(SqluckyConnector sopo, String schema) {
 //		// TODO Auto-generated method stub
 //		return null;
 //	}
-
+	
 }

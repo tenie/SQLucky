@@ -30,11 +30,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
-import javafx.scene.layout.Region;
-import net.tenie.fx.PropertyPo.DbTableDatePo;
 import net.tenie.fx.PropertyPo.SqlData;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
 import net.tenie.fx.Cache.CacheTabView;
@@ -47,11 +45,11 @@ import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.fx.config.DBConns;
-import net.tenie.fx.config.Db2ErrorCode;
-import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.factory.ButtonFactory;
@@ -59,7 +57,6 @@ import net.tenie.fx.factory.MenuFactory;
 import net.tenie.fx.factory.StringPropertyListValueFactory;
 import net.tenie.fx.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.tools.IconGenerator;
 
 
@@ -178,9 +175,10 @@ public class RunSQLHelper {
 				}
 			} catch (Exception e) {
 				msg = "failed : " + e.getMessage();
-				if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
-					msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
-				}
+//				if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
+//					msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
+//				}
+				msg += "\n"+dpo.translateErrMsg(msg);
 				SqlData sd = 	allsqls.get(i);
 				errObj.add(sd);
 			}
@@ -306,9 +304,10 @@ public class RunSQLHelper {
 		} catch (Exception e) { 
 			e.printStackTrace(); 
 			msg = "failed : " + e.getMessage();
-			if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
-				msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
-			}   
+//			if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
+//				msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
+//			}  
+			msg += "\n"+dpo.translateErrMsg(msg);
 		}
 		
 		if(StrUtils.isNotNullOrEmpty(msg)) {

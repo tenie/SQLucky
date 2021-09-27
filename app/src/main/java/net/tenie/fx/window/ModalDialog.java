@@ -2,9 +2,9 @@ package net.tenie.fx.window;
 
 import javafx.stage.*;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.main.MainMyDB;
 import net.tenie.lib.tools.IconGenerator;

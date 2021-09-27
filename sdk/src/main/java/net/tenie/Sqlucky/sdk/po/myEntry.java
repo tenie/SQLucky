@@ -1,4 +1,4 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.Sqlucky.sdk.po;
 
 /*   @author tenie */
 public class myEntry<K, V> {

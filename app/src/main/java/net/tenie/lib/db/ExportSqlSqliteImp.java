@@ -4,13 +4,14 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import net.tenie.fx.config.DbVendor;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
+import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 /* 
  *  * @author tenie 
@@ -18,13 +19,13 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  */
 public class ExportSqlSqliteImp implements ExportDDL {
  
-	private	FetchDB2InfoImp fdb2;
+	private	FetchDBInfoCommonTools fdbtool;
 	
 	private  List<TablePo> allTableObjs = new ArrayList<>();
 	private  List<TablePo> allViewObjs = new ArrayList<>();
 	
 	public ExportSqlSqliteImp() { 
-		fdb2  =new FetchDB2InfoImp(); 
+		fdbtool  =new FetchDBInfoCommonTools(); 
 	}
 	 
 	/**
@@ -185,37 +186,37 @@ public class ExportSqlSqliteImp implements ExportDDL {
 
 	@Override
 	public String exportCreateView(Connection conn, String schema, String obj) {
-		String ddl = fdb2.exportView(conn, schema, obj);
+		String ddl = fdbtool.exportView(conn, schema, obj);
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateFunction(Connection conn, String schema, String obj) {
-		String ddl = fdb2.exportFunction(conn,  schema, obj);
+		String ddl = fdbtool.exportFunction(conn,  schema, obj);
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateProcedure(Connection conn, String schema, String obj) {
-		String ddl = fdb2.exportProcedure(conn,  schema, obj);
+		String ddl = fdbtool.exportProcedure(conn,  schema, obj);
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateIndex(Connection conn, String schema, String obj) { 
-		String ddl = fdb2.exportIndex(conn,  schema, obj); 
+		String ddl = fdbtool.exportIndex(conn,  schema, obj); 
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateSequence(Connection conn, String schema, String obj) {
-		String ddl = fdb2.exportSeq(conn, schema,  obj);
+		String ddl = fdbtool.exportSeq(conn, schema,  obj);
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateTrigger(Connection conn, String schema, String obj) { 
-		String ddl = fdb2.exportTrigger(conn,  schema, obj);
+		String ddl = fdbtool.exportTrigger(conn,  schema, obj);
 		return ddl;
 	}
 
@@ -227,7 +228,7 @@ public class ExportSqlSqliteImp implements ExportDDL {
 
 	@Override
 	public String exportCreateForeignKey(Connection conn, String schema, String obj) {
-		String ddl = fdb2.exportForeignKey(conn,  schema, obj);
+		String ddl = fdbtool.exportForeignKey(conn,  schema, obj);
 		return ddl;
 	}
 
@@ -339,7 +340,7 @@ public class ExportSqlSqliteImp implements ExportDDL {
 
 	@Override
 	public String getDbVendor() { 
-		return DbVendor.sqlite;
+		return "sqlite";
 	}
 	
 	@Override

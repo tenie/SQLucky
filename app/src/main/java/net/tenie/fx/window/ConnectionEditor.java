@@ -109,10 +109,10 @@ public class ConnectionEditor {
 		String connNameStr = "Connection Name";
 		String userStr = "User";
 		String passwordStr = "Password";
-		String hostStr = "Host";
+		String hostStr = "Host or file";
 		String portStr = "Port";
 		String dbDriverStr = "DB Driver";
-		String defaultSchemaStr = "Schema";
+		String defaultSchemaStr = "Schema/DB Name";
 		Label lbconnNameStr = new Label(connNameStr);
 		Label lbdbDriverStr = new Label(dbDriverStr);
 		Label lbhostStr = new Label(hostStr);
@@ -171,7 +171,8 @@ public class ConnectionEditor {
 			if (f != null) { 
 			    fp = f.getAbsolutePath();
 			}
-			if (dbDriver.getValue().equals(DbVendor.h2)  ) {
+			//TODO
+			if (dbDriver.getValue().equals("H2")  ) { //DbVendor.h2
 				if(fp.endsWith(".mv.db"))
 					fp= fp.substring(0, fp.lastIndexOf(".mv.db"));
 				if(fp.endsWith(".trace.db"))
@@ -197,30 +198,31 @@ public class ConnectionEditor {
 
 		defaultSchema.setText(defaultSchemaVal);
 		defaultSchema.setDisable(false);
-			if (newValue.equals(DbVendor.h2) ||newValue.equals(DbVendor.sqlite) ) {
-				lbhostStr.setText("DB File");
-				host.setPromptText("DB File");
-				port.setDisable(true);
-
-				defaultSchema.setText("PUBLIC");
-				defaultSchema.setDisable(true);
-				h2FilePath.setVisible(true);
-				
-			}else if( newValue.equals(DbVendor.postgresql)) {
-				lbdefaultSchemaStr.setText("DB Name");
-				defaultSchema.setPromptText("DB Name");
-				defaultSchema.setText( dbName); 
-				
-			}
+//			if (newValue.equals(DbVendor.h2) ||newValue.equals(DbVendor.sqlite) ) {
+//				lbhostStr.setText("DB File");
+//				host.setPromptText("DB File");
+//				port.setDisable(true);
+//
+//				defaultSchema.setText("PUBLIC");
+//				defaultSchema.setDisable(true);
+//				h2FilePath.setVisible(true);
+//				
+//			}
+//			else if( newValue.equals(DbVendor.postgresql)) {
+//				lbdefaultSchemaStr.setText("DB Name");
+//				defaultSchema.setPromptText("DB Name");
+//				defaultSchema.setText( dbName); 
+//				
+//			}
 			
 			
-			if (newValue.equals(DbVendor.sqlite) ) {
-				user.setDisable(true);
-				password.setDisable(true);
-			}else {
-				user.setDisable(false);
-				password.setDisable(false);
-			}
+//			if (newValue.equals(DbVendor.sqlite) ) {
+//				user.setDisable(true);
+//				password.setDisable(true);
+//			}else {
+//				user.setDisable(false);
+//				password.setDisable(false);
+//			}
 			
 		});
 
@@ -232,7 +234,8 @@ public class ConnectionEditor {
 
 		
 		// 方法
-		Function<String, SqluckyConnector> call = x -> { 
+		Function<String, SqluckyConnector> call = x -> {
+			var dbpo = DbVendor.dbConnPo(dbDriver.getValue()); 
 			String connName = connectionName.getText();
 			// check date
 			if (StrUtils.isNullOrEmpty(connName)) {
@@ -243,15 +246,15 @@ public class ConnectionEditor {
 				MyAlert.errorAlert( "db Driver is empty !");
 				return null;
 			}
-			if (StrUtils.isNullOrEmpty(host.getText())) {
-				if (dbDriver.getValue().equals(DbVendor.h2) || dbDriver.getValue().equals(DbVendor.sqlite)) {
+			if (StrUtils.isNullOrEmpty(host.getText())) { 
+				if (dbpo.getJdbcUrlIsFile()) {
 					MyAlert.errorAlert( "DB File is empty !");
 				} else {
 					MyAlert.errorAlert( "host is empty !");
 				} 
 				return null;
 			} 
-			if (!dbDriver.getValue().equals(DbVendor.h2) && !dbDriver.getValue().equals(DbVendor.sqlite) ) {
+			if (! dbpo.getJdbcUrlIsFile() ) {
 				if (StrUtils.isNullOrEmpty(port.getText())) {
 					MyAlert.errorAlert( "port is empty !");
 					return null;
@@ -264,16 +267,16 @@ public class ConnectionEditor {
 				return null;
 			}
 			
-			if ( ! dbDriver.getValue().equals(DbVendor.sqlite) ) {
-				if (StrUtils.isNullOrEmpty(user.getText())) {
-					MyAlert.errorAlert( "user is empty !");
-					return null;
-				}
-				if (StrUtils.isNullOrEmpty(password.getText())) {
-					MyAlert.errorAlert( "password is empty !");
-					return null;
-				}
-			}
+//			if ( ! dbDriver.getValue().equals(DbVendor.sqlite) ) {
+//				if (StrUtils.isNullOrEmpty(user.getText())) {
+//					MyAlert.errorAlert( "user is empty !");
+//					return null;
+//				}
+//				if (StrUtils.isNullOrEmpty(password.getText())) {
+//					MyAlert.errorAlert( "password is empty !");
+//					return null;
+//				}
+//			}
 			
 			if (StrUtils.isNullOrEmpty(connName)) {
 				MyAlert.errorAlert( "connection name is empty !");

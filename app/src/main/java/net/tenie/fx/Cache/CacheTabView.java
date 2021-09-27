@@ -14,7 +14,7 @@ import javafx.scene.control.ButtonBase;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.fx.component.container.DataViewTab;
 
 

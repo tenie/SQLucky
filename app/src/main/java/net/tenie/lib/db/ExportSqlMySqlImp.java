@@ -11,8 +11,11 @@ import org.apache.logging.log4j.Logger;
 
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.fx.PropertyPo.RsData;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
+import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
 import net.tenie.fx.config.DbVendor;
 
 /* 
@@ -22,11 +25,11 @@ import net.tenie.fx.config.DbVendor;
 public class ExportSqlMySqlImp implements ExportDDL {
 	private static Logger logger = LogManager.getLogger(ExportSqlMySqlImp.class);
 
-	private FetchDB2InfoImp fdb2;
+	private FetchDBInfoCommonTools fdb2;
  
 
 	public ExportSqlMySqlImp() {
-		fdb2 = new FetchDB2InfoImp();
+		fdb2 = new FetchDBInfoCommonTools();
 
 	}
 
@@ -519,7 +522,7 @@ public class ExportSqlMySqlImp implements ExportDDL {
 	}
 	@Override
 	public String getDbVendor() { 
-		return DbVendor.mysql;
+		return "mysql";
 	}
 	@Override
 	public String exportCallFuncSql(String funcStr) {

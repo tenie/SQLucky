@@ -15,17 +15,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheTabView;
-import net.tenie.fx.PropertyPo.DbTableDatePo;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.TreeItem.TreeObjCache;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.fx.config.DBConns;
-import net.tenie.fx.config.Db2ErrorCode;
-import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DeleteDao;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
@@ -42,7 +40,7 @@ public class ButtonAction {
 		String tabName = CacheTabView.getTableName(tabId);
 //		ObservableList<ObservableList<StringProperty>> alldata = CacheTabView.getData(tabId);
 		Connection conn = CacheTabView.getDbConn(tabId);
-		var dpo = CacheTabView.getDbConnection(tabId);
+		SqluckyConnector  dpo = CacheTabView.getDbConnection(tabId);
 		if (tabName != null && tabName.length() > 0) {
 			// 字段
 			ObservableList<SqlFieldPo> fpos = CacheTabView.getFields(tabId);
@@ -75,9 +73,10 @@ public class ButtonAction {
 						saveBtn.setDisable(true);
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
 						String 	msg = "failed : " + e1.getMessage();
-						if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
-							msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
-						}
+						msg += "\n"+dpo.translateErrMsg(msg);
+//						if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
+//							msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
+//						}
 						val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
 						val.add(RunSQLHelper.createReadOnlyStringProperty(msg)); 
 						val.add(RunSQLHelper.createReadOnlyStringProperty("failed")); 

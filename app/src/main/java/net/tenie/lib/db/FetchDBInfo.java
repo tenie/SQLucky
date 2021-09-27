@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 
 import net.tenie.Sqlucky.sdk.po.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.fx.PropertyPo.myEntry;
+import net.tenie.Sqlucky.sdk.po.myEntry;
 
 import java.util.Set;
 /* 

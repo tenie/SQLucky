@@ -10,18 +10,20 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javafx.beans.property.StringProperty;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.fx.config.DbVendor;
-import net.tenie.lib.db.ExportSqlDB2Imp;
-import net.tenie.lib.db.Dbinfo;
 import net.tenie.lib.db.ExportDefaultImp;
 import net.tenie.lib.db.ExportSqlH2Imp;
 import net.tenie.lib.db.ExportSqlMariadbImp;
 import net.tenie.lib.db.ExportSqlMySqlImp;
 import net.tenie.lib.db.ExportSqlSqliteImp;
+import net.tenie.plugin.DB2Connector.ExportSqlDB2Imp;
 
 /**
  * 
@@ -414,6 +416,12 @@ public class DbConnectionPo2 implements SqluckyConnector {
 
 	@Override
 	public SqluckyConnector copyObj(SqluckyConnector sopo, String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public StringProperty DateToStringStringProperty(Date val) {
 		// TODO Auto-generated method stub
 		return null;
 	}

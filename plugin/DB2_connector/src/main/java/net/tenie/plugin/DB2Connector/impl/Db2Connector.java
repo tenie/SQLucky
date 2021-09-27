@@ -1,6 +1,8 @@
 package net.tenie.plugin.DB2Connector.impl;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,8 +19,10 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
@@ -28,24 +32,106 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  *
  */
 public class Db2Connector extends DbConnector {
-
-	public Db2Connector(String connName, String driver, String host, String port, String user, String passWord,
-			String dbVendor, String defaultSchema, String dbName) {
-		super(connName, driver, host, port, user, passWord, dbVendor, defaultSchema, dbName);
-		// TODO Auto-generated constructor stub
-	}
-
-	@Override
-	public Map<String, DbSchemaPo> getSchemas() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+ 
+	
+	public Db2Connector(DBConnectorInfoPo connPo) {
+		super(connPo);
+		ExportSqlDB2Imp ex = new ExportSqlDB2Imp();
+		getConnPo().setExportDDL( ex);
+	} 
+	 
 
 	@Override
 	public StringProperty DateToStringStringProperty(Date dv) {  
 		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
 		StringProperty val = new SimpleStringProperty(v);
+		
 		return val;
 	}
-	 
+
+//	@Override
+//	public void setExportDDL(ExportDDL exportDDL) {
+//		 getConnPo().setExportDDL(exportDDL);		
+//	}
+
+
+
+	@Override
+	public Map<String, DbSchemaPo> getSchemas() {
+		var schemas = getConnPo().getSchemas();
+		try {
+			if (schemas == null || schemas.isEmpty()) { 
+//				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
+//					Map<String, DbSchemaPo> sch = new HashMap<>();
+//					DbSchemaPo sp = new DbSchemaPo();
+//					sp.setSchemaName(SQLITE_DATABASE);
+//					sch.put(SQLITE_DATABASE, sp);
+//					schemas = sch;
+//				} else {
+//					schemas = Dbinfo.fetchSchemasInfo(this);					
+//				}
+				schemas = fetchSchemasInfo();		
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return schemas;
+	}
+
+
+	@Override
+	public String dbRootNodeName() { 
+		return "Schemas";
+	}
+
+
+	@Override
+	public String translateErrMsg(String errString) {
+		String  str = Db2ErrorCode.translateErrMsg(errString);
+		return str;
+	}
+	
+	public  Map<String, DbSchemaPo> fetchSchemasInfo() {
+		ResultSet rs = null;
+		Map<String, DbSchemaPo> pos = new HashMap<String, DbSchemaPo>();
+		Connection conn = getConn();
+		try {
+			DatabaseMetaData dmd = conn.getMetaData();
+//			if (    DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())
+//				||  DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())
+//					) {
+//				rs = dmd.getCatalogs();
+//			} else {
+//				rs = dmd.getSchemas(); // 默认 db2
+//			}
+			rs = dmd.getSchemas(); // 默认 db2
+
+			while (rs.next()) {
+				DbSchemaPo po = new DbSchemaPo();
+				String schema = rs.getString(1);
+//				logger.info("fetchSchemasInfo(); schema=" + schema);
+				po.setSchemaName(schema);
+				pos.put(schema, po);
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+
+		return pos;
+	}
+
+
+	@Override
+	public SqluckyConnector copyObj( String schema) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

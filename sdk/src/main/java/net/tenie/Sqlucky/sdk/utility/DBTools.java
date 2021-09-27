@@ -1,4 +1,4 @@
-package net.tenie.lib.db;
+package net.tenie.Sqlucky.sdk.utility;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -10,18 +10,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.RsData;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 
-import javafx.collections.ObservableList;
-import net.tenie.fx.PropertyPo.DbTableDatePo;
-import net.tenie.fx.PropertyPo.RsData;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
-import net.tenie.fx.dao.SelectDao;
-import net.tenie.fx.main.MainMyDB;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class DBTools {
 
 	private static Logger logger = LogManager.getLogger(DBTools.class);

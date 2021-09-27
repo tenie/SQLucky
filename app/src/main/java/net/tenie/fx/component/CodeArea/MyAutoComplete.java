@@ -19,7 +19,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.lib.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.AutoComplete;
 import net.tenie.Sqlucky.sdk.SqluckyCodeArea;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
@@ -29,6 +28,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 
 
 public class MyAutoComplete implements AutoComplete{

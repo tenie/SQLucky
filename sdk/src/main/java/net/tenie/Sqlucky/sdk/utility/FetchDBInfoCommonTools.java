@@ -1,4 +1,4 @@
-package net.tenie.lib.db;
+package net.tenie.Sqlucky.sdk.utility;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -9,18 +9,18 @@ import java.util.List;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import net.tenie.fx.PropertyPo.RsData;
-import net.tenie.fx.PropertyPo.myEntry;
+
+import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.po.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.po.myEntry;
 /* 
  *  * @author tenie 
  *  
  */
-public class FetchDB2InfoImp {
-	private static Logger logger = LogManager.getLogger(FetchDB2InfoImp.class);
+public class FetchDBInfoCommonTools {
+	private static Logger logger = LogManager.getLogger(FetchDBInfoCommonTools.class);
 
 	// 执行sql只返回第一个字段的list
 	private List<String> execSQL(Connection conn, String sql) {

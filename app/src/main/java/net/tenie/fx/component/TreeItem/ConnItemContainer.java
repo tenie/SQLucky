@@ -118,14 +118,14 @@ public class ConnItemContainer {
 	// 获取所有的schema, 并构建node
 	public static TreeItem<TreeNodePo> CreateSchemaNode(SqluckyConnector connpo) {
 		//判断是不是mysql
-		String nodeName = "Schemas";
-		if(    DbVendor.mysql.toUpperCase().equals(connpo.getDbVendor().toUpperCase())
-			|| DbVendor.mariadb.toUpperCase().equals(connpo.getDbVendor().toUpperCase())){
-			nodeName = "Databases";
-		}
-		if( DbVendor.postgresql.toUpperCase().equals(connpo.getDbVendor().toUpperCase()) ){
-			nodeName = connpo.getDbName();
-		}
+		String nodeName = connpo.dbRootNodeName(); //"Schemas";
+//		if(    DbVendor.mysql.toUpperCase().equals(connpo.getDbVendor().toUpperCase())
+//			|| DbVendor.mariadb.toUpperCase().equals(connpo.getDbVendor().toUpperCase())){
+//			nodeName = "Databases";
+//		}
+//		if( DbVendor.postgresql.toUpperCase().equals(connpo.getDbVendor().toUpperCase()) ){
+//			nodeName = connpo.getDbName();
+//		}
 		
 		// 创建一个schema node , 将数据库数据放入
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(

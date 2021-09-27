@@ -10,13 +10,14 @@ import org.apache.logging.log4j.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import net.tenie.fx.PropertyPo.RsData;
+import net.tenie.fx.PropertyPo.DbConnectionPo2;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.config.DBConns;
-import net.tenie.lib.db.DBTools;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.RsData;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ConnectionDao {
@@ -69,6 +70,7 @@ public class ConnectionDao {
 		try {
 		    List<RsData>  rs = DBTools.selectSql(conn, sql);
 		    for(RsData rd: rs) {
+		    	// VENDOR
 		    	  SqluckyConnector po = new DbConnectionPo2(
 		    			  	rd.getString("CONN_NAME"),
 		    			  	rd.getString("DRIVER"), //DbVendor.getDriver(dbDriver.getValue()),

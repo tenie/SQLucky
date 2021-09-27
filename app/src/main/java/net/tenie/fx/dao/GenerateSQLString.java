@@ -2,7 +2,7 @@ package net.tenie.fx.dao;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 

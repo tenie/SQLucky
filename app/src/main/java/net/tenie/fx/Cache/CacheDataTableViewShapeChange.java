@@ -19,8 +19,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.Tooltip;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 

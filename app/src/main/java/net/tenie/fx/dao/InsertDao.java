@@ -10,8 +10,8 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.lib.reflex.BuildObject;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;

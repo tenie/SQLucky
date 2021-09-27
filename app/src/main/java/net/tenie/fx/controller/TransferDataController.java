@@ -37,8 +37,6 @@ import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.PropertyPo.DbTableDatePo;
-import net.tenie.fx.PropertyPo.SqlFieldPo;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
@@ -47,12 +45,14 @@ import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.lib.db.DBTools;
 import net.tenie.lib.tools.IconGenerator;
 
 
@@ -381,12 +381,12 @@ public class TransferDataController implements Initializable {
 	}
 	
 	// 复制一个链接对象
-	private SqluckyConnector getNewDbConnectionPo(String dbName , String schema) {
-		SqluckyConnector soDbpo = DBConns.get(dbName);
-		//todo
-		SqluckyConnector nDBpo  = soDbpo.copyObj(soDbpo, schema);
-		return nDBpo;
-	}
+//	private SqluckyConnector getNewDbConnectionPo(String dbName , String schema) {
+//		SqluckyConnector soDbpo = DBConns.get(dbName);
+//		//todo
+//		SqluckyConnector nDBpo  = soDbpo.copyObj(soDbpo, schema);
+//		return nDBpo;
+//	}
 	
 	private SqluckyConnector soDbpo;
 	private SqluckyConnector tarDbpo;
@@ -403,9 +403,25 @@ public class TransferDataController implements Initializable {
 				String targetDBName   = taDB.getValue().getText();
 				String targetSchename = taSC.getValue().getText();
 				 
-				soDbpo =  getNewDbConnectionPo(dbname, schename);
+				//复制一个新的连接对象, 避免和 主界面上的连接发生冲突
+				SqluckyConnector soDbpo1 = DBConns.get(dbname);
+				var soDefSch = soDbpo1.getDefaultSchema();
+				if(StrUtils.isNullOrEmpty(soDefSch)) {
+					schename = "";
+				}   
+				soDbpo = soDbpo1.copyObj( schename); 
+//				soDbpo =  getNewDbConnectionPo(dbname, schename);
 				Connection  soConn = soDbpo.getConn();  
-				tarDbpo =  getNewDbConnectionPo(targetDBName, targetSchename); 
+				
+				
+				
+				SqluckyConnector tarDbpo1 = DBConns.get(targetDBName);
+				var tarDefSch = tarDbpo1.getDefaultSchema();
+				if(StrUtils.isNullOrEmpty(tarDefSch)) {
+					targetSchename = "";
+				}  
+				tarDbpo = tarDbpo1.copyObj(targetSchename);
+//				tarDbpo =  getNewDbConnectionPo(targetDBName, targetSchename); 
 				Connection   tarConn = tarDbpo.getConn();  
 				
 				moniterAppendStr( "-------- 获取 ddl --------"); 
@@ -942,11 +958,10 @@ public class TransferDataController implements Initializable {
 	}
 	
 	private String getTableName(String sch, String tn ,SqluckyConnector  dbpo) {
-		String rs = sch+"."+tn;
-		if(   DbVendor.h2.toUpperCase().equals( dbpo.getDbVendor().toUpperCase() ) 
-				   || DbVendor.sqlite.toUpperCase().equals(dbpo.getDbVendor().toUpperCase()) ){
-			rs = tn; 
-		}
+		String rs =  tn;
+		if(StrUtils.isNotNullOrEmpty(sch)) {
+		       rs = sch+"."+tn;
+		} 
 		return rs;
 	}
 }

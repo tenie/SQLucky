@@ -1,4 +1,4 @@
-package net.tenie.fx.config;
+package net.tenie.plugin.DB2Connector.impl;
 
 import java.util.HashMap;
 import java.util.Map;

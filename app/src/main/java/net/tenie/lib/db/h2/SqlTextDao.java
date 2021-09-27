@@ -11,7 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.lib.db.DBTools;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.lib.db.ExportSqlMySqlImp;
 
 /**

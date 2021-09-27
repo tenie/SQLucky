@@ -10,8 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.io.FileUtils;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.lib.db.DBTools;
-import net.tenie.lib.db.Dbinfo;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 
 /*   @author tenie */
 public class H2Db {

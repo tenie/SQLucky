@@ -10,12 +10,19 @@ import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
  
 
 public interface SqluckyConnector {
+	
+	
+	public String dbRootNodeName();
+	public String translateErrMsg(String errString);
+	
 	public Map<String, DbSchemaPo> getSchemas();
 	public ExportDDL getExportDDL();
-	public void setExportDDL(ExportDDL exportDDL);
+//	public void setExportDDL(ExportDDL exportDDL);
+	
+	
 	public Connection getConn();
 	
-	public SqluckyConnector copyObj(SqluckyConnector sopo, String schema);
+	public SqluckyConnector copyObj( String schema);
 	
 	public String getDbVendor();
 	
@@ -42,4 +49,6 @@ public interface SqluckyConnector {
 	public String getPort();
 	public String getDefaultSchema();
 	public StringProperty DateToStringStringProperty(Date val);
+	
+	public  Map<String, DbSchemaPo> fetchSchemasInfo();
 }
