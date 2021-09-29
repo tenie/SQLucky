@@ -4,12 +4,13 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
-/*   @author tenie */
 /**
- * 数据库厂家 和对应的启动字符串
+ *  数据库厂家 和对应的启动字符串
+ * @author tenie
+ *
  */
 public class DbVendor {
 	
@@ -22,7 +23,7 @@ public class DbVendor {
 	
 	
 	private static LinkedHashSet<String> keys = new LinkedHashSet<String>();
-	private static Map<String, DBConnectorInfoPo> data = new HashMap<String, DBConnectorInfoPo>();
+	private static Map<String, SqluckyDbRegister> data = new HashMap<String, SqluckyDbRegister>();
 
 	static {
 //		add( db2, "com.ibm.db2.jcc.DB2Driver");
@@ -34,7 +35,7 @@ public class DbVendor {
 //		add(sqlite, "");
 	}
 
-	public static void add(String name, DBConnectorInfoPo val) {
+	public static void add(String name, SqluckyDbRegister val) {
 		keys.add(name);
 		data.put(name, val);
 	}
@@ -47,7 +48,7 @@ public class DbVendor {
 		return data.get(name).getDriver();
 	}
 	
-	public static DBConnectorInfoPo dbConnPo(String name) { 
+	public static SqluckyDbRegister register(String name) { 
 		return data.get(name);
 	}
 	
@@ -61,10 +62,10 @@ public class DbVendor {
 	 * @param Name
 	 * @param driver 可以为空
 	 */
-	public static void registerDB(String Name, DBConnectorInfoPo db) {
-		if(StrUtils.isNullOrEmpty(Name)) return;
+	public static void registerDB( SqluckyDbRegister db) {
 		if(db == null) return;
-		add( Name, db);
+		String name = db.getName();
+		add( name, db);
 //		add(sqlite, "");
 	}
 }

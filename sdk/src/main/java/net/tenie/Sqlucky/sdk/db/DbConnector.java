@@ -132,23 +132,24 @@ public abstract class DbConnector implements SqluckyConnector {
 		return map.keySet();
 	}
 
-	public Connection getConn() {
-		if (this.connPo.getConn() == null) {
-			logger.info(this.connPo.getDriver());
-			logger.info(getJdbcUrl());
-			logger.info(this.connPo.getUser());
-//			logger.info(passWord);
-//			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
-//				conn = dbinfo.getconn();
-//			}else {
-//				Dbinfo dbinfo = new Dbinfo(driver, getJdbcUrl(), user, passWord);
-//				conn = dbinfo.getconn();
-//			}			
-		}
-
-		return this.connPo.getConn();
-	}
+	public abstract Connection getConn();
+//	{
+//		if (this.connPo.getConn() == null) {
+//			logger.info(this.connPo.getDriver());
+//			logger.info(getJdbcUrl());
+//			logger.info(this.connPo.getUser());
+////			logger.info(passWord);
+////			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
+////				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
+////				conn = dbinfo.getconn();
+////			}else {
+////				Dbinfo dbinfo = new Dbinfo(driver, getJdbcUrl(), user, passWord);
+////				conn = dbinfo.getconn();
+////			}			
+//		}
+//
+//		return this.connPo.getConn();
+//	}
 
 	// 关闭连接
 	public void closeConn() {
@@ -209,30 +210,7 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo.setComment(comment);
 	}
 
-	public String getJdbcUrl() {
-		return this.connPo.getJdbcUrl();
-//		if (jdbcUrl == null || jdbcUrl.length() == 0) {
-//			if (this.isH2()) {
-//				jdbcUrl = "jdbc:h2:" + host;
-//				defaultSchema = "PUBLIC";
-//			}else if (this.isSqlite()) {
-//				jdbcUrl = "jdbc:sqlite:" + host;
-//				defaultSchema = SQLITE_DATABASE;
-//			} else if (this.isPostgresql()) {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + dbName;
-//			} else {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + defaultSchema;
-//				if (otherParameter != null && otherParameter.length() > 0) {
-//					jdbcUrl += "?" + getOtherParameter();
-//				}
-//			}
-//
-//		}
-//
-//		logger.info(jdbcUrl);
-//
-//		return jdbcUrl;
-	}
+	public abstract String getJdbcUrl();
 
 //	public void setJdbcUrl(String jdbcUrl) {
 ////		this.jdbcUrl = jdbcUrl;

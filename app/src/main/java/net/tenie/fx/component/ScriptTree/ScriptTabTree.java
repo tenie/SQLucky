@@ -3,7 +3,11 @@ package net.tenie.fx.component.ScriptTree;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+
 import com.jfoenix.controls.JFXButton;
+
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -74,49 +78,70 @@ public class ScriptTabTree {
 	
 	// 恢复数据中保存的连接数据
 	public static void recoverScriptNode(TreeItem<MyTab> rootNode) {
-		List<DocumentPo> datas ;
-		List<H2SqlTextSavePo> ls;
-		String SELECT_PANE ;
-		try {
-			Connection H2conn = H2Db.getConn();
-			ls = SqlTextDao.read(H2conn);
-			SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
-			datas = SqlTextDao.readScriptPo(H2conn);
-		} finally {
-			H2Db.closeConn();
-		}
 		
-		List<Integer> ids = new ArrayList<>();
-		for (H2SqlTextSavePo sqlpo : ls) {
-			ids.add(sqlpo.getScriptId());
-		}
-
-		if (datas != null && datas.size() > 0) {
-			ConfigVal.pageSize = datas.size();
-			for (DocumentPo po : datas) {
-				MyTab tb = new MyTab(po);
-				TreeItem<MyTab> item = new TreeItem<>(tb);
-				rootNode.getChildren().add(item);
-				// 恢复代码编辑框
-				if (ids.contains(po.getId())) {
-					tb.mainTabPaneAddMyTab();
-				}
+		Consumer< String > cr = v->{
+			List<DocumentPo> datas ;
+			List<H2SqlTextSavePo> ls;
+			String SELECT_PANE ;
+			try {
+				Connection H2conn = H2Db.getConn();
+				ls = SqlTextDao.read(H2conn);
+				SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
+				datas = SqlTextDao.readScriptPo(H2conn);
+			} finally {
+				H2Db.closeConn();
+			}
+			
+			List<Integer> ids = new ArrayList<>();
+			for (H2SqlTextSavePo sqlpo : ls) {
+				ids.add(sqlpo.getScriptId());
 			}
 
-		}
+			if (datas != null && datas.size() > 0) {
+				ConfigVal.pageSize = datas.size();
+				List<TreeItem<MyTab>> itemList = new ArrayList<>();
+				for (DocumentPo po : datas) {
+					MyTab tb = new MyTab(po);
+					TreeItem<MyTab> item = new TreeItem<>(tb);
+//					rootNode.getChildren().add(item);
+					itemList.add(item);
+					// 恢复代码编辑框
+					if (ids.contains(po.getId())) {
+						Platform.runLater(()->{
+							tb.mainTabPaneAddMyTab();
+						});
+						
+					}
+				}
+				if(itemList.size() > 0 ) {
+					Platform.runLater(()->{
+						rootNode.getChildren().addAll(itemList);
+					});
+				}
+				
 
-		int ts = ComponentGetter.mainTabPane.getTabs().size();
-		// 初始化上次选中页面
-		if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) { 
-			int sps = Integer.valueOf(SELECT_PANE);
-			if (ts > sps) {
-				ComponentGetter.mainTabPane.getSelectionModel().select(sps);
-			}  
-		}	
-		// 没有tab被添加, 添加一新的
-		if (ts == 0) {
-			MyTab.addCodeEmptyTabMethod();
-		}
+			}
+
+			int ts = ComponentGetter.mainTabPane.getTabs().size();
+			// 初始化上次选中页面
+			if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) { 
+				int sps = Integer.valueOf(SELECT_PANE);
+				if (ts > sps) {
+					Platform.runLater(()->{
+						ComponentGetter.mainTabPane.getSelectionModel().select(sps);
+					});
+				}  
+			}	
+			// 没有tab被添加, 添加一新的
+			if (ts == 0) {
+				Platform.runLater(()->{
+					MyTab.addCodeEmptyTabMethod();
+				});
+				
+			}
+		};
+		CommonAction.addInitTask(cr);
+		
 
 	}
 

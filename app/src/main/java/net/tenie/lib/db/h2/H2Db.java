@@ -56,7 +56,7 @@ public class H2Db {
 			dir = "/.sqlucky_dev/";
 		}
 		String path = FileUtils.getUserDirectoryPath() + dir;
-		Dbinfo dbinfo = new Dbinfo("org.h2.Driver", "jdbc:h2:" + path + "h2db2", "sa", "xyz123qweasd");
+		Dbinfo dbinfo = new Dbinfo("jdbc:h2:" + path + "h2db2", "sa", "xyz123qweasd");
 		Connection connection = dbinfo.getconn();
 		return connection;
 	}

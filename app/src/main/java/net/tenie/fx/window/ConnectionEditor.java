@@ -31,7 +31,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.PropertyPo.DbConnectionPo2;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -40,6 +39,8 @@ import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
@@ -235,7 +236,7 @@ public class ConnectionEditor {
 		
 		// 方法
 		Function<String, SqluckyConnector> call = x -> {
-			var dbpo = DbVendor.dbConnPo(dbDriver.getValue()); 
+			var dbpo = DbVendor.register(dbDriver.getValue()); 
 			String connName = connectionName.getText();
 			// check date
 			if (StrUtils.isNullOrEmpty(connName)) {
@@ -289,10 +290,16 @@ public class ConnectionEditor {
 				}
 			}
 
-			//TODO 连接信息保存
-			SqluckyConnector connpo = new DbConnectionPo2(connName, DbVendor.getDriver(dbDriver.getValue()),
+			//TODO 连接信息保存 DbVendor
+			
+			DBConnectorInfoPo connPo = new DBConnectorInfoPo(connName, DbVendor.getDriver(dbDriver.getValue()),
 					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
 					defaultSchema.getText(), defaultSchema.getText());
+			SqluckyDbRegister reg = DbVendor.register(dbDriver.getValue());
+			SqluckyConnector connpo = reg.createConnector(connPo);
+//			SqluckyConnector connpo = new DbConnectionPo2(connName, DbVendor.getDriver(dbDriver.getValue()),
+//					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
+//					defaultSchema.getText(), defaultSchema.getText());
 			if (dp != null) {
 				dp.closeConn();
 				connpo.setId(dp.getId());

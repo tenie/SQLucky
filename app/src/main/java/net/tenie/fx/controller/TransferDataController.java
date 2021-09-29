@@ -405,7 +405,7 @@ public class TransferDataController implements Initializable {
 				 
 				//复制一个新的连接对象, 避免和 主界面上的连接发生冲突
 				SqluckyConnector soDbpo1 = DBConns.get(dbname);
-				var soDefSch = soDbpo1.getDefaultSchema();
+				var soDefSch = soDbpo1.getRealDefaultSchema();
 				if(StrUtils.isNullOrEmpty(soDefSch)) {
 					schename = "";
 				}   
@@ -416,7 +416,7 @@ public class TransferDataController implements Initializable {
 				
 				
 				SqluckyConnector tarDbpo1 = DBConns.get(targetDBName);
-				var tarDefSch = tarDbpo1.getDefaultSchema();
+				var tarDefSch = tarDbpo1.getRealDefaultSchema();
 				if(StrUtils.isNullOrEmpty(tarDefSch)) {
 					targetSchename = "";
 				}  

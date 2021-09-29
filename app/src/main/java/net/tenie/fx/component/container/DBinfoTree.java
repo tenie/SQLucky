@@ -4,9 +4,13 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
+
 import org.fxmisc.richtext.Caret.CaretVisibility;
 import org.fxmisc.richtext.CodeArea;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
+
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -17,6 +21,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.TreeObjAction;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -89,20 +94,32 @@ public class DBinfoTree {
 	
 	// 恢复数据中保存的连接数据
 	public static void recoverNode(TreeItem<TreeNodePo> rootNode) {  
-		try {
-			Connection H2conn = H2Db.getConn();
-			List<SqluckyConnector> datas = ConnectionDao.recoverConnObj(H2conn);
-			if (datas != null && datas.size() > 0) {
-				for (SqluckyConnector po : datas) {
-					MyTreeItem<TreeNodePo> item = new MyTreeItem<>(
-							new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
-					rootNode.getChildren().add(item);
-					DBConns.add(po.getConnName(), po); 
+		 
+		Consumer< String > cr = v->{
+			List<MyTreeItem<TreeNodePo>> ls = new ArrayList<>();
+			try {
+				Connection H2conn = H2Db.getConn(); 
+				List<SqluckyConnector> datas = ConnectionDao.recoverConnObj(H2conn);
+				if (datas != null && datas.size() > 0) {
+					for (SqluckyConnector po : datas) {
+						MyTreeItem<TreeNodePo> item = new MyTreeItem<>(
+								new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
+//						rootNode.getChildren().add(item);
+						ls.add(item);
+						DBConns.add(po.getConnName(), po); 
+					} 
 				} 
-			} 
-		} finally {
-			H2Db.closeConn();
-		}
+			} finally {
+				H2Db.closeConn();
+			}
+			if(ls.size() > 0) {
+				Platform.runLater(()->{
+					rootNode.getChildren().addAll(ls);
+				});
+			}
+		};
+		CommonAction.addInitTask(cr);
+		
 	}
 	
 

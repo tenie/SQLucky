@@ -13,7 +13,7 @@ public class DBConnectorInfoPo {
 	private String port;
 	private String driver;
 	private String dbVendor;
-//	private String defaultSchema;
+	private String defaultSchema;
 	private String displaySchema;  // 
 	private String dbName;
 	private String user;
@@ -30,7 +30,7 @@ public class DBConnectorInfoPo {
 	private Map<String, DbSchemaPo> schemas;
 
 	public DBConnectorInfoPo(String connName, String driver, String host, String port, String user, String passWord,
-			String dbVendor, String defaultSchema,String dbName , ExportDDL exportDDL
+			String dbVendor, String defaultSchema,String dbName 
 	) { 
 		this.connName = connName;
 		this.host = host;
@@ -42,15 +42,17 @@ public class DBConnectorInfoPo {
 //		} else {
 //			this.defaultSchema = defaultSchema.trim();
 //		}
-//		this.defaultSchema = defaultSchema.trim();
+		this.defaultSchema = defaultSchema.trim();
 		this.driver = driver;
 		this.user = user;
 		this.passWord = passWord;
 		this.dbName = dbName;
-		this.exportDDL = exportDDL;
+//		this.exportDDL = exportDDL;
 
 //		setExportDDL(dbVendor);
 	}
+	
+	
 	
 	
 	public Integer getId() {
@@ -186,6 +188,34 @@ public class DBConnectorInfoPo {
 
 	public void setJdbcUrlIsFile(boolean jdbcUrlIsFile) {
 		JdbcUrlIsFile = jdbcUrlIsFile;
+	}
+
+
+
+
+	public String getDefaultSchema() {
+		return defaultSchema;
+	}
+
+
+
+
+	public void setDefaultSchema(String defaultSchema) {
+		this.defaultSchema = defaultSchema;
+	}
+
+
+
+
+	public String getDisplaySchema() {
+		return displaySchema;
+	}
+
+
+
+
+	public void setDisplaySchema(String displaySchema) {
+		this.displaySchema = displaySchema;
 	}
 
 	

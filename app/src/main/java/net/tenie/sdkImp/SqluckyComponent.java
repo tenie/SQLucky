@@ -7,10 +7,11 @@ import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.fx.component.MyTab;
+import net.tenie.fx.config.DbVendor;
 import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.db.h2.SqlTextDao;
 import net.tenie.lib.tools.IconGenerator; 
 
 public class SqluckyComponent implements AppComponent { 
@@ -89,6 +90,12 @@ public class SqluckyComponent implements AppComponent {
 		if (myTabPane.getTabs().contains(tb)) {
 			myTabPane.getTabs().remove(tb);
 		}
+		
+	}
+
+	@Override
+	public void registerDBConnector(SqluckyDbRegister ctr) {
+		DbVendor.registerDB(ctr);
 		
 	}
 

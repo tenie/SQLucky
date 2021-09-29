@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk;
 
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 
 public interface AppComponent {
@@ -18,5 +19,9 @@ public interface AppComponent {
 	
 	public void saveData(String name, String key, String value);
 	public String fetchData(String name, String key);
+	
+	
+	//DB DB2Connector
+	public void registerDBConnector(SqluckyDbRegister ctr);
 	
 }

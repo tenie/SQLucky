@@ -1,4 +1,4 @@
-package net.tenie.lib.db;
+package net.tenie.plugin.H2Connector.impl;
 
 import java.sql.Connection;
 import java.util.ArrayList;

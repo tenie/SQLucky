@@ -1,4 +1,4 @@
-package net.tenie.plugin.DB2Connector.impl;
+package net.tenie.plugin.H2Connector.impl;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -6,14 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DbConnector;
+import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
+import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -23,12 +31,12 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class Db2Connector extends DbConnector {
+public class H2Connector extends DbConnector {
  
 	
-	public Db2Connector(DBConnectorInfoPo connPo) {
+	public H2Connector(DBConnectorInfoPo connPo) {
 		super(connPo);
-		ExportSqlDB2Imp ex = new ExportSqlDB2Imp();
+		ExportSqlH2Imp ex = new ExportSqlH2Imp();
 		getConnPo().setExportDDL( ex);
 	} 
 	 
@@ -79,7 +87,7 @@ public class Db2Connector extends DbConnector {
 
 	@Override
 	public String translateErrMsg(String errString) {
-		String  str = Db2ErrorCode.translateErrMsg(errString);
+		String  str = H2ErrorCode.translateErrMsg(errString);
 		return str;
 	}
 	
@@ -134,7 +142,7 @@ public class Db2Connector extends DbConnector {
 				schema,
 				getDbName()
 				);
-		var dbc = new Db2Connector(val);
+		var dbc = new H2Connector(val);
 		
 		return dbc;
 	}

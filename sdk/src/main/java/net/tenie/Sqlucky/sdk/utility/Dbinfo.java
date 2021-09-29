@@ -46,21 +46,27 @@ public class Dbinfo {
 //		DriverManager.getConnection("jdbc:postgresql://host/db", "user", "pw");
 	}
 	
-	public Dbinfo(String driver, String url, String us, String ps) {
-		this.driver = driver;
+//	public Dbinfo(String driver, String url, String us, String ps) {
+//		this.driver = driver;
+//		this.url = url;
+//		this.us = us;
+//		this.ps = ps;
+//		this.sqliteDriver = "";
+//	}
+	public Dbinfo( String url, String us, String ps) {
 		this.url = url;
 		this.us = us;
 		this.ps = ps;
 		this.sqliteDriver = "";
 	}
 	
-	public Dbinfo(String sqliteDriver) {
-		this.driver = "";
-		this.url = "";
-		this.us = "";
-		this.ps = "";
-		this.sqliteDriver = sqliteDriver;
-	}
+//	public Dbinfo(String sqliteDriver) {
+//		this.driver = "";
+//		this.url = "";
+//		this.us = "";
+//		this.ps = "";
+//		this.sqliteDriver = sqliteDriver;
+//	}
 	
 	
 
@@ -68,18 +74,17 @@ public class Dbinfo {
 	public Connection getconn() {
 		if (conn == null) {
 			try {
-				if(StrUtils.isNotNullOrEmpty(sqliteDriver)) {
-					conn = DriverManager.getConnection(sqliteDriver);
-				}else if( StrUtils.isNullOrEmpty(driver) )  {
-					conn = DriverManager.getConnection(url, us, ps);
-				}else {
-					Class.forName(driver).newInstance();
-					conn = DriverManager.getConnection(url, us, ps);
-				} 
-			} catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-				e.printStackTrace();
-				logger.error(e.getMessage());
-			} catch (SQLException e) { 
+//				if(StrUtils.isNotNullOrEmpty(sqliteDriver)) {
+//					conn = DriverManager.getConnection(sqliteDriver);
+//				}else if( StrUtils.isNullOrEmpty(driver) )  {
+//					conn = DriverManager.getConnection(url, us, ps);
+//				}else {
+//					Class.forName(driver).newInstance();
+//					conn = DriverManager.getConnection(url, us, ps);
+//				} 
+				conn = DriverManager.getConnection(url, us, ps);
+			 
+			} catch (Exception e) { 
 				logger.error(e.getMessage());
 				e.printStackTrace();
 			}

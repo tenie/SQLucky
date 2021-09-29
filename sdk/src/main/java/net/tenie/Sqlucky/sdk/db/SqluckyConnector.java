@@ -48,6 +48,7 @@ public interface SqluckyConnector {
 	public String getHost();
 	public String getPort();
 	public String getDefaultSchema();
+	public String getRealDefaultSchema();
 	public StringProperty DateToStringStringProperty(Date val);
 	
 	public  Map<String, DbSchemaPo> fetchSchemasInfo();

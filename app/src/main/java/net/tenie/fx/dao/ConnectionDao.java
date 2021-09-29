@@ -10,12 +10,14 @@ import org.apache.logging.log4j.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import net.tenie.fx.PropertyPo.DbConnectionPo2;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.config.DbVendor;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -71,21 +73,22 @@ public class ConnectionDao {
 		    List<RsData>  rs = DBTools.selectSql(conn, sql);
 		    for(RsData rd: rs) {
 		    	// VENDOR
-		    	  SqluckyConnector po = new DbConnectionPo2(
-		    			  	rd.getString("CONN_NAME"),
-		    			  	rd.getString("DRIVER"), //DbVendor.getDriver(dbDriver.getValue()),
-							rd.getString("HOST"),
-							rd.getString("PORT"),
-							rd.getString("USER"),
-							rd.getString("PASS_WORD"),
-							rd.getString("VENDOR"), //dbDriver.getValue(),
-							rd.getString("SCHEMA"), //defaultSchema.getText()	
-							rd.getString("DB_NAME")
-							);
-		    	  po.setId(rd.getInteger("ID"));
-		    	  po.setComment( rd.getString("COMMENT"));
+		    	String vendor = rd.getString("VENDOR");
+		    	DBConnectorInfoPo connPo = new DBConnectorInfoPo(
+		    			rd.getString("CONN_NAME"),
+	    			  	rd.getString("DRIVER"), //DbVendor.getDriver(dbDriver.getValue()),
+						rd.getString("HOST"),
+						rd.getString("PORT"),
+						rd.getString("USER"),
+						rd.getString("PASS_WORD"),
+						rd.getString("VENDOR"), //dbDriver.getValue(),
+						rd.getString("SCHEMA"), //defaultSchema.getText()	
+						rd.getString("DB_NAME"));
 		    	
-		    	
+		    	SqluckyDbRegister reg = DbVendor.register( vendor );
+				SqluckyConnector po = reg.createConnector(connPo); 
+		    	po.setId(rd.getInteger("ID"));
+		        po.setComment( rd.getString("COMMENT"));		    	
 		    	datas.add(po);
 		    }
 		} catch (SQLException e) { 

@@ -1,15 +1,15 @@
-package net.tenie.plugin.DB2Connector.impl;
+package net.tenie.plugin.H2Connector.impl;
 
 import net.tenie.Sqlucky.sdk.PluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 
-public class DB2ConnectorDelegateImpl implements PluginDelegate {  
+public class H2ConnectorDelegateImpl implements PluginDelegate {  
 	public static final String pluginName = "net.tenie.plugin.DB2Connector";
 	@Override
 	public void load() {
-		System.out.println("load:  DB2ConnectorDelegateImpl..."); 
+		System.out.println("load:  h2-file-ConnectorDelegateImpl..."); 
 		// 注册
-		Db2Register reg = new Db2Register();
+		H2FileRegister reg = new H2FileRegister();
 		ComponentGetter.appComponent.registerDBConnector(reg);
 		
 		
