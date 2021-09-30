@@ -109,7 +109,7 @@ public class CommonUtility {
 	 */
 	public static void delayRunThread(Consumer< String >  caller, int milliseconds) {
 		if ( queue.isEmpty() ) {
-			 queue.offer(caller);
+			 queue.offer(caller);  // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
 			 
 			 Thread t = new Thread() {
 					public void run() { 
@@ -119,7 +119,7 @@ public class CommonUtility {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						var cl = queue.poll();
+						var cl = queue.poll();  // 从队列取出一个元素
 						if(cl != null) {
 							cl.accept("");
 						}
@@ -574,5 +574,22 @@ public class CommonUtility {
 			});
 		});
 		
+	}
+	
+	// 应用创建完后, 执行一些初始化的任务
+	private static List<Consumer< String >> initTasks = new ArrayList<>();
+	public static void addInitTask(Consumer< String > v) {
+		initTasks.add(v);
+	}
+	public static void executeInitTask() {
+		
+		for(Consumer< String > cr: initTasks) {
+			try {
+//				cr.accept("");
+				CommonUtility.runThread(cr);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 }

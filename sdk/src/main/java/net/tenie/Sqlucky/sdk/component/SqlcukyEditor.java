@@ -87,6 +87,17 @@ public class SqlcukyEditor {
 		CodeArea code = getCodeArea();
 		return code.getSelectedText();
 	}
+	//当前行的 字符串文本;
+	public static String getCurrentLineText() {
+		CodeArea code = getCodeArea();
+		 
+		int idx = code.getCurrentParagraph();
+		var  val = code.getParagraph(idx);
+		List<String > ls = val.getSegments();
+		System.out.println(ls);
+		return  ls.get(0);
+	}
+	
 	
 	// 复制当前选中的文本
 	public static void copySelectionText() {

@@ -140,7 +140,7 @@ public class ScriptTabTree {
 				
 			}
 		};
-		CommonAction.addInitTask(cr);
+		CommonUtility.addInitTask(cr);
 		
 
 	}

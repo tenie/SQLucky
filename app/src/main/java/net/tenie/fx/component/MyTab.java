@@ -126,17 +126,25 @@ public class MyTab extends Tab implements SqluckyTab {
 		}); 
 		
 		// 设置sql 文本
-		setTabSQLText( docPo.getText());
+		initTabSQLText( docPo.getText());
 		
 		// 右键菜单
 		this.setContextMenu(MyTabMenu());
 	}
+	
 	// 设置tab 中的 area 中的文本
+	public   void initTabSQLText(String text) {
+		var code = sqlCodeArea.getCodeArea();
+		code.appendText(text);
+		sqlCodeArea.highLighting(); 
+	}
+	
+	// 设置tab 中的 area 中的文本, 并保存到数据库
 	public   void setTabSQLText(String text) {
 		var code = sqlCodeArea.getCodeArea();
 		code.appendText(text);
 		sqlCodeArea.highLighting();
-		syncScriptPo();
+//		syncScriptPo();
 	}
 	
 	public String getTabSqlText() {

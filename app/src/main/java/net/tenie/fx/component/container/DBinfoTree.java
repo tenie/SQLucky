@@ -1,15 +1,12 @@
 package net.tenie.fx.component.container;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 import org.fxmisc.richtext.Caret.CaretVisibility;
 import org.fxmisc.richtext.CodeArea;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -20,8 +17,8 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.TreeObjAction;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -39,7 +36,6 @@ import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.tools.IconGenerator;
 
 
@@ -97,28 +93,22 @@ public class DBinfoTree {
 		 
 		Consumer< String > cr = v->{
 			List<MyTreeItem<TreeNodePo>> ls = new ArrayList<>();
-			try {
-				Connection H2conn = H2Db.getConn(); 
-				List<SqluckyConnector> datas = ConnectionDao.recoverConnObj(H2conn);
-				if (datas != null && datas.size() > 0) {
-					for (SqluckyConnector po : datas) {
-						MyTreeItem<TreeNodePo> item = new MyTreeItem<>(
-								new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
-//						rootNode.getChildren().add(item);
-						ls.add(item);
-						DBConns.add(po.getConnName(), po); 
-					} 
+			List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
+			if (datas != null && datas.size() > 0) {
+				for (SqluckyConnector po : datas) {
+					var item = new MyTreeItem<TreeNodePo>(new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
+					ls.add(item);
+					DBConns.add(po.getConnName(), po); 
 				} 
-			} finally {
-				H2Db.closeConn();
-			}
+			} 
+			 
 			if(ls.size() > 0) {
 				Platform.runLater(()->{
 					rootNode.getChildren().addAll(ls);
 				});
 			}
 		};
-		CommonAction.addInitTask(cr);
+		CommonUtility.addInitTask(cr);
 		
 	}
 	

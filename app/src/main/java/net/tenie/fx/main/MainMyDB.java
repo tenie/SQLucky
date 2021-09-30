@@ -9,10 +9,7 @@ import org.apache.logging.log4j.Logger;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
@@ -24,14 +21,11 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.tools.IconGenerator;
 import net.tenie.sdkImp.SqluckyComponent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 
 /**
  * 启动入口
@@ -181,7 +175,7 @@ public class MainMyDB extends Application {
 			}); 
 			
 			ServiceLoad.myShowed(); 
-			CommonAction.executeInitTask();
+			CommonUtility.executeInitTask();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

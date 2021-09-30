@@ -66,7 +66,8 @@ public class ConnectionDao {
 	/**
 	 * 查询
 	 */
-	public static  List<SqluckyConnector> recoverConnObj(Connection conn) {
+	public static  List<SqluckyConnector> recoverConnObj() {
+		Connection conn = H2Db.getConn(); 
 		String sql = "SELECT * FROM  CONNECTION_INFO ORDER BY ORDER_TAG";
 		List<SqluckyConnector> datas =  new ArrayList<SqluckyConnector>();
 		try {
@@ -93,6 +94,8 @@ public class ConnectionDao {
 		    }
 		} catch (SQLException e) { 
 			e.printStackTrace();
+		}finally {
+			H2Db.closeConn();
 		}
 		
 		return datas; 

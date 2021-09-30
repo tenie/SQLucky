@@ -133,23 +133,22 @@ public class ButtonFactory {
 		    AnchorPane pn = new AnchorPane();
 			JFXButton runbtn = new JFXButton();
 			runbtn.setGraphic(IconGenerator.svgImageDefActive("play"));
-			runbtn.setTooltip(MyTooltipTool.instance("run sql      ctrl + Enter "));
-//			btns.add(runbtn);
+			runbtn.setTooltip(MyTooltipTool.instance("run sql     (ctrl + Enter)"));
 			
+			JFXButton runLinebtn = new JFXButton();
+			runLinebtn.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
+			runLinebtn.setTooltip(MyTooltipTool.instance("run current line sql (ctrl + shift + Enter)"));
 			
 			JFXButton stopbtn = new JFXButton();
 			stopbtn.setGraphic(IconGenerator.svgImage("stop", "red", false));
-			stopbtn.setTooltip(MyTooltipTool.instance("stop         ctrl + I "));
-//			btns.add(stopbtn);
-			
+			stopbtn.setTooltip(MyTooltipTool.instance("stop         ctrl + I "));			
 			stopbtn.setDisable(true);
+			
 			// add panel
 			JFXButton addcodeArea = new JFXButton();
 			addcodeArea.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
 			addcodeArea.setOnMouseClicked(CommonEventHandler.addCodeTab());
-			addcodeArea.setTooltip(MyTooltipTool.instance("add new code area panel     ctrl + T "));
-//			btns.add(addcodeArea);
-			
+			addcodeArea.setTooltip(MyTooltipTool.instance("add new code area panel     ctrl + T "));			
 			
 			JFXButton saveSQL = new JFXButton();
 			saveSQL.setGraphic(IconGenerator.svgImageDefActive("save"));
@@ -177,6 +176,11 @@ public class ButtonFactory {
 			runbtn.setOnMouseClicked(e->{
 				RunSQLHelper.runSQLMethod();
 			});
+			runLinebtn.setOnMouseClicked(e->{ 
+				RunSQLHelper.runCurrentLineSQLMethod();
+			});
+			
+			
 			runFunPro.setOnMouseClicked(e->{
 				RunSQLHelper.runFuncSQLMethod();
 			});
@@ -251,6 +255,12 @@ public class ButtonFactory {
 			runbtn.setLayoutX(0);
 			runbtn.setLayoutY(0);
 
+			// runLinebtn
+			pn.getChildren().add(runLinebtn);
+			runLinebtn.setLayoutY(0);
+			y += fix;
+			runLinebtn.setLayoutX(y);
+			
 			pn.getChildren().add(stopbtn);
 			stopbtn.setLayoutY(0);
 			y += fix;
@@ -297,6 +307,8 @@ public class ButtonFactory {
 			AllButtons.btns.put("runbtn", runbtn);
 			AllButtons.btns.put("stopbtn", stopbtn);
 			AllButtons.btns.put("runFunPro", runFunPro);
+			AllButtons.btns.put("runLinebtn", runLinebtn);
+			
 			AllButtons.btns.put("addcodeArea", addcodeArea);
 
 			return pn;

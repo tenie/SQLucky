@@ -6,20 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -78,19 +73,26 @@ public class NoteTabTree {
 		// 显示设置
 		treeView.setCellFactory(new NoteTabNodeCellFactory());
 		 
-		filePath = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "dir_path");
 		
-		recoverNode(rootNode, filePath);
+		recoverNode(rootNode);
 		return treeView;
 	}
 	
 	
 //	// 恢复数据中保存的连接数据
-	public static void recoverNode(TreeItem<SqluckyTab> rootNode, String filePath) { 
-		File file = new File(filePath);
-		if(file.exists()) {
-			openNoteDir(rootNode , file);
-		}
+	public  void recoverNode(TreeItem<SqluckyTab> rootNode) {
+		
+		Consumer< String > cr = v->{ 
+			filePath = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "dir_path");
+			File file = new File(filePath);
+			if(file.exists()) {
+				openNoteDir(rootNode , file);
+			}
+		};
+		CommonUtility.addInitTask(cr);
+		
+		
+	
 		
 	}
 

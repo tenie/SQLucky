@@ -1114,20 +1114,7 @@ public class CommonAction {
 		return null; 
 	}
 	
-	// 应用创建完后, 执行一些初始化的任务
-	private static List<Consumer< String >> initTasks = new ArrayList<>();
-	public static void addInitTask(Consumer< String > v) {
-		initTasks.add(v);
-	}
-	public static void executeInitTask() {
-		for(Consumer< String > cr: initTasks) {
-			try {
-				cr.accept("");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+
 	
 	
 	public static void demo() {}

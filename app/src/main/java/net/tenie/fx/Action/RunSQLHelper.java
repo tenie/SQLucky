@@ -65,6 +65,7 @@ public class RunSQLHelper {
 	private static Logger logger = LogManager.getLogger(RunSQLHelper.class);
 	private static Thread thread;
 	private static JFXButton runbtn;
+	private static JFXButton runLinebtn;
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
 	private static final String WAITTB_NAME = "Loading...";
@@ -81,6 +82,8 @@ public class RunSQLHelper {
 	private static boolean isLock =false;
 	private static boolean isCallFunc = false;
 	private static List<ProcedureFieldPo> callProcedureFields = null;
+	
+	private static boolean isCurrentLine = false; 
 	
 	
 
@@ -441,6 +444,7 @@ public class RunSQLHelper {
 		if (runbtn == null) {
 			runbtn =   AllButtons.btns.get("runbtn");
 			otherbtn = AllButtons.btns.get("runFunPro");
+			runLinebtn = AllButtons.btns.get("runLinebtn");
 		}
 		if (stopbtn == null) {
 			stopbtn = AllButtons.btns.get("stopbtn");
@@ -448,6 +452,7 @@ public class RunSQLHelper {
 		
 		runbtn.setDisable(stopbtn.disabledProperty().getValue());
 		otherbtn.setDisable(stopbtn.disabledProperty().getValue());
+		runLinebtn.setDisable(stopbtn.disabledProperty().getValue());
 		stopbtn.setDisable(!runbtn.disabledProperty().getValue());
 		ComponentGetter.connComboBox.setDisable( runbtn.disabledProperty().getValue());
 	}
@@ -507,8 +512,13 @@ public class RunSQLHelper {
 		thread = createThread( RunSQLHelper::runMain);
 		thread.start();
 	}
-
-	public static void runSQLMethod( ) {
+	//TODO runCurrentLineSQLMethod
+	public static void runCurrentLineSQLMethod() {
+		isCurrentLine = true;
+		runSQLMethod(  null, null, false);
+	}
+	
+	public static void runSQLMethod() {
 		runSQLMethod(  null, null, false);
 	}
 
@@ -766,9 +776,19 @@ public class RunSQLHelper {
 	 */
 	public static List<SqlData> willExecSql() {
 		List<SqlData> sds = new ArrayList<>();
-		
+		String str = "";
 		CodeArea code = SqlcukyEditor.getCodeArea();
-		String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText(); 
+		// 如果是执行当前行
+		if(isCurrentLine) {
+			try {
+				str = SqlcukyEditor.getCurrentLineText();
+			} finally {
+				isCurrentLine = false;
+			} 			
+		}else {
+			str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText(); 
+		}
+		  
 		int start = 0;
 		if (str != null && str.length() > 0) {
 		    start = code.getSelection().getStart();
