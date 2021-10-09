@@ -6,6 +6,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.jfoenix.controls.JFXCheckBox;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -133,12 +136,20 @@ public class ConnectionEditor {
 		dbDriver.setTooltip(MyTooltipTool.instance("Select DB Type"));
 		dbDriver.setPrefWidth(250);
 		dbDriver.setMinWidth(250);
+		
+		// jdbc url
+		JFXCheckBox isUseJdbcUrl = new JFXCheckBox("Use JDBC URL");
+		TextField jdbcUrl = new TextField();
+		jdbcUrl.setPromptText("jdbc:db://ip:port/xxxx");
+		
+		jdbcUrl.disableProperty().bind(isUseJdbcUrl.selectedProperty().not());
+		
 
 		TextField host = new TextField();
 		host.setPromptText(hostStr);
 		host.setText(hostVal);
 		host.lengthProperty().addListener(CommonListener.textFieldLimit(host, 100));
-		
+		host.disableProperty().bind(isUseJdbcUrl.selectedProperty());
 		
 		
 
@@ -147,6 +158,7 @@ public class ConnectionEditor {
 		port.setText(portVal);
 		port.lengthProperty().addListener(CommonListener.textFieldLimit(port, 5));
 		port.textProperty().addListener(CommonListener.textFieldNumChange(port));
+		port.disableProperty().bind(isUseJdbcUrl.selectedProperty());
 
 		TextField user = new TextField();
 		user.setPromptText(userStr);
@@ -188,17 +200,35 @@ public class ConnectionEditor {
 		});
 		
 		
-		
+		//TODO 
 		dbDriver.valueProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
-
-		h2FilePath.setVisible(false);
-		
-		lbhostStr.setText(hostStr);
-		host.setPromptText(hostStr);
-		port.setDisable(false);
-
-		defaultSchema.setText(defaultSchemaVal);
-		defaultSchema.setDisable(false);
+//			h2FilePath.setVisible(false); 
+//			lbhostStr.setText(hostStr);
+//			host.setPromptText(hostStr);
+//			port.setDisable(false);
+//
+//			defaultSchema.setText(defaultSchemaVal);
+//			defaultSchema.setDisable(false);
+			
+			var dbpo = DbVendor.register(dbDriver.getValue()); 
+			if(dbpo.getMustUseJdbcUrl()) {
+				isUseJdbcUrl.setSelected(true);
+				isUseJdbcUrl.setDisable(true);
+			}else {
+				isUseJdbcUrl.setSelected(false);
+				isUseJdbcUrl.setText("");
+				isUseJdbcUrl.setDisable(false);
+			}
+			String insNa = dbpo.getInstanceName();
+			if(StrUtils.isNotNullOrEmpty(insNa ) ) {
+				defaultSchema.setText(insNa);
+				defaultSchema.setDisable(true);
+			}else {
+				defaultSchema.setText("");
+				defaultSchema.setDisable(false);
+			}
+			
+			
 //			if (newValue.equals(DbVendor.h2) ||newValue.equals(DbVendor.sqlite) ) {
 //				lbhostStr.setText("DB File");
 //				host.setPromptText("DB File");
@@ -215,8 +245,7 @@ public class ConnectionEditor {
 //				defaultSchema.setText( dbName); 
 //				
 //			}
-			
-			
+
 //			if (newValue.equals(DbVendor.sqlite) ) {
 //				user.setDisable(true);
 //				password.setDisable(true);
@@ -224,7 +253,7 @@ public class ConnectionEditor {
 //				user.setDisable(false);
 //				password.setDisable(false);
 //			}
-			
+
 		});
 
 		if (StrUtils.isNotNullOrEmpty(dbDriverVal)) {
@@ -235,7 +264,7 @@ public class ConnectionEditor {
 
 		
 		// 方法
-		Function<String, SqluckyConnector> call = x -> {
+		Function<String, SqluckyConnector> assembleSqlCon = x -> {
 			var dbpo = DbVendor.register(dbDriver.getValue()); 
 			String connName = connectionName.getText();
 			// check date
@@ -247,20 +276,29 @@ public class ConnectionEditor {
 				MyAlert.errorAlert( "db Driver is empty !");
 				return null;
 			}
-			if (StrUtils.isNullOrEmpty(host.getText())) { 
-				if (dbpo.getJdbcUrlIsFile()) {
-					MyAlert.errorAlert( "DB File is empty !");
-				} else {
-					MyAlert.errorAlert( "host is empty !");
-				} 
-				return null;
-			} 
-			if (! dbpo.getJdbcUrlIsFile() ) {
-				if (StrUtils.isNullOrEmpty(port.getText())) {
-					MyAlert.errorAlert( "port is empty !");
+			
+			if(isUseJdbcUrl.isSelected()) { 
+				if (StrUtils.isNullOrEmpty(jdbcUrl.getText())) { 
+					MyAlert.errorAlert( "JDBC URL is empty !");
 					return null;
 				}
+			}else {
+				if (StrUtils.isNullOrEmpty(host.getText())) { 
+					if (dbpo.getJdbcUrlIsFile()) {
+						MyAlert.errorAlert( "DB File is empty !");
+					} else {
+						MyAlert.errorAlert( "host is empty !");
+					} 
+					return null;
+				} 
+				if (! dbpo.getJdbcUrlIsFile() ) {
+					if (StrUtils.isNullOrEmpty(port.getText())) {
+						MyAlert.errorAlert( "port is empty !");
+						return null;
+					}
+				}
 			}
+			
 			
 			if (StrUtils.isNullOrEmpty(defaultSchema.getText())) {
 				var textval = lbdefaultSchemaStr.getText();
@@ -294,7 +332,7 @@ public class ConnectionEditor {
 			
 			DBConnectorInfoPo connPo = new DBConnectorInfoPo(connName, DbVendor.getDriver(dbDriver.getValue()),
 					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
-					defaultSchema.getText(), defaultSchema.getText());
+					defaultSchema.getText(), defaultSchema.getText(), jdbcUrl.getText());
 			SqluckyDbRegister reg = DbVendor.register(dbDriver.getValue());
 			SqluckyConnector connpo = reg.createConnector(connPo);
 //			SqluckyConnector connpo = new DbConnectionPo2(connName, DbVendor.getDriver(dbDriver.getValue()),
@@ -308,11 +346,12 @@ public class ConnectionEditor {
 
 		};
 //TODO
-		Button testBtn = createTestBtn( call );//new Button("Test");
-		Button saveBtn = createSaveBtn( call , connectionName ,  dp, stage) ; // new Button("Save"); 
+		Button testBtn = createTestBtn( assembleSqlCon );//new Button("Test");
+		Button saveBtn = createSaveBtn( assembleSqlCon , connectionName ,  dp, stage) ; // new Button("Save"); 
 		
 		layout( grid, lbconnNameStr,   connectionName, 
 					  lbdbDriverStr,   dbDriver,
+					   isUseJdbcUrl,    jdbcUrl,
 					  lbhostStr,       host, h2FilePath,
 					  lbportStr,       port,
 					  lbdefaultSchemaStr,   defaultSchema, 
@@ -334,7 +373,7 @@ public class ConnectionEditor {
 
 	public static void ConnectionInfoSetting(SqluckyConnector dp) {
 		if(dp != null)
-			ConnectionInfoSetting(true, dp.getConnName(), dp.getUser(), dp.getPassWord(), dp.getHost(), dp.getPort(),
+			ConnectionInfoSetting(true, dp.getConnName(), dp.getUser(), dp.getPassWord(), dp.getHostOrFile(), dp.getPort(),
 				dp.getDbVendor(), dp.getDefaultSchema(), dp.getDbName(), dp);
 	}
 
@@ -467,7 +506,7 @@ public class ConnectionEditor {
 					String connName = item.getValue().getName();
 					SqluckyConnector po = DBConns.get(connName);
 					po1 = po;
-					po.setConning(true);
+					po.setInitConnectionNodeStatus(true);
 
 					po.getConn();
 					if (po.isAlive()) {
@@ -481,7 +520,7 @@ public class ConnectionEditor {
 						});
 					} else {
 						Platform.runLater(() -> {
-							MyAlert.errorAlert( " Cannot connect ip:" + po.getHost() + " port:" + po.getPort() + "  !");
+							MyAlert.errorAlert( " Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
 							item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
 							AppWindowComponentGetter.treeView.refresh();
 
@@ -499,7 +538,7 @@ public class ConnectionEditor {
 					
 				} finally {
 					DBConns.flushChoiceBoxGraphic();
-					po1.setConning(false);
+					po1.setInitConnectionNodeStatus(false);
 				}
 
 			}
@@ -508,12 +547,12 @@ public class ConnectionEditor {
 	}
 	
 	
-	public static Button createTestBtn(Function<String, SqluckyConnector> call ) {
+	public static Button createTestBtn(Function<String, SqluckyConnector> assembleSqlCon ) {
 		Button testBtn = new Button("Test"); 
 		testBtn.setOnMouseClicked(e -> {
 			testBtn.setStyle("-fx-background-color: red ");
 			logger.info("Test connection~~");
-			SqluckyConnector connpo = call.apply("");
+			SqluckyConnector connpo = assembleSqlCon.apply("");
 			if (connpo != null) {
 				CommonAction.isAliveTestAlert(connpo, testBtn);
 			}
@@ -521,10 +560,10 @@ public class ConnectionEditor {
 		return testBtn;
 	}
 	
-	public static Button createSaveBtn(Function<String, SqluckyConnector> call , TextField connectionName ,SqluckyConnector dp, Stage stage) {
+	public static Button createSaveBtn(Function<String, SqluckyConnector> assembleSqlCon , TextField connectionName ,SqluckyConnector dp, Stage stage) {
 		Button saveBtn = new Button("Save");
 		saveBtn.setOnMouseClicked(e -> {
-			SqluckyConnector connpo = call.apply("");
+			SqluckyConnector connpo = assembleSqlCon.apply("");
 			if (connpo != null) {  
 				// 先删除树中的节点
 				if (dp != null) {
@@ -555,6 +594,7 @@ public class ConnectionEditor {
 	public static void layout(GridPane grid  , 
 			Control lbconnNameStr, Control connectionName, 
 			Control lbdbDriverStr, Control dbDriver,
+			Control isUseJU, Control jdbcUrl,
 			Control lbhostStr, Control host,  Control h2FilePath,
 			Control lbportStr, Control port,
 			Control lbdefaultSchemaStr, Control defaultSchema, 
@@ -570,6 +610,9 @@ public class ConnectionEditor {
 
 		grid.add(lbdbDriverStr, 0, i++);
 		grid.add(dbDriver, 1, j++);
+		
+		grid.add(isUseJU, 0, i++);
+		grid.add(jdbcUrl, 1, j++);
 
 		grid.add(lbhostStr, 0, i++);
 		int tmp = j++;

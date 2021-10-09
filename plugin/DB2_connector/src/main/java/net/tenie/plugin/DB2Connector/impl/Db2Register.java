@@ -43,7 +43,15 @@ public class Db2Register implements SqluckyDbRegister{
 	public String getName() {
 		return dbVendor;
 	}
+
+	@Override
+	public boolean getMustUseJdbcUrl() {
+		return false;
+	}
 	
-	
+	@Override
+	public String getInstanceName() {
+		return "";
+	}
 	
 }

@@ -41,13 +41,6 @@ public class Db2Connector extends DbConnector {
 		return val;
 	}
 
-//	@Override
-//	public void setExportDDL(ExportDDL exportDDL) {
-//		 getConnPo().setExportDDL(exportDDL);		
-//	}
-
-
-
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
 		var schemas = getConnPo().getSchemas();
@@ -126,13 +119,14 @@ public class Db2Connector extends DbConnector {
 		DBConnectorInfoPo val = new DBConnectorInfoPo(  
 				getConnName()+"Copy",
 				getDriver(),
-				getHost(),
+				getHostOrFile(),
 				getPort(),
 				getUser(),
 				getPassWord(),
 				getDbVendor(),
 				schema,
-				getDbName()
+				getDbName(),
+				getJdbcUrl()
 				);
 		var dbc = new Db2Connector(val);
 		
@@ -148,29 +142,14 @@ public class Db2Connector extends DbConnector {
 
 	@Override
 	public String getJdbcUrl() {
-//		return connPo.getJdbcUrl();
-//		if (getJdbcUrl() == null || getJdbcUrl().length() == 0) {
-//			if (this.isH2()) {
-//				jdbcUrl = "jdbc:h2:" + host;
-//				defaultSchema = "PUBLIC";
-//			}else if (this.isSqlite()) {
-//				jdbcUrl = "jdbc:sqlite:" + host;
-//				defaultSchema = SQLITE_DATABASE;
-//			} else if (this.isPostgresql()) {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + dbName;
-//			} else {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + defaultSchema;
-//				if (otherParameter != null && otherParameter.length() > 0) {
-//					jdbcUrl += "?" + getOtherParameter();
-//				}
-//			}
-		 
-
-//		}
-		String jdbcUrl = jdbcUrl = "jdbc:" + getDbVendor() + "://" + getHost() + ":" + getPort() + "/" + getDefaultSchema();
-//		logger.info(jdbcUrl);
-
-		return jdbcUrl;
+		String jdbcUrlstr = connPo.getJdbcUrl();
+		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
+			return jdbcUrlstr;
+		}else {
+			jdbcUrlstr  = "jdbc:" + getDbVendor() + "://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+			connPo.setJdbcUrl(jdbcUrlstr);
+		}
+		return  jdbcUrlstr;
 	}
 
 

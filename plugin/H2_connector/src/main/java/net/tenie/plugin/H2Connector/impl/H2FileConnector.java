@@ -31,13 +31,13 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class H2Connector extends DbConnector {
+public class H2FileConnector extends DbConnector {
  
 	
-	public H2Connector(DBConnectorInfoPo connPo) {
+	public H2FileConnector(DBConnectorInfoPo connPo) {
 		super(connPo);
 		ExportSqlH2Imp ex = new ExportSqlH2Imp();
-		getConnPo().setExportDDL( ex);
+		getConnPo().setExportDDL( ex); 
 	} 
 	 
 
@@ -54,15 +54,6 @@ public class H2Connector extends DbConnector {
 		var schemas = getConnPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
-//				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//					Map<String, DbSchemaPo> sch = new HashMap<>();
-//					DbSchemaPo sp = new DbSchemaPo();
-//					sp.setSchemaName(SQLITE_DATABASE);
-//					sch.put(SQLITE_DATABASE, sp);
-//					schemas = sch;
-//				} else {
-//					schemas = Dbinfo.fetchSchemasInfo(this);					
-//				}
 				schemas = fetchSchemasInfo();		
 			}
 		} catch (Exception e) {
@@ -90,13 +81,6 @@ public class H2Connector extends DbConnector {
 		Connection conn = getConn();
 		try {
 			DatabaseMetaData dmd = conn.getMetaData();
-//			if (    DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())
-//				||  DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())
-//					) {
-//				rs = dmd.getCatalogs();
-//			} else {
-//				rs = dmd.getSchemas(); // 默认 db2
-//			}
 			rs = dmd.getSchemas(); // 默认 db2
 
 			while (rs.next()) {
@@ -137,7 +121,7 @@ public class H2Connector extends DbConnector {
 				getJdbcUrl()
 				
 				);
-		var dbc = new H2Connector(val);
+		var dbc = new H2FileConnector(val);
 		
 		return dbc;
 	}
@@ -175,7 +159,7 @@ public class H2Connector extends DbConnector {
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
-			jdbcUrlstr = "jdbc:h2:tcp//" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+			jdbcUrlstr = "jdbc:h2:" + connPo.getHostOrFile();
 			connPo.setJdbcUrl(jdbcUrlstr);
 		}
 		

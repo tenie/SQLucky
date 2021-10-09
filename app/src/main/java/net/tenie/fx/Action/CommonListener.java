@@ -87,7 +87,7 @@ public class CommonListener {
 				System.out.println("choiceBoxChange2");
 				if (newValue != null) {
 					SqluckyConnector cnnpo = DBConns.get(newValue.getText());
-					if (cnnpo != null && !cnnpo.isAlive() && !cnnpo.isConnIng()) {
+					if (cnnpo != null && !cnnpo.isAlive()) {
 						//清除查找字符串
 						IndexRange ir = SqlcukyEditor.getSelection();
 						CommonAction.pressBtnESC();	

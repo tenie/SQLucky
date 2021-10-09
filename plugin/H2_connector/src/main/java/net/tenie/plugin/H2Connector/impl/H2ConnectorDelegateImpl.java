@@ -9,9 +9,10 @@ public class H2ConnectorDelegateImpl implements PluginDelegate {
 	public void load() {
 		System.out.println("load:  h2-file-ConnectorDelegateImpl..."); 
 		// 注册
-		H2FileRegister reg = new H2FileRegister();
+		H2Register reg = new H2Register();
 		ComponentGetter.appComponent.registerDBConnector(reg);
-		
+		H2FileRegister regFile = new H2FileRegister();
+		ComponentGetter.appComponent.registerDBConnector(regFile);
 		
 	}
 	@Override

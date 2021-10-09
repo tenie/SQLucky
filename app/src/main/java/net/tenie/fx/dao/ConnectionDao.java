@@ -84,7 +84,9 @@ public class ConnectionDao {
 						rd.getString("PASS_WORD"),
 						rd.getString("VENDOR"), //dbDriver.getValue(),
 						rd.getString("SCHEMA"), //defaultSchema.getText()	
-						rd.getString("DB_NAME"));
+						rd.getString("DB_NAME"),
+						rd.getString("JDBC_URL")
+						);
 		    	
 		    	SqluckyDbRegister reg = DbVendor.register( vendor );
 				SqluckyConnector po = reg.createConnector(connPo); 
@@ -107,7 +109,7 @@ public class ConnectionDao {
 		    String connName =     po.getConnName();
 		    String user =         po.getUser();
 		    String passWord =     po.getPassWord();
-		    String host =         po.getHost();
+		    String hostOrFile =         po.getHostOrFile();
 		    String port =         po.getPort();
 		    String driver =       po.getDriver();
 		    String dbVendor =     po.getDbVendor();
@@ -124,7 +126,7 @@ public class ConnectionDao {
 							+ " CONN_NAME = '"+ connName +"' , "
 							+ " USER = '"+ user +"' ,"
 							+ " PASS_WORD = '"+ passWord +"' ,"
-							+ " HOST = '"+ host +"' ,"
+							+ " HOST = '"+ hostOrFile +"' ,"
 							+ " PORT = '"+ port +"' , "
 							+ " DRIVER = '"+ driver +"' , "
 							+ " VENDOR = '"+ dbVendor +"' , "
@@ -149,7 +151,7 @@ public class ConnectionDao {
 						+"'"+ connName +"' , "
 						+"'"+ user +"' ,"
 						+"'"+ passWord +"' ,"
-						+"'"+ host +"' ,"
+						+"'"+ hostOrFile +"' ,"
 						+"'"+ port +"' , "
 						+"'"+ driver +"' , "
 						+"'"+ dbVendor +"' , "

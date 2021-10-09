@@ -26,7 +26,8 @@ public interface SqluckyConnector {
 	
 	public String getDbVendor();
 	
-	public Boolean isConnIng();
+//	public Boolean isConnIng();
+	
 	public void closeConn();
 	public Integer getId();
 	public void setId(Integer id);
@@ -35,7 +36,7 @@ public interface SqluckyConnector {
 	
 	public String getConnName();
 	
-	public void setConning(Boolean tf);
+	public void setInitConnectionNodeStatus(Boolean tf);
 	public boolean isAlive();
 	
 	public void setComment(String comment);
@@ -45,11 +46,12 @@ public interface SqluckyConnector {
 	public String getDbName();
 	public String getUser();
 	public String getPassWord();
-	public String getHost();
+	public String getHostOrFile();
 	public String getPort();
 	public String getDefaultSchema();
 	public String getRealDefaultSchema();
 	public StringProperty DateToStringStringProperty(Date val);
 	
 	public  Map<String, DbSchemaPo> fetchSchemasInfo();
+//	String getJdbcUrl();
 }

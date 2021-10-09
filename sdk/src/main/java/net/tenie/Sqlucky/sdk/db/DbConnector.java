@@ -18,97 +18,39 @@ import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 
 public abstract class DbConnector implements SqluckyConnector { 
 
-	private static Logger logger = LogManager.getLogger(DbConnector.class);
-//	private Integer id;
-//	private String connName; // 连接名称
-//	private String host;
-//	private String port;
-//	private String driver;
-//	private String dbVendor;
-//	private String defaultSchema;
-//	private String dbName;
-//	private String user;
-//	private String passWord;
-//	private String jdbcUrl;
-//	private String otherParameter; // 可以为空,
-//	private String comment; // 可以为空,
-//	private Date createdAt;
-//	private Date updatedAt;
-//	private Integer recordVersion;
-//	private Connection conn;
-	private DBConnectorInfoPo connPo;
+	private static Logger logger = LogManager.getLogger(DbConnector.class); 
+	protected DBConnectorInfoPo connPo;
 	
-	
-	
-	private String SQLITE_DATABASE = "SQLITE DATABASE";
-
-	
-
-//	public DbConnector copyObj(SqluckyConnector sopo, String schema) {
-//		DbConnector val = null;
-////				new DbConnector(  
-////				sopo.getConnName()+"Copy",
-////				sopo.getDriver(),
-////				sopo.getHost(),
-////				sopo.getPort(),
-////				sopo.getUser(),
-////				sopo.getPassWord(),
-////				sopo.getDbVendor(),
-////				schema,
-////				sopo.getDbName()
-////				);
-////		
-//		return val;
-//	}
 	 
  
 	public DbConnector(DBConnectorInfoPo connPo) {
 		super();
 		this.connPo = connPo;
 	}
+ 
 
-//	public DbConnector(String connName, String driver, String host, String port, String user, String passWord,
-//			String dbVendor, String defaultSchema,String dbName
-//
-//	) {
-//		super();
-//		this.connName = connName;
-//		this.host = host;
-//		this.port = port;
-////		this.defaultSchema = defaultSchema.trim();
-//		this.dbVendor = dbVendor;
-////		if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
-////			this.defaultSchema = "public";
-////		} else {
-////			this.defaultSchema = defaultSchema.trim();
-////		}
-//		this.defaultSchema = defaultSchema.trim();
-//		this.driver = driver;
-//		this.user = user;
-//		this.passWord = passWord;
-//		this.dbName = dbName;
-//
-////		setExportDDL(dbVendor);
-//	}
-
-	// 正在连接中, 原子操作
-	private AtomicBoolean connectionIng = new AtomicBoolean(false);
+	//正在连接中, 原子操作
+	private AtomicBoolean finishInitNodeStatus = new AtomicBoolean(true);
 	
 	//是不是正在连接
-	public Boolean isConnIng() {
-		return connectionIng.get();
+	public synchronized  Boolean finishInitNode() {
+		return finishInitNodeStatus.get();
 	}
-	public void setConning(Boolean tf) {
-		connectionIng.set(tf);
+	@Override
+	public synchronized void setInitConnectionNodeStatus(Boolean tf) {
+		finishInitNodeStatus.set(tf);
 	}
+	
 	// 判断是否连接着
 	public boolean isAlive() {
 		boolean tf = false; 
-		if (this.connPo.getConn() != null) {
-			tf = true;
-		}
+		if(finishInitNode( )) {
+			if (this.connPo.getConn() != null) {
+				tf = true;
+			}
+		} 
 		return tf;
-	}
+	} 
 		
 
 	// 刷新Schema中的tabs
@@ -243,8 +185,8 @@ public abstract class DbConnector implements SqluckyConnector {
 ////		this.connName = connName;
 //	}
 
-	public String getHost() {
-		return this.connPo.getHost();
+	public String getHostOrFile() {
+		return this.connPo.getHostOrFile();
 	}
 
 //	public void setHost(String host) {

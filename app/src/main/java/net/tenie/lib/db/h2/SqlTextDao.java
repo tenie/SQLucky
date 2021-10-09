@@ -29,6 +29,7 @@ public class SqlTextDao {
 			"  `PASS_WORD` VARCHAR(1000)   NOT NULL,\n" + 
 			"  `HOST` VARCHAR(200) ,\n" + 
 			"  `PORT` VARCHAR(10) , \n" + 
+			"  `JDBC_URL` VARCHAR(500) , \n" + 
 			"  `DRIVER` VARCHAR(200) ,\n" + 
 			"  `VENDOR` VARCHAR(100)  ,\n" + 
 			"  `SCHEMA` VARCHAR(200)  ,\n" + 

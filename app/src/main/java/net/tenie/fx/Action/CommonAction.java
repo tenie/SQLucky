@@ -746,7 +746,7 @@ public class CommonAction {
 						connpo.closeConn();
 						testBtn.setStyle("-fx-background-color: green ");
 					} else {
-						MyAlert.errorAlert(" Cannot connect ip:" + connpo.getHost() + " port:" + connpo.getPort() + "  !");
+						MyAlert.errorAlert(" Connect fail !");
 
 					}
 

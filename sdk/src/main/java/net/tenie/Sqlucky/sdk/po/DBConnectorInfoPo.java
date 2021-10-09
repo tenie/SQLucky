@@ -9,7 +9,7 @@ import net.tenie.Sqlucky.sdk.db.ExportDDL;
 public class DBConnectorInfoPo {
 	private Integer id;
 	private String connName; // 连接名称
-	private String host;
+	private String hostOrFile;
 	private String port;
 	private String driver;
 	private String dbVendor;
@@ -30,10 +30,10 @@ public class DBConnectorInfoPo {
 	private Map<String, DbSchemaPo> schemas;
 
 	public DBConnectorInfoPo(String connName, String driver, String host, String port, String user, String passWord,
-			String dbVendor, String defaultSchema,String dbName 
+			String dbVendor, String defaultSchema,String dbName , String jdbcurlStr
 	) { 
 		this.connName = connName;
-		this.host = host;
+		this.hostOrFile = host;
 		this.port = port;
 //		this.defaultSchema = defaultSchema.trim();
 		this.dbVendor = dbVendor;
@@ -47,6 +47,7 @@ public class DBConnectorInfoPo {
 		this.user = user;
 		this.passWord = passWord;
 		this.dbName = dbName;
+		this.jdbcUrl = jdbcurlStr;
 //		this.exportDDL = exportDDL;
 
 //		setExportDDL(dbVendor);
@@ -67,11 +68,11 @@ public class DBConnectorInfoPo {
 	public void setConnName(String connName) {
 		this.connName = connName;
 	}
-	public String getHost() {
-		return host;
+	public String getHostOrFile() {
+		return hostOrFile;
 	}
-	public void setHost(String host) {
-		this.host = host;
+	public void setHostOrFile(String host) {
+		this.hostOrFile = host;
 	}
 	public String getPort() {
 		return port;
@@ -217,6 +218,11 @@ public class DBConnectorInfoPo {
 	public void setDisplaySchema(String displaySchema) {
 		this.displaySchema = displaySchema;
 	}
+
+
+
+
+
 
 	
 }

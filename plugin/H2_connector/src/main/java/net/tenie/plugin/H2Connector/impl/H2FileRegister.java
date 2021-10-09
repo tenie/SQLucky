@@ -7,8 +7,16 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 public class H2FileRegister implements SqluckyDbRegister{
 	private String driver = "";
 	private String dbVendor = "H2-file";
-	private boolean JdbcUrlIsFile = true;
+	private boolean JdbcUrlIsFile = false; 
+	private boolean mustUseJdbcUrl = false;
 	
+	public boolean getMustUseJdbcUrl() {
+		return mustUseJdbcUrl;
+	}
+  
+	public void setMustUseJdbcUrl(boolean mustUseJdbcUrl) {
+		this.mustUseJdbcUrl = mustUseJdbcUrl;
+	}
 	
 	@Override
 	public String getDriver() { 
@@ -16,7 +24,7 @@ public class H2FileRegister implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new H2Connector(connPo);
+		return new H2FileConnector(connPo);
 	}
 
 	public String getDbVendor() {
@@ -43,7 +51,10 @@ public class H2FileRegister implements SqluckyDbRegister{
 	public String getName() {
 		return dbVendor;
 	}
-	
+	@Override
+	public String getInstanceName() {
+		return "PUBLIC";
+	}
 	
 	
 }

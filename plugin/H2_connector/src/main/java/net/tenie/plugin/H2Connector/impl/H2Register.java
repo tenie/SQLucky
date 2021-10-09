@@ -10,6 +10,7 @@ public class H2Register implements SqluckyDbRegister{
 	private boolean JdbcUrlIsFile = false;
 	
 	
+	
 	@Override
 	public String getDriver() { 
 		return driver;
@@ -42,6 +43,16 @@ public class H2Register implements SqluckyDbRegister{
 	@Override
 	public String getName() {
 		return dbVendor;
+	}
+
+	@Override
+	public boolean getMustUseJdbcUrl() {
+		return true;
+	}
+
+	@Override
+	public String getInstanceName() {
+		return "PUBLIC";
 	}
 	
 	
