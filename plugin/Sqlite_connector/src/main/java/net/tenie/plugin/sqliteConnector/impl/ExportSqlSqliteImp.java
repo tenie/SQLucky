@@ -1,10 +1,9 @@
-package net.tenie.lib.db;
+package net.tenie.plugin.sqliteConnector.impl;
 
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import net.tenie.fx.config.DbVendor;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TableFieldPo;
@@ -13,9 +12,11 @@ import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-/* 
- *  * @author tenie 
- *  
+
+/**
+ * 
+ * @author tenie
+ *
  */
 public class ExportSqlSqliteImp implements ExportDDL {
  

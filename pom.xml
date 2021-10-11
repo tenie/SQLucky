@@ -9,6 +9,7 @@
      <module>plugin/note</module>
 	 <module>plugin/DB2_connector</module>
 	 <module>plugin/H2_connector</module>
+	 <module>plugin/Sqlite_connector</module>
 	 <module>app</module>   
   </modules>
 	

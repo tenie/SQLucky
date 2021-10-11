@@ -34,7 +34,7 @@ public class Dbinfo {
 	private Connection conn = null; 
 
 	private String driver, url, us, ps;
-	private String sqliteDriver;
+//	private String sqliteDriver;
     
 	//加载 jar
 	static {
@@ -57,16 +57,15 @@ public class Dbinfo {
 		this.url = url;
 		this.us = us;
 		this.ps = ps;
-		this.sqliteDriver = "";
+//		this.sqliteDriver = "";
 	}
 	
-//	public Dbinfo(String sqliteDriver) {
-//		this.driver = "";
-//		this.url = "";
-//		this.us = "";
-//		this.ps = "";
-//		this.sqliteDriver = sqliteDriver;
-//	}
+	public Dbinfo() {
+		this.driver = "";
+		this.url = "";
+		this.us = "";
+		this.ps = ""; 
+	}
 	
 	
 
@@ -91,6 +90,27 @@ public class Dbinfo {
 		}
 		return conn;
 	}
+	
+	
+	public  Connection getconn(String jdbcurl) {
+		if (conn == null) {
+			try {
+				conn = DriverManager.getConnection(jdbcurl);  
+			} catch (Exception e) { 
+				logger.error(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		return conn;
+	}
+	
+	public  static Connection getConnByJdbc(String jdbcurl) {
+		var dbinfo = new Dbinfo();
+		return dbinfo.getconn(jdbcurl);
+	}
+	
+	
+	
 
 	public void close() {
 		if (conn != null) {

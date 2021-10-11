@@ -25,11 +25,11 @@ import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 public class H2Db {
 	private static Connection conn;
 	// 连接打开次数的计数, 只有当connTimes = 0 , 调用close, 才会真的关闭
-//	private static AtomicInteger connTimes = new AtomicInteger(0);
+	private static AtomicInteger connTimes = new AtomicInteger(0);
 	
-	// 使用阻塞队列, 串行获取: 连接, 和关闭连接
-	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
-	public   static Connection getConn() {
+	// 使用阻塞队列, 串行获取: 连接, 和关闭连接 
+//	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
+	public synchronized  static Connection getConn() {
 		try {
 			if (conn == null) {
 				conn =  execConn() ;
@@ -43,16 +43,34 @@ public class H2Db {
 			}else if( conn.isClosed()) {
 				conn =  execConn() ;
 			}
-			bQueue.put(conn);
+//			bQueue.put(conn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-//		int v = connTimes.addAndGet(1);
-//		System.out.println("getConn = connIdx = "+ connTimes.get() + " v = " +v);
+		int v = connTimes.addAndGet(1);
+		System.out.println("getConn = connIdx = "+ connTimes.get() + " v = " +v);
 		
 		return conn;
+	} 
+	
+	public synchronized static void closeConn() {
+		if (conn != null) {
+			try { 
+//				var tmp_conn = bQueue.take();
+//				tmp_conn.close(); 			
+				 
+				int v = connTimes.addAndGet(-1);
+				System.out.println("closeConncloseConncloseConn = connIdx = "+ connTimes.get());
+				if(v <= 0) {
+					conn.close(); 					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
+
 	
 	public static boolean isDev() {
 		String  modulePath = System.getProperty("jdk.module.path");
@@ -76,23 +94,6 @@ public class H2Db {
 		Dbinfo dbinfo = new Dbinfo("jdbc:h2:" + path + "h2db3", "sa", "xyz123qweasd");
 		Connection connection = dbinfo.getconn();
 		return connection;
-	}
-
-	public  static void closeConn() {
-		if (conn != null) {
-			try { 
-				var tmp_conn = bQueue.take();
-				tmp_conn.close(); 			
-				 
-//				int v = connTimes.addAndGet(-1);
-//				System.out.println("closeConncloseConncloseConn = connIdx = "+ connTimes.get());
-//				if(v <= 0) {
-//					conn.close(); 					
-//				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	private static List<String> updateSQL(){

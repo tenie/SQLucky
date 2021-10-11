@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Map;
 
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class DBConnectorInfoPo {
 	private Integer id;
@@ -28,6 +29,7 @@ public class DBConnectorInfoPo {
 	private ExportDDL exportDDL; 
 	private boolean JdbcUrlIsFile = false;
 	private Map<String, DbSchemaPo> schemas;
+	private boolean jdbcUrlUse = false;
 
 	public DBConnectorInfoPo(String connName, String driver, String host, String port, String user, String passWord,
 			String dbVendor, String defaultSchema,String dbName , String jdbcurlStr
@@ -47,6 +49,9 @@ public class DBConnectorInfoPo {
 		this.user = user;
 		this.passWord = passWord;
 		this.dbName = dbName;
+		if(StrUtils.isNotNullOrEmpty(jdbcurlStr)) {
+			jdbcUrlUse = true;
+		}
 		this.jdbcUrl = jdbcurlStr;
 //		this.exportDDL = exportDDL;
 
@@ -217,6 +222,20 @@ public class DBConnectorInfoPo {
 
 	public void setDisplaySchema(String displaySchema) {
 		this.displaySchema = displaySchema;
+	}
+
+
+
+
+	public boolean isJdbcUrlUse() {
+		return jdbcUrlUse;
+	}
+
+
+
+
+	public void setJdbcUrlUse(boolean jdbcUrlUse) {
+		this.jdbcUrlUse = jdbcUrlUse;
 	}
 
 

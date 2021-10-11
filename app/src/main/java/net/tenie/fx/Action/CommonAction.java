@@ -33,6 +33,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
+import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -58,7 +59,68 @@ public class CommonAction {
 	private static Logger logger = LogManager.getLogger(CommonAction.class);
 	private static int windowsUiBugTag = 0;
 	
+	public static void openConn(TreeItem<TreeNodePo> item) {
+		// 判断 节点是否已经有子节点
+		if (item.getChildren().size() == 0) {
+			CommonAction.backRunOpenConn(item);
+		}
+	}
 	
+	// 子线程打开db连接backRunOpenConn
+	public static void backRunOpenConn(TreeItem<TreeNodePo> item) {
+		Node nd = IconGenerator.svgImage("spinner", "red", false);
+		CommonUtility.rotateTransition(nd);
+		item.getValue().setIcon( nd);
+		AppWindowComponentGetter.treeView.refresh();
+
+		Thread t = new Thread() {
+			public void run() {
+				SqluckyConnector po1 = null;
+				try {
+					 
+					logger.info("backRunOpenConn()");
+					String connName = item.getValue().getName();
+					SqluckyConnector po = DBConns.get(connName);
+					po1 = po;
+					po.setInitConnectionNodeStatus(true);
+
+					po.getConn();
+					if (po.isAlive()) {
+						ConnItemContainer connItemContainer = new  ConnItemContainer(po, item);
+						TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
+						Platform.runLater(() -> {
+							item.getChildren().add(s);
+							item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00", false));							
+							connItemContainer.selectTable(po.getDefaultSchema());
+							DBConns.flushChoiceBox(connName);
+						});
+					} else {
+						Platform.runLater(() -> {
+							MyAlert.errorAlert( " Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
+							item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
+							AppWindowComponentGetter.treeView.refresh();
+
+						});
+
+					}
+				} catch (Exception e) { 
+					e.printStackTrace();
+					logger.debug(e.getMessage());
+					Platform.runLater(() -> {
+						MyAlert.errorAlert( " Error !");
+						item.getValue().setIcon(IconGenerator.svgImage("unlink", "red", false));
+						AppWindowComponentGetter.treeView.refresh();
+					});
+					
+				} finally {
+					DBConns.flushChoiceBoxGraphic();
+					po1.setInitConnectionNodeStatus(false);
+				}
+
+			}
+		};
+		t.start();
+	}
 	
 	// 控件移除样式
 	public static void rmCssClass(Node nd, String css) {
@@ -239,7 +301,6 @@ public class CommonAction {
 //				}
 //			}
 //		} finally {
-//			H2Db.closeConn();
 //		}
 //		return val;
 //	}
@@ -818,23 +879,7 @@ public class CommonAction {
 		H2Db.setConfigVal(conn, "OPEN_FILE_DIR", val) ;
 		H2Db.closeConn();
 		ConfigVal.openfileDir = val;
-	}
-	
-	
-	
-//	public static void main(String[] args) {
-//		String sql = "CREATE PROCEDURE P_GEN_PART_MONREPORT (\r\n"
-//				+ "  IN AENTITY_CODE CHARACTER(8),\r\n"
-//				+ "  INOUT RETURN_CODE INTEGER,\r\n"
-//				+ "  OUT RETURN_MSG VARCHAR(60)\r\n"
-//				+ ") BEGIN DECLARE CURYEAR CHAR(4);aaa";
-////		sql = "adasda()sddasd";
-////		String val = firstParenthesisInsideString(sql);
-////		System.out.println(val);
-//		getProcedureFields(sql);
-//		
-//	}
-	
+	}	
 	
 	// 根据括号) 向前寻找配对的括号( 所在的位置.
 	public static int findEndParenthesisRange(String text, int start, String pb , String pe) {

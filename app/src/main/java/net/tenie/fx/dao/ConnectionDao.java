@@ -87,6 +87,14 @@ public class ConnectionDao {
 						rd.getString("DB_NAME"),
 						rd.getString("JDBC_URL")
 						);
+		    	// 设置使用jdbc url的flag 
+		    	if(StrUtils.isNullOrEmpty(connPo.getHostOrFile()) &&
+		    	   StrUtils.isNullOrEmpty(connPo.getPort()) &&
+		    	   StrUtils.isNotNullOrEmpty(connPo.getJdbcUrl()) ) {
+		    		connPo.setJdbcUrlUse(true);
+		    	}else {
+		    		connPo.setJdbcUrlUse(false);
+		    	}
 		    	
 		    	SqluckyDbRegister reg = DbVendor.register( vendor );
 				SqluckyConnector po = reg.createConnector(connPo); 
@@ -116,6 +124,8 @@ public class ConnectionDao {
 		    String defaultSchema =po.getDefaultSchema();
 		    String comment =      po.getComment();
 		    String dbName =      po.getDbName();
+		    String jdbcurl =      po.getJdbcUrl();
+		    
 //		    Date createdAt =      po.getCreatedAt();
 //		    Date updatedAt =      po.getUpdatedAt();
 //		    Integer recordVersion =  po.getRecordVersion(); 
@@ -133,6 +143,8 @@ public class ConnectionDao {
 							
 							+ " SCHEMA = '"+ defaultSchema +"', "
 							+ " DB_NAME = '"+ dbName +"', "
+							+ " JDBC_URL = '"+ jdbcurl +"', "
+							
 							+ " UPDATED_AT = '"+StrUtils.dateToStrL(new Date()) +"'";  
 							if(  StrUtils.isNotNullOrEmpty(comment)) {
 								sql  += ", COMMENT = '"+comment+"' ";
@@ -142,7 +154,7 @@ public class ConnectionDao {
 			}else {
 				// 插入
 			    sql  = " INSERT INTO CONNECTION_INFO "
-						+ "(CONN_NAME , USER, PASS_WORD, HOST, PORT, DRIVER,VENDOR, SCHEMA, DB_NAME, CREATED_AT ";
+						+ "(CONN_NAME , USER, PASS_WORD, HOST, PORT, DRIVER,VENDOR, SCHEMA, DB_NAME, JDBC_URL, CREATED_AT ";
 						if(  StrUtils.isNotNullOrEmpty(comment)) {
 							sql  += ", COMMENT ";
 						}
@@ -157,6 +169,8 @@ public class ConnectionDao {
 						+"'"+ dbVendor +"' , "
 						+"'"+ defaultSchema +"', "
 						+"'"+ dbName +"', "
+						+"'"+ jdbcurl +"', " 
+						
 						+"'"+StrUtils.dateToStrL(new Date()) +"'";  
 						if(  StrUtils.isNotNullOrEmpty(comment)) {
 							sql  += ", '"+comment+"' ";

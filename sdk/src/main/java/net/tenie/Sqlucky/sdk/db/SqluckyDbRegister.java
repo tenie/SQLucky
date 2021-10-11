@@ -14,4 +14,6 @@ public interface SqluckyDbRegister {
 	boolean getJdbcUrlIsFile();
 
 	boolean getMustUseJdbcUrl();
+	
+	boolean hasUser();
 }

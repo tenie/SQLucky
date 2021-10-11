@@ -1,22 +1,14 @@
-package net.tenie.plugin.H2Connector.impl;
+package net.tenie.plugin.sqliteConnector.impl;
 
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 
-public class H2FileRegister implements SqluckyDbRegister{
+public class SqliteRegister implements SqluckyDbRegister{
 	private String driver = "";
-	private String dbVendor = "H2-file";
-	private boolean JdbcUrlIsFile = true; 
-	private boolean mustUseJdbcUrl = false;
+	private String dbVendor = "sqlite";
+	private boolean JdbcUrlIsFile = true;
 	
-	public boolean getMustUseJdbcUrl() {
-		return mustUseJdbcUrl;
-	}
-  
-	public void setMustUseJdbcUrl(boolean mustUseJdbcUrl) {
-		this.mustUseJdbcUrl = mustUseJdbcUrl;
-	}
 	
 	@Override
 	public String getDriver() { 
@@ -24,7 +16,7 @@ public class H2FileRegister implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new H2FileConnector(connPo);
+		return new SqliteConnector(connPo);
 	}
 
 	public String getDbVendor() {
@@ -51,15 +43,20 @@ public class H2FileRegister implements SqluckyDbRegister{
 	public String getName() {
 		return dbVendor;
 	}
+
+	@Override
+	public boolean getMustUseJdbcUrl() {
+		return false;
+	}
+	
 	@Override
 	public String getInstanceName() {
-		return "PUBLIC";
+		return "SQLITE DATABASE";
 	}
 
 	@Override
 	public boolean hasUser() {
-		return true;
+		return false;
 	}
-	
 	
 }

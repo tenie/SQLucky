@@ -171,8 +171,7 @@ public class SqlTextDao {
 		PreparedStatement sm = null; 
 		String sql = "update SCRIPT_ARCHIVE set TITLE_NAME = ?, "
 				   + " SQL_TEXT = ?, FILE_NAME = ? , ENCODE = ?, PARAGRAPH = ? where id = ?";
-		try {  
-//			var conn = H2Db.getConn();
+		try {
 			sm = conn.prepareStatement(sql);
 			sm.setString(1, po.getTitle());
 			sm.setString(2, po.getText());
@@ -191,7 +190,6 @@ public class SqlTextDao {
 				} catch (SQLException e) { 
 					e.printStackTrace();
 				}
-//			H2Db.closeConn();
 		}
 		
 	}

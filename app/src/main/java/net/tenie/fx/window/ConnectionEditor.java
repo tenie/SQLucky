@@ -138,12 +138,22 @@ public class ConnectionEditor {
 		dbDriver.setMinWidth(250);
 		
 		// jdbc url
-		JFXCheckBox isUseJdbcUrl = new JFXCheckBox("Use JDBC URL");
+		JFXCheckBox isUseJdbcUrl = new JFXCheckBox("Use JDBC URL"); 
+	
+		
 		TextField jdbcUrl = new TextField();
+		if(dp!= null && dp.isJdbcUrlUse()) { 
+			Platform.runLater(()->{ 
+				String jdbcUrlVal = dp.getJdbcUrl();  
+				isUseJdbcUrl.setSelected(true);
+				jdbcUrl.setText(jdbcUrlVal);
+				 
+			});
+			
+		}
+		
 		jdbcUrl.setPromptText("jdbc:db://ip:port/xxxx");
-		
 		jdbcUrl.disableProperty().bind(isUseJdbcUrl.selectedProperty().not());
-		
 
 		TextField host = new TextField();
 		host.setPromptText(hostStr);
@@ -158,7 +168,7 @@ public class ConnectionEditor {
 		port.setText(portVal);
 		port.lengthProperty().addListener(CommonListener.textFieldLimit(port, 5));
 		port.textProperty().addListener(CommonListener.textFieldNumChange(port));
-		port.disableProperty().bind(isUseJdbcUrl.selectedProperty());
+		
 
 		TextField user = new TextField();
 		user.setPromptText(userStr);
@@ -178,6 +188,7 @@ public class ConnectionEditor {
 		// 获取db file
 		Button h2FilePath = new Button("...");
 		h2FilePath.setVisible(false);
+		h2FilePath.disableProperty().bind(isUseJdbcUrl.selectedProperty());
 		h2FilePath.setOnAction(e->{
 			String fp = "";
 			File f = FileOrDirectoryChooser.showOpenAllFile("Open", new Stage());
@@ -199,7 +210,14 @@ public class ConnectionEditor {
 				
 		});
 		
-		
+		isUseJdbcUrl.selectedProperty().addListener( (obj, od, n) ->{
+				if(n) {
+					host.setText("");
+					port.setText("");
+				}else {
+					jdbcUrl.setText("");
+				}
+		});
 		//TODO 
 		dbDriver.valueProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
 //			h2FilePath.setVisible(false); 
@@ -213,19 +231,39 @@ public class ConnectionEditor {
 			var dbpo = DbVendor.register(dbDriver.getValue()); 
 			if(dbpo.getMustUseJdbcUrl()) {
 				isUseJdbcUrl.setSelected(true);
-				isUseJdbcUrl.setDisable(true);
+				isUseJdbcUrl.setDisable(true); 
 			}else {
-				isUseJdbcUrl.setSelected(false);
-				isUseJdbcUrl.setText("");
+//				isUseJdbcUrl.setSelected(false); 
 				isUseJdbcUrl.setDisable(false);
 			}
+			
+			//schema/数据库实例名称, h2 ,sqlite 都是固定的
 			String insNa = dbpo.getInstanceName();
 			if(StrUtils.isNotNullOrEmpty(insNa ) ) {
 				defaultSchema.setText(insNa);
 				defaultSchema.setDisable(true);
 			}else {
-				defaultSchema.setText("");
+				defaultSchema.setText(defaultSchemaVal);
 				defaultSchema.setDisable(false);
+			}
+			
+			// isfile
+			if( dbpo.getJdbcUrlIsFile() ) {
+				port.disableProperty().unbind();
+				port.setDisable(true);
+				h2FilePath.setVisible(true);
+			}else {
+				port.setDisable(false);
+				port.disableProperty().bind(isUseJdbcUrl.selectedProperty());
+				h2FilePath.setVisible(false);
+			}
+			
+			if(dbpo.hasUser()) {
+				user.setDisable(false);
+				password.setDisable(false);
+			}else {
+				user.setDisable(true);
+				password.setDisable(true);
 			}
 			
 			
@@ -291,6 +329,7 @@ public class ConnectionEditor {
 					} 
 					return null;
 				} 
+				
 				if (! dbpo.getJdbcUrlIsFile() ) {
 					if (StrUtils.isNullOrEmpty(port.getText())) {
 						MyAlert.errorAlert( "port is empty !");
@@ -473,78 +512,19 @@ public class ConnectionEditor {
 	public static void openDbConn() {
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
-			openConn(val);
+			CommonAction.openConn(val);
 		}
 	}
 
 	// 打开连接
 	public static void openConn(String name) {
 		TreeItem<TreeNodePo> item = DBinfoTree.getTreeItemByName(name);
-		openConn(item);
+		CommonAction.openConn(item);
 	}
 
-	public static void openConn(TreeItem<TreeNodePo> item) {
-		// 判断 节点是否已经有子节点
-		if (item.getChildren().size() == 0) {
-			backRunOpenConn(item);
-		}
-	}
+	
 
-	// 子线程打开db连接backRunOpenConn
-	public static void backRunOpenConn(TreeItem<TreeNodePo> item) { 
-		Node nd = IconGenerator.svgImage("spinner", "red", false);
-		CommonUtility.rotateTransition(nd);
-		item.getValue().setIcon( nd);
-		AppWindowComponentGetter.treeView.refresh();
 
-		Thread t = new Thread() {
-			public void run() {
-				SqluckyConnector po1 = null;
-				try {
-					 
-					logger.info("backRunOpenConn()");
-					String connName = item.getValue().getName();
-					SqluckyConnector po = DBConns.get(connName);
-					po1 = po;
-					po.setInitConnectionNodeStatus(true);
-
-					po.getConn();
-					if (po.isAlive()) {
-						ConnItemContainer connItemContainer = new  ConnItemContainer(po, item);
-						TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
-						Platform.runLater(() -> {
-							item.getChildren().add(s);
-							item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00", false));							
-							connItemContainer.selectTable(po.getDefaultSchema());
-							DBConns.flushChoiceBox(connName);
-						});
-					} else {
-						Platform.runLater(() -> {
-							MyAlert.errorAlert( " Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
-							item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
-							AppWindowComponentGetter.treeView.refresh();
-
-						});
-
-					}
-				} catch (Exception e) { 
-					e.printStackTrace();
-					logger.debug(e.getMessage());
-					Platform.runLater(() -> {
-						MyAlert.errorAlert( " Error !");
-						item.getValue().setIcon(IconGenerator.svgImage("unlink", "red", false));
-						AppWindowComponentGetter.treeView.refresh();
-					});
-					
-				} finally {
-					DBConns.flushChoiceBoxGraphic();
-					po1.setInitConnectionNodeStatus(false);
-				}
-
-			}
-		};
-		t.start();
-	}
 	
 	
 	public static Button createTestBtn(Function<String, SqluckyConnector> assembleSqlCon ) {

@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.TreeObjAction;
 import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
@@ -178,7 +179,7 @@ public class DBinfoTree {
 			if(parentItem == null ) return ;
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
-				ConnectionEditor.openConn(item);
+				CommonAction.openConn(item);
 				CodeArea codeArea  = SqlcukyEditor.getCodeArea(); 
 				codeArea.requestFocus();
 				codeArea.setShowCaret(CaretVisibility.ON);;

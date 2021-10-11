@@ -54,6 +54,11 @@ public class H2Register implements SqluckyDbRegister{
 	public String getInstanceName() {
 		return "PUBLIC";
 	}
+
+	@Override
+	public boolean hasUser() {
+		return true;
+	}
 	
 	
 	

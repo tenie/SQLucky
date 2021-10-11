@@ -1,6 +1,8 @@
 package net.tenie.fx.component.TreeItem;
 
 import java.util.Set;
+
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import net.tenie.fx.PropertyPo.TreeItemType;
@@ -83,8 +85,11 @@ public class ConnItemContainer {
 		for (int i = 0; i < schemaNode.getChildren().size(); i++) {
 			String scheName = schemaNode.getChildren().get(i).getValue().getName();
 			if (itemName.equals(scheName)) {
-				AppWindowComponentGetter.treeView.getSelectionModel()
-						.select(schemaNode.getChildren().get(i).getValue().getConnItem().getTableNode());
+				var nd = schemaNode.getChildren().get(i).getValue().getConnItem().getTableNode();
+				Platform.runLater(()->{
+					AppWindowComponentGetter.treeView.getSelectionModel().select(nd);
+				});
+				break;
 			}
 		}
 //		ConnItem item = connItems.get(key);

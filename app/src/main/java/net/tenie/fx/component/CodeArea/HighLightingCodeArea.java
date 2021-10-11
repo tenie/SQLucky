@@ -96,7 +96,9 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 					});
 
 					// 缓存单词 
-					myAuto.cacheTextWord();
+					if( myAuto != null ) {
+						myAuto.cacheTextWord();
+					}
 					
 				}
 			};

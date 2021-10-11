@@ -60,6 +60,11 @@
 			<artifactId>SQLucky-plugin-H2-connector</artifactId>
 			<version>1.0</version>
 		</dependency>
+		<dependency>
+			<groupId>net.tenie</groupId>
+			<artifactId>SQLucky-plugin-sqlite-connector</artifactId>
+			<version>1.0</version>
+		</dependency>
 		
 
 		<dependency>

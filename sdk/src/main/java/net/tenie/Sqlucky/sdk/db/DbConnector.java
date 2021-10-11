@@ -152,7 +152,7 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo.setComment(comment);
 	}
 
-	public abstract String getJdbcUrl();
+//	public abstract String getJdbcUrl();
 
 //	public void setJdbcUrl(String jdbcUrl) {
 ////		this.jdbcUrl = jdbcUrl;
@@ -316,6 +316,10 @@ public abstract class DbConnector implements SqluckyConnector {
 
 	public void setConnPo(DBConnectorInfoPo connPo) {
 		this.connPo = connPo;
+	}
+	
+	public boolean isJdbcUrlUse() {
+		return this.connPo.isJdbcUrlUse();
 	}
 	
 //	public boolean isSqlite() {

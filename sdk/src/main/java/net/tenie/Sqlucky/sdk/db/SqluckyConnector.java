@@ -50,8 +50,11 @@ public interface SqluckyConnector {
 	public String getPort();
 	public String getDefaultSchema();
 	public String getRealDefaultSchema();
+	
+	public String getJdbcUrl();
+	public boolean isJdbcUrlUse();
 	public StringProperty DateToStringStringProperty(Date val);
 	
-	public  Map<String, DbSchemaPo> fetchSchemasInfo();
+//	public  Map<String, DbSchemaPo> fetchSchemasInfo();
 //	String getJdbcUrl();
 }

@@ -53,5 +53,10 @@ public class Db2Register implements SqluckyDbRegister{
 	public String getInstanceName() {
 		return "";
 	}
+
+	@Override
+	public boolean hasUser() {
+		return true;
+	}
 	
 }
