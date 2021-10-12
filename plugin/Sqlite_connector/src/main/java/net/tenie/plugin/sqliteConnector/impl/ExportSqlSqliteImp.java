@@ -21,10 +21,6 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 public class ExportSqlSqliteImp implements ExportDDL {
  
 	private	FetchDBInfoCommonTools fdbtool;
-	
-	private  List<TablePo> allTableObjs = new ArrayList<>();
-	private  List<TablePo> allViewObjs = new ArrayList<>();
-	
 	public ExportSqlSqliteImp() { 
 		fdbtool  =new FetchDBInfoCommonTools(); 
 	}
@@ -36,8 +32,6 @@ public class ExportSqlSqliteImp implements ExportDDL {
 	public List<TablePo> allTableObj(Connection conn, String schema ){
 		try {
 			List<TablePo>  vals = Dbinfo.fetchAllTableName(conn);
-			// 缓存数据
-			allTableObjs = vals;
 			return vals;
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -59,8 +53,7 @@ public class ExportSqlSqliteImp implements ExportDDL {
 					String ddl = exportCreateView(conn, schema, v.getTableName());
 					v.setDdl(ddl);
 				}); 
-			} 
-			allViewObjs = vals;
+			}
 			return vals;
 		} catch (Exception e) { 
 			e.printStackTrace();

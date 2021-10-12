@@ -8,6 +8,7 @@ public class H2Register implements SqluckyDbRegister{
 	private String driver = "";
 	private String dbVendor = "H2";
 	private boolean JdbcUrlIsFile = false;
+	private String instanceName =  "PUBLIC"; // 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称   
 	
 	
 	
@@ -52,7 +53,7 @@ public class H2Register implements SqluckyDbRegister{
 
 	@Override
 	public String getInstanceName() {
-		return "PUBLIC";
+		return  instanceName;
 	}
 
 	@Override

@@ -146,7 +146,7 @@ public class Db2Connector extends DbConnector {
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
-			jdbcUrlstr  = "jdbc:" + getDbVendor() + "://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+			jdbcUrlstr  = "jdbc:db2://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
 			connPo.setJdbcUrl(jdbcUrlstr);
 		}
 		return  jdbcUrlstr;

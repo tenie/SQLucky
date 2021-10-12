@@ -65,7 +65,23 @@
 			<artifactId>SQLucky-plugin-sqlite-connector</artifactId>
 			<version>1.0</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>net.tenie</groupId>
+			<artifactId>SQLucky-plugin-mysql-connector</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.tenie</groupId>
+			<artifactId>SQLucky-plugin-Mariadb-connector</artifactId>
+			<version>1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>net.tenie</groupId>
+			<artifactId>SQLucky-plugin-Postgresql-connector</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>org.openjfx</groupId>

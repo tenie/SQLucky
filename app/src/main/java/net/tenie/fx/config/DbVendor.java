@@ -62,7 +62,7 @@ public class DbVendor {
 	 * @param Name
 	 * @param driver 可以为空
 	 */
-	public static void registerDB( SqluckyDbRegister db) {
+	public static void registerDbConnection( SqluckyDbRegister db) {
 		if(db == null) return;
 		String name = db.getName();
 		add( name, db);

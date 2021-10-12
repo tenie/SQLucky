@@ -38,7 +38,7 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 	@Override
 	public synchronized void setInitConnectionNodeStatus(Boolean tf) {
-		finishInitNodeStatus.set(tf);
+		finishInitNodeStatus.set( ! tf);
 	}
 	
 	// 判断是否连接着

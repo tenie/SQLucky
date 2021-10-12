@@ -16,8 +16,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.Tooltip;
-import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;

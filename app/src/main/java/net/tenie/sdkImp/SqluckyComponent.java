@@ -95,7 +95,7 @@ public class SqluckyComponent implements AppComponent {
 
 	@Override
 	public void registerDBConnector(SqluckyDbRegister ctr) {
-		DbVendor.registerDB(ctr);
+		DbVendor.registerDbConnection(ctr);
 		
 	}
 

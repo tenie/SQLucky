@@ -1,4 +1,4 @@
-package net.tenie.plugin.H2Connector.impl;
+package net.tenie.plugin.MariadbConnector.impl;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -6,22 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DbConnector;
-import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -31,13 +23,13 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class H2FileConnector extends DbConnector {
+public class MariadbConnector extends DbConnector {
  
 	
-	public H2FileConnector(DBConnectorInfoPo connPo) {
-		super(connPo);
-		ExportSqlH2Imp ex = new ExportSqlH2Imp();
-		getConnPo().setExportDDL( ex); 
+	public MariadbConnector(DBConnectorInfoPo connPo) {
+		super(connPo); 
+		ExportSqlMariadbImp ex = new ExportSqlMariadbImp();
+		getConnPo().setExportDDL( ex);
 	} 
 	 
 
@@ -47,13 +39,22 @@ public class H2FileConnector extends DbConnector {
 		StringProperty val = new SimpleStringProperty(v);
 		
 		return val;
-	} 
+	}
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
 		var schemas = getConnPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
+//				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
+//					Map<String, DbSchemaPo> sch = new HashMap<>();
+//					DbSchemaPo sp = new DbSchemaPo();
+//					sp.setSchemaName(SQLITE_DATABASE);
+//					sch.put(SQLITE_DATABASE, sp);
+//					schemas = sch;
+//				} else {
+//					schemas = Dbinfo.fetchSchemasInfo(this);					
+//				}
 				schemas = fetchSchemasInfo();		
 			}
 		} catch (Exception e) {
@@ -65,13 +66,13 @@ public class H2FileConnector extends DbConnector {
 
 	@Override
 	public String dbRootNodeName() { 
-		return "Schemas";
+		return "Databases";
 	}
 
 
 	@Override
 	public String translateErrMsg(String errString) {
-		String  str = H2ErrorCode.translateErrMsg(errString);
+		String  str = MariadbErrorCode.translateErrMsg(errString);
 		return str;
 	}
 	
@@ -81,7 +82,15 @@ public class H2FileConnector extends DbConnector {
 		Connection conn = getConn();
 		try {
 			DatabaseMetaData dmd = conn.getMetaData();
-			rs = dmd.getSchemas(); // 默认 db2
+//			if (    DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())
+//				||  DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())
+//					) {
+//				rs = dmd.getCatalogs();
+//			} else {
+//				rs = dmd.getSchemas(); // 默认 db2
+//			}
+			rs = dmd.getCatalogs();
+//			rs = dmd.getSchemas(); // 默认 db2
 
 			while (rs.next()) {
 				DbSchemaPo po = new DbSchemaPo();
@@ -119,9 +128,8 @@ public class H2FileConnector extends DbConnector {
 				schema,
 				getDbName(),
 				getJdbcUrl()
-				
 				);
-		var dbc = new H2FileConnector(val);
+		var dbc = new MariadbConnector(val);
 		
 		return dbc;
 	}
@@ -134,45 +142,14 @@ public class H2FileConnector extends DbConnector {
 
 
 	@Override
-	public String getJdbcUrl() {		
-//		return connPo.getJdbcUrl();
-//		if (getJdbcUrl() == null || getJdbcUrl().length() == 0) {
-//			if (this.isH2()) {
-//				jdbcUrl = "jdbc:h2:" + host;
-//				defaultSchema = "PUBLIC";
-//			}else if (this.isSqlite()) {
-//				jdbcUrl = "jdbc:sqlite:" + host;
-//				defaultSchema = SQLITE_DATABASE;
-//			} else if (this.isPostgresql()) {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + dbName;
-//			} else {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + defaultSchema;
-//				if (otherParameter != null && otherParameter.length() > 0) {
-//					jdbcUrl += "?" + getOtherParameter();
-//				}
-//			}
-		 
-
-//		}
-//		jdbc:h2:tcp://localhost:9092/~/config/ssfblog_db
+	public String getJdbcUrl() {
 		String jdbcUrlstr = connPo.getJdbcUrl();
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
-			
-			String fp = connPo.getHostOrFile();
-			if(fp.endsWith(".mv.db"))
-				fp= fp.substring(0, fp.lastIndexOf(".mv.db"));
-			if(fp.endsWith(".trace.db"))
-				fp= fp.substring(0, fp.lastIndexOf(".trace.db"));
-			if(fp.endsWith(".db"))
-				fp= fp.substring(0, fp.lastIndexOf(".db")); 
-			
-			jdbcUrlstr = "jdbc:h2:" +fp;
+			jdbcUrlstr  = "jdbc:mariadb://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
 			connPo.setJdbcUrl(jdbcUrlstr);
 		}
-		
-		 
 		return  jdbcUrlstr;
 	}
 
@@ -198,7 +175,4 @@ public class H2FileConnector extends DbConnector {
 		return getConnPo().getConn();
 
 	}
-
-
-	 
 }

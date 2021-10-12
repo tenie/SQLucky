@@ -77,15 +77,15 @@ public class CommonAction {
 			public void run() {
 				SqluckyConnector po1 = null;
 				try {
-					 
 					logger.info("backRunOpenConn()");
 					String connName = item.getValue().getName();
 					SqluckyConnector po = DBConns.get(connName);
 					po1 = po;
-					po.setInitConnectionNodeStatus(true);
+					po1.setInitConnectionNodeStatus(true);
 
-					po.getConn();
-					if (po.isAlive()) {
+					var conntmp = po1.getConn();
+//					if (po.isAlive()) {
+					if ( conntmp != null) {
 						ConnItemContainer connItemContainer = new  ConnItemContainer(po, item);
 						TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
 						Platform.runLater(() -> {

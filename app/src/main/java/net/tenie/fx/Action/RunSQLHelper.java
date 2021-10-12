@@ -37,6 +37,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.fx.component.AllButtons;
+import net.tenie.fx.component.MyDataTable;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
@@ -146,9 +147,7 @@ public class RunSQLHelper {
 			int type = ParseSQL.parseType(sql);
 			String msg = "";
 			try {
-				if( isCallFunc ) { // 调用存储过程
-//					msg = DmlDdlDao.callFunc(conn, sql);
-//TODO					
+				if( isCallFunc ) { // 调用存储过程  
 					procedureAction(sql, conn ,  callProcedureFields);
 				}else if (type == ParseSQL.SELECT) {
 					  selectAction(sql, dpo); 
@@ -218,7 +217,8 @@ public class RunSQLHelper {
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo) {
 		// 有数据才展示
 		if (ddlDmlpo.getAllDatas().size() > 0) {
-			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+//			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			MyDataTable table = new MyDataTable();
 			// 表内容可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
@@ -226,7 +226,8 @@ public class RunSQLHelper {
 			ObservableList<SqlFieldPo> colss = ddlDmlpo.getFields();
 			ObservableList<ObservableList<StringProperty>> alldata = ddlDmlpo.getAllDatas();
 			DataViewTab dvt = new DataViewTab(table ,table.getId(), ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
-			CacheTabView.addDataViewTab( dvt ,table.getId());
+//			CacheTabView.addDataViewTab( dvt ,table.getId());
+			table.setTableData(dvt);
 			
 			var cols = createTableCol( colss, new ArrayList<String>(), true, dvt);
 			table.getColumns().addAll(cols);
@@ -259,7 +260,8 @@ public class RunSQLHelper {
 		String msg = "";
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		try { 
-			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+//			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			MyDataTable table = new MyDataTable();
 			// 获取表名
 			String tableName = sql; 
 //			ParseSQL.tabName(sql);
@@ -284,7 +286,8 @@ public class RunSQLHelper {
 			ObservableList<SqlFieldPo> colss = dvt.getColss();
 			  
 			//缓存
-			CacheTabView.addDataViewTab( dvt , table.getId());
+//			CacheTabView.addDataViewTab( dvt , table.getId());
+			table.setTableData(dvt);
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
 			
@@ -328,8 +331,10 @@ public class RunSQLHelper {
 	private static void selectAction(String sql, SqluckyConnector dpo ) throws Exception {
 		try { 
 		    Connection conn = dpo.getConn();
-			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
-			// 获取表名
+//			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			
+		    MyDataTable table = new MyDataTable();
+		    // 获取表名
 			String tableName = ParseSQL.tabName(sql);
 			if(StrUtils.isNullOrEmpty(tableName)) {
 				tableName = "Table Name Not Finded";
@@ -355,7 +360,8 @@ public class RunSQLHelper {
 			ObservableList<SqlFieldPo> colss = dvt.getColss();
 			  
 			//缓存
-			CacheTabView.addDataViewTab( dvt , table.getId());
+//			CacheTabView.addDataViewTab( dvt , table.getId());
+			table.setTableData(dvt);
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
 			
@@ -695,7 +701,7 @@ public class RunSQLHelper {
 		ls.forEach(nd->{
 			String idVal = nd.getId();
 			dataTab.getTabs().remove(nd);
-			CacheTabView.clear(idVal); //TODO clear?
+//			CacheTabView.clear(idVal); //TODO clear?
 			
 		});
 	}

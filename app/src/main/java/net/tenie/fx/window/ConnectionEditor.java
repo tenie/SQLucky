@@ -195,16 +195,6 @@ public class ConnectionEditor {
 			if (f != null) { 
 			    fp = f.getAbsolutePath();
 			}
-			//TODO
-			if (dbDriver.getValue().equals("H2")  ) { //DbVendor.h2
-				if(fp.endsWith(".mv.db"))
-					fp= fp.substring(0, fp.lastIndexOf(".mv.db"));
-				if(fp.endsWith(".trace.db"))
-					fp= fp.substring(0, fp.lastIndexOf(".trace.db"));
-				if(fp.endsWith(".db"))
-					fp= fp.substring(0, fp.lastIndexOf(".db"));
-				
-			}
 			host.setText(fp);
 			
 				

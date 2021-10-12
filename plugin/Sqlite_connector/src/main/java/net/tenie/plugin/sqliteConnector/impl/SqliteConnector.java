@@ -49,8 +49,8 @@ public class SqliteConnector extends DbConnector {
 //				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 					Map<String, DbSchemaPo> sch = new HashMap<>();
 					DbSchemaPo sp = new DbSchemaPo();
-					sp.setSchemaName("SQLITE DATABASE");
-					sch.put("SQLITE DATABASE", sp);
+					sp.setSchemaName(SqliteRegister.instanceName);
+					sch.put(SqliteRegister.instanceName, sp);
 					schemas = sch;
 //				} else {
 //					schemas = Dbinfo.fetchSchemasInfo(this);					
@@ -146,7 +146,7 @@ public class SqliteConnector extends DbConnector {
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else { 
-			jdbcUrlstr  = "jdbc:sqlite:" + getHostOrFile();// "jdbc:" + getDbVendor() + "://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+			jdbcUrlstr  = "jdbc:sqlite:" + getHostOrFile(); 
 			connPo.setJdbcUrl(jdbcUrlstr);
 		}
 		return  jdbcUrlstr;

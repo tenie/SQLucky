@@ -1,15 +1,14 @@
-package net.tenie.plugin.sqliteConnector.impl;
+package net.tenie.plugin.MariadbConnector.impl;
 
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 
-public class SqliteRegister implements SqluckyDbRegister{
+public class MariadbRegister implements SqluckyDbRegister{
 	private String driver = "";
-	private String dbVendor = "Sqlite";
-	private boolean JdbcUrlIsFile = true;
-	public static  String instanceName = "SQLITE DATABASE";// 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称   
-	
+	private String dbVendor = "Mariadb";
+	private boolean JdbcUrlIsFile = false;
+	private String instanceName = ""; // 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称
 	
 	@Override
 	public String getDriver() { 
@@ -17,7 +16,7 @@ public class SqliteRegister implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new SqliteConnector(connPo);
+		return new MariadbConnector(connPo);
 	}
 
 	public String getDbVendor() {
@@ -57,7 +56,7 @@ public class SqliteRegister implements SqluckyDbRegister{
 
 	@Override
 	public boolean hasUser() {
-		return false;
+		return true;
 	}
 	
 }

@@ -150,18 +150,6 @@ public final class DBConns {
 	public static boolean isEmpty() {
 		return dbs.isEmpty();
 	}
-
-	// TEST
-//	public static Connection aliveConn() {
-//		Connection conn = null;
-//		for (String key : set) {
-//			DbConnectionPo po = dbs.get(key);
-//			if (po.isAlive()) {
-//				conn = po.getConn();
-//			}
-//		}
-//		return conn;
-//	}
 	
 	// 当前选中的数据库连接名称
 	public static String getCurrentConnectName() {

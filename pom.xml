@@ -10,6 +10,10 @@
 	 <module>plugin/DB2_connector</module>
 	 <module>plugin/H2_connector</module>
 	 <module>plugin/Sqlite_connector</module>
+	 <module>plugin/Mysql_connector</module>
+	 <module>plugin/Mariadb_connector</module>
+	 <module>plugin/Postgresql_connector</module>
+	 
 	 <module>app</module>   
   </modules>
 	

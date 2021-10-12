@@ -1,33 +1,27 @@
-package net.tenie.lib.db;
+package net.tenie.plugin.MariadbConnector.impl;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
-import net.tenie.fx.config.DbVendor;
 
-/* 
- *  * @author tenie 
- *  
+
+/**
+ * 
+ * @author tenie
+ *
  */
 public class ExportSqlMariadbImp implements ExportDDL {
 	private static Logger logger = LogManager.getLogger(ExportSqlMariadbImp.class);
-
 	private FetchDBInfoCommonTools fdb2;
-
-	private List<TablePo> allTableObjs = new ArrayList<>();
-	private List<TablePo> allViewObjs = new ArrayList<>();
-
 	public ExportSqlMariadbImp() {
 		fdb2 = new FetchDBInfoCommonTools();
 
@@ -57,8 +51,6 @@ public class ExportSqlMariadbImp implements ExportDDL {
 //
 //				});
 //			}
-			// 缓存数据
-			allTableObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,7 +73,6 @@ public class ExportSqlMariadbImp implements ExportDDL {
 					v.setDdl(ddl);
 				});
 			}
-			allViewObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();

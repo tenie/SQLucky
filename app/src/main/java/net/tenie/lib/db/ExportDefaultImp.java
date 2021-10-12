@@ -17,9 +17,7 @@ import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
 public class ExportDefaultImp implements ExportDDL {
  
 	private	FetchDBInfoCommonTools fdbtool;
-	
-	private  List<TablePo> allTableObjs = new ArrayList<>();
-	private  List<TablePo> allViewObjs = new ArrayList<>();
+	 
 	
 	public ExportDefaultImp() { 
 		fdbtool  =new FetchDBInfoCommonTools(); 
@@ -47,9 +45,7 @@ public class ExportDefaultImp implements ExportDDL {
 					}
 					
 				});
-			}
-			// 缓存数据
-			allTableObjs = vals;
+			} 
 			return vals;
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -71,8 +67,7 @@ public class ExportDefaultImp implements ExportDDL {
 					String ddl = exportCreateView(conn, schema, v.getTableName());
 					v.setDdl(ddl);
 				}); 
-			} 
-			allViewObjs = vals;
+			}  
 			return vals;
 		} catch (Exception e) { 
 			e.printStackTrace();

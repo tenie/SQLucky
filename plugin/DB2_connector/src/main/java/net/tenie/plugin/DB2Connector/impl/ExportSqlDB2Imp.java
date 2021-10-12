@@ -15,9 +15,6 @@ import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 public class ExportSqlDB2Imp implements ExportDDL {
 
 	private FetchDB2InfoImp fdb2;
-//
-//	private List<TablePo> allTableObjs = new ArrayList<>();
-//	private List<TablePo> allViewObjs = new ArrayList<>();
 
 	public ExportSqlDB2Imp() {
 		fdb2 = new FetchDB2InfoImp();
@@ -49,8 +46,6 @@ public class ExportSqlDB2Imp implements ExportDDL {
 //
 //				});
 //			}
-			// 缓存数据
-//			allTableObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,7 +68,6 @@ public class ExportSqlDB2Imp implements ExportDDL {
 //					v.setDdl(ddl);
 //				});
 //			}
-//			allViewObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();

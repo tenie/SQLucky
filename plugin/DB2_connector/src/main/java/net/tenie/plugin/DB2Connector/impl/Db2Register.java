@@ -6,9 +6,9 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 
 public class Db2Register implements SqluckyDbRegister{
 	private String driver = "com.ibm.db2.jcc.DB2Driver";
-	private String dbVendor = "db2";
+	private String dbVendor = "DB2";
 	private boolean JdbcUrlIsFile = false;
-	
+	private String instanceName = "";  // 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称
 	
 	@Override
 	public String getDriver() { 
@@ -51,7 +51,7 @@ public class Db2Register implements SqluckyDbRegister{
 	
 	@Override
 	public String getInstanceName() {
-		return "";
+		return instanceName;
 	}
 
 	@Override

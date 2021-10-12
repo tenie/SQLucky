@@ -19,9 +19,6 @@ public class ExportSqlH2Imp implements ExportDDL {
  
 	private FetchDBInfoCommonTools fdbtool;
 	
-	private  List<TablePo> allTableObjs = new ArrayList<>();
-	private  List<TablePo> allViewObjs = new ArrayList<>();
-	
 	public ExportSqlH2Imp() { 
 		fdbtool  =new FetchDBInfoCommonTools(); 
 	}
@@ -49,8 +46,6 @@ public class ExportSqlH2Imp implements ExportDDL {
 //					
 //				});
 //			}
-			// 缓存数据
-			allTableObjs = vals;
 			return vals;
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -72,8 +67,7 @@ public class ExportSqlH2Imp implements ExportDDL {
 					String ddl = exportCreateView(conn, schema, v.getTableName());
 					v.setDdl(ddl);
 				}); 
-			} 
-			allViewObjs = vals;
+			}
 			return vals;
 		} catch (Exception e) { 
 			e.printStackTrace();

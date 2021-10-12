@@ -9,6 +9,7 @@ public class H2FileRegister implements SqluckyDbRegister{
 	private String dbVendor = "H2-file";
 	private boolean JdbcUrlIsFile = true; 
 	private boolean mustUseJdbcUrl = false;
+	private String instanceName =  "PUBLIC"; // 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称   
 	
 	public boolean getMustUseJdbcUrl() {
 		return mustUseJdbcUrl;
@@ -53,7 +54,7 @@ public class H2FileRegister implements SqluckyDbRegister{
 	}
 	@Override
 	public String getInstanceName() {
-		return "PUBLIC";
+		return instanceName;
 	}
 
 	@Override
