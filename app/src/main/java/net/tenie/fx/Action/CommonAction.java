@@ -36,6 +36,7 @@ import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.container.DataViewTab;
+import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -693,7 +694,7 @@ public class CommonAction {
 
 	// 查看表明细(一行数据) 快捷键
 	public static void shortcutShowDataDatil() {
-		AnchorPane fp = DataViewTab.dataPane();
+		AnchorPane fp = MyTabData.optionPane();
 		Button btn = (Button) fp.getChildren().get(1);
 		MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
 		Event.fireEvent(btn, me);

@@ -96,6 +96,8 @@ public class DataViewTab {
 	// tab中的表格
 	private FilteredTableView<ObservableList<StringProperty>> table;
 
+	
+	
 	public void clean() {
 		menuItems.clear();
 		menuItems = null;
@@ -136,6 +138,14 @@ public class DataViewTab {
 	//
 //	private DataTabDataPo tdpo ; 
 
+	public AnchorPane getFp() {
+		return fp;
+	}
+
+	public void setFp(AnchorPane fp) {
+		this.fp = fp;
+	}
+
 	public DataViewTab(FilteredTableView<ObservableList<StringProperty>> table, String tabId, String tabName,
 			String sqlStr, Connection dbconns, String connName, ObservableList<SqlFieldPo> colss,
 			ObservableList<ObservableList<StringProperty>> rawData) {
@@ -161,270 +171,11 @@ public class DataViewTab {
 	public DataViewTab() {
 
 	}
+ 
 
-	public Tab createTab(int idx, boolean disable, String time, String rows) {
-		tab = createTab(tabName); 
-		// 构建数据Tab页中的表
-		generateDataPane(disable, time, rows);
-		tab.setContent(dataPane);
-		var dataTab = ComponentGetter.dataTabPane;
-		if (idx > -1) {
-
-			dataTab.getTabs().add(idx, tab);
-		} else {
-			dataTab.getTabs().add(tab);
-		}
-
-		dataTab.getSelectionModel().select(tab);
-		return tab;
-	}
-
-	// 数据tab中的组件
-	public VBox generateDataPane(boolean disable, String time, String rows) {
-		dataPane = new VBox();
-		// 表格上面的按钮
-		fp = ButtonFactory.getDataTableOptionBtnsPane(tabId, disable, time, rows, connName, btns, isLock);
-		fp.setId(tabId);
-		dataPane.setId(tabId);
-		dataPane.getChildren().add(fp);
-		dataPane.getChildren().add(table);
-		VBox.setVgrow(table, Priority.ALWAYS);
-		return dataPane;
-	}
-
-	// 创建Tab
-	public Tab createTab(String tabName) {
-		tab = new Tab(tabName);
-		if(StrUtils.isNullOrEmpty(tabId)) {
-			tabId  = CommonAction.createTabId();
-			CacheTabView.addDataViewTab( this , tabId);
-		}
-		tab.setId(tabId);
-		tab.setOnCloseRequest(CommonEventHandler.dataTabCloseReq(tab));
-		tab.setContextMenu(tableViewMenu(tab));
-		return tab;
-	}
-
-	//TODO 表, 视图 等 数据库对象的ddl语句
-	public void showDdlPanel(String title, String ddl) {
-		showDdlPanel(title, ddl, false); 
-		
-	}
-	public void showDdlPanel(String title, String ddl, boolean isRunFunc ) {
-		tab = createTab(title);
-//		if(StrUtils.isNullOrEmpty(tabId)) {
-//			tabId  = CommonAction.createTabId();
-//			CacheTabView.addDataViewTab( this , tabId);
-//		}
-			
-		tabName = title;
-		VBox box = CreateDDLBox(ddl, isRunFunc, false, title);
-		tab.setContent(box);
-
-		ComponentGetter.dataTabPane.getTabs().add(tab);
-		CommonAction.showDetailPane();
-		ComponentGetter.dataTabPane.getSelectionModel().select(tab);
-	}
-	
-	public void showProcedurePanel(String title, String ddl, boolean isRunFunc ) {
-		tab = createTab(title);
-		
-		tabName = title;
-		VBox box = CreateDDLBox(ddl, isRunFunc, true,title );
-		tab.setContent(box);
-
-		ComponentGetter.dataTabPane.getTabs().add(tab);
-		CommonAction.showDetailPane();
-		ComponentGetter.dataTabPane.getSelectionModel().select(tab);
-		
-	}
 	
 
-	public void showEmptyPanel(String title, String message) {
-		Tab tb = createTab(title);
-		VBox box = CreateDDLBox(message, false, false, title);
-		tb.setContent(box);
-
-		ComponentGetter.dataTabPane.getTabs().add(tb);
-		CommonAction.showDetailPane();
-	}
-
-	public HighLightingCodeArea sqlArea;
-	// 数据tab中的组件
-	public VBox CreateDDLBox(String ddl, boolean isRunFunc, boolean isProc, String name) {
-		VBox vb = new VBox();
-	    sqlArea = new HighLightingCodeArea(null);
-		StackPane sp = sqlArea.getCodeAreaPane(ddl, false);
-		// 表格上面的按钮
-		AnchorPane fp = ddlOptionBtnsPane(ddl, isRunFunc, isProc, name);
-		vb.getChildren().add(fp);
-		vb.getChildren().add(sp);
-		VBox.setVgrow(sp, Priority.ALWAYS);
-		return vb;
-	}
-
-
-	// TODO 数据表格 操作按钮们
-	public AnchorPane ddlOptionBtnsPane(String ddl, boolean isRunFunc ,boolean isProc, String name ) {
-		AnchorPane fp = new AnchorPane();
-		if(StrUtils.isNullOrEmpty(tabId)) {
-			tabId = CommonAction.createTabId();
-			tab.setId(tabId);
-		} 
-		// 锁 
-		JFXButton lockbtn =ButtonFactory.createLockBtn(false, tabId);
-		btns.add(lockbtn);
-		// 保存
-		JFXButton saveBtn = new JFXButton();
-		btns.add(saveBtn);
-		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
-		saveBtn.setOnMouseClicked(e -> { 
-			//TODO 保存存储过程
-			RunSQLHelper.runSQLMethod(sqlArea.getCodeArea().getText(), null, true);
-			saveBtn.setDisable(true);
-			
-		});
-		saveBtn.setTooltip(MyTooltipTool.instance("save"));
-		saveBtn.setDisable(true);
-		btns.add(saveBtn);
-		
-		//编辑
-		JFXButton editBtn = new JFXButton();
-		btns.add(editBtn);
-		editBtn.setGraphic(IconGenerator.svgImageDefActive("edit"));
-		editBtn.setOnMouseClicked(e -> {
-//			SqlEditor.createTabFromSqlFile(ddl, "", "");
-			if (sqlArea != null) {
-				MyCodeArea codeArea = sqlArea.getCodeArea();
-				codeArea.setEditable(true);
-				saveBtn.setDisable(false);
-//				myEvent.btnClick( lockbtn);
-				ButtonFactory.lockLockBtn(tabId, lockbtn);
-
-			}
-		});
-		editBtn.setTooltip(MyTooltipTool.instance("Edit"));
-		editBtn.setId(AllButtons.SAVE);
-		btns.add(editBtn);
-		
-		// 隐藏按钮
-		JFXButton hideBottom = new JFXButton();
-		btns.add(hideBottom);
-		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
-		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
-
-		
-		
-		
-		double offset = 30.0;
-		AnchorPane.setLeftAnchor(editBtn, offset);
-		
-		// 运行按钮
-		if (isRunFunc) {
-			JFXButton runFuncBtn = new JFXButton();
-			runFuncBtn.setGraphic(IconGenerator.svgImageDefActive("play"));
-			runFuncBtn.setOnMouseClicked(e -> {
-				Consumer<String> caller;
-				ButtonFactory.lockLockBtn(tabId, lockbtn);
-				if (isProc) {
-					var fields = CommonUtility.getProcedureFields(ddl);
-					if (fields.size() > 0) {
-						// 有参数的存储过程
-						new ProcedureExecuteWindow( name, fields);
-					} else {
-						// 调用无参数的存储过程
-						caller = x -> {
-							SqluckyConnector dpo = DBConns.getCurrentConnectPO(); 
-							RunSQLHelper.callProcedure(name, dpo, fields);
-						};
-						ModalDialog.showExecWindow("Run Procedure", name, caller);
-
-					}
-
-				} else {
-					caller = x -> {
-						SqluckyConnector dpo = DBConns.getCurrentConnectPO();
-						String sql = dpo.getExportDDL().exportCallFuncSql(x);
-						RunSQLHelper.runSQLMethodRefresh(dpo, sql, null, false);
-					};
-					ModalDialog.showExecWindow("Run function", tabName + "()", caller);
-				}
-
-			});
-			runFuncBtn.setTooltip(MyTooltipTool.instance("Run"));
-			btns.add(runFuncBtn);
-			fp.getChildren().add(runFuncBtn);
-			AnchorPane.setLeftAnchor(runFuncBtn, offset + 30.0);
-		}
-		
-		fp.getChildren().addAll(saveBtn, editBtn, hideBottom , lockbtn);
-		fp.prefHeight(25); 
-		AnchorPane.setRightAnchor(hideBottom, 0.0);
-		AnchorPane.setRightAnchor(lockbtn, 30.0);
-		return fp;
-	}
-
-	// 右键菜单
-	public ContextMenu tableViewMenu(Tab tb) {
-		ContextMenu contextMenu = new ContextMenu();
-		MenuItem closeAll = new MenuItem("Close ALl");
-		closeAll.setOnAction(e -> {
-			List<Tab> ls = new ArrayList<>();
-			for (Tab tab : ComponentGetter.dataTabPane.getTabs()) {
-				ls.add(tab);
-			}
-			ls.forEach(tab -> {
-				CommonAction.clearDataTable(tab);
-			});
-			ComponentGetter.dataTabPane.getTabs().clear();
-		});
-
-		MenuItem closeOther = new MenuItem("Close Other");
-		closeOther.setOnAction(e -> {
-			int size = ComponentGetter.dataTabPane.getTabs().size();
-			if (size > 1) {
-				List<Tab> ls = new ArrayList<>();
-				for (Tab tab : ComponentGetter.dataTabPane.getTabs()) {
-
-					if (!Objects.equals(tab, tb)) {
-						ls.add(tab);
-					}
-				}
-				ls.forEach(tab -> {
-					CommonAction.clearDataTable(tab);
-				});
-
-				ComponentGetter.dataTabPane.getTabs().clear();
-				ComponentGetter.dataTabPane.getTabs().add(tb);
-
-			}
-
-		});
-
-		contextMenu.getItems().addAll(closeAll, closeOther);
-		return contextMenu;
-	}
-
-	public Tab maskTab(String waittbName) {
-		Tab waitTb = new Tab(waittbName);
-		MaskerPane masker = new MaskerPane();
-		waitTb.setContent(masker);
-		return waitTb;
-	}
-
-	public void ifEmptyAddNewEmptyTab(TabPane dataTab, String tabName) {
-		if (dataTab.getTabs().size() == 0) {
-			addEmptyTab(dataTab, tabName);
-		}
-	}
-
-	public Tab addEmptyTab(TabPane dataTab, String tabName) {
-		Tab tb = createTab(tabName);
-		dataTab.getTabs().add(tb);
-
-		return tb;
-	}
-
+	
 	public String getTabId() {
 		return tabId;
 	}
@@ -600,42 +351,17 @@ public class DataViewTab {
 	}
 	
 	
-	// 获取当前数据表的Tab
-	public static Tab currentDataTab() {
-		Tab tab = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-		return tab;
-	}
+	
 	
 	// 获取数据页的id
-	public static String currentDataTabID() {
-		Tab tab = currentDataTab();
-		String id = tab.getId();
-		
-		return id;
-	}
+//	public static String currentDataTabID() {
+//		Tab tab = currentDataTab();
+//		String id = tab.getId();
+//		
+//		return id;
+//	}
 	
-	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
-	public static RsVal tableInfo() {
-		String tableId = DataViewTab.currentDataTabID();
-		String connName =  CacheTabView.getConnName(tableId); // CacheTableDate.getConnName(tableId);
-		String tableName = CacheTabView.getTableName(tableId); // CacheTableDate.getTableName(tableId);
-		Connection conn =  CacheTabView.getDbConn(tableId); //  CacheTableDate.getDBConn(tableId);   
-				
-		var alldata =   CacheTabView.getTabData(tableId); //CacheTableDate.getData(tableId);
-		SqluckyConnector  dbc = DBConns.get(connName); 
-		
-//		Button saveBtn = ComponentGetter.dataPaneSaveBtn();
-		var dataTableView = dataTableView();
-		RsVal rv = new RsVal();
-		rv.conn = conn; 
-		rv.dbconnPo = dbc; 
-		rv.tableName = tableName;
-//		rv.dbc =  dbc; 
-		rv.alldata = alldata;
-//		rv.saveBtn = saveBtn;
-		rv.dataTableView = dataTableView;
-		return rv;
-	}
+	
 	
 	public static RsVal tableInfo(String tableName, String connName, Connection conn ) {
 
@@ -657,33 +383,8 @@ public class DataViewTab {
 		return vb;
 	}
 	
-	// 获取 当前table view 的控制面板
-	public static AnchorPane dataPane() {
-		if(   ComponentGetter.dataTabPane == null  
-		   || ComponentGetter.dataTabPane.getSelectionModel() == null
-		   || ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem() == null) return null;  
-		Node vb =  ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem().getContent();
-		if(vb != null) { 
-			VBox vbx = (VBox) vb;
-			AnchorPane fp = (AnchorPane) vbx.getChildren().get(0);
-			return fp;
-		}
-		return null;
-	}
+
 	
-	// 获取当前table view 的保存按钮
-	public static Button dataPaneSaveBtn() {
-		AnchorPane fp = dataPane();
-		if(fp == null ) return null;
-		return (Button) fp.getChildren().get(0);
-	}
-	
-	// 获取当前table view 的详细按钮
-	public static Button dataPaneDetailBtn() {
-		AnchorPane fp = dataPane();
-		if(fp == null ) return null;
-		return (Button) fp.getChildren().get(1);
-	}
 	
 	// 获取当前的表格
 	@SuppressWarnings("unchecked")
@@ -705,34 +406,24 @@ public class DataViewTab {
 		return dataTableView().getId();
 	}
 
-	// 获取当前数据页面 中的 某个按钮
-	public static Button getDataOptionBtn(String btnName) {
-		AnchorPane fp = dataPane();
-		if(fp == null ) return null;
-		Optional<Node> fn = fp.getChildren().stream().filter(v -> {
-			return v.getId().equals(btnName);
-		}).findFirst();
-		Button btn = (Button) fn.get();
-
-		return btn;
-	}
+	
 	
 	// 获取所有按钮
-	public static List<ButtonBase>  dataPaneBtns() {
-	 
-		List<ButtonBase> ls = new ArrayList<>();
-		for( String key :CacheTabView.getKey()) {
-			ls.addAll(CacheTabView.optionBtns(key) );
-		} 
-		return ls;
-	}
+//	public static List<ButtonBase>  dataPaneBtns() {
+//	 
+//		List<ButtonBase> ls = new ArrayList<>();
+//		for( String key :CacheTabView.getKey()) {
+//			ls.addAll(CacheTabView.optionBtns(key) );
+//		} 
+//		return ls;
+//	}
 	// 获取数据面板中所有右键按钮
-	public static List<MenuItem>  dataPaneMenuItems() {
-		 
-		List<MenuItem> ls = new ArrayList<>();
-		for( String key :CacheTabView.getKey()) {
-			ls.addAll(CacheTabView.MenuItems(key) );
-		} 
-		return ls;
-	}
+//	public static List<MenuItem>  dataPaneMenuItems() {
+//		 
+//		List<MenuItem> ls = new ArrayList<>();
+//		for( String key :CacheTabView.getKey()) {
+//			ls.addAll(CacheTabView.MenuItems(key) );
+//		} 
+//		return ls;
+//	}
 }

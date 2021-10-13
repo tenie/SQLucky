@@ -32,11 +32,11 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.TreeItem.MyTreeItem;
+import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
-import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.tools.IconGenerator;
 
 
@@ -230,7 +230,9 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
-				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, true);
+//				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, true);
+				MyTabData mtd = MyTabData.ddlTab(item.getValue().getName(), sqlStr, true);
+				mtd.show();
 
 			} // 过程
 			else if (parentItem.getValue().getType() != null
@@ -250,7 +252,9 @@ public class DBinfoTree {
 				if( ! fpt.isProcedure()) {
 					fpt.setProcedure(true);
 				}
-				new DataViewTab().showProcedurePanel(item.getValue().getName(), sqlStr, true);
+//				new DataViewTab().showProcedurePanel(item.getValue().getName(), sqlStr, true);
+				MyTabData mtd = MyTabData.ProcedureTab(item.getValue().getName(), sqlStr, true);
+				mtd.show();
 
 			} // trigger
 			else if (parentItem.getValue().getType() != null
@@ -265,7 +269,9 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				} 
-				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
+//				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
+				MyTabData mtd = MyTabData.ddlTab(item.getValue().getName(), sqlStr, false);
+				mtd.show();
 
 			}// index
 			else if (parentItem.getValue().getType() != null
@@ -280,7 +286,10 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
-				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
+//				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
+				MyTabData mtd = MyTabData.ddlTab(item.getValue().getName(), sqlStr, false);
+				mtd.show();
+
 
 			}// Sequence
 			else if (parentItem.getValue().getType() != null
@@ -295,7 +304,10 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				} 
-				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
+//				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
+				MyTabData mtd = MyTabData.ddlTab(item.getValue().getName(), sqlStr, false);
+				mtd.show();
+
 
 			}
 

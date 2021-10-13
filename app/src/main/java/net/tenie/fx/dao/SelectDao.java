@@ -22,6 +22,7 @@ import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.container.DataViewTab;
+import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -396,7 +397,7 @@ public class SelectDao {
 					Platform.runLater(() -> val.setValue("<null>"));
 				}
 				
-				DataViewTab.dataPaneSaveBtn().setDisable(false);
+				MyTabData.dataPaneSaveBtn().setDisable(false);
 				
 
 				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();

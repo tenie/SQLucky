@@ -44,6 +44,7 @@ import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DBinfoTree;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.container.DataViewTab;
+import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
@@ -227,7 +228,7 @@ public class RunSQLHelper {
 			ObservableList<ObservableList<StringProperty>> alldata = ddlDmlpo.getAllDatas();
 			DataViewTab dvt = new DataViewTab(table ,table.getId(), ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
 //			CacheTabView.addDataViewTab( dvt ,table.getId());
-			table.setTableData(dvt);
+//			table.setTableData(dvt);
 			
 			var cols = createTableCol( colss, new ArrayList<String>(), true, dvt);
 			table.getColumns().addAll(cols);
@@ -238,7 +239,10 @@ public class RunSQLHelper {
 			 
 			// 渲染界面
 			if (!thread.isInterrupted()) {
-				DataViewContainer.showTableDate(dvt , "", ""); 				
+//				DataViewContainer.showTableDate(dvt , "", ""); 
+				MyTabData mtd = MyTabData.dtTab(dvt, -1, true);
+				mtd.show();
+			
 			}
 
 		}
@@ -287,7 +291,7 @@ public class RunSQLHelper {
 			  
 			//缓存
 //			CacheTabView.addDataViewTab( dvt , table.getId());
-			table.setTableData(dvt);
+//			table.setTableData(dvt);
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
 			
@@ -302,7 +306,10 @@ public class RunSQLHelper {
 			// 渲染界面
 			if (!thread.isInterrupted()) {
 				if(hasOut(fields)) {
-					DataViewContainer.showTableDate(dvt, tidx, true, dvt.getExecTime()+"", dvt.getRows()+"");
+//					DataViewContainer.showTableDate(dvt, tidx, true, dvt.getExecTime()+"", dvt.getRows()+"");
+					MyTabData mtd = MyTabData.dtTab(dvt, tidx, true);
+					mtd.show();
+				
 				}else {
 					msg = "ok. ";
 				}
@@ -331,9 +338,9 @@ public class RunSQLHelper {
 	private static void selectAction(String sql, SqluckyConnector dpo ) throws Exception {
 		try { 
 		    Connection conn = dpo.getConn();
-//			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			
-		    MyDataTable table = new MyDataTable();
+//		    MyDataTable table = new MyDataTable();
 		    // 获取表名
 			String tableName = ParseSQL.tabName(sql);
 			if(StrUtils.isNullOrEmpty(tableName)) {
@@ -361,7 +368,7 @@ public class RunSQLHelper {
 			  
 			//缓存
 //			CacheTabView.addDataViewTab( dvt , table.getId());
-			table.setTableData(dvt);
+//			table.setTableData(dvt);
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
 			
@@ -377,7 +384,9 @@ public class RunSQLHelper {
 			CacheDataTableViewShapeChange.colReorder(dvt.getTabName(), colss, table);
 			// 渲染界面
 			if (!thread.isInterrupted()) {
-				DataViewContainer.showTableDate(dvt, tidx, false, dvt.getExecTime()+"", dvt.getRows()+"");			
+				MyTabData mtd = MyTabData.dtTab(dvt, tidx, false);
+				mtd.show();
+//				DataViewContainer.showTableDate(dvt, tidx, false, );			
 				// 水平滚顶条位置设置
 				CacheDataTableViewShapeChange.setDataTableViewShapeCache(dvt.getTabName(), dvt.getTable(), colss); 		
 					
@@ -708,7 +717,7 @@ public class RunSQLHelper {
 
 	// 等待加载动画 页面, 删除不要的页面, 保留 锁定的页面
 	private static Tab addWaitingPane( int tabIdx) {
-		Tab waitTb = new DataViewTab().maskTab(WAITTB_NAME);
+		Tab waitTb = MyTabData.maskTab(WAITTB_NAME);
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTabPane;
 			// 删除不要的tab, 保留 锁定的tab

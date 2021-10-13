@@ -43,15 +43,15 @@ public class DataViewContainer {
 		support2.addSupport(dataView);
 	}
 
-	public static void showTableDate(DataViewTab dvt, String time , String rows) {
-		showTableDate(dvt, -1, true, time, rows );
-	}
-
-	public static void showTableDate(DataViewTab dvt, int idx, boolean disable, String time , String rows) {
-		Platform.runLater(() -> { 
-			dvt.createTab(idx, disable, time , rows); 
-		});
-	}
+//	public static void showTableDate(DataViewTab dvt, String time , String rows) {
+//		showTableDate(dvt, -1, true, time, rows );
+//	}
+//
+//	public static void showTableDate(DataViewTab dvt, int idx, boolean disable, String time , String rows) {
+//		Platform.runLater(() -> { 
+//			dvt.createTab(idx, disable, time , rows); 
+//		});
+//	}
 
  
 

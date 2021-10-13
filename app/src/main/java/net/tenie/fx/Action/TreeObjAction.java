@@ -3,7 +3,7 @@ package net.tenie.fx.Action;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.DBOptionHelper;
-import net.tenie.fx.component.container.DataViewTab;
+import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.TablePo;
@@ -23,6 +23,8 @@ public class TreeObjAction {
 			createTableSql = SqlFormatter.format(createTableSql);
 			table.setDdl(createTableSql);
 		}
-		new DataViewTab().showDdlPanel(title, createTableSql);
+//		new DataViewTab().showDdlPanel(title, createTableSql);
+		MyTabData mtd = MyTabData.ddlTab(title, createTableSql, false);
+		mtd.show();
 	}
 }
