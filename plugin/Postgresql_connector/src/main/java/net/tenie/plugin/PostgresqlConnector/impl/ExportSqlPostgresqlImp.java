@@ -1,7 +1,6 @@
-package net.tenie.plugin.H2Connector.impl;
+package net.tenie.plugin.PostgresqlConnector.impl;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
@@ -9,19 +8,22 @@ import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
 
+
 /**
  * 
  * @author tenie
  *
  */
-public class ExportSqlH2Imp implements ExportDDL {
- 
-	private FetchDBInfoCommonTools fdbtool;
+public class ExportSqlPostgresqlImp implements ExportDDL { 
+
+	 
+	private	FetchDBInfoCommonTools fdbtool;
+	 
 	
-	public ExportSqlH2Imp() { 
+	public ExportSqlPostgresqlImp() { 
 		fdbtool  =new FetchDBInfoCommonTools(); 
 	}
-	 
+ 
 	/**
 	 * 导出所有表对象, 属性: 表名, 字段, 主键, ddl
 	 */
@@ -29,22 +31,22 @@ public class ExportSqlH2Imp implements ExportDDL {
 	public List<TablePo> allTableObj(Connection conn, String schema ){
 		try {
 			List<TablePo>  vals = Dbinfo.fetchAllTableName(conn, schema);
-//			if(vals !=null && vals.size() > 0) {
-//				vals.stream().forEach(v ->{
-//					try {
-//						// 表对象字段赋值
-//						Dbinfo.fetchTableInfo(conn, v);
-//						// 表对象 主键赋值
-//						Dbinfo.fetchTablePrimaryKeys(conn, v);
-//						// 表对象ddl语句
-//						String ddl = fdb2.createTab( v);
-//						v.setDdl(ddl);
-//					} catch (Exception e) { 
-//						e.printStackTrace();
-//					}
-//					
-//				});
-//			}
+			if(vals !=null && vals.size() > 0) {
+				vals.stream().forEach(v ->{
+					try {
+						// 表对象字段赋值
+						Dbinfo.fetchTableInfo(conn, v);
+						// 表对象 主键赋值
+						Dbinfo.fetchTablePrimaryKeys(conn, v);
+						// 表对象ddl语句
+						String ddl = fdbtool.createTab( v);
+						v.setDdl(ddl);
+					} catch (Exception e) { 
+						e.printStackTrace();
+					}
+					
+				});
+			} 
 			return vals;
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -66,7 +68,7 @@ public class ExportSqlH2Imp implements ExportDDL {
 					String ddl = exportCreateView(conn, schema, v.getTableName());
 					v.setDdl(ddl);
 				}); 
-			}
+			}  
 			return vals;
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -80,16 +82,42 @@ public class ExportSqlH2Imp implements ExportDDL {
 	 */
 	@Override
 	public List<FuncProcTriggerPo> allFunctionObj(Connection conn, String schema ){
-		List<FuncProcTriggerPo> val = new ArrayList<>(); 
-		return val;
+		try {
+			// 函数名称
+			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllFunctions(conn, schema);
+			if (vals != null && vals.size() > 0) {
+				vals.forEach(v -> {
+					String ddl = exportCreateFunction(conn,  schema, v.getName());
+					v.setDdl(ddl);
+				});
+			}
+
+			return vals;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	/**
 	 * 过程对象
 	 */
 	@Override
 	public List<FuncProcTriggerPo> allProcedureObj(Connection conn, String schema) {
-		List<FuncProcTriggerPo> val = new ArrayList<>(); 
-		return val;
+		try {
+			// 函数名称 
+			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllProcedures(conn, schema);
+			if (vals != null && vals.size() > 0) {
+				vals.forEach(v -> { 
+					String ddl = exportCreateProcedure(conn,  schema, v.getName());
+					v.setDdl(ddl);
+				});
+			}
+
+			return vals;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return null;
 	}
 	
 	/**
@@ -97,8 +125,21 @@ public class ExportSqlH2Imp implements ExportDDL {
 	 */
 	@Override
 	public List<FuncProcTriggerPo> allTriggerObj(Connection conn, String schema) {
-		List<FuncProcTriggerPo> val = new ArrayList<>(); 
-		return val;
+		try {
+			// 函数名称 
+			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
+			if (vals != null && vals.size() > 0) {
+				vals.forEach(v -> { 
+					String ddl = exportCreateTrigger(conn,  schema, v.getName());
+					v.setDdl(ddl);
+				});
+			}
+
+			return vals;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return null;
 	}
  
 
@@ -197,20 +238,20 @@ public class ExportSqlH2Imp implements ExportDDL {
 
 	@Override
 	public String exportAlterTableAddColumn(Connection conn, String schema, String tableName, String newCol) {
-		String sql = "ALTER TABLE "+tableName+" ADD    " + newCol +";";
-		return sql;
+	    
+		return null;
 	}
 
 	@Override
 	public String exportAlterTableDropColumn(Connection conn, String schema, String tableName, String col) {
-		String sql = "ALTER TABLE "+tableName+" DROP COLUMN   " + col +";";
-		return sql;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public String exportAlterTableModifyColumn(Connection conn, String schema, String tableName, String col) {
-		String sql = "ALTER TABLE "+tableName+" MODIFY COLUMN  " + col +";";
-		return sql;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -227,43 +268,44 @@ public class ExportSqlH2Imp implements ExportDDL {
 
 	@Override
 	public String exportDropTable(String schema , String name) {
-		String sql = "DROP TABLE "  + name.trim();
+		String sql = "DROP TABLE " + schema + "." + name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropView(String schema, String name) {
-		String sql = "DROP VIEW "  + name.trim();
+		String sql = "DROP VIEW " + schema + "." + name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropFunction(String schema, String name) {
-		String sql = "DROP  FUNCTION "  + name.trim();
+		String sql = "DROP  FUNCTION " + schema + "." + name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropProcedure(String schema, String name) {
-		String sql = "DROP  PROCEDURE "  + name.trim();
+		String sql = "DROP  PROCEDURE " + schema + "." + name.trim();
 		return sql;
 	}
 
 	@Override
 	public String exportDropIndex(String schema, String name) {
-		String sql = "DROP INDEX "  + name.trim();
+		String sql = "DROP INDEX " + schema + "." + name.trim();
 		return sql;
 	}
- 
+
+
 	@Override
 	public String exportDropSequence(String schema, String name) {
-		String sql = "DROP sequence "  + name.trim() ;
+		String sql = "DROP sequence " + schema + "." + name.trim() ;
 		return sql;
 	}
 
 	@Override
 	public String exportDropTrigger(String schema, String name) {
-		String sql = "DROP TRIGGER "  + name.trim();
+		String sql = "DROP TRIGGER " + schema + "." + name.trim();
 		return sql;
 	}
 
@@ -281,14 +323,14 @@ public class ExportSqlH2Imp implements ExportDDL {
 
 	@Override
 	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
-		List<FuncProcTriggerPo>  vals = new ArrayList<>();
-		return vals;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema) {
-		List<FuncProcTriggerPo>  vals = new ArrayList<>();
-		return vals;
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
@@ -308,4 +350,7 @@ public class ExportSqlH2Imp implements ExportDDL {
 		String sql = "select "+funcStr+" from dual";
 		return sql;
 	}
+
+	
+
 }

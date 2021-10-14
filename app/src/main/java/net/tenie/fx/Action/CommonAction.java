@@ -3,9 +3,6 @@ package net.tenie.fx.Action;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -24,18 +21,16 @@ import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.input.MouseEvent;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Cache.CacheTabView;
+import net.tenie.fx.component.CommonButtons;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.AllButtons;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
-import net.tenie.fx.component.TreeItem.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
-import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -149,7 +144,7 @@ public class CommonAction {
 		boolean showStatus = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		// 如果现在数据表格中的<保存按钮>是亮的(面板还要显示着), 就保存数据库数据 
 		if(showStatus) {
-			Button btn = DataViewTab.dataPaneSaveBtn();
+			Button btn = MyTabData.dataPaneSaveBtn();
 			if(btn != null && ! btn.isDisable()) {
 				ButtonAction.dataSave(); 
 				return ;
@@ -731,8 +726,8 @@ public class CommonAction {
 	}
 
 	public static void hideLeftBottom() {
-		JFXButton btnLeft = AllButtons.btns.get("hideLeft");
-		JFXButton btnBottom = AllButtons.btns.get("hideBottom");
+		JFXButton btnLeft =  CommonButtons.hideLeft; // AllButtons.btns.get("hideLeft");
+		JFXButton btnBottom = CommonButtons.hideBottom; //  AllButtons.btns.get("hideBottom");
 		boolean leftp = ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue();
 		boolean bootp = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		if (leftp || bootp) {
@@ -752,7 +747,7 @@ public class CommonAction {
 	}
 
 	public static void hideLeft() {
-		JFXButton btn = AllButtons.btns.get("hideLeft");
+		JFXButton btn =  CommonButtons.hideLeft; //  AllButtons.btns.get("hideLeft");
 		if (ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue()) {
 			ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
 			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
@@ -765,7 +760,7 @@ public class CommonAction {
 	}
 
 	public static void hideBottom() {
-		JFXButton btn = AllButtons.btns.get("hideBottom");
+		JFXButton btn =   CommonButtons.hideBottom; //   AllButtons.btns.get("hideBottom");
 		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		hideShowBottomHelper(showStatus, btn);
 		if(showStatus ) { 
@@ -788,7 +783,7 @@ public class CommonAction {
 
 	// 底部数据展示面板是否显示
 	public static void showDetailPane() {
-		JFXButton btn = AllButtons.btns.get("hideBottom");
+		JFXButton btn =    CommonButtons.hideBottom; //  AllButtons.btns.get("hideBottom");
 		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		if (showStatus) {
 			hideShowBottomHelper(true, btn); 
@@ -1031,10 +1026,10 @@ public class CommonAction {
 	public static void clearDataTable(Tab tb) {
 		TabPane tabPane = ComponentGetter.dataTabPane; 
 		long begintime = System.currentTimeMillis();
-		String idVal = tb.getId();
-		if (idVal != null) {
-			CacheTabView.clear(idVal);
-		}
+//		String idVal = tb.getId();
+//		if (idVal != null) {
+//			CacheTabView.clear(idVal);
+//		}
 		tb.setContent(null); 
 		tabPane.getTabs().remove(tb);
 		long endtime = System.currentTimeMillis();
@@ -1050,10 +1045,10 @@ public class CommonAction {
 		TabPane tabPane = ComponentGetter.dataTabPane; 
 		var tb = tabPane.getTabs().get(tbIdx);
 		long begintime = System.currentTimeMillis();
-		String idVal = tb.getId();
-		if (idVal != null) {
-			CacheTabView.clear(idVal);
-		}
+//		String idVal = tb.getId();
+//		if (idVal != null) {
+//			CacheTabView.clear(idVal);
+//		}
 		tb.setContent(null); 
 		tabPane.getTabs().remove(tb);
 		long endtime = System.currentTimeMillis();

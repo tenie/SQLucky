@@ -331,11 +331,6 @@ public class ExportSqlSqliteImp implements ExportDDL {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public String getDbVendor() { 
-		return "sqlite";
-	}
 	
 	@Override
 	public String exportCallFuncSql(String funcStr) {

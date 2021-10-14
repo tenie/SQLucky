@@ -517,10 +517,7 @@ public class ExportSqlMySqlImp implements ExportDDL {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public String getDbVendor() { 
-		return "mysql";
-	}
+
 	@Override
 	public String exportCallFuncSql(String funcStr) {
 		String sql = "select "+funcStr+" from dual";

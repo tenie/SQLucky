@@ -1,29 +1,40 @@
 package net.tenie.fx.component.dataView;
 
-import java.util.List;
+import java.sql.Connection;
+
+import org.controlsfx.control.tableview2.FilteredTableView;
 
 import com.jfoenix.controls.JFXButton;
 
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.ButtonAction;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.component.AllButtons;
+import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.component.CommonButtons;
 import net.tenie.fx.component.MyTooltipTool;
+import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.IconGenerator;
 
 public class DataTableOptionBtnsPane extends  AnchorPane{
 	
-	public DataTableOptionBtnsPane(MyTabData mytb,  boolean disable, String time , String rows, String connName, List<ButtonBase> optionBtns , boolean isLock) {
+	public DataTableOptionBtnsPane(MyTabData mytb,  boolean disable, String time , String rows, String connName  , boolean isLock) {
 		super();
 		CommonUtility.addCssClass(this, "data-table-btn-anchor-pane");
 		this.prefHeight(25);
@@ -34,9 +45,8 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		});
 		saveBtn.setTooltip(MyTooltipTool.instance("Save data"));
 		saveBtn.setDisable(true);
-		saveBtn.setId(AllButtons.SAVE);
-		optionBtns.add(saveBtn);
-		
+//		saveBtn.setId(AllButtons.SAVE);
+		mytb.setSaveBtn(saveBtn);
 
 		JFXButton detailBtn = new JFXButton();
 		detailBtn.setGraphic(IconGenerator.svgImageDefActive("search-plus")); 
@@ -45,8 +55,8 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		});
 		detailBtn.setTooltip(MyTooltipTool.instance("current line detail "));
 		detailBtn.setDisable(disable);
-		optionBtns.add(detailBtn);
 		
+		mytb.setDetailBtn(detailBtn);
 		
 		JFXButton tableSQLBtn = new JFXButton();
 		tableSQLBtn.setGraphic(IconGenerator.svgImageDefActive("table")); 
@@ -55,18 +65,16 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		});
 		tableSQLBtn.setTooltip(MyTooltipTool.instance("Table SQL"));
 		tableSQLBtn.setDisable(disable);
-		optionBtns.add(tableSQLBtn);
 		
 
 		// refresh
 		JFXButton refreshBtn = new JFXButton();
 		refreshBtn.setGraphic(IconGenerator.svgImageDefActive("refresh")); 
 		refreshBtn.setOnMouseClicked( e->{  
-			ButtonAction.refreshData(isLock) ;
+			refreshData(isLock) ;
 		});
 		refreshBtn.setTooltip(MyTooltipTool.instance("refresh table "));
 		refreshBtn.setDisable(disable);
-		optionBtns.add(refreshBtn);
 		
 
 		// 添加一行数据
@@ -74,11 +82,10 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		addBtn.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
 
 		addBtn.setOnMouseClicked(e->{ 
-			ButtonAction.addData();
+			addData(saveBtn);
 		});
 		addBtn.setTooltip(MyTooltipTool.instance("add new data "));
 		addBtn.setDisable(disable);
-		optionBtns.add(addBtn);
 
 		JFXButton minusBtn = new JFXButton();
 		minusBtn.setGraphic(IconGenerator.svgImage("minus-square", "#EC7774" , false));
@@ -88,7 +95,6 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		});
 		minusBtn.setTooltip(MyTooltipTool.instance("delete data "));
 		minusBtn.setDisable(disable);
-		optionBtns.add(minusBtn);
 
 //	    	 files-o
 		JFXButton copyBtn = new JFXButton();
@@ -98,14 +104,12 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		});
 		copyBtn.setTooltip(MyTooltipTool.instance("copy selected row data "));
 		copyBtn.setDisable(disable);
-		optionBtns.add(copyBtn);
 		
 
 		MenuButton exportBtn = new MenuButton();
 		exportBtn.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
 		exportBtn.setTooltip(MyTooltipTool.instance("Export data"));
 		exportBtn.setDisable(disable);
-		optionBtns.add(exportBtn);
 
 		Menu insertSQL = new Menu("Export Insert SQL Format ");
 		MenuItem selected = new MenuItem("Selected Data to Clipboard ");
@@ -152,21 +156,24 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		JFXButton hideBottom = new JFXButton(); 
 		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom()); 
-		optionBtns.add(hideBottom);
 		// 锁
 		JFXButton lockbtn = ButtonFactory.createLockBtn(mytb);  
-		optionBtns.add(lockbtn);
 		
 		//保存按钮监听 : 保存亮起, 锁住
 		saveBtn.disableProperty().addListener(e->{
 			if( ! saveBtn.disableProperty().getValue() ) {
-				setLockBtn( mytb, lockbtn);
+				if (mytb.getTableData().isLock()) {
+					lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
+				} else {
+					lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
+
+				}
 			}
 		});
 		
 		
 		//计时/查询行数
-		String info = ""; //time+ " ms / "+rows+" rows";
+		String info = ""; 
 		if(StrUtils.isNotNullOrEmpty(time)) {
 			 info = connName+ " : "+ time+ " s / "+rows+" rows";
 		}
@@ -194,15 +201,52 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		AnchorPane.setRightAnchor(lb, 70.0);
 		 
 	}
-
 	
-
-	private void setLockBtn(MyTabData mytb ,Button lockbtn) {
-		if (mytb.isLock()) {
-			lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
-		} else {
-			lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
-
+	//refreshData
+		public static void refreshData(boolean isLock) {
+//			String id = DataViewTab.currentDataTabID(); 
+			String sql = MyTabData.getSelectSQL();
+			Connection conn = MyTabData.getDbconn();
+		    String connName = 	MyTabData.getConnName();
+			if (conn != null) {
+				//TODO 关闭当前tab
+				var dataTab = ComponentGetter.dataTabPane;
+				int selidx = dataTab.getSelectionModel().getSelectedIndex(); 
+//				dataTab.getTabs().remove(selidx); 
+				CommonAction.clearDataTable(selidx);
+				RunSQLHelper.runSQLMethodRefresh( DBConns.get(connName),  sql, selidx+"", isLock);
+			}	
 		}
-	}
+		
+		// 添加一行数据
+		public static void addData(JFXButton saveBtn) {
+			MyTabData  mtd = MyTabData.currentDataTab();
+			var tbv = mtd.getTableData().getTable();
+			
+			tbv.scrollTo(0);
+			int newLineidx = ConfigVal.newLineIdx++;
+			ObservableList<SqlFieldPo> fs = MyTabData.getFields();
+			ObservableList<StringProperty> item = FXCollections.observableArrayList();
+			for (int i = 0; i < fs.size(); i++) {
+				SimpleStringProperty sp = new SimpleStringProperty();
+				// 添加监听. 保存时使用 newLineIdx
+				CommonUtility.newStringPropertyChangeListener(sp, fs.get(i).getColumnType().get());
+				item.add(sp);
+			}
+			item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
+			MyTabData.appendDate( newLineidx, item); // 可以防止在map中被覆盖
+			tbv.getItems().add(0, item);
+
+			// 点亮保存按钮
+//			AnchorPane fp = dataAnchorPane(tbv);
+//			fp.getChildren().get(0).setDisable(false);
+			saveBtn.setDisable(false);
+		}
+		
+//		// 获取数据表的 控制按钮列表
+//		public static AnchorPane dataAnchorPane(FilteredTableView<ObservableList<StringProperty>> table) {
+//			VBox vb = (VBox) table.getParent();
+//			AnchorPane fp = (AnchorPane) vb.getChildren().get(0);
+//			return fp;
+//		}
 }

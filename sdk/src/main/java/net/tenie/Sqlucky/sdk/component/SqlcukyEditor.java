@@ -54,6 +54,7 @@ public class SqlcukyEditor {
 	// 获取当前在前台的文本框
 	public static CodeArea getCodeArea() {
 		var mtb = currentMyTab();
+		if(mtb == null ) return null;
 		return mtb.getSqlCodeArea().getCodeArea();
 	}
 

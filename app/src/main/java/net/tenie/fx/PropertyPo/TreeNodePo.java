@@ -6,8 +6,9 @@ import javafx.scene.Node;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.fx.component.TreeItem.ConnItemContainer;
-import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
+import net.tenie.fx.component.InfoTree.TreeItemType;
+import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
+import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 
 /*   @author tenie */
 public class TreeNodePo implements Serializable {

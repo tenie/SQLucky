@@ -7,7 +7,7 @@ import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.container.DBinfoTree;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.IconGenerator;

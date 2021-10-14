@@ -46,16 +46,12 @@ public class SqliteConnector extends DbConnector {
 		var schemas = getConnPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
-//				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 					Map<String, DbSchemaPo> sch = new HashMap<>();
 					DbSchemaPo sp = new DbSchemaPo();
 					sp.setSchemaName(SqliteRegister.instanceName);
 					sch.put(SqliteRegister.instanceName, sp);
 					schemas = sch;
-//				} else {
-//					schemas = Dbinfo.fetchSchemasInfo(this);					
-//				}
-//				schemas = fetchSchemasInfo();		
+					getConnPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

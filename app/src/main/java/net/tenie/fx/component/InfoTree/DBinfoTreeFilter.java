@@ -1,4 +1,4 @@
-package net.tenie.fx.component.container;
+package net.tenie.fx.component.InfoTree;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.collections.FXCollections;
@@ -11,11 +11,11 @@ import javafx.scene.layout.AnchorPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
+import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
+import net.tenie.fx.component.InfoTree.TreeItem.MyTreeItem;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.fx.component.TreeItem.ConnItemContainer;
-import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
-import net.tenie.fx.component.TreeItem.MyTreeItem;
 import net.tenie.lib.tools.IconGenerator;
 
  

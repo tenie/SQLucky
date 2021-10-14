@@ -1,4 +1,4 @@
-package net.tenie.fx.factory;
+package net.tenie.fx.component.InfoTree;
 
 import java.util.Objects;
 
@@ -17,8 +17,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
-import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.fx.PropertyPo.TreeNodePo;
 
 /**
  * 把TreeNodePo对象的属性 赋值给 TreeItem显示(节点名称,图标)

@@ -54,7 +54,8 @@ public class H2FileConnector extends DbConnector {
 		var schemas = getConnPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
-				schemas = fetchSchemasInfo();		
+				schemas = fetchSchemasInfo();	
+				getConnPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -19,10 +19,9 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.Cache.CacheTabView;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.component.container.DataViewTab;
 import net.tenie.fx.component.dataView.MyTabData;
+import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -32,7 +31,11 @@ import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class SelectDao {
 
 	private static Logger logger = LogManager.getLogger(SelectDao.class);
@@ -60,9 +63,8 @@ public class SelectDao {
 	}
 	
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void selectSql(SqluckyConnector dpo , String sql, int limit,
-			String tableid , DataViewTab dvt ) throws SQLException {
-//		DbTableDatePo dpo = new DbTableDatePo();
+	public static void selectSql( String sql, int limit, MyTabDataValue dvt ) throws SQLException {
+		SqluckyConnector dpo  = dvt.getDbConnection();
 		Connection conn =dpo.getConn();
 		// DB对象
 		PreparedStatement pstate = null;
@@ -85,9 +87,9 @@ public class SelectDao {
 			ObservableList<ObservableList<StringProperty>>  val ;
 			// 数据
 			if (limit > 0) {
-				 val = execRs(limit, rs, fields, tableid, dpo);
+				 val = execRs(limit, rs, fields,   dpo);
 			} else {
-				 val =  execRs(rs, fields, tableid, dpo);
+				 val =  execRs(rs, fields, dpo);
 			}
 			
 			dvt.setColss(fields);
@@ -156,7 +158,7 @@ public class SelectDao {
 
 	
 	//TODO 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void callProcedure(Connection conn, String proName ,String tableid , DataViewTab dvt ,List<ProcedureFieldPo> pfp  ) throws SQLException {
+	public static void callProcedure(Connection conn, String proName ,String tableid , MyTabDataValue dvt ,List<ProcedureFieldPo> pfp  ) throws SQLException {
 		// DB对象
 		CallableStatement call = null;
 		ResultSet rs = null; 
@@ -276,7 +278,7 @@ public class SelectDao {
 	
 
 	private static ObservableList<ObservableList<StringProperty>>  execRs(int limit, ResultSet rs, ObservableList<SqlFieldPo> fpo,
-			String tableid, SqluckyConnector dpo) throws SQLException {
+			  SqluckyConnector dpo) throws SQLException {
 		int idx = 1;
 		int rowNo = 0;
 //		ObservableList<SqlFieldPo> fpo = dpo.getFields();
@@ -315,7 +317,7 @@ public class SelectDao {
 				}
 				
 				
-				addStringPropertyChangeListener(val, rn, tableid, i, vals, dbtype);
+				addStringPropertyChangeListener(val, rn, i, vals, dbtype);
 				vals.add(val);
 			}
 
@@ -371,21 +373,21 @@ public class SelectDao {
 
 	
 	
-	private static ObservableList<ObservableList<StringProperty>>   execRs(ResultSet rs, ObservableList<SqlFieldPo> fpo, String tableid, SqluckyConnector dpo)
+	private static ObservableList<ObservableList<StringProperty>>   execRs(ResultSet rs, ObservableList<SqlFieldPo> fpo,   SqluckyConnector dpo)
 			throws SQLException {
-		return execRs(Integer.MAX_VALUE, rs, fpo, tableid, dpo);
+		return execRs(Integer.MAX_VALUE, rs, fpo, dpo);
 	}
 
 	
     // 数据单元格添加监听
 	// 字段修改事件
-	public static void addStringPropertyChangeListener(StringProperty val, int rowNo, String tabId, int idx,
+	public static void addStringPropertyChangeListener(StringProperty val, int rowNo , int idx,
 			ObservableList<StringProperty> vals, int dbtype) {
 		ChangeListener<String> cl = new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				logger.info("addStringPropertyChangeListener ：newValue：" + newValue + " | oldValue =" + oldValue);
-				logger.info("key ==" + tabId + "-" + rowNo);
+//				logger.info("key ==" + tabId + "-" + rowNo);
 				logger.info("observable = " + observable);
 				// 如果类似是数字的, 新值不是数字, 还原
 				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
@@ -401,7 +403,7 @@ public class SelectDao {
 				
 
 				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();
-				if (!CacheTabView.exist(tabId, rowNo)) {
+				if (!MyTabData.exist( rowNo)) {
 					for (int i = 0; i < vals.size(); i++) {
 						if (i == idx) {
 							oldDate.add(new SimpleStringProperty(oldValue));
@@ -409,9 +411,9 @@ public class SelectDao {
 							oldDate.add(new SimpleStringProperty(vals.get(i).get()));
 						}
 					}
-					CacheTabView.addData(tabId, rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
+					MyTabData.addData( rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
 				} else {
-					CacheTabView.addData(tabId, rowNo, vals);
+					MyTabData.addData( rowNo, vals);
 				}
 			}
 		};

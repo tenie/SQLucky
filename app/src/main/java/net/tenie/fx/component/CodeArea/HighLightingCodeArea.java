@@ -222,7 +222,10 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		codeArea.setOnMouseReleased(mouseEvent -> {
 			if (mouseEvent.getButton() == MouseButton.PRIMARY) {  // 鼠标左键
 				if (mouseEvent.getClickCount() == 1) {
-					myAuto.hide();
+					if(myAuto != null ) {
+						myAuto.hide();
+					}
+					
 				} 
 				String str = codeArea.getSelectedText();
 				String trimStr = str.trim();

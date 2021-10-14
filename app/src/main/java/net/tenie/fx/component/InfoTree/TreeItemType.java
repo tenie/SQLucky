@@ -1,4 +1,4 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.fx.component.InfoTree;
 
 /*   @author tenie */
 public enum TreeItemType {

@@ -14,6 +14,8 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
+import net.tenie.fx.component.InfoTree.DBinfoTreeFilter;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.factory.ButtonFactory;
 

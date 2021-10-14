@@ -3,7 +3,6 @@ package net.tenie.plugin.DB2Connector.impl;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
@@ -391,16 +390,6 @@ public class ExportSqlDB2Imp implements ExportDDL {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-
-
-	@Override
-	public String getDbVendor() { 
-		return "db2";
-	}
-
-
-
 	
 	@Override
 	public String exportCallFuncSql(String funcStr) {

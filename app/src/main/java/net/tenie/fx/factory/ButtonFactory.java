@@ -1,25 +1,17 @@
 package net.tenie.fx.factory;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBase;
 import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.component.AllButtons;
+import net.tenie.fx.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.dataView.MyTabData;
@@ -27,13 +19,9 @@ import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class ButtonFactory {
-	public static  Map<String, Boolean> lockObj = new HashMap<>();
 	public static TextField rows ;
 
 	// 连接区
@@ -209,8 +197,13 @@ public class ButtonFactory {
 			pn.getChildren().add(hideBottom);
 			AnchorPane.setRightAnchor(hideBottom, 0.0);
 			AnchorPane.setRightAnchor(hideLeft, 30.0);
-			AllButtons.btns.put("hideLeft", hideLeft);
-			AllButtons.btns.put("hideBottom", hideBottom);
+			
+//			AllButtons.btns.put("hideLeft", hideLeft);
+//			AllButtons.btns.put("hideBottom", hideBottom);
+			
+			CommonButtons.hideLeft = hideLeft;
+			CommonButtons.hideBottom = hideBottom;
+			
 
 			// 选择sql在哪个连接上执行
 			Label lbcnn = new Label("DB Connection: ");
@@ -305,12 +298,18 @@ public class ButtonFactory {
 			y += fix + 35;
 			rows.setLayoutX(y);
 
-			AllButtons.btns.put("runbtn", runbtn);
-			AllButtons.btns.put("stopbtn", stopbtn);
-			AllButtons.btns.put("runFunPro", runFunPro);
-			AllButtons.btns.put("runLinebtn", runLinebtn);
+//			AllButtons.btns.put("runbtn", runbtn);
+//			AllButtons.btns.put("stopbtn", stopbtn);
+//			AllButtons.btns.put("runFunPro", runFunPro);
+//			AllButtons.btns.put("runLinebtn", runLinebtn); 
+//			AllButtons.btns.put("addcodeArea", addcodeArea);
 			
-			AllButtons.btns.put("addcodeArea", addcodeArea);
+			CommonButtons.runbtn = runbtn;
+			CommonButtons.stopbtn = stopbtn;
+			CommonButtons.runFunPro = runFunPro;
+			CommonButtons.runLinebtn = runLinebtn;
+			CommonButtons.addcodeArea = addcodeArea;
+			
 
 			return pn;
 		}
@@ -322,10 +321,9 @@ public class ButtonFactory {
 	
 	// 锁住<锁按钮>
 	public static void lockLockBtn(MyTabData mytb , JFXButton btn) {
-		boolean islock =  mytb.isLock(); //lockObj.get(id);
+		boolean islock =  mytb.getTableData().isLock();
 		if( ! islock) { 
-//			lockObj.put(id, true);
-			mytb.setLock(true);
+			mytb.getTableData().setLock(true);
 			btn.setGraphic(IconGenerator.svgImageDefActive("lock"));
 		}
 	}
@@ -334,21 +332,19 @@ public class ButtonFactory {
 	public static  JFXButton createLockBtn(MyTabData mytb ) {
 		// 锁
 		JFXButton lockbtn = new JFXButton();
-//		lockbtn.setDisable(disable);
-		if (mytb.isLock()) {
+		if (mytb.getTableData().isLock()) {
 			lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
 		} else {
 			lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
 		}
-//		lockObj.put(id, isLock);
 		lockbtn.setOnMouseClicked(e -> {
-//			Boolean tf = lockObj.get(id);
-			if (mytb.isLock()) {
+			if (mytb.getTableData().isLock()) {
 				lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
+				mytb.getTableData().setLock(true);
 			} else {
 				lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
+				mytb.getTableData().setLock(true);
 			}
-//			lockObj.put(id, !tf);
 
 		});
 

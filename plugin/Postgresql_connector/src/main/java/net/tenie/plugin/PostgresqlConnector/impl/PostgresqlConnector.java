@@ -1,4 +1,4 @@
-package net.tenie.plugin.MariadbConnector.impl;
+package net.tenie.plugin.PostgresqlConnector.impl;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -23,12 +23,12 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class MariadbConnector extends DbConnector {
+public class PostgresqlConnector extends DbConnector {
  
 	
-	public MariadbConnector(DBConnectorInfoPo connPo) {
+	public PostgresqlConnector(DBConnectorInfoPo connPo) {
 		super(connPo); 
-		ExportSqlMariadbImp ex = new ExportSqlMariadbImp();
+		ExportSqlPostgresqlImp ex = new ExportSqlPostgresqlImp();
 		getConnPo().setExportDDL( ex);
 	} 
 	 
@@ -46,7 +46,7 @@ public class MariadbConnector extends DbConnector {
 		var schemas = getConnPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
-				schemas = fetchSchemasInfo();	
+				schemas = fetchSchemasInfo();		
 				getConnPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
@@ -64,7 +64,7 @@ public class MariadbConnector extends DbConnector {
 
 	@Override
 	public String translateErrMsg(String errString) {
-		String  str = MariadbErrorCode.translateErrMsg(errString);
+		String  str = PostgresqlErrorCode.translateErrMsg(errString);
 		return str;
 	}
 	
@@ -121,7 +121,7 @@ public class MariadbConnector extends DbConnector {
 				getDbName(),
 				getJdbcUrl()
 				);
-		var dbc = new MariadbConnector(val);
+		var dbc = new PostgresqlConnector(val);
 		
 		return dbc;
 	}
@@ -139,7 +139,7 @@ public class MariadbConnector extends DbConnector {
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
-			jdbcUrlstr  = "jdbc:mariadb://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+			jdbcUrlstr  = "jdbc:postgresql://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
 			connPo.setJdbcUrl(jdbcUrlstr);
 		}
 		return  jdbcUrlstr;
@@ -148,23 +148,12 @@ public class MariadbConnector extends DbConnector {
 
 	@Override
 	public Connection getConn() {
-//		getConnPo().getConn()
 		if (getConnPo().getConn() == null) {
-//			logger.info(this.connPo.getDriver());
-//			logger.info(getJdbcUrl());
-//			logger.info(this.connPo.getUser());
-//			logger.info(passWord);
-//			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
-//				conn = dbinfo.getconn();
-//			}else {
-				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
-				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
-//			}			
+			Dbinfo dbinfo = new Dbinfo(getJdbcUrl(), getUser(), getPassWord());
+			var conn = dbinfo.getconn();
+			getConnPo().setConn(conn);
 		}
 
 		return getConnPo().getConn();
-
 	}
 }

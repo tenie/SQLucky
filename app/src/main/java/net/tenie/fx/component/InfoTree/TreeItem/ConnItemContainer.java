@@ -1,16 +1,13 @@
-package net.tenie.fx.component.TreeItem;
+package net.tenie.fx.component.InfoTree.TreeItem;
 
 import java.util.Set;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
-import net.tenie.fx.PropertyPo.TreeItemType;
-import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.config.DbVendor;
+import net.tenie.fx.component.InfoTree.TreeItemType;
 import net.tenie.lib.tools.IconGenerator;
 /**
  * 
@@ -92,8 +89,6 @@ public class ConnItemContainer {
 				break;
 			}
 		}
-//		ConnItem item = connItems.get(key);
-//		ComponentGetter.treeView.getSelectionModel().select(item.getTableNode()); // 选择新加的节点
 	}
 
 	// 默认的schema移动到第一位 , 遍历所有节点, 找默认节点, 从原位置删除, 后再插入到第一个位置
@@ -123,15 +118,7 @@ public class ConnItemContainer {
 	// 获取所有的schema, 并构建node
 	public static TreeItem<TreeNodePo> CreateSchemaNode(SqluckyConnector connpo) {
 		//判断是不是mysql
-		String nodeName = connpo.dbRootNodeName(); //"Schemas";
-//		if(    DbVendor.mysql.toUpperCase().equals(connpo.getDbVendor().toUpperCase())
-//			|| DbVendor.mariadb.toUpperCase().equals(connpo.getDbVendor().toUpperCase())){
-//			nodeName = "Databases";
-//		}
-//		if( DbVendor.postgresql.toUpperCase().equals(connpo.getDbVendor().toUpperCase()) ){
-//			nodeName = connpo.getDbName();
-//		}
-		
+		String nodeName = connpo.dbRootNodeName(); 
 		// 创建一个schema node , 将数据库数据放入
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
 				new TreeNodePo( nodeName, TreeItemType.SCHEMA_ROOT, IconGenerator.svgImage("th-list", "#FFD700", false), connpo));

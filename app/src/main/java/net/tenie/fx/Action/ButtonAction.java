@@ -11,19 +11,15 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Cache.CacheTabView;
-import net.tenie.fx.component.TreeItem.TreeObjCache;
-import net.tenie.fx.component.container.DataViewTab;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.fx.component.InfoTree.TreeObjAction;
+import net.tenie.fx.component.InfoTree.TreeItem.TreeObjCache;
+import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DeleteDao;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
@@ -33,26 +29,23 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class ButtonAction {
 	
-	
 	public static void dataSave() {
-		Button saveBtn = DataViewTab.dataPaneSaveBtn();
-		String tabId = DataViewTab.currentDataTabID(); //saveBtn.getParent().getId();
-		String tabName = CacheTabView.getTableName(tabId);
-//		ObservableList<ObservableList<StringProperty>> alldata = CacheTabView.getData(tabId);
-		Connection conn = CacheTabView.getDbConn(tabId);
-		SqluckyConnector  dpo = CacheTabView.getDbConnection(tabId);
+		Button saveBtn = MyTabData.dataPaneSaveBtn();
+		String tabName = MyTabData.getTableName();
+		Connection conn = MyTabData.getDbconn();
+		SqluckyConnector  dpo = MyTabData.getDbConnection();
 		if (tabName != null && tabName.length() > 0) {
 			// 字段
-			ObservableList<SqlFieldPo> fpos = CacheTabView.getFields(tabId);
+			ObservableList<SqlFieldPo> fpos = MyTabData.getFields();
 			// 待保存数据
-			Map<String, ObservableList<StringProperty>> modifyData = CacheTabView.getModifyData(tabId);
+			Map<String, ObservableList<StringProperty>> modifyData = MyTabData.getModifyData();
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
 			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 
 			if (!modifyData.isEmpty()) {
 				for (String key : modifyData.keySet()) {
 					// 获取对应旧数据
-					ObservableList<StringProperty> old = CacheTabView.getold(tabId, key);
+					ObservableList<StringProperty> old = MyTabData.getold( key);
 					ObservableList<StringProperty> newd = modifyData.get(key);
 					// 拼接update sql
 					try {
@@ -85,11 +78,11 @@ public class ButtonAction {
 						ddlDmlpo.addData(val);
 					}
 				}
-				CacheTabView.rmUpdateData(tabId);
+				MyTabData.rmUpdateData();
 			}
 
 			// 插入操作
-			List<ObservableList<StringProperty>> dataList = CacheTabView.getAppendData(tabId);
+			List<ObservableList<StringProperty>> dataList = MyTabData.getAppendData();
 			for (ObservableList<StringProperty> os : dataList) {
 				try {
 					String msg = InsertDao.execInsert(conn, tabName, os, fpos);
@@ -100,7 +93,7 @@ public class ButtonAction {
 					ddlDmlpo.addData(val);
 
 					// 删除缓存数据
-					CacheTabView.rmAppendData(tabId);
+					MyTabData.rmAppendData();
 					// 对insert 的数据保存后 , 不能再修改
 					List<StringProperty> templs = new ArrayList<>();
 					for (int i = 0; i < fpos.size(); i++) {
@@ -117,7 +110,6 @@ public class ButtonAction {
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
-//					saveBtn.setDisable(true);
 					ObservableList<StringProperty> val = FXCollections.observableArrayList();
 					val.add(new SimpleStringProperty(e1.getMessage()));
 					val.add(new SimpleStringProperty("fail."));
@@ -138,12 +130,10 @@ public class ButtonAction {
 	
 	public static void deleteData() { 
 		// 获取当前的table view
-		FilteredTableView<ObservableList<StringProperty>> table = DataViewTab.dataTableView();
-		String tabId = table.getId();
-
-		String tabName = CacheTabView.getTableName(tabId);
-		Connection conn = CacheTabView.getDbConn(tabId);
-		ObservableList<SqlFieldPo> fpos = CacheTabView.getFields(tabId);
+		FilteredTableView<ObservableList<StringProperty>> table = MyTabData.dataTableView();
+		String tabName = MyTabData.getTableName();
+		Connection conn = MyTabData.getDbconn();
+		ObservableList<SqlFieldPo> fpos = MyTabData.getFields();
 
 		ObservableList<ObservableList<StringProperty>> vals = table.getSelectionModel().getSelectedItems();
 		
@@ -170,7 +160,7 @@ public class ButtonAction {
 
 			}
 			for (String str : temp) {
-				CacheTabView.deleteTabDataRowNo(tabId, str);
+				MyTabData.deleteTabDataRowNo( str);
 			}
 
 		} catch (Exception e1) {
@@ -190,14 +180,14 @@ public class ButtonAction {
 	public static void copyData() {
 
 		// 获取当前的table view
-		FilteredTableView<ObservableList<StringProperty>> table = DataViewTab.dataTableView();
+		FilteredTableView<ObservableList<StringProperty>> table = MyTabData.dataTableView();
 
 		String tabId = table.getId();
 		// 获取字段属性信息
-		ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tabId);
+		ObservableList<SqlFieldPo> fs = MyTabData.getFields();
 		
 		// 选中的行数据
-		ObservableList<ObservableList<StringProperty>> vals = DataViewTab.dataTableViewSelectedItems();
+		ObservableList<ObservableList<StringProperty>> vals = MyTabData.dataTableViewSelectedItems();
 		try {
 			// 遍历选中的行
 			for (int i = 0; i < vals.size(); i++) {
@@ -215,61 +205,21 @@ public class ButtonAction {
 					item.add(newsp);
 				}
 				item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 新行的行号没什么用
-				CacheTabView.appendDate(tabId, newLineidx, item); // 可以防止在map中被覆盖
+				MyTabData.appendDate( newLineidx, item); // 可以防止在map中被覆盖
 				table.getItems().add(item);
 
 			}
 			table.scrollTo(table.getItems().size() - 1);
 
 			// 保存按钮亮起
-			DataViewTab.dataPaneSaveBtn().setDisable(false);
+			MyTabData.dataPaneSaveBtn().setDisable(false);
 		} catch (Exception e2) {
 			MyAlert.errorAlert( e2.getMessage());
 		}
 	
 	}
 	
-	//refreshData
-	public static void refreshData(boolean isLock) {
-		String id = DataViewTab.currentDataTabID(); 
-		String sql = CacheTabView.getSelectSQl(id);
-		Connection conn = CacheTabView.getDbConn(id);
-	    String connName = 	CacheTabView.getConnName(id);
-		if (conn != null) {
-			//TODO 关闭当前tab
-			var dataTab = ComponentGetter.dataTabPane;
-			int selidx = dataTab.getSelectionModel().getSelectedIndex(); 
-//			dataTab.getTabs().remove(selidx); 
-			CommonAction.clearDataTable(selidx);
-			RunSQLHelper.runSQLMethodRefresh( DBConns.get(connName),  sql, selidx+"", isLock);
-		}	
-	}
 	
-	//addData // 添加一行数据
-	public static void addData() {
-		var vbox = DataViewTab.currentDataVbox();
-		@SuppressWarnings("unchecked")
-		var tbv = (FilteredTableView<ObservableList<StringProperty>>) vbox.getChildren().get(1);
-		tbv.scrollTo(0);
-		String tabid = DataViewTab.currentDataTabID() ;// btn.getParent().getId();
-		int newLineidx = ConfigVal.newLineIdx++;
-		ObservableList<SqlFieldPo> fs = CacheTabView.getFields(tabid);
-		ObservableList<StringProperty> item = FXCollections.observableArrayList();
-		for (int i = 0; i < fs.size(); i++) {
-			SimpleStringProperty sp = new SimpleStringProperty();
-			// 添加监听. 保存时使用 newLineIdx
-			CommonUtility.newStringPropertyChangeListener(sp, fs.get(i).getColumnType().get());
-			item.add(sp);
-		}
-		item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
-		CacheTabView.appendDate(tabid, newLineidx, item); // 可以防止在map中被覆盖
-		tbv.getItems().add(0, item);
-
-		// 发生亮起保存按钮
-		AnchorPane fp = dataAnchorPane(tbv);
-		fp.getChildren().get(0).setDisable(false);
-	
-	}
 	
 	
 	
@@ -286,7 +236,7 @@ public class ButtonAction {
 	
 	// 更新查询结果中所有数据对应列的值
 	public static void updateAllColumn(int colIdx,String value) {
-		RsVal rv = DataViewTab.tableInfo();
+		RsVal rv = MyTabData.tableInfo();
 		value = needTrimChar(value);
 		if("null".equals(value)) {
 			value = "<null>";
@@ -302,13 +252,12 @@ public class ButtonAction {
 	
 	// 更新查询结果中选中的数据 对应列的值
 	 public static void updateSelectedDataColumn(int colIdx,String value) {
-//		RsVal rv = CommonAction.tableInfo();
 		value = needTrimChar(value);
 		if("null".equals(value)) {
 			value = "<null>";
 		}
 		 
-		ObservableList<ObservableList<StringProperty>> alls = DataViewTab.dataTableViewSelectedItems();
+		ObservableList<ObservableList<StringProperty>> alls = MyTabData.dataTableViewSelectedItems();
 		for(ObservableList<StringProperty> ls : alls) {
 			StringProperty  tmp = ls.get(colIdx);
 			tmp.setValue(value);
@@ -319,7 +268,7 @@ public class ButtonAction {
 	
 	// 获取tree 节点中的 table 的sql
 	public static void findTable() {
-		RsVal rv = DataViewTab.tableInfo();
+		RsVal rv = MyTabData.tableInfo();
 		SqluckyConnector dbcp = rv.dbconnPo;
 		if(dbcp == null ) {
 			return ;
@@ -342,10 +291,5 @@ public class ButtonAction {
 	
 	
 	
-	// 获取数据表的 控制按钮列表
-	public static AnchorPane dataAnchorPane(FilteredTableView<ObservableList<StringProperty>> table) {
-		VBox vb = (VBox) table.getParent();
-		AnchorPane fp = (AnchorPane) vb.getChildren().get(0);
-		return fp;
-	}
+	
 }

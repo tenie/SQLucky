@@ -13,7 +13,8 @@ import javafx.scene.control.MenuItem;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
-import net.tenie.fx.component.container.DataViewTab;
+import net.tenie.fx.component.dataView.MyTabData;
+import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.MyPopupNumberFilter;
 import net.tenie.lib.tools.IconGenerator;
@@ -128,7 +129,7 @@ public class MenuFactory {
 		
 		cm.getItems().addAll(filter, miActive, copyColData,   dropCol, alterColumn, addColumn, updateMenu);
 		cm.setOnShowing(e->{
-			ObservableList<ObservableList<StringProperty>> alls = DataViewTab.dataTableViewSelectedItems();
+			ObservableList<ObservableList<StringProperty>> alls = MyTabData.dataTableViewSelectedItems();
 			if( alls.size() == 0) {
 				updateSelectColumn.setDisable(true);
 			}else {

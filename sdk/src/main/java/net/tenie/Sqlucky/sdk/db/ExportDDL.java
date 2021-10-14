@@ -11,7 +11,7 @@ import net.tenie.Sqlucky.sdk.po.TablePo;
  */
 public interface ExportDDL {
  
-    String getDbVendor();
+//    String getDbVendor();
 	List<TablePo> allTableObj(Connection conn, String schema); 
 	List<TablePo> allViewObj(Connection conn, String schema); 
 	List<FuncProcTriggerPo> allFunctionObj(Connection conn, String schema); 

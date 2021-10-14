@@ -46,16 +46,8 @@ public class MysqlConnector extends DbConnector {
 		var schemas = getConnPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
-//				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//					Map<String, DbSchemaPo> sch = new HashMap<>();
-//					DbSchemaPo sp = new DbSchemaPo();
-//					sp.setSchemaName(SQLITE_DATABASE);
-//					sch.put(SQLITE_DATABASE, sp);
-//					schemas = sch;
-//				} else {
-//					schemas = Dbinfo.fetchSchemasInfo(this);					
-//				}
 				schemas = fetchSchemasInfo();		
+				getConnPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

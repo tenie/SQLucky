@@ -71,9 +71,9 @@ public final class SettingKeyCodeCombination {
 		KeyCodeCombination ctrlShiftD = new KeyCodeCombination(KeyCode.D, KeyCodeCombination.SHORTCUT_DOWN,
 				KeyCodeCombination.SHIFT_DOWN);
 //        KeyCodeCombination ctrlD = new KeyCodeCombination(KeyCode.D, KeyCodeCombination.SHORTCUT_DOWN);
-		JFXButton runbtn = AllButtons.btns.get("runbtn");
-		JFXButton stopbtn = AllButtons.btns.get("stopbtn");
-		JFXButton runFunPro = AllButtons.btns.get("runFunPro");
+		JFXButton runbtn = CommonButtons.runbtn; // AllButtons.btns.get("runbtn");
+		JFXButton stopbtn = CommonButtons.stopbtn; //  AllButtons.btns.get("stopbtn");
+		JFXButton runFunPro = CommonButtons.runFunPro; //  AllButtons.btns.get("runFunPro");
 
 		scene.getAccelerators().put(altSlash, () -> {
 			var codeArea = SqlcukyEditor.getCodeArea();

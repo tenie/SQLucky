@@ -1,7 +1,6 @@
 package net.tenie.lib.db;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
@@ -342,11 +341,6 @@ public class ExportDefaultImp implements ExportDDL {
 	public List<FuncProcTriggerPo> allForeignKeyObj(Connection conn, String schema) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public String getDbVendor() {
-		return "";
 	}
 
 	@Override

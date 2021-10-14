@@ -43,7 +43,7 @@ public class Db2Connector extends DbConnector {
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
-		var schemas = getConnPo().getSchemas();
+		Map<String, DbSchemaPo> schemas = getConnPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
 //				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
@@ -56,11 +56,12 @@ public class Db2Connector extends DbConnector {
 //					schemas = Dbinfo.fetchSchemasInfo(this);					
 //				}
 				schemas = fetchSchemasInfo();		
+				getConnPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return schemas;
+		return getConnPo().getSchemas();
 	}
 
 

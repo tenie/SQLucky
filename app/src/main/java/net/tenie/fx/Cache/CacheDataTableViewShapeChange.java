@@ -164,40 +164,51 @@ public class CacheDataTableViewShapeChange {
 	}
 
 	// tableview 每个列头的移动事件
-	public static void  setTableHeader(FilteredTableView<ObservableList<StringProperty>>  table , String tableName) {
-		Node h2 =    table.lookup(".nested-column-header");
-		javafx.scene.Parent p = (Parent) h2;
-		ObservableList<Node> ls = p.getChildrenUnmodifiable(); 
-		for(var lb : ls) { 
-			var rd = lb.getOnMouseReleased();
-			lb.setOnMouseReleased(e->{ 
-				rd.handle(e); 
-				List<String> col_list = new ArrayList<>();
-				for(var col :table.getColumns()) {
+	public static void setTableHeader(FilteredTableView<ObservableList<StringProperty>> table, String tableName) {
+		try {
+			Node h2 = table.lookup(".nested-column-header");
+			if(h2 == null ) return ;
+			javafx.scene.Parent p = (Parent) h2;
+			ObservableList<Node> ls = p.getChildrenUnmodifiable();
+			for (var lb : ls) {
+				var rd = lb.getOnMouseReleased();
+				lb.setOnMouseReleased(e -> {
+					rd.handle(e);
+					List<String> col_list = new ArrayList<>();
+					for (var col : table.getColumns()) {
 //					System.out.println(col.getText());
-					col_list.add(col.getText());
-				} 
-				colOrder.put(tableName, col_list);
-			}); 
-		} 
+						col_list.add(col.getText());
+					}
+					colOrder.put(tableName, col_list);
+				});
+			}
+		} catch (Exception e2) {
+			e2.printStackTrace();
+		}
 	}
 	
 	// 设置 tooltip
-	public static void  setTableHeaderTooltip(FilteredTableView<ObservableList<StringProperty>>  table, ObservableList<SqlFieldPo> colss) {
-		Node colHeader =    table.lookup(".nested-column-header");
-		javafx.scene.Parent p = (Parent) colHeader;
-		ObservableList<Node> ls = p.getChildrenUnmodifiable(); 
-		for(var lb : ls) { 
-			Label label = (Label) lb.lookup(".label");
-			if(label != null) {
-				String name = label.getText();
-				if( StrUtils.isNotNullOrEmpty(name) ) {
-					String typeName = findColType(colss, name);
-					var ttip = MyTooltipTool.instance(typeName);
-					label.setTooltip(ttip); 
-				}				
+	public static void setTableHeaderTooltip(FilteredTableView<ObservableList<StringProperty>> table,
+			ObservableList<SqlFieldPo> colss) {
+		try {
+			Node colHeader = table.lookup(".nested-column-header");
+			if(colHeader == null ) return ;
+			javafx.scene.Parent p = (Parent) colHeader;
+			ObservableList<Node> ls = p.getChildrenUnmodifiable();
+			for (var lb : ls) {
+				Label label = (Label) lb.lookup(".label");
+				if (label != null) {
+					String name = label.getText();
+					if (StrUtils.isNotNullOrEmpty(name)) {
+						String typeName = findColType(colss, name);
+						var ttip = MyTooltipTool.instance(typeName);
+						label.setTooltip(ttip);
+					}
+				}
 			}
-		}  
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private static String findColType(ObservableList<SqlFieldPo> colss , String name) {

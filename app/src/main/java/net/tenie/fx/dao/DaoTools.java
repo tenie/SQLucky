@@ -1,20 +1,20 @@
 package net.tenie.fx.dao;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Date;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.lib.reflex.BuildObject;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class DaoTools {
 		private static Logger logger = LogManager.getLogger(DaoTools.class);
 	
@@ -70,13 +70,13 @@ public class DaoTools {
 					// 日期直接拼接字符串, 防止毫秒的情况, 多加了1秒后的比较 
 					if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
 							|| type.equals("java.sql.Date")) {
-						str.append(field + " = '"+val+"' , ");  
+						str.append(field + " = '"+val+"' ,");  
 					}else {
 						str.append(field + " = ? ,");
 					}
 				}
 			}
-			String rs = str.toString();
+			String rs = str.toString().trim();
 			if (rs.endsWith(",")) {
 				rs = rs.substring(0, rs.length() - 1);
 			}

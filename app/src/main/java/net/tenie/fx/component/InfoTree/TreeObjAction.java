@@ -1,4 +1,4 @@
-package net.tenie.fx.Action;
+package net.tenie.fx.component.InfoTree;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;

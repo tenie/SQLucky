@@ -1,4 +1,4 @@
-package net.tenie.fx.component.container;
+package net.tenie.fx.component.InfoTree;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,22 +20,19 @@ import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.TreeObjAction;
-import net.tenie.fx.PropertyPo.TreeItemType;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
+import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
+import net.tenie.fx.component.InfoTree.TreeItem.MyTreeItem;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.fx.component.TreeItem.ConnItemContainer;
-import net.tenie.fx.component.TreeItem.ConnItemDbObjects;
-import net.tenie.fx.component.TreeItem.MyTreeItem;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.fx.factory.TreeNodeCellFactory;
 import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.lib.tools.IconGenerator;
 
@@ -181,8 +178,11 @@ public class DBinfoTree {
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
 				CommonAction.openConn(item);
 				CodeArea codeArea  = SqlcukyEditor.getCodeArea(); 
-				codeArea.requestFocus();
-				codeArea.setShowCaret(CaretVisibility.ON);;
+				if(codeArea != null) {
+					codeArea.requestFocus();
+					codeArea.setShowCaret(CaretVisibility.ON);
+				}
+
 //				item.setExpanded(true);
 			} // Schemas 双击, 打开非默认的schema
 			else if (parentItem != null && 
