@@ -1,4 +1,4 @@
-open module SQLucky.plugin.mysql.connector{
+open module SQLucky.plugin.connector.mysql{
 	requires javafx.base;
 	requires javafx.graphics;
     requires javafx.controls;

@@ -9,11 +9,9 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-
 import net.tenie.Sqlucky.sdk.po.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class Sample
 {

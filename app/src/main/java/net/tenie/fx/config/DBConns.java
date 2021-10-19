@@ -71,7 +71,10 @@ public final class DBConns {
 		}
 		
 		ObservableList<Label> list= getChoiceBoxItems();
-		cb.setItems(list);
+		Platform.runLater(()->{
+			cb.setItems(list);
+		});
+		
 
 	}
 	

@@ -212,7 +212,12 @@ public class CommonUtility {
 
 	// 字符串类型判断
 	public static boolean isString(int type) {
-		if (type == java.sql.Types.CHAR || type == java.sql.Types.VARCHAR || type == java.sql.Types.LONGVARCHAR) {
+		if (type == java.sql.Types.CHAR || 
+				type == java.sql.Types.VARCHAR ||
+				type == java.sql.Types.LONGVARCHAR ||
+				type == java.sql.Types.CLOB
+				
+				) {
 			return true;
 		}
 		return false;

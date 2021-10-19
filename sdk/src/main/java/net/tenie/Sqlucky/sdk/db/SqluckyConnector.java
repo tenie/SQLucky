@@ -53,6 +53,8 @@ public interface SqluckyConnector {
 	
 	public String getJdbcUrl();
 	public boolean isJdbcUrlUse();
+	
+	// 自定义需要展示的时间格式, 转换成字符串
 	public StringProperty DateToStringStringProperty(Date val);
 	
 //	public  Map<String, DbSchemaPo> fetchSchemasInfo();

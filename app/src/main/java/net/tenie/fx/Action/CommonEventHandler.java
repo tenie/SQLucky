@@ -170,9 +170,8 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> InsertSQLClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-//				String tableid = DataViewTab.dataTableViewID();
-				ObservableList<SqlFieldPo> fs = MyTabData.getFields();//CacheTableDate.getCols(tableid);
-				String tableName = MyTabData.getTableName();                 //CacheTableDate.getTableName(tableid);
+				ObservableList<SqlFieldPo> fs = MyTabData.getFields();
+				String tableName = MyTabData.getTableName();
 				final ObservableList<ObservableList<StringProperty>> fvals = getValsHelper(isSelected);
 
 				final File ff = getFileHelper(isFile);

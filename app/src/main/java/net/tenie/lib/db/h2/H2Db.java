@@ -8,14 +8,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import org.apache.commons.io.FileUtils;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.component.dataView.MyTabDataValue;
+import net.tenie.fx.dao.InsertDao;
+import net.tenie.fx.dao.SelectDao;
 
 /**
  * 
@@ -27,21 +30,29 @@ public class H2Db {
 	// 连接打开次数的计数, 只有当connTimes = 0 , 调用close, 才会真的关闭
 	private static AtomicInteger connTimes = new AtomicInteger(0);
 	
+	private static String H2_DB_NAME  = "h2db";
+	private static int  H2_DB_VERSION = 3;
+	
+	private static String USER = "sa";
+	private static String PASSWD = "xyz123qweasd";
+	
 	// 使用阻塞队列, 串行获取: 连接, 和关闭连接 
 //	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
 	public synchronized  static Connection getConn() {
 		try {
 			if (conn == null) {
-				conn =  execConn() ;
+				conn =  createH2Conn() ;
 				// 第一次启动
 				if (!tabExist(conn, "CONNECTION_INFO")) {
 					SqlTextDao.createTab(conn);
+					// 数据库迁移
+					transferOldDbData();
 				}else {// 之后的启动, 更新脚本
 //					UpdateScript.execUpdate(conn);
 					
 				}
 			}else if( conn.isClosed()) {
-				conn =  execConn() ;
+				conn =  createH2Conn() ;
 			}
 //			bQueue.put(conn);
 		} catch (Exception e) {
@@ -84,17 +95,109 @@ public class H2Db {
 		}
 		return false;
 	}
+
 	
-	private  static Connection execConn() {
+	private static String dbFilePath() {
 		String dir = "/.sqlucky/";
 		if(isDev()) {
 			dir = "/.sqlucky_dev/";
 		}
 		String path = FileUtils.getUserDirectoryPath() + dir;
-		Dbinfo dbinfo = new Dbinfo("jdbc:h2:" + path + "h2db3", "sa", "xyz123qweasd");
+		return path;
+	}
+	
+	private  static Connection createH2Conn() {
+		String path = dbFilePath() ;
+		Connection connection =	createH2Conn(path + H2_DB_NAME+H2_DB_VERSION, USER , PASSWD);
+		return connection;
+	}
+	
+	private  static Connection createH2Conn(String path, String user, String pw) {
+		Dbinfo dbinfo = new Dbinfo("jdbc:h2:" + path, user, pw);
 		Connection connection = dbinfo.getconn();
 		return connection;
 	}
+	
+	
+	// 获取目录下的旧db文件, 从旧文件中找一个最新的
+	private static String oldDbFiles(){
+		String rs = "";
+		String path = dbFilePath() ;
+		File dir = new File(path);
+		
+		File[] files = dir.listFiles(name->{
+				return name.getName().startsWith(H2_DB_NAME) && name.getName().endsWith(".mv.db");
+			});
+		if(files != null && files.length > 0) {
+			long lastModifiedTime = 0;
+			for(var fl : files) {
+				String flName = fl.getName(); 
+				if(!flName.startsWith(H2_DB_NAME+H2_DB_VERSION) ) {					
+					long ltmp = fl.lastModified();
+					if(ltmp > lastModifiedTime) {
+						lastModifiedTime = ltmp;
+						rs =  path + flName.substring(0, flName.indexOf(".mv.db")); 
+					}
+					System.out.println(rs);
+				} 
+			}
+		}  
+		return rs;
+	}
+	
+	// 旧的数据 转移 到新的 表里
+	private static void transferOldDbData() {
+		String path = oldDbFiles();
+		if (StrUtils.isNotNullOrEmpty(path)) {
+			DBConnectorInfoPo connPo = new DBConnectorInfoPo("CONN_NAME",  
+					"", // rd.getString("DRIVER"),
+					"", // rd.getString("HOST"),
+					"", // rd.getString("PORT"),
+					USER, 
+					PASSWD, 
+					"VENDOR",  
+					"SCHEMA",  
+					"DB_NAME",  
+					"jdbc:h2:" + path  
+			);
+			SqluckyConnector cnor = new MyH2Connector(connPo);
+			List<String> tableNames = new ArrayList<>();
+			tableNames.add("CONNECTION_INFO");
+			tableNames.add("SQL_TEXT_SAVE");
+			tableNames.add("SCRIPT_ARCHIVE");
+			tableNames.add("APP_CONFIG");
+
+			for (int i = 0; i < tableNames.size(); i++) {
+				String tableName = tableNames.get(i);
+				String sql = "select   *   from  " + tableName;
+				MyTabDataValue dvt = new MyTabDataValue();
+				dvt.setDbConnection(cnor);
+				dvt.setSqlStr(sql);
+				dvt.setTabName(tableName);
+				try {
+					SelectDao.selectSql(sql, -1, dvt);
+					var datas = dvt.getRawData();
+					var fs = dvt.getColss();
+					if (datas != null) {
+						for (var data : datas) {
+							InsertDao.execInsert(conn, tableName, data, fs);
+						}
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace(); 
+				}
+
+			}
+			cnor.closeConn();
+
+		}
+	}
+	
+	public static void main(String[] args) {
+		oldDbFiles();
+	}
+	
 
 	private static List<String> updateSQL(){
 		List<String> ls = new ArrayList<>(); 

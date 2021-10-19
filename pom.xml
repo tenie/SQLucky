@@ -1,24 +1,224 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>net.tenie</groupId>
-  <artifactId>SQLucky-pom</artifactId>
-  <version>1.0</version>
-  <packaging>pom</packaging>
-  <modules>
-	 <module>sdk</module>  
-     <module>plugin/note</module>
-	 <module>plugin/DB2_connector</module>
-	 <module>plugin/H2_connector</module>
-	 <module>plugin/Sqlite_connector</module>
-	 <module>plugin/Mysql_connector</module>
-	 <module>plugin/Mariadb_connector</module>
-	 <module>plugin/Postgresql_connector</module>
-	 
-	 <module>app</module>   
-  </modules>
-	
- 
-        
-	 
-	
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>net.tenie</groupId>
+	<artifactId>SQLucky-pom</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>sdk</module>
+		<module>plugin/note</module>
+		<module>plugin/DB2_connector</module>
+		<module>plugin/H2_connector</module>
+		<module>plugin/Sqlite_connector</module>
+		<module>plugin/Mysql_connector</module>
+		<module>plugin/Mariadb_connector</module>
+		<module>plugin/Postgresql_connector</module>
+		<module>app</module>
+	</modules>
+
+	<properties>
+		<sqlucky.version>1.0</sqlucky.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.release>16</maven.compiler.release>
+		<javafx.version>16</javafx.version>
+		<jfoenix.version>9.0.10</jfoenix.version>
+		<richtextfx.version>0.10.6</richtextfx.version>
+		<controlsfx.version>11.1.0</controlsfx.version>
+		<sql.formatter.version>2.0.2</sql.formatter.version>
+		<commons.io.version>2.8.0</commons.io.version>
+		<slf4j.api.version>1.7.30</slf4j.api.version>
+		<log4j.version>2.14.1</log4j.version>
+
+		<sqlite.jdbc.version>3.34.0</sqlite.jdbc.version>
+		<h2.jdbc.version>1.4.197</h2.jdbc.version>
+		<db2jcc4.version>10.1</db2jcc4.version>
+		<mysql.jdbc.version>5.1.35</mysql.jdbc.version>
+
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-SDK</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Plugin-Note</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Connector-DB2</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Connector-H2</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Connector-Sqlite</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Connector-Mysql</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Connector-Mariadb</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Connector-Postgresql</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-controls</artifactId>
+				<version>${javafx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-fxml</artifactId>
+				<version>${javafx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-graphics</artifactId>
+				<version>${javafx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.openjfx</groupId>
+				<artifactId>javafx-swing</artifactId>
+				<version>${javafx.version}</version>
+			</dependency>
+
+
+
+			<!-- 控件库 -->
+			<dependency>
+				<groupId>com.jfoenix</groupId>
+				<artifactId>jfoenix</artifactId>
+				<version>${jfoenix.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.fxmisc.richtext</groupId>
+				<artifactId>richtextfx</artifactId>
+				<version>${richtextfx.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.controlsfx</groupId>
+				<artifactId>controlsfx</artifactId>
+				<version>${controlsfx.version}</version>
+			</dependency>
+
+			<!-- sql 格式化 -->
+			<dependency>
+				<groupId>com.github.vertical-blank</groupId>
+				<artifactId>sql-formatter</artifactId>
+				<version>${sql.formatter.version}</version>
+			</dependency>
+
+			<!-- io 操作文件 -->
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>${commons.io.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.api.version}</version>
+			</dependency>
+
+			<!-- 数据库 JDBC -->
+			<dependency>
+				<groupId>com.ibm.db2</groupId>
+				<artifactId>jcc</artifactId>
+				<version>11.5.6.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>8.0.26</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.mariadb.jdbc</groupId>
+				<artifactId>mariadb-java-client</artifactId>
+				<version>2.7.3</version>
+			</dependency>
+
+			<dependency>
+				<groupId>com.h2database</groupId>
+				<artifactId>h2</artifactId>
+				<version>${h2.jdbc.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.xerial</groupId>
+				<artifactId>sqlite-jdbc</artifactId>
+				<version>${sqlite.jdbc.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.postgresql</groupId>
+				<artifactId>postgresql</artifactId>
+				<version>42.2.23</version>
+			</dependency>
+
+
+
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-api</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-slf4j-impl</artifactId>
+				<version>${log4j.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<build>
+		<!-- 插件声明 -->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.8.1</version>
+				</plugin>
+			</plugins>
+
+
+		</pluginManagement>
+
+	</build>
 </project>

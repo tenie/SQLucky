@@ -1,11 +1,7 @@
 package net.tenie.fx.component.dataView;
 
 import java.sql.Connection;
-
-import org.controlsfx.control.tableview2.FilteredTableView;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -15,7 +11,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
@@ -25,13 +20,17 @@ import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.component.CommonButtons;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.IconGenerator;
 
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class DataTableOptionBtnsPane extends  AnchorPane{
 	
 	public DataTableOptionBtnsPane(MyTabData mytb,  boolean disable, String time , String rows, String connName  , boolean isLock) {
@@ -45,7 +44,6 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		});
 		saveBtn.setTooltip(MyTooltipTool.instance("Save data"));
 		saveBtn.setDisable(true);
-//		saveBtn.setId(AllButtons.SAVE);
 		mytb.setSaveBtn(saveBtn);
 
 		JFXButton detailBtn = new JFXButton();

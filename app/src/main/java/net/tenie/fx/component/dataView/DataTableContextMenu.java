@@ -1,4 +1,4 @@
-package net.tenie.fx.factory;
+package net.tenie.fx.component.dataView;
 
 import java.util.List;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
@@ -7,19 +7,15 @@ import org.controlsfx.control.tableview2.filter.popupfilter.PopupStringFilter;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
-import net.tenie.fx.component.dataView.MyTabData;
-import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.MyPopupNumberFilter;
 import net.tenie.lib.tools.IconGenerator;
 
-public class MenuFactory {
+public class DataTableContextMenu {
 	
 	/**
 	 * 数据表中列的右键弹出菜单
@@ -138,72 +134,6 @@ public class MenuFactory {
 		});
 		return cm;
 	}
-	
- 
-	
-	
-	
-	
-//	treeView 右键菜单 TreeMenu
-//	@Deprecated 
-//	public static ContextMenu CreateTreeViewConnMenu() {
-//			ContextMenu contextMenu = new ContextMenu();
-////
-////			MenuItem add = new MenuItem("Add Connection");
-////			add.setOnAction(e -> {
-////				ConnectionEditor.ConnectionInfoSetting();
-////			});
-////			add.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
-//			
-//			MenuItem addtabNewCol = new MenuItem("Table Add New Column");
-//			addtabNewCol.setGraphic(ImageViewGenerator.svgImageDefActive("plus-square-o"));
-//			addtabNewCol.setId("tableAddNewCol");
-//			addtabNewCol.setDisable(true);
-//			
-////			addtabNewCol.setOnAction(e -> {
-//////				ConnectionEditor.ConnectionInfoSetting();
-////				addNewColumn();
-////			});
-//
-//			MenuItem link = new MenuItem("Open Connection");
-//			link.setOnAction(CommonEventHandler.openConnEvent());
-//			link.setGraphic(ImageViewGenerator.svgImageDefActive("link"));
-//			link.setDisable(true);
-//			link.setId("OpenConnection");
-//			
-//			MenuItem unlink = new MenuItem("Close Connection");
-//			unlink.setOnAction(CommonEventHandler.closeConnEvent());
-//			unlink.setGraphic(ImageViewGenerator.svgImageDefActive("unlink"));
-//			unlink.setDisable(true);
-//			unlink.setId("CloseConnection");
-//			
-//			MenuItem Edit = new MenuItem("Edit Connection");
-//			Edit.setOnAction(CommonEventHandler.editConnEvent());
-//			Edit.setGraphic(ImageViewGenerator.svgImageDefActive("edit"));
-//			Edit.setDisable(true);
-//			Edit.setId("EditConnection");
-//			
-//			MenuItem delete = new MenuItem("Delete Connection");
-//			delete.setOnAction(e -> {
-//				ConnectionEditor.ConnectionInfoSetting();
-//			});
-//			delete.setGraphic(ImageViewGenerator.svgImageDefActive("trash"));
-//			delete.setDisable(true);
-//			delete.setId("DeleteConnection");
-//			
-//			contextMenu.getItems().addAll(
-////					add,
-//					link, unlink, Edit, delete, new SeparatorMenuItem(), addtabNewCol);
-//
-//			return contextMenu;
-//		}
-	
-	
-
-	
-	
-	
-	
 	
 	
 }

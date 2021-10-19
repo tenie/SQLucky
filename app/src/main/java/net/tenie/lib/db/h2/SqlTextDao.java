@@ -78,7 +78,7 @@ public class SqlTextDao {
 			DBTools.execDDLNoErr(conn, SQL_TEXT_SAVE);
 			DBTools.execDDLNoErr(conn, SCRIPT_ARCHIVE); 
 			DBTools.execDDLNoErr(conn, APP_CONFIG);
-			saveConfig(conn, "THEME", "DARK");
+			
 		} catch (Exception e) { 
 			e.printStackTrace();
 		}

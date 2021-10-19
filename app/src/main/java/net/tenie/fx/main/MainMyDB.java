@@ -19,8 +19,10 @@ import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.H2Db;
+import net.tenie.lib.db.h2.SqlTextDao;
 import net.tenie.sdkImp.SqluckyComponent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -55,7 +57,12 @@ public class MainMyDB extends Application {
 		
 		Connection conn = H2Db.getConn();
 	    Theme = H2Db.getConfigVal(conn , "THEME");  
-	    H2Db.updateAppSql(conn);
+	    if(StrUtils.isNullOrEmpty(Theme)) {
+	    	SqlTextDao.saveConfig(conn, "THEME", "DARK");
+	    	Theme =  "DARK";
+	    }
+//	    H2Db.updateAppSql(conn);
+	    
 	    ConfigVal.openfileDir = H2Db.getConfigVal(conn , "OPEN_FILE_DIR"); 
 		H2Db.closeConn();
 		ConfigVal.THEME = Theme;

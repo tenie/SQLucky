@@ -1,4 +1,4 @@
-open module SQLucky.plugin.sqlite.connector{
+open module SQLucky.plugin.connector.sqlite{
 	requires javafx.base;
 	requires javafx.graphics;
     requires javafx.controls;

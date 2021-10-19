@@ -1,4 +1,4 @@
-open module SQLucky.plugin.Postgresql.connector{
+open module SQLucky.plugin.connector.postgresql{
 	requires javafx.base;
 	requires javafx.graphics;
     requires javafx.controls;

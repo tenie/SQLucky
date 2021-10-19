@@ -1,4 +1,4 @@
-open module SQLucky.plugin.Mariadb.connector{
+open module SQLucky.plugin.connector.mariadb{
 	requires javafx.base;
 	requires javafx.graphics;
     requires javafx.controls;

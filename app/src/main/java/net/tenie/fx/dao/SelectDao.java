@@ -281,9 +281,7 @@ public class SelectDao {
 			  SqluckyConnector dpo) throws SQLException {
 		int idx = 1;
 		int rowNo = 0;
-//		ObservableList<SqlFieldPo> fpo = dpo.getFields();
 		int columnnums = fpo.size();
-//		ObservableList<StringProperty> vals = FXCollections.observableArrayList();
 		ObservableList<ObservableList<StringProperty>> allDatas = FXCollections.observableArrayList();
 		while (rs.next()) {
 			ObservableList<StringProperty> vals = FXCollections.observableArrayList();

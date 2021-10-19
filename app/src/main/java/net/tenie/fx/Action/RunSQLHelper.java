@@ -41,6 +41,7 @@ import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.container.DataViewContainer;
+import net.tenie.fx.component.dataView.DataTableContextMenu;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -52,7 +53,6 @@ import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.fx.dao.SelectDao;
-import net.tenie.fx.factory.MenuFactory;
 import net.tenie.fx.factory.StringPropertyListValueFactory;
 import net.tenie.fx.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
@@ -330,7 +330,6 @@ public class RunSQLHelper {
 		    Connection conn = dpo.getConn();
 			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
 			
-//		    MyDataTable table = new MyDataTable();
 		    // 获取表名
 			String tableName = ParseSQL.tabName(sql);
 			if(StrUtils.isNullOrEmpty(tableName)) {
@@ -344,8 +343,6 @@ public class RunSQLHelper {
 			dvt.setTable(table);
 			dvt.setTabName(tableName);
 			dvt.setConnName(connectName);
-//			dvt.setDbconns(conn);
-//			dvt.setDbConnection(dpo);
 			dvt.setLock(isLock);
 
 			SelectDao.selectSql(sql, ConfigVal.MaxRows, dvt); 
@@ -667,7 +664,7 @@ public class RunSQLHelper {
 		List<MenuItem> menuList = new ArrayList<>();
 		// 右点菜单
 		if(! isInfo) { 
-			ContextMenu cm =MenuFactory.DataTableColumnContextMenu(colname, type, col, colIdx , menuList);
+			ContextMenu cm = DataTableContextMenu.DataTableColumnContextMenu(colname, type, col, colIdx , menuList);
 			col.setContextMenu(cm);
 		}
 		dvt.getMenuItems().addAll(menuList); 		

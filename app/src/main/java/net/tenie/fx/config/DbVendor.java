@@ -36,11 +36,18 @@ public class DbVendor {
 	}
 
 	public static String getDriver(String name) { 
+		
 		return data.get(name).getDriver();
 	}
 	
-	public static SqluckyDbRegister register(String name) { 
-		return data.get(name);
+	// 获取注册的 db 对象
+	public static SqluckyDbRegister register(String name) {
+		for(var key :data.keySet()) {
+			if(key.toLowerCase().equals(name.toLowerCase())) {
+				return data.get(key);
+			}
+		}
+		return null;
 	}
 	
 

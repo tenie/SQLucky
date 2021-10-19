@@ -38,7 +38,7 @@ public class InsertDao {
 		for (int i = 0; i < size; i++) {
 			SqlFieldPo po = fpos.get(i);
 			String temp = data.get(i).get();
-			if (StrUtils.isNotNullOrEmpty(temp) && !"<null>".equals(temp)) {
+			if ( !"<null>".equals(temp)) {
 				sql.append(po.getColumnLabel().get());
 				values.append(" ? ");
 				sql.append(" ,");
@@ -57,28 +57,38 @@ public class InsertDao {
 
 		PreparedStatement pstmt = null;
 		pstmt = conn.prepareStatement(insert); 
-		logger.info(insert);
+		String insertLog = insert;
+		 
 		int idx = 0;
 		for (int i = 0; i < size; i++) {
 			String val = data.get(i).get();
-			if (StrUtils.isNotNullOrEmpty(val) && !"<null>".equals(val)) {
+			if ( !"<null>".equals(val)) {
 				idx++;
 				String type = fpos.get(i).getColumnClassName().get();
 				int javatype = fpos.get(i).getColumnType().get();
-
+				String columnTypeName =  fpos.get(i).getColumnTypeName().get();
+				System.out.println("javatype = "+javatype +" | " +columnTypeName);
 				if (CommonUtility.isDateTime(javatype)) {
 					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
 					Timestamp ts = new Timestamp(dv.getTime());
 					pstmt.setTimestamp(idx, ts);
-					logger.info(idx + "  " + ts);
-				} else {
-					Object obj = BuildObject.buildObj(type, val);
-					pstmt.setObject(idx, obj);
-					logger.info(idx + "  " + obj);
+					insertLog += " | "+ ts ;
+//					logger.info(idx + "  " + ts);
+				}
+//				else if(CommonUtility.isString(javatype)) {
+//					pstmt.setString(idx, val);
+//				} 
+				else { 
+//					Object obj = BuildObject.buildObj(type, val);
+//					pstmt.setObject(idx, obj);
+					pstmt.setObject(idx, val);
+					insertLog += " | "+ val ;
+//					logger.info(idx + "  " + obj);
 				}
 			}
 
 		}
+		logger.info(insertLog);
 		int count = pstmt.executeUpdate();
 
 		msg = "Ok, Insert " + count;

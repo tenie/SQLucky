@@ -1,4 +1,4 @@
-open module SQLucky.plugin.DB2.connector{
+open module SQLucky.plugin.connector.db2{
 	requires javafx.base;
 	requires javafx.graphics;
     requires javafx.controls;

@@ -4,23 +4,22 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.fx.window.ModalDialog;
 import net.tenie.lib.reflex.BuildObject;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class UpdateDao {
 	private static Logger logger = LogManager.getLogger(UpdateDao.class);
+	
 	public static String execUpdate(Connection conn, String tableName, ObservableList<StringProperty> newvals,
 			ObservableList<StringProperty> oldvals, ObservableList<SqlFieldPo> fpos) throws Exception {
 		PreparedStatement pstmt = null;

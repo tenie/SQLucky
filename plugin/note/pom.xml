@@ -6,13 +6,14 @@
 	<!-- <parent> <groupId>net.tenie</groupId> <artifactId>SQLucky-pom</artifactId> 
 		<version>1.0</version> </parent> -->
 	<groupId>net.tenie</groupId>
-	<artifactId>SQLucky-plugin-note</artifactId>
+	<artifactId>SQLucky-Plugin-Note</artifactId>
 	<version>1.0</version>
 	<packaging>jar</packaging>
 
-	<name>SQLucky.plugin.note</name>
+	<name>SQLucky.Plugin.Note</name>
 
 	<properties>
+		<sqlucky.version>1.0</sqlucky.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>16</maven.compiler.release>
 		<javafx.version>16</javafx.version>
@@ -34,7 +35,7 @@
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-sdk</artifactId>
-			<version>1.0</version>
+			<version>${sqlucky.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -56,8 +57,6 @@
 			<artifactId>javafx-swing</artifactId>
 			<version>${javafx.version}</version>
 		</dependency>
-
-
 
 		<!-- 控件库 -->
 		<dependency>
@@ -96,10 +95,6 @@
 			<artifactId>slf4j-api</artifactId>
 			<version>${slf4j.api.version}</version>
 		</dependency>
-
-		<!-- 数据库 JDBC -->
-
-
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>

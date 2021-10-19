@@ -46,6 +46,39 @@ public class GenerateSQLString {
 
 		return insert;
 	}
+	
+	public static String insertSQLExcludeNull(String tableName, ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos) {
+
+		StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
+		StringBuilder values = new StringBuilder("");
+		int size = fpos.size();
+		for (int i = 0; i < size; i++) {
+			SqlFieldPo po = fpos.get(i);
+			int type = po.getColumnType().get();
+			String temp = data.get(i).get(); 
+			if ( "<null>".equals(temp)) {
+				continue;
+			} else if (CommonUtility.isString(type) || CommonUtility.isDateTime(type)) {
+				values.append("'" + temp + "'");
+			} else {
+				values.append(temp);
+			}
+			sql.append(po.getColumnLabel().get());
+			sql.append(" ,");
+			values.append(" ,");
+		}
+		String insert = sql.toString();
+		String valstr = values.toString();
+		if (insert.endsWith(",")) {
+			insert = insert.substring(0, insert.length() - 1);
+			valstr = valstr.substring(0, values.length() - 1);
+		}
+
+		insert += " ) VALUES (" + valstr + ") ";
+
+		return insert;
+	}
+	
 
 	public static String insertSQLHelper(ObservableList<ObservableList<StringProperty>> vals, String tableName,
 			ObservableList<SqlFieldPo> fs) {
