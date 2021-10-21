@@ -2,26 +2,20 @@ package net.tenie.fx.component;
 
 import java.io.File;
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import org.fxmisc.richtext.CodeArea;
-
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.CodeArea.MyAutoComplete;
@@ -38,7 +32,11 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
-
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class MyTab extends Tab implements SqluckyTab {
 	private DocumentPo docPo;
 	private HighLightingCodeArea sqlCodeArea;
@@ -340,6 +338,30 @@ public class MyTab extends Tab implements SqluckyTab {
 			myTabPane.getTabs().add( this);// 在指定位置添加Tab 
 		} 
 		myTabPane.getSelectionModel().select(this);
+	}
+	
+	//TODO 添加空文本的codeTab
+	public static  void mainTabPaneAddAllMyTabs(List<MyTab> ls) { 
+		if(ls != null && ls.size() > 0) {
+			var myTabPane = ComponentGetter.mainTabPane;
+			for(var mtb : ls) {
+				var code = mtb.getSqlCodeArea().getCodeArea();
+				if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
+					mtb.setTabSQLText( mtb.getDocumentPo().getText());
+				}
+			}
+			
+			myTabPane.getTabs().addAll(ls);
+		}
+		
+//		if( myTabPane.getTabs().contains(this) == false ) {
+//			var code = sqlCodeArea.getCodeArea();
+//			if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
+//				setTabSQLText( docPo.getText());
+//			}
+//			myTabPane.getTabs().add( this);// 在指定位置添加Tab 
+//		} 
+//		myTabPane.getSelectionModel().select(this);
 	}
 
 	public VBox getVbox() {

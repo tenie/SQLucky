@@ -2,6 +2,7 @@ package net.tenie.fx.config;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -53,7 +54,9 @@ public final class DBConns {
 		ObservableList<Label> ls = cb.getItems();
 		for(Label lb : ls) {
 			if(lb.getText().equals(name)) {
-				cb.getSelectionModel().select(lb);
+				Platform.runLater(()->{
+					cb.getSelectionModel().select(lb);
+				}); 
 				break;
 			}
 		}
@@ -71,10 +74,10 @@ public final class DBConns {
 		}
 		
 		ObservableList<Label> list= getChoiceBoxItems();
-		Platform.runLater(()->{
-			cb.setItems(list);
-		});
-		
+//		Platform.runLater(()->{
+//			
+//		});
+		cb.setItems(list);
 
 	}
 	
@@ -113,6 +116,17 @@ public final class DBConns {
 		set.add(name);
 		dbs.put(name, o);
 		flushChoiceBox(cb);
+	}
+	
+	public static void addAll(List<SqluckyConnector> ls) {
+		for(var sc: ls) {
+			var name = sc.getConnName();
+			set.add(name);
+			dbs.put(name, sc);
+		}
+		Platform.runLater(()->{
+			flushChoiceBox(cb);
+		});
 	}
 
 	public static boolean conaction(String name) {

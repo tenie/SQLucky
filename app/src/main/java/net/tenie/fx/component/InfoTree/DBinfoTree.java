@@ -96,13 +96,14 @@ public class DBinfoTree {
 				for (SqluckyConnector po : datas) {
 					var item = new MyTreeItem<TreeNodePo>(new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
 					ls.add(item);
-					DBConns.add(po.getConnName(), po); 
+//					DBConns.add(po.getConnName(), po); 
 				} 
 			} 
 			 
 			if(ls.size() > 0) {
 				Platform.runLater(()->{
 					rootNode.getChildren().addAll(ls);
+					DBConns.addAll(datas);
 				});
 			}
 		};

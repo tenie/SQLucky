@@ -8,7 +8,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -39,7 +38,7 @@ public class DBinfoContainer {
 		container = new VBox();
 		// 按钮
 		treeBtnPane = ButtonFactory.createTreeViewbtn();  
-		// 数据库
+		// 数据库信息
 		dbInfoTree = new DBinfoTree();
 		treeView =  DBinfoTree.DBinfoTreeView ;  
 		// 脚本

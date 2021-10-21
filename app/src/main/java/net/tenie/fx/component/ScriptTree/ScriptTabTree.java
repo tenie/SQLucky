@@ -100,6 +100,8 @@ public class ScriptTabTree {
 			if (datas != null && datas.size() > 0) {
 				ConfigVal.pageSize = datas.size();
 				List<TreeItem<MyTab>> itemList = new ArrayList<>();
+				List<MyTab> mtbs = new ArrayList<>();
+				
 				for (DocumentPo po : datas) {
 					MyTab tb = new MyTab(po);
 					TreeItem<MyTab> item = new TreeItem<>(tb);
@@ -107,37 +109,36 @@ public class ScriptTabTree {
 					itemList.add(item);
 					// 恢复代码编辑框
 					if (ids.contains(po.getId())) {
-						Platform.runLater(()->{
-							tb.mainTabPaneAddMyTab();
-						});
+						mtbs.add(tb);
+//						Platform.runLater(()->{
+//							tb.mainTabPaneAddMyTab();
+//						});
 						
 					}
 				}
 				if(itemList.size() > 0 ) {
 					Platform.runLater(()->{
 						rootNode.getChildren().addAll(itemList);
+						// 恢复代码编辑框
+						if (mtbs.size() > 0) {
+//							for (var tb : mtbs) {
+//								tb.mainTabPaneAddMyTab();
+//							}
+							MyTab.mainTabPaneAddAllMyTabs(mtbs);
+							// 初始化上次选中页面
+							if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) {
+								int sps = Integer.valueOf(SELECT_PANE);
+								if (mtbs.size() > sps) {
+									ComponentGetter.mainTabPane.getSelectionModel().select(sps);
+								}
+							}
+						}
+						// 没有tab被添加, 添加一新的
+						if (mtbs.size() == 0) {
+							MyTab.addCodeEmptyTabMethod();
+						}
 					});
 				}
-				
-
-			}
-
-			int ts = ComponentGetter.mainTabPane.getTabs().size();
-			// 初始化上次选中页面
-			if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) { 
-				int sps = Integer.valueOf(SELECT_PANE);
-				if (ts > sps) {
-					Platform.runLater(()->{
-						ComponentGetter.mainTabPane.getSelectionModel().select(sps);
-					});
-				}  
-			}	
-			// 没有tab被添加, 添加一新的
-			if (ts == 0) {
-				Platform.runLater(()->{
-					MyTab.addCodeEmptyTabMethod();
-				});
-				
 			}
 		};
 		CommonUtility.addInitTask(cr);

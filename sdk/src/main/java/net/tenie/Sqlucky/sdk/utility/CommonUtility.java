@@ -583,18 +583,37 @@ public class CommonUtility {
 	
 	// 应用创建完后, 执行一些初始化的任务
 	private static List<Consumer< String >> initTasks = new ArrayList<>();
+	private static List<String> initFinish = new ArrayList<>();
+	private static volatile int tasksCount = -1;
 	public static void addInitTask(Consumer< String > v) {
 		initTasks.add(v);
 	}
+	
+	public static synchronized int countTask() {
+		return initTasks.size();
+	}
+	
+	
+	// 子线程执行初始化任务
 	public static void executeInitTask() {
-		
-		for(Consumer< String > cr: initTasks) {
+		tasksCount = initTasks.size();
+		for(Consumer< String > caller: initTasks) {
 			try {
-//				cr.accept("");
-				CommonUtility.runThread(cr);
+				Thread t = new Thread() {
+					public void run() {
+						caller.accept("");
+						initFinish.add("1");
+					}
+				};
+				t.start();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
+	
+	public static void InitFinishCall(Consumer< String > caller) {
+//		initTasks.
+	}
+	
 }

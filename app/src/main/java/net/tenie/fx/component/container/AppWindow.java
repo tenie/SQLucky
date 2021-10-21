@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -61,8 +62,12 @@ public class AppWindow {
 					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
 				}
 		});  
-		BorderPane root = new BorderPane();
-		root.setCenter(mainWindow);
+//		BorderPane root = new BorderPane();
+//		root.setCenter(mainWindow);
+		Label lb =new Label("Loading.....");
+		StackPane root = new StackPane( mainWindow, lb);
+		root.getChildren().remove(lb);
+
 		appScene = new Scene(root); 
 //		appScene = new Scene(mainWindow); 
 		ComponentGetter.primaryscene = appScene;

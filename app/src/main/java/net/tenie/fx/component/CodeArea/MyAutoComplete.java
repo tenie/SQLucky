@@ -37,10 +37,11 @@ public class MyAutoComplete implements AutoComplete{
 	private static VBox vb ;
 	private static TreeItem<TablePo> rootNode  ;
 	private static TreeView<TablePo> treeView ;
-	private	static List<TablePo> tmpls = new ArrayList<>();
+	private	static HashSet<TablePo> tmpls = new HashSet<>();
 	private static String filterStr = "";
 	
-	private static Map<Integer, Set<TablePo> > pageTables = new HashMap<>();
+	private static Map<Integer, Set<TablePo> > page = new HashMap<>();
+	private static Map<Integer, Set<TablePo> > fields = new HashMap<>();
 	
 	static {
 		keyWords.add( TablePo.noDbObj("SELECT * FROM "));
@@ -178,7 +179,7 @@ public class MyAutoComplete implements AutoComplete{
 		filterStr = fStr.trim().toUpperCase();
 		String tmpFilterStr = filterStr; 
 		if(! isShow()) {
-			tmpls = new ArrayList<>();
+			tmpls = new HashSet<>();
 			if(tmpFilterStr.contains(".")) {
 				tmpFilterStr = tmpFilterStr.substring(tmpFilterStr.indexOf(".")+1);
 				var fs = getCacheTableFields();
@@ -190,9 +191,9 @@ public class MyAutoComplete implements AutoComplete{
 					DbSchemaPo spo = map.get(po.getDefaultSchema());
 					if (spo != null) { 
 						tmpls.addAll(keyWords  ) ;  
-						tmpls.addAll(getCacheTableFields()  ) ;  
 						tmpls.addAll(spo.getTabs()  ) ; 
 						tmpls.addAll(spo.getViews() ) ; 
+						tmpls.addAll(getCacheTableFields()  ) ;  
 					}
 				}else {
 					tmpls.addAll(keyWords  ) ;  
@@ -204,8 +205,9 @@ public class MyAutoComplete implements AutoComplete{
 		boolean tf =false;
 		if( tmpls != null && tmpls.size()>0) {
 			rootNode.getChildren().clear();
-			for(int i =0 ; i< tmpls.size() ; i++) { 
-				var tb = tmpls.get(i);
+			for(var tb: tmpls) {
+//			for(int i =0 ; i< tmpls.size() ; i++) { 
+//				var tb = tmpls.get(i);
 				if( tb.getTableName().toUpperCase().contains(tmpFilterStr) ){
 //					System.out.println(tmpFilterStr + " === " + tb.getTableName()); 
 					TreeItem<TablePo> item = new TreeItem<>(tb);
@@ -252,7 +254,7 @@ public class MyAutoComplete implements AutoComplete{
 	
 	public   void cacheTablePo(TablePo tabpo) {
 		
-		Consumer< String >  caller = x ->{ 
+		Consumer< String >  caller = x ->{
 			var fs = tabpo.getFields(); 
 			if( fs == null || fs .size() == 0) {
 				SqluckyConnector dpov = CommonAction.getDbConnectionPoByComboBoxDbConnName();
@@ -270,11 +272,11 @@ public class MyAutoComplete implements AutoComplete{
 				Integer id = getMyTabId();
 				if(id != null) {
 					Set<TablePo> tmppos ;
-					if( pageTables.containsKey(id) ) {
-						tmppos = pageTables.get(id); 
+					if( fields.containsKey(id) ) {
+						tmppos = fields.get(id); 
 					}else {
 						tmppos = new HashSet<>(); 
-						pageTables.put(id, tmppos);
+						fields.put(id, tmppos);
 					}
 					var fis =  tabpo.getFields();
 					for(var f : fis) {
@@ -300,11 +302,11 @@ public class MyAutoComplete implements AutoComplete{
 			Integer id = getMyTabId(); 
 			if(id != null) { 
 				Set<TablePo> tmppos ;
-				if( pageTables.containsKey(id) ) {
-					tmppos = pageTables.get(id); 
+				if( page.containsKey(id) ) {
+					tmppos = page.get(id); 
 				}else {
 					tmppos = new HashSet<>(); 
-					pageTables.put(id, tmppos);
+					page.put(id, tmppos);
 				}
 				
 				// 获取词组
@@ -320,14 +322,21 @@ public class MyAutoComplete implements AutoComplete{
 		
 	}
 	
+	
+	//获取缓存数据
 	public    Collection<TablePo> getCacheTableFields() {
-		List<TablePo> cacheFs= new ArrayList<>();
+		Set<TablePo> cacheFs= new HashSet<>();
 		Integer id = getMyTabId();
 		if(id != null) {
-			if( pageTables.containsKey(id) ) {
-				Set<TablePo> setpo = pageTables.get(id);
-				return setpo;
+			
+			if( fields.containsKey(id) ) {
+				cacheFs.addAll(fields.get(id));
 			}
+			if( page.containsKey(id) ) { 
+				cacheFs.addAll(page.get(id));
+			}
+			 
+			
 		}
 		return cacheFs;
 	}
