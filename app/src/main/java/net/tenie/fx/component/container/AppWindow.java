@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.controlsfx.control.MasterDetailPane;
 
+import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.geometry.Pos;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -14,6 +16,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -28,7 +32,9 @@ public class AppWindow {
 	private OperateContainer operate;
 	private DataViewContainer dataView;
 	private Scene appScene;
-	
+	private Label lb ;
+	private StackPane root;
+//	private VBox box;
 
 	public AppWindow() {
 		mainWindow = new VBox();
@@ -64,9 +70,11 @@ public class AppWindow {
 		});  
 //		BorderPane root = new BorderPane();
 //		root.setCenter(mainWindow);
-		Label lb =new Label("Loading.....");
-		StackPane root = new StackPane( mainWindow, lb);
-		root.getChildren().remove(lb);
+		lb =new Label("Loading.....");
+		lb.setFont(new Font(30));
+		root = new StackPane( mainWindow, lb);
+		StackPane.setAlignment(lb, Pos.CENTER);
+	
 
 		appScene = new Scene(root); 
 //		appScene = new Scene(mainWindow); 
@@ -126,6 +134,15 @@ public class AppWindow {
 		
 		
 		 
+	}
+	
+//	移除loading...
+	public void rmlb() {
+		 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(lb, 1500);
+		 fadeTransition.setOnFinished(e ->{
+			 root.getChildren().remove(lb);
+		 });
+		
 	}
 	
 	public VBox getMainWindow() {

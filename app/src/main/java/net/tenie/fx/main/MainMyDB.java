@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.sun.javafx.application.LauncherImpl;
@@ -113,7 +115,7 @@ public class MainMyDB extends Application {
 			 
 			 primaryStage.setX(500); 
 //			 primaryStage.setY(100);
-			
+		    primaryStage.centerOnScreen();
 			primaryStage.show();
 			
 			
@@ -182,7 +184,16 @@ public class MainMyDB extends Application {
 			}); 
 			
 			ServiceLoad.myShowed(); 
-			CommonUtility.executeInitTask();
+			
+			// 移除loading...
+			Consumer< String > cr = v->{ 
+				Platform.runLater(()->{
+					app.rmlb();
+				});
+				
+			}; 
+			CommonUtility.executeInitTask(cr);
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

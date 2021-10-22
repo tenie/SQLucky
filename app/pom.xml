@@ -19,6 +19,7 @@
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-SDK</artifactId>
+			<version>1.0</version>
 		</dependency>
 
 		<dependency>

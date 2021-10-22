@@ -356,8 +356,18 @@ public class CommonUtility {
         fadeTransition.setCycleCount(1);     // 设置循环周期为无限
         fadeTransition.setAutoReverse(true);    // 设置自动反转
         fadeTransition.setNode(node);         // 设置动画应用的节点
-        fadeTransition.play();                  // 播放动画
-
+        fadeTransition.play();                  // 播放动画 
+	}
+	public static FadeTransition fadeTransitionHidden(Node node , double ms ) {
+		   // 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
+     FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
+     fadeTransition.setFromValue(1);   // 设置起始透明度为1.0，表示不透明
+     fadeTransition.setToValue(0);     // 设置结束透明度为0.0，表示透明
+     fadeTransition.setCycleCount(1);     // 设置循环周期为无限
+     fadeTransition.setAutoReverse(true);    // 设置自动反转
+     fadeTransition.setNode(node);         // 设置动画应用的节点
+     fadeTransition.play();                  // 播放动画 
+     return fadeTransition;
 	}
 	
 	public static  boolean isMacOS() {
@@ -583,10 +593,24 @@ public class CommonUtility {
 	
 	// 应用创建完后, 执行一些初始化的任务
 	private static List<Consumer< String >> initTasks = new ArrayList<>();
-	private static List<String> initFinish = new ArrayList<>();
-	private static volatile int tasksCount = -1;
+	private static volatile int tasksCount = 0;
+	
+	private static synchronized int getTaskCount() {
+		return tasksCount;
+	}
+	
+	private static synchronized int addTaskCount() {
+		return tasksCount++;
+	}
+	
+	private static synchronized int minusTaskCount() {
+		return tasksCount--;
+	}
+	
+	
 	public static void addInitTask(Consumer< String > v) {
 		initTasks.add(v);
+		addTaskCount();
 	}
 	
 	public static synchronized int countTask() {
@@ -595,14 +619,13 @@ public class CommonUtility {
 	
 	
 	// 子线程执行初始化任务
-	public static void executeInitTask() {
-		tasksCount = initTasks.size();
+	public static void executeInitTask(Consumer< String > Callback) {
 		for(Consumer< String > caller: initTasks) {
 			try {
 				Thread t = new Thread() {
 					public void run() {
 						caller.accept("");
-						initFinish.add("1");
+						minusTaskCount();
 					}
 				};
 				t.start();
@@ -610,10 +633,29 @@ public class CommonUtility {
 				e.printStackTrace();
 			}
 		}
+		InitFinishCall(Callback);
+		
 	}
 	
 	public static void InitFinishCall(Consumer< String > caller) {
-//		initTasks.
+		try {
+			Thread t = new Thread() {
+				public void run() {
+					while(CommonUtility.getTaskCount() > 0){
+						try {
+							Thread.sleep(500);
+							System.out.println("getTaskCount()  = " + CommonUtility.getTaskCount() );
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					caller.accept("");
+				}
+			};
+			t.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
-	
 }
