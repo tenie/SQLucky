@@ -99,9 +99,9 @@ public class H2Db {
 	
 	private static String dbFilePath() {
 		String dir = "/.sqlucky/";
-		if(isDev()) {
-			dir = "/.sqlucky_dev/";
-		}
+//		if(isDev()) {
+//			dir = "/.sqlucky_dev/";
+//		}
 		String path = FileUtils.getUserDirectoryPath() + dir;
 		return path;
 	}

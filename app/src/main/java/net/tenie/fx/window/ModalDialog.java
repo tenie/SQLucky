@@ -1,7 +1,6 @@
 package net.tenie.fx.window;
 
 import javafx.stage.*;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
@@ -18,7 +17,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -37,16 +35,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-
-import org.apache.commons.io.input.WindowsLineEndingInputStream;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class ModalDialog {
 	private static Logger logger = LogManager.getLogger(ModalDialog.class);
 	private static void resize(SVGPath svg, double width, double height) {
@@ -60,15 +59,6 @@ public class ModalDialog {
 		svg.setScaleX(scaleX);
 		svg.setScaleY(scaleY);
 	}
-	
-	public static Label INFO ;
-	public static Label ABOUT ;
-	public static Label WARN ;
-	public static Label ERROR ;
-	public static Label EMPTY ;
-	
-	
- 
 	
 
 	// 根据给定的fxml 创建 模态框
@@ -492,7 +482,7 @@ public class ModalDialog {
 		btns.add( okbtn);
 		
 		
-		Node vb = DialogTools.setVboxShape(stage, WARN, nds, btns);
+		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.WARN, nds, btns);
 		Scene scene = new Scene((Parent) vb);
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
@@ -549,7 +539,7 @@ public class ModalDialog {
 		btns.add( okbtn);
 		
 		
-		Node vb = DialogTools.setVboxShape(stage, ABOUT, nds, btns);
+		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.ABOUT, nds, btns);
 		Scene scene = new Scene((Parent) vb);
 		
 		stage.initModality(Modality.APPLICATION_MODAL);

@@ -27,6 +27,11 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
+/**
+ * 存储过程运行界面
+ * @author tenie
+ *
+ */
 public class ProcedureExecuteWindow {
 	 private final ObservableList<Procedure> data  ;
 	 private static ObservableList<String> lsType = FXCollections.observableArrayList();
@@ -116,7 +121,7 @@ public class ProcedureExecuteWindow {
 		btns.add( cancelBtn);
 		btns.add( btn);
 		
-		Node vb = DialogTools.setVboxShape(0,0,stage, ModalDialog.INFO, nds, btns);
+		Node vb = DialogTools.setVboxShape(0,0,stage, ComponentGetter.INFO, nds, btns);
 		Scene scene = new Scene( (Parent) vb);
 //		Scene scene = new Scene( b);
 	
