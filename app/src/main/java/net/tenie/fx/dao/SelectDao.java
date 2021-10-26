@@ -306,7 +306,7 @@ public class SelectDao {
 //							String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
 //							val = new SimpleStringProperty(v);
 //						}
-					val = 	dpo.DateToStringStringProperty(rs.getDate(i + 1));
+					val = 	dpo.DateToStringStringProperty(rs.getObject(i + 1));
 						
 					} else {
 						String temp = rs.getString(i+1);
