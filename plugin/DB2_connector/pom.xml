@@ -10,7 +10,12 @@
 	</parent>
 	<artifactId>SQLucky-Connector-DB2</artifactId>
 	<packaging>jar</packaging>
+	<version>1.0</version>
 	<name>SQLucky.Connector.DB2</name>
+	
+	<properties>
+		<sqlucky.version>1.0</sqlucky.version>
+	</properties>
 
 	<organization>
 		<name>https://github.com/tenie/SQLucky</name>
