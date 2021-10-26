@@ -34,7 +34,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.tenie</groupId>
-			<artifactId>SQLucky-sdk</artifactId>
+			<artifactId>SQLucky-SDK</artifactId>
 			<version>${sqlucky.version}</version>
 		</dependency>
 		<dependency>
