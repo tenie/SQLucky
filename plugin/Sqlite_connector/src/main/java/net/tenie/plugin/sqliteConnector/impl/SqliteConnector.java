@@ -34,9 +34,9 @@ public class SqliteConnector extends DbConnector {
 	 
 
 	@Override
-	public StringProperty DateToStringStringProperty(Date dv) {  
-		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-		StringProperty val = new SimpleStringProperty(v);
+	public StringProperty DateToStringStringProperty(Object dv) {  
+//		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+		StringProperty val = new SimpleStringProperty((String) dv);
 		
 		return val;
 	}

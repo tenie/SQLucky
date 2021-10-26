@@ -34,7 +34,8 @@ public class MysqlConnector extends DbConnector {
 	 
 
 	@Override
-	public StringProperty DateToStringStringProperty(Date dv) {  
+	public StringProperty DateToStringStringProperty(Object obj) {  
+		Date dv = (Date) obj;
 		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
 		StringProperty val = new SimpleStringProperty(v);
 		
