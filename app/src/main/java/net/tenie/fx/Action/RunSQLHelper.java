@@ -370,7 +370,7 @@ public class RunSQLHelper {
 			if (!thread.isInterrupted()) {
 				MyTabData mtd = MyTabData.dtTab(dvt, tidx, false);
 				mtd.show();
-				// 水平滚顶条位置设置
+				// 水平滚顶条位置设置和字段类型
 				CacheDataTableViewShapeChange.setDataTableViewShapeCache(dvt.getTabName(), dvt.getTable(), colss); 		
 			}
 		} catch (Exception e) { 

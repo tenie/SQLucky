@@ -293,9 +293,31 @@ public class CommonUtility {
 	 *  在 Platform.runLater中放入一个计数器, 等执行到这个计数器完成说明在它前面的任务已经完成了
 	 */
 	public static void platformAwait(){
+		threadAwait(1);
+	}
+	//TODO
+	public static void threadAwait(int second){
+		// 设置一次计数
 		CountDownLatch countDownLatch = new CountDownLatch(1);
-	    Platform.runLater(countDownLatch::countDown);
+		
+		// 子线程中睡眠和减计数
+		Thread t = new Thread() {
+			public void run() { 
+				try {
+					// 在子线程里 睡眠
+					Thread.sleep(second * 1000);
+				} catch (InterruptedException e) { 
+					e.printStackTrace();
+				}finally {
+					// 睡眠完成后 计数减一
+					countDownLatch.countDown();
+				}
+			}
+		};
+		t.start();
+		
 	    try {
+	    	// countDownLatch 如果不为0 会在这阻塞.
 			countDownLatch.await();
 		} catch (InterruptedException e) { 
 			e.printStackTrace();
@@ -329,7 +351,7 @@ public class CommonUtility {
 	 */
 	public static void rotateTransition(Node pointer) {
 		// 播放持续时间
-		double play_time = 2.0;
+		double play_time = 3.0;
 		// 开始角度
 		double fromAngle = 0.0;
 		// 结束角度
@@ -487,7 +509,7 @@ public class CommonUtility {
 		return str;
 	}
 	
-	//TODO 获取 IN 字段
+	// 获取 IN 字段
 	public static List<String> findInField(String sql){
 		String pstr = firstParenthesisInsideString(sql);
 		 List<String> list = new ArrayList<>();

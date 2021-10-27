@@ -56,8 +56,8 @@ public class MyTabData extends Tab {
 	// 数据
 	public static MyTabData dtTab(MyTabDataValue data, int idx, boolean disable) {
 		MyTabData rs = new MyTabData(data, idx, disable);
-		String time = rs.getTableData().getExecTime() == 0 ? "" : rs.getTableData().getExecTime() + "";
-		String rows = rs.getTableData().getRows() == 0 ? "" : rs.getTableData().getRows() + "";
+		String time = rs.getTableData().getExecTime() == 0 ? "0" : rs.getTableData().getExecTime() + "";
+		String rows = rs.getTableData().getRows() == 0 ? "0" : rs.getTableData().getRows() + "";
 		VBox dataPane = dataBox(rs, disable, time, rows);
 		rs.setContent(dataPane);
 		return rs;

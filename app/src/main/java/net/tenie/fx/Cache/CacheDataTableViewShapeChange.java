@@ -28,10 +28,11 @@ public class CacheDataTableViewShapeChange {
 	static private Map<String, List<String>> colOrder = new HashMap<>();
 
 	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ObservableList<StringProperty>> table , ObservableList<SqlFieldPo> colss) {
-		CommonUtility.platformAwait();
+		CommonUtility.threadAwait(1);
 		Platform.runLater(() -> { 
 			// 列移动缓存
-			CacheDataTableViewShapeChange.setTableHeader(table, tableName );
+			CacheDataTableViewShapeChange.setTableHeader(table, tableName );			
+			
 			// 水平滚顶条的缓存
 			CacheDataTableViewShapeChange.setHorizontal(table, tableName );
 			

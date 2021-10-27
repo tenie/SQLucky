@@ -71,6 +71,9 @@ public class AppWindow {
 //		BorderPane root = new BorderPane();
 //		root.setCenter(mainWindow);
 		lb =new Label("Loading.....");
+		var nd = IconGenerator.svgImageUnactive("icomoon-spinner3", 30);
+		CommonUtility.rotateTransition(nd);
+		lb.setGraphic(nd );
 		lb.setFont(new Font(30));
 		root = new StackPane( mainWindow, lb);
 		StackPane.setAlignment(lb, Pos.CENTER);

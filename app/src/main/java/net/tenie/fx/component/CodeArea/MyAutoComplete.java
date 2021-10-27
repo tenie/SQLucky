@@ -117,18 +117,18 @@ public class MyAutoComplete implements AutoComplete{
 		treeView.setOnMouseClicked(e -> {
 			var it = treeView.getSelectionModel().getSelectedItem();
 			String selectVal = it.getValue().getTableName();
-			System.out.println(selectVal);
+//			System.out.println(selectVal);
 			codeAreaReplaceString(selectVal, it.getValue());
 			pop.hide();
 		});
 
 		// 回车的时候
 		treeView.setOnKeyPressed(e -> {
-			System.out.println(e.getCode());
+//			System.out.println(e.getCode());
 			if (KeyCode.ENTER.equals(e.getCode())) {
 				var it = treeView.getSelectionModel().getSelectedItem();
 				String selectVal = it.getValue().getTableName();
-				System.out.println(selectVal);
+//				System.out.println(selectVal);
 				codeAreaReplaceString(selectVal, it.getValue());
 				pop.hide();
 			} else if (KeyCode.ESCAPE.equals(e.getCode())) {
