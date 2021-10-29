@@ -36,6 +36,8 @@ import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
 import net.tenie.fx.component.CommonButtons;
+import net.tenie.fx.component.MyTextField2TableCell;
+import net.tenie.fx.component.MyTextField2TableCell2;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -643,8 +645,8 @@ public class RunSQLHelper {
 			int colIdx,  boolean augmentation, boolean iskey, boolean isInfo, MyTabDataValue dvt ) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col =
 				new FilteredTableColumn<ObservableList<StringProperty>, String>();
-//		col.setCellFactory(MyTextField2TableCell.forTableColumn());
-		col.setCellFactory(TextField2TableCell.forTableColumn());
+		col.setCellFactory(MyTextField2TableCell2.forTableColumn());
+//		col.setCellFactory(TextField2TableCell.forTableColumn());
 //		col.setEditable(true);
 		col.setText(colname);
 		Label label  = new Label(); 

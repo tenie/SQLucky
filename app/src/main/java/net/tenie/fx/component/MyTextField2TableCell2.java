@@ -1,4 +1,5 @@
 package net.tenie.fx.component;
+
 /**
  * Copyright (c) 2013, 2017 ControlsFX
  * All rights reserved.
@@ -25,12 +26,12 @@ package net.tenie.fx.component;
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-import java.util.Objects;
+ 
 
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.Event;
+import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
@@ -54,12 +55,10 @@ import javafx.util.converter.DefaultStringConverter;
  *
  * @param <S> The type of the objects contained within the TableView items list.
  * @param <T> The type of the elements contained within the TableColumn.
+ * /SQLucky/src/main/java/net/tenie/fx/component/MyTextField2TableCell2.java
  */
-public class MyTextField2TableCell<S, T> extends TextFieldTableCell<S, T> {
-
-
-	 private String tooltipstr;
-
+public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
+    
     /***************************************************************************
      *                                                                         *
      * Static cell factories                                                   *
@@ -69,7 +68,7 @@ public class MyTextField2TableCell<S, T> extends TextFieldTableCell<S, T> {
     /**
      * Provides a {@link TextField} that allows editing of the cell content when
      * the cell is double-clicked, or when
-     * {@link TableView#edit(int, javafx.scene.control.TableColumn)} is called.
+     * {@link TableView#edit(int, TableColumn)} is called.
      * This method will only  work on {@link TableColumn} instances which are of
      * type String.
      *
@@ -80,14 +79,14 @@ public class MyTextField2TableCell<S, T> extends TextFieldTableCell<S, T> {
      *      {@link TableColumn#cellFactoryProperty() cell factory property} of a
      *      TableColumn, that enables textual editing of the content.
      */
-    public static <S> Callback<TableColumn<S,String>, TableCell<S,String>> forTableColumn(String str) { 
-        return forTableColumn(new DefaultStringConverter(), str);
+    public static <S> Callback<TableColumn<S,String>, TableCell<S,String>> forTableColumn() {
+        return forTableColumn(new DefaultStringConverter());
     }
 
     /**
      * Provides a {@link TextField} that allows editing of the cell content when
      * the cell is double-clicked, or when
-     * {@link TableView#edit(int, javafx.scene.control.TableColumn) } is called.
+     * {@link TableView#edit(int, TableColumn) } is called.
      * This method will work  on any {@link TableColumn} instance, regardless of
      * its generic type. However, to enable this, a {@link StringConverter} must
      * be provided that will convert the given String (from what the user typed
@@ -105,8 +104,8 @@ public class MyTextField2TableCell<S, T> extends TextFieldTableCell<S, T> {
      *      TableColumn, that enables textual editing of the content.
      */
     public static <S,T> Callback<TableColumn<S,T>, TableCell<S,T>> forTableColumn(
-            final StringConverter<T> converter , String str) { 
-        return list -> new MyTextField2TableCell<>(converter, str);
+            final StringConverter<T> converter) {
+        return list -> new MyTextField2TableCell2<>(converter);
     }
 
     /***************************************************************************
@@ -133,8 +132,8 @@ public class MyTextField2TableCell<S, T> extends TextFieldTableCell<S, T> {
      * This table cell supports commit on focus lost.
      *
      */
-    public MyTextField2TableCell() {
-        this(null, null); 
+    public MyTextField2TableCell2() {
+        this(null);
     }
 
     /**
@@ -152,25 +151,23 @@ public class MyTextField2TableCell<S, T> extends TextFieldTableCell<S, T> {
      *      the given String (from what the user typed in) into an instance of
      *      type T.
      */
-
-
-    public MyTextField2TableCell(StringConverter<T> converter, String str) {
+    public MyTextField2TableCell2(StringConverter<T> converter) {
         super(converter);
-        super.maxHeight(50);
-        tooltipstr = str;
+//        this.setMaxHeight(50);
+        this.setTextOverrun(OverrunStyle.ELLIPSIS);
         graphicProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
                 if (getGraphic() != null && getGraphic() instanceof TextField) {
                     textField = (TextField) getGraphic();
-//                    textField.setTooltip(MyTooltipTool.instance(str));
+                    
                     // commit on focus lost
                     textField.focusedProperty().addListener((obs, ov, nv) -> {
                         if (! nv) {
                             commitEdit(converter.fromString(textField.getText()));
                         }
                     });
-
+                    
                     // cancel with Escape, on key pressed, not released
                     textField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
                         final TableView.TableViewSelectionModel<S> selectionModel = getTableView().getSelectionModel();
@@ -231,14 +228,14 @@ public class MyTextField2TableCell<S, T> extends TextFieldTableCell<S, T> {
             }
         });
     }
-
+    
     /** {@inheritDoc} */
     @Override public void commitEdit(T item) {
         if (! isEditing() && ! item.equals(getItem())) {
             TableView<S> table = getTableView();
             if (table != null) {
                 TableColumn<S, T> column = getTableColumn();
-                TableColumn.CellEditEvent<S, T> event = new TableColumn.CellEditEvent<>(table, 
+                TableColumn.CellEditEvent<S, T> event = new TableColumn.CellEditEvent<>(table,
                         new TablePosition<>(table, getIndex(), column), TableColumn.editCommitEvent(), item);
                 Event.fireEvent(column, event);
             }
@@ -246,40 +243,5 @@ public class MyTextField2TableCell<S, T> extends TextFieldTableCell<S, T> {
 
         super.commitEdit(item);
     }
-
-    @Override
-    public void updateItem(T item, boolean empty) { 
-    	super.updateItem(item, empty);
-    	 if (empty) {
-             // clear the cell
-             setStyle(null);
-             setText(null);
-             setTooltip(null);
-         } else {
-        	   setTooltip(MyTooltipTool.instance(tooltipstr)); 
-         }
-    }
-//    protected void updateItem(T item, boolean empty) {
-//        super.updateItem((T) item, empty);
-//
-//        if (empty) {
-//            // clear the cell
-//            setStyle(null);
-//            setText(null);
-//            setTooltip(null);
-//        } else {
-//            setText(item);
-//            String original = result.get(getIndex()).get(j);
-//            if (Objects.equals(original, item)) {
-//                // same value as original -> no tooltip, no background
-//                setStyle(null);
-//                setTooltip(null);
-//            } else {
-//                // different -> red background + tooltip
-//                setStyle("-fx-background-color: red;");
-//                setTooltip(tooltip);
-//                tooltip.setText("???????????");
-//            }
-//        }
-//    }
+    
 }

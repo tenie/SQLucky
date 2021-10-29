@@ -1,14 +1,17 @@
 package net.tenie.fx.factory;
 
-
 import javafx.beans.NamedArg;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.util.Callback;
-/*   @author tenie */
+
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class StringPropertyListValueFactory implements Callback<CellDataFeatures<ObservableList<StringProperty>, String>, ObservableValue<String>>{
 	 private final int idx;
 	 
