@@ -147,8 +147,17 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		txtallfile.setOnAction(CommonEventHandler.txtStrClipboard(false, true));
 
 		txt.getItems().addAll(txtselected, txtselectedfile, txtall, txtallfile);
+		
+		Menu filedNames = new Menu("Export Table Filed Name ");
+		MenuItem CommaSplit = new MenuItem("Comma splitting");
+		CommaSplit.setOnAction(CommonEventHandler.commaSplitTableFileds());
+		
+		MenuItem CommaSplitIncludeType = new MenuItem("Comma splitting Include Field Type");
+		CommaSplitIncludeType.setOnAction(CommonEventHandler.commaSplitTableFiledsIncludeType());
+		
+		filedNames.getItems().addAll(CommaSplit, CommaSplitIncludeType);
 
-		exportBtn.getItems().addAll(insertSQL, csv, txt);
+		exportBtn.getItems().addAll(insertSQL, csv, txt, filedNames);
 		
 		//隐藏按钮
 		JFXButton hideBottom = new JFXButton(); 

@@ -27,7 +27,15 @@ public class ParseSQL {
 	public static final int OTHER  = 8;
 
 	public static int parseType(String sql) {
+		// 去除注释
 		String temp = StrUtils.trimComment(sql, "--");
+		// 去除开头的非 字母部分, 如 ( 
+		for(int i = 0; i < temp.length(); i++) {
+			if( Character.isAlphabetic( temp.charAt(i) )){
+				temp = temp.substring(i);
+				break;
+			}
+		}
 		if (StrUtils.beginWithNotSensitive(temp, "SELECT")) {
 			return SELECT;
 		} else if (StrUtils.beginWithNotSensitive(temp, "WITH")) {

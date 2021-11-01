@@ -295,4 +295,65 @@ public class CommonEventHandler {
 		};
 	}
 
+	
+	
+	// 导出表的字段, 使用逗号分割
+	public static EventHandler<ActionEvent> commaSplitTableFileds() {
+		return new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent e) { 
+				ObservableList<SqlFieldPo> fs = MyTabData.getFields();
+				Thread t = new Thread() {
+					public void run() {
+						int size = fs.size();
+						StringBuilder  fieldsName = new StringBuilder("");
+						for (int i = 0; i < size; i++) {
+							SqlFieldPo po = fs.get(i);
+							String name = po.getColumnName().get();
+							fieldsName.append( name );
+							fieldsName.append( ", \n" );
+							 
+						}
+						if (StrUtils.isNotNullOrEmpty(fieldsName)) { 
+								String rsStr = fieldsName.toString().trim();
+								CommonUtility.setClipboardVal(fieldsName.substring(0, rsStr.length()-1)); 
+						}
+					}
+				};
+				t.start();
+
+			}
+
+		};
+	}
+	
+	// 导出表的字段包含类型, 使用逗号分割
+	public static EventHandler<ActionEvent> commaSplitTableFiledsIncludeType() {
+		return new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent e) {
+				ObservableList<SqlFieldPo> fs = MyTabData.getFields();
+				Thread t = new Thread() {
+					public void run() {
+						int size = fs.size();
+						StringBuilder fieldsName = new StringBuilder("");
+						for (int i = 0; i < size; i++) {
+							SqlFieldPo po = fs.get(i);
+							String name = po.getColumnName().get();
+							fieldsName.append(name);
+							fieldsName.append(", --");
+							fieldsName.append(po.getColumnTypeName().get());
+							fieldsName.append("\n");
+
+						}
+						if (StrUtils.isNotNullOrEmpty(fieldsName)) { 
+							CommonUtility.setClipboardVal(fieldsName.toString());
+						}
+					}
+				};
+				t.start();
+
+			}
+
+		};
+	}
+	
 }
