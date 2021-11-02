@@ -11,5 +11,5 @@ open module SQLucky.plugin.connector.mariadb{
 	requires org.apache.logging.log4j;	
 	
 	exports net.tenie.plugin.MariadbConnector.impl;
-    provides net.tenie.Sqlucky.sdk.PluginDelegate with net.tenie.plugin.MariadbConnector.impl.MariadbConnectorDelegateImpl;
+    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.MariadbConnector.impl.MariadbConnectorDelegateImpl;
 }

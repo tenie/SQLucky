@@ -85,13 +85,13 @@ public class AppWindow {
 		Platform.runLater(()->{
 //			CommonUtility.platformAwait();
 			mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
-			CommonUtility.fadeTransition(operate.getContainer(), 3500); 
-			CommonUtility.fadeTransition(dataView.getContainer(), 3500); 
-			CommonUtility.fadeTransition(mainMenuBar.getMainMenuBar(), 3500); 
-			CommonUtility.fadeTransition(masterDetailPane, 3500); 
+			CommonUtility.fadeTransition(operate.getContainer(), 2000); 
+			CommonUtility.fadeTransition(dataView.getContainer(), 2000); 
+			CommonUtility.fadeTransition(mainMenuBar.getMainMenuBar(), 2000); 
+			CommonUtility.fadeTransition(masterDetailPane, 2000); 
 		});  
 		
-		CommonUtility.fadeTransition(mainWindow, 2500); 
+		CommonUtility.fadeTransition(mainWindow, 1000); 
 	}
 
  

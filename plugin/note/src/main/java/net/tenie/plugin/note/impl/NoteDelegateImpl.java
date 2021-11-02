@@ -3,12 +3,12 @@ package net.tenie.plugin.note.impl;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.PluginDelegate;
+import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.plugin.note.component.NoteTabTree; 
 
-public class NoteDelegateImpl implements PluginDelegate { 
+public class NoteDelegateImpl implements SqluckyPluginDelegate { 
 	TitledPane NotePane;
 	public static final String pluginName = "net.tenie.plugin.note";
 	@Override
@@ -66,6 +66,11 @@ public class NoteDelegateImpl implements PluginDelegate {
 	@Override
 	public String pluginName() { 
 		return pluginName;
+	}
+	@Override
+	public void register() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -11,5 +11,5 @@ open module SQLucky.plugin.connector.sqlite{
 	requires org.apache.logging.log4j;	
 	
 	exports net.tenie.plugin.sqliteConnector.impl;
-    provides net.tenie.Sqlucky.sdk.PluginDelegate with net.tenie.plugin.sqliteConnector.impl.SqliteConnectorDelegateImpl;
+    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.sqliteConnector.impl.SqliteConnectorDelegateImpl;
 }

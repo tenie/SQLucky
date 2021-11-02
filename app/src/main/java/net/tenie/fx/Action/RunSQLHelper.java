@@ -191,7 +191,8 @@ public class RunSQLHelper {
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
 				val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
 				val.add(createReadOnlyStringProperty(msg)); 
-				val.add(createReadOnlyStringProperty(sqlstr.substring(0, 100) + " ... ")); 
+				int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
+				val.add(createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
 				val.add(createReadOnlyStringProperty("" + i));
 				ddlDmlpo.addData(val);
 			}
@@ -319,7 +320,8 @@ public class RunSQLHelper {
 			ObservableList<StringProperty> val = FXCollections.observableArrayList();
 			val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
 			val.add(createReadOnlyStringProperty(msg)); 
-			val.add(createReadOnlyStringProperty("call procedure "+ sqlstr.subSequence(0, 100) + " ... ")); 
+			int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
+			val.add(createReadOnlyStringProperty("call procedure "+ sqlstr.subSequence(0, endIdx) + " ... ")); 
 			val.add(createReadOnlyStringProperty("" ));
 			ddlDmlpo.addData(val);
 			showExecuteSQLInfo(ddlDmlpo);

@@ -11,5 +11,5 @@ open module SQLucky.plugin.note{
 	         
 	
 	exports net.tenie.plugin.note.impl;
-    provides net.tenie.Sqlucky.sdk.PluginDelegate with net.tenie.plugin.note.impl.NoteDelegateImpl;
+    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.note.impl.NoteDelegateImpl;
 }

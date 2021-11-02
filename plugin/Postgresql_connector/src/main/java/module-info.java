@@ -11,5 +11,5 @@ open module SQLucky.plugin.connector.postgresql{
 	requires org.apache.logging.log4j;	
 	
 	exports net.tenie.plugin.PostgresqlConnector.impl;
-    provides net.tenie.Sqlucky.sdk.PluginDelegate with net.tenie.plugin.PostgresqlConnector.impl.PostgresqlConnectorDelegateImpl;
+    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.PostgresqlConnector.impl.PostgresqlConnectorDelegateImpl;
 }

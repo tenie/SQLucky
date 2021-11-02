@@ -11,5 +11,5 @@ open module SQLucky.plugin.connector.h2{
 	requires org.apache.logging.log4j;	
 	
 	exports net.tenie.plugin.H2Connector.impl;
-    provides net.tenie.Sqlucky.sdk.PluginDelegate with net.tenie.plugin.H2Connector.impl.H2ConnectorDelegateImpl;
+    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.H2Connector.impl.H2ConnectorDelegateImpl;
 }

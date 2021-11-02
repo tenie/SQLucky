@@ -33,7 +33,7 @@ open module SQLucky {
 	requires sql.formatter;
 	requires org.slf4j;
 	requires SQLucky.sdk;
-	uses  net.tenie.Sqlucky.sdk.PluginDelegate;
+	uses  net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 	exports net.tenie.fx.controller  to    javafx.fxml;
     exports net.tenie.fx.main        to    javafx.graphics;
 }

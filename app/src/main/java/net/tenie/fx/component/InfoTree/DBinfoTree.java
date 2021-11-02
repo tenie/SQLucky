@@ -88,18 +88,15 @@ public class DBinfoTree {
 	
 	// 恢复数据中保存的连接数据
 	public static void recoverNode(TreeItem<TreeNodePo> rootNode) {  
-		 
-		Consumer< String > cr = v->{
-			List<MyTreeItem<TreeNodePo>> ls = new ArrayList<>();
-			List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
-			if (datas != null && datas.size() > 0) {
-				for (SqluckyConnector po : datas) {
-					var item = new MyTreeItem<TreeNodePo>(new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
-					ls.add(item);
-//					DBConns.add(po.getConnName(), po); 
-				} 
+		List<MyTreeItem<TreeNodePo>> ls = new ArrayList<>();
+		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
+		if (datas != null && datas.size() > 0) {
+			for (SqluckyConnector po : datas) {
+				var item = new MyTreeItem<TreeNodePo>(new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
+				ls.add(item); 
 			} 
-			 
+		} 
+		Consumer< String > cr = v->{  
 			if(ls.size() > 0) {
 				Platform.runLater(()->{
 					rootNode.getChildren().addAll(ls);

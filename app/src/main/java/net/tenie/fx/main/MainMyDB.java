@@ -68,15 +68,16 @@ public class MainMyDB extends Application {
 	    ConfigVal.openfileDir = H2Db.getConfigVal(conn , "OPEN_FILE_DIR"); 
 		H2Db.closeConn();
 		ConfigVal.THEME = Theme;
+		SqluckyComponent sqluckyComponent = new SqluckyComponent();
+		ComponentGetter.appComponent = sqluckyComponent;
+		// 注册
+		ServiceLoad.callRegister();
 		app = new AppWindow();
 //		scene = new Scene(app.getMainWindow());
 //		scene.getStylesheets().addAll(ConfigVal.cssList);
 //		ComponentGetter.primaryscene = scene;
 		SettingKeyCodeCombination.Setting();
 		img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
-
-		SqluckyComponent sqluckyComponent = new SqluckyComponent();
-		ComponentGetter.appComponent = sqluckyComponent;
 		
 		
 		tmpscene = app.getTmpScene();
@@ -84,7 +85,7 @@ public class MainMyDB extends Application {
 		scene = app.getAppScene();
 		CommonAction.setTheme(Theme);
 		// 加载插件
-		ServiceLoad.myLoader();
+		ServiceLoad.callLoad();
 		logger.info("完成初始化"); 
 	}
 
@@ -183,7 +184,7 @@ public class MainMyDB extends Application {
 				
 			}); 
 			
-			ServiceLoad.myShowed(); 
+			ServiceLoad.callShowed(); 
 			
 			// 移除loading...
 			Consumer< String > cr = v->{ 

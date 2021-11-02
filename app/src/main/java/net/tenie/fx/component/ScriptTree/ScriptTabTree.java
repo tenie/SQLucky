@@ -78,52 +78,44 @@ public class ScriptTabTree {
 	
 	// 恢复数据中保存的连接数据
 	public static void recoverScriptNode(TreeItem<MyTab> rootNode) {
+		List<DocumentPo> datas ;
+		List<H2SqlTextSavePo> ls;
+		String SELECT_PANE ;
+		try {
+			Connection H2conn = H2Db.getConn();
+			ls = SqlTextDao.read(H2conn);
+			SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
+			datas = SqlTextDao.readScriptPo(H2conn);
+		} finally {
+			H2Db.closeConn();
+		}
+		List<Integer> ids = new ArrayList<>();
+		for (H2SqlTextSavePo sqlpo : ls) {
+			ids.add(sqlpo.getScriptId());
+		}
 		
-		Consumer< String > cr = v->{
-			List<DocumentPo> datas ;
-			List<H2SqlTextSavePo> ls;
-			String SELECT_PANE ;
-			try {
-				Connection H2conn = H2Db.getConn();
-				ls = SqlTextDao.read(H2conn);
-				SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
-				datas = SqlTextDao.readScriptPo(H2conn);
-			} finally {
-				H2Db.closeConn();
-			}
-			
-			List<Integer> ids = new ArrayList<>();
-			for (H2SqlTextSavePo sqlpo : ls) {
-				ids.add(sqlpo.getScriptId());
-			}
-
-			if (datas != null && datas.size() > 0) {
-				ConfigVal.pageSize = datas.size();
-				List<TreeItem<MyTab>> itemList = new ArrayList<>();
-				List<MyTab> mtbs = new ArrayList<>();
-				
-				for (DocumentPo po : datas) {
-					MyTab tb = new MyTab(po);
-					TreeItem<MyTab> item = new TreeItem<>(tb);
-//					rootNode.getChildren().add(item);
-					itemList.add(item);
-					// 恢复代码编辑框
-					if (ids.contains(po.getId())) {
-						mtbs.add(tb);
-//						Platform.runLater(()->{
-//							tb.mainTabPaneAddMyTab();
-//						});
-						
-					}
+		List<TreeItem<MyTab>> itemList = new ArrayList<>();
+		List<MyTab> mtbs = new ArrayList<>();
+		if (datas != null && datas.size() > 0) {
+			ConfigVal.pageSize = datas.size();  
+			for (DocumentPo po : datas) {
+				MyTab tb = new MyTab(po);
+				TreeItem<MyTab> item = new TreeItem<>(tb);
+//				rootNode.getChildren().add(item);
+				itemList.add(item);
+				// 恢复代码编辑框
+				if (ids.contains(po.getId())) {
+					mtbs.add(tb);
 				}
+			}
+		}
+		// 页面显示后 执行下吗
+		Consumer< String > cr = v->{		
 				if(itemList.size() > 0 ) {
 					Platform.runLater(()->{
 						rootNode.getChildren().addAll(itemList);
 						// 恢复代码编辑框
 						if (mtbs.size() > 0) {
-//							for (var tb : mtbs) {
-//								tb.mainTabPaneAddMyTab();
-//							}
 							MyTab.mainTabPaneAddAllMyTabs(mtbs);
 							// 初始化上次选中页面
 							if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) {
@@ -139,7 +131,7 @@ public class ScriptTabTree {
 						}
 					});
 				}
-			}
+			 
 		};
 		CommonUtility.addInitTask(cr);
 		

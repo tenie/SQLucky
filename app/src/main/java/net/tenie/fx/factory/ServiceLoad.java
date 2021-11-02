@@ -3,13 +3,26 @@ package net.tenie.fx.factory;
 import java.util.ServiceLoader;
 
 import javafx.application.Platform;
-import net.tenie.Sqlucky.sdk.PluginDelegate;
+import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 
 public class ServiceLoad {
-	private static ServiceLoader<PluginDelegate> loader ;
-	public static void myLoader(){
-		loader = ServiceLoader.load(PluginDelegate.class);
-		for(PluginDelegate plugin: loader ) {
+	private static ServiceLoader<SqluckyPluginDelegate> loader ;
+	
+	public static void callRegister(){
+		loader = ServiceLoader.load(SqluckyPluginDelegate.class);
+		for(SqluckyPluginDelegate plugin: loader ) {
+			String name = plugin.pluginName();
+			System.out.println("\n====================");
+			System.out.println(name);
+			 plugin.register();
+			System.out.println("====================\n");
+		}
+	}
+	
+	
+	public static void callLoad(){
+		loader = ServiceLoader.load(SqluckyPluginDelegate.class);
+		for(SqluckyPluginDelegate plugin: loader ) {
 			String name = plugin.pluginName();
 			System.out.println("\n====================");
 			System.out.println(name);
@@ -18,9 +31,9 @@ public class ServiceLoad {
 		}
 	}
 	
-	public static void myShowed(){
+	public static void callShowed(){
 		Platform.runLater(()->{
-			for(PluginDelegate plugin: loader ) {
+			for(SqluckyPluginDelegate plugin: loader ) {
 				String name = plugin.pluginName();
 				System.out.println("\n====================");
 				System.out.println(name);

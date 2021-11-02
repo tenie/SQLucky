@@ -11,5 +11,5 @@ open module SQLucky.plugin.connector.mysql{
 	requires org.apache.logging.log4j;	
 	
 	exports net.tenie.plugin.mysqlConnector.impl;
-    provides net.tenie.Sqlucky.sdk.PluginDelegate with net.tenie.plugin.mysqlConnector.impl.MysqlConnectorDelegateImpl;
+    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.mysqlConnector.impl.MysqlConnectorDelegateImpl;
 }
