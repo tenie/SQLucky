@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.fxmisc.richtext.CodeArea;
+
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -39,6 +41,9 @@ public final class SettingKeyCodeCombination {
 		KeyCombination cx = KeyCombination.keyCombination("shortcut+X");
 
 		KeyCodeCombination ctrlEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.SHORTCUT_DOWN);
+		KeyCodeCombination altR = new KeyCodeCombination(KeyCode.R, KeyCodeCombination.ALT_DOWN);
+		
+		
 		KeyCodeCombination altSlash = new KeyCodeCombination(KeyCode.SLASH, KeyCodeCombination.ALT_DOWN);
 		KeyCodeCombination ctrlT = new KeyCodeCombination(KeyCode.T, KeyCodeCombination.SHORTCUT_DOWN);
 		KeyCodeCombination ctrlI = new KeyCodeCombination(KeyCode.I, KeyCodeCombination.SHORTCUT_DOWN);
@@ -107,8 +112,40 @@ public final class SettingKeyCodeCombination {
 			
 		});
 		
+//		public static String getSelectLineText() {
+//			CodeArea code = getCodeArea();
+//			var ps = code.getParagraphs();
+//			for(var p : ps) {
+//				System.out.println(p.getText());
+//			}
+//			
+//			 
+//			int idx = code.getCurrentParagraph();
+//			var  val = code.getParagraph(idx);
+//			List<String > ls = val.getSegments();
+//			System.out.println(ls);
+//			return  ls.get(0);
+//		}
 		scene.getAccelerators().put(F9, () -> {
-		
+			CodeArea code = SqlcukyEditor.getCodeArea();
+			var pgs = code.getParagraphs();
+			String tmp = "";
+			for(int i = 0; i < pgs.size(); i++) {
+				var val = code.getParagraphSelection(i);
+				if(val.getStart() > 0 || val.getEnd() > 0) {
+					tmp += pgs.get(i).getText()+ "\n"; 
+				} 
+			}
+			System.out.println(tmp);
+//			String sqltxt = code.getText();
+//			int startIdx = sqltxt.lastIndexOf("\n", range.getStart());
+//			int endIdx = sqltxt.indexOf("\n", range.getEnd());
+//			if(startIdx == -1) startIdx = 0;
+//			if(endIdx == -1) endIdx = sqltxt.length();
+//			String lineTxt = sqltxt.substring(startIdx , endIdx);
+//			
+//			System.out.println(lineTxt);
+			
 			
 //			VBox b = ComponentGetter.mainWindow;
 //			ObservableList<Node> ls = b.parentProperty().get().getChildrenUnmodifiable();
@@ -144,11 +181,21 @@ public final class SettingKeyCodeCombination {
 
 		// 运行SQL
 		scene.getAccelerators().put(ctrlEnter, () -> {
-//			boolean b = runbtn.disabledProperty().getValue();
 			if (!runbtn.disabledProperty().getValue()) {
 				RunSQLHelper.runSQLMethod();
 			}
 		});
+		// 运行 选中行中的 SQL
+		scene.getAccelerators().put(altR, () -> {
+			if (!runbtn.disabledProperty().getValue()) {
+				RunSQLHelper.runCurrentLineSQLMethod();
+			}
+		});
+		
+		
+		
+		//RunSQLHelper.runCurrentLineSQLMethod();
+		
 
 		// 停止真正运行的sql
 		scene.getAccelerators().put(ctrlI, () -> {

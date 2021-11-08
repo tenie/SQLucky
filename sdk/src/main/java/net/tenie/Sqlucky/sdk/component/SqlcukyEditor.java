@@ -90,14 +90,38 @@ public class SqlcukyEditor {
 	}
 	//当前行的 字符串文本;
 	public static String getCurrentLineText() {
-		CodeArea code = getCodeArea();
+		CodeArea code = getCodeArea(); 
+		String st = code.getSelectedText();
+		String rs  = "";
+		if(StrUtils.isNotNullOrEmpty(st)) {
+			rs  = getSelectLineText();
+		}else {
+			int idx = code.getCurrentParagraph();
+			var  val = code.getParagraph(idx);
+			List<String > ls = val.getSegments();
+			rs  = ls.get(0);
+		}
 		 
-		int idx = code.getCurrentParagraph();
-		var  val = code.getParagraph(idx);
-		List<String > ls = val.getSegments();
-		System.out.println(ls);
-		return  ls.get(0);
+		
+//		System.out.println(ls);
+		return  rs;
 	}
+	//TODO 获取选中行的所有字符, 
+	public static String getSelectLineText() {
+		CodeArea code = SqlcukyEditor.getCodeArea();
+		var pgs = code.getParagraphs();
+		String tmp = "";
+		for(int i = 0; i < pgs.size(); i++) {
+			var val = code.getParagraphSelection(i);
+			if(val.getStart() > 0 || val.getEnd() > 0) {
+				tmp += pgs.get(i).getText()+ "\n"; 
+			} 
+		}
+//		System.out.println(tmp);
+		return tmp;
+	}
+	
+	
 	
 	
 	// 复制当前选中的文本

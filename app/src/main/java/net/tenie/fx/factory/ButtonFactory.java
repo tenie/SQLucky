@@ -126,7 +126,7 @@ public class ButtonFactory {
 			
 			JFXButton runLinebtn = new JFXButton();
 			runLinebtn.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
-			runLinebtn.setTooltip(MyTooltipTool.instance("run current line sql (ctrl + shift + Enter)"));
+			runLinebtn.setTooltip(MyTooltipTool.instance("run current line sql (Alt + R)"));
 			
 			JFXButton stopbtn = new JFXButton();
 			stopbtn.setGraphic(IconGenerator.svgImage("stop", "red", false));
