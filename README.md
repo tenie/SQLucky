@@ -19,6 +19,9 @@
      
     $ git clone git@github.com:tenie/SQLucky.git
     $ cd  SQLucky
+    $ mvn -N install
+    $ mvn  install
+    $ cd app
     $ mvn javafx:run
 
 ## demo截图 ##
