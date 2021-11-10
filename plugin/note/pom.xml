@@ -7,13 +7,13 @@
 		<version>1.0</version> </parent> -->
 	<groupId>net.tenie</groupId>
 	<artifactId>SQLucky-Plugin-Note</artifactId>
-	<version>1.0</version>
+	<version>2.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>SQLucky.Plugin.Note</name>
 
 	<properties>
-		<sqlucky.version>1.0</sqlucky.version>
+		<sqlucky.version>2.0.0</sqlucky.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>16</maven.compiler.release>
 		<javafx.version>16</javafx.version>

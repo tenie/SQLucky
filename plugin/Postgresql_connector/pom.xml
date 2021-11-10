@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>net.tenie</groupId>
 		<artifactId>SQLucky-pom</artifactId>
-		<version>1.0</version>
+		<version>2.0.0</version>
 	</parent>
 	<artifactId>SQLucky-Connector-Postgresql</artifactId>
 	<packaging>jar</packaging>
