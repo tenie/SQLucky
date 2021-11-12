@@ -7,7 +7,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.Tab;
 import javafx.stage.WindowEvent;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.component.MyTab;
@@ -30,9 +29,10 @@ public class CommonEventHandler {
 	/**
 	 * 数据table关闭的时候 
 	 */
-	public static EventHandler<Event> dataTabCloseReq( Tab tb) {
+	public static EventHandler<Event> dataTabCloseReq( MyTabData tb) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) { 
+				tb.getTableData().clean();
 				CommonAction.clearDataTable( tb);
 				 
 			}

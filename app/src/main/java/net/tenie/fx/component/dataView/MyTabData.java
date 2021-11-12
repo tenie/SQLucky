@@ -35,6 +35,7 @@ public class MyTabData extends Tab {
 	private Button saveBtn;
 	private Button detailBtn;
 	private int idx;
+	private DataTableOptionBtnsPane dtBtnPane;
 	 
 
 	public MyTabData(MyTabDataValue data, int idx, boolean disable) {
@@ -58,9 +59,16 @@ public class MyTabData extends Tab {
 		MyTabData rs = new MyTabData(data, idx, disable);
 		String time = rs.getTableData().getExecTime() == 0 ? "0" : rs.getTableData().getExecTime() + "";
 		String rows = rs.getTableData().getRows() == 0 ? "0" : rs.getTableData().getRows() + "";
-		VBox dataPane = dataBox(rs, disable, time, rows);
-		rs.setContent(dataPane);
+//		VBox dataPane = dataBox(rs, disable, time, rows);
+//		rs.setContent(dataPane);
+		rs.setDataBox(disable, time, rows);
 		return rs;
+	}
+	
+	
+	public void setDataBox(boolean disable, String time, String rows ) {
+		VBox dataPane = dataBox(disable, time, rows);
+		this.setContent(dataPane);
 	}
 
 	// TODO 表, 视图 等 数据库对象的ddl语句
@@ -118,13 +126,14 @@ public class MyTabData extends Tab {
 	}
 
 	// 数据tab中的组件
-	public static VBox dataBox(MyTabData mtb, boolean disable, String time, String rows) {
+	public  VBox dataBox( boolean disable, String time, String rows) {
 		var dataPane = new VBox();
-		var fp = new DataTableOptionBtnsPane(mtb, disable, time, rows, mtb.getTableData().getConnName(),
-				  mtb.getTableData().isLock());
-		dataPane.getChildren().add(fp);
-		dataPane.getChildren().add(mtb.getTableData().getTable());
-		VBox.setVgrow(mtb.getTableData().getTable(), Priority.ALWAYS);
+		dtBtnPane = new DataTableOptionBtnsPane(this, disable, time, rows, 
+												this.getTableData().getConnName(),
+												this.getTableData().isLock());
+		dataPane.getChildren().add(dtBtnPane);
+		dataPane.getChildren().add(this.getTableData().getTable());
+		VBox.setVgrow(this.getTableData().getTable(), Priority.ALWAYS);
 		return dataPane;
 	}
 

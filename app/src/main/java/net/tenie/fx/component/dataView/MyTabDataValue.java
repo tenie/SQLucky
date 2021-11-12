@@ -1,6 +1,5 @@
 package net.tenie.fx.component.dataView;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
