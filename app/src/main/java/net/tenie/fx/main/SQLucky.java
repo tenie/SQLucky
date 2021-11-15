@@ -36,7 +36,7 @@ import javafx.scene.layout.StackPane;
  * @author tenie
  *
  */
-public class MainMyDB extends Application {
+public class SQLucky extends Application {
 	public static List<String> argsList = new ArrayList<>(); 
 	public static String userDir = "";
 	private AppWindow app;
@@ -44,7 +44,7 @@ public class MainMyDB extends Application {
 	private Scene tmpscene;
 	private Image img;
 	private String Theme;
-	private static Logger logger = LogManager.getLogger(MainMyDB.class);
+	private static Logger logger = LogManager.getLogger(SQLucky.class);
 	
 
 	
@@ -77,7 +77,7 @@ public class MainMyDB extends Application {
 //		scene.getStylesheets().addAll(ConfigVal.cssList);
 //		ComponentGetter.primaryscene = scene;
 		SettingKeyCodeCombination.Setting();
-		img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
+		img = new Image(SQLucky.class.getResourceAsStream(ConfigVal.appIcon));
 		
 		
 		tmpscene = app.getTmpScene();
@@ -206,6 +206,6 @@ public class MainMyDB extends Application {
 	
 	
 	public static void main(String[] args) throws IOException { 
-		LauncherImpl.launchApplication(MainMyDB.class, MyPreloader.class, args);
+		LauncherImpl.launchApplication(SQLucky.class, MyPreloader.class, args);
 	}
 }

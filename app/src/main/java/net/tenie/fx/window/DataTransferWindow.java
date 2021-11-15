@@ -2,9 +2,7 @@ package net.tenie.fx.window;
 
 import java.io.IOException;
 import java.net.URL;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -17,12 +15,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.main.MainMyDB;
 import net.tenie.lib.tools.IconGenerator;
 
 public class DataTransferWindow {
@@ -65,7 +60,7 @@ public class DataTransferWindow {
 			stage.setScene(scene);
 			stage.show();
 			
-			Image	img = new Image(MainMyDB.class.getResourceAsStream(ConfigVal.appIcon));
+			Image	img = new Image(DataTransferWindow.class.getResourceAsStream(ConfigVal.appIcon));
 			stage.getIcons().add(img);
 			stage.setOnCloseRequest(ev->{
 				stage.hide();

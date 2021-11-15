@@ -186,7 +186,7 @@
 					<release>${maven.compiler.release}</release>
 					<jlinkImageName>SQLucky</jlinkImageName>
 					<launcher>launcher</launcher>
-					<mainClass>SQLucky/net.tenie.fx.main.MainMyDB</mainClass>
+					<mainClass>SQLucky/net.tenie.fx.main.SQLucky</mainClass>
 					<runtimePathOption>MODULEPATH </runtimePathOption>
 					<options>
 						<option>--add-modules=javafx.controls,javafx.fxml</option>

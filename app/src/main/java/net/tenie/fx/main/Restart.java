@@ -53,8 +53,8 @@ public class Restart {
 	
 	private static void runDev( ) throws IOException {
 		String[] args = {};
-		if(MainMyDB.argsList != null && MainMyDB.argsList.size() > 0) {
-			 args =(String[]) MainMyDB.argsList.toArray();
+		if(SQLucky.argsList != null && SQLucky.argsList.size() > 0) {
+			 args =(String[]) SQLucky.argsList.toArray();
 		} 
 		StringBuilder cmd = new StringBuilder();
 		cmd.append(System.getProperty("java.home") 
@@ -64,7 +64,7 @@ public class Restart {
 			cmd.append(jvmArg + " "); 
 		} 
 		cmd.append("-cp ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-		cmd.append(MainMyDB.class.getName()).append(" ");
+		cmd.append(SQLucky.class.getName()).append(" ");
 		for (String arg : args) {
 			cmd.append(arg).append(" "); 
 		}
