@@ -64,7 +64,7 @@ public class CommonAction {
 	
 	// 子线程打开db连接backRunOpenConn
 	public static void backRunOpenConn(TreeItem<TreeNodePo> item) {
-		Node nd = IconGenerator.svgImage("spinner", "red", false);
+		Node nd = IconGenerator.svgImage("spinner", "red");
 		CommonUtility.rotateTransition(nd);
 		item.getValue().setIcon( nd);
 		AppWindowComponentGetter.treeView.refresh();
@@ -86,7 +86,7 @@ public class CommonAction {
 						TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
 						Platform.runLater(() -> {
 							item.getChildren().add(s);
-							item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00", false));							
+							item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00"));							
 							connItemContainer.selectTable(po.getDefaultSchema());
 							DBConns.flushChoiceBox(connName);
 						});
@@ -104,7 +104,7 @@ public class CommonAction {
 					logger.debug(e.getMessage());
 					Platform.runLater(() -> {
 						MyAlert.errorAlert( " Error !");
-						item.getValue().setIcon(IconGenerator.svgImage("unlink", "red", false));
+						item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
 						AppWindowComponentGetter.treeView.refresh();
 					});
 					
@@ -852,7 +852,7 @@ public class CommonAction {
 		// 根据新状态加载新样式
 		CommonUtility.loadCss(ComponentGetter.primaryscene); 
 		SqlcukyEditor.changeThemeAllCodeArea() ; 
-		changeSvgColor(); // 修改按钮颜色
+//		changeSvgColor(); // 修改按钮颜色
 	}
 	// 设置整体样式
 	public static void setThemeRestart(String val ) {
@@ -862,13 +862,13 @@ public class CommonAction {
 		
 	}
 		
-	public static void changeSvgColor() {
-		String color =  CommonUtility.themeColor();
-		for(var icon : IconGenerator.icons) {
-			icon.setStyle("-fx-background-color: " + color + ";");
-		}
-		
-	}
+//	public static void changeSvgColor() {
+//		String color =  CommonUtility.themeColor();
+//		for(var icon : IconGenerator.icons) {
+//			icon.setStyle("-fx-background-color: " + color + ";");
+//		}
+//		
+//	}
 	
 	public static void setOpenfileDir(String val) {
 		Connection conn =  H2Db.getConn();
@@ -1129,7 +1129,7 @@ public class CommonAction {
 			CommonUtility.loadCss(ComponentGetter.primaryscene); 
 			SqlcukyEditor.changeThemeAllCodeArea() ;
 			// 修改按钮颜色
-			changeSvgColor();
+//			changeSvgColor();
 		};
 		MyAlert.myConfirmation("Change Theme Restart Application Will Better, ok ? ", ok, cancel);
 	}
@@ -1156,7 +1156,26 @@ public class CommonAction {
 	}
 	
 
-	
+
+	// 数据库表名的查询输入框
+	public static void dbInfoTreeQuery() {
+		 var container =AppWindowComponentGetter.DBinfoContainer;
+		   var filter = AppWindowComponentGetter.dbInfoTreeFilter;
+		   if(  container.getChildren().contains(filter)) {
+			   container.getChildren().remove(filter);
+		   }else {
+			   container.getChildren().add(filter);
+		   }
+		   
+		    // 如果有选中的字符串, 进行查询
+			String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
+			if (str.trim().length() > 0) {
+				ComponentGetter.dbInfoFilter.setText(str.trim());
+				if(  ! container.getChildren().contains(filter)) {
+					 container.getChildren().add(filter);
+			   }
+			}
+	}
 	
 	public static void demo() {}
 	

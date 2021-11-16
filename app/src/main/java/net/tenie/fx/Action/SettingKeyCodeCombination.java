@@ -267,52 +267,20 @@ public final class SettingKeyCodeCombination {
 			SqlcukyEditor.currentMyTab().getSqlCodeArea().nextBookmark(true);
 		});
 		
-		
-		
-		
-		scene.getAccelerators().put(F4, () -> {
-			
-			try {
-				callProcedure(DBConns.getCurrentConnectPO().getConn());
-			} catch (SQLException e) { 
-				e.printStackTrace();
-			}
-//			List<String > fields = new ArrayList<>();
-//			fields.add("111");
-//			fields.add("222");
-//			fields.add("33");
-//			new ProcedureExecuteWindow(fields, "ffff");
-//			
-			
-			
-//			CommonAction.escapeWindowsUiBug();
-//			JFXComboBox<Label> connsComboBox = ButtonFactory.connsComboBox; 
-//			int i = connsComboBox.getSelectionModel().getSelectedIndex();
-//			if(i < 0) {
-//				connsComboBox.getSelectionModel().select(0);
-//			}else {
-//				connsComboBox.getSelectionModel().select(i);
-//			}
-			
-			
-//			System.out.println( ComponentGetter.currentDataTabID());
-//			CodeArea codeArea  = SqlEditor.getCodeArea(); 
-//			 
-//			codeArea.setShowCaret(CaretVisibility.ON);;
-//			MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, codeArea);
-//			Event.fireEvent(codeArea, me);
-//			ButtonFactory.rows.requestFocus(); 
-//			codeArea.requestFocus();
-//		System.out.println(codeArea.focusedProperty().get());
-//		
-//		codeArea.requestFocus();
-//		System.out.println(codeArea.focusedProperty().get());
-//	    	codeArea.deselect();
-//	    	codeArea.setFocusTraversable(true);
-////	    	codeArea.getShowCaret()
-//	    	ComponentGetter.codeAreaAnchor =  codeArea.getAnchor();
-	    	
+		scene.getAccelerators().put(F4, () -> {  
+			CommonAction.dbInfoTreeQuery();
 		});
+		
+		
+//		scene.getAccelerators().put(F4, () -> { 
+//			try {
+//				callProcedure(DBConns.getCurrentConnectPO().getConn());
+//			} catch (SQLException e) { 
+//				e.printStackTrace();
+//			} 
+//		});
+		
+		
 		
 	}
 	//TODO 获取查询的结果, 返回字段名称的数据和 值的数据

@@ -11,6 +11,7 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
@@ -73,15 +74,16 @@ public class ButtonFactory {
 //		btns.add(shrink);
 		shrink.setGraphic(IconGenerator.svgImageDefActive("zero-fitscreen-24"));
 		shrink.setOnMouseClicked(e -> {
-			// 如果有选中的字符串, 进行查询
-			String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
-			if (str.trim().length() > 0) {
-				ComponentGetter.dbInfoFilter.setText(str.trim());
-			} else {
-				CommonAction.shrinkTreeView();
-			}
+//			// 如果有选中的字符串, 进行查询
+//			String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
+//			if (str.trim().length() > 0) {
+//				ComponentGetter.dbInfoFilter.setText(str.trim());
+//			} else {
+//				CommonAction.shrinkTreeView();
+//			}
+			CommonAction.shrinkTreeView();
 		});
-		shrink.setTooltip(MyTooltipTool.instance("Select Words Find It In DB Tree"));
+		shrink.setTooltip(MyTooltipTool.instance("Shrink Tree"));
 		
 		
 		// 删除连接
@@ -89,21 +91,28 @@ public class ButtonFactory {
 		deleteConn.setGraphic(IconGenerator.svgImageDefActive("trash"));
 		deleteConn.setOnMouseClicked(CommonEventHandler.deleteConnEvent());
 		deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
-//		btns.add(deleteConn);
 
 		
 		// 脚本
-		JFXButton script = new JFXButton();
-		script.setGraphic(IconGenerator.svgImageDefActive("entypo-download"));
-		script.setOnMouseClicked(e->{
-		   CommonAction.archiveAllScript(); 
-			
+//		JFXButton script = new JFXButton();
+//		script.setGraphic(IconGenerator.svgImageDefActive("entypo-download"));
+//		script.setOnMouseClicked(e->{
+//		   CommonAction.archiveAllScript(); 
+//		});
+//		script.setTooltip(MyTooltipTool.instance("Archive Script "));
+		
+		// 查找
+		JFXButton queryTab = new JFXButton();
+		queryTab.setGraphic(IconGenerator.svgImageDefActive("search"));
+		queryTab.setOnMouseClicked(e->{
+			CommonAction.dbInfoTreeQuery();
 		});
-		script.setTooltip(MyTooltipTool.instance("Archive Script "));
-//		btns.add(script);
+		queryTab.setTooltip(MyTooltipTool.instance("Query Table  (F4)"));
+		
 		
 		pn.getChildren().add(addConnbtn);
 		pn.getChildren().add(editConn);
+		pn.getChildren().add(queryTab);
 		pn.getChildren().add(shrink);
 
 		pn.getChildren().add(openConn);
@@ -111,7 +120,9 @@ public class ButtonFactory {
 		pn.getChildren().add(closeALlConn);
 
 		pn.getChildren().add(deleteConn);
-		pn.getChildren().add(script);
+//		pn.getChildren().add(script);
+		
+		
 		return pn;
 	}
 
@@ -129,7 +140,7 @@ public class ButtonFactory {
 			runLinebtn.setTooltip(MyTooltipTool.instance("run current line sql (Alt + R)"));
 			
 			JFXButton stopbtn = new JFXButton();
-			stopbtn.setGraphic(IconGenerator.svgImage("stop", "red", false));
+			stopbtn.setGraphic(IconGenerator.svgImage("stop", "red"));
 			stopbtn.setTooltip(MyTooltipTool.instance("stop         ctrl + I "));			
 			stopbtn.setDisable(true);
 			

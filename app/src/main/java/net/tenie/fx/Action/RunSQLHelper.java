@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.controlsfx.control.tableview2.cell.TextField2TableCell;
@@ -73,6 +74,9 @@ public class RunSQLHelper {
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
 	private static final String WAITTB_NAME = "Loading...";
+	
+	private static Tab waitTb ;
+	
 	ExecutorService service = Executors.newFixedThreadPool(1);
 	// 新tab页插入的位置
 	private static int tidx = -1;
@@ -90,7 +94,18 @@ public class RunSQLHelper {
 	private static boolean isCurrentLine = false; 
 	
 	
-
+   // 查询时等待画面
+	public static Tab maskTab(String waittbName) {
+		Tab waitTb = new Tab(waittbName);
+		MaskerPane masker = new MaskerPane();
+		waitTb.setContent(masker);
+		return waitTb;
+	}
+	static {
+		 waitTb = maskTab(WAITTB_NAME);
+	}
+	
+	
 	@SuppressWarnings("restriction")
 	private static void runMain(String s) {	 
 		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
@@ -100,7 +115,7 @@ public class RunSQLHelper {
 		}
 		
 		// 等待加载动画
-		Tab waitTb =  addWaitingPane( tidx);
+		addWaitingPane( tidx);
 		List<SqlData> allsqls = new ArrayList<>();
 		try {
 			// 获取sql 语句 
@@ -127,7 +142,7 @@ public class RunSQLHelper {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			rmWaitingPane(waitTb);
+//			rmWaitingPane();
 			settingBtn();
 			callProcedureFields = null;
 			isCallFunc =false;
@@ -238,6 +253,7 @@ public class RunSQLHelper {
 			// 渲染界面
 			if (!thread.isInterrupted()) {
 				MyTabData mtd = MyTabData.dtTab(dvt, -1, true);
+				rmWaitingPane();
 				mtd.show();
 			
 			}
@@ -301,6 +317,7 @@ public class RunSQLHelper {
 			if (!thread.isInterrupted()) {
 				if(hasOut(fields)) {
 					MyTabData mtd = MyTabData.dtTab(dvt, tidx, true);
+					rmWaitingPane();
 					mtd.show();
 				
 				}else {
@@ -373,6 +390,7 @@ public class RunSQLHelper {
 			// 渲染界面
 			if (!thread.isInterrupted()) {
 				MyTabData mtd = MyTabData.dtTab(dvt, tidx, false);
+				rmWaitingPane();
 				mtd.show();
 				// 水平滚顶条位置设置和字段类型
 				CacheDataTableViewShapeChange.setDataTableViewShapeCache(dvt.getTabName(), dvt.getTable(), colss); 		
@@ -653,7 +671,7 @@ public class RunSQLHelper {
 		col.setText(colname);
 		Label label  = new Label(); 
 		if(iskey) {// #F0F0F0    1C92FB ##6EB842  #7CFC00
-			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#FF6600" , false)); 
+			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#FF6600")); 
 		}else {
 //			label.setGraphic(IconGenerator.svgImage("sort", 10, "blue" , false)); 
 		}
@@ -700,10 +718,10 @@ public class RunSQLHelper {
 			
 		});
 	}
-
+	
 	// 等待加载动画 页面, 删除不要的页面, 保留 锁定的页面
 	private static Tab addWaitingPane( int tabIdx) {
-		Tab waitTb = MyTabData.maskTab(WAITTB_NAME);
+//		Tab waitTb = MyTabData.maskTab(WAITTB_NAME);
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTabPane;
 			// 删除不要的tab, 保留 锁定的tab
@@ -720,10 +738,13 @@ public class RunSQLHelper {
 	}
 
 	// 移除 等待加载动画 页面
-	private static void rmWaitingPane(Tab waitTb) {
+	private static void rmWaitingPane() {
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTabPane;
-			dataTab.getTabs().remove(waitTb);
+			if( dataTab.getTabs().contains(waitTb) ) {
+				dataTab.getTabs().remove(waitTb);
+			}
+			
 		});
 
 	}

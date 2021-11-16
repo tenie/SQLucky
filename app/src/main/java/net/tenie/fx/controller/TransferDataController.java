@@ -242,7 +242,7 @@ public class TransferDataController implements Initializable {
 		title.setGraphic(IconGenerator.svgImageDefActive("gears"));
 		queryLabel.setGraphic(IconGenerator.svgImageDefActive("search"));
 		execBtn.setGraphic(IconGenerator.svgImageDefActive("play"));
-		stopBtn.setGraphic(IconGenerator.svgImage("stop", "red" , false)); 
+		stopBtn.setGraphic(IconGenerator.svgImage("stop", "red")); 
 		hideBtn.setGraphic(IconGenerator.svgImageUnactive("circle-o"));
 		monBtn.setGraphic(IconGenerator.svgImageDefActive("laptop"));
 	}

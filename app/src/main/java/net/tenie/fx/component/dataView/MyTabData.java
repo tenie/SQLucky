@@ -36,6 +36,7 @@ public class MyTabData extends Tab {
 	private Button detailBtn;
 	private int idx;
 	private DataTableOptionBtnsPane dtBtnPane;
+	private List<Button> optionBtns;
 	 
 
 	public MyTabData(MyTabDataValue data, int idx, boolean disable) {
@@ -102,13 +103,7 @@ public class MyTabData extends Tab {
 		return mtb;
 	}
 
-//		
-	public static Tab maskTab(String waittbName) {
-		Tab waitTb = new Tab(waittbName);
-		MaskerPane masker = new MaskerPane();
-		waitTb.setContent(masker);
-		return waitTb;
-	}
+ 
 
 
 	// 数据tab中的组件
@@ -129,8 +124,8 @@ public class MyTabData extends Tab {
 	public  VBox dataBox( boolean disable, String time, String rows) {
 		var dataPane = new VBox();
 		dtBtnPane = new DataTableOptionBtnsPane(this, disable, time, rows, 
-												this.getTableData().getConnName(),
-												this.getTableData().isLock());
+												this.getTableData().getConnName());
+		
 		dataPane.getChildren().add(dtBtnPane);
 		dataPane.getChildren().add(this.getTableData().getTable());
 		VBox.setVgrow(this.getTableData().getTable(), Priority.ALWAYS);

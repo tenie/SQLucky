@@ -8,8 +8,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.SVGPath;
-import net.tenie.Sqlucky.sdk.config.CommonConst;
-import net.tenie.Sqlucky.sdk.config.ConfigVal; 
 
 /**
  * 图标生成
@@ -17,46 +15,38 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
  *
  */
 public final class IconGenerator {
-	public static   List<Region> icons = new ArrayList<>();
+//	public static   List<Region> icons = new ArrayList<>();
 	// 修改颜色
 	public static void changeColor(Node node, String color) {
 		node.setStyle("-fx-background-color: " + color + ";");
 	}
 
 	public static Region svgImageUnactive(String name) {
-		return svgImage(name, 16, "#A9A9A9", false);
+		return svgImage(name, 16, "#A9A9A9");
 	}
 	
 	public static Region svgImageUnactive(String name, int size) {
-		return svgImage(name, size, "#A9A9A9", false);
+		return svgImage(name, size, "#A9A9A9");
 	}
 	
-	
-	public static String getColor() {
-		String defColorStr = "#1C94FF";
-		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
-			defColorStr = "#FDA232";
-		} 
-		return defColorStr;
-	}
-
 	public static Region svgImageDefActive(String name) {
-		String defColorStr = getColor();
-		Region rs = svgImage(name, 16, defColorStr, true);   
+		Region rs = svgImage(name, 16, "");   
+		rs.getStyleClass().add("Icon-color");
 		return rs;
 	}
 
 	public static Region svgImageDefActive(String name, double size) {
-		String defColorStr = getColor();
-		return svgImage(name, size, defColorStr, true);
+		Region rs = svgImage(name, size, "");
+		rs.getStyleClass().add("Icon-color");
+		return rs;
 	}
 
-	public static Region svgImage(String name, String color, boolean isCache) {
-		return svgImage(name, 16, color, isCache);
+	public static Region svgImage(String name, String color) {
+		return svgImage(name, 16, color);
 	}
 
 	// svg 图片
-	public static Region svgImage(String name, double size, String color, boolean isCache) {
+	public static Region svgImage(String name, double size, String color ) {
 		SVGPath p = new SVGPath();
 		p.setContent(getSvgStr(name));
 
@@ -65,10 +55,10 @@ public final class IconGenerator {
 		svgShape.setMinSize(size, size);
 		svgShape.setPrefSize(size, size);
 		svgShape.setMaxSize(size, size);
-		svgShape.setStyle("-fx-background-color: " + color + ";");
-		if(isCache) {
-			icons.add(svgShape);			
+		if( ! "".equals(color)) {
+			svgShape.setStyle("-fx-background-color: " + color + ";");
 		}
+		
 		return svgShape;
 	}
 

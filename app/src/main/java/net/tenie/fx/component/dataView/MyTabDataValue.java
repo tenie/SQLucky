@@ -30,15 +30,15 @@ public class MyTabDataValue {
 	private int rows = 0;
 
 	// table id + row num 组成key ,保存对于行的数据
-	private Map<String, ObservableList<StringProperty>> newLineDate = new HashMap<>();
+	private Map<String, ObservableList<StringProperty>> newLineDate; // = new HashMap<>();
 	// table id + row num 组成key ,保存对于行的原始数据
-	private Map<String, ObservableList<StringProperty>> oldval = new HashMap<>();
+	private Map<String, ObservableList<StringProperty>> oldval ;// = new HashMap<>();
 	// 表字段的信息
-	private ObservableList<SqlFieldPo> tabCol = FXCollections.observableArrayList();
+//	private ObservableList<SqlFieldPo> tabCol = FXCollections.observableArrayList();
 	// 待insert的 数据
-	private Map<String, ObservableList<StringProperty>> appendData = new HashMap<>();
+	private Map<String, ObservableList<StringProperty>> appendData ; //= new HashMap<>();
 
-	// 列的 menuItem
+	// 列的右键菜单 menuItem
 	private List<MenuItem> menuItems = new ArrayList<>();
 
 	// 列
@@ -63,14 +63,15 @@ public class MyTabDataValue {
 		rawData.clear();
 		rawData = null;
 		colss.clear();
-		colss = null; 
-		appendData.clear();
+		colss = null;  
+//		tabCol.clear();
+//		tabCol = null;
+		
+		if(appendData != null) appendData.clear();
 		appendData = null;
-		tabCol.clear();
-		tabCol = null;
-		oldval.clear();
+		if(oldval != null) oldval.clear();
 		oldval = null;
-		newLineDate.clear();
+		if(newLineDate != null) newLineDate.clear();
 		newLineDate = null;
 
 	}
@@ -116,13 +117,13 @@ public class MyTabDataValue {
 		this.sqlStr = sqlStr;
 	}
 
-	public ObservableList<SqlFieldPo> getTabCol() {
-		return tabCol;
-	}
+//	public ObservableList<SqlFieldPo> getTabCol() {
+//		return tabCol;
+//	}
 
-	public void setTabCol(ObservableList<SqlFieldPo> tabCol) {
-		this.tabCol = tabCol;
-	}
+//	public void setTabCol(ObservableList<SqlFieldPo> tabCol) {
+//		this.tabCol = tabCol;
+//	}
 
 	public ObservableList<ObservableList<StringProperty>> getRawData() {
 		return rawData;
@@ -157,6 +158,9 @@ public class MyTabDataValue {
 	}
 
 	public Map<String, ObservableList<StringProperty>> getNewLineDate() {
+		if(newLineDate == null) {
+			newLineDate = new HashMap<>();
+		}
 		return newLineDate;
 	}
 
@@ -165,6 +169,9 @@ public class MyTabDataValue {
 	}
 
 	public Map<String, ObservableList<StringProperty>> getOldval() {
+		if(oldval == null) {
+			oldval = new HashMap<>();
+		}
 		return oldval;
 	}
 
@@ -173,6 +180,9 @@ public class MyTabDataValue {
 	}
 
 	public Map<String, ObservableList<StringProperty>> getAppendData() {
+		if(appendData == null) {
+			appendData = new HashMap<>();
+		}
 		return appendData;
 	}
 

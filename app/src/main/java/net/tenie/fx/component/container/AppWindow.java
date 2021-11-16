@@ -96,6 +96,8 @@ public class AppWindow {
 
  
 	static {
+		System.out.println(AppWindow.class.getResource("/css/application.css").toExternalForm());
+		System.out.println("\n\n\n\n\n\n\n\n\n==========================\n\n\n\n");
 		ConfigVal.cssList.add(AppWindow.class.getResource("/css/application.css").toExternalForm());	
 		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/common.css").toExternalForm());	
 		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/sql-keywords.css").toExternalForm());	    
@@ -117,15 +119,15 @@ public class AppWindow {
 
 		 
 		ComponentGetter.INFO = new Label("Info");
-		ComponentGetter.INFO.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00", false));
+		ComponentGetter.INFO.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00"));
 		
 		ComponentGetter.ABOUT = new Label("About");
-		ComponentGetter.ABOUT.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00", false));
+		ComponentGetter.ABOUT.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00"));
 		
 		ComponentGetter.WARN = new Label("Warn");
-		ComponentGetter.WARN.setGraphic( IconGenerator.svgImage("info-circle", "#FFD700", false));
+		ComponentGetter.WARN.setGraphic( IconGenerator.svgImage("info-circle", "#FFD700"));
 		ComponentGetter.ERROR = new Label("Error");
-		ComponentGetter.ERROR.setGraphic( IconGenerator.svgImage("info-circle", "red", false));
+		ComponentGetter.ERROR.setGraphic( IconGenerator.svgImage("info-circle", "red"));
 		ComponentGetter.EMPTY = new Label("");
 		
 		 

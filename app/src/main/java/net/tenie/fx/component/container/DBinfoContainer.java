@@ -51,13 +51,15 @@ public class DBinfoContainer {
 		// 数据连接/脚本 切换窗口
 		Accordion ad = createAccordion(scriptTreeView, treeView);
 		
-		container.getChildren().addAll(treeBtnPane, ad , filter);
-		
+//		container.getChildren().addAll(treeBtnPane, ad , filter);
+		container.getChildren().addAll(treeBtnPane, ad );
 		VBox.setVgrow(ad, Priority.ALWAYS);
  
 
 		AppWindowComponentGetter.treeView = treeView;
 		AppWindowComponentGetter.dbInfoTree = dbInfoTree;
+		AppWindowComponentGetter.DBinfoContainer = container;
+		AppWindowComponentGetter.dbInfoTreeFilter = filter;
 		ComponentGetter.treeBtnPane = treeBtnPane;
 		
 		

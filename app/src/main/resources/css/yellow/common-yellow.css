@@ -3,6 +3,10 @@
 	
 }
 
+.Icon-color{
+	-fx-background-color: #FDA232;
+}
+
 .main-background{
 	 -fx-background-color:  #000000 ;
 }

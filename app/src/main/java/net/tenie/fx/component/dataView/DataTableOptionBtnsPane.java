@@ -33,7 +33,8 @@ import net.tenie.lib.tools.IconGenerator;
  */
 public class DataTableOptionBtnsPane extends  AnchorPane{
 	
-	public DataTableOptionBtnsPane(MyTabData mytb,  boolean disable, String time , String rows, String connName  , boolean isLock) {
+	public DataTableOptionBtnsPane(MyTabData mytb,  boolean disable, String time ,
+			String rows, String connName) {
 		super();
 		CommonUtility.addCssClass(this, "data-table-btn-anchor-pane");
 		this.prefHeight(25);
@@ -69,7 +70,7 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		JFXButton refreshBtn = new JFXButton();
 		refreshBtn.setGraphic(IconGenerator.svgImageDefActive("refresh")); 
 		refreshBtn.setOnMouseClicked( e->{  
-			refreshData(isLock) ;
+			refreshData(MyTabData.currentDataTab().getTableData().isLock()) ;
 		});
 		refreshBtn.setTooltip(MyTooltipTool.instance("refresh table "));
 		refreshBtn.setDisable(disable);
@@ -86,7 +87,7 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 		addBtn.setDisable(disable);
 
 		JFXButton minusBtn = new JFXButton();
-		minusBtn.setGraphic(IconGenerator.svgImage("minus-square", "#EC7774" , false));
+		minusBtn.setGraphic(IconGenerator.svgImage("minus-square", "#EC7774"));
 
 		minusBtn.setOnMouseClicked( e->{ 
 			ButtonAction.deleteData(); 

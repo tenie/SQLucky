@@ -98,7 +98,7 @@ public class ConnItemContainer {
 			for (int i = 0; i < ls.size(); i++) {
 				TreeItem<TreeNodePo> val = ls.get(i);
 				if (val.getValue().getName().equals(defSch)) {
-					val.getValue().setIcon(IconGenerator.svgImage("database", "#7CFC00 ", false));
+					val.getValue().setIcon(IconGenerator.svgImage("database", "#7CFC00 "));
 					ls.remove(i);
 					ls.add(0, val);
 					break;
@@ -111,7 +111,7 @@ public class ConnItemContainer {
 	public static TreeItem<TreeNodePo> CreateEmptySchemaNode(SqluckyConnector connpo) {
 
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
-				new TreeNodePo("Schemas", IconGenerator.svgImage("th-list", "#FFD700", false), connpo));
+				new TreeNodePo("Schemas", IconGenerator.svgImage("th-list", "#FFD700"), connpo));
 		return schemas;
 	}
 
@@ -121,7 +121,7 @@ public class ConnItemContainer {
 		String nodeName = connpo.dbRootNodeName(); 
 		// 创建一个schema node , 将数据库数据放入
 		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
-				new TreeNodePo( nodeName, TreeItemType.SCHEMA_ROOT, IconGenerator.svgImage("th-list", "#FFD700", false), connpo));
+				new TreeNodePo( nodeName, TreeItemType.SCHEMA_ROOT, IconGenerator.svgImage("th-list", "#FFD700"), connpo));
 		// 获取schema 数据
 		Set<String> set = connpo.settingSchema();
 		for (String sche : set) {

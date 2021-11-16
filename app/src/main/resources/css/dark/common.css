@@ -2,6 +2,9 @@
 .my-tag{
 	
 }
+.Icon-color{
+	-fx-background-color: #1C94FF;
+}
 
 .main-background{
 	 -fx-background-color:  #2E2E2E;
