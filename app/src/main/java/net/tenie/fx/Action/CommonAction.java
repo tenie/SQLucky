@@ -1164,7 +1164,7 @@ public class CommonAction {
 		   if(  container.getChildren().contains(filter)) {
 			   container.getChildren().remove(filter);
 		   }else {
-			   container.getChildren().add(filter);
+			   container.getChildren().add(1,filter);
 		   }
 		   
 		    // 如果有选中的字符串, 进行查询
@@ -1172,7 +1172,7 @@ public class CommonAction {
 			if (str.trim().length() > 0) {
 				ComponentGetter.dbInfoFilter.setText(str.trim());
 				if(  ! container.getChildren().contains(filter)) {
-					 container.getChildren().add(filter);
+					container.getChildren().add(1,filter);
 			   }
 			}
 	}

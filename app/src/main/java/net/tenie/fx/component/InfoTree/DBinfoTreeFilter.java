@@ -44,7 +44,7 @@ public class DBinfoTreeFilter {
 		filter.setPrefHeight(30);
 		filter.setMinHeight(30);
 		JFXButton query = new JFXButton();
-		query.setGraphic(IconGenerator.svgImageDefActive("search"));
+		query.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
 		query.setOnAction(e -> {
 			txt.requestFocus();
 		});

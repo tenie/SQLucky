@@ -11,17 +11,19 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.dataView.MyTabData;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.tools.IconGenerator;
-
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class ButtonFactory {
 	public static TextField rows ;
 
@@ -31,11 +33,9 @@ public class ButtonFactory {
 		FlowPane pn = new FlowPane();
 		// 页面初始化: 添加组件
 		JFXButton addConnbtn = new JFXButton();
-
 		addConnbtn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 		addConnbtn.setOnMouseClicked(CommonEventHandler.addConnEvent());
 		addConnbtn.setTooltip(MyTooltipTool.instance("Add new DB Connection"));
-//		btns.add(addConnbtn);
 
 		// open连接
 		JFXButton openConn = new JFXButton();
@@ -44,7 +44,7 @@ public class ButtonFactory {
 			ConnectionEditor.openDbConn();
 		});
 		openConn.setTooltip(MyTooltipTool.instance("Open DB Connection"));
-//		btns.add(openConn);
+
 		// 断开连接
 		JFXButton closeConn = new JFXButton();
 		closeConn.setGraphic(IconGenerator.svgImageDefActive("unlink"));
@@ -52,13 +52,11 @@ public class ButtonFactory {
 			ConnectionEditor.closeDbConn();
 		});
 		closeConn.setTooltip(MyTooltipTool.instance("Close DB Connection"));
-//		btns.add(closeConn);
 
 		JFXButton closeALlConn = new JFXButton();
 		closeALlConn.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 		closeALlConn.setOnMouseClicked(CommonEventHandler.closeAllConnEvent());
 		closeALlConn.setTooltip(MyTooltipTool.instance("Close All DB Connection"));
-//		btns.add(closeALlConn);
 
 		JFXButton editConn = new JFXButton();
 		editConn.setGraphic(IconGenerator.svgImageDefActive("edit"));
@@ -67,20 +65,22 @@ public class ButtonFactory {
 			ConnectionEditor.editDbConn();
 		});
 		editConn.setTooltip(MyTooltipTool.instance("Edit DB Connection"));
-//		btns.add(editConn); 
 
+		// 查找
+		JFXButton queryTab = new JFXButton();
+		queryTab.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
+		queryTab.setOnMouseClicked(e->{
+			CommonAction.dbInfoTreeQuery();
+		});
+		queryTab.setTooltip(MyTooltipTool.instance("Find Table  (F4)"));
+		
+		
+		
 		// 收缩树 zero-fitscreen-24
 		JFXButton shrink = new JFXButton();
 //		btns.add(shrink);
 		shrink.setGraphic(IconGenerator.svgImageDefActive("zero-fitscreen-24"));
 		shrink.setOnMouseClicked(e -> {
-//			// 如果有选中的字符串, 进行查询
-//			String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
-//			if (str.trim().length() > 0) {
-//				ComponentGetter.dbInfoFilter.setText(str.trim());
-//			} else {
-//				CommonAction.shrinkTreeView();
-//			}
 			CommonAction.shrinkTreeView();
 		});
 		shrink.setTooltip(MyTooltipTool.instance("Shrink Tree"));
@@ -101,14 +101,7 @@ public class ButtonFactory {
 //		});
 //		script.setTooltip(MyTooltipTool.instance("Archive Script "));
 		
-		// 查找
-		JFXButton queryTab = new JFXButton();
-		queryTab.setGraphic(IconGenerator.svgImageDefActive("search"));
-		queryTab.setOnMouseClicked(e->{
-			CommonAction.dbInfoTreeQuery();
-		});
-		queryTab.setTooltip(MyTooltipTool.instance("Query Table  (F4)"));
-		
+	
 		
 		pn.getChildren().add(addConnbtn);
 		pn.getChildren().add(editConn);
@@ -154,7 +147,6 @@ public class ButtonFactory {
 			saveSQL.setGraphic(IconGenerator.svgImageDefActive("save"));
 			saveSQL.setOnMouseClicked(CommonEventHandler.saveSQl());
 			saveSQL.setTooltip(MyTooltipTool.instance("Save sql to file ctrl + S"));
-//			btns.add(saveSQL);
 
 			JFXButton formatSQL = new JFXButton();
 			formatSQL.setGraphic(IconGenerator.svgImageDefActive("paragraph")); // i-cursor
@@ -162,7 +154,6 @@ public class ButtonFactory {
 				CommonAction.formatSqlText();
 			});
 			formatSQL.setTooltip(MyTooltipTool.instance("Format code   ctrl + shif + F  "));
-//			btns.add(formatSQL);
 			
 			
 			// 执行存储过程
@@ -170,7 +161,13 @@ public class ButtonFactory {
 			runFunPro.setGraphic(IconGenerator.svgImageDefActive("bolt"));
 			runFunPro.setId("runFunPro");
 			runFunPro.setTooltip(MyTooltipTool.instance("Execut Create Program DDL"));
-//			btns.add(runFunPro);
+			
+			// 查找
+			JFXButton findSQlTxt = new JFXButton();
+			findSQlTxt.setGraphic(IconGenerator.svgImageDefActive("search"));
+			findSQlTxt.setId("runFunPro");
+			findSQlTxt.setTooltip(MyTooltipTool.instance("Find (Ctrl + F)"));
+			findSQlTxt.setOnMouseClicked(e->CommonAction.findReplace(false));
 
 			
 			runbtn.setOnMouseClicked(e->{
@@ -189,19 +186,15 @@ public class ButtonFactory {
 			});
 			
 			JFXButton hideLeft = new JFXButton();
-			hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));// fontImgName("caret-square-o-left",
-																								// 16, Color.ROYALBLUE));
+			hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
 			hideLeft.setOnMouseClicked(CommonEventHandler.hideLift());
 			hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
-//			btns.add(hideLeft);
 			
 			//TODO hideBottom
 			JFXButton hideBottom = new JFXButton();
-			hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));// fontImgName("caret-square-o-down",
-																								// 16, Color.ROYALBLUE));
+			hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
 			hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
 			hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
-//			btns.add(hideBottom);
 			
 			
 			pn.getChildren().add(hideLeft);
@@ -209,8 +202,6 @@ public class ButtonFactory {
 			AnchorPane.setRightAnchor(hideBottom, 0.0);
 			AnchorPane.setRightAnchor(hideLeft, 30.0);
 			
-//			AllButtons.btns.put("hideLeft", hideLeft);
-//			AllButtons.btns.put("hideBottom", hideBottom);
 			
 			CommonButtons.hideLeft = hideLeft;
 			CommonButtons.hideBottom = hideBottom;
@@ -233,13 +224,10 @@ public class ButtonFactory {
 			connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
 			ComponentGetter.connComboBox = connsComboBox;
 			
-//			conns.getit
-//			AnchorPane.setTopAnchor(conns, 0.0);
 			
 			// sql 执行读取行数
 			Label lb = new Label("Max Rows: ");
 			rows = new TextField();
-//		    final TextField rows =  TextFieldFactory.numTextField();
 			
 			lb.setLabelFor(rows);
 			rows.setPrefHeight(25);
@@ -291,6 +279,12 @@ public class ButtonFactory {
 			runFunPro.setLayoutY(0);
 			y += fix;
 			runFunPro.setLayoutX(y);
+			
+			//findSQlTxt
+			pn.getChildren().add(findSQlTxt);
+			findSQlTxt.setLayoutY(0);
+			y += fix;
+			findSQlTxt.setLayoutX(y);
 			
 			pn.getChildren().add(lbcnn);
 			lbcnn.setLayoutY(5);
