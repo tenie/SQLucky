@@ -87,6 +87,16 @@ public class SQLucky extends Application {
 		// 加载插件
 		ServiceLoad.callLoad();
 		logger.info("完成初始化"); 
+//		Thread.sleep(4000);
+		
+		
+//		while(true) {
+//			if(MyPreloader.getFinish()) {
+//				break;
+//			}
+//			Thread.sleep(400);
+//		}
+		
 	}
 
 	@Override
@@ -99,11 +109,7 @@ public class SQLucky extends Application {
 			primaryStage.setTitle("SQLucky"); 
 //			primaryStage.
 //			primaryStage.centerOnScreen();
-//			primaryStage.initStyle(StageStyle);
-			
-			
-			
-			
+//			primaryStage.initStyle(StageStyle);			
 //			primaryStage.setScene(tmpscene); 
 			primaryStage.setScene(scene); 
 

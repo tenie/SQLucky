@@ -16,7 +16,9 @@ open module SQLucky {
 	requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;  
-    requires javafx.swing;  
+    requires javafx.swing; 
+    requires javafx.media;
+    
     // mods
 	requires com.jfoenix;  
 	requires org.controlsfx.controls;

@@ -68,7 +68,10 @@
 			<artifactId>javafx-swing</artifactId>
 		</dependency>
 
-
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-media</artifactId>
+		</dependency>
 
 		<!-- 控件库 -->
 		<dependency>
