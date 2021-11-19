@@ -392,6 +392,18 @@ public class CommonUtility {
      return fadeTransition;
 	}
 	
+	public static FadeTransition fadeTransitionHidden(Node node , double ms, double val) {
+		   // 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
+		  FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
+		  fadeTransition.setFromValue(1);   // 设置起始透明度为1.0，表示不透明
+		  fadeTransition.setToValue(val);     // 设置结束透明度为0.0，表示透明
+		  fadeTransition.setCycleCount(1);     // 设置循环周期为无限
+		  fadeTransition.setAutoReverse(true);    // 设置自动反转
+		  fadeTransition.setNode(node);         // 设置动画应用的节点
+		  fadeTransition.play();                  // 播放动画 
+		  return fadeTransition;
+	}
+	
 	public static  boolean isMacOS() {
 		String os_name = System.getProperty("os.name");
 		if (os_name.toLowerCase().startsWith("mac")) {

@@ -14,11 +14,6 @@ import javafx.stage.StageStyle;
 
 public class MyPreloader extends Preloader {
 	private Stage preloaderStage;
-	private volatile static boolean isFinish = false;
-	
-	public static boolean getFinish() {
-		return isFinish;
-	}
  
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -28,8 +23,7 @@ public class MyPreloader extends Preloader {
        loading.setMaxWidth(Region.USE_PREF_SIZE);
        loading.setMaxHeight(Region.USE_PREF_SIZE);
        loading.setStyle("-fx-background-color: #000000;");
-//       Image i = new Image( MyPreloader.class.getResourceAsStream("/image/SQL6preLoad.png")); 
-       Image i = new Image( MyPreloader.class.getResourceAsStream("/image/testgif.gif")); 
+       Image i = new Image( MyPreloader.class.getResourceAsStream("/image/SQL6preLoad.png")); 
        
       
        ProgressBar prob = new ProgressBar();

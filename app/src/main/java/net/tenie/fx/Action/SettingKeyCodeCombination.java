@@ -2,6 +2,7 @@ package net.tenie.fx.Action;
 
 import net.tenie.fx.component.*;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.main.SQLucky;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -60,6 +61,7 @@ public final class SettingKeyCodeCombination {
 		KeyCodeCombination F1 = new KeyCodeCombination(KeyCode.F1);
 		KeyCodeCombination F2 = new KeyCodeCombination(KeyCode.F2);
 		KeyCodeCombination F4 = new KeyCodeCombination(KeyCode.F4);
+		KeyCodeCombination F5 = new KeyCodeCombination(KeyCode.F5);
 		KeyCodeCombination F9 = new KeyCodeCombination(KeyCode.F9);
 
 		KeyCodeCombination ctrlO = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.SHORTCUT_DOWN);
@@ -192,6 +194,14 @@ public final class SettingKeyCodeCombination {
 			}
 		});
 		
+		 
+		scene.getAccelerators().put(F5, () -> {
+//			var ps = SQLucky.pStage;
+////			ps.setFullScreen(true);
+////			ps.setMaximized(true);
+//			ps.toBack();
+		
+		});
 		
 		
 		//RunSQLHelper.runCurrentLineSQLMethod();

@@ -11,7 +11,10 @@ import org.apache.logging.log4j.Logger;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
@@ -29,6 +32,7 @@ import net.tenie.sdkImp.SqluckyComponent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 
 /**
@@ -39,14 +43,13 @@ import javafx.scene.layout.StackPane;
 public class SQLucky extends Application {
 	public static List<String> argsList = new ArrayList<>(); 
 	public static String userDir = "";
+	public static Stage pStage;
 	private AppWindow app;
 	private Scene scene;
 	private Scene tmpscene;
 	private Image img;
 	private String Theme;
 	private static Logger logger = LogManager.getLogger(SQLucky.class);
-	
-
 	
 	static {
 		if( ! H2Db.isDev()) {
@@ -72,6 +75,7 @@ public class SQLucky extends Application {
 		ComponentGetter.appComponent = sqluckyComponent;
 		// 注册
 		ServiceLoad.callRegister();
+		
 		app = new AppWindow();
 //		scene = new Scene(app.getMainWindow());
 //		scene.getStylesheets().addAll(ConfigVal.cssList);
@@ -87,48 +91,70 @@ public class SQLucky extends Application {
 		// 加载插件
 		ServiceLoad.callLoad();
 		logger.info("完成初始化"); 
-//		Thread.sleep(4000);
 		
 		
-//		while(true) {
-//			if(MyPreloader.getFinish()) {
-//				break;
-//			}
-//			Thread.sleep(400);
-//		}
-		
+	}
+	
+	public void testFinish() {
+		while(true) {
+			var tf = MyPreloaderMp4.getFinish();
+			if(tf) { 
+				break;
+			}
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-//			String cssStr = ConfigVal.class.getResource("/css/common.css").toExternalForm();
+			pStage = primaryStage;
 			
-			// 图标
+			// 图标 
 			primaryStage.getIcons().add(img);
 			primaryStage.setTitle("SQLucky"); 
-//			primaryStage.
 //			primaryStage.centerOnScreen();
 //			primaryStage.initStyle(StageStyle);			
 //			primaryStage.setScene(tmpscene); 
 			primaryStage.setScene(scene); 
+//			var sceneRoot = scene.getRoot();
+//			CommonUtility.fadeTransition(sceneRoot, 2000); 
+//			app.fadeTransition();
 
-			primaryStage.setMaximized(true);
-//			primaryStage.setResizable(true);
+//			 primaryStage.setIconified(true); 
+			primaryStage.setIconified(true);
+			// 确保全屏显示
+			Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+			primaryStage.setX(primaryScreenBounds.getMinX());
+			primaryStage.setY(primaryScreenBounds.getMinY());
+			primaryStage.setWidth(primaryScreenBounds.getWidth());
+			primaryStage.setHeight(primaryScreenBounds.getHeight());
+			primaryStage.setMaximized(true); 
+			primaryStage.setResizable(false);
 
 			primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
 			ComponentGetter.primaryStage = primaryStage; 
 //			CommonAction.setTheme(Theme);
 			 
-			 primaryStage.setX(500); 
+//			 primaryStage.setX(500); 
 //			 primaryStage.setY(100);
+//			primaryStage.setWidth(100);
+//			primaryStage.setHeight(0);
 		    primaryStage.centerOnScreen();
-			primaryStage.show();
+//			  primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
+		    
+			primaryStage.show(); 
+//			primaryStage.toBack();
 			
-			
+			MyPreloaderMp4.hiden();
 			// 在stage show之后 需要初始化的内容, 如: 外观, 事件
 			Platform.runLater(() -> {
 //				primaryStage.setScene(scene); 
+				
 				primaryStage.setMaximized(true);
 				primaryStage.setResizable(true);
 //				 primaryStage.setX(500); 
@@ -212,6 +238,6 @@ public class SQLucky extends Application {
 	
 	
 	public static void main(String[] args) throws IOException { 
-		LauncherImpl.launchApplication(SQLucky.class, MyPreloader.class, args);
+		LauncherImpl.launchApplication(SQLucky.class, MyPreloaderMp4.class, args);
 	}
 }
