@@ -4,6 +4,7 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.application.Preloader.StateChangeNotification.Type;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -28,7 +29,7 @@ public class MyPreloaderMp4 extends Preloader {
 	}
 	
 	public static void  hiden() {
-		 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1000, 0.7);
+		 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1200, 0.8);
 		 fadeTransition.setOnFinished(e -> {
 			 preloaderStage.close();
 			
@@ -74,8 +75,8 @@ public class MyPreloaderMp4 extends Preloader {
     	double h = 319.0;
     	
     	
-    	String filePath = "D:\\BaiduNetdiskDownload\\sqlucky.mp4";
-//    	String filePath =	MyPreloaderMp4.class.getResource("/image/sqlucky_hd.mp4").toExternalForm();
+//    	String filePath = "D:\\BaiduNetdiskDownload\\sqlucky.mp4";
+    	String filePath =	MyPreloaderMp4.class.getResource("/image/sqlucky_hd2.mp4").toExternalForm();
     	
        preloaderStage = primaryStage;
  
@@ -87,15 +88,19 @@ public class MyPreloaderMp4 extends Preloader {
        Media media = new Media(filePath);
        mediaPlayer = new MediaPlayer(media);
        MediaView mediaView = new MediaView(mediaPlayer);
+       mediaView.setCursor(Cursor.CROSSHAIR);
+       
        mediaView.setFitWidth(w);
        mediaView.setFitHeight( h);
        mediaPlayer.play(); 
        
        loading.getChildren().add( mediaView);  
        VBox.setVgrow(mediaView, Priority.ALWAYS);
-       Scene scene = new Scene(loading);
-       scene.getStylesheets().add(MyPreloaderMp4.class.getResource("/css/ProgressBar.css").toExternalForm());
+       loading.setCursor(Cursor.WAIT);
        
+       Scene scene = new Scene(loading);
+//       scene.getStylesheets().add(MyPreloaderMp4.class.getResource("/css/ProgressBar.css").toExternalForm());
+//       scene.setCursor(Cursor.WAIT);
        primaryStage.setWidth(w);
        primaryStage.setHeight( h);
        primaryStage.setMaximized(false);
@@ -104,7 +109,7 @@ public class MyPreloaderMp4 extends Preloader {
        primaryStage.setAlwaysOnTop(true);
        primaryStage.setScene(scene);
        CommonUtility.fadeTransition(loading, 1800); 
-
+       
        primaryStage.show();
        
       
