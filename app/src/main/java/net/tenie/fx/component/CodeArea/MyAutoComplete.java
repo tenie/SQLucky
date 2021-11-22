@@ -175,7 +175,6 @@ public class MyAutoComplete implements AutoComplete{
 	 
 
 	public   void showPop(double x, double y, String fStr) {
-//		System.out.println("fStr === " + fStr);
 		filterStr = fStr.trim().toUpperCase();
 		String tmpFilterStr = filterStr; 
 		if(! isShow()) {
@@ -206,10 +205,7 @@ public class MyAutoComplete implements AutoComplete{
 		if( tmpls != null && tmpls.size()>0) {
 			rootNode.getChildren().clear();
 			for(var tb: tmpls) {
-//			for(int i =0 ; i< tmpls.size() ; i++) { 
-//				var tb = tmpls.get(i);
 				if( tb.getTableName().toUpperCase().contains(tmpFilterStr) ){
-//					System.out.println(tmpFilterStr + " === " + tb.getTableName()); 
 					TreeItem<TablePo> item = new TreeItem<>(tb);
 					rootNode.getChildren().add(item);
 					tf = true;
@@ -223,9 +219,6 @@ public class MyAutoComplete implements AutoComplete{
 			    pop = new Popup();
 				pop.setX(x);
 				pop.setY(y);
-//				pop.setWidth(100);
-//				pop.setHeight(100);
-//				pop.setHideOnEscape(true);
 				pop.setAutoHide(true); 
 				pop.getContent().add(vb);
 				

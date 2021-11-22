@@ -585,14 +585,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 				for(int i = 1 ; anchor-i >= 0 ; i++) {
 					var tmp = codeArea.getText(anchor-i, anchor);
 					int tmplen = tmp.length();
-					int idx =    anchor - tmplen ;
-//					System.out.println(tmp 
-//							+ tmp.startsWith(" ") + 
-//							tmp.startsWith("\t") + 
-//							tmp.startsWith("\n") +
-//							(idx <= 0) +" ==="
-//							);
-					
+					int idx =    anchor - tmplen ; 
 					if(tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") ||   idx <= 0   ) {
 						str = tmp;
 						break;

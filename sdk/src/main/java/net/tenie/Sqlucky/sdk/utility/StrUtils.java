@@ -76,7 +76,6 @@ public class StrUtils {
 				String rsstr = v.trim();
 				if(rsstr.length() > 0) {
 					rsset.add(rsstr);
-					System.out.println(rsstr);
 				}
 			}
 		}

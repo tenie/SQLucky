@@ -88,7 +88,6 @@ public class MyPreloaderMp4 extends Preloader {
        Media media = new Media(filePath);
        mediaPlayer = new MediaPlayer(media);
        MediaView mediaView = new MediaView(mediaPlayer);
-       mediaView.setCursor(Cursor.CROSSHAIR);
        
        mediaView.setFitWidth(w);
        mediaView.setFitHeight( h);

@@ -9,6 +9,7 @@ import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.geometry.Side;
+import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
@@ -77,7 +78,7 @@ public class AppWindow {
 		lb.setFont(new Font(30));
 		root = new StackPane( mainWindow, lb);
 		StackPane.setAlignment(lb, Pos.CENTER);
-	
+		root.setCursor(Cursor.WAIT);
 
 		appScene = new Scene(root); 
 //		appScene = new Scene(mainWindow); 
@@ -146,6 +147,7 @@ public class AppWindow {
 		 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(lb, 1500);
 		 fadeTransition.setOnFinished(e ->{
 			 root.getChildren().remove(lb);
+			 root.setCursor(Cursor.DEFAULT);
 		 });
 		
 	}

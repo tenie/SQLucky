@@ -101,14 +101,8 @@ public final class SettingKeyCodeCombination {
 					}
 				});  
 			}
-			
-//			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
-//			double x = bd.getCenterX();
-//			double y = bd.getCenterY();
 			if (codeArea.isFocused()) {
 				SqlcukyEditor.currentMyTab().getSqlCodeArea().callPopup();
-				
-//				SqlEditor.callPopup( codeArea);
 			}
 			
 			
