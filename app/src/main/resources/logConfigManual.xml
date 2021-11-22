@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<!-- configuration 属性 
+    monitorInterval: 置配置文件的动态加载时间（s），在程序运行过程中，如果修改配置文件，程序会随之改变。 
+	status: 设置 log4j 日志框架内部输出的日志级别 日志级别以及优先级排序: OFF > FATAL > ERROR > WARN > INFO > DEBUG > TRACE > ALL -->
+<configuration status="error" monitorInterval="5"> <!--配置变量 -->
+	<Properties> <!-- 配置输出格式 -->
+		<property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %c{36} - %m%n" /> 
+		<!-- 定义日志存储的路径 -->
+		<property name="FILE_PATH" value="更换为你的日志路径" />
+		<property name="FILE_NAME" value="更换为你的项目名" />
+	</Properties>
+	
+	<appenders> 
+	    <!-- 控制台输出日志，target: SYSTEM_OUT / SYSTEM_ERR（普通格式 / 异常格式） -->
+		<console name="Console" target="SYSTEM_OUT"> <!-- 输出日志的格式 -->
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</console> 
+		
+		<!-- 以单个文件形式输出日志，这个log每次运行程序会自动清空，由append属性决定，
+		     这个也挺有用的，适合临时测试用 append: true / false（追加 / 覆盖） -->
+		<File name="Filelog" fileName="${FILE_PATH}/test.log" append="false">
+			<PatternLayout pattern="${LOG_PATTERN}" />
+		</File> 
+		
+		<!-- 按照指定条件（按照时间、大小）阈值设置日志存档规则 
+		属性 filePattern: 表示达到阈值后文件存档路径和文件命名规格（包括是否压缩，若压缩指定后缀）日志匹配规则 -->
+		<RollingFile name="RollingFileInfo"
+			fileName="${FILE_PATH}/info.log"
+			filePattern="${FILE_PATH}/$${date:yyyy-MM}/${FILE_NAME}-INFO-%d{yyyy-MM-dd}_%i.log.gz">
+         
+           <!-- onMatch: ACCEPT / DENY（匹配该级别及以上级别 / 不匹配该级别及以上级别）
+                onMismatch: ACCEPT / DENY（匹配该级别以下级别 / 不匹配该级别以下级别） -->
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY" />
+			<PatternLayout pattern="${LOG_PATTERN}" />
+			<Policies> 
+			    <!-- interval 属性用来指定多久滚动一次，默认是 1 hour -->
+				<TimeBasedTriggeringPolicy modulate="true" interval="1" /> 
+				<!-- 当文件达到设定阈值时，会滚动一次（保存为新文件） -->
+				<SizeBasedTriggeringPolicy size="10MB" />
+			</Policies>
+			
+			 <!-- 该路径下最多能存放多少个文件，大于该数值后覆盖旧的文件，默认是 7 个 -->
+			<DefaultRolloverStrategy max="15">
+				<Delete basePath="${FILE_PATH}/" maxDepth="2">
+					<IfFileName glob="*.log.gz" /> 
+					 <!-- Note: 这里的age必须和filePattern协调, 后者是精确到HH, 这里就要写成xH, xd就不起作用 另外, 数字最好>2, 
+						        否则可能造成删除的时候, 最近的文件还处于被占用状态,导致删除不成功! --> 
+						        <!--7天 -->
+					<IfLastModified age="168H" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+	</appenders> 
+	
+	<!-- Logger节点用来单独指定日志的形式，比如要为指定包下的class指定不同的日志级别等。 --> 
+	<!-- 然后定义loggers，只有定义了logger并引入的appender，appender才会生效 -->
+	<!-- logger 的优先级要高于 root，多个 logger 的优先级是根据 name 属性匹配的完整度进行确定，匹配越精确， 优先级越高。优先级高的为子 
+		logger，优先级低的为父 logger，即 root 为所有 logger 的父 logger。 logger 属性 name: 用于单独配置日志级别和输出的 
+		package 或 class additivity: false: 只会在优先级最高的 logger 中输出，不会在父 logger 中输出 true: 
+		除了在本 logger 中输出以外，还会根据本 logger 配置的 level 级别，在父 logger 中 根据其输出类型进行输出。 -->
+	<loggers>
+		<logger name="org.mybatis" level="info" additivity="false">
+			<AppenderRef ref="Console" />
+		</logger>
+		<root level="info">
+			<appender-ref ref="Console" />
+		</root>
+	</loggers>
+</configuration>

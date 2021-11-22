@@ -7,7 +7,7 @@
         </Console>
 
         <!--普通文件：-->
-        <File name="File" fileName="${sys:user.home}/.sqlucky/sqlucky.log" append="true" immediateFlush="true" >
+        <File name="File" fileName="${sys:user.home}/.sqlucky/sqlucky.log" append="false" immediateFlush="true" >
             <PatternLayout>
                 <Pattern>%d{HH:mm:ss.SSS} [%t] %-5level %logger{36}[%L] %msg%n</Pattern>
             </PatternLayout>
