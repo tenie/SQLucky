@@ -154,7 +154,7 @@ public class SQLucky extends Application {
 			// 在stage show之后 需要初始化的内容, 如: 外观, 事件
 			Platform.runLater(() -> {
 				if(CommonUtility.isLinuxOS()) {
-					primaryStage.setAlwaysOnTop(true);
+//					primaryStage.setAlwaysOnTop(true);
 					primaryStage.toFront();
 				}
 				primaryStage.setMaximized(true);
