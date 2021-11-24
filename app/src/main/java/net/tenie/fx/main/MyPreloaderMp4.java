@@ -29,11 +29,14 @@ public class MyPreloaderMp4 extends Preloader {
 	}
 	
 	public static void  hiden() {
-		 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1200, 0.8);
-		 fadeTransition.setOnFinished(e -> {
-			 preloaderStage.close();
-			
-		  });
+		if(loading!= null) {
+			 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1200, 0.8);
+			 fadeTransition.setOnFinished(e -> {
+				 preloaderStage.close();
+				
+			  });
+		}
+		
 	}
 	
    private void hiden2() { 

@@ -148,13 +148,15 @@ public class SQLucky extends Application {
 //			  primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
 		    
 			primaryStage.show(); 
-//			primaryStage.toBack();
+			if(CommonUtility.isLinuxOS()) {
+				primaryStage.setAlwaysOnTop(true);
+			}
 			
 			MyPreloaderMp4.hiden();
 			// 在stage show之后 需要初始化的内容, 如: 外观, 事件
 			Platform.runLater(() -> {
 //				primaryStage.setScene(scene); 
-				
+//				primaryStage.toFront();
 				primaryStage.setMaximized(true);
 				primaryStage.setResizable(true);
 //				 primaryStage.setX(500); 
