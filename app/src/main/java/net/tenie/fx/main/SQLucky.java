@@ -238,6 +238,11 @@ public class SQLucky extends Application {
 	
 	
 	public static void main(String[] args) throws IOException { 
-		LauncherImpl.launchApplication(SQLucky.class, MyPreloaderMp4.class, args);
+		if(CommonUtility.isLinuxOS()) {
+			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
+		}else {
+			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderMp4.class, args);
+		}
+//		LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
 	}
 }

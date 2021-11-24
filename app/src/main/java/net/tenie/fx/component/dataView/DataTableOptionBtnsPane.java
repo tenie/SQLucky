@@ -236,7 +236,7 @@ public class DataTableOptionBtnsPane extends  AnchorPane{
 			ObservableList<SqlFieldPo> fs = MyTabData.getFields();
 			ObservableList<StringProperty> item = FXCollections.observableArrayList();
 			for (int i = 0; i < fs.size(); i++) {
-				SimpleStringProperty sp = new SimpleStringProperty();
+				SimpleStringProperty sp = new SimpleStringProperty("<null>");
 				// 添加监听. 保存时使用 newLineIdx
 				CommonUtility.newStringPropertyChangeListener(sp, fs.get(i).getColumnType().get());
 				item.add(sp);

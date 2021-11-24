@@ -107,7 +107,7 @@ public class MyPreloaderMp4 extends Preloader {
        primaryStage.initStyle(StageStyle.TRANSPARENT);//设定窗口无边框
        primaryStage.setAlwaysOnTop(true);
        primaryStage.setScene(scene);
-       CommonUtility.fadeTransition(loading, 1800); 
+//       CommonUtility.fadeTransition(loading, 1800); 
        
        primaryStage.show();
        
