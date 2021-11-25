@@ -35,6 +35,7 @@ import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
+import net.tenie.fx.component.InfoTree.TreeItemType;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -486,13 +487,28 @@ public class ConnectionEditor {
 
 		}
 	}
+	
+	private static TreeItem<TreeNodePo> getConnNodeRoot(TreeItem<TreeNodePo> val) {
+		TreeNodePo tnp = val.getValue();
+		if(tnp.getType()== null) {
+			return val;
+		}else {
+			return getConnNodeRoot(val.getParent());
+		}  
+		 
+	}
 
+	// 关闭链接
 	public static void closeDbConn() {
 		logger.info("closeConnEvent()");
-		if (DBinfoTree.currentTreeItemIsConnNode()) {
-			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
-			closeDbConnHelper(val);
-		}
+//		if (DBinfoTree.currentTreeItemIsConnNode()) {
+//			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+//			val = getConnNodeRoot(val);
+//			closeDbConnHelper(val);
+//		}
+		TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+		val = getConnNodeRoot(val);
+		closeDbConnHelper(val);
 		DBConns.flushChoiceBoxGraphic();
 		AppWindowComponentGetter.treeView.refresh();
 	}

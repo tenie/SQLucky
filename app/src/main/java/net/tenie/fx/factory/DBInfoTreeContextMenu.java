@@ -75,7 +75,7 @@ public class DBInfoTreeContextMenu {
 		delete.setId("DeleteConnection");
 		
 		
-		refresh = new MenuItem("Refresh");
+		refresh = new MenuItem("Refresh Connection");
 		
 		refresh.setGraphic(IconGenerator.svgImageDefActive("refresh"));
 		refresh.setDisable(true);
