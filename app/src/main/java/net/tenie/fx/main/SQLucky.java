@@ -107,20 +107,7 @@ public class SQLucky extends Application {
 		MyPreloaderGif.hiden();
 	}
 	
-	public void testFinish() {
-//		while(true) {
-//			var tf = SQLucky.isPreloaderStatus();
-//			if(tf) { 
-//				break;
-//			}
-//			try {
-//				Thread.sleep(100);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//		}
-		
-	}
+ 
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -168,6 +155,9 @@ public class SQLucky extends Application {
 			Platform.runLater(() -> {
 				if(CommonUtility.isLinuxOS()) {
 //					primaryStage.setAlwaysOnTop(true);
+					primaryStage.toFront();
+				}
+				if(! primaryStage.isFocused()) {
 					primaryStage.toFront();
 				}
 //				primaryStage.toFront();

@@ -130,6 +130,10 @@ public class ScriptTabTree {
 							MyTab.addCodeEmptyTabMethod();
 						}
 					});
+				}else {
+					Platform.runLater(()->{
+						MyTab.addCodeEmptyTabMethod();
+					});
 				}
 			 
 		};
