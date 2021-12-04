@@ -1,7 +1,6 @@
 package net.tenie.fx.main;
 
 import javafx.animation.FadeTransition;
-import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.application.Preloader.StateChangeNotification.Type;
 import javafx.scene.Cursor;
@@ -30,55 +29,46 @@ public class MyPreloaderMp4 extends Preloader {
 	
 	public static void  hiden() {
 		if(loading!= null) {
+			 var tf = getFinish();
+			 while(!tf) {
+				 tf = getFinish();
+				 try {
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			 }
 			 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1200, 0.8);
 			 fadeTransition.setOnFinished(e -> {
 				 preloaderStage.close();
-				
+				  
 			  });
+			
 		}
 		
 	}
 	
-   private void hiden2() { 
-       Thread th = new Thread() {
+   private void stopTime() {
+	   Thread th = new Thread() {
 			public void run() {
-				try {
-					  while(true) {
-			        	  var val = mediaPlayer.getCurrentRate();
-			        	  var cnt =  mediaPlayer.currentCountProperty().get();
-			        	  if(val == 0 && cnt == 1) {
-			        		  Platform.runLater(() -> {
-				        		  FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1500,0.7);
-				      			  fadeTransition.setOnFinished(e -> {
-//				    				 preloaderStage.hide();
-//				    				 preloaderStage.toBack();
-				    				 preloaderStage.close(); 
-				    				 isFinish = true;
-				    			  });
-			        		  });
-			        		  break;
-			        	  }
-			        	  Thread.sleep(10);
-			        }
-				} catch (InterruptedException e) {
+				 try {
+					Thread.sleep(4600);
+					isFinish = true;
+				} catch (InterruptedException e) { 
 					e.printStackTrace();
-				} 
+				}
 			}
 		};
 		th.start();
-   }
+	}
+	 
 	
  
     @Override
     public void start(Stage primaryStage) throws Exception {
-//    	double w = 450.0;
-//    	double h = 261.0;
-    	
     	double w = 550.0;
     	double h = 319.0;
-    	
-    	
-//    	String filePath = "D:\\BaiduNetdiskDownload\\sqlucky.mp4";
+    	 
     	String filePath =	MyPreloaderMp4.class.getResource("/image/sqlucky_hd2.mp4").toExternalForm();
     	
        preloaderStage = primaryStage;
@@ -101,8 +91,6 @@ public class MyPreloaderMp4 extends Preloader {
        loading.setCursor(Cursor.WAIT);
        
        Scene scene = new Scene(loading);
-//       scene.getStylesheets().add(MyPreloaderMp4.class.getResource("/css/ProgressBar.css").toExternalForm());
-//       scene.setCursor(Cursor.WAIT);
        primaryStage.setWidth(w);
        primaryStage.setHeight( h);
        primaryStage.setMaximized(false);
@@ -110,8 +98,7 @@ public class MyPreloaderMp4 extends Preloader {
        primaryStage.initStyle(StageStyle.TRANSPARENT);//设定窗口无边框
        primaryStage.setAlwaysOnTop(true);
        primaryStage.setScene(scene);
-//       CommonUtility.fadeTransition(loading, 1800); 
-       
+       stopTime();
        primaryStage.show();
        
       

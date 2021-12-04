@@ -1,9 +1,7 @@
 package net.tenie.fx.main;
 
-import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.application.Preloader;
-import javafx.application.Preloader.StateChangeNotification.Type;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -12,11 +10,48 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class MyPreloaderGif extends Preloader {
-	private Stage preloaderStage;
- 
+	private static Stage preloaderStage; 
+	private volatile static boolean isFinish = false;
+	
+	public static boolean getFinish() {
+		return isFinish;
+	}
+	
+	public static void  hiden() {
+		if(preloaderStage!= null) {
+			 var tf = getFinish();
+			 while(!tf) {
+				 tf = getFinish();
+				 try {
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			 }
+			 Platform.runLater(()->{
+				 preloaderStage.close();
+			 });
+			 
+			
+		}
+		
+	}
+	
+   private void stopTime() {
+	   Thread th = new Thread() {
+			public void run() {
+				 try {
+					Thread.sleep(4600);
+					isFinish = true;
+				} catch (InterruptedException e) { 
+					e.printStackTrace();
+				}
+			}
+		};
+		th.start();
+	}
     @Override
     public void start(Stage primaryStage) throws Exception {
        this.preloaderStage = primaryStage;
@@ -43,20 +78,21 @@ public class MyPreloaderGif extends Preloader {
        primaryStage.setScene(scene);
        primaryStage.setAlwaysOnTop(true);
        primaryStage.show();
-		Thread th = new Thread() {
-			public void run() {
-				try {
-					Thread.sleep(5000); 
-					Platform.runLater(() -> {
-						preloaderStage.close();
-					});
-
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
-		th.start();
+       stopTime();
+//		Thread th = new Thread() {
+//			public void run() {
+//				try {
+//					Thread.sleep(5000); 
+//					Platform.runLater(() -> {
+//						preloaderStage.close();
+//					});
+//
+//				} catch (InterruptedException e) {
+//					e.printStackTrace();
+//				}
+//			}
+//		};
+//		th.start();
       
    }
  

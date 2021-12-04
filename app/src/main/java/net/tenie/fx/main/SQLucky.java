@@ -51,6 +51,17 @@ public class SQLucky extends Application {
 	private String Theme;
 	private static Logger logger = LogManager.getLogger(SQLucky.class);
 	
+	private static boolean preloaderStatus = false;
+	
+	public static boolean isPreloaderStatus() {
+		return preloaderStatus;
+	}
+
+	public static void setPreloaderStatus(boolean preloaderStatus) {
+		SQLucky.preloaderStatus = preloaderStatus;
+	}
+
+
 	static {
 		if( ! H2Db.isDev()) {
 			Log4jPrintStream.redirectSystemOut();
@@ -92,21 +103,23 @@ public class SQLucky extends Application {
 		ServiceLoad.callLoad();
 		logger.info("完成初始化"); 
 		
-		
+		MyPreloaderMp4.hiden();
+		MyPreloaderGif.hiden();
 	}
 	
 	public void testFinish() {
-		while(true) {
-			var tf = MyPreloaderMp4.getFinish();
-			if(tf) { 
-				break;
-			}
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+//		while(true) {
+//			var tf = SQLucky.isPreloaderStatus();
+//			if(tf) { 
+//				break;
+//			}
+//			try {
+//				Thread.sleep(100);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//		}
+		
 	}
 
 	@Override
@@ -146,17 +159,18 @@ public class SQLucky extends Application {
 //			primaryStage.setHeight(0);
 		    primaryStage.centerOnScreen();
 //			  primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
-		    
+
+			
 			primaryStage.show(); 
 			
 			
-			MyPreloaderMp4.hiden();
 			// 在stage show之后 需要初始化的内容, 如: 外观, 事件
 			Platform.runLater(() -> {
 				if(CommonUtility.isLinuxOS()) {
 //					primaryStage.setAlwaysOnTop(true);
 					primaryStage.toFront();
 				}
+//				primaryStage.toFront();
 				primaryStage.setMaximized(true);
 				primaryStage.setResizable(true);
 //				 primaryStage.setX(500); 
