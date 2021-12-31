@@ -10,7 +10,7 @@
 
 > 依赖:
 
-    Java 16 
+    Java 17 
     maven  latest
     git    latest
     

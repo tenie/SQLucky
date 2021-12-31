@@ -22,8 +22,8 @@
 	<properties>
 		<sqlucky.version>2.0.0</sqlucky.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>16</maven.compiler.release>
-		<javafx.version>16</javafx.version>
+		<maven.compiler.release>17</maven.compiler.release>
+		<javafx.version>17.0.2-ea+2</javafx.version>
 		<jfoenix.version>9.0.10</jfoenix.version>
 		<richtextfx.version>0.10.6</richtextfx.version>
 		<controlsfx.version>11.1.0</controlsfx.version>

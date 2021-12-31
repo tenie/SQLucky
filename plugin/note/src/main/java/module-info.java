@@ -3,8 +3,6 @@ open module SQLucky.plugin.note{
 	requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;  
-    requires javafx.swing;  
-//    requires java.sql;
 	requires SQLucky.sdk;
 	requires org.apache.commons.io;
 	requires com.jfoenix;  
