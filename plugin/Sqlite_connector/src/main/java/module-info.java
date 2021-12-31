@@ -3,7 +3,6 @@ open module SQLucky.plugin.connector.sqlite{
 	requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;  
-    requires javafx.swing;  
     requires java.sql;
 	requires SQLucky.sdk;
 	requires org.apache.commons.io;

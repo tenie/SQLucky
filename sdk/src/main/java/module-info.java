@@ -1,13 +1,10 @@
 open module SQLucky.sdk {
+	
 	requires java.desktop;
-	requires java.naming;
-	requires java.security.jgss;
-	requires java.transaction.xa;
+//	requires java.naming;
+//	requires java.transaction.xa;
 	requires java.compiler;
 	requires java.logging;
-	requires java.management;
-	requires java.rmi;
-	requires java.scripting;
 	requires java.xml;
     requires java.sql;
     requires java.sql.rowset;
@@ -16,7 +13,6 @@ open module SQLucky.sdk {
 	requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;  
-    requires javafx.swing;  
     // mods
 	requires com.jfoenix;  
 	requires org.controlsfx.controls;
