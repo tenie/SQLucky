@@ -16,7 +16,9 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.config.DBConns;
+import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.tools.IconGenerator;
 /**
@@ -127,10 +129,19 @@ public class ButtonFactory {
 			JFXButton runbtn = new JFXButton();
 			runbtn.setGraphic(IconGenerator.svgImageDefActive("play"));
 			runbtn.setTooltip(MyTooltipTool.instance("run sql     (ctrl + Enter)"));
+			runbtn.setDisable(true);
 			
 			JFXButton runLinebtn = new JFXButton();
 			runLinebtn.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
 			runLinebtn.setTooltip(MyTooltipTool.instance("run current line sql (Alt + R)"));
+			runLinebtn.setDisable(true);
+			
+			// 执行存储过程
+			JFXButton runFunPro = new JFXButton();
+			runFunPro.setGraphic(IconGenerator.svgImageDefActive("bolt"));
+			runFunPro.setId("runFunPro");
+			runFunPro.setTooltip(MyTooltipTool.instance("Execut Create Program DDL"));
+			runFunPro.setDisable(true);
 			
 			JFXButton stopbtn = new JFXButton();
 			stopbtn.setGraphic(IconGenerator.svgImage("stop", "red"));
@@ -156,12 +167,7 @@ public class ButtonFactory {
 			formatSQL.setTooltip(MyTooltipTool.instance("Format code   ctrl + shif + F  "));
 			
 			
-			// 执行存储过程
-			JFXButton runFunPro = new JFXButton();
-			runFunPro.setGraphic(IconGenerator.svgImageDefActive("bolt"));
-			runFunPro.setId("runFunPro");
-			runFunPro.setTooltip(MyTooltipTool.instance("Execut Create Program DDL"));
-			
+		
 			// 查找
 			JFXButton findSQlTxt = new JFXButton();
 			findSQlTxt.setGraphic(IconGenerator.svgImageDefActive("search"));
@@ -220,7 +226,21 @@ public class ButtonFactory {
 			
 			DBConns.flushChoiceBox(connsComboBox); // 填充内容
 			// change 事件
-			connsComboBox.getSelectionModel().selectedIndexProperty().addListener(CommonListener.choiceBoxChange());
+			connsComboBox.getSelectionModel().selectedIndexProperty()
+			.addListener((obj, ov, newValue)->{
+				System.out.println("choiceBoxChange" + newValue);
+				if(newValue!=null && newValue.intValue() > 0) {
+					runbtn.setDisable(false);
+					runLinebtn.setDisable(false);
+					runFunPro.setDisable(false);
+				}else {
+					runbtn.setDisable(true);
+					runLinebtn.setDisable(true);
+					runFunPro.setDisable(true);
+				}
+				// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
+				MainTabs.setBoxIdx( CommonUtility.tabText(  MainTabs.getActTab()), newValue.toString());
+			});
 			connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
 			ComponentGetter.connComboBox = connsComboBox;
 			
