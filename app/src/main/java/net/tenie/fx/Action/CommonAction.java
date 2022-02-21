@@ -4,44 +4,51 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.function.Consumer;
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
+
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
+
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.event.Event;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.IndexRange;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.CommonButtons;
-import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.AppWindowComponentGetter;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.Sqlucky.sdk.utility.SaveFile;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.fx.component.CommonButtons;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.fx.component.dataView.MyTabData;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.main.Restart;
-import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.SaveFile;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
 import net.tenie.lib.tools.IconGenerator;
@@ -1180,7 +1187,7 @@ public class CommonAction {
 	public static void showNotifiaction(String title) {
 		var notificationPane =  ComponentGetter.notificationPane;
 		notificationPane.setText(title);
-		  if (notificationPane.isShowing()) {
+		if (notificationPane.isShowing()) {
             notificationPane.hide();
         } else {
             notificationPane.show();

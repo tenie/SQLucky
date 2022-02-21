@@ -8,14 +8,16 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
-import org.controlsfx.control.tableview2.cell.TextField2TableCell;
 import org.fxmisc.richtext.CodeArea;
+
 import com.jfoenix.controls.JFXButton;
+
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -31,34 +33,33 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
-import net.tenie.fx.PropertyPo.SqlData;
-import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.Sqlucky.sdk.utility.Dbinfo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
-import net.tenie.fx.component.CommonButtons;
-import net.tenie.fx.component.MyTextField2TableCell;
-import net.tenie.fx.component.MyTextField2TableCell2;
-import net.tenie.fx.component.InfoTree.DBinfoTree;
-import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
-import net.tenie.fx.component.container.DataViewContainer;
-import net.tenie.fx.component.dataView.DataTableContextMenu;
-import net.tenie.fx.component.dataView.MyTabData;
-import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
+import net.tenie.fx.PropertyPo.SqlData;
+import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.CommonButtons;
+import net.tenie.fx.component.MyTextField2TableCell2;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
+import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
+import net.tenie.fx.component.container.DataViewContainer;
+import net.tenie.fx.component.dataView.DataTableContextMenu;
+import net.tenie.fx.component.dataView.MyTabData;
+import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.factory.StringPropertyListValueFactory;
 import net.tenie.fx.utility.ParseSQL;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.lib.tools.IconGenerator;
 
 /**
@@ -205,22 +206,21 @@ public class RunSQLHelper {
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
 				// 如果只有一行ddl执行
-//				if(sqllenght == 1 ) {
-//					CommonAction.showNotifiaction(msg);
+				if(sqllenght == 1  && !msg.startsWith("failed :")) {
+					CommonAction.showNotifiaction(msg);
 //					rmWaitingPane();
-//				}else {
-//				
-//				}
-				
-				// 显示字段是只读的
-				ObservableList<StringProperty> val = FXCollections.observableArrayList();
-				val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-				val.add(createReadOnlyStringProperty(msg)); 
-				int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
-				val.add(createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
-				val.add(createReadOnlyStringProperty("" + i));
-				ddlDmlpo.addData(val);
-				
+					rmWaitingPaneHold();
+				}else {
+					// 显示字段是只读的
+					ObservableList<StringProperty> val = FXCollections.observableArrayList();
+					val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+					val.add(createReadOnlyStringProperty(msg)); 
+					int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
+					val.add(createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
+					val.add(createReadOnlyStringProperty("" + i));
+					ddlDmlpo.addData(val);
+
+				}
 			}
 
 		}
@@ -735,7 +735,7 @@ public class RunSQLHelper {
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTabPane;
 			// 删除不要的tab, 保留 锁定的tab
-			deleteEmptyTab(dataTab);
+//			deleteEmptyTab(dataTab);
 			if (tabIdx > -1) {
 				dataTab.getTabs().add(tabIdx, waitTb);
 			} else {
@@ -754,6 +754,25 @@ public class RunSQLHelper {
 			if( dataTab.getTabs().contains(waitTb) ) {
 				dataTab.getTabs().remove(waitTb);
 			}
+			if(dataTab.getTabs().size() == 0) {
+				CommonAction.hideBottom();
+			}
+			deleteEmptyTab(dataTab);
+			
+		});
+
+	}
+	// 移除 等待加载动画 页面, 不删除任何界面
+	private static void rmWaitingPaneHold() {
+		Platform.runLater(() -> {
+			TabPane dataTab = ComponentGetter.dataTabPane;
+			if( dataTab.getTabs().contains(waitTb) ) {
+				dataTab.getTabs().remove(waitTb);
+			}
+			if(dataTab.getTabs().size() == 0) {
+				CommonAction.hideBottom();
+			}
+			
 			
 		});
 

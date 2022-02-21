@@ -1,14 +1,6 @@
 package net.tenie.fx.component.container;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.controlsfx.control.MasterDetailPane;
-import org.controlsfx.control.NotificationPane;
 
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
@@ -19,10 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -41,7 +31,7 @@ public class AppWindow {
 	private Label lb ;
 	private StackPane root;
 //	private VBox box;
-	NotificationPane notificationPane = new NotificationPane();
+	
 
 	public AppWindow() {
 		mainWindow = new VBox();
@@ -85,10 +75,8 @@ public class AppWindow {
 		root = new StackPane( mainWindow, lb);
 		StackPane.setAlignment(lb, Pos.CENTER);
 		root.setCursor(Cursor.WAIT);
-		notificationPane.setContent(root); 
-		// 配置 notificationPane 组件
-		configNotificationPane();
-		appScene = new Scene(notificationPane); 
+		
+		appScene = new Scene(root); 
 //		appScene = new Scene(mainWindow); 
 		ComponentGetter.primaryscene = appScene;
 		Platform.runLater(()->{
@@ -149,26 +137,6 @@ public class AppWindow {
 		 
 	}
 	
-	public void configNotificationPane() {
-		ComponentGetter.notificationPane = notificationPane;
-//	    notificationPane.setText("Hello World! Using the dark theme");
-		notificationPane.setShowFromTop(false);
-	    notificationPane.setOnShown(e->{
-	    	new Thread(() -> { 
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-					Platform.runLater(()->{
-						notificationPane.hide();
-					});
-					
-				 
-			}).start();
-	    	
-	    });
-	}
 	
 //	移除loading...
 	public void rmlb() {

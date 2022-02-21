@@ -1,14 +1,17 @@
 package net.tenie.fx.component.container;
 
+import org.controlsfx.control.NotificationPane;
+
+import javafx.application.Platform;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.utility.DraggingTabPaneSupport;
+import net.tenie.lib.tools.IconGenerator;
 
 /*   @author tenie */
 public class CodeContainer {
@@ -16,7 +19,7 @@ public class CodeContainer {
 	private AnchorPane operateBtnPane;
 	private TabPane mainTabPane;
 	private DraggingTabPaneSupport dtps = new DraggingTabPaneSupport();
-
+	private NotificationPane notificationPane = new NotificationPane();
 	public CodeContainer() {
 		container = new VBox();
 		operateBtnPane = ButtonFactory.codeAreabtnInit();
@@ -26,8 +29,14 @@ public class CodeContainer {
 
 		dtps.addSupport(mainTabPane);
 
-		VBox.setVgrow(mainTabPane, Priority.ALWAYS);
-		container.getChildren().addAll(operateBtnPane, mainTabPane);
+//		VBox.setVgrow(mainTabPane, Priority.ALWAYS);
+		notificationPane.setContent(mainTabPane); 
+		VBox.setVgrow(notificationPane, Priority.ALWAYS);
+		// 配置 notificationPane 组件
+		configNotificationPane();
+		
+		container.getChildren().addAll(operateBtnPane, notificationPane);
+//		container.getChildren().addAll(operateBtnPane, mainTabPane);
 
 		// tab 拖拽
 		DraggingTabPaneSupport support1 = new DraggingTabPaneSupport();
@@ -39,6 +48,29 @@ public class CodeContainer {
 		
 	}
 
+	public void configNotificationPane() {
+		ComponentGetter.notificationPane = notificationPane;
+//	    notificationPane.setText("Hello World! Using the dark theme");
+		notificationPane.setText(" ");
+		notificationPane.setShowFromTop(true);
+		notificationPane.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
+		
+	    notificationPane.setOnShown(e->{
+	    	new Thread(() -> { 
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e1) {
+						e1.printStackTrace();
+					}
+					Platform.runLater(()->{
+						notificationPane.hide();
+					});
+					
+				 
+			}).start();
+	    	
+	    });
+	}
 	
 
 	public VBox getContainer() {
