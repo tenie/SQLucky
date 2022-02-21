@@ -9,7 +9,7 @@ public interface SqluckyCodeAreaHolder {
 
 	public void highLighting();
 
-	public void errorHighLighting(int begin, int length, String str);
+	public void errorHighLighting(int begin, String str);
 
 	public void changeCodeAreaLineNoThemeHelper();
 

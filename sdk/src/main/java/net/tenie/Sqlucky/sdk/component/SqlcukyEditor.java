@@ -189,10 +189,10 @@ public class SqlcukyEditor {
 		area.highLighting();
 	} 
 	
-	public static void ErrorHighlighting( int begin , int length , String str) {
+	public static void ErrorHighlighting( int begin  , String str) {
 		SqluckyTab mtb = currentMyTab();
 		var area = mtb.getSqlCodeArea();
-		area.errorHighLighting(begin, length, str);
+		area.errorHighLighting(begin, str);
 	}
 	
 	public static void currentSqlCodeAreaHighLighting(String str) {
