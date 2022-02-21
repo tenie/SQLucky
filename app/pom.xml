@@ -207,6 +207,12 @@
 						<option>javafx.graphics/com.sun.javafx.geom=ALL-UNNAMED</option>
 						<option>--add-exports</option>
 						<option>javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</option>
+						
+						<option>--add-exports</option>
+						<option>javafx.graphics/com.sun.javafx.scene.traversal=org.controlsfx.controls</option>
+						<option>--add-exports</option>
+						<option>javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls</option>
+						
 						<option>--add-exports</option>
 						<option>javafx.graphics/com.sun.javafx.application=SQLucky</option>
 						<option>--add-opens</option>
