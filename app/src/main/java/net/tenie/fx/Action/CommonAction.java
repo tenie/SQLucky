@@ -1177,6 +1177,16 @@ public class CommonAction {
 			}
 	}
 	
+	public static void showNotifiaction(String title) {
+		var notificationPane =  ComponentGetter.notificationPane;
+		notificationPane.setText(title);
+		  if (notificationPane.isShowing()) {
+            notificationPane.hide();
+        } else {
+            notificationPane.show();
+        }
+	}
+	
 	public static void demo() {}
 	
 }

@@ -159,7 +159,7 @@ public class RunSQLHelper {
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		List<SqlData> errObj = new ArrayList<>();
 		
-		for (int i = 0; i < sqllenght; i++) { 
+		for (int i = 0; i < sqllenght; i++) {
 			sqlstr = allsqls.get(i).sql; 
 			sql = StrUtils.trimComment(sqlstr, "--");
 			int type = ParseSQL.parseType(sql);
@@ -192,6 +192,7 @@ public class RunSQLHelper {
 							msg = DmlDdlDao.otherSql2(conn, sql);
 							logger.info("add OTEHR sql: " + sql);
 						}
+						
 				}
 			} catch (Exception e) {
 				msg = "failed : " + e.getMessage();
@@ -203,6 +204,15 @@ public class RunSQLHelper {
 				errObj.add(sd);
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
+				// 如果只有一行ddl执行
+//				if(sqllenght == 1 ) {
+//					CommonAction.showNotifiaction(msg);
+//					rmWaitingPane();
+//				}else {
+//				
+//				}
+				
+				// 显示字段是只读的
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
 				val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
 				val.add(createReadOnlyStringProperty(msg)); 
@@ -210,6 +220,7 @@ public class RunSQLHelper {
 				val.add(createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
 				val.add(createReadOnlyStringProperty("" + i));
 				ddlDmlpo.addData(val);
+				
 			}
 
 		}
@@ -221,8 +232,7 @@ public class RunSQLHelper {
 				if (errObj.size() > 0) {
 					for (SqlData sd : errObj) {
 						int bg = sd.begin;
-						int len = sd.sql.length();
-						SqlcukyEditor.ErrorHighlighting(bg, len, sd.sql);
+						SqlcukyEditor.ErrorHighlighting(bg, sd.sql);
 					}
 				}
 			});

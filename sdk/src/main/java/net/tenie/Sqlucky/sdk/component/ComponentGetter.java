@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.controlsfx.control.MasterDetailPane;
+import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
 
 /**
@@ -49,6 +50,8 @@ public final class ComponentGetter {
 	public static Accordion infoAccordion;
 	public static TitledPane scriptTitledPane;
 	public static TitledPane dbTitledPane;
+	
+	public static NotificationPane notificationPane ;
 	
 	// 数据同步界面
 	public static Stage dataTransferStage;

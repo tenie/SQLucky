@@ -220,17 +220,13 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		// 当鼠标释放, 判断是否为双击, 是双击选中对应的内容, 在判断有没有选择的文本, 有的话就修改所有相同的文本
 		codeArea.setOnMouseReleased(mouseEvent -> {
 			if (mouseEvent.getButton() == MouseButton.PRIMARY) {  // 鼠标左键
-				if (mouseEvent.getClickCount() == 1) {
-					if(myAuto != null ) {
-						myAuto.hide();
-					}
-					
-				} 
+				int clickCount = mouseEvent.getClickCount() ;
 				String str = codeArea.getSelectedText();
 				String trimStr = str.trim();
 				int strSz = trimStr.length();
 				boolean isContinue = true;
-				if (mouseEvent.getClickCount() == 2) {
+				if (clickCount == 2) {
+					
 					if (trimStr.length() == 0) {
 						// 选中的内容为空白符, 就选中当前行
 						codeArea.selectLine();
@@ -239,9 +235,14 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 						isContinue = selectSQLDoubleClicked(codeArea); // 如果选中了内容, 就会返回false
 					}
 
-				} else if (mouseEvent.getClickCount() == 1) { // 鼠标单击
+				} else if (clickCount == 1) { // 鼠标单击
 					// 单击 括号() {} []的双击, 找到下一个括号, 对括号添加选中样式
 					isContinue = oneClickedFindParenthesis(codeArea);
+					
+					// 隐藏自动补全提示框
+					if(myAuto != null ) {
+ 						myAuto.hide();
+					}
 
 				}
 
@@ -250,7 +251,12 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 					if (strSz > 0 && !"*".equals(trimStr)) {
 						// 查找选中的字符
 						highLighting( str);
-					} 
+					} else {
+						// 双击没有选择的情况下, 重新刷新一下高亮
+						if ( clickCount == 2) {
+							highLighting();
+						}
+					}
 				}
 
 			}
@@ -416,9 +422,9 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 	
-	public void errorHighLighting( int begin , int length , String str) {
+	public void errorHighLighting( int begin , String str) {
 		try {
-			highLightingHelper.applyErrorHighlighting(codeArea , begin ,   length ,  str);
+			highLightingHelper.applyErrorHighlighting(codeArea , begin ,  str);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

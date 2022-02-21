@@ -1,31 +1,5 @@
 package net.tenie.fx.component;
 
-/**
- * Copyright (c) 2013, 2017 ControlsFX
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- * notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- * notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *     * Neither the name of ControlsFX, any associated website, nor the
- * names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL CONTROLSFX BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
  
 
 import javafx.beans.InvalidationListener;
@@ -43,114 +17,24 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 
-/**
- * A class containing a {@link TableCell} implementation that draws a
- * {@link TextField} node inside the cell.
- *
- * <p>By default, the TextField2TableCell is rendered as a {@link javafx.scene.control.Label} when not
- * being edited, and as a TextField when in editing mode. The TextField will, by
- * default, stretch to fill the entire table cell.
- * 
- * This table cell supports commit on focus lost
- *
- * @param <S> The type of the objects contained within the TableView items list.
- * @param <T> The type of the elements contained within the TableColumn.
- * /SQLucky/src/main/java/net/tenie/fx/component/MyTextField2TableCell2.java
- */
 public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
     
-    /***************************************************************************
-     *                                                                         *
-     * Static cell factories                                                   *
-     *                                                                         *
-     **************************************************************************/
-
-    /**
-     * Provides a {@link TextField} that allows editing of the cell content when
-     * the cell is double-clicked, or when
-     * {@link TableView#edit(int, TableColumn)} is called.
-     * This method will only  work on {@link TableColumn} instances which are of
-     * type String.
-     *
-     * This table cell supports commit on focus lost.
-     *
-     * @param <S> The type of the objects contained within the TableView
-     * @return A {@link Callback} that can be inserted into the
-     *      {@link TableColumn#cellFactoryProperty() cell factory property} of a
-     *      TableColumn, that enables textual editing of the content.
-     */
     public static <S> Callback<TableColumn<S,String>, TableCell<S,String>> forTableColumn() {
         return forTableColumn(new DefaultStringConverter());
     }
 
-    /**
-     * Provides a {@link TextField} that allows editing of the cell content when
-     * the cell is double-clicked, or when
-     * {@link TableView#edit(int, TableColumn) } is called.
-     * This method will work  on any {@link TableColumn} instance, regardless of
-     * its generic type. However, to enable this, a {@link StringConverter} must
-     * be provided that will convert the given String (from what the user typed
-     * in) into an instance of type T. This item will then be passed along to the
-     * {@link TableColumn#onEditCommitProperty()} callback.
-     *
-     * This table cell supports commit on focus lost.
-     *
-     * @param <S> The type of the objects contained within the TableView
-     * @param <T> The type of the elements contained within the TableColumn
-     * @param converter A {@link StringConverter} that can convert the given String
-     *      (from what the user typed in) into an instance of type T.
-     * @return A {@link Callback} that can be inserted into the
-     *      {@link TableColumn#cellFactoryProperty() cell factory property} of a
-     *      TableColumn, that enables textual editing of the content.
-     */
     public static <S,T> Callback<TableColumn<S,T>, TableCell<S,T>> forTableColumn(
             final StringConverter<T> converter) {
         return list -> new MyTextField2TableCell2<>(converter);
     }
 
-    /***************************************************************************
-     *                                                                         *
-     * Fields                                                                  *
-     *                                                                         *
-     **************************************************************************/
 
     private TextField textField;
 
-    /***************************************************************************
-     *                                                                         *
-     * Constructors                                                            *
-     *                                                                         *
-     **************************************************************************/
-
-    /**
-     * Creates a default TextField2TableCell with a null converter. Without a
-     * {@link StringConverter} specified, this cell will not be able to accept
-     * input from the TextField (as it will not know how to convert this back
-     * to the domain object). It is therefore strongly encouraged to not use
-     * this constructor unless you intend to set the converter separately.
-     * 
-     * This table cell supports commit on focus lost.
-     *
-     */
     public MyTextField2TableCell2() {
         this(null);
     }
 
-    /**
-     * Creates a TextField2TableCell that provides a {@link TextField} when put
-     * into editing mode that allows editing of the cell content. This method
-     * will work on any TableColumn instance, regardless of its generic type.
-     * However, to enable this, a {@link StringConverter} must be provided that
-     * will convert the given String (from what the user typed in) into an
-     * instance of type T. This item will then be passed along to the
-     * {@link TableColumn#onEditCommitProperty()} callback.
-     *
-     * This table cell supports commit on focus lost.
-     *
-     * @param converter A {@link StringConverter converter} that can convert
-     *      the given String (from what the user typed in) into an instance of
-     *      type T.
-     */
     public MyTextField2TableCell2(StringConverter<T> converter) {
         super(converter);
 //        this.setMaxHeight(50);
@@ -227,6 +111,14 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
                 }
             }
         });
+        
+        
+    }
+    
+    public void textFieldSetON(TextField textField) {
+    	textField.setOnAction(v->{
+    		System.out.println(textField.getText());
+    	});
     }
     
     /** {@inheritDoc} */

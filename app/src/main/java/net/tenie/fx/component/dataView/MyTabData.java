@@ -36,7 +36,7 @@ public class MyTabData extends Tab {
 	private Button detailBtn;
 	private int idx;
 	private DataTableOptionBtnsPane dtBtnPane;
-	private List<Button> optionBtns;
+//	private List<Button> optionBtns;
 	 
 
 	public MyTabData(MyTabDataValue data, int idx, boolean disable) {

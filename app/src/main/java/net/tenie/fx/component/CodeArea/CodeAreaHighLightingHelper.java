@@ -201,9 +201,13 @@ public class CodeAreaHighLightingHelper {
 		} 
     	
     }  
-    public  void applyErrorHighlighting(CodeArea codeArea , int begin , int length , String str) {
+    public  void applyErrorHighlighting(CodeArea codeArea , int begin  , String str) {
+    	int length = str.length();
+    	if(str.endsWith("\n")) {
+    		length--;
+    	}
 	    StyleSpansBuilder<Collection<String>> spansBuilder  = new StyleSpansBuilder<>();
-    	spansBuilder.add(Collections.singleton("errorword"), length);
+    	spansBuilder.add(Collections.singleton("errorword"), length);  // str.length()-1
     	StyleSpans<Collection<String>> highlighting  = spansBuilder.create();
     	Platform.runLater(() -> {
     		codeArea.setStyleSpans(begin, highlighting); 
