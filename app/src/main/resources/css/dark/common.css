@@ -60,8 +60,9 @@ CheckBoxTreeItem{
 }
 
 GridPane {
- /* -fx-border-color: #4C708C;  */
+ /* -fx-border-color: #4C708C;   -fx-border-color:  transparent ;  */
  -fx-background-color: #3C3F41;
+ 
 }
 
 /*

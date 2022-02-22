@@ -499,14 +499,17 @@ public class RunSQLHelper {
 //	    	logger.info(conns.getValue() );
 		if (conns.getValue() == null || StrUtils.isNullOrEmpty(conns.getValue().getText())) {
 			warn = true;
-			MyAlert.errorAlert( "please , choose alive DB connection!");
+//			MyAlert.errorAlert( "please , choose alive DB connection!");
+			MyAlert.notification("Error", "Please , choose alive DB connection!", MyAlert.NotificationType.Error);
 			return warn;
 		} 
 		String val = conns.getValue().getText();
 		SqluckyConnector po = DBConns.get(val);
 		if (po == null || !po.isAlive()) {
 			warn = true;
-			MyAlert.errorAlert( "please ,  connect DB !");
+//			MyAlert.errorAlert( "please ,  connect DB !");
+			MyAlert.notification("Error", "Please ,  connect DB !", MyAlert.NotificationType.Error);
+			
 		}
 		return warn;
 	}
@@ -562,7 +565,9 @@ public class RunSQLHelper {
 			if (connv == null) {
 				return;
 			} else if (connv.isClosed()) {
-				MyAlert.errorAlert( "Connect is Closed!");
+//				MyAlert.errorAlert( "Connect is Closed!");
+				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
+				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -595,7 +600,8 @@ public class RunSQLHelper {
 			if (connv == null) {
 				return;
 			} else if (connv.isClosed()) {
-				MyAlert.errorAlert( "Connect is Closed!");
+//				MyAlert.errorAlert("Connect is Closed!" );
+				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -9,6 +9,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.NotificationPane;
 import org.fxmisc.richtext.CodeArea;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
@@ -29,6 +30,7 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -1187,6 +1189,16 @@ public class CommonAction {
 	public static void showNotifiaction(String title) {
 		var notificationPane =  ComponentGetter.notificationPane;
 		notificationPane.setText(title);
+		if(! CommonConst.THEME_LIGHT.equals(ConfigVal.THEME)) { 
+			if( ! notificationPane.getStyleClass().contains(NotificationPane.STYLE_CLASS_DARK)) {
+				notificationPane.getStyleClass().add(NotificationPane.STYLE_CLASS_DARK);
+			} 
+		}else {
+			if( notificationPane.getStyleClass().contains(NotificationPane.STYLE_CLASS_DARK)) {
+				notificationPane.getStyleClass().remove(NotificationPane.STYLE_CLASS_DARK);
+			} 
+		}
+		 
 		if (notificationPane.isShowing()) {
             notificationPane.hide();
         } else {

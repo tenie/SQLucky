@@ -4,7 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import org.controlsfx.control.Notifications;
+
 import com.jfoenix.controls.JFXButton;
+
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,7 +16,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.config.CommonConst;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 
 public class MyAlert {
 	public static void infoAlert(String title, String containTxt) {
@@ -109,4 +116,58 @@ public class MyAlert {
 		DialogTools.setSceneAndShow(scene, stage);  
 	}
 	
+	
+	 public static void notification(String title, String str, NotificationType type ) {
+		 
+		 Notifications notificationBuilder = Notifications.create()
+	                .title(title)
+	                .text(str)
+//	                .graphic(graphic)
+	                .hideAfter(Duration.seconds(2.5))
+	                .position(Pos.TOP_RIGHT)
+//	                .onAction(e -> System.out.println("Notification clicked on!"))
+//	                .threshold((int) thresholdSlider.getValue(),
+//	                        Notifications.create().title("Threshold Notification"))
+	                ;
+		if(! CommonConst.THEME_LIGHT.equals(ConfigVal.THEME)) {
+			 notificationBuilder.darkStyle();
+		}
+		 switch (type) {
+		 case Error:
+//			 notificationBuilder.graphic( ComponentGetter.ERROR);
+			 notificationBuilder.showError();
+			 break;
+			 
+		 case Warning:
+//			 notificationBuilder.graphic( ComponentGetter.WARN);
+			 notificationBuilder.showWarning();
+			 break;
+			 
+		 case Information:
+//			 notificationBuilder.graphic( ComponentGetter.INFO);
+			 notificationBuilder.showInformation();
+			 break;
+		
+		 case Confirm:
+//			 notificationBuilder.graphic( ComponentGetter.INFO);
+			 notificationBuilder.showConfirm();
+			 break;
+			 
+		default:
+//			notificationBuilder.graphic( ComponentGetter.INFO);
+			notificationBuilder.show();
+			break;
+		
+		 }
+		 
+	 }
+	 
+	 public  enum NotificationType{
+		 Error,
+		 Warning,
+		 Information,
+		 Confirm,
+		 show;
+		 
+	 }
 }
