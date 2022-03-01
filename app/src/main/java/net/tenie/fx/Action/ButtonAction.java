@@ -41,7 +41,7 @@ public class ButtonAction {
 			Map<String, ObservableList<StringProperty>> modifyData = MyTabData.getModifyData();
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
 			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
-
+			boolean btnDisable = true;
 			if (!modifyData.isEmpty()) {
 				for (String key : modifyData.keySet()) {
 					// 获取对应旧数据
@@ -63,7 +63,7 @@ public class ButtonAction {
 						ddlDmlpo.addData(val);
 					} catch (Exception e1) {
 						e1.printStackTrace();
-						saveBtn.setDisable(true);
+						btnDisable = false;
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
 						String 	msg = "failed : " + e1.getMessage();
 						msg += "\n"+dpo.translateErrMsg(msg);
@@ -110,9 +110,10 @@ public class ButtonAction {
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
+					btnDisable = false;
 					ObservableList<StringProperty> val = FXCollections.observableArrayList();
 					val.add(new SimpleStringProperty(e1.getMessage()));
-					val.add(new SimpleStringProperty("fail."));
+					val.add(new SimpleStringProperty("failed"));
 					val.add(new SimpleStringProperty(""));
 					ddlDmlpo.addData(val);
 				}
@@ -121,7 +122,7 @@ public class ButtonAction {
 			// 保存按钮禁用
 //			FlowPane fp = (FlowPane) saveBtn.getParent();
 //			fp.getChildren().get(0).setDisable(true);
-			saveBtn.setDisable(true);
+			saveBtn.setDisable(btnDisable);
 			RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
 
 		}

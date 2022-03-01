@@ -206,7 +206,7 @@ public class RunSQLHelper {
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
 				// 如果只有一行ddl执行
-				if(sqllenght == 1  && !msg.startsWith("failed :")) {
+				if(sqllenght == 1  && !msg.startsWith("failed")) {
 					CommonAction.showNotifiaction(msg);
 //					rmWaitingPane();
 					rmWaitingPaneHold();
@@ -259,12 +259,25 @@ public class RunSQLHelper {
 			table.getColumns().addAll(cols);
 			table.setItems(alldata); 
 
-			 
+			rmWaitingPaneHold();
 			// 渲染界面
 			if (!thread.isInterrupted()) {
-				MyTabData mtd = MyTabData.dtTab(dvt, -1, true);
-				rmWaitingPane();
-				mtd.show();
+				boolean showtab = true;
+				if(ddlDmlpo.getAllDatas().size() == 1) {
+					var list = ddlDmlpo.getAllDatas().get(0);
+					var strfield = list.get(1).get();
+					if(!strfield.startsWith("failed")){
+						CommonAction.showNotifiaction(strfield);
+						showtab = false;
+					}
+				}
+				if(showtab){
+					MyTabData mtd = MyTabData.dtTab(dvt, -1, true);
+//					rmWaitingPane(); 
+					
+					mtd.show();
+				}
+
 			
 			}
 
