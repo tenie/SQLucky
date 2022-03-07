@@ -56,6 +56,8 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  *
  */
 public class ConnectionEditor {
+	// 编辑连接时记录连接状态
+	public  static boolean editLinkStatus = false;
 	private static Logger logger = LogManager.getLogger(ConnectionEditor.class);
 	public static Stage CreateModalWindow(VBox vb) {
 
@@ -242,7 +244,8 @@ public class ConnectionEditor {
 				port.setDisable(true);
 				h2FilePath.setVisible(true);
 			}else {
-				port.setDisable(false);
+//				port.disableProperty().unbind();
+//				port.setDisable(false);
 				port.disableProperty().bind(isUseJdbcUrl.selectedProperty());
 				h2FilePath.setVisible(false);
 			}
@@ -405,13 +408,23 @@ public class ConnectionEditor {
 				dp.getDbVendor(), dp.getDefaultSchema(), dp.getDbName(), dp);
 	}
 
-	public static void editDbConn() {
+	public static void editDbConn() { 
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+			boolean tf = ConnectionEditor.treeItemIsLink(val);
+			if(tf) {
+				ConnectionEditor.closeDbConn();
+				ConnectionEditor.editLinkStatus = true;
+			}else {
+				ConnectionEditor.editLinkStatus = false;
+			}
+			  
 			String str = val.getValue().getName();
 			SqluckyConnector dp = DBConns.get(str);
 			ConnectionEditor.ConnectionInfoSetting(dp);
-			 
+		}else {
+			CommonAction.showNotifiaction("编辑需要选中连接名称!");
+//			MyAlert.notification("Error", "编辑需要选中连接名称!", MyAlert.NotificationType.Error);
 		}
 	}
 
@@ -482,13 +495,32 @@ public class ConnectionEditor {
 			// 修改颜色
 			val.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
 			// 删除子节点
-//			val.getChildren().remove(0, val.getChildren().size());
 			val.getChildren().clear();
 
 		}
 	}
 	
-	private static TreeItem<TreeNodePo> getConnNodeRoot(TreeItem<TreeNodePo> val) {
+	// 判断节点是否连接状态
+	public static boolean treeItemIsLink() {
+		TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+		val = getConnNodeRoot(val);
+		return treeItemIsLink(val);
+	}
+	// 判断节点是否连接状态
+	public static boolean treeItemIsLink(TreeItem<TreeNodePo> val) {
+		String str = val.getValue().getName();
+		logger.info(str);
+		SqluckyConnector dp = DBConns.get(str);
+		if (dp != null ) {
+			if(dp.isAlive()) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
+	public  static TreeItem<TreeNodePo> getConnNodeRoot(TreeItem<TreeNodePo> val) {
 		TreeNodePo tnp = val.getValue();
 		if(tnp.getType()== null) {
 			return val;
@@ -501,11 +533,6 @@ public class ConnectionEditor {
 	// 关闭链接
 	public static void closeDbConn() {
 		logger.info("closeConnEvent()");
-//		if (DBinfoTree.currentTreeItemIsConnNode()) {
-//			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
-//			val = getConnNodeRoot(val);
-//			closeDbConnHelper(val);
-//		}
 		TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
 		val = getConnNodeRoot(val);
 		closeDbConnHelper(val);
@@ -548,16 +575,18 @@ public class ConnectionEditor {
 		Button saveBtn = new Button("Save");
 		saveBtn.setOnMouseClicked(e -> {
 			SqluckyConnector connpo = assembleSqlCon.apply("");
+			TreeItem<TreeNodePo> item ;
 			if (connpo != null) {  
 				// 先删除树中的节点
 				if (dp != null) {
 					DBConns.remove(dp.getConnName());
 //					DBinfoTree.rmTreeItemByName(dp.getConnName());
-					TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
-					val.getValue().setName(connectionName.getText() );
+//					TreeItem<TreeNodePo> val 
+					item = DBinfoTree.getTrewViewCurrentItem();
+					item.getValue().setName(connectionName.getText() );
 					AppWindowComponentGetter.treeView.refresh();
 				}else {
-					TreeItem<TreeNodePo> item = new TreeItem<>(
+					item = new TreeItem<>(
 							new TreeNodePo(connectionName.getText(), IconGenerator.svgImageUnactive("unlink")));
 					DBinfoTree.treeRootAddItem(item); 
 				}
@@ -566,6 +595,12 @@ public class ConnectionEditor {
 				DBConns.add(connpo.getConnName(), connpo);
 				connpo = ConnectionDao.createOrUpdate(H2Db.getConn(), connpo);
 				H2Db.closeConn();
+				
+				//TODO 打开连接
+				if( editLinkStatus) {
+					CommonAction.openConn(item);
+				}
+				
 			} else {
 				return;
 			}

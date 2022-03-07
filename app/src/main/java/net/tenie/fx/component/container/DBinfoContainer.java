@@ -25,7 +25,7 @@ import net.tenie.fx.factory.ButtonFactory;
  */
 public class DBinfoContainer {
 	private VBox container;
-	private FlowPane treeBtnPane;
+	private FlowPane treeBtnPane;	// 按钮面板
 	private TreeView<TreeNodePo> treeView;
 	private AnchorPane filter;
 	private DBinfoTree dbInfoTree;

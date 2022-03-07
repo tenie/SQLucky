@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.MenuItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -30,13 +29,11 @@ public class MyTabDataValue {
 	private int rows = 0;
 
 	// table id + row num 组成key ,保存对于行的数据
-	private Map<String, ObservableList<StringProperty>> newLineDate; // = new HashMap<>();
+	private Map<String, ObservableList<StringProperty>> newLineDate;
 	// table id + row num 组成key ,保存对于行的原始数据
-	private Map<String, ObservableList<StringProperty>> oldval ;// = new HashMap<>();
-	// 表字段的信息
-//	private ObservableList<SqlFieldPo> tabCol = FXCollections.observableArrayList();
+	private Map<String, ObservableList<StringProperty>> oldval ;
 	// 待insert的 数据
-	private Map<String, ObservableList<StringProperty>> appendData ; //= new HashMap<>();
+	private Map<String, ObservableList<StringProperty>> appendData ;
 
 	// 列的右键菜单 menuItem
 	private List<MenuItem> menuItems = new ArrayList<>();
@@ -46,7 +43,6 @@ public class MyTabDataValue {
 	// 数据添加到表格 更简洁的api
 	ObservableList<ObservableList<StringProperty>> rawData;
 
-
 	// tab中的表格
 	private FilteredTableView<ObservableList<StringProperty>> table;
 
@@ -55,22 +51,30 @@ public class MyTabDataValue {
 	public void clean() {
 		menuItems.clear();
 		menuItems = null;
-		table.getItems().clear();
+		if(table != null) {
+			table.getItems().clear();
+		}
 		table = null;
-		rawData.forEach(v -> {
-			v.clear();
-		});
-		rawData.clear();
+		
+		if(rawData!=null) {
+			rawData.forEach(v -> {
+				v.clear();
+			});
+			rawData.clear();
+		}		
 		rawData = null;
-		colss.clear();
+		
+		if(colss!=null) {
+			colss.clear();
+		}
 		colss = null;  
-//		tabCol.clear();
-//		tabCol = null;
 		
 		if(appendData != null) appendData.clear();
 		appendData = null;
+		
 		if(oldval != null) oldval.clear();
 		oldval = null;
+		
 		if(newLineDate != null) newLineDate.clear();
 		newLineDate = null;
 

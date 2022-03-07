@@ -140,6 +140,11 @@ public class DBinfoTree {
 		TreeItem<TreeNodePo> ctt = getTrewViewCurrentItem();
 		return allconnsItem().contains(ctt);
 	}
+	
+	// 判断当前选中的节点是连接节点
+	public static boolean currentTreeItemIsConnNode(TreeItem<TreeNodePo> ctt) { 
+		return allconnsItem().contains(ctt);
+	}
 
 	// 获取当前选中的节点
 	public static TreeItem<TreeNodePo> getTrewViewCurrentItem() {

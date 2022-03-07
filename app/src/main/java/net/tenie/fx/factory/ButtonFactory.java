@@ -5,15 +5,18 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -63,8 +66,18 @@ public class ButtonFactory {
 		JFXButton editConn = new JFXButton();
 		editConn.setGraphic(IconGenerator.svgImageDefActive("edit"));
 		editConn.setOnMouseClicked(e->{
-			ConnectionEditor.closeDbConn();
+//			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem(); 
+//			val = ConnectionEditor.getConnNodeRoot(val);
+//			boolean tf = ConnectionEditor.treeItemIsLink(val);
+//			if(tf) { 
+//				ConnectionEditor.closeDbConn();
+//				ConnectionEditor.editLinkStatus = true;
+//			}else {
+//				ConnectionEditor.editLinkStatus = false;
+//			}
+			
 			ConnectionEditor.editDbConn();
+			
 		});
 		editConn.setTooltip(MyTooltipTool.instance("Edit DB Connection"));
 

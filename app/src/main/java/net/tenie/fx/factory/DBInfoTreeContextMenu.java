@@ -50,7 +50,7 @@ public class DBInfoTreeContextMenu {
 		
 	    Edit = new MenuItem("Edit Connection");
 		Edit.setOnAction(e->{
-			ConnectionEditor.closeDbConn();
+//			ConnectionEditor.closeDbConn();
 			ConnectionEditor.editDbConn();
 		});
 		Edit.setGraphic(IconGenerator.svgImageDefActive("edit"));
