@@ -18,8 +18,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
@@ -203,7 +202,7 @@ public class SelectDao {
 			    	ProcedureFieldPo po = pfp.get(i);
 			    	if(po.isOut()) {
 			    		 Object objRtn =   call.getObject( i+1 );
-			    		 rowval.add(RunSQLHelper.createReadOnlyStringProperty(objRtn.toString()));
+			    		 rowval.add(CommonAction.createReadOnlyStringProperty(objRtn.toString()));
 			    		 
 			    		// 字段信息
 			    		 SqlFieldPo sfpo  = new SqlFieldPo();

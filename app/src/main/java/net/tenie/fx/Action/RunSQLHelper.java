@@ -213,11 +213,11 @@ public class RunSQLHelper {
 				}else {
 					// 显示字段是只读的
 					ObservableList<StringProperty> val = FXCollections.observableArrayList();
-					val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-					val.add(createReadOnlyStringProperty(msg)); 
+					val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+					val.add(CommonAction.createReadOnlyStringProperty(msg)); 
 					int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
-					val.add(createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
-					val.add(createReadOnlyStringProperty("" + i));
+					val.add(CommonAction.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
+					val.add(CommonAction.createReadOnlyStringProperty("" + i));
 					ddlDmlpo.addData(val);
 
 				}
@@ -358,11 +358,11 @@ public class RunSQLHelper {
 		
 		if(StrUtils.isNotNullOrEmpty(msg)) {
 			ObservableList<StringProperty> val = FXCollections.observableArrayList();
-			val.add(createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-			val.add(createReadOnlyStringProperty(msg)); 
+			val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+			val.add(CommonAction.createReadOnlyStringProperty(msg)); 
 			int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
-			val.add(createReadOnlyStringProperty("call procedure "+ sqlstr.subSequence(0, endIdx) + " ... ")); 
-			val.add(createReadOnlyStringProperty("" ));
+			val.add(CommonAction.createReadOnlyStringProperty("call procedure "+ sqlstr.subSequence(0, endIdx) + " ... ")); 
+			val.add(CommonAction.createReadOnlyStringProperty("" ));
 			ddlDmlpo.addData(val);
 			showExecuteSQLInfo(ddlDmlpo);
 		}
@@ -871,45 +871,8 @@ public class RunSQLHelper {
 		sds = epurateSql(str, start);
 		return sds;
 	}
-	// 字段值被修改还原, 不允许修改
-	public static   StringProperty createReadOnlyStringProperty(String val ) {
-		StringProperty sp =  new StringProperty() {
-			@Override
-			public String get() { 
-				return val;
-			}
-			
-			@Override
-			public void bind(ObservableValue<? extends String> arg0) { }
-			@Override
-			public boolean isBound() { 
-				return false;
-			}
-			@Override
-			public void unbind() { }
-
-			@Override
-			public Object getBean() { 
-				return null;
-			}
-			@Override
-			public String getName() { 
-				return null;
-			} 
-			@Override
-			public void addListener(ChangeListener<? super String> arg0) { } 
-			@Override
-			public void removeListener(ChangeListener<? super String> arg0) { } 
-			@Override
-			public void addListener(InvalidationListener arg0) { }
-			@Override
-			public void removeListener(InvalidationListener arg0) { } 		
-			@Override
-			public void set(String arg0) {}  
-		}; 		
-		return sp;
-	}
-			
+	
+		
 		
 }
  

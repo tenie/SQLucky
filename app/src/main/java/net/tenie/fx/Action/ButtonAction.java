@@ -52,10 +52,10 @@ public class ButtonAction {
 						String msg = UpdateDao.execUpdate(conn, tabName, newd, old, fpos);
 						
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
-						val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-						val.add(RunSQLHelper.createReadOnlyStringProperty(msg)); 
-						val.add(RunSQLHelper.createReadOnlyStringProperty("success")); 
-						val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
+						val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+						val.add(CommonAction.createReadOnlyStringProperty(msg)); 
+						val.add(CommonAction.createReadOnlyStringProperty("success")); 
+						val.add(CommonAction.createReadOnlyStringProperty("" ));
 						
 //						val.add(new SimpleStringProperty(msg));
 //						val.add(new SimpleStringProperty("success"));
@@ -70,10 +70,10 @@ public class ButtonAction {
 //						if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
 //							msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
 //						}
-						val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-						val.add(RunSQLHelper.createReadOnlyStringProperty(msg)); 
-						val.add(RunSQLHelper.createReadOnlyStringProperty("failed")); 
-						val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
+						val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+						val.add(CommonAction.createReadOnlyStringProperty(msg)); 
+						val.add(CommonAction.createReadOnlyStringProperty("failed")); 
+						val.add(CommonAction.createReadOnlyStringProperty("" ));
 						
 						ddlDmlpo.addData(val);
 					}
@@ -152,10 +152,10 @@ public class ButtonAction {
 				String msg = DeleteDao.execDelete(conn, tabName, sps, fpos);
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
 
-				val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-				val.add(RunSQLHelper.createReadOnlyStringProperty(msg)); 
-				val.add(RunSQLHelper.createReadOnlyStringProperty("success")); 
-				val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
+				val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+				val.add(CommonAction.createReadOnlyStringProperty(msg)); 
+				val.add(CommonAction.createReadOnlyStringProperty("success")); 
+				val.add(CommonAction.createReadOnlyStringProperty("" ));
 				
 				ddlDmlpo.addData(val);
 
@@ -166,10 +166,10 @@ public class ButtonAction {
 
 		} catch (Exception e1) {
 			ObservableList<StringProperty> val = FXCollections.observableArrayList();					
-			val.add(RunSQLHelper.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-			val.add(RunSQLHelper.createReadOnlyStringProperty(e1.getMessage() )); 
-			val.add(RunSQLHelper.createReadOnlyStringProperty("fail.")); 
-			val.add(RunSQLHelper.createReadOnlyStringProperty("" ));
+			val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+			val.add(CommonAction.createReadOnlyStringProperty(e1.getMessage() )); 
+			val.add(CommonAction.createReadOnlyStringProperty("fail.")); 
+			val.add(CommonAction.createReadOnlyStringProperty("" ));
 			
 			ddlDmlpo.addData(val);
 		} finally {

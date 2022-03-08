@@ -16,6 +16,10 @@ import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Node;
@@ -1205,6 +1209,46 @@ public class CommonAction {
             notificationPane.show();
         }
 	}
+	
+	// 字段值被修改还原, 不允许修改
+		public static   StringProperty createReadOnlyStringProperty(String val ) {
+			StringProperty sp =  new StringProperty() {
+				@Override
+				public String get() { 
+					return val;
+				}
+				
+				@Override
+				public void bind(ObservableValue<? extends String> arg0) { }
+				@Override
+				public boolean isBound() { 
+					return false;
+				}
+				@Override
+				public void unbind() { }
+
+				@Override
+				public Object getBean() { 
+					return null;
+				}
+				@Override
+				public String getName() { 
+					return null;
+				} 
+				@Override
+				public void addListener(ChangeListener<? super String> arg0) { } 
+				@Override
+				public void removeListener(ChangeListener<? super String> arg0) { } 
+				@Override
+				public void addListener(InvalidationListener arg0) { }
+				@Override
+				public void removeListener(InvalidationListener arg0) { } 		
+				@Override
+				public void set(String arg0) {}  
+			}; 		
+			return sp;
+		}
+			
 	
 	public static void demo() {}
 	

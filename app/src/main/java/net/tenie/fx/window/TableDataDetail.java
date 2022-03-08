@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.fx.component.MyTextField2ReadOnlyTableCell;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.fx.dao.SelectDao;
@@ -50,7 +51,7 @@ public class TableDataDetail {
 				StringProperty strp = new SimpleStringProperty(tyNa);
 				p.setValue(strp);
 			}
-			showTableDetail("Field Name", fieldValue, fields);
+			showTableDetail(tablename, "Field Name", fieldValue, fields);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -64,6 +65,7 @@ public class TableDataDetail {
 		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 
 		MyTabDataValue dvt = mtd.getTableData();
+		String tabName = dvt.getTabName();
 		ObservableList<SqlFieldPo> fields = dvt.getColss();
 
 		ObservableList<StringProperty> rowValues = null;
@@ -94,10 +96,10 @@ public class TableDataDetail {
 				p.setValue(strp);
 			}
 		}
-		showTableDetail("Field Name", fieldValue, fields);
+		showTableDetail(tabName, "Field Name", fieldValue, fields);
 	}
 
-	private static void showTableDetail(String colName1, String colName2, ObservableList<SqlFieldPo> fields) {
+	private static void showTableDetail(String tableName ,String colName1, String colName2, ObservableList<SqlFieldPo> fields) {
 		FlowPane fp = new FlowPane();
 
 		TextField tf1 = new TextField("");
@@ -144,23 +146,27 @@ public class TableDataDetail {
 						tf3.setText(p.getColumnClassName().get());
 					}
 				});
-		TableColumn<SqlFieldPo, String> col = new TableColumn<>(colName1); // "Field Name"
-		col.setCellValueFactory(cellData -> {
+		TableColumn<SqlFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
+		// 给单元格赋值
+		fieldNameCol.setCellValueFactory(cellData -> {
 			return cellData.getValue().getColumnLabel();
 		});
-		col.setCellFactory(TextFieldTableCell.forTableColumn());
-		col.setEditable(false);
-		col.setPrefWidth(200);
+		
+		
+		
+		fieldNameCol.setCellFactory(MyTextField2ReadOnlyTableCell.forTableColumn());
+//		fieldNameCol.setEditable(false);
+		fieldNameCol.setPrefWidth(200);
 
-		tv.getColumns().add(col);
+		tv.getColumns().add(fieldNameCol);
 
-		col = new TableColumn<>(colName2);
-		col.setPrefWidth(200);
-		col.setCellValueFactory(cellData -> {
+		TableColumn<SqlFieldPo, String> valueCol = new TableColumn<>(colName2);
+		valueCol.setPrefWidth(200);
+		valueCol.setCellValueFactory(cellData -> {
 			return cellData.getValue().getValue();
 		});
-		col.setCellFactory(TextFieldTableCell.forTableColumn());
-		tv.getColumns().add(col);
+		valueCol.setCellFactory(TextFieldTableCell.forTableColumn());
+		tv.getColumns().add(valueCol);
 
 		tv.getItems().addAll(fields);
 
@@ -195,7 +201,7 @@ public class TableDataDetail {
 
 		});
 
-		new ModalDialog(subvb, tv, "Table Info");
+		new ModalDialog(subvb, tv, tableName);
 	}
 
 	public static final void bindTableViewFilter(TableView<SqlFieldPo> tableView,
