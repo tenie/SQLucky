@@ -127,7 +127,8 @@ public class H2Connector extends DbConnector {
 				getDbVendor(),
 				schema,
 				getDbName(),
-				getJdbcUrl()
+				getJdbcUrl(),
+				getAutoConnect()
 				
 				);
 		var dbc = new H2Connector(val);

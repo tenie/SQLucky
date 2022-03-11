@@ -31,7 +31,7 @@ public class H2Db {
 	private static AtomicInteger connTimes = new AtomicInteger(0);
 	
 	private static String H2_DB_NAME  = "h2db";
-	private static int  H2_DB_VERSION = 3;
+	private static int  H2_DB_VERSION = 4;
 	
 	private static String USER = "sa";
 	private static String PASSWD = "xyz123qweasd";
@@ -158,7 +158,8 @@ public class H2Db {
 					"VENDOR",  
 					"SCHEMA",  
 					"DB_NAME",  
-					"jdbc:h2:" + path  
+					"jdbc:h2:" + path  ,
+					false
 			);
 			SqluckyConnector cnor = new MyH2Connector(connPo);
 			List<String> tableNames = new ArrayList<>();

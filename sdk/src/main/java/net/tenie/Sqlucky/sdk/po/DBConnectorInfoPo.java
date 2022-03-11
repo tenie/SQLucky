@@ -30,9 +30,10 @@ public class DBConnectorInfoPo {
 	private boolean JdbcUrlIsFile = false;
 	private Map<String, DbSchemaPo> schemas;
 	private boolean jdbcUrlUse = false;
-
+	private boolean autoConnect = false;
+	
 	public DBConnectorInfoPo(String connName, String driver, String host, String port, String user, String passWord,
-			String dbVendor, String defaultSchema,String dbName , String jdbcurlStr
+			String dbVendor, String defaultSchema,String dbName , String jdbcurlStr, boolean autoConn
 	) { 
 		this.connName = connName;
 		this.hostOrFile = host;
@@ -53,6 +54,7 @@ public class DBConnectorInfoPo {
 			jdbcUrlUse = true;
 		}
 		this.jdbcUrl = jdbcurlStr;
+		this.autoConnect = autoConn;
 //		this.exportDDL = exportDDL;
 
 //		setExportDDL(dbVendor);
@@ -236,6 +238,20 @@ public class DBConnectorInfoPo {
 
 	public void setJdbcUrlUse(boolean jdbcUrlUse) {
 		this.jdbcUrlUse = jdbcUrlUse;
+	}
+
+
+
+
+	public boolean isAutoConnect() {
+		return autoConnect;
+	}
+
+
+
+
+	public void setAutoConnect(boolean autoConnect) {
+		this.autoConnect = autoConnect;
 	}
 
 

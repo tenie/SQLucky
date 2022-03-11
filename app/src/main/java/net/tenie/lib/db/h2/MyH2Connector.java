@@ -110,8 +110,8 @@ public class MyH2Connector extends DbConnector {
 				getDbVendor(),
 				schema,
 				getDbName(),
-				getJdbcUrl()
-				
+				getJdbcUrl(),
+				getAutoConnect()
 				);
 		var dbc = new MyH2Connector(val);
 		
@@ -157,5 +157,7 @@ public class MyH2Connector extends DbConnector {
 		}
 		return getConnPo().getConn();
 	}
+
+ 
 
 }

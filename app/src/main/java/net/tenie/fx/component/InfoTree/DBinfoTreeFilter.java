@@ -185,7 +185,7 @@ public class DBinfoTreeFilter {
 				// schema数据对象有数据的 情况, 创建一个新的连接节点并返回它
 				if(tempcip.getSchemaNode().getChildren().size() > 0) {
 					MyTreeItem<TreeNodePo> newConn = new MyTreeItem<TreeNodePo>(
-							new TreeNodePo(connpo.getConnName(), IconGenerator.svgImage("link", "#7CFC00")));
+							new TreeNodePo(connpo.getConnName(), IconGenerator.svgImage("link", "#7CFC00")), connpo);
 					
 					newConn.getChildren().add(tempcip.getSchemaNode());
 					newConn.getValue().setConnItemContainer(tempcip); 

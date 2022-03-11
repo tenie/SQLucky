@@ -14,6 +14,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
+import net.tenie.fx.component.InfoTree.DBinfoTreeButtonFactory;
 import net.tenie.fx.component.InfoTree.DBinfoTreeFilter;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.factory.ButtonFactory;
@@ -37,7 +38,7 @@ public class DBinfoContainer {
 		// 容器
 		container = new VBox();
 		// 按钮
-		treeBtnPane = ButtonFactory.createTreeViewbtn();  
+		treeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn();  
 		// 数据库信息
 		dbInfoTree = new DBinfoTree();
 		treeView =  DBinfoTree.DBinfoTreeView ;  

@@ -50,6 +50,7 @@ public interface SqluckyConnector {
 	public String getPort();
 	public String getDefaultSchema();
 	public String getRealDefaultSchema();
+	public boolean getAutoConnect();
 	
 	public String getJdbcUrl();
 	public boolean isJdbcUrlUse();

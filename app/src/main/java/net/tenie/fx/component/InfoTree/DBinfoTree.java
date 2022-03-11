@@ -92,16 +92,33 @@ public class DBinfoTree {
 		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
 		if (datas != null && datas.size() > 0) {
 			for (SqluckyConnector po : datas) {
-				var item = new MyTreeItem<TreeNodePo>(new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")));
+				var item = new MyTreeItem<TreeNodePo>(new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")), po);
 				ls.add(item); 
 			} 
 		} 
 		Consumer< String > cr = v->{  
 			if(ls.size() > 0) {
+				// 连接方法缓存
 				Platform.runLater(()->{
 					rootNode.getChildren().addAll(ls);
-					DBConns.addAll(datas);
+					DBConns.addAll(datas); 
 				});
+				Platform.runLater(()->{
+					// 打开自动连接的连接
+					for(MyTreeItem treeItem :ls) {
+						Platform.runLater(()->{
+							SqluckyConnector  scp = treeItem.getSqluckyConn();
+							if( scp !=null ) {
+								boolean autoConn = scp.getAutoConnect();
+								if(autoConn) {
+									CommonAction.openConn(treeItem);
+								}
+							}
+							
+						});
+					}
+				});
+				
 			}
 		};
 		CommonUtility.addInitTask(cr);

@@ -322,6 +322,9 @@ public abstract class DbConnector implements SqluckyConnector {
 		return this.connPo.isJdbcUrlUse();
 	}
 	
+	public boolean getAutoConnect() {
+		return this.connPo.isAutoConnect();
+	}
 //	public boolean isSqlite() {
 ////		if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
 ////			return true;

@@ -122,7 +122,8 @@ public class SqliteConnector extends DbConnector {
 				getDbVendor(),
 				schema,
 				getDbName(),
-				getJdbcUrl()
+				getJdbcUrl(),
+				getAutoConnect()
 				);
 		var dbc = new SqliteConnector(val);
 		

@@ -120,7 +120,8 @@ public class H2FileConnector extends DbConnector {
 				getDbVendor(),
 				schema,
 				getDbName(),
-				getJdbcUrl()
+				getJdbcUrl(),
+				getAutoConnect()
 				
 				);
 		var dbc = new H2FileConnector(val);

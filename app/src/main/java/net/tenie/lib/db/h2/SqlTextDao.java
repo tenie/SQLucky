@@ -34,6 +34,7 @@ public class SqlTextDao {
 			"  `SCHEMA` VARCHAR(200)  ,\n" + 
 			"  `DB_NAME` VARCHAR(200)  ,\n" + 
 			"  `COMMENT` VARCHAR(200) DEFAULT NULL,\n" +  
+			"  `AUTO_CONNECT` INT(1) DEFAULT '0',\n" + 
 			"  `CREATED_AT` DATETIME DEFAULT NULL,\n" + 
 			"  `UPDATED_AT` DATETIME DEFAULT NULL,\n" + 
 			"  `RECORD_VERSION` INT(11) DEFAULT '0',\n" + 

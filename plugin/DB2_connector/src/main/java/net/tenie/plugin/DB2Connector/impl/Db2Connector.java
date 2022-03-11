@@ -128,7 +128,8 @@ public class Db2Connector extends DbConnector {
 				getDbVendor(),
 				schema,
 				getDbName(),
-				getJdbcUrl()
+				getJdbcUrl(),
+				getAutoConnect()
 				);
 		var dbc = new Db2Connector(val);
 		

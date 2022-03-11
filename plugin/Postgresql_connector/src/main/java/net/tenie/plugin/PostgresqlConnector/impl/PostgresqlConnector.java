@@ -120,7 +120,8 @@ public class PostgresqlConnector extends DbConnector {
 				getDbVendor(),
 				schema,
 				getDbName(),
-				getJdbcUrl()
+				getJdbcUrl(),
+				getAutoConnect()
 				);
 		var dbc = new PostgresqlConnector(val);
 		

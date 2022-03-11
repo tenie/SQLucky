@@ -92,6 +92,15 @@ public class ConnectionEditor {
 		stage.getIcons().add(new Image(ConnectionEditor.class.getResourceAsStream(ConfigVal.appIcon)));
 		stage.setMaximized(false);
 		stage.setResizable(false);
+		stage.setOnHidden(e->{
+			//TODO 打开连接
+			if( editLinkStatus) {
+				Platform.runLater(()->{
+					var item = DBinfoTree.getTrewViewCurrentItem();
+					CommonAction.openConn(item);
+				});
+			}
+		});
 		return stage;
 	}
 
@@ -125,6 +134,10 @@ public class ConnectionEditor {
 		Label lbdefaultSchemaStr = new Label(defaultSchemaStr);
 		Label lbuserStr = new Label(userStr);
 		Label lbpasswordStr = new Label(passwordStr);
+		
+		Label autoConnect = new Label("Auto Connect");
+	    JFXCheckBox autoConnectCB  = new JFXCheckBox();
+	    autoConnectCB.setSelected( dp == null ? false : dp.getAutoConnect());
 
 		TextField connectionName = new TextField();
 		connectionName.setPrefWidth(250);
@@ -180,6 +193,8 @@ public class ConnectionEditor {
 		password.setPromptText(passwordStr);
 		password.setText(passwordVal);
 		password.lengthProperty().addListener(CommonListener.textFieldLimit(password, 50));
+		
+		
 
 		TextField defaultSchema = new TextField();
 		defaultSchema.setPromptText(defaultSchemaStr);
@@ -211,20 +226,12 @@ public class ConnectionEditor {
 		});
 		//TODO 
 		dbDriver.valueProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
-//			h2FilePath.setVisible(false); 
-//			lbhostStr.setText(hostStr);
-//			host.setPromptText(hostStr);
-//			port.setDisable(false);
-//
-//			defaultSchema.setText(defaultSchemaVal);
-//			defaultSchema.setDisable(false);
 			
 			var dbpo = DbVendor.register(dbDriver.getValue()); 
 			if(dbpo.getMustUseJdbcUrl()) {
 				isUseJdbcUrl.setSelected(true);
 				isUseJdbcUrl.setDisable(true); 
 			}else {
-//				isUseJdbcUrl.setSelected(false); 
 				isUseJdbcUrl.setDisable(false);
 			}
 			
@@ -244,8 +251,6 @@ public class ConnectionEditor {
 				port.setDisable(true);
 				h2FilePath.setVisible(true);
 			}else {
-//				port.disableProperty().unbind();
-//				port.setDisable(false);
 				port.disableProperty().bind(isUseJdbcUrl.selectedProperty());
 				h2FilePath.setVisible(false);
 			}
@@ -258,31 +263,6 @@ public class ConnectionEditor {
 				password.setDisable(true);
 			}
 			
-			
-//			if (newValue.equals(DbVendor.h2) ||newValue.equals(DbVendor.sqlite) ) {
-//				lbhostStr.setText("DB File");
-//				host.setPromptText("DB File");
-//				port.setDisable(true);
-//
-//				defaultSchema.setText("PUBLIC");
-//				defaultSchema.setDisable(true);
-//				h2FilePath.setVisible(true);
-//				
-//			}
-//			else if( newValue.equals(DbVendor.postgresql)) {
-//				lbdefaultSchemaStr.setText("DB Name");
-//				defaultSchema.setPromptText("DB Name");
-//				defaultSchema.setText( dbName); 
-//				
-//			}
-
-//			if (newValue.equals(DbVendor.sqlite) ) {
-//				user.setDisable(true);
-//				password.setDisable(true);
-//			}else {
-//				user.setDisable(false);
-//				password.setDisable(false);
-//			}
 
 		});
 
@@ -337,17 +317,6 @@ public class ConnectionEditor {
 				return null;
 			}
 			
-//			if ( ! dbDriver.getValue().equals(DbVendor.sqlite) ) {
-//				if (StrUtils.isNullOrEmpty(user.getText())) {
-//					MyAlert.errorAlert( "user is empty !");
-//					return null;
-//				}
-//				if (StrUtils.isNullOrEmpty(password.getText())) {
-//					MyAlert.errorAlert( "password is empty !");
-//					return null;
-//				}
-//			}
-			
 			if (StrUtils.isNullOrEmpty(connName)) {
 				MyAlert.errorAlert( "connection name is empty !");
 				return null;
@@ -360,10 +329,9 @@ public class ConnectionEditor {
 			}
 
 			//TODO 连接信息保存 DbVendor
-			
 			DBConnectorInfoPo connPo = new DBConnectorInfoPo(connName, DbVendor.getDriver(dbDriver.getValue()),
 					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
-					defaultSchema.getText(), defaultSchema.getText(), jdbcUrl.getText());
+					defaultSchema.getText(), defaultSchema.getText(), jdbcUrl.getText(), autoConnectCB.isSelected());
 			SqluckyDbRegister reg = DbVendor.register(dbDriver.getValue());
 			SqluckyConnector connpo = reg.createConnector(connPo);
 //			SqluckyConnector connpo = new DbConnectionPo2(connName, DbVendor.getDriver(dbDriver.getValue()),
@@ -388,6 +356,7 @@ public class ConnectionEditor {
 					  lbdefaultSchemaStr,   defaultSchema, 
 					  lbuserStr,       user,
 					  lbpasswordStr,   password, 
+					  autoConnect,     autoConnectCB,
 					  testBtn,         saveBtn );
 	
 		// 默认焦点
@@ -580,8 +549,6 @@ public class ConnectionEditor {
 				// 先删除树中的节点
 				if (dp != null) {
 					DBConns.remove(dp.getConnName());
-//					DBinfoTree.rmTreeItemByName(dp.getConnName());
-//					TreeItem<TreeNodePo> val 
 					item = DBinfoTree.getTrewViewCurrentItem();
 					item.getValue().setName(connectionName.getText() );
 					AppWindowComponentGetter.treeView.refresh();
@@ -595,12 +562,6 @@ public class ConnectionEditor {
 				DBConns.add(connpo.getConnName(), connpo);
 				connpo = ConnectionDao.createOrUpdate(H2Db.getConn(), connpo);
 				H2Db.closeConn();
-				
-				//TODO 打开连接
-				if( editLinkStatus) {
-					CommonAction.openConn(item);
-				}
-				
 			} else {
 				return;
 			}
@@ -609,7 +570,7 @@ public class ConnectionEditor {
 		});
 		return saveBtn;
 	}
-	//TODO
+	// 组件布局
 	public static void layout(GridPane grid  , 
 			Control lbconnNameStr, Control connectionName, 
 			Control lbdbDriverStr, Control dbDriver,
@@ -619,7 +580,9 @@ public class ConnectionEditor {
 			Control lbdefaultSchemaStr, Control defaultSchema, 
 			Control lbuserStr, Control user,
 			Control lbpasswordStr, Control password, 
+			Control autoConnect, Control autoConnectCB,
 			Control testBtn, Control saveBtn
+			
 			) {
 		int i = 0;
 		int j = 0;
@@ -650,6 +613,10 @@ public class ConnectionEditor {
 
 		grid.add(lbpasswordStr, 0, i++);
 		grid.add(password, 1, j++);
+		
+		grid.add(autoConnect, 0, i++);
+		grid.add(autoConnectCB, 1, j++);
+		
 		
 		grid.add(testBtn, 0, i); 
 		grid.add(saveBtn, 1, i);
