@@ -24,6 +24,10 @@ open module SQLucky {
 	requires org.controlsfx.controls;
 	requires org.apache.logging.log4j;	
 	
+
+	requires org.apache.httpcomponents.client5.httpclient5;
+	requires org.apache.httpcomponents.client5.httpclient5.fluent;
+	requires org.apache.httpcomponents.core5.httpcore5;
 	
 	// non-mods
 	requires org.apache.commons.io;

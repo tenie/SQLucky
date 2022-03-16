@@ -643,9 +643,16 @@ public class RunSQLHelper {
 		if (thread != null && !stopbtn.disabledProperty().getValue()) { 
 			thread.interrupt();
 			logger.info("线程是否被中断：" + thread.isInterrupted());// true
-			if (thread.isInterrupted()) {
-				settingBtn(runbtn, true, stopbtn, false, otherbtn);
-			} 
+			dpo.closeConn();
+			dpo.getConn();
+//			settingBtn(runbtn, true, stopbtn, false, otherbtn);
+//		
+//			if (thread.isInterrupted()) {
+//				settingBtn(runbtn, true, stopbtn, false, otherbtn);
+//			}else {
+//				dpo.closeConn();
+//				dpo.getConn();
+//			}
 		}
 	}
 

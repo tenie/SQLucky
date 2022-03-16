@@ -92,8 +92,8 @@ public class SQLucky extends Application {
 		img = new Image(SQLucky.class.getResourceAsStream(ConfigVal.appIcon));
 		
 		
-		tmpscene = app.getTmpScene();
-		CommonUtility.loadCss(tmpscene); 
+//		tmpscene = app.getTmpScene();
+//		CommonUtility.loadCss(tmpscene); 
 		scene = app.getAppScene();
 		CommonAction.setTheme(Theme);
 		// 加载插件

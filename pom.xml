@@ -9,6 +9,7 @@
 	<modules>
 		<module>sdk</module>
 		<module>plugin/note</module>
+		<module>plugin/Workspace</module>
 		<module>plugin/DB2_connector</module>
 		<module>plugin/H2_connector</module>
 		<module>plugin/Sqlite_connector</module>
@@ -31,10 +32,8 @@
 		<commons.io.version>2.8.0</commons.io.version>
 		<slf4j.api.version>1.7.30</slf4j.api.version>
 		<log4j.version>2.17.2</log4j.version>
-
 		<sqlite.jdbc.version>3.34.0</sqlite.jdbc.version>
 		<h2.jdbc.version>1.4.197</h2.jdbc.version>
-		<db2jcc4.version>10.1</db2jcc4.version>
 		<mysql.jdbc.version>5.1.35</mysql.jdbc.version>
 
 	</properties>
@@ -51,6 +50,11 @@
 			<dependency>
 				<groupId>net.tenie</groupId>
 				<artifactId>SQLucky-Plugin-Note</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Plugin-Workspace</artifactId>
 				<version>${sqlucky.version}</version>
 			</dependency>
 
@@ -205,8 +209,20 @@
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-slf4j-impl</artifactId>
 				<version>${log4j.version}</version>
+			</dependency> 
+			
+			<dependency>
+				<groupId>org.apache.httpcomponents.client5</groupId>
+				<artifactId>httpclient5</artifactId>
+				<version>5.1.3</version>
 			</dependency>
-
+			
+			<dependency>
+				<groupId>org.apache.httpcomponents.client5</groupId>
+				<artifactId>httpclient5-fluent</artifactId>
+				<version>5.1.3</version>
+			</dependency>
+		
 		</dependencies>
 	</dependencyManagement>
 

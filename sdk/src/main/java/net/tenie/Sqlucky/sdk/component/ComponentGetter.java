@@ -8,9 +8,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
@@ -52,6 +54,7 @@ public final class ComponentGetter {
 	public static TitledPane dbTitledPane;
 	
 	public static NotificationPane notificationPane ;
+	public static Menu pluginMenu ;
 	
 	// 数据同步界面
 	public static Stage dataTransferStage;
@@ -66,6 +69,9 @@ public final class ComponentGetter {
 	public static String  dragTreeItemName;
 	
 	public static AppComponent appComponent;
+	
+	// 窗口上的logo图
+	public static Image LogoIcons;
 	
 	
 	public static Label INFO ;

@@ -33,6 +33,8 @@ public class MenuBarContainer {
 	private Menu mnfile;
 	private Menu mnEdit;
 	private Menu mnTools;
+	private Menu mnplugin;
+	
 	private Menu mnHelp;
 	private DataTransferWindow dtw;
 	public MenuBarContainer() {
@@ -41,8 +43,9 @@ public class MenuBarContainer {
 		mnEdit = createEditMenu();
 		mnTools = createToolsMenu();
 		mnHelp = createHelpMenu();
+		mnplugin = createPluginMenu();
 
-		mainMenuBar.getMenus().addAll(mnfile, mnEdit, mnTools, mnHelp);
+		mainMenuBar.getMenus().addAll(mnfile, mnEdit, mnTools, mnplugin, mnHelp);
 		mainMenuBar.setUseSystemMenuBar(true);
 	}
 
@@ -322,6 +325,20 @@ public class MenuBarContainer {
 		});
 
 		mn.getItems().addAll(about); 
+		return mn;
+	}
+	
+	Menu createPluginMenu() {
+		Menu mn = new Menu("Plugin");
+
+//		MenuItem about = new MenuItem(StrUtils.MenuItemNameFormat("About"));
+//		about.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
+//		about.setOnAction(value -> {
+//			ModalDialog.showAbout();
+//		});
+//
+//		mn.getItems().addAll(about); 
+		ComponentGetter.pluginMenu = mn;
 		return mn;
 	}
 

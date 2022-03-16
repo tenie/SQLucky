@@ -9,6 +9,7 @@ import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -18,6 +19,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.lib.tools.IconGenerator;
 
 /*   @author tenie */
@@ -133,6 +135,7 @@ public class AppWindow {
 		ComponentGetter.iconRight  = IconGenerator.svgImageDefActive("chevron-circle-right", 14);
 		ComponentGetter.iconLeft   = IconGenerator.svgImageDefActive("chevron-circle-down", 14);
 		 
+		ComponentGetter.LogoIcons   = new Image(AppWindow.class.getResourceAsStream(ConfigVal.appIcon ));
 	
 		 
 	}

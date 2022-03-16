@@ -21,7 +21,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -35,8 +34,7 @@ import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
-import net.tenie.fx.component.InfoTree.TreeItemType;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -59,9 +57,9 @@ public class ConnectionEditor {
 	// 编辑连接时记录连接状态
 	public  static boolean editLinkStatus = false;
 	private static Logger logger = LogManager.getLogger(ConnectionEditor.class);
+	private static   Stage stage;
 	public static Stage CreateModalWindow(VBox vb) {
-
-		final Stage stage = new Stage();
+		stage = new Stage();
 		vb.getStyleClass().add("connectionEditor");
 
 		Scene scene = new Scene(vb);
@@ -73,14 +71,10 @@ public class ConnectionEditor {
 
 		vb.getChildren().add(bottomPane);
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-//		KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
 		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {
 			stage.close();
 		});
-//		scene.getAccelerators().put(enterbtn, () -> {
-//			stage.close();
-//		});
 		scene.getAccelerators().put(spacebtn, () -> {
 			stage.close();
 		});
@@ -89,7 +83,7 @@ public class ConnectionEditor {
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 		
-		stage.getIcons().add(new Image(ConnectionEditor.class.getResourceAsStream(ConfigVal.appIcon)));
+		stage.getIcons().add(ComponentGetter.LogoIcons);
 		stage.setMaximized(false);
 		stage.setResizable(false);
 		stage.setOnHidden(e->{
@@ -106,19 +100,7 @@ public class ConnectionEditor {
 
 	public static void ConnectionInfoSetting(boolean isEdit, String connNameVal, String userVal, String passwordVal,
 			String hostVal, String portVal, String dbDriverVal, String defaultSchemaVal,String dbName, SqluckyConnector dp) {
-		VBox vb = new VBox();
-		Label title = new Label("Edit Connection Info");
-		title.setPadding(new Insets(15));
-		title.setGraphic(IconGenerator.svgImageDefActive("gears"));
-		vb.getChildren().add(title);
 
-		GridPane grid = new GridPane();
-		vb.getChildren().add(grid);
-		vb.setPadding( new Insets(5));
-		Stage stage = CreateModalWindow(vb);
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 10, 10, 10));
 
 		String connNameStr = "Connection Name";
 		String userStr = "User";
@@ -346,9 +328,9 @@ public class ConnectionEditor {
 		};
 //TODO
 		Button testBtn = createTestBtn( assembleSqlCon );//new Button("Test");
-		Button saveBtn = createSaveBtn( assembleSqlCon , connectionName ,  dp, stage) ; // new Button("Save"); 
+		Button saveBtn = createSaveBtn( assembleSqlCon , connectionName ,  dp) ; // new Button("Save"); 
 		
-		layout( grid, lbconnNameStr,   connectionName, 
+		layoutAndShow(   lbconnNameStr,   connectionName, 
 					  lbdbDriverStr,   dbDriver,
 					   isUseJdbcUrl,    jdbcUrl,
 					  lbhostStr,       host, h2FilePath,
@@ -359,11 +341,7 @@ public class ConnectionEditor {
 					  autoConnect,     autoConnectCB,
 					  testBtn,         saveBtn );
 	
-		// 默认焦点
-		Platform.runLater(() -> connectionName.requestFocus());
-//		ModalDialog.windowShell(stage, ModalDialog.INFO);
-		stage.show();
-
+		
 	}
 
 	// 连接设置界面
@@ -540,7 +518,7 @@ public class ConnectionEditor {
 		return testBtn;
 	}
 	
-	public static Button createSaveBtn(Function<String, SqluckyConnector> assembleSqlCon , TextField connectionName ,SqluckyConnector dp, Stage stage) {
+	public static Button createSaveBtn(Function<String, SqluckyConnector> assembleSqlCon , TextField connectionName ,SqluckyConnector dp ) {
 		Button saveBtn = new Button("Save");
 		saveBtn.setOnMouseClicked(e -> {
 			SqluckyConnector connpo = assembleSqlCon.apply("");
@@ -571,7 +549,7 @@ public class ConnectionEditor {
 		return saveBtn;
 	}
 	// 组件布局
-	public static void layout(GridPane grid  , 
+	public static void layoutAndShow( 
 			Control lbconnNameStr, Control connectionName, 
 			Control lbdbDriverStr, Control dbDriver,
 			Control isUseJU, Control jdbcUrl,
@@ -584,6 +562,20 @@ public class ConnectionEditor {
 			Control testBtn, Control saveBtn
 			
 			) {
+		VBox vb = new VBox();
+		Label title = new Label("Edit Connection Info");
+		title.setPadding(new Insets(15));
+		title.setGraphic(IconGenerator.svgImageDefActive("gears"));
+		vb.getChildren().add(title);
+
+		GridPane grid = new GridPane();
+		vb.getChildren().add(grid);
+		vb.setPadding( new Insets(5));
+		Stage stage = CreateModalWindow(vb);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 10, 10, 10));
+		
 		int i = 0;
 		int j = 0;
 //	 
@@ -620,6 +612,10 @@ public class ConnectionEditor {
 		
 		grid.add(testBtn, 0, i); 
 		grid.add(saveBtn, 1, i);
+		// 默认焦点
+		Platform.runLater(() -> connectionName.requestFocus());
+		stage.show();
+
 	}
 	
 }
