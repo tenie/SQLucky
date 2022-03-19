@@ -3,20 +3,16 @@ package net.tenie.Sqlucky.sdk.utility;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
+
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
@@ -291,6 +287,25 @@ public class Dbinfo {
 		return fetchAllTableViewName(conn, true);
 	}
 	
+	public static String getSchema(Connection conn) {
+		String val = null;
+		try {
+			val = conn.getSchema();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return val;
+	}
+	public static String getCatalog(Connection conn) {
+		String val = null;
+		try {
+			val = conn.getCatalog();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return val;
+	}
 
 	// jdbc方式: 获取视图, 名称,
 	public static List<TablePo> fetchAllTableViewName(Connection conn, String schemaOrCatalog, boolean istable)
@@ -301,8 +316,8 @@ public class Dbinfo {
 		List<TablePo> tbls = new ArrayList<TablePo>();
 		try {
 			DatabaseMetaData dbMetaData = conn.getMetaData();
-			String catalog = conn.getCatalog();
-			String schema = conn.getSchema();
+			String catalog = getCatalog(conn);//conn.getCatalog();
+			String schema = getSchema(conn); //conn.getSchema();
 			if (StrUtils.isNotNullOrEmpty(schemaOrCatalog)) {
 				if (catalog == null) {
 					schema = schemaOrCatalog;
@@ -411,8 +426,8 @@ public class Dbinfo {
 		TablePo po = new TablePo();
 		try {
 			DatabaseMetaData dbMetaData = conn.getMetaData();
-			String catalog = conn.getCatalog();
-			String schema = conn.getSchema();
+			String catalog = getCatalog(conn);//conn.getCatalog();
+			String schema = getSchema(conn); // conn.getSchema();
 			if (StrUtils.isNotNullOrEmpty(schemaOrCatalog)) {
 				if (catalog == null) {
 					schema = schemaOrCatalog;

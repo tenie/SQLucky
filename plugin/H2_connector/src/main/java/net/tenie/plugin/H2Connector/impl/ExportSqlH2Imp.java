@@ -1,13 +1,21 @@
 package net.tenie.plugin.H2Connector.impl;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 
@@ -28,7 +36,7 @@ public class ExportSqlH2Imp implements ExportDDL {
 	@Override
 	public List<TablePo> allTableObj(Connection conn, String schema ){
 		try {
-			List<TablePo>  vals = Dbinfo.fetchAllTableName(conn, schema);
+			List<TablePo>  vals = fetchAllTableViewNameForH2(conn, null, true); // Dbinfo.fetchAllTableName(conn, null);
 //			if(vals !=null && vals.size() > 0) {
 //				vals.stream().forEach(v ->{
 //					try {
@@ -50,6 +58,69 @@ public class ExportSqlH2Imp implements ExportDDL {
 			e.printStackTrace();
 		}
 		return null; 
+	}
+	
+	// jdbc方式: 获取视图, 名称,
+	public static List<TablePo> fetchAllTableViewNameForH2(Connection conn, String schemaOrCatalog, boolean istable)
+			throws Exception {
+		ResultSet tablesResultSet = null;
+		ResultSet rs = null;
+		Statement sm = null;
+		List<TablePo> tbls = new ArrayList<TablePo>();
+		try {
+			DatabaseMetaData dbMetaData = conn.getMetaData();
+			String catalog = Dbinfo.getCatalog(conn);// conn.getCatalog();
+			String schema = Dbinfo.getSchema(conn); // conn.getSchema();
+			if (StrUtils.isNotNullOrEmpty(schemaOrCatalog)) {
+				if (catalog == null) {
+					schema = schemaOrCatalog;
+				} else if (schema == null) {
+					catalog = schemaOrCatalog;
+				}
+			}
+			tablesResultSet = dbMetaData.getTables(catalog, schema, null, null);
+			while (tablesResultSet.next()) {
+				String tableType = tablesResultSet.getString("TABLE_TYPE");
+				if (tableType == null) {
+					tableType = "";
+				}
+				if (istable) {
+					if (tableType.contains("VIEW")) {
+						continue;
+					}
+					if (tableType.contains("SYSTEM")) {
+						continue;
+					}
+					
+				} else {
+					if (!tableType.contains("VIEW")) {
+						continue;
+					}
+				}
+
+				String tableName = tablesResultSet.getString("TABLE_NAME");
+				String remarks = tablesResultSet.getString("REMARKS");
+				TablePo po = new TablePo();
+				po.setTableName(tableName);
+				po.setTableRemarks(remarks);
+				po.setTableSchema(schemaOrCatalog);
+				po.setTableType(tableType);
+				LinkedHashSet<TableFieldPo> fields = new LinkedHashSet<TableFieldPo>();
+				po.setFields(fields);
+				ArrayList<TablePrimaryKeysPo> tpks = new ArrayList<TablePrimaryKeysPo>();
+				po.setPrimaryKeys(tpks);
+				tbls.add(po);
+			}
+
+		} finally {
+			if (tablesResultSet != null)
+				tablesResultSet.close();
+			if (rs != null)
+				rs.close();
+			if (sm != null)
+				sm.close();
+		}
+		return tbls;
 	}
 	
 	/**
