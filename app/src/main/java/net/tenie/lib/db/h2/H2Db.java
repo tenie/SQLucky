@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.apache.commons.io.FileUtils;
+
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -106,9 +108,16 @@ public class H2Db {
 		return path;
 	}
 	
-	private  static Connection createH2Conn() {
+	private static String getH2FilePath() {
 		String path = dbFilePath() ;
-		Connection connection =	createH2Conn(path + H2_DB_NAME+H2_DB_VERSION, USER , PASSWD);
+		
+		ConfigVal.H2_DB_FILE_NAME = path + H2_DB_NAME+H2_DB_VERSION;
+		ConfigVal.H2_DB_FULL_FILE_NAME = ConfigVal.H2_DB_FILE_NAME+ ".mv.db";
+		return ConfigVal.H2_DB_FILE_NAME;
+	}
+	
+	private  static Connection createH2Conn() {
+		Connection connection =	createH2Conn(getH2FilePath(), USER , PASSWD);
 		return connection;
 	}
 	

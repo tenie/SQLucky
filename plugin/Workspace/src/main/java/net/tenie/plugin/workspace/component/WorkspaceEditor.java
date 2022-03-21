@@ -1,7 +1,9 @@
 package net.tenie.plugin.workspace.component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
@@ -78,15 +81,21 @@ public class WorkspaceEditor {
 	public static void createWorkspaceConfigWindow( ) {
 		String userName = "User Name"; 
 		String passwordStr = "Password";
+		String urlStr = "https://example.com";
+		Label lbserverName = new Label("URL");   
 		Label lbUserName= new Label(userName);  
 		Label lbPassword = new Label(passwordStr);   
-
-
+		
+		TextField tfserverName = new TextField();
+		tfserverName.setPromptText(urlStr);
+		
 		TextField tfUserName = new TextField();
-		tfUserName.setPromptText(passwordStr);
+		tfUserName.setPromptText(userName);
 		
 		PasswordField password = new PasswordField();
 		password.setPromptText(passwordStr);
+		
+		
 		
 		HBox hb1 = new HBox();
 		Label Remember = new Label("Remember Account ");
@@ -113,15 +122,19 @@ public class WorkspaceEditor {
 		
 
 	 
-		Button uploadBtn = createUploadBtn( null  );//new Button("Test");
+		Button uploadBtn = createUploadBtn( tfserverName, tfUserName , password);//new Button("Test");
 		Button downloadBtn = createDownloadBtn( null  );
-		Button saveBtn = createSaveBtn(  null ) ; // new Button("Save"); 
+		Button saveBtn = createSwitchBtn(  null ) ; // new Button("Save"); 
 		
 		List<Region> list = new ArrayList<>();
 		list.add(    lbWorkspace);
 		list.add(    cbWorkspace);
 		list.add(    saveBtn);
 		list.add(    null);
+		
+		
+		list.add(    lbserverName);
+		list.add(    tfserverName);
 		
 		list.add(    lbUserName);
 		list.add(    tfUserName);
@@ -142,12 +155,24 @@ public class WorkspaceEditor {
 		Button testBtn = new Button("Download "); 
 		return testBtn;
 	}
-	public static Button createUploadBtn(Function<String, SqluckyConnector> assembleSqlCon ) {
-		Button testBtn = new Button("Upload Loacl Data "); 
-		return testBtn;
+	public static Button createUploadBtn(TextField tfserverName, TextField tfUserName , PasswordField password) {
+		Button UploadBtn = new Button("Upload Loacl Data ");
+		UploadBtn.setOnMouseClicked(e->{
+			String url = tfserverName.getText();
+			String userName = tfUserName.getText();
+			String pw = password.getText();
+			Map<String, String> pama = new HashMap<>();
+			pama.put("userName", userName);
+			pama.put("password", pw);
+//			pama.put("fileName", ConfigVal.H2_DB_FULL_FILE_NAME);
+			
+			
+			net.tenie.Sqlucky.sdk.utility.net.HttpPostFile.exec(url, ConfigVal.H2_DB_FULL_FILE_NAME, pama );
+		});
+		return UploadBtn;
 	}
 	
-	public static Button createSaveBtn(Function<String, SqluckyConnector> assembleSqlCon  ) {
+	public static Button createSwitchBtn(Function<String, SqluckyConnector> assembleSqlCon  ) {
 		Button saveBtn = new Button("Switch");
 		return saveBtn;
 	}

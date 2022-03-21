@@ -32,6 +32,7 @@ open module SQLucky.sdk {
 	requires org.apache.httpcomponents.core5.httpcore5;
 	
 	exports net.tenie.Sqlucky.sdk.utility;
+	exports net.tenie.Sqlucky.sdk.utility.net;
 	exports net.tenie.Sqlucky.sdk.subwindow;
 	exports net.tenie.Sqlucky.sdk.config;
 	exports net.tenie.Sqlucky.sdk.component;

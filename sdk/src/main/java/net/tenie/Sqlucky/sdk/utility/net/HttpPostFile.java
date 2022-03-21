@@ -1,9 +1,10 @@
-package net.tenie.Sqlucky.sdk.net;
+package net.tenie.Sqlucky.sdk.utility.net;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
@@ -27,6 +28,42 @@ import org.apache.hc.core5.http.message.StatusLine;
 
 public class HttpPostFile {
  
+	public static void exec(String url, String filePath, Map<String, String> strPamas) {
+        try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {
+            HttpPost httppost = new HttpPost(url);
+
+            FileBody bin = new FileBody(new File( filePath ));
+            MultipartEntityBuilder meb =  MultipartEntityBuilder.create().addPart("file", bin);
+           
+            if(strPamas != null ) {
+            	strPamas.forEach( (key, val)->{
+                	 StringBody valBody = new StringBody(val , ContentType.TEXT_PLAIN);
+                	 meb.addPart(key, valBody);
+                });
+            }
+           
+            
+            HttpEntity reqEntity = meb.build();
+
+            httppost.setEntity(reqEntity);
+
+            System.out.println("executing request " + httppost);
+            httpclient.execute(httppost, response -> {
+                System.out.println("----------------------------------------");
+                System.out.println(httppost + "->" + new StatusLine(response));
+                final HttpEntity resEntity = response.getEntity();
+                if (resEntity != null) {
+                    System.out.println("Response content length: " + resEntity.getContentLength());
+                }
+                EntityUtils.consume(response.getEntity());
+                return null;
+            });
+        }catch(IOException e) {
+        	e.printStackTrace();
+        }
+ 
+	}
+	
 	public static void post(String url, String user, String password, String filepath) throws IOException {
 		  
         try (final CloseableHttpClient httpclient = HttpClients.createDefault()) {

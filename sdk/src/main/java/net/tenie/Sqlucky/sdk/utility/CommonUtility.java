@@ -692,4 +692,10 @@ public class CommonUtility {
 		}
 		
 	}
+	
+	// 上传 app h2数据库文件
+	public static void uploadFile() {
+		
+	}
+	
 }
