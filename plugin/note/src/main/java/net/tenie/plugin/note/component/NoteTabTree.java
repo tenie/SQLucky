@@ -23,7 +23,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
-import net.tenie.Sqlucky.sdk.utility.SaveFile;
+import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.note.impl.NoteDelegateImpl;
@@ -455,7 +455,7 @@ public class NoteTabTree {
 		FileChooser fc =  FileOrDirectoryChooser.getFileChooser("New ", "new " , new File(fpval)); 
 		File file = fc.showSaveDialog( ComponentGetter.primaryStage);
 		try {
-			SaveFile.save(file, "");
+			FileTools.save(file, "");
 		} catch (IOException e1) { 
 			e1.printStackTrace();
 		}

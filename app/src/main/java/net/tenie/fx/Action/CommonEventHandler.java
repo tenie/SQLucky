@@ -16,7 +16,7 @@ import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.SaveFile;
+import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.fx.window.ConnectionEditor;
 
 /**
@@ -183,7 +183,7 @@ public class CommonEventHandler {
 							if (isFile) {
 								if (ff != null) {
 									try {
-										SaveFile.save(ff, sql);
+										FileTools.save(ff, sql);
 									} catch (IOException e) {
 										e.printStackTrace();
 									}
@@ -215,7 +215,7 @@ public class CommonEventHandler {
 							if (isFile) {
 								if (ff != null) {
 									try {
-										SaveFile.save(ff, sql);
+										FileTools.save(ff, sql);
 									} catch (IOException e) {
 										e.printStackTrace();
 									}
@@ -246,7 +246,7 @@ public class CommonEventHandler {
 							if (isFile) {
 								if (ff != null) {
 									try {
-										SaveFile.save(ff, sql);
+										FileTools.save(ff, sql);
 									} catch (IOException e) {
 										e.printStackTrace();
 									}
@@ -277,7 +277,7 @@ public class CommonEventHandler {
 							if (isFile) {
 								if (ff != null) {
 									try {
-										SaveFile.save(ff, sql);
+										FileTools.save(ff, sql);
 									} catch (IOException e) {
 										e.printStackTrace();
 									}

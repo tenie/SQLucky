@@ -94,7 +94,7 @@ public class CommonUtility {
 					"";
 			try {
 				String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
-				SaveFile.saveByEncode( path , val,"UTF-8");
+				FileTools.saveByEncode( path , val,"UTF-8");
 				loadCss(ComponentGetter.primaryscene);  
 				
 			} catch (IOException e) { 

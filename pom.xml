@@ -16,6 +16,7 @@
 		<module>plugin/Mysql_connector</module>
 		<module>plugin/Mariadb_connector</module>
 		<module>plugin/Postgresql_connector</module>
+		<module>plugin/Data_model</module>
 		<module>app</module>
 	</modules>
 
@@ -35,6 +36,7 @@
 		<sqlite.jdbc.version>3.34.0</sqlite.jdbc.version>
 		<h2.jdbc.version>1.4.197</h2.jdbc.version>
 		<mysql.jdbc.version>5.1.35</mysql.jdbc.version>
+		<fastjson.version>1.2.76</fastjson.version>
 
 	</properties>
 
@@ -55,6 +57,12 @@
 			<dependency>
 				<groupId>net.tenie</groupId>
 				<artifactId>SQLucky-Plugin-Workspace</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Plugin-Data-model</artifactId>
 				<version>${sqlucky.version}</version>
 			</dependency>
 
@@ -153,7 +161,13 @@
 				<artifactId>slf4j-api</artifactId>
 				<version>${slf4j.api.version}</version>
 			</dependency>
-
+			
+			<!-- fastjson -->
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${fastjson.version}</version>
+			</dependency>
 			<!-- 数据库 JDBC -->
 			<dependency>
 				<groupId>com.ibm.db2</groupId>

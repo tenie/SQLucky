@@ -72,6 +72,33 @@ public class SqlTextDao {
 					"  `VAL`  VARCHAR(1000), \n" + 
 					"  PRIMARY KEY (`NAME`)\n" + 
 					") ";
+	
+	public static final  String DATA_MODEL_INFO = 
+			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
+			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+			"  `MODEL_NAME` VARCHAR(1000)   NOT NULL,\n" + 
+			"  `REMARK` VARCHAR(1000)  , \n" +
+			"  `ORDER_TAG` INT(11) DEFAULT '99',\n" + 
+			 
+			"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
+			") ";
+	
+	
+	public static final  String DATA_MODEL_DETAIL = 
+			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
+			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+			"  `MODEL_NAME` VARCHAR(200)   NOT NULL,\n" + 
+			"  `DESCRIBE` VARCHAR(1000)  , \n" +
+			"  `AVATAR` VARCHAR(100)  , \n" +
+			"  `VERSION` VARCHAR(100)  , \n" +
+			"  `CREATED_TIME` DATETIME DEFAULT NULL,\n" + 
+			"  `UPDATED_TIME` DATETIME DEFAULT NULL,\n" + 
+			
+			"  `ORDER_TAG` INT(11) DEFAULT '99',\n" + 
+			 
+			"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
+			") ";
+	
 	// 建表 
 	public static void createTab(Connection conn) {
 		try {

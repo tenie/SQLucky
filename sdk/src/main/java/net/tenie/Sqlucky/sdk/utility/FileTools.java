@@ -12,8 +12,8 @@ import org.apache.logging.log4j.Logger;
  * @author tenie
  *
  */
-public class SaveFile {
-	private static Logger logger = LogManager.getLogger(SaveFile.class);
+public class FileTools {
+	private static Logger logger = LogManager.getLogger(FileTools.class);
 	
 	public static void save(File file, String data ) throws IOException {
 		FileUtils.writeStringToFile( file,  data,"UTF-8" ); 

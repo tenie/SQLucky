@@ -30,6 +30,11 @@
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Plugin-Workspace</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>net.tenie</groupId>
+			<artifactId>SQLucky-Plugin-Data-model</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>net.tenie</groupId>

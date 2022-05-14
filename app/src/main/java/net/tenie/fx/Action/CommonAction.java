@@ -41,7 +41,7 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
-import net.tenie.Sqlucky.sdk.utility.SaveFile;
+import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.PropertyPo.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
@@ -182,7 +182,7 @@ public class CommonAction {
 			var scriptPo = tb.getDocumentPo();
 			String fileName = scriptPo.getFileFullName();
 			if (StrUtils.isNotNullOrEmpty(fileName)) {
-				SaveFile.saveByEncode(fileName, sql, scriptPo.getEncode());
+				FileTools.saveByEncode(fileName, sql, scriptPo.getEncode());
 				CommonUtility.setTabName(tb, FilenameUtils.getName(fileName));
 
 			} else {
@@ -191,8 +191,8 @@ public class CommonAction {
 				title = StrUtils.trimRightChar(title, "*");
 				File file = FileOrDirectoryChooser.showSaveDefault("Save", title, ComponentGetter.primaryStage);
 				if (file != null) {
-					SaveFile.save(file, sql);
-					String name = SaveFile.fileName(file.getPath());
+					FileTools.save(file, sql);
+					String name = FileTools.fileName(file.getPath());
 					CommonUtility.setTabName(tb, name);
 					scriptPo.setFileFullName(file.getPath());
 					fileName = file.getPath();
@@ -679,7 +679,7 @@ public class CommonAction {
 //			ComponentGetter.fileEncode.put( f.getPath(), encode);
 			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
 //				id = ConfigVal.SAVE_TAG + f.getPath();
-				tabName = SaveFile.fileName(f.getPath());
+				tabName = FileTools.fileName(f.getPath());
 				setOpenfileDir(f.getPath());
 			}
 			DocumentPo scpo = new DocumentPo();
@@ -1000,7 +1000,7 @@ public class CommonAction {
 		// 获取当前的 size
 		if(ConfigVal.FONT_SIZE == -1) {
 			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
-			String str = SaveFile.read(path);
+			String str = FileTools.read(path);
 			String val = str.split("\n")[0];
 			val = val.substring(2, val.lastIndexOf("*/"));
 			System.out.println(val);
