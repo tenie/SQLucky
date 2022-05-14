@@ -1,68 +1,65 @@
 /* 空标记 */
-.my-tag{
+.my-tag {
 	
 }
-.Icon-color{
+
+.Icon-color {
 	-fx-background-color: #1C94FF;
 }
 
-.main-background{
-	 -fx-background-color:  #2E2E2E;
+.main-background {
+	-fx-background-color: #2E2E2E;
 }
 
-.accordion .content{
-	 -fx-background-color:  #2B2B2B;
-	 -fx-border-color:  #2B2B2B;
-}	
+.accordion .content {
+	-fx-background-color: #2B2B2B;
+	-fx-border-color: #2B2B2B;
+}
 
 /* titledPane 背景色*/
-.titledPane-color .title{ 
-    -fx-background-color:  #2E2E2E;
-	 -fx-border-color: #4C4C4C transparent #4C4C4C transparent ; 
-	  -fx-border-width: 1 0 1 0;
+.titledPane-color .title {
+	-fx-background-color: #2E2E2E;
+	-fx-border-color: #4C4C4C transparent #4C4C4C transparent;
+	-fx-border-width: 1 0 1 0;
 }
-
 
 /* tabpane 选择tab按钮 .tab-down-button */
 .control-buttons-tab .arrow {
-	-fx-background-color: #1C94FF; 
+	-fx-background-color: #1C94FF;
 }
 
 .control-buttons-tab .tab-down-button {
-	-fx-background-color: #323232; 
+	-fx-background-color: #323232;
 }
-
 
 /*
 .control-buttons-tab .tab-down-button {
 	-fx-background-color:  #333333; 
 }*/
-
-.transfer-run-btn{
-	 -fx-background-color: #008000;
-}
-.transfer-stop-btn{
-	 -fx-background-color: red;
+.transfer-run-btn {
+	-fx-background-color: #008000;
 }
 
-.transfer-btn{
-	-fx-border-color: #333333; 
+.transfer-stop-btn {
+	-fx-background-color: red;
 }
 
-CheckBoxTreeItem{
-	-fx-checked-color: red; 
+.transfer-btn {
+	-fx-border-color: #333333;
 }
 
+CheckBoxTreeItem {
+	-fx-checked-color: red;
+}
 
 .myModalDialog {
- /* -fx-border-color: #4C708C;  */
- -fx-background-color: #3C3F41;
+	/* -fx-border-color: #4C708C;  */
+	-fx-background-color: #3C3F41;
 }
 
 GridPane {
- /* -fx-border-color: #4C708C;   -fx-border-color:  transparent ;  */
- -fx-background-color: #3C3F41;
- 
+	/* -fx-border-color: #4C708C;   -fx-border-color:  transparent ;  */
+	-fx-background-color: #3C3F41;
 }
 
 /*
@@ -70,110 +67,114 @@ GridPane {
 	 -fx-background-color: red; 
 }
 */
-.myShellWindow{
+.myShellWindow {
 	/* -fx-border-color: #4C708C; */
+	
 }
 
 /* 子窗口壳的顶部关闭区域*/
-.subWindowClose{
-	 -fx-background-color:#4B4B4B;
-}
-.myAlert {
-/* -fx-border-color: #4C708C;   #3C3F41*/
- -fx-background-color: #17181A;
-}
-.myAlert  TextField{
- -fx-text-fill: white;
+.subWindowClose {
+	-fx-background-color: #4B4B4B;
 }
 
-.myAlertBtn{
+.myAlert {
+	/* -fx-border-color: #4C708C;   #3C3F41*/
+	-fx-background-color: #17181A;
+}
+
+.myAlert  TextField {
+	-fx-text-fill: white;
+}
+
+.myAlertBtn {
 	-fx-background-color: #365880;
 }
 
-.myAlert   Button{
- -fx-background-color: #365880;
- -fx-text-fill: white;
- -fx-border-color: #4C708C;
+.myAlert   Button {
+	-fx-background-color: #365880;
+	-fx-text-fill: white;
+	-fx-border-color: #4C708C;
 }
 
 /*箭头颜色(菜单按钮的进入子菜单有一个箭头图标)*/
-.arrow{
+.arrow {
 	-fx-background-color: #BBBBBB;
 }
 /* 表格头最右侧的控制列隐藏的一个菜单按钮图标*/
-.show-hide-column-image{
+.show-hide-column-image {
 	-fx-background-color: #BBBBBB;
 }
 
-
-
 .menu:hover {
-	 -fx-background-color: #2F65CA;
+	-fx-background-color: #2F65CA;
 }
+
 .menu:showing {
-	 -fx-background-color: #2F65CA;
+	-fx-background-color: #2F65CA;
 }
+
 .menu:selected {
-	 -fx-background-color: #2F65CA;
+	-fx-background-color: #2F65CA;
 }
+
 .menu-item:hover {
-	 -fx-background-color: #2F65CA;
+	-fx-background-color: #2F65CA;
 }
 
 /* .myMenuItem{
 	-fx-background-color:  red;
 } */
-
-MenuButton{
+MenuButton {
 	-fx-background-color: #3C3F41;
 }
-MenuItem{
-	-fx-background-color:  #4E5254;
-}
-ContextMenu{
-	-fx-background-color:  #4E5254;
+
+MenuItem {
+	-fx-background-color: #4E5254;
 }
 
-FlowPane{
+ContextMenu {
+	-fx-background-color: #4E5254;
+}
+
+FlowPane {
 	-fx-background-color: #3C3F41;
 	-fx-text-fill: white;
 }
 
-FlowPane TextField{ 
+FlowPane TextField {
 	-fx-text-fill: white;
 }
-
 
 /*连接编辑窗口*/
 .connectionEditor {
-    -fx-background-color: #3C3F41;
-}
-.connectionEditor  TextField{
-    -fx-text-fill: white;
-    -fx-background-color: #373a3c;
-    -fx-border-color: #5E6060 ;
-    -fx-border-radius: 3px; /* 圆角 */
+	-fx-background-color: #3C3F41;
 }
 
-.connectionEditor  PasswordField{
-    -fx-text-fill: white;
-    -fx-background-color: #373a3c;
-    -fx-border-color: #5E6060 ;
-    -fx-border-radius: 3px; /* 圆角 */
-}
-.connectionEditor  ChoiceBox{
-    -fx-text-fill: white;
-    -fx-background-color: #373a3c;
-    -fx-border-color: #5E6060 ;
-    -fx-border-radius: 3px; /* 圆角 */
+.connectionEditor  TextField {
+	-fx-text-fill: white;
+	-fx-background-color: #373a3c;
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px; /* 圆角 */
 }
 
+.connectionEditor  PasswordField {
+	-fx-text-fill: white;
+	-fx-background-color: #373a3c;
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px; /* 圆角 */
+}
 
+.connectionEditor  ChoiceBox {
+	-fx-text-fill: white;
+	-fx-background-color: #373a3c;
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px; /* 圆角 */
+}
 
-.connectionEditor   Button{
-    -fx-background-color: #365880;
-    -fx-text-fill: white;
-    -fx-border-color: #4C708C;
+.connectionEditor   Button {
+	-fx-background-color: #365880;
+	-fx-text-fill: white;
+	-fx-border-color: #4C708C;
 }
 
 /* 
@@ -181,30 +182,31 @@ FlowPane TextField{
 	-fx-visible: true;
 } */
 /*搜索 替换 按钮*/
-.myReplaceBtn{
-    -fx-border-color: #5E6060 ;
-    -fx-border-radius: 3px;
+.myReplaceBtn {
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px;
 }
 
 /*  搜索框 */
-.myFindTextField{
+.myFindTextField {
 	-fx-text-fill: white;
 	-fx-background-color: #373a3c;
-	-fx-border-color: #5E6060 ;
+	-fx-border-color: #5E6060;
 	-fx-border-radius: 3px; /* 圆角 */
 }
 
-.myTextField{
+.myTextField {
 	-fx-text-fill: white;
 	-fx-background-color: #373a3c;
-    -fx-border-color: #059BCE;
-    -fx-border-width: 0 0 1 0;
+	-fx-border-color: #059BCE;
+	-fx-border-width: 0 0 1 0;
 }
-.myTextField:hover{
+
+.myTextField:hover {
 	-fx-background-color: #323232;
 }
 
-.myBorderColor{
+.myBorderColor {
 	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
 }
 
@@ -213,14 +215,13 @@ FlowPane TextField{
 	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
 }
 
-.button:hover{
-	 -fx-background-color: #323232;
+.button:hover {
+	-fx-background-color: #323232;
 }
- 
 
 /* 右键菜单   	 -fx-background-color: #4E5254;*/
-.context-menu{
-	  -fx-background-color:  #17191a;
+.context-menu {
+	-fx-background-color: #17191a;
 }
 /* .context-menu .menu-item .right-container .arrow  {
 	 -fx-background-color: white;
@@ -228,10 +229,8 @@ FlowPane TextField{
 /* .context-menu .left-container .mark  {
 	 -fx-background-color: white;
 } */
-
-
-.myComboBox{
-	 
+.myComboBox {
+	
 }
 
 /* .combo-box-base {
@@ -240,48 +239,47 @@ FlowPane TextField{
 	-fx-shadow-highlight-color: #323232;
 	-fx-background-color:  #323232;
 } */
+.combo-box {
+	-fx-border-color: #059BCE;
+	-fx-border-width: 0 0 1 0;
+	-fx-background-radius: 0;
+	-fx-background-color: #373a3c; /* #373a3c */
+	/*  -fx-font-family: "Arial"; */
+	-fx-font-size: 12px;
+	-fx-text-fill: #ffffff;
+	-fx-background-insets: 0;
+	-fx-alignment: center;
+	-fx-content-display: center;
+}
 
-.combo-box {   
-     -fx-border-color: #059BCE;
-     -fx-border-width: 0 0 1 0;
-     -fx-background-radius: 0; 
-     -fx-background-color: #373a3c; /* #373a3c */
-    /*  -fx-font-family: "Arial"; */
-     -fx-font-size: 12px;
-     -fx-text-fill: #ffffff;
-     -fx-background-insets: 0;
-     -fx-alignment: center;
-     -fx-content-display: center;
- }
+.combo-box>.cell {
+	-fx-text-fill: #ffffff;
+	-fx-alignment: center;
+}
 
- .combo-box > .cell {   
-     -fx-text-fill: #ffffff;
-     -fx-alignment: center;
- }
+.combo-box:hover {
+	-fx-background-color: #323232;
+	/* #87cefa; */
+}
 
- .combo-box:hover {   
-     -fx-background-color: #323232;
-        /* #87cefa; */
- }
- .combo-box-popup .list-view {
- 	 -fx-background-color: #4E5254;  
- }
- .combo-box-popup .list-view .list-cell {
-     -fx-background-color: #323232;  
-     -fx-text-fill: #ffffff;
-     -fx-text-alignment: center;
- }
+.combo-box-popup .list-view {
+	-fx-background-color: #4E5254;
+}
+
+.combo-box-popup .list-view .list-cell {
+	-fx-background-color: #323232;
+	-fx-text-fill: #ffffff;
+	-fx-text-alignment: center;
+}
 
 /* combo-box 下划线*/
-.combo-box .input-line{
- 	 -fx-background-color:  #373A3C ;
+.combo-box .input-line {
+	-fx-background-color: #373A3C;
 }
 
-.combo-box .input-focused-line{
- 	 -fx-background-color:  #373A3C ;
+.combo-box .input-focused-line {
+	-fx-background-color: #373A3C;
 }
-
-
 
 /*  .combo-box-popup .list-view .list-cell:filled:selected, 
  .combo-box-popup .list-view .list-cell:filled:selected:hover {
@@ -290,26 +288,21 @@ FlowPane TextField{
      -fx-text-fill: #ffffff;
      -fx-text-alignment: center;
  } */
-
- .combo-box-popup .list-view .list-cell:filled:hover {
-     -fx-background-color: #2F65CA ;
-     -fx-text-alignment: center;
-/*      -fx-background-radius: 10.0; */
- }
-
-
-
-
+.combo-box-popup .list-view .list-cell:filled:hover {
+	-fx-background-color: #2F65CA;
+	-fx-text-alignment: center;
+	/*      -fx-background-radius: 10.0; */
+}
 
 .my-jfx-text-field {
-    -fx-focus-color: #77acf4;
-    -fx-unfocus-color: #00f900;
-    -fx-padding: 0.333333em 0 0.333333em 0;
+	-fx-focus-color: #77acf4;
+	-fx-unfocus-color: #00f900;
+	-fx-padding: 0.333333em 0 0.333333em 0;
 }
 
 /* 滚动条角的颜色 */
-.my-tag  .corner   {
-	-fx-background-color:  #3C3F41;
+.my-tag  .corner {
+	-fx-background-color: #3C3F41;
 }
 
 /* .scroll-pane > .corner {    
@@ -318,10 +311,9 @@ FlowPane TextField{
 .scroll-bar > .corner {    
 -fx-background-color: red;
 } */
-
 .my-tag   .scroll-bar {
-    -fx-background-color:  #3C3F41;
-    /*  #3C3F41 */
+	-fx-background-color: #3C3F41;
+	/*  #3C3F41 */
 }
 /* .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track{
@@ -330,59 +322,54 @@ FlowPane TextField{
     -fx-background-radius : 0.0em;
     -fx-border-radius :2.0em;
 } */
-
-
-.my-tag  .scroll-bar:horizontal .increment-button ,
-.my-tag  .scroll-bar:horizontal .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 0.0 7.0 0.0; 
+.my-tag  .scroll-bar:horizontal .increment-button, .my-tag  .scroll-bar:horizontal .decrement-button
+	{
+	-fx-background-color: transparent;
+	-fx-background-radius: 0.0em;
+	-fx-padding: 0.0 0.0 7.0 0.0;
 }
 
-.my-tag  .scroll-bar:vertical .increment-button ,
-.my-tag  .scroll-bar:vertical .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 7.0 0.0 0.0;
-
+.my-tag  .scroll-bar:vertical .increment-button, .my-tag  .scroll-bar:vertical .decrement-button
+	{
+	-fx-background-color: transparent;
+	-fx-background-radius: 0.0em;
+	-fx-padding: 0.0 7.0 0.0 0.0;
 }
 
-.my-tag   .scroll-bar .increment-arrow,
-.my-tag   .scroll-bar .decrement-arrow{
-    -fx-shape : " ";    
-    -fx-padding :0.15em 0.0;
+.my-tag   .scroll-bar .increment-arrow, .my-tag   .scroll-bar .decrement-arrow
+	{
+	-fx-shape: " ";
+	-fx-padding: 0.15em 0.0;
 }
 
- .my-tag  .scroll-bar:vertical .increment-arrow,
- .my-tag  .scroll-bar:vertical .decrement-arrow{
-    -fx-shape : " ";    
-    -fx-padding :0.0 0.15em;
+.my-tag  .scroll-bar:vertical .increment-arrow, .my-tag  .scroll-bar:vertical .decrement-arrow
+	{
+	-fx-shape: " ";
+	-fx-padding: 0.0 0.15em;
 }
 
-.my-tag  .scroll-bar:horizontal .thumb,
-.my-tag  .scroll-bar:vertical .thumb {
-   /*  -fx-background-color :derive(black,90.0%);
+.my-tag  .scroll-bar:horizontal .thumb, .my-tag  .scroll-bar:vertical .thumb
+	{
+	/*  -fx-background-color :derive(black,90.0%);
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em; */
-    -fx-background-color:
-        #4E5254,
-        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
-        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%));
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 0.5em;
+	-fx-background-color: #4E5254,
+		linear-gradient(to right, derive(#4E5254, 95%), derive(#4E5254, 10%)),
+		linear-gradient(to right, derive(#4E5254, 38%), derive(#4E5254, -16%));
+	-fx-background-insets: 0, 1, 2;
+	-fx-background-radius: 0.5em;
 }
 
-.my-tag  .scroll-bar:horizontal .thumb:hover,
-.my-tag  .scroll-bar:vertical .thumb:hover {
-   /*  -fx-background-color :derive(#4D4C4F,10.0%);
+.my-tag  .scroll-bar:horizontal .thumb:hover, .my-tag  .scroll-bar:vertical .thumb:hover
+	{
+	/*  -fx-background-color :derive(#4D4C4F,10.0%);
     -fx-background-insets : 2.0, 0.0, 0.0;
     -fx-background-radius : 2.0em; */
-    -fx-background-color:
-        #4E5254,
-        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
-        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%));
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 0.5em;
+	-fx-background-color: #4E5254,
+		linear-gradient(to right, derive(#4E5254, 95%), derive(#4E5254, 10%)),
+		linear-gradient(to right, derive(#4E5254, 38%), derive(#4E5254, -16%));
+	-fx-background-insets: 0, 1, 2;
+	-fx-background-radius: 0.5em;
 }
 
 /* 
@@ -423,19 +410,19 @@ FlowPane TextField{
  */
 
 /**Costumization of Buttons**/
-.dialog-pane .button{
-   -fx-background-color:black;
-   -fx-text-fill:white;
-   -fx-wrap-text: true;
-   -fx-effect: dropshadow( three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
-   -fx-cursor:hand;
- }
+.dialog-pane .button {
+	-fx-background-color: black;
+	-fx-text-fill: white;
+	-fx-wrap-text: true;
+	-fx-effect: dropshadow(three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
+	-fx-cursor: hand;
+}
 
-.dialog-pane .button:hover{     
-  -fx-background-color:white;
-  -fx-text-fill:black;
-  -fx-font-weight:bold; 
- }
+.dialog-pane .button:hover {
+	-fx-background-color: white;
+	-fx-text-fill: black;
+	-fx-font-weight: bold;
+}
 
 /*.check-box:selected{
   -fx-color: #059BCE;
@@ -448,28 +435,26 @@ FlowPane TextField{
 .check-box:selected .mark {
     -fx-background-color: #0181e2;
 }*/
-
-
 .check-box:hover  .mark {
-  -fx-background-color: #0181e2;
+	-fx-background-color: #0181e2;
 }
 
 /* tree 过滤清空按钮 #373A3C*/
-.myCleanBtn{
-	 -fx-background-color:  transparent;
-	 -fx-background-radius: 10px;
-	 -fx-padding: 1;
-}
-.myCleanBtn:hover{
-	-fx-background-color:  transparent;
+.myCleanBtn {
+	-fx-background-color: transparent;
+	-fx-background-radius: 10px;
+	-fx-padding: 1;
 }
 
- /*
+.myCleanBtn:hover {
+	-fx-background-color: transparent;
+}
+
+/*
 
 .check-box{
  -fx-color: black;
 }*/
-
 
 /*  失去焦点隐藏
 .scroll-bar{ 

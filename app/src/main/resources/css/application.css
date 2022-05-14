@@ -12,3 +12,7 @@
 	-fx-font-weight: bold ;
 }
 
+.myDataModel-vbox{
+	-fx-padding: 0;
+	-fx-background-color: red;
+}
