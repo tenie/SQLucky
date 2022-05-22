@@ -14,5 +14,9 @@
 
 .myDataModel-vbox{
 	-fx-padding: 0;
-	-fx-background-color: red;
+	/* -fx-background-color: red; */
+}
+
+.myIcon{ 
+	-fx-padding: 5px;
 }

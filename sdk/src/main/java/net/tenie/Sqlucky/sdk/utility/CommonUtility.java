@@ -28,12 +28,14 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.Tooltip;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.MouseEvent;
 
@@ -697,5 +699,28 @@ public class CommonUtility {
 	public static void uploadFile() {
 		
 	}
+	
+	// 组件的悬停提示
+	public static Tooltip instanceTooltip(String msg){
+		Tooltip tt = new Tooltip(msg); 
+		tt.setShowDelay(new Duration(100));
+		return tt;
+	}
+	
+	// 读选择系统中的文件读取为字符串  UTF-8
+	public static String openFileReadToString(String encode) {
+		File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
+		if (f == null)
+			return "";
+		String val = "";
+		try {
+			val = FileUtils.readFileToString(f, encode);
+		} catch (IOException e) {
+			e.printStackTrace();
+			MyAlert.errorAlert( e.getMessage());
+		} 
+		return val;
+	}
+	
 	
 }

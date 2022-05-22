@@ -52,18 +52,9 @@ public class DataModelTabTree {
 		createDataModelTreeView();
 	}
 	
-	public HBox filter() {
-		HBox hbox = new HBox();
-		// 
-		Label lb = new Label("查询");
-		TextField txt = new TextField("???");
-		hbox.getChildren().addAll(lb, txt);
-		HBox.setHgrow(txt, Priority.ALWAYS);
-		return hbox;
-		
-	}
+	
 
-	// db节点view
+	// 节点view
 	public TreeView<SqluckyTab> createDataModelTreeView() {
 		vbox.getStyleClass().add("myDataModel-vbox");
 		
@@ -93,9 +84,9 @@ public class DataModelTabTree {
 		treeView.setCellFactory(new DataModelNodeCellFactory());
 		
 		
-
-		HBox hbox  = filter();
-		vbox.getChildren().addAll(treeView, hbox);
+		DataModelFilter dmFilter = new DataModelFilter(); 
+		HBox filterHbox  = dmFilter.getFilterHbox();
+		vbox.getChildren().addAll(treeView, filterHbox);
 		VBox.setVgrow(treeView, Priority.ALWAYS);
 		
 		// 恢复上次的数据

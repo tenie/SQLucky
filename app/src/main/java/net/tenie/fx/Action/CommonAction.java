@@ -1172,22 +1172,23 @@ public class CommonAction {
 
 	// 数据库表名的查询输入框
 	public static void dbInfoTreeQuery() {
-		 var container =AppWindowComponentGetter.DBinfoContainer;
-		   var filter = AppWindowComponentGetter.dbInfoTreeFilter;
-		   if(  container.getChildren().contains(filter)) {
-			   container.getChildren().remove(filter);
-		   }else {
-			   container.getChildren().add(1,filter);
-		   }
-		   
-		    // 如果有选中的字符串, 进行查询
-			String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
-			if (str.trim().length() > 0) {
-				ComponentGetter.dbInfoFilter.setText(str.trim());
-				if(  ! container.getChildren().contains(filter)) {
-					container.getChildren().add(1,filter);
-			   }
+		var container = AppWindowComponentGetter.DBinfoContainer;
+		//显示或隐藏 filter
+		var filter = AppWindowComponentGetter.dbInfoTreeFilter;
+		if (container.getChildren().contains(filter)) {
+			container.getChildren().remove(filter);
+		} else {
+			container.getChildren().add(1, filter);
+		}
+
+		// 如果有选中的字符串, 进行查询
+		String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
+		if (str.trim().length() > 0) {
+			ComponentGetter.dbInfoFilter.setText(str.trim());
+			if (!container.getChildren().contains(filter)) {
+				container.getChildren().add(1, filter);
 			}
+		}
 	}
 	
 	public static void showNotifiaction(String title) {

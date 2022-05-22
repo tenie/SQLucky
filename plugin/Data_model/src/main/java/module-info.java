@@ -6,7 +6,7 @@ open module SQLucky.plugin.DataModel{
 	requires SQLucky.sdk;
 	requires org.apache.commons.io;
 	requires com.jfoenix;  
-	         
+	requires fastjson; 
 	
 	exports net.tenie.plugin.DataModel.impl;
     provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.DataModel.impl.DataModelDelegateImpl;

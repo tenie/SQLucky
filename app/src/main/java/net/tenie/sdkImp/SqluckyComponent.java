@@ -1,5 +1,7 @@
 package net.tenie.sdkImp;
 
+import java.sql.SQLException;
+
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
@@ -11,6 +13,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.config.DbVendor;
+import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.tools.IconGenerator; 
 
@@ -97,6 +100,20 @@ public class SqluckyComponent implements AppComponent {
 	public void registerDBConnector(SqluckyDbRegister ctr) {
 		DbVendor.registerDbConnection(ctr);
 		
+	}
+
+	@Override
+	public boolean execDML(String sql) {
+		boolean succeed = false;
+		var conn = H2Db.getConn();
+		try {
+			DmlDdlDao.execDML(conn, sql);
+			succeed = true;
+		} catch (SQLException e) { 
+			e.printStackTrace();
+		}
+		
+		return succeed; 
 	}
 
 }

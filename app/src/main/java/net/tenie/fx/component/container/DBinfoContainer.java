@@ -17,7 +17,6 @@ import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.DBinfoTreeButtonFactory;
 import net.tenie.fx.component.InfoTree.DBinfoTreeFilter;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
-import net.tenie.fx.factory.ButtonFactory;
 
 /**
  * 
@@ -48,6 +47,11 @@ public class DBinfoContainer {
 		// 查询过滤
 		dbf  = new DBinfoTreeFilter(); 		
 		filter = dbf.createFilterPane(treeView);
+		
+//		VBox vboxTreeView = new VBox();
+//		vboxTreeView.getStyleClass().add("myDataModel-vbox");
+//		vboxTreeView.getChildren().addAll(filter, treeView );
+//		VBox.setVgrow(treeView, Priority.ALWAYS);
 		
 		// 数据连接/脚本 切换窗口
 		Accordion ad = createAccordion(scriptTreeView, treeView);

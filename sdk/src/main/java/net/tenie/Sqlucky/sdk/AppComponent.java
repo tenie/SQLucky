@@ -24,4 +24,11 @@ public interface AppComponent {
 	//DB DB2Connector
 	public void registerDBConnector(SqluckyDbRegister ctr);
 	
+	
+	// 执行dml sql语句
+	public boolean execDML(String sql);
+	// 获取链接/断开链接
+//	public void closeConn();
+//	public void openConn();
+	
 }

@@ -76,28 +76,65 @@ public class SqlTextDao {
 	public static final  String DATA_MODEL_INFO = 
 			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
 			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
-			"  `MODEL_NAME` VARCHAR(1000)   NOT NULL,\n" + 
-			"  `REMARK` VARCHAR(1000)  , \n" +
-			"  `ORDER_TAG` INT(11) DEFAULT '99',\n" + 
-			 
-			"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
-			") ";
-	
-	
-	public static final  String DATA_MODEL_DETAIL = 
-			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
-			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
-			"  `MODEL_NAME` VARCHAR(200)   NOT NULL,\n" + 
-			"  `DESCRIBE` VARCHAR(1000)  , \n" +
-			"  `AVATAR` VARCHAR(100)  , \n" +
-			"  `VERSION` VARCHAR(100)  , \n" +
-			"  `CREATED_TIME` DATETIME DEFAULT NULL,\n" + 
-			"  `UPDATED_TIME` DATETIME DEFAULT NULL,\n" + 
+			"  `NAME` VARCHAR(200)   NOT NULL,\n" + 
+			"  `DESCRIBE` VARCHAR(300)  , \n" +
+			"  `AVATAR` VARCHAR(200)   NOT NULL,\n" + 
+			"  `VERSION` VARCHAR(100)   NOT NULL,\n" + 
+			"  `CREATEDTIME` VARCHAR(100)   NOT NULL,\n" + 
+			"  `UPDATEDTIME` VARCHAR(100)   NOT NULL,\n" + 
 			
 			"  `ORDER_TAG` INT(11) DEFAULT '99',\n" + 
 			 
+			"  PRIMARY KEY ( `ID`, `NAME`)\n" + 
+			") ";
+	
+	
+	public static final  String DATA_MODEL_TABLE = 
+			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
+			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+			"  `DATA_ID` INT(11) ,\n" + 
+			"  `DEF_KEY` VARCHAR(200)   NOT NULL,\n" + 
+			"  `DEF_NAME` VARCHAR(300)  , \n" +
+			"  `COMMENT` VARCHAR(1000)  , \n" +
+	 
+			"  `CREATED_TIME` DATETIME DEFAULT NULL,\n" + 
+			"  `UPDATED_TIME` DATETIME DEFAULT NULL,\n" + 
+			
 			"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
 			") ";
+	public static final  String DATA_MODEL_TABLE_FIELDS = 
+			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
+			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
+			"  `data_id` VARCHAR(500)  , \n" + 
+			"  `rowNo` INT(11) ,\n" + 
+			"  `DEF_KEY` VARCHAR(200)   NOT NULL,   \n" +  //字段名称
+			"  `DEF_NAME` VARCHAR(300)  , \n" +
+			"  `COMMENT` VARCHAR(1000)  , \n" +
+			
+			"  `domain` VARCHAR(200)  , \n" +
+			"  `type` VARCHAR(200)  , \n" +
+			"  `len` INT(11) ,\n" + 
+			"  `scale` VARCHAR(200)  , \n" +
+			
+			"  `primaryKey` INT(1) ,\n" + 
+			"  `notNull` INT(1) ,\n" + 
+			"  `autoIncrement` INT(1) ,\n" + 
+			"  `defaultValue` VARCHAR(500)  , \n" + 
+			"  `hideInGraph` INT(1) ,\n" + 
+			
+			"  `typeFullName` VARCHAR(500)  , \n" + 
+			"  `primaryKeyName` VARCHAR(500)  , \n" + 
+			"  `notNullName` VARCHAR(500)  , \n" + 
+			"  `autoIncrementName` VARCHAR(500)  , \n" + 
+			"  `refDict` VARCHAR(500)  , \n" + 
+			"  `isStandard` INT(1) ,\n" + 
+			
+			"  `CREATED_TIME` DATETIME DEFAULT NULL,\n" + 
+			"  `UPDATED_TIME` DATETIME DEFAULT NULL,\n" + 
+			
+			"  PRIMARY KEY ( `ID`, `defKey`)\n" + 
+			") ";
+ 
 	
 	// 建表 
 	public static void createTab(Connection conn) {
