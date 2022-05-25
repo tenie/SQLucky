@@ -16,6 +16,12 @@
 		<name>https://github.com/tenie/SQLucky</name>
 	</organization>
 	<dependencies>
+	
+	<dependency>
+		    <groupId>org.javalite</groupId>
+		    <artifactId>activejdbc</artifactId>
+		</dependency>
+	
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-SDK</artifactId>

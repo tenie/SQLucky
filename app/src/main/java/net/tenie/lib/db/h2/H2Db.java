@@ -9,14 +9,15 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.commons.io.FileUtils;
 
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.connection.SqluckyConnection;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
-import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.fx.dao.InsertDao;
@@ -28,44 +29,38 @@ import net.tenie.fx.dao.SelectDao;
  *
  */
 public class H2Db {
-	private static Connection conn;
+	
 	// 连接打开次数的计数, 只有当connTimes = 0 , 调用close, 才会真的关闭
 	private static AtomicInteger connTimes = new AtomicInteger(0);
-	
-	private static String H2_DB_NAME  = "h2db";
-	private static int  H2_DB_VERSION = 4;
-	
-	private static String USER = "sa";
-	private static String PASSWD = "xyz123qweasd";
-	
+	private static Connection conn;
 	// 使用阻塞队列, 串行获取: 连接, 和关闭连接 
 //	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
-	public synchronized  static Connection getConn() {
+	public synchronized static Connection getConn() {
 		try {
 			if (conn == null) {
-				conn =  createH2Conn() ;
+				conn = SqluckyConnection.getConn();
 				// 第一次启动
-				if (!tabExist(conn, "CONNECTION_INFO")) {
+				if (!tabExist(conn, "DATA_MODEL_INFO")) {
 					SqlTextDao.createTab(conn);
 					// 数据库迁移
 					transferOldDbData();
-				}else {// 之后的启动, 更新脚本
+				} else {// 之后的启动, 更新脚本
 //					UpdateScript.execUpdate(conn);
-					
+
 				}
-			}else if( conn.isClosed()) {
-				conn =  createH2Conn() ;
+			} else if (conn.isClosed()) {
+				conn = SqluckyConnection.getConn();
 			}
 //			bQueue.put(conn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		int v = connTimes.addAndGet(1);
-		System.out.println("getConn = connIdx = "+ connTimes.get() + " v = " +v);
-		
+		System.out.println("getConn = connIdx = " + connTimes.get() + " v = " + v);
+
 		return conn;
-	} 
+	}
 	
 	public synchronized static void closeConn() {
 		if (conn != null) {
@@ -83,7 +78,21 @@ public class H2Db {
 			}
 		}
 	}
+	// 检查表是否存在
+	public static boolean tabExist(Connection conn, String tablename) {
+		try {
+			DatabaseMetaData dmd = conn.getMetaData();
+			ResultSet tablesResultSet = dmd.getTables(null, null, tablename, new String[] { "TABLE" });
+			if (tablesResultSet.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 
+	}
+ 
 	
 	public static boolean isDev() {
 		String  modulePath = System.getProperty("jdk.module.path");
@@ -99,49 +108,25 @@ public class H2Db {
 	}
 
 	
-	private static String dbFilePath() {
-		String dir = "/.sqlucky/";
-//		if(isDev()) {
-//			dir = "/.sqlucky_dev/";
-//		}
-		String path = FileUtils.getUserDirectoryPath() + dir;
-		return path;
-	}
 	
-	private static String getH2FilePath() {
-		String path = dbFilePath() ;
-		
-		ConfigVal.H2_DB_FILE_NAME = path + H2_DB_NAME+H2_DB_VERSION;
-		ConfigVal.H2_DB_FULL_FILE_NAME = ConfigVal.H2_DB_FILE_NAME+ ".mv.db";
-		return ConfigVal.H2_DB_FILE_NAME;
-	}
 	
-	private  static Connection createH2Conn() {
-		Connection connection =	createH2Conn(getH2FilePath(), USER , PASSWD);
-		return connection;
-	}
 	
-	private  static Connection createH2Conn(String path, String user, String pw) {
-		Dbinfo dbinfo = new Dbinfo("jdbc:h2:" + path, user, pw);
-		Connection connection = dbinfo.getconn();
-		return connection;
-	}
 	
 	
 	// 获取目录下的旧db文件, 从旧文件中找一个最新的
 	private static String oldDbFiles(){
 		String rs = "";
-		String path = dbFilePath() ;
+		String path = DBTools.dbFilePath() ;
 		File dir = new File(path);
 		
 		File[] files = dir.listFiles(name->{
-				return name.getName().startsWith(H2_DB_NAME) && name.getName().endsWith(".mv.db");
+				return name.getName().startsWith(ConfigVal.H2_DB_NAME) && name.getName().endsWith(".mv.db");
 			});
 		if(files != null && files.length > 0) {
 			long lastModifiedTime = 0;
 			for(var fl : files) {
 				String flName = fl.getName(); 
-				if(!flName.startsWith(H2_DB_NAME+H2_DB_VERSION) ) {					
+				if(!flName.startsWith(ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION) ) {					
 					long ltmp = fl.lastModified();
 					if(ltmp > lastModifiedTime) {
 						lastModifiedTime = ltmp;
@@ -162,8 +147,8 @@ public class H2Db {
 					"", // rd.getString("DRIVER"),
 					"", // rd.getString("HOST"),
 					"", // rd.getString("PORT"),
-					USER, 
-					PASSWD, 
+					ConfigVal.USER, 
+					ConfigVal.PASSWD, 
 					"VENDOR",  
 					"SCHEMA",  
 					"DB_NAME",  
@@ -223,20 +208,7 @@ public class H2Db {
 		}
 		return ls;
 	}
-	// 检查表是否存在
-	public static boolean tabExist(Connection conn, String tablename) {
-		try {
-			DatabaseMetaData dmd = conn.getMetaData();
-			ResultSet tablesResultSet = dmd.getTables(null, null, tablename, new String[] { "TABLE" });
-			if (tablesResultSet.next()) {
-				return true;
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return false;
-
-	}
+	
 	
 	// 获取配置
 	public static String getConfigVal(Connection conn, String key) {

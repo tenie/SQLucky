@@ -40,8 +40,15 @@ public class ConfigVal {
 	public static int FONT_SIZE = -1;
 	
 	// h2数据库位置
+	public static String H2_DIRVER = "org.h2.Driver";
 	public static String H2_DB_FILE_NAME = "";
 	public static String H2_DB_FULL_FILE_NAME = "";
+	
+	public static String H2_DB_NAME = "h2db";
+	public static int H2_DB_VERSION = 4;
+	  
+	public static String USER = "sa";
+	public static String PASSWD = "xyz123qweasd";
 	 
 	
 	// 打开文件目录缓存

@@ -27,10 +27,13 @@ open module SQLucky.sdk {
 	requires sql.formatter;
 	requires org.slf4j;
 	requires fastjson;
+	requires activejdbc;
+	
 	
 	requires org.apache.httpcomponents.client5.httpclient5;
 	requires org.apache.httpcomponents.client5.httpclient5.fluent;
 	requires org.apache.httpcomponents.core5.httpcore5;
+	requires org.mybatis;
 	
 	exports net.tenie.Sqlucky.sdk.utility;
 	exports net.tenie.Sqlucky.sdk.utility.net;
@@ -38,6 +41,8 @@ open module SQLucky.sdk {
 	exports net.tenie.Sqlucky.sdk.config;
 	exports net.tenie.Sqlucky.sdk.component;
 	exports net.tenie.Sqlucky.sdk.po;
+	exports net.tenie.Sqlucky.sdk.po.tools;
 	exports net.tenie.Sqlucky.sdk;
 	exports net.tenie.Sqlucky.sdk.db;
+	exports net.tenie.Sqlucky.sdk.db.connection;
 }

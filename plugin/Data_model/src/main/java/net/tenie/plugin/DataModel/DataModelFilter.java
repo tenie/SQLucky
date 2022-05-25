@@ -1,15 +1,13 @@
 package net.tenie.plugin.DataModel;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import org.apache.commons.io.FileUtils;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jfoenix.controls.JFXButton;
-import javafx.scene.control.Label;
+
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -17,8 +15,8 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
-import net.tenie.Sqlucky.sdk.utility.FileTools;
-import net.tenie.plugin.DataModel.po.DataModelPo;
+import net.tenie.plugin.DataModel.po.DataModelInfoPo;
+import net.tenie.plugin.DataModel.tools.AddModelFile;
 
 public class DataModelFilter {
 	HBox FilterHbox = new HBox();
@@ -45,7 +43,8 @@ public class DataModelFilter {
 //		addcodeArea.setOnMouseClicked(CommonEventHandler.addCodeTab());
 		addBtn.setTooltip(CommonUtility.instanceTooltip("Add Data Model File "));
 		addBtn.setOnAction(e->{
-			CommonUtility.openFileReadToString("UTF-8");
+//			CommonUtility.openFileReadToString("UTF-8");
+			AddModelFile.test();
 		});
 		
 		FilterHbox.getChildren().addAll(queryBtn, txt, addBtn);
@@ -61,7 +60,7 @@ public class DataModelFilter {
 		try {
 			val = FileUtils.readFileToString(f, encode);
 			if(val != null && !"".equals(val) ) { 
-				DataModelPo DataModelPoVal = JSONObject.parseObject(val, DataModelPo.class);
+				DataModelInfoPo DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
 				System.out.println(DataModelPoVal);
 			}
 		} catch (IOException e) {
@@ -75,7 +74,7 @@ public class DataModelFilter {
 		try {
 			String val = FileUtils.readFileToString(f, encode);
 			if(val != null && !"".equals(val) ) { 
-				DataModelPo DataModelPoVal = JSONObject.parseObject(val, DataModelPo.class);
+				DataModelInfoPo DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
 				System.out.println(DataModelPoVal);
 				System.out.println("======================");
 				System.out.println(DataModelPoVal.getEntities().get(0));

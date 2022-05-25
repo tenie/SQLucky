@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -78,10 +79,11 @@ public class SqlTextDao {
 			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
 			"  `NAME` VARCHAR(200)   NOT NULL,\n" + 
 			"  `DESCRIBE` VARCHAR(300)  , \n" +
-			"  `AVATAR` VARCHAR(200)   NOT NULL,\n" + 
-			"  `VERSION` VARCHAR(100)   NOT NULL,\n" + 
-			"  `CREATEDTIME` VARCHAR(100)   NOT NULL,\n" + 
-			"  `UPDATEDTIME` VARCHAR(100)   NOT NULL,\n" + 
+			"  `AVATAR` VARCHAR(200)   ,\n" + 
+			"  `VERSION` VARCHAR(100)   ,\n" + 
+			
+			"  `CREATEDTIME` VARCHAR(100)    ,\n" + 
+			"  `UPDATEDTIME` VARCHAR(100)    ,\n" + 
 			
 			"  `ORDER_TAG` INT(11) DEFAULT '99',\n" + 
 			 
@@ -90,49 +92,49 @@ public class SqlTextDao {
 	
 	
 	public static final  String DATA_MODEL_TABLE = 
-			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
-			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
-			"  `DATA_ID` INT(11) ,\n" + 
+			"CREATE TABLE `DATA_MODEL_TABLE` (\n" +
+			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+			"  `ID` VARCHAR(100) ,\n" + 
 			"  `DEF_KEY` VARCHAR(200)   NOT NULL,\n" + 
 			"  `DEF_NAME` VARCHAR(300)  , \n" +
 			"  `COMMENT` VARCHAR(1000)  , \n" +
 	 
-			"  `CREATED_TIME` DATETIME DEFAULT NULL,\n" + 
-			"  `UPDATED_TIME` DATETIME DEFAULT NULL,\n" + 
+			"  `CREATED_TIME` DATETIME  ,\n" + 
+			"  `UPDATED_TIME` DATETIME  ,\n" + 
 			
-			"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
+			"  PRIMARY KEY ( `ITEM_ID`, `DEF_KEY`)\n" + 
 			") ";
 	public static final  String DATA_MODEL_TABLE_FIELDS = 
-			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
-			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
-			"  `data_id` VARCHAR(500)  , \n" + 
-			"  `rowNo` INT(11) ,\n" + 
-			"  `DEF_KEY` VARCHAR(200)   NOT NULL,   \n" +  //字段名称
+			"CREATE TABLE `DATA_MODEL_TABLE_FIELDS` (\n" +
+			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
+			"  `TABLE_ID` INT(11) NOT NULL ,\n" +
+			"  `ID` VARCHAR(100)  , \n" + 
+			"  `ROW_NO` INT(11) ,\n" + 
+			"  `DEF_KEY` VARCHAR(200)    ,   \n" +  //字段名称
 			"  `DEF_NAME` VARCHAR(300)  , \n" +
 			"  `COMMENT` VARCHAR(1000)  , \n" +
 			
-			"  `domain` VARCHAR(200)  , \n" +
-			"  `type` VARCHAR(200)  , \n" +
-			"  `len` INT(11) ,\n" + 
-			"  `scale` VARCHAR(200)  , \n" +
+			"  `DOMAIN` VARCHAR(200)  , \n" +
+			"  `TYPE` VARCHAR(200)  , \n" +
+			"  `LEN` INT(11) ,\n" + 
+			"  `SCALE` VARCHAR(100)  , \n" +
 			
-			"  `primaryKey` INT(1) ,\n" + 
-			"  `notNull` INT(1) ,\n" + 
-			"  `autoIncrement` INT(1) ,\n" + 
-			"  `defaultValue` VARCHAR(500)  , \n" + 
-			"  `hideInGraph` INT(1) ,\n" + 
+			"  `PRIMARY_KEY` BOOLEAN ,\n" + 
+			"  `NOT_NULL` BOOLEAN ,\n" + 
+			"  `AUTO_INCREMENT` BOOLEAN ,\n" + 
+			"  `DEFAULT_VALUE` VARCHAR(500)  , \n" + 
+			"  `HIDE_IN_GRAPH` BOOLEAN ,\n" + 
 			
-			"  `typeFullName` VARCHAR(500)  , \n" + 
-			"  `primaryKeyName` VARCHAR(500)  , \n" + 
-			"  `notNullName` VARCHAR(500)  , \n" + 
-			"  `autoIncrementName` VARCHAR(500)  , \n" + 
-			"  `refDict` VARCHAR(500)  , \n" + 
-			"  `isStandard` INT(1) ,\n" + 
+			"  `TYPE_FULL_NAME` VARCHAR(500)  , \n" + 
+			"  `PRIMARY_KEY_NAME` VARCHAR(500)  , \n" + 
+			"  `NOT_NULL_NAME` VARCHAR(500)  , \n" + 
+			"  `AUTO_INCREMENT_NAME` VARCHAR(500)  , \n" + 
+			"  `REF_DICT` VARCHAR(500)  , \n" + 
 			
-			"  `CREATED_TIME` DATETIME DEFAULT NULL,\n" + 
-			"  `UPDATED_TIME` DATETIME DEFAULT NULL,\n" + 
+			"  `CREATED_TIME` DATETIME ,\n" + 
+			"  `UPDATED_TIME` DATETIME ,\n" + 
 			
-			"  PRIMARY KEY ( `ID`, `defKey`)\n" + 
+			"  PRIMARY KEY ( `ITEM_ID`, `TABLE_ID`,`DEF_KEY`)\n" + 
 			") ";
  
 	
@@ -143,6 +145,10 @@ public class SqlTextDao {
 			DBTools.execDDLNoErr(conn, SQL_TEXT_SAVE);
 			DBTools.execDDLNoErr(conn, SCRIPT_ARCHIVE); 
 			DBTools.execDDLNoErr(conn, APP_CONFIG);
+			
+			DBTools.execDDLNoErr(conn, DATA_MODEL_INFO);
+			DBTools.execDDLNoErr(conn, DATA_MODEL_TABLE);
+			DBTools.execDDLNoErr(conn, DATA_MODEL_TABLE_FIELDS);
 			
 		} catch (Exception e) { 
 			e.printStackTrace();

@@ -10,8 +10,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
@@ -24,7 +27,16 @@ import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 public class DBTools {
 
 	private static Logger logger = LogManager.getLogger(DBTools.class);
-
+	
+	public static String dbFilePath() {
+		String dir = "/.sqlucky/";
+//		if(isDev()) {
+//			dir = "/.sqlucky_dev/";
+//		}
+		String path = FileUtils.getUserDirectoryPath() + dir;
+		return path;
+	}
+	
 	public static DbTableDatePo deleteSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		int i = execDML(conn, sql);

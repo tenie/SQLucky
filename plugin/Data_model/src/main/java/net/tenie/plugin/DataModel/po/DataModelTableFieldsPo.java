@@ -1,7 +1,10 @@
 package net.tenie.plugin.DataModel.po;
 
+import java.util.Date;
+
 public class DataModelTableFieldsPo {
 
+	private Long itemId;
 	private String id; 
 	private int rowNo;
 	private String defKey;
@@ -20,8 +23,11 @@ public class DataModelTableFieldsPo {
 	private String primaryKeyName;
 	private String notNullName; 
 	private String autoIncrementName;
-	private String refDict;
-	private boolean isStandard;
+	private String refDict; 
+
+	private Date createdTime;
+	private Date updatedTime;
+	
 	public int getRowNo() {
 		return rowNo;
 	}
@@ -136,20 +142,34 @@ public class DataModelTableFieldsPo {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public boolean isStandard() {
-		return isStandard;
+	public Long getItemId() {
+		return itemId;
 	}
-	public void setStandard(boolean isStandard) {
-		this.isStandard = isStandard;
+	public void setItemId(Long itemId) {
+		this.itemId = itemId;
+	}
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+	public Date getUpdatedTime() {
+		return updatedTime;
+	}
+	public void setUpdatedTime(Date updatedTime) {
+		this.updatedTime = updatedTime;
 	}
 	@Override
 	public String toString() {
-		return "DataModelTableFieldsPo [rowNo=" + rowNo + ", defKey=" + defKey + ", defName=" + defName + ", comment="
-				+ comment + ", domain=" + domain + ", type=" + type + ", len=" + len + ", scale=" + scale
-				+ ", primaryKey=" + primaryKey + ", notNull=" + notNull + ", autoIncrement=" + autoIncrement
-				+ ", defaultValue=" + defaultValue + ", hideInGraph=" + hideInGraph + ", typeFullName=" + typeFullName
-				+ ", primaryKeyName=" + primaryKeyName + ", notNullName=" + notNullName + ", autoIncrementName="
-				+ autoIncrementName + ", refDict=" + refDict + ", id=" + id + ", isStandard=" + isStandard + "]";
-	} 
+		return "DataModelTableFieldsPo [itemId=" + itemId + ", id=" + id + ", rowNo=" + rowNo + ", defKey=" + defKey
+				+ ", defName=" + defName + ", comment=" + comment + ", domain=" + domain + ", type=" + type + ", len="
+				+ len + ", scale=" + scale + ", primaryKey=" + primaryKey + ", notNull=" + notNull + ", autoIncrement="
+				+ autoIncrement + ", defaultValue=" + defaultValue + ", hideInGraph=" + hideInGraph + ", typeFullName="
+				+ typeFullName + ", primaryKeyName=" + primaryKeyName + ", notNullName=" + notNullName
+				+ ", autoIncrementName=" + autoIncrementName + ", refDict=" + refDict + ", createdTime=" + createdTime
+				+ ", updatedTime=" + updatedTime + "]";
+	}
+ 
 	
 }

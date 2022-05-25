@@ -1,12 +1,17 @@
 package net.tenie.plugin.DataModel.po;
 
+import java.util.Date;
 import java.util.List;
 
 public class DataModelTablePo {
+	private Long itemId;
 	private String id;
 	private String defKey;
 	private String defName;
 	private String comment; 
+	
+	private Date createdTime;
+	private Date updatedTime;
 	
 	private List<DataModelTableFieldsPo> fields;
 
@@ -50,10 +55,37 @@ public class DataModelTablePo {
 		this.fields = fields;
 	}
 
+	public Long getItemId() {
+		return itemId;
+	}
+
+	public void setItemId(Long itemId) {
+		this.itemId = itemId;
+	}
+
+	public Date getCreatedTime() {
+		return createdTime;
+	}
+
+	public void setCreatedTime(Date createdTime) {
+		this.createdTime = createdTime;
+	}
+
+	public Date getUpdatedTime() {
+		return updatedTime;
+	}
+
+	public void setUpdatedTime(Date updatedTime) {
+		this.updatedTime = updatedTime;
+	}
+
 	@Override
 	public String toString() {
-		return "DataModelTablePo [id=" + id + ", defKey=" + defKey + ", defName=" + defName + ", comment=" + comment
-				+ ", fields=" + fields + "]";
+		return "DataModelTablePo [itemId=" + itemId + ", id=" + id + ", defKey=" + defKey + ", defName=" + defName
+				+ ", comment=" + comment + ", createdTime=" + createdTime + ", updatedTime=" + updatedTime + ", fields="
+				+ fields + "]";
 	}
+
+	 
 	
 }
