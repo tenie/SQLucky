@@ -12,16 +12,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.po.tools.PoDao;
+import net.tenie.Sqlucky.sdk.po.tools.PoDaoUtil;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.tools.AddModelFile;
 
-public class DataModelFilter {
+public class DataModelOption {
 	HBox FilterHbox = new HBox();
 	
-	public DataModelFilter(){
+	public DataModelOption(){
 //		Label lb = new Label();
 //		var icon = ComponentGetter.getIconDefActive("search");
 //		lb.setGraphic(icon);
@@ -44,7 +46,8 @@ public class DataModelFilter {
 		addBtn.setTooltip(CommonUtility.instanceTooltip("Add Data Model File "));
 		addBtn.setOnAction(e->{
 //			CommonUtility.openFileReadToString("UTF-8");
-			AddModelFile.test();
+//			AddModelFile.test();
+			readJosnModel("UTF-8");
 		});
 		
 		FilterHbox.getChildren().addAll(queryBtn, txt, addBtn);
@@ -53,7 +56,7 @@ public class DataModelFilter {
 	
 
 	public static void readJosnModel(String encode) {
-		File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
+		File f = FileOrDirectoryChooser.showOpenJsonFile("Open", ComponentGetter.primaryStage);
 		if (f == null)
 			return ;
 		String val = "";
@@ -61,7 +64,8 @@ public class DataModelFilter {
 			val = FileUtils.readFileToString(f, encode);
 			if(val != null && !"".equals(val) ) { 
 				DataModelInfoPo DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
-				System.out.println(DataModelPoVal);
+//				System.out.println(DataModelPoVal);
+				AddModelFile.insertDataModel(DataModelPoVal);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -69,23 +73,26 @@ public class DataModelFilter {
 		} 
 	}
 	
-	public static void readJosnModel(String fileName, String encode) {
+	public static DataModelInfoPo readJosnModel(String fileName, String encode) {
+		DataModelInfoPo DataModelPoVal =  null;
 		File f =  new File(fileName);
 		try {
 			String val = FileUtils.readFileToString(f, encode);
 			if(val != null && !"".equals(val) ) { 
-				DataModelInfoPo DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
+			    DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
 				System.out.println(DataModelPoVal);
 				System.out.println("======================");
-				System.out.println(DataModelPoVal.getEntities().get(0));
-				System.out.println("======================");
-				System.out.println(DataModelPoVal.getEntities().get(0).getFields());
+				System.out.println(DataModelPoVal.getEntities().get(0)); 
+//				AddModelFile.insertDataModel(DataModelPoVal);
+//				PoDao.insert(null, null);
 				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 			MyAlert.errorAlert( e.getMessage());
 		} 
+		
+		return DataModelPoVal;
 	}
 	
 	

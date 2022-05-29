@@ -5,6 +5,7 @@ import java.util.List;
 
 public class DataModelTablePo {
 	private Long itemId;
+	private Long modelId;
 	private String id;
 	private String defKey;
 	private String defName;
@@ -79,12 +80,21 @@ public class DataModelTablePo {
 		this.updatedTime = updatedTime;
 	}
 
+	public Long getModelId() {
+		return modelId;
+	}
+
+	public void setModelId(Long modelId) {
+		this.modelId = modelId;
+	}
+
 	@Override
 	public String toString() {
-		return "DataModelTablePo [itemId=" + itemId + ", id=" + id + ", defKey=" + defKey + ", defName=" + defName
-				+ ", comment=" + comment + ", createdTime=" + createdTime + ", updatedTime=" + updatedTime + ", fields="
-				+ fields + "]";
+		return "DataModelTablePo [itemId=" + itemId + ", modelId=" + modelId + ", id=" + id + ", defKey=" + defKey
+				+ ", defName=" + defName + ", comment=" + comment + ", createdTime=" + createdTime + ", updatedTime="
+				+ updatedTime + ", fields=" + fields + "]";
 	}
+
 
 	 
 	

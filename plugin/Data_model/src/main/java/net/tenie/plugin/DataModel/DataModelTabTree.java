@@ -84,7 +84,7 @@ public class DataModelTabTree {
 		treeView.setCellFactory(new DataModelNodeCellFactory());
 		
 		
-		DataModelFilter dmFilter = new DataModelFilter(); 
+		DataModelOption dmFilter = new DataModelOption(); 
 		HBox filterHbox  = dmFilter.getFilterHbox();
 		vbox.getChildren().addAll(treeView, filterHbox);
 		VBox.setVgrow(treeView, Priority.ALWAYS);

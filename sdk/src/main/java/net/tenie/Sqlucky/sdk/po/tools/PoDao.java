@@ -3,6 +3,7 @@ package net.tenie.Sqlucky.sdk.po.tools;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
 import java.util.LinkedList;
@@ -28,13 +29,9 @@ public class PoDao {
 			LinkedList params = new LinkedList();
 
 			try {
-//				POValidate.getInstance().validate(bean, 1);
 				PoInfo binfo = PoDaoUtil.getDataBeanInfo(bean);
 				String sql = PoDaoUtil.getInsertSql(binfo, bean);
 				System.out.println(sql);
-//				if(1==1) {
-//					return;
-//				}
 				ps = conn.prepareStatement(sql);
 				int size = binfo.getColSize();
 				Object obj = null;
@@ -58,6 +55,61 @@ public class PoDao {
 			}
 		}
 	}
+	public static Long getReturnId(PreparedStatement pstmt) {
+		ResultSet rs = null;
+		
+		Long id = null;
+		try {
+			rs = pstmt.getGeneratedKeys();
+			if (rs.next()) {
+				id = rs.getLong(1);
+			}
+		} catch (SQLException e) { 
+			e.printStackTrace();
+		} finally { 
+			try {
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	
+		return id;
+	}
+	public static Long insertReturnID(Connection conn, Object bean) throws Exception {
+		if (bean != null ) {
+			PreparedStatement ps = null;
+			LinkedList params = new LinkedList();
+
+			try {
+				PoInfo binfo = PoDaoUtil.getDataBeanInfo(bean);
+				String sql = PoDaoUtil.getInsertSql(binfo, bean);
+				ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+				int size = binfo.getColSize();
+				Object obj = null;
+				int idx = 1;
+
+				for (int i = 0; i < size; ++i) {
+					obj = binfo.getColVal(bean, i);
+					if (obj != null) {
+						setObj(ps, idx, binfo.getColType(i), obj);
+						params.addLast(obj.toString());
+						++idx;
+					}
+				}
+
+				logger.debug(sql + " " + params);
+				ps.execute();
+				return getReturnId(ps);
+			} catch (Throwable var13) {
+				throw new Exception("Exception", var13);
+			} finally {
+				clean(ps, (ResultSet) null);
+			}
+		}
+		return null;
+	}
+	
 
 	private static void setObj(PreparedStatement ps, int idx, Class type, Object val) throws Exception {
 		if (type.equals(Date.class)) {

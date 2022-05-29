@@ -94,6 +94,7 @@ public class SqlTextDao {
 	public static final  String DATA_MODEL_TABLE = 
 			"CREATE TABLE `DATA_MODEL_TABLE` (\n" +
 			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+			"  `MODEL_ID` INT(11)   ,\n" + 		
 			"  `ID` VARCHAR(100) ,\n" + 
 			"  `DEF_KEY` VARCHAR(200)   NOT NULL,\n" + 
 			"  `DEF_NAME` VARCHAR(300)  , \n" +
@@ -119,11 +120,11 @@ public class SqlTextDao {
 			"  `LEN` INT(11) ,\n" + 
 			"  `SCALE` VARCHAR(100)  , \n" +
 			
-			"  `PRIMARY_KEY` BOOLEAN ,\n" + 
-			"  `NOT_NULL` BOOLEAN ,\n" + 
-			"  `AUTO_INCREMENT` BOOLEAN ,\n" + 
+			"  `PRIMARY_KEY` VARCHAR(10) ,\n" + 
+			"  `NOT_NULL` VARCHAR(10) ,\n" + 
+			"  `AUTO_INCREMENT` VARCHAR(10) ,\n" + 
 			"  `DEFAULT_VALUE` VARCHAR(500)  , \n" + 
-			"  `HIDE_IN_GRAPH` BOOLEAN ,\n" + 
+			"  `HIDE_IN_GRAPH` VARCHAR(10) ,\n" + 
 			
 			"  `TYPE_FULL_NAME` VARCHAR(500)  , \n" + 
 			"  `PRIMARY_KEY_NAME` VARCHAR(500)  , \n" + 

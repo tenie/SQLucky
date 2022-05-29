@@ -66,8 +66,29 @@ public class PoInfo {
 	}
 
 	public Object getColVal(Object bean, int idx) throws Exception {
-		Method mth = this.cls.getMethod("get" + (String) this.mthName.get(idx));
-		return mth.invoke(bean);
+		String colName =  this.mthName.get(idx);
+		String lowCN = colName.toLowerCase();
+		var ms = this.cls.getMethods();
+		for(Method mth : ms) {
+			var mName = mth.getName();
+			if(mName.toLowerCase().contains( lowCN)) {
+				if(mName.startsWith("set")) {
+					continue;
+				}else {
+					return mth.invoke(bean);
+				}
+				
+			}
+			
+			
+			
+		}
+		return null;
+//		Method mth = this.cls.getMethod("get" + (String) this.mthName.get(idx));
+//		if(mth == null) {
+//			mth = this.cls.getMethod("is" + (String) this.mthName.get(idx));
+//		}
+//		return mth.invoke(bean);
 	}
 
 	public void setColVal(Object bean, int idx, Object val) throws Exception {

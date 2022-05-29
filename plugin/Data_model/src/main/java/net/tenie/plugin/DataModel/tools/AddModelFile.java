@@ -1,6 +1,8 @@
 package net.tenie.plugin.DataModel.tools;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -19,13 +21,48 @@ import net.tenie.plugin.DataModel.po.DataModelInfoMapper;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 
 public class AddModelFile {
-	
-	public static void insert(DataModelInfoPo dmp) {
+	// 模型插入到数据库
+	public static void insertDataModel(DataModelInfoPo dmp) {
+		var conn = SqluckyConnection.getConn();
 		
-		var tabs = dmp.getEntities();
+		try {
+			var modelID = PoDao.insertReturnID(conn, dmp);
+			
+			var tables = dmp.getEntities();
+			for(var tab : tables ) {
+				tab.setModelId(modelID);
+				 var tableId = PoDao.insertReturnID(conn, tab);
+				 
+				 // 字段
+				 var fields = tab.getFields();
+				 for(var field: fields) {
+					 System.out.println(field);
+					 field.setTableId(tableId);
+					 field.setCreatedTime(new Date());
+					 PoDao.insert(conn, field);
+//					 break;
+					 
+				 }
+//				 break;
+				 
+			}
+			
+		} catch (Exception e) { 
+			e.printStackTrace();
+		}finally {
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+//		var tabs = dmp.getEntities();
 		
 		
 	}
+	
+	// 测试PoDao
 	public static void test()   {
 		var conn = SqluckyConnection.getConn();
 		try {
@@ -49,6 +86,7 @@ public class AddModelFile {
 		
 	}
 	
+	// mybites 测试
 	public static void test2() {
 //		 SqlSessionFactory sqlSessionFactory2= new SqlSessionFactoryBuilder().build
 		

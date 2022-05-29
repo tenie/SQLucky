@@ -5,6 +5,7 @@ import java.util.Date;
 public class DataModelTableFieldsPo {
 
 	private Long itemId;
+	private Long tableId;
 	private String id; 
 	private int rowNo;
 	private String defKey;
@@ -14,11 +15,8 @@ public class DataModelTableFieldsPo {
 	private String type;
 	private int len; 
 	private String scale;
-	private boolean primaryKey;
-	private boolean notNull; 
-	private boolean autoIncrement;
+
 	private String defaultValue;
-	private boolean hideInGraph; 
 	private String typeFullName;
 	private String primaryKeyName;
 	private String notNullName; 
@@ -27,6 +25,12 @@ public class DataModelTableFieldsPo {
 
 	private Date createdTime;
 	private Date updatedTime;
+	
+	
+	private String primaryKey;
+	private String notNull; 
+	private String autoIncrement; 
+	private String hideInGraph; 
 	
 	public int getRowNo() {
 		return rowNo;
@@ -76,35 +80,11 @@ public class DataModelTableFieldsPo {
 	public void setScale(String scale) {
 		this.scale = scale;
 	}
-	public boolean isPrimaryKey() {
-		return primaryKey;
-	}
-	public void setPrimaryKey(boolean primaryKey) {
-		this.primaryKey = primaryKey;
-	}
-	public boolean isNotNull() {
-		return notNull;
-	}
-	public void setNotNull(boolean notNull) {
-		this.notNull = notNull;
-	}
-	public boolean isAutoIncrement() {
-		return autoIncrement;
-	}
-	public void setAutoIncrement(boolean autoIncrement) {
-		this.autoIncrement = autoIncrement;
-	}
 	public String getDefaultValue() {
 		return defaultValue;
 	}
 	public void setDefaultValue(String defaultValue) {
 		this.defaultValue = defaultValue;
-	}
-	public boolean isHideInGraph() {
-		return hideInGraph;
-	}
-	public void setHideInGraph(boolean hideInGraph) {
-		this.hideInGraph = hideInGraph;
 	}
 	public String getTypeFullName() {
 		return typeFullName;
@@ -160,16 +140,48 @@ public class DataModelTableFieldsPo {
 	public void setUpdatedTime(Date updatedTime) {
 		this.updatedTime = updatedTime;
 	}
+	public Long getTableId() {
+		return tableId;
+	}
+	public void setTableId(Long tableId) {
+		this.tableId = tableId;
+	}
+	
+	
+	public String getPrimaryKey() {
+		return primaryKey;
+	}
+	public void setPrimaryKey(String primaryKey) {
+		this.primaryKey = primaryKey;
+	}
+	public String getNotNull() {
+		return notNull;
+	}
+	public void setNotNull(String notNull) {
+		this.notNull = notNull;
+	}
+	public String getAutoIncrement() {
+		return autoIncrement;
+	}
+	public void setAutoIncrement(String autoIncrement) {
+		this.autoIncrement = autoIncrement;
+	}
+	public String getHideInGraph() {
+		return hideInGraph;
+	}
+	public void setHideInGraph(String hideInGraph) {
+		this.hideInGraph = hideInGraph;
+	}
 	@Override
 	public String toString() {
-		return "DataModelTableFieldsPo [itemId=" + itemId + ", id=" + id + ", rowNo=" + rowNo + ", defKey=" + defKey
-				+ ", defName=" + defName + ", comment=" + comment + ", domain=" + domain + ", type=" + type + ", len="
-				+ len + ", scale=" + scale + ", primaryKey=" + primaryKey + ", notNull=" + notNull + ", autoIncrement="
-				+ autoIncrement + ", defaultValue=" + defaultValue + ", hideInGraph=" + hideInGraph + ", typeFullName="
-				+ typeFullName + ", primaryKeyName=" + primaryKeyName + ", notNullName=" + notNullName
-				+ ", autoIncrementName=" + autoIncrementName + ", refDict=" + refDict + ", createdTime=" + createdTime
-				+ ", updatedTime=" + updatedTime + "]";
+		return "DataModelTableFieldsPo [itemId=" + itemId + ", tableId=" + tableId + ", id=" + id + ", rowNo=" + rowNo
+				+ ", defKey=" + defKey + ", defName=" + defName + ", comment=" + comment + ", domain=" + domain
+				+ ", type=" + type + ", len=" + len + ", scale=" + scale + ", primaryKey=" + primaryKey + ", notNull="
+				+ notNull + ", autoIncrement=" + autoIncrement + ", defaultValue=" + defaultValue + ", hideInGraph="
+				+ hideInGraph + ", typeFullName=" + typeFullName + ", primaryKeyName=" + primaryKeyName
+				+ ", notNullName=" + notNullName + ", autoIncrementName=" + autoIncrementName + ", refDict=" + refDict
+				+ ", createdTime=" + createdTime + ", updatedTime=" + updatedTime + "]";
 	}
- 
+	 
 	
 }

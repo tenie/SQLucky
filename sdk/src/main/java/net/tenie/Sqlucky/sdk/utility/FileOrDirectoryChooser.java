@@ -68,6 +68,16 @@ public final class FileOrDirectoryChooser {
 				new FileChooser.ExtensionFilter("All", "*.*"));
 	}
 	
+	private static void jsonFileChooser(final FileChooser fileChooser, String title) {
+		fileChooser.setTitle(title);
+	    fileChooser.setInitialDirectory( new File(System.getProperty("user.home"))  );
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().addAll( 
+				new FileChooser.ExtensionFilter("json", "*.json"),
+				new FileChooser.ExtensionFilter("All", "*.*"));
+			
+	}
+	
 	
 	// 选择目录
 	public static DirectoryChooser getDirChooser(String title) {
@@ -89,20 +99,16 @@ public final class FileOrDirectoryChooser {
   }
 	
 	
-	public static FileChooser getDefaultFileChooser(String title) {
-		configureFileChooser(fileChooser, title);
-		return fileChooser;
-	}
+ 
 	
 	public static FileChooser getFileChooserInitFileName(String title, String filename) {
 		configureFileChooser(fileChooser, title, filename);
 		return fileChooser;
 	}
 	
-	public static FileChooser getAllFileChooser(String title) {
-		allFileChooser(fileChooser, title);
-		return fileChooser;
-	}
+	 
+	 
+	
 	
 	 
 	public static FileChooser getFileChooser( String title, String filename, File dir) {
@@ -150,8 +156,8 @@ public final class FileOrDirectoryChooser {
 	
 	// 获取保存的文件绝对路径名(默认)
 	public static File showSaveDefault(String title, Stage stage) {
-		FileChooser fc = getDefaultFileChooser(title);
-		File file = fc.showSaveDialog(stage);
+		configureFileChooser(fileChooser, title);
+		File file = fileChooser.showSaveDialog(stage);
 		return file;
 	}
 	
@@ -175,15 +181,22 @@ public final class FileOrDirectoryChooser {
 
 	// 打开sql文件
 	public static File showOpenSqlFile(String title, Stage stage) {
-		FileChooser fc = getDefaultFileChooser(title);
-		File file = fc.showOpenDialog(stage);
+		configureFileChooser(fileChooser, title);
+		File file = fileChooser.showOpenDialog(stage);
 		return file;
 	}
 
 	// 所以类型的文件
 	public static File showOpenAllFile(String title, Stage stage) {
-		FileChooser fc = getAllFileChooser(title); 
-		File file = fc.showOpenDialog(stage);
+		allFileChooser(fileChooser, title);
+		File file = fileChooser.showOpenDialog(stage);
+		return file;
+	}
+	
+	// json类型的文件
+	public static File showOpenJsonFile(String title, Stage stage) {
+		jsonFileChooser(fileChooser, title);
+		File file = fileChooser.showOpenDialog(stage);
 		return file;
 	}
 
