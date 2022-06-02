@@ -1,4 +1,4 @@
-package net.tenie.fx.factory;
+package net.tenie.fx.component.InfoTree;
 
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
@@ -7,7 +7,6 @@ import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.TableDataDetail;
 import net.tenie.lib.tools.IconGenerator;
@@ -134,13 +133,13 @@ public class DBInfoTreeContextMenu {
 	
 	
 	
-	public void setTableAction(SqluckyConnector  dbc ,String schema ,String tablename ) {
+	public void setTableAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String tablename ) {
 		tableAddNewCol.setOnAction(e->{ 
 			MenuAction.addNewColumn(dbc, schema, tablename);
 		});
 	 
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropTable(dbc, schema, tablename);
+			MenuAction.dropTable( treeItem,  dbc, schema, tablename);
 		});
 	 
 		tableShow.setOnAction(e->{ 

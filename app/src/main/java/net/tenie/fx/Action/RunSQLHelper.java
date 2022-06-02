@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -19,11 +21,8 @@ import org.fxmisc.richtext.CodeArea;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
@@ -42,6 +41,7 @@ import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
@@ -68,6 +68,11 @@ import net.tenie.lib.tools.IconGenerator;
  *
  */
 public class RunSQLHelper {
+	
+	// 执行状态, 失败赋值为0， 成功为1
+	public static Map<Long, Integer> RUN_STATUS = new HashMap<>();
+//	RUN_STATUS = -1;
+	
 	private static Logger logger = LogManager.getLogger(RunSQLHelper.class);
 	private static Thread thread;
 	private static JFXButton runbtn;
@@ -94,6 +99,16 @@ public class RunSQLHelper {
 	
 	private static boolean isCurrentLine = false; 
 	
+	// 获取执行状态，成功或失败
+	public static Integer runStatus(Long key) {
+		Integer val = RUN_STATUS.get(key);
+		if(val !=null) {
+			if(val == 1 || val == 0) {
+				RUN_STATUS.remove(key);
+			}
+		}
+		return val;
+	}
 	
    // 查询时等待画面
 	public static Tab maskTab(String waittbName) {
@@ -108,7 +123,7 @@ public class RunSQLHelper {
 	
 	
 	@SuppressWarnings("restriction")
-	private static void runMain(String s) {	 
+	private static void runMain(Long statusKey) {	 
 		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
 			tidx = Integer.valueOf(tabIdx);
 		}else {
@@ -138,7 +153,8 @@ public class RunSQLHelper {
 				allsqls = willExecSql();
 			}
 			// 执行sql
-			execSqlList(allsqls, dpo);
+			var rsVal = execSqlList(allsqls, dpo);
+			if(statusKey != null) RUN_STATUS.put(statusKey, rsVal);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -152,7 +168,8 @@ public class RunSQLHelper {
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static void execSqlList(List<SqlData> allsqls,  SqluckyConnector dpo) throws SQLException {
+	private static Integer execSqlList(List<SqlData> allsqls,  SqluckyConnector dpo) throws SQLException {
+		Integer rsVal = 1;
 		String sqlstr;
 		String sql;
 		Connection conn = dpo.getConn();
@@ -203,13 +220,18 @@ public class RunSQLHelper {
 				msg += "\n"+dpo.translateErrMsg(msg);
 				SqlData sd = 	allsqls.get(i);
 				errObj.add(sd);
+				rsVal = 0;
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
 				// 如果只有一行ddl执行
 				if(sqllenght == 1  && !msg.startsWith("failed")) {
-					CommonAction.showNotifiaction(msg);
-//					rmWaitingPane();
-					rmWaitingPaneHold();
+					final String msgVal = msg; 
+					Platform.runLater(()->{
+						CommonAction.showNotifiaction(msgVal);
+//						rmWaitingPane();
+						rmWaitingPaneHold();
+					});
+					
 				}else {
 					// 显示字段是只读的
 					ObservableList<StringProperty> val = FXCollections.observableArrayList();
@@ -237,7 +259,7 @@ public class RunSQLHelper {
 				}
 			});
 		}
-		
+		return rsVal;
 	}
 	
 	
@@ -470,11 +492,11 @@ public class RunSQLHelper {
 	}
  
 	// 在子线程执行 运行sql 的任务
-	public static Thread createThread(  Consumer<String> action) {
+	public static Thread createThread(Consumer<Long> action , Long statusKey) {
 		return new Thread() {
 			public void run() {
 				logger.info("线程启动了" + this.getName()); 
-				action.accept("");
+				action.accept(statusKey);
 				logger.info("线程结束了" + this.getName());
 			}
 		};
@@ -537,11 +559,13 @@ public class RunSQLHelper {
 		Connection conn = DBConns.get(connboxVal).getConn();
 		return conn;
 	}
+	
 
-
-
-	// 运行 sql 入口
-	public static void runSQLMethodRefresh(SqluckyConnector dpov , String sqlv, String tabIdxv, boolean isLockv ) {
+	public static Long runSQLMethodRefresh(SqluckyConnector dpov , String sqlv, String tabIdxv, boolean isLockv ) {
+		Long statusKey =  CommonUtility.dateTime();
+		 
+		RUN_STATUS.put(statusKey, -1);
+		 
 		settingBtn();
 		CommonAction.showDetailPane();
 		
@@ -553,9 +577,16 @@ public class RunSQLHelper {
 	    isLock = isLockv;
 	    isCallFunc = false;
 	    
-		thread = createThread( RunSQLHelper::runMain);
+		thread = createThread( RunSQLHelper::runMain, statusKey);
 		thread.start();
+		return statusKey;
 	}
+
+
+	// 运行 sql 入口
+//	public static void runSQLMethodRefresh(SqluckyConnector dpov , String sqlv, String tabIdxv, boolean isLockv ) {
+//		runSQLMethodRefreshByStatus(dpov, sqlv, tabIdxv, isLockv, null );
+//	}
 	//TODO runCurrentLineSQLMethod
 	public static void runCurrentLineSQLMethod() {
 		isCurrentLine = true;
@@ -600,7 +631,7 @@ public class RunSQLHelper {
 	    //TODO
 	    callProcedureFields = fields;
 	    
-		thread = createThread( RunSQLHelper::runMain);
+		thread = createThread( RunSQLHelper::runMain, null);
 		thread.start();
 	}
 	
@@ -632,7 +663,7 @@ public class RunSQLHelper {
 	    isLock = false; 
 	    isCallFunc = false;
 	    
-		thread = createThread( RunSQLHelper::runMain);
+		thread = createThread( RunSQLHelper::runMain, null);
 		thread.start();
 	}
 

@@ -53,12 +53,16 @@ public class SqluckyComponent implements AppComponent {
 	public Region getIconUnactive(String name) {
 		return IconGenerator.svgImageUnactive( name); 
 	}
-
+	/**
+	 * 获取图标
+	 */
 	@Override
 	public Region getIconDefActive(String name) {
 		return IconGenerator.svgImageDefActive( name); 
 	}
-
+	/**
+	 *  保持插件存储的key_value
+	 */
 	@Override
 	public void saveData(String name, String key, String value) {
 		try {
@@ -71,6 +75,10 @@ public class SqluckyComponent implements AppComponent {
 			H2Db.closeConn();
 		} 
 	}
+	/**
+	 * 获取插件存储的key_value
+	 */
+	@Override
 	public String fetchData(String name, String key) {
 		String val = "";
 		try {

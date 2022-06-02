@@ -4,9 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+
 import org.fxmisc.richtext.Caret.CaretVisibility;
 import org.fxmisc.richtext.CodeArea;
+
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,23 +20,22 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.PropertyPo.TreeNodePo;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.InfoTree.TreeItem.MyTreeItem;
-import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.fx.factory.DBInfoTreeContextMenu;
 import net.tenie.lib.tools.IconGenerator;
 
 
@@ -367,7 +369,7 @@ public class DBinfoTree {
 					SqluckyConnector  dbc =nd.getConnpo();
 					String schema = nd.getTable().getTableSchema();
 					String tablename = nd.getTable().getTableName();
-					menu.setTableAction(dbc, schema, tablename);
+					menu.setTableAction(   newValue , dbc, schema, tablename);
 				}else if(nd != null && nd.getType() == TreeItemType.VIEW) {
 					//TODO  
 					menu.setConnectDisable(true);

@@ -2,12 +2,14 @@ package net.tenie.fx.Action;
 
 import java.sql.Connection;
 import java.util.function.Consumer;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.dataView.MyTabData;
-import net.tenie.fx.component.dataView.MyTabDataValue;
-import net.tenie.fx.window.ModalDialog;
+
+import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.component.dataView.MyTabData;
+import net.tenie.fx.window.ModalDialog;
 
 
 public class MenuAction {
@@ -105,9 +107,9 @@ public class MenuAction {
 	
 		
 	// 执行导出的sql
-	public static void  execExportSql(String sql, Connection conn, SqluckyConnector dbconnPo) { 
-		RunSQLHelper.runSQLMethodRefresh(dbconnPo, sql, "", false);
-		
+	public static Long  execExportSql(String sql, Connection conn, SqluckyConnector dbconnPo) { 
+		Long key = RunSQLHelper.runSQLMethodRefresh(dbconnPo, sql, "", false);
+		return key;
 	}
 	
 	// 导出SQL
@@ -140,15 +142,56 @@ public class MenuAction {
 	}
 	
 	// 删表
-	public static void dropTable(SqluckyConnector  dbc ,String schema ,String tablename  ) { 
+	public static void dropTable( TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String tablename  ) { 
 		Connection conn = dbc.getConn();  
 		String sql =  dbc.getExportDDL().exportDropTable(schema, tablename);
 		Consumer< String >  caller = x ->{ 
-			execExportSql(sql, conn, dbc);
+			Long key = execExportSql(sql, conn, dbc);
+			rmTreeNode(key, treeItem, MenuAction::successFunc) ;
+		 
 		};
 		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller); 
 		 
 	}
+	// 删除成功后的回调
+	public static void successFunc(TreeItem<TreeNodePo> treeItem) {
+		TreeItem<TreeNodePo>  pti = treeItem.getParent();
+		pti.getChildren().remove(treeItem);
+	
+	}
+	
+	 /**
+	  * 删除表后， 把tree node从界面上去掉
+	  * @param key			运行sql返回的token
+	  * @param treeItem     
+	  * @param successFunc  回调函数
+	  */
+	public static void rmTreeNode(Long key, TreeItem<TreeNodePo> treeItem, Consumer<TreeItem<TreeNodePo> > successFunc) {
+		Thread td = new Thread() {
+			public void run() {
+				Integer status = RunSQLHelper.runStatus(key);
+				while (status != null) {
+					if (status.equals(0)) { 
+						break;
+					} else if (status.equals(1)) {
+						if (successFunc != null)
+							successFunc.accept(treeItem);
+						break;
+					}else {
+						try {
+							Thread.sleep(500);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+
+					status = RunSQLHelper.runStatus(key);
+				}
+			}
+		};
+		td.start();
+	}
+	
 	
 	// 删视图
 	public static void dropView(SqluckyConnector  dbc ,String schema ,String viewName  ) { 
