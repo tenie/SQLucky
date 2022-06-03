@@ -6,8 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import org.controlsfx.control.MaskerPane;
+
 import org.controlsfx.control.tableview2.FilteredTableView;
+
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
