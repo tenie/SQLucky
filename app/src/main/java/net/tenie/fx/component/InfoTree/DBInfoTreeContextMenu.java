@@ -148,30 +148,30 @@ public class DBInfoTreeContextMenu {
 	}
 	
 	// 设置选中视图时 对应的按钮action
-	public void setViewAction(SqluckyConnector  dbc ,String schema ,String viewName ) {
+	public void setViewAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropView(dbc, schema, viewName);
+			MenuAction.dropView(treeItem, dbc, schema, viewName);
 		});
 	  
 	}
 	// 设置选中函数时 对应的按钮action
-	public void setFuncAction(SqluckyConnector  dbc ,String schema ,String viewName ) {
+	public void setFuncAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropFunc(dbc, schema, viewName);
+			MenuAction.dropFunc(treeItem, dbc, schema, viewName);
 		});
 	  
 	}
 	
-	public void setProcAction(SqluckyConnector  dbc ,String schema ,String viewName ) {
+	public void setProcAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropProc(dbc, schema, viewName);
+			MenuAction.dropProc(treeItem, dbc, schema, viewName);
 		});
 	  
 	}
 	
-	public void setTriggerAction(SqluckyConnector  dbc ,String schema ,String viewName ) {
+	public void setTriggerAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropTrigger(dbc, schema, viewName);
+			MenuAction.dropTrigger(treeItem, dbc, schema, viewName);
 		});
 	  
 	}

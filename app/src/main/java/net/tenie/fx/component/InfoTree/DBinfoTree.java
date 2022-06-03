@@ -377,7 +377,7 @@ public class DBinfoTree {
 					SqluckyConnector  dbc =nd.getConnpo();
 					String schema = nd.getTable().getTableSchema();
 					String viewName = nd.getTable().getTableName();
-					menu.setViewAction(dbc, schema, viewName);
+					menu.setViewAction(  newValue , dbc, schema, viewName);
 				}else if(nd != null && nd.getType() == TreeItemType.FUNCTION) {
 					//TODO  
 					menu.setConnectDisable(true);
@@ -386,7 +386,7 @@ public class DBinfoTree {
 					 
 					String schema = nd.getFuncProTri().getSchema();
 					String funcName = nd.getFuncProTri().getName();
-					menu.setFuncAction(dbc, schema, funcName);
+					menu.setFuncAction(  newValue , dbc, schema, funcName);
 				}else if(nd != null && nd.getType() == TreeItemType.PROCEDURE) {
 					//TODO  
 					menu.setConnectDisable(true);
@@ -395,7 +395,7 @@ public class DBinfoTree {
 					
 					String schema = nd.getFuncProTri().getSchema();
 					String procName = nd.getFuncProTri().getName();
-					menu.setProcAction(dbc, schema, procName);
+					menu.setProcAction(  newValue , dbc, schema, procName);
 				}else if(nd != null && nd.getType() == TreeItemType.TRIGGER) {
 					//TODO  
 					menu.setConnectDisable(true);
@@ -404,7 +404,7 @@ public class DBinfoTree {
 					
 					String schema = nd.getFuncProTri().getSchema();
 					String triggerName = nd.getFuncProTri().getName();
-					menu.setTriggerAction(dbc, schema, triggerName);
+					menu.setTriggerAction(  newValue , dbc, schema, triggerName);
 				}else {
 					menu.setConnectDisable(true);
 					menu.setTableDisable(true); 

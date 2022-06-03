@@ -154,6 +154,8 @@ public class RunSQLHelper {
 			}
 			// 执行sql
 			var rsVal = execSqlList(allsqls, dpo);
+			
+			// 执行sql的状态保存
 			if(statusKey != null) RUN_STATUS.put(statusKey, rsVal);
 
 		} catch (Exception e) {

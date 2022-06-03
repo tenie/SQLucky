@@ -35,6 +35,8 @@ open module SQLucky.sdk {
 	requires org.apache.httpcomponents.core5.httpcore5;
 	requires org.mybatis;
 	
+	exports net.tenie.Sqlucky.sdk;
+	exports net.tenie.Sqlucky.sdk.Action;
 	exports net.tenie.Sqlucky.sdk.utility;
 	exports net.tenie.Sqlucky.sdk.utility.net;
 	exports net.tenie.Sqlucky.sdk.subwindow;
@@ -42,7 +44,6 @@ open module SQLucky.sdk {
 	exports net.tenie.Sqlucky.sdk.component;
 	exports net.tenie.Sqlucky.sdk.po; 
 	exports net.tenie.Sqlucky.sdk.po.tools;
-	exports net.tenie.Sqlucky.sdk;
 	exports net.tenie.Sqlucky.sdk.db; 
 	exports net.tenie.Sqlucky.sdk.db.connection;
 	
