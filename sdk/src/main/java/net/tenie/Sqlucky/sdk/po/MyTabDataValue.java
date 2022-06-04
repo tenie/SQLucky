@@ -1,15 +1,17 @@
-package net.tenie.fx.component.dataView;
+package net.tenie.Sqlucky.sdk.po;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.controlsfx.control.tableview2.FilteredTableView;
+
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.MenuItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 
 
 /**
@@ -46,6 +48,8 @@ public class MyTabDataValue {
 	// tab中的表格
 	private FilteredTableView<ObservableList<StringProperty>> table;
 
+	// 操作数据的按钮
+	private List<Node> btnLs ;
 	
 	
 	public void clean() {
@@ -77,7 +81,9 @@ public class MyTabDataValue {
 		
 		if(newLineDate != null) newLineDate.clear();
 		newLineDate = null;
-
+		
+		if(btnLs != null) btnLs.clear();
+		btnLs = null;
 	}
 
  
@@ -233,4 +239,18 @@ public class MyTabDataValue {
 	public void setDbConnection(SqluckyConnector dbConnection) {
 		this.dbConnection = dbConnection;
 	}
+
+
+
+	public List<Node> getBtnLs() {
+		return btnLs;
+	}
+
+
+
+	public void setBtnLs(List<Node> btnLs) {
+		this.btnLs = btnLs;
+	}
+	
+	
 }

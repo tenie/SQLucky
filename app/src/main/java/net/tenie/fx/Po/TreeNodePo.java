@@ -1,4 +1,4 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.fx.Po;
 
 import java.io.Serializable;
 

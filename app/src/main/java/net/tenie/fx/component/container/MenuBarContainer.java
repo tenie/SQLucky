@@ -19,11 +19,11 @@ import net.tenie.fx.component.MyTab;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
-import net.tenie.fx.window.ModalDialog;
-import net.tenie.lib.tools.IconGenerator;
 
 
 /*   @author tenie */

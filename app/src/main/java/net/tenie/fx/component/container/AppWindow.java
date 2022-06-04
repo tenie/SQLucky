@@ -18,9 +18,9 @@ import javafx.scene.text.Font;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.lib.tools.IconGenerator;
 
 /*   @author tenie */
 public class AppWindow {

@@ -18,7 +18,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.Po.TreeNodePo;
 
 /**
  * 把TreeNodePo对象的属性 赋值给 TreeItem显示(节点名称,图标)

@@ -13,9 +13,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.lib.tools.IconGenerator;
 
 
 /*   @author tenie */

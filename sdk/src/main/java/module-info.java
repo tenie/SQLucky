@@ -36,7 +36,6 @@ open module SQLucky.sdk {
 	requires org.mybatis;
 	
 	exports net.tenie.Sqlucky.sdk;
-	exports net.tenie.Sqlucky.sdk.Action;
 	exports net.tenie.Sqlucky.sdk.utility;
 	exports net.tenie.Sqlucky.sdk.utility.net;
 	exports net.tenie.Sqlucky.sdk.subwindow;

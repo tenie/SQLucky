@@ -1,7 +1,4 @@
-package net.tenie.lib.tools;
-
-import java.util.ArrayList;
-import java.util.List;
+package net.tenie.Sqlucky.sdk.utility;
 
 import javafx.scene.Node;
 import javafx.scene.control.Label;

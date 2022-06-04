@@ -16,8 +16,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.lib.tools.IconGenerator;
 
 public class DialogTools {
 	public static Node setVboxShape(Stage stage , Node title, List<Node> nds, List<Node> btns ) {

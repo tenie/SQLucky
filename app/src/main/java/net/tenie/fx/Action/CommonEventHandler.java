@@ -2,21 +2,22 @@ package net.tenie.fx.Action;
 
 import java.io.File;
 import java.io.IOException;
+
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.MyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.Sqlucky.sdk.utility.FileTools;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.dao.GenerateSQLString;
-import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.fx.window.ConnectionEditor;
 
 /**
@@ -298,7 +299,7 @@ public class CommonEventHandler {
 	
 	
 	// 导出表的字段, 使用逗号分割
-	public static EventHandler<ActionEvent> commaSplitTableFileds() {
+	public static EventHandler<ActionEvent> commaSplitTableFields() {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) { 
 				ObservableList<SqlFieldPo> fs = MyTabData.getFields();

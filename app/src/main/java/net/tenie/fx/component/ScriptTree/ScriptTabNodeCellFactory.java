@@ -16,8 +16,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.component.MyTab;
-import net.tenie.lib.tools.IconGenerator;
 
 /**
  * 

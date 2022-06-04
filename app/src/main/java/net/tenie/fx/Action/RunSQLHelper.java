@@ -32,21 +32,25 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.SqlcukyComponent;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
-import net.tenie.fx.PropertyPo.SqlData;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.Po.SqlData;
+import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.CommonButtons;
 import net.tenie.fx.component.MyTextField2TableCell2;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
@@ -54,13 +58,11 @@ import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.dataView.DataTableContextMenu;
 import net.tenie.fx.component.dataView.MyTabData;
-import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.factory.StringPropertyListValueFactory;
 import net.tenie.fx.utility.ParseSQL;
-import net.tenie.lib.tools.IconGenerator;
 
 /**
  * 
@@ -187,7 +189,7 @@ public class RunSQLHelper {
 			try {
 				if( isCallFunc ) { // 调用存储过程  
 					procedureAction(sql, dpo ,  callProcedureFields);
-				}else if (type == ParseSQL.SELECT) {
+				}else if (type == ParseSQL.SELECT) { // 调用查询
 					  selectAction(sql, dpo); 
 				} else {
 						if (type == ParseSQL.UPDATE) {
@@ -270,7 +272,7 @@ public class RunSQLHelper {
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo) {
 		// 有数据才展示
 		if (ddlDmlpo.getAllDatas().size() > 0) {
-			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			FilteredTableView<ObservableList<StringProperty>> table = SqlcukyComponent.creatFilteredTableView();
 			// 表内容可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
@@ -296,7 +298,7 @@ public class RunSQLHelper {
 					}
 				}
 				if(showtab){
-					MyTabData mtd = MyTabData.dtTab(dvt, -1, true);
+					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
 //					rmWaitingPane(); 
 					
 					mtd.show();
@@ -325,7 +327,7 @@ public class RunSQLHelper {
 		Connection conn = dpo.getConn();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		try { 
-			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			FilteredTableView<ObservableList<StringProperty>> table = SqlcukyComponent.creatFilteredTableView();
 			// 获取表名
 			String tableName = sql; 
 //			ParseSQL.tabName(sql);
@@ -363,7 +365,7 @@ public class RunSQLHelper {
 			// 渲染界面
 			if (!thread.isInterrupted()) {
 				if(hasOut(fields)) {
-					MyTabData mtd = MyTabData.dtTab(dvt, tidx, true);
+					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, true);
 					rmWaitingPane();
 					mtd.show();
 				
@@ -396,7 +398,7 @@ public class RunSQLHelper {
 	private static void selectAction(String sql, SqluckyConnector dpo ) throws Exception {
 		try { 
 		    Connection conn = dpo.getConn();
-			FilteredTableView<ObservableList<StringProperty>> table = DataViewContainer.creatFilteredTableView();
+			FilteredTableView<ObservableList<StringProperty>> table = SqlcukyComponent.creatFilteredTableView();
 			
 		    // 获取表名
 			String tableName = ParseSQL.tabName(sql);
@@ -436,7 +438,7 @@ public class RunSQLHelper {
 			CacheDataTableViewShapeChange.colReorder(dvt.getTabName(), colss, table);
 			// 渲染界面
 			if (!thread.isInterrupted()) {
-				MyTabData mtd = MyTabData.dtTab(dvt, tidx, false);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, false);
 				rmWaitingPane();
 				mtd.show();
 				// 水平滚顶条位置设置和字段类型

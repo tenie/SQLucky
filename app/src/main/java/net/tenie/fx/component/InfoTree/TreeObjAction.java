@@ -1,12 +1,14 @@
 package net.tenie.fx.component.InfoTree;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.PropertyPo.DBOptionHelper;
-import net.tenie.fx.component.dataView.MyTabData;
+
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Po.DBOptionHelper;
 
 
 public class TreeObjAction {
@@ -24,7 +26,7 @@ public class TreeObjAction {
 			table.setDdl(createTableSql);
 		}
 //		new DataViewTab().showDdlPanel(title, createTableSql);
-		MyTabData mtd = MyTabData.ddlTab(title, createTableSql, false);
+		SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(title, createTableSql, false);
 		mtd.show();
 	}
 }

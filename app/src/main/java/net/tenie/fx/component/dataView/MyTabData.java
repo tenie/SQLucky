@@ -18,25 +18,25 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.Action.RsVal;
+import net.tenie.fx.Po.RsVal;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 
-public class MyTabData extends Tab {
+public class MyTabData extends Tab implements SqluckyBottomSheet{
 	private MyTabDataValue tableData;
 	public HighLightingCodeArea sqlArea;
 	private boolean isDDL = false;
 	private Button saveBtn;
 	private Button detailBtn;
 	private int idx;
-	private DataTableOptionBtnsPane dtBtnPane;
+	private BottomSheetOptionBtnsPane dtBtnPane;
 //	private List<Button> optionBtns;
 	 
 
@@ -44,93 +44,16 @@ public class MyTabData extends Tab {
 		this(data.getTabName());
 		this.tableData = data;
 		this.idx = idx;
-
 	}
+	
 
-	private MyTabData(String tabName) {
+	public MyTabData(String tabName) {
 		super(tabName);
 		this.setOnCloseRequest(CommonEventHandler.dataTabCloseReq(this));
 		this.setContextMenu(tableViewMenu());
 		if (tableData == null) {
 			tableData = new MyTabDataValue();
 		}
-	}
-
-	// 数据
-	public static MyTabData dtTab(MyTabDataValue data, int idx, boolean disable) {
-		MyTabData rs = new MyTabData(data, idx, disable);
-		String time = rs.getTableData().getExecTime() == 0 ? "0" : rs.getTableData().getExecTime() + "";
-		String rows = rs.getTableData().getRows() == 0 ? "0" : rs.getTableData().getRows() + "";
-//		VBox dataPane = dataBox(rs, disable, time, rows);
-//		rs.setContent(dataPane);
-		rs.setDataBox(disable, time, rows);
-		return rs;
-	}
-	
-	
-	public void setDataBox(boolean disable, String time, String rows ) {
-		VBox dataPane = dataBox(disable, time, rows);
-		this.setContent(dataPane);
-	}
-
-	// TODO 表, 视图 等 数据库对象的ddl语句
-	public static MyTabData ddlTab(String name, String ddl, boolean isRunFunc) {
-		var mtb = new MyTabData(name);
-		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
-		mtb.setSqlArea(sqlArea);
-		VBox box = DDLBox(mtb, ddl, isRunFunc, false, name);
-		mtb.setContent(box);
-		return mtb;
-	}
-
-	public static MyTabData ProcedureTab(String name, String ddl, boolean isRunFunc) {
-		var mtb = new MyTabData(name);
-		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
-		mtb.setSqlArea(sqlArea);
-		VBox box = DDLBox(mtb, ddl, isRunFunc, true, name);
-		mtb.setContent(box);
-		return mtb;
-	}
-
-	public static MyTabData EmptyTab(String name, String message) {
-		var mtb = new MyTabData(name);
-		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
-		mtb.setSqlArea(sqlArea);
-		VBox box = DDLBox(mtb, message, false, false, name);
-		mtb.setContent(box);
-		return mtb;
-	}
-
- 
-
-
-	// 数据tab中的组件
-	public static VBox DDLBox(MyTabData mtb, String ddl, boolean isRunFunc, boolean isProc, String name) {
-		VBox vb = new VBox();
-
-		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);
-		// 表格上面的按钮
-		AnchorPane fp = new DdlOptionBtnsPane(mtb, ddl, isRunFunc, isProc, name); // ddlOptionBtnsPane(ddl, isRunFunc,
-																					// isProc, name);
-		vb.getChildren().add(fp);
-		vb.getChildren().add(sp);
-		VBox.setVgrow(sp, Priority.ALWAYS);
-		return vb;
-	}
-
-	// 数据tab中的组件
-	public  VBox dataBox( boolean disable, String time, String rows) {
-		var dataPane = new VBox();
-		dtBtnPane = new DataTableOptionBtnsPane(this, disable, time, rows, 
-												this.getTableData().getConnName());
-		
-		dataPane.getChildren().add(dtBtnPane);
-		dataPane.getChildren().add(this.getTableData().getTable());
-		VBox.setVgrow(this.getTableData().getTable(), Priority.ALWAYS);
-		return dataPane;
 	}
 
 	// 右键菜单
@@ -192,16 +115,17 @@ public class MyTabData extends Tab {
 		});
 	}
 
-	// 获取当前数据表的Tab
-	public static MyTabData currentDataTab() {
-		MyTabData tab = (MyTabData) ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-		return tab;
-	}
+//	// 获取当前数据表的Tab
+//	public static Tab currentDataTab() {
+//		Tab tab =  ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
+//		SqluckyBottomSheet sheet = (SqluckyBottomSheet) tab;
+//		return tab;
+//	}
 
 	// 获取当前的表格
 	@SuppressWarnings("unchecked")
 	public static FilteredTableView<ObservableList<StringProperty>> dataTableView() {
-		MyTabData mtd = currentDataTab();
+		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var table = mtd.getTableData().getTable();
 		return table;
 	}
@@ -213,7 +137,7 @@ public class MyTabData extends Tab {
 	}
 
 	public static MyTabDataValue myTabValue() {
-		MyTabData mtd = currentDataTab();
+		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		MyTabDataValue dv = mtd.getTableData();
 		return dv;
 	}
@@ -304,12 +228,12 @@ public class MyTabData extends Tab {
 
 	// 获取当前table view 的保存按钮
 	public static Button dataPaneSaveBtn() {
-		return MyTabData.currentDataTab().getSaveBtn();
+		return ComponentGetter.currentDataTab().getSaveBtn();
 	}
 
 	// 获取当前table view 的详细按钮
 	public static Button dataPaneDetailBtn() {
-		return MyTabData.currentDataTab().getDetailBtn();
+		return ComponentGetter.currentDataTab().getDetailBtn();
 	}
 
 	public static boolean exist(int row) {
@@ -398,7 +322,7 @@ public class MyTabData extends Tab {
 	}
 
 	public static void rmAppendData() {
-		MyTabData mtd = currentDataTab();
+		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		MyTabDataValue dvt = mtd.getTableData();
 		if (dvt != null) {
 			dvt.getAppendData().clear();

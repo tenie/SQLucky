@@ -20,23 +20,23 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.InfoTree.TreeItem.MyTreeItem;
-import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.lib.tools.IconGenerator;
 
 
 /**
@@ -253,7 +253,7 @@ public class DBinfoTree {
 					}
 				}
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, true);
-				MyTabData mtd = MyTabData.ddlTab(item.getValue().getName(), sqlStr, true);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(item.getValue().getName(), sqlStr, true);
 				mtd.show();
 
 			} // 过程
@@ -275,7 +275,7 @@ public class DBinfoTree {
 					fpt.setProcedure(true);
 				}
 //				new DataViewTab().showProcedurePanel(item.getValue().getName(), sqlStr, true);
-				MyTabData mtd = MyTabData.ProcedureTab(item.getValue().getName(), sqlStr, true);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ProcedureSheet(item.getValue().getName(), sqlStr, true);
 				mtd.show();
 
 			} // trigger
@@ -292,7 +292,7 @@ public class DBinfoTree {
 					}
 				} 
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-				MyTabData mtd = MyTabData.ddlTab(item.getValue().getName(), sqlStr, false);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(item.getValue().getName(), sqlStr, false);
 				mtd.show();
 
 			}// index
@@ -309,7 +309,7 @@ public class DBinfoTree {
 					}
 				}
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-				MyTabData mtd = MyTabData.ddlTab(item.getValue().getName(), sqlStr, false);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(item.getValue().getName(), sqlStr, false);
 				mtd.show();
 
 
@@ -327,7 +327,7 @@ public class DBinfoTree {
 					}
 				} 
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-				MyTabData mtd = MyTabData.ddlTab(item.getValue().getName(), sqlStr, false);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(item.getValue().getName(), sqlStr, false);
 				mtd.show();
 
 

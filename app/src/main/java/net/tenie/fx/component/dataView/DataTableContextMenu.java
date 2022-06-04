@@ -12,8 +12,8 @@ import javafx.scene.control.MenuItem;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.MenuAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.utility.MyPopupNumberFilter;
-import net.tenie.lib.tools.IconGenerator;
 
 public class DataTableContextMenu {
 	

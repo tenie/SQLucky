@@ -5,10 +5,10 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.TreeItemType;
-import net.tenie.lib.tools.IconGenerator;
 /**
  * 
  * @author tenie

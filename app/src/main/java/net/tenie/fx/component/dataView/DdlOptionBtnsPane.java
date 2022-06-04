@@ -4,7 +4,9 @@ import java.util.function.Consumer;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.layout.AnchorPane;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.CommonButtons;
@@ -12,9 +14,7 @@ import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.CodeArea.MyCodeArea;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
-import net.tenie.fx.window.ModalDialog;
 import net.tenie.fx.window.ProcedureExecuteWindow;
-import net.tenie.lib.tools.IconGenerator;
 /**
  * 建表语句, 视图 等的创建语句展示
  * @author tenie

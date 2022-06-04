@@ -3,11 +3,11 @@ package net.tenie.fx.component.InfoTree;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.layout.FlowPane;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.lib.tools.IconGenerator;
 
 public class DBinfoTreeButtonFactory {
 	// 连接区

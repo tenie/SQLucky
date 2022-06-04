@@ -1,21 +1,32 @@
 package net.tenie.sdkImp;
 
 import java.sql.SQLException;
+import java.util.List;
 
+import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.AppComponent;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
+import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
+import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
-import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.tools.IconGenerator; 
+import net.tenie.lib.db.h2.H2Db; 
 
 public class SqluckyComponent implements AppComponent { 
 
@@ -123,5 +134,94 @@ public class SqluckyComponent implements AppComponent {
 		
 		return succeed; 
 	}
+	
+	// 创建sql查询结果数据tableview
+	@Override
+	public  SqluckyBottomSheet sqlDataSheet(MyTabDataValue data, int idx, boolean disable) {
+		MyTabData rs = new MyTabData(data, idx, disable);
+		String time = data.getExecTime() == 0 ? "0" : data.getExecTime() + "";
+		String rows = data.getRows() == 0 ? "0" : data.getRows() + "";
+		
+		VBox vbox = new VBox();
+		var btnLs = BottomSheetOptionBtnsPane.sqlDataOptionBtns(rs, disable);
+		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs, time, rows, data.getConnName());
+		// 添加按钮面板和 数据表格
+		vbox.getChildren().add(dtBtnPane);
+		vbox.getChildren().add(data.getTable());
+		VBox.setVgrow(data.getTable(), Priority.ALWAYS);
+		
+		rs.setContent(vbox);
+
+		return rs;
+	}
+	
+	public  SqluckyBottomSheet tableViewSheet(MyTabDataValue data, List<Node> btnLs) {
+		var rs = new MyTabData(data.getTabName());
+		
+		VBox vbox = new VBox(); 
+		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs);
+		// 添加按钮面板和 数据表格
+		vbox.getChildren().add(dtBtnPane);
+		vbox.getChildren().add(data.getTable());
+		VBox.setVgrow(data.getTable(), Priority.ALWAYS);
+		
+		rs.setContent(vbox);
+
+		return rs;
+	}
+	
+	
+	
+	// 表, 视图 等 数据库对象的ddl语句
+	@Override
+	public  SqluckyBottomSheet ddlSheet(String name, String ddl, boolean isRunFunc) {
+		var mtb = new MyTabData(name);
+		mtb.setDDL(true);
+		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
+		mtb.setSqlArea(sqlArea);
+		VBox box = DDLBox(mtb, ddl, isRunFunc, false, name);
+		mtb.setContent(box);
+		return mtb;
+	}
+	@Override
+	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc) {
+		var mtb = new MyTabData(name);
+		mtb.setDDL(true);
+		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
+		mtb.setSqlArea(sqlArea);
+		VBox box = DDLBox(mtb, ddl, isRunFunc, true, name);
+		mtb.setContent(box);
+		return mtb;
+	}
+	@Override
+	public SqluckyBottomSheet EmptySheet(String name, String message) {
+		var mtb = new MyTabData(name);
+		mtb.setDDL(true);
+		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
+		mtb.setSqlArea(sqlArea);
+		VBox box = DDLBox(mtb, message, false, false, name);
+		mtb.setContent(box);
+		return mtb;
+	}
+
+ 
+	// 数据tab中的组件
+	public static VBox DDLBox(MyTabData mtb, String ddl, boolean isRunFunc, boolean isProc, String name) {
+		VBox vb = new VBox();
+
+		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);
+		// 表格上面的按钮
+		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(mtb, ddl, isRunFunc, isProc, name);
+		AnchorPane fp = new BottomSheetOptionBtnsPane(btnLs);
+//		AnchorPane fp = new DdlOptionBtnsPane(mtb, ddl, isRunFunc, isProc, name); // ddlOptionBtnsPane(ddl, isRunFunc,
+																					// isProc, name);
+		vb.getChildren().add(fp);
+		vb.getChildren().add(sp);
+		VBox.setVgrow(sp, Priority.ALWAYS);
+		return vb;
+	}
+
+
+	
 
 }

@@ -37,7 +37,7 @@ import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.CodeArea.MyCodeArea;
@@ -52,8 +52,8 @@ import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.lib.tools.IconGenerator;
 
 
 public class TransferDataController implements Initializable {

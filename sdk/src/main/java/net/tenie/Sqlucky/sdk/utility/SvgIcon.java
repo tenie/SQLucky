@@ -1,4 +1,4 @@
-package net.tenie.lib.tools;
+package net.tenie.Sqlucky.sdk.utility;
 
 import java.util.HashMap;
 import java.util.Map;

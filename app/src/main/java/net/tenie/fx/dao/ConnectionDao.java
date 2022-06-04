@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;

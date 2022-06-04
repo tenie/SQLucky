@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
-import net.tenie.fx.window.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.lib.reflex.BuildObject;
 
 /**

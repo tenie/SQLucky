@@ -1,9 +1,13 @@
 package net.tenie.Sqlucky.sdk;
 
+import java.util.List;
+
+import javafx.scene.Node;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
 
 public interface AppComponent {
 	
@@ -31,4 +35,11 @@ public interface AppComponent {
 //	public void closeConn();
 //	public void openConn();
 	
+    //创建数据tableview
+	public  SqluckyBottomSheet sqlDataSheet(MyTabDataValue data, int idx, boolean disable);
+	public  SqluckyBottomSheet tableViewSheet(MyTabDataValue data, List<Node> btnLs);
+	// 表, 视图 等 数据库对象的ddl语句
+	public  SqluckyBottomSheet ddlSheet(String name, String ddl, boolean isRunFunc);
+	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc);
+	public SqluckyBottomSheet EmptySheet(String name, String message);
 }

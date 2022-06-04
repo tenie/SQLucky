@@ -1,15 +1,23 @@
 package net.tenie.fx.component.InfoTree;
 
+import java.sql.SQLException;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.MenuAction;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.Po.TreeNodePo;
+import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.fx.window.TableDataDetail;
-import net.tenie.lib.tools.IconGenerator;
 
 public class DBInfoTreeContextMenu {
 	private ContextMenu contextMenu;
@@ -143,8 +151,34 @@ public class DBInfoTreeContextMenu {
 		});
 	 
 		tableShow.setOnAction(e->{ 
-			TableDataDetail.showTableFieldType(dbc, schema, tablename); 
+			showTableFieldType(dbc, schema, tablename); 
 		});
+	}
+	
+
+	public static void showTableFieldType(SqluckyConnector dbc, String schema, String tablename) {
+		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
+		try {
+			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
+			ObservableList<SqlFieldPo> fields = DP.getFields();
+
+			String fieldValue = "Field Type";
+			for (int i = 0; i < fields.size(); i++) {
+				SqlFieldPo p = fields.get(i);
+				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
+				if (p.getScale() != null && p.getScale().get() > 0) {
+					tyNa += ", " + p.getScale().get();
+				}
+				tyNa += ")";
+				StringProperty strp = new SimpleStringProperty(tyNa);
+				p.setValue(strp);
+			}
+			TableDataDetail.showTableDetail(tablename, "Field Name", fieldValue, fields);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
 	}
 	
 	// 设置选中视图时 对应的按钮action

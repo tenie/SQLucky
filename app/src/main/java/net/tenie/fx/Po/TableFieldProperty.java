@@ -1,4 +1,4 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.fx.Po;
 
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;

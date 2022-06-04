@@ -5,8 +5,8 @@ import java.sql.SQLException;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import net.tenie.fx.PropertyPo.TableFieldProperty;
-import net.tenie.fx.PropertyPo.TableProperty;
+import net.tenie.fx.Po.TableFieldProperty;
+import net.tenie.fx.Po.TableProperty;
 /*   @author tenie */
 public class SelectDataToPo {
 	/**

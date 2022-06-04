@@ -16,9 +16,9 @@ import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
-import net.tenie.lib.tools.IconGenerator;
 /**
  * 
  * @author tenie

@@ -5,11 +5,12 @@ import java.util.function.Consumer;
 
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.Po.RsVal;
+import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.dataView.MyTabData;
-import net.tenie.fx.window.ModalDialog;
 
 public class MenuAction {
 	static final int DROP_COLUMN = 1;

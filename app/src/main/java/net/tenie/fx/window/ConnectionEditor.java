@@ -30,7 +30,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
@@ -43,9 +43,9 @@ import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.tools.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**

@@ -42,8 +42,9 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.PropertyPo.TreeNodePo;
+import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.CommonButtons;
 import net.tenie.fx.component.FindReplaceEditor;
@@ -57,7 +58,6 @@ import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.main.Restart;
 import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.lib.tools.IconGenerator;
 
 
 /**
@@ -1116,11 +1116,7 @@ public class CommonAction {
 		
 	}
 	
-	public static String createTabId() {
-		int tableIdx = ConfigVal.tableIdx++; 
-//		System.out.println(tableIdx);
-		return tableIdx + "";
-	}
+
 	
 	// 重启应用
 	public static void restartApp() {

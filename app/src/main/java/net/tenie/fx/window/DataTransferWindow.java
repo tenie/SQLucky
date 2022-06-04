@@ -18,7 +18,7 @@ import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.lib.tools.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 
 public class DataTransferWindow {
 	Stage stage;

@@ -1,4 +1,4 @@
-package net.tenie.fx.PropertyPo;
+package net.tenie.fx.Po;
 
 /*   @author tenie */
 public class TablePrimaryKeysPo2 {

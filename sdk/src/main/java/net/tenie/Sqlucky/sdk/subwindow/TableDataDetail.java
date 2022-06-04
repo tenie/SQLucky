@@ -1,6 +1,5 @@
-package net.tenie.fx.window;
+package net.tenie.Sqlucky.sdk.subwindow;
 
-import java.sql.SQLException;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -18,14 +17,12 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTextField2ReadOnlyTableCell;
+import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
-import net.tenie.fx.component.MyTextField2ReadOnlyTableCell;
-import net.tenie.fx.component.dataView.MyTabData;
-import net.tenie.fx.component.dataView.MyTabDataValue;
-import net.tenie.fx.dao.SelectDao;
-import net.tenie.lib.tools.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   
@@ -33,34 +30,34 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie 
  * */
 public class TableDataDetail {
-
-	public static void showTableFieldType(SqluckyConnector dbc, String schema, String tablename) {
-		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
-		try {
-			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
-			ObservableList<SqlFieldPo> fields = DP.getFields();
-
-			String fieldValue = "Field Type";
-			for (int i = 0; i < fields.size(); i++) {
-				SqlFieldPo p = fields.get(i);
-				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
-				if (p.getScale() != null && p.getScale().get() > 0) {
-					tyNa += ", " + p.getScale().get();
-				}
-				tyNa += ")";
-				StringProperty strp = new SimpleStringProperty(tyNa);
-				p.setValue(strp);
-			}
-			showTableDetail(tablename, "Field Name", fieldValue, fields);
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
-	}
+//
+//	public static void showTableFieldType(SqluckyConnector dbc, String schema, String tablename) {
+//		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
+//		try {
+//			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
+//			ObservableList<SqlFieldPo> fields = DP.getFields();
+//
+//			String fieldValue = "Field Type";
+//			for (int i = 0; i < fields.size(); i++) {
+//				SqlFieldPo p = fields.get(i);
+//				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
+//				if (p.getScale() != null && p.getScale().get() > 0) {
+//					tyNa += ", " + p.getScale().get();
+//				}
+//				tyNa += ")";
+//				StringProperty strp = new SimpleStringProperty(tyNa);
+//				p.setValue(strp);
+//			}
+//			showTableDetail(tablename, "Field Name", fieldValue, fields);
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 	public static void show() {
-		MyTabData mtd = MyTabData.currentDataTab();
+		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tb = mtd.getTableData().getTable();
 		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 
@@ -99,7 +96,7 @@ public class TableDataDetail {
 		showTableDetail(tabName, "Field Name", fieldValue, fields);
 	}
 
-	private static void showTableDetail(String tableName ,String colName1, String colName2, ObservableList<SqlFieldPo> fields) {
+	public static void showTableDetail(String tableName ,String colName1, String colName2, ObservableList<SqlFieldPo> fields) {
 		FlowPane fp = new FlowPane();
 
 		TextField tf1 = new TextField("");

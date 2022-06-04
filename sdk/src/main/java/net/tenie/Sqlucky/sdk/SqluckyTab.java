@@ -5,7 +5,11 @@ import java.io.File;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-
+/**
+ * 文本页面
+ * @author tenie
+ *
+ */
 public interface SqluckyTab  {
 	public SqluckyCodeAreaHolder getSqlCodeArea();
 	public DocumentPo getDocumentPo();

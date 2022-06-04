@@ -8,9 +8,9 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.lib.tools.IconGenerator; 
+import net.tenie.fx.Action.CommonAction; 
 
 public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
  

@@ -16,10 +16,10 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.connection.SqluckyConnection;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
+import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.dataView.MyTabDataValue;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.SelectDao;
 
