@@ -3,6 +3,8 @@ package net.tenie.sdkImp;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.jfoenix.controls.JFXButton;
+
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Tab;
@@ -16,9 +18,11 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
+import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
@@ -26,9 +30,9 @@ import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
-import net.tenie.lib.db.h2.H2Db; 
+import net.tenie.lib.db.h2.AppDao; 
 
-public class SqluckyComponent implements AppComponent { 
+public class SqluckyAppComponent implements AppComponent { 
 
 	@Override
 	public void addTitledPane(TitledPane tp) {
@@ -81,9 +85,9 @@ public class SqluckyComponent implements AppComponent {
 			strb.append(name);
 			strb.append("-");
 			strb.append(key); 
-			H2Db.setConfigVal(H2Db.getConn(), strb.toString(), value);
+			AppDao.saveConfig(SqluckyAppDB.getConn(), strb.toString(), value);
 		} finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		} 
 	}
 	/**
@@ -97,9 +101,9 @@ public class SqluckyComponent implements AppComponent {
 			strb.append(name);
 			strb.append("-");
 			strb.append(key); 
-			val = H2Db.getConfigVal(H2Db.getConn(), strb.toString());
+			val = AppDao.readConfig(SqluckyAppDB.getConn(), strb.toString());
 		} finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		} 
 		
 		return val;
@@ -124,7 +128,7 @@ public class SqluckyComponent implements AppComponent {
 	@Override
 	public boolean execDML(String sql) {
 		boolean succeed = false;
-		var conn = H2Db.getConn();
+		var conn = SqluckyAppDB.getConn();
 		try {
 			DmlDdlDao.execDML(conn, sql);
 			succeed = true;
@@ -137,7 +141,7 @@ public class SqluckyComponent implements AppComponent {
 	
 	// 创建sql查询结果数据tableview
 	@Override
-	public  SqluckyBottomSheet sqlDataSheet(MyTabDataValue data, int idx, boolean disable) {
+	public  SqluckyBottomSheet sqlDataSheet(BottomSheetDataValue data, int idx, boolean disable) {
 		MyTabData rs = new MyTabData(data, idx, disable);
 		String time = data.getExecTime() == 0 ? "0" : data.getExecTime() + "";
 		String rows = data.getRows() == 0 ? "0" : data.getRows() + "";
@@ -155,10 +159,12 @@ public class SqluckyComponent implements AppComponent {
 		return rs;
 	}
 	
-	public  SqluckyBottomSheet tableViewSheet(MyTabDataValue data, List<Node> btnLs) {
-		var rs = new MyTabData(data.getTabName());
+	public  SqluckyBottomSheet tableViewSheet(BottomSheetDataValue data, List<Node> btnLs) {
+		var rs = new MyTabData(data);
 		
 		VBox vbox = new VBox(); 
+		JFXButton LockBtn = SdkComponent.createLockBtn(rs);
+		btnLs.add(0, LockBtn);
 		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs);
 		// 添加按钮面板和 数据表格
 		vbox.getChildren().add(dtBtnPane);
@@ -220,6 +226,8 @@ public class SqluckyComponent implements AppComponent {
 		VBox.setVgrow(sp, Priority.ALWAYS);
 		return vb;
 	}
+
+	
 
 
 	

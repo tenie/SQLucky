@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.po.tools;
+package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,6 +12,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.Sqlucky.sdk.po.DynaPo;
+import net.tenie.Sqlucky.sdk.po.PoInfo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class PoDao {

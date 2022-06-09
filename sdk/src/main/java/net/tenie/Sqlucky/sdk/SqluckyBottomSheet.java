@@ -1,7 +1,7 @@
 package net.tenie.Sqlucky.sdk;
 
 import javafx.scene.control.Button;
-import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
+import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
 
 /**
  * 底部窗口的显示页
@@ -10,7 +10,7 @@ import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
  */
 public interface SqluckyBottomSheet {
 	public void show();
-	public MyTabDataValue getTableData();
+	public BottomSheetDataValue getTableData();
 	public Button getSaveBtn();
 	public Button getDetailBtn();
 	

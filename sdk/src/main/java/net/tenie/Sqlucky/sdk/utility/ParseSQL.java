@@ -1,19 +1,14 @@
-package net.tenie.fx.utility;
+package net.tenie.Sqlucky.sdk.utility;
 
-import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-//import net.sf.jsqlparser.JSQLParserException;
-//import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-//import net.sf.jsqlparser.statement.Statement;
-//import net.sf.jsqlparser.statement.select.Select;
-//import net.sf.jsqlparser.util.TablesNamesFinder;
-import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-
-/*   @author tenie */
+/**
+ * sql 字符串 解析， 判断是否是查询语句或更新， 创建语句等
+ * @author tenie
+ *
+ */
 public class ParseSQL {
 	private static Logger logger = LogManager.getLogger(ParseSQL.class);
 

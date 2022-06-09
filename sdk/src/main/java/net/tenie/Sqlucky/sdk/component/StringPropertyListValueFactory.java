@@ -1,4 +1,4 @@
-package net.tenie.fx.factory;
+package net.tenie.Sqlucky.sdk.component;
 
 import javafx.beans.NamedArg;
 import javafx.beans.property.StringProperty;

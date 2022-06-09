@@ -41,6 +41,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 
 /**
  * A class containing a {@link TableCell} implementation that draws a

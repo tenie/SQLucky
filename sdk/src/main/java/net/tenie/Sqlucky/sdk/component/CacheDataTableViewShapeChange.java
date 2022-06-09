@@ -1,11 +1,13 @@
-package net.tenie.fx.Cache;
+package net.tenie.Sqlucky.sdk.component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
+
 import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -16,10 +18,10 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.po.DataTableViewShapePo;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
 public class CacheDataTableViewShapeChange {
@@ -134,7 +136,7 @@ public class CacheDataTableViewShapeChange {
 	 * @param augmentation
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	static public void setColWidth(FilteredTableColumn<ObservableList<StringProperty>, String>  col, String tableName, String colname, boolean augmentation) {
+	static public void setColWidthByCache(FilteredTableColumn<ObservableList<StringProperty>, String>  col, String tableName, String colname) {
 		// 设置列的长度
 		Double width;
 		Double cacheWidth = CacheDataTableViewShapeChange.getWidth(tableName, colname);
@@ -144,11 +146,11 @@ public class CacheDataTableViewShapeChange {
 			width = 600.0;
 		} else {
 			width = (colname.length() * 10.0) + 15;
-			if (width < 90)
-				width = 100.0;
-			if (augmentation) {
-				width = 200.0;
-			}
+			if (width < 100)
+				width = 110.0;
+//			if (augmentation) {
+//				width = 200.0;
+//			}
 		}
 
 		if (cacheWidth == null) {
@@ -163,6 +165,28 @@ public class CacheDataTableViewShapeChange {
 			CacheDataTableViewShapeChange.saveWidth(tableName, colname, Double.valueOf(t1.longValue()));
 		});		
 	}
+	
+	static public void setColWidth(FilteredTableColumn<ObservableList<StringProperty>, String>  col, String colname) {
+		// 设置列的长度
+		Double width;
+		if (colname.equals("Execute SQL Info")) {
+			width = 550.0;
+		} else if (colname.equals("Execute SQL")) {
+			width = 600.0;
+		} else {
+			width = (colname.length() * 10.0) + 15;
+			if (width < 90)
+				width = 100.0;
+//			if (augmentation) {
+//				width = 200.0;
+//			}
+		}
+
+		col.setMinWidth(width);
+		col.setPrefWidth(width);
+		 	
+	}
+	
 
 	// tableview 每个列头的移动事件
 	public static void setTableHeader(FilteredTableView<ObservableList<StringProperty>> table, String tableName) {

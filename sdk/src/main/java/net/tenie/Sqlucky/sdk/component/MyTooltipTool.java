@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.Sqlucky.sdk.component;
 
 import javafx.scene.control.Tooltip;
 import javafx.util.Duration;

@@ -32,9 +32,10 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -45,7 +46,6 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.lib.db.h2.H2Db;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -402,7 +402,7 @@ public class ConnectionEditor {
 		Consumer<String> ok = x -> {
 			try {
 				if (tmpPo != null ) {
-					Connection h2conn = H2Db.getConn();
+					Connection h2conn = SqluckyAppDB.getConn();
 					tmpPo.closeConn(); // 关闭它的连接 if(po.getId() !=null )
 					ConnectionDao.delete(h2conn, tmpPo.getId()); // 删除连接对象在数据库中的数据
 					DBConns.remove(tmpPo.getConnName());
@@ -410,7 +410,7 @@ public class ConnectionEditor {
 					ls.remove(tmpTreeNode);
 				}
 			} finally {
-				H2Db.closeConn();
+				SqluckyAppDB.closeConn();
 			}
 
 		};
@@ -538,8 +538,8 @@ public class ConnectionEditor {
 			
 				// 缓存数据
 				DBConns.add(connpo.getConnName(), connpo);
-				connpo = ConnectionDao.createOrUpdate(H2Db.getConn(), connpo);
-				H2Db.closeConn();
+				connpo = ConnectionDao.createOrUpdate(SqluckyAppDB.getConn(), connpo);
+				SqluckyAppDB.closeConn();
 			} else {
 				return;
 			}

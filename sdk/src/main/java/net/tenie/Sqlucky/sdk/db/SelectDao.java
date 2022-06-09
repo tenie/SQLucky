@@ -1,4 +1,4 @@
-package net.tenie.fx.dao;
+package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -9,8 +9,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -18,13 +20,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.dataView.MyTabData;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
-import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -62,9 +62,14 @@ public class SelectDao {
 	}
 	
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void selectSql( String sql, int limit, MyTabDataValue dvt ) throws SQLException {
+	public static void selectSql( String sql, int limit, BottomSheetDataValue dvt ) throws SQLException {
 		SqluckyConnector dpo  = dvt.getDbConnection();
-		Connection conn =dpo.getConn();
+		Connection conn = null;
+		if(dpo != null) {
+			 conn = dpo.getConn();
+		}else {
+			conn =  dvt.getConn();
+		}
 		// DB对象
 		PreparedStatement pstate = null;
 		ResultSet rs = null;
@@ -157,7 +162,7 @@ public class SelectDao {
 
 	
 	//TODO 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void callProcedure(Connection conn, String proName ,String tableid , MyTabDataValue dvt ,List<ProcedureFieldPo> pfp  ) throws SQLException {
+	public static void callProcedure(Connection conn, String proName ,String tableid , BottomSheetDataValue dvt ,List<ProcedureFieldPo> pfp  ) throws SQLException {
 		// DB对象
 		CallableStatement call = null;
 		ResultSet rs = null; 
@@ -202,7 +207,7 @@ public class SelectDao {
 			    	ProcedureFieldPo po = pfp.get(i);
 			    	if(po.isOut()) {
 			    		 Object objRtn =   call.getObject( i+1 );
-			    		 rowval.add(CommonAction.createReadOnlyStringProperty(objRtn.toString()));
+			    		 rowval.add(CommonUtility.createReadOnlyStringProperty(objRtn.toString()));
 			    		 
 			    		// 字段信息
 			    		 SqlFieldPo sfpo  = new SqlFieldPo();
@@ -305,7 +310,15 @@ public class SelectDao {
 //							String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
 //							val = new SimpleStringProperty(v);
 //						}
-					val = 	dpo.DateToStringStringProperty(rs.getObject(i + 1));
+					if(dpo != null ) {
+						val = 	dpo.DateToStringStringProperty(rs.getObject(i + 1));
+					}else {
+						//TODO dpo null 的情况下
+						Date dv = (Date) rs.getObject(i + 1);
+						String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+					    val = new SimpleStringProperty(v);
+					}
+						
 						
 					} else {
 						String temp = rs.getString(i+1);
@@ -395,12 +408,13 @@ public class SelectDao {
 				if(CommonUtility.isDateTime(dbtype) && "".equals(newValue )) {
 					Platform.runLater(() -> val.setValue("<null>"));
 				}
-				
-				MyTabData.dataPaneSaveBtn().setDisable(false);
+				if(SqluckyBottomSheetUtility.dataPaneSaveBtn() != null ) {
+					SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
+				}
 				
 
 				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();
-				if (!MyTabData.exist( rowNo)) {
+				if (!SqluckyBottomSheetUtility.exist( rowNo)) {
 					for (int i = 0; i < vals.size(); i++) {
 						if (i == idx) {
 							oldDate.add(new SimpleStringProperty(oldValue));
@@ -408,9 +422,9 @@ public class SelectDao {
 							oldDate.add(new SimpleStringProperty(vals.get(i).get()));
 						}
 					}
-					MyTabData.addData( rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
+					SqluckyBottomSheetUtility.addData( rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
 				} else {
-					MyTabData.addData( rowNo, vals);
+					SqluckyBottomSheetUtility.addData( rowNo, vals);
 				}
 			}
 		};

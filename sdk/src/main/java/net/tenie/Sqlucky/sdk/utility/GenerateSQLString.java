@@ -1,10 +1,8 @@
-package net.tenie.fx.dao;
+package net.tenie.Sqlucky.sdk.utility;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
 public class GenerateSQLString {

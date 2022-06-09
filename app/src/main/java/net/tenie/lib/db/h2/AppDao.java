@@ -1,6 +1,9 @@
 package net.tenie.lib.db.h2;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -8,19 +11,28 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.db.SelectDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.dao.InsertDao;
 
 /**
  * 
  * @author tenie
  *
  */
-public class SqlTextDao {
-	private static Logger logger = LogManager.getLogger(SqlTextDao.class);
+public class AppDao {
+	private static Logger logger = LogManager.getLogger(AppDao.class);
 	public static final String CONNECTION_INFO = 
 			"CREATE TABLE `CONNECTION_INFO` (\n" + 
 			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
@@ -228,9 +240,9 @@ public class SqlTextDao {
 	public static DocumentPo scriptArchive( String title, String txt, String filename, String encode, int paragraph) {
 		DocumentPo po = null ;
 		try{
-			 po = scriptArchive(H2Db.getConn(),  title, txt, filename, encode, paragraph);
+			 po = scriptArchive(SqluckyAppDB.getConn(),  title, txt, filename, encode, paragraph);
 		}finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		}
 		if( po == null) {
 			po = new DocumentPo();
@@ -358,13 +370,13 @@ public class SqlTextDao {
 	
 	public static void delScriptPo(Integer id) {
 		String sql = "delete   from   SCRIPT_ARCHIVE  where id = " + id ;
-		var conn = H2Db.getConn();
+		var conn = SqluckyAppDB.getConn();
 		try {
 			DBTools.execDDL(conn,  sql);
 		} catch (SQLException e) { 
 			e.printStackTrace();
 		}finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		}
 	}
 	
@@ -412,6 +424,155 @@ public class SqlTextDao {
 		}
 	}
 	
+	public static void testDbTableExists(Connection conn) {
+		// 第一次启动
+		if (!tabExist(conn, "DATA_MODEL_INFO")) {
+			AppDao.createTab(conn);
+			// 数据库迁移
+			transferOldDbData(conn);
+		} else {// 之后的启动, 更新脚本
+//			UpdateScript.execUpdate(conn);
+
+		}
+	}
+	
+	// 检查表是否存在
+	public static boolean tabExist(Connection conn, String tablename) {
+		try {
+			DatabaseMetaData dmd = conn.getMetaData();
+			ResultSet tablesResultSet = dmd.getTables(null, null, tablename, new String[] { "TABLE" });
+			if (tablesResultSet.next()) {
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+	// 旧的数据 转移 到新的 表里
+	private static void transferOldDbData(Connection conn) {
+		String path = oldDbFiles();
+		if (StrUtils.isNotNullOrEmpty(path)) {
+			DBConnectorInfoPo connPo = new DBConnectorInfoPo("CONN_NAME",  
+					"", // rd.getString("DRIVER"),
+					"", // rd.getString("HOST"),
+					"", // rd.getString("PORT"),
+					ConfigVal.USER, 
+					ConfigVal.PASSWD, 
+					"VENDOR",  
+					"SCHEMA",  
+					"DB_NAME",  
+					"jdbc:h2:" + path  ,
+					false
+			);
+			SqluckyConnector cnor = new MyH2Connector(connPo);
+			List<String> tableNames = new ArrayList<>();
+			tableNames.add("CONNECTION_INFO");
+			tableNames.add("SQL_TEXT_SAVE");
+			tableNames.add("SCRIPT_ARCHIVE");
+			tableNames.add("APP_CONFIG");
+
+			for (int i = 0; i < tableNames.size(); i++) {
+				String tableName = tableNames.get(i);
+				String sql = "select   *   from  " + tableName;
+				BottomSheetDataValue dvt = new BottomSheetDataValue();
+				dvt.setDbConnection(cnor);
+				dvt.setSqlStr(sql);
+				dvt.setTabName(tableName);
+				try {
+					SelectDao.selectSql(sql, -1, dvt);
+					var datas = dvt.getRawData();
+					var fs = dvt.getColss();
+					if (datas != null) {
+						for (var data : datas) {
+							InsertDao.execInsert(conn, tableName, data, fs);
+						}
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace(); 
+				}
+
+			}
+			cnor.closeConn();
+
+		}
+	}
+	// 获取目录下的旧db文件, 从旧文件中找一个最新的
+	private static String oldDbFiles(){
+		String rs = "";
+		String path = DBTools.dbFilePath() ;
+		File dir = new File(path);
+		
+		File[] files = dir.listFiles(name->{
+				return name.getName().startsWith(ConfigVal.H2_DB_NAME) && name.getName().endsWith(".mv.db");
+			});
+		if(files != null && files.length > 0) {
+			long lastModifiedTime = 0;
+			for(var fl : files) {
+				String flName = fl.getName(); 
+				if(!flName.startsWith(ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION) ) {					
+					long ltmp = fl.lastModified();
+					if(ltmp > lastModifiedTime) {
+						lastModifiedTime = ltmp;
+						rs =  path + flName.substring(0, flName.indexOf(".mv.db")); 
+					}
+					System.out.println(rs);
+				} 
+			}
+		}  
+		return rs;
+	}
+
+	// 执行更新脚本
+	public static void updateAppSql(Connection conn) {
+//		 setConfigVal(conn,  "UPDATE_SQL", "ALTER TABLE SQL_TEXT_SAVE ADD PARAGRAPH  INT(11);");
+		 String  UPDATE_SQL =  AppDao.readConfig(conn , "UPDATE_SQL"); 
+		 if(UPDATE_SQL != null &&  UPDATE_SQL.length() > 0) {
+			 String[] sql = UPDATE_SQL.split(";");
+				for (String s : sql) {
+					try {
+						if (s.length() > 0) {
+							DBTools.execDDL(conn, s);
+						}
+
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+				}
+				AppDao.saveConfig(conn,  "UPDATE_SQL", "");
+		 }
+		 
+		List<String> ls =  updateSQL();
+		for(String sql : ls) {
+			try {
+				if (sql.length() > 0) {
+					DBTools.execDDL(conn, sql);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+    /**
+     *  
+     * @return
+     */
+	private static List<String> updateSQL(){
+		List<String> ls = new ArrayList<>(); 
+		String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/updatesql.txt";
+		File fl = new File(path);
+		if(fl.exists()) {
+			try {
+				ls = FileUtils.readLines(fl, "UTF-8");
+				FileUtils.forceDelete(fl);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return ls;
+	}
 	
 	
 }

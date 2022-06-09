@@ -23,6 +23,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -133,7 +134,7 @@ public class CommonUtility {
 				t.start();
 			 
 		}else {
-			System.out.println("delayRunThread");
+			logger.debug("delayRunThread");
 			return ;
 			
 		}  
@@ -336,7 +337,7 @@ public class CommonUtility {
 				max = arr[i];
 			}
 		}
-		System.out.println(max);
+		logger.debug(max);
 		return max;
 	}
 	
@@ -347,7 +348,7 @@ public class CommonUtility {
 				min = arr[i];
 			}
 		}
-		System.out.println(min);
+		logger.debug(min);
 		return min;
 	}
 	/**
@@ -482,19 +483,19 @@ public class CommonUtility {
                 }
                 for (File f : files) {
                     if (f.isDirectory()) {
-                        System.out.println("文件夹:" + f.getAbsolutePath());
+                        logger.debug("文件夹:" + f.getAbsolutePath());
                         list.add(f);
                         folderNum++;
                     } else {
-                        System.out.println("文件:" + f.getAbsolutePath());
+                        logger.debug("文件:" + f.getAbsolutePath());
                         fileNum++;
                     }
                 }
             }
         } else {
-            System.out.println("文件不存在!");
+            logger.debug("文件不存在!");
         }
-        System.out.println("文件夹数量:" + folderNum + ",文件数量:" + fileNum);
+        logger.debug("文件夹数量:" + folderNum + ",文件数量:" + fileNum);
     }
 	
 	public static void folderMethod2(String path) {
@@ -504,15 +505,15 @@ public class CommonUtility {
             if (null != files) {
                 for (File file2 : files) {
                     if (file2.isDirectory()) {
-                        System.out.println("文件夹:" + file2.getAbsolutePath());
+                        logger.debug("文件夹:" + file2.getAbsolutePath());
                         folderMethod2(file2.getAbsolutePath());
                     } else {
-                        System.out.println("文件:" + file2.getAbsolutePath());
+                        logger.debug("文件:" + file2.getAbsolutePath());
                     }
                 }
             }
         } else {
-            System.out.println("文件不存在!");
+            logger.debug("文件不存在!");
         }
     }
 	
@@ -593,7 +594,7 @@ public class CommonUtility {
 				rs.add(po);
 			}
 		 }
-		 System.out.println(rs);
+		 logger.debug(rs);
 		 return rs;
 	}
 
@@ -650,6 +651,8 @@ public class CommonUtility {
 	public static void addInitTask(Consumer< String > v) {
 		initTasks.add(v);
 		addTaskCount();
+		logger.debug("addTaskCount == getTaskCount()  = " + CommonUtility.getTaskCount() );
+		
 	}
 	
 	public static synchronized int countTask() {
@@ -663,14 +666,18 @@ public class CommonUtility {
 			try {
 				Thread t = new Thread() {
 					public void run() {
-						caller.accept("");
-						minusTaskCount();
+						try {
+							caller.accept("");
+						} finally {
+							minusTaskCount();
+							logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtility.getTaskCount() );
+						}
 					}
 				};
 				t.start();
 			} catch (Exception e) {
 				e.printStackTrace();
-			}
+			} 
 		}
 		InitFinishCall(Callback);
 		
@@ -683,7 +690,7 @@ public class CommonUtility {
 					while(CommonUtility.getTaskCount() > 0){
 						try {
 							Thread.sleep(500);
-							System.out.println("getTaskCount()  = " + CommonUtility.getTaskCount() );
+							logger.debug("getTaskCount()  = " + CommonUtility.getTaskCount() );
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -734,4 +741,61 @@ public class CommonUtility {
 		 Date d = new Date();
 		 return d.getTime();
 	}
+
+
+	public static File getFileHelper(boolean isFile) {
+		File file = null;
+		if (isFile) {
+			file = FileOrDirectoryChooser.showSaveDefault("Save", ComponentGetter.primaryStage);
+		}
+		return file;
+	}
+	// 字段值被修改还原, 不允许修改
+	public static   StringProperty createReadOnlyStringProperty(String val ) {
+		StringProperty sp =  new StringProperty() {
+			@Override
+			public String get() { 
+				return val;
+			}
+			
+			@Override
+			public void bind(ObservableValue<? extends String> arg0) { }
+			@Override
+			public boolean isBound() { 
+				return false;
+			}
+			@Override
+			public void unbind() { }
+
+			@Override
+			public Object getBean() { 
+				return null;
+			}
+			@Override
+			public String getName() { 
+				return null;
+			} 
+			@Override
+			public void addListener(ChangeListener<? super String> arg0) { } 
+			@Override
+			public void removeListener(ChangeListener<? super String> arg0) { } 
+			@Override
+			public void addListener(InvalidationListener arg0) { }
+			@Override
+			public void removeListener(InvalidationListener arg0) { } 		
+			@Override
+			public void set(String arg0) {}  
+		}; 		
+		return sp;
+	}
+
+	public static void sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 }
+
+

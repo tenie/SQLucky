@@ -123,6 +123,12 @@
 					<compilerArgs>
 						<arg>--add-exports</arg>
 						<arg>javafx.graphics/com.sun.javafx.application=SQLucky.sdk</arg>
+						<arg>--add-exports</arg>
+						<arg>org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser=SQLucky.sdk</arg>
+						<arg>--add-exports</arg>
+						<arg>org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser.aggregate=SQLucky.sdk</arg>
+						<arg>--add-exports</arg>
+						<arg>org.controlsfx.controls/impl.org.controlsfx.i18n=SQLucky.sdk</arg>
 					</compilerArgs>
 				</configuration>
 			</plugin>

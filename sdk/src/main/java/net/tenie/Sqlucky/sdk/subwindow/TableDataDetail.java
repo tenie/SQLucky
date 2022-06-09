@@ -20,7 +20,7 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTextField2ReadOnlyTableCell;
-import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
+import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -59,9 +59,10 @@ public class TableDataDetail {
 	public static void show() {
 		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tb = mtd.getTableData().getTable();
+		if(tb == null ) return;
 		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 
-		MyTabDataValue dvt = mtd.getTableData();
+		BottomSheetDataValue dvt = mtd.getTableData();
 		String tabName = dvt.getTabName();
 		ObservableList<SqlFieldPo> fields = dvt.getColss();
 

@@ -5,32 +5,35 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.sun.javafx.application.LauncherImpl;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.Action.Log4jPrintStream;
-import net.tenie.fx.Action.SettingKeyCodeCombination;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.container.AppWindow;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.factory.ServiceLoad;
-import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.db.h2.SqlTextDao;
-import net.tenie.sdkImp.SqluckyComponent;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.Action.Log4jPrintStream;
+import net.tenie.fx.Action.SettingKeyCodeCombination;
+import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.container.AppWindow;
+import net.tenie.fx.factory.ServiceLoad;
+import net.tenie.lib.db.h2.AppDao;
+import net.tenie.sdkImp.SqluckyAppComponent;
 
 /**
  * 启动入口
@@ -60,7 +63,7 @@ public class SQLucky extends Application {
 
 
 	static {
-		if( ! H2Db.isDev()) {
+		if( ! SqluckyAppDB.isDev()) {
 			Log4jPrintStream.redirectSystemOut();
 		} 
 //		Log4jPrintStream.redirectSystemOut();
@@ -68,18 +71,23 @@ public class SQLucky extends Application {
 	@Override
 	public void init() throws Exception {
 		
-		Connection conn = H2Db.getConn();
-	    Theme = H2Db.getConfigVal(conn , "THEME");  
+		
+		Connection conn = SqluckyAppDB.getConn();
+		// 数据库迁移
+		AppDao.testDbTableExists(conn);
+		
+		// 界面主题色， 没有设置过，默认黑色
+	    Theme = AppDao.readConfig(conn , "THEME");  
 	    if(StrUtils.isNullOrEmpty(Theme)) {
-	    	SqlTextDao.saveConfig(conn, "THEME", "DARK");
+	    	AppDao.saveConfig(conn, "THEME", "DARK");
 	    	Theme =  "DARK";
 	    }
 //	    H2Db.updateAppSql(conn);
 	    
-	    ConfigVal.openfileDir = H2Db.getConfigVal(conn , "OPEN_FILE_DIR"); 
-		H2Db.closeConn();
+	    ConfigVal.openfileDir = AppDao.readConfig(conn , "OPEN_FILE_DIR"); 
+		SqluckyAppDB.closeConn();
 		ConfigVal.THEME = Theme;
-		SqluckyComponent sqluckyComponent = new SqluckyComponent();
+		SqluckyAppComponent sqluckyComponent = new SqluckyAppComponent();
 		ComponentGetter.appComponent = sqluckyComponent;
 		// 注册
 		ServiceLoad.callRegister();
@@ -89,7 +97,7 @@ public class SQLucky extends Application {
 //		scene.getStylesheets().addAll(ConfigVal.cssList);
 //		ComponentGetter.primaryscene = scene;
 		SettingKeyCodeCombination.Setting();
-		img = new Image(SQLucky.class.getResourceAsStream(ConfigVal.appIcon));
+		img = ComponentGetter.LogoIcons; //new Image(SQLucky.class.getResourceAsStream(ConfigVal.appIcon));
 		
 		
 //		tmpscene = app.getTmpScene();

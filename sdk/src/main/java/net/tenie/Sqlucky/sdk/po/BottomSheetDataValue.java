@@ -1,6 +1,6 @@
 package net.tenie.Sqlucky.sdk.po;
 
-import java.util.ArrayList;
+import java.sql.Connection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +10,6 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.MenuItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 
 
@@ -19,12 +18,13 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
  * @author tenie
  *
  */
-public class MyTabDataValue {
+public class BottomSheetDataValue {
 	private String tabName;
 	private String sqlStr;
 	private String connName;
 	private boolean isLock = false;
 	private SqluckyConnector dbConnection;
+	private Connection conn;
 	// sql执行时间
 	private double execTime = 0;
 	// 行数
@@ -38,7 +38,7 @@ public class MyTabDataValue {
 	private Map<String, ObservableList<StringProperty>> appendData ;
 
 	// 列的右键菜单 menuItem
-	private List<MenuItem> menuItems = new ArrayList<>();
+//	private List<MenuItem> menuItems = new ArrayList<>();
 
 	// 列
 	private ObservableList<SqlFieldPo> colss;
@@ -53,8 +53,8 @@ public class MyTabDataValue {
 	
 	
 	public void clean() {
-		menuItems.clear();
-		menuItems = null;
+//		menuItems.clear();
+//		menuItems = null;
 		if(table != null) {
 			table.getItems().clear();
 		}
@@ -88,7 +88,7 @@ public class MyTabDataValue {
 
  
 
-	public MyTabDataValue(FilteredTableView<ObservableList<StringProperty>> table,  String tabName,
+	public BottomSheetDataValue(FilteredTableView<ObservableList<StringProperty>> table,  String tabName,
 			String sqlStr, String connName, ObservableList<SqlFieldPo> colss,
 			ObservableList<ObservableList<StringProperty>> rawData) {
 		this.table = table;
@@ -99,7 +99,7 @@ public class MyTabDataValue {
 		this.rawData = rawData;
 	}
 
-	public MyTabDataValue(FilteredTableView<ObservableList<StringProperty>> table, String tabName,
+	public BottomSheetDataValue(FilteredTableView<ObservableList<StringProperty>> table, String tabName,
 			ObservableList<SqlFieldPo> colss, ObservableList<ObservableList<StringProperty>> rawData) {
 		this.table = table;
 		this.tabName = tabName;
@@ -107,7 +107,7 @@ public class MyTabDataValue {
 		this.rawData = rawData;
 	}
 
-	public MyTabDataValue() {
+	public BottomSheetDataValue() {
 
 	}
  
@@ -216,13 +216,13 @@ public class MyTabDataValue {
 		this.rows = rows;
 	}
 
-	public List<MenuItem> getMenuItems() {
-		return menuItems;
-	}
-
-	public void setMenuItems(List<MenuItem> menuItems) {
-		this.menuItems = menuItems;
-	}
+//	public List<MenuItem> getMenuItems() {
+//		return menuItems;
+//	}
+//
+//	public void setMenuItems(List<MenuItem> menuItems) {
+//		this.menuItems = menuItems;
+//	}
 
 	public boolean isLock() {
 		return isLock;
@@ -250,6 +250,18 @@ public class MyTabDataValue {
 
 	public void setBtnLs(List<Node> btnLs) {
 		this.btnLs = btnLs;
+	}
+
+
+
+	public Connection getConn() {
+		return conn;
+	}
+
+
+
+	public void setConn(Connection conn) {
+		this.conn = conn;
 	}
 	
 	

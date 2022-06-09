@@ -1,16 +1,18 @@
 package net.tenie.fx.component.dataView;
 
 import java.util.function.Consumer;
+
 import com.jfoenix.controls.JFXButton;
+
 import javafx.scene.layout.AnchorPane;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.component.CommonButtons;
-import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.CodeArea.MyCodeArea;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
@@ -27,7 +29,7 @@ public class DdlOptionBtnsPane extends  AnchorPane{
 		public   DdlOptionBtnsPane(MyTabData mytb, String ddl, boolean isRunFunc ,boolean isProc, String name ) {
 		 
 			// 锁 
-			JFXButton lockbtn = ButtonFactory.createLockBtn(mytb );
+			JFXButton lockbtn = SdkComponent.createLockBtn(mytb );
 			// 保存
 			JFXButton saveBtn = new JFXButton();
 			saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));

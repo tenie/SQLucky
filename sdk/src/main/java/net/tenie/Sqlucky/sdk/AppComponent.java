@@ -6,8 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
+import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
 
 public interface AppComponent {
 	
@@ -36,8 +36,8 @@ public interface AppComponent {
 //	public void openConn();
 	
     //创建数据tableview
-	public  SqluckyBottomSheet sqlDataSheet(MyTabDataValue data, int idx, boolean disable);
-	public  SqluckyBottomSheet tableViewSheet(MyTabDataValue data, List<Node> btnLs);
+	public  SqluckyBottomSheet sqlDataSheet(BottomSheetDataValue data, int idx, boolean disable);
+	public  SqluckyBottomSheet tableViewSheet(BottomSheetDataValue data, List<Node> nodeLs);
 	// 表, 视图 等 数据库对象的ddl语句
 	public  SqluckyBottomSheet ddlSheet(String name, String ddl, boolean isRunFunc);
 	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc);

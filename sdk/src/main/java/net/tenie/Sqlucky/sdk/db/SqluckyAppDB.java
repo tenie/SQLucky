@@ -1,6 +1,7 @@
-package net.tenie.Sqlucky.sdk.db.connection;
+package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
@@ -8,26 +9,72 @@ import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.javalite.activejdbc.Base;
 
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
-import net.tenie.Sqlucky.sdk.utility.Dbinfo; 
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 
-public class SqluckyConnection {
+/**
+ * 
+ * @author tenie
+ *
+ */
+public class SqluckyAppDB {
+	
+	// 连接打开次数的计数, 只有当connTimes = 0 , 调用close, 才会真的关闭
+	private static AtomicInteger connTimes = new AtomicInteger(0);
 	private static Connection conn;
-
-	public synchronized static Connection getConn() {
+	// 使用阻塞队列, 串行获取: 连接, 和关闭连接 
+//	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
+	public  static Connection getConn() {
+		while(connTimes.get() != 0) {
+			CommonUtility.sleep(300);
+		}
 		try {
 			if (conn == null) {
 				conn = createH2Conn();
-				 
 			} else if (conn.isClosed()) {
 				conn = createH2Conn();
 			}
+//			bQueue.put(conn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-  
+
+		int v = connTimes.addAndGet(1);
+		System.out.println("getConn = connIdx = " + connTimes.get() + " v = " + v);
+
 		return conn;
 	}
+	
+	public  static void closeConn() {
+		if (conn != null) {
+			try { 
+				int v = connTimes.addAndGet(-1);
+				System.out.println("closeConncloseConncloseConn = connIdx = "+ connTimes.get());
+				if(v <= 0) {
+					conn.close(); 					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+ 
+	
+	public static boolean isDev() {
+		String  modulePath = System.getProperty("jdk.module.path");
+		String strSplit = ":";
+		if(CommonUtility.isWinOS()) {
+			strSplit = ";";
+		}
+		String[] ls  = modulePath.split( strSplit );
+		if(ls.length > 1) {
+			return true;
+		}
+		return false;
+	}
+
 
 //	@SuppressWarnings("exports")
 	public static DataSource getH2DataSource() {
@@ -67,5 +114,5 @@ public class SqluckyConnection {
 	}
 
 	
-
+	
 }

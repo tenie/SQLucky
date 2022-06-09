@@ -1,4 +1,4 @@
-package net.tenie.fx.Po;
+package net.tenie.Sqlucky.sdk.po;
 
 import java.sql.Connection;
 

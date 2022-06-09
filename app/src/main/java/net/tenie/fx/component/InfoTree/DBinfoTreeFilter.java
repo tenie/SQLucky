@@ -1,6 +1,7 @@
 package net.tenie.fx.component.InfoTree;
 
 import com.jfoenix.controls.JFXButton;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
@@ -8,6 +9,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
@@ -15,8 +18,6 @@ import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.InfoTree.TreeItem.MyTreeItem;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 
  
 /**
@@ -26,8 +27,11 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
  */
 public class DBinfoTreeFilter {
 	 AnchorPane filter;
-	 private  ObservableList<TreeItem<TreeNodePo>> temp  = FXCollections.observableArrayList();
+	 // 界面上所有链接节点的临时缓存， 之后的查找过滤都是对tempAllConnNode操作
+	 private  ObservableList<TreeItem<TreeNodePo>> tempAllConnNode  = FXCollections.observableArrayList();
+	 // 缓存查找到的节点容器， 查找到的数据库对象放入filtList， filtList之后放入新的根节点用来界面展示
 	 private  ObservableList<TreeItem<TreeNodePo>>  filtList = FXCollections.observableArrayList();
+	 // 界面上的根节点
 	 private  TreeItem<TreeNodePo> rootNode ;
 	 private TextField txt  ;
 	 public DBinfoTreeFilter () {}
@@ -40,9 +44,9 @@ public class DBinfoTreeFilter {
 	public AnchorPane createFilterPane(TreeView<TreeNodePo> treeView) {
 		txt = new TextField();
 		ComponentGetter.dbInfoFilter = txt;
-		AnchorPane filter = new AnchorPane();
-		filter.setPrefHeight(30);
-		filter.setMinHeight(30);
+		AnchorPane filterPane = new AnchorPane();
+		filterPane.setPrefHeight(30);
+		filterPane.setMinHeight(30);
 		JFXButton query = new JFXButton();
 		query.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
 		query.setOnAction(e -> {
@@ -75,23 +79,23 @@ public class DBinfoTreeFilter {
 			txt.clear();
 		});
 		
-		filter.setOnMouseEntered(e->{
+		filterPane.setOnMouseEntered(e->{
 			clean.setVisible(true);
 		});
-		filter.setOnMouseExited(e->{
+		filterPane.setOnMouseExited(e->{
 			clean.setVisible(false);
 		});
 		
-		filter.getChildren().addAll(query, txt , clean);
+		filterPane.getChildren().addAll(query, txt , clean);
 		
 		
 		txt.textProperty().addListener((o, oldVal, newVal) -> {
 			ComponentGetter.dbTitledPane.setExpanded(true);
-			// 缓存
-			ObservableList<TreeItem<TreeNodePo>> connNodes = treeView.getRoot().getChildren();
-			if (temp.size() < connNodes.size()) {
-				temp.clear();
-				temp.addAll(connNodes);
+			// 缓存,
+			ObservableList<TreeItem<TreeNodePo>> allConnNode = treeView.getRoot().getChildren();
+			if (tempAllConnNode.size() < allConnNode.size()) {
+				tempAllConnNode.clear();
+				tempAllConnNode.addAll(allConnNode);
 				rootNode = treeView.getRoot();
 			}
 
@@ -106,21 +110,26 @@ public class DBinfoTreeFilter {
 			if (StrUtils.isNotNullOrEmpty(newVal)) {
 				filtList.clear();
 				// 遍历每一个连接节点, 在节点下查找到了数据, 就会返回一个新节点对象, 最后使用新节点创建一个新的树
-				for (int i = 0; i < temp.size(); i++) {
-					TreeItem<TreeNodePo> connNode = temp.get(i);
-					TreeItem<TreeNodePo> nConnNode = connNodeOption(connNode, newVal);
+				for (int i = 0; i < tempAllConnNode.size(); i++) {
+					// 获取一个链接节点
+					TreeItem<TreeNodePo> connNode = tempAllConnNode.get(i);
+					// 查找过滤后， 得到一个新的链接节点
+					TreeItem<TreeNodePo> nConnNode = linkTreeItemOption(connNode, newVal);
 					// 新节点不是NULL 缓存
 					if (nConnNode != null) {
 						filtList.add(nConnNode);
 					}
 				}
 				// 创建一个新的树根, 将查询数据挂在新的上面
-				TreeItem<TreeNodePo> rootNode = new TreeItem<>(
+				TreeItem<TreeNodePo> filterRootNode = new TreeItem<>(
 						new TreeNodePo("Connections", IconGenerator.svgImageDefActive("windows-globe")));
-				rootNode.getChildren().addAll(filtList);
-				treeView.setRoot(rootNode); // 使用新的树根
+				//
+				filterRootNode.getChildren().addAll(filtList);
+				// 使用新的树根
+				treeView.setRoot(filterRootNode); 
 				
 				if(filtList.size() >0 ) {
+					// 展开treeview
 					CommonAction.unfoldTreeView();
 				}
 				
@@ -128,7 +137,7 @@ public class DBinfoTreeFilter {
 
 		});
 
-		return filter;
+		return filterPane;
 	}
  
 	
@@ -136,7 +145,7 @@ public class DBinfoTreeFilter {
 	 * 传递连接节点, 对其进行过滤
 	 * 如果节点包含查询内容就返回一个新的节点, 否则返回null
 	 */
-	private TreeItem<TreeNodePo>  connNodeOption(TreeItem<TreeNodePo> conn, String queryStr) {
+	private TreeItem<TreeNodePo>  linkTreeItemOption(TreeItem<TreeNodePo> conn, String queryStr) {
 		// 1. 首先看节点是否激活的(有子节点?)
 		if( conn.getChildren().size() > 0) {
 			ConnItemContainer cip = conn.getValue().getConnItemContainer(); 
@@ -144,8 +153,8 @@ public class DBinfoTreeFilter {
 				// 获取Schema的节点集合
 				ObservableList<TreeItem<TreeNodePo>> vals = cip.getSchemaNode().getChildren();
 				
-				ConnItemContainer tempcip = new ConnItemContainer(cip.getConnpo());
-				SqluckyConnector connpo = tempcip.getConnpo();
+				ConnItemContainer filterCIContainer = new ConnItemContainer(cip.getConnpo());
+				SqluckyConnector connpo = filterCIContainer.getConnpo();
 				 
 				// 2. 遍历每个schema节点
 				for (int i = 0; i < vals.size(); i++) {
@@ -156,40 +165,40 @@ public class DBinfoTreeFilter {
 					if(sche.getChildren().size() > 0) {
 						// 从schema节点下获取数据对象
 						ConnItemDbObjects ci =	sche.getValue().getConnItem(); 
-						// 创建一个新的数据对象, 来存储过滤后的数据
-						ConnItemDbObjects cinew = new ConnItemDbObjects( ); 
-						cinew.initConnItem(connpo,  ci.getSchemaName());
+						// 创建一个新的数据对象, 来存储过滤后的数据filterConnObjs
+						ConnItemDbObjects filterCIDO = new ConnItemDbObjects( ); 
+						filterCIDO.initConnItem(connpo,  ci.getSchemaName());
 					
 						
 						// 开始查找, 从表开始
-						count += filterHelper(ci.getTableNode(), queryStr, cinew.getTableNode(), cinew.getParentNode());
+						count += filterHelper(ci.getTableNode(), queryStr, filterCIDO.getTableNode(), filterCIDO.getParentNode());
 						
-						count += filterHelper(ci.getViewNode(), queryStr, cinew.getViewNode(), cinew.getParentNode());
+						count += filterHelper(ci.getViewNode(), queryStr, filterCIDO.getViewNode(), filterCIDO.getParentNode());
 
-						count += filterHelper(ci.getFuncNode(), queryStr, cinew.getFuncNode(), cinew.getParentNode());
+						count += filterHelper(ci.getFuncNode(), queryStr, filterCIDO.getFuncNode(), filterCIDO.getParentNode());
 
-						count += filterHelper(ci.getProcNode(), queryStr, cinew.getProcNode(), cinew.getParentNode());
+						count += filterHelper(ci.getProcNode(), queryStr, filterCIDO.getProcNode(), filterCIDO.getParentNode());
 
-						count += filterHelper(ci.getTriggerNode(), queryStr, cinew.getTriggerNode(), cinew.getParentNode());
+						count += filterHelper(ci.getTriggerNode(), queryStr, filterCIDO.getTriggerNode(), filterCIDO.getParentNode());
 						
-						count += filterHelper(ci.getIndexNode(), queryStr, cinew.getIndexNode(), cinew.getParentNode());
+						count += filterHelper(ci.getIndexNode(), queryStr, filterCIDO.getIndexNode(), filterCIDO.getParentNode());
 
-						count += filterHelper(ci.getSequenceNode(), queryStr, cinew.getSequenceNode(), cinew.getParentNode());
+						count += filterHelper(ci.getSequenceNode(), queryStr, filterCIDO.getSequenceNode(), filterCIDO.getParentNode());
 						 
 						 // 如果找到了数据, 将新的数据对象, 放入schema数据对象
 						 if(count > 0 ) {
-							 tempcip.addChildren(cinew); 
+							 filterCIContainer.addChildren(filterCIDO); 
 						 } 
 					}					
 				}
 				// schema数据对象有数据的 情况, 创建一个新的连接节点并返回它
-				if(tempcip.getSchemaNode().getChildren().size() > 0) {
-					MyTreeItem<TreeNodePo> newConn = new MyTreeItem<TreeNodePo>(
+				if(filterCIContainer.getSchemaNode().getChildren().size() > 0) {
+					MyTreeItem<TreeNodePo> filterLinkTreeItem = new MyTreeItem<TreeNodePo>(
 							new TreeNodePo(connpo.getConnName(), IconGenerator.svgImage("link", "#7CFC00")), connpo);
 					
-					newConn.getChildren().add(tempcip.getSchemaNode());
-					newConn.getValue().setConnItemContainer(tempcip); 
-					return newConn;
+					filterLinkTreeItem.getChildren().add(filterCIContainer.getSchemaNode());
+					filterLinkTreeItem.getValue().setConnItemContainer(filterCIContainer); 
+					return filterLinkTreeItem;
 				}
 			
 			}
@@ -197,22 +206,34 @@ public class DBinfoTreeFilter {
 		
 		return null;
 	}
-	
-	private static int filterHelper(TreeItem<TreeNodePo>  node, String queryStr, TreeItem<TreeNodePo> cnode, TreeItem<TreeNodePo> pnode) {
+	/**
+	 * 
+	 * @param parentNode 父节点（比包含所有表格的那个节点）
+	 * @param queryStr	要查询的字符串
+	 * @param parentNewNode   新父节点（把查找到的子节点放到这个新父节点下）
+	 * @param dbObjNewParent   新父节点的父节点(存放所有数据库对象集合的节点)
+	 * @return  返回一个统计结果， 找到了几个节点
+	 */
+	private static int filterHelper(TreeItem<TreeNodePo>  parentNode, String queryStr, TreeItem<TreeNodePo> parentNewNode, TreeItem<TreeNodePo> dbObjNewParent) {
 		int count = 0;
-		if(node !=null) {
-			ObservableList<TreeItem<TreeNodePo>>    val = filter(node.getChildren(), queryStr);
+		if(parentNode !=null) {
+			var val = filter(parentNode.getChildren(), queryStr);
 			int sz = val.size();
 			if (sz > 0) {
-				cnode.getChildren().setAll(val);
-				pnode.getChildren().add(cnode);
+				parentNewNode.getChildren().setAll(val);
+				dbObjNewParent.getChildren().add(parentNewNode);
 				count += val.size();
 			}
 		}
 		return count;
 	}
 	
-	 
+	/**
+	 *  从TreeItem 集合中找出值 和 查询的字符串做contains， 如果匹配把TreeItem放入到新的集合里
+	 * @param val  TreeItem 集合
+	 * @param str 查询的字符串
+	 * @return 新集合包含里了查找到的 个别TreeItem 
+	 */
 	private static ObservableList<TreeItem<TreeNodePo>> filter(ObservableList<TreeItem<TreeNodePo>> val, String str){
 		ObservableList<TreeItem<TreeNodePo>> rs =  FXCollections.observableArrayList();
 		String temp = str.toUpperCase();

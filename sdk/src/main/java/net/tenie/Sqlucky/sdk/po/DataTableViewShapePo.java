@@ -1,4 +1,4 @@
-package net.tenie.fx.Cache;
+package net.tenie.Sqlucky.sdk.po;
 
 import java.util.HashMap;
 import java.util.Map;

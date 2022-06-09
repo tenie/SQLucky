@@ -9,14 +9,14 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
-import net.tenie.fx.Action.MenuAction;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.dao.SelectDao;
 import net.tenie.fx.window.ConnectionEditor;
 
 public class DBInfoTreeContextMenu {
@@ -143,11 +143,11 @@ public class DBInfoTreeContextMenu {
 	
 	public void setTableAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String tablename ) {
 		tableAddNewCol.setOnAction(e->{ 
-			MenuAction.addNewColumn(dbc, schema, tablename);
+			CommonAction.addNewColumn(dbc, schema, tablename);
 		});
 	 
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropTable( treeItem,  dbc, schema, tablename);
+			DBInfoTreeContextMenuAction.dropTable( treeItem,  dbc, schema, tablename);
 		});
 	 
 		tableShow.setOnAction(e->{ 
@@ -184,28 +184,28 @@ public class DBInfoTreeContextMenu {
 	// 设置选中视图时 对应的按钮action
 	public void setViewAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropView(treeItem, dbc, schema, viewName);
+			DBInfoTreeContextMenuAction.dropView(treeItem, dbc, schema, viewName);
 		});
 	  
 	}
 	// 设置选中函数时 对应的按钮action
 	public void setFuncAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropFunc(treeItem, dbc, schema, viewName);
+			DBInfoTreeContextMenuAction.dropFunc(treeItem, dbc, schema, viewName);
 		});
 	  
 	}
 	
 	public void setProcAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropProc(treeItem, dbc, schema, viewName);
+			DBInfoTreeContextMenuAction.dropProc(treeItem, dbc, schema, viewName);
 		});
 	  
 	}
 	
 	public void setTriggerAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector  dbc ,String schema ,String viewName ) {
 		tableDrop.setOnAction(e->{ 
-			MenuAction.dropTrigger(treeItem, dbc, schema, viewName);
+			DBInfoTreeContextMenuAction.dropTrigger(treeItem, dbc, schema, viewName);
 		});
 	  
 	}

@@ -7,8 +7,8 @@ import net.tenie.Sqlucky.sdk.utility.DBTools;
 public class UpdateScript {
 	
 	public static void execUpdate(Connection conn) {
-		if ( H2Db.tabExist(conn, "SCRIPT_ARCHIVE") == false) {
-			DBTools.execDDLNoErr(conn, SqlTextDao.SCRIPT_ARCHIVE);
+		if ( AppDao.tabExist(conn, "SCRIPT_ARCHIVE") == false) {
+			DBTools.execDDLNoErr(conn, AppDao.SCRIPT_ARCHIVE);
 		}
 	 
 		String addCol = "ALTER TABLE SQL_TEXT_SAVE  ADD `SCRIPT_ID` INT(11) NOT NULL ";

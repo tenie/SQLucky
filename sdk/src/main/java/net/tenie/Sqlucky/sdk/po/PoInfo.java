@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.po.tools;
+package net.tenie.Sqlucky.sdk.po;
 
  
 import java.lang.reflect.Method;

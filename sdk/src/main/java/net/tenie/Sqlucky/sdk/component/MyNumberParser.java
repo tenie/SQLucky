@@ -1,4 +1,4 @@
-package net.tenie.fx.utility;
+package net.tenie.Sqlucky.sdk.component;
 
 import impl.org.controlsfx.tableview2.filter.parser.Operation;
 import impl.org.controlsfx.tableview2.filter.parser.aggregate.AggregatorsParser;

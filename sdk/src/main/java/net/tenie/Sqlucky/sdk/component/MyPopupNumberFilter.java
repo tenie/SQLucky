@@ -1,10 +1,10 @@
-package net.tenie.fx.utility;
+package net.tenie.Sqlucky.sdk.component;
+
+import java.util.List;
 
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.filter.parser.Parser;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
-
-import java.util.List;
 
 /*   @author tenie */
 // 字符串作为数字来过滤, 对字符串<null>做了特殊处理, 参考NumberParser

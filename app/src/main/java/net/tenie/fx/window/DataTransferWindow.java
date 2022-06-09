@@ -2,7 +2,9 @@ package net.tenie.fx.window;
 
 import java.io.IOException;
 import java.net.URL;
+
 import com.jfoenix.controls.JFXButton;
+
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
@@ -60,7 +62,7 @@ public class DataTransferWindow {
 			stage.setScene(scene);
 			stage.show();
 			
-			Image	img = new Image(DataTransferWindow.class.getResourceAsStream(ConfigVal.appIcon));
+			Image	img = ComponentGetter.LogoIcons; //new Image(DataTransferWindow.class.getResourceAsStream(ConfigVal.appIcon));
 			stage.getIcons().add(img);
 			stage.setOnCloseRequest(ev->{
 				stage.hide();

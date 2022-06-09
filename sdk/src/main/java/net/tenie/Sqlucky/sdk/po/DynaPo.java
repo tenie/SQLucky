@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.po.tools;
+package net.tenie.Sqlucky.sdk.po;
 
 
 import java.io.Serializable;
@@ -9,11 +9,11 @@ import java.util.Iterator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.ObjFormater;
  
 
 public class DynaPo implements Serializable {
-	private static Logger logger = LogManager.getLogger(CommonUtility.class);
+	private static Logger logger = LogManager.getLogger(DynaPo.class);
 	private HashMap<Object, Object> dataMap = new HashMap(1);
 	private String name = null;
 

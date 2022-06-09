@@ -19,7 +19,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
@@ -32,7 +35,6 @@ import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.component.MyTooltipTool;
 import net.tenie.fx.component.CodeArea.MyCodeArea;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
@@ -77,9 +79,15 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		// 按钮摆放的容器
 		HBox btnHbox = new HBox();
 		// 将按钮放入容器
-		for(var nd : btnLs) {
-			btnHbox.getChildren().add(nd);
+		if(btnLs != null) {
+			for(var nd : btnLs) {
+				if(nd instanceof Label) {
+					nd.getStyleClass().add("padding5");
+				}
+				btnHbox.getChildren().add(nd);
+			}
 		}
+		
 		
 		this.getChildren().addAll(btnHbox,  hideBottom, lb);
 
@@ -218,7 +226,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		
 		
 		// 锁
-		JFXButton lockbtn = ButtonFactory.createLockBtn(mytb);
+		JFXButton lockbtn = SdkComponent.createLockBtn(mytb);
 
 		// 保存按钮监听 : 保存亮起, 锁住
 		saveBtn.disableProperty().addListener(e -> {
@@ -256,7 +264,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	public static List<Node> DDLOptionBtns(MyTabData mytb, String ddl, boolean isRunFunc, boolean isProc, String name) {
 		List<Node> ls = new ArrayList<>();
 		// 锁
-		JFXButton lockbtn = ButtonFactory.createLockBtn(mytb);
+		JFXButton lockbtn = SdkComponent.createLockBtn(mytb);
 		ls.add(lockbtn);
 		// 保存
 		JFXButton saveBtn = new JFXButton();
@@ -337,9 +345,9 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	// refreshData
 	public static void refreshData(boolean isLock) {
 //			String id = DataViewTab.currentDataTabID(); 
-		String sql = MyTabData.getSelectSQL();
-		Connection conn = MyTabData.getDbconn();
-		String connName = MyTabData.getConnName();
+		String sql = SqluckyBottomSheetUtility.getSelectSQL();
+		Connection conn = SqluckyBottomSheetUtility.getDbconn();
+		String connName = SqluckyBottomSheetUtility.getConnName();
 		if (conn != null) {
 			// TODO 关闭当前tab
 			var dataTab = ComponentGetter.dataTabPane;
@@ -357,7 +365,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 		tbv.scrollTo(0);
 		int newLineidx = ConfigVal.newLineIdx++;
-		ObservableList<SqlFieldPo> fs = MyTabData.getFields();
+		ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 		ObservableList<StringProperty> item = FXCollections.observableArrayList();
 		for (int i = 0; i < fs.size(); i++) {
 			SimpleStringProperty sp = new SimpleStringProperty("<null>");
@@ -366,7 +374,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			item.add(sp);
 		}
 		item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
-		MyTabData.appendDate(newLineidx, item); // 可以防止在map中被覆盖
+		SqluckyBottomSheetUtility.appendDate(newLineidx, item); // 可以防止在map中被覆盖
 		tbv.getItems().add(0, item);
 
 		// 点亮保存按钮

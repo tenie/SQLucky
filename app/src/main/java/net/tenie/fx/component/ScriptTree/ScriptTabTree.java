@@ -21,12 +21,12 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.lib.db.h2.H2Db;
 import net.tenie.lib.db.h2.H2SqlTextSavePo;
-import net.tenie.lib.db.h2.SqlTextDao;
+import net.tenie.lib.db.h2.AppDao;
 
 
 /**
@@ -82,12 +82,12 @@ public class ScriptTabTree {
 		List<H2SqlTextSavePo> ls;
 		String SELECT_PANE ;
 		try {
-			Connection H2conn = H2Db.getConn();
-			ls = SqlTextDao.read(H2conn);
-			SELECT_PANE = SqlTextDao.readConfig(H2conn, "SELECT_PANE");
-			datas = SqlTextDao.readScriptPo(H2conn);
+			Connection H2conn = SqluckyAppDB.getConn();
+			ls = AppDao.read(H2conn);
+			SELECT_PANE = AppDao.readConfig(H2conn, "SELECT_PANE");
+			datas = AppDao.readScriptPo(H2conn);
 		} finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		}
 		List<Integer> ids = new ArrayList<>();
 		for (H2SqlTextSavePo sqlpo : ls) {
@@ -272,16 +272,16 @@ public class ScriptTabTree {
 	public static void removeNode(ObservableList<TreeItem<MyTab>>  myTabItemList, TreeItem<MyTab> ctt, MyTab tb ) {
 		try { 
 			var myTabPane = ComponentGetter.mainTabPane;
-			var conn = H2Db.getConn();
+			var conn = SqluckyAppDB.getConn();
 			if (myTabPane.getTabs().contains(tb)) {
 				myTabPane.getTabs().remove(tb);
 			}
 			myTabItemList.remove(ctt);
 
 			var scpo = tb.getDocumentPo();
-			SqlTextDao.deleteScriptArchive(conn, scpo);
+			AppDao.deleteScriptArchive(conn, scpo);
 		} finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		}
 	}
 	

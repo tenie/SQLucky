@@ -3,20 +3,21 @@ package net.tenie.fx.factory;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.CommonButtons;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.component.MyTooltipTool;
-import net.tenie.fx.component.dataView.MyTabData;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 /**
@@ -252,7 +253,7 @@ public class ButtonFactory {
 	
 	
 	// 锁住<锁按钮>
-	public static void lockLockBtn(MyTabData mytb , JFXButton btn) {
+	public static void lockLockBtn(SqluckyBottomSheet mytb , JFXButton btn) {
 		boolean islock =  mytb.getTableData().isLock();
 		if( ! islock) { 
 			mytb.getTableData().setLock(true);
@@ -261,26 +262,5 @@ public class ButtonFactory {
 	}
 	
 	
-	public static  JFXButton createLockBtn(MyTabData mytb ) {
-		// 锁
-		JFXButton lockbtn = new JFXButton();
-		if (mytb.getTableData().isLock()) {
-			lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
-		} else {
-			lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
-		}
-		lockbtn.setOnMouseClicked(e -> {
-			if (mytb.getTableData().isLock()) {
-				lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
-				mytb.getTableData().setLock(true);
-			} else {
-				lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
-				mytb.getTableData().setLock(true);
-			}
-
-		});
-
-		return lockbtn;
-	}
-
+	
 }

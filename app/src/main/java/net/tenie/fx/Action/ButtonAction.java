@@ -5,62 +5,61 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
 import org.controlsfx.control.tableview2.FilteredTableView;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Po.RsVal;
-import net.tenie.fx.component.InfoTree.TreeObjAction;
-import net.tenie.fx.component.InfoTree.TreeItem.TreeObjCache;
-import net.tenie.fx.component.dataView.MyTabData;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.RsVal;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.component.InfoTree.TreeObjAction;
+import net.tenie.fx.component.InfoTree.TreeItem.TreeObjCache;
 import net.tenie.fx.dao.DeleteDao;
 import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 
 public class ButtonAction {
 	
 	public static void dataSave() {
-		Button saveBtn = MyTabData.dataPaneSaveBtn();
-		String tabName = MyTabData.getTableName();
-		Connection conn = MyTabData.getDbconn();
-		SqluckyConnector  dpo = MyTabData.getDbConnection();
+		Button saveBtn = SqluckyBottomSheetUtility.dataPaneSaveBtn();
+		String tabName = SqluckyBottomSheetUtility.getTableName();
+		Connection conn = SqluckyBottomSheetUtility.getDbconn();
+		SqluckyConnector  dpo = SqluckyBottomSheetUtility.getDbConnection();
 		if (tabName != null && tabName.length() > 0) {
 			// 字段
-			ObservableList<SqlFieldPo> fpos = MyTabData.getFields();
+			ObservableList<SqlFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
 			// 待保存数据
-			Map<String, ObservableList<StringProperty>> modifyData = MyTabData.getModifyData();
+			Map<String, ObservableList<StringProperty>> modifyData = SqluckyBottomSheetUtility.getModifyData();
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
 			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 			boolean btnDisable = true;
 			if (!modifyData.isEmpty()) {
 				for (String key : modifyData.keySet()) {
 					// 获取对应旧数据
-					ObservableList<StringProperty> old = MyTabData.getold( key);
+					ObservableList<StringProperty> old = SqluckyBottomSheetUtility.getold( key);
 					ObservableList<StringProperty> newd = modifyData.get(key);
 					// 拼接update sql
 					try {
 						String msg = UpdateDao.execUpdate(conn, tabName, newd, old, fpos);
 						
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
-						val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-						val.add(CommonAction.createReadOnlyStringProperty(msg)); 
-						val.add(CommonAction.createReadOnlyStringProperty("success")); 
-						val.add(CommonAction.createReadOnlyStringProperty("" ));
+						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+						val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
+						val.add(CommonUtility.createReadOnlyStringProperty("success")); 
+						val.add(CommonUtility.createReadOnlyStringProperty("" ));
 						
-//						val.add(new SimpleStringProperty(msg));
-//						val.add(new SimpleStringProperty("success"));
-//						val.add(new SimpleStringProperty(""));
 						ddlDmlpo.addData(val);
 					} catch (Exception e1) {
 						e1.printStackTrace();
@@ -68,22 +67,19 @@ public class ButtonAction {
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
 						String 	msg = "failed : " + e1.getMessage();
 						msg += "\n"+dpo.translateErrMsg(msg);
-//						if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
-//							msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
-//						}
-						val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-						val.add(CommonAction.createReadOnlyStringProperty(msg)); 
-						val.add(CommonAction.createReadOnlyStringProperty("failed")); 
-						val.add(CommonAction.createReadOnlyStringProperty("" ));
+						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+						val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
+						val.add(CommonUtility.createReadOnlyStringProperty("failed")); 
+						val.add(CommonUtility.createReadOnlyStringProperty("" ));
 						
 						ddlDmlpo.addData(val);
 					}
 				}
-				MyTabData.rmUpdateData();
+				SqluckyBottomSheetUtility.rmUpdateData();
 			}
 
 			// 插入操作
-			List<ObservableList<StringProperty>> dataList = MyTabData.getAppendData();
+			List<ObservableList<StringProperty>> dataList = SqluckyBottomSheetUtility.getAppendData();
 			for (ObservableList<StringProperty> os : dataList) {
 				try {
 					String msg = InsertDao.execInsert(conn, tabName, os, fpos);
@@ -94,7 +90,7 @@ public class ButtonAction {
 					ddlDmlpo.addData(val);
 
 					// 删除缓存数据
-					MyTabData.rmAppendData();
+					SqluckyBottomSheetUtility.rmAppendData();
 					// 对insert 的数据保存后 , 不能再修改
 					List<StringProperty> templs = new ArrayList<>();
 					for (int i = 0; i < fpos.size(); i++) {
@@ -121,8 +117,6 @@ public class ButtonAction {
 			}
 
 			// 保存按钮禁用
-//			FlowPane fp = (FlowPane) saveBtn.getParent();
-//			fp.getChildren().get(0).setDisable(true);
 			saveBtn.setDisable(btnDisable);
 			RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
 
@@ -132,10 +126,10 @@ public class ButtonAction {
 	
 	public static void deleteData() { 
 		// 获取当前的table view
-		FilteredTableView<ObservableList<StringProperty>> table = MyTabData.dataTableView();
-		String tabName = MyTabData.getTableName();
-		Connection conn = MyTabData.getDbconn();
-		ObservableList<SqlFieldPo> fpos = MyTabData.getFields();
+		FilteredTableView<ObservableList<StringProperty>> table = SqluckyBottomSheetUtility.dataTableView();
+		String tabName = SqluckyBottomSheetUtility.getTableName();
+		Connection conn = SqluckyBottomSheetUtility.getDbconn();
+		ObservableList<SqlFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
 
 		ObservableList<ObservableList<StringProperty>> vals = table.getSelectionModel().getSelectedItems();
 		
@@ -153,24 +147,24 @@ public class ButtonAction {
 				String msg = DeleteDao.execDelete(conn, tabName, sps, fpos);
 				ObservableList<StringProperty> val = FXCollections.observableArrayList();
 
-				val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-				val.add(CommonAction.createReadOnlyStringProperty(msg)); 
-				val.add(CommonAction.createReadOnlyStringProperty("success")); 
-				val.add(CommonAction.createReadOnlyStringProperty("" ));
+				val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+				val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
+				val.add(CommonUtility.createReadOnlyStringProperty("success")); 
+				val.add(CommonUtility.createReadOnlyStringProperty("" ));
 				
 				ddlDmlpo.addData(val);
 
 			}
 			for (String str : temp) {
-				MyTabData.deleteTabDataRowNo( str);
+				SqluckyBottomSheetUtility.deleteTabDataRowNo( str);
 			}
 
 		} catch (Exception e1) {
 			ObservableList<StringProperty> val = FXCollections.observableArrayList();					
-			val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-			val.add(CommonAction.createReadOnlyStringProperty(e1.getMessage() )); 
-			val.add(CommonAction.createReadOnlyStringProperty("fail.")); 
-			val.add(CommonAction.createReadOnlyStringProperty("" ));
+			val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+			val.add(CommonUtility.createReadOnlyStringProperty(e1.getMessage() )); 
+			val.add(CommonUtility.createReadOnlyStringProperty("fail.")); 
+			val.add(CommonUtility.createReadOnlyStringProperty("" ));
 			
 			ddlDmlpo.addData(val);
 		} finally {
@@ -182,14 +176,14 @@ public class ButtonAction {
 	public static void copyData() {
 
 		// 获取当前的table view
-		FilteredTableView<ObservableList<StringProperty>> table = MyTabData.dataTableView();
+		FilteredTableView<ObservableList<StringProperty>> table = SqluckyBottomSheetUtility.dataTableView();
 
 		String tabId = table.getId();
 		// 获取字段属性信息
-		ObservableList<SqlFieldPo> fs = MyTabData.getFields();
+		ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 		
 		// 选中的行数据
-		ObservableList<ObservableList<StringProperty>> vals = MyTabData.dataTableViewSelectedItems();
+		ObservableList<ObservableList<StringProperty>> vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
 		try {
 			// 遍历选中的行
 			for (int i = 0; i < vals.size(); i++) {
@@ -207,14 +201,14 @@ public class ButtonAction {
 					item.add(newsp);
 				}
 				item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 新行的行号没什么用
-				MyTabData.appendDate( newLineidx, item); // 可以防止在map中被覆盖
+				SqluckyBottomSheetUtility.appendDate( newLineidx, item); // 可以防止在map中被覆盖
 				table.getItems().add(item);
 
 			}
 			table.scrollTo(table.getItems().size() - 1);
 
 			// 保存按钮亮起
-			MyTabData.dataPaneSaveBtn().setDisable(false);
+			SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
 		} catch (Exception e2) {
 			MyAlert.errorAlert( e2.getMessage());
 		}
@@ -238,7 +232,7 @@ public class ButtonAction {
 	
 	// 更新查询结果中所有数据对应列的值
 	public static void updateAllColumn(int colIdx,String value) {
-		RsVal rv = MyTabData.tableInfo();
+		RsVal rv = SqluckyBottomSheetUtility.tableInfo();
 		value = needTrimChar(value);
 		if("null".equals(value)) {
 			value = "<null>";
@@ -259,7 +253,7 @@ public class ButtonAction {
 			value = "<null>";
 		}
 		 
-		ObservableList<ObservableList<StringProperty>> alls = MyTabData.dataTableViewSelectedItems();
+		ObservableList<ObservableList<StringProperty>> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
 		for(ObservableList<StringProperty> ls : alls) {
 			StringProperty  tmp = ls.get(colIdx);
 			tmp.setValue(value);
@@ -270,7 +264,7 @@ public class ButtonAction {
 	
 	// 获取tree 节点中的 table 的sql
 	public static void findTable() {
-		RsVal rv = MyTabData.tableInfo();
+		RsVal rv = SqluckyBottomSheetUtility.tableInfo();
 		SqluckyConnector dbcp = rv.dbconnPo;
 		if(dbcp == null ) {
 			return ;

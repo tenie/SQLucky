@@ -16,10 +16,6 @@ import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Node;
@@ -29,15 +25,18 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.po.RsVal;
+import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
@@ -51,13 +50,11 @@ import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
-import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.main.Restart;
-import net.tenie.lib.db.h2.H2Db;
-import net.tenie.lib.db.h2.SqlTextDao;
+import net.tenie.lib.db.h2.AppDao;
 
 
 /**
@@ -157,7 +154,7 @@ public class CommonAction {
 		boolean showStatus = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		// 如果现在数据表格中的<保存按钮>是亮的(面板还要显示着), 就保存数据库数据 
 		if(showStatus) {
-			Button btn = MyTabData.dataPaneSaveBtn();
+			Button btn = SqluckyBottomSheetUtility.dataPaneSaveBtn();
 			if(btn != null && ! btn.isDisable()) {
 				ButtonAction.dataSave(); 
 				return ;
@@ -198,14 +195,14 @@ public class CommonAction {
 					fileName = file.getPath();
 				}
 			}
-			tb.syncScriptPo(H2Db.getConn());
+			tb.syncScriptPo(SqluckyAppDB.getConn());
 			setOpenfileDir(fileName);
 
 		} catch (Exception e1) {
 			MyAlert.errorAlert( e1.getMessage());
 			e1.printStackTrace();
 		}finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		} 
 	}
 	
@@ -217,7 +214,7 @@ public class CommonAction {
 		try {
 			 saveApplicationStatusInfo();
 		} finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 			System.exit(0);
 		}
 
@@ -229,8 +226,8 @@ public class CommonAction {
 			ConnectionDao.refreshConnOrder();
 			TabPane mainTabPane = ComponentGetter.mainTabPane;
 			int SELECT_PANE = mainTabPane.getSelectionModel().getSelectedIndex();
-			Connection H2conn = H2Db.getConn();
-			SqlTextDao.deleteAll(H2conn);
+			Connection H2conn = SqluckyAppDB.getConn();
+			AppDao.deleteAll(H2conn);
 			for (Tab t : mainTabPane.getTabs()) {
 				//TODO close save
 				MyTab mtab = (MyTab) t;
@@ -244,13 +241,13 @@ public class CommonAction {
 						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
 						String title =  spo.getTitle();
 						String encode = spo.getEncode();
-						SqlTextDao.save(H2conn, title, sql, fp, encode, paragraph, spo.getId());
+						AppDao.save(H2conn, title, sql, fp, encode, paragraph, spo.getId());
 					}
 
 				}
 			}
 			// 保存选择的pane 下标
-			SqlTextDao.saveConfig(H2conn, "SELECT_PANE", SELECT_PANE + "");
+			AppDao.saveConfig(H2conn, "SELECT_PANE", SELECT_PANE + "");
 			
 			// 删除 script tree view 中的空内容tab
 			var childs = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
@@ -262,19 +259,19 @@ public class CommonAction {
 				var scpo = mytab.getDocumentPo();
 				var sqltxt = scpo.getText();
 				if(sqltxt == null || sqltxt.trim().length() == 0) {
-					SqlTextDao.deleteScriptArchive(H2conn, scpo); 
+					AppDao.deleteScriptArchive(H2conn, scpo); 
 				}else {
 					String fp = scpo.getFileFullName();
 					if(StrUtils.isNullOrEmpty(fp)) {
 						scpo.setTitle("Untitled_"+ idx +"*");
-						SqlTextDao.updateScriptArchive(H2conn , scpo);  
+						AppDao.updateScriptArchive(H2conn , scpo);  
 						idx++;
 					}
 				}				
 			}
 
 		} finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		}
 
 	}
@@ -702,8 +699,7 @@ public class CommonAction {
 
 	// 查看表明细(一行数据) 快捷键
 	public static void shortcutShowDataDatil() {
-		AnchorPane fp = MyTabData.optionPane();
-		Button btn = (Button) fp.getChildren().get(1);
+		Button btn = 	SqluckyBottomSheetUtility.dataPaneDetailBtn();
 		MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
 		Event.fireEvent(btn, me);
 	}
@@ -854,9 +850,9 @@ public class CommonAction {
 	// 保证theme状态
 	public static void saveThemeStatus(String val) {
 		ConfigVal.THEME = val;
-		Connection conn =  H2Db.getConn();
-		H2Db.setConfigVal(conn, "THEME", val) ;
-		H2Db.closeConn();
+		Connection conn =  SqluckyAppDB.getConn();
+		AppDao.saveConfig(conn, "THEME", val) ;
+		SqluckyAppDB.closeConn();
 	}
 	
 	// 设置整体样式
@@ -884,9 +880,9 @@ public class CommonAction {
 //	}
 	
 	public static void setOpenfileDir(String val) {
-		Connection conn =  H2Db.getConn();
-		H2Db.setConfigVal(conn, "OPEN_FILE_DIR", val) ;
-		H2Db.closeConn();
+		Connection conn =  SqluckyAppDB.getConn();
+		AppDao.saveConfig(conn, "OPEN_FILE_DIR", val) ;
+		SqluckyAppDB.closeConn();
 		ConfigVal.openfileDir = val;
 	}	
 	
@@ -1207,46 +1203,72 @@ public class CommonAction {
         }
 	}
 	
-	// 字段值被修改还原, 不允许修改
-		public static   StringProperty createReadOnlyStringProperty(String val ) {
-			StringProperty sp =  new StringProperty() {
-				@Override
-				public String get() { 
-					return val;
-				}
-				
-				@Override
-				public void bind(ObservableValue<? extends String> arg0) { }
-				@Override
-				public boolean isBound() { 
-					return false;
-				}
-				@Override
-				public void unbind() { }
-
-				@Override
-				public Object getBean() { 
-					return null;
-				}
-				@Override
-				public String getName() { 
-					return null;
-				} 
-				@Override
-				public void addListener(ChangeListener<? super String> arg0) { } 
-				@Override
-				public void removeListener(ChangeListener<? super String> arg0) { } 
-				@Override
-				public void addListener(InvalidationListener arg0) { }
-				@Override
-				public void removeListener(InvalidationListener arg0) { } 		
-				@Override
-				public void set(String arg0) {}  
-			}; 		
-			return sp;
-		}
-			
 	
+		
+		public static final int DROP_COLUMN = 1;
+		public static final int ALTER_COLUMN = 2;
+		public static final int ADD_COLUMN = 3;
+	// 执行导出的sql
+	public static Long execExportSql(String sql, Connection conn, SqluckyConnector dbconnPo) {
+		Long key = RunSQLHelper.runSQLMethodRefresh(dbconnPo, sql, "", false);
+		return key;
+	}
+	
+	// 导出SQL
+	public static RsVal exportSQL(int ty, String colname, RsVal rv) {
+		try {
+			// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
+			String sql = "";
+			if (DROP_COLUMN == ty) {
+				sql = rv.dbconnPo.getExportDDL().exportAlterTableDropColumn(rv.conn, rv.dbconnPo.getDefaultSchema(),
+						rv.tableName, colname);
+			} else if (ALTER_COLUMN == ty) {
+				sql = rv.dbconnPo.getExportDDL().exportAlterTableModifyColumn(rv.conn, rv.dbconnPo.getDefaultSchema(),
+						rv.tableName, colname);
+			} else if (ADD_COLUMN == ty) {
+				sql = rv.dbconnPo.getExportDDL().exportAlterTableAddColumn(rv.conn, rv.dbconnPo.getDefaultSchema(),
+						rv.tableName, colname);
+			}
+
+			rv.sql = sql;
+		} catch (Exception e) {
+			MyAlert.errorAlert(e.getMessage());
+
+		}
+		return rv;
+
+	}
+
+	public static RsVal exportSQL(int ty, String colname) {
+		RsVal rv = SqluckyBottomSheetUtility.tableInfo();
+		return exportSQL(ty, colname, rv);
+	}
+	// 添加新字段
+	public static void addNewColumn() {
+		RsVal rv = SqluckyBottomSheetUtility.tableInfo();
+		Consumer<String> caller = x -> {
+			if (StrUtils.isNullOrEmpty(x.trim()))
+				return;
+			RsVal rv2 = exportSQL(ADD_COLUMN, x);
+			CommonAction.execExportSql(rv2.sql, rv2.conn, rv.dbconnPo);
+		};
+		ModalDialog.showExecWindow(rv.tableName + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
+
+	}
+	// 添加新字段
+	public static void addNewColumn(SqluckyConnector dbc, String schema, String tablename) {
+
+		Connection conn = dbc.getConn();
+		Consumer<String> caller = x -> {
+			if (StrUtils.isNullOrEmpty(x.trim()))
+				return;
+			String colname = x.trim();
+			String sql = dbc.getExportDDL().exportAlterTableAddColumn(conn, schema, tablename, colname);
+			CommonAction.execExportSql(sql, conn, dbc);
+		};
+		ModalDialog.showExecWindow(tablename + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
+
+	}
 	public static void demo() {}
 	
 }

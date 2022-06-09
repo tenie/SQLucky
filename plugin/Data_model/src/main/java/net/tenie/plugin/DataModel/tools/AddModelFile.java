@@ -1,7 +1,6 @@
 package net.tenie.plugin.DataModel.tools;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -15,15 +14,15 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 
-import net.tenie.Sqlucky.sdk.db.connection.SqluckyConnection;
-import net.tenie.Sqlucky.sdk.po.tools.PoDao;
+import net.tenie.Sqlucky.sdk.db.PoDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.plugin.DataModel.po.DataModelInfoMapper;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 
 public class AddModelFile {
 	// 模型插入到数据库
 	public static void insertDataModel(DataModelInfoPo dmp) {
-		var conn = SqluckyConnection.getConn();
+		var conn = SqluckyAppDB.getConn();
 		
 		try {
 			var modelID = PoDao.insertReturnID(conn, dmp);
@@ -50,11 +49,7 @@ public class AddModelFile {
 		} catch (Exception e) { 
 			e.printStackTrace();
 		}finally {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+			SqluckyAppDB.closeConn();
 		}
 		
 //		var tabs = dmp.getEntities();
@@ -64,7 +59,7 @@ public class AddModelFile {
 	
 	// 测试PoDao
 	public static void test()   {
-		var conn = SqluckyConnection.getConn();
+		var conn = SqluckyAppDB.getConn();
 		try {
 			DataModelInfoPo poinsert = new DataModelInfoPo();
 			poinsert.setName("insertName");
@@ -81,6 +76,8 @@ public class AddModelFile {
 			System.out.println(val);
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			SqluckyAppDB.closeConn();
 		}
 		
 		
@@ -90,7 +87,7 @@ public class AddModelFile {
 	public static void test2() {
 //		 SqlSessionFactory sqlSessionFactory2= new SqlSessionFactoryBuilder().build
 		
-		DataSource dataSource = SqluckyConnection.getH2DataSource();
+		DataSource dataSource = SqluckyAppDB.getH2DataSource();
 		TransactionFactory transactionFactory = new JdbcTransactionFactory();
 		Environment environment = new Environment("development", transactionFactory, dataSource);
 		Configuration configuration = new Configuration(environment);
@@ -110,7 +107,7 @@ public class AddModelFile {
 	
 	public static void main(String[] args) throws IOException {
 
-		DataSource dataSource = SqluckyConnection.getH2DataSource();
+		DataSource dataSource = SqluckyAppDB.getH2DataSource();
 		TransactionFactory transactionFactory = new JdbcTransactionFactory();
 		Environment environment = new Environment("development", transactionFactory, dataSource);
 		Configuration configuration = new Configuration(environment);

@@ -2,7 +2,11 @@ package net.tenie.plugin.DataModel.po;
 
 import java.util.Date;
 import java.util.List;
-
+/**
+ * json 解析后的对象
+ * @author tenie
+ *
+ */
 public class DataModelTablePo {
 	private Long itemId;
 	private Long modelId;

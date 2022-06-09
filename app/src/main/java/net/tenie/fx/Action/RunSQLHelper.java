@@ -28,18 +28,19 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.SqlcukyComponent;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
-import net.tenie.Sqlucky.sdk.po.MyTabDataValue;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
@@ -47,12 +48,11 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Cache.CacheDataTableViewShapeChange;
 import net.tenie.fx.Po.SqlData;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.CommonButtons;
-import net.tenie.fx.component.MyTextField2TableCell2;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DataViewContainer;
@@ -60,9 +60,6 @@ import net.tenie.fx.component.dataView.DataTableContextMenu;
 import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DmlDdlDao;
-import net.tenie.fx.dao.SelectDao;
-import net.tenie.fx.factory.StringPropertyListValueFactory;
-import net.tenie.fx.utility.ParseSQL;
 
 /**
  * 
@@ -239,11 +236,11 @@ public class RunSQLHelper {
 				}else {
 					// 显示字段是只读的
 					ObservableList<StringProperty> val = FXCollections.observableArrayList();
-					val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-					val.add(CommonAction.createReadOnlyStringProperty(msg)); 
+					val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+					val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
 					int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
-					val.add(CommonAction.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
-					val.add(CommonAction.createReadOnlyStringProperty("" + i));
+					val.add(CommonUtility.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
+					val.add(CommonUtility.createReadOnlyStringProperty("" + i));
 					ddlDmlpo.addData(val);
 
 				}
@@ -272,16 +269,16 @@ public class RunSQLHelper {
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo) {
 		// 有数据才展示
 		if (ddlDmlpo.getAllDatas().size() > 0) {
-			FilteredTableView<ObservableList<StringProperty>> table = SqlcukyComponent.creatFilteredTableView();
+			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
 			// 表内容可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
 			// table 添加列和数据 
 			ObservableList<SqlFieldPo> colss = ddlDmlpo.getFields();
 			ObservableList<ObservableList<StringProperty>> alldata = ddlDmlpo.getAllDatas();
-			MyTabDataValue dvt = new MyTabDataValue(table , ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
+			BottomSheetDataValue dvt = new BottomSheetDataValue(table , ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
 			
-			var cols = createTableCol( colss, new ArrayList<String>(), true, dvt);
+			var cols = SdkComponent.createTableColForInfo( colss);
 			table.getColumns().addAll(cols);
 			table.setItems(alldata); 
 
@@ -327,13 +324,13 @@ public class RunSQLHelper {
 		Connection conn = dpo.getConn();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		try { 
-			FilteredTableView<ObservableList<StringProperty>> table = SqlcukyComponent.creatFilteredTableView();
+			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
 			// 获取表名
 			String tableName = sql; 
 //			ParseSQL.tabName(sql);
 			
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			MyTabDataValue dvt = new MyTabDataValue();
+			BottomSheetDataValue dvt = new BottomSheetDataValue();
 			//TODO callProcedure
 			SelectDao.callProcedure(conn, sql, table.getId(), dvt, fields );
 			
@@ -356,10 +353,12 @@ public class RunSQLHelper {
 			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
 			
 			//根据表名获取tablepo对象
-			List<String> keys = findPrimaryKeys(conn, tableName);
+//			List<String> keys = findPrimaryKeys(conn, tableName);
 			// table 添加列和数据 
 			// 表格添加列
-			var ls = createTableCol( colss, keys, false , dvt);
+			var ls = SdkComponent.createTableColForInfo( colss);
+			// 设置 列的 右键菜单
+			setDataTableContextMenu(ls, colss);
 			table.getColumns().addAll(ls);
 			table.setItems(allRawData);   
 			// 渲染界面
@@ -384,11 +383,11 @@ public class RunSQLHelper {
 		
 		if(StrUtils.isNotNullOrEmpty(msg)) {
 			ObservableList<StringProperty> val = FXCollections.observableArrayList();
-			val.add(CommonAction.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-			val.add(CommonAction.createReadOnlyStringProperty(msg)); 
+			val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+			val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
 			int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
-			val.add(CommonAction.createReadOnlyStringProperty("call procedure "+ sqlstr.subSequence(0, endIdx) + " ... ")); 
-			val.add(CommonAction.createReadOnlyStringProperty("" ));
+			val.add(CommonUtility.createReadOnlyStringProperty("call procedure "+ sqlstr.subSequence(0, endIdx) + " ... ")); 
+			val.add(CommonUtility.createReadOnlyStringProperty("" ));
 			ddlDmlpo.addData(val);
 			showExecuteSQLInfo(ddlDmlpo);
 		}
@@ -398,7 +397,7 @@ public class RunSQLHelper {
 	private static void selectAction(String sql, SqluckyConnector dpo ) throws Exception {
 		try { 
 		    Connection conn = dpo.getConn();
-			FilteredTableView<ObservableList<StringProperty>> table = SqlcukyComponent.creatFilteredTableView();
+			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
 			
 		    // 获取表名
 			String tableName = ParseSQL.tabName(sql);
@@ -406,23 +405,23 @@ public class RunSQLHelper {
 				tableName = "Table Name Not Finded";
 			}
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			MyTabDataValue dvt = new MyTabDataValue();
-			dvt.setDbConnection(dpo); 
+			BottomSheetDataValue sheetDaV = new BottomSheetDataValue();
+			sheetDaV.setDbConnection(dpo); 
 			String connectName = DBConns.getCurrentConnectName();
-			dvt.setSqlStr(sql);
-			dvt.setTable(table);
-			dvt.setTabName(tableName);
-			dvt.setConnName(connectName);
-			dvt.setLock(isLock);
+			sheetDaV.setSqlStr(sql);
+			sheetDaV.setTable(table);
+			sheetDaV.setTabName(tableName);
+			sheetDaV.setConnName(connectName);
+			sheetDaV.setLock(isLock);
 
-			SelectDao.selectSql(sql, ConfigVal.MaxRows, dvt); 
-			DataViewContainer.setTabRowWith(table, dvt.getRawData().size()); 
+			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV); 
+			DataViewContainer.setTabRowWith(table, sheetDaV.getRawData().size()); 
 			
-			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
-			ObservableList<SqlFieldPo> colss = dvt.getColss();
+			ObservableList<ObservableList<StringProperty>> allRawData = sheetDaV.getRawData();
+			ObservableList<SqlFieldPo> colss = sheetDaV.getColss();
 			  
 			//缓存
-			dvt.setTable(table);
+			sheetDaV.setTable(table);
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
 			
@@ -430,19 +429,21 @@ public class RunSQLHelper {
 			List<String> keys = findPrimaryKeys(conn, tableName);
 			// table 添加列和数据 
 			// 表格添加列
-			var tableColumns = createTableCol( colss, keys, false , dvt);  
+			var tableColumns = createTableColForSqlData( colss, keys , sheetDaV); 
+			// 设置 列的 右键菜单
+			setDataTableContextMenu(tableColumns, colss);
 			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);  
 
 			// 列顺序重排
-			CacheDataTableViewShapeChange.colReorder(dvt.getTabName(), colss, table);
+			CacheDataTableViewShapeChange.colReorder(sheetDaV.getTabName(), colss, table);
 			// 渲染界面
 			if (!thread.isInterrupted()) {
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, false);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(sheetDaV, tidx, false);
 				rmWaitingPane();
 				mtd.show();
 				// 水平滚顶条位置设置和字段类型
-				CacheDataTableViewShapeChange.setDataTableViewShapeCache(dvt.getTabName(), dvt.getTable(), colss); 		
+				CacheDataTableViewShapeChange.setDataTableViewShapeCache(sheetDaV.getTabName(), sheetDaV.getTable(), colss); 		
 			}
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -692,34 +693,40 @@ public class RunSQLHelper {
 	}
 
 	// table 添加列
-	private static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableCol( ObservableList<SqlFieldPo> cols,  List<String> keys , boolean isInfo, MyTabDataValue dvt) {
+	private static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableColForSqlData( ObservableList<SqlFieldPo> cols,  List<String> keys  , BottomSheetDataValue dvt) {
 		int len = cols.size();
 		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList = FXCollections.observableArrayList();
 		for (int i = 0; i < len; i++) {
 			String colname = cols.get(i).getColumnLabel().get();
-			int type = cols.get(i).getColumnType().get();
 			FilteredTableColumn<ObservableList<StringProperty>, String> col = null;
-			if(isInfo) {
-				col = createColumn(colname, type, i,  true , false , isInfo, dvt);
-			}else {
-				boolean iskey = false;
+			 
+			boolean iskey = false;
+			if(keys != null) {
 				if(keys.contains(colname)) {
 					iskey = true;
 				}
-				if (len == 2 && i == 1) {
-					col = createColumn(colname, type, i,  true , iskey , isInfo, dvt);
-				} else {
-					col = createColumn(colname, type, i,  false , iskey , isInfo, dvt);
-				} 
 			}
-			
+			col = createColumnForSqlData(colname, i , iskey , dvt);
+			 
 			colList.add(col);
 		}
 		
 		return colList;
-		
 	}
-
+	// 设置 列的 右键菜单
+	private static void setDataTableContextMenu(ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>>  colList , ObservableList<SqlFieldPo> cols) {
+		int len = cols.size();
+		for (int i = 0; i < len; i++) {
+			FilteredTableColumn<ObservableList<StringProperty>, String> col = colList.get(i);
+			String colname = cols.get(i).getColumnLabel().get();
+			int type = cols.get(i).getColumnType().get();
+			// 右点菜单
+			ContextMenu cm = DataTableContextMenu.DataTableColumnContextMenu(colname, type, col, i );
+			col.setContextMenu(cm);
+		}
+	}
+	
+	
 	// 创建列
 	/**
 	 * @param colname
@@ -732,38 +739,23 @@ public class RunSQLHelper {
 	 * @param dvt
 	 * @return
 	 */
-	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int type,
-			int colIdx,  boolean augmentation, boolean iskey, boolean isInfo, MyTabDataValue dvt ) {
-		FilteredTableColumn<ObservableList<StringProperty>, String> col =
-				new FilteredTableColumn<ObservableList<StringProperty>, String>();
-		col.setCellFactory(MyTextField2TableCell2.forTableColumn());
-//		col.setCellFactory(TextField2TableCell.forTableColumn());
-//		col.setEditable(true);
-		col.setText(colname);
-		Label label  = new Label(); 
+	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumnForSqlData(
+			String colname, int colIdx, boolean iskey, BottomSheetDataValue dvt ) {
+		FilteredTableColumn<ObservableList<StringProperty>, String> col = SdkComponent.createColumn(colname, colIdx);
+		Label label  =  (Label) col.getGraphic() ;//new Label(); 
 		if(iskey) {// #F0F0F0    1C92FB ##6EB842  #7CFC00
 			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#FF6600")); 
-		}else {
-//			label.setGraphic(IconGenerator.svgImage("sort", 10, "blue" , false)); 
-		}
-		col.setGraphic(label);
+		} 
 				
 		String tableName = dvt.getTabName();
 		//设置列宽
-		CacheDataTableViewShapeChange.setColWidth(col, tableName, colname, augmentation); 
-		
-		
-		col.setCellValueFactory(new StringPropertyListValueFactory(colIdx));
-		List<MenuItem> menuList = new ArrayList<>();
-		// 右点菜单
-		if(! isInfo) { 
-			ContextMenu cm = DataTableContextMenu.DataTableColumnContextMenu(colname, type, col, colIdx , menuList);
-			col.setContextMenu(cm);
-		}
-		dvt.getMenuItems().addAll(menuList); 		
-		
+		CacheDataTableViewShapeChange.setColWidthByCache(col, tableName, colname); 
 		return col;
 	}
+	
+
+	
+
 
 	// 删除空白页, 保留锁定页
 	private static void deleteEmptyTab(TabPane dataTab) {

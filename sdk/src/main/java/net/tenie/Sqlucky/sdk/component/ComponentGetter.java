@@ -49,6 +49,7 @@ public final class ComponentGetter {
 	
 	public static Accordion infoAccordion;
 	public static TitledPane scriptTitledPane;
+	// 数据库链接信息tree 的容器面板
 	public static TitledPane dbTitledPane;
 	
 	public static NotificationPane notificationPane ;

@@ -42,7 +42,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
@@ -162,8 +161,9 @@ public class ModalDialog {
 			Scene scene = new Scene(node);
 			 
 			CommonUtility.loadCss(scene);
-			Image img = new Image(ModalDialog.class.getResourceAsStream(ConfigVal.appIcon));
+			Image img = ComponentGetter.LogoIcons; //new Image(ModalDialog.class.getResourceAsStream(ConfigVal.appIcon));
 			stage.getIcons().add(img);
+			
 
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.setTitle(title);
@@ -188,7 +188,7 @@ public class ModalDialog {
 				Scene scene = new Scene(node);
 				 
 				CommonUtility.loadCss(scene);
-				Image img = new Image(ModalDialog.class.getResourceAsStream(ConfigVal.appIcon));
+				Image img = ComponentGetter.LogoIcons; //new Image(ModalDialog.class.getResourceAsStream(ConfigVal.appIcon));
 				stage.getIcons().add(img);
 
 				stage.initModality(Modality.WINDOW_MODAL);

@@ -4,8 +4,12 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 
 
-/*   @author tenie */
-// table view 共用
+/**
+ *  数据库里表对象的属性字段， 如表名等
+ *  table view 共用
+ * @author tenie
+ *
+ */
 public class TablePo {
 	private long id;
 	private String tableName;

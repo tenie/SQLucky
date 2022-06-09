@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.po.tools;
+package net.tenie.Sqlucky.sdk.utility;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -7,8 +7,6 @@ import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class ObjFormater {
 	private static Logger logger = LogManager.getLogger(CommonUtility.class);

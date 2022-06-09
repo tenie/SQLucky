@@ -14,7 +14,7 @@ import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
-import net.tenie.lib.db.h2.H2Db;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -40,7 +40,7 @@ public class ConnectionDao {
 			TreeItem<TreeNodePo>  root = treeView.getRoot();
 			ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
 			int size = ls.size();
-			Connection conn = H2Db.getConn();
+			Connection conn = SqluckyAppDB.getConn();
 			for(int i = 0; i < size; i++) {
 				TreeItem<TreeNodePo> nopo = ls.get(i);
 				String name = nopo.getValue().getName();
@@ -49,7 +49,7 @@ public class ConnectionDao {
 				updateDataOrder(conn, id, i);
 			}
 		} finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		}
 		 
 	}
@@ -67,7 +67,7 @@ public class ConnectionDao {
 	 * 查询
 	 */
 	public static  List<SqluckyConnector> recoverConnObj() {
-		Connection conn = H2Db.getConn(); 
+		Connection conn = SqluckyAppDB.getConn(); 
 		String sql = "SELECT * FROM  CONNECTION_INFO ORDER BY ORDER_TAG";
 		List<SqluckyConnector> datas =  new ArrayList<SqluckyConnector>();
 		try {
@@ -106,7 +106,7 @@ public class ConnectionDao {
 		} catch (SQLException e) { 
 			e.printStackTrace();
 		}finally {
-			H2Db.closeConn();
+			SqluckyAppDB.closeConn();
 		}
 		
 		return datas; 
