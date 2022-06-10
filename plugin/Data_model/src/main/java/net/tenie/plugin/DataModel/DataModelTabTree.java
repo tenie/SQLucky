@@ -75,7 +75,9 @@ public class DataModelTabTree {
 		
 		DataModelOption dmFilter = new DataModelOption(); 
 		HBox filterHbox  = dmFilter.getFilterHbox();
-		vbox.getChildren().addAll(treeView, filterHbox);
+		vbox.getChildren().addAll( filterHbox, treeView);
+//		#3C3F41
+		vbox.getStyleClass().add("myModalDialog");
 		VBox.setVgrow(treeView, Priority.ALWAYS);
 		
 		// 恢复上次的数据
@@ -181,11 +183,11 @@ public class DataModelTabTree {
 		
 		String sql = "select DEF_KEY as FIELD, DEF_NAME AS NAME , COMMENT, TYPE_FULL_NAME, PRIMARY_KEY, NOT_NULL, AUTO_INCREMENT, DEFAULT_VALUE,PRIMARY_KEY_NAME,NOT_NULL_NAME, AUTO_INCREMENT_NAME  from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "+ tableId;
 		try {
-			SdkComponent.sqlResultShow(sql, conn , tableName, rs);
+			SdkComponent.dataModelQueryFieldsShow(sql, conn , tableName, rs, DataModelOption.tableInfoColWidth);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		
 		

@@ -1,4 +1,4 @@
-package net.tenie.fx.Action;
+package net.tenie.Sqlucky.sdk.utility;
 
 import javafx.event.Event;
 import javafx.event.EventType;

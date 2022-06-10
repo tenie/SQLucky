@@ -2,6 +2,7 @@ package net.tenie.plugin.note.component;
 
 import java.io.File;
 import java.util.Objects;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
@@ -21,6 +22,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.plugin.note.utility.NoteUtility;
 
 
 /**
@@ -132,7 +134,7 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 					
 				}else if(file.isDirectory()) {
 					if(cell.getTreeItem().getChildren().size() == 0) {
-						NoteTabTree.openNoteDir(cell.getTreeItem(), file);
+						NoteUtility.openNoteDir(cell.getTreeItem(), file);
 						cell.getTreeItem().setExpanded(true);
 					}
 					

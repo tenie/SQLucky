@@ -15,18 +15,18 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.lib.db.h2.H2SqlTextSavePo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.lib.db.h2.AppDao;
+import net.tenie.lib.db.h2.H2SqlTextSavePo;
 
 
 /**
@@ -81,13 +81,13 @@ public class ScriptTabTree {
 		List<DocumentPo> datas ;
 		List<H2SqlTextSavePo> ls;
 		String SELECT_PANE ;
+		Connection H2conn = SqluckyAppDB.getConn();
 		try {
-			Connection H2conn = SqluckyAppDB.getConn();
 			ls = AppDao.read(H2conn);
 			SELECT_PANE = AppDao.readConfig(H2conn, "SELECT_PANE");
 			datas = AppDao.readScriptPo(H2conn);
 		} finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(H2conn);
 		}
 		List<Integer> ids = new ArrayList<>();
 		for (H2SqlTextSavePo sqlpo : ls) {
@@ -270,9 +270,9 @@ public class ScriptTabTree {
 	
 	// 从ScriptTabTree 中移除一个节点
 	public static void removeNode(ObservableList<TreeItem<MyTab>>  myTabItemList, TreeItem<MyTab> ctt, MyTab tb ) {
+		var conn = SqluckyAppDB.getConn();
 		try { 
 			var myTabPane = ComponentGetter.mainTabPane;
-			var conn = SqluckyAppDB.getConn();
 			if (myTabPane.getTabs().contains(tb)) {
 				myTabPane.getTabs().remove(tb);
 			}
@@ -281,7 +281,7 @@ public class ScriptTabTree {
 			var scpo = tb.getDocumentPo();
 			AppDao.deleteScriptArchive(conn, scpo);
 		} finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 	}
 	

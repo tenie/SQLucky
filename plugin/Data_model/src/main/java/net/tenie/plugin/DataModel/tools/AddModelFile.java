@@ -49,7 +49,7 @@ public class AddModelFile {
 		} catch (Exception e) { 
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		
 //		var tabs = dmp.getEntities();
@@ -77,7 +77,7 @@ public class AddModelFile {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		
 		

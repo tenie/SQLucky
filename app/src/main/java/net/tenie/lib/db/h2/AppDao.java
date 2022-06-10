@@ -16,8 +16,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -238,11 +238,12 @@ public class AppDao {
 	}
 	
 	public static DocumentPo scriptArchive( String title, String txt, String filename, String encode, int paragraph) {
+		var conn = SqluckyAppDB.getConn();
 		DocumentPo po = null ;
 		try{
 			 po = scriptArchive(SqluckyAppDB.getConn(),  title, txt, filename, encode, paragraph);
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		if( po == null) {
 			po = new DocumentPo();
@@ -376,7 +377,7 @@ public class AppDao {
 		} catch (SQLException e) { 
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 	}
 	

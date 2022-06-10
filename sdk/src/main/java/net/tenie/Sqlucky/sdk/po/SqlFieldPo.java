@@ -18,6 +18,9 @@ public class SqlFieldPo {
 	private IntegerProperty scale;
 
 	private StringProperty value;
+	
+	
+	private Double columnWidth;
 
 	public IntegerProperty getScale() {
 		return scale;
@@ -117,4 +120,13 @@ public class SqlFieldPo {
 			this.columnTypeName = new SimpleStringProperty(columnTypeName);
 	}
 
+	public Double getColumnWidth() {
+		return columnWidth;
+	}
+
+	public void setColumnWidth(Double columnWidth) {
+		this.columnWidth = columnWidth;
+	}
+
+ 
 }

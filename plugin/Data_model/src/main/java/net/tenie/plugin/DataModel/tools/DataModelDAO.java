@@ -23,7 +23,7 @@ public class DataModelDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		
 
@@ -44,7 +44,7 @@ public class DataModelDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		
 
@@ -70,7 +70,7 @@ public class DataModelDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		
 
@@ -91,7 +91,7 @@ public class DataModelDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		
 		return rs;

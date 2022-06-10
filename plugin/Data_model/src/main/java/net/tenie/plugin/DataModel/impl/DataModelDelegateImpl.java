@@ -20,7 +20,6 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
  
 		
 		DataModelTabTree tree = new DataModelTabTree(); 
-//		var tv  = tree.DataModelTreeView;
 		var tv  = tree.vbox;
 		
 		

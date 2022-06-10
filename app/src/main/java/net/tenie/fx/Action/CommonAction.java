@@ -43,6 +43,7 @@ import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.CommonButtons;
@@ -174,6 +175,7 @@ public class CommonAction {
 	
 	// 保存sql文本到硬盘
 	public static void saveSqlAction(MyTab tb) {
+		var conn = SqluckyAppDB.getConn();
 		try {			
 			String sql   =  tb.getTabSqlText();// SqlEditor.getTabSQLText(tb); 
 			var scriptPo = tb.getDocumentPo();
@@ -195,14 +197,14 @@ public class CommonAction {
 					fileName = file.getPath();
 				}
 			}
-			tb.syncScriptPo(SqluckyAppDB.getConn());
+			tb.syncScriptPo(conn);
 			setOpenfileDir(fileName);
 
 		} catch (Exception e1) {
 			MyAlert.errorAlert( e1.getMessage());
 			e1.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		} 
 	}
 	
@@ -214,7 +216,7 @@ public class CommonAction {
 		try {
 			 saveApplicationStatusInfo();
 		} finally {
-			SqluckyAppDB.closeConn();
+//			SqluckyAppDB.closeConn();
 			System.exit(0);
 		}
 
@@ -222,11 +224,12 @@ public class CommonAction {
 	
 	// 保存app状态
 	public static void saveApplicationStatusInfo() {
+		Connection H2conn = SqluckyAppDB.getConn();
 		try {
 			ConnectionDao.refreshConnOrder();
 			TabPane mainTabPane = ComponentGetter.mainTabPane;
 			int SELECT_PANE = mainTabPane.getSelectionModel().getSelectedIndex();
-			Connection H2conn = SqluckyAppDB.getConn();
+			
 			AppDao.deleteAll(H2conn);
 			for (Tab t : mainTabPane.getTabs()) {
 				//TODO close save
@@ -271,7 +274,7 @@ public class CommonAction {
 			}
 
 		} finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(H2conn);
 		}
 
 	}
@@ -852,7 +855,7 @@ public class CommonAction {
 		ConfigVal.THEME = val;
 		Connection conn =  SqluckyAppDB.getConn();
 		AppDao.saveConfig(conn, "THEME", val) ;
-		SqluckyAppDB.closeConn();
+		SqluckyAppDB.closeConn(conn);
 	}
 	
 	// 设置整体样式
@@ -882,7 +885,7 @@ public class CommonAction {
 	public static void setOpenfileDir(String val) {
 		Connection conn =  SqluckyAppDB.getConn();
 		AppDao.saveConfig(conn, "OPEN_FILE_DIR", val) ;
-		SqluckyAppDB.closeConn();
+		SqluckyAppDB.closeConn(conn);
 		ConfigVal.openfileDir = val;
 	}	
 	

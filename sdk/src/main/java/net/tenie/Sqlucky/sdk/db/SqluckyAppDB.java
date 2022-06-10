@@ -25,40 +25,50 @@ public class SqluckyAppDB {
 	private static Connection conn;
 	// 使用阻塞队列, 串行获取: 连接, 和关闭连接 
 //	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
+//	public  static Connection getConn() {
+//		while(connTimes.get() != 0) {
+//			CommonUtility.sleep(300);
+//		}
+//		try {
+//			if (conn == null) {
+//				conn = createH2Conn();
+//			} else if (conn.isClosed()) {
+//				conn = createH2Conn();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		int v = connTimes.addAndGet(1);
+//		System.out.println("getConn = connIdx = " + connTimes.get() + " v = " + v);
+//
+//		return conn;
+//	}
 	public  static Connection getConn() {
-		while(connTimes.get() != 0) {
-			CommonUtility.sleep(300);
-		}
-		try {
-			if (conn == null) {
-				conn = createH2Conn();
-			} else if (conn.isClosed()) {
-				conn = createH2Conn();
-			}
-//			bQueue.put(conn);
+		Connection conn = createH2Conn();
+		return conn;
+	}
+	public  static void closeConn(Connection conn) {
+		try { 
+				conn.close(); 					
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		int v = connTimes.addAndGet(1);
-		System.out.println("getConn = connIdx = " + connTimes.get() + " v = " + v);
-
-		return conn;
 	}
 	
-	public  static void closeConn() {
-		if (conn != null) {
-			try { 
-				int v = connTimes.addAndGet(-1);
-				System.out.println("closeConncloseConncloseConn = connIdx = "+ connTimes.get());
-				if(v <= 0) {
-					conn.close(); 					
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+//	public  static void closeConn() {
+//		if (conn != null) {
+//			try { 
+//				int v = connTimes.addAndGet(-1);
+//				System.out.println("closeConncloseConncloseConn = connIdx = "+ connTimes.get());
+//				if(v <= 0) {
+//					conn.close(); 					
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//		}
+//	}
 	
  
 	

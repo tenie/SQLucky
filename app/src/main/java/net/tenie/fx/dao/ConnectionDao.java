@@ -5,15 +5,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.config.DBConns;
-import net.tenie.fx.config.DbVendor;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -21,6 +19,10 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Po.TreeNodePo;
+import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.fx.config.DBConns;
+import net.tenie.fx.config.DbVendor;
 
 public class ConnectionDao {
 	private static Logger logger = LogManager.getLogger(ConnectionDao.class);
@@ -34,13 +36,13 @@ public class ConnectionDao {
 	}
 //	更新节点的
 	public static void refreshConnOrder() {
+		Connection conn = SqluckyAppDB.getConn();
 		try {  
 			logger.info("refreshConnOrder");
 			TreeView<TreeNodePo> treeView = AppWindowComponentGetter.treeView ;
 			TreeItem<TreeNodePo>  root = treeView.getRoot();
 			ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
 			int size = ls.size();
-			Connection conn = SqluckyAppDB.getConn();
 			for(int i = 0; i < size; i++) {
 				TreeItem<TreeNodePo> nopo = ls.get(i);
 				String name = nopo.getValue().getName();
@@ -49,7 +51,7 @@ public class ConnectionDao {
 				updateDataOrder(conn, id, i);
 			}
 		} finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		 
 	}
@@ -106,7 +108,7 @@ public class ConnectionDao {
 		} catch (SQLException e) { 
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 		
 		return datas; 

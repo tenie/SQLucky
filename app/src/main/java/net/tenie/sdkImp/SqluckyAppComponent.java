@@ -80,14 +80,15 @@ public class SqluckyAppComponent implements AppComponent {
 	 */
 	@Override
 	public void saveData(String name, String key, String value) {
+		var conn = SqluckyAppDB.getConn();
 		try {
 			StringBuilder strb = new StringBuilder();
 			strb.append(name);
 			strb.append("-");
 			strb.append(key); 
-			AppDao.saveConfig(SqluckyAppDB.getConn(), strb.toString(), value);
+			AppDao.saveConfig(conn, strb.toString(), value);
 		} finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		} 
 	}
 	/**
@@ -96,14 +97,15 @@ public class SqluckyAppComponent implements AppComponent {
 	@Override
 	public String fetchData(String name, String key) {
 		String val = "";
+		var conn = SqluckyAppDB.getConn();
 		try {
 			StringBuilder strb = new StringBuilder();
 			strb.append(name);
 			strb.append("-");
 			strb.append(key); 
-			val = AppDao.readConfig(SqluckyAppDB.getConn(), strb.toString());
+			val = AppDao.readConfig( conn, strb.toString());
 		} finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn( conn);
 		} 
 		
 		return val;

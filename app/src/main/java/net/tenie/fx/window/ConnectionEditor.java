@@ -4,9 +4,12 @@ import java.io.File;
 import java.sql.Connection;
 import java.util.function.Consumer;
 import java.util.function.Function;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.jfoenix.controls.JFXCheckBox;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -28,25 +31,25 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.CommonListener;
-import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.CommonListener;
+import net.tenie.fx.Po.TreeNodePo;
+import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 
@@ -400,9 +403,9 @@ public class ConnectionEditor {
 		final SqluckyConnector tmpPo = po;
 		final TreeItem<TreeNodePo> tmpTreeNode = treeNode;
 		Consumer<String> ok = x -> {
+			Connection h2conn = SqluckyAppDB.getConn();
 			try {
 				if (tmpPo != null ) {
-					Connection h2conn = SqluckyAppDB.getConn();
 					tmpPo.closeConn(); // 关闭它的连接 if(po.getId() !=null )
 					ConnectionDao.delete(h2conn, tmpPo.getId()); // 删除连接对象在数据库中的数据
 					DBConns.remove(tmpPo.getConnName());
@@ -410,7 +413,7 @@ public class ConnectionEditor {
 					ls.remove(tmpTreeNode);
 				}
 			} finally {
-				SqluckyAppDB.closeConn();
+				SqluckyAppDB.closeConn(h2conn);
 			}
 
 		};
@@ -522,6 +525,7 @@ public class ConnectionEditor {
 		Button saveBtn = new Button("Save");
 		saveBtn.setOnMouseClicked(e -> {
 			SqluckyConnector connpo = assembleSqlCon.apply("");
+			var conn = SqluckyAppDB.getConn();
 			TreeItem<TreeNodePo> item ;
 			if (connpo != null) {  
 				// 先删除树中的节点
@@ -538,8 +542,8 @@ public class ConnectionEditor {
 			
 				// 缓存数据
 				DBConns.add(connpo.getConnName(), connpo);
-				connpo = ConnectionDao.createOrUpdate(SqluckyAppDB.getConn(), connpo);
-				SqluckyAppDB.closeConn();
+				connpo = ConnectionDao.createOrUpdate(conn, connpo);
+				SqluckyAppDB.closeConn(conn );
 			} else {
 				return;
 			}

@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.util.List;
 
 import org.fxmisc.richtext.CodeArea;
+
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
@@ -15,22 +16,22 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
-import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
-import net.tenie.fx.component.CodeArea.MyAutoComplete;
-import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
+import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
+import net.tenie.fx.component.CodeArea.MyAutoComplete;
+import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
 import net.tenie.fx.config.MainTabs;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.lib.db.h2.AppDao;
 /**
  * 
@@ -170,10 +171,11 @@ public class MyTab extends Tab implements SqluckyTab {
 	}
 	
 	public void syncScriptPo() {
+		var conn = SqluckyAppDB.getConn();
 		try {
-			syncScriptPo(SqluckyAppDB.getConn());
+			syncScriptPo(conn);
 		} finally {
-			SqluckyAppDB.closeConn();
+			SqluckyAppDB.closeConn(conn);
 		}
 	 
 	}

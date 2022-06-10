@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.component;
 
 import java.sql.Connection;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -163,9 +164,10 @@ public class SdkComponent {
 		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList = FXCollections.observableArrayList();
 		for (int i = 0; i < len; i++) {
 			String colname = cols.get(i).getColumnLabel().get();
+			Double colnameWidth = cols.get(i).getColumnWidth();
 			FilteredTableColumn<ObservableList<StringProperty>, String> col = null;
 			// isInfo 展示执行信息（错误/成功的信息) 
-			col = createColumnForShowInfo(colname, i);
+			col = createColumnForShowInfo(colname, i, colnameWidth);
 			colList.add(col);
 		}
 		
@@ -182,9 +184,9 @@ public class SdkComponent {
 	 * @param dvt
 	 * @return
 	 */
-	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumnForShowInfo(String colname, int colIdx ) {
+	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumnForShowInfo(String colname, int colIdx, Double colnameWidth ) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col = SdkComponent.createColumn(colname, colIdx);
-		CacheDataTableViewShapeChange.setColWidth(col, colname);
+		CacheDataTableViewShapeChange.setColWidth(col, colname, colnameWidth);
 		return col;
 	}
 	
@@ -193,6 +195,8 @@ public class SdkComponent {
 		try { 
 //		    Connection conn = dpo.getConn();
 			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
+			// 查询的 的语句可以被修改
+			table.editableProperty().bind(new SimpleBooleanProperty(false));
 			
 		    // 获取表名
 			if(tableName == null || "".equals(tableName)) {
@@ -218,8 +222,6 @@ public class SdkComponent {
 			ObservableList<ObservableList<StringProperty>> allRawData = sheetDaV.getRawData();
 			ObservableList<SqlFieldPo> colss = sheetDaV.getColss();
 			   
-			// 查询的 的语句可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
 			
 			// table 添加列和数据 
 			// 表格添加列
@@ -234,6 +236,71 @@ public class SdkComponent {
 		 
 			SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(sheetDaV, nodeList);
 //			rmWaitingPane();
+			mtd.show();
+			 
+		} catch (Exception e) { 
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
+	/**
+	 * 数据模型查询字段时， 对展示列宽度做调整
+	 * @param sql
+	 * @param conn
+	 * @param tableName
+	 * @param nodeList
+	 * @param fieldWidthMap
+	 * @throws Exception
+	 */
+	public static void dataModelQueryFieldsShow(String sql,  Connection conn, String tableName, List<Node> nodeList, Map<String, Double> fieldWidthMap) throws Exception {
+		try { 
+			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
+			// 查询的 的语句可以被修改
+			table.editableProperty().bind(new SimpleBooleanProperty(false)); 
+			
+		    // 获取表名
+			if(tableName == null || "".equals(tableName)) {
+				tableName = ParseSQL.tabName(sql);
+				if(StrUtils.isNullOrEmpty(tableName)) {
+					tableName = "Table Name Not Finded";
+				}
+			}
+			
+			logger.info("tableName= " + tableName + "\n sql = " + sql);
+			BottomSheetDataValue sheetDaV = new BottomSheetDataValue();
+			sheetDaV.setSqlStr(sql);
+			sheetDaV.setTable(table);
+			sheetDaV.setTabName(tableName);
+			sheetDaV.setLock(false);
+			sheetDaV.setConn(conn);
+
+			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV); 
+			
+			ObservableList<ObservableList<StringProperty>> allRawData = sheetDaV.getRawData();
+			ObservableList<SqlFieldPo> colss = sheetDaV.getColss();
+			   
+			// 给字段设置显示宽度
+			for(var sfpo : colss) {
+				Double val = fieldWidthMap.get(sfpo.getColumnLabel().getValue());
+				if(val != null) {
+					sfpo.setColumnWidth(val);
+				}
+			}
+			
+			// table 添加列和数据 
+			// 表格添加列
+			var tableColumns = SdkComponent.createTableColForInfo( colss ); 
+			// 设置 列的 右键菜单
+//			setDataTableContextMenu(tableColumns, colss);
+			table.getColumns().addAll(tableColumns);
+			table.setItems(allRawData);  
+
+			
+			// 渲染界面
+		 
+			SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(sheetDaV, nodeList);
 			mtd.show();
 			 
 		} catch (Exception e) { 

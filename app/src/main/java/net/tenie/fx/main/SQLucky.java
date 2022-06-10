@@ -85,7 +85,7 @@ public class SQLucky extends Application {
 //	    H2Db.updateAppSql(conn);
 	    
 	    ConfigVal.openfileDir = AppDao.readConfig(conn , "OPEN_FILE_DIR"); 
-		SqluckyAppDB.closeConn();
+		SqluckyAppDB.closeConn(conn);
 		ConfigVal.THEME = Theme;
 		SqluckyAppComponent sqluckyComponent = new SqluckyAppComponent();
 		ComponentGetter.appComponent = sqluckyComponent;
