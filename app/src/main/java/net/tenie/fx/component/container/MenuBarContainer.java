@@ -1,10 +1,10 @@
 package net.tenie.fx.component.container;
 
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -12,16 +12,17 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCombination;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.fx.component.MyTab;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.component.MyTab;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
 
@@ -111,7 +112,7 @@ public class MenuBarContainer {
 				//都关闭页, 隐藏下半窗体
 				int tabSize = ComponentGetter.dataTabPane.getTabs().size();
 				if( tabSize == 0) {
-					CommonAction.hideBottom();
+					SdkComponent.hideBottom();
 				}else {
 					//选择最后一个
 					if( ConfigVal.EXEC_INFO_TITLE.equals(title) ) {
@@ -236,7 +237,7 @@ public class MenuBarContainer {
 
 		MenuItem hideBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show Data View Panel"));
 		hideBottom.setOnAction(value -> {
-			CommonAction.hideBottom();
+			SdkComponent.hideBottom();
 		});
 
 		MenuItem hideLeftBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show All Panels"));

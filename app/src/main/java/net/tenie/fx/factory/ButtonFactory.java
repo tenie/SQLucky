@@ -8,6 +8,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -17,7 +18,6 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.component.CommonButtons;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 /**
@@ -156,7 +156,7 @@ public class ButtonFactory {
 			// sql 执行读取行数
 			Label lb = new Label("Max Rows: ");
 			rows = new TextField();
-			
+			ComponentGetter.maxRowsTextField = rows;
 			lb.setLabelFor(rows);
 			rows.setPrefHeight(25);
 			rows.setMinHeight(25);

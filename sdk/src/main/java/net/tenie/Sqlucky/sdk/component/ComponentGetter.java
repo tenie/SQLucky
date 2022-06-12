@@ -16,7 +16,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -39,7 +38,7 @@ public final class ComponentGetter {
 	public static MasterDetailPane treeAreaDetailPane;
 	
 	public static VBox mainWindow;
-	public static FlowPane treeBtnPane;
+//	public static FlowPane treeBtnPane;
 
 	public static Scene primaryscene;
 	public static Stage primaryStage;
@@ -49,6 +48,10 @@ public final class ComponentGetter {
 	
 	public static Accordion infoAccordion;
 	public static TitledPane scriptTitledPane;
+	
+	// 查询结果limit 的 text field
+//	public static maxRowsTextField
+	public static TextField maxRowsTextField ;
 	// 数据库链接信息tree 的容器面板
 	public static TitledPane dbTitledPane;
 	

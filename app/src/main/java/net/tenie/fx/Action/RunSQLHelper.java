@@ -13,7 +13,6 @@ import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.fxmisc.richtext.CodeArea;
@@ -33,6 +32,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
+import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
@@ -52,12 +52,10 @@ import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Po.SqlData;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.CommonButtons;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.dataView.DataTableContextMenu;
-import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DmlDdlDao;
 
@@ -78,9 +76,9 @@ public class RunSQLHelper {
 	private static JFXButton runLinebtn;
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
-	private static final String WAITTB_NAME = "Loading...";
+
 	
-	private static Tab waitTb ;
+	
 	
 	ExecutorService service = Executors.newFixedThreadPool(1);
 	// 新tab页插入的位置
@@ -109,16 +107,8 @@ public class RunSQLHelper {
 		return val;
 	}
 	
-   // 查询时等待画面
-	public static Tab maskTab(String waittbName) {
-		Tab waitTb = new Tab(waittbName);
-		MaskerPane masker = new MaskerPane();
-		waitTb.setContent(masker);
-		return waitTb;
-	}
-	static {
-		 waitTb = maskTab(WAITTB_NAME);
-	}
+  
+	
 	
 	
 	@SuppressWarnings("restriction")
@@ -229,8 +219,8 @@ public class RunSQLHelper {
 					final String msgVal = msg; 
 					Platform.runLater(()->{
 						CommonAction.showNotifiaction(msgVal);
-//						rmWaitingPane();
-						rmWaitingPaneHold();
+						rmWaitingPane(true);
+//						rmWaitingPaneHold();
 					});
 					
 				}else {
@@ -282,7 +272,8 @@ public class RunSQLHelper {
 			table.getColumns().addAll(cols);
 			table.setItems(alldata); 
 
-			rmWaitingPaneHold();
+//			rmWaitingPaneHold();
+			rmWaitingPane(true);
 			// 渲染界面
 			if (!thread.isInterrupted()) {
 				boolean showtab = true;
@@ -365,7 +356,7 @@ public class RunSQLHelper {
 			if (!thread.isInterrupted()) {
 				if(hasOut(fields)) {
 					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, true);
-					rmWaitingPane();
+					rmWaitingPane( isRefresh );
 					mtd.show();
 				
 				}else {
@@ -440,7 +431,7 @@ public class RunSQLHelper {
 			// 渲染界面
 			if (!thread.isInterrupted()) {
 				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(sheetDaV, tidx, false);
-				rmWaitingPane();
+				rmWaitingPane( isRefresh);
 				mtd.show();
 				// 水平滚顶条位置设置和字段类型
 				CacheDataTableViewShapeChange.setDataTableViewShapeCache(sheetDaV.getTabName(), sheetDaV.getTable(), colss); 		
@@ -572,7 +563,7 @@ public class RunSQLHelper {
 		RUN_STATUS.put(statusKey, -1);
 		 
 		settingBtn();
-		CommonAction.showDetailPane();
+		SdkComponent.showDetailPane();
 		
 	    sqlstr = sqlv;
 	    dpo = dpov; 
@@ -624,7 +615,7 @@ public class RunSQLHelper {
 		}
 
 		settingBtn();
-		CommonAction.showDetailPane();
+		SdkComponent.showDetailPane();
 		
 	    sqlstr = sqlv;
 	    dpo = dpov; 
@@ -658,7 +649,7 @@ public class RunSQLHelper {
 		}
 
 		settingBtn();
-		CommonAction.showDetailPane();
+		SdkComponent.showDetailPane();
 		
 	    sqlstr = sqlv;
 	    dpo = dpov; 
@@ -757,79 +748,23 @@ public class RunSQLHelper {
 	
 
 
-	// 删除空白页, 保留锁定页
-	private static void deleteEmptyTab(TabPane dataTab) {
-		if(isRefresh) return;
-		// 判断是否已经到达最大tab显示页面
-		// 删除旧的 tab
-		List<Tab> ls = new ArrayList<>();
-		for(int i = 0; i < dataTab.getTabs().size() ;i++) { 
-			MyTabData nd = (MyTabData) dataTab.getTabs().get(i);
-//			String idVal = nd.getId();
-//			Boolean tf = ButtonFactory.lockObj.get(idVal);
-			Boolean tf = nd.getTableData().isLock();
-			if(tf != null && tf) {
-				logger.info("lock  "  );
-			}else {
-				ls.add(nd);
-			}
-		}
-		ls.forEach(nd->{
-			String idVal = nd.getId();
-			dataTab.getTabs().remove(nd);
-//			CacheTabView.clear(idVal); //TODO clear?
-			
-		});
-	}
 	
 	// 等待加载动画 页面, 删除不要的页面, 保留 锁定的页面
-	private static Tab addWaitingPane( int tabIdx) {
-//		Tab waitTb = MyTabData.maskTab(WAITTB_NAME);
-		Platform.runLater(() -> {
-			TabPane dataTab = ComponentGetter.dataTabPane;
-			// 删除不要的tab, 保留 锁定的tab
-//			deleteEmptyTab(dataTab);
-			if (tabIdx > -1) {
-				dataTab.getTabs().add(tabIdx, waitTb);
-			} else {
-				dataTab.getTabs().add(waitTb);
-			}
-			dataTab.getSelectionModel().select(waitTb);
-			
-		});
-	    return waitTb;
-	}
+//	private static Tab addWaitingPane( int tabIdx) {
+//		Platform.runLater(() -> {
+//			TabPane dataTab = ComponentGetter.dataTabPane;
+//			if (tabIdx > -1) {
+//				dataTab.getTabs().add(tabIdx, waitTb);
+//			} else {
+//				dataTab.getTabs().add(waitTb);
+//			}
+//			dataTab.getSelectionModel().select(waitTb);
+//			
+//		});
+//	    return waitTb;
+//	}
 
-	// 移除 等待加载动画 页面
-	private static void rmWaitingPane() {
-		Platform.runLater(() -> {
-			TabPane dataTab = ComponentGetter.dataTabPane;
-			if( dataTab.getTabs().contains(waitTb) ) {
-				dataTab.getTabs().remove(waitTb);
-			}
-			if(dataTab.getTabs().size() == 0) {
-				CommonAction.hideBottom();
-			}
-			deleteEmptyTab(dataTab);
-			
-		});
-
-	}
-	// 移除 等待加载动画 页面, 不删除任何界面
-	private static void rmWaitingPaneHold() {
-		Platform.runLater(() -> {
-			TabPane dataTab = ComponentGetter.dataTabPane;
-			if( dataTab.getTabs().contains(waitTb) ) {
-				dataTab.getTabs().remove(waitTb);
-			}
-			if(dataTab.getTabs().size() == 0) {
-				CommonAction.hideBottom();
-			}
-			
-			
-		});
-
-	}
+	
 	
 	private static List<SqlData> epurateSql(String str) {
 		List<SqlData> sds = new ArrayList<>();
@@ -906,7 +841,16 @@ public class RunSQLHelper {
 		return sds;
 	}
 	
-		
+	private static void rmWaitingPane(boolean holdSheet) {
+		SdkComponent.rmWaitingPane();
+		if( holdSheet == false) { // 非刷新的， 删除多余的页
+			TabPane dataTab = ComponentGetter.dataTabPane;
+			SdkComponent.deleteEmptyTab(dataTab);
+		}
+	}
+	private static Tab addWaitingPane(int tabIdx) {
+		return SdkComponent.addWaitingPane(tabIdx);
+	}
 		
 }
  

@@ -14,4 +14,5 @@ public interface SqluckyBottomSheet {
 	public Button getSaveBtn();
 	public Button getDetailBtn();
 	
+	
 }

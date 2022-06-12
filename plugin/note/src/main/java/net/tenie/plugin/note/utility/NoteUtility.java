@@ -28,7 +28,25 @@ import net.tenie.plugin.note.impl.NoteDelegateImpl;
 
 public class NoteUtility {
 	
-	// 
+	// 在系统的目录里打开
+	public static void showInSystem(TreeView<SqluckyTab> NoteTabTreeView) {
+
+		TreeItem<SqluckyTab> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
+		SqluckyTab tb = ctt.getValue(); 
+		try {
+			String fn = tb.getDocumentPo().getFileFullName();
+			if(StrUtils.isNotNullOrEmpty(fn)) {
+				File file = new File(fn); 
+				CommonUtility.openExplorer(file.getParentFile());
+			}
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	
+	}
+	
+	// 重新载入
 	public static void refreshAction(TreeView<SqluckyTab> NoteTabTreeView, TreeItem<SqluckyTab> rootNode, String filePath) {
     	var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
 		var ParentNode = itm.getParent();

@@ -5,10 +5,11 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
@@ -17,6 +18,7 @@ import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.DBinfoTreeButtonFactory;
 import net.tenie.fx.component.InfoTree.DBinfoTreeFilter;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
+import net.tenie.fx.component.ScriptTree.ScriptTreeButtonPanel;
 
 /**
  * 
@@ -25,7 +27,7 @@ import net.tenie.fx.component.ScriptTree.ScriptTabTree;
  */
 public class DBinfoContainer {
 	private VBox container;
-	private FlowPane treeBtnPane;	// 按钮面板
+	private HBox treeBtnPane;	// 按钮面板
 	private TreeView<TreeNodePo> treeView;
 	private AnchorPane filter;
 	private DBinfoTree dbInfoTree;
@@ -37,7 +39,8 @@ public class DBinfoContainer {
 		// 容器
 		container = new VBox();
 		// 按钮
-		treeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn();  
+//		treeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn();  
+		treeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn2();  
 		// 数据库信息
 		dbInfoTree = new DBinfoTree();
 		treeView =  DBinfoTree.DBinfoTreeView ;  
@@ -65,7 +68,8 @@ public class DBinfoContainer {
 		AppWindowComponentGetter.dbInfoTree = dbInfoTree;
 		AppWindowComponentGetter.DBinfoContainer = container;
 		AppWindowComponentGetter.dbInfoTreeFilter = filter;
-		ComponentGetter.treeBtnPane = treeBtnPane;
+		
+//		ComponentGetter.treeBtnPane = treeBtnPane;
 		
 		
 		ComponentGetter.infoAccordion = ad;
@@ -83,7 +87,8 @@ public class DBinfoContainer {
 		Accordion ad = new Accordion();
 		// 数据库连接信息
 		TitledPane dbTitledPane = new TitledPane();
-		dbTitledPane.setText("DB Config"); 
+		dbTitledPane.setText("DB Connection"); 
+		dbTitledPane.setUserData( new SqlcukyTitledPaneInfoPo("Sqlucky DB Connection", treeBtnPane));
 //		dbTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("info-circle", 14)); 
 		CommonUtility.addCssClass(dbTitledPane, "titledPane-color");
 		dbTitledPane.setContent( DBtreeView);
@@ -91,11 +96,17 @@ public class DBinfoContainer {
 		
 
 		// 脚本文件
+		ScriptTreeButtonPanel sbtnPanel  = new ScriptTreeButtonPanel();
+//		sbtnPanel.getOptionHbox();
+		var scriptVbox = sbtnPanel.getScriptTitledPaneContent(scriptTreeView);
 		TitledPane scriptTitledPane = new TitledPane();
 		scriptTitledPane.setText("Script");
-//		scriptTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("icomoon-files-empty", 14));
+		scriptTitledPane.setUserData(new SqlcukyTitledPaneInfoPo("Script", sbtnPanel.getOptionHbox()));
+		
+		
 		CommonUtility.addCssClass(scriptTitledPane, "titledPane-color");
 		scriptTitledPane.setContent(scriptTreeView);
+//		scriptTitledPane.setContent(scriptVbox);
 		
 		ad.setExpandedPane(dbTitledPane);
 		ad.getPanes().add(dbTitledPane);
@@ -113,6 +124,13 @@ public class DBinfoContainer {
 						dbTitledPane.setExpanded(true); 
 					}
 				}); 
+			}
+			
+			SqlcukyTitledPaneInfoPo info = (SqlcukyTitledPaneInfoPo) n.getUserData();
+			if(info !=null) {
+				var bx = info.getBtnsBox();
+				container.getChildren().remove(0);
+				container.getChildren().add(0, bx);
 			}
 		});
 //		
@@ -148,13 +166,6 @@ public class DBinfoContainer {
 		this.container = container;
 	}
 
-	public FlowPane getTreeBtnPane() {
-		return treeBtnPane;
-	}
-
-	public void setTreeBtnPane(FlowPane treeBtnPane) {
-		this.treeBtnPane = treeBtnPane;
-	}
 
 	public TreeView<TreeNodePo> getTreeView() {
 		return treeView;

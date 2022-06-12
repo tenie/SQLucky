@@ -6,6 +6,13 @@
 .Icon-color{
 	-fx-background-color: #FDA232;
 }
+/* tree view 中文字按钮边框 */
+.myTxtBtnBorder{
+	-fx-border-color: #FDA232;
+	-fx-border-radius: 3px;
+	-fx-padding: 2px 3px 1px 3px;  
+	-fx-border-insets: 2 0 1 0;  
+}
 
 .main-background{
 	 -fx-background-color:  #000000 ;

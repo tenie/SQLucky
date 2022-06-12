@@ -61,12 +61,19 @@ public class DataModelOption {
 		
 //	    queryBtn = new JFXButton();
 		queryBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
-		queryBtn.setTooltip(CommonUtility.instanceTooltip("Search table $ field info "));
+		queryBtn.setTooltip(CommonUtility.instanceTooltip("Search table & field info "));
 		queryBtn.setOnMouseClicked(e->{
 			String txtVal = txt.getText();
 			if(StrUtils.isNotNullOrEmpty(txtVal)) {
-				exeQueryTable(txtVal);
-				exeQueryTableFields(txtVal);
+				SdkComponent.addWaitingPane(-1);
+				try {
+					exeQueryTable(txtVal);
+					exeQueryTableFields(txtVal);
+				} finally {
+					SdkComponent.rmWaitingPane();
+				}
+				
+				
 			}else {
 				txt.requestFocus();
 			}
@@ -158,7 +165,7 @@ public class DataModelOption {
 			queryTable( queryStr,  DataModelTabTree.treeRoot.getChildren());
 			 
 		}
-		DataModelTabTree.treeView.refresh();
+		DataModelTabTree.DataModelTreeView.refresh();
 	
 	}
 	private void queryTable(String str, ObservableList<TreeItem<DataModelTreeNodePo>> allModels) {

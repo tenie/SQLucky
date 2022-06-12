@@ -7,6 +7,17 @@
 	-fx-background-color: #1C94FF;
 }
 
+/* tree view 中文字按钮边框 */
+.myTxtBtnBorder{
+	-fx-border-color: #1C94FF;
+	-fx-border-radius: 3px;
+	-fx-padding: 2px 3px 1px 3px;  
+	-fx-border-insets: 2 0 1 0;  
+}
+/* Button{
+	 -fx-border-insets: 2 0 1 0;
+} */
+
 .main-background {
 	-fx-background-color: #2E2E2E;
 }

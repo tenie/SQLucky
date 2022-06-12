@@ -5,6 +5,7 @@ import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.plugin.note.component.NoteTabTree; 
 
@@ -22,17 +23,16 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 				  "M13.5 0a2.5 2.5 0 0 1 2 4l-1 1L11 1.5l1-1c.418-.314.937-.5 1.5-.5zM1 11.5L0 16l4.5-1 9.25-9.25-3.5-3.5L1 11.5zm10.181-5.819l-7 7-.862-.862 7-7 .862.862z"); 
 	
 		
-		
 		NoteTabTree tree = new NoteTabTree(); 
-//		var tv  = tree.NoteTabTreeView;
-		
-		
-		var treeBox = tree.treeBox;
+//		var treeBox = tree.getTreeBox();
 		
 	    NotePane = new TitledPane();
+	    NotePane.setUserData(new SqlcukyTitledPaneInfoPo( pluginName, tree.getBtnsBox()));
+		
+		
 		NotePane.setText("Note");  
 		CommonUtility.addCssClass(NotePane, "titledPane-color");
-		NotePane.setContent( treeBox);
+		NotePane.setContent( tree.noteTabTreeView);
 		
 		appComponent.addTitledPane(NotePane);
 	}

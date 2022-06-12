@@ -5,6 +5,7 @@ import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.plugin.DataModel.DataModelTabTree; 
 
@@ -20,13 +21,14 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
  
 		
 		DataModelTabTree tree = new DataModelTabTree(); 
-		var tv  = tree.vbox;
+//		var tv  = tree.vbox;
 		
 		
 	    NotePane = new TitledPane();
-		NotePane.setText("Data Model");  
+		NotePane.setText("Data Model");
+		NotePane.setUserData(new SqlcukyTitledPaneInfoPo( pluginName, tree.getBtnsBox()));
 		CommonUtility.addCssClass(NotePane, "titledPane-color");
-		NotePane.setContent( tv);
+		NotePane.setContent( tree.getDataModelTreeView());
 		
 		appComponent.addTitledPane(NotePane);
 	}

@@ -1,4 +1,4 @@
-package net.tenie.fx.component.dataView;
+package net.tenie.Sqlucky.sdk.component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,41 +10,48 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
-
-public class MyTabData extends Tab implements SqluckyBottomSheet{
+/**
+ * 
+ * @author tenie
+ *extends Tab
+ */
+public class MyTabData  implements SqluckyBottomSheet{
 	private BottomSheetDataValue tableData;
-	public HighLightingCodeArea sqlArea;
+	public SqluckyCodeAreaHolder sqlArea;
 	private boolean isDDL = false;
 	private Button saveBtn;
 	private Button detailBtn;
 	private int idx;
-	private BottomSheetOptionBtnsPane dtBtnPane;
+	private Tab tab ;
+//	private BottomSheetOptionBtnsPane dtBtnPane;
 //	private List<Button> optionBtns;
 	 
 
 	public MyTabData(BottomSheetDataValue data, int idx, boolean disable) {
-		this(data.getTabName());
+		tab = new Tab(data.getTabName());
 		this.tableData = data;
 		this.idx = idx;
+		
+		tab.setUserData(this);
 	}
 	
 
 	public MyTabData(String tabName) {
-		super(tabName);
-		this.setOnCloseRequest(CommonEventHandler.dataTabCloseReq(this));
-		this.setContextMenu(tableViewMenu());
+		tab =  new Tab(tabName);
+		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
+		tab.setContextMenu(tableViewMenu());
 		if (tableData == null) {
 			tableData = new BottomSheetDataValue();
 		}
+		
+		tab.setUserData(this);
 	}
 	public MyTabData( BottomSheetDataValue data) {
 		this(data.getTabName());
 		this.tableData = data;
+		
 	}
 
 	// 右键菜单
@@ -57,7 +64,7 @@ public class MyTabData extends Tab implements SqluckyBottomSheet{
 				ls.add(tab);
 			}
 			ls.forEach(tab -> {
-				CommonAction.clearDataTable(tab);
+				SdkComponent.clearDataTable(tab);
 			});
 			ComponentGetter.dataTabPane.getTabs().clear();
 		});
@@ -74,11 +81,11 @@ public class MyTabData extends Tab implements SqluckyBottomSheet{
 					}
 				}
 				ls.forEach(tab -> {
-					CommonAction.clearDataTable(tab);
+					SdkComponent.clearDataTable(tab);
 				});
 
 				ComponentGetter.dataTabPane.getTabs().clear();
-				ComponentGetter.dataTabPane.getTabs().add(this);
+				ComponentGetter.dataTabPane.getTabs().add(this.tab);
 
 			}
 
@@ -92,17 +99,17 @@ public class MyTabData extends Tab implements SqluckyBottomSheet{
 		Platform.runLater(() -> {
 			var dataTab = ComponentGetter.dataTabPane;
 			if (isDDL) {
-				dataTab.getTabs().add(this);
+				dataTab.getTabs().add(this.tab);
 			} else {
 				if (idx > -1) {
-					dataTab.getTabs().add(idx, this);
+					dataTab.getTabs().add(idx, this.tab);
 				} else {
-					dataTab.getTabs().add(this);
+					dataTab.getTabs().add(this.tab);
 				}
 			}
 
-			CommonAction.showDetailPane();
-			dataTab.getSelectionModel().select(this);
+			SdkComponent.showDetailPane();
+			dataTab.getSelectionModel().select(this.tab);
 		});
 	}
 
@@ -163,11 +170,11 @@ public class MyTabData extends Tab implements SqluckyBottomSheet{
 		this.tableData = tableData;
 	}
 
-	public HighLightingCodeArea getSqlArea() {
+	public SqluckyCodeAreaHolder getSqlArea() {
 		return sqlArea;
 	}
 
-	public void setSqlArea(HighLightingCodeArea sqlArea) {
+	public void setSqlArea(SqluckyCodeAreaHolder sqlArea) {
 		this.sqlArea = sqlArea;
 	}
 
@@ -193,6 +200,26 @@ public class MyTabData extends Tab implements SqluckyBottomSheet{
 
 	public void setDetailBtn(Button detailBtn) {
 		this.detailBtn = detailBtn;
+	}
+
+
+	public int getIdx() {
+		return idx;
+	}
+
+
+	public void setIdx(int idx) {
+		this.idx = idx;
+	}
+
+
+	public Tab getTab() {
+		return tab;
+	}
+
+
+	public void setTab(Tab tab) {
+		this.tab = tab;
 	}
 	
 }

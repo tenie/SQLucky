@@ -21,6 +21,8 @@ import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyTabData;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -32,10 +34,8 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.ButtonAction;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.component.CodeArea.MyCodeArea;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.window.ProcedureExecuteWindow;
@@ -353,7 +353,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			var dataTab = ComponentGetter.dataTabPane;
 			int selidx = dataTab.getSelectionModel().getSelectedIndex();
 //				dataTab.getTabs().remove(selidx); 
-			CommonAction.clearDataTable(selidx);
+			SdkComponent.clearDataTable(selidx);
 			RunSQLHelper.runSQLMethodRefresh(DBConns.get(connName), sql, selidx + "", isLock);
 		}
 	}

@@ -10,13 +10,13 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.component.MyTab;
-import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.window.ConnectionEditor;
 
 /**
@@ -29,15 +29,15 @@ public class CommonEventHandler {
 	/**
 	 * 数据table关闭的时候 
 	 */
-	public static EventHandler<Event> dataTabCloseReq( MyTabData tb) {
-		return new EventHandler<Event>() {
-			public void handle(Event e) { 
-				tb.getTableData().clean();
-				CommonAction.clearDataTable( tb);
-				 
-			}
-		};
-	}
+//	public static EventHandler<Event> dataTabCloseReq( MyTabData tb) {
+//		return new EventHandler<Event>() {
+//			public void handle(Event e) { 
+//				tb.getTableData().clean();
+//				SdkComponent.clearDataTable( tb);
+//				 
+//			}
+//		};
+//	}
 
 	// 添加按钮点击事件
 	public static EventHandler<Event> addConnEvent() {
@@ -116,7 +116,7 @@ public class CommonEventHandler {
 	public static EventHandler<Event> hideBottom() {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
-				CommonAction.hideBottom();
+				SdkComponent.hideBottom();
 			}
 		};
 	}

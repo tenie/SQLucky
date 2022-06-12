@@ -12,9 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -33,11 +31,12 @@ import net.tenie.plugin.DataModel.tools.DataModelDAO;
 public class DataModelTabTree {
 
 	public static TreeView<DataModelTreeNodePo> DataModelTreeView;
-//	private ContextMenu  menu;
 	public static TreeItem<DataModelTreeNodePo> treeRoot;
-	public static VBox vbox = new VBox();
+//	public static VBox vbox = new VBox();
 	
-	public static TreeView<DataModelTreeNodePo> treeView ;
+//	public static TreeView<DataModelTreeNodePo> treeView ;
+	
+	private HBox btnsBox ; 
 	String filePath = "";
 
 	public DataModelTabTree() {
@@ -48,41 +47,40 @@ public class DataModelTabTree {
 
 	// 节点view
 	public TreeView<DataModelTreeNodePo> createDataModelTreeView() {
-		vbox.getStyleClass().add("myDataModel-vbox");
 		
-//		SqluckyTab stab = ComponentGetter.appComponent.sqluckyTab();
 		DataModelTreeNodePo treeNodePo = new DataModelTreeNodePo();
 		treeRoot = new TreeItem<>(treeNodePo);
-	    treeView = new TreeView<>(treeRoot);
-		treeView.getStyleClass().add("my-tag");
-		treeView.setShowRoot(false);
+		DataModelTreeView = new TreeView<>(treeRoot);
+		DataModelTreeView.getStyleClass().add("my-tag");
+		DataModelTreeView.setShowRoot(false);
 		// 展示连接
 		if (treeRoot.getChildren().size() > 0)
-			treeView.getSelectionModel().select(treeRoot.getChildren().get(0)); // 选中节点
+			DataModelTreeView.getSelectionModel().select(treeRoot.getChildren().get(0)); // 选中节点
 		// 右键菜单
 //		ContextMenu contextMenu = createContextMenu();
 //		treeView.setContextMenu(contextMenu);
 		// 选中监听事件
 //		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
-		treeView.getSelectionModel().select(treeRoot);
+		DataModelTreeView.getSelectionModel().select(treeRoot);
 
-		DataModelTreeView = treeView;
+//		DataModelTreeView = treeView;
 		
 		
 		// 显示设置, 双击事件也在这里设置
-		treeView.setCellFactory(new DataModelNodeCellFactory());
+		DataModelTreeView.setCellFactory(new DataModelNodeCellFactory());
 		
 		
 		DataModelOption dmFilter = new DataModelOption(); 
-		HBox filterHbox  = dmFilter.getFilterHbox();
-		vbox.getChildren().addAll( filterHbox, treeView);
-//		#3C3F41
-		vbox.getStyleClass().add("myModalDialog");
-		VBox.setVgrow(treeView, Priority.ALWAYS);
+		btnsBox  = dmFilter.getFilterHbox();
+
+//		vbox.getStyleClass().add("myTreeView-vbox");
+//		vbox.getChildren().addAll( filterHbox, treeView);
+//		vbox.getStyleClass().add("myModalDialog");
+//		VBox.setVgrow(treeView, Priority.ALWAYS);
 		
 		// 恢复上次的数据
 		recoverModelInfoNode(treeRoot);
-		return treeView;
+		return DataModelTreeView;
 	}
 
 	
@@ -145,7 +143,7 @@ public class DataModelTabTree {
 		return item;
 	}
 	/**
-	 * 模型节点添加表节点
+	 * 双击模型节点时， 查询数据库表， 添加表节点都模型节点下
 	 * @param mdTreeNode
 	 */
 	public static void modelInfoTreeAddTableTreeNode(TreeItem<DataModelTreeNodePo>  mdTreeNode) {
@@ -163,7 +161,7 @@ public class DataModelTabTree {
 		if (nodels.size() > 0) {
 			Platform.runLater(() -> {
 				mdTreeNode.getChildren().addAll(nodels);
-				treeView.getSelectionModel().select(mdTreeNode.getChildren().get(0)); // 选中节点
+				DataModelTreeView.getSelectionModel().select(mdTreeNode.getChildren().get(0)); // 选中节点
 			});
 		}
 		
@@ -176,11 +174,9 @@ public class DataModelTabTree {
 	 * @return
 	 */
 	public static void showFields(Long tableId) {
-		
+		SdkComponent.addWaitingPane(-1);
 		List<Node> rs = tableInfoToLabels(tableId);
 		var conn = SqluckyAppDB.getConn();
-	
-		
 		String sql = "select DEF_KEY as FIELD, DEF_NAME AS NAME , COMMENT, TYPE_FULL_NAME, PRIMARY_KEY, NOT_NULL, AUTO_INCREMENT, DEFAULT_VALUE,PRIMARY_KEY_NAME,NOT_NULL_NAME, AUTO_INCREMENT_NAME  from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "+ tableId;
 		try {
 			SdkComponent.dataModelQueryFieldsShow(sql, conn , tableName, rs, DataModelOption.tableInfoColWidth);
@@ -188,6 +184,7 @@ public class DataModelTabTree {
 			e.printStackTrace();
 		}finally {
 			SqluckyAppDB.closeConn(conn);
+			SdkComponent.rmWaitingPane();
 		}
 		
 		
@@ -249,6 +246,30 @@ public class DataModelTabTree {
 //		var stb = subItem.getValue();
 //		nodeItem.getChildren().remove(subItem);
 //		ComponentGetter.appComponent.tabPaneRemoveSqluckyTab(stb);
+	}
+
+
+
+	public HBox getBtnsBox() {
+		return btnsBox;
+	}
+
+
+
+	public void setBtnsBox(HBox btnsBox) {
+		this.btnsBox = btnsBox;
+	}
+
+
+
+	public static TreeView<DataModelTreeNodePo> getDataModelTreeView() {
+		return DataModelTreeView;
+	}
+
+
+
+	public static void setDataModelTreeView(TreeView<DataModelTreeNodePo> dataModelTreeView) {
+		DataModelTreeView = dataModelTreeView;
 	}
 
 	// 菜单

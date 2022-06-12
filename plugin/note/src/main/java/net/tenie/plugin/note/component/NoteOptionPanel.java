@@ -16,6 +16,9 @@ public class NoteOptionPanel {
 	private JFXButton newFile = new JFXButton();
 	private JFXButton DeleteFile = new JFXButton();
 	private JFXButton refresh = new JFXButton();
+
+	private JFXButton showInFolder = new JFXButton();
+	
 	
 	
 	public NoteOptionPanel() {
@@ -29,14 +32,14 @@ public class NoteOptionPanel {
 		newFile.setGraphic(ComponentGetter.getIconDefActive("file-o"));
 		newFile.setTooltip(CommonUtility.instanceTooltip("New  file "));
 		newFile.setOnMouseClicked(e->{
-			NoteUtility.newFile(NoteTabTree.NoteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
+			NoteUtility.newFile(NoteTabTree.noteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
 		});
 		
 		
 		DeleteFile.setGraphic(ComponentGetter.getIconDefActive("trash"));
 		DeleteFile.setTooltip(CommonUtility.instanceTooltip("Delete  file "));
 		DeleteFile.setOnMouseClicked(e->{
-			NoteUtility.deleteFile(NoteTabTree.NoteTabTreeView);
+			NoteUtility.deleteFile(NoteTabTree.noteTabTreeView);
 		});
 		
 		
@@ -51,11 +54,17 @@ public class NoteOptionPanel {
 		refresh.setGraphic(ComponentGetter.getIconDefActive("refresh")   );
 		refresh.setTooltip(CommonUtility.instanceTooltip("Reload note folder"));
 		refresh.setOnMouseClicked(e->{
-			  NoteUtility.refreshAction(NoteTabTree.NoteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
+			  NoteUtility.refreshAction(NoteTabTree.noteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
+		});
+		
+		showInFolder.setGraphic(ComponentGetter.getIconDefActive("sign-in")   );
+		showInFolder.setTooltip(CommonUtility.instanceTooltip("Show In System folder"));
+		showInFolder.setOnMouseClicked(e->{
+			NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
 		});
 		
 		
-		optionHbox.getChildren().addAll(openFolderBtn, newFile, DeleteFile, cleanBtn, refresh);
+		optionHbox.getChildren().addAll(openFolderBtn, newFile, DeleteFile, cleanBtn, refresh, showInFolder);
 	}
 
 

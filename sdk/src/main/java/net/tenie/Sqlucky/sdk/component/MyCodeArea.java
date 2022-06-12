@@ -1,4 +1,4 @@
-package net.tenie.fx.component.CodeArea;
+package net.tenie.Sqlucky.sdk.component;
 
 import org.fxmisc.richtext.CodeArea;
 

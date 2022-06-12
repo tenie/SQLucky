@@ -28,6 +28,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
+import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
@@ -46,14 +47,12 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.component.CommonButtons;
 import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.fx.factory.ButtonFactory;
 import net.tenie.fx.main.Restart;
 import net.tenie.lib.db.h2.AppDao;
 
@@ -64,7 +63,6 @@ import net.tenie.lib.db.h2.AppDao;
  */
 public class CommonAction {
 	private static Logger logger = LogManager.getLogger(CommonAction.class);
-	private static int windowsUiBugTag = 0;
 	
 	public static void openConn(TreeItem<TreeNodePo> item) {
 		// 判断 节点是否已经有子节点
@@ -771,38 +769,7 @@ public class CommonAction {
 		}
 	}
 
-	public static void hideBottom() {
-		JFXButton btn =   CommonButtons.hideBottom; //   AllButtons.btns.get("hideBottom");
-		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-		hideShowBottomHelper(showStatus, btn);
-		if(showStatus ) { 
-			CommonAction.escapeWindowsUiBug(); 
-			 
-		}
-
-	}
 	
-	//TODO 显示或隐藏 数据面板, 修改控制按钮图标
-	public static void hideShowBottomHelper(boolean isShow, JFXButton btn) {
-		ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
-		if (isShow) {
-			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
-		} else {
-			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
-		}
-
-	}
-
-	// 底部数据展示面板是否显示
-	public static void showDetailPane() {
-		JFXButton btn =    CommonButtons.hideBottom; //  AllButtons.btns.get("hideBottom");
-		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-		if (showStatus) {
-			hideShowBottomHelper(true, btn); 
-			escapeWindowsUiBug();
-		}
-		
-	}
 
 	// 连接测试
 	public static boolean isAliveTestAlert(SqluckyConnector connpo, Button testBtn) {
@@ -1034,86 +1001,24 @@ public class CommonAction {
 	}
 	 
 	
-	// 关闭 数据页, 清理缓存
-	public static void clearDataTable(Tab tb) {
-		TabPane tabPane = ComponentGetter.dataTabPane; 
-		long begintime = System.currentTimeMillis();
-//		String idVal = tb.getId();
-//		if (idVal != null) {
-//			CacheTabView.clear(idVal);
-//		}
-		tb.setContent(null); 
-		tabPane.getTabs().remove(tb);
-		long endtime = System.currentTimeMillis();
-		long costTime = (endtime - begintime);
-		logger.info("关闭使用时间 = "+ costTime);
-		
-		if(tabPane.getTabs().size() == 0) {
-			CommonAction.hideBottom(); 
-		} 
-	}
-	
-	public static void clearDataTable(int tbIdx) {
-		TabPane tabPane = ComponentGetter.dataTabPane; 
-		var tb = tabPane.getTabs().get(tbIdx);
-		long begintime = System.currentTimeMillis();
-//		String idVal = tb.getId();
-//		if (idVal != null) {
-//			CacheTabView.clear(idVal);
-//		}
-		tb.setContent(null); 
-		tabPane.getTabs().remove(tb);
-		long endtime = System.currentTimeMillis();
-		long costTime = (endtime - begintime);
-		logger.info("关闭使用时间 = "+ costTime);
-		
-		if(tabPane.getTabs().size() == 0) {
-			CommonAction.hideBottom(); 
-		} 
-	}
-	
 
-	// 避免windows UI bug, 选择一下输入框
-	public static void escapeWindowsUiBug() {
-		if( windowsUiBugTag == 0 ){
-			windowsUiBugTag = 1;
-//			Platform.runLater(() -> {
-//				ButtonFactory.rows.requestFocus();
-//			 
-//			});
-			
-			Thread th = new Thread() {
-				public void run() {
-					try {
-						Thread.sleep(700);
-						Platform.runLater(() -> {
-							ButtonFactory.rows.requestFocus();
-						 
-						});
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} 
-				}
-			};
-			th.start();
-			
-		    th = new Thread() {
-				public void run() {
-					try {
-						Thread.sleep(900);
-						Platform.runLater(() -> {
-						    SqlcukyEditor.getCodeArea().requestFocus(); 
-						 
-						});
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					} 
-				}
-			};
-			th.start();
-		}
-		
-	}
+//	
+//	public static void clearDataTable(int tbIdx) {
+//		TabPane tabPane = ComponentGetter.dataTabPane; 
+//		var tb = tabPane.getTabs().get(tbIdx);
+//		long begintime = System.currentTimeMillis();
+//		tb.setContent(null); 
+//		tabPane.getTabs().remove(tb);
+//		long endtime = System.currentTimeMillis();
+//		long costTime = (endtime - begintime);
+//		logger.info("关闭使用时间 = "+ costTime);
+//		
+//		if(tabPane.getTabs().size() == 0) {
+//			SdkComponent.hideBottom(); 
+//		} 
+//	}
+//	
+
 	
 
 	

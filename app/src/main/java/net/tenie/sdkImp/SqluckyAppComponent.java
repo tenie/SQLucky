@@ -18,6 +18,7 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTabData;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -27,7 +28,6 @@ import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
-import net.tenie.fx.component.dataView.MyTabData;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.lib.db.h2.AppDao; 
@@ -156,7 +156,7 @@ public class SqluckyAppComponent implements AppComponent {
 		vbox.getChildren().add(data.getTable());
 		VBox.setVgrow(data.getTable(), Priority.ALWAYS);
 		
-		rs.setContent(vbox);
+		rs.getTab().setContent(vbox);
 
 		return rs;
 	}
@@ -173,7 +173,7 @@ public class SqluckyAppComponent implements AppComponent {
 		vbox.getChildren().add(data.getTable());
 		VBox.setVgrow(data.getTable(), Priority.ALWAYS);
 		
-		rs.setContent(vbox);
+		rs.getTab().setContent(vbox);
 
 		return rs;
 	}
@@ -188,7 +188,7 @@ public class SqluckyAppComponent implements AppComponent {
 		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
 		mtb.setSqlArea(sqlArea);
 		VBox box = DDLBox(mtb, ddl, isRunFunc, false, name);
-		mtb.setContent(box);
+		mtb.getTab().setContent(box);
 		return mtb;
 	}
 	@Override
@@ -198,7 +198,7 @@ public class SqluckyAppComponent implements AppComponent {
 		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
 		mtb.setSqlArea(sqlArea);
 		VBox box = DDLBox(mtb, ddl, isRunFunc, true, name);
-		mtb.setContent(box);
+		mtb.getTab().setContent(box);
 		return mtb;
 	}
 	@Override
@@ -208,7 +208,7 @@ public class SqluckyAppComponent implements AppComponent {
 		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
 		mtb.setSqlArea(sqlArea);
 		VBox box = DDLBox(mtb, message, false, false, name);
-		mtb.setContent(box);
+		mtb.getTab().setContent(box);
 		return mtb;
 	}
 

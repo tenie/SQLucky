@@ -140,18 +140,18 @@ public class CacheDataTableViewShapeChange {
 		// 设置列的长度
 		Double width;
 		Double cacheWidth = CacheDataTableViewShapeChange.getWidth(tableName, colname);
-		if (colname.equals("Execute SQL Info")) {
-			width = 550.0;
-		} else if (colname.equals("Execute SQL")) {
-			width = 600.0;
-		} else {
+//		if (colname.equals("Execute SQL Info")) {
+//			width = 550.0;
+//		} else if (colname.equals("Execute SQL")) {
+//			width = 600.0;
+//		} else {
 			width = (colname.length() * 10.0) + 15;
 			if (width < 100)
 				width = 110.0;
 //			if (augmentation) {
 //				width = 200.0;
 //			}
-		}
+//		}
 
 		if (cacheWidth == null) {
 			col.setMinWidth(width);
@@ -174,15 +174,15 @@ public class CacheDataTableViewShapeChange {
 		if(cusWidth !=null) {
 			width = cusWidth;
 		}else {
-			if (colname.equals("Execute SQL Info")) {
-				width = 550.0;
-			} else if (colname.equals("Execute SQL")) {
-				width = 600.0;
-			} else {
+//			if (colname.equals("Execute SQL Info")) {
+//				width = 550.0;
+//			} else if (colname.equals("Execute SQL")) {
+//				width = 600.0;
+//			} else {
 				width = (colname.length() * 10.0) + 15;
 				if (width < 90)
 					width = 100.0;
-			}
+//			}
 		}
 		
 

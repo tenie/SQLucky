@@ -7,7 +7,13 @@
 	 
 }
 
-
+/* tree view 中文字按钮边框 */
+.myTxtBtnBorder{
+	-fx-border-color: #1C94FF;
+	-fx-border-radius: 3px;
+	-fx-padding: 2px 3px 1px 3px;  
+	-fx-border-insets: 2 0 1 0;  
+}
 
 
 /* tabpane 选择tab按钮 .tab-down-button */

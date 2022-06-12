@@ -15,8 +15,6 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -35,23 +33,21 @@ import net.tenie.plugin.note.utility.NoteUtility;
  */
 public class NoteTabTree {
 
-	public static TreeView<SqluckyTab> NoteTabTreeView;
-//	private ContextMenu  menu;
+	public static TreeView<SqluckyTab> noteTabTreeView;
 	public static TreeItem<SqluckyTab> rootNode;
 	public static String filePath = "";
-	public static VBox treeBox = new VBox();
-	
+//	private static VBox treeBox = new VBox();
+	private static HBox btnsBox ;
 	
 	public NoteTabTree() {
-		NoteTabTreeView = createScriptTreeView();
+		noteTabTreeView = createScriptTreeView();
 		NoteOptionPanel optPane = new NoteOptionPanel();
-		HBox ohb = optPane.getOptionHbox();
-		treeBox.getChildren().addAll(ohb, NoteTabTreeView);
-		treeBox.getStyleClass().add("myDataModel-vbox");
-		
-		treeBox.getStyleClass().add("myModalDialog");
-		treeBox.setVgrow(NoteTabTreeView, Priority.ALWAYS);
-//		treeBox.getChildren().add(ohb);
+		btnsBox = optPane.getOptionHbox();
+//		treeBox.getChildren().addAll(btnsBox, noteTabTreeView);
+//		treeBox.getStyleClass().add("myTreeView-vbox");
+//		
+//		treeBox.getStyleClass().add("myModalDialog");
+//		treeBox.setVgrow(noteTabTreeView, Priority.ALWAYS);
 		
 	}
 
@@ -104,7 +100,7 @@ public class NoteTabTree {
 
 	// 所有连接节点
 	public static ObservableList<TreeItem<SqluckyTab>> allTreeItem() {
-		ObservableList<TreeItem<SqluckyTab>> val = NoteTabTreeView.getRoot().getChildren();
+		ObservableList<TreeItem<SqluckyTab>> val = noteTabTreeView.getRoot().getChildren();
 		return val;
 	}
 
@@ -112,7 +108,7 @@ public class NoteTabTree {
 
 	// 获取当前选中的节点
 	public static TreeItem<SqluckyTab> getScriptViewCurrentItem() {
-		TreeItem<SqluckyTab> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
+		TreeItem<SqluckyTab> ctt = noteTabTreeView.getSelectionModel().getSelectedItem();
 		return ctt;
 	}
 
@@ -120,7 +116,7 @@ public class NoteTabTree {
 
 	// 给root节点加元素 
 	public static void treeRootAddItem(TreeItem<SqluckyTab> item) { 
-		TreeItem<SqluckyTab> rootNode = NoteTabTreeView.getRoot();
+		TreeItem<SqluckyTab> rootNode = noteTabTreeView.getRoot();
 		rootNode.getChildren().add(item);		
 	}
 	// 给root节点加元素 
@@ -137,7 +133,7 @@ public class NoteTabTree {
 //	}
 	
 	public static void openMyTab() {
-		TreeItem<SqluckyTab> item = NoteTabTreeView.getSelectionModel().getSelectedItem();
+		TreeItem<SqluckyTab> item = noteTabTreeView.getSelectionModel().getSelectedItem();
 		var mytab = item.getValue(); 
 		if(mytab != null && mytab.getDocumentPo() != null) {
 			mytab.mainTabPaneAddMyTab();
@@ -265,7 +261,7 @@ public class NoteTabTree {
 		 
 	    MenuItem Refresh = new MenuItem("Refresh ");
 	    Refresh.setOnAction(e -> {
-	    	NoteUtility.refreshAction(NoteTabTreeView, rootNode, filePath);
+	    	NoteUtility.refreshAction(noteTabTreeView, rootNode, filePath);
 //	    	var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
 //			var ParentNode = itm.getParent();
 //			if(Objects.equals(rootNode, ParentNode)) {
@@ -284,7 +280,7 @@ public class NoteTabTree {
 	    
 	    MenuItem newFile = new MenuItem("New File ");
 	    newFile.setOnAction(e -> {	   
-	    	NoteUtility.newFile(NoteTabTreeView, rootNode, filePath);
+	    	NoteUtility.newFile(noteTabTreeView, rootNode, filePath);
 //	    	var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
 //			var ParentNode = itm.getParent();
 //			if(Objects.equals(rootNode, ParentNode)) {	
@@ -303,13 +299,13 @@ public class NoteTabTree {
 		 
 		MenuItem close = new MenuItem("Close");
 		close.setOnAction(e -> {
-			var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
+			var itm = noteTabTreeView.getSelectionModel().getSelectedItem();
 			NoteTabTree.closeAction(itm);
 		}); 
 		
 		MenuItem deleteFile = new MenuItem("Delete File");
 		deleteFile.setOnAction(e -> {
-			NoteUtility.deleteFile(NoteTabTree.NoteTabTreeView);
+			NoteUtility.deleteFile(NoteTabTree.noteTabTreeView);
 //			var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
 //			File file = itm.getValue().getFile();
 //			String fileTyep = "File";
@@ -346,18 +342,19 @@ public class NoteTabTree {
 		
 		MenuItem showInFolder = new MenuItem("Show In Folder");
 		showInFolder.setOnAction(e -> {
-			TreeItem<SqluckyTab> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
-			SqluckyTab tb = ctt.getValue(); 
-			try {
-				String fn = tb.getDocumentPo().getFileFullName();
-				if(StrUtils.isNotNullOrEmpty(fn)) {
-					File file = new File(fn); 
-					CommonUtility.openExplorer(file.getParentFile());
-				}
-				
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
+			NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
+//			TreeItem<SqluckyTab> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
+//			SqluckyTab tb = ctt.getValue(); 
+//			try {
+//				String fn = tb.getDocumentPo().getFileFullName();
+//				if(StrUtils.isNotNullOrEmpty(fn)) {
+//					File file = new File(fn); 
+//					CommonUtility.openExplorer(file.getParentFile());
+//				}
+//				
+//			} catch (Exception e1) {
+//				e1.printStackTrace();
+//			}
 		}); 
 		
 		contextMenu.getItems().addAll( 
@@ -372,7 +369,7 @@ public class NoteTabTree {
 				showInFolder
 				);
 		contextMenu.setOnShowing(e->{
-			var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
+			var itm = noteTabTreeView.getSelectionModel().getSelectedItem();
 			
 			if( itm != null &&
 				itm.getValue() !=null && 
@@ -396,7 +393,23 @@ public class NoteTabTree {
 		});
 		return contextMenu;
 	}
-	
+
+	public static HBox getBtnsBox() {
+		return btnsBox;
+	}
+
+	public static void setBtnsBox(HBox btnsBox) {
+		NoteTabTree.btnsBox = btnsBox;
+	}
+
+//	public static VBox getTreeBox() {
+//		return treeBox;
+//	}
+//
+//	public static void setTreeBox(VBox treeBox) {
+//		NoteTabTree.treeBox = treeBox;
+//	}
+//	
 	
 	
 	

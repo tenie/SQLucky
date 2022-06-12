@@ -1,14 +1,11 @@
 package net.tenie.fx.component.ScriptTree;
 
-import java.io.File;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyTab;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 /**
  * 
  * @author tenie
@@ -42,9 +39,10 @@ public class ScriptTreeContextMenu {
 		
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(e -> {
-			TreeItem<MyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
-			MyTab mtab = ctt.getValue();
-			CommonAction.saveSqlAction(mtab);
+			ScriptTreeAction.saveAction();
+//			TreeItem<MyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
+//			MyTab mtab = ctt.getValue();
+//			CommonAction.saveSqlAction(mtab);
 		}); 
 			
 		
@@ -55,13 +53,14 @@ public class ScriptTreeContextMenu {
 		
 		MenuItem folder = new MenuItem("Show In Folder");
 		folder.setOnAction(e -> {
-			TreeItem<MyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
-			MyTab tb = ctt.getValue(); 
-			String fn = tb.getDocumentPo().getFileFullName();
-			if(StrUtils.isNotNullOrEmpty(fn)) {
-				File file = new File(fn); 
-				CommonUtility.openExplorer(file.getParentFile());
-			}
+			ScriptTreeAction.showInFloder();
+//			TreeItem<MyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
+//			MyTab tb = ctt.getValue(); 
+//			String fn = tb.getDocumentPo().getFileFullName();
+//			if(StrUtils.isNotNullOrEmpty(fn)) {
+//				File file = new File(fn); 
+//				CommonUtility.openExplorer(file.getParentFile());
+//			}
 				
 			
 		}); 

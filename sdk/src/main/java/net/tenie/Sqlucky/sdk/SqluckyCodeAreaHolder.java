@@ -1,8 +1,8 @@
 package net.tenie.Sqlucky.sdk;
 
-import org.fxmisc.richtext.CodeArea;
-
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 
 public interface SqluckyCodeAreaHolder {
 	public void highLighting(String str);
@@ -13,7 +13,7 @@ public interface SqluckyCodeAreaHolder {
 
 	public void changeCodeAreaLineNoThemeHelper();
 
-	public CodeArea getCodeArea();
+	public MyCodeArea getCodeArea();
 
 	public void callPopup();
 	public   void codePopup(KeyEvent e) ;
@@ -21,5 +21,7 @@ public interface SqluckyCodeAreaHolder {
 	public void showAutoComplete(double x , double y , String str);
 	
 	public void nextBookmark(boolean tf);
+	public StackPane getCodeAreaPane() ;
+	public StackPane getCodeAreaPane(String text, boolean editable) ;
 	
 }

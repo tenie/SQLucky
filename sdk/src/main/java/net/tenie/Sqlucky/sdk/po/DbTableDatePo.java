@@ -38,9 +38,9 @@ public class DbTableDatePo {
 	
 	public static DbTableDatePo setExecuteInfoPo() {
 		DbTableDatePo ddlDmlpo = new DbTableDatePo(); 
-		ddlDmlpo.addField("Current Time");
-		ddlDmlpo.addField("Execute SQL Info");
-		ddlDmlpo.addField("Execute SQL");
+		ddlDmlpo.addField("Current Time", 140.0);
+		ddlDmlpo.addField("Execute SQL Info", 500.0);
+		ddlDmlpo.addField("Execute SQL", 550.0);
 		return ddlDmlpo;
 	}
 
@@ -80,7 +80,19 @@ public class DbTableDatePo {
 		po.setColumnClassName("String");
 		po.setColumnType(Types.VARCHAR);
 		po.setScale(0);
-		po.setColumnDisplaySize(0);
+		po.setColumnDisplaySize(0); 
+		fields.add(po);
+	}
+	public void addField(String data ,Double Width) {
+		SqlFieldPo po = new SqlFieldPo();
+		po.setColumnLabel(data);
+		po.setColumnName(data);
+		po.setColumnTypeName("String");
+		po.setColumnClassName("String");
+		po.setColumnType(Types.VARCHAR);
+		po.setScale(0);
+		po.setColumnDisplaySize(0); 
+		po.setColumnWidth(Width);
 		fields.add(po);
 	}
 
