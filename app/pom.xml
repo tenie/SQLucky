@@ -16,7 +16,7 @@
 		<name>https://github.com/tenie/SQLucky</name>
 	</organization>
 	<dependencies>
-	 
+
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-SDK</artifactId>
@@ -26,12 +26,12 @@
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Plugin-Note</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Plugin-Workspace</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Plugin-Data-model</artifactId>
@@ -74,10 +74,8 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-graphics</artifactId>
 		</dependency>
-		<!-- <dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-swing</artifactId>
-		</dependency> -->
+		<!-- <dependency> <groupId>org.openjfx</groupId> <artifactId>javafx-swing</artifactId> 
+			</dependency> -->
 
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -116,6 +114,11 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+	
 		<!-- 数据库 JDBC -->
 		<dependency>
 			<groupId>com.ibm.db2</groupId>
@@ -147,7 +150,10 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 
-
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
@@ -164,7 +170,7 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 		</dependency>
 
-		 
+
 
 	</dependencies>
 
@@ -218,12 +224,12 @@
 						<option>javafx.graphics/com.sun.javafx.geom=ALL-UNNAMED</option>
 						<option>--add-exports</option>
 						<option>javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</option>
-						
+
 						<option>--add-exports</option>
 						<option>javafx.graphics/com.sun.javafx.scene.traversal=org.controlsfx.controls</option>
 						<option>--add-exports</option>
 						<option>javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls</option>
-						
+
 						<option>--add-exports</option>
 						<option>javafx.graphics/com.sun.javafx.application=SQLucky</option>
 						<option>--add-opens</option>

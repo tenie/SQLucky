@@ -27,7 +27,6 @@ open module SQLucky.sdk {
 	requires sql.formatter;
 	requires org.slf4j;
 	requires fastjson;
-//	requires activejdbc;
 	
 	
 	requires org.apache.httpcomponents.client5.httpclient5;

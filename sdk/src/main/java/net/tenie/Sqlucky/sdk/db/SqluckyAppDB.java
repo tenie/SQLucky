@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-//import org.javalite.activejdbc.Base;
 
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
