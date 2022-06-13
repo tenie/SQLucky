@@ -7,6 +7,11 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.plugin.note.utility.NoteUtility;
 
+/**
+ * button 的设置
+ * @author tenie
+ *
+ */
 public class NoteOptionPanel {
 
 	private HBox optionHbox = new HBox();

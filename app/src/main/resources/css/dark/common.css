@@ -6,7 +6,13 @@
 .Icon-color {
 	-fx-background-color: #1C94FF;
 }
-
+/* title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 */
+.myTitleTxtActiveColor .title .text{
+	  -fx-fill:  #0595ff;
+	  -fx-font-size: 15px; 
+    /*   -fx-font-weight: bold; */
+}
+ 
 /* tree view 中文字按钮边框 */
 .myTxtBtnBorder{
 	-fx-border-color: #1C94FF;
@@ -32,6 +38,7 @@
 	-fx-background-color: #2E2E2E;
 	-fx-border-color: #4C4C4C transparent #4C4C4C transparent;
 	-fx-border-width: 1 0 1 0;
+	 -fx-text-fill:red;
 }
 
 /* tabpane 选择tab按钮 .tab-down-button */

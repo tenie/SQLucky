@@ -11,7 +11,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -36,7 +36,7 @@ public class DataModelTabTree {
 	
 //	public static TreeView<DataModelTreeNodePo> treeView ;
 	
-	private HBox btnsBox ; 
+	private Pane btnsBox ; 
 	String filePath = "";
 
 	public DataModelTabTree() {
@@ -71,7 +71,7 @@ public class DataModelTabTree {
 		
 		
 		DataModelOption dmFilter = new DataModelOption(); 
-		btnsBox  = dmFilter.getFilterHbox();
+		btnsBox  = dmFilter.getOptionVbox();
 
 //		vbox.getStyleClass().add("myTreeView-vbox");
 //		vbox.getChildren().addAll( filterHbox, treeView);
@@ -250,13 +250,13 @@ public class DataModelTabTree {
 
 
 
-	public HBox getBtnsBox() {
+	public Pane getBtnsBox() {
 		return btnsBox;
 	}
 
 
 
-	public void setBtnsBox(HBox btnsBox) {
+	public void setBtnsBox(Pane btnsBox) {
 		this.btnsBox = btnsBox;
 	}
 

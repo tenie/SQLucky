@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -18,6 +19,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -29,13 +31,20 @@ import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
 import net.tenie.plugin.DataModel.tools.AddModelFile;
-
+/**
+ * button 的设置
+ * @author tenie
+ *
+ */
 public class DataModelOption {
-	private HBox FilterHbox = new HBox();
+	private VBox optionVbox = new VBox();
+	private HBox filterHbox = new HBox();
+	private HBox btnHbox = new HBox();
 	private TextField txt  = new TextField();
 	private JFXButton queryBtn  = new JFXButton();
+	private JFXButton queryExecBtn  = new JFXButton();
 	private JFXButton addBtn = new JFXButton();
-	private ObservableList<TreeItem<DataModelTreeNodePo>>  filterTables ;
+//	private ObservableList<TreeItem<DataModelTreeNodePo>>  filterTables2 ;
 	public static Map<String, Double> queryFieldColWidth = new HashMap<>();
 	public static Map<String, Double> tableInfoColWidth = new HashMap<>();
 	
@@ -56,18 +65,38 @@ public class DataModelOption {
 	
 	
 	public DataModelOption(){
-//		txt = new TextField("");
-		txt.getStyleClass().add("myTextField");
-		
-//	    queryBtn = new JFXButton();
-		queryBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
+		//  search
+		queryBtn.setGraphic(ComponentGetter.getIconDefActive("windows-magnify-browse"));
 		queryBtn.setTooltip(CommonUtility.instanceTooltip("Search table & field info "));
 		queryBtn.setOnMouseClicked(e->{
+//			filterHbox
+			CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, filterHbox);
+//			String txtVal = txt.getText();
+//			if(StrUtils.isNotNullOrEmpty(txtVal)) {
+//				SdkComponent.addWaitingPane(-1);
+//				try {
+//					exeQueryTable(txtVal);
+//					exeQueryTableFields(txtVal);
+//				} finally {
+//					SdkComponent.rmWaitingPane();
+//				}
+//				
+//				
+//			}else {
+//				txt.requestFocus();
+//			}
+			
+		});
+		queryExecBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
+		queryExecBtn.setTooltip(CommonUtility.instanceTooltip("Search table & field info "));
+		queryExecBtn.setOnMouseClicked(e->{
 			String txtVal = txt.getText();
 			if(StrUtils.isNotNullOrEmpty(txtVal)) {
 				SdkComponent.addWaitingPane(-1);
 				try {
 					exeQueryTable(txtVal);
+					// 获取展开的模型id
+					
 					exeQueryTableFields(txtVal);
 				} finally {
 					SdkComponent.rmWaitingPane();
@@ -80,6 +109,9 @@ public class DataModelOption {
 			
 		});
 		
+		
+
+		txt.getStyleClass().add("myTextField");
 		// 文本输入监听
 		txt.textProperty().addListener((o, oldStr, newStr) -> {
 			if(StrUtils.isNullOrEmpty(newStr)) {
@@ -98,34 +130,49 @@ public class DataModelOption {
 		// 回车后触发查询按钮
 		txt.setOnKeyPressed(val->{
 			 if(val.getCode() == KeyCode.ENTER ){ 
-				 myEvent.btnClick(queryBtn);
+				 myEvent.btnClick(queryExecBtn);
 			 }
 		});
 		
 		// 导入文件按钮
-//	    addBtn = new JFXButton();
 		addBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-//		addcodeArea.setOnMouseClicked(CommonEventHandler.addCodeTab());
 		addBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
 		addBtn.setOnAction(e->{
 			readJosnModel("UTF-8");
 		});
 		
-		FilterHbox.getChildren().addAll(queryBtn, txt, addBtn);
+		btnHbox.getChildren().addAll(queryBtn, addBtn);
+		
+		filterHbox.getChildren().addAll(queryExecBtn, txt );
 		HBox.setHgrow(txt, Priority.ALWAYS);
+		
+		
+		// 
+		optionVbox.getChildren().addAll(btnHbox);
 	}
 	
 	
 	// 通过字符串， 查询字段表
 	private void exeQueryTableFields(String queryStr) {
-		
+		Long modelId = 0L;
+		String modelIds = "0";
+		var allmodels = DataModelTabTree.treeRoot.getChildren();
+		for (Iterator iterator = allmodels.iterator(); iterator.hasNext();) {
+			TreeItem<DataModelTreeNodePo> treeItem = (TreeItem<DataModelTreeNodePo>) iterator.next();
+			// 模型激活状态有子节点才获取模型的ID
+			if(treeItem.getChildren().size() > 0 ) {
+				DataModelTreeNodePo modelepo = treeItem.getValue();
+			    modelId = modelepo.getModelId();
+			    modelIds += "," + modelId ;
+			}
+		}
 		
 		queryStr = queryStr.toUpperCase();
 				
 		var conn = SqluckyAppDB.getConn();
 		String sql =  "SELECT b.DEF_KEY AS TABLE, a.DEF_KEY AS  FIELD,  a.DEF_NAME AS FIELD_NAME , a.COMMENT FROM DATA_MODEL_TABLE_FIELDS  a\n"
 				+ "left join DATA_MODEL_TABLE b on b.ITEM_ID = a.TABLE_ID\n"
-				+ "where  a.DEF_KEY like '%"+queryStr+"%' or  a.DEF_NAME  like '%"+queryStr+"%' or a.COMMENT like '%"+queryStr+"%'";
+				+ "where b.MODEL_ID in ( "+modelIds+") and ( a.DEF_KEY like '%"+queryStr+"%' or  a.DEF_NAME  like '%"+queryStr+"%' or a.COMMENT like '%"+queryStr+"%' )";
 		try {
 			SdkComponent.dataModelQueryFieldsShow(sql, conn , queryStr, new ArrayList(), queryFieldColWidth);
 		} catch (Exception e) {
@@ -138,6 +185,9 @@ public class DataModelOption {
 	private void exeQueryTable(String queryStr) {
 		if(rootMap.isEmpty()) {
 			for(var md: DataModelTabTree.treeRoot.getChildren()) {
+				// 模型下面没有节点跳过
+				if( md.getChildren().size() ==0 ) continue;
+				
 				// 模型名称
 				var modelName = md.getValue().getName();
 				
@@ -152,6 +202,9 @@ public class DataModelOption {
 		
 		// 为空，还原
 		for(var md: DataModelTabTree.treeRoot.getChildren()) {
+			// 模型下面没有节点跳过
+			if( md.getChildren().size() ==0 ) continue;
+			
 			// 通过名称从缓存中获取表集合
 			var tbs = rootMap.get(md.getValue().getName());
 //			System.out.println("tbs = " + tbs.size());
@@ -266,20 +319,27 @@ public class DataModelOption {
 		
 		return DataModelPoVal;
 	}
-	
-	
-//	public static void main(String[] args) {
-//		readJosnModel("C:\\Users\\tenie\\Downloads\\infodms.chnr.json", "UTF-8");
-//	}
-	
 
-	public HBox getFilterHbox() {
-		return FilterHbox;
+
+	public HBox getBtnHbox() {
+		return btnHbox;
 	}
 
-	public void setFilterHbox(HBox filterHbox) {
-		FilterHbox = filterHbox;
-	} 
+
+	public void setBtnHbox(HBox btnHbox) {
+		this.btnHbox = btnHbox;
+	}
+
+
+	public VBox getOptionVbox() {
+		return optionVbox;
+	}
+
+
+	public void setOptionVbox(VBox optionVbox) {
+		this.optionVbox = optionVbox;
+	}
+	
 
 	 
 	

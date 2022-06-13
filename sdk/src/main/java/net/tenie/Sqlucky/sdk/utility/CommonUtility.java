@@ -32,9 +32,13 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
@@ -788,7 +792,7 @@ public class CommonUtility {
 		}; 		
 		return sp;
 	}
-
+	
 	public static void sleep(long millis) {
 		try {
 			Thread.sleep(millis);
@@ -796,6 +800,74 @@ public class CommonUtility {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	// 左侧添加隐藏操作按钮/查询框
+	public static void leftHideOrShowSecondOptionBox(Pane container, Node box) {
+//		var container = ComponentGetter.leftNodeContainer;
+		if (container.getChildren().contains(box)) {
+			container.getChildren().remove(box);
+		} else {
+			container.getChildren().add(1, box);
+		}
+		
+	}
+	
+	// 左侧折叠面板的图标切换
+	public static void leftPaneChangeIcon(TitledPane NotePane,  StackPane Node,  Region icon,Region uaicon) {
+		if(NotePane.isExpanded()) {
+			Node.getChildren().add(icon);
+			NotePane.getStyleClass().add("myTitleTxtActiveColor");
+		}else {
+			Node.getChildren().add(uaicon);
+			NotePane.getStyleClass().remove("myTitleTxtActiveColor");
+		}
+	}
+	
+	
+	public static void setLeftPaneIcon(TitledPane NotePane, Region icon,  Region uaicon ) {
+		// 图标切换
+		final StackPane Node = (StackPane)NotePane.lookup(".arrow-button");
+		Node.getChildren().clear(); 
+		CommonUtility.leftPaneChangeIcon(NotePane, Node, icon, uaicon);
+		// 监听展开状态
+		NotePane.expandedProperty().addListener((obs, ov, nv) -> {
+			Node.getChildren().clear();
+			NotePane.getStyleClass().remove("myTitleTxtActiveColor");
+			if(nv) {
+				Node.getChildren().add(icon);
+				NotePane.getStyleClass().add("myTitleTxtActiveColor");
+			}else {
+				Node.getChildren().add(uaicon);
+//				NotePane.getStyleClass().remove("myTitleTxtActiveColor");
+			}
+		});
+		
+		var title = NotePane.lookup(".title");
+		// 鼠标进入后， 切换图标
+		title.setOnMouseEntered( e->{ 
+			Node.getChildren().clear();
+			NotePane.getStyleClass().remove("myTitleTxtActiveColor");
+			NotePane.getStyleClass().add("myTitleTxtActiveColor");
+			if(NotePane.isExpanded()) {
+				Node.getChildren().add(ComponentGetter.iconLeft);
+			}else {
+				Node.getChildren().add(ComponentGetter.iconRight);
+			}
+
+		
+			
+		});
+		// 鼠标离开后使用原来的图标
+		title.setOnMouseExited( e->{ 
+			Node.getChildren().clear();
+			NotePane.getStyleClass().remove("myTitleTxtActiveColor");
+			CommonUtility.leftPaneChangeIcon(NotePane, Node, icon, uaicon);
+		});
+		
+		
+	}
+	
 }
 
 

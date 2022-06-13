@@ -11,6 +11,7 @@ import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
@@ -19,6 +20,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -47,32 +49,32 @@ public class ScriptTabTree {
 	// db节点view
 	public TreeView<MyTab> createScriptTreeView() {
 		var rootNode = new TreeItem<>(new MyTab());
-		TreeView<MyTab> treeView = new TreeView<>(rootNode);
-		treeView.getStyleClass().add("my-tag");
-		treeView.setShowRoot(false); 
+		ScriptTreeView = new TreeView<>(rootNode);
+		ScriptTreeView.getStyleClass().add("my-tag");
+		ScriptTreeView.setShowRoot(false); 
 		// 展示连接
 		if (rootNode.getChildren().size() > 0)
-			treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+			ScriptTreeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
 		// 双击
-		treeView.setOnMouseClicked(e -> {
+		ScriptTreeView.setOnMouseClicked(e -> {
 			treeViewDoubleClick(e);
 		});
 		// 右键菜单
 		menu = new ScriptTreeContextMenu(rootNode );
 		ContextMenu	contextMenu = menu.getContextMenu(); 
-		treeView.setContextMenu(contextMenu);
+		ScriptTreeView.setContextMenu(contextMenu);
 		// 选中监听事件
 //		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
-		treeView.getSelectionModel().select(rootNode);
+		ScriptTreeView.getSelectionModel().select(rootNode);
 
-		ScriptTreeView = treeView;
+//		ScriptTreeView = treeView;
 
 		// 显示设置
-		treeView.setCellFactory(new ScriptTabNodeCellFactory());
+		ScriptTreeView.setCellFactory(new ScriptTabNodeCellFactory());
 		 
 
 		recoverScriptNode(rootNode);
-		return treeView;
+		return ScriptTreeView;
 	}
 	
 	
@@ -283,6 +285,31 @@ public class ScriptTabTree {
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
+	}
+	
+	// TitledPane
+	public TitledPane scriptTitledPane() {
+ 
+		ScriptTreeButtonPanel sbtnPanel  = new ScriptTreeButtonPanel();
+		
+		TitledPane scriptTitledPane = new TitledPane();
+		scriptTitledPane.setText("Script");
+		scriptTitledPane.setUserData(new SqlcukyTitledPaneInfoPo("Script", sbtnPanel.getOptionHbox()));
+		
+		
+		CommonUtility.addCssClass(scriptTitledPane, "titledPane-color");
+		scriptTitledPane.setContent(ScriptTreeView);
+		
+		
+		// 图标切换
+		CommonUtility.addInitTask(v->{
+			Platform.runLater(()->{
+				CommonUtility.setLeftPaneIcon(scriptTitledPane , ComponentGetter.iconScript, ComponentGetter.uaIconScript);
+			});
+			
+		});
+		
+		return scriptTitledPane;
 	}
 	
 	// treeView 右键菜单属性设置

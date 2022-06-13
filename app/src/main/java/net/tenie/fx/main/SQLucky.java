@@ -17,7 +17,6 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -170,51 +169,9 @@ public class SQLucky extends Application {
 				primaryStage.setResizable(true);
 //				 primaryStage.setX(500); 
 //				 primaryStage.setY(500);
-				var dbTitledPane     = ComponentGetter.dbTitledPane  ;
-				var scriptTitledPane = ComponentGetter.scriptTitledPane;
-				
-				final StackPane Node = (StackPane)dbTitledPane.lookup(".arrow-button");
-				Node.getChildren().clear(); 
-			
-				Node.getChildren().add(ComponentGetter.iconInfo);
-				
-				var title = 	dbTitledPane.lookup(".title");
-				title.setOnMouseEntered( e->{ 
-					Node.getChildren().clear();
-					if(dbTitledPane.isExpanded()) {
-						Node.getChildren().add(ComponentGetter.iconLeft);
-					}else {
-						Node.getChildren().add(ComponentGetter.iconRight);
-					}
-					
-				});
-				
-				title.setOnMouseExited( e->{ 
-					Node.getChildren().clear();
-					Node.getChildren().add(ComponentGetter.iconInfo);
-				});
 				
 				
 				
-				final StackPane  Node2 = (StackPane)scriptTitledPane.lookup(".arrow-button");
-				Node2.getChildren().clear();  
-				Node2.getChildren().add(ComponentGetter.iconScript);
-				
-				
-				var title2 = scriptTitledPane.lookup(".title");
-				title2.setOnMouseEntered( e->{ 
-					Node2.getChildren().clear();
-					if(scriptTitledPane.isExpanded()) {
-						Node2.getChildren().add(ComponentGetter.iconLeft);
-					}else {
-						Node2.getChildren().add(ComponentGetter.iconRight);
-					}
-				});
-				
-				title2.setOnMouseExited( e->{ 
-					Node2.getChildren().clear();
-					Node2.getChildren().add(ComponentGetter.iconScript);
-				});
 				// 双击添加新codearea
 				var mainTabPane = ComponentGetter.mainTabPane ;
 				Node tabHeader = mainTabPane.lookup(".tab-header-area");

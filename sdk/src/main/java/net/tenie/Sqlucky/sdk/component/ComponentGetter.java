@@ -20,7 +20,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 
 /**
  * 
@@ -72,6 +71,7 @@ public final class ComponentGetter {
 	
 	public static AppComponent appComponent;
 	
+	public static VBox leftNodeContainer;
 	// 窗口上的logo图
 	public static Image LogoIcons;
 	
@@ -84,7 +84,9 @@ public final class ComponentGetter {
 	
 	
 	public static   Region iconInfo;
+	public static   Region uaIconInfo;
 	public static   Region iconScript;
+	public static   Region uaIconScript;
 	public static   Region iconRight;
 	public static   Region iconLeft;
 	
@@ -104,10 +106,11 @@ public final class ComponentGetter {
 //	}
 	
 	// 获取当前数据表的Tab
-	public static SqluckyBottomSheet currentDataTab() {
+	public static MyTabData currentDataTab() {
 		Tab tab =  ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-		SqluckyBottomSheet sheet = (SqluckyBottomSheet) tab;
-		return sheet;
+		MyTabData mtb =	(MyTabData) tab.getUserData();
+//		SqluckyBottomSheet sheet = (SqluckyBottomSheet) tab;
+		return mtb;
 	}
 
 	

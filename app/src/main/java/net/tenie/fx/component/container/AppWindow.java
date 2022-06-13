@@ -20,7 +20,6 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.window.ConnectionEditor;
 
 /*   @author tenie */
 public class AppWindow {
@@ -130,8 +129,11 @@ public class AppWindow {
 		ComponentGetter.EMPTY = new Label("");
 		
 		 
-		ComponentGetter.iconInfo   = IconGenerator.svgImageDefActive("info-circle", 14);  
-		ComponentGetter.iconScript = IconGenerator.svgImageDefActive("icomoon-files-empty", 14);
+		ComponentGetter.iconInfo   = IconGenerator.svgImageDefActive("info-circle");  
+		ComponentGetter.uaIconInfo   = IconGenerator.svgImageUnactive("info-circle");  
+		ComponentGetter.iconScript = IconGenerator.svgImageDefActive("icomoon-files-empty");
+		ComponentGetter.uaIconScript = IconGenerator.svgImageUnactive("icomoon-files-empty");
+		
 		ComponentGetter.iconRight  = IconGenerator.svgImageDefActive("chevron-circle-right", 14);
 		ComponentGetter.iconLeft   = IconGenerator.svgImageDefActive("chevron-circle-down", 14);
 		 

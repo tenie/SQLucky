@@ -45,7 +45,6 @@ public class NoteTabTree {
 		btnsBox = optPane.getOptionHbox();
 //		treeBox.getChildren().addAll(btnsBox, noteTabTreeView);
 //		treeBox.getStyleClass().add("myTreeView-vbox");
-//		
 //		treeBox.getStyleClass().add("myModalDialog");
 //		treeBox.setVgrow(noteTabTreeView, Priority.ALWAYS);
 		
@@ -61,10 +60,6 @@ public class NoteTabTree {
 		// 展示连接
 		if (rootNode.getChildren().size() > 0)
 			treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
-		// 双击
-//		treeView.setOnMouseClicked(e -> {
-//			treeViewDoubleClick(e);
-//		});
 		// 右键菜单
 		ContextMenu contextMenu = createContextMenu();
 		treeView.setContextMenu(contextMenu);
@@ -72,7 +67,7 @@ public class NoteTabTree {
 //		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
 		treeView.getSelectionModel().select(rootNode);
 
-		// 显示设置，双击设置
+		// cell显示设置(图标），cell 双击设置
 		treeView.setCellFactory(new NoteTabNodeCellFactory());
 		 
 		
@@ -125,13 +120,6 @@ public class NoteTabTree {
 			treeRootAddItem(item);
 		}
 
-	// tree view 双击事件
-//	public void treeViewDoubleClick(MouseEvent mouseEvent) { 
-//		if (mouseEvent.getClickCount() == 2) {
-//			openMyTab();
-//		}
-//	}
-	
 	public static void openMyTab() {
 		TreeItem<SqluckyTab> item = noteTabTreeView.getSelectionModel().getSelectedItem();
 		var mytab = item.getValue(); 
@@ -254,41 +242,16 @@ public class NoteTabTree {
 		MenuItem Clean = new MenuItem("Clean ");
 	    Clean.setOnAction(e -> {
 	    	NoteTabTree.filePath = NoteUtility.cleanAction(NoteTabTree.rootNode);
-//			rootNode.getChildren().clear();
-//			filePath = "";
-//			ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path", "");
 		}); 
 		 
 	    MenuItem Refresh = new MenuItem("Refresh ");
 	    Refresh.setOnAction(e -> {
 	    	NoteUtility.refreshAction(noteTabTreeView, rootNode, filePath);
-//	    	var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
-//			var ParentNode = itm.getParent();
-//			if(Objects.equals(rootNode, ParentNode)) {
-//    			if(rootNode.getChildren().size() > 0) {
-//    	    		rootNode.getChildren().clear();
-//    	    	}
-//    			NoteUtility.openNoteDir(ParentNode , new File(filePath));
-//    		}else {
-//    			if(ParentNode.getChildren().size() > 0) {
-//    				ParentNode.getChildren().clear();
-//    	    	}
-//    			var parentFile = ParentNode.getValue().getFile();
-//    			NoteUtility.openNoteDir(ParentNode , parentFile);
-//    		}	 
 		}); 
 	    
 	    MenuItem newFile = new MenuItem("New File ");
 	    newFile.setOnAction(e -> {	   
 	    	NoteUtility.newFile(noteTabTreeView, rootNode, filePath);
-//	    	var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
-//			var ParentNode = itm.getParent();
-//			if(Objects.equals(rootNode, ParentNode)) {	
-//				newFileNode(rootNode, filePath);
-//    		}else {
-//    			var parentFile = ParentNode.getValue().getFile();
-//    			newFileNode(ParentNode, parentFile.getAbsolutePath());
-//    		}	 
 		}); 
 	    
 	    // 打开目录
@@ -306,55 +269,12 @@ public class NoteTabTree {
 		MenuItem deleteFile = new MenuItem("Delete File");
 		deleteFile.setOnAction(e -> {
 			NoteUtility.deleteFile(NoteTabTree.noteTabTreeView);
-//			var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
-//			File file = itm.getValue().getFile();
-//			String fileTyep = "File";
-//			if(file.isDirectory()) {
-//				fileTyep = "Folder";
-//			}
-//			
-//			List<Node> btns = new ArrayList<>();  
-//			final Stage stage = new Stage(); 
-//			JFXButton okbtn = new JFXButton("Yes");
-//			okbtn.getStyleClass().add("myAlertBtn");
-//			okbtn.setOnAction(value -> {  
-//				file.delete();
-//				var pa = itm.getParent();
-//				pa.getChildren().remove(itm);
-//				stage.close();
-//			});
-// 
-//			// 取消
-//			JFXButton cancelbtn = new JFXButton("Cancel"); 
-//			cancelbtn.setOnAction(value -> { 
-//				stage.close();
-//			});
-//			
-//			
-//			btns.add(cancelbtn);
-//			btns.add(okbtn);
-//			MyAlert.myConfirmation("Delete  " + fileTyep+ ": "+ file.getAbsolutePath() + " ? ", stage, btns);
-			
-			
-			
 		}); 
 		
 		
 		MenuItem showInFolder = new MenuItem("Show In Folder");
 		showInFolder.setOnAction(e -> {
 			NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
-//			TreeItem<SqluckyTab> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
-//			SqluckyTab tb = ctt.getValue(); 
-//			try {
-//				String fn = tb.getDocumentPo().getFileFullName();
-//				if(StrUtils.isNotNullOrEmpty(fn)) {
-//					File file = new File(fn); 
-//					CommonUtility.openExplorer(file.getParentFile());
-//				}
-//				
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//			}
 		}); 
 		
 		contextMenu.getItems().addAll( 
@@ -402,18 +322,4 @@ public class NoteTabTree {
 		NoteTabTree.btnsBox = btnsBox;
 	}
 
-//	public static VBox getTreeBox() {
-//		return treeBox;
-//	}
-//
-//	public static void setTreeBox(VBox treeBox) {
-//		NoteTabTree.treeBox = treeBox;
-//	}
-//	
-	
-	
-	
-	
-	
-	
 }

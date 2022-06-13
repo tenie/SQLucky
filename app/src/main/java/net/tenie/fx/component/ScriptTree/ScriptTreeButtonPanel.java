@@ -2,10 +2,7 @@ package net.tenie.fx.component.ScriptTree;
 
 import com.jfoenix.controls.JFXButton;
 
-import javafx.scene.control.TreeView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.Action.CommonAction;
@@ -57,15 +54,15 @@ public class ScriptTreeButtonPanel {
 	}
 
 	// 按钮面板和treeView 的vbox容器
-	public VBox getScriptTitledPaneContent(TreeView<MyTab> scriptTreeView ) {
-		VBox box  = new VBox();
-		box.getChildren().addAll(optionHbox, scriptTreeView);
-		
-		box.getStyleClass().add("myTreeView-vbox");
-		box.getStyleClass().add("myModalDialog");
-		VBox.setVgrow(scriptTreeView, Priority.ALWAYS);
-		return box;
-	}
+//	public VBox getScriptTitledPaneContent(TreeView<MyTab> scriptTreeView ) {
+//		VBox box  = new VBox();
+//		box.getChildren().addAll(optionHbox, scriptTreeView);
+//		
+//		box.getStyleClass().add("myTreeView-vbox");
+//		box.getStyleClass().add("myModalDialog");
+//		VBox.setVgrow(scriptTreeView, Priority.ALWAYS);
+//		return box;
+//	}
 
 	public HBox getOptionHbox() {
 		return optionHbox;

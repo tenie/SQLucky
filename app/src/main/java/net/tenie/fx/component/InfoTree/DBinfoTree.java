@@ -16,15 +16,18 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
@@ -497,5 +500,27 @@ public class DBinfoTree {
 	public static SqluckyConnector getSchameIsConnObj(TreeItem<TreeNodePo> item) {
 		String connName = item.getParent().getParent().getValue().getName();
 		return DBConns.get(connName);
+	}
+	
+	
+	//  TitledPane
+	public TitledPane dbInfoTitledPane(Pane treeBtnPane) {
+		TitledPane dbTitledPane = new TitledPane();
+		dbTitledPane.setText("DB Connection"); 
+		dbTitledPane.setUserData( new SqlcukyTitledPaneInfoPo("Sqlucky DB Connection", treeBtnPane));
+		CommonUtility.addCssClass(dbTitledPane, "titledPane-color");
+		dbTitledPane.setContent(DBinfoTreeView);
+
+		// 图标切换
+		CommonUtility.addInitTask(v->{
+			Platform.runLater(()->{
+				CommonUtility.setLeftPaneIcon(dbTitledPane, ComponentGetter.iconInfo, ComponentGetter.uaIconInfo);
+			});
+			
+		});
+		
+		
+		
+		return dbTitledPane;
 	}
 }

@@ -272,9 +272,9 @@ public final class SettingKeyCodeCombination {
 			SqlcukyEditor.currentMyTab().getSqlCodeArea().nextBookmark(true);
 		});
 		
-		scene.getAccelerators().put(F4, () -> {  
-			CommonAction.dbInfoTreeQuery();
-		});
+//		scene.getAccelerators().put(F4, () -> {  
+//			CommonAction.dbInfoTreeQuery(AppWindowComponentGetter.dbInfoTreeFilter);
+//		});
 		
 		
 //		scene.getAccelerators().put(F4, () -> { 

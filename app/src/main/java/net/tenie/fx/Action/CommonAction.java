@@ -25,6 +25,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
@@ -1071,15 +1072,18 @@ public class CommonAction {
 
 
 	// 数据库表名的查询输入框
-	public static void dbInfoTreeQuery() {
-		var container = AppWindowComponentGetter.DBinfoContainer;
-		//显示或隐藏 filter
-		var filter = AppWindowComponentGetter.dbInfoTreeFilter;
-		if (container.getChildren().contains(filter)) {
-			container.getChildren().remove(filter);
-		} else {
-			container.getChildren().add(1, filter);
-		}
+	public static void dbInfoTreeQuery(Pane container, Node filter) {
+		
+//		var container = ComponentGetter.leftNodeContainer;
+
+		CommonUtility.leftHideOrShowSecondOptionBox(container, filter);
+//		//显示或隐藏 filter
+////		var filter = AppWindowComponentGetter.dbInfoTreeFilter;
+//		if (container.getChildren().contains(filter)) {
+//			container.getChildren().remove(filter);
+//		} else {
+//			container.getChildren().add(1, filter);
+//		}
 
 		// 如果有选中的字符串, 进行查询
 		String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();

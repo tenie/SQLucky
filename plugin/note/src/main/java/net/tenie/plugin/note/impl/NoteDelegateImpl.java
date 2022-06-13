@@ -1,7 +1,6 @@
 package net.tenie.plugin.note.impl;
 
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -28,7 +27,7 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 		
 	    NotePane = new TitledPane();
 	    NotePane.setUserData(new SqlcukyTitledPaneInfoPo( pluginName, tree.getBtnsBox()));
-		
+//	    NotePane.getStyleClass().add("myTitleTxtActiveColor");
 		
 		NotePane.setText("Note");  
 		CommonUtility.addCssClass(NotePane, "titledPane-color");
@@ -38,26 +37,11 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 	}
 	@Override
 	public void showed() {
-		final StackPane Node = (StackPane)NotePane.lookup(".arrow-button");
-		Node.getChildren().clear(); 
+		// 显示的时候切换图标
 		var icon = ComponentGetter.getIconDefActive("icomoon-pencil");
-		Node.getChildren().add(icon);
-		
-		var title = NotePane.lookup(".title");
-		title.setOnMouseEntered( e->{ 
-			Node.getChildren().clear();
-			if(NotePane.isExpanded()) {
-				Node.getChildren().add(ComponentGetter.iconLeft);
-			}else {
-				Node.getChildren().add(ComponentGetter.iconRight);
-			}
-			
-		});
-		
-		title.setOnMouseExited( e->{ 
-			Node.getChildren().clear();
-			Node.getChildren().add(icon);
-		});
+		var uaicon = ComponentGetter.getIconUnActive("icomoon-pencil");
+
+		CommonUtility.setLeftPaneIcon(NotePane, icon, uaicon);
 	}
 
 	@Override
@@ -72,7 +56,6 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 	}
 	@Override
 	public void register() {
-		// TODO Auto-generated method stub
 		
 	}
 

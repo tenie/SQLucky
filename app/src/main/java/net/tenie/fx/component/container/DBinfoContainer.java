@@ -4,8 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -13,12 +12,9 @@ import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.DBinfoTreeButtonFactory;
-import net.tenie.fx.component.InfoTree.DBinfoTreeFilter;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
-import net.tenie.fx.component.ScriptTree.ScriptTreeButtonPanel;
 
 /**
  * 
@@ -27,86 +23,54 @@ import net.tenie.fx.component.ScriptTree.ScriptTreeButtonPanel;
  */
 public class DBinfoContainer {
 	private VBox container;
-	private HBox treeBtnPane;	// 按钮面板
-	private TreeView<TreeNodePo> treeView;
-	private AnchorPane filter;
+	private Pane dbInfoTreeBtnPane;	// 按钮面板
+	private TreeView<TreeNodePo> dbInfoTreeView;
+//	private AnchorPane filter;
 	private DBinfoTree dbInfoTree;
 	private ScriptTabTree scriptTabTree;   //脚本
-	private DBinfoTreeFilter dbf;
+//	private DBinfoTreeFilter dbf;
 	
 	
 	public DBinfoContainer() {
 		// 容器
 		container = new VBox();
-		// 按钮
-//		treeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn();  
-		treeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn2();  
 		// 数据库信息
 		dbInfoTree = new DBinfoTree();
-		treeView =  DBinfoTree.DBinfoTreeView ;  
-		// 脚本
-		scriptTabTree = new ScriptTabTree();
-		var scriptTreeView =  ScriptTabTree.ScriptTreeView ;
-		// 查询过滤
-		dbf  = new DBinfoTreeFilter(); 		
-		filter = dbf.createFilterPane(treeView);
+		dbInfoTreeView =  dbInfoTree.DBinfoTreeView ;  
+		// 按钮
+		dbInfoTreeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn(dbInfoTreeView);  
+		TitledPane dbInfoTtPane = dbInfoTree.dbInfoTitledPane(dbInfoTreeBtnPane);
 		
-//		VBox vboxTreeView = new VBox();
-//		vboxTreeView.getStyleClass().add("myDataModel-vbox");
-//		vboxTreeView.getChildren().addAll(filter, treeView );
-//		VBox.setVgrow(treeView, Priority.ALWAYS);
+		// 脚本
+		scriptTabTree = new ScriptTabTree(); 
 		
 		// 数据连接/脚本 切换窗口
-		Accordion ad = createAccordion(scriptTreeView, treeView);
+		Accordion ad = createAccordion(scriptTabTree.scriptTitledPane(), dbInfoTtPane);
 		
-//		container.getChildren().addAll(treeBtnPane, ad , filter);
-		container.getChildren().addAll(treeBtnPane, ad );
+		container.getChildren().addAll(dbInfoTreeBtnPane, ad );
 		VBox.setVgrow(ad, Priority.ALWAYS);
  
 
-		AppWindowComponentGetter.treeView = treeView;
+		AppWindowComponentGetter.treeView = dbInfoTreeView;
 		AppWindowComponentGetter.dbInfoTree = dbInfoTree;
-		AppWindowComponentGetter.DBinfoContainer = container;
-		AppWindowComponentGetter.dbInfoTreeFilter = filter;
+		ComponentGetter.leftNodeContainer = container;
+		
 		
 //		ComponentGetter.treeBtnPane = treeBtnPane;
 		
 		
 		ComponentGetter.infoAccordion = ad;
 		
-		CommonUtility.fadeTransition(treeBtnPane, 1000); 
+		CommonUtility.fadeTransition(dbInfoTreeBtnPane, 1000); 
 		CommonUtility.fadeTransition(ad, 1000);  
-		CommonUtility.fadeTransition(treeView, 1000); 
-		CommonUtility.fadeTransition(filter, 1000); 
+		CommonUtility.fadeTransition(dbInfoTreeView, 1000); 
 		
 		
 	}
 
 	
-	private Accordion createAccordion(TreeView<MyTab> scriptTreeView ,TreeView<TreeNodePo> DBtreeView) { 
+	private Accordion createAccordion(TitledPane scriptTitledPane ,TitledPane dbTitledPane) { 
 		Accordion ad = new Accordion();
-		// 数据库连接信息
-		TitledPane dbTitledPane = new TitledPane();
-		dbTitledPane.setText("DB Connection"); 
-		dbTitledPane.setUserData( new SqlcukyTitledPaneInfoPo("Sqlucky DB Connection", treeBtnPane));
-//		dbTitledPane.setGraphic( ImageViewGenerator.svgImageDefActive("info-circle", 14)); 
-		CommonUtility.addCssClass(dbTitledPane, "titledPane-color");
-		dbTitledPane.setContent( DBtreeView);
-		
-		
-
-		// 脚本文件
-		ScriptTreeButtonPanel sbtnPanel  = new ScriptTreeButtonPanel();
-//		sbtnPanel.getOptionHbox();
-		var scriptVbox = sbtnPanel.getScriptTitledPaneContent(scriptTreeView);
-		TitledPane scriptTitledPane = new TitledPane();
-		scriptTitledPane.setText("Script");
-		scriptTitledPane.setUserData(new SqlcukyTitledPaneInfoPo("Script", sbtnPanel.getOptionHbox()));
-		
-		
-		CommonUtility.addCssClass(scriptTitledPane, "titledPane-color");
-		scriptTitledPane.setContent(scriptTreeView);
-//		scriptTitledPane.setContent(scriptVbox);
 		
 		ad.setExpandedPane(dbTitledPane);
 		ad.getPanes().add(dbTitledPane);
@@ -114,10 +78,6 @@ public class DBinfoContainer {
 		
 		
 		ad.expandedPaneProperty().addListener((obj, o, n )->{
-//			System.out.println(o);
-//			System.out.println(n);
-//			System.out.println(ad.getExpandedPane());
-//			System.out.println("----------------------\n");
 			if(ad.getExpandedPane() == null && n == null) { 
 				Platform.runLater(() -> { 
 					if(ad.getExpandedPane() == null) { 
@@ -125,13 +85,16 @@ public class DBinfoContainer {
 					}
 				}); 
 			}
-			
-			SqlcukyTitledPaneInfoPo info = (SqlcukyTitledPaneInfoPo) n.getUserData();
-			if(info !=null) {
-				var bx = info.getBtnsBox();
-				container.getChildren().remove(0);
-				container.getChildren().add(0, bx);
+			if(n != null ) {
+				SqlcukyTitledPaneInfoPo info = (SqlcukyTitledPaneInfoPo) n.getUserData();
+				if(info !=null) {
+					var bx = info.getBtnsBox();
+					container.getChildren().remove(0);
+					container.getChildren().add(0, bx);
+					
+				}
 			}
+			
 		});
 //		
 //		dbTitledPane.expandedProperty().addListener((obs, oldValue, newValue) -> {
@@ -168,11 +131,11 @@ public class DBinfoContainer {
 
 
 	public TreeView<TreeNodePo> getTreeView() {
-		return treeView;
+		return dbInfoTreeView;
 	}
 
 	public void setTreeView(TreeView<TreeNodePo> treeView) {
-		this.treeView = treeView;
+		this.dbInfoTreeView = treeView;
 	}
 
 	public DBinfoTree getDbInfoTree() {
