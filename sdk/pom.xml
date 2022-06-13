@@ -15,12 +15,6 @@
 	<dependencies>
 	
 		<dependency>
-		    <groupId>org.javalite</groupId>
-		    <artifactId>activejdbc</artifactId>
-		</dependency>
-		
-	
-		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-controls</artifactId>
 		</dependency>

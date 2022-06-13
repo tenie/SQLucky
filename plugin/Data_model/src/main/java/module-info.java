@@ -9,7 +9,6 @@ open module SQLucky.plugin.DataModel{
 	requires fastjson;
 	requires java.sql;
 	requires org.mybatis; 
-	requires activejdbc;
 	
 	
 	exports net.tenie.plugin.DataModel.impl;

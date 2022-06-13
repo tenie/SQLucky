@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import javax.sql.DataSource;
 
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
-import org.javalite.activejdbc.Base;
+//import org.javalite.activejdbc.Base;
 
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -94,10 +94,10 @@ public class SqluckyAppDB {
 		  return  dataSource;
 	}
 
-	public static void openAvtiveJDBC() {
-		Base.open(ConfigVal.H2_DIRVER, jdbcURL(),  ConfigVal.USER, ConfigVal.PASSWD);
-
-	}
+//	public static void openAvtiveJDBC() {
+//		Base.open(ConfigVal.H2_DIRVER, jdbcURL(),  ConfigVal.USER, ConfigVal.PASSWD);
+//
+//	}
 	
 	
 	private static String getH2FilePath() {

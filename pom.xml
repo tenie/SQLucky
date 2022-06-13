@@ -129,11 +129,11 @@
 			    <artifactId>mybatis</artifactId>
 			    <version>3.5.9</version>
 			</dependency>
-			<dependency>
+			<!-- <dependency>
 			    <groupId>org.javalite</groupId>
 			    <artifactId>activejdbc</artifactId>
 			    <version>3.1-j11</version>
-			</dependency>
+			</dependency> -->
 
 
 			<!-- 控件库 -->
