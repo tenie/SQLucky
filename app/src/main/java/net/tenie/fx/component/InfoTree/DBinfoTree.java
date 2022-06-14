@@ -64,31 +64,32 @@ public class DBinfoTree {
 	public TreeView<TreeNodePo> createConnsTreeView() {
 		Region icon =  IconGenerator.svgImageDefActive("windows-globe");
 		var rootNode = new TreeItem<>(new TreeNodePo("Connections",  icon)); 
-		TreeView<TreeNodePo> treeView = new TreeView<>(rootNode);
-		treeView.getStyleClass().add("my-tag");
-		treeView.setShowRoot(false);
+		DBinfoTreeView = new TreeView<>(rootNode);
+		DBinfoTreeView.getStyleClass().add("my-tag");
+		DBinfoTreeView.setShowRoot(false);
 		
 		recoverNode(rootNode);// 恢复数据中保存的连接数据
 		// 展示连接
 		if (rootNode.getChildren().size() > 0)
-			treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+			DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
 		// 双击
-		treeView.setOnMouseClicked(e -> {
+		DBinfoTreeView.setOnMouseClicked(e -> {
 			treeViewDoubleClick(e);
 		});
 		// 右键菜单
 		menu = new DBInfoTreeContextMenu();
 		ContextMenu	contextMenu = menu.getContextMenu();
-		treeView.setContextMenu(contextMenu);
+		ComponentGetter.dbInfoTreeContextMenu = contextMenu;
+		DBinfoTreeView.setContextMenu(contextMenu);
 		// 选中监听事件
-		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
-		treeView.getSelectionModel().select(rootNode);
+		DBinfoTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(DBinfoTreeView));
+		DBinfoTreeView.getSelectionModel().select(rootNode);
 
-		DBinfoTreeView = treeView;
+//		DBinfoTreeView = treeView;
 		
 		// 显示设置, 从TreeNodePo中的对象显示为 TreeItem 的名称和图标
-		treeView.setCellFactory(new TreeNodeCellFactory());
-		return treeView;
+		DBinfoTreeView.setCellFactory(new TreeNodeCellFactory());
+		return DBinfoTreeView;
 	}
 	
 	// 恢复数据中保存的连接数据

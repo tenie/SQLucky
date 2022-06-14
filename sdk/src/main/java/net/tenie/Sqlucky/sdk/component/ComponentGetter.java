@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.Tab;
@@ -53,6 +54,8 @@ public final class ComponentGetter {
 	public static TextField maxRowsTextField ;
 	// 数据库链接信息tree 的容器面板
 	public static TitledPane dbTitledPane;
+	// 数据库链接信息tree 的右键菜单
+	public static ContextMenu	dbInfoTreeContextMenu;
 	
 	public static NotificationPane notificationPane ;
 	public static Menu pluginMenu ;

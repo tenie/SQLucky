@@ -194,7 +194,9 @@ public class SQLucky extends Application {
 				
 			}; 
 			CommonUtility.executeInitTask(cr);
-			
+			Long mm = Runtime.getRuntime().maxMemory()/1024;
+			mm = mm / 1024;
+			logger.info("Runtime.getRuntime().maxMemory = " + mm); 
 			
 		} catch (Exception e) {
 			e.printStackTrace();
