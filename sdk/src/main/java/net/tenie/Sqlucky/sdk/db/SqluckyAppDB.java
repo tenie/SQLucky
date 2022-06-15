@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
@@ -21,7 +22,7 @@ public class SqluckyAppDB {
 	
 	// 连接打开次数的计数, 只有当connTimes = 0 , 调用close, 才会真的关闭
 	private static AtomicInteger connTimes = new AtomicInteger(0);
-	private static Connection conn;
+//	private static Connection conn;
 	// 使用阻塞队列, 串行获取: 连接, 和关闭连接 
 //	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
 //	public  static Connection getConn() {
@@ -47,8 +48,37 @@ public class SqluckyAppDB {
 		Connection conn = createH2Conn();
 		return conn;
 	}
+	
+	public  static Connection getConnNotAutoCommit() {
+		Connection conn = createH2Conn();
+		try {
+			conn.setAutoCommit(false);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return conn;
+	}
+	
 	public  static void closeConn(Connection conn) {
 		try { 
+				conn.close(); 					
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public  static void closeConnAndRollback(Connection conn) {
+		try { 
+				conn.rollback();
+				conn.close(); 					
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public  static void closeConnAndCommit(Connection conn) {
+		try { 
+				conn.commit();
 				conn.close(); 					
 		} catch (Exception e) {
 			e.printStackTrace();

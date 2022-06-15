@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
 
@@ -25,7 +26,6 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
@@ -147,7 +147,17 @@ public class DataModelOption {
 		delBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
 		delBtn.setOnAction(e->{
 			var item = DataModelTabTree.DataModelTreeView.getSelectionModel().getSelectedItem();
-			DataModelUtility.delModel(DataModelTabTree.treeRoot, item);
+			if ( item.getValue().getIsModel()) {
+				Consumer<String> caller = x -> {
+					
+					DataModelUtility.delModel(DataModelTabTree.treeRoot, item);
+
+				};
+				MyAlert.myConfirmation(" Delete Model : " + item.getValue().getName() + "?", caller);
+				
+			}
+			
+			
 			
 		});
 		

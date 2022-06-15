@@ -21,7 +21,6 @@ import com.alibaba.fastjson.JSONObject;
 
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ListChangeListener.Change;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -50,7 +49,7 @@ public class DataModelUtility {
 			var sceneRoot = ComponentGetter.primarySceneRoot;
 			
 			// 载入动画
-			LoadingAnimation.addLoading(sceneRoot);
+			LoadingAnimation.addLoading(sceneRoot, "Saving....");
 //			后台执行 数据导入
 			CommonUtility.runThread(v->{
 				try {
@@ -87,9 +86,10 @@ public class DataModelUtility {
 
 	// 模型插入到数据库
 	public static Long insertDataModel(DataModelInfoPo dmp) {
-		var conn = SqluckyAppDB.getConn();
+		var conn = SqluckyAppDB.getConnNotAutoCommit();
+		
 		Long modelID = -1L;
-		try {
+		try {  
 		    modelID = PoDao.insertReturnID(conn, dmp);
 
 			var tables = dmp.getEntities();
@@ -105,20 +105,14 @@ public class DataModelUtility {
 					field.setModelId(modelID);
 					field.setCreatedTime(new Date());
 					PoDao.insert(conn, field);
-//					 break;
-
 				}
-//				 break;
 
 			}
-
+			SqluckyAppDB.closeConnAndCommit(conn);
 		} catch (Exception e) {
+			SqluckyAppDB.closeConnAndRollback(conn);
 			e.printStackTrace();
-		} finally {
-			SqluckyAppDB.closeConn(conn);
-		}
-
-//		var tabs = dmp.getEntities();
+		} 
 		return modelID;
 	}
 	

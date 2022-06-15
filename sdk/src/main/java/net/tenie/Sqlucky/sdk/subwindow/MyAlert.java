@@ -84,7 +84,7 @@ public class MyAlert {
 			stage.close();
 		});
 
-		JFXButton okbtn = new JFXButton("OK");
+		JFXButton okbtn = new JFXButton("Yes");
 		okbtn.setOnAction(value -> {
 			if(okCaller !=null) {
 				okCaller.accept("");

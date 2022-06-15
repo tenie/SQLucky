@@ -30,6 +30,20 @@ public class LoadingAnimation {
 
 	}
 	
+	public static  void addLoading(StackPane root, String loadingString) {
+		Platform.runLater(() -> {
+			lb = new Label(loadingString);
+			Animation = IconGenerator.svgImageUnactive("icomoon-spinner3", 30);
+			CommonUtility.rotateTransition(Animation);
+			lb.setGraphic(Animation);
+			lb.setFont(new Font(30));
+			StackPane.setAlignment(lb, Pos.CENTER);
+			root.setCursor(Cursor.WAIT);
+			root.getChildren().add(lb);
+		});
+
+	}
+	
 	//	移除loading...
 	public static  void rmLoading(StackPane root) {
 		Platform.runLater(()->{
