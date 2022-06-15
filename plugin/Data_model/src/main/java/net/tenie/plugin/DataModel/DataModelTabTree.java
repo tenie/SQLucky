@@ -22,6 +22,7 @@ import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.DataModelTablePo;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
 import net.tenie.plugin.DataModel.tools.DataModelDAO;
+import net.tenie.plugin.DataModel.tools.DataModelUtility;
 
 /**
  * 
@@ -79,69 +80,11 @@ public class DataModelTabTree {
 //		VBox.setVgrow(treeView, Priority.ALWAYS);
 		
 		// 恢复上次的数据
-		recoverModelInfoNode(treeRoot);
+		DataModelUtility.recoverModelInfoNode(treeRoot);
 		return DataModelTreeView;
 	}
 
 	
-//	//TODO 恢复数据中保存的连接数据
-	public void recoverModelInfoNode(TreeItem<DataModelTreeNodePo> rootNode) {
-
-		Consumer<String> cr = v -> {
-//			filePath = ComponentGetter.appComponent.fetchData(DataModelDelegateImpl.pluginName, "dir_path");
-//			File file = new File(filePath);
-//			if (file.exists()) {
-//				openNoteDir(rootNode, file);
-//			}
-			List<DataModelInfoPo> ls = DataModelDAO.selectDMInfo();
-			List<TreeItem<DataModelTreeNodePo>> nodels = new ArrayList<>();
-			for(var po : ls) {
-				DataModelTreeNodePo nodepo = new DataModelTreeNodePo(po);
-				TreeItem<DataModelTreeNodePo> item = createItemNode(nodepo);
-				nodels.add(item);
-			}
-			if (ls.size() > 0) {
-				Platform.runLater(() -> {
-					rootNode.getChildren().addAll(nodels);
-				});
-			}
-		};
-		CommonUtility.addInitTask(cr);
-
-	}
-	/**
-	 * 创建 一个节点
-	 * @param name
-	 * @return
-	 */
-	public static TreeItem<DataModelTreeNodePo> createItemNode(DataModelTreeNodePo treeNode) {
-		Region icon = null;
-		if (treeNode.getIsModel()) {
-			icon = IconGenerator.svgImageUnactive("database");;
-			Region acIcon = IconGenerator.svgImage("database", "#7CFC00 ");
-//			treeNode.setIcon(icon);
-			treeNode.setUnactiveIcon(icon);
-			treeNode.setActiveIcon(acIcon);
-		} else {
-			icon = IconGenerator.svgImage("window-restore", "blue");
-//			treeNode.setIcon(icon);
-			treeNode.setUnactiveIcon(icon);
-			treeNode.setActiveIcon(icon);
-		}
-
-		TreeItem<DataModelTreeNodePo> item = new TreeItem<>(treeNode);
-		item.getChildren().addListener(new ListChangeListener<TreeItem<DataModelTreeNodePo>>() {
-			@Override
-			public void onChanged(Change c) {
-				var list = c.getList();
-				System.out.println("list.size() = " + list.size());
-				if(list.size() > 0) {
-					treeNode.setActive(true);
-				}
-				
-			}});
-		return item;
-	}
 	/**
 	 * 双击模型节点时， 查询数据库表， 添加表节点都模型节点下
 	 * @param mdTreeNode
@@ -155,7 +98,7 @@ public class DataModelTabTree {
 		
 		for( var table : tableLs) {
 			DataModelTreeNodePo ndpo = new DataModelTreeNodePo(table);
-			TreeItem<DataModelTreeNodePo> treeNode = createItemNode(ndpo);
+			TreeItem<DataModelTreeNodePo> treeNode = DataModelUtility.createItemNode(ndpo);
 			nodels.add(treeNode);
 		}
 		if (nodels.size() > 0) {

@@ -26,9 +26,33 @@ public class DataModelDAO {
 			SqluckyAppDB.closeConn(conn);
 		}
 		
-
 		return rs;
 	}
+	/**
+	 * 查询指定模型
+	 * @return
+	 */
+	public static DataModelInfoPo selectDMInfo(Long mid) {
+		DataModelInfoPo po = new DataModelInfoPo();
+		po.setId(mid);
+		var conn = SqluckyAppDB.getConn();
+		List<DataModelInfoPo> rs = new ArrayList<>();
+		
+		DataModelInfoPo val = null;
+		try {
+			rs = PoDao.select(conn, po);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+		if(rs != null && rs.size() >0 ) {
+			val = rs.get(0);
+		}
+
+		return val;
+	}
+	
 	
 	/**
 	 * 根据模型ID， 找出所有表

@@ -356,7 +356,7 @@ public class CommonUtility {
 		return min;
 	}
 	/**
-	 * node 进行旋转的动画, 设置旋转100次
+	 * node 进行旋转的动画, 设置旋转9999次
 	 * @param pointer
 	 */
 	public static void rotateTransition(Node pointer) {
@@ -374,7 +374,7 @@ public class CommonUtility {
 		rotateTransition.setFromAngle(fromAngle);
 		rotateTransition.setToAngle(toAngle);
 		// 只播放次数
-		rotateTransition.setCycleCount(100);
+		rotateTransition.setCycleCount(9999);
 		// 每次旋转后是否改变旋转方向
 		rotateTransition.setAutoReverse(false);
 		rotateTransition.play();

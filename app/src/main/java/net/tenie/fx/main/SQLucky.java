@@ -20,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -189,7 +190,7 @@ public class SQLucky extends Application {
 			// 移除loading...
 			Consumer< String > cr = v->{ 
 				Platform.runLater(()->{
-					app.rmlb();
+					LoadingAnimation.rmLoading(ComponentGetter.primarySceneRoot);
 				});
 				
 			}; 

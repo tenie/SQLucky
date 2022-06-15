@@ -18,6 +18,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
@@ -40,8 +41,16 @@ public final class ComponentGetter {
 	public static VBox mainWindow;
 //	public static FlowPane treeBtnPane;
 
-	public static Scene primaryscene;
+	
+	// 主界面 Stage
 	public static Stage primaryStage;
+	// 主界面 scene
+	public static Scene primaryscene;
+	
+	// 主界面 scene root
+	public static StackPane primarySceneRoot;
+		
+	
 
 	public static ComboBox<Label> connComboBox;
 	

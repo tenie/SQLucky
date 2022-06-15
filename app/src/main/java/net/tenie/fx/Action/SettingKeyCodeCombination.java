@@ -21,8 +21,10 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -63,6 +65,8 @@ public final class SettingKeyCodeCombination {
 		KeyCodeCombination F2 = new KeyCodeCombination(KeyCode.F2);
 		KeyCodeCombination F4 = new KeyCodeCombination(KeyCode.F4);
 		KeyCodeCombination F5 = new KeyCodeCombination(KeyCode.F5);
+
+		KeyCodeCombination F6 = new KeyCodeCombination(KeyCode.F6);
 		KeyCodeCombination F9 = new KeyCodeCombination(KeyCode.F9);
 
 		KeyCodeCombination ctrlO = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.SHORTCUT_DOWN);
@@ -272,9 +276,17 @@ public final class SettingKeyCodeCombination {
 			SqlcukyEditor.currentMyTab().getSqlCodeArea().nextBookmark(true);
 		});
 		
-//		scene.getAccelerators().put(F4, () -> {  
+		scene.getAccelerators().put(F4, () -> {  
 //			CommonAction.dbInfoTreeQuery(AppWindowComponentGetter.dbInfoTreeFilter);
-//		});
+			StackPane root = ComponentGetter.primarySceneRoot;
+			LoadingAnimation.addLoading(root);
+		});
+		
+		scene.getAccelerators().put(F6, () -> {  
+//			CommonAction.dbInfoTreeQuery(AppWindowComponentGetter.dbInfoTreeFilter);
+			StackPane root = ComponentGetter.primarySceneRoot;
+			LoadingAnimation.rmLoading(root);
+		});
 		
 		
 //		scene.getAccelerators().put(F4, () -> { 

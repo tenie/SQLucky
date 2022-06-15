@@ -1,7 +1,12 @@
 package net.tenie.Sqlucky.sdk.po;
 
 import javafx.scene.layout.Pane;
-
+/**
+ * 折叠面板的子面板的按钮面板引用,
+ * 这个对象会放在TitledPane 对象的 UserData中, 在折叠面板的时候, 切换显示按钮面板在主界面上
+ * @author tenie
+ *
+ */
 public class SqlcukyTitledPaneInfoPo {
 	private String name;
 	private Pane  btnsBox;

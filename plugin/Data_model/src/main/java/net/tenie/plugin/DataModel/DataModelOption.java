@@ -30,7 +30,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
-import net.tenie.plugin.DataModel.tools.AddModelFile;
+import net.tenie.plugin.DataModel.tools.DataModelUtility;
 /**
  * button 的设置
  * @author tenie
@@ -44,6 +44,8 @@ public class DataModelOption {
 	private JFXButton queryBtn  = new JFXButton();
 	private JFXButton queryExecBtn  = new JFXButton();
 	private JFXButton addBtn = new JFXButton();
+	private JFXButton delBtn = new JFXButton();
+	
 //	private ObservableList<TreeItem<DataModelTreeNodePo>>  filterTables2 ;
 	public static Map<String, Double> queryFieldColWidth = new HashMap<>();
 	public static Map<String, Double> tableInfoColWidth = new HashMap<>();
@@ -138,10 +140,20 @@ public class DataModelOption {
 		addBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
 		addBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
 		addBtn.setOnAction(e->{
-			readJosnModel("UTF-8");
+			DataModelUtility.modelFileImport("UTF-8");
+		});
+		// 删除
+		delBtn.setGraphic(ComponentGetter.getIconDefActive("trash"));
+		delBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
+		delBtn.setOnAction(e->{
+			var item = DataModelTabTree.DataModelTreeView.getSelectionModel().getSelectedItem();
+			DataModelUtility.delModel(DataModelTabTree.treeRoot, item);
+			
 		});
 		
-		btnHbox.getChildren().addAll(queryBtn, addBtn);
+		
+		
+		btnHbox.getChildren().addAll(queryBtn, addBtn, delBtn);
 		
 		filterHbox.getChildren().addAll(queryExecBtn, txt );
 		HBox.setHgrow(txt, Priority.ALWAYS);
@@ -279,24 +291,7 @@ public class DataModelOption {
 	
 	
 	
-
-	public static void readJosnModel(String encode) {
-		File f = FileOrDirectoryChooser.showOpenJsonFile("Open", ComponentGetter.primaryStage);
-		if (f == null)
-			return ;
-		String val = "";
-		try {
-			val = FileUtils.readFileToString(f, encode);
-			if(val != null && !"".equals(val) ) { 
-				DataModelInfoPo DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
-//				System.out.println(DataModelPoVal);
-				AddModelFile.insertDataModel(DataModelPoVal);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-			MyAlert.errorAlert( e.getMessage());
-		} 
-	}
+	
 	
 	public static DataModelInfoPo readJosnModel(String fileName, String encode) {
 		DataModelInfoPo DataModelPoVal =  null;

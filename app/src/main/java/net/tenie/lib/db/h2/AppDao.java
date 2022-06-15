@@ -121,6 +121,7 @@ public class AppDao {
 			"CREATE TABLE `DATA_MODEL_TABLE_FIELDS` (\n" +
 			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
 			"  `TABLE_ID` INT(11) NOT NULL ,\n" +
+			"  `MODEL_ID` INT(11)   ,\n" + 	
 			"  `ID` VARCHAR(100)  , \n" + 
 			"  `ROW_NO` INT(11) ,\n" + 
 			"  `DEF_KEY` VARCHAR(200)    ,   \n" +  //字段名称

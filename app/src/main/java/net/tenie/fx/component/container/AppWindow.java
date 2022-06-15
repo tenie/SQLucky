@@ -2,11 +2,8 @@ package net.tenie.fx.component.container;
 
 import org.controlsfx.control.MasterDetailPane;
 
-import javafx.animation.FadeTransition;
 import javafx.application.Platform;
-import javafx.geometry.Pos;
 import javafx.geometry.Side;
-import javafx.scene.Cursor;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -14,8 +11,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
@@ -29,14 +26,11 @@ public class AppWindow {
 	private OperateContainer operate;
 	private DataViewContainer dataView;
 	private Scene appScene;
-	private Label lb ;
 	private StackPane root;
-//	private VBox box;
 	
 
 	public AppWindow() {
 		mainWindow = new VBox();
-//		mainWindow.getStyleClass().add("main-background");
 		CommonUtility.addCssClass(mainWindow, "main-background");
 		ComponentGetter.mainWindow = mainWindow;
 
@@ -55,7 +49,6 @@ public class AppWindow {
 
 		ComponentGetter.masterDetailPane = masterDetailPane;
 		AppWindowComponentGetter.dataView = dataView;
-//		mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
 		// 设置tree 面板的显示比例
 		masterDetailPane.widthProperty().addListener((ob, ov ,nv)->{
 				if (nv.doubleValue() > 1) {
@@ -66,20 +59,13 @@ public class AppWindow {
 					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
 				}
 		});  
-//		BorderPane root = new BorderPane();
-//		root.setCenter(mainWindow);
-		lb =new Label("Loading.....");
-		var nd = IconGenerator.svgImageUnactive("icomoon-spinner3", 30);
-		CommonUtility.rotateTransition(nd);
-		lb.setGraphic(nd );
-		lb.setFont(new Font(30));
-		root = new StackPane( mainWindow, lb);
-		StackPane.setAlignment(lb, Pos.CENTER);
-		root.setCursor(Cursor.WAIT);
+		root = new StackPane( mainWindow);
+		LoadingAnimation.addLoading(root);
 		
 		appScene = new Scene(root); 
-//		appScene = new Scene(mainWindow); 
 		ComponentGetter.primaryscene = appScene;
+		ComponentGetter.primarySceneRoot = root; 
+		
 		Platform.runLater(()->{
 //			CommonUtility.platformAwait();
 			mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
@@ -143,15 +129,7 @@ public class AppWindow {
 	}
 	
 	
-//	移除loading...
-	public void rmlb() {
-		 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(lb, 1500);
-		 fadeTransition.setOnFinished(e ->{
-			 root.getChildren().remove(lb);
-			 root.setCursor(Cursor.DEFAULT);
-		 });
-		
-	}
+
 	
 	public VBox getMainWindow() {
 		return mainWindow;

@@ -6,14 +6,15 @@ public class DataModelTableFieldsPo {
 
 	private Long itemId;
 	private Long tableId;
+	private Long modelId;
 	private String id; 
-	private int rowNo;
+	private Integer rowNo;
 	private String defKey;
 	private String defName;
 	private String comment; 
 	private String domain;
 	private String type;
-	private int len; 
+	private Integer len; 
 	private String scale;
 
 	private String defaultValue;
@@ -32,10 +33,10 @@ public class DataModelTableFieldsPo {
 	private String autoIncrement; 
 	private String hideInGraph; 
 	
-	public int getRowNo() {
+	public Integer getRowNo() {
 		return rowNo;
 	}
-	public void setRowNo(int rowNo) {
+	public void setRowNo(Integer rowNo) {
 		this.rowNo = rowNo;
 	}
 	public String getDefKey() {
@@ -68,10 +69,10 @@ public class DataModelTableFieldsPo {
 	public void setType(String type) {
 		this.type = type;
 	}
-	public int getLen() {
+	public Integer getLen() {
 		return len;
 	}
-	public void setLen(int len) {
+	public void setLen(Integer len) {
 		this.len = len;
 	}
 	public String getScale() {
@@ -171,6 +172,14 @@ public class DataModelTableFieldsPo {
 	}
 	public void setHideInGraph(String hideInGraph) {
 		this.hideInGraph = hideInGraph;
+	}
+	
+	
+	public Long getModelId() {
+		return modelId;
+	}
+	public void setModelId(Long modelId) {
+		this.modelId = modelId;
 	}
 	@Override
 	public String toString() {
