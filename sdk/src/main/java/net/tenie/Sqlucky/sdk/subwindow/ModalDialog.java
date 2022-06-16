@@ -488,7 +488,7 @@ public class ModalDialog {
 		btns.add( okbtn);
 		
 		
-		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.WARN, nds, btns);
+		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.INFO, nds, btns);
 		Scene scene = new Scene((Parent) vb);
 		
 		stage.initModality(Modality.APPLICATION_MODAL);

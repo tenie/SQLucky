@@ -45,7 +45,6 @@ public class DBInfoTreeContextMenu {
 		});
 		link.setGraphic(IconGenerator.svgImageDefActive("link"));
 		link.setDisable(true);
-		link.setId("OpenConnection");
 		
 	    unlink = new MenuItem("Close Connection");
 		unlink.setOnAction(e->{
@@ -53,11 +52,9 @@ public class DBInfoTreeContextMenu {
 		});
 		unlink.setGraphic(IconGenerator.svgImageDefActive("unlink"));
 		unlink.setDisable(true);
-		unlink.setId("CloseConnection");
 		
 	    Edit = new MenuItem("Edit Connection");
 		Edit.setOnAction(e->{
-//			ConnectionEditor.closeDbConn();
 			ConnectionEditor.editDbConn();
 		});
 		Edit.setGraphic(IconGenerator.svgImageDefActive("edit"));
@@ -69,8 +66,6 @@ public class DBInfoTreeContextMenu {
 			ConnectionEditor.ConnectionInfoSetting();
 		});
 		Add.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
-//		Add.setDisable(true);
-		Add.setId("AddConnection");
 		
 		
 	    delete = new MenuItem("Delete Connection");
@@ -79,33 +74,27 @@ public class DBInfoTreeContextMenu {
 		});
 		delete.setGraphic(IconGenerator.svgImageDefActive("trash"));
 		delete.setDisable(true);
-		delete.setId("DeleteConnection");
 		
 		
 		refresh = new MenuItem("Refresh Connection");
 		
 		refresh.setGraphic(IconGenerator.svgImageDefActive("refresh"));
 		refresh.setDisable(true);
-		refresh.setId("DeleteConnection");
 		
 		
 		tableAddNewCol = new MenuItem("Table Add New Column");
 	    tableAddNewCol.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
-	    tableAddNewCol.setId("tableAddNewCol");
 	    tableAddNewCol.setDisable(true);
 	    
 	    tableShow = new MenuItem("Show Table Field Type");
 	    tableShow.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
-	    tableShow.setId("tableShow");
 	    tableShow.setDisable(true);
 	    
 	    tableDrop = new MenuItem("Drop ");
 	    tableDrop.setGraphic(IconGenerator.svgImageDefActive("minus-square"));
-	    tableDrop.setId("tableDrop");
 	    tableDrop.setDisable(true);
 		
 		contextMenu.getItems().addAll(
-//				add,
 				link, unlink, Edit, Add, delete, new SeparatorMenuItem(), refresh, new SeparatorMenuItem(),
 				tableAddNewCol, tableShow, tableDrop);
 	

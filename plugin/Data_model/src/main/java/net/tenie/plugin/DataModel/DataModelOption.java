@@ -71,22 +71,7 @@ public class DataModelOption {
 		queryBtn.setGraphic(ComponentGetter.getIconDefActive("windows-magnify-browse"));
 		queryBtn.setTooltip(CommonUtility.instanceTooltip("Search table & field info "));
 		queryBtn.setOnMouseClicked(e->{
-//			filterHbox
-			CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, filterHbox);
-//			String txtVal = txt.getText();
-//			if(StrUtils.isNotNullOrEmpty(txtVal)) {
-//				SdkComponent.addWaitingPane(-1);
-//				try {
-//					exeQueryTable(txtVal);
-//					exeQueryTableFields(txtVal);
-//				} finally {
-//					SdkComponent.rmWaitingPane();
-//				}
-//				
-//				
-//			}else {
-//				txt.requestFocus();
-//			}
+			CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, filterHbox, txt);
 			
 		});
 		queryExecBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
@@ -146,19 +131,7 @@ public class DataModelOption {
 		delBtn.setGraphic(ComponentGetter.getIconDefActive("trash"));
 		delBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
 		delBtn.setOnAction(e->{
-			var item = DataModelTabTree.DataModelTreeView.getSelectionModel().getSelectedItem();
-			if ( item.getValue().getIsModel()) {
-				Consumer<String> caller = x -> {
-					
-					DataModelUtility.delModel(DataModelTabTree.treeRoot, item);
-
-				};
-				MyAlert.myConfirmation(" Delete Model : " + item.getValue().getName() + "?", caller);
-				
-			}
-			
-			
-			
+			DataModelUtility.delAction();
 		});
 		
 		
@@ -330,19 +303,16 @@ public class DataModelOption {
 		return btnHbox;
 	}
 
-
-	public void setBtnHbox(HBox btnHbox) {
-		this.btnHbox = btnHbox;
-	}
-
-
 	public VBox getOptionVbox() {
 		return optionVbox;
 	}
 
+	public HBox getFilterHbox() {
+		return filterHbox;
+	}
 
-	public void setOptionVbox(VBox optionVbox) {
-		this.optionVbox = optionVbox;
+	public TextField getTxt() {
+		return txt;
 	}
 	
 

@@ -32,6 +32,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
@@ -804,7 +805,6 @@ public class CommonUtility {
 	
 	// 左侧添加隐藏操作按钮/查询框
 	public static void leftHideOrShowSecondOptionBox(Pane container, Node box) {
-//		var container = ComponentGetter.leftNodeContainer;
 		if (container.getChildren().contains(box)) {
 			container.getChildren().remove(box);
 		} else {
@@ -812,6 +812,19 @@ public class CommonUtility {
 		}
 		
 	}
+	
+	// 左侧添加隐藏操作按钮/查询框
+		public static void leftHideOrShowSecondOptionBox(Pane container, Node box, TextField txt ) {
+			if (container.getChildren().contains(box)) {
+				container.getChildren().remove(box);
+			} else {
+				container.getChildren().add(1, box);
+				if(txt != null ) {
+					txt.requestFocus();
+				}
+			}
+			
+		}
 	
 	// 左侧折叠面板的图标切换
 	public static void leftPaneChangeIcon(TitledPane NotePane,  StackPane Node,  Region icon,Region uaicon) {

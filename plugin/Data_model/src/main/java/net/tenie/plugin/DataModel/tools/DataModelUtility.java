@@ -27,10 +27,12 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.db.PoDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.DataModel.DataModelTabTree;
 import net.tenie.plugin.DataModel.po.DataModelInfoMapper;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
@@ -55,6 +57,12 @@ public class DataModelUtility {
 				try {
 					// 读取
 					DataModelInfoPo DataModelPoVal = readJosnModel(encode, f);
+					var mdpo = DataModelDAO.selectDMInfoByName( DataModelPoVal.getName());
+					//同名模型存在
+					if(mdpo !=null ) {
+						MyAlert.errorAlert("Duplicates model name:" +DataModelPoVal.getName() +"; modify exist model name");
+					}
+					
 					// 数据插入到数据库
 					Long  mid = DataModelUtility.insertDataModel(DataModelPoVal);
 					// 插入模型节点
@@ -128,6 +136,22 @@ public class DataModelUtility {
 	}
 	
 	
+	/**
+	 * 删除模型Action
+	 * 1. 先获取选择的模型, 判断是不是模型
+	 * 2. 回调函数中删除
+	 * 3. 回调函数传给确认提醒, 用户确认后才会调用删除回调函数
+	 */
+	public static void delAction() {
+		var item = DataModelTabTree.currentSelectItem();
+		if ( item.getValue().getIsModel()) {
+			Consumer<String> caller = x -> {
+				DataModelUtility.delModel(DataModelTabTree.treeRoot, item);
+			};
+			MyAlert.myConfirmation(" Delete Model : " + item.getValue().getName() + "?", caller);
+			
+		}
+	}
 	/**
 	 * 删除模型
 	 * @param root
@@ -247,7 +271,41 @@ public class DataModelUtility {
 	}
 	
 	
+	/**
+	 * 根据模型id, 给模型重命名
+	 * @param mid
+	 * @param newName
+	 * @return
+	 */
+	public static void renameModelName(  ) {
+		var mdpo = DataModelTabTree.currentSelectItem().getValue();
+		Long mid = mdpo.getModelId();
+		Consumer<String> caller = newName -> {
+			if (StrUtils.isNullOrEmpty( newName.trim()))
+				return;
+			var val = DataModelDAO.selectDMInfoByName(newName);
+			if(val != null ) { 
+				MyAlert.errorAlert("Fail ! Name Exist :" + newName);
+			}else {
+				DataModelDAO.updateModelName(mid, newName);
+				mdpo.setName(newName);
+				DataModelTabTree.DataModelTreeView.refresh();
+			}
+			 
+		};
+		ModalDialog.showExecWindow("New name ","", caller);
+	}
 	
+	
+	public static void closeModel() {
+		var item = DataModelTabTree.currentSelectItem();
+		var itemPo = item.getValue();
+		if(itemPo.getIsModel()) {
+			item.getChildren().clear();
+			itemPo.setActive(false);
+			DataModelTabTree.DataModelTreeView.refresh();
+		}
+	}
 	
 	// 测试PoDao
 	public static void test() {

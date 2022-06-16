@@ -36,7 +36,7 @@ public class DataModelTabTree {
 //	public static VBox vbox = new VBox();
 	
 //	public static TreeView<DataModelTreeNodePo> treeView ;
-	
+	private DataModelOption optionPanel ;
 	private Pane btnsBox ; 
 	String filePath = "";
 
@@ -58,8 +58,8 @@ public class DataModelTabTree {
 		if (treeRoot.getChildren().size() > 0)
 			DataModelTreeView.getSelectionModel().select(treeRoot.getChildren().get(0)); // 选中节点
 		// 右键菜单
-//		ContextMenu contextMenu = createContextMenu();
-//		treeView.setContextMenu(contextMenu);
+		DataModelTabTreeContextMenu contextMenu = new DataModelTabTreeContextMenu(this);
+		DataModelTreeView.setContextMenu(contextMenu.getContextMenu());
 		// 选中监听事件
 //		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
 		DataModelTreeView.getSelectionModel().select(treeRoot);
@@ -71,8 +71,8 @@ public class DataModelTabTree {
 		DataModelTreeView.setCellFactory(new DataModelNodeCellFactory());
 		
 		
-		DataModelOption dmFilter = new DataModelOption(); 
-		btnsBox  = dmFilter.getOptionVbox();
+	    optionPanel = new DataModelOption(); 
+		btnsBox  = optionPanel.getOptionVbox();
 
 //		vbox.getStyleClass().add("myTreeView-vbox");
 //		vbox.getChildren().addAll( filterHbox, treeView);
@@ -185,11 +185,6 @@ public class DataModelTabTree {
 	}
 
 
-	public static void removeItem(TreeItem<DataModelTreeNodePo> nodeItem, TreeItem<DataModelTreeNodePo> subItem) {
-//		var stb = subItem.getValue();
-//		nodeItem.getChildren().remove(subItem);
-//		ComponentGetter.appComponent.tabPaneRemoveSqluckyTab(stb);
-	}
 
 
 
@@ -213,6 +208,24 @@ public class DataModelTabTree {
 
 	public static void setDataModelTreeView(TreeView<DataModelTreeNodePo> dataModelTreeView) {
 		DataModelTreeView = dataModelTreeView;
+	}
+	
+	
+	public static TreeItem<DataModelTreeNodePo> currentSelectItem() {
+		TreeItem<DataModelTreeNodePo> item = DataModelTabTree.DataModelTreeView.getSelectionModel().getSelectedItem();
+		return item;
+	}
+
+
+
+	public DataModelOption getOptionPanel() {
+		return optionPanel;
+	}
+
+
+
+	public void setOptionPanel(DataModelOption optionPanel) {
+		this.optionPanel = optionPanel;
 	}
 
 	// 菜单

@@ -9,7 +9,7 @@ open module SQLucky.plugin.DataModel{
 	requires fastjson;
 	requires java.sql;
 	requires org.mybatis; 
-	
+	requires org.apache.logging.log4j;	
 	
 	exports net.tenie.plugin.DataModel.impl;
     provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.DataModel.impl.DataModelDelegateImpl;
