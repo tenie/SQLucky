@@ -79,21 +79,17 @@ public class DataModelImportWindow {
 	}
 
 	public static void createConfigWindow( ) {
-		String userName = "User Name"; 
-		String passwordStr = "Password";
-		String urlStr = "https://example.com";
-		Label lbserverName = new Label("URL");   
-		Label lbUserName= new Label(userName);  
-		Label lbPassword = new Label(passwordStr);   
+		String filePath = "File path"; 
 		
-		TextField tfserverName = new TextField();
-		tfserverName.setPromptText(urlStr);
+		Label lbFilePath= new Label(filePath);   
+		TextField tfFilePath = new TextField();
+		tfFilePath.setPromptText(filePath);
 		
-		TextField tfUserName = new TextField();
-		tfUserName.setPromptText(userName);
+		String modelName = "Model name";
+		Label lbModelName = new Label(modelName);  
+		TextField tfModelName = new TextField();
+		tfModelName.setPromptText(modelName);
 		
-		PasswordField password = new PasswordField();
-		password.setPromptText(passwordStr);
 		
 		
 		
@@ -108,7 +104,6 @@ public class DataModelImportWindow {
 	    hb2.getChildren().addAll(autoUp, autoUpCB);
 	    
 		
-		Label lbModel = new Label("Workspace");   
 		List<String> liWs = new ArrayList<>();
 		liWs.add("Local Workspace");
 		ObservableList<String>   workspaces   = FXCollections.observableArrayList(liWs);
