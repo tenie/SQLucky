@@ -23,11 +23,9 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 	
 		
 		NoteTabTree tree = new NoteTabTree(); 
-//		var treeBox = tree.getTreeBox();
 		
 	    NotePane = new TitledPane();
-	    NotePane.setUserData(new SqlcukyTitledPaneInfoPo( pluginName, tree.getBtnsBox()));
-//	    NotePane.getStyleClass().add("myTitleTxtActiveColor");
+	    NotePane.setUserData(new SqlcukyTitledPaneInfoPo( pluginName, tree.getOptionBox()));
 		
 		NotePane.setText("Note");  
 		CommonUtility.addCssClass(NotePane, "titledPane-color");

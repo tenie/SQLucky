@@ -14,7 +14,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -37,12 +37,12 @@ public class NoteTabTree {
 	public static TreeItem<SqluckyTab> rootNode;
 	public static String filePath = "";
 //	private static VBox treeBox = new VBox();
-	private static HBox btnsBox ;
+	private static VBox optionBox ;
 	
 	public NoteTabTree() {
 		noteTabTreeView = createScriptTreeView();
 		NoteOptionPanel optPane = new NoteOptionPanel();
-		btnsBox = optPane.getOptionHbox();
+		optionBox = optPane.getOptionVbox();
 //		treeBox.getChildren().addAll(btnsBox, noteTabTreeView);
 //		treeBox.getStyleClass().add("myTreeView-vbox");
 //		treeBox.getStyleClass().add("myModalDialog");
@@ -314,12 +314,11 @@ public class NoteTabTree {
 		return contextMenu;
 	}
 
-	public static HBox getBtnsBox() {
-		return btnsBox;
+	public static VBox getOptionBox() {
+		return optionBox;
 	}
-
-	public static void setBtnsBox(HBox btnsBox) {
-		NoteTabTree.btnsBox = btnsBox;
-	}
+ 
+ 
+	
 
 }
