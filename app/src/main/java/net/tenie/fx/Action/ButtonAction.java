@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
 
@@ -124,53 +125,60 @@ public class ButtonAction {
 
 	} 
 	
-	public static void deleteData() { 
-		// 获取当前的table view
-		FilteredTableView<ObservableList<StringProperty>> table = SqluckyBottomSheetUtility.dataTableView();
-		String tabName = SqluckyBottomSheetUtility.getTableName();
-		Connection conn = SqluckyBottomSheetUtility.getDbconn();
-		ObservableList<SqlFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
-
-		ObservableList<ObservableList<StringProperty>> vals = table.getSelectionModel().getSelectedItems();
+	public static void deleteData() {
 		
-		// 行号集合
-		List<String> temp = new ArrayList<>();
 
-		// 执行sql 后的信息 (主要是错误后显示到界面上)
-		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
+			// 获取当前的table view
+			FilteredTableView<ObservableList<StringProperty>> table = SqluckyBottomSheetUtility.dataTableView();
+			String tabName = SqluckyBottomSheetUtility.getTableName();
+			Connection conn = SqluckyBottomSheetUtility.getDbconn();
+			ObservableList<SqlFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
 
-		try {
-			for (int i = 0; i < vals.size(); i++) {
-				ObservableList<StringProperty> sps = vals.get(i);
-				String ro = sps.get(sps.size() - 1).get();
-				temp.add(ro);
-				String msg = DeleteDao.execDelete(conn, tabName, sps, fpos);
-				ObservableList<StringProperty> val = FXCollections.observableArrayList();
+			ObservableList<ObservableList<StringProperty>> vals = table.getSelectionModel().getSelectedItems();
 
-				val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-				val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
-				val.add(CommonUtility.createReadOnlyStringProperty("success")); 
-				val.add(CommonUtility.createReadOnlyStringProperty("" ));
-				
-				ddlDmlpo.addData(val);
+			// 行号集合
+			List<String> temp = new ArrayList<>();
 
-			}
-			for (String str : temp) {
-				SqluckyBottomSheetUtility.deleteTabDataRowNo( str);
-			}
+			// 执行sql 后的信息 (主要是错误后显示到界面上)
+			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
+			Consumer<String> caller = x -> {
+				try {
+					for (int i = 0; i < vals.size(); i++) {
+						ObservableList<StringProperty> sps = vals.get(i);
+						String ro = sps.get(sps.size() - 1).get();
+						temp.add(ro);
+						String msg = DeleteDao.execDelete(conn, tabName, sps, fpos);
+						ObservableList<StringProperty> val = FXCollections.observableArrayList();
 
-		} catch (Exception e1) {
-			ObservableList<StringProperty> val = FXCollections.observableArrayList();					
-			val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-			val.add(CommonUtility.createReadOnlyStringProperty(e1.getMessage() )); 
-			val.add(CommonUtility.createReadOnlyStringProperty("fail.")); 
-			val.add(CommonUtility.createReadOnlyStringProperty("" ));
-			
-			ddlDmlpo.addData(val);
-		} finally {
-			RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
+						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())));
+						val.add(CommonUtility.createReadOnlyStringProperty(msg));
+						val.add(CommonUtility.createReadOnlyStringProperty("success"));
+						val.add(CommonUtility.createReadOnlyStringProperty(""));
+
+						ddlDmlpo.addData(val);
+
+					}
+					for (String str : temp) {
+						SqluckyBottomSheetUtility.deleteTabDataRowNo(str);
+					}
+
+				} catch (Exception e1) {
+					ObservableList<StringProperty> val = FXCollections.observableArrayList();
+					val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())));
+					val.add(CommonUtility.createReadOnlyStringProperty(e1.getMessage()));
+					val.add(CommonUtility.createReadOnlyStringProperty("fail."));
+					val.add(CommonUtility.createReadOnlyStringProperty(""));
+
+					ddlDmlpo.addData(val);
+				} finally {
+					RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
+				}
+			};
+		if(vals.size() >0 ) {
+			MyAlert.myConfirmation("Sure to delete selected rows?", caller);
 		}
-	
+		
+
 	}
 	// 复制选择的 行数据 插入到表格末尾
 	public static void copyData() {

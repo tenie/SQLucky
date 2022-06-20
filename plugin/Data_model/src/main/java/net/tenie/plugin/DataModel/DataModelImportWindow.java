@@ -1,41 +1,37 @@
 package net.tenie.plugin.DataModel;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.jfoenix.controls.JFXCheckBox;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.plugin.DataModel.po.DataModelInfoPo;
+import net.tenie.plugin.DataModel.tools.DataModelDAO;
+import net.tenie.plugin.DataModel.tools.DataModelUtility;
 
 /**
  * 
@@ -45,14 +41,21 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 public class DataModelImportWindow {
 	// 编辑连接时记录连接状态
 	public  static boolean editLinkStatus = false;
+	// 
+	public  static StackPane wdroot;
+	public  static Stage stage;
+	
 	private static Logger logger = LogManager.getLogger(DataModelImportWindow.class);
 	public static Stage CreateModalWindow(VBox vb) {
 
-		final Stage stage = new Stage();
-		vb.getStyleClass().add("connectionEditor");
-
-		Scene scene = new Scene(vb);
+	    stage = new Stage();
 		
+	    wdroot =  new StackPane(vb);
+		Scene scene = new Scene(wdroot);
+		CommonUtility.loadCss(scene);
+		
+		vb.getStyleClass().add("connectionEditor");
+	
 		vb.setPrefWidth(400);
 		vb.maxWidth(400);
 		AnchorPane bottomPane = new AnchorPane();
@@ -78,103 +81,128 @@ public class DataModelImportWindow {
 		return stage;
 	}
 
-	public static void createConfigWindow( ) {
+	public static void createModelImportWindow( ) {
 		String filePath = "File path"; 
 		
-		Label lbFilePath= new Label(filePath);   
+		Label lbFilePath= new Label(filePath);  
+		
 		TextField tfFilePath = new TextField();
 		tfFilePath.setPromptText(filePath);
+		tfFilePath.setDisable(true);
+		
+		
+				
 		
 		String modelName = "Model name";
 		Label lbModelName = new Label(modelName);  
 		TextField tfModelName = new TextField();
 		tfModelName.setPromptText(modelName);
+		tfModelName.setDisable(true);
+		tfModelName.disableProperty().bind( tfFilePath.textProperty().isEmpty());
 		
-		
-		
-		
-		HBox hb1 = new HBox();
-		Label Remember = new Label("Remember Account ");
-	    JFXCheckBox rememberCB  = new JFXCheckBox(); 
-	    hb1.getChildren().addAll(Remember, rememberCB);
+		 
 	    
-	    HBox hb2 = new HBox();
-	    Label autoUp = new Label("Auto Upload ");
-	    JFXCheckBox autoUpCB  = new JFXCheckBox(); 
-	    hb2.getChildren().addAll(autoUp, autoUpCB);
-	    
-		
-		List<String> liWs = new ArrayList<>();
-		liWs.add("Local Workspace");
-		ObservableList<String>   workspaces   = FXCollections.observableArrayList(liWs);
-		ChoiceBox<String> cbWorkspace = new ChoiceBox<String>(workspaces);
-		Tooltip tt = new Tooltip("select workspace"); 
-		tt.setShowDelay(new Duration(100));
-		cbWorkspace.setTooltip(tt);
-		cbWorkspace.setPrefWidth(250);
-		cbWorkspace.setMinWidth(250);
-		
-		
-
-	 
-		Button uploadBtn = createUploadBtn( tfserverName, tfUserName , password);//new Button("Test");
-		Button downloadBtn = createDownloadBtn( null  );
-		Button saveBtn = createSwitchBtn(  null ) ; // new Button("Save"); 
+		// 文件选择按钮
+		var selectFile = openFileBtn(tfFilePath, tfModelName ); 
+		HBox fileBox = new HBox();
+		fileBox.getChildren().addAll( tfFilePath, selectFile);
+		var savebtn = saveBtn( tfModelName );
+		savebtn.disableProperty().bind( tfFilePath.textProperty().isEmpty());
+		var cancel = cancelBtn();
+				 
 		
 		List<Region> list = new ArrayList<>();
-		list.add(    lbModel);
-		list.add(    cbWorkspace);
-		list.add(    saveBtn);
-		list.add(    null);
+		list.add(    lbFilePath);
+		list.add(    fileBox);
+		list.add(    lbModelName);
+		list.add(    tfModelName);
+		
+		list.add(    savebtn);
+		list.add(    cancel);
 		
 		
-		list.add(    lbserverName);
-		list.add(    tfserverName);
-		
-		list.add(    lbUserName);
-		list.add(    tfUserName);
-		
-		list.add(    lbPassword);
-		list.add(    password); 
-		
-		list.add(    hb1);
-		list.add(    hb2); 
-		
-		list.add(    downloadBtn);
-		list.add(    uploadBtn);
 		layout(list);
 
 	}  
 	
-	public static Button createDownloadBtn(Function<String, SqluckyConnector> assembleSqlCon ) {
-		Button testBtn = new Button("Download "); 
-		return testBtn;
-	}
-	public static Button createUploadBtn(TextField tfserverName, TextField tfUserName , PasswordField password) {
-		Button UploadBtn = new Button("Upload Loacl Data ");
-		UploadBtn.setOnMouseClicked(e->{
-			String url = tfserverName.getText();
-			String userName = tfUserName.getText();
-			String pw = password.getText();
-			Map<String, String> pama = new HashMap<>();
-			pama.put("userName", userName);
-			pama.put("password", pw);
-//			pama.put("fileName", ConfigVal.H2_DB_FULL_FILE_NAME);
+	public static DataModelInfoPo tmpDataModelPoVal  = null;
+	public static Button openFileBtn(TextField tfFilePath ,TextField tfModelName ) {
+		Button saveBtn = new Button("...");
+		saveBtn.setOnMouseClicked(e->{
+			// 获取文件
+			File jsonFile = FileOrDirectoryChooser.showOpenJsonFile("Open", ComponentGetter.primaryStage);
+			if(jsonFile != null) {
+				tmpDataModelPoVal = null;
+				String path = jsonFile.getAbsolutePath();
+				// 读模型数据
+				try {
+					tmpDataModelPoVal = DataModelUtility.readJosnModel("UTF-8", jsonFile);
+					String mdName = tmpDataModelPoVal.getName();
+					
+					tfFilePath.setText(path);
+					tfModelName.setText(mdName);
+					
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+				
+			}
+		
 			
-			
-			net.tenie.Sqlucky.sdk.utility.net.HttpPostFile.exec(url, ConfigVal.H2_DB_FULL_FILE_NAME, pama );
 		});
-		return UploadBtn;
-	}
-	
-	public static Button createSwitchBtn(Function<String, SqluckyConnector> assembleSqlCon  ) {
-		Button saveBtn = new Button("Switch");
 		return saveBtn;
 	}
+	
+	public static Button saveBtn(TextField tfModelName) {
+		Button saveBtn = new Button("Save");
+		saveBtn.getStyleClass().add("myAlertBtn");
+		saveBtn.setOnMouseClicked(e->{
+			String mdName = "";
+			if(tmpDataModelPoVal != null ) {
+				if(tfModelName.getText() != null && tfModelName.getText().length() > 0) {
+					mdName = tfModelName.getText();
+					
+				}else {
+					mdName = tmpDataModelPoVal.getName();
+				}
+				// 查找模型名称是否存在， 存在不能保存
+				var mdpo = DataModelDAO.selectDMInfoByName( mdName);
+				//同名模型存在
+				if(mdpo !=null ) {
+					MyAlert.errorAlert("Exist model name: " + mdName +", Please,  Rename !");
+					return ;
+				}
+				
+				tmpDataModelPoVal.setName(mdName);
+				
+				DataModelUtility.saveDataModelToDB(wdroot, tmpDataModelPoVal, v->{
+					Platform.runLater(()->{
+						stage.close();
+					});
+				});
+				
+			}
+			
+			
+		});
+		return saveBtn;
+	}
+	
+	
+	public static Button cancelBtn() {
+		Button cancelBtn = new Button("Cancel");
+		cancelBtn.getStyleClass().add("myAlertBtn");
+		cancelBtn.setOnMouseClicked(e->{
+			stage.close();
+			
+		});
+		return cancelBtn;
+	}
+	
 	// 组件布局
 	public static void layout(List<Region> list    ) {
 		VBox vb = new VBox();
-		Label title = new Label("Edit Connection Info");
+		Label title = new Label("Import Model Json File");
 		title.setPadding(new Insets(15));
 		AppComponent appComponent = ComponentGetter.appComponent; 
 		title.setGraphic(appComponent.getIconDefActive("gears"));

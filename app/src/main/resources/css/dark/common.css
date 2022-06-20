@@ -167,9 +167,14 @@ FlowPane TextField {
 .connectionEditor {
 	-fx-background-color: #3C3F41;
 }
-
+/*  */
 .connectionEditor  TextField {
 	-fx-text-fill: white;
+	-fx-background-color: #373a3c;
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px; /* 圆角 */
+}
+Button {
 	-fx-background-color: #373a3c;
 	-fx-border-color: #5E6060;
 	-fx-border-radius: 3px; /* 圆角 */

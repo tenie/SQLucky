@@ -1,6 +1,5 @@
 package net.tenie.fx.window;
 
-import java.io.File;
 import java.sql.Connection;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -39,7 +38,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
@@ -190,15 +189,8 @@ public class ConnectionEditor {
 		Button h2FilePath = new Button("...");
 		h2FilePath.setVisible(false);
 		h2FilePath.disableProperty().bind(isUseJdbcUrl.selectedProperty());
-		h2FilePath.setOnAction(e->{
-			String fp = "";
-			File f = FileOrDirectoryChooser.showOpenAllFile("Open", new Stage());
-			if (f != null) { 
-			    fp = f.getAbsolutePath();
-			}
-			host.setText(fp);
-			
-				
+		h2FilePath.setOnAction(e->{ 
+			host.setText(FileTools.selectFile());
 		});
 		
 		isUseJdbcUrl.selectedProperty().addListener( (obj, od, n) ->{

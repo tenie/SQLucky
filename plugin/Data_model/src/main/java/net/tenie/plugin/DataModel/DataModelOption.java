@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
 
@@ -125,7 +124,8 @@ public class DataModelOption {
 		addBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
 		addBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
 		addBtn.setOnAction(e->{
-			DataModelUtility.modelFileImport("UTF-8");
+//			DataModelUtility.modelFileImport("UTF-8");
+			DataModelImportWindow.createModelImportWindow();
 		});
 		// 删除
 		delBtn.setGraphic(ComponentGetter.getIconDefActive("trash"));

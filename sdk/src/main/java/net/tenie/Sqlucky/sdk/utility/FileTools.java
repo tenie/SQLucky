@@ -2,10 +2,14 @@ package net.tenie.Sqlucky.sdk.utility;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 
 /**
  * 
@@ -53,6 +57,24 @@ public class FileTools {
 			e.printStackTrace();
 		}
 		return val;
+	}
+	
+	// 选择文件
+	public static String selectFile() {
+		String fp = "";
+		File f = FileOrDirectoryChooser.showOpenAllFile("Open", new Stage());
+		if (f != null) { 
+		    fp = f.getAbsolutePath();
+		}
+//		host.setText(fp);
+		return fp;
+	}
+	
+	// 选择文件
+	public static File selectJsonFile() {
+		// 获取文件
+		File f = FileOrDirectoryChooser.showOpenJsonFile("Open", ComponentGetter.primaryStage);
+		return f;
 	}
 	
 }

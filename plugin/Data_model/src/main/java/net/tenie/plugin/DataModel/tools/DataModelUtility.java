@@ -23,6 +23,7 @@ import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.db.PoDao;
@@ -75,9 +76,35 @@ public class DataModelUtility {
 					LoadingAnimation.rmLoading(sceneRoot);
 				}
 			});
-			
 		}
-			
+	}
+	// 保存按钮触发保存数据操作
+	public static void saveDataModelToDB(StackPane wdroot , DataModelInfoPo val, Consumer< String >  caller) {
+		// 载入动画
+		LoadingAnimation.addLoading(wdroot, "Saving....");
+//		后台执行 数据导入
+		CommonUtility.runThread(v -> {
+			try {
+				// 数据插入到数据库
+				Long mid = DataModelUtility.insertDataModel(val);
+				// 插入模型节点
+				DataModelUtility.addModelItem(mid, DataModelTabTree.treeRoot);
+				caller.accept("");
+			} catch (Exception e) {
+				e.printStackTrace();
+				MyAlert.errorAlert(e.getMessage());
+			} finally {
+				// 移除动画
+				LoadingAnimation.rmLoading(wdroot);
+			}
+		});
+	}
+	
+	
+	// 从文件中读取 数据
+	public static DataModelInfoPo readModelInfo(String encode, File f) throws IOException {
+		DataModelInfoPo DataModelPoVal = readJosnModel(encode, f);
+		return DataModelPoVal;
 	}
 	
 	// 读取josn 的模型文件
