@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.note.utility.NoteUtility;
 
 /**
@@ -107,14 +108,7 @@ public class NoteOptionPanel {
 		query.setGraphic(ComponentGetter.getIconDefActive("search")   );
 		query.setOnMouseClicked(e->{
 			String ft = fileType.getText().trim();
-			if("*.*".equals(ft)) {
-				//all
-			}else {
-				if( ft.contains(".")) {
-					
-				}
-				
-			}
+		
 		});
 		
 		txt.getStyleClass().add("myTextField");
@@ -133,8 +127,22 @@ public class NoteOptionPanel {
 		searchVbox.getChildren().add(grid);
 	}
 
- 
+	public static void main(String[] args) {
+//		String fileTyleStr = "*ss.sss";
+		String fileTyleStr = "bbbb*ss.sss";
+//		String queryStr = fileTyleStr.substring(0, fileTyleStr.lastIndexOf("*"));
+//		String queryStr = fileTyleStr.substring(1);
+//		System.out.println(queryStr);
+		
+		String arrStr[] = fileTyleStr.split("\\*");
+		String qStr1 = arrStr[0];
+		String qStr2 = arrStr[1];
+		System.out.println(qStr1 + " | " + qStr2);
+		
+	}
 
+	
+	
 	public JFXButton getOpenFolderBtn() {
 		return openFolderBtn;
 	}

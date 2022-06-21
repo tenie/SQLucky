@@ -507,4 +507,63 @@ public class StrUtils {
 		String str = String.format("  %-"+size+"s", name);
 		return str;
 	}
+	
+	// 匹配文件名
+	public String matchFileName(String fileTyleStr, String fileName) {
+		
+		String rtVal = "";
+		if(StrUtils.isNullOrEmpty(fileName)) {
+			return rtVal;
+		}
+		
+		if("*.*".equals(fileTyleStr)) {
+			//all
+			if(fileName.contains(".")) {
+				rtVal = fileName; 
+			}
+			
+		}else {
+			if(  fileTyleStr.startsWith("*")&& !fileTyleStr.endsWith("*")) {
+				String queryStr = fileTyleStr.substring(1);
+				// 前缀
+				if(fileName.endsWith(queryStr)) {
+					rtVal = fileName; 
+				}
+				
+				
+			}else if( !fileTyleStr.startsWith("*")&& fileTyleStr.endsWith("*")) {
+				String queryStr = fileTyleStr.substring(0, fileTyleStr.lastIndexOf("*"));
+				// 后缀
+				if(fileName.startsWith(queryStr)) {
+					rtVal = fileName; 
+				}
+				
+			}else if( fileTyleStr.startsWith("*")&& fileTyleStr.endsWith("*")) {
+				// 包含
+				String queryStr = fileTyleStr.substring(1, fileTyleStr.lastIndexOf("*"));
+				if(fileName.contains(queryStr)) {
+					rtVal = fileName; 
+				}
+				
+			}else if( fileTyleStr.contains("*") ) {
+				// 前后包含
+				String arrStr[] = fileTyleStr.split("\\*");
+				String qStr1 = arrStr[0];
+				String qStr2 = arrStr[1];
+				if(fileName.startsWith(qStr1) && fileName.endsWith(qStr2)) {
+					rtVal = fileName; 
+				}
+				
+				
+			}else if(! fileTyleStr.contains("*")) { 
+				// 全匹配
+				if(fileTyleStr.equals(fileName)) {
+					rtVal = fileName; 
+				}
+				
+			}
+			
+		}
+		return rtVal;
+	}
 }

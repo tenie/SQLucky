@@ -145,8 +145,8 @@ public class MyTab extends Tab implements SqluckyTab {
 		sqlCodeArea.highLighting();
 //		syncScriptPo();
 	}
-	
-	public String getTabSqlText() {
+	@Override
+	public String getAreaText() {
 //		sqlCodeArea.getCodeArea().get
 		CodeArea code = sqlCodeArea.getCodeArea();
 		String sqlText = code.getText();
@@ -159,7 +159,7 @@ public class MyTab extends Tab implements SqluckyTab {
 	}
 	
 	public void syncScriptPo(Connection conn) {
-		String sql = getTabSqlText();
+		String sql = getAreaText();
 		String title = getTabTitle();
 		
 		docPo.setText(sql);
@@ -184,7 +184,7 @@ public class MyTab extends Tab implements SqluckyTab {
  
 	
 	public void saveScriptPo(Connection conn) {
-		String sql = getTabSqlText();
+		String sql = getAreaText();
 		String title =   getTabTitle();
 		
 		docPo.setText(sql);

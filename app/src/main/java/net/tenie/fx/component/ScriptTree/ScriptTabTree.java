@@ -228,7 +228,7 @@ public class ScriptTabTree {
 		MyTab tb = ctt.getValue();
 		
 		String title = CommonUtility.tabText(tb);
-		String sql = tb.getTabSqlText(); // SqlEditor.getTabSQLText(tb);
+		String sql = tb.getAreaText(); // SqlEditor.getTabSQLText(tb);
 		if (title.endsWith("*") && sql.trim().length() > 0) {
 			// 是否保存
 			final Stage stage = new Stage();

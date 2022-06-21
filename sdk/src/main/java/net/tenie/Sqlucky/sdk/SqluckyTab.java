@@ -16,7 +16,7 @@ public interface SqluckyTab  {
 	public VBox getVbox();
 	public  void mainTabPaneAddMyTab() ;
 	public String getTitle();
-	public String getTabSqlText();
+	public String getAreaText();
 	
 	public void setFile(File file);
 	public File getFile();

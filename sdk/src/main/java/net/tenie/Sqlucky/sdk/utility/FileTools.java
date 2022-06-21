@@ -2,6 +2,11 @@ package net.tenie.Sqlucky.sdk.utility;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -58,6 +63,16 @@ public class FileTools {
 		}
 		return val;
 	}
+	public static String read(File file) {
+		String val = "";
+		try {
+		     val = FileUtils.readFileToString(file,"utf-8");
+		} catch (IOException e) { 
+			e.printStackTrace();
+		}
+		return val;
+	}
+	
 	
 	// 选择文件
 	public static String selectFile() {
@@ -75,6 +90,53 @@ public class FileTools {
 		// 获取文件
 		File f = FileOrDirectoryChooser.showOpenJsonFile("Open", ComponentGetter.primaryStage);
 		return f;
+	}
+	
+	
+	// 目录下的所有文件
+	public List<File> getFileFromDir(File dirFile){
+		 List<File> fls = new ArrayList<>();
+		 File arrFile[] =  dirFile.listFiles();
+		 for(File fl: arrFile) {
+			 if(fl.isFile()) {
+				 fls.add(fl);
+			 }
+		 }
+		  	 
+		 return fls;
+	}
+	// 目录下的所有文件, 包括子目录
+	public List<File> getAllFileFromDir(File dir){
+		 List<File> fls = new ArrayList<>();
+		 
+		 File arrFile[] =  dir.listFiles();
+		 for(File fl: arrFile) {
+			 if(fl.isFile()) {
+				 fls.add(fl);
+			 }
+			 if(fl.isDirectory()) {
+				 List<File> vals =  getAllFileFromDir(fl);
+				 fls.addAll(vals);
+			 } 
+		 } 
+		 return fls;
+	}
+	
+	/**
+	 * 读取文件内容, 判断内容中是否包含查询字符串
+	 * @param file
+	 * @param queryStr
+	 * @return
+	 */
+	public String fileExistQueryStr(File file, String queryStr) {
+		if(file.isFile()) {
+			String valStr = FileTools.read(file);
+			if(valStr.contains(queryStr)) {
+				return valStr;
+			}
+		}
+		
+		return null;
 	}
 	
 }

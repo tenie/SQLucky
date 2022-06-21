@@ -176,7 +176,7 @@ public class CommonAction {
 	public static void saveSqlAction(MyTab tb) {
 		var conn = SqluckyAppDB.getConn();
 		try {			
-			String sql   =  tb.getTabSqlText();// SqlEditor.getTabSQLText(tb); 
+			String sql   =  tb.getAreaText();// SqlEditor.getTabSQLText(tb); 
 			var scriptPo = tb.getDocumentPo();
 			String fileName = scriptPo.getFileFullName();
 			if (StrUtils.isNotNullOrEmpty(fileName)) {
@@ -237,7 +237,7 @@ public class CommonAction {
 				var spo = mtab.getDocumentPo();
 				String fp = spo.getFileFullName(); 
 				if (spo != null && spo.getId() != null ) {
-					String sql = mtab.getTabSqlText() ;// SqlEditor.getTabSQLText(mtab);
+					String sql = mtab.getAreaText() ;// SqlEditor.getTabSQLText(mtab);
 					if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
 						CodeArea code = mtab.getCodeArea(); //SqlEditor.getCodeArea(mtab);
 						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
