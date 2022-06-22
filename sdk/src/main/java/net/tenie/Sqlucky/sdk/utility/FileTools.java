@@ -94,7 +94,7 @@ public class FileTools {
 	
 	
 	// 目录下的所有文件
-	public List<File> getFileFromDir(File dirFile){
+	public static List<File> getFileFromDir(File dirFile){
 		 List<File> fls = new ArrayList<>();
 		 File arrFile[] =  dirFile.listFiles();
 		 for(File fl: arrFile) {
@@ -106,7 +106,7 @@ public class FileTools {
 		 return fls;
 	}
 	// 目录下的所有文件, 包括子目录
-	public List<File> getAllFileFromDir(File dir){
+	public static List<File> getAllFileFromDir(File dir){
 		 List<File> fls = new ArrayList<>();
 		 
 		 File arrFile[] =  dir.listFiles();
@@ -128,7 +128,7 @@ public class FileTools {
 	 * @param queryStr
 	 * @return
 	 */
-	public String fileExistQueryStr(File file, String queryStr) {
+	public static String fileExistQueryStr(File file, String queryStr) {
 		if(file.isFile()) {
 			String valStr = FileTools.read(file);
 			if(valStr.contains(queryStr)) {

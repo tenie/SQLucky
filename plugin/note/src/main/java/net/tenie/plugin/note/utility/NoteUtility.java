@@ -24,6 +24,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.plugin.note.component.NoteTabTree;
 import net.tenie.plugin.note.impl.NoteDelegateImpl;
 
 public class NoteUtility {
@@ -44,6 +45,22 @@ public class NoteUtility {
 			e1.printStackTrace();
 		}
 	
+	}
+	// 获取选中的treeItem
+	public static TreeItem<SqluckyTab> currentTreeItem() {
+		TreeItem<SqluckyTab> ctt = NoteTabTree.noteTabTreeView.getSelectionModel().getSelectedItem();
+		return ctt;
+	}
+	// 获取选中的treeItem中的Tab
+	public static SqluckyTab currentTreeItemSqluckyTab() {
+		SqluckyTab val = currentTreeItem().getValue();
+		return val;
+	}
+	
+	public static File currentTreeItemFile() {
+		SqluckyTab val = currentTreeItem().getValue();
+		File  file = val.getFile();
+		return file;
 	}
 	
 	// 重新载入
@@ -159,9 +176,13 @@ public class NoteUtility {
 				File[] files = openFile.listFiles();
 				if (files == null)
 					return;
+				 
+				TreeItem<SqluckyTab> fileRootitem = createItemNode( openFile);
+				node.getChildren().add(fileRootitem);
+				
 				List<TreeItem<SqluckyTab>> ls = new ArrayList<>();
 				for (var file : files) {
-					TreeItem<SqluckyTab> item = createItemNode(node, file);
+					TreeItem<SqluckyTab> item = createItemNode(  file);
 					if (item != null) {
 						ls.add(item);
 					}
@@ -169,7 +190,7 @@ public class NoteUtility {
 				}
 				if (ls.size() > 0) {
 					Platform.runLater(() -> {
-						node.getChildren().addAll(ls);
+						fileRootitem.getChildren().addAll(ls);
 					});
 				}
 			};
@@ -180,7 +201,14 @@ public class NoteUtility {
 			e.printStackTrace();
 		}
 	}
-	public static TreeItem<SqluckyTab> createItemNode(TreeItem<SqluckyTab> node , File file) {
+	
+	/**
+	 * 创建一个TreeItem
+	 * @param node
+	 * @param file
+	 * @return
+	 */
+	public static TreeItem<SqluckyTab> createItemNode(  File file) {
 		if( file.exists() ) {
 			DocumentPo fileNode = new DocumentPo(); 
 			fileNode.setFileFullName(file.getAbsolutePath());  
