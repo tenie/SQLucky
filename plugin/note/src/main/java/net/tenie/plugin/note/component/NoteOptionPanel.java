@@ -6,17 +6,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
@@ -163,6 +159,15 @@ public class NoteOptionPanel {
 		// 文件类型
 		fileType.getStyleClass().add("myTextField");
 		fileType.setText("*.*");  
+		
+		fileType.textProperty().addListener((o, oldStr, newStr) -> {
+			if(NoteUtility.rootCache != null &&  !NoteTabTree.noteTabTreeView.getRoot().equals(NoteUtility.rootCache)) {
+				NoteTabTree.noteTabTreeView.setRoot(NoteUtility.rootCache);
+				NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
+				
+			}
+		});
+		
 		fileType.setOnKeyPressed(val->{
 			 if(val.getCode() == KeyCode.ENTER ){ 
 				 myEvent.btnClick(query);

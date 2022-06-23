@@ -247,6 +247,7 @@ public class NoteUtility {
 					Platform.runLater(() -> {
 						tmpItem.getChildren().addAll(ls);
 						tmpItem.setExpanded(true);
+						NoteTabTree.noteTabTreeView.getSelectionModel().select(tmpItem);
 					});
 				}
 			};
@@ -320,47 +321,50 @@ public class NoteUtility {
 
 					SqluckyTab stab = ComponentGetter.appComponent.sqluckyTab();
 					TreeItem<SqluckyTab> tmpRoot = new TreeItem<>(stab);
-					List<File> files = FileTools.getAllFileFromDir(file);
 					Platform.runLater(()->{
 						NoteTabTree.noteTabTreeView.setRoot(tmpRoot);
 					});
-					if (isFile) { // 文件名搜索
-						for (var tmpfile : files) {
-							LoadingAnimation.ChangeLabelText("Search : " + tmpfile.getName());
-							String fileName = tmpfile.getName().toLowerCase();
-							if (fileName.contains(searchStr)) {
-								TreeItem<SqluckyTab> fileRootitem = NoteUtility.createItemNode(tmpfile);
-								Platform.runLater(()->{
-									tmpRoot.getChildren().add(fileRootitem);
-								});
-								
-							}
-						}
-					}else if(isText) { // 文件内容搜索
-						for (var tmpfile : files) {
-							if(fileType.endsWith("*")) { // 如果结尾是* , 就规避二进制文件
-								if(FileTools.isBinaryFile(tmpfile)) {
-									continue ;
-								}
-							} 
-							boolean match = StrUtils.matchFileName(fileType, tmpfile);
-							if(match) {
+					
+					 Consumer< File >  caller = tmpfile->{
+							if (isFile) { // 文件名搜索 
 								LoadingAnimation.ChangeLabelText("Search : " + tmpfile.getName());
-								String charset = FileTools.detectFileCharset(tmpfile);
-								if(charset != null ) {
-									String textStr = FileTools.read(tmpfile, charset);
-									if(textStr.contains(searchStr)) {
-										TreeItem<SqluckyTab> fileRootitem = NoteUtility.createItemNode(tmpfile);
+								String fileName = tmpfile.getName().toLowerCase();
+								if (fileName.contains(searchStr)) {
+									TreeItem<SqluckyTab> fileRootitem = NoteUtility.createItemNode(tmpfile);
+									Platform.runLater(()->{
+										tmpRoot.getChildren().add(fileRootitem);
+									});
 									
-										Platform.runLater(()->{
-											tmpRoot.getChildren().add(fileRootitem);
-										});
+								}
+							 
+						}else if(isText) { // 文件内容搜索 
+								if(fileType.endsWith("*")) { // 如果结尾是* , 就规避二进制文件
+									if(FileTools.isBinaryFile(tmpfile)) {
+										return;
+									}
+								} 
+								boolean match = StrUtils.matchFileName(fileType, tmpfile);
+								if(match) {
+									LoadingAnimation.ChangeLabelText("Search : " + tmpfile.getName());
+									String charset = FileTools.detectFileCharset(tmpfile);
+									if(charset != null ) {
+										String textStr = FileTools.read(tmpfile, charset);
+										if(textStr.contains(searchStr)) {
+											TreeItem<SqluckyTab> fileRootitem = NoteUtility.createItemNode(tmpfile);
+										
+											Platform.runLater(()->{
+												tmpRoot.getChildren().add(fileRootitem);
+											});
+										}
 									}
 								}
-							}
-							
+								
+							 
 						}
-					}
+					 };
+					
+				    FileTools.getAllFileFromDir(file, caller);
+				
 				}
 			}
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(0);

@@ -1,14 +1,11 @@
 package net.tenie.Sqlucky.sdk.utility;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -43,6 +40,9 @@ public class FileTools {
 		fileTypes.add(".xlsx");
 		fileTypes.add(".xls"); 
 		fileTypes.add(".pdf");
+		fileTypes.add(".azw3");
+		fileTypes.add(".epub");
+		
 		 
 		fileTypes.add(".mp4");
 		fileTypes.add(".mp3");
@@ -167,28 +167,51 @@ public class FileTools {
 	public static List<File> getFileFromDir(File dirFile){
 		 List<File> fls = new ArrayList<>();
 		 File arrFile[] =  dirFile.listFiles();
-		 for(File fl: arrFile) {
-			 if(fl.isFile()) {
-				 fls.add(fl);
+		 if(arrFile !=null && arrFile.length > 0) {
+			 for(File fl: arrFile) {
+				 if(fl.isFile()) {
+					 fls.add(fl);
+				 }
 			 }
 		 }
+		
 		  	 
 		 return fls;
 	}
+	
+	
 	// 目录下的所有文件, 包括子目录
+	public static void getAllFileFromDir(File dir , Consumer< File >  caller){
+		 File arrFile[] =  dir.listFiles();
+		 if(arrFile != null && arrFile.length > 0) {
+			 for(File fl: arrFile) {
+				 if(fl.isFile()) {
+					 caller.accept(fl);
+				 }
+				 if(fl.isDirectory()) {
+					  getAllFileFromDir(fl, caller);
+				 } 
+			 } 
+		 }
+		
+	}
+	
 	public static List<File> getAllFileFromDir(File dir){
 		 List<File> fls = new ArrayList<>();
 		 
 		 File arrFile[] =  dir.listFiles();
-		 for(File fl: arrFile) {
-			 if(fl.isFile()) {
-				 fls.add(fl);
-			 }
-			 if(fl.isDirectory()) {
-				 List<File> vals =  getAllFileFromDir(fl);
-				 fls.addAll(vals);
+		 if(arrFile != null && arrFile.length > 0) {
+			 for(File fl: arrFile) {
+				 if(fl.isFile()) {
+					 fls.add(fl);
+				 }
+				 if(fl.isDirectory()) {
+					 List<File> vals =  getAllFileFromDir(fl);
+					 fls.addAll(vals);
+				 } 
 			 } 
-		 } 
+		 }
+		
 		 return fls;
 	}
 	
