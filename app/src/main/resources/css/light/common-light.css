@@ -6,7 +6,7 @@
 /* 左侧折叠面板的title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 */
 .myTitleTxtActiveColor .title .text{
 	  -fx-fill:  #0595ff; 
-	  -fx-font-size: 15px; 
+	 /*  -fx-font-size: 15px;  */
 }
 
 .main-background{

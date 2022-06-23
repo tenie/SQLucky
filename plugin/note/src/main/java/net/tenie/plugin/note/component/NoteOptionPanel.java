@@ -1,26 +1,25 @@
 package net.tenie.plugin.note.component;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.jfoenix.controls.JFXButton;
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.plugin.note.utility.NoteUtility;
 
 /**
@@ -38,32 +37,29 @@ public class NoteOptionPanel {
 	
 	private JFXButton openFolderBtn = new JFXButton();
 
-	private JFXButton cleanBtn = new JFXButton();
+//	private JFXButton cleanBtn = new JFXButton();
 	private JFXButton newFile = new JFXButton();
 	private JFXButton DeleteFile = new JFXButton();
-	private JFXButton refresh = new JFXButton();
-	private JFXButton search = new JFXButton();
+//	private JFXButton refresh = new JFXButton();
 	
 	//
 	private JFXButton query = new JFXButton();
 	//
-	private TextField txt  = new TextField();
+	public static  TextField txt  = new TextField();
 	//
 	private Label lbFT = new Label("Type");
 	private TextField fileType  = new TextField();
 	
 	private JFXButton showInFolder = new JFXButton();
 	
-	private boolean isFile = false;
-	private boolean isText = false;
+	
 	
 	// 搜索panel
-//	GridPane grid = new GridPane();
 	// 查询的上下按钮
 	JFXButton up = new JFXButton();
 	JFXButton down = new JFXButton();
 	
-	Map<String, ObservableList<TreeItem<SqluckyTab> >>  rootMap = new HashMap<>();
+	
 	
 	public NoteOptionPanel() {
 		
@@ -71,7 +67,7 @@ public class NoteOptionPanel {
 		initSearchPanel();
 		
 		openFolderBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-		openFolderBtn.setTooltip(CommonUtility.instanceTooltip("Open note folder "));
+		openFolderBtn.setTooltip(CommonUtility.instanceTooltip("Import note folder "));
 		openFolderBtn.setOnMouseClicked(e->{
 			NoteTabTree.filePath =  NoteUtility.openFolder( NoteTabTree.rootNode);
 		});
@@ -91,19 +87,19 @@ public class NoteOptionPanel {
 		});
 		
 		
-		cleanBtn.setGraphic(ComponentGetter.getIconDefActive("eraser")   );
-		cleanBtn.setTooltip(CommonUtility.instanceTooltip("Close note folder"));
-		cleanBtn.setOnMouseClicked(e->{
-			NoteTabTree.filePath = NoteUtility.cleanAction(NoteTabTree.rootNode);
-		});
+//		cleanBtn.setGraphic(ComponentGetter.getIconDefActive("eraser")   );
+//		cleanBtn.setTooltip(CommonUtility.instanceTooltip("Close note folder"));
+//		cleanBtn.setOnMouseClicked(e->{
+//			NoteTabTree.filePath = NoteUtility.cleanAction(NoteTabTree.rootNode);
+//		});
 		
 		
 		//refresh
-		refresh.setGraphic(ComponentGetter.getIconDefActive("refresh")   );
-		refresh.setTooltip(CommonUtility.instanceTooltip("Reload note folder"));
-		refresh.setOnMouseClicked(e->{
-			  NoteUtility.refreshAction(NoteTabTree.noteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
-		});
+//		refresh.setGraphic(ComponentGetter.getIconDefActive("refresh")   );
+//		refresh.setTooltip(CommonUtility.instanceTooltip("Reload note folder"));
+//		refresh.setOnMouseClicked(e->{
+//			  NoteUtility.refreshAction(NoteTabTree.noteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
+//		});
 		
 		showInFolder.setGraphic(ComponentGetter.getIconDefActive("sign-in")   );
 		showInFolder.setTooltip(CommonUtility.instanceTooltip("Show In System folder"));
@@ -137,7 +133,7 @@ public class NoteOptionPanel {
 		
 		
 		
-		btnsBox.getChildren().addAll(openFolderBtn, newFile, DeleteFile, cleanBtn, refresh, showInFolder, searchBtn);
+		btnsBox.getChildren().addAll(openFolderBtn, newFile, DeleteFile, showInFolder, searchBtn);
 		optionVbox.getChildren().add(btnsBox);
 	}
 	
@@ -146,35 +142,44 @@ public class NoteOptionPanel {
 		// 查询btn
 		query.setGraphic(ComponentGetter.getIconDefActive("search")   );
 		query.setOnMouseClicked(e->{
-			String ft = fileType.getText().trim();
-			File file = NoteUtility.currentTreeItemFile();
-			if( file.isDirectory()) {
-				TreeItem<SqluckyTab> treeItem = NoteUtility.currentTreeItem();
-				treeItem.getChildren();
-			}
-			
-			FileTools.getFileFromDir(file);
-		
+			//TODO
+			NoteUtility.searchAction(txt.getText().trim(), fileType.getText().trim());
 		});
 		// 查询文本
 		txt.getStyleClass().add("myTextField");
+		txt.textProperty().addListener((o, oldStr, newStr) -> {
+			if(StrUtils.isNullOrEmpty(newStr)) {
+				NoteTabTree.noteTabTreeView.setRoot(NoteUtility.rootCache);
+			}
+			
+		});
+		
+		// 回车后触发查询按钮
+		txt.setOnKeyPressed(val->{
+			 if(val.getCode() == KeyCode.ENTER ){ 
+				 myEvent.btnClick(query);
+			 }
+		});
+		// 文件类型
+		fileType.getStyleClass().add("myTextField");
+		fileType.setText("*.*");  
+		fileType.setOnKeyPressed(val->{
+			 if(val.getCode() == KeyCode.ENTER ){ 
+				 myEvent.btnClick(query);
+			 }
+		});
+		
+		
 		// 上下查找btn
 		down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
 		down.setOnAction(v -> {
-		 
+			NoteUtility.downBtnChange();
 		});
 
 		up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
 		up.setOnAction(v -> {
 			 
 		});
-		
-		
-		
-		fileType.getStyleClass().add("myTextField");
-		fileType.setText("*.*");
-		
-		
 	
 	}
 
@@ -183,10 +188,12 @@ public class NoteOptionPanel {
 	public void showFileNameSearch() {
 		if (optionVbox.getChildren().contains(searchVbox)) {
 			optionVbox.getChildren().remove(searchVbox);
-			isFile = false;
+			NoteUtility.isFile = false;
+			txt.clear();
 			return ;
 		}else if(optionVbox.getChildren().contains(searchVbox2)){
 			optionVbox.getChildren().remove(searchVbox2);
+			txt.clear();
 		}
 		GridPane grid = new GridPane();
 		grid.add(query, 0, 0);
@@ -194,8 +201,8 @@ public class NoteOptionPanel {
 		searchVbox.getChildren().clear();
 		searchVbox2.getChildren().clear();
 		searchVbox.getChildren().add(grid);
-		isFile = true;
-		isText = false;
+		NoteUtility.isFile = true;
+		NoteUtility.isText = false;
 		CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, searchVbox, txt);
 	}
 	
@@ -204,11 +211,13 @@ public class NoteOptionPanel {
 		// 已经存在就隐藏
 		if (optionVbox.getChildren().contains(searchVbox2)) {
 			optionVbox.getChildren().remove(searchVbox2);
-			isText = false;
+			NoteUtility.isText = false;
+			txt.clear();
 			return;
 
 		} else if (optionVbox.getChildren().contains(searchVbox)) {
 			optionVbox.getChildren().remove(searchVbox);
+			txt.clear();
 		}
 		GridPane grid2 = new GridPane();
 		grid2.add(query, 0, 0);
@@ -221,8 +230,8 @@ public class NoteOptionPanel {
 		searchVbox.getChildren().clear();
 		searchVbox2.getChildren().clear();
 		searchVbox2.getChildren().add(grid2);
-		isFile = false;
-		isText = true;
+		NoteUtility.isFile = false;
+		NoteUtility.isText = true;
 		CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, searchVbox2, txt);
 
 	}

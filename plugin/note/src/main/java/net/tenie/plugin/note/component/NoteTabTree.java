@@ -244,10 +244,10 @@ public class NoteTabTree {
 	    	NoteTabTree.filePath = NoteUtility.cleanAction(NoteTabTree.rootNode);
 		}); 
 		 
-	    MenuItem Refresh = new MenuItem("Refresh ");
-	    Refresh.setOnAction(e -> {
-	    	NoteUtility.refreshAction(noteTabTreeView, rootNode, filePath);
-		}); 
+//	    MenuItem Refresh = new MenuItem("Refresh ");
+//	    Refresh.setOnAction(e -> {
+//	    	NoteUtility.refreshAction(noteTabTreeView, rootNode, filePath);
+//		}); 
 	    
 	    MenuItem newFile = new MenuItem("New File ");
 	    newFile.setOnAction(e -> {	   
@@ -255,16 +255,16 @@ public class NoteTabTree {
 		}); 
 	    
 	    // 打开目录
-		MenuItem Open = new MenuItem("Open Folder");
+		MenuItem Open = new MenuItem("Import note Folder");
 		Open.setOnAction(e -> { 
 			filePath = NoteUtility.openFolder(rootNode);
 		}); 
 		 
-		MenuItem close = new MenuItem("Close");
-		close.setOnAction(e -> {
-			var itm = noteTabTreeView.getSelectionModel().getSelectedItem();
-			NoteTabTree.closeAction(itm);
-		}); 
+//		MenuItem close = new MenuItem("Close");
+//		close.setOnAction(e -> {
+//			var itm = noteTabTreeView.getSelectionModel().getSelectedItem();
+//			NoteTabTree.closeAction(itm);
+//		}); 
 		
 		MenuItem deleteFile = new MenuItem("Delete File");
 		deleteFile.setOnAction(e -> {
@@ -279,11 +279,11 @@ public class NoteTabTree {
 		
 		contextMenu.getItems().addAll( 
 				Open, 
-				close,
+//				close,
 				new SeparatorMenuItem(), 
 				newFile,
 				deleteFile,
-				Refresh,
+//				Refresh,
 				Clean  , 
 				new SeparatorMenuItem(), 
 				showInFolder

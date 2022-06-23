@@ -15,6 +15,10 @@ public interface SqluckyTab  {
 	public DocumentPo getDocumentPo();
 	public VBox getVbox();
 	public  void mainTabPaneAddMyTab() ;
+	// 主界面上存在否
+	public boolean existTab();
+	// 存就显示
+	public boolean existTabShow(); 
 	public String getTitle();
 	public String getAreaText();
 	

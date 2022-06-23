@@ -58,19 +58,20 @@ public class MenuBarContainer {
 		open.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
 		open.setAccelerator(KeyCombination.keyCombination("shortcut+O"));
 		open.setOnAction(value -> {
-			CommonAction.openSqlFile("UTF-8");
+			CommonAction.openSqlFile();
 		});
 		
-		Menu openEncoding = new Menu(StrUtils.MenuItemNameFormat("Open With Encoding "));
-		openEncoding.setGraphic(IconGenerator.svgImageDefActive("folder-open")); 
+//		Menu openEncoding = new Menu(StrUtils.MenuItemNameFormat("Open With Encoding "));
+//		openEncoding.setGraphic(IconGenerator.svgImageDefActive("folder-open")); 
 		 
 		
-		MenuItem openGBK = new MenuItem(StrUtils.MenuItemNameFormat("GBK"));
-		openGBK.setGraphic(IconGenerator.svgImageDefActive("folder-open")); 
-		openGBK.setOnAction(value -> {
-			CommonAction.openSqlFile("GBK");
-		});
-		openEncoding.getItems().addAll(openGBK );
+//		MenuItem openGBK = new MenuItem(StrUtils.MenuItemNameFormat("GBK"));
+//		openGBK.setGraphic(IconGenerator.svgImageDefActive("folder-open")); 
+//		openGBK.setOnAction(value -> {
+//			CommonAction.openSqlFile("GBK");
+//		});
+		
+//		openEncoding.getItems().addAll(openGBK );
 
 		MenuItem Save = new MenuItem(StrUtils.MenuItemNameFormat("Save"));
 		Save.setGraphic(IconGenerator.svgImageDefActive("floppy-o"));
@@ -86,7 +87,9 @@ public class MenuBarContainer {
 			CommonAction.mainPageClose();
 		});
 
-		mn.getItems().addAll(open, openEncoding, Save, new SeparatorMenuItem(), exit);
+		mn.getItems().addAll(open, 
+//				openEncoding, 
+				Save, new SeparatorMenuItem(), exit);
 		return mn;
 	}
 

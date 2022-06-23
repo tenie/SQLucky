@@ -10,7 +10,7 @@
 /* 左侧折叠面板的title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 #FDA232 */
 .myTitleTxtActiveColor .title .text{
 	  -fx-fill:  #FDA232; 
-	  -fx-font-size: 15px; 
+	 /*  -fx-font-size: 15px;  */
 }
 
 /* tree view 中文字按钮边框 */

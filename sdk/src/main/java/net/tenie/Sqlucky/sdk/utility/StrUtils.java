@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.utility;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -509,17 +510,18 @@ public class StrUtils {
 	}
 	
 	// 匹配文件名
-	public String matchFileName(String fileTyleStr, String fileName) {
+	public static boolean matchFileName(String fileTyleStr, File file) {
 		
-		String rtVal = "";
-		if(StrUtils.isNullOrEmpty(fileName)) {
-			return rtVal;
+		String fileName = file.getName();
+		boolean rtVal = false;
+		if(StrUtils.isNullOrEmpty(fileTyleStr)) {
+			rtVal = true ;
 		}
 		
 		if("*.*".equals(fileTyleStr)) {
 			//all
 			if(fileName.contains(".")) {
-				rtVal = fileName; 
+				rtVal = true; 
 			}
 			
 		}else {
@@ -527,7 +529,7 @@ public class StrUtils {
 				String queryStr = fileTyleStr.substring(1);
 				// 前缀
 				if(fileName.endsWith(queryStr)) {
-					rtVal = fileName; 
+					rtVal = true; 
 				}
 				
 				
@@ -535,14 +537,14 @@ public class StrUtils {
 				String queryStr = fileTyleStr.substring(0, fileTyleStr.lastIndexOf("*"));
 				// 后缀
 				if(fileName.startsWith(queryStr)) {
-					rtVal = fileName; 
+					rtVal = true; 
 				}
 				
 			}else if( fileTyleStr.startsWith("*")&& fileTyleStr.endsWith("*")) {
 				// 包含
 				String queryStr = fileTyleStr.substring(1, fileTyleStr.lastIndexOf("*"));
 				if(fileName.contains(queryStr)) {
-					rtVal = fileName; 
+					rtVal = true; 
 				}
 				
 			}else if( fileTyleStr.contains("*") ) {
@@ -551,14 +553,14 @@ public class StrUtils {
 				String qStr1 = arrStr[0];
 				String qStr2 = arrStr[1];
 				if(fileName.startsWith(qStr1) && fileName.endsWith(qStr2)) {
-					rtVal = fileName; 
+					rtVal = true; 
 				}
 				
 				
 			}else if(! fileTyleStr.contains("*")) { 
 				// 全匹配
 				if(fileTyleStr.equals(fileName)) {
-					rtVal = fileName; 
+					rtVal = true; 
 				}
 				
 			}

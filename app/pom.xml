@@ -96,7 +96,11 @@
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
 		</dependency>
-
+		<!-- 文件字符集 -->
+		<dependency>
+			<groupId>com.github.albfernandez</groupId>
+			<artifactId>juniversalchardet</artifactId> 
+		</dependency>
 		<!-- sql 格式化 -->
 		<dependency>
 			<groupId>com.github.vertical-blank</groupId>

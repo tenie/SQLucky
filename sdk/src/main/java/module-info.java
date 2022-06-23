@@ -17,7 +17,7 @@ open module SQLucky.sdk {
 	requires com.jfoenix;  
 	requires org.controlsfx.controls;
 	requires org.apache.logging.log4j;	
-	
+	 
 	
 	// non-mods
 	requires org.apache.commons.io;
@@ -33,6 +33,7 @@ open module SQLucky.sdk {
 	requires org.apache.httpcomponents.client5.httpclient5.fluent;
 	requires org.apache.httpcomponents.core5.httpcore5;
 	requires org.mybatis;
+	requires com.github.albfernandez.juniversalchardet;
 	
 	exports net.tenie.Sqlucky.sdk;
 	exports net.tenie.Sqlucky.sdk.utility;

@@ -668,12 +668,16 @@ public class CommonAction {
 	}
 
 	//TODO 打开sql文件
-	public static void openSqlFile(String encode) {
+	public static void openSqlFile() {
 		try {
 			File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
 			if (f == null)
 				return;
-			String val = FileUtils.readFileToString(f, encode); 
+			String charset = FileTools.detectFileCharset(f);
+			if(charset == null ) {
+				 new RuntimeException("Open failed!");
+			}
+			String val = FileUtils.readFileToString(f, charset); 
 			String tabName = "";
 //			ComponentGetter.fileEncode.put( f.getPath(), encode);
 			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
@@ -682,7 +686,7 @@ public class CommonAction {
 				setOpenfileDir(f.getPath());
 			}
 			DocumentPo scpo = new DocumentPo();
-			scpo.setEncode(encode);
+			scpo.setEncode(charset);
 			scpo.setFileFullName(f.getAbsolutePath());
 			scpo.setText(val);
 			scpo.setTitle(tabName);

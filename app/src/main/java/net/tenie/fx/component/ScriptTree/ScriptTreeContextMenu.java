@@ -48,7 +48,7 @@ public class ScriptTreeContextMenu {
 		
 		MenuItem Import = new MenuItem("Import...");
 		Import.setOnAction(e -> {
-			CommonAction.openSqlFile("UTF-8");
+			CommonAction.openSqlFile();
 		}); 
 		
 		MenuItem folder = new MenuItem("Show In Folder");

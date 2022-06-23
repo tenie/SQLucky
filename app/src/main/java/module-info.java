@@ -29,6 +29,8 @@ open module SQLucky {
 	requires org.apache.httpcomponents.client5.httpclient5.fluent;
 	requires org.apache.httpcomponents.core5.httpcore5;
 	
+	requires com.github.albfernandez.juniversalchardet;
+	
 	// non-mods
 	requires org.apache.commons.io;
 	requires org.fxmisc.richtext; 

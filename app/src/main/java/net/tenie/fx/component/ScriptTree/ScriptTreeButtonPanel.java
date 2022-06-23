@@ -38,7 +38,7 @@ public class ScriptTreeButtonPanel {
 		importBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
 		importBtn.setTooltip(CommonUtility.instanceTooltip("Open note folder "));
 		importBtn.setOnMouseClicked(e->{
-			CommonAction.openSqlFile("UTF-8");
+			CommonAction.openSqlFile();
 		});
 		
 //		saveBtn.setText("Import");

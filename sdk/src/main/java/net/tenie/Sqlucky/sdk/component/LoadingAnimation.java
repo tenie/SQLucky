@@ -15,6 +15,14 @@ public class LoadingAnimation {
 	private static Label lb  ;
 	private static Region  Animation ;
 	
+	public static void ChangeLabelText(String val) {
+		if(lb !=null) {
+			Platform.runLater(() -> {
+				lb.setText(val);
+			});
+		}
+	}
+	
 	// 添加loading... 动画
 	public static  void addLoading(StackPane root) {
 		Platform.runLater(() -> {

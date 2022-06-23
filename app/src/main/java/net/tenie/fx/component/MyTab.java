@@ -341,6 +341,24 @@ public class MyTab extends Tab implements SqluckyTab {
 		} 
 		myTabPane.getSelectionModel().select(this);
 	}
+	// 主界面上存在否
+	@Override
+	public boolean existTab() {
+		var myTabPane = ComponentGetter.mainTabPane;
+		return myTabPane.getTabs().contains(this);
+	}
+	
+	// 存在显示
+	@Override
+	public boolean existTabShow() {
+		
+		var myTabPane = ComponentGetter.mainTabPane;
+		if(myTabPane.getTabs().contains(this)) {
+			myTabPane.getSelectionModel().select(this);
+			return true;
+		}
+		return false;
+	}
 	
 	//TODO 添加空文本的codeTab
 	public static  void mainTabPaneAddAllMyTabs(List<MyTab> ls) { 
