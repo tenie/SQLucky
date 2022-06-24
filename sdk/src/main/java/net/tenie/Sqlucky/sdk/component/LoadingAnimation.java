@@ -23,14 +23,13 @@ public class LoadingAnimation {
 		}
 	}
 	
-	// 添加loading... 动画
-	public static  void addLoading(StackPane root) {
+	public static  void addLoading(StackPane root, String loadingString,  int fontSize) {
 		Platform.runLater(() -> {
-			lb = new Label("Loading.....");
-			Animation = IconGenerator.svgImageUnactive("icomoon-spinner3", 30);
+			lb = new Label(loadingString);
+			Animation = IconGenerator.svgImageUnactive("icomoon-spinner3",  fontSize);
 			CommonUtility.rotateTransition(Animation);
 			lb.setGraphic(Animation);
-			lb.setFont(new Font(30));
+			lb.setFont(new Font(fontSize));
 			StackPane.setAlignment(lb, Pos.CENTER);
 			root.setCursor(Cursor.WAIT);
 			root.getChildren().add(lb);
@@ -38,17 +37,14 @@ public class LoadingAnimation {
 
 	}
 	
+	
+	// 添加loading... 动画
+	public static  void addLoading(StackPane root) {
+		addLoading(root, "Loading.....", 30);
+	}
+	
 	public static  void addLoading(StackPane root, String loadingString) {
-		Platform.runLater(() -> {
-			lb = new Label(loadingString);
-			Animation = IconGenerator.svgImageUnactive("icomoon-spinner3", 30);
-			CommonUtility.rotateTransition(Animation);
-			lb.setGraphic(Animation);
-			lb.setFont(new Font(30));
-			StackPane.setAlignment(lb, Pos.CENTER);
-			root.setCursor(Cursor.WAIT);
-			root.getChildren().add(lb);
-		});
+		addLoading(root, loadingString , 30);
 
 	}
 	

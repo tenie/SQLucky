@@ -47,7 +47,10 @@ public class NoteOptionPanel {
 	private TextField fileType  = new TextField();
 	
 	private JFXButton showInFolder = new JFXButton();
+	private JFXButton stopbtn = new JFXButton();
 	
+	// 当前显示的 GridPane
+	private GridPane currentShowGridPane ;
 	
 	
 	// 搜索panel
@@ -138,14 +141,30 @@ public class NoteOptionPanel {
 		// 查询btn
 		query.setGraphic(ComponentGetter.getIconDefActive("search")   );
 		query.setOnMouseClicked(e->{
+			down.setDisable(true);
+			up.setDisable(true);
+			stopbtn.setDisable(false);
+			NoteUtility.beginSearch();
+//			currentShowGridPane.
 			//TODO
-			NoteUtility.searchAction(txt.getText().trim(), fileType.getText().trim());
+			NoteUtility.searchAction(txt.getText().trim(), fileType.getText().trim(), down , up , stopbtn);
 		});
 		// 查询文本
 		txt.getStyleClass().add("myTextField");
 		txt.textProperty().addListener((o, oldStr, newStr) -> {
+			if(NoteUtility.rootCache != null &&  !NoteTabTree.noteTabTreeView.getRoot().equals(NoteUtility.rootCache)) {
+				NoteTabTree.noteTabTreeView.setRoot(NoteUtility.rootCache);
+				NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
+				down.setDisable(true);
+				up.setDisable(true);
+				stopbtn.setDisable(true);
+			}
+			
 			if(StrUtils.isNullOrEmpty(newStr)) {
 				NoteTabTree.noteTabTreeView.setRoot(NoteUtility.rootCache);
+				down.setDisable(true);
+				up.setDisable(true);
+				stopbtn.setDisable(true);
 			}
 			
 		});
@@ -164,6 +183,9 @@ public class NoteOptionPanel {
 			if(NoteUtility.rootCache != null &&  !NoteTabTree.noteTabTreeView.getRoot().equals(NoteUtility.rootCache)) {
 				NoteTabTree.noteTabTreeView.setRoot(NoteUtility.rootCache);
 				NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
+				down.setDisable(true);
+				up.setDisable(true);
+				stopbtn.setDisable(true);
 				
 			}
 		});
@@ -177,15 +199,26 @@ public class NoteOptionPanel {
 		
 		// 上下查找btn
 		down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
+		down.setDisable(true);
+		down.setTooltip(MyTooltipTool.instance("Search next"));		
 		down.setOnAction(v -> {
-			NoteUtility.downBtnChange();
+			NoteUtility.downUpBtnChange(false, txt.getText());
 		});
 
 		up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
+		up.setDisable(true);
+		up.setTooltip(MyTooltipTool.instance("Search previous"));			
 		up.setOnAction(v -> {
-			 
+			NoteUtility.downUpBtnChange(true, txt.getText());
 		});
-	
+		
+		stopbtn.setGraphic(IconGenerator.svgImage("stop", "red"));
+		stopbtn.setDisable(true);
+		stopbtn.setTooltip(MyTooltipTool.instance("Stop search"));	
+		stopbtn.setOnAction(v -> {
+			NoteUtility.stopSearch();
+		});
+		
 	}
 
 	
@@ -203,9 +236,11 @@ public class NoteOptionPanel {
 		GridPane grid = new GridPane();
 		grid.add(query, 0, 0);
 		grid.add(txt, 1, 0);
+		
 		searchVbox.getChildren().clear();
 		searchVbox2.getChildren().clear();
 		searchVbox.getChildren().add(grid);
+		currentShowGridPane = grid;
 		NoteUtility.isFile = true;
 		NoteUtility.isText = false;
 		CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, searchVbox, txt);
@@ -227,14 +262,17 @@ public class NoteOptionPanel {
 		GridPane grid2 = new GridPane();
 		grid2.add(query, 0, 0);
 		grid2.add(txt, 1, 0);
-		grid2.add(down, 2, 0);
-		grid2.add(up, 3, 0);
+		grid2.add(stopbtn, 2, 0);
+		
 
 		grid2.add(lbFT, 0, 1);
 		grid2.add(fileType, 1, 1);
+		grid2.add(down, 2, 1);
+		grid2.add(up, 3, 1);
 		searchVbox.getChildren().clear();
 		searchVbox2.getChildren().clear();
 		searchVbox2.getChildren().add(grid2);
+		currentShowGridPane = grid2;
 		NoteUtility.isFile = false;
 		NoteUtility.isText = true;
 		CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, searchVbox2, txt);

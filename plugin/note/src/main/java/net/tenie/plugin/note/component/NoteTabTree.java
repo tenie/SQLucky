@@ -14,6 +14,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
@@ -33,6 +34,7 @@ import net.tenie.plugin.note.utility.NoteUtility;
  */
 public class NoteTabTree {
 
+	public static StackPane noteStackPane = new StackPane();
 	public static TreeView<SqluckyTab> noteTabTreeView;
 	public static TreeItem<SqluckyTab> rootNode;
 	public static String filePath = "";
@@ -43,6 +45,9 @@ public class NoteTabTree {
 		noteTabTreeView = createScriptTreeView();
 		NoteOptionPanel optPane = new NoteOptionPanel();
 		optionBox = optPane.getOptionVbox();
+		noteStackPane.getChildren().add(noteTabTreeView);
+		noteStackPane.getStyleClass().add("myStackPane");
+		
 //		treeBox.getChildren().addAll(btnsBox, noteTabTreeView);
 //		treeBox.getStyleClass().add("myTreeView-vbox");
 //		treeBox.getStyleClass().add("myModalDialog");
@@ -124,7 +129,7 @@ public class NoteTabTree {
 		TreeItem<SqluckyTab> item = noteTabTreeView.getSelectionModel().getSelectedItem();
 		var mytab = item.getValue(); 
 		if(mytab != null && mytab.getDocumentPo() != null) {
-			mytab.mainTabPaneAddMyTab();
+			mytab.mainTabPaneAddSqlTab();
 		}
 	}
 	 

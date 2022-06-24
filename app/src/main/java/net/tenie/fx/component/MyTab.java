@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.fxmisc.richtext.CodeArea;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
@@ -19,6 +20,7 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.FindReplaceEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -41,7 +43,10 @@ import net.tenie.lib.db.h2.AppDao;
 public class MyTab extends Tab implements SqluckyTab {
 	private DocumentPo docPo;
 	private HighLightingCodeArea sqlCodeArea;
+	// 放查找面板, 文本area 的容器
 	private VBox vbox;
+	// 查找面板
+	private FindReplaceEditor findReplacePanel;
 	private Boolean savePo = true;
 	
 	private boolean isModify = false;
@@ -138,13 +143,19 @@ public class MyTab extends Tab implements SqluckyTab {
 		sqlCodeArea.highLighting(); 
 	}
 	
-	// 设置tab 中的 area 中的文本, 并保存到数据库
+	// 设置tab 中的 area 中的文本, 并保存到数据库 
 	public   void setTabSQLText(String text) {
 		var code = sqlCodeArea.getCodeArea();
 		code.appendText(text);
 		sqlCodeArea.highLighting();
 //		syncScriptPo();
 	}
+	public   void setTabStringText(String text) {
+		var code = sqlCodeArea.getCodeArea();
+		code.appendText(text);
+	}
+	
+	
 	@Override
 	public String getAreaText() {
 //		sqlCodeArea.getCodeArea().get
@@ -330,16 +341,33 @@ public class MyTab extends Tab implements SqluckyTab {
 	}
 	
 	//TODO 添加空文本的codeTab
-	public  void mainTabPaneAddMyTab() { 
-		var myTabPane = ComponentGetter.mainTabPane;
-		if( myTabPane.getTabs().contains(this) == false ) {
-			var code = sqlCodeArea.getCodeArea();
-			if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
-				setTabSQLText( docPo.getText());
-			}
-			myTabPane.getTabs().add( this);// 在指定位置添加Tab 
-		} 
-		myTabPane.getSelectionModel().select(this);
+	public  void mainTabPaneAddSqlTab() { 
+		Platform.runLater(()->{
+			var myTabPane = ComponentGetter.mainTabPane;
+			if( myTabPane.getTabs().contains(this) == false ) {
+				var code = sqlCodeArea.getCodeArea();
+				if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
+					setTabSQLText( docPo.getText());
+				}
+				myTabPane.getTabs().add( this);// 在指定位置添加Tab 
+			} 
+			myTabPane.getSelectionModel().select(this);
+		});
+		
+	}
+	public  void mainTabPaneAddTextTab() { 
+		Platform.runLater(()->{
+			var myTabPane = ComponentGetter.mainTabPane;
+			if( myTabPane.getTabs().contains(this) == false ) {
+				var code = sqlCodeArea.getCodeArea();
+				if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
+					setTabStringText( docPo.getText());
+				}
+				myTabPane.getTabs().add( this);// 在指定位置添加Tab 
+			} 
+			myTabPane.getSelectionModel().select(this);
+		});
+		
 	}
 	// 主界面上存在否
 	@Override
@@ -446,6 +474,18 @@ public class MyTab extends Tab implements SqluckyTab {
  
 	public void saveTextAction() {
 		CommonAction.saveSqlAction(this);
+	}
+
+	// 保存查找面板
+	@Override
+	public void saveFindReplacePanel(FindReplaceEditor panel) {
+		findReplacePanel = panel;
+	}
+
+	@Override
+	public void cleanFindReplacePanel() {
+		findReplacePanel = null;
+		
 	}
 	
 	// 设置tab 中的 area 中的文本

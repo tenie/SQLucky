@@ -81,7 +81,7 @@ public class ButtonFactory {
 			findSQlTxt.setGraphic(IconGenerator.svgImageDefActive("search"));
 			findSQlTxt.setId("runFunPro");
 			findSQlTxt.setTooltip(MyTooltipTool.instance("Find (Ctrl + F)"));
-			findSQlTxt.setOnMouseClicked(e->CommonAction.findReplace(false));
+			findSQlTxt.setOnMouseClicked(e->CommonUtility.findReplace(false));
 
 			
 			runbtn.setOnMouseClicked(e->{

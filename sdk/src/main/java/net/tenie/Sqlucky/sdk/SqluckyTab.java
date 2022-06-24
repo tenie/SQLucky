@@ -4,6 +4,7 @@ import java.io.File;
 
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.component.FindReplaceEditor;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 /**
  * 文本页面
@@ -13,8 +14,16 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 public interface SqluckyTab  {
 	public SqluckyCodeAreaHolder getSqlCodeArea();
 	public DocumentPo getDocumentPo();
+	
+	// 放查找面板, 文本area 的容器
 	public VBox getVbox();
-	public  void mainTabPaneAddMyTab() ;
+	// 查找面板
+	public void saveFindReplacePanel(FindReplaceEditor panel);
+	// 
+	public void cleanFindReplacePanel();
+	
+	public  void mainTabPaneAddSqlTab() ;
+	public  void mainTabPaneAddTextTab() ;
 	// 主界面上存在否
 	public boolean existTab();
 	// 存就显示

@@ -40,8 +40,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.FindReplaceEditor;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -879,6 +882,46 @@ public class CommonUtility {
 		});
 		
 		
+	}
+	
+	// 查找替换
+	public static void findReplace(boolean isReplace, String findStr, SqluckyTab skTab) {
+		VBox b = null;
+		if(skTab == null) {
+		   skTab = SqlcukyEditor.currentMyTab();
+		   b = skTab.getVbox();
+		}else {
+		   b = skTab.getVbox();
+		}
+//		VBox b = SqlcukyEditor.getTabVbox();
+		int bsize = b.getChildren().size();
+	    if (bsize > 1) {
+			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
+			if (bsize == 2 && isReplace) {
+				FindReplaceEditor.delFindReplacePane(skTab);
+				findReplace(isReplace, findStr, skTab);
+			} else // 如果替换已经存在, 要打开查找, 就先关光再打开查找
+			if (bsize == 3 && !isReplace) {
+				FindReplaceEditor.delFindReplacePane(skTab);
+				findReplace(isReplace, findStr, skTab);
+			} else {
+				FindReplaceEditor.delFindReplacePane(skTab);
+			}
+			// 如果是指定查询, 需要清除之前的查询界面, 新建一个
+			if(StrUtils.isNotNullOrEmpty(findStr)) {
+				FindReplaceEditor findPanel = new FindReplaceEditor(isReplace, findStr, skTab);
+				skTab.saveFindReplacePanel(findPanel);
+			} 
+
+		} else {
+			FindReplaceEditor findPanel = new FindReplaceEditor(isReplace, findStr, skTab);
+			skTab.saveFindReplacePanel(findPanel);
+		}
+	}
+
+	// 查找替换
+	public static void findReplace(boolean isReplace) {
+		findReplace(isReplace, "", null);
 	}
 	
 }

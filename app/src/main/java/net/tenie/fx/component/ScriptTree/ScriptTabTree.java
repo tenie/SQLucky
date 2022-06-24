@@ -182,7 +182,7 @@ public class ScriptTabTree {
 		TreeItem<MyTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
 		var mytab = item.getValue(); 
 		if(mytab != null && mytab.getDocumentPo() != null) {
-			mytab.mainTabPaneAddMyTab();
+			mytab.mainTabPaneAddSqlTab();
 		}
 	}
 	 

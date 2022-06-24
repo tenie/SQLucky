@@ -69,12 +69,12 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 		MenuItem  find = new MenuItem("Find                        (ctrl+F)");  
 		find.setGraphic(IconGenerator.svgImageDefActive("search")); 
 		find.setOnAction(e->{
-			CommonAction.findReplace(false);
+			CommonUtility.findReplace(false);
 		});
 		
 		MenuItem  replace = new MenuItem("Replace                     (ctrl+R)");   
 		replace.setOnAction(e->{
-			CommonAction.findReplace(true);
+			CommonUtility.findReplace(true);
 		});
 		
 		MenuItem  mvB = new MenuItem("Move to begin of line (ctrl+shift+A)");   

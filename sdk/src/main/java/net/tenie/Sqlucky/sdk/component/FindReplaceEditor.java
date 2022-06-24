@@ -1,4 +1,4 @@
-package net.tenie.fx.component;
+package net.tenie.Sqlucky.sdk.component;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,19 +9,30 @@ import javafx.application.Platform;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
+import net.tenie.Sqlucky.sdk.utility.myEvent;
 
-
-/*   @author tenie */
+/**
+ * 查找窗口
+ * @author tenie
+ *
+ */
 public class FindReplaceEditor {
 	private static String f3Str = "";
 	private static Logger logger = LogManager.getLogger(FindReplaceEditor.class);
+	
+	// 查询字符串输入框
+	public	static TextField textField;
+	private JFXButton down ;
+	private JFXButton up;
+	
+	
 	public static void findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
 		CodeArea code = SqlcukyEditor.getCodeArea();
 		int idx = code.getCaretPosition();
@@ -90,12 +101,18 @@ public class FindReplaceEditor {
 		findString(text, idx, true, true);
 	}
 
-	// 字符串查找
+	 
+	/**
+	 * 字符串查找
+	 * @param str 要查找的字符串
+	 * @param forward  是否向前找
+	 * @param sensitive 是否大小写敏感
+	 */
 	public static void findStringFromCodeArea(String str, boolean forward, boolean sensitive) {
 		if (StrUtils.isNullOrEmpty(str))
 			return;
 		CodeArea code = SqlcukyEditor.getCodeArea();
-		int idx = code.getCaretPosition();
+		int idx = code.getCaretPosition();  // 光标位置
 		findString(str, idx, sensitive, forward); 
 	}
 
@@ -143,9 +160,16 @@ public class FindReplaceEditor {
 		code.requestFollowCaret();
 	}
 
-	// 查找
+	/**
+	 * 开始查找字符串
+	 * @param str 要查找的字符串	
+	 * @param fromIndex 从文本的哪个位置开始找
+	 * @param sensitive 是否大小写敏感
+	 * @param forward 向前还是向后找
+	 */
 	public static void findString(String str, int fromIndex, boolean sensitive, boolean forward) {
 		CodeArea code = SqlcukyEditor.getCodeArea();
+		// 获取文本
 		String text = code.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
@@ -176,10 +200,11 @@ public class FindReplaceEditor {
 		SqlcukyEditor.currentSqlCodeAreaHighLighting(str);
 	}
 
-	public static void delFindReplacePane() {
+	public static void delFindReplacePane(SqluckyTab skTab) {
 		VBox x = SqlcukyEditor.getTabVbox();
 		while (x.getChildren().size() > 1) {
 			x.getChildren().remove(0);
+			skTab.cleanFindReplacePanel();
 		}
 	}
 
@@ -228,8 +253,8 @@ public class FindReplaceEditor {
 		replaceAnchorPane.getChildren().add(replaceAllBtn);
 		return replaceAnchorPane;
 	}
-
-	public static AnchorPane createFindPane(boolean isReplace) {
+//  public static  void createFindPane(boolean isReplace, String findText, VBox b ) {
+	public  FindReplaceEditor(boolean isReplace, String findText, SqluckyTab skTab ) {
 		AnchorPane findAnchorPane = new AnchorPane();
 		CommonUtility.addCssClass(findAnchorPane, "myFindPane");
 		findAnchorPane.prefHeight(30);
@@ -237,30 +262,50 @@ public class FindReplaceEditor {
 		JFXCheckBox cb = new JFXCheckBox("Sensitive");  
 		query.setGraphic(IconGenerator.svgImageDefActive("search"));
 
-		TextField tf = new TextField();
+	    textField = new TextField();
 		query.setOnAction(v -> {
-			findStringFromCodeArea(tf.getText(), true, !cb.isSelected());
+			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
 		});
-		CodeArea code = SqlcukyEditor.getCodeArea();
-		tf.setText(code.getSelectedText());
-		tf.setPrefWidth(250);
-		tf.setPrefHeight(15);
-		tf.getStyleClass().add("myFindTextField");
-		tf.textProperty().addListener((o, oldVal, newVal) -> {
+		
+		if(StrUtils.isNullOrEmpty(findText)) {
+			// 从编辑框中获取选中的文本
+			CodeArea code = SqlcukyEditor.getCodeArea();
+			findText = code.getSelectedText();
+		}
+		
+		textField.setText(findText);
+		textField.setPrefWidth(250);
+		textField.setPrefHeight(15);
+		textField.getStyleClass().add("myFindTextField");
+		textField.textProperty().addListener((o, oldVal, newVal) -> {
 			findStringFromCodeArea(newVal, true, !cb.isSelected());
 		});
-
+		// 回车键出发查找下一个
+		textField.setOnKeyPressed(val->{
+			 if(val.getCode() == KeyCode.ENTER ){ 
+				 myEvent.btnClick(down);
+			 }
+		});
 		// "arrow-down"
-		JFXButton down = new JFXButton();
+		down = new JFXButton();
 		down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
 		down.setOnAction(v -> {
-			findStringFromCodeArea(tf.getText(), true, !cb.isSelected());
+			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
 		});
+		
+		down.setOnMouseClicked(v -> {
+			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
+		});
+		
+		
 
-		JFXButton up = new JFXButton();
+		up = new JFXButton();
 		up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
 		up.setOnAction(v -> {
-			findStringFromCodeArea(tf.getText(), false, !cb.isSelected());
+			findStringFromCodeArea(textField.getText(), false, !cb.isSelected());
+		});
+		up.setOnMouseClicked(v -> {
+			findStringFromCodeArea(textField.getText(), false, !cb.isSelected());
 		});
 		
 		// 计算查询字符串出现次数
@@ -270,13 +315,13 @@ public class FindReplaceEditor {
 		count.setOnAction(e->{
 			String sqlTxt = SqlcukyEditor.getCurrentCodeAreaSQLText();
 			int countVal = 0;
-			if(tf.getText().length() == 0) {
+			if(textField.getText().length() == 0) {
 				countLabel.setText("");
 			}else {
 				if(cb.isSelected()) {
-					countVal = StrUtils.countSubString(sqlTxt, tf.getText());
+					countVal = StrUtils.countSubString(sqlTxt, textField.getText());
 				}else {
-					countVal = StrUtils.countSubString(sqlTxt.toLowerCase() , tf.getText().toLowerCase());
+					countVal = StrUtils.countSubString(sqlTxt.toLowerCase() , textField.getText().toLowerCase());
 				}
 				countLabel.setText(countVal + "");
 			}			
@@ -286,8 +331,8 @@ public class FindReplaceEditor {
 		query.setLayoutX(x);
 		query.setLayoutY(0);
 		x += 35;
-		tf.setLayoutX(x);
-		tf.setLayoutY(0);
+		textField.setLayoutX(x);
+		textField.setLayoutY(0);
 		x += 250;
 		down.setLayoutX(x);
 		down.setLayoutY(0);
@@ -308,7 +353,7 @@ public class FindReplaceEditor {
 		
 
 		findAnchorPane.getChildren().add(query);
-		findAnchorPane.getChildren().add(tf);
+		findAnchorPane.getChildren().add(textField);
 		findAnchorPane.getChildren().add(down);
 		findAnchorPane.getChildren().add(up);
 		findAnchorPane.getChildren().add(cb);
@@ -321,18 +366,19 @@ public class FindReplaceEditor {
 		findAnchorPane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 		
-		VBox b = SqlcukyEditor.getTabVbox();
+//		VBox b = SqlcukyEditor.getTabVbox();
 		hideBottom.setOnAction(v -> {
-			delFindReplacePane();
+			delFindReplacePane(skTab);
 		});
 		// 加入到 代码编辑框上面
+		VBox b =  skTab.getVbox();
 		b.getChildren().add(0, findAnchorPane);
 		if (isReplace) {
-			b.getChildren().add(1, createReplacePane(tf, cb));
+			b.getChildren().add(1, createReplacePane(textField, cb));
 		}
 		Platform.runLater(() -> {
-			tf.requestFocus();
+			textField.requestFocus();
 		});
-		return findAnchorPane;
+//		return findAnchorPane;
 	}
 }

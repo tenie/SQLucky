@@ -6,11 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Region;
@@ -55,7 +58,7 @@ public class NoteUtility {
 						if(! isExist) {
 							String  val = CommonUtility.readFileText(file, charset);
 							stb.setFileText(val);
-							stb.mainTabPaneAddMyTab();
+							stb.mainTabPaneAddSqlTab();
 						}
 					}else {
 						CommonUtility.openExplorer(file);
@@ -99,15 +102,23 @@ public class NoteUtility {
 	}
 
 	// 获取选中的treeItem中的Tab
-	public static SqluckyTab currentTreeItemSqluckyTab() {
-		SqluckyTab val = currentTreeItem().getValue();
-		return val;
-	}
-
+//	public static SqluckyTab currentTreeItemSqluckyTab2() {
+//		var cit = currentTreeItem();
+//		if(cit != null ) {
+//			SqluckyTab val = currentTreeItem().getValue();
+//			return val;
+//		}
+//		return null;
+//	}
+	// 获取选中的treeItem中的Tab中的file
 	public static File currentTreeItemFile() {
-		SqluckyTab val = currentTreeItem().getValue();
-		File file = val.getFile();
-		return file;
+		var cit = currentTreeItem();
+		if(cit != null) {
+			SqluckyTab val = currentTreeItem().getValue();
+			File file = val.getFile();
+			return file;
+		}
+		return null;
 	}
 
 	// 重新载入
@@ -292,108 +303,155 @@ public class NoteUtility {
 	}
 
 	// 搜索
-	public static void searchAction(String queryStr, String fileType) {
+	public static void searchAction(String queryStr, String fileType, Button down, Button up, Button stopbtn) {
 		if (StrUtils.isNullOrEmpty(queryStr)) {
 			return;
 		} else {
 			queryStr = queryStr.toLowerCase();
 		}
-		var windowSceneRoot = ComponentGetter.primarySceneRoot; 
-		LoadingAnimation.addLoading(windowSceneRoot, "Search....");
+		var windowSceneRoot = NoteTabTree.noteStackPane; //ComponentGetter.primarySceneRoot; 
+		LoadingAnimation.addLoading(windowSceneRoot, "Search....", 14);
 		
 		String searchStr = queryStr;
-		CommonUtility.runThread(v->{
-			File selectfile = NoteUtility.currentTreeItemFile();
-			List<File> searchDirs = new ArrayList<>();
-			if (selectfile == null) {
-				var nodels = NoteTabTree.rootNode.getChildren();
-				for (var subNd : nodels) {
-					var tmpfile = subNd.getValue().getFile();
-					searchDirs.add(tmpfile);
+		CommonUtility.runThread(v -> {
+			try {
+
+				File selectfile = NoteUtility.currentTreeItemFile();
+				List<File> searchDirs = new ArrayList<>();
+				if (selectfile == null) {
+					var nodels = NoteTabTree.rootNode.getChildren();
+					for (var subNd : nodels) {
+						var tmpfile = subNd.getValue().getFile();
+						searchDirs.add(tmpfile);
+					}
+
+				} else {
+					searchDirs.add(selectfile);
 				}
+				for (var file : searchDirs) {
+					if (file.isDirectory()) {
+						rootCache = NoteTabTree.rootNode;
 
-			} else {
-				searchDirs.add(selectfile);
-			}
-			for (var file : searchDirs) {
-				if (file.isDirectory()) {
-					rootCache = NoteTabTree.rootNode;
+						SqluckyTab stab = ComponentGetter.appComponent.sqluckyTab();
+						TreeItem<SqluckyTab> tmpRoot = new TreeItem<>(stab);
+						Platform.runLater(() -> {
+							NoteTabTree.noteTabTreeView.setRoot(tmpRoot);
+						});
 
-					SqluckyTab stab = ComponentGetter.appComponent.sqluckyTab();
-					TreeItem<SqluckyTab> tmpRoot = new TreeItem<>(stab);
-					Platform.runLater(()->{
-						NoteTabTree.noteTabTreeView.setRoot(tmpRoot);
-					});
-					
-					 Consumer< File >  caller = tmpfile->{
-							if (isFile) { // 文件名搜索 
-								LoadingAnimation.ChangeLabelText("Search : " + tmpfile.getName());
+						Function<File, Boolean> caller = tmpfile -> {
+							if(  isStopSearch()) {
+								return true;
+							}
+							if (isFile) { // 文件名搜索
+								LoadingAnimation.ChangeLabelText("Search: \n" + tmpfile.getName());
 								String fileName = tmpfile.getName().toLowerCase();
 								if (fileName.contains(searchStr)) {
 									TreeItem<SqluckyTab> fileRootitem = NoteUtility.createItemNode(tmpfile);
-									Platform.runLater(()->{
+									Platform.runLater(() -> {
 										tmpRoot.getChildren().add(fileRootitem);
 									});
-									
+
 								}
-							 
-						}else if(isText) { // 文件内容搜索 
-								if(fileType.endsWith("*")) { // 如果结尾是* , 就规避二进制文件
-									if(FileTools.isBinaryFile(tmpfile)) {
-										return;
+
+							} else if (isText) { // 文件内容搜索
+								if (fileType.endsWith("*")) { // 如果结尾是* , 就规避二进制文件
+									if (FileTools.isBinaryFile(tmpfile)) {
+										return isStopSearch();
 									}
-								} 
+								}
 								boolean match = StrUtils.matchFileName(fileType, tmpfile);
-								if(match) {
-									LoadingAnimation.ChangeLabelText("Search : " + tmpfile.getName());
+								if (match) {
+									LoadingAnimation.ChangeLabelText("Search: \n" + tmpfile.getName());
 									String charset = FileTools.detectFileCharset(tmpfile);
-									if(charset != null ) {
+									if (charset != null) {
 										String textStr = FileTools.read(tmpfile, charset);
-										if(textStr.contains(searchStr)) {
+										if (textStr.contains(searchStr)) {
 											TreeItem<SqluckyTab> fileRootitem = NoteUtility.createItemNode(tmpfile);
-										
-											Platform.runLater(()->{
+
+											Platform.runLater(() -> {
 												tmpRoot.getChildren().add(fileRootitem);
 											});
 										}
 									}
 								}
-								
-							 
-						}
-					 };
-					
-				    FileTools.getAllFileFromDir(file, caller);
-				
+
+							}
+							return isStopSearch();
+						};
+
+						FileTools.getAllFileFromDir(file, caller);
+
+					}
 				}
+			} finally {
+				NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
+				NoteTabTree.noteTabTreeView.refresh();
+				LoadingAnimation.rmLoading(windowSceneRoot);
+				down.setDisable(false);
+				up.setDisable(false);
+				stopbtn.setDisable(true);
 			}
-			NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
-			NoteTabTree.noteTabTreeView.refresh(); 
-			LoadingAnimation.rmLoading(windowSceneRoot);
+
 		});
 	}
+	
+	private static volatile boolean stopTag = false;
+	
+	public static boolean getStopTag() {
+		return stopTag;
+	}
+	
+	public static void beginSearch() {
+		stopTag = false;
+	}
+	
+	public static void stopSearch() {
+		stopTag = true;
+	}
+	
+	public static boolean isStopSearch() {  
+		return getStopTag();
+	}
+	
+	
 	/**
 	 * 上下切换搜索的文件
 	 */
-	public static void downBtnChange() {
+	public static void downUpBtnChange(boolean isUp, String txt ) {
 		var currentItem = currentTreeItem();
 		if(currentItem == null) {
 			var ls = NoteTabTree.noteTabTreeView.getRoot().getChildren();
 			if(ls.size() > 0) {
-				NoteTabTree.noteTabTreeView.getRoot().getChildren().get(0);
+				currentItem = NoteTabTree.noteTabTreeView.getRoot().getChildren().get(0);
 				NoteUtility.doubleClickItem( currentItem);
+				NoteTabTree.noteTabTreeView.getSelectionModel().select(currentItem);
 			}
 			
 		}else {	
 			var ls = currentItem.getParent().getChildren();
 			int idx  = ls.indexOf(currentItem);
-			int next = idx + 1;
-			if(ls.size() == next) {
-				next = 0;
+			int next;
+			if(isUp) {
+				  next = idx - 1;
+				  if(next < 0) {
+						next = ls.size() -1;
+					}
+			}else {
+				next = idx + 1;
+				if(ls.size() == next) {
+					next = 0;
+				}
+				
 			}
+			
+			
 			var nextItem = ls.get(next);
 			NoteUtility.doubleClickItem( nextItem);
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(next);
+			if(StrUtils.isNotNullOrEmpty(txt)) {
+				SqluckyTab skTab = nextItem.getValue();
+				CommonUtility.findReplace(false, txt, skTab);
+			}
 		}
 		
 	}

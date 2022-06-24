@@ -29,7 +29,9 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 		
 		NotePane.setText("Note");  
 		CommonUtility.addCssClass(NotePane, "titledPane-color");
-		NotePane.setContent( tree.noteTabTreeView);
+//		NotePane.setContent( tree.noteTabTreeView);
+		NotePane.setContent( tree.noteStackPane);
+		
 		
 		appComponent.addTitledPane(NotePane);
 	}

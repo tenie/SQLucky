@@ -132,13 +132,13 @@ public class MenuBarContainer {
 		Find.setGraphic(IconGenerator.svgImageDefActive("search"));
 		Find.setAccelerator(KeyCombination.keyCombination("shortcut+F"));
 		Find.setOnAction(value -> {
-			CommonAction.findReplace(false);
+			CommonUtility.findReplace(false);
 		});
 
 		MenuItem FindReplace = new MenuItem(StrUtils.MenuItemNameFormat("Replace"));
 		FindReplace.setAccelerator(KeyCombination.keyCombination("shortcut+R"));
 		FindReplace.setOnAction(value -> {
-			CommonAction.findReplace(true);
+			CommonUtility.findReplace(true);
 		});
 
 		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format Text"));

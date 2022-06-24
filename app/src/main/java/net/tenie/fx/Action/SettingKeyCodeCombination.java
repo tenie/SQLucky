@@ -24,13 +24,13 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.FindReplaceEditor;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.MyTab;
 
 /*   @author tenie */
@@ -168,11 +168,11 @@ public final class SettingKeyCodeCombination {
 
 		// 查找 替换
 		scene.getAccelerators().put(ctrlF, () -> {
-			CommonAction.findReplace(false);
+			CommonUtility.findReplace(false);
 		});
 		// 查找 替换
 		scene.getAccelerators().put(ctrlR, () -> {
-			CommonAction.findReplace(true);
+			CommonUtility.findReplace(true);
 		});
 
 		// 查找

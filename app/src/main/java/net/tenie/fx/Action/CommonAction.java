@@ -31,6 +31,7 @@ import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.FindReplaceEditor;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -48,7 +49,6 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.component.FindReplaceEditor;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
@@ -692,7 +692,7 @@ public class CommonAction {
 			scpo.setTitle(tabName);
 			MyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
 			if(mt != null) { // 如果已经存在就不用重新打开
-				mt.mainTabPaneAddMyTab();
+				mt.mainTabPaneAddSqlTab();
 			}else {
 				MyTab.createTabFromSqlFile(scpo);
 			}
@@ -719,26 +719,26 @@ public class CommonAction {
 		 
 	}
 	
-	public static void findReplace(boolean isReplace) {
-		VBox b = SqlcukyEditor.getTabVbox();
-		int bsize = b.getChildren().size();
-		if (bsize > 1) {
-			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
-			if (bsize == 2 && isReplace) {
-				FindReplaceEditor.delFindReplacePane();
-				findReplace(isReplace);
-			} else // 如果替换已经存在, 要打开查找, 就先关光再打开查找
-			if (bsize == 3 && !isReplace) {
-				FindReplaceEditor.delFindReplacePane();
-				findReplace(isReplace);
-			} else {
-				FindReplaceEditor.delFindReplacePane();
-			}
-
-		} else {
-			FindReplaceEditor.createFindPane(isReplace);
-		}
-	}
+//	public static void findReplace(boolean isReplace) {
+//		VBox b = SqlcukyEditor.getTabVbox();
+//		int bsize = b.getChildren().size();
+//		if (bsize > 1) {
+//			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
+//			if (bsize == 2 && isReplace) {
+//				FindReplaceEditor.delFindReplacePane();
+//				findReplace(isReplace);
+//			} else // 如果替换已经存在, 要打开查找, 就先关光再打开查找
+//			if (bsize == 3 && !isReplace) {
+//				FindReplaceEditor.delFindReplacePane();
+//				findReplace(isReplace);
+//			} else {
+//				FindReplaceEditor.delFindReplacePane();
+//			}
+//
+//		} else {
+//			FindReplaceEditor.createFindPane(isReplace);
+//		}
+//	}
 
 	public static void hideLeftBottom() {
 		JFXButton btnLeft =  CommonButtons.hideLeft; // AllButtons.btns.get("hideLeft");

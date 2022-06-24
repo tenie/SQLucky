@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -181,12 +182,16 @@ public class FileTools {
 	
 	
 	// 目录下的所有文件, 包括子目录
-	public static void getAllFileFromDir(File dir , Consumer< File >  caller){
+	public static void getAllFileFromDir(File dir , Function<File, Boolean>  caller){
 		 File arrFile[] =  dir.listFiles();
 		 if(arrFile != null && arrFile.length > 0) {
 			 for(File fl: arrFile) {
 				 if(fl.isFile()) {
-					 caller.accept(fl);
+					Boolean isStop =  caller.apply(fl);
+					if(isStop) {
+						return;
+					}
+					
 				 }
 				 if(fl.isDirectory()) {
 					  getAllFileFromDir(fl, caller);
