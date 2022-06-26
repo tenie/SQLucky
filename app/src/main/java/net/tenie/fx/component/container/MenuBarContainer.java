@@ -1,7 +1,5 @@
 package net.tenie.fx.component.container;
 
-import java.io.UnsupportedEncodingException;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +12,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.input.KeyCombination;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
@@ -130,19 +127,19 @@ public class MenuBarContainer {
 
 		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
 		Find.setGraphic(IconGenerator.svgImageDefActive("search"));
-		Find.setAccelerator(KeyCombination.keyCombination("shortcut+F"));
+//		Find.setAccelerator(KeyCombination.keyCombination("shortcut+F"));
 		Find.setOnAction(value -> {
 			CommonUtility.findReplace(false);
 		});
 
 		MenuItem FindReplace = new MenuItem(StrUtils.MenuItemNameFormat("Replace"));
-		FindReplace.setAccelerator(KeyCombination.keyCombination("shortcut+R"));
+//		FindReplace.setAccelerator(KeyCombination.keyCombination("shortcut+R"));
 		FindReplace.setOnAction(value -> {
 			CommonUtility.findReplace(true);
 		});
 
 		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format Text"));
-		Format.setAccelerator(KeyCombination.keyCombination("shortcut+shift+F"));
+//		Format.setAccelerator(KeyCombination.keyCombination("shortcut+shift+F"));
 		Format.setOnAction(value -> {
 			CommonAction.formatSqlText();
 		});
@@ -250,17 +247,17 @@ public class MenuBarContainer {
 			CommonAction.hideLeftBottom();
 		});
 		
-		MenuItem EnCoding = new MenuItem(StrUtils.MenuItemNameFormat("EnCoding"));
-		EnCoding.setGraphic(IconGenerator.svgImageDefActive("mfglabs-random"));
-		EnCoding.setOnAction(value -> {
-			String txt = SqlcukyEditor.getCurrentCodeAreaSQLText();
-		    try {
-				String unicode = new String(txt.getBytes(""),"GBK");
-				logger.info(unicode);
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
-		});
+//		MenuItem EnCoding = new MenuItem(StrUtils.MenuItemNameFormat("EnCoding"));
+//		EnCoding.setGraphic(IconGenerator.svgImageDefActive("mfglabs-random"));
+//		EnCoding.setOnAction(value -> {
+//			String txt = SqlcukyEditor.getCurrentCodeAreaSQLText();
+//		    try {
+//				String unicode = new String(txt.getBytes(""),"GBK");
+//				logger.info(unicode);
+//			} catch (UnsupportedEncodingException e) {
+//				e.printStackTrace();
+//			}
+//		});
 		
 		// 主题变化
 		Menu Theme = new Menu(StrUtils.MenuItemNameFormat("Theme"));

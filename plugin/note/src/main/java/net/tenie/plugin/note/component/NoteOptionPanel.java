@@ -236,6 +236,7 @@ public class NoteOptionPanel {
 		GridPane grid = new GridPane();
 		grid.add(query, 0, 0);
 		grid.add(txt, 1, 0);
+		grid.add(stopbtn, 2, 0);
 		
 		searchVbox.getChildren().clear();
 		searchVbox2.getChildren().clear();

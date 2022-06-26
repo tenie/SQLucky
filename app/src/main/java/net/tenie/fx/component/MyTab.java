@@ -20,7 +20,7 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.FindReplaceEditor;
+import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -46,7 +46,7 @@ public class MyTab extends Tab implements SqluckyTab {
 	// 放查找面板, 文本area 的容器
 	private VBox vbox;
 	// 查找面板
-	private FindReplaceEditor findReplacePanel;
+	private FindReplaceTextPanel findReplacePanel;
 	private Boolean savePo = true;
 	
 	private boolean isModify = false;
@@ -476,17 +476,27 @@ public class MyTab extends Tab implements SqluckyTab {
 		CommonAction.saveSqlAction(this);
 	}
 
-	// 保存查找面板
-	@Override
-	public void saveFindReplacePanel(FindReplaceEditor panel) {
-		findReplacePanel = panel;
-	}
-
+	
+	
+	 
+	// 清空查找面板
 	@Override
 	public void cleanFindReplacePanel() {
 		findReplacePanel = null;
 		
 	}
+	@Override
+	public FindReplaceTextPanel getFindReplacePanel() {
+		return findReplacePanel;
+	}
+	// 保存查找面板
+	@Override
+	public void setFindReplacePanel(FindReplaceTextPanel findReplacePanel) {
+		this.findReplacePanel = findReplacePanel;
+	}
+	
+	
+	
 	
 	// 设置tab 中的 area 中的文本
 //	public static void setTabSQLText(MyTab tb, String text) {

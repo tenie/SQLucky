@@ -31,7 +31,7 @@ import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.FindReplaceEditor;
+import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -146,7 +146,17 @@ public class CommonAction {
 		
 		// 提示窗口
 		SqlcukyEditor.currentMyTab().getSqlCodeArea().hideAutoComplete();
-//		MyAutoComplete.hide();
+	}
+	
+	// 隐藏查找, 替换窗口
+	public static void hideFindReplaceWindow() {
+		VBox b = SqlcukyEditor.getTabVbox();
+		var sltb = SqlcukyEditor.currentMyTab();
+		int bsize = b.getChildren().size();
+		if (bsize > 1) { 
+			FindReplaceTextPanel.delFindReplacePane(sltb);
+		} 
+		 
 	}
  
 	// ctrl + S 按钮触发, 保存数据或sql文本
@@ -710,14 +720,7 @@ public class CommonAction {
 		Event.fireEvent(btn, me);
 	}
 
-	public static void hideFindReplaceWindow() {
-		VBox b = SqlcukyEditor.getTabVbox();
-		int bsize = b.getChildren().size();
-		if (bsize > 1) { 
-				FindReplaceEditor.delFindReplacePane();
-		} 
-		 
-	}
+	
 	
 //	public static void findReplace(boolean isReplace) {
 //		VBox b = SqlcukyEditor.getTabVbox();

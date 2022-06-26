@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.apache.commons.io.FileUtils;
@@ -72,10 +71,16 @@ public class FileTools {
 		fileTypes.add(".jar");
 		fileTypes.add(".class");
 		fileTypes.add(".war");
+		fileTypes.add(".pyc");
+		fileTypes.add(".mv.db");
 		
 		// 库
 		fileTypes.add(".dll"); 
 		fileTypes.add(".lib");
+		fileTypes.add(".jnilib");
+		fileTypes.add(".dylib");
+		fileTypes.add(".so");
+		
 		fileTypes.add(".o"); 
 		
 		// delphi

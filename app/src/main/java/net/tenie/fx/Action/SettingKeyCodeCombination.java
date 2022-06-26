@@ -24,7 +24,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.FindReplaceEditor;
+import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
@@ -177,7 +177,7 @@ public final class SettingKeyCodeCombination {
 
 		// 查找
 		scene.getAccelerators().put(F3, () -> {
-			FindReplaceEditor.findSelectedString();
+			FindReplaceTextPanel.findSelectedString();
 		});
 
 		// 运行SQL

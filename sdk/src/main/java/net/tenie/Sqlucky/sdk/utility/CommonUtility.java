@@ -44,7 +44,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.FindReplaceEditor;
+import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -898,24 +898,24 @@ public class CommonUtility {
 	    if (bsize > 1) {
 			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
 			if (bsize == 2 && isReplace) {
-				FindReplaceEditor.delFindReplacePane(skTab);
+				FindReplaceTextPanel.delFindReplacePane(skTab);
 				findReplace(isReplace, findStr, skTab);
 			} else // 如果替换已经存在, 要打开查找, 就先关光再打开查找
 			if (bsize == 3 && !isReplace) {
-				FindReplaceEditor.delFindReplacePane(skTab);
+				FindReplaceTextPanel.delFindReplacePane(skTab);
 				findReplace(isReplace, findStr, skTab);
 			} else {
-				FindReplaceEditor.delFindReplacePane(skTab);
+				FindReplaceTextPanel.delFindReplacePane(skTab);
 			}
 			// 如果是指定查询, 需要清除之前的查询界面, 新建一个
 			if(StrUtils.isNotNullOrEmpty(findStr)) {
-				FindReplaceEditor findPanel = new FindReplaceEditor(isReplace, findStr, skTab);
-				skTab.saveFindReplacePanel(findPanel);
+				FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, skTab);
+				skTab.setFindReplacePanel(findPanel);
 			} 
 
 		} else {
-			FindReplaceEditor findPanel = new FindReplaceEditor(isReplace, findStr, skTab);
-			skTab.saveFindReplacePanel(findPanel);
+			FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, skTab);
+			skTab.setFindReplacePanel(findPanel);
 		}
 	}
 

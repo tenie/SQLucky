@@ -13,7 +13,6 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Region;
@@ -21,6 +20,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
@@ -450,7 +450,13 @@ public class NoteUtility {
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(next);
 			if(StrUtils.isNotNullOrEmpty(txt)) {
 				SqluckyTab skTab = nextItem.getValue();
-				CommonUtility.findReplace(false, txt, skTab);
+				FindReplaceTextPanel fpanel = skTab.getFindReplacePanel() ;
+				if(skTab.getFindReplacePanel() == null) {
+					CommonUtility.findReplace(false, txt, skTab);
+				}else {
+//					fpanel
+				}
+				
 			}
 		}
 		

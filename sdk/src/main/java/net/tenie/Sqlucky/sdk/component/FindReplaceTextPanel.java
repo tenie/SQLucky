@@ -3,8 +3,10 @@ package net.tenie.Sqlucky.sdk.component;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
+
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
+
 import javafx.application.Platform;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
@@ -23,9 +25,9 @@ import net.tenie.Sqlucky.sdk.utility.myEvent;
  * @author tenie
  *
  */
-public class FindReplaceEditor {
+public class FindReplaceTextPanel {
 	private static String f3Str = "";
-	private static Logger logger = LogManager.getLogger(FindReplaceEditor.class);
+	private static Logger logger = LogManager.getLogger(FindReplaceTextPanel.class);
 	
 	// 查询字符串输入框
 	public	static TextField textField;
@@ -114,6 +116,7 @@ public class FindReplaceEditor {
 		CodeArea code = SqlcukyEditor.getCodeArea();
 		int idx = code.getCaretPosition();  // 光标位置
 		findString(str, idx, sensitive, forward); 
+//		findStringStop(str, idx, sensitive, forward);
 	}
 
 	public static String codeStr(boolean sensitive) {
@@ -199,6 +202,37 @@ public class FindReplaceEditor {
 		} 
 		SqlcukyEditor.currentSqlCodeAreaHighLighting(str);
 	}
+	public static boolean  findStringStop(String str, int fromIndex, boolean sensitive, boolean forward) {
+		CodeArea code = SqlcukyEditor.getCodeArea();
+		// 获取文本
+		String text = code.getText();
+		if (sensitive) {
+			str = str.toUpperCase();
+			text = text.toUpperCase();
+		}
+		int start = -1;
+		int length = str.length();
+		if (text.indexOf(str) > -1) {
+			if (forward) {
+				start = text.indexOf(str, fromIndex);
+			} else {
+				start = text.lastIndexOf(str, (fromIndex - 1));
+				int tempIdx = fromIndex - str.length();
+				if (tempIdx == start) {
+					start = text.lastIndexOf(str, tempIdx - 1);
+				}
+			}
+			if (start > -1) {
+				selectRange(code, start, start + length);
+			}
+		} 
+		if(start > -1) {
+			SqlcukyEditor.currentSqlCodeAreaHighLighting(str);
+			return true;
+		}
+		return false;
+		
+	}
 
 	public static void delFindReplacePane(SqluckyTab skTab) {
 		VBox x = SqlcukyEditor.getTabVbox();
@@ -254,7 +288,7 @@ public class FindReplaceEditor {
 		return replaceAnchorPane;
 	}
 //  public static  void createFindPane(boolean isReplace, String findText, VBox b ) {
-	public  FindReplaceEditor(boolean isReplace, String findText, SqluckyTab skTab ) {
+	public  FindReplaceTextPanel(boolean isReplace, String findText, SqluckyTab skTab ) {
 		AnchorPane findAnchorPane = new AnchorPane();
 		CommonUtility.addCssClass(findAnchorPane, "myFindPane");
 		findAnchorPane.prefHeight(30);
