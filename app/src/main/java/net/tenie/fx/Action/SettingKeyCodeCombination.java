@@ -194,13 +194,7 @@ public final class SettingKeyCodeCombination {
 		});
 		
 		 
-		scene.getAccelerators().put(F5, () -> {
-//			var ps = SQLucky.pStage;
-////			ps.setFullScreen(true);
-////			ps.setMaximized(true);
-//			ps.toBack();
-		
-		});
+	
 		
 		
 		//RunSQLHelper.runCurrentLineSQLMethod();
@@ -249,8 +243,16 @@ public final class SettingKeyCodeCombination {
 		// 压缩代码
 		scene.getAccelerators().put(ctrlP, () -> {
 			CommonAction.pressSqlText();
-
+//			CodeArea code = SqlcukyEditor.getCodeArea();
+//			 code.moveTo(0);
 		});
+		
+		scene.getAccelerators().put(F5, () -> {
+//			CodeArea code = SqlcukyEditor.getCodeArea();
+//			int idx =	code.getCaretPosition();  // 光标位置		
+//			System.out.println(idx);
+		});
+		
 		
 		scene.getAccelerators().put(F1, () -> {
 			

@@ -114,7 +114,7 @@ public class FindReplaceTextPanel {
 		if (StrUtils.isNullOrEmpty(str))
 			return;
 		CodeArea code = SqlcukyEditor.getCodeArea();
-		int idx = code.getCaretPosition();  // 光标位置
+		int idx = code.getCaretPosition();  // 光标位置 
 		findString(str, idx, sensitive, forward); 
 //		findStringStop(str, idx, sensitive, forward);
 	}
@@ -209,7 +209,6 @@ public class FindReplaceTextPanel {
 				if (start < 0) {
 					start = text.indexOf(str);
 				}
-				code.displaceCaret(start + length);
 			} else {
 				start = text.lastIndexOf(str, (fromIndex -1));
 				int tempIdx = fromIndex - str.length();
@@ -219,10 +218,17 @@ public class FindReplaceTextPanel {
 				if (start < 0) {
 					start = text.lastIndexOf(str);
 				}
-				code.displaceCaret(start);
+//				code.displaceCaret();
+				
 			}
-			if (start > -1) {
+			if (start > -1) { 
 				selectRange(code, start, start + length);
+//				if(! forward) {
+//					int tmp = start;
+//					Platform.runLater(()->{
+//						code.moveTo(tmp);
+//					});
+//				}
 				
 			}
 		} 
@@ -339,7 +345,7 @@ public class FindReplaceTextPanel {
 		textField.setPrefHeight(15);
 		textField.getStyleClass().add("myFindTextField");
 		textField.textProperty().addListener((o, oldVal, newVal) -> {
-			findStringFromCodeArea(newVal, true, !cb.isSelected());
+//			findStringFromCodeArea(newVal, true, !cb.isSelected());
 		});
 		// 回车键出发查找下一个
 		textField.setOnKeyPressed(val->{
