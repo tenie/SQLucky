@@ -118,6 +118,29 @@ public class FindReplaceTextPanel {
 		findString(str, idx, sensitive, forward); 
 //		findStringStop(str, idx, sensitive, forward);
 	}
+	
+	 
+	/**
+	 * 找不到就停止查找 
+	 * @param str
+	 * @param forward
+	 * @param sensitive
+	 * @return   返回false, 表示找不到
+	 */
+	public static boolean findStringStopFromCodeArea(String str, Integer position, boolean forward, boolean sensitive) {
+		if (StrUtils.isNullOrEmpty(str))
+			return false;
+		
+		 Integer idx = 0;
+		if(position == null) {
+			CodeArea code = SqlcukyEditor.getCodeArea();
+			idx =	code.getCaretPosition();  // 光标位置
+		} else {
+			idx = position;
+		}
+	
+		return findStringStop(str, idx, sensitive, forward);
+	}
 
 	public static String codeStr(boolean sensitive) {
 		CodeArea code = SqlcukyEditor.getCodeArea();
@@ -186,8 +209,9 @@ public class FindReplaceTextPanel {
 				if (start < 0) {
 					start = text.indexOf(str);
 				}
+				code.displaceCaret(start + length);
 			} else {
-				start = text.lastIndexOf(str, (fromIndex - 1));
+				start = text.lastIndexOf(str, (fromIndex -1));
 				int tempIdx = fromIndex - str.length();
 				if (tempIdx == start) {
 					start = text.lastIndexOf(str, tempIdx - 1);
@@ -195,13 +219,16 @@ public class FindReplaceTextPanel {
 				if (start < 0) {
 					start = text.lastIndexOf(str);
 				}
+				code.displaceCaret(start);
 			}
 			if (start > -1) {
 				selectRange(code, start, start + length);
+				
 			}
 		} 
 		SqlcukyEditor.currentSqlCodeAreaHighLighting(str);
 	}
+	// 不循环找, 找不到下一个就不循环
 	public static boolean  findStringStop(String str, int fromIndex, boolean sensitive, boolean forward) {
 		CodeArea code = SqlcukyEditor.getCodeArea();
 		// 获取文本
@@ -323,9 +350,9 @@ public class FindReplaceTextPanel {
 		// "arrow-down"
 		down = new JFXButton();
 		down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
-		down.setOnAction(v -> {
-			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
-		});
+//		down.setOnAction(v -> {
+//			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
+//		});
 		
 		down.setOnMouseClicked(v -> {
 			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
@@ -335,9 +362,9 @@ public class FindReplaceTextPanel {
 
 		up = new JFXButton();
 		up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
-		up.setOnAction(v -> {
-			findStringFromCodeArea(textField.getText(), false, !cb.isSelected());
-		});
+//		up.setOnAction(v -> {
+//			findStringFromCodeArea(textField.getText(), false, !cb.isSelected());
+//		});
 		up.setOnMouseClicked(v -> {
 			findStringFromCodeArea(textField.getText(), false, !cb.isSelected());
 		});

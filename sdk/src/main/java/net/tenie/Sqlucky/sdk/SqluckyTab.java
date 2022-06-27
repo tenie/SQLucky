@@ -28,8 +28,11 @@ public interface SqluckyTab  {
 	public  void mainTabPaneAddTextTab() ;
 	// 主界面上存在否
 	public boolean existTab();
-	// 存就显示
+	// 存在, 就显示出来
 	public boolean existTabShow(); 
+	// 显示的Tab 是否是当前的对象
+	public boolean isShowing(); 
+	
 	public String getTitle();
 	public String getAreaText();
 	

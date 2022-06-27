@@ -11,6 +11,7 @@ import java.util.function.Function;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
@@ -414,52 +415,129 @@ public class NoteUtility {
 	}
 	
 	
-	/**
-	 * 上下切换搜索的文件
-	 */
-	public static void downUpBtnChange(boolean isUp, String txt ) {
-		var currentItem = currentTreeItem();
-		if(currentItem == null) {
-			var ls = NoteTabTree.noteTabTreeView.getRoot().getChildren();
-			if(ls.size() > 0) {
-				currentItem = NoteTabTree.noteTabTreeView.getRoot().getChildren().get(0);
-				NoteUtility.doubleClickItem( currentItem);
-				NoteTabTree.noteTabTreeView.getSelectionModel().select(currentItem);
-			}
-			
-		}else {	
-			var ls = currentItem.getParent().getChildren();
-			int idx  = ls.indexOf(currentItem);
-			int next;
-			if(isUp) {
-				  next = idx - 1;
-				  if(next < 0) {
-						next = ls.size() -1;
-					}
-			}else {
-				next = idx + 1;
-				if(ls.size() == next) {
-					next = 0;
-				}
-				
-			}
-			
-			
+	public static SqluckyTab openNextNote(ObservableList<TreeItem<SqluckyTab>> ls, int next) {
+		if( ls != null && next < ls.size()  ) {
 			var nextItem = ls.get(next);
 			NoteUtility.doubleClickItem( nextItem);
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(next);
-			if(StrUtils.isNotNullOrEmpty(txt)) {
-				SqluckyTab skTab = nextItem.getValue();
-				FindReplaceTextPanel fpanel = skTab.getFindReplacePanel() ;
-				if(skTab.getFindReplacePanel() == null) {
-					CommonUtility.findReplace(false, txt, skTab);
-				}else {
-//					fpanel
-				}
-				
+			return  nextItem.getValue();
+		}
+		return null;
+	}
+	
+ 
+	
+	/**
+	 * 上下切换搜索的文件
+	 */
+	public static void downUpBtnChange(boolean isUp, String txt) {
+		TreeItem<SqluckyTab> currentItem = currentTreeItem();
+		if (currentItem == null) {
+			var ls = NoteTabTree.noteTabTreeView.getRoot().getChildren();
+			if (ls.size() > 0) {
+				currentItem = NoteTabTree.noteTabTreeView.getRoot().getChildren().get(0);
 			}
 		}
+		if (currentItem == null) {
+			return;
+		}
 		
+		// 判断当前节点是否大开着
+		SqluckyTab currentSktb = currentItem.getValue();
+		boolean isfind =  false;
+		if(currentSktb.isShowing() ) {
+			FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
+			if(fpanel == null ) {
+				CommonUtility.findReplace(false, txt, currentSktb);
+				fpanel = currentSktb.getFindReplacePanel();
+				isfind = fpanel.findStringStopFromCodeArea(txt, 0, !isUp, false);
+			}else {
+				isfind = fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
+			}
+			
+			 
+		}else {
+			// 没有展示的情况
+//			currentSktb.existTabShow(); // 展示
+//			NoteTabTree.noteTabTreeView.getSelectionModel().select(currentItem);
+			
+			NoteUtility.doubleClickItem( currentItem);
+			NoteTabTree.noteTabTreeView.getSelectionModel().select(currentItem);
+			
+			FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
+			if(fpanel == null ) {
+				CommonUtility.findReplace(false, txt, currentSktb);
+				fpanel = currentSktb.getFindReplacePanel();
+				isfind = fpanel.findStringStopFromCodeArea(txt, 0, !isUp, false);
+			}else {
+				isfind = fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
+			}
+//		    isfind = fpanel.findStringStopFromCodeArea(txt, , false);
+			
+		}
+		
+		if(! isfind && currentSktb.isShowing() ) {
+			// 获取所有搜索到的文件节点
+			var ls = currentItem.getParent().getChildren();
+			int idx = ls.indexOf(currentItem);
+			int next;
+			if (isUp) {
+				next = idx - 1;
+				if (next < 0) {
+					next = ls.size() - 1;
+				}
+			} else {
+				next = idx + 1;
+				if (ls.size() == next) {
+					next = 0;
+				}
+	
+			}
+			
+			SqluckyTab skTab = openNextNote(ls, next);
+		}
+		
+		
+		// 获取所有搜索到的文件节点
+//		var ls = currentItem.getParent().getChildren();
+//		int idx = ls.indexOf(currentItem);
+//		int next;
+//		if (isUp) {
+//			next = idx - 1;
+//			if (next < 0) {
+//				next = ls.size() - 1;
+//			}
+//		} else {
+//			next = idx + 1;
+//			if (ls.size() == next) {
+//				next = 0;
+//			}
+//
+//		}
+
+//			var nextItem = ls.get(next);
+//			NoteUtility.doubleClickItem( nextItem);
+//			NoteTabTree.noteTabTreeView.getSelectionModel().select(next);
+//		SqluckyTab skTab = openNextNote(ls, next);
+//		if (skTab != null && StrUtils.isNotNullOrEmpty(txt)) {
+//			FindReplaceTextPanel fpanel = skTab.getFindReplacePanel();
+//			if (fpanel == null) {
+//				CommonUtility.findReplace(false, txt, skTab);
+//			} else {
+//				boolean isfind = fpanel.findStringStopFromCodeArea(txt, !isUp, false);
+//
+//				// 没有找到切换到下一个文件
+//				if (!isfind) {
+//					SqluckyTab skTab2 = openNextNote(ls, next + 1);
+//					FindReplaceTextPanel fpanel2 = skTab2.getFindReplacePanel();
+//					if (fpanel == null) {
+//						CommonUtility.findReplace(false, txt, skTab2);
+//					}
+//				}
+//			}
+//
+//		}
+
 	}
 	
 }

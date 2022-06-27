@@ -376,7 +376,7 @@ public class MyTab extends Tab implements SqluckyTab {
 		return myTabPane.getTabs().contains(this);
 	}
 	
-	// 存在显示
+	// 存在 就显示出来
 	@Override
 	public boolean existTabShow() {
 		
@@ -493,6 +493,19 @@ public class MyTab extends Tab implements SqluckyTab {
 	@Override
 	public void setFindReplacePanel(FindReplaceTextPanel findReplacePanel) {
 		this.findReplacePanel = findReplacePanel;
+	}
+
+	@Override
+	public boolean isShowing() {
+		var myTabPane = ComponentGetter.mainTabPane;
+		if(myTabPane.getTabs().contains(this)) {
+			int idxThis = myTabPane.getTabs().indexOf(this);
+			int  currentSelect = myTabPane.getSelectionModel().getSelectedIndex();
+			if(idxThis == currentSelect) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	
