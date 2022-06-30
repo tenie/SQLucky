@@ -131,12 +131,15 @@ public class FindReplaceTextPanel {
 		if (StrUtils.isNullOrEmpty(str))
 			return false;
 		
-		 Integer idx = 0;
+		Integer idx = 0;
+		CodeArea code = SqlcukyEditor.getCodeArea();
 		if(position == null) {
-			CodeArea code = SqlcukyEditor.getCodeArea();
 			idx =	code.getCaretPosition();  // 光标位置
-		} else {
+		}else if(position > -1) {
 			idx = position;
+		}else if(position < 0) { // 从后往前找
+			int areaLength  = code.getLength();
+			idx = areaLength;
 		}
 	
 		return findStringStop(str, idx, sensitive, forward);

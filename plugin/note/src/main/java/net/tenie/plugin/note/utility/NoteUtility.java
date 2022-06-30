@@ -442,6 +442,11 @@ public class NoteUtility {
 			return;
 		}
 		
+		int startIdx = 0;
+		if(isUp) {
+			startIdx = -1;
+		}
+		
 		// 判断当前节点是否大开着
 		SqluckyTab currentSktb = currentItem.getValue();
 		boolean isfind =  false;
@@ -450,52 +455,67 @@ public class NoteUtility {
 			if(fpanel == null ) {
 				CommonUtility.findReplace(false, txt, currentSktb);
 				fpanel = currentSktb.getFindReplacePanel();
-				isfind = fpanel.findStringStopFromCodeArea(txt, 0, !isUp, false);
+				isfind = fpanel.findStringStopFromCodeArea(txt, startIdx, !isUp, false);
 			}else {
 				isfind = fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
+			}
+			
+			if(! isfind && currentSktb.isShowing() ) {
+				// 获取所有搜索到的文件节点
+				var ls = currentItem.getParent().getChildren();
+				int idx = ls.indexOf(currentItem);
+				int next;
+				if (isUp) {
+					next = idx - 1;
+					if (next < 0) {
+						next = ls.size() - 1;
+					}
+				} else {
+					next = idx + 1;
+					if (ls.size() == next) {
+						next = 0;
+					}
+		
+				}
+				
+				SqluckyTab skTab = openNextNote(ls, next);
 			}
 			
 			 
 		}else {
-			// 没有展示的情况
-//			currentSktb.existTabShow(); // 展示
-//			NoteTabTree.noteTabTreeView.getSelectionModel().select(currentItem);
-			
+			// 没有展示的情况, 先展示再查找
 			NoteUtility.doubleClickItem( currentItem);
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(currentItem);
 			
-			FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
-			if(fpanel == null ) {
-				CommonUtility.findReplace(false, txt, currentSktb);
-				fpanel = currentSktb.getFindReplacePanel();
-				isfind = fpanel.findStringStopFromCodeArea(txt, 0, !isUp, false);
-			}else {
-				isfind = fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
-			}
-//		    isfind = fpanel.findStringStopFromCodeArea(txt, , false);
+			// 展示之后开始查找
+			Platform.runLater(()->{
+				int startIdx2 = 0;
+				if(isUp) {
+					startIdx2 = -1;
+				}
+				FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
+				if(fpanel == null ) {
+					CommonUtility.findReplace(false, txt, currentSktb);
+					fpanel = currentSktb.getFindReplacePanel();
+					 fpanel.findStringStopFromCodeArea(txt, startIdx2, !isUp, false);
+				}else {
+					 fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
+				}
+			});
+			
+//			
+//			FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
+//			if(fpanel == null ) {
+//				CommonUtility.findReplace(false, txt, currentSktb);
+//				fpanel = currentSktb.getFindReplacePanel();
+//				isfind = fpanel.findStringStopFromCodeArea(txt, startIdx, !isUp, false);
+//			}else {
+//				isfind = fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
+//			}
 			
 		}
 		
-		if(! isfind && currentSktb.isShowing() ) {
-			// 获取所有搜索到的文件节点
-			var ls = currentItem.getParent().getChildren();
-			int idx = ls.indexOf(currentItem);
-			int next;
-			if (isUp) {
-				next = idx - 1;
-				if (next < 0) {
-					next = ls.size() - 1;
-				}
-			} else {
-				next = idx + 1;
-				if (ls.size() == next) {
-					next = 0;
-				}
-	
-			}
-			
-			SqluckyTab skTab = openNextNote(ls, next);
-		}
+		
 		
 		
 		// 获取所有搜索到的文件节点

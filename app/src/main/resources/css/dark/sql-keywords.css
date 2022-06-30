@@ -1,10 +1,11 @@
 /* 文本颜色 */
 .text {
-     -fx-fill: #bdcddf;   /* 文本颜色 */  
+     -fx-fill: #bdcddf;   /* 文本颜色!important; */  
 }
 
 .findword {
-    -rtfx-background-color: teal!important; 
+    -rtfx-background-color: #FFF59D!important;
+    -fx-fill: #000000; 
    /*   -fx-fill: yellow;  
         -fx-underline: true;
         -fx-stroke: green;

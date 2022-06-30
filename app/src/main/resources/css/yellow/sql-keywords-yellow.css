@@ -1,7 +1,9 @@
 
 
 .findword {
-    -rtfx-background-color: teal!important; 
+  /*  -rtfx-background-color: teal!important; */
+    -rtfx-background-color: #FFF59D!important;
+    -fx-fill: #000000; 
 }
 
 .findparenthesis {
