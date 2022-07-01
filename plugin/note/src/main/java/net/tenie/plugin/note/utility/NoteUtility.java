@@ -25,10 +25,7 @@ import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
-import net.tenie.Sqlucky.sdk.utility.FileTools;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.*;
 import net.tenie.plugin.note.component.NoteOptionPanel;
 import net.tenie.plugin.note.component.NoteTabTree;
 import net.tenie.plugin.note.impl.NoteDelegateImpl;
@@ -273,8 +270,7 @@ public class NoteUtility {
 
 	/**
 	 * 创建一个TreeItem
-	 * 
-	 * @param node
+	 *
 	 * @param file
 	 * @return
 	 */
@@ -288,10 +284,12 @@ public class NoteUtility {
 			mtb.setFile(file);
 			Region icon;
 			if (file.isFile()) {
-				icon = ComponentGetter.appComponent.getIconDefActive("file-text-o");
+				icon = IconGenerator.svgImage("file-text-o", "#C1C1C3 ");
+//				icon = 	ComponentGetter.appComponent.getIconDefActive("file-text-o"); //#ACBDE8
 
 			} else {
-				icon = ComponentGetter.appComponent.getIconDefActive("folder");
+				icon = IconGenerator.svgImage("folder", "#ACBDE8 ");
+//				icon = ComponentGetter.appComponent.getIconDefActive("folder");
 
 			}
 			mtb.setIcon(icon);

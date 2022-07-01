@@ -16,3 +16,4 @@ dependency-reduced-pom.xml
 .apt_generated_tests/
 *.db
 *_hd.mp4
+*.eml
