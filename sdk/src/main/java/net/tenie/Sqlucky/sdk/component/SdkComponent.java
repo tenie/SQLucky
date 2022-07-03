@@ -149,17 +149,6 @@ public class SdkComponent {
 	}
 
 	// 创建列
-	/**
-	 * @param colname
-	 * @param type
-	 * @param typeName
-	 * @param colIdx
-	 * @param augmentation
-	 * @param iskey
-	 * @param isInfo
-	 * @param dvt
-	 * @return
-	 */
 	public static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int colIdx) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col = new FilteredTableColumn<ObservableList<StringProperty>, String>();
 		col.setCellFactory(MyTextField2TableCell2.forTableColumn());
@@ -190,16 +179,6 @@ public class SdkComponent {
 
 	/**
 	 * 创建列
-	 * 
-	 * @param colname
-	 * @param type
-	 * @param typeName
-	 * @param colIdx
-	 * @param augmentation
-	 * @param iskey
-	 * @param isInfo
-	 * @param dvt
-	 * @return
 	 */
 	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumnForShowInfo(String colname,
 			int colIdx, Double colnameWidth) {
