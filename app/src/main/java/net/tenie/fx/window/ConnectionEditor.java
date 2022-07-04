@@ -36,6 +36,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
+import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
@@ -527,8 +528,9 @@ public class ConnectionEditor {
 					item.getValue().setName(connectionName.getText() );
 					AppWindowComponentGetter.treeView.refresh();
 				}else {
-					item = new TreeItem<>(
-							new TreeNodePo(connectionName.getText(), IconGenerator.svgImageUnactive("unlink")));
+					TreeNodePo tnpo = new TreeNodePo(connectionName.getText(), IconGenerator.svgImageUnactive("unlink"));
+					tnpo.setType(TreeItemType.CONNECT_INFO);
+					item = new TreeItem<>(tnpo );
 					DBinfoTree.treeRootAddItem(item); 
 				}
 			

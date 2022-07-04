@@ -29,6 +29,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -98,7 +99,9 @@ public class DBinfoTree {
 		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
 		if (datas != null && datas.size() > 0) {
 			for (SqluckyConnector po : datas) {
-				var item = new MyTreeItem<TreeNodePo>(new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink")), po);
+				TreeNodePo tnpo = new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink") );
+				tnpo.setType(TreeItemType.CONNECT_INFO);
+				var item = new MyTreeItem<TreeNodePo>( tnpo, po);
 				ls.add(item); 
 			} 
 		} 
@@ -384,6 +387,7 @@ public class DBinfoTree {
 					menu.setViewAction(  newValue , dbc, schema, viewName);
 				}else if(nd != null && nd.getType() == TreeItemType.FUNCTION) {
 					//TODO  
+					menu.setNodeType(TreeItemType.FUNCTION);
 					menu.setConnectDisable(true);
 					menu.setViewFuncProcTriDisable(false);
 					SqluckyConnector  dbc =nd.getConnpo();
@@ -393,6 +397,7 @@ public class DBinfoTree {
 					menu.setFuncAction(  newValue , dbc, schema, funcName);
 				}else if(nd != null && nd.getType() == TreeItemType.PROCEDURE) {
 					//TODO  
+					menu.setNodeType(TreeItemType.PROCEDURE);
 					menu.setConnectDisable(true);
 					menu.setViewFuncProcTriDisable(false);
 					SqluckyConnector  dbc =nd.getConnpo();
@@ -402,6 +407,7 @@ public class DBinfoTree {
 					menu.setProcAction(  newValue , dbc, schema, procName);
 				}else if(nd != null && nd.getType() == TreeItemType.TRIGGER) {
 					//TODO  
+					menu.setNodeType(TreeItemType.TRIGGER);
 					menu.setConnectDisable(true);
 					menu.setViewFuncProcTriDisable(false);
 					SqluckyConnector  dbc =nd.getConnpo();
@@ -410,6 +416,7 @@ public class DBinfoTree {
 					String triggerName = nd.getFuncProTri().getName();
 					menu.setTriggerAction(  newValue , dbc, schema, triggerName);
 				}else {
+					menu.setNodeType(null);
 					menu.setConnectDisable(true);
 					menu.setTableDisable(true); 
 					menu.setRefreshDisable(false);

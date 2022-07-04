@@ -57,10 +57,17 @@
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Connector-Mariadb</artifactId>
 		</dependency>
+		
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Connector-Postgresql</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>net.tenie</groupId>
+			<artifactId>SQLucky-Plugin-Code-Generation</artifactId>
+		</dependency>
+		
 
 		<dependency>
 			<groupId>org.openjfx</groupId>

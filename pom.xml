@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>sdk</module>
-		<module>plugin/note</module>
+		<module>plugin/Note</module>
 		<module>plugin/Workspace</module>
 		<module>plugin/DB2_connector</module>
 		<module>plugin/H2_connector</module>
@@ -17,6 +17,7 @@
 		<module>plugin/Mariadb_connector</module>
 		<module>plugin/Postgresql_connector</module>
 		<module>plugin/Data_model</module>
+		<module>plugin/Code_generation</module>
 		<module>app</module>
 	</modules>
 
@@ -94,6 +95,11 @@
 			<dependency>
 				<groupId>net.tenie</groupId>
 				<artifactId>SQLucky-Connector-Postgresql</artifactId>
+				<version>${sqlucky.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>net.tenie</groupId>
+				<artifactId>SQLucky-Plugin-Code-Generation</artifactId>
 				<version>${sqlucky.version}</version>
 			</dependency>
 
