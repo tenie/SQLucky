@@ -4,9 +4,10 @@ import java.io.Serializable;
 
 import javafx.scene.Node;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.fx.component.InfoTree.TreeItemType;
+import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 
@@ -25,7 +26,8 @@ public class TreeNodePo implements Serializable {
 	private ConnItemContainer connItemContainer;
 	private ConnItemDbObjects connItem;
 	
-
+//	private DBNodeInfoPo dbNodeInfoPo;
+	
 	public TreeNodePo(String name, Node cion) {
 		super();
 		this.name = name;
@@ -215,5 +217,20 @@ public class TreeNodePo implements Serializable {
 	public void setConnItemContainer(ConnItemContainer connItemContainer) {
 		this.connItemContainer = connItemContainer;
 	}
+
+	public DBNodeInfoPo getDbNodeInfoPo() {
+		DBNodeInfoPo po = new DBNodeInfoPo();
+		po.setConnpo(connpo);
+		po.setFuncProTri(funcProTri);
+		po.setIcon(icon);
+		po.setName(name);
+		po.setParent(parent);
+		po.setTable(table);
+		po.setTableDDL(TableDDL);
+		po.setType(type);
+		return po;
+	}
+
+	 
 
 }

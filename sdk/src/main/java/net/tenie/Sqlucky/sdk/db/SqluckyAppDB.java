@@ -22,32 +22,32 @@ public class SqluckyAppDB {
 	
 	// 连接打开次数的计数, 只有当connTimes = 0 , 调用close, 才会真的关闭
 	private static AtomicInteger connTimes = new AtomicInteger(0);
-//	private static Connection conn;
+	private static Connection conn;
 	// 使用阻塞队列, 串行获取: 连接, 和关闭连接 
 //	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
-//	public  static Connection getConn() {
+	public  static Connection getConn() {
 //		while(connTimes.get() != 0) {
 //			CommonUtility.sleep(300);
 //		}
-//		try {
-//			if (conn == null) {
-//				conn = createH2Conn();
-//			} else if (conn.isClosed()) {
-//				conn = createH2Conn();
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//
-//		int v = connTimes.addAndGet(1);
-//		System.out.println("getConn = connIdx = " + connTimes.get() + " v = " + v);
-//
-//		return conn;
-//	}
-	public  static Connection getConn() {
-		Connection conn = createH2Conn();
+		try {
+			if (conn == null) {
+				conn = createH2Conn();
+			} else if (conn.isClosed()) {
+				conn = createH2Conn();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		int v = connTimes.addAndGet(1);
+		System.out.println("getConn = connIdx = " + connTimes.get() + " v = " + v);
+
 		return conn;
 	}
+//	public  static Connection getConn() {
+//		Connection conn = createH2Conn();
+//		return conn;
+//	}
 	
 	public  static Connection getConnNotAutoCommit() {
 		Connection conn = createH2Conn();
@@ -59,13 +59,13 @@ public class SqluckyAppDB {
 		return conn;
 	}
 	
-	public  static void closeConn(Connection conn) {
-		try { 
-				conn.close(); 					
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public  static void closeConn(Connection conn) {
+//		try {
+//				conn.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public  static void closeConnAndRollback(Connection conn) {
 		try { 
@@ -85,19 +85,32 @@ public class SqluckyAppDB {
 		}
 	}
 	
-//	public  static void closeConn() {
-//		if (conn != null) {
-//			try { 
-//				int v = connTimes.addAndGet(-1);
-//				System.out.println("closeConncloseConncloseConn = connIdx = "+ connTimes.get());
-//				if(v <= 0) {
-//					conn.close(); 					
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	public  static void closeConn(Connection conn) {
+		if (conn != null) {
+			try {
+				int v = connTimes.addAndGet(-1);
+				Thread th = new Thread(()->{
+					while (true){
+						try {
+							Thread.sleep(5000);
+							if(connTimes.get() <= 0){
+								conn.close();
+								System.out.println("closeConncloseConncloseConn = connIdx = "+ connTimes.get());
+								return;
+							}
+						} catch (Exception e) {
+							throw new RuntimeException(e);
+						}
+					}
+				});
+				if(connTimes.get() <= 0){
+					th.start();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 	
  
 	

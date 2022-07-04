@@ -1,14 +1,20 @@
 package net.tenie.sdkImp;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -21,19 +27,26 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTabData;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
+import net.tenie.fx.component.InfoTree.DBInfoTreeContextMenu;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.lib.db.h2.AppDao; 
 
 public class SqluckyAppComponent implements AppComponent { 
-
+	private Consumer< String >  dbInfoMenuOnShowingCaller ; 
+	
 	@Override
 	public void addTitledPane(TitledPane tp) {
 		Accordion ad = ComponentGetter.infoAccordion;
@@ -228,6 +241,59 @@ public class SqluckyAppComponent implements AppComponent {
 		VBox.setVgrow(sp, Priority.ALWAYS);
 		return vb;
 	}
+
+	// 注册db节点的右键菜单
+	@Override
+	public void registerDBInfoMenu(List<Menu> otherDBMenu, List<MenuItem> otherDBMenuItem) {
+		var contextMenu = ComponentGetter.dbInfoTreeContextMenu;
+		if(otherDBMenu != null && otherDBMenu.size() > 0) {
+//			DBInfoTreeContextMenu.otherDBMenu.addAll(ms);
+			contextMenu.getItems().add(new SeparatorMenuItem());
+        	for(var mn : otherDBMenu ) { 
+            	contextMenu.getItems().add(mn);
+        	}
+		}
+		if(otherDBMenuItem != null && otherDBMenuItem.size() > 0) {
+//			DBInfoTreeContextMenu.otherDBMenuItem.addAll(mis);
+			contextMenu.getItems().add(new SeparatorMenuItem());
+        	for(var mnitem : otherDBMenuItem ) { 
+            	contextMenu.getItems().add(mnitem);
+        	}
+		}
+        
+	}
+
+	/**
+	 * 获取选中的 dbInfo 节点的类型(表格, 视图, 等)
+	 */
+	@Override
+	public TreeItemType currentDBInfoNodeType() {
+		TreeItem<TreeNodePo>   item = DBinfoTree.DBinfoTreeView.getSelectionModel().getSelectedItem();
+		TreeNodePo np  =	item.getValue();
+//		System.out.println(np.getType());
+		return np.getType();
+	}
+	@Override
+	public DBNodeInfoPo currentDBInfoNode() {
+		TreeItem<TreeNodePo>   item = DBinfoTree.DBinfoTreeView.getSelectionModel().getSelectedItem();
+		TreeNodePo np  =	item.getValue();
+//		System.out.println(np.getType()); SqluckyConnector connpo
+		return np.getDbNodeInfoPo();
+	}
+
+	
+
+	@Override
+	public void setDBInfoMenuOnShowing(Consumer<String> caller) {
+		dbInfoMenuOnShowingCaller = caller;
+		
+	}
+
+	@Override
+	public Consumer<String> getDBInfoMenuOnShowing() {
+		return dbInfoMenuOnShowingCaller;
+	}
+	
 
 	
 

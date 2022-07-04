@@ -1,5 +1,8 @@
 package net.tenie.Sqlucky.sdk.component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
@@ -12,6 +15,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
@@ -65,6 +69,7 @@ public final class ComponentGetter {
 	public static TitledPane dbTitledPane;
 	// 数据库链接信息tree 的右键菜单
 	public static ContextMenu	dbInfoTreeContextMenu;
+	
 	
 	public static NotificationPane notificationPane ;
 	public static Menu pluginMenu ;
@@ -124,8 +129,6 @@ public final class ComponentGetter {
 //		SqluckyBottomSheet sheet = (SqluckyBottomSheet) tab;
 		return mtb;
 	}
-
-	
 	
 	
 	

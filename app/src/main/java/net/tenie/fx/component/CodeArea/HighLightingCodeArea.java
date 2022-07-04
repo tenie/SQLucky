@@ -58,7 +58,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	public void  hideAutoComplete() {
 		myAuto.hide();
 	}
-	
+	// 显示自动补全
 	public void showAutoComplete(double x , double y , String str) {
 		myAuto.showPop(x, y+7, str); 
 	}

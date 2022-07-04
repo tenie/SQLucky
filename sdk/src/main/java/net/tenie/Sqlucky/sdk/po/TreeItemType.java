@@ -1,8 +1,8 @@
-package net.tenie.fx.component.InfoTree;
+package net.tenie.Sqlucky.sdk.po;
 
 /*   @author tenie */
 public enum TreeItemType {
-	ROOT, SCHEMA_ROOT, SCHEMA, TABLE_ROOT, TABLE, VIEW_ROOT, VIEW, FUNCTION_ROOT, FUNCTION, 
+	ROOT, CONNECT_INFO,  SCHEMA_ROOT, SCHEMA, TABLE_ROOT, TABLE, VIEW_ROOT, VIEW, FUNCTION_ROOT, FUNCTION, 
 	PROCEDURE_ROOT,  PROCEDURE,
 	INDEX_ROOT,  INDEX,
 	SEQUENCE_ROOT,  SEQUENCE,

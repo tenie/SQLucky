@@ -1,13 +1,19 @@
 package net.tenie.Sqlucky.sdk;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import javafx.scene.Node;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.po.TreeItemType;
 
 public interface AppComponent {
 	
@@ -25,8 +31,19 @@ public interface AppComponent {
 	public String fetchData(String name, String key);
 	
 	
-	//DB DB2Connector
+	//DB DB2Connector 
 	public void registerDBConnector(SqluckyDbRegister ctr);
+	
+	// DB info Node Menu register 注册插件的menu
+	public void registerDBInfoMenu(List<Menu> ms, List<MenuItem> mis);
+	// 获取选中的 dbInfo 节点的类型(表格, 视图, 等)
+	public TreeItemType currentDBInfoNodeType();
+	// 获取 dbInfo 上的数据库连接对象
+	public DBNodeInfoPo currentDBInfoNode();
+	
+	// DBInfoMenu 显示的时候调用
+	public void setDBInfoMenuOnShowing(Consumer< String >  caller);
+	public Consumer< String >  getDBInfoMenuOnShowing();
 	
 	
 	// 执行dml sql语句

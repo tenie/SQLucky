@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.tenie</groupId>
+		<artifactId>SQLucky-pom</artifactId>
+		<version>2.0.0</version>
+	</parent>
+	 <artifactId>SQLucky-Plugin-Code-Generation</artifactId>
+	<packaging>jar</packaging>
+
+	<name>SQLucky.Plugin.CodeGeneration</name>
+
+
+	<properties>
+		<sqlucky.version>2.0.0</sqlucky.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.release>16</maven.compiler.release>
+		<javafx.version>16</javafx.version>
+		<jfoenix.version>9.0.10</jfoenix.version>
+		<richtextfx.version>0.10.6</richtextfx.version>
+		<controlsfx.version>11.1.0</controlsfx.version>
+		<sql.formatter.version>2.0.2</sql.formatter.version>
+		<commons.io.version>2.8.0</commons.io.version>
+		<slf4j.api.version>1.7.30</slf4j.api.version>
+		<log4j.version>2.14.1</log4j.version>
+
+	</properties>
+
+	<organization>
+		<name>https://github.com/tenie/SQLucky</name>
+	</organization>
+
+	<dependencies>
+		<dependency>
+			<groupId>net.tenie</groupId>
+			<artifactId>SQLucky-SDK</artifactId>
+			<version>${sqlucky.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-controls</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-fxml</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-graphics</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-swing</artifactId>
+			<version>${javafx.version}</version>
+		</dependency>
+
+		<!-- 控件库 -->
+		<dependency>
+			<groupId>com.jfoenix</groupId>
+			<artifactId>jfoenix</artifactId>
+			<version>${jfoenix.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.fxmisc.richtext</groupId>
+			<artifactId>richtextfx</artifactId>
+			<version>${richtextfx.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.controlsfx</groupId>
+			<artifactId>controlsfx</artifactId>
+			<version>${controlsfx.version}</version>
+		</dependency>
+
+		<!-- sql 格式化 -->
+		<dependency>
+			<groupId>com.github.vertical-blank</groupId>
+			<artifactId>sql-formatter</artifactId>
+			<version>${sql.formatter.version}</version>
+		</dependency>
+
+		<!-- io 操作文件 -->
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>${commons.io.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.api.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<release>${maven.compiler.release}</release>
+				</configuration>
+			</plugin>
+
+
+		</plugins>
+	</build>
+
+</project>

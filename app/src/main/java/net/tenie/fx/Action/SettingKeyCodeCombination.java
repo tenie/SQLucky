@@ -22,6 +22,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
@@ -255,20 +256,21 @@ public final class SettingKeyCodeCombination {
 		
 		
 		scene.getAccelerators().put(F1, () -> {
-			
-			// test caret
-			var codeArea = SqlcukyEditor.getCodeArea();
-			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
-			double x = bd.getCenterX();
-			double y = bd.getCenterY();
-			double z = bd.getCenterZ();
-			
-			System.out.println(x);
-			System.out.println(y);
-			System.out.println(z);
-			 
-//			MyAutoComplete.showPop(x, y+7, ""); 
-			SqlcukyEditor.currentMyTab().getSqlCodeArea().showAutoComplete(x, y, ""); 
+			ComponentGetter.appComponent.currentDBInfoNodeType();
+//			AppComponent.currentDBInfoNodeTyp
+//			// test caret
+//			var codeArea = SqlcukyEditor.getCodeArea();
+//			Bounds  bd = codeArea.caretBoundsProperty().getValue().get();
+//			double x = bd.getCenterX();
+//			double y = bd.getCenterY();
+//			double z = bd.getCenterZ();
+//			
+//			System.out.println(x);
+//			System.out.println(y);
+//			System.out.println(z);
+//			 
+////			MyAutoComplete.showPop(x, y+7, ""); 
+//			SqlcukyEditor.currentMyTab().getSqlCodeArea().showAutoComplete(x, y, ""); 
 		});
 		
 		

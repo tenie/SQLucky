@@ -17,7 +17,9 @@ public interface SqluckyCodeAreaHolder {
 
 	public void callPopup();
 	public   void codePopup(KeyEvent e) ;
+//	隐藏自动补全
 	public void  hideAutoComplete();
+//	显示自动补全
 	public void showAutoComplete(double x , double y , String str);
 	
 	public void nextBookmark(boolean tf);

@@ -158,7 +158,7 @@ public class PoDaoUtil {
 	}
 
 	public static List<DynaPo> getDynaBeansFromResultSet(String beanName, ResultSet rs) throws Exception {
-		HashMap<String, Class<?>> lhm = getResultSetMetaData(rs);
+		HashMap<String, Class> lhm = getResultSetMetaData(rs);
 		LinkedList<DynaPo> result = new LinkedList<DynaPo>();
 		Iterator<String> ite = null;
 		while (rs.next()) {
@@ -215,13 +215,13 @@ public class PoDaoUtil {
 						binfo.setColVal(dataBean, i, (rs.getTimestamp(colName) == null) ? null
 								: new Date(rs.getTimestamp(colName).getTime()));
 					} else if (colType.equals(Integer.class)) {
-						binfo.setColVal(dataBean, i, new Integer(rs.getInt(colName)));
+						binfo.setColVal(dataBean, i, rs.getInt(colName));
 					} else if (colType.equals(Long.class)) {
-						binfo.setColVal(dataBean, i, new Long(rs.getLong(colName)));
+						binfo.setColVal(dataBean, i, rs.getLong(colName));
 					} else if (colType.equals(Float.class)) {
-						binfo.setColVal(dataBean, i, new Float(rs.getFloat(colName)));
+						binfo.setColVal(dataBean, i, rs.getFloat(colName));
 					} else if (colType.equals(Double.class)) {
-						binfo.setColVal(dataBean, i, new Double(rs.getDouble(colName)));
+						binfo.setColVal(dataBean, i, rs.getDouble(colName));
 					} else if (colType.equals(String.class)) {
 						binfo.setColVal(dataBean, i, rs.getString(colName));
 					} else {
@@ -233,8 +233,8 @@ public class PoDaoUtil {
 		return result;
 	}
 
-	public static HashMap<String, Class<?>> getResultSetMetaData(ResultSet rs) throws Exception {
-		HashMap<String, Class<?>> lhs = new HashMap<String, Class<?>>(5);
+	public static HashMap<String, Class> getResultSetMetaData(ResultSet rs) throws Exception {
+		HashMap<String, Class> lhs = new HashMap<>(5);
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int colSize = rsmd.getColumnCount();
 		for (int i = 1; i < colSize + 1; i++)
@@ -244,175 +244,154 @@ public class PoDaoUtil {
 	}
 
 	private static Class getJavaType(String colName, int colType, int colPrecision, int colScale) throws Exception {
-		Class<Integer> clazz8 = null;
-		Class<String> clazz7 = null;
-		Class<Date> clazz6 = null;
-		;
-		Class<Double> clazz5 = null;
-		Class<Float> clazz = null;
-		Class<Integer> clazz4 = null;
-		Class<Date> clazz3 = null;
-		Class<Integer> clazz2 = null;
-		Class<String> clazz1 = null;
-		;
-		Class<Long> cls = null;
+		Class cls = null;
 		String jType = null;
 		switch (colType) {
-		case 2003:
-			jType = "ARRAY";
-			break;
-		case -5:
-			jType = "BIGINT";
-			cls = Long.class;
-			break;
-		case -2:
-			jType = "BINARY";
-			break;
-		case -7:
-			jType = "BIT";
-			clazz8 = Integer.class;
-			break;
-		case 2004:
-			jType = "BLOB";
-			break;
-		case 16:
-			jType = "BOOLEAN";
-			break;
-		case 1:
-			jType = "CHAR";
-			clazz7 = String.class;
-			break;
-		case 2005:
-			jType = "CLOB";
-			break;
-		case 70:
-			jType = "DATALINK";
-			break;
-		case 91:
-			jType = "DATE";
-			clazz6 = Date.class;
-			break;
-		case 3:
-			jType = "NUMERIC";
-			if (colScale == -127) {
-				Class<Double> clazz9 = Double.class;
+			case -7 :
+				jType = "BIT";
+				cls = Integer.class;
 				break;
-			}
-			if (colPrecision == 0 && colScale <= 0) {
-				Class<Double> clazz9 = Double.class;
+			case -6 :
+				jType = "TINYINT";
+				cls = Integer.class;
 				break;
-			}
-			if (colScale == 0) {
-				if (colPrecision > 9) {
-					Class<Long> clazz10 = Long.class;
-					break;
+			case -5 :
+				jType = "BIGINT";
+				cls = Long.class;
+				break;
+			case -4 :
+				jType = "LONGVARBINARY";
+				break;
+			case -3 :
+				jType = "VARBINARY";
+				break;
+			case -2 :
+				jType = "BINARY";
+				break;
+			case -1 :
+				jType = "LONGVARCHAR";
+				break;
+			case 0 :
+				jType = "NULL";
+				break;
+			case 1 :
+				jType = "CHAR";
+				cls = String.class;
+				break;
+			case 2 :
+				jType = "NUMERIC";
+				if (colScale == -127) {
+					cls = Double.class;
+				} else if (colPrecision == 0 && colScale <= 0) {
+					cls = Double.class;
+				} else if (colScale == 0) {
+					if (colPrecision > 9) {
+						cls = Long.class;
+					} else {
+						cls = Integer.class;
+					}
+				} else if (colScale > 0) {
+					if (colPrecision > 9) {
+						cls = Double.class;
+					} else {
+						cls = Float.class;
+					}
 				}
-				Class<Integer> clazz9 = Integer.class;
 				break;
-			}
-			if (colScale > 0) {
-				if (colPrecision > 9) {
-					Class<Double> clazz10 = Double.class;
-					break;
+			case 3 :
+				jType = "NUMERIC";
+				if (colScale == -127) {
+					cls = Double.class;
+				} else if (colPrecision == 0 && colScale <= 0) {
+					cls = Double.class;
+				} else if (colScale == 0) {
+					if (colPrecision > 9) {
+						cls = Long.class;
+					} else {
+						cls = Integer.class;
+					}
+				} else if (colScale > 0) {
+					if (colPrecision > 9) {
+						cls = Double.class;
+					} else {
+						cls = Float.class;
+					}
 				}
-				Class<Float> clazz9 = Float.class;
-			}
-			break;
-		case 2001:
-			jType = "DISTINCT";
-			break;
-		case 8:
-			jType = "DOUBLE";
-			clazz5 = Double.class;
-			break;
-		case 6:
-			jType = "FLOAT";
-			clazz = Float.class;
-			break;
-		case 4:
-			jType = "INTEGER";
-			clazz4 = Integer.class;
-			break;
-		case 2000:
-			jType = "JAVA_OBJECT";
-			break;
-		case -4:
-			jType = "LONGVARBINARY";
-			break;
-		case -1:
-			jType = "LONGVARCHAR";
-			break;
-		case 0:
-			jType = "NULL";
-			break;
-		case 2:
-			jType = "NUMERIC";
-			if (colScale == -127) {
-				Class<Double> clazz9 = Double.class;
 				break;
-			}
-			if (colPrecision == 0 && colScale <= 0) {
-				Class<Double> clazz9 = Double.class;
+			case 4 :
+				jType = "INTEGER";
+				cls = Integer.class;
 				break;
-			}
-			if (colScale == 0) {
-				if (colPrecision > 9) {
-					Class<Long> clazz9 = Long.class;
-					break;
-				}
-				clazz4 = Integer.class;
+			case 5 :
+				jType = "SMALLINT";
+				cls = Integer.class;
 				break;
-			}
-			if (colScale > 0) {
-				if (colPrecision > 9) {
-					Class<Double> clazz10 = Double.class;
-					break;
-				}
-				Class<Float> clazz9 = Float.class;
-			}
-			break;
-		case 1111:
-			jType = "OTHER";
-			break;
-		case 7:
-			jType = "REAL";
-			break;
-		case 2006:
-			jType = "REF";
-			break;
-		case 5:
-			jType = "SMALLINT";
-			clazz4 = Integer.class;
-			break;
-		case 2002:
-			jType = "STRUCT";
-			break;
-		case 92:
-			jType = "TIME";
-			break;
-		case 93:
-			jType = "TIMESTAMP";
-			clazz3 = Date.class;
-			break;
-		case -6:
-			jType = "TINYINT";
-			clazz2 = Integer.class;
-			break;
-		case -3:
-			jType = "VARBINARY";
-			break;
-		case 12:
-			jType = "VARCHAR";
-			clazz1 = String.class;
-			break;
-		default:
-			jType = "JDBC_NOT_SUPPORT";
-			break;
+			case 6 :
+				jType = "FLOAT";
+				cls = Float.class;
+				break;
+			case 7 :
+				jType = "REAL";
+				break;
+			case 8 :
+				jType = "DOUBLE";
+				cls = Double.class;
+				break;
+			case 12 :
+				jType = "VARCHAR";
+				cls = String.class;
+				break;
+			case 16 :
+				jType = "BOOLEAN";
+				break;
+			case 70 :
+				jType = "DATALINK";
+				break;
+			case 91 :
+				jType = "DATE";
+				cls = Date.class;
+				break;
+			case 92 :
+				jType = "TIME";
+				break;
+			case 93 :
+				jType = "TIMESTAMP";
+				cls = Date.class;
+				break;
+			case 1111 :
+				jType = "OTHER";
+				break;
+			case 2000 :
+				jType = "JAVA_OBJECT";
+				break;
+			case 2001 :
+				jType = "DISTINCT";
+				break;
+			case 2002 :
+				jType = "STRUCT";
+				break;
+			case 2003 :
+				jType = "ARRAY";
+				break;
+			case 2004 :
+				jType = "BLOB";
+				break;
+			case 2005 :
+				jType = "CLOB";
+				break;
+			case 2006 :
+				jType = "REF";
+				break;
+			default :
+				jType = "JDBC_NOT_SUPPORT";
 		}
-		if (clazz1 != null)
-			return clazz1;
-		throw new Exception("Not supported column type! colName=" + colName + " jdbcType=" + jType + " type=" + colType
-				+ " precision=" + colPrecision + " Scale=" + colScale);
+
+		if (cls != null) {
+			return cls;
+		} else {
+			throw new Exception("Not supported column type! colName=" + colName + " jdbcType=" + jType + " type="
+					+ colType + " precision=" + colPrecision + " Scale=" + colScale);
+		}
 	}
 
 	public static void setParamsToPreparedStatment(PreparedStatement ps, List params) throws Exception {
