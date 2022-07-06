@@ -3,6 +3,7 @@ package net.tenie.fx.main;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -41,6 +42,7 @@ import net.tenie.sdkImp.SqluckyAppComponent;
  *
  */
 public class SQLucky extends Application {
+	public static String sysOpenFile = ""; 
 	public static List<String> argsList = new ArrayList<>(); 
 	public static String userDir = "";
 	public static Stage pStage;
@@ -209,6 +211,11 @@ public class SQLucky extends Application {
 	
 	
 	public static void main(String[] args) throws IOException { 
+		logger.debug("main.args ==  "Arrays.toString(args)); 
+		if(args!=null && args.length >0) {
+			sysOpenFile = args[0];
+		}
+		
 		if(CommonUtility.isLinuxOS()) {
 			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
 		}else {

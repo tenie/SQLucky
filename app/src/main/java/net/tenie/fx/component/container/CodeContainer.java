@@ -18,7 +18,9 @@ public class CodeContainer {
 	private VBox container;
 	private AnchorPane operateBtnPane;
 	private TabPane mainTabPane;
-	private DraggingTabPaneSupport dtps = new DraggingTabPaneSupport();
+	//拖拽控制组件
+//	private DraggingTabPaneSupport dtps = new DraggingTabPaneSupport();
+	// 通知信息的面板容器, 一些提示信息, 会在这个容器顶部显示
 	private NotificationPane notificationPane = new NotificationPane();
 	public CodeContainer() {
 		container = new VBox();
@@ -27,9 +29,11 @@ public class CodeContainer {
 		mainTabPane = new TabPane();
 		ComponentGetter.mainTabPane = mainTabPane;
 
-		dtps.addSupport(mainTabPane);
+//		dtps.addSupport(mainTabPane);
 
 //		VBox.setVgrow(mainTabPane, Priority.ALWAYS);
+		
+		// 将主面板放入到"通知面板"的容器中
 		notificationPane.setContent(mainTabPane); 
 		VBox.setVgrow(notificationPane, Priority.ALWAYS);
 		// 配置 notificationPane 组件
@@ -48,6 +52,7 @@ public class CodeContainer {
 		
 	}
 
+	// 顶部提示(通知)信息框的配置
 	public void configNotificationPane() {
 		ComponentGetter.notificationPane = notificationPane;
 //	    notificationPane.setText("Hello World! Using the dark theme");
@@ -55,21 +60,21 @@ public class CodeContainer {
 		notificationPane.setShowFromTop(true);
 		notificationPane.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
 		
-	    notificationPane.setOnShown(e->{
-	    	new Thread(() -> { 
-					try {
-						Thread.sleep(3000);
-					} catch (InterruptedException e1) {
-						e1.printStackTrace();
-					}
-					Platform.runLater(()->{
+		notificationPane.setOnShown(e -> {
+			new Thread(() -> {
+				try {
+					Thread.sleep(3000); // 延迟3秒后隐藏
+					Platform.runLater(() -> {
 						notificationPane.hide();
 					});
-					
-				 
+
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+
 			}).start();
-	    	
-	    });
+
+		});
 	}
 	
 
