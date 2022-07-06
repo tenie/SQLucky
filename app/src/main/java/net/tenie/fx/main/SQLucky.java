@@ -211,7 +211,7 @@ public class SQLucky extends Application {
 	
 	
 	public static void main(String[] args) throws IOException { 
-		logger.debug("main.args ==  "Arrays.toString(args)); 
+		logger.debug("main.args ==  "+ Arrays.toString(args)); 
 		if(args!=null && args.length >0) {
 			sysOpenFile = args[0];
 		}
