@@ -712,6 +712,40 @@ public class CommonAction {
 			e.printStackTrace();
 		}
 	}
+	// 打开系统中的一个sql文件, 并在主界面显示
+	public static void openSqlFile(	File f) {
+		try {
+			if (f == null)
+				return;
+			String charset = FileTools.detectFileCharset(f);
+			if(charset == null ) {
+				 new RuntimeException("Open failed!");
+			}
+			String val = FileUtils.readFileToString(f, charset); 
+			String tabName = "";
+//			ComponentGetter.fileEncode.put( f.getPath(), encode);
+			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
+//				id = ConfigVal.SAVE_TAG + f.getPath();
+				tabName = FileTools.fileName(f.getPath());
+				setOpenfileDir(f.getPath());
+			}
+			DocumentPo scpo = new DocumentPo();
+			scpo.setEncode(charset);
+			scpo.setFileFullName(f.getAbsolutePath());
+			scpo.setText(val);
+			scpo.setTitle(tabName);
+			MyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
+			if(mt != null) { // 如果已经存在就不用重新打开
+				mt.mainTabPaneAddSqlTab();
+			}else {
+				MyTab.createTabFromSqlFile(scpo);
+			}
+			
+		} catch (IOException e) {
+			MyAlert.errorAlert( e.getMessage());
+			e.printStackTrace();
+		}
+	}
 
 	// 查看表明细(一行数据) 快捷键
 	public static void shortcutShowDataDatil() {

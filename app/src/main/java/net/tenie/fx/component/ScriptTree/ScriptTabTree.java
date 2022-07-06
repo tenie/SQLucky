@@ -1,9 +1,13 @@
 package net.tenie.fx.component.ScriptTree;
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.jfoenix.controls.JFXButton;
 
@@ -27,6 +31,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyTab;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
+import net.tenie.fx.main.SQLucky;
 import net.tenie.lib.db.h2.AppDao;
 import net.tenie.lib.db.h2.H2SqlTextSavePo;
 
@@ -38,6 +43,8 @@ import net.tenie.lib.db.h2.H2SqlTextSavePo;
  */
 public class ScriptTabTree {
 
+	private static Logger logger = LogManager.getLogger(ScriptTabTree.class);
+	
 	public static TreeView<MyTab> ScriptTreeView; 
 	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
 	private  ScriptTreeContextMenu  menu;
@@ -83,6 +90,7 @@ public class ScriptTabTree {
 		List<DocumentPo> datas ;
 		List<H2SqlTextSavePo> ls;
 		String SELECT_PANE ;
+		MyTab sysOpenFileTB = null;
 		Connection H2conn = SqluckyAppDB.getConn();
 		try {
 			ls = AppDao.read(H2conn);
@@ -102,36 +110,61 @@ public class ScriptTabTree {
 			ConfigVal.pageSize = datas.size();  
 			for (DocumentPo po : datas) {
 				MyTab tb = new MyTab(po);
+				
 				TreeItem<MyTab> item = new TreeItem<>(tb);
 //				rootNode.getChildren().add(item);
 				itemList.add(item);
 				// 恢复代码编辑框
 				if (ids.contains(po.getId())) {
 					mtbs.add(tb);
+					// 再操作系统中通过鼠标双击打开的文件, 如果再在以前打开过就直接选中
+					if(StrUtils.isNotNullOrEmpty(SQLucky.sysOpenFile) ) {
+						var filePath = po.getFileFullName();
+						if(StrUtils.isNotNullOrEmpty(filePath) ) {
+							if(SQLucky.sysOpenFile.equals(filePath)) {
+								sysOpenFileTB = tb;
+								logger.info("**** filePath = " + filePath);
+							}
+						}
+					}
+					
 				}
+				
+				
 			}
 		}
+		MyTab tmpSysOpenFileTB = sysOpenFileTB;
 		// 页面显示后 执行下吗
 		Consumer< String > cr = v->{		
 				if(itemList.size() > 0 ) {
-					Platform.runLater(()->{
-						rootNode.getChildren().addAll(itemList);
-						// 恢复代码编辑框
-						if (mtbs.size() > 0) {
-							MyTab.mainTabPaneAddAllMyTabs(mtbs);
-							// 初始化上次选中页面
-							if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) {
-								int sps = Integer.valueOf(SELECT_PANE);
-								if (mtbs.size() > sps) {
-									ComponentGetter.mainTabPane.getSelectionModel().select(sps);
-								}
+				Platform.runLater(() -> {
+					rootNode.getChildren().addAll(itemList);
+					// 恢复代码编辑框
+					if (mtbs.size() > 0) {
+						MyTab.mainTabPaneAddAllMyTabs(mtbs);
+						
+						// 系统打开文件触发启动APP时, 恢复历史中的文件
+						if (tmpSysOpenFileTB != null) {
+							logger.info("系统打开文件触发启动APP时, 恢复历史中的文件 " );
+							ComponentGetter.mainTabPane.getSelectionModel().select(tmpSysOpenFileTB);
+						}else if(StrUtils.isNotNullOrEmpty(SQLucky.sysOpenFile) ) { // 系统打开文件触发启动APP时, 新开一个 脚本文件
+							logger.info("系统打开文件触发启动APP时, 新开一个 脚本文件 " );
+							File sif = new File(SQLucky.sysOpenFile);
+							CommonAction.openSqlFile(sif);
+						}
+						else if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) {// 恢复选中上次选中页面
+							logger.info(" 恢复选中上次选中页面" );
+							int sps = Integer.valueOf(SELECT_PANE);
+							if (mtbs.size() > sps) {
+								ComponentGetter.mainTabPane.getSelectionModel().select(sps);
 							}
 						}
-						// 没有tab被添加, 添加一新的
-						if (mtbs.size() == 0) {
-							MyTab.addCodeEmptyTabMethod();
-						}
-					});
+					}
+					// 没有tab被添加, 添加一新的
+					if (mtbs.size() == 0) {
+						MyTab.addCodeEmptyTabMethod();
+					}
+				});
 				}else {
 					Platform.runLater(()->{
 						MyTab.addCodeEmptyTabMethod();
