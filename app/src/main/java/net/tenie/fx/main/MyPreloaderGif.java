@@ -76,7 +76,7 @@ public class MyPreloaderGif extends Preloader {
        primaryStage.setResizable(false);
        primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
        primaryStage.setScene(scene);
-       primaryStage.setAlwaysOnTop(true);
+//       primaryStage.setAlwaysOnTop(true);
        primaryStage.show();
        stopTime();
 //		Thread th = new Thread() {
