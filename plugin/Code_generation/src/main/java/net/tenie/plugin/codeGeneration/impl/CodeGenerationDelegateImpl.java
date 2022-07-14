@@ -1,18 +1,16 @@
 package net.tenie.plugin.codeGeneration.impl;
 
-import java.util.List;
 
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TitledPane;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.plugin.codeGeneration.component.CodeGenerationMenu;
 
-public class CodeGenerationDelegateImpl implements SqluckyPluginDelegate { 
-	public static final String pluginName = "net.tenie.plugin.CodeGeneration";
+public class CodeGenerationDelegateImpl implements SqluckyPluginDelegate {
+	public static final String pluginName = "Code Generation";
+	public static final String pluginCode = "net.tenie.plugin.CodeGeneration";
+	public static final String pluginDescribe = "Code Generation";
+	
 	@Override
 	public void load() {
 		System.out.println("load:  CodeGenerationDelegateImpl..."); 
@@ -29,7 +27,7 @@ public class CodeGenerationDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: NoteDelegateImp...");
+		System.out.println("unload: CodeGenerationDelegateImpl...");
 
 	}
 
@@ -40,6 +38,14 @@ public class CodeGenerationDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public void register() {
 		
+	}
+	@Override
+	public String pluginCode() {
+		return pluginCode;
+	}
+	@Override
+	public String pluginDescribe() {
+		return pluginDescribe;
 	}
 
 }

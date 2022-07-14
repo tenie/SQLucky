@@ -3,8 +3,11 @@ package net.tenie.plugin.mysqlConnector.impl;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 
-public class MysqlConnectorDelegateImpl implements SqluckyPluginDelegate {  
-	public static final String pluginName = "net.tenie.plugin.MysqlConnector";
+public class MysqlConnectorDelegateImpl implements SqluckyPluginDelegate {
+	public static final String pluginName = "Mysql Connector";
+	public static final String pluginCode = "net.tenie.plugin.MysqlConnector";
+	public static final String pluginDescribe = "Mysql Connector";
+	
 	@Override
 	public void register() {
 		System.out.println("register:  MysqlConnectorDelegateImpl ..."); 
@@ -21,7 +24,7 @@ public class MysqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: NoteDelegateImp...");
+		System.out.println("unload: MysqlConnectorDelegateImpl...");
 
 	}
 
@@ -31,8 +34,15 @@ public class MysqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 	}
 	@Override
 	public void load() {
-		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public String pluginCode() {
+		return pluginCode;
+	}
+	@Override
+	public String pluginDescribe() {
+		return pluginDescribe;
 	}
 
 }

@@ -6,6 +6,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
@@ -15,7 +16,7 @@ import net.tenie.fx.Action.CommonAction;
 public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
  
 	
-	public HighLightingSqlCodeAreaContextMenu(HighLightingCodeArea codeArea) {
+	public HighLightingSqlCodeAreaContextMenu(SqluckyCodeAreaHolder codeArea) {
 		super();
 		this.setPrefWidth(200);
 		MenuItem copy  = new MenuItem("Copy                        (ctrl+C)"); 

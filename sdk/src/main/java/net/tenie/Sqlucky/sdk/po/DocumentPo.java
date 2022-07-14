@@ -12,6 +12,9 @@ import javafx.scene.layout.Region;
  */
 public class DocumentPo implements Serializable {
 
+	public static int IS_SQL = 1;
+	public static int IS_TEXT = 2;
+	
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
@@ -22,6 +25,7 @@ public class DocumentPo implements Serializable {
 	private Integer paragraph;
 	private File file;
 	private Region icon;
+	private int type;
 	
 	public DocumentPo() {
 		this.id = null;
@@ -32,6 +36,7 @@ public class DocumentPo implements Serializable {
 		this.paragraph = 0;
 		this.file = null;
 		this.icon = null;
+		this.type = IS_SQL;
 		
 	}
 	
@@ -118,6 +123,14 @@ public class DocumentPo implements Serializable {
 
 	public void setIcon(Region icon) {
 		this.icon = icon;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
 	}
 
 	public static long getSerialversionuid() {

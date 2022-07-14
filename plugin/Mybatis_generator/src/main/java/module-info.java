@@ -19,5 +19,5 @@ open module SQLucky.plugin.MybatisGenerator{
 	requires org.slf4j;
 	
 	exports net.tenie.plugin.MybatisGenerator.impl;
-    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.MybatisGenerator.impl.DataModelDelegateImpl;
+    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.MybatisGenerator.impl.MybatisGeneratorDelegateImpl;
 }

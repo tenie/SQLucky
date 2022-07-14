@@ -8,12 +8,15 @@ import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.plugin.DataModel.DataModelTabTree; 
 
-public class DataModelDelegateImpl implements SqluckyPluginDelegate { 
-	TitledPane NotePane;
-	public static final String pluginName = "net.tenie.plugin.note";
+public class DataModelDelegateImpl implements SqluckyPluginDelegate {
+	public static final String pluginName = "Data Model";
+	public static final String pluginCode = "net.tenie.plugin.DataModel";
+	public static final String pluginDescribe = "Data Model";
+	
+	private static TitledPane NotePane;
 	@Override
 	public void load() {
-		System.out.println("load:  NoteDelegateImp..."); 
+		System.out.println("load:  DataModelDelegateImpl..."); 
 		AppComponent appComponent = ComponentGetter.appComponent;
 		
 		
@@ -44,7 +47,7 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: NoteDelegateImp...");
+		System.out.println("unload: DataModelDelegateImpl...");
 
 	}
 
@@ -54,8 +57,15 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 	}
 	@Override
 	public void register() {
-		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public String pluginCode() {
+		return pluginCode;
+	}
+	@Override
+	public String pluginDescribe() {
+		return pluginDescribe;
 	}
 
 }

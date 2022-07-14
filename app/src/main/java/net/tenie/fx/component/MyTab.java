@@ -30,6 +30,7 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.CodeArea.MyAutoComplete;
+import net.tenie.fx.component.CodeArea.MyTextArea;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
@@ -42,7 +43,7 @@ import net.tenie.lib.db.h2.AppDao;
  */
 public class MyTab extends Tab implements SqluckyTab {
 	private DocumentPo docPo;
-	private HighLightingCodeArea sqlCodeArea;
+	private SqluckyCodeAreaHolder sqlCodeArea;
 	// 放查找面板, 文本area 的容器
 	private VBox vbox;
 	// 查找面板
@@ -77,7 +78,11 @@ public class MyTab extends Tab implements SqluckyTab {
 		}else {
 			docPo = po;
 		}
-		createMyTab();
+		if(po.getType() == DocumentPo.IS_SQL) {
+			createMyTab();
+		}else if(po.getType() == DocumentPo.IS_TEXT) {
+			createTextMyTab();
+		}
 	}
 	
 	public MyTab(DocumentPo po, boolean save) {
@@ -90,11 +95,17 @@ public class MyTab extends Tab implements SqluckyTab {
 			}else {
 				docPo = po;
 			}
-			createMyTab();
+//			createMyTab();
 		}else {
 			docPo = po;
-			createMyTab();
+//			createMyTab();
 		}
+		if(po.getType() == DocumentPo.IS_SQL) {
+			createMyTab();
+		}else if(po.getType() == DocumentPo.IS_TEXT) {
+			createTextMyTab();
+		}
+		
 	}
 	
  
@@ -135,6 +146,41 @@ public class MyTab extends Tab implements SqluckyTab {
 		// 右键菜单
 		this.setContextMenu(MyTabMenu());
 	}
+	
+	private void createTextMyTab() {
+		String TabName = docPo.getTitle();
+		var myTabPane = ComponentGetter.mainTabPane;
+		// 	名称
+		CommonUtility.setTabName(this, TabName);
+		// 添加到缓存
+		MainTabs.add(this);
+//		MyAutoComplete myAuto = new MyAutoComplete();
+		sqlCodeArea = new MyTextArea();
+		
+		StackPane pane = sqlCodeArea.getCodeAreaPane();
+		vbox = new VBox();
+		vbox.getChildren().add(pane);
+		VBox.setVgrow(pane, Priority.ALWAYS);
+		this.setContent(vbox);
+
+		// 关闭前事件
+		this.setOnCloseRequest(tabCloseReq(myTabPane));
+		// 选中事件
+		this.setOnSelectionChanged(value -> {
+			MainTabInfo ti = MainTabs.get(this);
+			if (ti != null) {
+				DBConns.changeChoiceBox(ti.getTabConnIdx());
+			}
+
+		}); 
+		
+		// 设置sql 文本
+		initTabSQLText( docPo.getText());
+		
+		// 右键菜单
+		this.setContextMenu(MyTabMenu());
+	}
+	
 	
 	// 设置tab 中的 area 中的文本
 	public   void initTabSQLText(String text) {

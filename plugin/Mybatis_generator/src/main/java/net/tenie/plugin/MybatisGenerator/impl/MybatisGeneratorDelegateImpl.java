@@ -8,12 +8,14 @@ import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.plugin.MybatisGenerator.DataModelTabTree; 
 
-public class DataModelDelegateImpl implements SqluckyPluginDelegate { 
+public class MybatisGeneratorDelegateImpl implements SqluckyPluginDelegate {
+	public static final String pluginName = "Mybatis Generator";
+	public static final String pluginCode = "net.tenie.plugin.MybatisGenerator";
+	public static final String pluginDescribe = "Mybatis Generator";
 	TitledPane NotePane;
-	public static final String pluginName = "net.tenie.plugin.note";
 	@Override
 	public void load() {
-		System.out.println("load:  NoteDelegateImp..."); 
+		System.out.println("load:  MybaisGeneratorDelegateImpl..."); 
 		AppComponent appComponent = ComponentGetter.appComponent;
 		
 		
@@ -44,7 +46,7 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: NoteDelegateImp...");
+		System.out.println("unload: MybaisGeneratorDelegateImpl...");
 
 	}
 
@@ -54,8 +56,15 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 	}
 	@Override
 	public void register() {
-		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public String pluginCode() {
+		return pluginCode;
+	}
+	@Override
+	public String pluginDescribe() {
+		return pluginDescribe;
 	}
 
 }

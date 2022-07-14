@@ -20,6 +20,7 @@ import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyTab;
+import net.tenie.fx.plugin.PluginManageWindow;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
 
@@ -332,13 +333,15 @@ public class MenuBarContainer {
 	Menu createPluginMenu() {
 		Menu mn = new Menu("Plugin");
 
-//		MenuItem about = new MenuItem(StrUtils.MenuItemNameFormat("About"));
+		MenuItem plugin = new MenuItem(StrUtils.MenuItemNameFormat("Plugin Manage "));
 //		about.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
-//		about.setOnAction(value -> {
-//			ModalDialog.showAbout();
-//		});
+	
+		plugin.setOnAction(value -> {
+			PluginManageWindow pw = new PluginManageWindow();
+			pw.show();
+		});
 //
-//		mn.getItems().addAll(about); 
+		mn.getItems().addAll(plugin); 
 		ComponentGetter.pluginMenu = mn;
 		return mn;
 	}

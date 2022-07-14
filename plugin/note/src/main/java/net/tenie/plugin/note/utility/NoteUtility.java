@@ -279,6 +279,12 @@ public class NoteUtility {
 			DocumentPo fileNode = new DocumentPo();
 			fileNode.setFileFullName(file.getAbsolutePath());
 			fileNode.setTitle(file.getName());
+			if(file.getAbsolutePath().toLowerCase().endsWith(".sql")) {
+				fileNode.setType(DocumentPo.IS_SQL);
+			}else {
+				fileNode.setType(DocumentPo.IS_TEXT);
+			}
+			
 			SqluckyTab mtb = ComponentGetter.appComponent.sqluckyTab(fileNode);
 
 			mtb.setFile(file);
@@ -364,11 +370,13 @@ public class NoteUtility {
 									String charset = FileTools.detectFileCharset(tmpfile);
 									if (charset != null) {
 										String textStr = FileTools.read(tmpfile, charset);
-										if (textStr.contains(searchStr)) {
+										if (textStr.toLowerCase().contains(searchStr)) {
 											TreeItem<SqluckyTab> fileRootitem = NoteUtility.createItemNode(tmpfile);
 
 											Platform.runLater(() -> {
 												tmpRoot.getChildren().add(fileRootitem);
+												down.setDisable(false);
+												up.setDisable(false);
 											});
 										}
 									}
