@@ -3,8 +3,11 @@ package net.tenie.plugin.sqliteConnector.impl;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 
-public class SqliteConnectorDelegateImpl implements SqluckyPluginDelegate {  
-	public static final String pluginName = "net.tenie.plugin.sqliteConnector";
+public class SqliteConnectorDelegateImpl implements SqluckyPluginDelegate {
+	public static final String pluginName = "sqlite Connector";
+	public static final String pluginCode = "net.tenie.plugin.sqliteConnector";
+	public static final String pluginDescribe = "sqlite Connector";
+	
 	@Override
 	public void register() {
 		System.out.println("load:  SqliteConnectorDelegateImpl..."); 
@@ -21,7 +24,7 @@ public class SqliteConnectorDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: NoteDelegateImp...");
+		System.out.println("unload: SqliteConnectorDelegateImpl...");
 
 	}
 
@@ -31,8 +34,15 @@ public class SqliteConnectorDelegateImpl implements SqluckyPluginDelegate {
 	}
 	@Override
 	public void load() {
-		// TODO Auto-generated method stub
 		
+	}
+	@Override
+	public String pluginCode() {
+		return pluginCode;
+	}
+	@Override
+	public String pluginDescribe() {
+		return pluginDescribe;
 	}
 
 }

@@ -9,8 +9,10 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.plugin.note.component.NoteTabTree; 
 
 public class NoteDelegateImpl implements SqluckyPluginDelegate { 
-	TitledPane NotePane;
-	public static final String pluginName = "net.tenie.plugin.note";
+	private static TitledPane NotePane;
+	public static final String pluginName = "Note";
+	public static final String pluginCode = "net.tenie.plugin.note";
+	public static final String pluginDescribe = "Note";
 	@Override
 	public void load() {
 		System.out.println("load:  NoteDelegateImp..."); 
@@ -57,6 +59,14 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public void register() {
 		
+	}
+	@Override
+	public String pluginCode() {
+		return pluginCode;
+	}
+	@Override
+	public String pluginDescribe() {
+		return pluginDescribe;
 	}
 
 }

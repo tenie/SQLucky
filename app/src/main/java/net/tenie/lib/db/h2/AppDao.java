@@ -150,6 +150,23 @@ public class AppDao {
 			
 			"  PRIMARY KEY ( `ITEM_ID`, `TABLE_ID`,`DEF_KEY`)\n" + 
 			") ";
+	
+	public static final  String PLUGIN_INFO = 
+			"CREATE TABLE `PLUGIN_INFO` (\n" +
+			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
+			"  `PLUGIN_NAME` VARCHAR(200)    ,   \n" +  //字段名称
+			"  `PLUGIN_CODE` VARCHAR(200)    ,   \n" +  //字段名称
+			"  `PLUGIN_DESCRIBE` VARCHAR(1000)  , \n" +
+			"  `COMMENT` VARCHAR(1000)  , \n" +
+			"  `INSTALL_STATUS` INT(1) ,\n" +  //安装状态, 0:未安装, 1: 以安装
+			"  `RELOAD_STATUS` INT(1) DEFAULT '1',\n" +   // 是否需要加载, 0: 不加载, 1: 加载
+			
+			
+			"  `CREATED_TIME` DATETIME ,\n" + 
+			"  `UPDATED_TIME` DATETIME ,\n" + 
+			
+			"  PRIMARY KEY ( `ID`, `PLUGIN_NAME`)\n" + 
+			") ";
  
 	
 	// 建表 
@@ -163,6 +180,7 @@ public class AppDao {
 			DBTools.execDDLNoErr(conn, DATA_MODEL_INFO);
 			DBTools.execDDLNoErr(conn, DATA_MODEL_TABLE);
 			DBTools.execDDLNoErr(conn, DATA_MODEL_TABLE_FIELDS);
+			DBTools.execDDLNoErr(conn, PLUGIN_INFO);
 			
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -428,7 +446,7 @@ public class AppDao {
 	
 	public static void testDbTableExists(Connection conn) {
 		// 第一次启动
-		if (!tabExist(conn, "DATA_MODEL_INFO")) {
+		if (!tabExist(conn, "PLUGIN_INFO")) {
 			AppDao.createTab(conn);
 			// 数据库迁移
 			transferOldDbData(conn);

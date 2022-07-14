@@ -2,6 +2,9 @@ package net.tenie.Sqlucky.sdk;
 
 public interface SqluckyPluginDelegate {
 	String pluginName();
+	String pluginCode();
+	String pluginDescribe();
+	
 	
 	/**
 	 * 主窗口创建前调用
