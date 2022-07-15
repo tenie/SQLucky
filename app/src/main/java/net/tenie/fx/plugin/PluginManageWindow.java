@@ -1,5 +1,7 @@
 package net.tenie.fx.plugin;
 
+import java.sql.Connection;
+
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import com.jfoenix.controls.JFXButton;
@@ -25,6 +27,7 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
@@ -122,5 +125,13 @@ public class PluginManageWindow {
 	public void show() {
 		var stage = CreateModalWindow(pluginManageBox);
 		stage.show();
+		String sql = "select * from PLUGIN_INFO";
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			SdkComponent.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	
 	}
 }

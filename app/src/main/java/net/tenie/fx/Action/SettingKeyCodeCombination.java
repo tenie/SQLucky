@@ -32,7 +32,7 @@ import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.MyAreaTab;
 
 /*   @author tenie */
 public final class SettingKeyCodeCombination {
@@ -207,7 +207,7 @@ public final class SettingKeyCodeCombination {
 		});
 		// 添加代码窗口
 		scene.getAccelerators().put(ctrlT, () -> {
-			MyTab.addCodeEmptyTabMethod();
+			MyAreaTab.addCodeEmptyTabMethod();
 		});
 		// close code tab
 //		scene.getAccelerators().put(ctrlW, () -> {

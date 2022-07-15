@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.lib.reflex.BuildObject;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -30,13 +30,13 @@ public class InsertDao {
 	 * @throws Exception
 	 */
 	public static String execInsert(Connection conn, String tableName, ObservableList<StringProperty> data,
-			ObservableList<SqlFieldPo> fpos) throws Exception {
+			ObservableList<SheetFieldPo> fpos) throws Exception {
 		String msg = "";
 		StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
 		StringBuilder values = new StringBuilder("");
 		int size = fpos.size();
 		for (int i = 0; i < size; i++) {
-			SqlFieldPo po = fpos.get(i);
+			SheetFieldPo po = fpos.get(i);
 			String temp = data.get(i).get();
 			if ( !"<null>".equals(temp)) {
 				sql.append(po.getColumnLabel().get());

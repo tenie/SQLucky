@@ -21,6 +21,7 @@ import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
+import net.tenie.Sqlucky.sdk.component.MyTextArea;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -30,18 +31,18 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
 import net.tenie.fx.component.CodeArea.MyAutoComplete;
-import net.tenie.fx.component.CodeArea.MyTextArea;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.lib.db.h2.AppDao;
+
 /**
  * 
  * @author tenie
  *
  */
-public class MyTab extends Tab implements SqluckyTab {
+public class MyAreaTab extends Tab implements SqluckyTab {
 	private DocumentPo docPo;
 	private SqluckyCodeAreaHolder sqlCodeArea;
 	// 放查找面板, 文本area 的容器
@@ -49,80 +50,77 @@ public class MyTab extends Tab implements SqluckyTab {
 	// 查找面板
 	private FindReplaceTextPanel findReplacePanel;
 	private Boolean savePo = true;
-	
+
 	private boolean isModify = false;
-	
+
 	public CodeArea getCodeArea() {
 		return sqlCodeArea.getCodeArea();
 	}
-	
-	public MyTab() {
+
+	public MyAreaTab() {
 		super();
 	}
-	public MyTab(boolean save) {
+
+	public MyAreaTab(boolean save) {
 		super();
 		this.savePo = save;
 	}
 
-	public MyTab(String TabName) {
+	public MyAreaTab(String TabName) {
 		super();
-		docPo = AppDao.scriptArchive(TabName, ""	, "", "UTF-8", 0);
+		docPo = AppDao.scriptArchive(TabName, "", "", "UTF-8", 0);
 		createMyTab();
 	}
-	
-	public MyTab(DocumentPo po) {
+
+	public MyAreaTab(DocumentPo po) {
 		super();
-		if(po.getId() == null ) { 
-			docPo = AppDao.scriptArchive(po.getTitle(), po.getText()	, po.getFileFullName(),
-					po.getEncode(), po.getParagraph());
-		}else {
+		if (po.getId() == null) {
+			docPo = AppDao.scriptArchive(po.getTitle(), po.getText(), po.getFileFullName(), po.getEncode(),
+					po.getParagraph());
+		} else {
 			docPo = po;
 		}
-		if(po.getType() == DocumentPo.IS_SQL) {
+		if (po.getType() == DocumentPo.IS_SQL) {
 			createMyTab();
-		}else if(po.getType() == DocumentPo.IS_TEXT) {
+		} else if (po.getType() == DocumentPo.IS_TEXT) {
 			createTextMyTab();
 		}
 	}
-	
-	public MyTab(DocumentPo po, boolean save) {
+
+	public MyAreaTab(DocumentPo po, boolean save) {
 		super();
 		this.savePo = save;
-		if(save) {
-			if(po.getId() == null ) { 
-				docPo = AppDao.scriptArchive(po.getTitle(), po.getText()	, po.getFileFullName(),
-						po.getEncode(), po.getParagraph());
-			}else {
+		if (save) {
+			if (po.getId() == null) {
+				docPo = AppDao.scriptArchive(po.getTitle(), po.getText(), po.getFileFullName(), po.getEncode(),
+						po.getParagraph());
+			} else {
 				docPo = po;
 			}
-//			createMyTab();
-		}else {
+		} else {
 			docPo = po;
-//			createMyTab();
 		}
-		if(po.getType() == DocumentPo.IS_SQL) {
+		if (po.getType() == DocumentPo.IS_SQL) {
 			createMyTab();
-		}else if(po.getType() == DocumentPo.IS_TEXT) {
+		} else if (po.getType() == DocumentPo.IS_TEXT) {
 			createTextMyTab();
 		}
-		
+
 	}
-	
- 
-	
+
 	private void createMyTab() {
 		String TabName = docPo.getTitle();
 		var myTabPane = ComponentGetter.mainTabPane;
-		// 	名称
+		// 名称
 		CommonUtility.setTabName(this, TabName);
 		// 添加到缓存
 		MainTabs.add(this);
 		MyAutoComplete myAuto = new MyAutoComplete();
 		sqlCodeArea = new HighLightingCodeArea(myAuto);
 //		右键菜单
-		HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(sqlCodeArea);  
+		HighLightingSqlCodeAreaContextMenu cm = new HighLightingSqlCodeAreaContextMenu(sqlCodeArea);
 		sqlCodeArea.setContextMenu(cm);
-		
+
 		StackPane pane = sqlCodeArea.getCodeAreaPane();
 		vbox = new VBox();
 		vbox.getChildren().add(pane);
@@ -138,25 +136,24 @@ public class MyTab extends Tab implements SqluckyTab {
 				DBConns.changeChoiceBox(ti.getTabConnIdx());
 			}
 
-		}); 
-		
+		});
+
 		// 设置sql 文本
-		initTabSQLText( docPo.getText());
-		
+		initTabSQLText(docPo.getText());
+
 		// 右键菜单
 		this.setContextMenu(MyTabMenu());
 	}
-	
+
 	private void createTextMyTab() {
 		String TabName = docPo.getTitle();
 		var myTabPane = ComponentGetter.mainTabPane;
-		// 	名称
+		// 名称
 		CommonUtility.setTabName(this, TabName);
 		// 添加到缓存
 		MainTabs.add(this);
-//		MyAutoComplete myAuto = new MyAutoComplete();
 		sqlCodeArea = new MyTextArea();
-		
+
 		StackPane pane = sqlCodeArea.getCodeAreaPane();
 		vbox = new VBox();
 		vbox.getChildren().add(pane);
@@ -172,61 +169,59 @@ public class MyTab extends Tab implements SqluckyTab {
 				DBConns.changeChoiceBox(ti.getTabConnIdx());
 			}
 
-		}); 
-		
+		});
+
 		// 设置sql 文本
-		initTabSQLText( docPo.getText());
-		
+		initTabSQLText(docPo.getText());
+
 		// 右键菜单
 		this.setContextMenu(MyTabMenu());
 	}
-	
-	
+
 	// 设置tab 中的 area 中的文本
-	public   void initTabSQLText(String text) {
-		var code = sqlCodeArea.getCodeArea();
-		code.appendText(text);
-		sqlCodeArea.highLighting(); 
-	}
-	
-	// 设置tab 中的 area 中的文本, 并保存到数据库 
-	public   void setTabSQLText(String text) {
+	public void initTabSQLText(String text) {
 		var code = sqlCodeArea.getCodeArea();
 		code.appendText(text);
 		sqlCodeArea.highLighting();
-//		syncScriptPo();
 	}
-	public   void setTabStringText(String text) {
+
+	// 设置tab 中的 area 中的文本, 并保存到数据库
+	public void setAreaText(String text) {
 		var code = sqlCodeArea.getCodeArea();
 		code.appendText(text);
+		sqlCodeArea.highLighting();
 	}
 	
 	
+//	public void setTabStringText(String text) {
+//		var code = sqlCodeArea.getCodeArea();
+//		code.appendText(text);
+//	}
+
 	@Override
 	public String getAreaText() {
-//		sqlCodeArea.getCodeArea().get
 		CodeArea code = sqlCodeArea.getCodeArea();
 		String sqlText = code.getText();
-//		String sql = SqlEditor.getTabSQLText(this);
 		return sqlText;
 	}
+
 	public String getTabTitle() {
 		String title = CommonUtility.tabText(this);
 		return title;
 	}
-	
+
 	public void syncScriptPo(Connection conn) {
 		String sql = getAreaText();
 		String title = getTabTitle();
-		
+
 		docPo.setText(sql);
-		docPo.setTitle(title); 
-		if(savePo) { 
-			AppDao.updateScriptArchive(conn , docPo); 
+		docPo.setTitle(title);
+		if (savePo) {
+			AppDao.updateScriptArchive(conn, docPo);
 		}
 		ScriptTabTree.ScriptTreeView.refresh();
 	}
-	
+
 	public void syncScriptPo() {
 		var conn = SqluckyAppDB.getConn();
 		try {
@@ -234,129 +229,115 @@ public class MyTab extends Tab implements SqluckyTab {
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
-	 
+
 	}
-		
-	
- 
-	
+
 	public void saveScriptPo(Connection conn) {
 		String sql = getAreaText();
-		String title =   getTabTitle();
-		
+		String title = getTabTitle();
+
 		docPo.setText(sql);
-		docPo.setTitle(title); 
-		AppDao.updateScriptArchive(conn, docPo); 
+		docPo.setTitle(title);
+		AppDao.updateScriptArchive(conn, docPo);
 	}
-	
-	
+
 	/**
 	 * tab 关闭时：阻止关闭最后一个
 	 */
-	public  EventHandler<Event> tabCloseReq(TabPane myTabPane) {
+	public EventHandler<Event> tabCloseReq(TabPane myTabPane) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
-				syncScriptPo();   
+				syncScriptPo();
 //				 // 如果只有一个窗口就不能关闭 
 //				if (myTabPane.getTabs().size() == 1) {
 //  					e.consume();
 //				}
-				
+
 			}
 		};
 	}
-	
+
 	// 删除 TabPane中的所有 MyTab
 	private void closeAll() {
 		CommonAction.archiveAllScript();
 	}
-	
+
 	// 右键菜单
 	public ContextMenu MyTabMenu() {
 		ContextMenu contextMenu = new ContextMenu();
 		MenuItem closeAll = new MenuItem("Close ALl");
-		closeAll.setOnAction(e -> { 
+		closeAll.setOnAction(e -> {
 			closeAll();
 		});
 
 		MenuItem closeOther = new MenuItem("Close Other");
-		closeOther.setOnAction(e -> { 
+		closeOther.setOnAction(e -> {
 			closeAll();
 			var myTabPane = ComponentGetter.mainTabPane;
 			myTabPane.getTabs().add(this);
 
 		});
-		
+
 		MenuItem closeRight = new MenuItem("Close Tabs To The Right");
-		closeRight.setOnAction(e -> { 
+		closeRight.setOnAction(e -> {
 			var myTabPane = ComponentGetter.mainTabPane;
 			var tabs = myTabPane.getTabs();
 			int idx = tabs.indexOf(this);
 			int tsize = tabs.size();
-			if( (idx+1) < tsize ) {
-				for(int i = idx+1 ; i < tsize; i++) {
+			if ((idx + 1) < tsize) {
+				for (int i = idx + 1; i < tsize; i++) {
 					var t = tabs.get(i);
-					MyTab mt = (MyTab) t;
+					MyAreaTab mt = (MyAreaTab) t;
 					mt.syncScriptPo();
 				}
-				
 				tabs.remove(idx + 1, tsize);
-				
 			}
-			
-			
-
 		});
-		
+
 		MenuItem closeLeft = new MenuItem("Close Tabs To The Left");
-		closeLeft.setOnAction(e -> { 
+		closeLeft.setOnAction(e -> {
 			var myTabPane = ComponentGetter.mainTabPane;
 			var tabs = myTabPane.getTabs();
-			int idx = tabs.indexOf(this); 
-			if(  idx  > 0 ) {
-				for(int i = 0  ; i < idx; i++) {
+			int idx = tabs.indexOf(this);
+			if (idx > 0) {
+				for (int i = 0; i < idx; i++) {
 					var t = tabs.get(i);
-					MyTab mt = (MyTab) t;
+					MyAreaTab mt = (MyAreaTab) t;
 					mt.syncScriptPo();
 				}
-				
 				tabs.remove(0, idx);
-				
 			}
-
 		});
 
-		contextMenu.getItems().addAll(closeAll, closeOther, closeRight, closeLeft );
-		contextMenu.setOnShowing(e->{
+		contextMenu.getItems().addAll(closeAll, closeOther, closeRight, closeLeft);
+		contextMenu.setOnShowing(e -> {
 			var myTabPane = ComponentGetter.mainTabPane;
 			int idx = myTabPane.getTabs().indexOf(this);
 			int size = myTabPane.getTabs().size();
-			if(idx == 0) {
+			if (idx == 0) {
 				closeLeft.setDisable(true);
-			}else {
+			} else {
 				closeLeft.setDisable(false);
 			}
-			
-			if(idx == (size -1 ) ) {
+
+			if (idx == (size - 1)) {
 				closeRight.setDisable(true);
-			}else {
+			} else {
 				closeRight.setDisable(false);
 			}
-			
-			
-			if(size == 1) {
+
+			if (size == 1) {
 				closeOther.setDisable(true);
-			}else {
+			} else {
 				closeOther.setDisable(false);
 			}
-			
-			
+
 		});
 		return contextMenu;
 	}
 
 	// 添加空文本的codeTab
-	public static MyTab addCodeEmptyTabMethod() {
+	public static MyAreaTab addCodeEmptyTabMethod() {
 		var myTabPane = ComponentGetter.mainTabPane;
 		int size = myTabPane.getTabs().size();
 		if (ConfigVal.pageSize < 0) {
@@ -364,7 +345,7 @@ public class MyTab extends Tab implements SqluckyTab {
 		}
 		ConfigVal.pageSize++;
 		String labe = "Untitled_" + ConfigVal.pageSize + "*";
-		MyTab nwTab = new MyTab(labe); 
+		MyAreaTab nwTab = new MyAreaTab(labe);
 		myTabPane.getTabs().add(size, nwTab);// 在指定位置添加Tab
 		myTabPane.getSelectionModel().select(size);
 		ScriptTabTree.treeRootAddItem(nwTab);
@@ -372,82 +353,85 @@ public class MyTab extends Tab implements SqluckyTab {
 	}
 
 	// 添加空文本的codeTab
-	public static MyTab addMyTabByScriptPo(DocumentPo scpo) {
+	public static MyAreaTab addMyTabByScriptPo(DocumentPo scpo) {
 		var myTabPane = ComponentGetter.mainTabPane;
-		int size = myTabPane.getTabs().size(); 
-		ConfigVal.pageSize++; 
-		MyTab nwTab = new MyTab(scpo); 
+		int size = myTabPane.getTabs().size();
+		ConfigVal.pageSize++;
+		MyAreaTab nwTab = new MyAreaTab(scpo);
 		myTabPane.getTabs().add(size, nwTab);// 在指定位置添加Tab
 		myTabPane.getSelectionModel().select(size);
 		ScriptTabTree.treeRootAddItem(nwTab);
 		return nwTab;
 	}
+
 	public static void createTabFromSqlFile(DocumentPo scpo) {
 		addMyTabByScriptPo(scpo);
 	}
-	
-	//TODO 添加空文本的codeTab
-	public  void mainTabPaneAddSqlTab() { 
-		Platform.runLater(()->{
+
+	// TODO 添加空文本的codeTab
+	public void showMyTab() {
+		Platform.runLater(() -> {
 			var myTabPane = ComponentGetter.mainTabPane;
-			if( myTabPane.getTabs().contains(this) == false ) {
+			if (myTabPane.getTabs().contains(this) == false) {
 				var code = sqlCodeArea.getCodeArea();
-				if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
-					setTabSQLText( docPo.getText());
+				if (StrUtils.isNullOrEmpty(code.getText().trim())) {
+					setAreaText(docPo.getText());
 				}
-				myTabPane.getTabs().add( this);// 在指定位置添加Tab 
-			} 
+				myTabPane.getTabs().add(this);// 在指定位置添加Tab
+			}
 			myTabPane.getSelectionModel().select(this);
 		});
-		
+
 	}
-	public  void mainTabPaneAddTextTab() { 
-		Platform.runLater(()->{
-			var myTabPane = ComponentGetter.mainTabPane;
-			if( myTabPane.getTabs().contains(this) == false ) {
-				var code = sqlCodeArea.getCodeArea();
-				if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
-					setTabStringText( docPo.getText());
-				}
-				myTabPane.getTabs().add( this);// 在指定位置添加Tab 
-			} 
-			myTabPane.getSelectionModel().select(this);
-		});
-		
-	}
+
+//	public void mainTabPaneAddTextTab2() {
+//		Platform.runLater(() -> {
+//			var myTabPane = ComponentGetter.mainTabPane;
+//			if (myTabPane.getTabs().contains(this) == false) {
+//				var code = sqlCodeArea.getCodeArea();
+//				if (StrUtils.isNullOrEmpty(code.getText().trim())) {
+//					setTabStringText(docPo.getText());
+//				}
+//				myTabPane.getTabs().add(this);// 在指定位置添加Tab
+//			}
+//			myTabPane.getSelectionModel().select(this);
+//		});
+//
+//	}
+
 	// 主界面上存在否
 	@Override
 	public boolean existTab() {
 		var myTabPane = ComponentGetter.mainTabPane;
 		return myTabPane.getTabs().contains(this);
 	}
-	
+
 	// 存在 就显示出来
 	@Override
 	public boolean existTabShow() {
-		
+
 		var myTabPane = ComponentGetter.mainTabPane;
-		if(myTabPane.getTabs().contains(this)) {
+		if (myTabPane.getTabs().contains(this)) {
 			myTabPane.getSelectionModel().select(this);
 			return true;
 		}
 		return false;
 	}
-	
-	//TODO 添加空文本的codeTab
-	public static  void mainTabPaneAddAllMyTabs(List<MyTab> ls) { 
-		if(ls != null && ls.size() > 0) {
+
+	// TODO 添加空文本的codeTab
+	public static void mainTabPaneAddAllMyTabs(List<MyAreaTab> ls) {
+		if (ls != null && ls.size() > 0) {
 			var myTabPane = ComponentGetter.mainTabPane;
-			for(var mtb : ls) {
+			for (var mtb : ls) {
 				var code = mtb.getSqlCodeArea().getCodeArea();
-				if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
-					mtb.setTabSQLText( mtb.getDocumentPo().getText());
+				if (StrUtils.isNullOrEmpty(code.getText().trim())) {
+					mtb.setAreaText(mtb.getDocumentPo().getText());
 				}
 			}
-			
+
 			myTabPane.getTabs().addAll(ls);
 		}
-		
+
 //		if( myTabPane.getTabs().contains(this) == false ) {
 //			var code = sqlCodeArea.getCodeArea();
 //			if( StrUtils.isNullOrEmpty(code.getText().trim() ) ) {
@@ -478,35 +462,38 @@ public class MyTab extends Tab implements SqluckyTab {
 		this.sqlCodeArea = sqlCodeArea;
 	}
 
-	
 	@Override
 	public String getTitle() {
 		return CommonUtility.tabText(this);
 	}
-	
+
 	public void setFile(File file) {
 		docPo.setFile(file);
 	}
-	
+
 	public File getFile() {
-		if(docPo == null ) return null;
+		if (docPo == null)
+			return null;
 		return docPo.getFile();
 	}
-	
+
 	public Region getIcon() {
-		if(docPo == null ) return null;
+		if (docPo == null)
+			return null;
 		return docPo.getIcon();
 	}
 
 	public void setIcon(Region icon) {
 		docPo.setIcon(icon);
 	}
-	
+
 	public String getFileText() {
-		if(docPo == null ) return "";
+		if (docPo == null)
+			return "";
 		return docPo.getText();
 	}
-	public void setFileText(String text) { 
+
+	public void setFileText(String text) {
 		docPo.setText(text);
 	}
 
@@ -517,24 +504,23 @@ public class MyTab extends Tab implements SqluckyTab {
 	public void setModify(boolean isModify) {
 		this.isModify = isModify;
 	}
- 
+
 	public void saveTextAction() {
 		CommonAction.saveSqlAction(this);
 	}
 
-	
-	
-	 
 	// 清空查找面板
 	@Override
 	public void cleanFindReplacePanel() {
 		findReplacePanel = null;
-		
+
 	}
+
 	@Override
 	public FindReplaceTextPanel getFindReplacePanel() {
 		return findReplacePanel;
 	}
+
 	// 保存查找面板
 	@Override
 	public void setFindReplacePanel(FindReplaceTextPanel findReplacePanel) {
@@ -544,25 +530,16 @@ public class MyTab extends Tab implements SqluckyTab {
 	@Override
 	public boolean isShowing() {
 		var myTabPane = ComponentGetter.mainTabPane;
-		if(myTabPane.getTabs().contains(this)) {
+		if (myTabPane.getTabs().contains(this)) {
 			int idxThis = myTabPane.getTabs().indexOf(this);
-			int  currentSelect = myTabPane.getSelectionModel().getSelectedIndex();
-			if(idxThis == currentSelect) {
+			int currentSelect = myTabPane.getSelectionModel().getSelectedIndex();
+			if (idxThis == currentSelect) {
 				return true;
 			}
 		}
 		return false;
 	}
-	
-	
-	
-	
-	// 设置tab 中的 area 中的文本
-//	public static void setTabSQLText(MyTab tb, String text) {
-//		CodeArea code = getCodeArea(tb);
-//		code.appendText(text);
-//		tb.getSqlCodeArea().highLighting();
-//		tb.syncScriptPo();
-//	}
-	
+
+	 
+
 }

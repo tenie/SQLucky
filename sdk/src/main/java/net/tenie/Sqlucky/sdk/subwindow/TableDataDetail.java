@@ -20,8 +20,8 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTextField2ReadOnlyTableCell;
-import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -62,9 +62,9 @@ public class TableDataDetail {
 		if(tb == null ) return;
 		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 
-		BottomSheetDataValue dvt = mtd.getTableData();
+		SheetDataValue dvt = mtd.getTableData();
 		String tabName = dvt.getTabName();
-		ObservableList<SqlFieldPo> fields = dvt.getColss();
+		ObservableList<SheetFieldPo> fields = dvt.getColss();
 
 		ObservableList<StringProperty> rowValues = null;
 
@@ -77,14 +77,14 @@ public class TableDataDetail {
 		String fieldValue = "Value";
 		if (rowValues.size() > 0) {
 			for (int i = 0; i < fields.size(); i++) {
-				SqlFieldPo po = fields.get(i);
+				SheetFieldPo po = fields.get(i);
 				StringProperty val = rowValues.get(i);
 				po.setValue(val);
 			}
 		} else {
 			fieldValue = "Field Type";
 			for (int i = 0; i < fields.size(); i++) {
-				SqlFieldPo p = fields.get(i);
+				SheetFieldPo p = fields.get(i);
 				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
 				if (p.getScale() != null && p.getScale().get() > 0) {
 					tyNa += ", " + p.getScale().get();
@@ -97,7 +97,7 @@ public class TableDataDetail {
 		showTableDetail(tabName, "Field Name", fieldValue, fields);
 	}
 
-	public static void showTableDetail(String tableName ,String colName1, String colName2, ObservableList<SqlFieldPo> fields) {
+	public static void showTableDetail(String tableName ,String colName1, String colName2, ObservableList<SheetFieldPo> fields) {
 		FlowPane fp = new FlowPane();
 
 		TextField tf1 = new TextField("");
@@ -123,15 +123,15 @@ public class TableDataDetail {
 		FlowPane.setMargin(tf3, is);
 
 		// table
-		TableView<SqlFieldPo> tv = new TableView<>();
+		TableView<SheetFieldPo> tv = new TableView<>();
 		tv.getStyleClass().add("myTableTag");
 		tv.setEditable(true);
 		tv.getSelectionModel().selectedItemProperty().addListener(// 选中某一行
-				new ChangeListener<SqlFieldPo>() {
+				new ChangeListener<SheetFieldPo>() {
 					@Override
-					public void changed(ObservableValue<? extends SqlFieldPo> observableValue, SqlFieldPo oldItem,
-							SqlFieldPo newItem) {
-						SqlFieldPo p = newItem;
+					public void changed(ObservableValue<? extends SheetFieldPo> observableValue, SheetFieldPo oldItem,
+							SheetFieldPo newItem) {
+						SheetFieldPo p = newItem;
 						if (p == null)
 							return;
 						tf1.setText(p.getColumnLabel().get());
@@ -144,7 +144,7 @@ public class TableDataDetail {
 						tf3.setText(p.getColumnClassName().get());
 					}
 				});
-		TableColumn<SqlFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
+		TableColumn<SheetFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
 		// 给单元格赋值
 		fieldNameCol.setCellValueFactory(cellData -> {
 			return cellData.getValue().getColumnLabel();
@@ -158,7 +158,7 @@ public class TableDataDetail {
 
 		tv.getColumns().add(fieldNameCol);
 
-		TableColumn<SqlFieldPo, String> valueCol = new TableColumn<>(colName2);
+		TableColumn<SheetFieldPo, String> valueCol = new TableColumn<>(colName2);
 		valueCol.setPrefWidth(200);
 		valueCol.setCellValueFactory(cellData -> {
 			return cellData.getValue().getValue();
@@ -202,9 +202,9 @@ public class TableDataDetail {
 		new ModalDialog(subvb, tv, tableName);
 	}
 
-	public static final void bindTableViewFilter(TableView<SqlFieldPo> tableView,
-			ObservableList<SqlFieldPo> observableList, String newValue) {
-		FilteredList<SqlFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
+	public static final void bindTableViewFilter(TableView<SheetFieldPo> tableView,
+			ObservableList<SheetFieldPo> observableList, String newValue) {
+		FilteredList<SheetFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
 		filteredData.setPredicate(entity -> {
 			boolean tf1 = false;
 			boolean tf2 = false;
@@ -219,7 +219,7 @@ public class TableDataDetail {
 		}
 
 		);
-		SortedList<SqlFieldPo> sortedData = new SortedList<>(filteredData);
+		SortedList<SheetFieldPo> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 		tableView.setItems(sortedData);
 	}

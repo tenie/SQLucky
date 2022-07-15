@@ -6,7 +6,7 @@ import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.MyAreaTab;
 
 public class ScriptTreeButtonPanel {
 
@@ -32,7 +32,7 @@ public class ScriptTreeButtonPanel {
 		newFile.setGraphic(ComponentGetter.getIconDefActive("file-o"));
 		newFile.setTooltip(CommonUtility.instanceTooltip("New file"));
 		newFile.setOnMouseClicked(e->{
-			MyTab.addCodeEmptyTabMethod();
+			MyAreaTab.addCodeEmptyTabMethod();
 		});
 		
 		importBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));

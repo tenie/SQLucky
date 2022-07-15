@@ -19,7 +19,7 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
@@ -496,7 +496,7 @@ public class AppDao {
 			for (int i = 0; i < tableNames.size(); i++) {
 				String tableName = tableNames.get(i);
 				String sql = "select   *   from  " + tableName;
-				BottomSheetDataValue dvt = new BottomSheetDataValue();
+				SheetDataValue dvt = new SheetDataValue();
 				dvt.setDbConnection(cnor);
 				dvt.setSqlStr(sql);
 				dvt.setTabName(tableName);

@@ -19,7 +19,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.plugin.PluginManageWindow;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
@@ -97,7 +97,7 @@ public class MenuBarContainer {
 		MenuItem nce = new MenuItem(StrUtils.MenuItemNameFormat("Add Code Editer"));
 		nce.setAccelerator(KeyCombination.keyCombination("shortcut+T"));
 		nce.setOnAction(value -> {
-			MyTab.addCodeEmptyTabMethod();
+			MyAreaTab.addCodeEmptyTabMethod();
 		});
 
 		MenuItem cce = new MenuItem(StrUtils.MenuItemNameFormat("Close Data Table"));

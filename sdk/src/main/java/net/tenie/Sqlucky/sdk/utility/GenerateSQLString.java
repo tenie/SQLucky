@@ -2,7 +2,7 @@ package net.tenie.Sqlucky.sdk.utility;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 
 /*   @author tenie */
 public class GenerateSQLString {
@@ -13,13 +13,13 @@ public class GenerateSQLString {
 	 * @param fpos
 	 * @return
 	 */
-	public static String insertSQL(String tableName, ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos) {
+	public static String insertSQL(String tableName, ObservableList<StringProperty> data, ObservableList<SheetFieldPo> fpos) {
 
 		StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
 		StringBuilder values = new StringBuilder("");
 		int size = fpos.size();
 		for (int i = 0; i < size; i++) {
-			SqlFieldPo po = fpos.get(i);
+			SheetFieldPo po = fpos.get(i);
 			int type = po.getColumnType().get();
 			String temp = data.get(i).get();
 			sql.append(po.getColumnLabel().get());
@@ -45,13 +45,13 @@ public class GenerateSQLString {
 		return insert;
 	}
 	
-	public static String insertSQLExcludeNull(String tableName, ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos) {
+	public static String insertSQLExcludeNull(String tableName, ObservableList<StringProperty> data, ObservableList<SheetFieldPo> fpos) {
 
 		StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
 		StringBuilder values = new StringBuilder("");
 		int size = fpos.size();
 		for (int i = 0; i < size; i++) {
-			SqlFieldPo po = fpos.get(i);
+			SheetFieldPo po = fpos.get(i);
 			int type = po.getColumnType().get();
 			String temp = data.get(i).get(); 
 			if ( "<null>".equals(temp)) {
@@ -79,7 +79,7 @@ public class GenerateSQLString {
 	
 
 	public static String insertSQLHelper(ObservableList<ObservableList<StringProperty>> vals, String tableName,
-			ObservableList<SqlFieldPo> fs) {
+			ObservableList<SheetFieldPo> fs) {
 
 		if (vals != null && vals.size() > 0) {
 			StringBuilder strb = new StringBuilder();
@@ -94,11 +94,11 @@ public class GenerateSQLString {
 		return "";
 	}
 
-	public static String csvStr( ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos) {
+	public static String csvStr( ObservableList<StringProperty> data, ObservableList<SheetFieldPo> fpos) {
 		StringBuilder values = new StringBuilder("");
 		int size = fpos.size();
 		for (int i = 0; i < size; i++) {
-			SqlFieldPo po = fpos.get(i);
+			SheetFieldPo po = fpos.get(i);
 			int type = po.getColumnType().get();
 			String temp = data.get(i).get();
 			if (StrUtils.isNullOrEmpty(temp) || "<null>".equals(temp)) {
@@ -120,7 +120,7 @@ public class GenerateSQLString {
 		return valstr;
 	}
 
-	public static String csvStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SqlFieldPo> fs) {
+	public static String csvStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SheetFieldPo> fs) {
 
 		if (vals != null && vals.size() > 0) {
 			StringBuilder strb = new StringBuilder();
@@ -135,12 +135,12 @@ public class GenerateSQLString {
 		return "";
 	}
 
-	public static String txtStr(  ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos) {
+	public static String txtStr(  ObservableList<StringProperty> data, ObservableList<SheetFieldPo> fpos) {
 
 		StringBuilder values = new StringBuilder("");
 		int size = fpos.size();
 		for (int i = 0; i < size; i++) {
-			SqlFieldPo po = fpos.get(i);
+			SheetFieldPo po = fpos.get(i);
 			int type = po.getColumnType().get();
 			String temp = data.get(i).get();
 			if (StrUtils.isNullOrEmpty(temp) || "<null>".equals(temp)) {
@@ -164,7 +164,7 @@ public class GenerateSQLString {
 		return valstr;
 	}
 
-	public static String txtStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SqlFieldPo> fs) {
+	public static String txtStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SheetFieldPo> fs) {
 
 		if (vals != null && vals.size() > 0) {
 			StringBuilder strb = new StringBuilder();
@@ -180,7 +180,7 @@ public class GenerateSQLString {
 	}
 	
 	
-	public static String columnStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SqlFieldPo> fs, String colName) {
+	public static String columnStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SheetFieldPo> fs, String colName) {
 
 		if (vals != null && vals.size() > 0) {
 			StringBuilder strb = new StringBuilder();
@@ -195,12 +195,12 @@ public class GenerateSQLString {
 		return "";
 	}
 	
-	public static String columnStr(ObservableList<StringProperty> data, ObservableList<SqlFieldPo> fpos, String colName) {
+	public static String columnStr(ObservableList<StringProperty> data, ObservableList<SheetFieldPo> fpos, String colName) {
 		StringBuilder values = new StringBuilder("");
 		int size = fpos.size();
 		int idx = -1;
 		for (int i = 0; i < size; i++) {
-			SqlFieldPo po = fpos.get(i);
+			SheetFieldPo po = fpos.get(i);
 			String  name = po.getColumnLabel().get();
 			if( name.equals(colName)) {
 				idx = i;

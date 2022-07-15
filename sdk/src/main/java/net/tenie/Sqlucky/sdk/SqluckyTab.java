@@ -24,8 +24,7 @@ public interface SqluckyTab  {
 	// 
 	public void cleanFindReplacePanel();
 	
-	public  void mainTabPaneAddSqlTab() ;
-	public  void mainTabPaneAddTextTab() ;
+	public  void showMyTab() ;
 	// 主界面上存在否
 	public boolean existTab();
 	// 存在, 就显示出来

@@ -19,7 +19,7 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsVal;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -40,7 +40,7 @@ public class ButtonAction {
 		SqluckyConnector  dpo = SqluckyBottomSheetUtility.getDbConnection();
 		if (tabName != null && tabName.length() > 0) {
 			// 字段
-			ObservableList<SqlFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
+			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
 			// 待保存数据
 			Map<String, ObservableList<StringProperty>> modifyData = SqluckyBottomSheetUtility.getModifyData();
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
@@ -132,7 +132,7 @@ public class ButtonAction {
 			FilteredTableView<ObservableList<StringProperty>> table = SqluckyBottomSheetUtility.dataTableView();
 			String tabName = SqluckyBottomSheetUtility.getTableName();
 			Connection conn = SqluckyBottomSheetUtility.getDbconn();
-			ObservableList<SqlFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
+			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
 
 			ObservableList<ObservableList<StringProperty>> vals = table.getSelectionModel().getSelectedItems();
 
@@ -188,7 +188,7 @@ public class ButtonAction {
 
 		String tabId = table.getId();
 		// 获取字段属性信息
-		ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields();
+		ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 		
 		// 选中的行数据
 		ObservableList<ObservableList<StringProperty>> vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems();

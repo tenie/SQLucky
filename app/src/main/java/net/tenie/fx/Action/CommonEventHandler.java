@@ -11,12 +11,12 @@ import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.window.ConnectionEditor;
 
 /**
@@ -98,7 +98,7 @@ public class CommonEventHandler {
 	public static EventHandler<Event> addCodeTab() {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
-				MyTab.addCodeEmptyTabMethod();
+				MyAreaTab.addCodeEmptyTabMethod();
 			}
 		};
 	}
@@ -156,7 +156,7 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> InsertSQLClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields();
+				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 				String tableName = SqluckyBottomSheetUtility.getTableName();
 				final ObservableList<ObservableList<StringProperty>> fvals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
 
@@ -191,7 +191,7 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> csvStrClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields();				
+				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();				
 				ObservableList<ObservableList<StringProperty>> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {
@@ -222,7 +222,7 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> txtStrClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) { 
-				ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields(); 
+				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields(); 
 				ObservableList<ObservableList<StringProperty>> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {
@@ -253,7 +253,7 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields(); 
+				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields(); 
 				ObservableList<ObservableList<StringProperty>> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {
@@ -287,13 +287,13 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> commaSplitTableFields() {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) { 
-				ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields();
+				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 				Thread t = new Thread() {
 					public void run() {
 						int size = fs.size();
 						StringBuilder  fieldsName = new StringBuilder("");
 						for (int i = 0; i < size; i++) {
-							SqlFieldPo po = fs.get(i);
+							SheetFieldPo po = fs.get(i);
 							String name = po.getColumnName().get();
 							fieldsName.append( name );
 							fieldsName.append( ", \n" );
@@ -316,13 +316,13 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> commaSplitTableFiledsIncludeType() {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields();
+				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 				Thread t = new Thread() {
 					public void run() {
 						int size = fs.size();
 						StringBuilder fieldsName = new StringBuilder("");
 						for (int i = 0; i < size; i++) {
-							SqlFieldPo po = fs.get(i);
+							SheetFieldPo po = fs.get(i);
 							String name = po.getColumnName().get();
 							fieldsName.append(name);
 							fieldsName.append(", --");

@@ -7,8 +7,8 @@ import javafx.beans.property.StringProperty;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
-public class SqlFieldPo {
-
+public class SheetFieldPo {
+	
 	private StringProperty columnName;
 	private StringProperty columnClassName;
 	private IntegerProperty columnDisplaySize;
@@ -21,6 +21,21 @@ public class SqlFieldPo {
 	
 	
 	private Double columnWidth;
+
+	// 类型
+	private String Type = TEXT_TYPE; 
+	
+	
+	public static String TEXT_TYPE = "TEXT_TYPE";
+	public static String CHECK_BOX_TYPE = "CHECK_BOX_TYPE";
+	
+	public String getType() {
+		return Type;
+	}
+
+	public void setType(String type) {
+		Type = type;
+	}
 
 	public IntegerProperty getScale() {
 		return scale;

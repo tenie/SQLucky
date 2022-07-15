@@ -123,9 +123,9 @@ public final class ComponentGetter {
 //	}
 	
 	// 获取当前数据表的Tab
-	public static MyTabData currentDataTab() {
+	public static MyBottomTab currentDataTab() {
 		Tab tab =  ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-		MyTabData mtb =	(MyTabData) tab.getUserData();
+		MyBottomTab mtb =	(MyBottomTab) tab.getUserData();
 //		SqluckyBottomSheet sheet = (SqluckyBottomSheet) tab;
 		return mtb;
 	}

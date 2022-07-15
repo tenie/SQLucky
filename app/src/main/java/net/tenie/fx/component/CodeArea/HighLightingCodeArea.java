@@ -24,11 +24,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.MyAreaTab;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyLineNumberNode;
 import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -84,7 +84,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		cl = (obj, o, n) -> {
 			Consumer<String> caller = x -> {
 				Tab tb = SqlcukyEditor.mainTabPaneSelectedTab();
-				MyTab mtb = (MyTab) tb;
+				MyAreaTab mtb = (MyAreaTab) tb;
 				if (tb != null) {
 					Platform.runLater(() -> {
 						String title = CommonUtility.tabText(tb);
@@ -284,7 +284,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 						String val = charMapPre.get(key);
 						int endIdx = str.lastIndexOf(key);
 						int end = start + endIdx;
-						int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, key, val);
+						int is = CodeAreaUtility.findEndParenthesisRange(codeArea.getText(), end, key, val);
 						if (end > is) {
 							codeArea.selectRange(is, end);
 						}
@@ -299,7 +299,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 					if (trimStr.endsWith(v)) {
 						int endIdx = str.lastIndexOf(v);
 						int end = start + endIdx;
-						IndexRange ir = CommonAction.findStringRange(codeArea.getText(), end, v);
+						IndexRange ir = CodeAreaUtility.findStringRange(codeArea.getText(), end, v);
 						if ((ir.getStart() + ir.getEnd()) > 0) {
 							int st = ir.getStart();
 							int en = ir.getEnd();
@@ -325,7 +325,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 				if (trimStr.toUpperCase().endsWith("SELECT")) {
 					int endIdx = str.toUpperCase().lastIndexOf("SELECT");
 					int is = start + endIdx + 6;
-					int end = CommonAction.findBeginStringRange(codeArea.getText(), is, "SELECT", "FROM");
+					int end = CodeAreaUtility.findBeginStringRange(codeArea.getText(), is, "SELECT", "FROM");
 					if (end != 0 && end > is) {
 						codeArea.selectRange(is - 6, end + 4);
 					}
@@ -333,7 +333,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 				} else if (trimStr.toUpperCase().endsWith("FROM")) {
 					int endIdx = str.toUpperCase().lastIndexOf("FROM");
 					int end = start + endIdx;
-					int is = CommonAction.findEndStringRange(codeArea.getText(), end, "FROM", "SELECT");
+					int is = CodeAreaUtility.findEndStringRange(codeArea.getText(), end, "FROM", "SELECT");
 					if (end > is) {
 						codeArea.selectRange(is - 6, end + 5);
 					}
@@ -346,7 +346,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 				if (trimStr.toUpperCase().endsWith("CASE")) {
 					int endIdx = str.toUpperCase().lastIndexOf("CASE");
 					int is = start + endIdx + 4;
-					int end = CommonAction.findBeginStringRange(codeArea.getText(), is, "CASE", "END");
+					int end = CodeAreaUtility.findBeginStringRange(codeArea.getText(), is, "CASE", "END");
 					if (end != 0 && end > is) {
 						codeArea.selectRange(is - 4, end + 3);
 					}
@@ -354,7 +354,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 				} else if (trimStr.toUpperCase().endsWith("END")) {
 					int endIdx = str.toUpperCase().lastIndexOf("END");
 					int end = start + endIdx;
-					int is = CommonAction.findEndStringRange(codeArea.getText(), end, "END", "CASE");
+					int is = CodeAreaUtility.findEndStringRange(codeArea.getText(), end, "END", "CASE");
 					if (end > is) {
 						codeArea.selectRange(is - 4, end + 4);
 					}
@@ -523,7 +523,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 						String val = charMapPre.get(key);
 						int endIdx = str.lastIndexOf(key);
 						end = start + endIdx;
-						int is = CommonAction.findEndParenthesisRange(codeArea.getText(), end, key, val);
+						int is = CodeAreaUtility.findEndParenthesisRange(codeArea.getText(), end, key, val);
 						if (end > is) {
 							setStyleSpans(codeArea, is - 1, 1);
 							setStyleSpans(codeArea, end, 1);
@@ -944,9 +944,9 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 			logger.info("文本缩进 : " + e.getCode());
 			e.consume();
 			if (e.isShiftDown()) {
-				CommonAction.minus4Space();
+				CodeAreaUtility.minus4Space();
 			} else {
-				CommonAction.add4Space();
+				CodeAreaUtility.add4Space();
 			}
 		}
 	}

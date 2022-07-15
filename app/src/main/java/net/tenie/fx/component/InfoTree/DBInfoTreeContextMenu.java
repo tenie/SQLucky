@@ -17,7 +17,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
@@ -169,11 +169,11 @@ public class DBInfoTreeContextMenu {
         String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
         try {
             DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
-            ObservableList<SqlFieldPo> fields = DP.getFields();
+            ObservableList<SheetFieldPo> fields = DP.getFields();
 
             String fieldValue = "Field Type";
             for (int i = 0; i < fields.size(); i++) {
-                SqlFieldPo p = fields.get(i);
+                SheetFieldPo p = fields.get(i);
                 String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
                 if (p.getScale() != null && p.getScale().get() > 0) {
                     tyNa += ", " + p.getScale().get();

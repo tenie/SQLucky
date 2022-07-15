@@ -1,10 +1,9 @@
-package net.tenie.fx.component.CodeArea;
+package net.tenie.Sqlucky.sdk.component;
 
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
-import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 

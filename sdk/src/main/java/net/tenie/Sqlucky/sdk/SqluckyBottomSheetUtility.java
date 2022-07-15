@@ -12,29 +12,29 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.RsVal;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 
 public class SqluckyBottomSheetUtility {
 
-	public static BottomSheetDataValue myTabValue() {
+	public static SheetDataValue myTabValue() {
 		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
-		BottomSheetDataValue dv = mtd.getTableData();
+		SheetDataValue dv = mtd.getTableData();
 		return dv;
 	}
 	
 	// 获取所有数据
 	public static ObservableList<ObservableList<StringProperty>> getTabData() {
-		BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 		if (dvt != null) {
 			return dvt.getRawData();
 		}
 		return null;
 	}
 //	// 获取字段
-	public static ObservableList<SqlFieldPo> getFields() {
-		BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static ObservableList<SheetFieldPo> getFields() {
+		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 		if (dvt != null) {
 			return dvt.getColss();
 		}
@@ -43,7 +43,7 @@ public class SqluckyBottomSheetUtility {
 	
 //	// 获取tableName
 	public static String getTableName() {
-		BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 		if (dvt != null) {
 			return dvt.getTabName();
 		}
@@ -51,7 +51,7 @@ public class SqluckyBottomSheetUtility {
 	}
 	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
 		public static RsVal tableInfo() {
-			BottomSheetDataValue dataObj = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dataObj = SqluckyBottomSheetUtility.myTabValue();
 			String connName = "";
 			String tableName = "";
 			Connection conn = null;
@@ -88,7 +88,7 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static boolean exist(int row) {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				Map<String, ObservableList<StringProperty>> oldval = dvt.getNewLineDate();
 				if (null != oldval.get(row + "")) {
@@ -112,7 +112,7 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static String getSelectSQL() {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				return dvt.getSqlStr();
 			}
@@ -121,7 +121,7 @@ public class SqluckyBottomSheetUtility {
 
 //		// 添加一行新数据
 		public static void addDataNewLine(int rowNo, ObservableList<StringProperty> vals) {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				Map<String, ObservableList<StringProperty>> map = dvt.getNewLineDate();
 				map.put(rowNo + "", vals);
@@ -130,7 +130,7 @@ public class SqluckyBottomSheetUtility {
 
 		
 		public static void addDataOldVal(int rowNo, ObservableList<StringProperty> vals) {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				Map<String, ObservableList<StringProperty>> map = dvt.getOldval();
 				map.put(rowNo + "", vals);
@@ -143,7 +143,7 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static Map<String, ObservableList<StringProperty>> getOldval() {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				var v = dvt.getOldval();
 				return v;
@@ -156,7 +156,7 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static Map<String, ObservableList<StringProperty>> getNewLineDate() {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				var v = dvt.getNewLineDate();
 				return v;
@@ -165,7 +165,7 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static void rmUpdateData() {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				dvt.getNewLineDate().clear();
 				dvt.getOldval().clear();
@@ -174,7 +174,7 @@ public class SqluckyBottomSheetUtility {
 
 		public static void rmAppendData() {
 			SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
-			BottomSheetDataValue dvt = mtd.getTableData();
+			SheetDataValue dvt = mtd.getTableData();
 			if (dvt != null) {
 				dvt.getAppendData().clear();
 
@@ -182,7 +182,7 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static void appendDate(int rowNo, ObservableList<StringProperty> newDate) {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				Map<String, ObservableList<StringProperty>> map = dvt.getAppendData();
 				map.put(rowNo + "", newDate);
@@ -190,7 +190,7 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static List<ObservableList<StringProperty>> getAppendData() {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				List<ObservableList<StringProperty>> dataList = new ArrayList<>();
 
@@ -225,7 +225,7 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static String getConnName() {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				return dvt.getConnName();
 			}
@@ -233,7 +233,7 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static SqluckyConnector getDbConnection() {
-			BottomSheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			return dvt.getDbConnection();
 		}
 

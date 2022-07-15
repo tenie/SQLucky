@@ -44,7 +44,7 @@ public class CodeGenerationMenu {
 					fileNode.setTitle( gen.getPoClassFileName());
 					fileNode.setText( gen.getPoTxt());
 					SqluckyTab mtb = ComponentGetter.appComponent.sqluckyTab(fileNode);
-					mtb.mainTabPaneAddTextTab();  // 界面上显示
+					mtb.showMyTab();  // 界面上显示
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

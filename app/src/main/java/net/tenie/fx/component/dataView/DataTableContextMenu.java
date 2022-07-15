@@ -16,7 +16,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.MyPopupNumberFilter;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
@@ -135,7 +135,7 @@ public class DataTableContextMenu {
 	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields(); 
+				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields(); 
 				ObservableList<ObservableList<StringProperty>> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {

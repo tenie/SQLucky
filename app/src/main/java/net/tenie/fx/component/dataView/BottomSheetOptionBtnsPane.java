@@ -22,12 +22,12 @@ import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.MyTabData;
+import net.tenie.Sqlucky.sdk.component.MyBottomTab;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -103,7 +103,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	 * @param disable
 	 * @return
 	 */
-	public static List<Node> sqlDataOptionBtns( MyTabData mytb,  boolean disable){
+	public static List<Node> sqlDataOptionBtns( MyBottomTab mytb,  boolean disable){
 		List<Node> ls = new ArrayList<>();
 		JFXButton saveBtn = new JFXButton();
 		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
@@ -261,7 +261,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	 * @param name
 	 * @return
 	 */
-	public static List<Node> DDLOptionBtns(MyTabData mytb, String ddl, boolean isRunFunc, boolean isProc, String name) {
+	public static List<Node> DDLOptionBtns(MyBottomTab mytb, String ddl, boolean isRunFunc, boolean isProc, String name) {
 		List<Node> ls = new ArrayList<>();
 		// 锁
 		JFXButton lockbtn = SdkComponent.createLockBtn(mytb);
@@ -365,7 +365,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 		tbv.scrollTo(0);
 		int newLineidx = ConfigVal.newLineIdx++;
-		ObservableList<SqlFieldPo> fs = SqluckyBottomSheetUtility.getFields();
+		ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 		ObservableList<StringProperty> item = FXCollections.observableArrayList();
 		for (int i = 0; i < fs.size(); i++) {
 			SimpleStringProperty sp = new SimpleStringProperty("<null>");

@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.lib.reflex.BuildObject;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -24,7 +24,7 @@ public class DeleteDao {
 
 
 	public static String execDelete(Connection conn, String tableName, ObservableList<StringProperty> vals,
-			ObservableList<SqlFieldPo> fpos) throws Exception {
+			ObservableList<SheetFieldPo> fpos) throws Exception {
 		String msg = "";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;

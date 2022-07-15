@@ -30,8 +30,8 @@ import javafx.scene.control.TableCell;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
-import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
@@ -161,7 +161,7 @@ public class SdkComponent {
 	}
 
 	public static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableColForInfo(
-			ObservableList<SqlFieldPo> cols) {
+			ObservableList<SheetFieldPo> cols) {
 		int len = cols.size();
 		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList = FXCollections
 				.observableArrayList();
@@ -187,10 +187,9 @@ public class SdkComponent {
 		return col;
 	}
 
-	public static void sqlResultShow(String sql, Connection conn, String tableName, List<Node> nodeList)
+	public static void sqlResultShow2(String sql, Connection conn, String tableName, List<Node> nodeList)
 			throws Exception {
 		try {
-//		    Connection conn = dpo.getConn();
 			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(false));
@@ -204,26 +203,22 @@ public class SdkComponent {
 			}
 
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			BottomSheetDataValue sheetDaV = new BottomSheetDataValue();
-//			sheetDaV.setDbConnection(dpo); 
-//			String connectName = DBConns.getCurrentConnectName();
+			SheetDataValue sheetDaV = new SheetDataValue();
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTable(table);
 			sheetDaV.setTabName(tableName);
-//			sheetDaV.setConnName(connectName);
 			sheetDaV.setLock(false);
 			sheetDaV.setConn(conn);
 
 			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV);
 
 			ObservableList<ObservableList<StringProperty>> allRawData = sheetDaV.getRawData();
-			ObservableList<SqlFieldPo> colss = sheetDaV.getColss();
+			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
 
 			// table 添加列和数据
 			// 表格添加列
 			var tableColumns = SdkComponent.createTableColForInfo(colss);
 			// 设置 列的 右键菜单
-//			setDataTableContextMenu(tableColumns, colss);
 			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);
 
@@ -240,17 +235,15 @@ public class SdkComponent {
 	}
 
 	/**
-	 * 数据模型查询字段时， 对展示列宽度做调整
-	 * 
+	 * sql 查询结果生成表格
 	 * @param sql
 	 * @param conn
 	 * @param tableName
-	 * @param nodeList
 	 * @param fieldWidthMap
-	 * @throws Exception
+	 * @return
 	 */
-	public static void dataModelQueryFieldsShow(String sql, Connection conn, String tableName, List<Node> nodeList,
-			Map<String, Double> fieldWidthMap) throws Exception {
+	public static SheetDataValue sqlToSheet(String sql, Connection conn, String tableName, Map<String, Double> fieldWidthMap) {
+
 		try {
 			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
 			// 查询的 的语句可以被修改
@@ -265,7 +258,7 @@ public class SdkComponent {
 			}
 
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			BottomSheetDataValue sheetDaV = new BottomSheetDataValue();
+			SheetDataValue sheetDaV = new SheetDataValue();
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTable(table);
 			sheetDaV.setTabName(tableName);
@@ -275,13 +268,15 @@ public class SdkComponent {
 			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV);
 
 			ObservableList<ObservableList<StringProperty>> allRawData = sheetDaV.getRawData();
-			ObservableList<SqlFieldPo> colss = sheetDaV.getColss();
+			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
 
-			// 给字段设置显示宽度
-			for (var sfpo : colss) {
-				Double val = fieldWidthMap.get(sfpo.getColumnLabel().getValue());
-				if (val != null) {
-					sfpo.setColumnWidth(val);
+			if(fieldWidthMap != null ) {
+				// 给字段设置显示宽度
+				for (var sfpo : colss) {
+					Double val = fieldWidthMap.get(sfpo.getColumnLabel().getValue());
+					if (val != null) {
+						sfpo.setColumnWidth(val);
+					}
 				}
 			}
 
@@ -289,13 +284,33 @@ public class SdkComponent {
 			// 表格添加列
 			var tableColumns = SdkComponent.createTableColForInfo(colss);
 			// 设置 列的 右键菜单
-//			setDataTableContextMenu(tableColumns, colss);
 			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);
+			
+			return sheetDaV;
 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	/**
+	 * 数据模型查询字段时， 对展示列宽度做调整
+	 * 
+	 * @param sql
+	 * @param conn
+	 * @param tableName
+	 * @param optionNodes  按钮等组件的集合
+	 * @param fieldWidthMap
+	 * @throws Exception
+	 */
+	public static void dataModelQueryFieldsShow(String sql, Connection conn, String tableName, List<Node> optionNodes,
+			Map<String, Double> fieldWidthMap) throws Exception {
+		try {
+			SheetDataValue sheetDaV = sqlToSheet(sql, conn, tableName, fieldWidthMap);
 			// 渲染界面
-
-			SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(sheetDaV, nodeList);
+			SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(sheetDaV, optionNodes);
 			mtd.show();
 
 		} catch (Exception e) {
@@ -349,18 +364,6 @@ public class SdkComponent {
 
 	}
 
-//	// 移除 等待加载动画 页面, 不删除任何界面
-//	public static void rmWaitingPaneHold() {
-//		Platform.runLater(() -> {
-//			TabPane dataTab = ComponentGetter.dataTabPane;
-//			if (dataTab.getTabs().contains(waitTb)) {
-//				dataTab.getTabs().remove(waitTb);
-//			}
-//			if (dataTab.getTabs().size() == 0) {
-//				SdkComponent.hideBottom();
-//			}
-//		});
-//	}
 
 	// 删除空白页, 保留锁定页
 	public static void deleteEmptyTab(TabPane dataTab) {
@@ -368,9 +371,8 @@ public class SdkComponent {
 		// 删除旧的 tab
 		List<Tab> ls = new ArrayList<>();
 		for(int i = 0; i < dataTab.getTabs().size() ;i++) { 
-//			MyTabData nd = (MyTabData) dataTab.getTabs().get(i);
 			Tab tab = dataTab.getTabs().get(i);
-			MyTabData nd =  (MyTabData) tab.getUserData();
+			MyBottomTab nd =  (MyBottomTab) tab.getUserData();
 			if(nd == null) continue;
 			Boolean tf = nd.getTableData().isLock();
 			if(tf != null && tf) {
@@ -462,10 +464,6 @@ public class SdkComponent {
 		TabPane tabPane = ComponentGetter.dataTabPane; 
 		var tb = tabPane.getTabs().get(tbIdx);
 		long begintime = System.currentTimeMillis();
-//		String idVal = tb.getId();
-//		if (idVal != null) {
-//			CacheTabView.clear(idVal);
-//		}
 		tb.setContent(null); 
 		tabPane.getTabs().remove(tb);
 		long endtime = System.currentTimeMillis();
@@ -480,10 +478,6 @@ public class SdkComponent {
 	public static void clearDataTable(Tab tb) {
 		TabPane tabPane = ComponentGetter.dataTabPane; 
 		long begintime = System.currentTimeMillis();
-//		String idVal = tb.getId();
-//		if (idVal != null) {
-//			CacheTabView.clear(idVal);
-//		}
 		tb.setContent(null); 
 		tabPane.getTabs().remove(tb);
 		long endtime = System.currentTimeMillis();
@@ -498,7 +492,7 @@ public class SdkComponent {
 	/**
 	 * 数据table关闭的时候 
 	 */
-	public static EventHandler<Event> dataTabCloseReq( MyTabData tb) {
+	public static EventHandler<Event> dataTabCloseReq( MyBottomTab tb) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) { 
 				SdkComponent.clearDataTable( tb.getTab());

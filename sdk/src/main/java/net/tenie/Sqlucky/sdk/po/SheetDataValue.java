@@ -18,7 +18,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
  * @author tenie
  *
  */
-public class BottomSheetDataValue {
+public class SheetDataValue {
 	private String tabName;
 	private String sqlStr;
 	private String connName;
@@ -41,7 +41,7 @@ public class BottomSheetDataValue {
 //	private List<MenuItem> menuItems = new ArrayList<>();
 
 	// 列
-	private ObservableList<SqlFieldPo> colss;
+	private ObservableList<SheetFieldPo> colss;
 	// 数据添加到表格 更简洁的api
 	ObservableList<ObservableList<StringProperty>> rawData;
 
@@ -88,8 +88,8 @@ public class BottomSheetDataValue {
 
  
 
-	public BottomSheetDataValue(FilteredTableView<ObservableList<StringProperty>> table,  String tabName,
-			String sqlStr, String connName, ObservableList<SqlFieldPo> colss,
+	public SheetDataValue(FilteredTableView<ObservableList<StringProperty>> table,  String tabName,
+			String sqlStr, String connName, ObservableList<SheetFieldPo> colss,
 			ObservableList<ObservableList<StringProperty>> rawData) {
 		this.table = table;
 		this.tabName = tabName;
@@ -99,15 +99,15 @@ public class BottomSheetDataValue {
 		this.rawData = rawData;
 	}
 
-	public BottomSheetDataValue(FilteredTableView<ObservableList<StringProperty>> table, String tabName,
-			ObservableList<SqlFieldPo> colss, ObservableList<ObservableList<StringProperty>> rawData) {
+	public SheetDataValue(FilteredTableView<ObservableList<StringProperty>> table, String tabName,
+			ObservableList<SheetFieldPo> colss, ObservableList<ObservableList<StringProperty>> rawData) {
 		this.table = table;
 		this.tabName = tabName;
 		this.colss = colss;
 		this.rawData = rawData;
 	}
 
-	public BottomSheetDataValue() {
+	public SheetDataValue() {
 
 	}
  
@@ -151,11 +151,11 @@ public class BottomSheetDataValue {
 		this.table = table;
 	}
 
-	public ObservableList<SqlFieldPo> getColss() {
+	public ObservableList<SheetFieldPo> getColss() {
 		return colss;
 	}
 
-	public void setColss(ObservableList<SqlFieldPo> colss) {
+	public void setColss(ObservableList<SheetFieldPo> colss) {
 		this.colss = colss;
 	}
 

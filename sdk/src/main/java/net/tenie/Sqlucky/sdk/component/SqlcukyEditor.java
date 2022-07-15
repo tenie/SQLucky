@@ -152,27 +152,11 @@ public class SqlcukyEditor {
 		 copySelectionText();
 		 deleteSelectionText(); 
 	}
-		
 
-	// 代码的容器
-//	public static StackPane getTabStackPane(SqluckyTab tb) {
-//		VBox vb =   tb.getVbox();;
-//		StackPane sp = null;
-//		if (vb.getChildren().size() > 1) {
-//			int sz = vb.getChildren().size() - 1;
-//			sp = (StackPane) vb.getChildren().get(sz);
-//			
-//		} else {
-//			sp = (StackPane) vb.getChildren().get(0);
-//		}
-//		return sp;
-//	}
 
 	// 获取当前选中的代码Tab
 	public static Tab mainTabPaneSelectedTab() { 
 		var myTabPane = ComponentGetter.mainTabPane;
-//		SqluckyTab rstab = (SqluckyTab) myTabPane.getSelectionModel().getSelectedItem();
-//		return rstab;
 		return myTabPane.getSelectionModel().getSelectedItem();
 	}
 	

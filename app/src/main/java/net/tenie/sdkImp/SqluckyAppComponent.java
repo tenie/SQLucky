@@ -24,18 +24,18 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyTabData;
+import net.tenie.Sqlucky.sdk.component.MyBottomTab;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
-import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.InfoTree.DBInfoTreeContextMenu;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
@@ -62,7 +62,7 @@ public class SqluckyAppComponent implements AppComponent {
 
 	@Override
 	public SqluckyTab sqluckyTab() { 
-		return new MyTab(false);
+		return new MyAreaTab(false);
 	}
 //
 //	@Override
@@ -72,7 +72,7 @@ public class SqluckyAppComponent implements AppComponent {
 
 	@Override
 	public SqluckyTab sqluckyTab(DocumentPo po) { 
-		return new MyTab(po, false);
+		return new MyAreaTab(po, false);
 	}
 	/**
 	 * 获取图标
@@ -156,8 +156,8 @@ public class SqluckyAppComponent implements AppComponent {
 	
 	// 创建sql查询结果数据tableview
 	@Override
-	public  SqluckyBottomSheet sqlDataSheet(BottomSheetDataValue data, int idx, boolean disable) {
-		MyTabData rs = new MyTabData(data, idx, disable);
+	public  SqluckyBottomSheet sqlDataSheet(SheetDataValue data, int idx, boolean disable) {
+		MyBottomTab rs = new MyBottomTab(data, idx, disable);
 		String time = data.getExecTime() == 0 ? "0" : data.getExecTime() + "";
 		String rows = data.getRows() == 0 ? "0" : data.getRows() + "";
 		
@@ -173,9 +173,11 @@ public class SqluckyAppComponent implements AppComponent {
 
 		return rs;
 	}
-	
-	public  SqluckyBottomSheet tableViewSheet(BottomSheetDataValue data, List<Node> btnLs) {
-		var rs = new MyTabData(data);
+	/**
+	 * 
+	 */
+	public  SqluckyBottomSheet tableViewSheet(SheetDataValue data, List<Node> btnLs) {
+		var rs = new MyBottomTab(data);
 		
 		VBox vbox = new VBox(); 
 		JFXButton LockBtn = SdkComponent.createLockBtn(rs);
@@ -196,7 +198,7 @@ public class SqluckyAppComponent implements AppComponent {
 	// 表, 视图 等 数据库对象的ddl语句
 	@Override
 	public  SqluckyBottomSheet ddlSheet(String name, String ddl, boolean isRunFunc) {
-		var mtb = new MyTabData(name);
+		var mtb = new MyBottomTab(name);
 		mtb.setDDL(true);
 		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
 		mtb.setSqlArea(sqlArea);
@@ -206,7 +208,7 @@ public class SqluckyAppComponent implements AppComponent {
 	}
 	@Override
 	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc) {
-		var mtb = new MyTabData(name);
+		var mtb = new MyBottomTab(name);
 		mtb.setDDL(true);
 		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
 		mtb.setSqlArea(sqlArea);
@@ -216,7 +218,7 @@ public class SqluckyAppComponent implements AppComponent {
 	}
 	@Override
 	public SqluckyBottomSheet EmptySheet(String name, String message) {
-		var mtb = new MyTabData(name);
+		var mtb = new MyBottomTab(name);
 		mtb.setDDL(true);
 		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
 		mtb.setSqlArea(sqlArea);
@@ -227,7 +229,7 @@ public class SqluckyAppComponent implements AppComponent {
 
  
 	// 数据tab中的组件
-	public static VBox DDLBox(MyTabData mtb, String ddl, boolean isRunFunc, boolean isProc, String name) {
+	public static VBox DDLBox(MyBottomTab mtb, String ddl, boolean isRunFunc, boolean isProc, String name) {
 		VBox vb = new VBox();
 
 		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);

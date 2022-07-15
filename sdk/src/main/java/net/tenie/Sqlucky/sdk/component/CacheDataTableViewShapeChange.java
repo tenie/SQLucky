@@ -19,7 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
 import net.tenie.Sqlucky.sdk.po.DataTableViewShapePo;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -29,7 +29,7 @@ public class CacheDataTableViewShapeChange {
 	static private Map<String, Double> tableScrollHorizontal = new HashMap<>();
 	static private Map<String, List<String>> colOrder = new HashMap<>();
 
-	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ObservableList<StringProperty>> table , ObservableList<SqlFieldPo> colss) {
+	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ObservableList<StringProperty>> table , ObservableList<SheetFieldPo> colss) {
 		CommonUtility.threadAwait(1);
 		Platform.runLater(() -> { 
 			// 列移动缓存
@@ -218,7 +218,7 @@ public class CacheDataTableViewShapeChange {
 	
 	// 设置 tooltip
 	public static void setTableHeaderTooltip(FilteredTableView<ObservableList<StringProperty>> table,
-			ObservableList<SqlFieldPo> colss) {
+			ObservableList<SheetFieldPo> colss) {
 		try {
 			Node colHeader = table.lookup(".nested-column-header");
 			if(colHeader == null ) return ;
@@ -240,7 +240,7 @@ public class CacheDataTableViewShapeChange {
 		}
 	}
 	
-	private static String findColType(ObservableList<SqlFieldPo> colss , String name) {
+	private static String findColType(ObservableList<SheetFieldPo> colss , String name) {
 		if(colss != null ) {
 			for(var po:colss) {
 				String poname = po.getColumnLabel().get();
@@ -258,7 +258,7 @@ public class CacheDataTableViewShapeChange {
 	}
 	
 	// 重新设置位置
-	public static void colReorder(String tableName, ObservableList<SqlFieldPo> colss , FilteredTableView<ObservableList<StringProperty>> table) {
+	public static void colReorder(String tableName, ObservableList<SheetFieldPo> colss , FilteredTableView<ObservableList<StringProperty>> table) {
 		List<String> tmporder = colOrder.get(tableName);
 		
 		ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabcols = table.getColumns(); 
@@ -269,7 +269,7 @@ public class CacheDataTableViewShapeChange {
 				&& tmporder.size() == colss.size() ) {
 			boolean same = true; 
 
-			for(SqlFieldPo col: colss) {
+			for(SheetFieldPo col: colss) {
 				String colname =col.getColumnLabel().get(); 
 				// 看列名是否包含在缓存中的列名列表中
 				if( ! tmporder.contains(colname)) {

@@ -5,7 +5,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.MyAreaTab;
 /**
  * 
  * @author tenie
@@ -16,7 +16,7 @@ public class ScriptTreeContextMenu {
 	private MenuItem close; 
 	
 	
-	public ScriptTreeContextMenu(TreeItem<MyTab> rootNode) {
+	public ScriptTreeContextMenu(TreeItem<MyAreaTab> rootNode) {
 
 		contextMenu = new ContextMenu();  
 		
@@ -34,7 +34,7 @@ public class ScriptTreeContextMenu {
 	 
 		MenuItem New = new MenuItem("New");
 		New.setOnAction(e -> {
-			MyTab.addCodeEmptyTabMethod();
+			MyAreaTab.addCodeEmptyTabMethod();
 		}); 
 		
 		MenuItem save = new MenuItem("Save");
