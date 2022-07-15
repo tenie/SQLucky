@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
  * @author tenie */
 public class DbTableDatePo {
 	// 字段
-	private ObservableList<SqlFieldPo> fields;
+	private ObservableList<SheetFieldPo> fields;
 	// 数据
 	private ObservableList<ObservableList<StringProperty>> allDatas;
 	// sql执行时间
@@ -48,7 +48,7 @@ public class DbTableDatePo {
 	public static DbTableDatePo errObj(String errorMessage) {
 		DbTableDatePo errdpo = new DbTableDatePo();
 
-		SqlFieldPo p = new SqlFieldPo();
+		SheetFieldPo p = new SheetFieldPo();
 		p.setColumnLabel(new SimpleStringProperty("Error Message Info"));
 		errdpo.addField(p);
 
@@ -62,7 +62,7 @@ public class DbTableDatePo {
 		allDatas.add(data);
 	}
 
-	public void addField(SqlFieldPo data) {
+	public void addField(SheetFieldPo data) {
 		fields.add(data);
 	}
 
@@ -73,7 +73,7 @@ public class DbTableDatePo {
 	}
 
 	public void addField(String data) {
-		SqlFieldPo po = new SqlFieldPo();
+		SheetFieldPo po = new SheetFieldPo();
 		po.setColumnLabel(data);
 		po.setColumnName(data);
 		po.setColumnTypeName("String");
@@ -84,7 +84,7 @@ public class DbTableDatePo {
 		fields.add(po);
 	}
 	public void addField(String data ,Double Width) {
-		SqlFieldPo po = new SqlFieldPo();
+		SheetFieldPo po = new SheetFieldPo();
 		po.setColumnLabel(data);
 		po.setColumnName(data);
 		po.setColumnTypeName("String");
@@ -96,11 +96,11 @@ public class DbTableDatePo {
 		fields.add(po);
 	}
 
-	public ObservableList<SqlFieldPo> getFields() {
+	public ObservableList<SheetFieldPo> getFields() {
 		return fields;
 	}
 
-	public void setFields(ObservableList<SqlFieldPo> fields) {
+	public void setFields(ObservableList<SheetFieldPo> fields) {
 		this.fields = fields;
 	}
 

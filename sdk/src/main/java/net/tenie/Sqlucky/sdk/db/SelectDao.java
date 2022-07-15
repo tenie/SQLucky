@@ -23,10 +23,10 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -39,15 +39,15 @@ public class SelectDao {
 
 	private static Logger logger = LogManager.getLogger(SelectDao.class);
 	
-	public static ObservableList<SqlFieldPo> resultSetMetaData(ResultSet rs ) throws SQLException {
+	public static ObservableList<SheetFieldPo> resultSetMetaData(ResultSet rs ) throws SQLException {
 		// 获取元数据
 		ResultSetMetaData mdata = rs.getMetaData();
 		// 获取元数据列数
 		Integer columnnums = Integer.valueOf(mdata.getColumnCount());
 		// 迭代元数据
-		ObservableList<SqlFieldPo> fields = FXCollections.observableArrayList();
+		ObservableList<SheetFieldPo> fields = FXCollections.observableArrayList();
 		for (int i = 1; i <= columnnums; i++) {
-			SqlFieldPo po = new SqlFieldPo();
+			SheetFieldPo po = new SheetFieldPo();
 			po.setScale(mdata.getScale(i));
 			po.setColumnName(mdata.getColumnName(i));
 			po.setColumnClassName(mdata.getColumnClassName(i));
@@ -62,7 +62,7 @@ public class SelectDao {
 	}
 	
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void selectSql( String sql, int limit, BottomSheetDataValue dvt ) throws SQLException {
+	public static void selectSql( String sql, int limit, SheetDataValue dvt ) throws SQLException {
 		SqluckyConnector dpo  = dvt.getDbConnection();
 		Connection conn = null;
 		if(dpo != null) {
@@ -86,7 +86,7 @@ public class SelectDao {
 			logger.info("查询时间： "+usetime+"ms");
 			dvt.setExecTime(vt); 
 //			// 获取元数据
-			ObservableList<SqlFieldPo> fields = resultSetMetaData(rs);
+			ObservableList<SheetFieldPo> fields = resultSetMetaData(rs);
 			
 			ObservableList<ObservableList<StringProperty>>  val ;
 			// 数据
@@ -162,11 +162,11 @@ public class SelectDao {
 
 	
 	//TODO 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void callProcedure(Connection conn, String proName ,String tableid , BottomSheetDataValue dvt ,List<ProcedureFieldPo> pfp  ) throws SQLException {
+	public static void callProcedure(Connection conn, String proName ,String tableid , SheetDataValue dvt ,List<ProcedureFieldPo> pfp  ) throws SQLException {
 		// DB对象
 		CallableStatement call = null;
 		ResultSet rs = null; 
-		ObservableList<SqlFieldPo> fields = FXCollections.observableArrayList();
+		ObservableList<SheetFieldPo> fields = FXCollections.observableArrayList();
 		ObservableList<ObservableList<StringProperty>>  val = FXCollections.observableArrayList();
 		ObservableList<StringProperty> rowval = FXCollections.observableArrayList();
 		try {
@@ -210,7 +210,7 @@ public class SelectDao {
 			    		 rowval.add(CommonUtility.createReadOnlyStringProperty(objRtn.toString()));
 			    		 
 			    		// 字段信息
-			    		 SqlFieldPo sfpo  = new SqlFieldPo();
+			    		 SheetFieldPo sfpo  = new SheetFieldPo();
 			    		 sfpo.setScale(0);
 			    		 sfpo.setColumnName( po.getName());
 			    		 sfpo.setColumnClassName("");
@@ -260,7 +260,7 @@ public class SelectDao {
 			Integer columnnums = Integer.valueOf(mdata.getColumnCount());
  
 			for (int i = 1; i <= columnnums; i++) {
-				SqlFieldPo po = new SqlFieldPo();
+				SheetFieldPo po = new SheetFieldPo();
 				po.setScale(mdata.getScale(i));
 				po.setColumnName(mdata.getColumnName(i));
 				po.setColumnClassName(mdata.getColumnClassName(i));
@@ -281,7 +281,7 @@ public class SelectDao {
 	}
 	
 
-	private static ObservableList<ObservableList<StringProperty>>  execRs(int limit, ResultSet rs, ObservableList<SqlFieldPo> fpo,
+	private static ObservableList<ObservableList<StringProperty>>  execRs(int limit, ResultSet rs, ObservableList<SheetFieldPo> fpo,
 			  SqluckyConnector dpo) throws SQLException {
 		int idx = 1;
 		int rowNo = 0;
@@ -344,7 +344,7 @@ public class SelectDao {
 
 	
 
-	public static ObservableList<ObservableList<StringProperty>>  simpleExecRs( ResultSet rs, ObservableList<SqlFieldPo> fpo ) throws SQLException {
+	public static ObservableList<ObservableList<StringProperty>>  simpleExecRs( ResultSet rs, ObservableList<SheetFieldPo> fpo ) throws SQLException {
 		int idx = 1;
 		int rowNo = 0; 
 		int columnnums = fpo.size(); 
@@ -383,7 +383,7 @@ public class SelectDao {
 
 	
 	
-	private static ObservableList<ObservableList<StringProperty>>   execRs(ResultSet rs, ObservableList<SqlFieldPo> fpo,   SqluckyConnector dpo)
+	private static ObservableList<ObservableList<StringProperty>>   execRs(ResultSet rs, ObservableList<SheetFieldPo> fpo,   SqluckyConnector dpo)
 			throws SQLException {
 		return execRs(Integer.MAX_VALUE, rs, fpo, dpo);
 	}

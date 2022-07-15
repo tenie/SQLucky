@@ -17,26 +17,26 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
-import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.MyAreaTab;
 
 /**
  * 
  * @author tenie
  *
  */
-public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeCell<MyTab>> { 
+public class ScriptTabNodeCellFactory implements Callback<TreeView<MyAreaTab>, TreeCell<MyAreaTab>> { 
 	private static Logger logger = LogManager.getLogger(ScriptTabNodeCellFactory.class);
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
-	private TreeCell<MyTab> dropZone;
-	private TreeItem<MyTab> draggedItem;
+	private TreeCell<MyAreaTab> dropZone;
+	private TreeItem<MyAreaTab> draggedItem;
 
 	@Override
-	public TreeCell<MyTab> call(TreeView<MyTab> treeView) {
+	public TreeCell<MyAreaTab> call(TreeView<MyAreaTab> treeView) {
 		Button clean = new Button(); 
-		TreeCell<MyTab> cell = new TreeCell<MyTab>() {
+		TreeCell<MyAreaTab> cell = new TreeCell<MyAreaTab>() {
 		
 			@Override
-			public void updateItem(MyTab item, boolean empty) {
+			public void updateItem(MyAreaTab item, boolean empty) {
 				super.updateItem(item, empty);				
 				// 给cell 内容添加 button
 				   // If the cell is empty we don't show anything.
@@ -115,7 +115,7 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 	
 
 	// 发现拖动 当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个
-	private void dragDetected(MouseEvent event, TreeCell<MyTab> treeCell, TreeView<MyTab> treeView) {
+	private void dragDetected(MouseEvent event, TreeCell<MyAreaTab> treeCell, TreeView<MyAreaTab> treeView) {
 		logger.info("dragDetected"); 
 		
 		draggedItem = treeCell.getTreeItem();
@@ -135,11 +135,11 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 	
 	}
 
-	private void dragOver(DragEvent event, TreeCell<MyTab> treeCell, TreeView<MyTab> treeView) {
+	private void dragOver(DragEvent event, TreeCell<MyAreaTab> treeCell, TreeView<MyAreaTab> treeView) {
   
 		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT))
 			return;
-		TreeItem<MyTab> thisItem = treeCell.getTreeItem();
+		TreeItem<MyAreaTab> thisItem = treeCell.getTreeItem();
 
 		// can't drop on itself
 		if (draggedItem == null || thisItem == null || thisItem == draggedItem)
@@ -161,15 +161,15 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyTab>, TreeC
 	}
 
 	// 放下后执行
-	private void drop(DragEvent event, TreeCell<MyTab> treeCell, TreeView<MyTab> treeView) {
+	private void drop(DragEvent event, TreeCell<MyAreaTab> treeCell, TreeView<MyAreaTab> treeView) {
 		logger.info("drop");
 		Dragboard db = event.getDragboard();
 		boolean success = false;
 		if (!db.hasContent(DataFormat.PLAIN_TEXT))
 			return;
 
-		TreeItem<MyTab> thisItem = treeCell.getTreeItem();
-		TreeItem<MyTab> droppedItemParent = draggedItem.getParent();
+		TreeItem<MyAreaTab> thisItem = treeCell.getTreeItem();
+		TreeItem<MyAreaTab> droppedItemParent = draggedItem.getParent();
 
 //		// 只能同一个父节点下换位置, 否则不动
 		if (Objects.equals(droppedItemParent, thisItem.getParent())) {

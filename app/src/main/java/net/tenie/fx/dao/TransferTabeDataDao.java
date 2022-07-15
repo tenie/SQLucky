@@ -18,7 +18,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -43,7 +43,7 @@ public class TransferTabeDataDao {
 			Integer columnnums = Integer.valueOf(mdata.getColumnCount());
 			// 迭代元数据
 			for (int i = 1; i <= columnnums; i++) {
-				SqlFieldPo po = new SqlFieldPo();
+				SheetFieldPo po = new SheetFieldPo();
 				po.setScale(mdata.getScale(i));
 				po.setColumnName(mdata.getColumnName(i));
 				po.setColumnClassName(mdata.getColumnClassName(i));
@@ -79,7 +79,7 @@ public class TransferTabeDataDao {
 		try {
 			stmt = toConn.createStatement();
 			int idx = 0 ; 
-			ObservableList<SqlFieldPo> fpo = dpo.getFields();
+			ObservableList<SheetFieldPo> fpo = dpo.getFields();
 			int columnnums = fpo.size();
 			String  insertSql = "";
 			while (rs.next()) {

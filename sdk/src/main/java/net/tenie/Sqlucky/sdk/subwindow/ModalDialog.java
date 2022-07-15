@@ -42,7 +42,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 
@@ -154,7 +154,7 @@ public class ModalDialog {
 	}
 
 	// 根据给定的node 创建 模态框
-	public ModalDialog(Parent node, TableView<SqlFieldPo>  tv ,String title) {
+	public ModalDialog(Parent node, TableView<SheetFieldPo>  tv ,String title) {
 		try {
 			
 			final Stage stage = new Stage();

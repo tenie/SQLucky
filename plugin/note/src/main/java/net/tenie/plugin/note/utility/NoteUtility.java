@@ -56,7 +56,7 @@ public class NoteUtility {
 						if(! isExist) {
 							String  val = CommonUtility.readFileText(file, charset);
 							stb.setFileText(val);
-							stb.mainTabPaneAddSqlTab();
+							stb.showMyTab();
 						}
 					}else {
 						CommonUtility.openExplorer(file);

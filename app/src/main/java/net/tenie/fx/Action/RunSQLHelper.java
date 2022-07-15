@@ -39,10 +39,10 @@ import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -264,9 +264,9 @@ public class RunSQLHelper {
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
 			// table 添加列和数据 
-			ObservableList<SqlFieldPo> colss = ddlDmlpo.getFields();
+			ObservableList<SheetFieldPo> colss = ddlDmlpo.getFields();
 			ObservableList<ObservableList<StringProperty>> alldata = ddlDmlpo.getAllDatas();
-			BottomSheetDataValue dvt = new BottomSheetDataValue(table , ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
+			SheetDataValue dvt = new SheetDataValue(table , ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
 			
 			var cols = SdkComponent.createTableColForInfo( colss);
 			table.getColumns().addAll(cols);
@@ -321,7 +321,7 @@ public class RunSQLHelper {
 //			ParseSQL.tabName(sql);
 			
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			BottomSheetDataValue dvt = new BottomSheetDataValue();
+			SheetDataValue dvt = new SheetDataValue();
 			//TODO callProcedure
 			SelectDao.callProcedure(conn, sql, table.getId(), dvt, fields );
 			
@@ -337,7 +337,7 @@ public class RunSQLHelper {
 			dvt.setLock(isLock);
 			
 			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
-			ObservableList<SqlFieldPo> colss = dvt.getColss();
+			ObservableList<SheetFieldPo> colss = dvt.getColss();
 			  
 			//缓存
 			// 查询的 的语句可以被修改
@@ -396,7 +396,7 @@ public class RunSQLHelper {
 				tableName = "Table Name Not Finded";
 			}
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			BottomSheetDataValue sheetDaV = new BottomSheetDataValue();
+			SheetDataValue sheetDaV = new SheetDataValue();
 			sheetDaV.setDbConnection(dpo); 
 			String connectName = DBConns.getCurrentConnectName();
 			sheetDaV.setSqlStr(sql);
@@ -409,7 +409,7 @@ public class RunSQLHelper {
 			DataViewContainer.setTabRowWith(table, sheetDaV.getRawData().size()); 
 			
 			ObservableList<ObservableList<StringProperty>> allRawData = sheetDaV.getRawData();
-			ObservableList<SqlFieldPo> colss = sheetDaV.getColss();
+			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
 			  
 			//缓存
 			sheetDaV.setTable(table);
@@ -684,7 +684,7 @@ public class RunSQLHelper {
 	}
 
 	// table 添加列
-	private static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableColForSqlData( ObservableList<SqlFieldPo> cols,  List<String> keys  , BottomSheetDataValue dvt) {
+	private static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableColForSqlData( ObservableList<SheetFieldPo> cols,  List<String> keys  , SheetDataValue dvt) {
 		int len = cols.size();
 		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList = FXCollections.observableArrayList();
 		for (int i = 0; i < len; i++) {
@@ -705,7 +705,7 @@ public class RunSQLHelper {
 		return colList;
 	}
 	// 设置 列的 右键菜单
-	private static void setDataTableContextMenu(ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>>  colList , ObservableList<SqlFieldPo> cols) {
+	private static void setDataTableContextMenu(ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>>  colList , ObservableList<SheetFieldPo> cols) {
 		int len = cols.size();
 		for (int i = 0; i < len; i++) {
 			FilteredTableColumn<ObservableList<StringProperty>, String> col = colList.get(i);
@@ -731,7 +731,7 @@ public class RunSQLHelper {
 	 * @return
 	 */
 	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumnForSqlData(
-			String colname, int colIdx, boolean iskey, BottomSheetDataValue dvt ) {
+			String colname, int colIdx, boolean iskey, SheetDataValue dvt ) {
 		FilteredTableColumn<ObservableList<StringProperty>, String> col = SdkComponent.createColumn(colname, colIdx);
 		Label label  =  (Label) col.getGraphic() ;//new Label(); 
 		if(iskey) {// #F0F0F0    1C92FB ##6EB842  #7CFC00

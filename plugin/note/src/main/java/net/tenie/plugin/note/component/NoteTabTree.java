@@ -129,7 +129,7 @@ public class NoteTabTree {
 		TreeItem<SqluckyTab> item = noteTabTreeView.getSelectionModel().getSelectedItem();
 		var mytab = item.getValue(); 
 		if(mytab != null && mytab.getDocumentPo() != null) {
-			mytab.mainTabPaneAddSqlTab();
+			mytab.showMyTab();
 		}
 	}
 	 

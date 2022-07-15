@@ -10,7 +10,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
-import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
@@ -53,8 +53,8 @@ public interface AppComponent {
 //	public void openConn();
 	
     //创建数据tableview
-	public  SqluckyBottomSheet sqlDataSheet(BottomSheetDataValue data, int idx, boolean disable);
-	public  SqluckyBottomSheet tableViewSheet(BottomSheetDataValue data, List<Node> nodeLs);
+	public  SqluckyBottomSheet sqlDataSheet(SheetDataValue data, int idx, boolean disable);
+	public  SqluckyBottomSheet tableViewSheet(SheetDataValue data, List<Node> nodeLs);
 	// 表, 视图 等 数据库对象的ddl语句
 	public  SqluckyBottomSheet ddlSheet(String name, String ddl, boolean isRunFunc);
 	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc);

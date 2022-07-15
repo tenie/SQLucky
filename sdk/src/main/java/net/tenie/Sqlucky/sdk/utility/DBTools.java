@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsData;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 
 /**
  * 
@@ -385,9 +385,9 @@ public class DBTools {
 	}
 
 	// List<SqlFieldPo> 转为 List<String>
-	public static List<String> conversionSqlFieldPo(List<SqlFieldPo> v) {
+	public static List<String> conversionSqlFieldPo(List<SheetFieldPo> v) {
 		List<String> rs = new ArrayList<String>();
-		for (SqlFieldPo po : v) {
+		for (SheetFieldPo po : v) {
 			String na = po.getColumnLabel().get();
 			rs.add(na);
 		}

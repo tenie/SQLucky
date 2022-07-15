@@ -30,7 +30,7 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
 import net.tenie.fx.Action.SettingKeyCodeCombination;
-import net.tenie.fx.component.MyTab;
+import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.AppDao;
@@ -180,7 +180,7 @@ public class SQLucky extends Application {
 				Node tabHeader = mainTabPane.lookup(".tab-header-area");
 				tabHeader.setOnMouseClicked(mouseEvent->{
 					if (mouseEvent.getClickCount() == 2) {
-						MyTab.addCodeEmptyTabMethod();
+						MyAreaTab.addCodeEmptyTabMethod();
 					}
 				});
 				 

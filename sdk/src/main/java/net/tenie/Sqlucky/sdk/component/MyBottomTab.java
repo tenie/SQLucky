@@ -11,25 +11,23 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
-import net.tenie.Sqlucky.sdk.po.BottomSheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 /**
  * 
  * @author tenie
  *extends Tab
  */
-public class MyTabData  implements SqluckyBottomSheet{
-	private BottomSheetDataValue tableData;
-	public SqluckyCodeAreaHolder sqlArea;
+public class MyBottomTab  implements SqluckyBottomSheet{
+	public  SqluckyCodeAreaHolder sqlArea;
+	private SheetDataValue tableData;
 	private boolean isDDL = false;
 	private Button saveBtn;
 	private Button detailBtn;
 	private int idx;
 	private Tab tab ;
-//	private BottomSheetOptionBtnsPane dtBtnPane;
-//	private List<Button> optionBtns;
 	 
 
-	public MyTabData(BottomSheetDataValue data, int idx, boolean disable) {
+	public MyBottomTab(SheetDataValue data, int idx, boolean disable) {
 		tab = new Tab(data.getTabName());
 		this.tableData = data;
 		this.idx = idx;
@@ -38,17 +36,17 @@ public class MyTabData  implements SqluckyBottomSheet{
 	}
 	
 
-	public MyTabData(String tabName) {
+	public MyBottomTab(String tabName) {
 		tab =  new Tab(tabName);
 		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
 		tab.setContextMenu(tableViewMenu());
 		if (tableData == null) {
-			tableData = new BottomSheetDataValue();
+			tableData = new SheetDataValue();
 		}
 		
 		tab.setUserData(this);
 	}
-	public MyTabData( BottomSheetDataValue data) {
+	public MyBottomTab( SheetDataValue data) {
 		this(data.getTabName());
 		this.tableData = data;
 		
@@ -113,60 +111,12 @@ public class MyTabData  implements SqluckyBottomSheet{
 		});
 	}
 
-//	// 获取当前数据表的Tab
-//	public static Tab currentDataTab() {
-//		Tab tab =  ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-//		SqluckyBottomSheet sheet = (SqluckyBottomSheet) tab;
-//		return tab;
-//	}
-
-	
-
-//	public static BottomSheetDataValue myTabValue() {
-//		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
-//		BottomSheetDataValue dv = mtd.getTableData();
-//		return dv;
-//	}
-	
-////	// 获取所有数据
-//	public static ObservableList<ObservableList<StringProperty>> getTabData() {
-//		BottomSheetDataValue dvt = MyTabData.myTabValue();
-//		if (dvt != null) {
-//			return dvt.getRawData();
-//		}
-//		return null;
-//	}
-
-////	// 获取字段
-//	public static ObservableList<SqlFieldPo> getFields() {
-//		BottomSheetDataValue dvt = MyTabData.myTabValue();
-//		if (dvt != null) {
-//			return dvt.getColss();
-//		}
-//		return null;
-//	}
-
-////	// 获取tableName
-//	public static String getTableName() {
-//		BottomSheetDataValue dvt = MyTabData.myTabValue();
-//		if (dvt != null) {
-//			return dvt.getTabName();
-//		}
-//		return "";
-//	}
-//	
-
-	
-
-
-
-	 
 	@Override
-	public BottomSheetDataValue getTableData() {
+	public SheetDataValue getTableData() {
 		return tableData;
 	}
 
-	public void setTableData(BottomSheetDataValue tableData) {
+	public void setTableData(SheetDataValue tableData) {
 		this.tableData = tableData;
 	}
 

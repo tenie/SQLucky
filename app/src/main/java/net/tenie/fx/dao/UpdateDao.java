@@ -8,7 +8,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.lib.reflex.BuildObject;
 
@@ -21,7 +21,7 @@ public class UpdateDao {
 	private static Logger logger = LogManager.getLogger(UpdateDao.class);
 	
 	public static String execUpdate(Connection conn, String tableName, ObservableList<StringProperty> newvals,
-			ObservableList<StringProperty> oldvals, ObservableList<SqlFieldPo> fpos) throws Exception {
+			ObservableList<StringProperty> oldvals, ObservableList<SheetFieldPo> fpos) throws Exception {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String msg = "";

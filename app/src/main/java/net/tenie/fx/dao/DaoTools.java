@@ -7,7 +7,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.po.SqlFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.lib.reflex.BuildObject;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 /**
@@ -19,7 +19,7 @@ public class DaoTools {
 		private static Logger logger = LogManager.getLogger(DaoTools.class);
 	
 		// where 后面的字段 处理, <null> 设置成is null, 时间类型 直接字符串拼接
-		public static String conditionStr(ObservableList<StringProperty> vals, ObservableList<SqlFieldPo> fpos) {
+		public static String conditionStr(ObservableList<StringProperty> vals, ObservableList<SheetFieldPo> fpos) {
 			StringBuffer str = new StringBuffer(" ");// "where ";
 			for (int i = 0; i < fpos.size(); i++) {
 				String val = vals.get(i).get();
@@ -57,7 +57,7 @@ public class DaoTools {
 		}
 
 		// 更新值的 字符串拼接, <null>直接设置为 is null, 时间类型之间字符串拼接
-		public static String concatStrSetVal(ObservableList<StringProperty> vals, ObservableList<SqlFieldPo> fpos) {
+		public static String concatStrSetVal(ObservableList<StringProperty> vals, ObservableList<SheetFieldPo> fpos) {
 			StringBuffer str = new StringBuffer(" ");// "where ";
 			for (int i = 0; i < fpos.size(); i++) {
 				String val = vals.get(i).get();
@@ -85,7 +85,7 @@ public class DaoTools {
 		}
 		
 		
-		public static void deleteConditionSetVal(PreparedStatement pstmt , ObservableList<StringProperty> vals,ObservableList<SqlFieldPo> fpos) throws Exception {
+		public static void deleteConditionSetVal(PreparedStatement pstmt , ObservableList<StringProperty> vals,ObservableList<SheetFieldPo> fpos) throws Exception {
 			int valsLen = fpos.size();
 			int idx = 0;
 			for (int i = 0; i < valsLen; i++) {
