@@ -163,8 +163,8 @@ public class SdkComponent {
 	public static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableColForInfo(
 			ObservableList<SheetFieldPo> cols) {
 		int len = cols.size();
-		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList = FXCollections
-				.observableArrayList();
+		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList 
+			= FXCollections.observableArrayList();
 		for (int i = 0; i < len; i++) {
 			String colname = cols.get(i).getColumnLabel().get();
 			Double colnameWidth = cols.get(i).getColumnWidth();
@@ -503,4 +503,50 @@ public class SdkComponent {
 			}
 		};
 	}
+	
+	
+	// 创建一个表
+	// 数据展示tableView StringProperty
+		public static FilteredTableView<ObservableList<StringProperty>> creatFilteredTableView2() {
+			FilteredTableView<ObservableList<StringProperty>> table = new FilteredTableView<ObservableList<StringProperty>>();
+
+			table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
+			table.setPlaceholder(new Label());
+			// 可以选中多行
+			table.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
+					.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
+
+			String tableIdx = createTabId();
+			table.setId(tableIdx);
+			table.getStyleClass().add("myTableTag");
+
+			FilteredTableColumn<ObservableList<StringProperty>, Number> tc = new FilteredTableColumn<>();
+			// 点击 行号, 显示一个 当前行的明细窗口
+			tc.setCellFactory(col -> {
+				TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>() {
+					@Override
+					public void updateItem(Number item, boolean empty) {
+						super.updateItem(item, empty);
+						this.setText(null);
+						this.setGraphic(null);
+						if (!empty) {
+							int rowIndex = this.getIndex();
+							this.setText((rowIndex + 1) + "");
+							this.setOnMouseClicked(e -> {
+								if (e.getClickCount() == 2) {
+									TableDataDetail.show();
+								}
+							});
+						}
+					}
+				};
+				return cell;
+			});
+
+			table.setRowHeader(tc);
+			// 启用 隐藏列的控制按钮
+			table.tableMenuButtonVisibleProperty().setValue(true);
+
+			return table;
+		}
 }
