@@ -28,6 +28,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
@@ -69,10 +70,10 @@ public class PluginManageWindow {
 		allPluginTab.setText("All plugin ");
 		installedPluginTab.setText("Installed plugin");
 		pluginTabPane.getTabs().addAll(allPluginTab, installedPluginTab);
-		FilteredTableView<ObservableList<StringProperty>> allTable = SdkComponent.creatFilteredTableView();
+//		FilteredTableView<ObservableList<StringProperty>> allTable = SdkComponent.creatFilteredTableView();
 		FilteredTableView<ObservableList<StringProperty>> installedTable = SdkComponent.creatFilteredTableView();
 
-		allPluginTab.setContent(allTable);
+//		allPluginTab.setContent(allTable);
 		installedPluginTab.setContent(installedTable);
 
 		// 操作面板
@@ -125,13 +126,28 @@ public class PluginManageWindow {
 	public void show() {
 		var stage = CreateModalWindow(pluginManageBox);
 		stage.show();
-		String sql = "select * from PLUGIN_INFO";
+		String sql = "select"
+				   + " ID , "
+				   + " PLUGIN_NAME as Name , "
+				   + " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as Describe ,"
+				   + " case when  INSTALL_STATUS = 1 then '√' else '' end  as \"Install Status\" ,"
+				   + " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
+				   + " from PLUGIN_INFO";
 		Connection conn = SqluckyAppDB.getConn();
-		try {
-			SdkComponent.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
-		} finally {
-			SqluckyAppDB.closeConn(conn);
-		}
+		SheetDataValue sheetDaV = 	SdkComponent.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+		allPluginTab.setContent(sheetDaV.getTable());
+ 
+		SqluckyAppDB.closeConn(conn);
+		 
+//		try {
+//			SheetDataValue sheetDaV = 	SdkComponent.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+//			allPluginTab.setContent(sheetDaV.getTable());
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		finally {
+//			SqluckyAppDB.closeConn(conn);
+//		}
 	
 	}
 }
