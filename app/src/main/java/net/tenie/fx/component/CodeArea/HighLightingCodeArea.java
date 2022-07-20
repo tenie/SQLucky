@@ -29,7 +29,7 @@ import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyLineNumberNode;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -83,7 +83,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		codeArea = new MyCodeArea();
 		cl = (obj, o, n) -> {
 			Consumer<String> caller = x -> {
-				Tab tb = SqlcukyEditor.mainTabPaneSelectedTab();
+				Tab tb = SqluckyEditor.mainTabPaneSelectedTab();
 				MyAreaTab mtb = (MyAreaTab) tb;
 				if (tb != null) {
 					Platform.runLater(() -> {

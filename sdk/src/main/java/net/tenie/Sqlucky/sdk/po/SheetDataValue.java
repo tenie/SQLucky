@@ -10,6 +10,7 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 
 
@@ -42,11 +43,14 @@ public class SheetDataValue {
 
 	// 列
 	private ObservableList<SheetFieldPo> colss;
-	// 数据添加到表格 更简洁的api
-	ObservableList<ObservableList<StringProperty>> rawData;
-
+	// 数据添加到表格 更简洁的api   , 数据库查询结果的表格原始数据
+	private ObservableList<ObservableList<StringProperty>> rawData;
 	// tab中的表格
-	private FilteredTableView<ObservableList<StringProperty>> table;
+	private FilteredTableView<ObservableList<StringProperty>> dbValTable;
+	
+	// 一般的信息展示表个数据
+	private ObservableList<ResultSetRowPo> infoTableVals;
+	private FilteredTableView<ResultSetRowPo> infoTable;
 
 	// 操作数据的按钮
 	private List<Node> btnLs ;
@@ -55,10 +59,10 @@ public class SheetDataValue {
 	public void clean() {
 //		menuItems.clear();
 //		menuItems = null;
-		if(table != null) {
-			table.getItems().clear();
+		if(dbValTable != null) {
+			dbValTable.getItems().clear();
 		}
-		table = null;
+		dbValTable = null;
 		
 		if(rawData!=null) {
 			rawData.forEach(v -> {
@@ -91,7 +95,7 @@ public class SheetDataValue {
 	public SheetDataValue(FilteredTableView<ObservableList<StringProperty>> table,  String tabName,
 			String sqlStr, String connName, ObservableList<SheetFieldPo> colss,
 			ObservableList<ObservableList<StringProperty>> rawData) {
-		this.table = table;
+		this.dbValTable = table;
 		this.tabName = tabName;
 		this.sqlStr = sqlStr;
 		this.connName = connName;
@@ -101,7 +105,7 @@ public class SheetDataValue {
 
 	public SheetDataValue(FilteredTableView<ObservableList<StringProperty>> table, String tabName,
 			ObservableList<SheetFieldPo> colss, ObservableList<ObservableList<StringProperty>> rawData) {
-		this.table = table;
+		this.dbValTable = table;
 		this.tabName = tabName;
 		this.colss = colss;
 		this.rawData = rawData;
@@ -144,11 +148,11 @@ public class SheetDataValue {
 	}
 
 	public FilteredTableView<ObservableList<StringProperty>> getTable() {
-		return table;
+		return dbValTable;
 	}
 
 	public void setTable(FilteredTableView<ObservableList<StringProperty>> table) {
-		this.table = table;
+		this.dbValTable = table;
 	}
 
 	public ObservableList<SheetFieldPo> getColss() {
@@ -263,6 +267,33 @@ public class SheetDataValue {
 	public void setConn(Connection conn) {
 		this.conn = conn;
 	}
+
+
+
+	public ObservableList<ResultSetRowPo> getInfoTableVals() {
+		return infoTableVals;
+	}
+
+
+
+	public void setInfoTableVals(ObservableList<ResultSetRowPo> infoTableVals) {
+		this.infoTableVals = infoTableVals;
+	}
+
+
+
+	public FilteredTableView<ResultSetRowPo> getInfoTable() {
+		return infoTable;
+	}
+
+
+
+	public void setInfoTable(FilteredTableView<ResultSetRowPo> table2) {
+		this.infoTable = table2;
+	}
+
+
+ 
 	
 	
 }

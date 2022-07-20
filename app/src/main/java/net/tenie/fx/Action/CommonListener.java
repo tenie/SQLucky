@@ -7,7 +7,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.fx.config.DBConns;
@@ -89,11 +89,11 @@ public class CommonListener {
 					SqluckyConnector cnnpo = DBConns.get(newValue.getText());
 					if (cnnpo != null && !cnnpo.isAlive()) {
 						//清除查找字符串
-						IndexRange ir = SqlcukyEditor.getSelection();
+						IndexRange ir = SqluckyEditor.getSelection();
 						CommonAction.pressBtnESC();	
 						CommonAction.shrinkTreeView();
 						ConnectionEditor.openConn(cnnpo.getConnName());
-						SqlcukyEditor.selectRange(ir);
+						SqluckyEditor.selectRange(ir);
 					}
 				}
 			    

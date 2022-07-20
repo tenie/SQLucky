@@ -5,7 +5,7 @@ import javafx.geometry.Side;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 /*   @author tenie */

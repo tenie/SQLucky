@@ -27,7 +27,7 @@ import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
@@ -89,7 +89,7 @@ public final class SettingKeyCodeCombination {
 		JFXButton runFunPro = CommonButtons.runFunPro; //  AllButtons.btns.get("runFunPro");
 
 		scene.getAccelerators().put(altSlash, () -> {
-			var codeArea = SqlcukyEditor.getCodeArea();
+			var codeArea = SqluckyEditor.getCodeArea();
 			if ( CommonUtility.isMacOS() ) {
 				Platform.runLater(()->{
 					int ar = codeArea.getAnchor();
@@ -108,7 +108,7 @@ public final class SettingKeyCodeCombination {
 				});  
 			}
 			if (codeArea.isFocused()) {
-				SqlcukyEditor.currentMyTab().getSqlCodeArea().callPopup();
+				SqluckyEditor.currentMyTab().getSqlCodeArea().callPopup();
 			}
 			
 			
@@ -129,7 +129,7 @@ public final class SettingKeyCodeCombination {
 //			return  ls.get(0);
 //		}
 		scene.getAccelerators().put(F9, () -> {
-			CodeArea code = SqlcukyEditor.getCodeArea();
+			CodeArea code = SqluckyEditor.getCodeArea();
 			var pgs = code.getParagraphs();
 			String tmp = "";
 			for(int i = 0; i < pgs.size(); i++) {
@@ -277,7 +277,7 @@ public final class SettingKeyCodeCombination {
 		// 书签查找
 		scene.getAccelerators().put(F2, () -> {  
 //			ButtonAction.nextBookmark(true);
-			SqlcukyEditor.currentMyTab().getSqlCodeArea().nextBookmark(true);
+			SqluckyEditor.currentMyTab().getSqlCodeArea().nextBookmark(true);
 		});
 		
 		scene.getAccelerators().put(F4, () -> {  
