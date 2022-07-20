@@ -7,7 +7,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -22,13 +22,13 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 		MenuItem copy  = new MenuItem("Copy                        (ctrl+C)"); 
 		copy.setGraphic(IconGenerator.svgImageDefActive("files-o"));
 		copy.setOnAction(e->{
-			SqlcukyEditor.copySelectionText();
+			SqluckyEditor.copySelectionText();
 		});
 		
 		MenuItem Paste  = new MenuItem("Paste                       (ctrl+V)"); 
 		Paste.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 		Paste.setOnAction(e->{
-			SqlcukyEditor.pasteTextToCodeArea();
+			SqluckyEditor.pasteTextToCodeArea();
 		});
 		
 		
@@ -42,7 +42,7 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 		
 		MenuItem  cut = new MenuItem("Cut                         (ctrl+X)"); 
 		cut.setOnAction(e->{
-			SqlcukyEditor.cutSelectionText();
+			SqluckyEditor.cutSelectionText();
 		});
 		cut.setGraphic(IconGenerator.svgImageDefActive("scissors"));
 
@@ -135,7 +135,7 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 		
 		// 菜单显示的时刻
 		this.setOnShowing(e->{
-			String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
+			String str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText();
 			if(StrUtils.isNotNullOrEmpty(str)) {
 				copy.setDisable(false);
 //				del.setDisable(false);

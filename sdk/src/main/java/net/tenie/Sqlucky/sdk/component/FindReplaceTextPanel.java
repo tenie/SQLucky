@@ -36,7 +36,7 @@ public class FindReplaceTextPanel {
 	
 	
 	public static void findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		int idx = code.getCaretPosition();
 		String selTex = code.getSelectedText();
 		String findStr = findtf.getText();
@@ -47,7 +47,7 @@ public class FindReplaceTextPanel {
 	}
 
 	public static void replaceString(String str, String strNew, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
@@ -85,7 +85,7 @@ public class FindReplaceTextPanel {
 
 	// F3 字符串查找
 	public static void findSelectedString() {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text)) {
 			if(StrUtils.isNotNullOrEmpty(f3Str)) {
@@ -113,7 +113,7 @@ public class FindReplaceTextPanel {
 	public static void findStringFromCodeArea(String str, boolean forward, boolean sensitive) {
 		if (StrUtils.isNullOrEmpty(str))
 			return;
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		int idx = code.getCaretPosition();  // 光标位置 
 		findString(str, idx, sensitive, forward); 
 //		findStringStop(str, idx, sensitive, forward);
@@ -132,7 +132,7 @@ public class FindReplaceTextPanel {
 			return false;
 		
 		Integer idx = 0;
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		if(position == null) {
 			idx =	code.getCaretPosition();  // 光标位置
 		}else if(position > -1) {
@@ -146,7 +146,7 @@ public class FindReplaceTextPanel {
 	}
 
 	public static String codeStr(boolean sensitive) {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			text = text.toUpperCase();
@@ -159,7 +159,7 @@ public class FindReplaceTextPanel {
 	}
 
 	public static void replaceStringAll(String str, String strNew, boolean sensitive) {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
@@ -197,7 +197,7 @@ public class FindReplaceTextPanel {
 	 * @param forward 向前还是向后找
 	 */
 	public static void findString(String str, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		// 获取文本
 		String text = code.getText();
 		if (sensitive) {
@@ -235,11 +235,11 @@ public class FindReplaceTextPanel {
 				
 			}
 		} 
-		SqlcukyEditor.currentSqlCodeAreaHighLighting(str);
+		SqluckyEditor.currentSqlCodeAreaHighLighting(str);
 	}
 	// 不循环找, 找不到下一个就不循环
 	public static boolean  findStringStop(String str, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		// 获取文本
 		String text = code.getText();
 		if (sensitive) {
@@ -263,7 +263,7 @@ public class FindReplaceTextPanel {
 			}
 		} 
 		if(start > -1) {
-			SqlcukyEditor.currentSqlCodeAreaHighLighting(str);
+			SqluckyEditor.currentSqlCodeAreaHighLighting(str);
 			return true;
 		}
 		return false;
@@ -271,7 +271,7 @@ public class FindReplaceTextPanel {
 	}
 
 	public static void delFindReplacePane(SqluckyTab skTab) {
-		VBox x = SqlcukyEditor.getTabVbox();
+		VBox x = SqluckyEditor.getTabVbox();
 		while (x.getChildren().size() > 1) {
 			x.getChildren().remove(0);
 			skTab.cleanFindReplacePanel();
@@ -339,7 +339,7 @@ public class FindReplaceTextPanel {
 		
 		if(StrUtils.isNullOrEmpty(findText)) {
 			// 从编辑框中获取选中的文本
-			CodeArea code = SqlcukyEditor.getCodeArea();
+			CodeArea code = SqluckyEditor.getCodeArea();
 			findText = code.getSelectedText();
 		}
 		
@@ -383,7 +383,7 @@ public class FindReplaceTextPanel {
 		count.setGraphic(IconGenerator.svgImageDefActive("calculator")); 
 		Label countLabel = new Label(""); 
 		count.setOnAction(e->{
-			String sqlTxt = SqlcukyEditor.getCurrentCodeAreaSQLText();
+			String sqlTxt = SqluckyEditor.getCurrentCodeAreaSQLText();
 			int countVal = 0;
 			if(textField.getText().length() == 0) {
 				countLabel.setText("");

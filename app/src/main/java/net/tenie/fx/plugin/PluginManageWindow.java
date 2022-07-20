@@ -27,6 +27,7 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -134,8 +135,8 @@ public class PluginManageWindow {
 				   + " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
 				   + " from PLUGIN_INFO";
 		Connection conn = SqluckyAppDB.getConn();
-		SheetDataValue sheetDaV = 	SdkComponent.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
-		allPluginTab.setContent(sheetDaV.getTable());
+		SheetDataValue sheetDaV = 	SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+		allPluginTab.setContent(sheetDaV.getInfoTable());
  
 		SqluckyAppDB.closeConn(conn);
 		 

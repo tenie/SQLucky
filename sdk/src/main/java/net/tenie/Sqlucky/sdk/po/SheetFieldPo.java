@@ -25,7 +25,6 @@ public class SheetFieldPo {
 	// 类型
 	private String Type = TEXT_TYPE; 
 	
-	
 	public static String TEXT_TYPE = "TEXT_TYPE";
 	public static String CHECK_BOX_TYPE = "CHECK_BOX_TYPE";
 	

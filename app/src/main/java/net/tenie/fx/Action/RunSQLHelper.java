@@ -35,7 +35,7 @@ import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -130,7 +130,7 @@ public class RunSQLHelper {
 					SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
 					allsqls.add(sq );
 				}else {
-					String str = SqlcukyEditor.getCurrentCodeAreaSQLText();
+					String str = SqluckyEditor.getCurrentCodeAreaSQLText();
 					SqlData sq = new SqlData(str, 0, str.length());
 					allsqls.add(sq);
 				}
@@ -245,7 +245,7 @@ public class RunSQLHelper {
 				if (errObj.size() > 0) {
 					for (SqlData sd : errObj) {
 						int bg = sd.begin;
-						SqlcukyEditor.ErrorHighlighting(bg, sd.sql);
+						SqluckyEditor.ErrorHighlighting(bg, sd.sql);
 					}
 				}
 			});
@@ -769,7 +769,7 @@ public class RunSQLHelper {
 	private static List<SqlData> epurateSql(String str) {
 		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = SqlcukyEditor.findSQLFromTxt(str);
+		List<String> sqls = SqluckyEditor.findSQLFromTxt(str);
 		
 		if(sqls.size()> 0) {
 			for (String s : sqls) { 
@@ -791,7 +791,7 @@ public class RunSQLHelper {
 	private static List<SqlData> epurateSql(String str, int start) {
 		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = SqlcukyEditor.findSQLFromTxt(str);
+		List<String> sqls = SqluckyEditor.findSQLFromTxt(str);
 		
 		if(sqls.size()> 0) {
 			for (String s : sqls) { 
@@ -816,26 +816,26 @@ public class RunSQLHelper {
 	public static List<SqlData> willExecSql() {
 		List<SqlData> sds = new ArrayList<>();
 		String str = "";
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		// 如果是执行当前行
 		if(isCurrentLine) {
 			try {
-				str = SqlcukyEditor.getCurrentLineText();
+				str = SqluckyEditor.getCurrentLineText();
 			} finally {
 				isCurrentLine = false;
 			} 			
 		}else {
-			str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText(); 
+			str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText(); 
 		}
 		  
 		int start = 0;
 		if (str != null && str.length() > 0) {
 		    start = code.getSelection().getStart();
 		} else {
-			str = SqlcukyEditor.getCurrentCodeAreaSQLText();
+			str = SqluckyEditor.getCurrentCodeAreaSQLText();
 		}
 		// 去除注释, 包注释字符串转换为空白字符串
-		str = SqlcukyEditor.trimCommentToSpace(str, "--");
+		str = SqluckyEditor.trimCommentToSpace(str, "--");
 //		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		sds = epurateSql(str, start);
 		return sds;

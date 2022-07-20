@@ -23,7 +23,7 @@ import net.tenie.Sqlucky.sdk.AutoComplete;
 import net.tenie.Sqlucky.sdk.SqluckyCodeArea;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
@@ -234,7 +234,7 @@ public class MyAutoComplete implements AutoComplete{
 	}
 	
 	public   Integer getMyTabId() {
-		SqluckyTab tb = SqlcukyEditor.currentMyTab(); 
+		SqluckyTab tb = SqluckyEditor.currentMyTab(); 
 		if(tb != null) {
 			var scpo = tb.getDocumentPo();
 			if(scpo != null) {
@@ -289,7 +289,7 @@ public class MyAutoComplete implements AutoComplete{
 	
 	// 缓存页面单词
 	public   void cacheTextWord() {
-		var mtb = SqlcukyEditor.currentMyTab(); 
+		var mtb = SqluckyEditor.currentMyTab(); 
 		String text = mtb.getSqlCodeArea().getCodeArea().getText();
 		Consumer< String >  caller = x ->{ 
 			Integer id = getMyTabId(); 
@@ -340,7 +340,7 @@ public class MyAutoComplete implements AutoComplete{
 		cacheTablePo(tabpo);
 		
 		int len = selectVal.length();
-		var codeArea = SqlcukyEditor.getCodeArea();
+		var codeArea = SqluckyEditor.getCodeArea();
 		int anc = codeArea.getAnchor();
 		
 		int start = 0;

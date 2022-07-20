@@ -29,8 +29,8 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
  * @author tenie
  *
  */
-public class SqlcukyEditor {
-	private static Logger logger = LogManager.getLogger(SqlcukyEditor.class);
+public class SqluckyEditor {
+	private static Logger logger = LogManager.getLogger(SqluckyEditor.class);
 
 	// 当前文本框中文本重新高亮
 	public static void applyHighlighting() {
@@ -39,14 +39,14 @@ public class SqlcukyEditor {
 	
 	// 获取当前选中的区间
 	public static IndexRange getSelection() {
-		var codeArea = SqlcukyEditor.getCodeArea();
+		var codeArea = SqluckyEditor.getCodeArea();
 		return codeArea.getSelection();
 	}
 	
 	
 	// 设置选中
 	public static void selectRange( IndexRange  ir) {
-		var codeArea = SqlcukyEditor.getCodeArea();
+		var codeArea = SqluckyEditor.getCodeArea();
 		codeArea.selectRange(ir.getStart(), ir.getEnd());
 	}
 	
@@ -108,7 +108,7 @@ public class SqlcukyEditor {
 	}
 	//TODO 获取选中行的所有字符, 
 	public static String getSelectLineText() {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		var pgs = code.getParagraphs();
 		String tmp = "";
 		for(int i = 0; i < pgs.size(); i++) {
@@ -133,16 +133,16 @@ public class SqlcukyEditor {
 	public static void pasteTextToCodeArea(){
 		String val = CommonUtility.getClipboardVal();
 		if(StrUtils.isNotNullOrEmpty(val)) {
-			var codeArea = SqlcukyEditor.getCodeArea();
+			var codeArea = SqluckyEditor.getCodeArea();
 			int i = codeArea.getAnchor();
 			codeArea.insertText(i, val);
-			SqlcukyEditor.currentMyTab().getSqlCodeArea().highLighting();
+			SqluckyEditor.currentMyTab().getSqlCodeArea().highLighting();
 		}
 	}
 	
 	// 删除选中文本
 	public static void deleteSelectionText() { 
-		var codeArea = SqlcukyEditor.getCodeArea();
+		var codeArea = SqluckyEditor.getCodeArea();
 		IndexRange ir = codeArea.getSelection();
 		codeArea.deleteText(ir);
 	}

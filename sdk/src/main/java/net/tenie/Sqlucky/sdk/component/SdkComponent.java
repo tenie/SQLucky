@@ -446,7 +446,7 @@ public class SdkComponent {
 					try {
 						Thread.sleep(900);
 						Platform.runLater(() -> {
-						    SqlcukyEditor.getCodeArea().requestFocus(); 
+						    SqluckyEditor.getCodeArea().requestFocus(); 
 						 
 						});
 					} catch (InterruptedException e) {

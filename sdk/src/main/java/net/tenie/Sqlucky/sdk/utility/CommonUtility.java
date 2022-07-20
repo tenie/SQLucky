@@ -45,7 +45,7 @@ import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
@@ -573,7 +573,7 @@ public class CommonUtility {
 	public static List<ProcedureFieldPo> getProcedureFields(String ddl){
 		 List<ProcedureFieldPo> rs = new ArrayList<>();
 		 ddl = StrUtils.multiLineCommentToSpace(ddl);
-		 ddl = SqlcukyEditor.trimCommentToSpace(ddl, "--");
+		 ddl = SqluckyEditor.trimCommentToSpace(ddl, "--");
 		 // 给ddl分词, 找到过程名称后面的参数列表
 		 ddl = StrUtils.pressString(ddl).toUpperCase();
 		 if( procedureIsNoParameter(ddl) ) { // 没有参数直接返回
@@ -888,7 +888,7 @@ public class CommonUtility {
 	public static void findReplace(boolean isReplace, String findStr, SqluckyTab skTab) {
 		VBox b = null;
 		if(skTab == null) {
-		   skTab = SqlcukyEditor.currentMyTab();
+		   skTab = SqluckyEditor.currentMyTab();
 		   b = skTab.getVbox();
 		}else {
 		   b = skTab.getVbox();

@@ -32,7 +32,7 @@ import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
-import net.tenie.Sqlucky.sdk.component.SqlcukyEditor;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -138,20 +138,20 @@ public class CommonAction {
 		ComponentGetter.dbInfoFilter.setText("");
 		
 		// 代码编辑内容, 取消选中, 高亮恢复复原
-		SqlcukyEditor.deselect(); 
-		SqlcukyEditor.applyHighlighting();
+		SqluckyEditor.deselect(); 
+		SqluckyEditor.applyHighlighting();
 		
 		// 隐藏查找, 替换窗口
 		hideFindReplaceWindow();
 		
 		// 提示窗口
-		SqlcukyEditor.currentMyTab().getSqlCodeArea().hideAutoComplete();
+		SqluckyEditor.currentMyTab().getSqlCodeArea().hideAutoComplete();
 	}
 	
 	// 隐藏查找, 替换窗口
 	public static void hideFindReplaceWindow() {
-		VBox b = SqlcukyEditor.getTabVbox();
-		var sltb = SqlcukyEditor.currentMyTab();
+		VBox b = SqluckyEditor.getTabVbox();
+		var sltb = SqluckyEditor.currentMyTab();
 		int bsize = b.getChildren().size();
 		if (bsize > 1) { 
 			FindReplaceTextPanel.delFindReplacePane(sltb);
@@ -178,7 +178,7 @@ public class CommonAction {
 	
 	// 保存sql文本到硬盘
 	public static void saveSqlAction() { 
-			MyAreaTab tb = (MyAreaTab) SqlcukyEditor.mainTabPaneSelectedTab();
+			MyAreaTab tb = (MyAreaTab) SqluckyEditor.mainTabPaneSelectedTab();
 			saveSqlAction(tb);
 	}
 	
@@ -339,7 +339,7 @@ public class CommonAction {
 
 	// 代码格式化
 	public static void formatSqlText() {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String txt = code.getSelectedText();
 		if (StrUtils.isNotNullOrEmpty(txt)) {
 			IndexRange i = code.getSelection();
@@ -350,18 +350,18 @@ public class CommonAction {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqlcukyEditor.getCurrentCodeAreaSQLText();
+			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
 			String rs = SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
 		}
-		SqlcukyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditor.currentSqlCodeAreaHighLighting();
 	}
 	
 	
 	// sql 压缩
 	public static void pressSqlText() {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String txt = code.getSelectedText();
 		if (StrUtils.isNotNullOrEmpty(txt)) {
 			IndexRange i = code.getSelection();
@@ -372,19 +372,19 @@ public class CommonAction {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqlcukyEditor.getCurrentCodeAreaSQLText();
+			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
 			String rs = StrUtils.pressString(txt); //  SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
 		} 
-		SqlcukyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditor.currentSqlCodeAreaHighLighting();
 	}
 	
 
 	// 代码大写
 	public static void UpperCaseSQLTextSelectText() {
 
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -395,13 +395,13 @@ public class CommonAction {
 		code.deleteText(start, end);
 		 
 		code.insertText(start, text.toUpperCase());
-		SqlcukyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	// 代码小写
 	public static void LowerCaseSQLTextSelectText() {
 
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -412,13 +412,13 @@ public class CommonAction {
 		code.deleteText(start, end);
 		 
 		code.insertText(start, text.toLowerCase()); 
-		SqlcukyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	// 驼峰命名转下划线
 	public static void CamelCaseUnderline() {
 
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -430,13 +430,13 @@ public class CommonAction {
 	 
 		text = StrUtils.CamelCaseUnderline(text);
 		code.insertText(start, text); 
-		SqlcukyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	// 下划线 轉 驼峰命名
 	public static void underlineCaseCamel() {
 
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -448,11 +448,11 @@ public class CommonAction {
 		// 插入 注释过的文本
 		text = StrUtils.underlineCaseCamel(text);
 		code.insertText(start, text);
-		SqlcukyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	public static void selectTextAddString() {
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();
@@ -505,7 +505,7 @@ public class CommonAction {
 			// 插入 注释过的文本
 			code.insertText(start, valStr);
 		}
-		SqlcukyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditor.currentSqlCodeAreaHighLighting();
 	}
 	
 
@@ -513,7 +513,7 @@ public class CommonAction {
 	// 代码添加注释-- 或去除注释
 	public static void addAnnotationSQLTextSelectText() {
 
-		CodeArea code = SqlcukyEditor.getCodeArea();
+		CodeArea code = SqluckyEditor.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();
@@ -572,7 +572,7 @@ public class CommonAction {
 			// 插入 注释过的文本
 			code.insertText(start, valStr);
 		}
-		SqlcukyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditor.currentSqlCodeAreaHighLighting();
 	}
 
 	//TODO 打开sql文件
@@ -770,7 +770,7 @@ public class CommonAction {
 		saveThemeStatus(val); 
 		// 根据新状态加载新样式
 		CommonUtility.loadCss(ComponentGetter.primaryscene); 
-		SqlcukyEditor.changeThemeAllCodeArea() ; 
+		SqluckyEditor.changeThemeAllCodeArea() ; 
 //		changeSvgColor(); // 修改按钮颜色
 	}
 	// 设置整体样式
@@ -822,7 +822,7 @@ public class CommonAction {
 			sz = 10;
 		}
 		CommonUtility.setFontSize(sz);
-		for(SqluckyTab mtb : SqlcukyEditor.getAllgetMyTabs() ) {
+		for(SqluckyTab mtb : SqluckyEditor.getAllgetMyTabs() ) {
 			var obj = mtb.getSqlCodeArea();
 			var code = obj.getCodeArea();
 			logger.info(code.getStyle());
@@ -875,7 +875,7 @@ public class CommonAction {
 		Consumer< String >  cancel = x ->{ 
 			saveThemeStatus(val);  
 			CommonUtility.loadCss(ComponentGetter.primaryscene); 
-			SqlcukyEditor.changeThemeAllCodeArea() ;
+			SqluckyEditor.changeThemeAllCodeArea() ;
 			// 修改按钮颜色
 //			changeSvgColor();
 		};
@@ -920,7 +920,7 @@ public class CommonAction {
 //		}
 
 		// 如果有选中的字符串, 进行查询
-		String str = SqlcukyEditor.getCurrentCodeAreaSQLSelectedText();
+		String str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText();
 		if (str.trim().length() > 0) {
 			ComponentGetter.dbInfoFilter.setText(str.trim());
 			if (!container.getChildren().contains(filter)) {
