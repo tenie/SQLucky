@@ -4,6 +4,7 @@ public interface SqluckyPluginDelegate {
 	String pluginName();
 	String pluginCode();
 	String pluginDescribe();
+	String version();
 	
 	
 	/**

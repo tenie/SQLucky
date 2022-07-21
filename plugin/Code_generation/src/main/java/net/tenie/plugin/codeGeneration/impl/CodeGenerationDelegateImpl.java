@@ -10,6 +10,7 @@ public class CodeGenerationDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "Code Generation";
 	public static final String pluginCode = "net.tenie.plugin.CodeGeneration";
 	public static final String pluginDescribe = "Code Generation";
+	public static final String version ="0.0.1";
 	
 	@Override
 	public void load() {
@@ -46,6 +47,10 @@ public class CodeGenerationDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 
 }

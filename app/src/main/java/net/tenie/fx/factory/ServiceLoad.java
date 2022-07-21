@@ -34,6 +34,7 @@ public class ServiceLoad {
 				String pluginName = plugin.pluginName();
 				String pluginCode = plugin.pluginCode();
 				String pluginDescribe = plugin.pluginDescribe();
+				String version = plugin.version();
 				PluginInfoPO ppo = new PluginInfoPO();
 				ppo.setPluginCode(pluginCode);
 				
@@ -47,8 +48,12 @@ public class ServiceLoad {
 				}else { // 数据库中不存在就新建一条数据
 					ppo.setPluginName(pluginName);
 					ppo.setPluginCode(pluginCode);
-					ppo.setInstallStatus(1);
+					ppo.setPluginDescribe(pluginDescribe);
+					ppo.setVersion(version);
+					ppo.setDownloadStatus(1);
 					ppo.setReloadStatus(1);
+					
+					
 					ppo.setCreatedTime(new Date());
 					PoDao.insert(conn, ppo);
 					loadStatus = 1;
@@ -78,6 +83,7 @@ public class ServiceLoad {
 					String pluginName = plugin.pluginName();
 					String pluginCode = plugin.pluginCode();
 					String pluginDescribe = plugin.pluginDescribe();
+					String version = plugin.version();
 					PluginInfoPO ppo = new PluginInfoPO();
 					ppo.setPluginCode(pluginCode);
 					
@@ -91,7 +97,9 @@ public class ServiceLoad {
 					}else { // 数据库中不存在就新建一条数据
 						ppo.setPluginName(pluginName);
 						ppo.setPluginCode(pluginCode);
-						ppo.setInstallStatus(1);
+						ppo.setPluginDescribe(pluginDescribe);
+						ppo.setVersion(version);
+						ppo.setDownloadStatus(1);
 						ppo.setReloadStatus(1);
 						ppo.setCreatedTime(new Date());
 						PoDao.insert(conn, ppo);

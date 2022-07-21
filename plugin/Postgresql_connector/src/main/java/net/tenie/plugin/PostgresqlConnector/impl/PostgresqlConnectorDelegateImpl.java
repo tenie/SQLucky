@@ -7,6 +7,7 @@ public class PostgresqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "Postgresql Connector";
 	public static final String pluginCode = "net.tenie.plugin.PostgresqlConnector";
 	public static final String pluginDescribe = "Postgresql Connector";
+	public static final String version ="0.0.1";
 	 
 	@Override
 	public void register() {
@@ -43,6 +44,10 @@ public class PostgresqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 
 }

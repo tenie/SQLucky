@@ -718,17 +718,7 @@ public class RunSQLHelper {
 	}
 	
 	
-	// 创建列
-	/**
-	 * @param colname
-	 * @param type
-	 * @param typeName
-	 * @param colIdx
-	 * @param augmentation
-	 * @param iskey
-	 * @param isInfo
-	 * @param dvt
-	 * @return
+	/** 创建列
 	 */
 	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumnForSqlData(
 			String colname, int colIdx, boolean iskey, SheetDataValue dvt ) {

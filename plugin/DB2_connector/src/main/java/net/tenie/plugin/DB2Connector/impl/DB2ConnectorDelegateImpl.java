@@ -7,7 +7,7 @@ public class DB2ConnectorDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "DB2 Connector";
 	public static final String pluginCode = "net.tenie.plugin.DB2Connector";
 	public static final String pluginDescribe = "DB2 Connector";
-	
+	public static final String version ="0.0.1";
 	
 	@Override
 	public void register() {
@@ -44,5 +44,9 @@ public class DB2ConnectorDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 }

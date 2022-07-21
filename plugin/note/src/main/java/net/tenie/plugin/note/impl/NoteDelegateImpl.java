@@ -13,6 +13,8 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "Note";
 	public static final String pluginCode = "net.tenie.plugin.note";
 	public static final String pluginDescribe = "Note";
+	public static final String version ="0.0.1";
+	
 	@Override
 	public void load() {
 		System.out.println("load:  NoteDelegateImp..."); 
@@ -67,6 +69,10 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 
 }

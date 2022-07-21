@@ -7,7 +7,7 @@ public class SqliteConnectorDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "sqlite Connector";
 	public static final String pluginCode = "net.tenie.plugin.sqliteConnector";
 	public static final String pluginDescribe = "sqlite Connector";
-	
+	public static final String version ="0.0.1";
 	@Override
 	public void register() {
 		System.out.println("load:  SqliteConnectorDelegateImpl..."); 
@@ -43,6 +43,10 @@ public class SqliteConnectorDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 
 }

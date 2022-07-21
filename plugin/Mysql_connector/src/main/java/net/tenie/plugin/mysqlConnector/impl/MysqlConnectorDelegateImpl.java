@@ -7,7 +7,7 @@ public class MysqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "Mysql Connector";
 	public static final String pluginCode = "net.tenie.plugin.MysqlConnector";
 	public static final String pluginDescribe = "Mysql Connector";
-	
+	public static final String version ="0.0.1";
 	@Override
 	public void register() {
 		System.out.println("register:  MysqlConnectorDelegateImpl ..."); 
@@ -43,6 +43,10 @@ public class MysqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 
 }

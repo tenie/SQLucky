@@ -12,6 +12,7 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "Data Model";
 	public static final String pluginCode = "net.tenie.plugin.DataModel";
 	public static final String pluginDescribe = "Data Model";
+	public static final String version ="0.0.1";
 	
 	private static TitledPane NotePane;
 	@Override
@@ -66,6 +67,10 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 
 }
