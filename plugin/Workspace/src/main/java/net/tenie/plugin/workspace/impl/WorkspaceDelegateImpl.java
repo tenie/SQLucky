@@ -12,6 +12,7 @@ public class WorkspaceDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "workspace";
 	public static final String pluginCode = "net.tenie.plugin.workspace";
 	public static final String pluginDescribe = "workspace";
+	public static final String version ="0.0.1";
 	
 	@Override
 	public void load() {
@@ -52,6 +53,10 @@ public class WorkspaceDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 
 }

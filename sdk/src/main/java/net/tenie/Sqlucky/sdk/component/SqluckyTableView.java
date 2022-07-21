@@ -35,6 +35,7 @@ import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SelectInfoTableDao;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
@@ -64,13 +65,13 @@ public class SqluckyTableView {
 	 * @param fieldWidthMap
 	 * @return
 	 */
-	public static SheetDataValue sqlToSheet(String sql, Connection conn, String tableName,
+	public static SheetTableData sqlToSheet(String sql, Connection conn, String tableName,
 			Map<String, Double> fieldWidthMap) {
 
 		try {
 			FilteredTableView<ResultSetRowPo> table = SqluckyTableView.creatInfoTableView();
 			// 查询的 的语句可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(false));
+			table.editableProperty().bind(new SimpleBooleanProperty(true));
 
 			// 获取表名
 			if (tableName == null || "".equals(tableName)) {
@@ -81,16 +82,16 @@ public class SqluckyTableView {
 			}
 
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			SheetDataValue sheetDaV = new SheetDataValue();
+			SheetTableData sheetDaV = new SheetTableData();
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setInfoTable(table);
 			sheetDaV.setTabName(tableName);
 			sheetDaV.setLock(false);
 			sheetDaV.setConn(conn);
 
-			SelectInfoTableDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV);
+			SelectInfoTableDao.selectSql(sql, sheetDaV);
 
-			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getInfoTableVals();
+			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getInfoTableVals().getDatas();
 			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
 
 			if (fieldWidthMap != null) {

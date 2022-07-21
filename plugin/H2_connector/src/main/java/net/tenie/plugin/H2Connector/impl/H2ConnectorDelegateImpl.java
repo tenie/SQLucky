@@ -7,6 +7,8 @@ public class H2ConnectorDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "H2 Connector";
 	public static final String pluginCode = "net.tenie.plugin.H2Connector";
 	public static final String pluginDescribe = "H2 Connector";
+	public static final String version ="0.0.1";
+	
 	@Override
 	public void register() {
 		System.out.println("register:  h2-file-ConnectorDelegateImpl..."); 
@@ -43,6 +45,10 @@ public class H2ConnectorDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 
 }

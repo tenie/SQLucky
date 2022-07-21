@@ -12,6 +12,8 @@ public class MybatisGeneratorDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "Mybatis Generator";
 	public static final String pluginCode = "net.tenie.plugin.MybatisGenerator";
 	public static final String pluginDescribe = "Mybatis Generator";
+	public static final String version ="0.0.1";
+	
 	TitledPane NotePane;
 	@Override
 	public void load() {
@@ -65,6 +67,10 @@ public class MybatisGeneratorDelegateImpl implements SqluckyPluginDelegate {
 	@Override
 	public String pluginDescribe() {
 		return pluginDescribe;
+	}
+	@Override
+	public String version() {
+		return version;
 	}
 
 }

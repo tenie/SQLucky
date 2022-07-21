@@ -391,8 +391,12 @@ public class SelectDao {
 	
     // 数据单元格添加监听
 	// 字段修改事件
-	public static void addStringPropertyChangeListener(StringProperty val, int rowNo , int idx,
-			ObservableList<StringProperty> vals, int dbtype) {
+	public static void addStringPropertyChangeListener(
+			StringProperty val,
+			int rowNo , 
+			int idx,
+			ObservableList<StringProperty> vals,
+			int dbtype) {
 		ChangeListener<String> cl = new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {

@@ -158,9 +158,9 @@ public class AppDao {
 			"  `PLUGIN_CODE` VARCHAR(200)    ,   \n" +  //字段名称
 			"  `PLUGIN_DESCRIBE` VARCHAR(1000)  , \n" +
 			"  `COMMENT` VARCHAR(1000)  , \n" +
-			"  `INSTALL_STATUS` INT(1) ,\n" +  //安装状态, 0:未安装, 1: 以安装
+			"  `DOWNLOAD_STATUS` INT(1) ,\n" +            //下载状态, 0:未安装, 1: 以安装
 			"  `RELOAD_STATUS` INT(1) DEFAULT '1',\n" +   // 是否需要加载, 0: 不加载, 1: 加载
-			
+			"  `VERSION` VARCHAR(30)    , "+       // 版本
 			
 			"  `CREATED_TIME` DATETIME ,\n" + 
 			"  `UPDATED_TIME` DATETIME ,\n" + 

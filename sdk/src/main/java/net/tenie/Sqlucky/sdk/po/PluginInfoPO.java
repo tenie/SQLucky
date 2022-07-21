@@ -10,9 +10,10 @@ public class PluginInfoPO  {
 	private String pluginCode;
 	private String pluginDescribe;
 	private String pluginName;
-	private Integer installStatus;
+	private Integer downloadStatus;
 	private Integer id;
 	private String comment;
+	private String version;
 
 	public void setReloadStatus(Integer reloadStatus){
 		this.reloadStatus=reloadStatus;
@@ -62,12 +63,12 @@ public class PluginInfoPO  {
 		return this.pluginName;
 	}
 
-	public void setInstallStatus(Integer installStatus){
-		this.installStatus=installStatus;
+	public Integer getDownloadStatus() {
+		return downloadStatus;
 	}
 
-	public Integer getInstallStatus(){
-		return this.installStatus;
+	public void setDownloadStatus(Integer downloadStatus) {
+		this.downloadStatus = downloadStatus;
 	}
 
 	public void setId(Integer id){
@@ -84,6 +85,14 @@ public class PluginInfoPO  {
 
 	public String getComment(){
 		return this.comment;
+	}
+
+	public String getVersion() {
+		return version;
+	}
+
+	public void setVersion(String version) {
+		this.version = version;
 	}
 
 }

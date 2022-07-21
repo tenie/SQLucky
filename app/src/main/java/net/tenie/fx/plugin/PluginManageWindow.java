@@ -30,6 +30,7 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
+import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
@@ -91,8 +92,8 @@ public class PluginManageWindow {
 
 		Scene scene = new Scene(vb);
 		
-		vb.setPrefWidth(450);
-		vb.maxWidth(450);
+		vb.setPrefWidth(750);
+		vb.maxWidth(750);
 		AnchorPane bottomPane = new AnchorPane();
 		bottomPane.setPadding(new Insets(10));
 
@@ -129,13 +130,14 @@ public class PluginManageWindow {
 		stage.show();
 		String sql = "select"
 				   + " ID , "
-				   + " PLUGIN_NAME as Name , "
-				   + " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as Describe ,"
-				   + " case when  INSTALL_STATUS = 1 then '√' else '' end  as \"Install Status\" ,"
+				   + " PLUGIN_NAME as \"Name\" , "
+				   + " VERSION ,"
+				   + " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
+				   + " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
 				   + " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
 				   + " from PLUGIN_INFO";
 		Connection conn = SqluckyAppDB.getConn();
-		SheetDataValue sheetDaV = 	SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+		SheetTableData sheetDaV = 	SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
 		allPluginTab.setContent(sheetDaV.getInfoTable());
  
 		SqluckyAppDB.closeConn(conn);
