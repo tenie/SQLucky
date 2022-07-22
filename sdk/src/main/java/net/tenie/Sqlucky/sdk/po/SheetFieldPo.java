@@ -142,5 +142,13 @@ public class SheetFieldPo {
 		this.columnWidth = columnWidth;
 	}
 
+	@Override
+	public String toString() {
+		return "SheetFieldPo [columnName=" + columnName + ", columnClassName=" + columnClassName
+				+ ", columnDisplaySize=" + columnDisplaySize + ", columnLabel=" + columnLabel + ", columnType="
+				+ columnType + ", columnTypeName=" + columnTypeName + ", scale=" + scale + ", value=" + value
+				+ ", columnWidth=" + columnWidth + ", Type=" + Type + "]";
+	}
+
  
 }
