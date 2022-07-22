@@ -28,6 +28,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
@@ -58,7 +59,11 @@ public class PluginManageWindow {
 	private FlowPane optionPane = new FlowPane();
 	// 下载按钮
 	private JFXButton download = new JFXButton("Download");
-
+	private JFXButton disableEnable = new JFXButton("Disable/Enable");
+	
+	// 所有插件表
+	SheetTableData sheetDaV = null;
+	FilteredTableView<ResultSetRowPo> allPluginTable = null;
 //	private JFXButton close = new JFXButton("Close");
 
 	public PluginManageWindow() {
@@ -79,11 +84,19 @@ public class PluginManageWindow {
 		installedPluginTab.setContent(installedTable);
 
 		// 操作面板
-		optionPane.getChildren().addAll(download);
-
+		optionPane.getChildren().addAll(download, disableEnable);
+		initBtn();
+		
 		pluginManageBox.getChildren().addAll(SearchPane, pluginTabPane, describe, optionPane);
 		VBox.setVgrow(pluginTabPane, Priority.ALWAYS);
 
+	}
+	
+	public void initBtn() {
+		disableEnable.setOnAction(e->{
+			ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
+			System.out.println(selectRow);
+		});
 	}
 	
 	public static Stage CreateModalWindow(VBox vb) {
@@ -125,32 +138,30 @@ public class PluginManageWindow {
 		});
 		return stage;
 	}
+	
+	public void createTable() {
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			String sql = "select" + " ID , " + " PLUGIN_NAME as \"Name\" , " + " VERSION ,"
+					+ " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
+					+ " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
+					+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" " + " from PLUGIN_INFO";
+			sheetDaV = SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+			allPluginTable = sheetDaV.getInfoTable();
+			allPluginTab.setContent(allPluginTable);
+
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+	
 	public void show() {
+		createTable();
 		var stage = CreateModalWindow(pluginManageBox);
 		stage.show();
-		String sql = "select"
-				   + " ID , "
-				   + " PLUGIN_NAME as \"Name\" , "
-				   + " VERSION ,"
-				   + " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
-				   + " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
-				   + " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
-				   + " from PLUGIN_INFO";
-		Connection conn = SqluckyAppDB.getConn();
-		SheetTableData sheetDaV = 	SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
-		allPluginTab.setContent(sheetDaV.getInfoTable());
- 
-		SqluckyAppDB.closeConn(conn);
-		 
-//		try {
-//			SheetDataValue sheetDaV = 	SdkComponent.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
-//			allPluginTab.setContent(sheetDaV.getTable());
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		finally {
-//			SqluckyAppDB.closeConn(conn);
-//		}
-	
 	}
+	
+	
+	
+	// 禁用
 }

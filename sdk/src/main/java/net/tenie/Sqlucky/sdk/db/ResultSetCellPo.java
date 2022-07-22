@@ -46,6 +46,12 @@ public class ResultSetCellPo {
 	public void setOldCellData(StringProperty oldCellData) {
 		this.oldCellData = oldCellData;
 	}
+
+	@Override
+	public String toString() {
+		return "ResultSetCellPo [field=" + field + ", cellData=" + cellData + ", oldCellData=" + oldCellData
+				+ ", index=" + index + "]";
+	}
 	
 	
 }

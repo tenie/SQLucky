@@ -36,6 +36,10 @@ public class ResultSetRowPo {
 	public void setFields(ObservableList<SheetFieldPo> fields) {
 		this.fields = fields;
 	}
+	@Override
+	public String toString() {
+		return "ResultSetRowPo [fields=" + fields + ", rowDatas=" + rowDatas + ", rowIndex=" + rowIndex + "]";
+	}
 	
 	
 }
