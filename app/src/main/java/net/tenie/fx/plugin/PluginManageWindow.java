@@ -10,15 +10,12 @@ import com.jfoenix.controls.JFXTextField;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TablePosition;
-import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -30,10 +27,8 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
-import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.db.PoDao;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.PluginInfoPO;
@@ -65,7 +60,8 @@ public class PluginManageWindow {
 	private FlowPane optionPane = new FlowPane();
 	// 下载按钮
 	private JFXButton download = new JFXButton("Download");
-	private JFXButton disableEnable = new JFXButton("Disable/Enable");
+	private JFXButton disable = new JFXButton("Disable");
+	private JFXButton enable = new JFXButton("Enable");
 	
 	// 所有插件表
 	SheetTableData sheetDaV = null;
@@ -90,7 +86,7 @@ public class PluginManageWindow {
 		installedPluginTab.setContent(installedTable);
 
 		// 操作面板
-		optionPane.getChildren().addAll(download, disableEnable);
+		optionPane.getChildren().addAll(download, disable, enable);
 		initBtn();
 		
 		describe.setPrefHeight(100);
@@ -103,9 +99,22 @@ public class PluginManageWindow {
 	public void initBtn() {
 		download.setGraphic(IconGenerator.svgImageDefActive("cloud-download"));
 		
-		disableEnable.setGraphic(IconGenerator.svgImageDefActive("toggle-off"));
+		disable.setGraphic(IconGenerator.svgImageDefActive("toggle-off"));
+		enable.setGraphic(IconGenerator.svgImageDefActive("toggle-on"));
 		
-		disableEnable.setOnAction(e->{
+		disable.setOnAction(e->{
+			enableOrDisableAction(false);
+		});
+
+		enable.setOnAction(e->{
+			enableOrDisableAction(true);
+		});
+		
+		
+	}
+	
+	public   void enableOrDisableAction(boolean isEnable) {
+		 
 			ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
 			String reloadStatus = selectRow.getValueByFieldName("Load Status");
 			System.out.println(reloadStatus);
@@ -116,12 +125,10 @@ public class PluginManageWindow {
 			PluginInfoPO infoPo = new PluginInfoPO();
 			infoPo.setId(Integer.valueOf(id));
 			PluginInfoPO valInfoPo = new PluginInfoPO();
-			if("√".equals(reloadStatus)) {
-				valInfoPo.setReloadStatus(0);
-				selectRow.setValueByFieldName("Load Status", "");
-			}else {
+			if(isEnable) {
 				valInfoPo.setReloadStatus(1);
-				selectRow.setValueByFieldName("Load Status", "√");
+			}else {
+				valInfoPo.setReloadStatus(0);
 			}
 			
 			Connection conn = SqluckyAppDB.getConn();
@@ -132,20 +139,16 @@ public class PluginManageWindow {
 			}finally {
 				SqluckyAppDB.closeConn(conn);
 			}
-			if("√".equals(reloadStatus)) {
-				selectRow.setValueByFieldName("Load Status", "");
-			}else {
+			if(isEnable) {
 				selectRow.setValueByFieldName("Load Status", "√");
+			}else {
+				selectRow.setValueByFieldName("Load Status", "");
 			}
 			allPluginTable.getSelectionModel().getTableView().refresh();
-			Consumer< String >  ok = x ->{ 
-				Restart.reboot();
-			};
+			Consumer< String >  ok = x -> Restart.reboot();
 			 
 			MyAlert.myConfirmation("Setting up requires reboot , ok ? ", ok, null);
-		});
-		
-		
+		 
 	}
 	
 	public static Stage CreateModalWindow(VBox vb) {
