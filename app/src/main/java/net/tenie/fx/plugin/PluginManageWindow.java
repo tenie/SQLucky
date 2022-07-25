@@ -7,13 +7,11 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 
-import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.Labeled;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
@@ -30,12 +28,9 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
-import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
-import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.InfoTree.DBinfoTree;
 
 public class PluginManageWindow {
 	private VBox pluginManageBox = new VBox();
@@ -101,7 +96,7 @@ public class PluginManageWindow {
 	
 	public static Stage CreateModalWindow(VBox vb) {
 		Stage	stage = new Stage();
-		vb.getStyleClass().add("connectionEditor");
+//		vb.getStyleClass().add("connectionEditor");
 
 		Scene scene = new Scene(vb);
 		
