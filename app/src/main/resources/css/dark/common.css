@@ -174,11 +174,12 @@ FlowPane TextField {
 	-fx-border-color: #5E6060;
 	-fx-border-radius: 3px; /* 圆角 */
 }
-Button {
+/*  Button {
 	-fx-background-color: #373a3c;
 	-fx-border-color: #5E6060;
-	-fx-border-radius: 3px; /* 圆角 */
-}
+	-fx-border-radius: 3px; 
+}  */
+/*圆角*/
 
 .connectionEditor  PasswordField {
 	-fx-text-fill: white;
