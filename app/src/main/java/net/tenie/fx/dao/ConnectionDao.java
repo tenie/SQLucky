@@ -100,6 +100,7 @@ public class ConnectionDao {
 		    	}
 		    	
 		    	SqluckyDbRegister reg = DbVendor.register( vendor );
+		    	if(reg == null) continue;
 				SqluckyConnector po = reg.createConnector(connPo); 
 		    	po.setId(rd.getInteger("ID"));
 		        po.setComment( rd.getString("COMMENT"));		    	

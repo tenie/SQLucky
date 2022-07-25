@@ -1,5 +1,7 @@
 package net.tenie.Sqlucky.sdk.db;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 /**
@@ -17,6 +19,35 @@ public class ResultSetRowPo {
 		rowDatas = val;
 		this.fields = fields;
 	}
+	
+	
+	// 根据字段名称找到对应的值
+	public String getValueByFieldName(String fieldName) {
+		if(rowDatas != null && rowDatas.size()>0) {
+			for(ResultSetCellPo cellpo : rowDatas) {
+				StringProperty tmpName = cellpo.getField().getColumnName();
+				String strName = tmpName.get();
+				if(fieldName.equals(strName)) {
+					return cellpo.getCellData().get();
+				}
+			}
+		}
+		
+		return null;
+	}
+	
+	public void setValueByFieldName(String fieldName, String val) {
+		if(rowDatas != null && rowDatas.size()>0) {
+			for(ResultSetCellPo cellpo : rowDatas) {
+				StringProperty tmpName = cellpo.getField().getColumnName();
+				String strName = tmpName.get();
+				if(fieldName.equals(strName)) { 
+					cellpo.setCellData(new SimpleStringProperty(val));
+				}
+			}
+		}
+	}
+	
 	public ObservableList<ResultSetCellPo> getRowDatas() {
 		return rowDatas;
 	}
