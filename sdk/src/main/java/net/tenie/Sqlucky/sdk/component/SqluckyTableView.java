@@ -167,7 +167,7 @@ public class SqluckyTableView {
 	// 创建列
 	public static FilteredTableColumn<ResultSetRowPo, String> createColumn(String colname, int colIdx) {
 		FilteredTableColumn<ResultSetRowPo, String> col = new FilteredTableColumn<>();
-		col.setCellFactory(MyTextField2TableCell2.forTableColumn());
+		col.setCellFactory(MyTextField2TableCell3.forTableColumn());
 		col.setText(colname);
 		Label label = new Label();
 		col.setGraphic(label);

@@ -1,19 +1,24 @@
 package net.tenie.fx.plugin;
 
 import java.sql.Connection;
+import java.util.function.Consumer;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -25,12 +30,18 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
+import net.tenie.Sqlucky.sdk.db.PoDao;
+import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.po.PluginInfoPO;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.fx.main.Restart;
 
 public class PluginManageWindow {
 	private VBox pluginManageBox = new VBox();
@@ -82,16 +93,59 @@ public class PluginManageWindow {
 		optionPane.getChildren().addAll(download, disableEnable);
 		initBtn();
 		
+		describe.setPrefHeight(100);
+		describe.setMinHeight(100);
 		pluginManageBox.getChildren().addAll(SearchPane, pluginTabPane, describe, optionPane);
 		VBox.setVgrow(pluginTabPane, Priority.ALWAYS);
 
 	}
 	
 	public void initBtn() {
+		download.setGraphic(IconGenerator.svgImageDefActive("cloud-download"));
+		
+		disableEnable.setGraphic(IconGenerator.svgImageDefActive("toggle-off"));
+		
 		disableEnable.setOnAction(e->{
 			ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
-			System.out.println(selectRow);
+			String reloadStatus = selectRow.getValueByFieldName("Load Status");
+			System.out.println(reloadStatus);
+			
+			String id = selectRow.getValueByFieldName("ID");
+			System.out.println(id);
+			
+			PluginInfoPO infoPo = new PluginInfoPO();
+			infoPo.setId(Integer.valueOf(id));
+			PluginInfoPO valInfoPo = new PluginInfoPO();
+			if("√".equals(reloadStatus)) {
+				valInfoPo.setReloadStatus(0);
+				selectRow.setValueByFieldName("Load Status", "");
+			}else {
+				valInfoPo.setReloadStatus(1);
+				selectRow.setValueByFieldName("Load Status", "√");
+			}
+			
+			Connection conn = SqluckyAppDB.getConn();
+			try {
+				PoDao.update(conn, infoPo, valInfoPo);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}finally {
+				SqluckyAppDB.closeConn(conn);
+			}
+			if("√".equals(reloadStatus)) {
+				selectRow.setValueByFieldName("Load Status", "");
+			}else {
+				selectRow.setValueByFieldName("Load Status", "√");
+			}
+			allPluginTable.getSelectionModel().getTableView().refresh();
+			Consumer< String >  ok = x ->{ 
+				Restart.reboot();
+			};
+			 
+			MyAlert.myConfirmation("Setting up requires reboot , ok ? ", ok, null);
 		});
+		
+		
 	}
 	
 	public static Stage CreateModalWindow(VBox vb) {
@@ -123,13 +177,6 @@ public class PluginManageWindow {
 		stage.setMaximized(false);
 		stage.setResizable(false);
 		stage.setOnHidden(e->{
-			//TODO 打开连接
-//			if( editLinkStatus) {
-//				Platform.runLater(()->{
-//					var item = DBinfoTree.getTrewViewCurrentItem();
-//					CommonAction.openConn(item);
-//				});
-//			}
 		});
 		return stage;
 	}
@@ -137,14 +184,23 @@ public class PluginManageWindow {
 	public void createTable() {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
-			String sql = "select" + " ID , " + " PLUGIN_NAME as \"Name\" , " + " VERSION ,"
+			String sql = "select" 
+					+ " ID , "
+					+ " PLUGIN_NAME as \"Name\" , "
+					+ " VERSION ,"
 					+ " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
 					+ " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
-					+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" " + " from PLUGIN_INFO";
+					+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
+					+ " from PLUGIN_INFO";
 			sheetDaV = SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
 			allPluginTable = sheetDaV.getInfoTable();
 			allPluginTab.setContent(allPluginTable);
-
+			allPluginTable.editableProperty().bind(new SimpleBooleanProperty(false));
+			allPluginTable.getSelectionModel().selectedItemProperty().addListener((ob, ov ,nv)->{
+				describe.clear();
+				String strDescribe = nv.getValueByFieldName("Describe");
+				describe.appendText(strDescribe);
+			});
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
