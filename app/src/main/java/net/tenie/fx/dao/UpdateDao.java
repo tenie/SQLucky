@@ -54,7 +54,10 @@ public class UpdateDao {
 					continue;
 					
 				} else {
-					Object obj = BuildObject.buildObj(type, val);
+//					Object obj = BuildObject.buildObj(type, val);
+//					pstmt.setObject(idx, obj);
+					
+					Object obj = val;
 					pstmt.setObject(idx, obj);
 					logmsg += idx + " : " + obj +"\n";
 				}
@@ -99,7 +102,8 @@ public class UpdateDao {
 					idx--;
 					continue;
 				} else {
-					Object obj = BuildObject.buildObj(type, val);
+//					Object obj = BuildObject.buildObj(type, val);
+					Object obj = val;
 					pstmt.setObject(idx, obj);
 				}
 			}
@@ -120,7 +124,8 @@ public class UpdateDao {
 					idx--;
 					continue;
 				} else { 
-					Object obj = BuildObject.buildObj(type, val);
+//					Object obj = BuildObject.buildObj(type, val);
+					Object obj = val;
 					pstmt.setObject(idx, obj);
 				}
 			}

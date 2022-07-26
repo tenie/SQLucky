@@ -4,24 +4,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
-import net.tenie.lib.reflex.BuildObject;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
-/*   @author tenie */
+/**
+ * 
+ * @author tenie
+ *
+ */
 public class DeleteDao {
 	private static Logger logger = LogManager.getLogger(DeleteDao.class);
-
 
 	public static String execDelete(Connection conn, String tableName, ObservableList<StringProperty> vals,
 			ObservableList<SheetFieldPo> fpos) throws Exception {

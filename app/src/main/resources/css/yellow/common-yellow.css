@@ -3,6 +3,14 @@
 	
 }
 
+/* 插件管理界面 #000000 */
+.myPluginManager-vbox{
+	-fx-padding: 5px 0px 5px 0px;
+	/* -fx-spacing box 之间的间距 */
+	-fx-spacing: 2px; 
+	-fx-background-color: #000000; 
+}
+
 .Icon-color{
 	-fx-background-color: #FDA232;
 }

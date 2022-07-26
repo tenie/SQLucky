@@ -2,10 +2,22 @@
 .my-tag {
 	
 }
-
+/* 插件管理界面 */
+.myPluginManager-vbox{
+	-fx-padding: 5px 0px 5px 0px;
+	/* -fx-spacing box 之间的间距 */
+	-fx-spacing: 2px; 
+	-fx-background-color: #2B2B2B; 
+}
 .Icon-color {
 	-fx-background-color: #1C94FF;
 }
+
+/*  button 样式*/
+.mybutton{
+
+}
+
 /* title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 */
 .myTitleTxtActiveColor .title .text{
 	  -fx-fill:  #0595ff;
