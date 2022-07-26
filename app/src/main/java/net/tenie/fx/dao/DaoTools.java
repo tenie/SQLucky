@@ -107,7 +107,8 @@ public class DaoTools {
 					pstmt.setObject(idx, val);
 					logger.info(idx + "  " + val);
 				 } else {
-					Object obj = BuildObject.buildObj(type, val);
+//					Object obj = BuildObject.buildObj(type, val);
+					Object obj = val;
 					pstmt.setObject(idx, obj);
 					logger.info(idx + "  " + obj);
 				}

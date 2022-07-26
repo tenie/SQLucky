@@ -46,10 +46,11 @@ public class PluginManageWindow {
 	private JFXButton searchBtn = new JFXButton("Search");
 
 	// 插件表格面板
-	private TabPane pluginTabPane = new TabPane();
+//	private TabPane pluginTabPane = new TabPane();
+	private VBox  pluginBox = new VBox();
 	// 所有插件面板
-	private Tab allPluginTab = new Tab();
-	private Tab installedPluginTab = new Tab();
+//	private Tab allPluginTab = new Tab();
+//	private Tab installedPluginTab = new Tab();
 
 	// 表
 
@@ -76,23 +77,23 @@ public class PluginManageWindow {
 		
 
 		// 插件表格
-		allPluginTab.setText("All plugin ");
-		installedPluginTab.setText("Installed plugin");
-		pluginTabPane.getTabs().addAll(allPluginTab, installedPluginTab);
+//		allPluginTab.setText("All plugin ");
+//		installedPluginTab.setText("Installed plugin");
+//		pluginTabPane.getTabs().addAll(allPluginTab, installedPluginTab);
 //		FilteredTableView<ObservableList<StringProperty>> allTable = SdkComponent.creatFilteredTableView();
-		FilteredTableView<ObservableList<StringProperty>> installedTable = SdkComponent.creatFilteredTableView();
+//		FilteredTableView<ObservableList<StringProperty>> installedTable = SdkComponent.creatFilteredTableView();
 
-//		allPluginTab.setContent(allTable);
-		installedPluginTab.setContent(installedTable);
+//		installedPluginTab.setContent(installedTable);
 
 		// 操作面板
 		optionPane.getChildren().addAll(download, disable, enable);
 		initBtn();
 		
-		describe.setPrefHeight(100);
-		describe.setMinHeight(100);
-		pluginManageBox.getChildren().addAll(SearchPane, pluginTabPane, describe, optionPane);
-		VBox.setVgrow(pluginTabPane, Priority.ALWAYS);
+		describe.setPrefHeight(80);
+		describe.setMinHeight(80);
+		describe.setEditable(false);
+		pluginManageBox.getChildren().addAll(SearchPane, pluginBox, describe, optionPane);
+		VBox.setVgrow(pluginBox, Priority.ALWAYS);
 
 	}
 	
@@ -110,7 +111,9 @@ public class PluginManageWindow {
 			enableOrDisableAction(true);
 		});
 		
-		
+		disable.setDisable(true);
+		enable.setDisable(true);
+		download.setDisable(true);
 	}
 	
 	public   void enableOrDisableAction(boolean isEnable) {
@@ -151,9 +154,52 @@ public class PluginManageWindow {
 		 
 	}
 	
+	
+	
+	public void createTable() {
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			String sql = "select" 
+					+ " ID , "
+					+ " PLUGIN_NAME as \"Name\" , "
+					+ " VERSION ,"
+					+ " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
+					+ " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
+					+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
+					+ " from PLUGIN_INFO";
+			sheetDaV = SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+			allPluginTable = sheetDaV.getInfoTable();
+//			allPluginTab.setContent(allPluginTable);
+			pluginBox.getChildren().add(allPluginTable);
+			allPluginTable.editableProperty().bind(new SimpleBooleanProperty(false));
+			allPluginTable.getSelectionModel().selectedItemProperty().addListener((ob, ov ,nv)->{
+				describe.clear();
+				String strDescribe = nv.getValueByFieldName("Describe");
+				describe.appendText(strDescribe);
+				String loadStatus = nv.getValueByFieldName("Load Status");
+				if("√".equals(loadStatus)) {
+					disable.setDisable(false);
+					enable.setDisable(true);
+				}else {
+					disable.setDisable(true);
+					enable.setDisable(false);
+				}
+			});
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+	
+	public void show() {
+		createTable();
+		var stage = CreateModalWindow(pluginManageBox);
+		stage.show();
+	}
+	
+	
 	public static Stage CreateModalWindow(VBox vb) {
 		Stage	stage = new Stage();
-//		vb.getStyleClass().add("connectionEditor");
+		vb.getStyleClass().add("myPluginManager-vbox");
 
 		Scene scene = new Scene(vb);
 		
@@ -183,39 +229,5 @@ public class PluginManageWindow {
 		});
 		return stage;
 	}
-	
-	public void createTable() {
-		Connection conn = SqluckyAppDB.getConn();
-		try {
-			String sql = "select" 
-					+ " ID , "
-					+ " PLUGIN_NAME as \"Name\" , "
-					+ " VERSION ,"
-					+ " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
-					+ " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
-					+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
-					+ " from PLUGIN_INFO";
-			sheetDaV = SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
-			allPluginTable = sheetDaV.getInfoTable();
-			allPluginTab.setContent(allPluginTable);
-			allPluginTable.editableProperty().bind(new SimpleBooleanProperty(false));
-			allPluginTable.getSelectionModel().selectedItemProperty().addListener((ob, ov ,nv)->{
-				describe.clear();
-				String strDescribe = nv.getValueByFieldName("Describe");
-				describe.appendText(strDescribe);
-			});
-		} finally {
-			SqluckyAppDB.closeConn(conn);
-		}
-	}
-	
-	public void show() {
-		createTable();
-		var stage = CreateModalWindow(pluginManageBox);
-		stage.show();
-	}
-	
-	
-	
 	// 禁用
 }
