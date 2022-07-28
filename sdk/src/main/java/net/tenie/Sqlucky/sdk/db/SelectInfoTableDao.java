@@ -32,6 +32,17 @@ public class SelectInfoTableDao {
 
 	private static Logger logger = LogManager.getLogger(SelectInfoTableDao.class);
 
+	
+	public static ResultSetPo selectTableData(ResultSet rs, 
+			ObservableList<SheetFieldPo> fields, 
+			SqluckyConnector dpo  ) throws SQLException {
+		ResultSetPo setPo = new ResultSetPo();
+		// 数据
+		execRs(rs, fields, dpo, setPo );
+		
+		return setPo;
+	}
+	
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
 	public static void selectSql(String sql, SheetTableData std) throws SQLException {
 		SqluckyConnector dpo = std.getDbConnection();
@@ -58,10 +69,12 @@ public class SelectInfoTableDao {
 			std.setExecTime(vt);
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = SelectDao.resultSetMetaData(rs);
-			ResultSetPo setPo = new ResultSetPo();
-			// 数据
-			execRs(rs, fields, dpo, setPo );
+//			ResultSetPo setPo = new ResultSetPo();
+//			// 数据
+//			execRs(rs, fields, dpo, setPo );
 
+			ResultSetPo setPo = selectTableData(rs, fields, dpo);
+			
 			std.setColss(fields);
 			std.setInfoTableVals(setPo);
 			std.setRows(setPo.size());
@@ -74,7 +87,7 @@ public class SelectInfoTableDao {
 		}
 	}
  
-	private static void execRs(  ResultSet rs, ObservableList<SheetFieldPo> fpo,
+	public static void execRs(  ResultSet rs, ObservableList<SheetFieldPo> fpo,
 			SqluckyConnector dpo,ResultSetPo setPo ) throws SQLException {
 		int idx = 1;
 		int rowNo = 0;
