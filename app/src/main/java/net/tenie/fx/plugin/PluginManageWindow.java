@@ -1,6 +1,7 @@
 package net.tenie.fx.plugin;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.function.Consumer;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -29,21 +30,25 @@ import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.db.PoDao;
+import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.PluginInfoPO;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.fx.main.Restart;
 
 public class PluginManageWindow {
 	private VBox pluginManageBox = new VBox();
 	private FlowPane SearchPane = new FlowPane();
-	private Label searchLb = new Label("Search Plugin");
+	private JFXButton searchBtn = new JFXButton("Search Plugin");
 	private JFXTextField searchText = new JFXTextField();
-	private JFXButton searchBtn = new JFXButton("Search");
+//	private JFXButton searchBtn = new JFXButton("Search");
 
 	// 插件表格面板
 //	private TabPane pluginTabPane = new TabPane();
@@ -70,12 +75,23 @@ public class PluginManageWindow {
 //	private JFXButton close = new JFXButton("Close");
 
 	public PluginManageWindow() {
-		searchLb.setGraphic(IconGenerator.svgImageDefActive("search"));
+//		searchLb.setGraphic(IconGenerator.svgImageDefActive("search"));
 		searchBtn.setGraphic(IconGenerator.svgImageDefActive("search"));
 		searchText.getStyleClass().add("myTextField");
-		SearchPane.getChildren().addAll(searchLb, searchText, searchBtn);
+		// 回车后触发查询按钮
+		searchText.setOnKeyPressed(val->{
+			 if(val.getCode() == KeyCode.ENTER ){ 
+//				 myEvent.btnClick(queryExecBtn);
+				 queryAction(searchText.getText());
+			 }
+		});
+		searchBtn.setOnMouseClicked(e->{
+			 queryAction(searchText.getText());
+		});
+		searchBtn.getStyleClass().add("myAlertBtn");
+		SearchPane.getChildren().addAll(searchBtn, searchText );
 		
-
+		
 		// 插件表格
 //		allPluginTab.setText("All plugin ");
 //		installedPluginTab.setText("Installed plugin");
@@ -85,6 +101,9 @@ public class PluginManageWindow {
 
 //		installedPluginTab.setContent(installedTable);
 
+		download.getStyleClass().add("myAlertBtn");
+		disable.getStyleClass().add("myAlertBtn");
+		enable.getStyleClass().add("myAlertBtn");
 		// 操作面板
 		optionPane.getChildren().addAll(download, disable, enable);
 		initBtn();
@@ -154,19 +173,19 @@ public class PluginManageWindow {
 		 
 	}
 	
-	
+	String sql = "select" 
+			+ " ID , "
+			+ " PLUGIN_NAME as \"Name\" , "
+			+ " VERSION ,"
+			+ " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
+			+ " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
+			+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
+			+ " from PLUGIN_INFO";
 	
 	public void createTable() {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
-			String sql = "select" 
-					+ " ID , "
-					+ " PLUGIN_NAME as \"Name\" , "
-					+ " VERSION ,"
-					+ " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
-					+ " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
-					+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
-					+ " from PLUGIN_INFO";
+		
 			sheetDaV = SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
 			allPluginTable = sheetDaV.getInfoTable();
 //			allPluginTab.setContent(allPluginTable);
@@ -175,6 +194,7 @@ public class PluginManageWindow {
 			allPluginTable.getSelectionModel().selectedItemProperty().addListener((ob, ov ,nv)->{
 				describe.clear();
 				String strDescribe = nv.getValueByFieldName("Describe");
+				 
 				describe.appendText(strDescribe);
 				String loadStatus = nv.getValueByFieldName("Load Status");
 				if("√".equals(loadStatus)) {
@@ -190,13 +210,35 @@ public class PluginManageWindow {
 		}
 	}
 	
+	// 根据输入字符串查询
+	public void queryAction(String  queryStr) {
+		Connection conn = SqluckyAppDB.getConn();
+		String mysql = sql;
+		if(StrUtils.isNotNullOrEmpty(queryStr)) {
+			 queryStr = queryStr.toLowerCase();
+			 mysql = sql + "\n where LOWER(PLUGIN_NAME) like '%"+queryStr+"%' or LOWER(PLUGIN_DESCRIBE) like '%"+queryStr+"%'";
+		}
+		try {
+			ResultSetPo set =	DBTools.simpleSelect(conn, mysql, sheetDaV.getColss(), sheetDaV.getDbConnection());
+			if(set != null ) {
+				allPluginTable.setItems(set.getDatas());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+	
+	// 显示窗口
 	public void show() {
 		createTable();
 		var stage = CreateModalWindow(pluginManageBox);
 		stage.show();
+		searchText.requestFocus();
 	}
 	
-	
+	// 创建一个窗体
 	public static Stage CreateModalWindow(VBox vb) {
 		Stage	stage = new Stage();
 		vb.getStyleClass().add("myPluginManager-vbox");
@@ -229,5 +271,4 @@ public class PluginManageWindow {
 		});
 		return stage;
 	}
-	// 禁用
 }

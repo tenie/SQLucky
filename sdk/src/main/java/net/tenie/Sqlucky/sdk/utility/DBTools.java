@@ -15,6 +15,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.collections.ObservableList;
+import net.tenie.Sqlucky.sdk.db.ResultSetPo;
+import net.tenie.Sqlucky.sdk.db.SelectInfoTableDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -393,9 +397,33 @@ public class DBTools {
 		}
 		return rs;
 	}
-
-//	public static 
-//	  select   *   from   INFODMS.TT_ACTIVITY_MODEL    where   1=2
+ 
+	// 简单的sql 转为ResultSet
+	public static ResultSet sqlToResultSet(Connection conn, String sql) {
+		PreparedStatement pstate = null;
+		ResultSet rs = null;
+		try {
+			pstate = conn.prepareStatement(sql);
+			rs = pstate.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+		
+		return rs;
+	}
+	
+	// 简单的sql 查询, 用于更新之前表的数据
+	public static  ResultSetPo simpleSelect(Connection conn, String sql, 
+			ObservableList<SheetFieldPo> fields, 
+			SqluckyConnector dpo    ) throws SQLException {
+		ResultSet rs = sqlToResultSet(conn, sql);
+		ResultSetPo setPo = null;
+		if(rs!=null) {
+		   setPo = SelectInfoTableDao.selectTableData(rs, fields, dpo);
+		}
+		
+		return setPo;
+	}
  
 
 }

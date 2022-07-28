@@ -30,6 +30,7 @@ import javafx.scene.control.TableCell;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
+import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SelectInfoTableDao;
@@ -118,6 +119,8 @@ public class SqluckyTableView {
 		}
 		return null;
 	}
+	
+
 
 	// 数据展示tableView StringProperty
 	public static FilteredTableView<ResultSetRowPo> creatInfoTableView() {
