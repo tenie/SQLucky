@@ -3,23 +3,13 @@ package net.tenie.fx.plugin;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.function.Consumer;
-
 import org.controlsfx.control.tableview2.FilteredTableView;
-
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
-
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -27,7 +17,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.db.PoDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
@@ -40,7 +29,6 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.fx.main.Restart;
 
 public class PluginManageWindow {
@@ -48,16 +36,8 @@ public class PluginManageWindow {
 	private FlowPane SearchPane = new FlowPane();
 	private JFXButton searchBtn = new JFXButton("Search Plugin");
 	private JFXTextField searchText = new JFXTextField();
-//	private JFXButton searchBtn = new JFXButton("Search");
 
-	// 插件表格面板
-//	private TabPane pluginTabPane = new TabPane();
 	private VBox  pluginBox = new VBox();
-	// 所有插件面板
-//	private Tab allPluginTab = new Tab();
-//	private Tab installedPluginTab = new Tab();
-
-	// 表
 
 	// 描述
 	private MyCodeArea describe = new MyCodeArea();
@@ -72,40 +52,29 @@ public class PluginManageWindow {
 	// 所有插件表
 	SheetTableData sheetDaV = null;
 	FilteredTableView<ResultSetRowPo> allPluginTable = null;
-//	private JFXButton close = new JFXButton("Close");
 
 	public PluginManageWindow() {
-//		searchLb.setGraphic(IconGenerator.svgImageDefActive("search"));
 		searchBtn.setGraphic(IconGenerator.svgImageDefActive("search"));
 		searchText.getStyleClass().add("myTextField");
 		// 回车后触发查询按钮
 		searchText.setOnKeyPressed(val->{
 			 if(val.getCode() == KeyCode.ENTER ){ 
-//				 myEvent.btnClick(queryExecBtn);
 				 queryAction(searchText.getText());
 			 }
 		});
 		searchBtn.setOnMouseClicked(e->{
 			 queryAction(searchText.getText());
 		});
-		searchBtn.getStyleClass().add("myAlertBtn");
 		SearchPane.getChildren().addAll(searchBtn, searchText );
-		
-		
-		// 插件表格
-//		allPluginTab.setText("All plugin ");
-//		installedPluginTab.setText("Installed plugin");
-//		pluginTabPane.getTabs().addAll(allPluginTab, installedPluginTab);
-//		FilteredTableView<ObservableList<StringProperty>> allTable = SdkComponent.creatFilteredTableView();
-//		FilteredTableView<ObservableList<StringProperty>> installedTable = SdkComponent.creatFilteredTableView();
+		SearchPane.setMinHeight(35);
+		SearchPane.setPrefHeight(35);
+		SearchPane.getStyleClass().add("topPadding5");
 
-//		installedPluginTab.setContent(installedTable);
-
-		download.getStyleClass().add("myAlertBtn");
-		disable.getStyleClass().add("myAlertBtn");
-		enable.getStyleClass().add("myAlertBtn");
 		// 操作面板
 		optionPane.getChildren().addAll(download, disable, enable);
+		optionPane.setMinHeight(35);
+		optionPane.setPrefHeight(35);
+		optionPane.getStyleClass().add("topPadding5");
 		initBtn();
 		
 		describe.setPrefHeight(80);
@@ -135,14 +104,11 @@ public class PluginManageWindow {
 		download.setDisable(true);
 	}
 	
+	// 插件启用/禁用 
 	public   void enableOrDisableAction(boolean isEnable) {
-		 
 			ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
-			String reloadStatus = selectRow.getValueByFieldName("Load Status");
-			System.out.println(reloadStatus);
 			
 			String id = selectRow.getValueByFieldName("ID");
-			System.out.println(id);
 			
 			PluginInfoPO infoPo = new PluginInfoPO();
 			infoPo.setId(Integer.valueOf(id));
@@ -185,12 +151,13 @@ public class PluginManageWindow {
 	public void createTable() {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
-		
+		    // 查询
 			sheetDaV = SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+			// 获取表
 			allPluginTable = sheetDaV.getInfoTable();
-//			allPluginTab.setContent(allPluginTable);
-			pluginBox.getChildren().add(allPluginTable);
+			// 表不可编辑
 			allPluginTable.editableProperty().bind(new SimpleBooleanProperty(false));
+			// 选中事件
 			allPluginTable.getSelectionModel().selectedItemProperty().addListener((ob, ov ,nv)->{
 				describe.clear();
 				String strDescribe = nv.getValueByFieldName("Describe");
@@ -205,6 +172,8 @@ public class PluginManageWindow {
 					enable.setDisable(false);
 				}
 			});
+			// 表放入界面
+			pluginBox.getChildren().add(allPluginTable);
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -245,12 +214,9 @@ public class PluginManageWindow {
 
 		Scene scene = new Scene(vb);
 		
-		vb.setPrefWidth(750);
-		vb.maxWidth(750);
-		AnchorPane bottomPane = new AnchorPane();
-		bottomPane.setPadding(new Insets(10));
+		vb.setPrefWidth(720);
+		vb.maxWidth(720);
 
-		vb.getChildren().add(bottomPane);
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
 		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {

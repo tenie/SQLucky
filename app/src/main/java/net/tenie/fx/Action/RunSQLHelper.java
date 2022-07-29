@@ -120,7 +120,7 @@ public class RunSQLHelper {
 		}
 		
 		// 等待加载动画
-		addWaitingPane( tidx);
+		addWaitingPane( tidx, isRefresh);
 		List<SqlData> allsqls = new ArrayList<>();
 		try {
 			// 获取sql 语句 
@@ -833,13 +833,24 @@ public class RunSQLHelper {
 	
 	private static void rmWaitingPane(boolean holdSheet) {
 		SdkComponent.rmWaitingPane();
-		if( holdSheet == false) { // 非刷新的， 删除多余的页
-			TabPane dataTab = ComponentGetter.dataTabPane;
-			SdkComponent.deleteEmptyTab(dataTab);
-		}
+		Platform.runLater(()->{
+			if( holdSheet == false) { // 非刷新的， 删除多余的页
+				TabPane dataTab = ComponentGetter.dataTabPane;
+				SdkComponent.deleteEmptyTab(dataTab);
+			}
+		});
+		
 	}
-	private static Tab addWaitingPane(int tabIdx) {
-		return SdkComponent.addWaitingPane(tabIdx);
+	private static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
+		Tab v =	SdkComponent.addWaitingPane(tabIdx);
+		Platform.runLater(()->{
+			if( holdSheet == false) { // 非刷新的， 删除多余的页
+				TabPane dataTab = ComponentGetter.dataTabPane;
+				SdkComponent.deleteEmptyTab(dataTab);
+			}
+		});
+		
+		return v;
 	}
 		
 }

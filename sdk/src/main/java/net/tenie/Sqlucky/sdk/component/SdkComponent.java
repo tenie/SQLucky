@@ -33,7 +33,9 @@ import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.MyOption;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -67,7 +69,7 @@ public class SdkComponent {
 		lockbtn.setOnMouseClicked(e -> {
 			if (mytb.getTableData().isLock()) {
 				lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
-				mytb.getTableData().setLock(true);
+				mytb.getTableData().setLock(false);
 			} else {
 				lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
 				mytb.getTableData().setLock(true);
@@ -356,9 +358,17 @@ public class SdkComponent {
 			if (dataTab.getTabs().contains(waitTb)) {
 				dataTab.getTabs().remove(waitTb);
 			}
-			if (dataTab.getTabs().size() == 0) {
-				SdkComponent.hideBottom();
-			}
+			
+			CommonUtility.delayRunThread(v->{
+				Platform.runLater(()->{
+					if(dataTab.getTabs().size() == 0) {
+						SdkComponent.hideBottom(); 
+					} 
+				});
+			}, 1000);
+//			if (dataTab.getTabs().size() == 0) {
+//				SdkComponent.hideBottom();
+//			}
 
 		});
 
@@ -370,7 +380,7 @@ public class SdkComponent {
 		// 判断是否已经到达最大tab显示页面
 		// 删除旧的 tab
 		List<Tab> ls = new ArrayList<>();
-		for(int i = 0; i < dataTab.getTabs().size() ;i++) { 
+		for(int i = 0; i < dataTab.getTabs().size() ;i++) {
 			Tab tab = dataTab.getTabs().get(i);
 			MyBottomTab nd =  (MyBottomTab) tab.getUserData();
 			if(nd == null) continue;
@@ -381,12 +391,16 @@ public class SdkComponent {
 				ls.add(tab);
 			}
 		}
-		Platform.runLater(()->{
-			ls.forEach(nd->{
-				dataTab.getTabs().remove(nd);
-				
+		if( ls.size()> 0 ) {
+			Platform.runLater(()->{
+				ls.forEach(nd->{
+					dataTab.getTabs().remove(nd);
+					
+				});
+//				System.gc();
+				MyOption.gc(SdkComponent.class, "deleteEmptyTab");
 			});
-		});
+		}
 		
 	}
 	
@@ -482,11 +496,18 @@ public class SdkComponent {
 		tabPane.getTabs().remove(tb);
 		long endtime = System.currentTimeMillis();
 		long costTime = (endtime - begintime);
+//		System.gc();
+		MyOption.gc(SdkComponent.class, "clearDataTable");
 		logger.info("关闭使用时间 = "+ costTime);
 		
-		if(tabPane.getTabs().size() == 0) {
-			SdkComponent.hideBottom(); 
-		} 
+		CommonUtility.delayRunThread(v->{
+			Platform.runLater(()->{
+				if(tabPane.getTabs().size() == 0) {
+					SdkComponent.hideBottom(); 
+				} 
+			});
+		}, 1000);
+		
 	}
 	
 	/**
