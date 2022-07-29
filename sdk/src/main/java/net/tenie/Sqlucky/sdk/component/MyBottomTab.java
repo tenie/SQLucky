@@ -31,7 +31,8 @@ public class MyBottomTab  implements SqluckyBottomSheet{
 		tab = new Tab(data.getTabName());
 		this.tableData = data;
 		this.idx = idx;
-		
+		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
+		tab.setContextMenu(tableViewMenu());
 		tab.setUserData(this);
 	}
 	

@@ -5,6 +5,8 @@ package net.tenie.Sqlucky.sdk.component;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.Event;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -23,9 +25,11 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
         return forTableColumn(new DefaultStringConverter());
     }
 
-    public static <S,T> Callback<TableColumn<S,T>, TableCell<S,T>> forTableColumn(
-            final StringConverter<T> converter) {
-        return list -> new MyTextField2TableCell2<>(converter);
+    // 返回一个函数
+    public static <S,T> Callback<TableColumn<S,T>, TableCell<S,T>> forTableColumn(  final StringConverter<T> converter) {
+        return  list -> {
+    		return new MyTextField2TableCell2<>(converter);
+    	};
     }
 
 
@@ -37,7 +41,12 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
 
     public MyTextField2TableCell2(StringConverter<T> converter) {
         super(converter);
-//        this.setMaxHeight(50);
+    	// 右键菜单
+        ContextMenu cm = new ContextMenu();
+        MenuItem setNull = new MenuItem("Set Null ");
+		cm.getItems().add(setNull);
+        setContextMenu(cm);
+        
         this.setTextOverrun(OverrunStyle.ELLIPSIS);
         graphicProperty().addListener(new InvalidationListener() {
             @Override

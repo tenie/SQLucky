@@ -33,5 +33,8 @@ https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
 	-fx-padding: 5px;
 }
 
+.topPadding5{ 
+	-fx-padding: 5px 0px 5px 0px;
+}
 
 
