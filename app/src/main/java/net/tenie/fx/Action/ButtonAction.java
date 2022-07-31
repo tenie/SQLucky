@@ -24,6 +24,7 @@ import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.sqlExecute.SqlExecuteOption;
 import net.tenie.fx.component.InfoTree.TreeObjAction;
 import net.tenie.fx.component.InfoTree.TreeItem.TreeObjCache;
 import net.tenie.fx.dao.DeleteDao;
@@ -119,7 +120,7 @@ public class ButtonAction {
 
 			// 保存按钮禁用
 			saveBtn.setDisable(btnDisable);
-			RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
+			SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, null);
 
 		}
 
@@ -171,7 +172,7 @@ public class ButtonAction {
 
 					ddlDmlpo.addData(val);
 				} finally {
-					RunSQLHelper.showExecuteSQLInfo(ddlDmlpo);
+					SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, null);
 				}
 			};
 		if(vals.size() >0 ) {
