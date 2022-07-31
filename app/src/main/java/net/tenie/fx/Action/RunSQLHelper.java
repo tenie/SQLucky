@@ -13,49 +13,30 @@ import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.tableview2.FilteredTableColumn;
-import org.controlsfx.control.tableview2.FilteredTableView;
-import org.fxmisc.richtext.CodeArea;
 
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TreeItem;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
-import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
-import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.Dbinfo;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Action.sqlExecute.ProcedureAction;
+import net.tenie.fx.Action.sqlExecute.SelectAction;
+import net.tenie.fx.Action.sqlExecute.SqlExecuteOption;
 import net.tenie.fx.Po.SqlData;
-import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.InfoTree.DBinfoTree;
-import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
-import net.tenie.fx.component.container.DataViewContainer;
-import net.tenie.fx.component.dataView.DataTableContextMenu;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DmlDdlDao;
 
@@ -120,7 +101,7 @@ public class RunSQLHelper {
 		}
 		
 		// 等待加载动画
-		addWaitingPane( tidx, isRefresh);
+		SqlExecuteOption.addWaitingPane( tidx, isRefresh);
 		List<SqlData> allsqls = new ArrayList<>();
 		try {
 			// 获取sql 语句 
@@ -136,10 +117,10 @@ public class RunSQLHelper {
 				}
 			// 执行传入的sql, 非界面上的sql
 			}else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
-				allsqls = epurateSql(sqlstr);
+				allsqls = SqlExecuteOption.epurateSql(sqlstr);
 			} else { 
 				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
-				allsqls = willExecSql();
+				allsqls = SqlExecuteOption.willExecSql(isCurrentLine);
 			}
 			// 执行sql
 			var rsVal = execSqlList(allsqls, dpo);
@@ -175,9 +156,9 @@ public class RunSQLHelper {
 			String msg = "";
 			try {
 				if( isCallFunc ) { // 调用存储过程  
-					procedureAction(sql, dpo ,  callProcedureFields);
+					ProcedureAction.procedureAction(sql, dpo ,  callProcedureFields, tidx,isLock, thread, isRefresh );
 				}else if (type == ParseSQL.SELECT) { // 调用查询
-					  selectAction(sql, dpo); 
+					SelectAction.selectAction(sql, dpo, tidx, isLock, thread, isRefresh);
 				} else {
 						if (type == ParseSQL.UPDATE) {
 							msg = DmlDdlDao.updateSql2(conn, sql);
@@ -219,7 +200,7 @@ public class RunSQLHelper {
 					final String msgVal = msg; 
 					Platform.runLater(()->{
 						CommonAction.showNotifiaction(msgVal);
-						rmWaitingPane(true);
+						SqlExecuteOption.rmWaitingPane(true);
 //						rmWaitingPaneHold();
 					});
 					
@@ -238,7 +219,7 @@ public class RunSQLHelper {
 
 		}
 		// 如果 ddlDmlpo 中有 msg的信息 就会显示到界面上
-		showExecuteSQLInfo(ddlDmlpo);
+		SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, thread);
 		// 如果是执行的界面上的sql, 那么对错误的sql渲染为红色
 		if (StrUtils.isNullOrEmpty(RunSQLHelper.sqlstr)) {
 			Platform.runLater(() -> { 
@@ -255,237 +236,93 @@ public class RunSQLHelper {
 	
 	
 	
-	// 展示信息窗口,
-	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo) {
-		// 有数据才展示
-		if (ddlDmlpo.getAllDatas().size() > 0) {
-			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
-			// 表内容可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(true));
-			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
-			// table 添加列和数据 
-			ObservableList<SheetFieldPo> colss = ddlDmlpo.getFields();
-			ObservableList<ObservableList<StringProperty>> alldata = ddlDmlpo.getAllDatas();
-			SheetDataValue dvt = new SheetDataValue(table , ConfigVal.EXEC_INFO_TITLE,  colss, alldata); 
-			
-			var cols = SdkComponent.createTableColForInfo( colss);
-			table.getColumns().addAll(cols);
-			table.setItems(alldata); 
+//	private static boolean hasOut(List<ProcedureFieldPo> fields) {
+//		if(fields != null && fields.size() > 0) {
+//			for(ProcedureFieldPo po : fields) {
+//				if(po.isOut()) {
+//					return true;
+//				}
+//			}
+//		}
+//		
+//		return false;
+//	}
 
-//			rmWaitingPaneHold();
-			rmWaitingPane(true);
-			// 渲染界面
-			if (!thread.isInterrupted()) {
-				boolean showtab = true;
-				if(ddlDmlpo.getAllDatas().size() == 1) {
-					var list = ddlDmlpo.getAllDatas().get(0);
-					var strfield = list.get(1).get();
-					if(!strfield.startsWith("failed")){
-						CommonAction.showNotifiaction(strfield);
-						showtab = false;
-					}
-				}
-				if(showtab){
-					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
-//					rmWaitingPane(); 
-					
-					mtd.show();
-				}
+//	private static void procedureAction(String sql, SqluckyConnector dpo, List<ProcedureFieldPo> fields) throws Exception {
+//		String msg = "";
+//		Connection conn = dpo.getConn();
+//		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
+//		try { 
+//			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
+//			// 获取表名
+//			String tableName = sql; 
+////			ParseSQL.tabName(sql);
+//			
+//			logger.info("tableName= " + tableName + "\n sql = " + sql);
+//			SheetDataValue dvt = new SheetDataValue();
+//			//TODO callProcedure
+//			SelectDao.callProcedure(conn, sql, table.getId(), dvt, fields );
+//			
+//			DataViewContainer.setTabRowWith(table, dvt.getRawData().size());
+//			
+//			String connectName = DBConns.getCurrentConnectName();
+//			dvt.setSqlStr(sql);
+//			dvt.setTable(table);
+//			dvt.setTabName(tableName);
+//			dvt.setConnName(connectName);
+////			dvt.setDbconns(conn);
+//			dvt.setDbConnection(dpo);
+//			dvt.setLock(isLock);
+//			
+//			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
+//			ObservableList<SheetFieldPo> colss = dvt.getColss();
+//			  
+//			//缓存
+//			// 查询的 的语句可以被修改
+//			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
+//			
+//			//根据表名获取tablepo对象
+////			List<String> keys = findPrimaryKeys(conn, tableName);
+//			// table 添加列和数据 
+//			// 表格添加列
+//			var ls = SdkComponent.createTableColForInfo( colss);
+//			// 设置 列的 右键菜单
+//			SqlExecuteOption.setDataTableContextMenu(ls, colss);
+//			table.getColumns().addAll(ls);
+//			table.setItems(allRawData);   
+//			// 渲染界面
+//			if (!thread.isInterrupted()) {
+//				if(hasOut(fields)) {
+//					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, true);
+//					SqlExecuteOption.rmWaitingPane( isRefresh );
+//					mtd.show();
+//				
+//				}else {
+//					msg = "ok. ";
+//				}
+//			}
+//		} catch (Exception e) { 
+//			e.printStackTrace(); 
+//			msg = "failed : " + e.getMessage();
+////			if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
+////				msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
+////			}  
+//			msg += "\n"+dpo.translateErrMsg(msg);
+//		}
+//		
+//		if(StrUtils.isNotNullOrEmpty(msg)) {
+//			ObservableList<StringProperty> val = FXCollections.observableArrayList();
+//			val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+//			val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
+//			int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
+//			val.add(CommonUtility.createReadOnlyStringProperty("call procedure "+ sqlstr.subSequence(0, endIdx) + " ... ")); 
+//			val.add(CommonUtility.createReadOnlyStringProperty("" ));
+//			ddlDmlpo.addData(val);
+//			showExecuteSQLInfo(ddlDmlpo);
+//		}
+//	}
+	
 
-			
-			}
-
-		}
-	}
-	
-	private static boolean hasOut(List<ProcedureFieldPo> fields) {
-		if(fields != null && fields.size() > 0) {
-			for(ProcedureFieldPo po : fields) {
-				if(po.isOut()) {
-					return true;
-				}
-			}
-		}
-		
-		return false;
-	}
-
-	private static void procedureAction(String sql, SqluckyConnector dpo, List<ProcedureFieldPo> fields) throws Exception {
-		String msg = "";
-		Connection conn = dpo.getConn();
-		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
-		try { 
-			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
-			// 获取表名
-			String tableName = sql; 
-//			ParseSQL.tabName(sql);
-			
-			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			SheetDataValue dvt = new SheetDataValue();
-			//TODO callProcedure
-			SelectDao.callProcedure(conn, sql, table.getId(), dvt, fields );
-			
-			DataViewContainer.setTabRowWith(table, dvt.getRawData().size());
-			
-			String connectName = DBConns.getCurrentConnectName();
-			dvt.setSqlStr(sql);
-			dvt.setTable(table);
-			dvt.setTabName(tableName);
-			dvt.setConnName(connectName);
-//			dvt.setDbconns(conn);
-			dvt.setDbConnection(dpo);
-			dvt.setLock(isLock);
-			
-			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
-			ObservableList<SheetFieldPo> colss = dvt.getColss();
-			  
-			//缓存
-			// 查询的 的语句可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
-			
-			//根据表名获取tablepo对象
-//			List<String> keys = findPrimaryKeys(conn, tableName);
-			// table 添加列和数据 
-			// 表格添加列
-			var ls = SdkComponent.createTableColForInfo( colss);
-			// 设置 列的 右键菜单
-			setDataTableContextMenu(ls, colss);
-			table.getColumns().addAll(ls);
-			table.setItems(allRawData);   
-			// 渲染界面
-			if (!thread.isInterrupted()) {
-				if(hasOut(fields)) {
-					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, true);
-					rmWaitingPane( isRefresh );
-					mtd.show();
-				
-				}else {
-					msg = "ok. ";
-				}
-			}
-		} catch (Exception e) { 
-			e.printStackTrace(); 
-			msg = "failed : " + e.getMessage();
-//			if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
-//				msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
-//			}  
-			msg += "\n"+dpo.translateErrMsg(msg);
-		}
-		
-		if(StrUtils.isNotNullOrEmpty(msg)) {
-			ObservableList<StringProperty> val = FXCollections.observableArrayList();
-			val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-			val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
-			int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
-			val.add(CommonUtility.createReadOnlyStringProperty("call procedure "+ sqlstr.subSequence(0, endIdx) + " ... ")); 
-			val.add(CommonUtility.createReadOnlyStringProperty("" ));
-			ddlDmlpo.addData(val);
-			showExecuteSQLInfo(ddlDmlpo);
-		}
-	}
-	
-	
-	private static void selectAction(String sql, SqluckyConnector dpo ) throws Exception {
-		try { 
-		    Connection conn = dpo.getConn();
-			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
-			
-		    // 获取表名
-			String tableName = ParseSQL.tabName(sql);
-			if(StrUtils.isNullOrEmpty(tableName)) {
-				tableName = "Table Name Not Finded";
-			}
-			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			SheetDataValue sheetDaV = new SheetDataValue();
-			sheetDaV.setDbConnection(dpo); 
-			String connectName = DBConns.getCurrentConnectName();
-			sheetDaV.setSqlStr(sql);
-			sheetDaV.setTable(table);
-			sheetDaV.setTabName(tableName);
-			sheetDaV.setConnName(connectName);
-			sheetDaV.setLock(isLock);
-
-			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV); 
-			DataViewContainer.setTabRowWith(table, sheetDaV.getRawData().size()); 
-			
-			ObservableList<ObservableList<StringProperty>> allRawData = sheetDaV.getRawData();
-			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
-			  
-			//缓存
-			sheetDaV.setTable(table);
-			// 查询的 的语句可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
-			
-			//根据表名获取tablepo对象
-			List<String> keys = findPrimaryKeys(conn, tableName);
-			// table 添加列和数据 
-			// 表格添加列
-			var tableColumns = createTableColForSqlData( colss, keys , sheetDaV); 
-			// 设置 列的 右键菜单
-			setDataTableContextMenu(tableColumns, colss);
-			table.getColumns().addAll(tableColumns);
-			table.setItems(allRawData);  
-
-			// 列顺序重排
-			CacheDataTableViewShapeChange.colReorder(sheetDaV.getTabName(), colss, table);
-			// 渲染界面
-			if (!thread.isInterrupted()) {
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(sheetDaV, tidx, false);
-				rmWaitingPane( isRefresh);
-				mtd.show();
-				// 水平滚顶条位置设置和字段类型
-				CacheDataTableViewShapeChange.setDataTableViewShapeCache(sheetDaV.getTabName(), sheetDaV.getTable(), colss); 		
-			}
-		} catch (Exception e) { 
-			e.printStackTrace();
-			throw e;
-		}
-	}
-	
-	
-	// 根据表名获取表的主键字段名称集合
-	private static List<String> findPrimaryKeys(Connection conn, String tableName ){
-		
-		String schemaName = "";
-		List<String> keys = new ArrayList<>();
-		String tempTableName = tableName;
-		if(tableName.contains(".")) {
-			String[] arrs = tableName.split("\\.");
-			schemaName = arrs[0];
-			tempTableName = arrs[1];
-		}
-		TreeNodePo tnp = DBinfoTree.getSchemaTableNodePo(schemaName);
-		if(tnp != null && tnp.getConnItem() != null && tnp.getConnItem().getTableNode() !=null) {
-			ConnItemDbObjects ci =tnp.getConnItem(); 
-			ObservableList<TreeItem<TreeNodePo>>  tabs = ci.getTableNode().getChildren(); 
-			for(TreeItem<TreeNodePo> node: tabs) {
-				if(node.getValue().getName().toUpperCase().equals(tempTableName.toUpperCase())) { 
-					keys = getKeys(conn, node);
-				}
-			}
-		} 
-		return keys;
-	}
-	
-	private static List<String>  getKeys( Connection conn, TreeItem<TreeNodePo> node){
-		List<String> keys = new ArrayList<>(); 
-		try {
-			ArrayList<TablePrimaryKeysPo> pks = node.getValue().getTable().getPrimaryKeys();
-			if(pks == null || pks.size() == 0) {
-				Dbinfo.fetchTablePrimaryKeys(conn, node.getValue().getTable()); 
-			} 
-			pks = node.getValue().getTable().getPrimaryKeys();
-			if(pks !=null ) {
-				for(TablePrimaryKeysPo kp : pks ) {
-					keys.add(kp.getColumnName());
-				} 
-			} 
-		} catch (Exception e) { 
-			e.printStackTrace();
-		}
-		
-		return keys;
-	}
  
 	// 在子线程执行 运行sql 的任务
 	public static Thread createThread(Consumer<Long> action , Long statusKey) {
@@ -683,59 +520,7 @@ public class RunSQLHelper {
 		}
 	}
 
-	// table 添加列
-	private static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableColForSqlData( ObservableList<SheetFieldPo> cols,  List<String> keys  , SheetDataValue dvt) {
-		int len = cols.size();
-		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList = FXCollections.observableArrayList();
-		for (int i = 0; i < len; i++) {
-			String colname = cols.get(i).getColumnLabel().get();
-			FilteredTableColumn<ObservableList<StringProperty>, String> col = null;
-			 
-			boolean iskey = false;
-			if(keys != null) {
-				if(keys.contains(colname)) {
-					iskey = true;
-				}
-			}
-			col = createColumnForSqlData(colname, i , iskey , dvt);
-			 
-			colList.add(col);
-		}
-		
-		return colList;
-	}
-	// 设置 列的 右键菜单
-	private static void setDataTableContextMenu(ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>>  colList , ObservableList<SheetFieldPo> cols) {
-		int len = cols.size();
-		for (int i = 0; i < len; i++) {
-			FilteredTableColumn<ObservableList<StringProperty>, String> col = colList.get(i);
-			String colname = cols.get(i).getColumnLabel().get();
-			int type = cols.get(i).getColumnType().get();
-			// 右点菜单
-			ContextMenu cm = DataTableContextMenu.DataTableColumnContextMenu(colname, type, col, i );
-			col.setContextMenu(cm);
-		}
-	}
-	
-	
-	/** 创建列
-	 */
-	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumnForSqlData(
-			String colname, int colIdx, boolean iskey, SheetDataValue dvt ) {
-		FilteredTableColumn<ObservableList<StringProperty>, String> col = SdkComponent.createColumn(colname, colIdx);
-		Label label  =  (Label) col.getGraphic() ;//new Label(); 
-		if(iskey) {// #F0F0F0    1C92FB ##6EB842  #7CFC00
-			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#FF6600")); 
-		} 
-				
-		String tableName = dvt.getTabName();
-		//设置列宽
-		CacheDataTableViewShapeChange.setColWidthByCache(col, tableName, colname); 
-		return col;
-	}
-	
 
-	
 
 
 	
@@ -756,102 +541,9 @@ public class RunSQLHelper {
 
 	
 	
-	private static List<SqlData> epurateSql(String str) {
-		List<SqlData> sds = new ArrayList<>();
-		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = SqluckyEditor.findSQLFromTxt(str);
-		
-		if(sqls.size()> 0) {
-			for (String s : sqls) { 
-				String trimSql = s.trim();
-				if (trimSql.length() > 1) {
-					SqlData sq = new SqlData(trimSql, 0, 0);
-					sds.add(sq); 
-				}
-			}
-		}else {
-			SqlData sq = new SqlData(str, 0,0);
-			sds.add(sq);
-		}
-
-		return sds;
-	}
-
-	// 将sql 字符串根据;分割成多个字符串 并计算其他信息
-	private static List<SqlData> epurateSql(String str, int start) {
-		List<SqlData> sds = new ArrayList<>();
-		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = SqluckyEditor.findSQLFromTxt(str);
-		
-		if(sqls.size()> 0) {
-			for (String s : sqls) { 
-				String trimSql = s.trim();
-				if (trimSql.length() > 1) {
-					SqlData sq = new SqlData(s, start, s.length());
-					sds.add(sq);
-					start +=  s.length()+1; 
-				}
-			}
-		}else {
-			SqlData sq = new SqlData(str, start, str.length());
-			sds.add(sq);
-		}
-
-		return sds;
-	}
 	
-	/**
-	 * 获取要执行的sql, 去除无效的(如-- 开头的)
-	 */
-	public static List<SqlData> willExecSql() {
-		List<SqlData> sds = new ArrayList<>();
-		String str = "";
-		CodeArea code = SqluckyEditor.getCodeArea();
-		// 如果是执行当前行
-		if(isCurrentLine) {
-			try {
-				str = SqluckyEditor.getCurrentLineText();
-			} finally {
-				isCurrentLine = false;
-			} 			
-		}else {
-			str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText(); 
-		}
-		  
-		int start = 0;
-		if (str != null && str.length() > 0) {
-		    start = code.getSelection().getStart();
-		} else {
-			str = SqluckyEditor.getCurrentCodeAreaSQLText();
-		}
-		// 去除注释, 包注释字符串转换为空白字符串
-		str = SqluckyEditor.trimCommentToSpace(str, "--");
-//		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		sds = epurateSql(str, start);
-		return sds;
-	}
 	
-	private static void rmWaitingPane(boolean holdSheet) {
-		SdkComponent.rmWaitingPane();
-		Platform.runLater(()->{
-			if( holdSheet == false) { // 非刷新的， 删除多余的页
-				TabPane dataTab = ComponentGetter.dataTabPane;
-				SdkComponent.deleteEmptyTab(dataTab);
-			}
-		});
-		
-	}
-	private static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
-		Tab v =	SdkComponent.addWaitingPane(tabIdx);
-		Platform.runLater(()->{
-			if( holdSheet == false) { // 非刷新的， 删除多余的页
-				TabPane dataTab = ComponentGetter.dataTabPane;
-				SdkComponent.deleteEmptyTab(dataTab);
-			}
-		});
-		
-		return v;
-	}
+
 		
 }
  
