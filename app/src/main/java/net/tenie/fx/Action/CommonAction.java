@@ -956,7 +956,7 @@ public class CommonAction {
 		public static final int ADD_COLUMN = 3;
 	// 执行导出的sql
 	public static Long execExportSql(String sql, Connection conn, SqluckyConnector dbconnPo) {
-		Long key = RunSQLHelper.runSQLMethodRefresh(dbconnPo, sql, "", false);
+		Long key = RunSQLHelper.refresh(dbconnPo, sql, "", false);
 		return key;
 	}
 	

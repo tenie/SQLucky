@@ -383,38 +383,43 @@ public class CommonUtility {
 		rotateTransition.setAutoReverse(false);
 		rotateTransition.play();
 	}
-	
+	/**
+	 * 添加显示动画, 动画有问题先注释了
+	 * @param node
+	 * @param ms
+	 */
 	public static void fadeTransition(Node node , double ms ) {
 		   // 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
-        FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
-        fadeTransition.setFromValue(0.0);   // 设置起始透明度为1.0，表示不透明
-        fadeTransition.setToValue(1.0);     // 设置结束透明度为0.0，表示透明
-        fadeTransition.setCycleCount(1);     // 设置循环周期为无限
-        fadeTransition.setAutoReverse(true);    // 设置自动反转
-        fadeTransition.setNode(node);         // 设置动画应用的节点
-        fadeTransition.play();                  // 播放动画 
+//        FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
+//        fadeTransition.setFromValue(0.0);   // 设置起始透明度为1.0，表示不透明
+//        fadeTransition.setToValue(1.0);     // 设置结束透明度为0.0，表示透明
+//        fadeTransition.setCycleCount(1);     // 设置循环周期为无限
+//        fadeTransition.setAutoReverse(true);    // 设置自动反转
+//        fadeTransition.setNode(node);         // 设置动画应用的节点
+//        fadeTransition.play();                  // 播放动画 
 	}
+	// 对节点实验隐藏动画, 动画有问题, 先注释了
 	public static FadeTransition fadeTransitionHidden(Node node , double ms ) {
 		   // 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
      FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
-     fadeTransition.setFromValue(1);   // 设置起始透明度为1.0，表示不透明
-     fadeTransition.setToValue(0);     // 设置结束透明度为0.0，表示透明
-     fadeTransition.setCycleCount(1);     // 设置循环周期为无限
-     fadeTransition.setAutoReverse(true);    // 设置自动反转
-     fadeTransition.setNode(node);         // 设置动画应用的节点
-     fadeTransition.play();                  // 播放动画 
+//     fadeTransition.setFromValue(1);   // 设置起始透明度为1.0，表示不透明
+//     fadeTransition.setToValue(0);     // 设置结束透明度为0.0，表示透明
+//     fadeTransition.setCycleCount(1);     // 设置循环周期为无限
+//     fadeTransition.setAutoReverse(true);    // 设置自动反转
+//     fadeTransition.setNode(node);         // 设置动画应用的节点
+//     fadeTransition.play();                  // 播放动画 
      return fadeTransition;
 	}
-	
+	// 对节点实验隐藏动画, 动画有问题, 先注释了
 	public static FadeTransition fadeTransitionHidden(Node node , double ms, double val) {
 		   // 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
 		  FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
-		  fadeTransition.setFromValue(1);   // 设置起始透明度为1.0，表示不透明
-		  fadeTransition.setToValue(val);     // 设置结束透明度为0.0，表示透明
-		  fadeTransition.setCycleCount(1);     // 设置循环周期为无限
-		  fadeTransition.setAutoReverse(true);    // 设置自动反转
-		  fadeTransition.setNode(node);         // 设置动画应用的节点
-		  fadeTransition.play();                  // 播放动画 
+//		  fadeTransition.setFromValue(1);   // 设置起始透明度为1.0，表示不透明
+//		  fadeTransition.setToValue(val);     // 设置结束透明度为0.0，表示透明
+//		  fadeTransition.setCycleCount(1);     // 设置循环周期为无限
+//		  fadeTransition.setAutoReverse(true);    // 设置自动反转
+//		  fadeTransition.setNode(node);         // 设置动画应用的节点
+//		  fadeTransition.play();                  // 播放动画 
 		  return fadeTransition;
 	}
 	

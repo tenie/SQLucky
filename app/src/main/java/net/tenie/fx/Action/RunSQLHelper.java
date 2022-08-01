@@ -34,6 +34,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.sqlExecute.ProcedureAction;
+import net.tenie.fx.Action.sqlExecute.RunSqlStatePo;
 import net.tenie.fx.Action.sqlExecute.SelectAction;
 import net.tenie.fx.Action.sqlExecute.SqlExecuteOption;
 import net.tenie.fx.Po.SqlData;
@@ -49,7 +50,6 @@ public class RunSQLHelper {
 	
 	// 执行状态, 失败赋值为0， 成功为1
 	public static Map<Long, Integer> RUN_STATUS = new HashMap<>();
-//	RUN_STATUS = -1;
 	
 	private static Logger logger = LogManager.getLogger(RunSQLHelper.class);
 	private static Thread thread;
@@ -57,25 +57,9 @@ public class RunSQLHelper {
 	private static JFXButton runLinebtn;
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
-
-	
-	
 	
 	ExecutorService service = Executors.newFixedThreadPool(1);
-	// 新tab页插入的位置
-	private static int tidx = -1;
-	
-	// 参数
-	private static String sqlstr = null; 
-	private static String tabIdx = null;
-	private static Boolean isCreateFunc = null;
-	private static SqluckyConnector dpo = null;
-	private static Boolean isRefresh = false;
-	private static boolean isLock =false;
-	private static boolean isCallFunc = false;
-	private static List<ProcedureFieldPo> callProcedureFields = null;
-	
-	private static boolean isCurrentLine = false; 
+	private static SqluckyConnector tmpSqlConn;
 	
 	// 获取执行状态，成功或失败
 	public static Integer runStatus(Long key) {
@@ -88,26 +72,24 @@ public class RunSQLHelper {
 		return val;
 	}
 	
-  
-	
-	
-	
 	@SuppressWarnings("restriction")
-	private static void runMain(Long statusKey) {	 
-		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
-			tidx = Integer.valueOf(tabIdx);
-		}else {
-			tidx = -1;
-		}
-		
+	private static void runMain( RunSqlStatePo state) {	 
+		tmpSqlConn = state.getSqlConn();
+//		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
+//			tidx = Integer.valueOf(tabIdx);
+//		}else {
+//			tidx = -1;
+//		}
+//		
 		// 等待加载动画
-		SqlExecuteOption.addWaitingPane( tidx, isRefresh);
+		SqlExecuteOption.addWaitingPane( state.getTidx(), state.getIsRefresh());
 		List<SqlData> allsqls = new ArrayList<>();
 		try {
 			// 获取sql 语句 
+			String sqlstr = state.getSqlStr();
 			//执行创建存储过程函数, 触发器等
-			if( isCreateFunc ) { 
-				if (StrUtils.isNotNullOrEmpty(sqlstr)) {
+			if( state.getIsCreateFunc() ) { 
+				if (StrUtils.isNotNullOrEmpty( sqlstr )) {
 					SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
 					allsqls.add(sq );
 				}else {
@@ -120,27 +102,26 @@ public class RunSQLHelper {
 				allsqls = SqlExecuteOption.epurateSql(sqlstr);
 			} else { 
 				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
-				allsqls = SqlExecuteOption.willExecSql(isCurrentLine);
+				allsqls = SqlExecuteOption.willExecSql( state.getIsCreateFunc());
 			}
 			// 执行sql
-			var rsVal = execSqlList(allsqls, dpo);
+			var rsVal = execSqlList(allsqls,  state.getSqlConn(), state);
 			
 			// 执行sql的状态保存
-			if(statusKey != null) RUN_STATUS.put(statusKey, rsVal);
+			if(state.getStatusKey() != null) RUN_STATUS.put(state.getStatusKey(), rsVal);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-//			rmWaitingPane();
 			settingBtn();
-			callProcedureFields = null;
-			isCallFunc =false;
+			 state.setCallProcedureFields(null)  ;
+			 state.setIsCallFunc(false);  
 		}
 		
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static Integer execSqlList(List<SqlData> allsqls,  SqluckyConnector dpo) throws SQLException {
+	private static Integer execSqlList(List<SqlData> allsqls,  SqluckyConnector dpo, RunSqlStatePo state) throws SQLException {
 		Integer rsVal = 1;
 		String sqlstr;
 		String sql;
@@ -155,10 +136,10 @@ public class RunSQLHelper {
 			int type = ParseSQL.parseType(sql);
 			String msg = "";
 			try {
-				if( isCallFunc ) { // 调用存储过程  
-					ProcedureAction.procedureAction(sql, dpo ,  callProcedureFields, tidx,isLock, thread, isRefresh );
+				if( state.getIsCallFunc() ) { // 调用存储过程  
+					ProcedureAction.procedureAction(sql, dpo ,  state.getCallProcedureFields(), state.getTidx(), state.getIsLock(), thread, state.getIsRefresh() );
 				}else if (type == ParseSQL.SELECT) { // 调用查询
-					SelectAction.selectAction(sql, dpo, tidx, isLock, thread, isRefresh);
+					SelectAction.selectAction(sql, dpo, state.getTidx(), state.getIsLock(), thread, state.getIsRefresh());
 				} else {
 						if (type == ParseSQL.UPDATE) {
 							msg = DmlDdlDao.updateSql2(conn, sql);
@@ -201,9 +182,7 @@ public class RunSQLHelper {
 					Platform.runLater(()->{
 						CommonAction.showNotifiaction(msgVal);
 						SqlExecuteOption.rmWaitingPane(true);
-//						rmWaitingPaneHold();
 					});
-					
 				}else {
 					// 显示字段是只读的
 					ObservableList<StringProperty> val = FXCollections.observableArrayList();
@@ -213,7 +192,6 @@ public class RunSQLHelper {
 					val.add(CommonUtility.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
 					val.add(CommonUtility.createReadOnlyStringProperty("" + i));
 					ddlDmlpo.addData(val);
-
 				}
 			}
 
@@ -221,7 +199,7 @@ public class RunSQLHelper {
 		// 如果 ddlDmlpo 中有 msg的信息 就会显示到界面上
 		SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, thread);
 		// 如果是执行的界面上的sql, 那么对错误的sql渲染为红色
-		if (StrUtils.isNullOrEmpty(RunSQLHelper.sqlstr)) {
+		if (StrUtils.isNullOrEmpty(state.getSqlStr())) {
 			Platform.runLater(() -> { 
 				if (errObj.size() > 0) {
 					for (SqlData sd : errObj) {
@@ -234,102 +212,14 @@ public class RunSQLHelper {
 		return rsVal;
 	}
 	
-	
-	
-//	private static boolean hasOut(List<ProcedureFieldPo> fields) {
-//		if(fields != null && fields.size() > 0) {
-//			for(ProcedureFieldPo po : fields) {
-//				if(po.isOut()) {
-//					return true;
-//				}
-//			}
-//		}
-//		
-//		return false;
-//	}
-
-//	private static void procedureAction(String sql, SqluckyConnector dpo, List<ProcedureFieldPo> fields) throws Exception {
-//		String msg = "";
-//		Connection conn = dpo.getConn();
-//		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
-//		try { 
-//			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
-//			// 获取表名
-//			String tableName = sql; 
-////			ParseSQL.tabName(sql);
-//			
-//			logger.info("tableName= " + tableName + "\n sql = " + sql);
-//			SheetDataValue dvt = new SheetDataValue();
-//			//TODO callProcedure
-//			SelectDao.callProcedure(conn, sql, table.getId(), dvt, fields );
-//			
-//			DataViewContainer.setTabRowWith(table, dvt.getRawData().size());
-//			
-//			String connectName = DBConns.getCurrentConnectName();
-//			dvt.setSqlStr(sql);
-//			dvt.setTable(table);
-//			dvt.setTabName(tableName);
-//			dvt.setConnName(connectName);
-////			dvt.setDbconns(conn);
-//			dvt.setDbConnection(dpo);
-//			dvt.setLock(isLock);
-//			
-//			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
-//			ObservableList<SheetFieldPo> colss = dvt.getColss();
-//			  
-//			//缓存
-//			// 查询的 的语句可以被修改
-//			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
-//			
-//			//根据表名获取tablepo对象
-////			List<String> keys = findPrimaryKeys(conn, tableName);
-//			// table 添加列和数据 
-//			// 表格添加列
-//			var ls = SdkComponent.createTableColForInfo( colss);
-//			// 设置 列的 右键菜单
-//			SqlExecuteOption.setDataTableContextMenu(ls, colss);
-//			table.getColumns().addAll(ls);
-//			table.setItems(allRawData);   
-//			// 渲染界面
-//			if (!thread.isInterrupted()) {
-//				if(hasOut(fields)) {
-//					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, true);
-//					SqlExecuteOption.rmWaitingPane( isRefresh );
-//					mtd.show();
-//				
-//				}else {
-//					msg = "ok. ";
-//				}
-//			}
-//		} catch (Exception e) { 
-//			e.printStackTrace(); 
-//			msg = "failed : " + e.getMessage();
-////			if(dpo.getDbVendor().toUpperCase().equals( DbVendor.db2.toUpperCase())) {
-////				msg += "\n"+Db2ErrorCode.translateErrMsg(msg);
-////			}  
-//			msg += "\n"+dpo.translateErrMsg(msg);
-//		}
-//		
-//		if(StrUtils.isNotNullOrEmpty(msg)) {
-//			ObservableList<StringProperty> val = FXCollections.observableArrayList();
-//			val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-//			val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
-//			int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
-//			val.add(CommonUtility.createReadOnlyStringProperty("call procedure "+ sqlstr.subSequence(0, endIdx) + " ... ")); 
-//			val.add(CommonUtility.createReadOnlyStringProperty("" ));
-//			ddlDmlpo.addData(val);
-//			showExecuteSQLInfo(ddlDmlpo);
-//		}
-//	}
-	
 
  
 	// 在子线程执行 运行sql 的任务
-	public static Thread createThread(Consumer<Long> action , Long statusKey) {
+	public static Thread createThread(Consumer<RunSqlStatePo> action ,  RunSqlStatePo state) {
 		return new Thread() {
 			public void run() {
 				logger.info("线程启动了" + this.getName()); 
-				action.accept(statusKey);
+				action.accept(state);
 				logger.info("线程结束了" + this.getName());
 			}
 		};
@@ -359,15 +249,12 @@ public class RunSQLHelper {
 		stop.setDisable(stopt);
 	} 
 
-//    检查db连接状态
+	//    检查db连接状态
 	private static boolean checkDBconn() {
 		ComboBox<Label> conns = ComponentGetter.connComboBox;
-
 		boolean warn = false;
-//	    	logger.info(conns.getValue() );
 		if (conns.getValue() == null || StrUtils.isNullOrEmpty(conns.getValue().getText())) {
 			warn = true;
-//			MyAlert.errorAlert( "please , choose alive DB connection!");
 			MyAlert.notification("Error", "Please , choose alive DB connection!", MyAlert.NotificationType.Error);
 			return warn;
 		} 
@@ -375,76 +262,70 @@ public class RunSQLHelper {
 		SqluckyConnector po = DBConns.get(val);
 		if (po == null || !po.isAlive()) {
 			warn = true;
-//			MyAlert.errorAlert( "please ,  connect DB !");
 			MyAlert.notification("Error", "Please ,  connect DB !", MyAlert.NotificationType.Error);
-			
 		}
 		return warn;
 	}
 
  
 
-	// 获取当前执行面板中的连接
-	public static Connection getComboBoxDbConn() {
-		String connboxVal = ComponentGetter.connComboBox.getValue().getText();
-		if (StrUtils.isNullOrEmpty(connboxVal))
-			return null;
-		Connection conn = DBConns.get(connboxVal).getConn();
-		return conn;
-	}
-	
 
-	public static Long runSQLMethodRefresh(SqluckyConnector dpov , String sqlv, String tabIdxv, boolean isLockv ) {
+	// 刷新
+	public static Long refresh(SqluckyConnector sqlConn , String sqlv, String tabIdxv, boolean isLockv ) {
 		Long statusKey =  CommonUtility.dateTime();
 		 
 		RUN_STATUS.put(statusKey, -1);
 		 
 		settingBtn();
 		SdkComponent.showDetailPane();
+		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
+//		state.setSqlstr(sqlv);
+//		state.setSqlConn(dpov);
+		state.setTidx(tabIdxv);
+		state.setIsRefresh(true);
+		state.setIsLock(isLockv);
+		state.setStatusKey(statusKey);
 		
-	    sqlstr = sqlv;
-	    dpo = dpov; 
-	    tabIdx = tabIdxv;
-	    isCreateFunc = false;
-	    isRefresh = true;
-	    isLock = isLockv;
-	    isCallFunc = false;
+//		state.setIsCreateFunc(false);
+//		state.setIsCallFunc(false);
+		
+		
+//	    sqlstr = sqlv;
+//	    dpo = dpov; 
+//	    tabIdx = tabIdxv;
+//	    isCreateFunc = false;
+//	    isRefresh = true;
+//	    isLock = isLockv;
+//	    isCallFunc = false;
 	    
-		thread = createThread( RunSQLHelper::runMain, statusKey);
+		thread = createThread( RunSQLHelper::runMain, state);
 		thread.start();
 		return statusKey;
 	}
 
-
-	// 运行 sql 入口
-//	public static void runSQLMethodRefresh(SqluckyConnector dpov , String sqlv, String tabIdxv, boolean isLockv ) {
-//		runSQLMethodRefreshByStatus(dpov, sqlv, tabIdxv, isLockv, null );
-//	}
 	//TODO runCurrentLineSQLMethod
 	public static void runCurrentLineSQLMethod() {
-		isCurrentLine = true;
-		runSQLMethod(  null, null, false);
+		Boolean isCurrentLine = true;
+		runSQLMethod(  null, null, false, isCurrentLine);
 	}
 	
 	public static void runSQLMethod() {
-		runSQLMethod(  null, null, false);
+		runSQLMethod(  null, null, false, null);
 	}
 
 	public static void runFuncSQLMethod( ) {
-		runSQLMethod(  null, null, true);
+		runSQLMethod(  null, null, true, null);
 	}
 	
-	public static void callProcedure( String sqlv, SqluckyConnector dpov , List<ProcedureFieldPo> fields ) {
+	public static void callProcedure( String sqlv, SqluckyConnector sqlConn , List<ProcedureFieldPo> fields ) {
 		if (checkDBconn())
 			return; 
-		Connection connv = dpov.getConn();
+		Connection connv = sqlConn.getConn();
 		try {
 			if (connv == null) {
 				return;
 			} else if (connv.isClosed()) {
-//				MyAlert.errorAlert( "Connect is Closed!");
 				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -453,31 +334,42 @@ public class RunSQLHelper {
 
 		settingBtn();
 		SdkComponent.showDetailPane();
+
+		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
+//		state.setSqlstr(sqlv);
+//		state.setSqlConn(dpov);
+		state.setIsCallFunc(true);
+		state.setCallProcedureFields(fields);
+
+//		state.setIsCreateFunc(false);
+//		state.setIsRefresh(false);
+//		state.setIsLock(false);
+//		state.setTidx(null);
 		
-	    sqlstr = sqlv;
-	    dpo = dpov; 
-	    tabIdx = null;
-	    isCreateFunc = false;
-	    isRefresh = false;
-	    isLock = false;  
-	    isCallFunc = true;
+		
+//	    sqlstr = sqlv;
+//	    dpo = dpov; 
+//	    tabIdx = null;
+//	    isCreateFunc = false;
+//	    isRefresh = false;
+//	    isLock = false;  
+//	    isCallFunc = true;
 	    //TODO
-	    callProcedureFields = fields;
+//	    callProcedureFields = fields;
 	    
-		thread = createThread( RunSQLHelper::runMain, null);
+		thread = createThread( RunSQLHelper::runMain, state);
 		thread.start();
 	}
 	
-	public static void runSQLMethod( String sqlv, String tabIdxv, boolean isFuncv) {
+	public static void runSQLMethod( String sqlv, String tabIdxv, boolean isFuncv, Boolean isCurrentLine) {
 		if (checkDBconn())
 			return;
-		SqluckyConnector dpov = CommonAction.getDbConnectionPoByComboBoxDbConnName();
-		Connection connv = dpov.getConn();
+		SqluckyConnector sqlConn = CommonAction.getDbConnectionPoByComboBoxDbConnName();
+		Connection connv = sqlConn.getConn();
 		try {
 			if (connv == null) {
 				return;
 			} else if (connv.isClosed()) {
-//				MyAlert.errorAlert("Connect is Closed!" );
 				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
 			}
 		} catch (Exception e) {
@@ -488,63 +380,43 @@ public class RunSQLHelper {
 		settingBtn();
 		SdkComponent.showDetailPane();
 		
-	    sqlstr = sqlv;
-	    dpo = dpov; 
-	    tabIdx = tabIdxv;
-	    isCreateFunc = isFuncv;
-	    isRefresh = false;
-	    isLock = false; 
-	    isCallFunc = false;
+		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
+//		state.setSqlstr(sqlv);
+//		state.setDpo(sqlConn);
+		state.setTidx(tabIdxv);
+		if(isCurrentLine !=null ) {
+			state.setIsCurrentLine(isCurrentLine);
+		}
+		
+
+//		state.setIsCreateFunc(false);
+//		state.setIsRefresh(false);
+//		state.setIsLock(false);
+//		state.setIsCallFunc(false);
+		
+//	    sqlstr = sqlv;
+//	    dpo = dpov; 
+//	    tabIdx = tabIdxv;
+//	    isCreateFunc = isFuncv;
+//	    isRefresh = false;
+//	    isLock = false; 
+//	    isCallFunc = false;
 	    
-		thread = createThread( RunSQLHelper::runMain, null);
+		thread = createThread( RunSQLHelper::runMain, state);
 		thread.start();
 	}
 
- 
 
 	// stop 入口
 	public static void stopSQLMethod() {
 		if (thread != null && !stopbtn.disabledProperty().getValue()) { 
 			thread.interrupt();
 			logger.info("线程是否被中断：" + thread.isInterrupted());// true
-			dpo.closeConn();
-			dpo.getConn();
-//			settingBtn(runbtn, true, stopbtn, false, otherbtn);
-//		
-//			if (thread.isInterrupted()) {
-//				settingBtn(runbtn, true, stopbtn, false, otherbtn);
-//			}else {
-//				dpo.closeConn();
-//				dpo.getConn();
-//			}
+			tmpSqlConn.closeConn();
+			tmpSqlConn.getConn();
 		}
 	}
 
-
-
-
-	
-	// 等待加载动画 页面, 删除不要的页面, 保留 锁定的页面
-//	private static Tab addWaitingPane( int tabIdx) {
-//		Platform.runLater(() -> {
-//			TabPane dataTab = ComponentGetter.dataTabPane;
-//			if (tabIdx > -1) {
-//				dataTab.getTabs().add(tabIdx, waitTb);
-//			} else {
-//				dataTab.getTabs().add(waitTb);
-//			}
-//			dataTab.getSelectionModel().select(waitTb);
-//			
-//		});
-//	    return waitTb;
-//	}
-
-	
-	
-	
-	
-
-		
 }
  
 

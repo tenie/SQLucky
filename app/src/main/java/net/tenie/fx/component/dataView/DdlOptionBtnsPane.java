@@ -36,7 +36,7 @@ public class DdlOptionBtnsPane extends  AnchorPane{
 			saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
 			saveBtn.setOnMouseClicked(e -> { 
 				//TODO 保存存储过程
-				RunSQLHelper.runSQLMethod(mytb.getSqlArea().getCodeArea().getText(), null, true);
+				RunSQLHelper.runSQLMethod(mytb.getSqlArea().getCodeArea().getText(), null, true, null);
 				saveBtn.setDisable(true);
 				
 			});
@@ -93,7 +93,7 @@ public class DdlOptionBtnsPane extends  AnchorPane{
 						caller = x -> {
 							SqluckyConnector dpo = DBConns.getCurrentConnectPO();
 							String sql = dpo.getExportDDL().exportCallFuncSql(x);
-							RunSQLHelper.runSQLMethodRefresh(dpo, sql, null, false);
+							RunSQLHelper.refresh(dpo, sql, null, false);
 						};
 						ModalDialog.showExecWindow("Run function",  name + "()", caller);
 					}

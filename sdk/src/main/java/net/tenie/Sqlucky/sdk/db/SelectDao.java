@@ -300,26 +300,15 @@ public class SelectDao {
 					val = new SimpleStringProperty("<null>");
 				}else {
 					if (CommonUtility.isDateTime(dbtype)) {
-						//sqlite 
-//						if(dpo.isSqlite()) {
-//							var v = rs.getString(i + 1);
-//							val = new SimpleStringProperty(v);
-//						}else {
-//							java.sql.Date dv= rs.getDate(i + 1);
-//							Date d = new Date(dv.getTime());
-//							String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
-//							val = new SimpleStringProperty(v);
-//						}
-					if(dpo != null ) {
-						val = 	dpo.DateToStringStringProperty(rs.getObject(i + 1));
-					}else {
-						//TODO dpo null 的情况下
-						Date dv = (Date) rs.getObject(i + 1);
-						String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-					    val = new SimpleStringProperty(v);
-					}
-						
-						
+						if (dpo != null) {
+							val = dpo.DateToStringStringProperty(rs.getObject(i + 1));
+						} else {
+							// TODO dpo null 的情况下
+							Date dv = (Date) rs.getObject(i + 1);
+							String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+							val = new SimpleStringProperty(v);
+						}
+
 					} else {
 						String temp = rs.getString(i+1);
 						val = new SimpleStringProperty(temp); 

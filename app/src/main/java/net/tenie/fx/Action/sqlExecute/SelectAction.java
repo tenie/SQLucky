@@ -33,11 +33,11 @@ import net.tenie.fx.config.DBConns;
 public class SelectAction {
 
 	private static Logger logger = LogManager.getLogger(SelectAction.class);
-	private static Thread staticThread;
+//	private static Thread staticThread;
 	
 	public static void selectAction(String sql, SqluckyConnector dpo , int tidx, boolean isLock, Thread thread, boolean isRefresh) throws Exception {
 		try { 
-			staticThread = thread;
+//			staticThread = thread;
 		    Connection conn = dpo.getConn();
 			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
 			
