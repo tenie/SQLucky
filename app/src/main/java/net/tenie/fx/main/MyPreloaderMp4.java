@@ -1,6 +1,7 @@
 package net.tenie.fx.main;
 
 import javafx.animation.FadeTransition;
+import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.application.Preloader.StateChangeNotification.Type;
 import javafx.scene.Cursor;
@@ -38,11 +39,15 @@ public class MyPreloaderMp4 extends Preloader {
 					e1.printStackTrace();
 				}
 			 }
-			 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1200, 0.8);
-			 fadeTransition.setOnFinished(e -> {
+			 Platform.runLater(()->{
 				 preloaderStage.close();
-				  
-			  });
+			 });
+			 // 动画有问题, 先注释了
+//			 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1200, 0.8);
+//			 fadeTransition.setOnFinished(e -> {
+//				 preloaderStage.close();
+//				  
+//			  });
 			
 		}
 		

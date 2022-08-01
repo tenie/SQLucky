@@ -110,8 +110,11 @@ public class SQLucky extends Application {
 		ServiceLoad.callLoad();
 		logger.info("完成初始化"); 
 		
-		MyPreloaderMp4.hiden();
-		MyPreloaderGif.hiden();
+		if(CommonUtility.isLinuxOS()) {
+			MyPreloaderGif.hiden();
+		}else {
+			MyPreloaderMp4.hiden();
+		}
 	}
 	
  

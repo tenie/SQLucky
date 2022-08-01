@@ -30,6 +30,7 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Po.SqlData;
 import net.tenie.fx.Po.TreeNodePo;
@@ -37,6 +38,7 @@ import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.dataView.DataTableContextMenu;
+import net.tenie.fx.config.DBConns;
 
 public class SqlExecuteOption {
 	public static void rmWaitingPane(boolean holdSheet) {
@@ -278,5 +280,13 @@ public class SqlExecuteOption {
 		return sds;
 	}
 
+	// 获取当前执行面板中的连接
+	private static Connection getComboBoxDbConn() {
+		String connboxVal = ComponentGetter.connComboBox.getValue().getText();
+		if (StrUtils.isNullOrEmpty(connboxVal))
+			return null;
+		Connection conn = DBConns.get(connboxVal).getConn();
+		return conn;
+	}
 	
 }

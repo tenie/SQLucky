@@ -51,14 +51,17 @@ public class LoadingAnimation {
 	//	移除loading...
 	public static  void rmLoading(StackPane root) {
 		Platform.runLater(()->{
-			 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(lb, 1500);
-			 fadeTransition.setOnFinished(e ->{
-				 root.getChildren().remove(lb);
-				 root.setCursor(Cursor.DEFAULT);
-				 
-				 lb = null;
-				 Animation = null;
-			 });
+			 root.getChildren().remove(lb);
+			 root.setCursor(Cursor.DEFAULT);
+			
+//			 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(lb, 1500);
+//			 fadeTransition.setOnFinished(e ->{
+//				 root.getChildren().remove(lb);
+//				 root.setCursor(Cursor.DEFAULT);
+//				 
+//				 lb = null;
+//				 Animation = null;
+//			 });
 		});
 		 
 	}
