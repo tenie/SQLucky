@@ -6,7 +6,7 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.layout.AnchorPane;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.MyBottomTab;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -27,7 +27,7 @@ public class DdlOptionBtnsPane extends  AnchorPane{
 	
 	 
 	// TODO 数据表格 操作按钮们
-		public   DdlOptionBtnsPane(MyBottomTab mytb, String ddl, boolean isRunFunc ,boolean isProc, String name ) {
+		public   DdlOptionBtnsPane(MyBottomSheet mytb, String ddl, boolean isRunFunc ,boolean isProc, String name ) {
 		 
 			// 锁 
 			JFXButton lockbtn = SdkComponent.createLockBtn(mytb );

@@ -69,10 +69,6 @@ public class SelectInfoTableDao {
 			std.setExecTime(vt);
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = SelectDao.resultSetMetaData(rs);
-//			ResultSetPo setPo = new ResultSetPo();
-//			// 数据
-//			execRs(rs, fields, dpo, setPo );
-
 			ResultSetPo setPo = selectTableData(rs, fields, dpo);
 			
 			std.setColss(fields);

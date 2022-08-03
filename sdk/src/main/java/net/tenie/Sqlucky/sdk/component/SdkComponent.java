@@ -29,6 +29,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -85,9 +86,9 @@ public class SdkComponent {
 		return tableIdx + "";
 	}
 
-	// 数据展示tableView StringProperty
-	public static FilteredTableView<ObservableList<StringProperty>> creatFilteredTableView() {
-		FilteredTableView<ObservableList<StringProperty>> table = new FilteredTableView<ObservableList<StringProperty>>();
+	// 数据展示tableView StringProperty FilteredTableView<ResultSetRowPo>
+	public static FilteredTableView<ResultSetRowPo> creatFilteredTableView() {
+		FilteredTableView<ResultSetRowPo> table = new FilteredTableView<>();
 
 		table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
 		table.setPlaceholder(new Label());
@@ -110,7 +111,7 @@ public class SdkComponent {
 		table.setId(tableIdx);
 		table.getStyleClass().add("myTableTag");
 
-		FilteredTableColumn<ObservableList<StringProperty>, Number> tc = new FilteredTableColumn<>();
+		FilteredTableColumn<ResultSetRowPo, Number> tc = new FilteredTableColumn<>();
 
 //			tc.setCellValueFactory(cal -> { 
 //				ObservableList<StringProperty> obs = cal.getValue(); 
@@ -123,7 +124,7 @@ public class SdkComponent {
 
 		// 点击 行号, 显示一个 当前行的明细窗口
 		tc.setCellFactory(col -> {
-			TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>() {
+			TableCell<ResultSetRowPo, Number> cell = new TableCell<>() {
 				@Override
 				public void updateItem(Number item, boolean empty) {
 					super.updateItem(item, empty);
@@ -151,26 +152,26 @@ public class SdkComponent {
 	}
 
 	// 创建列
-	public static FilteredTableColumn<ObservableList<StringProperty>, String> createColumn(String colname, int colIdx) {
-		FilteredTableColumn<ObservableList<StringProperty>, String> col = new FilteredTableColumn<ObservableList<StringProperty>, String>();
+	public static FilteredTableColumn<ResultSetRowPo, String> createColumn(String colname, int colIdx) {
+		FilteredTableColumn<ResultSetRowPo, String> col = new FilteredTableColumn<>();
 		col.setCellFactory(MyTextField2TableCell2.forTableColumn());
 		col.setText(colname);
 		Label label = new Label();
 		col.setGraphic(label);
 		// 通过下标从ObservableList 获取对应列显示的字符串值
-		col.setCellValueFactory(new StringPropertyListValueFactory(colIdx));
+		col.setCellValueFactory(new ResultSetCellValueFactory(colIdx));
 		return col;
 	}
-
-	public static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableColForInfo(
+//                ObservableList<FilteredTableColumn<ResultSetRowPo, String>>
+	public static ObservableList<FilteredTableColumn<ResultSetRowPo, String>> createTableColForInfo(
 			ObservableList<SheetFieldPo> cols) {
 		int len = cols.size();
-		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList 
+		ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList 
 			= FXCollections.observableArrayList();
 		for (int i = 0; i < len; i++) {
 			String colname = cols.get(i).getColumnLabel().get();
 			Double colnameWidth = cols.get(i).getColumnWidth();
-			FilteredTableColumn<ObservableList<StringProperty>, String> col = null;
+			FilteredTableColumn<ResultSetRowPo, String> col = null;
 			// isInfo 展示执行信息（错误/成功的信息)
 			col = createColumnForShowInfo(colname, i, colnameWidth);
 			colList.add(col);
@@ -182,59 +183,13 @@ public class SdkComponent {
 	/**
 	 * 创建列
 	 */
-	private static FilteredTableColumn<ObservableList<StringProperty>, String> createColumnForShowInfo(String colname,
+	private static FilteredTableColumn<ResultSetRowPo, String> createColumnForShowInfo(String colname,
 			int colIdx, Double colnameWidth) {
-		FilteredTableColumn<ObservableList<StringProperty>, String> col = SdkComponent.createColumn(colname, colIdx);
+		FilteredTableColumn<ResultSetRowPo, String> col = SdkComponent.createColumn(colname, colIdx);
 		CacheDataTableViewShapeChange.setColWidth(col, colname, colnameWidth);
 		return col;
 	}
-
-	public static void sqlResultShow2(String sql, Connection conn, String tableName, List<Node> nodeList)
-			throws Exception {
-		try {
-			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
-			// 查询的 的语句可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(false));
-
-			// 获取表名
-			if (tableName == null || "".equals(tableName)) {
-				tableName = ParseSQL.tabName(sql);
-				if (StrUtils.isNullOrEmpty(tableName)) {
-					tableName = "Table Name Not Finded";
-				}
-			}
-
-			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			SheetDataValue sheetDaV = new SheetDataValue();
-			sheetDaV.setSqlStr(sql);
-			sheetDaV.setTable(table);
-			sheetDaV.setTabName(tableName);
-			sheetDaV.setLock(false);
-			sheetDaV.setConn(conn);
-
-			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV);
-
-			ObservableList<ObservableList<StringProperty>> allRawData = sheetDaV.getRawData();
-			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
-
-			// table 添加列和数据
-			// 表格添加列
-			var tableColumns = SdkComponent.createTableColForInfo(colss);
-			// 设置 列的 右键菜单
-			table.getColumns().addAll(tableColumns);
-			table.setItems(allRawData);
-
-			// 渲染界面
-
-			SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(sheetDaV, nodeList);
-//			rmWaitingPane();
-			mtd.show();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}
+ 
 
 	/**
 	 * sql 查询结果生成表格
@@ -247,7 +202,7 @@ public class SdkComponent {
 	public static SheetDataValue sqlToSheet(String sql, Connection conn, String tableName, Map<String, Double> fieldWidthMap) {
 
 		try {
-			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
+			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(false));
 
@@ -269,7 +224,7 @@ public class SdkComponent {
 
 			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV);
 
-			ObservableList<ObservableList<StringProperty>> allRawData = sheetDaV.getRawData();
+			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getDataRs().getDatas();
 			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
 
 			if(fieldWidthMap != null ) {
@@ -382,7 +337,7 @@ public class SdkComponent {
 		List<Tab> ls = new ArrayList<>();
 		for(int i = 0; i < dataTab.getTabs().size() ;i++) {
 			Tab tab = dataTab.getTabs().get(i);
-			MyBottomTab nd =  (MyBottomTab) tab.getUserData();
+			MyBottomSheet nd =  (MyBottomSheet) tab.getUserData();
 			if(nd == null) continue;
 			Boolean tf = nd.getTableData().isLock();
 			if(tf != null && tf) {
@@ -513,12 +468,13 @@ public class SdkComponent {
 	/**
 	 * 数据table关闭的时候 
 	 */
-	public static EventHandler<Event> dataTabCloseReq( MyBottomTab tb) {
+	public static EventHandler<Event> dataTabCloseReq( MyBottomSheet tb) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) { 
 				SdkComponent.clearDataTable( tb.getTab());
-				tb.getTableData().clean();
-			
+//				tb.getTableData().clean();
+				
+				tb.clean();
 				
 				 
 			}
