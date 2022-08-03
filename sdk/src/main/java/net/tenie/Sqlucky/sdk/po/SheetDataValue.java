@@ -10,6 +10,7 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 
@@ -29,29 +30,16 @@ public class SheetDataValue {
 	// sql执行时间
 	private double execTime = 0;
 	// 行数
-	private int rows = 0;
-
-	// table id + row num 组成key ,保存对于行的数据
-	private Map<String, ObservableList<StringProperty>> newLineDate;
-	// table id + row num 组成key ,保存对于行的原始数据
-	private Map<String, ObservableList<StringProperty>> oldval ;
-	// 待insert的 数据
-	private Map<String, ObservableList<StringProperty>> appendData ;
-
-	// 列的右键菜单 menuItem
-//	private List<MenuItem> menuItems = new ArrayList<>();
-
+	private int rowSize = 0;
+	
+	// 展示的数据集
+	private ResultSetPo dataRs;
 	// 列
 	private ObservableList<SheetFieldPo> colss;
 	// 数据添加到表格 更简洁的api   , 数据库查询结果的表格原始数据
-	private ObservableList<ObservableList<StringProperty>> rawData;
 	// tab中的表格
-	private FilteredTableView<ObservableList<StringProperty>> dbValTable;
+	private FilteredTableView<ResultSetRowPo> dbValTable;
 	
-	// 一般的信息展示表个数据
-	private ObservableList<ResultSetRowPo> infoTableVals;
-	private FilteredTableView<ResultSetRowPo> infoTable;
-
 	// 操作数据的按钮
 	private List<Node> btnLs ;
 	
@@ -64,27 +52,14 @@ public class SheetDataValue {
 		}
 		dbValTable = null;
 		
-		if(rawData!=null) {
-			rawData.forEach(v -> {
-				v.clear();
-			});
-			rawData.clear();
-		}		
-		rawData = null;
+	 
 		
 		if(colss!=null) {
 			colss.clear();
 		}
 		colss = null;  
 		
-		if(appendData != null) appendData.clear();
-		appendData = null;
-		
-		if(oldval != null) oldval.clear();
-		oldval = null;
-		
-		if(newLineDate != null) newLineDate.clear();
-		newLineDate = null;
+		 
 		
 		if(btnLs != null) btnLs.clear();
 		btnLs = null;
@@ -92,23 +67,24 @@ public class SheetDataValue {
 
  
 
-	public SheetDataValue(FilteredTableView<ObservableList<StringProperty>> table,  String tabName,
+	public SheetDataValue(FilteredTableView<ResultSetRowPo> table,  String tabName,
 			String sqlStr, String connName, ObservableList<SheetFieldPo> colss,
-			ObservableList<ObservableList<StringProperty>> rawData) {
+			ResultSetPo  dataRs) {
 		this.dbValTable = table;
 		this.tabName = tabName;
 		this.sqlStr = sqlStr;
 		this.connName = connName;
 		this.colss = colss;
-		this.rawData = rawData;
+		this.dataRs = dataRs;
 	}
 
-	public SheetDataValue(FilteredTableView<ObservableList<StringProperty>> table, String tabName,
-			ObservableList<SheetFieldPo> colss, ObservableList<ObservableList<StringProperty>> rawData) {
+	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName,
+			ObservableList<SheetFieldPo> colss, 
+			ResultSetPo  dataRs) {
 		this.dbValTable = table;
 		this.tabName = tabName;
 		this.colss = colss;
-		this.rawData = rawData;
+		this.dataRs = dataRs;
 	}
 
 	public SheetDataValue() {
@@ -131,27 +107,13 @@ public class SheetDataValue {
 		this.sqlStr = sqlStr;
 	}
 
-//	public ObservableList<SqlFieldPo> getTabCol() {
-//		return tabCol;
-//	}
 
-//	public void setTabCol(ObservableList<SqlFieldPo> tabCol) {
-//		this.tabCol = tabCol;
-//	}
 
-	public ObservableList<ObservableList<StringProperty>> getRawData() {
-		return rawData;
-	}
-
-	public void setRawData(ObservableList<ObservableList<StringProperty>> rawData) {
-		this.rawData = rawData;
-	}
-
-	public FilteredTableView<ObservableList<StringProperty>> getTable() {
+	public FilteredTableView<ResultSetRowPo> getTable() {
 		return dbValTable;
 	}
 
-	public void setTable(FilteredTableView<ObservableList<StringProperty>> table) {
+	public void setTable(FilteredTableView<ResultSetRowPo> table) {
 		this.dbValTable = table;
 	}
 
@@ -171,38 +133,7 @@ public class SheetDataValue {
 		this.connName = connName;
 	}
 
-	public Map<String, ObservableList<StringProperty>> getNewLineDate() {
-		if(newLineDate == null) {
-			newLineDate = new HashMap<>();
-		}
-		return newLineDate;
-	}
 
-	public void setNewLineDate(Map<String, ObservableList<StringProperty>> newLineDate) {
-		this.newLineDate = newLineDate;
-	}
-
-	public Map<String, ObservableList<StringProperty>> getOldval() {
-		if(oldval == null) {
-			oldval = new HashMap<>();
-		}
-		return oldval;
-	}
-
-	public void setOldval(Map<String, ObservableList<StringProperty>> oldval) {
-		this.oldval = oldval;
-	}
-
-	public Map<String, ObservableList<StringProperty>> getAppendData() {
-		if(appendData == null) {
-			appendData = new HashMap<>();
-		}
-		return appendData;
-	}
-
-	public void setAppendData(Map<String, ObservableList<StringProperty>> appendData) {
-		this.appendData = appendData;
-	}
 
 	public double getExecTime() {
 		return execTime;
@@ -213,20 +144,12 @@ public class SheetDataValue {
 	}
 
 	public int getRows() {
-		return rows;
+		return rowSize;
 	}
 
 	public void setRows(int rows) {
-		this.rows = rows;
+		this.rowSize = rows;
 	}
-
-//	public List<MenuItem> getMenuItems() {
-//		return menuItems;
-//	}
-//
-//	public void setMenuItems(List<MenuItem> menuItems) {
-//		this.menuItems = menuItems;
-//	}
 
 	public boolean isLock() {
 		return isLock;
@@ -262,38 +185,32 @@ public class SheetDataValue {
 		return conn;
 	}
 
-
-
 	public void setConn(Connection conn) {
 		this.conn = conn;
 	}
 
 
 
-	public ObservableList<ResultSetRowPo> getInfoTableVals() {
-		return infoTableVals;
+	public ResultSetPo getDataRs() {
+		return dataRs;
 	}
 
 
 
-	public void setInfoTableVals(ObservableList<ResultSetRowPo> infoTableVals) {
-		this.infoTableVals = infoTableVals;
+	public void setDataRs(ResultSetPo dataRs) {
+		this.dataRs = dataRs;
 	}
 
 
 
-	public FilteredTableView<ResultSetRowPo> getInfoTable() {
-		return infoTable;
+	public FilteredTableView<ResultSetRowPo> getDbValTable() {
+		return dbValTable;
 	}
 
 
 
-	public void setInfoTable(FilteredTableView<ResultSetRowPo> table2) {
-		this.infoTable = table2;
+	public void setDbValTable(FilteredTableView<ResultSetRowPo> dbValTable) {
+		this.dbValTable = dbValTable;
 	}
 
-
- 
-	
-	
 }

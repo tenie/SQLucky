@@ -17,7 +17,7 @@ import net.tenie.Sqlucky.sdk.po.SheetDataValue;
  * @author tenie
  *extends Tab
  */
-public class MyBottomTab  implements SqluckyBottomSheet{
+public class MyBottomSheet  implements SqluckyBottomSheet{
 	public  SqluckyCodeAreaHolder sqlArea;
 	private SheetDataValue tableData;
 	private boolean isDDL = false;
@@ -26,8 +26,27 @@ public class MyBottomTab  implements SqluckyBottomSheet{
 	private int idx;
 	private Tab tab ;
 	 
+	public void clean() {
+		if(sqlArea != null ) {
+			this.sqlArea = null;
+		}
+		if(tableData != null ) {
+			this.tableData.clean();
+			tableData = null;
+		}
+		if(saveBtn != null ) {
+			this.saveBtn = null;
+		}
+		if(detailBtn != null ) {
+			this.detailBtn = null;
+		}
+		if(tab != null ) {
+			this.tab.setContent(null);
+			this.tab = null;
+		}
+	}
 
-	public MyBottomTab(SheetDataValue data, int idx, boolean disable) {
+	public MyBottomSheet(SheetDataValue data, int idx, boolean disable) {
 		tab = new Tab(data.getTabName());
 		this.tableData = data;
 		this.idx = idx;
@@ -37,7 +56,7 @@ public class MyBottomTab  implements SqluckyBottomSheet{
 	}
 	
 
-	public MyBottomTab(String tabName) {
+	public MyBottomSheet(String tabName) {
 		tab =  new Tab(tabName);
 		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
 		tab.setContextMenu(tableViewMenu());
@@ -47,7 +66,7 @@ public class MyBottomTab  implements SqluckyBottomSheet{
 		
 		tab.setUserData(this);
 	}
-	public MyBottomTab( SheetDataValue data) {
+	public MyBottomSheet( SheetDataValue data) {
 		this(data.getTabName());
 		this.tableData = data;
 		

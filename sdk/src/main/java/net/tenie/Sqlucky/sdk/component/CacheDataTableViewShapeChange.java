@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollBar;
 import javafx.scene.control.TableColumn;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.DataTableViewShapePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -166,7 +167,7 @@ public class CacheDataTableViewShapeChange {
 		});		
 	}
 	
-	static public void setColWidth(FilteredTableColumn<ObservableList<StringProperty>, String>  col, String colname , Double cusWidth) {
+	static public void setColWidth(FilteredTableColumn<ResultSetRowPo, String>  col, String colname , Double cusWidth) {
 		
 		
 		// 设置列的长度

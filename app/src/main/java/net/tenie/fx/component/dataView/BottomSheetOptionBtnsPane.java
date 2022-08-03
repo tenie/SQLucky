@@ -22,7 +22,7 @@ import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.MyBottomTab;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -103,7 +103,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	 * @param disable
 	 * @return
 	 */
-	public static List<Node> sqlDataOptionBtns( MyBottomTab mytb,  boolean disable){
+	public static List<Node> sqlDataOptionBtns( MyBottomSheet mytb,  boolean disable){
 		List<Node> ls = new ArrayList<>();
 		JFXButton saveBtn = new JFXButton();
 		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
@@ -261,7 +261,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	 * @param name
 	 * @return
 	 */
-	public static List<Node> DDLOptionBtns(MyBottomTab mytb, String ddl, boolean isRunFunc, boolean isProc, String name) {
+	public static List<Node> DDLOptionBtns(MyBottomSheet mytb, String ddl, boolean isRunFunc, boolean isProc, String name) {
 		List<Node> ls = new ArrayList<>();
 		// 锁
 		JFXButton lockbtn = SdkComponent.createLockBtn(mytb);

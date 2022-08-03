@@ -35,9 +35,9 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class SelectDao {
+public class SelectDao2 {
 
-	private static Logger logger = LogManager.getLogger(SelectDao.class);
+	private static Logger logger = LogManager.getLogger(SelectDao2.class);
 	
 	public static ObservableList<SheetFieldPo> resultSetMetaData(ResultSet rs ) throws SQLException {
 		// 获取元数据
@@ -87,22 +87,18 @@ public class SelectDao {
 			dvt.setExecTime(vt); 
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = resultSetMetaData(rs);
-			ResultSetPo setPo = new ResultSetPo();
 			
-//			ObservableList<ObservableList<StringProperty>>  val ;
+			ObservableList<ObservableList<StringProperty>>  val ;
 			// 数据
 			if (limit > 0) {
-				execRs(limit, rs, fields, dpo, setPo);
+				 val = execRs(limit, rs, fields,   dpo);
 			} else {
-				   execRs(rs, fields, dpo, setPo);
+				 val =  execRs(rs, fields, dpo);
 			}
-			int rowSize = setPo.getDatas().size();
 			
-			dvt.setDataRs(setPo);
 			dvt.setColss(fields);
-			dvt.setRows(rowSize);
-//			dvt.setRawData(val);
-//			dvt.setRows(val.size());
+			dvt.setRawData(val);
+			dvt.setRows(val.size());
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -235,9 +231,9 @@ public class SelectDao {
 			 if(rowval.size() > 0) {
 				 val.add(rowval);
 			 }
-//			 dvt.set
+			
 			dvt.setColss(fields);
-//			dvt.setRawData(val);
+			dvt.setRawData(val);
 			dvt.setRows(val.size());
 		} catch (SQLException e) {
 			throw e;
@@ -285,20 +281,18 @@ public class SelectDao {
 	}
 	
 
-	private static void execRs(int limit, ResultSet rs, ObservableList<SheetFieldPo> fpo,
-			  SqluckyConnector dpo, ResultSetPo setPo ) throws SQLException {
+	private static ObservableList<ObservableList<StringProperty>>  execRs(int limit, ResultSet rs, ObservableList<SheetFieldPo> fpo,
+			  SqluckyConnector dpo) throws SQLException {
 		int idx = 1;
 		int rowNo = 0;
-		int rowIdx = 0;
 		int columnnums = fpo.size();
-//		ObservableList<ObservableList<StringProperty>> allDatas = FXCollections.observableArrayList();
+		ObservableList<ObservableList<StringProperty>> allDatas = FXCollections.observableArrayList();
 		while (rs.next()) {
-			ObservableList<ResultSetCellPo> rowDatas = FXCollections.observableArrayList();
-//			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
+			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
 			int rn = rowNo++;
 			for (int i = 0; i < columnnums; i++) {
-				SheetFieldPo fieldpo = fpo.get(i);
-				int dbtype = fieldpo.getColumnType().get();
+//				String field = fpo.get(i).getColumnLabel().get();
+				int dbtype = fpo.get(i).getColumnType().get();
 				StringProperty val;
 				
 				Object obj = rs.getObject(i + 1);
@@ -320,25 +314,21 @@ public class SelectDao {
 						val = new SimpleStringProperty(temp); 
 					}
 				}
-				ResultSetCellPo cellVal = new ResultSetCellPo(i, val, fieldpo);
-				rowDatas.add(cellVal);
-//				vals.add(val);
+				
+				
+				addStringPropertyChangeListener(val, rn, i, vals, dbtype);
+				vals.add(val);
 			}
 
-//			vals.add(new SimpleStringProperty(rn + ""));
-//			allDatas.add(vals);
-			ResultSetRowPo rowpo = new ResultSetRowPo(rowIdx, rowDatas, fpo);
-			rowIdx++;
-			setPo.addRow(rowpo); 
-			
-			if (idx == limit) {
+			vals.add(new SimpleStringProperty(rn + ""));
+			allDatas.add(vals);
+
+			if (idx == limit)
 				break;
-			}
-				
 			idx++;
 		}
 		
-//		return allDatas;
+		return allDatas;
 	}
 
 	
@@ -382,12 +372,55 @@ public class SelectDao {
 
 	
 	
-	private static void  execRs(ResultSet rs, ObservableList<SheetFieldPo> fpo, 
-			SqluckyConnector dpo, ResultSetPo setPo )
+	private static ObservableList<ObservableList<StringProperty>>   execRs(ResultSet rs, ObservableList<SheetFieldPo> fpo,   SqluckyConnector dpo)
 			throws SQLException {
-		  execRs(Integer.MAX_VALUE, rs, fpo, dpo, setPo);
+		return execRs(Integer.MAX_VALUE, rs, fpo, dpo);
 	}
 
 	
- 
+    // 数据单元格添加监听
+	// 字段修改事件
+	public static void addStringPropertyChangeListener(
+			StringProperty val,
+			int rowNo , 
+			int idx,
+			ObservableList<StringProperty> vals,
+			int dbtype) {
+		ChangeListener<String> cl = new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				logger.info("addStringPropertyChangeListener ：newValue：" + newValue + " | oldValue =" + oldValue);
+//				logger.info("key ==" + tabId + "-" + rowNo);
+				logger.info("observable = " + observable);
+				// 如果类似是数字的, 新值不是数字, 还原
+				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
+					Platform.runLater(() -> val.setValue(oldValue));
+					return;
+				}
+				
+				if(CommonUtility.isDateTime(dbtype) && "".equals(newValue )) {
+					Platform.runLater(() -> val.setValue("<null>"));
+				}
+				if(SqluckyBottomSheetUtility.dataPaneSaveBtn() != null ) {
+					SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
+				}
+				
+
+				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();
+				if (!SqluckyBottomSheetUtility.exist( rowNo)) {
+					for (int i = 0; i < vals.size(); i++) {
+						if (i == idx) {
+							oldDate.add(new SimpleStringProperty(oldValue));
+						} else {
+							oldDate.add(new SimpleStringProperty(vals.get(i).get()));
+						}
+					}
+					SqluckyBottomSheetUtility.addData( rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
+				} else {
+					SqluckyBottomSheetUtility.addData( rowNo, vals);
+				}
+			}
+		};
+		val.addListener(cl);
+	}
 }

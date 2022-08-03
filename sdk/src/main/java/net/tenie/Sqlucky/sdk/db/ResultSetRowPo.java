@@ -10,14 +10,29 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
  *
  */
 public class ResultSetRowPo {
+	private ResultSetPo resultSet ;
 	private	ObservableList<SheetFieldPo> fields;
-	private ObservableList<ResultSetCellPo> rowDatas;
+	private ObservableList<ResultSetCellPo> rowDatas; 
+	private ObservableList<ResultSetCellPo> oldCellVal;
+	private Boolean hasModify;
 	private int rowIndex = -1;
+	
+	public void clean() {
+		resultSet = null;
+		fields.clear();
+		fields = null;
+		rowDatas.forEach(v->{ v.clean(); });
+		oldCellVal.forEach(v->{ v.clean(); });
+		hasModify = null;
+	}
 	
 	public ResultSetRowPo(int idx, ObservableList<ResultSetCellPo> val, ObservableList<SheetFieldPo> fields) {
 		rowIndex = idx;
 		rowDatas = val;
 		this.fields = fields;
+		for(var cell : rowDatas) {
+			cell.setCurrentRow(this);
+		}
 	}
 	
 	
@@ -48,6 +63,16 @@ public class ResultSetRowPo {
 		}
 	}
 	
+	public ResultSetPo getResultSet() {
+		return resultSet;
+	}
+
+
+	public void setResultSet(ResultSetPo resultSet) {
+		this.resultSet = resultSet;
+	}
+
+
 	public ObservableList<ResultSetCellPo> getRowDatas() {
 		return rowDatas;
 	}
@@ -66,6 +91,26 @@ public class ResultSetRowPo {
 	}
 	public void setFields(ObservableList<SheetFieldPo> fields) {
 		this.fields = fields;
+	}
+
+
+	public ObservableList<ResultSetCellPo> getOldCellVal() {
+		return oldCellVal;
+	}
+
+
+	public void setOldCellVal(ObservableList<ResultSetCellPo> oldCellVal) {
+		this.oldCellVal = oldCellVal;
+	}
+
+
+	public Boolean getHasModify() {
+		return hasModify;
+	}
+
+
+	public void setHasModify(Boolean hasModify) {
+		this.hasModify = hasModify;
 	}
 	
 	

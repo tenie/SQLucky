@@ -20,8 +20,6 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTextField2ReadOnlyTableCell;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
@@ -31,33 +29,56 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * 行数据 显示窗口
  * @author tenie 
  * */
-public class TableDataDetail {
+public class TableDataDetail2 {
+//
+//	public static void showTableFieldType(SqluckyConnector dbc, String schema, String tablename) {
+//		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
+//		try {
+//			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
+//			ObservableList<SqlFieldPo> fields = DP.getFields();
+//
+//			String fieldValue = "Field Type";
+//			for (int i = 0; i < fields.size(); i++) {
+//				SqlFieldPo p = fields.get(i);
+//				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
+//				if (p.getScale() != null && p.getScale().get() > 0) {
+//					tyNa += ", " + p.getScale().get();
+//				}
+//				tyNa += ")";
+//				StringProperty strp = new SimpleStringProperty(tyNa);
+//				p.setValue(strp);
+//			}
+//			showTableDetail(tablename, "Field Name", fieldValue, fields);
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//
+//	}
 
 	public static void show() {
 		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tb = mtd.getTableData().getTable();
 		if(tb == null ) return;
-//		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
-		ResultSetRowPo selectedItem = tb.getSelectionModel().getSelectedItem();
+		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 
 		SheetDataValue dvt = mtd.getTableData();
 		String tabName = dvt.getTabName();
 		ObservableList<SheetFieldPo> fields = dvt.getColss();
 
-		ObservableList<ResultSetCellPo> cells = null;
+		ObservableList<StringProperty> rowValues = null;
 
-		if (selectedItem == null) {
-			cells = FXCollections.observableArrayList();
+		if (currentRowNo < 0) {
+			rowValues = FXCollections.observableArrayList();
 		} else {
-			cells =  selectedItem.getRowDatas();
+			rowValues = dvt.getRawData().get(currentRowNo);
 		}
 
 		String fieldValue = "Value";
-		if (cells.size() > 0) {
+		if (rowValues.size() > 0) {
 			for (int i = 0; i < fields.size(); i++) {
 				SheetFieldPo po = fields.get(i);
-				ResultSetCellPo cv = cells.get(i);
-				StringProperty val = cv.getCellData();
+				StringProperty val = rowValues.get(i);
 				po.setValue(val);
 			}
 		} else {

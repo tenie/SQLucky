@@ -11,6 +11,8 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.ResultSetPo;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.RsVal;
@@ -25,10 +27,13 @@ public class SqluckyBottomSheetUtility {
 	}
 	
 	// 获取所有数据
-	public static ObservableList<ObservableList<StringProperty>> getTabData() {
+	public static ObservableList<ResultSetRowPo> getTabData() {
 		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 		if (dvt != null) {
-			return dvt.getRawData();
+//			return 
+			ResultSetPo spo = dvt.getDataRs();
+			 ObservableList<ResultSetRowPo> val = spo.getDatas();
+			 return val;
 		}
 		return null;
 	}

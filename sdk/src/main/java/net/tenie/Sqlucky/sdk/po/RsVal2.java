@@ -5,15 +5,14 @@ import java.sql.Connection;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 
-public class RsVal {
+public class RsVal2 {
 	public String tableId;
 	public String sql;
 	public String tableName;
 	public Connection conn;
 	public SqluckyConnector dbconnPo;
-	public ObservableList<ResultSetRowPo> alldata;
-	public FilteredTableView<ResultSetRowPo> dataTableView;
+	public ObservableList<ObservableList<StringProperty>> alldata;
+	public FilteredTableView<ObservableList<StringProperty>> dataTableView;
 }

@@ -29,7 +29,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -87,8 +86,8 @@ public class SdkComponent2 {
 	}
 
 	// 数据展示tableView StringProperty
-	public static FilteredTableView<ResultSetRowPo> creatFilteredTableView() {
-		FilteredTableView<ResultSetRowPo> table = new FilteredTableView<ResultSetRowPo>();
+	public static FilteredTableView<ObservableList<StringProperty>> creatFilteredTableView() {
+		FilteredTableView<ObservableList<StringProperty>> table = new FilteredTableView<ObservableList<StringProperty>>();
 
 		table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
 		table.setPlaceholder(new Label());
@@ -111,7 +110,7 @@ public class SdkComponent2 {
 		table.setId(tableIdx);
 		table.getStyleClass().add("myTableTag");
 
-		FilteredTableColumn<ResultSetRowPo, Number> tc = new FilteredTableColumn<>();
+		FilteredTableColumn<ObservableList<StringProperty>, Number> tc = new FilteredTableColumn<>();
 
 //			tc.setCellValueFactory(cal -> { 
 //				ObservableList<StringProperty> obs = cal.getValue(); 
@@ -124,7 +123,7 @@ public class SdkComponent2 {
 
 		// 点击 行号, 显示一个 当前行的明细窗口
 		tc.setCellFactory(col -> {
-			TableCell<ResultSetRowPo, Number> cell = new TableCell<ResultSetRowPo, Number>() {
+			TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>() {
 				@Override
 				public void updateItem(Number item, boolean empty) {
 					super.updateItem(item, empty);
@@ -383,7 +382,7 @@ public class SdkComponent2 {
 		List<Tab> ls = new ArrayList<>();
 		for(int i = 0; i < dataTab.getTabs().size() ;i++) {
 			Tab tab = dataTab.getTabs().get(i);
-			MyBottomTab nd =  (MyBottomTab) tab.getUserData();
+			MyBottomSheet nd =  (MyBottomSheet) tab.getUserData();
 			if(nd == null) continue;
 			Boolean tf = nd.getTableData().isLock();
 			if(tf != null && tf) {
@@ -514,12 +513,13 @@ public class SdkComponent2 {
 	/**
 	 * 数据table关闭的时候 
 	 */
-	public static EventHandler<Event> dataTabCloseReq( MyBottomTab tb) {
+	public static EventHandler<Event> dataTabCloseReq( MyBottomSheet tb) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) { 
 				SdkComponent2.clearDataTable( tb.getTab());
-				tb.getTableData().clean();
-			
+//				tb.getTableData().clean();
+				
+				tb.clean();
 				
 				 
 			}
