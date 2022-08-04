@@ -8,7 +8,9 @@ public class ResultSetPo {
 	private ObservableList<SheetFieldPo> fields;
 	private ObservableList<ResultSetRowPo> datas;
 	
+	// 新增数据
 	private ObservableList<ResultSetRowPo> newDatas;
+	// 待更新的数据
 	private ObservableList<ResultSetRowPo> updateDatas;
 	
 	public void clean() {
@@ -39,6 +41,10 @@ public class ResultSetPo {
 	public ResultSetPo() {
 		fields = FXCollections.observableArrayList();
 		datas =  FXCollections.observableArrayList();
+
+		newDatas =  FXCollections.observableArrayList();
+	    updateDatas =  FXCollections.observableArrayList();
+		
 	}
 
 	public ObservableList<SheetFieldPo> getFields() {
@@ -64,6 +70,18 @@ public class ResultSetPo {
 
 	public int size() {
 		return datas.size();
+	}
+	public ObservableList<ResultSetRowPo> getNewDatas() {
+		return newDatas;
+	}
+	public void setNewDatas(ObservableList<ResultSetRowPo> newDatas) {
+		this.newDatas = newDatas;
+	}
+	public ObservableList<ResultSetRowPo> getUpdateDatas() {
+		return updateDatas;
+	}
+	public void setUpdateDatas(ObservableList<ResultSetRowPo> updateDatas) {
+		this.updateDatas = updateDatas;
 	}
 
 	 

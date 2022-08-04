@@ -26,7 +26,6 @@ import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
@@ -46,13 +45,13 @@ import net.tenie.fx.window.ProcedureExecuteWindow;
  * @author tenie
  *
  */
-public class BottomSheetOptionBtnsPane extends AnchorPane {
+public class BottomSheetOptionBtnsPane2 extends AnchorPane {
 
-	public  BottomSheetOptionBtnsPane( List<Node> btnLs) {
+	public  BottomSheetOptionBtnsPane2( List<Node> btnLs) {
 		super();
 		initObj(  btnLs, null, null, null);
 	}
-	public BottomSheetOptionBtnsPane( List<Node> btnLs, String time, String rows, String connName) {
+	public BottomSheetOptionBtnsPane2( List<Node> btnLs, String time, String rows, String connName) {
 		super();
 		initObj(btnLs, time, rows, connName);
 
@@ -367,11 +366,9 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		tbv.scrollTo(0);
 		int newLineidx = ConfigVal.newLineIdx++;
 		ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
-		ObservableList<ResultSetCellPo> item = FXCollections.observableArrayList();
+		ObservableList<StringProperty> item = FXCollections.observableArrayList();
 		for (int i = 0; i < fs.size(); i++) {
 			SimpleStringProperty sp = new SimpleStringProperty("<null>");
-			ResultSetCellPo tmpCell = new ResultSetCellPo(i, sp, fs.get(i));
-			
 			// 添加监听. 保存时使用 newLineIdx
 			CommonUtility.newStringPropertyChangeListener(sp, fs.get(i).getColumnType().get());
 			item.add(sp);
@@ -381,6 +378,15 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		tbv.getItems().add(0, item);
 
 		// 点亮保存按钮
+//			AnchorPane fp = dataAnchorPane(tbv);
+//			fp.getChildren().get(0).setDisable(false);
 		saveBtn.setDisable(false);
 	}
+
+//		// 获取数据表的 控制按钮列表
+//		public static AnchorPane dataAnchorPane(FilteredTableView<ObservableList<StringProperty>> table) {
+//			VBox vb = (VBox) table.getParent();
+//			AnchorPane fp = (AnchorPane) vb.getChildren().get(0);
+//			return fp;
+//		}
 }

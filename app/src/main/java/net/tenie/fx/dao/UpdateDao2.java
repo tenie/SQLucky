@@ -8,8 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.lib.reflex.BuildObject;
@@ -19,38 +17,39 @@ import net.tenie.lib.reflex.BuildObject;
  * @author tenie
  *
  */
-public class UpdateDao {
-	private static Logger logger = LogManager.getLogger(UpdateDao.class);
+public class UpdateDao2 {
+	private static Logger logger = LogManager.getLogger(UpdateDao2.class);
 	
-	public static String execUpdate(Connection conn,
-			String tableName,
-			ResultSetRowPo mval) throws Exception {
+	public static String execUpdate(Connection conn, String tableName, ObservableList<StringProperty> newvals,
+			ObservableList<StringProperty> oldvals, ObservableList<SheetFieldPo> fpos) throws Exception {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String msg = "";
 		try {
-			ObservableList<SheetFieldPo> fpos = mval.getFields();
-			
-			String condition = DaoTools.conditionStr(mval);
+			int oldvalsLen = fpos.size();
+			int newvalsLen = fpos.size();
+			String temp = DaoTools.concatStrSetVal(newvals, fpos);
+			String condition = DaoTools.conditionStr(oldvals, fpos);
 
 			// 校验 更新sql 会更1条以上, 如果查到一天以上给予提示确认!
 			String select = "Select count(*) as val from " + tableName + " where " + condition;
 			pstmt = conn.prepareStatement(select);
-			DaoTools.conditionPrepareStatement(mval, pstmt);
-			/*
 			int idx = 0;
 			String logmsg = "[ ";
-			ObservableList<ResultSetCellPo> cellVals = mval.getRowDatas();
-			for (int i = 0; i < cellVals.size(); i++) {
+			for (int i = 0; i < oldvalsLen; i++) {
 				idx++;
-				ResultSetCellPo cellpo = cellVals.get(i);
-				String val = cellpo.getCellData().get();
-				String type =cellpo.getField().getColumnClassName().get();
+				String val = oldvals.get(i).get();
+				String type = fpos.get(i).getColumnClassName().get();
 				if ("<null>".equals(val)) {
 					idx--;
 					continue;
 				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
 						|| type.equals("java.sql.Date")) {
+//					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
+//					Timestamp ts = new Timestamp(dv.getTime());
+//					pstmt.setTimestamp(idx, ts);
+					
+//					logger.info(idx );
 					idx--;
 					continue;
 					
@@ -65,7 +64,6 @@ public class UpdateDao {
 			}
 			
 			logger.info(logmsg +" ]");
-			*/
 			boolean tf = true;
 			logger.info("sql = " + select);
 			rs = pstmt.executeQuery();
@@ -83,15 +81,11 @@ public class UpdateDao {
 				msg = " Data Not finded, Skip Update.";
 				return msg;
 			}
-
-			String temp = DaoTools.concatStrSetVal(mval);
 			String sql = "update " + tableName + " set  " + temp + " where " + condition;
 			pstmt = conn.prepareStatement(sql);
-			
-			DaoTools.updatePrepareStatement(mval, pstmt);
-/*
+
 			// 赋值
-			int idx = 0;
+			idx = 0;
 			for (int i = 0; i < newvalsLen; i++) {
 				idx++;
 				String val = newvals.get(i).get();
@@ -135,8 +129,6 @@ public class UpdateDao {
 					pstmt.setObject(idx, obj);
 				}
 			}
-			
-			*/
 
 			// 更新
 			int i = pstmt.executeUpdate();

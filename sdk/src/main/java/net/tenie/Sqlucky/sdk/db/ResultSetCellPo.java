@@ -22,6 +22,7 @@ public class ResultSetCellPo {
 	private StringProperty oldCellData;  // 如果被更新, 旧的值放这个理
 	private ResultSetRowPo currentRow;
 	private int index = -1;
+	private Boolean hasModify = false;
 	
 	public void clean() {
 		field = null;
@@ -43,6 +44,7 @@ public class ResultSetCellPo {
 	public void setCellData(StringProperty cellData) {
 		if(oldCellData == null) {
 			this.oldCellData  = this.cellData;
+			hasModify = true;
 		}
 		this.cellData = cellData;
 		
@@ -76,6 +78,14 @@ public class ResultSetCellPo {
 
 	public void setCurrentRow(ResultSetRowPo currentRow) {
 		this.currentRow = currentRow;
+	}
+
+	public Boolean getHasModify() {
+		return hasModify;
+	}
+
+	public void setHasModify(Boolean hasModify) {
+		this.hasModify = hasModify;
 	}
 
 	@Override
