@@ -16,7 +16,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.MyPopupNumberFilter;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
@@ -25,7 +24,7 @@ import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 
-public class DataTableContextMenu {
+public class DataTableContextMenu2 {
 	
 	/**
 	 * 数据表中列的右键弹出菜单
@@ -123,7 +122,7 @@ public class DataTableContextMenu {
 		
 		cm.getItems().addAll(filter, miActive, copyColData,   dropCol, alterColumn, addColumn, updateMenu);
 		cm.setOnShowing(e->{
-			ObservableList<ResultSetRowPo> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
+			ObservableList<ObservableList<StringProperty>> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
 			if( alls.size() == 0) {
 				updateSelectColumn.setDisable(true);
 			}else {
@@ -135,12 +134,13 @@ public class DataTableContextMenu {
 	
 	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName) {
 		return new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) { 
-				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
+			public void handle(ActionEvent e) {
+				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields(); 
+				ObservableList<ObservableList<StringProperty>> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {
 					public void run() {
-						String sql = GenerateSQLString.columnStrHelper(vals, colName);
+						String sql = GenerateSQLString.columnStrHelper(vals, fs, colName);
 						if (StrUtils.isNotNullOrEmpty(sql)) {
 							if (isFile) {
 								if (ff != null) {

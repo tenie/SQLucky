@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 
@@ -17,21 +16,22 @@ import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
  * @author tenie
  *
  */
-public class DeleteDao {
-	private static Logger logger = LogManager.getLogger(DeleteDao.class);
+public class DeleteDao2 {
+	private static Logger logger = LogManager.getLogger(DeleteDao2.class);
 
-	public static String execDelete(Connection conn, String tableName, ResultSetRowPo mval) throws Exception {
+	public static String execDelete(Connection conn, String tableName, ObservableList<StringProperty> vals,
+			ObservableList<SheetFieldPo> fpos) throws Exception {
 		String msg = "";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		try { 
-			String condition = DaoTools.conditionStr(mval);
+			String condition = DaoTools.conditionStr(vals, fpos);
 
 			// 校验 更新sql 会更1条以上, 如果查到一天以上给予提示确认!
 			String select = "Select count(*) as val from " + tableName + " where " + condition;
 			pstmt = conn.prepareStatement(select);
-//			DaoTools.deleteConditionSetVal(pstmt, mval);
-			DaoTools.conditionPrepareStatement(mval, pstmt);
+			DaoTools.deleteConditionSetVal(pstmt, vals, fpos);
+			
 			boolean tf = true;
 			logger.info("sql = " + select);
 			rs = pstmt.executeQuery();
@@ -53,8 +53,8 @@ public class DeleteDao {
 
 			logger.info("sql = " + sql);
 			pstmt = conn.prepareStatement(sql);
-//			DaoTools.deleteConditionSetVal(pstmt, vals, fpos); 
-			DaoTools.conditionPrepareStatement(mval, pstmt);
+			DaoTools.deleteConditionSetVal(pstmt, vals, fpos); 
+
 			// 更新
 			int i = pstmt.executeUpdate();
 			logger.info("executeDelete = " + i);

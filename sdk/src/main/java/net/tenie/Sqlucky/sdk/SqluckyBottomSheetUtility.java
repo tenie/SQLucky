@@ -11,6 +11,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -60,16 +61,16 @@ public class SqluckyBottomSheetUtility {
 			String connName = "";
 			String tableName = "";
 			Connection conn = null;
-			ObservableList<ObservableList<StringProperty>> alldata = null;
+			ObservableList<ResultSetRowPo> alldata = null;
 			SqluckyConnector cntor = null;
-			FilteredTableView<ObservableList<StringProperty>> dataTableView = null;
+			FilteredTableView<ResultSetRowPo> dataTableView = null;
 			if (dataObj != null) {
 				connName = dataObj.getConnName();
 				tableName = dataObj.getTabName();
 				cntor = dataObj.getDbConnection();
 				conn = cntor.getConn();
 
-				alldata = dataObj.getRawData();
+				alldata = dataObj.getDataRs().getDatas();
 
 				dataTableView = dataObj.getTable();
 
@@ -93,18 +94,19 @@ public class SqluckyBottomSheetUtility {
 		}
 
 		public static boolean exist(int row) {
-			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
-			if (dvt != null) {
-				Map<String, ObservableList<StringProperty>> oldval = dvt.getNewLineDate();
-				if (null != oldval.get(row + "")) {
-					return true;
-				}
-			}
+			//TODO 后期重构
+//			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+//			if (dvt != null) {
+//				Map<String, ObservableList<StringProperty>> oldval = dvt.getNewLineDate();
+//				if (null != oldval.get(row + "")) {
+//					return true;
+//				}
+//			}
 			return false;
 		}
 
-		public static void addData(int rowNo, ObservableList<StringProperty> newDate,
-				ObservableList<StringProperty> oldDate) {
+		public static void addData(int rowNo,ResultSetRowPo newDate,
+				ResultSetRowPo oldDate) {
 			if (!exist(rowNo)) {
 				addDataOldVal(rowNo, oldDate);
 			}
@@ -112,7 +114,7 @@ public class SqluckyBottomSheetUtility {
 
 		}
 
-		public static void addData(int rowNo, ObservableList<StringProperty> newDate) {
+		public static void addData(int rowNo, ResultSetRowPo newDate) {
 			addDataNewLine(rowNo, newDate);
 		}
 
@@ -125,45 +127,55 @@ public class SqluckyBottomSheetUtility {
 		}
 
 //		// 添加一行新数据
-		public static void addDataNewLine(int rowNo, ObservableList<StringProperty> vals) {
+		public static void addDataNewLine(int rowNo, ResultSetRowPo  vals) {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
-				Map<String, ObservableList<StringProperty>> map = dvt.getNewLineDate();
-				map.put(rowNo + "", vals);
+				dvt.getDataRs().getNewDatas().add(vals);
+//				Map<String, ObservableList<StringProperty>> map = dvt.getNewLineDate();
+//				map.put(rowNo + "", vals);
 			}
 		}
 
 		
-		public static void addDataOldVal(int rowNo, ObservableList<StringProperty> vals) {
+		public static void addDataOldVal(int rowNo, ResultSetRowPo vals) {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
-				Map<String, ObservableList<StringProperty>> map = dvt.getOldval();
-				map.put(rowNo + "", vals);
+				dvt.getDataRs().getUpdateDatas().add(vals);
+//				Map<String, ObservableList<StringProperty>> map = dvt.getOldval();
+//				map.put(rowNo + "", vals);
 			}
 		}
 
-		public static ObservableList<StringProperty> getold(String row) {
-			var ov = getOldval();
-			return ov.get(row);
+		public static ObservableList<StringProperty> getold2(String row) {
+//			var ov = getOldval();
+//			return ov.get(row);
+			return null;
 		}
 
-		public static Map<String, ObservableList<StringProperty>> getOldval() {
+		public static ObservableList<ResultSetRowPo> getOldval() {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
-				var v = dvt.getOldval();
+				var v = dvt.getDataRs().getUpdateDatas();
 				return v;
 			}
 			return null;
 		}
 
-		public static Map<String, ObservableList<StringProperty>> getModifyData() {
-			return getNewLineDate();
-		}
-
-		public static Map<String, ObservableList<StringProperty>> getNewLineDate() {
+		public static ObservableList<ResultSetRowPo>  getModifyData() {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
-				var v = dvt.getNewLineDate();
+				var v = dvt.getDataRs().getUpdateDatas();
+				return v;
+			}
+			return null;
+			
+//			return getNewLineDate();
+		}
+
+		public static ObservableList<ResultSetRowPo>  getNewLineDate() {
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			if (dvt != null) {
+				var v = dvt.getDataRs().getNewDatas();
 				return v;
 			}
 			return null;
@@ -172,8 +184,8 @@ public class SqluckyBottomSheetUtility {
 		public static void rmUpdateData() {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
-				dvt.getNewLineDate().clear();
-				dvt.getOldval().clear();
+				dvt.getDataRs().getNewDatas().clear();
+				dvt.getDataRs().getUpdateDatas().clear();
 			}
 		}
 
@@ -181,47 +193,50 @@ public class SqluckyBottomSheetUtility {
 			SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 			SheetDataValue dvt = mtd.getTableData();
 			if (dvt != null) {
-				dvt.getAppendData().clear();
+				dvt.getDataRs().getNewDatas().clear();
 
 			}
 		}
 
-		public static void appendDate(int rowNo, ObservableList<StringProperty> newDate) {
+		public static void appendDate(int rowNo, ResultSetRowPo newDate) {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
-				Map<String, ObservableList<StringProperty>> map = dvt.getAppendData();
-				map.put(rowNo + "", newDate);
+				dvt.getDataRs().getNewDatas().add(newDate);
+//				Map<String, ObservableList<StringProperty>> map = dvt.getAppendData();
+//				map.put(rowNo + "", newDate);
 			}
 		}
 
-		public static List<ObservableList<StringProperty>> getAppendData() {
-			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
-			if (dvt != null) {
-				List<ObservableList<StringProperty>> dataList = new ArrayList<>();
-
-				var map = dvt.getAppendData();
-				for (String key : map.keySet()) {
-					dataList.add(map.get(key));
-				}
-				return dataList;
-			}
+		public static List<ObservableList<StringProperty>> getAppendData2() {
+			//TODO 后期重构
+//			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+//			if (dvt != null) {
+//				List<ObservableList<StringProperty>> dataList = new ArrayList<>();
+//
+//				var map = dvt.getAppendData();
+//				for (String key : map.keySet()) {
+//					dataList.add(map.get(key));
+//				}
+//				return dataList;
+//			}
 			return null;
 
 		}
 
-		public static void deleteTabDataRowNo(String no) {
-			ObservableList<ObservableList<StringProperty>> ol = getTabData();
-			if (ol == null)
-				return;
-			for (int i = 0; i < ol.size(); i++) {
-				ObservableList<StringProperty> sps = ol.get(i);
-				int len = sps.size();
-				String dro = sps.get(len - 1).get();
-				if (dro.equals(no)) {
-					ol.remove(i);
-					break;
-				}
-			}
+		public static void deleteTabDataRowNo2(String no) {
+			//TODO 后期重构
+//			ObservableList<ObservableList<StringProperty>> ol = getTabData();
+//			if (ol == null)
+//				return;
+//			for (int i = 0; i < ol.size(); i++) {
+//				ObservableList<StringProperty> sps = ol.get(i);
+//				int len = sps.size();
+//				String dro = sps.get(len - 1).get();
+//				if (dro.equals(no)) {
+//					ol.remove(i);
+//					break;
+//				}
+//			}
 
 		}
 
@@ -244,15 +259,16 @@ public class SqluckyBottomSheetUtility {
 
 		// 获取当前的表格
 		@SuppressWarnings("unchecked")
-		public static FilteredTableView<ObservableList<StringProperty>> dataTableView() {
+		public static FilteredTableView<ResultSetRowPo> dataTableView() {
 			SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 			var table = mtd.getTableData().getTable();
 			return table;
 		}
 
 		// 获取当前表格选择的数据
-		public static ObservableList<ObservableList<StringProperty>> dataTableViewSelectedItems() {
-			ObservableList<ObservableList<StringProperty>> vals = dataTableView().getSelectionModel().getSelectedItems();
+		public static ObservableList<ResultSetRowPo> dataTableViewSelectedItems() {
+			ObservableList<ResultSetRowPo> vals = 
+					dataTableView().getSelectionModel().getSelectedItems();
 			return vals;
 		}
 
@@ -284,8 +300,8 @@ public class SqluckyBottomSheetUtility {
 //		}
 
 		
-		public static ObservableList<ObservableList<StringProperty>> getValsHelper(boolean isSelected) {
-			ObservableList<ObservableList<StringProperty>> vals = null;
+		public static ObservableList<ResultSetRowPo> getValsHelper(boolean isSelected) {
+			ObservableList<ResultSetRowPo> vals = null;
 			if (isSelected) {
 				vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
 			} else {

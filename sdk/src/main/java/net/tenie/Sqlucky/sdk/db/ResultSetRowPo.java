@@ -13,8 +13,8 @@ public class ResultSetRowPo {
 	private ResultSetPo resultSet ;
 	private	ObservableList<SheetFieldPo> fields;
 	private ObservableList<ResultSetCellPo> rowDatas; 
-	private ObservableList<ResultSetCellPo> oldCellVal;
-	private Boolean hasModify;
+//	private ObservableList<ResultSetCellPo> oldCellVal;
+	private Boolean hasModify = false;
 	private int rowIndex = -1;
 	
 	public void clean() {
@@ -22,7 +22,7 @@ public class ResultSetRowPo {
 		fields.clear();
 		fields = null;
 		rowDatas.forEach(v->{ v.clean(); });
-		oldCellVal.forEach(v->{ v.clean(); });
+//		oldCellVal.forEach(v->{ v.clean(); });
 		hasModify = null;
 	}
 	
@@ -94,14 +94,14 @@ public class ResultSetRowPo {
 	}
 
 
-	public ObservableList<ResultSetCellPo> getOldCellVal() {
-		return oldCellVal;
-	}
-
-
-	public void setOldCellVal(ObservableList<ResultSetCellPo> oldCellVal) {
-		this.oldCellVal = oldCellVal;
-	}
+//	public ObservableList<ResultSetCellPo> getOldCellVal() {
+//		return oldCellVal;
+//	}
+//
+//
+//	public void setOldCellVal(ObservableList<ResultSetCellPo> oldCellVal) {
+//		this.oldCellVal = oldCellVal;
+//	}
 
 
 	public Boolean getHasModify() {

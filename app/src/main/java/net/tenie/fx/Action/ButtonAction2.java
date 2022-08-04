@@ -16,7 +16,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsVal;
@@ -33,7 +32,7 @@ import net.tenie.fx.dao.InsertDao;
 import net.tenie.fx.dao.UpdateDao;
 
 
-public class ButtonAction {
+public class ButtonAction2 {
 	
 	public static void dataSave() {
 		Button saveBtn = SqluckyBottomSheetUtility.dataPaneSaveBtn();
@@ -44,18 +43,18 @@ public class ButtonAction {
 			// 字段
 			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
 			// 待保存数据
-			 ObservableList<ResultSetRowPo> modifyData = SqluckyBottomSheetUtility.getModifyData();
+			Map<String, ObservableList<StringProperty>> modifyData = SqluckyBottomSheetUtility.getModifyData();
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
 			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 			boolean btnDisable = true;
 			if (!modifyData.isEmpty()) {
-				for (ResultSetRowPo val : modifyData) {
+				for (String key : modifyData.keySet()) {
 					// 获取对应旧数据
-//					ObservableList<StringProperty> old = SqluckyBottomSheetUtility.getold( key);
-//					ObservableList<StringProperty> newd = modifyData.get(key);
+					ObservableList<StringProperty> old = SqluckyBottomSheetUtility.getold( key);
+					ObservableList<StringProperty> newd = modifyData.get(key);
 					// 拼接update sql
 					try {
-						String msg = UpdateDao.execUpdate(conn, tabName, val, fpos);
+						String msg = UpdateDao.execUpdate(conn, tabName, newd, old, fpos);
 						
 						ObservableList<StringProperty> val = FXCollections.observableArrayList();
 						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));

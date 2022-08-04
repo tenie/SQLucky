@@ -2,12 +2,10 @@ package net.tenie.Sqlucky.sdk.utility;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 
 /*   @author tenie */
-public class GenerateSQLString {
+public class GenerateSQLString2 {
 	/**
 	 * 给一行数据到处insert 语句
 	 * @param tableName
@@ -87,7 +85,7 @@ public class GenerateSQLString {
 			StringBuilder strb = new StringBuilder();
 			for (int i = 0; i < vals.size(); i++) {
 				ObservableList<StringProperty> vl = vals.get(i);
-				String rs = GenerateSQLString.insertSQL(tableName, vl, fs) + ";\n";
+				String rs = GenerateSQLString2.insertSQL(tableName, vl, fs) + ";\n";
 				strb.append(rs);
 			}
 			String str = strb.toString();
@@ -128,7 +126,7 @@ public class GenerateSQLString {
 			StringBuilder strb = new StringBuilder();
 			for (int i = 0; i < vals.size(); i++) {
 				ObservableList<StringProperty> vl = vals.get(i);
-				String rs = GenerateSQLString.csvStr( vl, fs);
+				String rs = GenerateSQLString2.csvStr( vl, fs);
 				strb.append(rs);
 			}
 			String str = strb.toString();
@@ -172,7 +170,7 @@ public class GenerateSQLString {
 			StringBuilder strb = new StringBuilder();
 			for (int i = 0; i < vals.size(); i++) {
 				ObservableList<StringProperty> vl = vals.get(i);
-				String rs = GenerateSQLString.txtStr(vl, fs);
+				String rs = GenerateSQLString2.txtStr(vl, fs);
 				strb.append(rs);
 			}
 			String str = strb.toString();
@@ -182,13 +180,13 @@ public class GenerateSQLString {
 	}
 	
 	
-	public static String columnStrHelper(ObservableList<ResultSetRowPo> vals,  String colName) {
+	public static String columnStrHelper(ObservableList<ObservableList<StringProperty>> vals, ObservableList<SheetFieldPo> fs, String colName) {
 
 		if (vals != null && vals.size() > 0) {
 			StringBuilder strb = new StringBuilder();
 			for (int i = 0; i < vals.size(); i++) {
-				ResultSetRowPo vl = vals.get(i);
-				String rs = GenerateSQLString.columnStr(vl, colName);
+				ObservableList<StringProperty> vl = vals.get(i);
+				String rs = GenerateSQLString2.columnStr(vl, fs, colName);
 				strb.append(rs);
 			}
 			String str = strb.toString();
@@ -197,14 +195,12 @@ public class GenerateSQLString {
 		return "";
 	}
 	
-	public static String columnStr(ResultSetRowPo data, String colName) {
+	public static String columnStr(ObservableList<StringProperty> data, ObservableList<SheetFieldPo> fpos, String colName) {
 		StringBuilder values = new StringBuilder("");
-		 ObservableList<ResultSetCellPo> cells = data.getRowDatas();
-		int size = cells.size();
+		int size = fpos.size();
 		int idx = -1;
 		for (int i = 0; i < size; i++) {
-			ResultSetCellPo cellpo = cells.get(i);
-			SheetFieldPo po = cellpo.getField();
+			SheetFieldPo po = fpos.get(i);
 			String  name = po.getColumnLabel().get();
 			if( name.equals(colName)) {
 				idx = i;
@@ -212,7 +208,7 @@ public class GenerateSQLString {
 			}
 		}
 		if( idx > -1) { 
-				String temp = cells.get(idx).getCellData().get(); 
+				String temp = data.get(idx).get(); 
 				values.append(temp);
 				values.append("\n"); 
 		}
