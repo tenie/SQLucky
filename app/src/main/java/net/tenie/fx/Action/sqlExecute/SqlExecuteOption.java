@@ -24,6 +24,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -109,14 +110,13 @@ public class SqlExecuteOption {
 	}
 
 	// table 添加列
-	public static ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> createTableColForSqlData(
+	public static ObservableList<FilteredTableColumn<ResultSetRowPo, String>> createTableColForSqlData(
 			ObservableList<SheetFieldPo> cols, List<String> keys, SheetDataValue dvt) {
 		int len = cols.size();
-		ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList = FXCollections
-				.observableArrayList();
+		ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList = FXCollections.observableArrayList();
 		for (int i = 0; i < len; i++) {
 			String colname = cols.get(i).getColumnLabel().get();
-			FilteredTableColumn<ObservableList<StringProperty>, String> col = null;
+			FilteredTableColumn<ResultSetRowPo, String> col = null;
 
 			boolean iskey = false;
 			if (keys != null) {
@@ -135,9 +135,9 @@ public class SqlExecuteOption {
 	/**
 	 * 创建列
 	 */
-	public static FilteredTableColumn<ObservableList<StringProperty>, String> createColumnForSqlData(String colname,
+	public static FilteredTableColumn<ResultSetRowPo, String> createColumnForSqlData(String colname,
 			int colIdx, boolean iskey, SheetDataValue dvt) {
-		FilteredTableColumn<ObservableList<StringProperty>, String> col = SdkComponent.createColumn(colname, colIdx);
+		FilteredTableColumn<ResultSetRowPo, String> col = SdkComponent.createColumn(colname, colIdx);
 		Label label = (Label) col.getGraphic();// new Label();
 		if (iskey) {// #F0F0F0 1C92FB ##6EB842 #7CFC00
 			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#FF6600"));
@@ -151,11 +151,11 @@ public class SqlExecuteOption {
 
 	// 设置 列的 右键菜单
 	public static void setDataTableContextMenu(
-			ObservableList<FilteredTableColumn<ObservableList<StringProperty>, String>> colList,
+			ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList,
 			ObservableList<SheetFieldPo> cols) {
 		int len = cols.size();
 		for (int i = 0; i < len; i++) {
-			FilteredTableColumn<ObservableList<StringProperty>, String> col = colList.get(i);
+			FilteredTableColumn<ResultSetRowPo, String> col = colList.get(i);
 			String colname = cols.get(i).getColumnLabel().get();
 			int type = cols.get(i).getColumnType().get();
 			// 右点菜单
@@ -167,15 +167,15 @@ public class SqlExecuteOption {
 	// 展示信息窗口,
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo, Thread thread) {
 		// 有数据才展示
-		if (ddlDmlpo.getAllDatas().size() > 0) {
-			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
+		if (ddlDmlpo.getResultSet().getDatas().size() > 0) {
+			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
 			// 表内容可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
-			DataViewContainer.setTabRowWith(table, ddlDmlpo.getAllDatasSize());
+			DataViewContainer.setTabRowWith(table, ddlDmlpo.getResultSet().getDatas().size());
 			// table 添加列和数据
 			ObservableList<SheetFieldPo> colss = ddlDmlpo.getFields();
-			ObservableList<ObservableList<StringProperty>> alldata = ddlDmlpo.getAllDatas();
-			SheetDataValue dvt = new SheetDataValue(table, ConfigVal.EXEC_INFO_TITLE, colss, alldata);
+			ObservableList<ResultSetRowPo> alldata = ddlDmlpo.getResultSet().getDatas();
+			SheetDataValue dvt = new SheetDataValue(table, ConfigVal.EXEC_INFO_TITLE, colss, ddlDmlpo.getResultSet());
 
 			var cols = SdkComponent.createTableColForInfo(colss);
 			table.getColumns().addAll(cols);
@@ -185,9 +185,9 @@ public class SqlExecuteOption {
 			// 渲染界面
 			if (thread != null && !thread.isInterrupted()) {
 				boolean showtab = true;
-				if (ddlDmlpo.getAllDatas().size() == 1) {
-					var list = ddlDmlpo.getAllDatas().get(0);
-					var strfield = list.get(1).get();
+				if (ddlDmlpo.getResultSet().getDatas().size() == 1) {
+					var list = ddlDmlpo.getResultSet().getDatas().get(0);
+					var strfield = list.getRowDatas().get(1).getCellData().get();  //(1).get();
 					if (!strfield.startsWith("failed")) {
 						CommonAction.showNotifiaction(strfield);
 						showtab = false;

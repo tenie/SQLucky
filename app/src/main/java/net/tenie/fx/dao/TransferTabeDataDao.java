@@ -84,8 +84,8 @@ public class TransferTabeDataDao {
 			String  insertSql = "";
 			while (rs.next()) {
 				idx++;
-				ObservableList<StringProperty> vals = FXCollections.observableArrayList();
-
+//				ObservableList<StringProperty> vals = FXCollections.observableArrayList();
+				var row = dpo.addRow();
 				for (int i = 0; i < columnnums; i++) {
 					int dbtype = fpo.get(i).getColumnType().get();
 					StringProperty val;
@@ -104,9 +104,10 @@ public class TransferTabeDataDao {
 							val = new SimpleStringProperty(temp); 
 						}
 					}
-					 vals.add(val);
+//					 vals.add(val);
+					 dpo.addData(row, val, fpo.get(i));
 				} 
-			    insertSql = GenerateSQLString.insertSQL(tableName, vals, fpo);  
+			    insertSql = GenerateSQLString.insertSQL(tableName, row);  
 				
 				stmt.addBatch(insertSql); 
 				if( idx % execLine == 0 ) { 

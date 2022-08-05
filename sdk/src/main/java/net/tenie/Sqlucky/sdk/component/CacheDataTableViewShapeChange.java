@@ -30,7 +30,7 @@ public class CacheDataTableViewShapeChange {
 	static private Map<String, Double> tableScrollHorizontal = new HashMap<>();
 	static private Map<String, List<String>> colOrder = new HashMap<>();
 
-	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ObservableList<StringProperty>> table , ObservableList<SheetFieldPo> colss) {
+	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ResultSetRowPo> table , ObservableList<SheetFieldPo> colss) {
 		CommonUtility.threadAwait(1);
 		Platform.runLater(() -> { 
 			// 列移动缓存
@@ -52,7 +52,7 @@ public class CacheDataTableViewShapeChange {
 	 * @param tableName
 	 * @param table
 	 */
-	public static void setHorizontal( FilteredTableView<ObservableList<StringProperty>> table ,  String tableName) {
+	public static void setHorizontal( FilteredTableView<ResultSetRowPo> table ,  String tableName) {
 			ScrollBar horizontalBar = null;
 			// 获取到 ScrollBar的 父节点, 然后遍历子节点, 获取第三个元素就是 水平ScrollBar了
 			Node nodes = table.lookup(".virtual-flow");
@@ -81,7 +81,7 @@ public class CacheDataTableViewShapeChange {
 			}
 	}
 	
-	private static  TableColumn<ObservableList<StringProperty>, ?> gettableColumnByName(ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabcols ,String name){
+	private static  TableColumn<ResultSetRowPo, ?> gettableColumnByName(ObservableList<TableColumn<ResultSetRowPo, ?>> tabcols ,String name){
 		for(var col : tabcols) {
 			var colname = col.getText();
 			if(colname.equals(name)) {
@@ -137,7 +137,7 @@ public class CacheDataTableViewShapeChange {
 	 * @param augmentation
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	static public void setColWidthByCache(FilteredTableColumn<ObservableList<StringProperty>, String>  col, String tableName, String colname) {
+	static public void setColWidthByCache(FilteredTableColumn<ResultSetRowPo, String>  col, String tableName, String colname) {
 		// 设置列的长度
 		Double width;
 		Double cacheWidth = CacheDataTableViewShapeChange.getWidth(tableName, colname);
@@ -194,7 +194,7 @@ public class CacheDataTableViewShapeChange {
 	
 
 	// tableview 每个列头的移动事件
-	public static void setTableHeader(FilteredTableView<ObservableList<StringProperty>> table, String tableName) {
+	public static void setTableHeader(FilteredTableView<ResultSetRowPo> table, String tableName) {
 		try {
 			Node h2 = table.lookup(".nested-column-header");
 			if(h2 == null ) return ;
@@ -218,7 +218,7 @@ public class CacheDataTableViewShapeChange {
 	}
 	
 	// 设置 tooltip
-	public static void setTableHeaderTooltip(FilteredTableView<ObservableList<StringProperty>> table,
+	public static void setTableHeaderTooltip(FilteredTableView<ResultSetRowPo> table,
 			ObservableList<SheetFieldPo> colss) {
 		try {
 			Node colHeader = table.lookup(".nested-column-header");
@@ -259,10 +259,10 @@ public class CacheDataTableViewShapeChange {
 	}
 	
 	// 重新设置位置
-	public static void colReorder(String tableName, ObservableList<SheetFieldPo> colss , FilteredTableView<ObservableList<StringProperty>> table) {
+	public static void colReorder(String tableName, ObservableList<SheetFieldPo> colss , FilteredTableView<ResultSetRowPo> table) {
 		List<String> tmporder = colOrder.get(tableName);
 		
-		ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabcols = table.getColumns(); 
+		ObservableList<TableColumn<ResultSetRowPo, ?>> tabcols = table.getColumns(); 
 		if(        tmporder !=null 
 				&& tmporder.size()>0 
 				&& colss.size() > 0 
@@ -279,7 +279,7 @@ public class CacheDataTableViewShapeChange {
 				}
 			}
 			if(same) { 
-			    ObservableList<TableColumn<ObservableList<StringProperty>, ?>> tabNewCos = FXCollections.observableArrayList();
+			    ObservableList<TableColumn<ResultSetRowPo, ?>> tabNewCos = FXCollections.observableArrayList();
 			    boolean positionSame = true;
 			    for(int i = 0 ; i < tmporder.size(); i++) {
 					String colname =  tmporder.get(i);

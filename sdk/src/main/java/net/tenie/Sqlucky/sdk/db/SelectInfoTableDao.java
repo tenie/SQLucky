@@ -36,7 +36,7 @@ public class SelectInfoTableDao {
 	public static ResultSetPo selectTableData(ResultSet rs, 
 			ObservableList<SheetFieldPo> fields, 
 			SqluckyConnector dpo  ) throws SQLException {
-		ResultSetPo setPo = new ResultSetPo();
+		ResultSetPo setPo = new ResultSetPo(fields);
 		// 数据
 		execRs(rs, fields, dpo, setPo );
 		
@@ -91,7 +91,8 @@ public class SelectInfoTableDao {
 		int rowIdx = 0;
 
 		while (rs.next()) {
-			ObservableList<ResultSetCellPo> rowDatas = FXCollections.observableArrayList();
+			ResultSetRowPo rowpo = setPo.creatRow();
+//			ObservableList<ResultSetCellPo> rowDatas = FXCollections.observableArrayList();
 			int rn = rowNo++;
 			for (int i = 0; i < columnnums; i++) {
 				SheetFieldPo fieldpo = fpo.get(i);
@@ -117,16 +118,16 @@ public class SelectInfoTableDao {
 						val = new SimpleStringProperty(temp);
 					}
 				}
-
-				ResultSetCellPo cellVal = new ResultSetCellPo(i, val, fieldpo); 
+				rowpo.addCell(val, fieldpo);
+//				ResultSetCellPo cellVal = new ResultSetCellPo(i, val, fieldpo); 
 				// 修改监听
 //				addStringPropertyChangeListener(val, rn, i, rowDatas, dbtype,  setPo );
-				rowDatas.add(cellVal);
+//				rowDatas.add(cellVal);
 
 			}
-			ResultSetRowPo rowpo = new ResultSetRowPo(rowIdx, rowDatas, fpo);
+//			ResultSetRowPo rowpo = new ResultSetRowPo(rowIdx, rowDatas, fpo);
 			rowIdx++;
-			setPo.addRow(rowpo); 
+//			setPo.addRow(rowpo); 
 			idx++;
 		}
 

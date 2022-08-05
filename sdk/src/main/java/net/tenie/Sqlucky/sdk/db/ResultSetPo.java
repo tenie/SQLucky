@@ -13,6 +13,22 @@ public class ResultSetPo {
 	// 待更新的数据
 	private ObservableList<ResultSetRowPo> updateDatas;
 	
+	/**
+	 * 首次查询数据后, 后期添加一行行的数据
+	 */
+	public ResultSetRowPo createAppendNewRow() {
+		ResultSetRowPo appendNewpo = new ResultSetRowPo(this);
+		newDatas.add(appendNewpo);
+		datas.add(appendNewpo);
+		return appendNewpo;
+	}
+	
+	public ResultSetRowPo creatRow() {
+		ResultSetRowPo po = new ResultSetRowPo(this);
+		datas.add(po);
+		return po;
+	}
+	
 	public void clean() {
 		if(fields != null) {
 			fields.clear();
@@ -38,8 +54,8 @@ public class ResultSetPo {
 		
 		 
 	}
-	public ResultSetPo() {
-		fields = FXCollections.observableArrayList();
+	public ResultSetPo(ObservableList<SheetFieldPo> fds) {
+		fields = fds;// FXCollections.observableArrayList();
 		datas =  FXCollections.observableArrayList();
 
 		newDatas =  FXCollections.observableArrayList();

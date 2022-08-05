@@ -16,6 +16,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
@@ -55,67 +56,94 @@ public class ButtonAction {
 //					ObservableList<StringProperty> newd = modifyData.get(key);
 					// 拼接update sql
 					try {
-						String msg = UpdateDao.execUpdate(conn, tabName, val, fpos);
+						String msg = UpdateDao.execUpdate(conn, tabName, val);
 						
-						ObservableList<StringProperty> val = FXCollections.observableArrayList();
-						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-						val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
-						val.add(CommonUtility.createReadOnlyStringProperty("success")); 
-						val.add(CommonUtility.createReadOnlyStringProperty("" ));
-						
-						ddlDmlpo.addData(val);
+//						ObservableList<StringProperty> val = FXCollections.observableArrayList();
+						var fds = ddlDmlpo.getFields();
+						var row = ddlDmlpo.addRow();
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fds.get(2));
+//						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("" ), fds.get(3));
+//						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+//						val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
+//						val.add(CommonUtility.createReadOnlyStringProperty("success")); 
+//						val.add(CommonUtility.createReadOnlyStringProperty("" ));
+//						
+//						ddlDmlpo.addData(val);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 						btnDisable = false;
-						ObservableList<StringProperty> val = FXCollections.observableArrayList();
+//						ObservableList<StringProperty> val = FXCollections.observableArrayList();
 						String 	msg = "failed : " + e1.getMessage();
 						msg += "\n"+dpo.translateErrMsg(msg);
-						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-						val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
-						val.add(CommonUtility.createReadOnlyStringProperty("failed")); 
-						val.add(CommonUtility.createReadOnlyStringProperty("" ));
+						var fds = ddlDmlpo.getFields();
+						var row = ddlDmlpo.addRow();
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("failed"), fds.get(2));
+//						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("" ), fds.get(3));
 						
-						ddlDmlpo.addData(val);
+//						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+//						val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
+//						val.add(CommonUtility.createReadOnlyStringProperty("failed")); 
+//						val.add(CommonUtility.createReadOnlyStringProperty("" ));
+						
+//						ddlDmlpo.addData(val);
 					}
 				}
 				SqluckyBottomSheetUtility.rmUpdateData();
 			}
 
 			// 插入操作
-			List<ObservableList<StringProperty>> dataList = SqluckyBottomSheetUtility.getAppendData();
-			for (ObservableList<StringProperty> os : dataList) {
+			ObservableList<ResultSetRowPo> dataList = SqluckyBottomSheetUtility.getAppendData();
+			for (ResultSetRowPo os : dataList) {
 				try {
-					String msg = InsertDao.execInsert(conn, tabName, os, fpos);
-					ObservableList<StringProperty> val = FXCollections.observableArrayList();
-					val.add(new SimpleStringProperty(msg));
-					val.add(new SimpleStringProperty("success"));
-					val.add(new SimpleStringProperty(""));
-					ddlDmlpo.addData(val);
+					String msg = InsertDao.execInsert(conn, tabName, os);
+//					ObservableList<StringProperty> val = FXCollections.observableArrayList();
+					var fds = ddlDmlpo.getFields();
+					var row = ddlDmlpo.addRow();
+					ddlDmlpo.addData(row, new SimpleStringProperty(msg), fds.get(0));
+					ddlDmlpo.addData(row, new SimpleStringProperty("success"), fds.get(1));
+//					ddlDmlpo.addData(row, new SimpleStringProperty(""), fds.get(2));
+
+//					val.add(new SimpleStringProperty(msg));
+//					val.add(new SimpleStringProperty("success"));
+//					val.add(new SimpleStringProperty(""));
+//					ddlDmlpo.addData(val);
 
 					// 删除缓存数据
 					SqluckyBottomSheetUtility.rmAppendData();
 					// 对insert 的数据保存后 , 不能再修改
-					List<StringProperty> templs = new ArrayList<>();
-					for (int i = 0; i < fpos.size(); i++) {
-						StringProperty sp = os.get(i);
-						StringProperty newsp = new SimpleStringProperty(sp.get());
-						templs.add(newsp);
-						CommonUtility.prohibitChangeListener(newsp, sp.get());
+//					List<StringProperty> templs = new ArrayList<>();
+					ObservableList<ResultSetCellPo> cells = os.getRowDatas();
+					for (int i = 0; i < cells.size(); i++) {
+						var cellpo = cells.get(i);
+						StringProperty sp = cellpo.getCellData();
+//						StringProperty newsp = new SimpleStringProperty(sp.get());
+//						templs.add(newsp);
+						CommonUtility.prohibitChangeListener(sp, sp.get());
 					}
-					os.clear();
-					for (int i = 0; i < templs.size(); i++) {
-						StringProperty newsp = templs.get(i);
-						os.add(newsp);
-					}
+//					os.clear();
+//					for (int i = 0; i < templs.size(); i++) {
+//						StringProperty newsp = templs.get(i);
+//						os.add(newsp);
+//					}
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					btnDisable = false;
-					ObservableList<StringProperty> val = FXCollections.observableArrayList();
-					val.add(new SimpleStringProperty(e1.getMessage()));
-					val.add(new SimpleStringProperty("failed"));
-					val.add(new SimpleStringProperty(""));
-					ddlDmlpo.addData(val);
+//					ObservableList<StringProperty> val = FXCollections.observableArrayList();
+					var fs = ddlDmlpo.getFields();
+					var row = ddlDmlpo.addRow();
+					ddlDmlpo.addData(row, new SimpleStringProperty(e1.getMessage()), fs.get(0));
+					ddlDmlpo.addData(row, new SimpleStringProperty("failed"), fs.get(1));
+//					ddlDmlpo.addData(row, new SimpleStringProperty(""), fs.get(2));
+					
+//					val.add(new SimpleStringProperty(e1.getMessage()));
+//					val.add(new SimpleStringProperty("failed"));
+//					val.add(new SimpleStringProperty(""));
+//					ddlDmlpo.addData(val);
 				}
 			}
 
@@ -131,12 +159,12 @@ public class ButtonAction {
 		
 
 			// 获取当前的table view
-			FilteredTableView<ObservableList<StringProperty>> table = SqluckyBottomSheetUtility.dataTableView();
+			FilteredTableView<ResultSetRowPo> table = SqluckyBottomSheetUtility.dataTableView();
 			String tabName = SqluckyBottomSheetUtility.getTableName();
 			Connection conn = SqluckyBottomSheetUtility.getDbconn();
 			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
 
-			ObservableList<ObservableList<StringProperty>> vals = table.getSelectionModel().getSelectedItems();
+			ObservableList<ResultSetRowPo> vals = table.getSelectionModel().getSelectedItems();
 
 			// 行号集合
 			List<String> temp = new ArrayList<>();
@@ -146,32 +174,46 @@ public class ButtonAction {
 			Consumer<String> caller = x -> {
 				try {
 					for (int i = 0; i < vals.size(); i++) {
-						ObservableList<StringProperty> sps = vals.get(i);
-						String ro = sps.get(sps.size() - 1).get();
-						temp.add(ro);
-						String msg = DeleteDao.execDelete(conn, tabName, sps, fpos);
-						ObservableList<StringProperty> val = FXCollections.observableArrayList();
+						ResultSetRowPo sps = vals.get(i);
+//						String ro = sps.get(sps.size() - 1).get();
+//						temp.add(ro);
+						String msg = DeleteDao.execDelete(conn, tabName, sps);
+						var rs = sps.getResultSet();
+						rs.getDatas().remove(sps);
+//						ObservableList<StringProperty> val = FXCollections.observableArrayList();
+						var fs = ddlDmlpo.getFields();
+						var row = ddlDmlpo.addRow();
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())), fs.get(0));
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fs.get(1));
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fs.get(2));
+//						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(""), fs.get(3));
+//						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())));
+//						val.add(CommonUtility.createReadOnlyStringProperty(msg));
+//						val.add(CommonUtility.createReadOnlyStringProperty("success"));
+//						val.add(CommonUtility.createReadOnlyStringProperty(""));
 
-						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())));
-						val.add(CommonUtility.createReadOnlyStringProperty(msg));
-						val.add(CommonUtility.createReadOnlyStringProperty("success"));
-						val.add(CommonUtility.createReadOnlyStringProperty(""));
-
-						ddlDmlpo.addData(val);
+//						ddlDmlpo.addData(val);
 
 					}
-					for (String str : temp) {
-						SqluckyBottomSheetUtility.deleteTabDataRowNo(str);
-					}
+//					for (String str : temp) {
+//						SqluckyBottomSheetUtility.deleteTabDataRowNo(str);
+//					}
 
 				} catch (Exception e1) {
-					ObservableList<StringProperty> val = FXCollections.observableArrayList();
-					val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())));
-					val.add(CommonUtility.createReadOnlyStringProperty(e1.getMessage()));
-					val.add(CommonUtility.createReadOnlyStringProperty("fail."));
-					val.add(CommonUtility.createReadOnlyStringProperty(""));
+					var fs = ddlDmlpo.getFields();
+					var row = ddlDmlpo.addRow();
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())), fs.get(0));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(e1.getMessage()), fs.get(1));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("fail."), fs.get(2));
+//					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(""), fs.get(3));
 
-					ddlDmlpo.addData(val);
+//					ObservableList<StringProperty> val = FXCollections.observableArrayList();
+//					val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())));
+//					val.add(CommonUtility.createReadOnlyStringProperty(e1.getMessage()));
+//					val.add(CommonUtility.createReadOnlyStringProperty("fail."));
+//					val.add(CommonUtility.createReadOnlyStringProperty(""));
+//
+//					ddlDmlpo.addData(val);
 				} finally {
 					SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, null);
 				}
@@ -186,33 +228,38 @@ public class ButtonAction {
 	public static void copyData() {
 
 		// 获取当前的table view
-		FilteredTableView<ObservableList<StringProperty>> table = SqluckyBottomSheetUtility.dataTableView();
+		FilteredTableView<ResultSetRowPo> table = SqluckyBottomSheetUtility.dataTableView();
 
 		String tabId = table.getId();
 		// 获取字段属性信息
 		ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 		
 		// 选中的行数据
-		ObservableList<ObservableList<StringProperty>> vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
+		ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
 		try {
 			// 遍历选中的行
 			for (int i = 0; i < vals.size(); i++) {
 				// 一行数据, 提醒: 最后一列是行号
-				ObservableList<StringProperty> sps = vals.get(i);
+				ResultSetRowPo rowPo = vals.get(i);
+				var rs = rowPo.getResultSet();
+				ResultSetRowPo appendRow = rs.createAppendNewRow();
+				ObservableList<ResultSetCellPo> cells = rowPo.getRowDatas();
 				// copy 一行
 				ObservableList<StringProperty> item = FXCollections.observableArrayList();
-				int newLineidx = ConfigVal.newLineIdx++;
-				for (int j = 0 ; j < fs.size(); j++) {
-					StringProperty strp = sps.get(j);
-				 
-					StringProperty newsp = new SimpleStringProperty(strp.get());
+//				int newLineidx = ConfigVal.newLineIdx++;
+				for (int j = 0 ; j < cells.size(); j++) {
+//					StringProperty strp = sps.get(j);
+					ResultSetCellPo cellPo = cells.get(i);
+					
+					StringProperty newsp = new SimpleStringProperty(cellPo.getCellData().get());
+					appendRow.addCell(newsp, cellPo.getField());
 					int dataType = fs.get(j).getColumnType().get();
 					CommonUtility.newStringPropertyChangeListener(newsp, dataType);
 					item.add(newsp);
 				}
-				item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 新行的行号没什么用
-				SqluckyBottomSheetUtility.appendDate( newLineidx, item); // 可以防止在map中被覆盖
-				table.getItems().add(item);
+//				item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 新行的行号没什么用
+//				SqluckyBottomSheetUtility.appendDate( item); // 可以防止在map中被覆盖
+//				table.getItems().add(item);
 
 			}
 			table.scrollTo(table.getItems().size() - 1);
@@ -247,10 +294,11 @@ public class ButtonAction {
 		if("null".equals(value)) {
 			value = "<null>";
 		}
-		FilteredTableView<ObservableList<StringProperty>> dataTableView = rv.dataTableView;
-		ObservableList<ObservableList<StringProperty>> alls = dataTableView.getItems();
-		for(ObservableList<StringProperty> ls : alls) {
-			StringProperty  tmp = ls.get(colIdx);
+		FilteredTableView<ResultSetRowPo> dataTableView = rv.dataTableView;
+		ObservableList<ResultSetRowPo> alls = dataTableView.getItems();
+		for(ResultSetRowPo ls : alls) {
+			StringProperty  tmp = ls.getRowDatas().get(colIdx).getCellData();
+//			StringProperty  tmp = ls.get(colIdx);
 			tmp.setValue(value);
 		}
 		dataSave();
@@ -263,9 +311,10 @@ public class ButtonAction {
 			value = "<null>";
 		}
 		 
-		ObservableList<ObservableList<StringProperty>> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
-		for(ObservableList<StringProperty> ls : alls) {
-			StringProperty  tmp = ls.get(colIdx);
+		ObservableList<ResultSetRowPo> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
+		for(ResultSetRowPo ls : alls) {
+			StringProperty  tmp = ls.getRowDatas().get(colIdx).getCellData();
+//			StringProperty  tmp = ls.get(colIdx);
 			tmp.setValue(value);
 		}
 		dataSave();

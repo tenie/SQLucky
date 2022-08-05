@@ -87,14 +87,14 @@ public class SelectDao {
 			dvt.setExecTime(vt); 
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = resultSetMetaData(rs);
-			ResultSetPo setPo = new ResultSetPo();
+			ResultSetPo setPo = new ResultSetPo(fields);
 			
 //			ObservableList<ObservableList<StringProperty>>  val ;
 			// 数据
 			if (limit > 0) {
-				execRs(limit, rs, fields, dpo, setPo);
+				execRs(limit, rs, dpo, setPo);
 			} else {
-				   execRs(rs, fields, dpo, setPo);
+				execRs(rs,  dpo, setPo);
 			}
 			int rowSize = setPo.getDatas().size();
 			
@@ -285,17 +285,20 @@ public class SelectDao {
 	}
 	
 
-	private static void execRs(int limit, ResultSet rs, ObservableList<SheetFieldPo> fpo,
+	private static void execRs(int limit, ResultSet rs, 
 			  SqluckyConnector dpo, ResultSetPo setPo ) throws SQLException {
 		int idx = 1;
 		int rowNo = 0;
 		int rowIdx = 0;
+		ObservableList<SheetFieldPo> fpo = setPo.getFields();
 		int columnnums = fpo.size();
 //		ObservableList<ObservableList<StringProperty>> allDatas = FXCollections.observableArrayList();
 		while (rs.next()) {
-			ObservableList<ResultSetCellPo> rowDatas = FXCollections.observableArrayList();
+//			ObservableList<ResultSetCellPo> rowDatas = FXCollections.observableArrayList();
 //			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
 			int rn = rowNo++;
+			ResultSetRowPo rowpo = new ResultSetRowPo(setPo);
+			
 			for (int i = 0; i < columnnums; i++) {
 				SheetFieldPo fieldpo = fpo.get(i);
 				int dbtype = fieldpo.getColumnType().get();
@@ -320,17 +323,18 @@ public class SelectDao {
 						val = new SimpleStringProperty(temp); 
 					}
 				}
-				ResultSetCellPo cellVal = new ResultSetCellPo(i, val, fieldpo);
-				rowDatas.add(cellVal);
+//				ResultSetCellPo cellVal = new ResultSetCellPo(i, val, fieldpo);
+				rowpo.addCell(val, fieldpo);
+//				rowDatas.add(cellVal);
 //				vals.add(val);
 			}
 
 //			vals.add(new SimpleStringProperty(rn + ""));
 //			allDatas.add(vals);
-			ResultSetRowPo rowpo = new ResultSetRowPo(rowIdx, rowDatas, fpo);
+			
 			rowIdx++;
 			setPo.addRow(rowpo); 
-			
+			rowpo.cellAddChangeListener();
 			if (idx == limit) {
 				break;
 			}
@@ -382,10 +386,10 @@ public class SelectDao {
 
 	
 	
-	private static void  execRs(ResultSet rs, ObservableList<SheetFieldPo> fpo, 
+	private static void  execRs(ResultSet rs, 
 			SqluckyConnector dpo, ResultSetPo setPo )
 			throws SQLException {
-		  execRs(Integer.MAX_VALUE, rs, fpo, dpo, setPo);
+		  execRs(Integer.MAX_VALUE, rs, dpo, setPo);
 	}
 
 	

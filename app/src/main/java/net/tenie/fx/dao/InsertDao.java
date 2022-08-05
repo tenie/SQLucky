@@ -11,6 +11,8 @@ import org.apache.logging.log4j.Logger;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.lib.reflex.BuildObject;
@@ -29,15 +31,16 @@ public class InsertDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String execInsert(Connection conn, String tableName, ObservableList<StringProperty> data,
-			ObservableList<SheetFieldPo> fpos) throws Exception {
+	public static String execInsert(Connection conn, String tableName,  ResultSetRowPo data) throws Exception {
 		String msg = "";
 		StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
 		StringBuilder values = new StringBuilder("");
-		int size = fpos.size();
+		ObservableList<ResultSetCellPo> cells = data.getRowDatas();
+		int size = cells.size();
 		for (int i = 0; i < size; i++) {
-			SheetFieldPo po = fpos.get(i);
-			String temp = data.get(i).get();
+			ResultSetCellPo cellPo = cells.get(i);
+			SheetFieldPo po = cellPo.getField(); //fpos.get(i);
+			String temp = cellPo.getCellData().get(); //data.get(i).get();
 			if ( !"<null>".equals(temp)) {
 				sql.append(po.getColumnLabel().get());
 				values.append(" ? ");
@@ -61,12 +64,14 @@ public class InsertDao {
 		 
 		int idx = 0;
 		for (int i = 0; i < size; i++) {
-			String val = data.get(i).get();
+//			String val = data.get(i).get();
+			ResultSetCellPo cellPo = cells.get(i);
+			String val =  cellPo.getCellData().get(); 
 			if ( !"<null>".equals(val)) {
 				idx++;
-				String type = fpos.get(i).getColumnClassName().get();
-				int javatype = fpos.get(i).getColumnType().get();
-				String columnTypeName =  fpos.get(i).getColumnTypeName().get();
+				String type = cellPo.getField().getColumnClassName().get();
+				int javatype = cellPo.getField().getColumnType().get();
+				String columnTypeName =  cellPo.getField().getColumnTypeName().get();
 				System.out.println("javatype = "+javatype +" | " +columnTypeName);
 				if (CommonUtility.isDateTime(javatype)) {
 					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);

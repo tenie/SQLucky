@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.db;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 /**
@@ -11,31 +12,58 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
  */
 public class ResultSetRowPo {
 	private ResultSetPo resultSet ;
-	private	ObservableList<SheetFieldPo> fields;
+//	private	ObservableList<SheetFieldPo> fields;
 	private ObservableList<ResultSetCellPo> rowDatas; 
 //	private ObservableList<ResultSetCellPo> oldCellVal;
 	private Boolean hasModify = false;
 	private int rowIndex = -1;
 	
 	public void clean() {
-		resultSet = null;
-		fields.clear();
-		fields = null;
+		if(resultSet != null ) {
+			resultSet.getFields().clear();
+			resultSet = null;
+		}
+//		fields.clear();
+//		fields = null;
 		rowDatas.forEach(v->{ v.clean(); });
 //		oldCellVal.forEach(v->{ v.clean(); });
 		hasModify = null;
 	}
 	
-	public ResultSetRowPo(int idx, ObservableList<ResultSetCellPo> val, ObservableList<SheetFieldPo> fields) {
-		rowIndex = idx;
-		rowDatas = val;
-		this.fields = fields;
-		for(var cell : rowDatas) {
-			cell.setCurrentRow(this);
-		}
+//	public ResultSetRowPo(int idx, ObservableList<ResultSetCellPo> val, ObservableList<SheetFieldPo> fields) {
+//		rowIndex = idx;
+//		rowDatas = val;
+//		this.fields = fields;
+//		for(var cell : rowDatas) {
+//			cell.setCurrentRow(this);
+//		}
+//	}
+	
+	protected ResultSetRowPo(ResultSetPo rs) {
+		resultSet = rs;
+		rowIndex = resultSet.getDatas().size();
+		rowDatas = FXCollections.observableArrayList();
+//		this.fields = fields;
 	}
 	
+//	public void addCell(ResultSetCellPo cell) {
+//		rowDatas.add(cell);
+//	}
+	public void addCell(StringProperty cellData, SheetFieldPo field) {
+		ResultSetCellPo cell = new ResultSetCellPo(this, cellData, field);
+		rowDatas.add(cell);
+	}
+	public void addCell(String cellstr, SheetFieldPo field) {
+		StringProperty sp = new SimpleStringProperty(cellstr);
+		addCell(sp, field);
+	}
 	
+	public int cellSize() {
+		if(rowDatas != null) {
+			return rowDatas.size();
+		}
+		return 0;
+	}
 	// 根据字段名称找到对应的值
 	public String getValueByFieldName(String fieldName) {
 		if(rowDatas != null && rowDatas.size()>0) {
@@ -63,6 +91,16 @@ public class ResultSetRowPo {
 		}
 	}
 	
+	// cell 添加监听时间
+	public void cellAddChangeListener() {
+		if( rowDatas != null && rowDatas.size() > 0) {
+			for(var cell : rowDatas) {
+				cell.addStringPropertyChangeListener();
+			}
+		}
+		
+	}
+	
 	public ResultSetPo getResultSet() {
 		return resultSet;
 	}
@@ -77,9 +115,9 @@ public class ResultSetRowPo {
 		return rowDatas;
 	}
 
-	public void setRowDatas(ObservableList<ResultSetCellPo> rowDatas) {
-		this.rowDatas = rowDatas;
-	}
+//	public void setRowDatas(ObservableList<ResultSetCellPo> rowDatas) {
+//		this.rowDatas = rowDatas;
+//	}
 	public int getRowIndex() {
 		return rowIndex;
 	}
@@ -87,11 +125,9 @@ public class ResultSetRowPo {
 		this.rowIndex = rowIndex;
 	}
 	public ObservableList<SheetFieldPo> getFields() {
-		return fields;
+		return resultSet.getFields();
 	}
-	public void setFields(ObservableList<SheetFieldPo> fields) {
-		this.fields = fields;
-	}
+	 
 
 
 //	public ObservableList<ResultSetCellPo> getOldCellVal() {

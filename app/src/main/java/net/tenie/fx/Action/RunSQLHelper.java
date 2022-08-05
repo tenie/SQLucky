@@ -29,6 +29,7 @@ import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
@@ -185,13 +186,21 @@ public class RunSQLHelper {
 					});
 				}else {
 					// 显示字段是只读的
-					ObservableList<StringProperty> val = FXCollections.observableArrayList();
-					val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-					val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
+//					ObservableList<StringProperty> val = FXCollections.observableArrayList();
+					ObservableList<SheetFieldPo> fls = ddlDmlpo.getFields();
+					var row = ddlDmlpo.addRow();
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fls.get(0));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fls.get(1));
 					int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
-					val.add(CommonUtility.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
-					val.add(CommonUtility.createReadOnlyStringProperty("" + i));
-					ddlDmlpo.addData(val);
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... "), fls.get(2));
+//					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("" + i), fls.get(3));
+					
+//					val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+//					val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
+//					int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
+//					val.add(CommonUtility.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... ")); 
+//					val.add(CommonUtility.createReadOnlyStringProperty("" + i));
+//					ddlDmlpo.addData(val);
 				}
 			}
 

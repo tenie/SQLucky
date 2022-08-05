@@ -17,8 +17,9 @@ public class DmlDdlDao {
 	public static DbTableDatePo deleteSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		int i = execDML(conn, sql);
-		dpo.addField("Delete Info");
-		dpo.addData("ok, delete:" + i);
+		var fp = dpo.addField("Delete Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok, delete:" + i, fp);
 		return dpo;
 	}
 
@@ -30,8 +31,9 @@ public class DmlDdlDao {
 	public static DbTableDatePo updateSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		int i = execDML(conn, sql);
-		dpo.addField("Update Info");
-		dpo.addData("ok, Update: " + i);
+		var fp = dpo.addField("Update Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok, Update: " + i, fp);
 		return dpo;
 	}
 
@@ -43,8 +45,9 @@ public class DmlDdlDao {
 	public static DbTableDatePo insertSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		int i = execDML(conn, sql);
-		dpo.addField("Insert Info");
-		dpo.addData("ok, Insert: " + i);
+		var fp = dpo.addField("Insert Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok, Insert: " + i, fp);
 		return dpo;
 	}
 
@@ -56,8 +59,9 @@ public class DmlDdlDao {
 	public static DbTableDatePo dropSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		execDDL(conn, sql);
-		dpo.addField("drop Info");
-		dpo.addData("ok");
+		var fp = dpo.addField("drop Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok", fp);
 		return dpo;
 	}
 
@@ -69,8 +73,9 @@ public class DmlDdlDao {
 	public static DbTableDatePo alterSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		execDDL(conn, sql);
-		dpo.addField("Alter Info");
-		dpo.addData("ok");
+		var fp = dpo.addField("Alter Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok", fp);
 		return dpo;
 	}
 
@@ -82,8 +87,9 @@ public class DmlDdlDao {
 	public static DbTableDatePo createSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		execDDL(conn, sql);
-		dpo.addField("Create Info");
-		dpo.addData("ok");
+		var fp = dpo.addField("Create Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok", fp);
 		return dpo;
 	}
 
@@ -94,9 +100,10 @@ public class DmlDdlDao {
 
 	public static DbTableDatePo otherSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
+		var row = dpo.addRow();
 		execDDL(conn, sql);
-		dpo.addField(" Info");
-		dpo.addData("ok");
+		var fp = dpo.addField(" Info");
+		dpo.addData(row, "ok", fp);
 		return dpo;
 	}
 
