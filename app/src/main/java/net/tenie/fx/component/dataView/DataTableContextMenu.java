@@ -34,10 +34,10 @@ public class DataTableContextMenu {
 	 * @param col
 	 * @return
 	 */
-	public static ContextMenu DataTableColumnContextMenu(String colname, int type, FilteredTableColumn<ObservableList<StringProperty>, String> col, int colIdx ) {
+	public static ContextMenu DataTableColumnContextMenu(String colname, int type, FilteredTableColumn<ResultSetRowPo, String> col, int colIdx ) {
 		
 		// 过滤框
-		PopupFilter<ObservableList<StringProperty>, String> popupFilter ;
+		PopupFilter<ResultSetRowPo, String> popupFilter ;
 		if (CommonUtility.isNum(type)) {
 			// 过滤框
 			popupFilter = new MyPopupNumberFilter<>(col);

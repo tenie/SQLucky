@@ -15,10 +15,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.ResultSetPo;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -34,8 +31,8 @@ import net.tenie.fx.dao.InsertDao;
  * @author tenie
  *
  */
-public class AppDao {
-	private static Logger logger = LogManager.getLogger(AppDao.class);
+public class AppDao2 {
+	private static Logger logger = LogManager.getLogger(AppDao2.class);
 	public static final String CONNECTION_INFO = 
 			"CREATE TABLE `CONNECTION_INFO` (\n" + 
 			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
@@ -450,7 +447,7 @@ public class AppDao {
 	public static void testDbTableExists(Connection conn) {
 		// 第一次启动
 		if (!tabExist(conn, "PLUGIN_INFO")) {
-			AppDao.createTab(conn);
+			AppDao2.createTab(conn);
 			// 数据库迁移
 			transferOldDbData(conn);
 		} else {// 之后的启动, 更新脚本
@@ -505,13 +502,11 @@ public class AppDao {
 				dvt.setTabName(tableName);
 				try {
 					SelectDao.selectSql(sql, -1, dvt);
-//					var datas = dvt.getRawData();
-					ResultSetPo rspo = dvt.getDataRs();
-					ObservableList<ResultSetRowPo> datas = rspo.getDatas();
+					var datas = dvt.getRawData();
 					var fs = dvt.getColss();
 					if (datas != null) {
-						for (ResultSetRowPo data : datas) {
-							InsertDao.execInsert(conn, tableName, data);
+						for (var data : datas) {
+							InsertDao.execInsert(conn, tableName, data, fs);
 						}
 					}
 
@@ -553,7 +548,7 @@ public class AppDao {
 	// 执行更新脚本
 	public static void updateAppSql(Connection conn) {
 //		 setConfigVal(conn,  "UPDATE_SQL", "ALTER TABLE SQL_TEXT_SAVE ADD PARAGRAPH  INT(11);");
-		 String  UPDATE_SQL =  AppDao.readConfig(conn , "UPDATE_SQL"); 
+		 String  UPDATE_SQL =  AppDao2.readConfig(conn , "UPDATE_SQL"); 
 		 if(UPDATE_SQL != null &&  UPDATE_SQL.length() > 0) {
 			 String[] sql = UPDATE_SQL.split(";");
 				for (String s : sql) {
@@ -566,7 +561,7 @@ public class AppDao {
 						e.printStackTrace();
 					}
 				}
-				AppDao.saveConfig(conn,  "UPDATE_SQL", "");
+				AppDao2.saveConfig(conn,  "UPDATE_SQL", "");
 		 }
 		 
 		List<String> ls =  updateSQL();

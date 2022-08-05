@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.fx.utility.DraggingTabPaneSupport;
 
 /*   
@@ -54,7 +55,7 @@ public class DataViewContainer {
 	
 	
 	// 设置序号行的宽度
-	public static void setTabRowWith(FilteredTableView<ObservableList<StringProperty>> table , int dataSize ) {
+	public static void setTabRowWith(FilteredTableView<ResultSetRowPo> table , int dataSize ) {
 		if(dataSize > 1000) {
 			table.setRowHeaderWidth(50);
 		}else if(dataSize > 100000) {

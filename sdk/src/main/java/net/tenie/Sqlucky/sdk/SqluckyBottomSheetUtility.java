@@ -26,6 +26,14 @@ public class SqluckyBottomSheetUtility {
 		SheetDataValue dv = mtd.getTableData();
 		return dv;
 	}
+	public static ResultSetPo getResultSet() {
+		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+		if (dvt != null) {
+			 ResultSetPo spo = dvt.getDataRs();
+			 return spo;
+		}
+		return null;
+	}
 	
 	// 获取所有数据
 	public static ObservableList<ResultSetRowPo> getTabData() {
@@ -198,16 +206,21 @@ public class SqluckyBottomSheetUtility {
 			}
 		}
 
-		public static void appendDate(int rowNo, ResultSetRowPo newDate) {
+		public static void appendDate( ResultSetRowPo newDate) {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				dvt.getDataRs().getNewDatas().add(newDate);
+				dvt.getDataRs().getDatas().add(newDate);
 //				Map<String, ObservableList<StringProperty>> map = dvt.getAppendData();
 //				map.put(rowNo + "", newDate);
 			}
 		}
 
-		public static List<ObservableList<StringProperty>> getAppendData2() {
+		public static ObservableList<ResultSetRowPo>  getAppendData() {
+			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+			if (dvt != null) {
+				return dvt.getDataRs().getNewDatas();
+			}
 			//TODO 后期重构
 //			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 //			if (dvt != null) {

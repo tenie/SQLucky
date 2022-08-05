@@ -27,6 +27,8 @@ import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
+import net.tenie.Sqlucky.sdk.db.ResultSetPo;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
@@ -361,24 +363,31 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 	// 添加一行数据
 	public static void addData(JFXButton saveBtn) {
+		
+		
+		
 		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tbv = mtd.getTableData().getTable();
 
 		tbv.scrollTo(0);
 		int newLineidx = ConfigVal.newLineIdx++;
-		ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
+//		ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
+		ResultSetPo rspo = SqluckyBottomSheetUtility.getResultSet();
+		ResultSetRowPo rowpo = rspo.createAppendNewRow(); //new ResultSetRowPo(rspo);
+		ObservableList<SheetFieldPo> fs = rspo.getFields();
 		ObservableList<ResultSetCellPo> item = FXCollections.observableArrayList();
 		for (int i = 0; i < fs.size(); i++) {
+			SheetFieldPo fieldpo = fs.get(i);
 			SimpleStringProperty sp = new SimpleStringProperty("<null>");
-			ResultSetCellPo tmpCell = new ResultSetCellPo(i, sp, fs.get(i));
+			rowpo.addCell(sp, fieldpo); 
 			
 			// 添加监听. 保存时使用 newLineIdx
-			CommonUtility.newStringPropertyChangeListener(sp, fs.get(i).getColumnType().get());
-			item.add(sp);
+//			CommonUtility.newStringPropertyChangeListener(sp, fs.get(i).getColumnType().get());
+//			item.add(sp);
 		}
-		item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
-		SqluckyBottomSheetUtility.appendDate(newLineidx, item); // 可以防止在map中被覆盖
-		tbv.getItems().add(0, item);
+//		item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
+//		SqluckyBottomSheetUtility.appendDate(newLineidx, item); // 可以防止在map中被覆盖
+		tbv.getItems().add(0, rowpo);
 
 		// 点亮保存按钮
 		saveBtn.setDisable(false);

@@ -44,56 +44,63 @@ public class DBTools {
 	public static DbTableDatePo deleteSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		int i = execDML(conn, sql);
-		dpo.addField("Delete Info");
-		dpo.addData("ok, delete:" + i);
+		SheetFieldPo field = dpo.addField("Delete Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok, delete:" + i, field);
 		return dpo;
 	}
 
 	public static DbTableDatePo updateSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		int i = execDML(conn, sql);
-		dpo.addField("Update Info");
-		dpo.addData("ok, Update: " + i);
+		var fp = dpo.addField("Update Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok, Update: " + i, fp);
 		return dpo;
 	}
 
 	public static DbTableDatePo insertSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		int i = execDML(conn, sql);
-		dpo.addField("Insert Info");
-		dpo.addData("ok, Insert: " + i);
+		var fp = dpo.addField("Insert Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok, Insert: " + i, fp);
 		return dpo;
 	}
 
 	public static DbTableDatePo dropSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		execDDL(conn, sql);
-		dpo.addField("drop Info");
-		dpo.addData("ok");
+		var fp = dpo.addField("drop Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok", fp);
 		return dpo;
 	}
 
 	public static DbTableDatePo alterSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		execDDL(conn, sql);
-		dpo.addField("Alter Info");
-		dpo.addData("ok");
+		var fp = dpo.addField("Alter Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok", fp);
 		return dpo;
 	}
 
 	public static DbTableDatePo createSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		execDDL(conn, sql);
-		dpo.addField("Create Info");
-		dpo.addData("ok");
+		var fp = dpo.addField("Create Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok", fp);
 		return dpo;
 	}
 
 	public static DbTableDatePo otherSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		execDDL(conn, sql);
-		dpo.addField(" Info");
-		dpo.addData("ok");
+		var fp = dpo.addField(" Info");
+		var row = dpo.addRow();
+		dpo.addData(row, "ok", fp);
 		return dpo;
 	}
 
@@ -170,13 +177,14 @@ public class DBTools {
 	public static DbTableDatePo execSql(Connection conn, String sql, String sqltype, String content)
 			throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
-		dpo.addField(sqltype + " Info");
+		var fp = 	dpo.addField(sqltype + " Info");
+		var row = dpo.addRow();
 		Statement sm = null;
 		try {
 			logger.debug("execSql = " + sql);
 			sm = conn.createStatement();
 			int i = sm.executeUpdate(sql);
-			dpo.addData(content + i);
+			dpo.addData(row, content + i, fp);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;

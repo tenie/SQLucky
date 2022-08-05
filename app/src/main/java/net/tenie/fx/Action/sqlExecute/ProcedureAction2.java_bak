@@ -15,7 +15,6 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
@@ -27,9 +26,9 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.config.DBConns;
 
-public class ProcedureAction {
+public class ProcedureAction2 {
 
-	private static Logger logger = LogManager.getLogger(ProcedureAction.class);
+	private static Logger logger = LogManager.getLogger(ProcedureAction2.class);
 	private static Thread staticThread = null ;
 	
 	public static void procedureAction(String sql, SqluckyConnector dpo,
@@ -38,8 +37,9 @@ public class ProcedureAction {
 		staticThread = thread;
 		String msg = "";
 		Connection conn = dpo.getConn();
+		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		try { 
-			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
+			FilteredTableView<ObservableList<StringProperty>> table = SdkComponent.creatFilteredTableView();
 			// 获取表名
 			String tableName = sql; 
 //			ParseSQL.tabName(sql);
@@ -49,7 +49,7 @@ public class ProcedureAction {
 			//TODO callProcedure
 			SelectDao.callProcedure(conn, sql, table.getId(), dvt, fields );
 			
-			DataViewContainer.setTabRowWith(table, dvt.getDataRs().getDatas().size());
+			DataViewContainer.setTabRowWith(table, dvt.getRawData().size());
 			
 			String connectName = DBConns.getCurrentConnectName();
 			dvt.setSqlStr(sql);
@@ -60,7 +60,7 @@ public class ProcedureAction {
 			dvt.setDbConnection(dpo);
 			dvt.setLock(isLock);
 			
-			ObservableList<ResultSetRowPo> allRawData = dvt.getDataRs().getDatas();
+			ObservableList<ObservableList<StringProperty>> allRawData = dvt.getRawData();
 			ObservableList<SheetFieldPo> colss = dvt.getColss();
 			  
 			//缓存
@@ -97,23 +97,13 @@ public class ProcedureAction {
 		}
 		
 		if(StrUtils.isNotNullOrEmpty(msg)) {
-			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
-			ObservableList<SheetFieldPo>  fieldpols = ddlDmlpo.getFields();
-			var row = ddlDmlpo.addRow();
-			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fieldpols.get(0));
-			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg),  fieldpols.get(1));
-			
+			ObservableList<StringProperty> val = FXCollections.observableArrayList();
+			val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
+			val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
 			int endIdx = sql.length() > 100 ? 100 : sql.length();
-			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("call procedure "+ sql.subSequence(0, endIdx) + " ... "), fieldpols.get(2));
-//			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("" ),  fieldpols.get(3));
-			
-//			ObservableList<StringProperty> val = FXCollections.observableArrayList();
-//			val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-//			val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
-//			int endIdx = sql.length() > 100 ? 100 : sql.length();
-//			val.add(CommonUtility.createReadOnlyStringProperty("call procedure "+ sql.subSequence(0, endIdx) + " ... ")); 
-//			val.add(CommonUtility.createReadOnlyStringProperty("" ));
-//			ddlDmlpo.addData(val);
+			val.add(CommonUtility.createReadOnlyStringProperty("call procedure "+ sql.subSequence(0, endIdx) + " ... ")); 
+			val.add(CommonUtility.createReadOnlyStringProperty("" ));
+			ddlDmlpo.addData(val);
 			SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, thread);
 		}
 	}

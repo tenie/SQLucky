@@ -44,6 +44,7 @@ import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -902,12 +903,13 @@ public class TransferDataController implements Initializable {
 			stmt = toConn.createStatement();
 			int idx = 0 ; 
 			ObservableList<SheetFieldPo> fpo = dpo.getFields();
+		
 			int columnnums = fpo.size();
 			String  insertSql = "";
 			while (rs.next()) {
 				idx++;
-				ObservableList<StringProperty> vals = FXCollections.observableArrayList();
-
+//				ObservableList<StringProperty> vals = FXCollections.observableArrayList();
+				var row = dpo.addRow();
 				for (int i = 0; i < columnnums; i++) {
 					int dbtype = fpo.get(i).getColumnType().get();
 					StringProperty val;
@@ -926,9 +928,10 @@ public class TransferDataController implements Initializable {
 							val = new SimpleStringProperty(temp); 
 						}
 					}
-					 vals.add(val);
-				} 
-			    insertSql = GenerateSQLString.insertSQL(tableName, vals, fpo);  
+//					 vals.add(val);
+					 dpo.addData(row, val, fpo.get(i));
+				}
+			    insertSql = GenerateSQLString.insertSQL(tableName , row);  
 				moniterAppendStr(insertSql);
 				stmt.addBatch(insertSql); 
 				if( idx % execLine == 0 ) { 

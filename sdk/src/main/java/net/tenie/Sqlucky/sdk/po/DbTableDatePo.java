@@ -6,6 +6,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import net.tenie.Sqlucky.sdk.db.ResultSetPo;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 
 /*   
  * 查询表的 字段 和 查询数据
@@ -13,8 +15,9 @@ import javafx.collections.ObservableList;
 public class DbTableDatePo {
 	// 字段
 	private ObservableList<SheetFieldPo> fields;
-	// 数据
-	private ObservableList<ObservableList<StringProperty>> allDatas;
+ 
+	private ResultSetPo resultSet ;
+	
 	// sql执行时间
 	private double execTime = 0;
 	// 行数
@@ -22,18 +25,14 @@ public class DbTableDatePo {
 	
 	public void clean() {
 		fields.clear();
-		allDatas.forEach(val ->{
-			val.clear();
-		});
-		
-		allDatas.clear();
+		resultSet.clean();
 		
 		fields = null;
-		allDatas = null;
+		resultSet = null;
 	}
 	public DbTableDatePo() {
 		fields = FXCollections.observableArrayList();
-		allDatas = FXCollections.observableArrayList();
+		resultSet = new ResultSetPo(fields);
 	}
 	
 	public static DbTableDatePo setExecuteInfoPo() {
@@ -52,27 +51,41 @@ public class DbTableDatePo {
 		p.setColumnLabel(new SimpleStringProperty("Error Message Info"));
 		errdpo.addField(p);
 
-		ObservableList<StringProperty> valsErr = FXCollections.observableArrayList();
-		valsErr.add(new SimpleStringProperty(errorMessage));
-		errdpo.addData(valsErr);
+//		ObservableList<StringProperty> valsErr = FXCollections.observableArrayList();
+//		valsErr.add(new SimpleStringProperty(errorMessage));
+//		errdpo.addData(valsErr);
+		ResultSetRowPo  rowpo = errdpo.getResultSet().creatRow();
+		rowpo.addCell(new SimpleStringProperty(errorMessage), p);
 		return errdpo;
 	}
-
-	public void addData(ObservableList<StringProperty> data) {
-		allDatas.add(data);
+	public ResultSetRowPo addRow() {
+		ResultSetRowPo row = resultSet.creatRow();
+		return row;
+	}
+	
+	public void addData(ResultSetRowPo row, String data, SheetFieldPo field) {
+//		ResultSetRowPo row = resultSet.creatRow();
+//		allDatas.add(data);
+		row.addCell(data, field);
+	}
+	public void addData(ResultSetRowPo row, StringProperty data, SheetFieldPo field) {
+//		ResultSetRowPo row = resultSet.creatRow();
+//		allDatas.add(data);
+		row.addCell(data, field);
 	}
 
 	public void addField(SheetFieldPo data) {
 		fields.add(data);
 	}
 
-	public void addData(String str) {
-		ObservableList<StringProperty> val = FXCollections.observableArrayList();
-		val.add(new SimpleStringProperty(str));
-		allDatas.add(val);
-	}
+//	public void addData(String str) {
+//		ObservableList<StringProperty> val = FXCollections.observableArrayList();
+//		val.add(new SimpleStringProperty(str));
+//		ResultSetRowPo 
+//		allDatas.add(val);
+//	}
 
-	public void addField(String data) {
+	public SheetFieldPo addField(String data) {
 		SheetFieldPo po = new SheetFieldPo();
 		po.setColumnLabel(data);
 		po.setColumnName(data);
@@ -82,8 +95,9 @@ public class DbTableDatePo {
 		po.setScale(0);
 		po.setColumnDisplaySize(0); 
 		fields.add(po);
+		return po;
 	}
-	public void addField(String data ,Double Width) {
+	public SheetFieldPo addField(String data ,Double Width) {
 		SheetFieldPo po = new SheetFieldPo();
 		po.setColumnLabel(data);
 		po.setColumnName(data);
@@ -94,6 +108,7 @@ public class DbTableDatePo {
 		po.setColumnDisplaySize(0); 
 		po.setColumnWidth(Width);
 		fields.add(po);
+		return po;
 	}
 
 	public ObservableList<SheetFieldPo> getFields() {
@@ -104,17 +119,17 @@ public class DbTableDatePo {
 		this.fields = fields;
 	}
 
-	public ObservableList<ObservableList<StringProperty>> getAllDatas() {
-		return allDatas;
-	}
+//	public ObservableList<ObservableList<StringProperty>> getAllDatas() {
+//		return allDatas;
+//	}
+//
+//	public void setAllDatas(ObservableList<ObservableList<StringProperty>> allDatas) {
+//		this.allDatas = allDatas;
+//	}
 
-	public void setAllDatas(ObservableList<ObservableList<StringProperty>> allDatas) {
-		this.allDatas = allDatas;
-	}
-
-	public int getAllDatasSize() {
-		return allDatas.size();
-	}
+//	public int getAllDatasSize() {
+//		return allDatas.size();
+//	}
 
 	public double getExecTime() {
 		return execTime;
@@ -124,15 +139,22 @@ public class DbTableDatePo {
 		this.execTime = execTime;
 	}
 
-	public int getRows() {
-		if( allDatas != null) {
-			this.rows =  allDatas.size();
-		}
-		return rows;
-	}
+//	public int getRows() {
+//		if( allDatas != null) {
+//			this.rows =  allDatas.size();
+//		}
+//		return rows;
+//	}
 
+	public ResultSetPo getResultSet() {
+		return resultSet;
+	}
+	public void setResultSet(ResultSetPo resultSet) {
+		this.resultSet = resultSet;
+	}
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
+	
 	
 }

@@ -31,11 +31,18 @@ public class ResultSetCellPo {
 		currentRow = null;
 	}
 	
-	public ResultSetCellPo(int index, StringProperty cellData, SheetFieldPo field) {
-		this.index = index;
+//	public ResultSetCellPo(ResultSetRowPo currentRow, StringProperty cellData, SheetFieldPo field) {
+//		this.index = index;
+//		this.cellData = cellData;
+//		this.field = field; 
+//		addStringPropertyChangeListener();
+//	}
+	
+	protected ResultSetCellPo(ResultSetRowPo currentRow, StringProperty cellData, SheetFieldPo field) {
+		this.index = currentRow.cellSize();
 		this.cellData = cellData;
 		this.field = field; 
-		addStringPropertyChangeListener();
+//		addStringPropertyChangeListener();
 	}
 	
 	public StringProperty getCellData() {
