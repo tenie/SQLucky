@@ -14,6 +14,7 @@ import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
@@ -165,10 +166,18 @@ public class ButtonFactory {
 //			rows.setPromptText("Max Rows");
 			rows.getStyleClass().add("myTextField");
 			rows.setMaxWidth(90);
-			rows.setTooltip(MyTooltipTool.instance("Input 0 query all data."));
+			rows.setTooltip(MyTooltipTool.instance("Load query data rows, suggest <10000 "));
 			rows.setText(ConfigVal.MaxRows + "");
 			rows.lengthProperty().addListener(CommonListener.textFieldLimit(rows, 9));
 			rows.textProperty().addListener(CommonListener.textFieldNumChange(rows));
+			// 失去焦点, 如果没有输入值默认1
+			rows.focusedProperty().addListener((observable,  oldValue,  newValu)->{
+				if(newValu == false) {
+					if(StrUtils.isNullOrEmpty(rows.getText())) {
+						rows.setText("1");
+					}
+				}
+			});
 
 			int y = 0;
 			int fix = 30;
