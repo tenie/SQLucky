@@ -39,14 +39,15 @@ public class CommonListener {
 		return new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-
-				String str = StrUtils.clearString(newValue);
-				if (str != null && str.length() > 0) {
-					ConfigVal.MaxRows = Integer.valueOf(str);
-				} else {
-					ConfigVal.MaxRows = 0;
+				if(StrUtils.isNotNullOrEmpty(newValue)) {
+					String str = StrUtils.clearString(newValue);
+					if (str != null && str.length() > 0) {
+						ConfigVal.MaxRows = Integer.valueOf(str);
+					} else {
+						ConfigVal.MaxRows = 1;
+					}
+					rows.setText(str);
 				}
-				rows.setText(str);
 			}
 		};
 	}
