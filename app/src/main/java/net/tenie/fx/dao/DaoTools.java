@@ -29,7 +29,13 @@ public class DaoTools {
 			for (int i = 0; i < cellVals.size(); i++) {
 				ResultSetCellPo cellpo = cellVals.get(i);
 				String field = cellpo.getField().getColumnLabel().get();
-				String valStr = cellpo.getCellData().get();
+				String valStr = null;
+				if(cellpo.getHasModify() ) {
+					valStr = cellpo.getOldCellData().get();
+				}else {
+					valStr = cellpo.getCellData().get();
+				}
+			 
 				if( valStr != null) {
 					if( "<null>".equals(valStr) ) {
 						str.append(field + " is null and ");
@@ -70,8 +76,16 @@ public class DaoTools {
 			for (int i = 0; i < cellVals.size(); i++) {
 				idx++;
 				ResultSetCellPo cellpo = cellVals.get(i);
-				String val = cellpo.getCellData().get();
+//				String val = cellpo.getCellData().get();
 				String type = cellpo.getField().getColumnClassName().get();
+				
+				String val = null;
+				if(cellpo.getHasModify() ) {
+					val = cellpo.getOldCellData().get();
+				}else {
+					val = cellpo.getCellData().get();
+				}
+				
 				if ("<null>".equals(val)) {
 					idx--;
 					continue;
@@ -133,7 +147,14 @@ public class DaoTools {
 			for (int i = 0; i < cells.size(); i++) {
 				idx++;
 				ResultSetCellPo cellpo = cells.get(i);
-				String val = cellpo.getCellData().get();
+//				String val = cellpo.getCellData().get();
+				String val = null;
+				if(cellpo.getHasModify() ) {
+					val = cellpo.getOldCellData().get();
+				}else {
+					val = cellpo.getCellData().get();
+				}
+				
 				String type = cellpo.getField().getColumnClassName().get();
 				if ("<null>".equals(val)) {
 					idx--;
