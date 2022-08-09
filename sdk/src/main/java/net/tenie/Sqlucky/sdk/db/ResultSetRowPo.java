@@ -94,8 +94,8 @@ public class ResultSetRowPo {
 	// cell 添加监听时间
 	public void cellAddChangeListener() {
 		if( rowDatas != null && rowDatas.size() > 0) {
-			for(var cell : rowDatas) {
-				cell.addStringPropertyChangeListener();
+			for(ResultSetCellPo cell : rowDatas) {
+				ResultSetCellPo.addStringPropertyChangeListener(cell);
 			}
 		}
 		
@@ -147,6 +147,10 @@ public class ResultSetRowPo {
 
 	public void setHasModify(Boolean hasModify) {
 		this.hasModify = hasModify;
+		if(hasModify) {
+			resultSet.getUpdateDatas().add(this);
+		}
+		
 	}
 	
 	

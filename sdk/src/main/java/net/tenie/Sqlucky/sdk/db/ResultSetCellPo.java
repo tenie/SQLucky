@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -42,6 +43,7 @@ public class ResultSetCellPo {
 		this.index = currentRow.cellSize();
 		this.cellData = cellData;
 		this.field = field; 
+		this.currentRow = currentRow; 
 //		addStringPropertyChangeListener();
 	}
 	
@@ -49,10 +51,7 @@ public class ResultSetCellPo {
 		return cellData;
 	}
 	public void setCellData(StringProperty cellData) {
-		if(oldCellData == null) {
-			this.oldCellData  = this.cellData;
-			hasModify = true;
-		}
+		
 		this.cellData = cellData;
 		
 	}
@@ -103,30 +102,33 @@ public class ResultSetCellPo {
 	
 	// 数据单元格添加监听
 		// 字段修改事件
-		public  void addStringPropertyChangeListener( ) {
-			ChangeListener<String> cl = new ChangeListener<String>() {
-				@Override
-				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					logger.info("add String Property Change Listener ：newValue：" + newValue + " | oldValue =" + oldValue);
+	public static void addStringPropertyChangeListener(ResultSetCellPo cell) {
+		ChangeListener<String> cl = new ChangeListener<String>() {
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				logger.info("add String Property Change Listener ：newValue：" + newValue + " | oldValue =" + oldValue);
 //					logger.info("key ==" + tabId + "-" + rowNo);
-					logger.info("observable = " + observable);
-					int dbtype = field.getColumnType().get();
-					
-					// 如果类似是数字的, 新值不是数字, 还原
-					if (CommonUtility.isNum(dbtype) &&
-						!StrUtils.isNumeric(newValue) &&
-						!"<null>".equals(newValue)) {
-							Platform.runLater(() -> cellData.setValue(oldValue));
-							return;
-					}
+				logger.info("observable = " + observable);
+				int dbtype = cell.getField().getColumnType().get();
 
-					if (CommonUtility.isDateTime(dbtype) && "".equals(newValue)) {
-						Platform.runLater(() -> cellData.setValue("<null>"));
-					}
-					if (SqluckyBottomSheetUtility.dataPaneSaveBtn() != null) {
-						SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
-					}
-					
+				// 如果类似是数字的, 新值不是数字, 还原
+				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
+					Platform.runLater(() -> cell.getCellData().setValue(oldValue));
+					return;
+				}
+
+				if (CommonUtility.isDateTime(dbtype) && "".equals(newValue)) {
+					Platform.runLater(() ->  cell.getCellData().setValue("<null>"));
+				}
+				if (SqluckyBottomSheetUtility.dataPaneSaveBtn() != null) {
+					SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
+				}
+//				setCellData();
+				if(cell.getOldCellData() == null) {
+					cell.setOldCellData(new SimpleStringProperty(oldValue));
+					cell.setHasModify(true);  
+					cell.getCurrentRow().setHasModify(true);
+				}
 
 //					ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();
 //					if (!SqluckyBottomSheetUtility.exist( rowNo)) {
@@ -141,8 +143,8 @@ public class ResultSetCellPo {
 //					} else {
 //						SqluckyBottomSheetUtility.addData( rowNo, vals);
 //					}
-				}
-			};
-			cellData.addListener(cl);
-		}
+			}
+		};
+		cell.getCellData().addListener(cl);
+	}
 }
