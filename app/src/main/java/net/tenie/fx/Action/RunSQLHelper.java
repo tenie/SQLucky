@@ -178,7 +178,7 @@ public class RunSQLHelper {
 			}
 			if(StrUtils.isNotNullOrEmpty(msg)) {
 				// 如果只有一行ddl执行
-				if(sqllenght == 1  && !msg.startsWith("failed")) {
+				if(sqllenght == -1 && !msg.startsWith("failed")) {
 					final String msgVal = msg; 
 					Platform.runLater(()->{
 						CommonAction.showNotifiaction(msgVal);

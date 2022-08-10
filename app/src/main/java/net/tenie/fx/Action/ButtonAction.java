@@ -103,8 +103,9 @@ public class ButtonAction {
 //					ObservableList<StringProperty> val = FXCollections.observableArrayList();
 					var fds = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, new SimpleStringProperty(msg), fds.get(0));
-					ddlDmlpo.addData(row, new SimpleStringProperty("success"), fds.get(1));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
+					ddlDmlpo.addData(row, new SimpleStringProperty(msg), fds.get(1));
+					ddlDmlpo.addData(row, new SimpleStringProperty("success"), fds.get(2));
 //					ddlDmlpo.addData(row, new SimpleStringProperty(""), fds.get(2));
 
 //					val.add(new SimpleStringProperty(msg));
@@ -136,8 +137,9 @@ public class ButtonAction {
 //					ObservableList<StringProperty> val = FXCollections.observableArrayList();
 					var fs = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, new SimpleStringProperty(e1.getMessage()), fs.get(0));
-					ddlDmlpo.addData(row, new SimpleStringProperty("failed"), fs.get(1));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fs.get(0));
+					ddlDmlpo.addData(row, new SimpleStringProperty(e1.getMessage()), fs.get(1));
+					ddlDmlpo.addData(row, new SimpleStringProperty("failed"), fs.get(2));
 //					ddlDmlpo.addData(row, new SimpleStringProperty(""), fs.get(2));
 					
 //					val.add(new SimpleStringProperty(e1.getMessage()));
@@ -226,14 +228,10 @@ public class ButtonAction {
 	}
 	// 复制选择的 行数据 插入到表格末尾
 	public static void copyData() {
-
 		// 获取当前的table view
 		FilteredTableView<ResultSetRowPo> table = SqluckyBottomSheetUtility.dataTableView();
-
-		String tabId = table.getId();
 		// 获取字段属性信息
 		ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
-		
 		// 选中的行数据
 		ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
 		try {
@@ -248,8 +246,7 @@ public class ButtonAction {
 				ObservableList<StringProperty> item = FXCollections.observableArrayList();
 //				int newLineidx = ConfigVal.newLineIdx++;
 				for (int j = 0 ; j < cells.size(); j++) {
-//					StringProperty strp = sps.get(j);
-					ResultSetCellPo cellPo = cells.get(i);
+					ResultSetCellPo cellPo = cells.get(j);
 					
 					StringProperty newsp = new SimpleStringProperty(cellPo.getCellData().get());
 					appendRow.addCell(newsp, cellPo.getField());
@@ -257,9 +254,6 @@ public class ButtonAction {
 					CommonUtility.newStringPropertyChangeListener(newsp, dataType);
 					item.add(newsp);
 				}
-//				item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 新行的行号没什么用
-//				SqluckyBottomSheetUtility.appendDate( item); // 可以防止在map中被覆盖
-//				table.getItems().add(item);
 
 			}
 			table.scrollTo(table.getItems().size() - 1);
