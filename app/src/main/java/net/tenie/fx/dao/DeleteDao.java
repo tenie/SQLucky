@@ -54,11 +54,11 @@ public class DeleteDao {
 			logger.info("sql = " + sql);
 			pstmt = conn.prepareStatement(sql);
 //			DaoTools.deleteConditionSetVal(pstmt, vals, fpos); 
-			DaoTools.conditionPrepareStatement(mval, pstmt);
+			String valStr = DaoTools.conditionPrepareStatement(mval, pstmt);
 			// 更新
 			int i = pstmt.executeUpdate();
 			logger.info("executeDelete = " + i);
-			msg = "Ok, Delete " + i;
+			msg = "Ok, Delete " + i + " ;\n" +sql + " ;\n"+valStr;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;

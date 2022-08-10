@@ -43,8 +43,7 @@ public class ResultSetCellPo {
 		this.index = currentRow.cellSize();
 		this.cellData = cellData;
 		this.field = field; 
-		this.currentRow = currentRow; 
-//		addStringPropertyChangeListener();
+		this.currentRow = currentRow;  
 	}
 	
 	public StringProperty getCellData() {

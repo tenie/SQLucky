@@ -183,24 +183,26 @@ public class SqlExecuteOption {
 
 			SqlExecuteOption.rmWaitingPane(true);
 			// 渲染界面
-			if (thread != null && !thread.isInterrupted()) {
-				boolean showtab = true;
-				if (ddlDmlpo.getResultSet().getDatas().size() == 1) {
-					var list = ddlDmlpo.getResultSet().getDatas().get(0);
-					var strfield = list.getRowDatas().get(1).getCellData().get();  //(1).get();
-					if (!strfield.startsWith("failed")) {
-						CommonAction.showNotifiaction(strfield);
-						showtab = false;
-					}
-				}
-				if (showtab) {
-					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
+			if (thread != null && thread.isInterrupted()) {
+				return;
+			} 
 
-					mtd.show();
-				}
+			boolean showtab = true;
+//			if (ddlDmlpo.getResultSet().getDatas().size() == 1) {
+//				var list = ddlDmlpo.getResultSet().getDatas().get(0);
+//				var strfield = list.getRowDatas().get(1).getCellData().get();   
+//				if (!strfield.startsWith("failed")) {
+//					CommonAction.showNotifiaction(strfield);
+//					showtab = false;
+//				}
+//			}
+			if (showtab) {
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
 
+				mtd.show();
 			}
 
+		
 		}
 	}
 

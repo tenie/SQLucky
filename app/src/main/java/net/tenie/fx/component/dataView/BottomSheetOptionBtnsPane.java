@@ -183,9 +183,9 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		MenuItem selectedfile = new MenuItem("Selected Data to file");
 		selectedfile.setOnAction(CommonEventHandler.InsertSQLClipboard(true, true));
 
-		MenuItem all = new MenuItem("ALl Data to Clipboard ");
+		MenuItem all = new MenuItem("All Data to Clipboard ");
 		all.setOnAction(CommonEventHandler.InsertSQLClipboard(false, false));
-		MenuItem allfile = new MenuItem("ALl Data to file");
+		MenuItem allfile = new MenuItem("All Data to file");
 		allfile.setOnAction(CommonEventHandler.InsertSQLClipboard(false, true));
 
 		insertSQL.getItems().addAll(selected, selectedfile, all, allfile);
@@ -196,9 +196,9 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		MenuItem csvselectedfile = new MenuItem("Selected Data to file");
 		csvselectedfile.setOnAction(CommonEventHandler.csvStrClipboard(true, true));
 
-		MenuItem csvall = new MenuItem("ALl Data to Clipboard ");
+		MenuItem csvall = new MenuItem("All Data to Clipboard ");
 		csvall.setOnAction(CommonEventHandler.csvStrClipboard(false, false));
-		MenuItem csvallfile = new MenuItem("ALl Data to file");
+		MenuItem csvallfile = new MenuItem("All Data to file");
 		csvallfile.setOnAction(CommonEventHandler.csvStrClipboard(false, true));
 
 		csv.getItems().addAll(csvselected, csvselectedfile, csvall, csvallfile);
@@ -209,9 +209,9 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		MenuItem txtselectedfile = new MenuItem("Selected Data to file");
 		txtselectedfile.setOnAction(CommonEventHandler.txtStrClipboard(true, true));
 
-		MenuItem txtall = new MenuItem("ALl Data to Clipboard ");
+		MenuItem txtall = new MenuItem("All Data to Clipboard ");
 		txtall.setOnAction(CommonEventHandler.txtStrClipboard(false, false));
-		MenuItem txtallfile = new MenuItem("ALl Data to file");
+		MenuItem txtallfile = new MenuItem("All Data to file");
 		txtallfile.setOnAction(CommonEventHandler.txtStrClipboard(false, true));
 
 		txt.getItems().addAll(txtselected, txtselectedfile, txtall, txtallfile);
@@ -345,9 +345,8 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	
 	
 
-	// refreshData
+	// 刷新查询结果
 	public static void refreshData(boolean isLock) {
-//			String id = DataViewTab.currentDataTabID(); 
 		String sql = SqluckyBottomSheetUtility.getSelectSQL();
 		Connection conn = SqluckyBottomSheetUtility.getDbconn();
 		String connName = SqluckyBottomSheetUtility.getConnName();
@@ -355,7 +354,6 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			// TODO 关闭当前tab
 			var dataTab = ComponentGetter.dataTabPane;
 			int selidx = dataTab.getSelectionModel().getSelectedIndex();
-//				dataTab.getTabs().remove(selidx); 
 			SdkComponent.clearDataTable(selidx);
 			RunSQLHelper.refresh(DBConns.get(connName), sql, selidx + "", isLock);
 		}
@@ -363,30 +361,18 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 	// 添加一行数据
 	public static void addData(JFXButton saveBtn) {
-		
-		
-		
 		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tbv = mtd.getTableData().getTable();
 
 		tbv.scrollTo(0);
-		int newLineidx = ConfigVal.newLineIdx++;
-//		ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 		ResultSetPo rspo = SqluckyBottomSheetUtility.getResultSet();
-		ResultSetRowPo rowpo = rspo.createAppendNewRow(); //new ResultSetRowPo(rspo);
+		ResultSetRowPo rowpo = rspo.createAppendNewRow(); 
 		ObservableList<SheetFieldPo> fs = rspo.getFields();
-		ObservableList<ResultSetCellPo> item = FXCollections.observableArrayList();
 		for (int i = 0; i < fs.size(); i++) {
 			SheetFieldPo fieldpo = fs.get(i);
 			SimpleStringProperty sp = new SimpleStringProperty("<null>");
 			rowpo.addCell(sp, fieldpo); 
-			
-			// 添加监听. 保存时使用 newLineIdx
-//			CommonUtility.newStringPropertyChangeListener(sp, fs.get(i).getColumnType().get());
-//			item.add(sp);
 		}
-//		item.add(new SimpleStringProperty(newLineidx + "")); // 行号， 没什么用
-//		SqluckyBottomSheetUtility.appendDate(newLineidx, item); // 可以防止在map中被覆盖
 		tbv.getItems().add(0, rowpo);
 
 		// 点亮保存按钮

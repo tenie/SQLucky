@@ -359,7 +359,17 @@ public class SdkComponent {
 		
 	}
 	
+	// 延迟1秒隐藏
+//	public static void dalayHideBottom() {
+//		CommonUtility.delayRunThread(v->{
+//			Platform.runLater(()->{
+//				SdkComponent.hideBottom(); 
+//			});
+//		}, 1000);
+//	}
+	
 	public static void hideBottom() {
+		
 		JFXButton btn =   CommonButtons.hideBottom; //   AllButtons.btns.get("hideBottom");
 		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		hideShowBottomHelper(showStatus, btn);
@@ -439,9 +449,15 @@ public class SdkComponent {
 		long costTime = (endtime - begintime);
 		logger.info("关闭使用时间 = "+ costTime);
 		
-		if(tabPane.getTabs().size() == 0) {
-			SdkComponent.hideBottom(); 
-		} 
+		CommonUtility.delayRunThread(v->{
+			Platform.runLater(()->{
+				if(tabPane.getTabs().size() == 0) {
+					SdkComponent.hideBottom(); 
+				} 
+			});
+		}, 1000);
+		
+		 
 	}
 	// 关闭 数据页, 清理缓存
 	public static void clearDataTable(Tab tb) {
@@ -454,14 +470,13 @@ public class SdkComponent {
 //		System.gc();
 		MyOption.gc(SdkComponent.class, "clearDataTable");
 		logger.info("关闭使用时间 = "+ costTime);
-		
 		CommonUtility.delayRunThread(v->{
 			Platform.runLater(()->{
 				if(tabPane.getTabs().size() == 0) {
 					SdkComponent.hideBottom(); 
 				} 
 			});
-		}, 1000);
+		}, 200);
 		
 	}
 	

@@ -72,7 +72,7 @@ public class InsertDao {
 				String type = cellPo.getField().getColumnClassName().get();
 				int javatype = cellPo.getField().getColumnType().get();
 				String columnTypeName =  cellPo.getField().getColumnTypeName().get();
-				System.out.println("javatype = "+javatype +" | " +columnTypeName);
+				logger.info("javatype = "+javatype +" | " +columnTypeName);
 				if (CommonUtility.isDateTime(javatype)) {
 					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
 					Timestamp ts = new Timestamp(dv.getTime());
@@ -96,7 +96,7 @@ public class InsertDao {
 		logger.info(insertLog);
 		int count = pstmt.executeUpdate();
 
-		msg = "Ok, Insert " + count;
+		msg = "Ok, Insert " + count +" ;\n" + insert + " ;\n"+ insertLog ;
 		return msg;
 	}
 }

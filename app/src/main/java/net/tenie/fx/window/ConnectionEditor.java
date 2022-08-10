@@ -465,8 +465,11 @@ public class ConnectionEditor {
 	
 	public  static TreeItem<TreeNodePo> getConnNodeRoot(TreeItem<TreeNodePo> val) {
 		TreeNodePo tnp = val.getValue();
-		if(tnp.getType()== null) {
-			return val;
+		if(tnp.getType() != null) {
+			if( tnp.getType().equals(TreeItemType.CONNECT_INFO)) {
+				return val;
+			}
+			return getConnNodeRoot(val.getParent());
 		}else {
 			return getConnNodeRoot(val.getParent());
 		}  

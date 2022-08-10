@@ -103,8 +103,8 @@ public class DaoTools {
 					logmsg += idx + " : " + obj + "\n";
 				}
 			}
-
-			logger.info(logmsg + " ]");
+			logmsg += " ]";
+			logger.info(logmsg);
 			return logmsg;
 		}
 		
@@ -173,8 +173,8 @@ public class DaoTools {
 					logmsg += idx + " : " + obj + "\n";
 				}
 			}
-	
-			logger.info(logmsg + " ]");
+			logmsg += " ]";
+			logger.info(logmsg);
 			return logmsg;
 		}
 

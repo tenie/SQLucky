@@ -88,7 +88,7 @@ public class UpdateDao {
 			String sql = "update " + tableName + " set  " + temp + " where " + condition;
 			pstmt = conn.prepareStatement(sql);
 			
-			DaoTools.updatePrepareStatement(mval, pstmt);
+			String valStr = DaoTools.updatePrepareStatement(mval, pstmt);
 /*
 			// 赋值
 			int idx = 0;
@@ -140,7 +140,7 @@ public class UpdateDao {
 
 			// 更新
 			int i = pstmt.executeUpdate();
-			msg = "Ok, Update " + i;
+			msg = "Ok, Update " + i + " ;\n" + sql +" ;\n"+ valStr;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
