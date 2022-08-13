@@ -10,8 +10,6 @@ import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.sun.javafx.application.LauncherImpl;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -218,12 +216,19 @@ public class SQLucky extends Application {
 		if(args!=null && args.length >0) {
 			sysOpenFile = args[0];
 		}
+//		syso
+		var val =System.getProperty("jdk.module.path");
+//		var val =System.getProperty("jdk.module.upgrade.path");
+//		var val =System.getProperty("jdk.module.main");
+		logger.debug("main.args ==  "+ Arrays.toString(val.split(":")));
 		
-		if(CommonUtility.isLinuxOS()) {
-			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
-		}else {
-			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderMp4.class, args);
-		}
+//		System.out.println(val);	
+		
+//		if(CommonUtility.isLinuxOS()) {
+//			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
+//		}else {
+//			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderMp4.class, args);
+//		}
 //		LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
 	}
 }
