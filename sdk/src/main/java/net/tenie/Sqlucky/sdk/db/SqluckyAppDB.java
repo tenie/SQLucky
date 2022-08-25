@@ -149,7 +149,7 @@ public class SqluckyAppDB {
 		return ConfigVal.H2_DB_FILE_NAME;
 	}
 
-	private static Connection createH2Conn() {
+	private synchronized static Connection createH2Conn() {
 		Connection connection = createH2Conn(getH2FilePath(), ConfigVal.USER, ConfigVal.PASSWD);
 		return connection;
 	}

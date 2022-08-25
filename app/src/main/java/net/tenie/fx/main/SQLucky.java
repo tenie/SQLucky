@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import com.sun.javafx.application.LauncherImpl;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -224,11 +225,11 @@ public class SQLucky extends Application {
 		
 //		System.out.println(val);	
 		
-//		if(CommonUtility.isLinuxOS()) {
-//			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
-//		}else {
-//			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderMp4.class, args);
-//		}
+		if(CommonUtility.isLinuxOS()) {
+			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
+		}else {
+			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderMp4.class, args);
+		}
 //		LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
 	}
 }
