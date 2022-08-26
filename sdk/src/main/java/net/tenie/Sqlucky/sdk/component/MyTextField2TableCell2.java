@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
     
@@ -38,15 +39,32 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
     public MyTextField2TableCell2() {
         this(null);
     }
-
-    public MyTextField2TableCell2(StringConverter<T> converter) {
-        super(converter);
+    /**
+     * 初始化右键菜单
+     */
+    private void initMenu(StringConverter<T> converter) {
     	// 右键菜单
         ContextMenu cm = new ContextMenu();
+        // 设置null
         MenuItem setNull = new MenuItem("Set Null ");
-		cm.getItems().add(setNull);
-        setContextMenu(cm);
+        setNull.setOnAction(e->{
+        	commitEdit(converter.fromString("<null>"));
+        });
+		
+        // 复制值
+        MenuItem copyVal = new MenuItem("Copy Value");
+        copyVal.setOnAction(e->{
+        	String val =  this.getText();
+        	CommonUtility.setClipboardVal(val);
+        });
         
+        cm.getItems().addAll(copyVal, setNull);
+        setContextMenu(cm);
+    }
+    
+    public MyTextField2TableCell2(StringConverter<T> converter) {
+        super(converter); 
+        initMenu(converter);
         this.setTextOverrun(OverrunStyle.ELLIPSIS);
         graphicProperty().addListener(new InvalidationListener() {
             @Override
