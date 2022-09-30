@@ -103,7 +103,7 @@ public class RunSQLHelper {
 				allsqls = SqlExecuteOption.epurateSql(sqlstr);
 			} else { 
 				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
-				allsqls = SqlExecuteOption.willExecSql( state.getIsCreateFunc());
+				allsqls = SqlExecuteOption.willExecSql( state.getIsCurrentLine());
 			}
 			// 执行sql
 			var rsVal = execSqlList(allsqls,  state.getSqlConn(), state);
