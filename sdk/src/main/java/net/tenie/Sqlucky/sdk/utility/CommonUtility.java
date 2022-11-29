@@ -446,6 +446,18 @@ public class CommonUtility {
 		}
 		return false;
 	}
+	
+	public static String osName() {
+		String os_name = System.getProperty("os.name");
+		if (os_name.toLowerCase().startsWith("linux")) {
+			return "linux";
+		}else if (os_name.toLowerCase().startsWith("win")) {
+			return "win";
+		}else if (os_name.toLowerCase().startsWith("mac")) {
+			return "mac";
+		}
+		return "";
+	}
 	// 给控件加样式
 	public static void addCssClass(Node nd, String css) {
 		nd.getStyleClass().add(css);
