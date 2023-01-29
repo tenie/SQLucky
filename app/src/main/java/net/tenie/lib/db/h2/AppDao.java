@@ -38,7 +38,9 @@ public class AppDao {
 	private static Logger logger = LogManager.getLogger(AppDao.class);
 	public static final String CONNECTION_INFO = 
 			"CREATE TABLE `CONNECTION_INFO` (\n" + 
-			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+//			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +  
+					// sqlite 自增 AUTOINCREMENT
+			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" +  
 			"  `CONN_NAME` VARCHAR(1000)   NOT NULL,\n" + 
 			"  `USER` VARCHAR(1000)   NOT NULL,\n" + 
 			"  `PASS_WORD` VARCHAR(1000)   NOT NULL,\n" + 
@@ -54,8 +56,10 @@ public class AppDao {
 			"  `CREATED_AT` DATETIME DEFAULT NULL,\n" + 
 			"  `UPDATED_AT` DATETIME DEFAULT NULL,\n" + 
 			"  `RECORD_VERSION` INT(11) DEFAULT '0',\n" + 
-			"  `ORDER_TAG` DOUBLE(11) DEFAULT '99',\n" + 
-			"  PRIMARY KEY (`ID`,`CONN_NAME`)\n" + 
+			"  `ORDER_TAG` DOUBLE(11) DEFAULT '99'" + 
+			// sqlite 不能建表的时候创建联合组件
+//			+ ",\n" 
+//			"  PRIMARY KEY (`ID`,`CONN_NAME`)\n" + 
 			") ";
 	public static  final String SQL_TEXT_SAVE = 
 			"CREATE TABLE `SQL_TEXT_SAVE` (\n" +  
@@ -71,14 +75,15 @@ public class AppDao {
 	
 	public static final  String SCRIPT_ARCHIVE = 
 			"CREATE TABLE `SCRIPT_ARCHIVE` (\n" +
-			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+//			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + 
 			"  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n" + 
 			"  `SQL_TEXT` CLOB, \n" +
 			"  `FILE_NAME` VARCHAR(1000) ,\n" + 
 			"  `ENCODE` VARCHAR(100) ,\n" + 
-			"  `PARAGRAPH` INT(11) DEFAULT '0',\n" + 
-			 
-			"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
+			"  `PARAGRAPH` INT(11) DEFAULT '0'"+ 
+//			+ ",\n" 
+//			"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
 			") ";
 	
 	
@@ -91,7 +96,8 @@ public class AppDao {
 	
 	public static final  String DATA_MODEL_INFO = 
 			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
-			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+//			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + 
 			"  `NAME` VARCHAR(200)   NOT NULL,\n" + 
 			"  `DESCRIBE` VARCHAR(300)  , \n" +
 			"  `AVATAR` VARCHAR(200)   ,\n" + 
@@ -100,15 +106,16 @@ public class AppDao {
 			"  `CREATEDTIME` VARCHAR(100)    ,\n" + 
 			"  `UPDATEDTIME` VARCHAR(100)    ,\n" + 
 			
-			"  `ORDER_TAG` INT(11) DEFAULT '99',\n" + 
-			 
-			"  PRIMARY KEY ( `ID`, `NAME`)\n" + 
+			"  `ORDER_TAG` INT(11) DEFAULT '99'" + 
+//			+ ",\n" +
+//			"  PRIMARY KEY ( `ID`, `NAME`)\n" + 
 			") ";
 	
 	
 	public static final  String DATA_MODEL_TABLE = 
 			"CREATE TABLE `DATA_MODEL_TABLE` (\n" +
-			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
+//			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
+			"  `ITEM_ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + 
 			"  `MODEL_ID` INT(11)   ,\n" + 		
 			"  `ID` VARCHAR(100) ,\n" + 
 			"  `DEF_KEY` VARCHAR(200)   NOT NULL,\n" + 
@@ -116,13 +123,14 @@ public class AppDao {
 			"  `COMMENT` VARCHAR(1000)  , \n" +
 	 
 			"  `CREATED_TIME` DATETIME  ,\n" + 
-			"  `UPDATED_TIME` DATETIME  ,\n" + 
-			
-			"  PRIMARY KEY ( `ITEM_ID`, `DEF_KEY`)\n" + 
+			"  `UPDATED_TIME` DATETIME  " +
+//			+ ",\n" + 
+//			"  PRIMARY KEY ( `ITEM_ID`, `DEF_KEY`)\n" + 
 			") ";
 	public static final  String DATA_MODEL_TABLE_FIELDS = 
 			"CREATE TABLE `DATA_MODEL_TABLE_FIELDS` (\n" +
-			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
+//			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
+			"  `ITEM_ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + 
 			"  `TABLE_ID` INT(11) NOT NULL ,\n" +
 			"  `MODEL_ID` INT(11)   ,\n" + 	
 			"  `ID` VARCHAR(100)  , \n" + 
@@ -149,14 +157,15 @@ public class AppDao {
 			"  `REF_DICT` VARCHAR(500)  , \n" + 
 			
 			"  `CREATED_TIME` DATETIME ,\n" + 
-			"  `UPDATED_TIME` DATETIME ,\n" + 
-			
-			"  PRIMARY KEY ( `ITEM_ID`, `TABLE_ID`,`DEF_KEY`)\n" + 
+			"  `UPDATED_TIME` DATETIME " +
+//			+ ",\n" + 
+//			"  PRIMARY KEY ( `ITEM_ID`, `TABLE_ID`,`DEF_KEY`)\n" + 
 			") ";
 	
 	public static final  String PLUGIN_INFO = 
 			"CREATE TABLE `PLUGIN_INFO` (\n" +
-			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
+//			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
+			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT, \n" + 
 			"  `PLUGIN_NAME` VARCHAR(200)    ,   \n" +  //字段名称
 			"  `PLUGIN_CODE` VARCHAR(200)    ,   \n" +  //字段名称
 			"  `PLUGIN_DESCRIBE` VARCHAR(1000)  , \n" +
@@ -166,9 +175,9 @@ public class AppDao {
 			"  `VERSION` VARCHAR(30)    , "+       // 版本
 			
 			"  `CREATED_TIME` DATETIME ,\n" + 
-			"  `UPDATED_TIME` DATETIME ,\n" + 
-			
-			"  PRIMARY KEY ( `ID`, `PLUGIN_NAME`)\n" + 
+			"  `UPDATED_TIME` DATETIME "+ 
+//			",\n" + 
+//			"  PRIMARY KEY ( `ID`, `PLUGIN_NAME`)\n" + 
 			") ";
  
 	

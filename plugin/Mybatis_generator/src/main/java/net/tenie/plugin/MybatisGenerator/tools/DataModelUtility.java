@@ -362,7 +362,8 @@ public class DataModelUtility {
 	public static void test2() {
 //		 SqlSessionFactory sqlSessionFactory2= new SqlSessionFactoryBuilder().build
 
-		DataSource dataSource = SqluckyAppDB.getH2DataSource();
+//		DataSource dataSource = SqluckyAppDB.getH2DataSource();
+		DataSource dataSource = SqluckyAppDB.getSqliteDataSource();
 		TransactionFactory transactionFactory = new JdbcTransactionFactory();
 		Environment environment = new Environment("development", transactionFactory, dataSource);
 		Configuration configuration = new Configuration(environment);
@@ -381,7 +382,8 @@ public class DataModelUtility {
 
 	public static void main(String[] args) throws IOException {
 
-		DataSource dataSource = SqluckyAppDB.getH2DataSource();
+//		DataSource dataSource = SqluckyAppDB.getH2DataSource();
+		DataSource dataSource = SqluckyAppDB.getSqliteDataSource();
 		TransactionFactory transactionFactory = new JdbcTransactionFactory();
 		Environment environment = new Environment("development", transactionFactory, dataSource);
 		Configuration configuration = new Configuration(environment);
