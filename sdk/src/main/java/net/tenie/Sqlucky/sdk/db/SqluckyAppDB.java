@@ -25,15 +25,16 @@ public class SqluckyAppDB {
 	private static Connection conn;
 	// 使用阻塞队列, 串行获取: 连接, 和关闭连接 
 //	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
+	
+	// 获取应用本身的数据库链接
 	public  static Connection getConn() {
-//		while(connTimes.get() != 0) {
-//			CommonUtility.sleep(300);
-//		}
 		try {
 			if (conn == null) {
-				conn = createH2Conn();
+//				conn = createH2Conn();
+				conn = createSqliteConn();
 			} else if (conn.isClosed()) {
-				conn = createH2Conn();
+//				conn = createH2Conn();
+				conn = createSqliteConn();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -44,13 +45,11 @@ public class SqluckyAppDB {
 
 		return conn;
 	}
-//	public  static Connection getConn() {
-//		Connection conn = createH2Conn();
-//		return conn;
-//	}
+	
 	
 	public  static Connection getConnNotAutoCommit() {
-		Connection conn = createH2Conn();
+//		Connection conn = createH2Conn();
+		Connection conn = createSqliteConn();
 		try {
 			conn.setAutoCommit(false);
 		} catch (SQLException e) {
@@ -59,13 +58,6 @@ public class SqluckyAppDB {
 		return conn;
 	}
 	
-//	public  static void closeConn(Connection conn) {
-//		try {
-//				conn.close();
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 	
 	public  static void closeConnAndRollback(Connection conn) {
 		try { 
@@ -127,15 +119,23 @@ public class SqluckyAppDB {
 		return false;
 	}
 
-
-//	@SuppressWarnings("exports")
-	public static DataSource getH2DataSource() {
+	// test mybites
+//	public static DataSource getH2DataSource() {
+//		  UnpooledDataSource dataSource = null;
+//		  dataSource = new UnpooledDataSource("org.h2.Driver", h2JdbcURL(), ConfigVal.USER, ConfigVal.PASSWD);
+//		  
+//		  return  dataSource;
+//	}
+	
+	// test mybites
+	public static DataSource getSqliteDataSource() {
 		  UnpooledDataSource dataSource = null;
-		  dataSource = new UnpooledDataSource("org.h2.Driver", jdbcURL(), ConfigVal.USER, ConfigVal.PASSWD);
+		  dataSource = new UnpooledDataSource("", sqliteJdbcURL(), ConfigVal.USER, ConfigVal.PASSWD);
 		  
 		  return  dataSource;
 	}
-
+	
+	// test AvtiveJDBC
 //	public static void openAvtiveJDBC() {
 //		Base.open(ConfigVal.H2_DIRVER, jdbcURL(),  ConfigVal.USER, ConfigVal.PASSWD);
 //
@@ -146,6 +146,13 @@ public class SqluckyAppDB {
 		String path = DBTools.dbFilePath(); 
 		ConfigVal.H2_DB_FILE_NAME = path + ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION;
 		ConfigVal.H2_DB_FULL_FILE_NAME = ConfigVal.H2_DB_FILE_NAME + ".mv.db";
+		return ConfigVal.H2_DB_FILE_NAME;
+	}
+	
+	private static String getSqliteFilePath() {
+		String path = DBTools.dbFilePath(); 
+		ConfigVal.H2_DB_FILE_NAME = path + ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION + "_sqlite.db";
+		ConfigVal.H2_DB_FULL_FILE_NAME = ConfigVal.H2_DB_FILE_NAME ;
 		return ConfigVal.H2_DB_FILE_NAME;
 	}
 
@@ -160,8 +167,24 @@ public class SqluckyAppDB {
 		return connection;
 	}
 	
-	private static String jdbcURL() {
+	private synchronized static Connection createSqliteConn() {
+		Connection connection = createSqliteConn(getSqliteFilePath(), ConfigVal.USER, ConfigVal.PASSWD);
+		return connection;
+	}
+	
+	private static Connection createSqliteConn(String path, String user, String pw) {
+		Dbinfo dbinfo = new Dbinfo("jdbc:sqlite:" + path, user, pw);
+		Connection connection = dbinfo.getconn();
+		return connection;
+	}
+	
+	private static String h2JdbcURL() {
 		String val = "jdbc:h2:" + getH2FilePath();
+		return val;
+	}
+	
+	private static String sqliteJdbcURL() {
+		String val = "jdbc:sqlite:" + getSqliteFilePath();
 		return val;
 	}
 

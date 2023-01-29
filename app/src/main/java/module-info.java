@@ -34,8 +34,8 @@ open module SQLucky {
 	// non-mods
 	requires org.apache.commons.io;
 	requires org.fxmisc.richtext; 
-	requires com.h2database;	
-//	requires h2;
+//	requires com.h2database;	
+	requires h2;
 	requires reactfx;
 	requires flowless;
 	requires sql.formatter;

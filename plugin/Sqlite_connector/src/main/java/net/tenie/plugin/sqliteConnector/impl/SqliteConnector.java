@@ -149,12 +149,30 @@ public class SqliteConnector extends DbConnector {
 		return  jdbcUrlstr;
 	}
 
+	/**
+	 * if (getConnPo().getConn() == null) {
+				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
+				var conn = dbinfo.getconn();
+				getConnPo().setConn(conn);
+		}
+
+		return getConnPo().getConn();
+	 */
 
 	@Override
 	public Connection getConn() { 
 		if (getConnPo().getConn() == null) {
-			var conn = Dbinfo.getConnByJdbc( getJdbcUrl());
-			getConnPo().setConn(conn);		 	
+			var hasUser = StrUtils.isNotNullOrEmpty(getUser());
+			var hasPw = StrUtils.isNotNullOrEmpty(getPassWord());
+			if(hasUser && hasPw) {
+				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
+				var conn = dbinfo.getconn();
+				getConnPo().setConn(conn);
+			}else {
+				var conn = Dbinfo.getConnByJdbc( getJdbcUrl());
+				getConnPo().setConn(conn);		 
+			}
+				
 		}
 
 		return getConnPo().getConn();
