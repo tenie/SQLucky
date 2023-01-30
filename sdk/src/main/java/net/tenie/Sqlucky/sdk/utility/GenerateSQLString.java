@@ -15,7 +15,7 @@ public class GenerateSQLString {
 	 * @param fpos
 	 * @return
 	 */
-	public static String insertSQL(String tableName, ResultSetRowPo data  ) {
+	public static String insertSQL(String tableName, ResultSetRowPo data  , boolean emptyStrUseNull) {
 
 		StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
 		StringBuilder values = new StringBuilder("");
@@ -28,7 +28,13 @@ public class GenerateSQLString {
 			String temp =  cells.get(i).getCellData().get();
 //			String temp = data.get(i).get();
 			sql.append(po.getColumnLabel().get());
-			if (StrUtils.isNullOrEmpty(temp) || "<null>".equals(temp)) {
+			boolean isNull =  true;
+			if(emptyStrUseNull) {
+				isNull = StrUtils.isNullOrEmpty(temp) || "<null>".equals(temp);
+			}else {
+				isNull =  "<null>".equals(temp);
+			}
+			if (isNull) {
 				values.append("null");
 			} else if (CommonUtility.isString(type) || CommonUtility.isDateTime(type)) {
 				values.append("'" + temp + "'");
@@ -90,7 +96,7 @@ public class GenerateSQLString {
 			for (int i = 0; i < vals.size(); i++) {
 //				ObservableList<StringProperty> vl = vals.get(i);
 				ResultSetRowPo row = vals.get(i);
-				String rs = GenerateSQLString.insertSQL(tableName, row) + ";\n";
+				String rs = GenerateSQLString.insertSQL(tableName, row, true) + ";\n";
 				strb.append(rs);
 			}
 			String str = strb.toString();

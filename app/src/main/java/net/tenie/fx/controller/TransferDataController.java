@@ -38,18 +38,22 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Po.TreeNodePo;
+import net.tenie.Sqlucky.sdk.SqluckyDbTableDatePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyTextArea;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
+import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
+import net.tenie.Sqlucky.sdk.utility.CodeRunTimeCalculate;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
@@ -155,19 +159,35 @@ public class TransferDataController implements Initializable {
 		treePane.getChildren().add(checkTreeView);
 	}
 	
+	private int logLineSize = 0;
 	// 输出log 
-	private void moniterAppendStr(String str) {
+	private void moniterAppendLog(String str) {
 		Platform.runLater(() -> { 
-//			SqlEditor.appendStr(spCode, str+"\n");
+			if(logLineSize == 10000) {
+				CodeArea.clear();
+				logLineSize = 0;
+			}
 			CodeArea.appendText(str+"\n");
+			CodeArea.scrollYToPixel(CodeArea.getEstimatedScrollY());
+			logLineSize++;
+		});
+		
+	}
+	
+	private void moniterAppendErrorLog(List<String> logs) {
+		Platform.runLater(() -> {  
+			for(String str : logs) {
+				CodeArea.appendText(str+"\n"); 
+			}
+			
 		});
 		
 	}
 	// 清除log
 	private void moniterCleanStr() {
 		Platform.runLater(() -> { 
-//			SqlEditor.cleanStr(spCode); 
 			CodeArea.clear();
+			logLineSize = 0;
 		}); 
 		errorMsg.clear();
 	}
@@ -196,7 +216,7 @@ public class TransferDataController implements Initializable {
 		currentThread = new Thread() {
 			public void run() {
 				try {					
-					moniterAppendStr("........begin ......");
+					moniterAppendLog("........begin ......");
 					runBtnAction();  
 					Platform.runLater(() -> { 
 						MyAlert.infoAlert("完成", "完成"); 
@@ -209,7 +229,7 @@ public class TransferDataController implements Initializable {
 					});
 				}finally {
 					btnController(false);
-					moniterAppendStr("........end ......");
+					moniterAppendLog("........end ......");
 				}
 				
 			};
@@ -275,8 +295,8 @@ public class TransferDataController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		filterTxtInitialize();
 		setGraphicAndCss(); 
-//		spCode = SqlEditor.SqlCodeArea(); 
-		var sqlCodeArea = new HighLightingCodeArea(null);
+
+		var sqlCodeArea = new MyTextArea();
 		spCode  = sqlCodeArea.getCodeAreaPane();
 		CodeArea = sqlCodeArea.getCodeArea();
 		setAction();  
@@ -425,16 +445,18 @@ public class TransferDataController implements Initializable {
 //				tarDbpo =  getNewDbConnectionPo(targetDBName, targetSchename); 
 				Connection   tarConn = tarDbpo.getConn();  
 				
-				moniterAppendStr( "-------- 获取 ddl --------"); 
+				moniterAppendLog( "-------- 获取 ddl --------"); 
 				List<String> sqls = generateDDL(soConn, schename, targetSchename);
 				
-				moniterAppendStr( "--------准备执行 sql--------");
+				moniterAppendLog( "--------准备执行 sql--------");
 				// 执行ddl
 				execListSQL(sqls, tarConn , isThrow);
 				 
-				moniterAppendStr( "--------准备执行 insert --------");
+				moniterAppendLog( "--------准备执行 insert --------");
+				CodeRunTimeCalculate rt = new CodeRunTimeCalculate();
 				synTabData( soConn ,tarConn , schename , targetSchename , isThrow);
-				 
+				String rtValStr = rt.getSecond();
+				moniterAppendLog( "--------执行 insert 时间 :"+rtValStr+" --------");
 			}else {
 				if(isThrow) throw new RuntimeException("数据库链接错误");
 			}
@@ -442,8 +464,11 @@ public class TransferDataController implements Initializable {
 			e.printStackTrace(); 
 			logger.debug(e.getMessage());
 			errorMsg.add( e.getMessage());
-			moniterAppendStr(  e.getMessage());
+			moniterAppendLog(  e.getMessage());
 			if(isThrow) throw e;
+		}
+		if(errorMsg.size() > 0) {
+			moniterAppendErrorLog(errorMsg);
 		}
 		
 	}
@@ -499,7 +524,7 @@ public class TransferDataController implements Initializable {
 				e.printStackTrace();
 				logger.debug(e.getMessage());
 				errorMsg.add( e.getMessage());
-				moniterAppendStr(e.getMessage() );
+				moniterAppendLog(e.getMessage() );
 				if(isThrow)throw e;
 			}  
 		}
@@ -507,7 +532,7 @@ public class TransferDataController implements Initializable {
 	private void cleanData(boolean tf, Connection  toConn , String targetSchename, String tablename ) throws SQLException {
 		if(tf) { 
 				String tableName = targetSchename+"."+tablename;
-				moniterAppendStr("delete from " +tableName);
+				moniterAppendLog("delete from " +tableName);
 				DBTools.execDelTab(toConn, tableName);   
 		}
 	}
@@ -528,13 +553,13 @@ public class TransferDataController implements Initializable {
 						String drop = getDropDDL(nodeType, schename, checkBoxName, targetSchename);
 						logger.info(drop);
 						sqls.add(drop);
-						moniterAppendStr(drop);
+						moniterAppendLog(drop);
 					}
 					// create语句
 					String create = getCreateDDL(soConn, nodeType, schename, checkBoxName, targetSchename);
 					logger.info(create);
 					sqls.add(create);
-					moniterAppendStr(create);
+					moniterAppendLog(create);
 
 				}
 			}
@@ -828,12 +853,8 @@ public class TransferDataController implements Initializable {
 			 
 			for (String sql : sqls) {
 				try { 
-					moniterAppendStr(sql);
-//					pstmt = tarConn.prepareStatement(sql);
-//					pstmt.execute();
-//					pstmt.close(); 
+					moniterAppendLog(sql);
 					DBTools.execDDL(tarConn, sql);
-					
 				} catch (Exception e1) {
 					e1.printStackTrace(); 
 					if(isThrow ) { 
@@ -846,12 +867,15 @@ public class TransferDataController implements Initializable {
 	
 	
 	
-	@SuppressWarnings("exports")
-	public   DbTableDatePo insertData(Connection conn, Connection toConn , String tableName,  String schename , String targetSchename, int amount , boolean isThrow) throws SQLException {
+	@SuppressWarnings("exports") //DbTableDatePo
+	public   void insertData(Connection conn, Connection toConn , String tableName,  String schename , String targetSchename, int amount , boolean isThrow) throws SQLException {
 		String sorTable =  getTableName(schename, tableName, tarDbpo);  
 		String sql = "select   *   from   "+sorTable+"    where   1=1  ";
 		
-		DbTableDatePo dpo = new DbTableDatePo();
+//		DbTableDatePo dpo = new DbTableDatePo();
+		ObservableList<SheetFieldPo> fields = 
+				FXCollections.observableArrayList();
+		
 		// DB对象
 		PreparedStatement pstate = null;
 		ResultSet rs = null;
@@ -873,12 +897,16 @@ public class TransferDataController implements Initializable {
 				po.setColumnLabel(mdata.getColumnLabel(i));
 				po.setColumnType(mdata.getColumnType(i));
 				po.setColumnTypeName(mdata.getColumnTypeName(i));
-				dpo.addField(po);
+//				dpo.addField(po);
+				fields.add(po);
 			}
 
 			String tarTableName =  getTableName(targetSchename, tableName, tarDbpo); 
 			 
-			execRs(toConn, rs, dpo, tarTableName, amount , isThrow );
+			execRs(toConn, rs, 
+					fields
+//					dpo
+					, tarTableName, amount , isThrow );
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -888,10 +916,21 @@ public class TransferDataController implements Initializable {
 			if (rs != null)
 				rs.close();
 		}
-		return dpo;
+//		return dpo;
 	} 
 	
-	private   void execRs( Connection toConn ,ResultSet rs, DbTableDatePo dpo, String tableName , int amount,  boolean isThrow) throws SQLException {
+	// 创建一行数据
+	private ResultSetRowPo createRow(ObservableList<SheetFieldPo> fields) {
+		ResultSetPo	resultSet = new ResultSetPo(fields);
+		ResultSetRowPo row = resultSet.creatRow();
+		return row;
+	}
+	
+	private   void execRs( Connection toConn ,ResultSet rs, 
+//			SqluckyDbTableDatePo dpo, 
+			ObservableList<SheetFieldPo> fpo,
+			String tableName , int amount,  
+			boolean isThrow) throws SQLException {
 		 
 		Statement stmt = null;
 		int execLine = 500;
@@ -902,14 +941,15 @@ public class TransferDataController implements Initializable {
 		try {
 			stmt = toConn.createStatement();
 			int idx = 0 ; 
-			ObservableList<SheetFieldPo> fpo = dpo.getFields();
+//			ObservableList<SheetFieldPo> fpo = dpo.getFields();
 		
 			int columnnums = fpo.size();
 			String  insertSql = "";
 			while (rs.next()) {
 				idx++;
-//				ObservableList<StringProperty> vals = FXCollections.observableArrayList();
-				var row = dpo.addRow();
+				// 创建一个行
+//				var row = dpo.addRow();
+				var row = createRow(fpo);
 				for (int i = 0; i < columnnums; i++) {
 					int dbtype = fpo.get(i).getColumnType().get();
 					StringProperty val;
@@ -928,31 +968,34 @@ public class TransferDataController implements Initializable {
 							val = new SimpleStringProperty(temp); 
 						}
 					}
-//					 vals.add(val);
-					 dpo.addData(row, val, fpo.get(i));
+					// 给行的字段赋值
+//					dpo.addData(row, val, fpo.get(i));
+					row.addCell(val, fpo.get(i));
 				}
-			    insertSql = GenerateSQLString.insertSQL(tableName , row);  
-				moniterAppendStr(insertSql);
+			    insertSql = GenerateSQLString.insertSQL(tableName , row, false);  
+//				moniterAppendLog(insertSql);
 				stmt.addBatch(insertSql); 
 				if( idx % execLine == 0 ) { 
 					logger.info(insertSql);
 					int[] count = stmt.executeBatch();
 					logger.info("instert = "+count.length);
-					moniterAppendStr("Batch instert = "+count.length);
+					moniterAppendLog(tableName + " exec Batch instert = "+count.length);
 				}  
 				 
 			}
+			// while循环完成后输出insert sql ,否则太多了
+			moniterAppendLog(insertSql);
 			
 			if( idx % execLine >  0 ) {
 				logger.info(insertSql);
 				int[] count = stmt.executeBatch();
 				logger.info("instert = "+count.length);
-				moniterAppendStr("Batch instert = "+count.length);
+				moniterAppendLog("Batch instert = "+count.length);
 			} 
 		} catch (Exception e1) { 
 			e1.printStackTrace();
 			logger.debug(e1.getMessage());
-			moniterAppendStr( e1.getMessage());
+			moniterAppendLog( e1.getMessage());
 			if(isThrow) throw e1;
 		}finally {
 			if (stmt != null)
