@@ -13,7 +13,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 /*   
  * 查询表的 字段 和 查询数据
  * @author tenie */
-public class DbTableDatePo implements SqluckyDbTableDatePo {
+public class DbTableDatePoNoCache implements SqluckyDbTableDatePo {
 	// 字段
 	private ObservableList<SheetFieldPo> fields;
  
@@ -31,13 +31,13 @@ public class DbTableDatePo implements SqluckyDbTableDatePo {
 		fields = null;
 		resultSet = null;
 	}
-	public DbTableDatePo() {
+	public DbTableDatePoNoCache() {
 		fields = FXCollections.observableArrayList();
 		resultSet = new ResultSetPo(fields);
 	}
 	
-	public static DbTableDatePo setExecuteInfoPo() {
-		DbTableDatePo ddlDmlpo = new DbTableDatePo(); 
+	public static DbTableDatePoNoCache setExecuteInfoPo() {
+		DbTableDatePoNoCache ddlDmlpo = new DbTableDatePoNoCache(); 
 		ddlDmlpo.addField("Current Time", 140.0);
 		ddlDmlpo.addField("Execute SQL Info", 500.0);
 		ddlDmlpo.addField("Execute SQL", 550.0);
@@ -45,8 +45,8 @@ public class DbTableDatePo implements SqluckyDbTableDatePo {
 	}
 
 	// 生成一个错误的对象
-	public static DbTableDatePo errObj(String errorMessage) {
-		DbTableDatePo errdpo = new DbTableDatePo();
+	public static DbTableDatePoNoCache errObj(String errorMessage) {
+		DbTableDatePoNoCache errdpo = new DbTableDatePoNoCache();
 
 		SheetFieldPo p = new SheetFieldPo();
 		p.setColumnLabel(new SimpleStringProperty("Error Message Info"));
