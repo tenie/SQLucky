@@ -106,6 +106,10 @@ public class TransferDataController implements Initializable {
 	@FXML private JFXButton hideBtn;
 	@FXML private JFXButton monBtn; 
 	
+	@FXML private JFXButton upSelBtn;
+	@FXML private JFXButton downSelBtn;
+	
+	
 	@FXML private TextField	filterTxt;
 	@FXML private TextField	amountTxt;
 	
@@ -113,10 +117,57 @@ public class TransferDataController implements Initializable {
 	private MyCodeArea CodeArea;
 	
 	private CheckTreeView<String> checkTreeView;
-	private CheckBoxTreeItem<String> root;
+	private CheckBoxTreeItem<String> root; // CheckBoxTreeItem<String>
 //	private CheckBoxTreeItem<String> filterRoot;
 	 ObservableList<Label > empty = FXCollections.observableArrayList();
 	
+	 
+	
+	 // CheckBoxTreeItem 向上选和向下选中所有item
+	 private void selectAllObjByUpOrDown(boolean isUpSelect) {
+		 ObservableList<TreeItem<String>>  rootChildren = 
+				 root.getChildren();
+		 if(rootChildren != null && rootChildren.size() > 0) {
+			 for(var item : rootChildren) {
+				 // 遍历表节点
+				 var tabList =  item.getChildren();
+				 int idx = 0;
+				 // 找到列表中选中的 对象 selectObj
+				 for(var tab : tabList) {
+					 CheckBoxTreeItem<String> tmpTab = (CheckBoxTreeItem<String>) tab;
+					 boolean tf = tmpTab.isSelected();
+					 if(tf) {
+						 break;
+					 } 
+					 idx++;
+				 }
+				 
+				 // 根据selectObj的位置对其上面或下面的对象进行全选
+				 for(int i = 0 ; i < tabList.size(); i++) {
+					 CheckBoxTreeItem<String> tmpTab =
+							 (CheckBoxTreeItem<String>)tabList.get(i);
+					 if(isUpSelect ) { //向上全选
+						 if(i < idx) {
+							 tmpTab.setSelected(true);
+						 }else {
+							 break;
+						 }
+					 }else {// 向下全选
+						 if(i > idx) {
+							 tmpTab.setSelected(true);
+						 } 
+					 }
+					  
+						 
+				 }
+				 
+				 
+			 }
+		 }
+		 
+	 }
+	 
+	 
 	// 清除 check Box 
 	private void cleanCheckBox() {
 		isIgnore.setSelected(false);
@@ -147,16 +198,21 @@ public class TransferDataController implements Initializable {
 		HBox.setHgrow(checkTreeView, Priority.ALWAYS);
 	}
 	
+	// 显示 日志 输出窗口
 	private void monitorShow() {
 		Platform.runLater(() -> { 
 			treePane.getChildren().remove(0);
 			treePane.getChildren().add(spCode);
 			HBox.setHgrow(spCode, Priority.ALWAYS);
+			monBtn.setText("Hide Monitor");
+			monBtn.setStyle("-fx-background-color: red;");
 		});		
 	}
 	private void monitorHide() { 
 		treePane.getChildren().remove(0);
 		treePane.getChildren().add(checkTreeView);
+		monBtn.setText("Monitor");
+		monBtn.setStyle("");
 	}
 	
 	private int logLineSize = 0;
@@ -167,8 +223,10 @@ public class TransferDataController implements Initializable {
 				CodeArea.clear();
 				logLineSize = 0;
 			}
-			CodeArea.appendText(str+"\n");
-			CodeArea.scrollYToPixel(CodeArea.getEstimatedScrollY());
+			CodeArea.appendText(str+"\n"); 
+//			double yv = CodeArea.getEstimatedScrollY();
+//			System.out.println(yv);
+			CodeArea.scrollYToPixel(Double.MAX_VALUE);
 			logLineSize++;
 		});
 		
@@ -211,10 +269,11 @@ public class TransferDataController implements Initializable {
 		
 	private void runActionn() { 
 		btnController(true);
-		monitorShow() ;
+		monitorShow() ; 
 		moniterCleanStr();
 		currentThread = new Thread() {
 			public void run() {
+				CodeRunTimeCalculate rt = new CodeRunTimeCalculate();
 				try {					
 					moniterAppendLog("........begin ......");
 					runBtnAction();  
@@ -230,6 +289,8 @@ public class TransferDataController implements Initializable {
 				}finally {
 					btnController(false);
 					moniterAppendLog("........end ......");
+					String rtValStr = rt.getSecond();
+					moniterAppendLog( "--------执行 时间 : "+rtValStr+" 秒 --------");
 				}
 				
 			};
@@ -248,7 +309,7 @@ public class TransferDataController implements Initializable {
 	private void monBtnAction() { 
 		Object nd = treePane.getChildren().get(0);
 		if( nd instanceof StackPane ) {
-			monitorHide() ;
+			monitorHide() ; 
 		}else {
 			monitorShow();
 		}
@@ -259,6 +320,8 @@ public class TransferDataController implements Initializable {
 	private void setGraphicAndCss() {
 		CommonUtility.addCssClass(monBtn, "transfer-btn");  
 		CommonUtility.addCssClass(amountTxt, "myTextField");
+		CommonUtility.addCssClass(upSelBtn, "transfer-btn");  
+		CommonUtility.addCssClass(downSelBtn, "transfer-btn");  
 		
 		title.setGraphic(IconGenerator.svgImageDefActive("gears"));
 		queryLabel.setGraphic(IconGenerator.svgImageDefActive("search"));
@@ -281,6 +344,12 @@ public class TransferDataController implements Initializable {
 		stopBtn.setOnAction(e->{ stopAction(); }); 
 		// 隐藏界面
 		hideBtn.setOnAction(e->{ ComponentGetter.dataTransferStage.hide(); }); 
+		
+		
+		//TODO 向上选表格
+		upSelBtn.setOnAction(e->{ selectAllObjByUpOrDown( true); }); 
+		// 向下选表格
+		downSelBtn.setOnAction(e->{ selectAllObjByUpOrDown(false); }); 
 		
 		amountTxt.setDisable(true);
 		amountTxt.lengthProperty().addListener(CommonListener.textFieldLimit(amountTxt, 4));
@@ -453,10 +522,8 @@ public class TransferDataController implements Initializable {
 				execListSQL(sqls, tarConn , isThrow);
 				 
 				moniterAppendLog( "--------准备执行 insert --------");
-				CodeRunTimeCalculate rt = new CodeRunTimeCalculate();
 				synTabData( soConn ,tarConn , schename , targetSchename , isThrow);
-				String rtValStr = rt.getSecond();
-				moniterAppendLog( "--------执行 insert 时间 :"+rtValStr+" --------");
+				moniterAppendLog( "--------END insert  --------");
 			}else {
 				if(isThrow) throw new RuntimeException("数据库链接错误");
 			}

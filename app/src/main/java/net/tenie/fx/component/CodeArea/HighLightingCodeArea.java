@@ -829,12 +829,15 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 					fstr = strb;
 				}
 
-				// 在新行插入空白字符串
+				// 当前行的前缀时空白符, 回车后在新行前面填入相同数量的空白符 
 				if (fstr.length() > 0) {
-					e.consume();
-					String addstr = "\n" + fstr;
-					codeArea.insertText(anchor, addstr);
-					codeArea.moveTo(idx + 1, countSpace);
+//					e.consume();
+					String addstr =  fstr;
+					// 回车后, 在回车那行补上前缀空白符
+					Platform.runLater(() -> {
+						codeArea.insertText(idx +1, 0, addstr);
+					});
+					
 				} else {
 					// 如果光标在起始位, 那么回车后光标移动到起始再会到回车后的位置, 目的是防止页面不滚动
 					if (anchor == 0) {
@@ -845,8 +848,10 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 							});
 						});
 					} else {
-						e.consume();
-						codeArea.insertText(anchor, "\n");
+						// 在最后一行
+//						e.consume();
+//						codeArea.insertText(anchor, "\n");
+//						codeArea.scrollYToPixel(Double.MAX_VALUE);
 					}
 				}
 
