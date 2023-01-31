@@ -80,8 +80,8 @@ public class DataTransferWindow {
 		vb.getStyleClass().add("myAlert");
 		Scene scene = new Scene(vb);
 
-		vb.setPrefWidth(500);
-		vb.maxWidth(500);
+		vb.setPrefWidth(600);
+		vb.maxWidth(600);
 
 		AnchorPane closepane = new AnchorPane();
 		JFXButton hideBottom = new JFXButton();
