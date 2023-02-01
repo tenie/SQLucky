@@ -174,6 +174,28 @@ public class DBTools {
 		return str;
 	}
 	
+	public static Long selectOneLongVal(Connection conn, String sql) {
+		ResultSet rs = null;
+		Long val = null;
+		try {
+			rs = conn.createStatement().executeQuery(sql);
+			if (rs.next()) {
+				val = rs.getLong(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+
+		return val;
+	}
+	
 	public static DbTableDatePo execSql(Connection conn, String sql, String sqltype, String content)
 			throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();

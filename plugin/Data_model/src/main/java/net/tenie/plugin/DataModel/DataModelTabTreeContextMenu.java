@@ -90,7 +90,13 @@ public class DataModelTabTreeContextMenu {
 		contextMenu.getItems().addAll(modelImport,query,new SeparatorMenuItem(),  open, close, rename, delete);
 		contextMenu.setOnShowing(e->{
 			var item = DataModelTabTree.currentSelectItem();
-			boolean ismodel = item.getValue().getIsModel();
+			boolean ismodel =  false;
+			if(item != null) {
+				if( item.getValue() != null ) {
+					ismodel = item.getValue().getIsModel();
+				}
+			}
+//			boolean ismodel = item.getValue().getIsModel();
 			if(ismodel) {
 				delete.setDisable(false);
 //				refresh.setDisable(false);

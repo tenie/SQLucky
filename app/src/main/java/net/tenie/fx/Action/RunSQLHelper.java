@@ -76,12 +76,6 @@ public class RunSQLHelper {
 	@SuppressWarnings("restriction")
 	private static void runMain( RunSqlStatePo state) {	 
 		tmpSqlConn = state.getSqlConn();
-//		if (StrUtils.isNotNullOrEmpty(tabIdx)) {
-//			tidx = Integer.valueOf(tabIdx);
-//		}else {
-//			tidx = -1;
-//		}
-//		
 		// 等待加载动画
 		SqlExecuteOption.addWaitingPane( state.getTidx(), state.getIsRefresh());
 		List<SqlData> allsqls = new ArrayList<>();
@@ -322,10 +316,10 @@ public class RunSQLHelper {
 		runSQLMethod(  null, null, false, null);
 	}
 
-	public static void runFuncSQLMethod( ) {
+	public static void runCreateFuncSQLMethod( ) {
 		runSQLMethod(  null, null, true, null);
 	}
-	
+	// 调用函数/存储国产
 	public static void callProcedure( String sqlv, SqluckyConnector sqlConn , List<ProcedureFieldPo> fields ) {
 		if (checkDBconn())
 			return; 
@@ -370,7 +364,7 @@ public class RunSQLHelper {
 		thread.start();
 	}
 	
-	public static void runSQLMethod( String sqlv, String tabIdxv, boolean isFuncv, Boolean isCurrentLine) {
+	public static void runSQLMethod( String sqlv, String tabIdxv, boolean isCreateFunc, Boolean isCurrentLine) {
 		if (checkDBconn())
 			return;
 		SqluckyConnector sqlConn = CommonAction.getDbConnectionPoByComboBoxDbConnName();
@@ -398,7 +392,7 @@ public class RunSQLHelper {
 		}
 		
 
-//		state.setIsCreateFunc(false);
+		state.setIsCreateFunc(isCreateFunc);
 //		state.setIsRefresh(false);
 //		state.setIsLock(false);
 //		state.setIsCallFunc(false);

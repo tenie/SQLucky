@@ -26,7 +26,6 @@ import net.tenie.fx.component.InfoTree.TreeItem.MyTreeItem;
  *
  */
 public class DBinfoTreeFilter {
-	 AnchorPane filter;
 	 // 界面上所有链接节点的临时缓存， 之后的查找过滤都是对tempAllConnNode操作
 	 private  ObservableList<TreeItem<TreeNodePo>> tempAllConnNode  = FXCollections.observableArrayList();
 	 // 缓存查找到的节点容器， 查找到的数据库对象放入filtList， filtList之后放入新的根节点用来界面展示
