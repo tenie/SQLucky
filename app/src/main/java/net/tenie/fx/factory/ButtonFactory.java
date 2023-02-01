@@ -94,7 +94,7 @@ public class ButtonFactory {
 			
 			
 			runFunPro.setOnMouseClicked(e->{
-				RunSQLHelper.runFuncSQLMethod();
+				RunSQLHelper.runCreateFuncSQLMethod();
 			});
 			stopbtn.setOnMouseClicked(e->{
 				RunSQLHelper.stopSQLMethod();

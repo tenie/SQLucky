@@ -35,24 +35,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.Sqlucky.sdk.SqluckyDbTableDatePo;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTextArea;
-import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
+import net.tenie.Sqlucky.sdk.po.component.SqluckyTextField;
 import net.tenie.fx.config.DBConns;
-import net.tenie.fx.config.DbVendor;
 import net.tenie.Sqlucky.sdk.utility.CodeRunTimeCalculate;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
@@ -74,7 +70,7 @@ public class TransferDataController implements Initializable {
 	public static List<String> errorMsg = new ArrayList<>();
 	
 	
-	
+	@FXML private  AnchorPane tpane;
 	
 	private static Thread currentThread; 
 	@FXML private Label title;
@@ -110,8 +106,13 @@ public class TransferDataController implements Initializable {
 	@FXML private JFXButton downSelBtn;
 	
 	
-	@FXML private TextField	filterTxt;
+//	@FXML private TextField	filterTxt;
+	private TextField	filterTxt;
+	// 同步数据行数最大行数
 	@FXML private TextField	amountTxt;
+	
+	// 提醒: 同步过程, 函数, 可能依赖序列和互相依赖 
+	@FXML private Label tipsLabel;
 	
 	private StackPane spCode ;
 	private MyCodeArea CodeArea;
@@ -362,24 +363,34 @@ public class TransferDataController implements Initializable {
 	// 初始化方法, 这边在初始化的时候添加按钮的点击事件
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		filterTxtInitialize();
-		setGraphicAndCss(); 
+		SqluckyTextField tf = new SqluckyTextField();
+		filterTxt = tf.getTxt();
+		filterTxtInitialize( filterTxt); 
+		
+		tpane.getChildren().add( tf.getPane() );
+		
+		setGraphicAndCss();  
+		tipsLabel.setText("Tips: 同步过程, 函数, 可能依赖序列或互相依赖");// "Tips: 同步过程, 函数, 可能依赖序列和互相依赖 ";
 
 		var sqlCodeArea = new MyTextArea();
 		spCode  = sqlCodeArea.getCodeAreaPane();
 		CodeArea = sqlCodeArea.getCodeArea();
-		setAction();  
+		setAction();
 		 
-		soDB.setItems(DBConns.getChoiceBoxItems());
-		taDB.setItems(DBConns.getChoiceBoxItems());  
+		// 设置数据库下拉选的值
+		TransferDataPageTools.setupDBComboBox(soDB, taDB);
+		
 		soDB.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 					soSC.setItems(empty);
 					cleanCheckBox();
-					String str = newValue.getText();
-					soSC.setItems(getSchemaLabels(str));
+					if(newValue != null) {
+						String str = newValue.getText();
+						soSC.setItems(getSchemaLabels(str));
 
-					root.getChildren().removeAll(root.getChildren()); 
-					filterTxt.clear();
+						root.getChildren().removeAll(root.getChildren()); 
+						filterTxt.clear();
+					}
+					
 				});
 		soSC.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 					root.getChildren().removeAll(root.getChildren());
@@ -388,11 +399,12 @@ public class TransferDataController implements Initializable {
 				});
 
 		taDB.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-					String str = newValue.getText();
-					taSC.setItems(getSchemaLabels(str));
+					if(newValue != null) {
+						String str = newValue.getText();
+						taSC.setItems(getSchemaLabels(str));
+					}
 				});
 
-		// check tree
 		creatCheckTree(); 
 		
 		tabData.selectedProperty().addListener((obs, oldValue, newValue) -> {
@@ -832,8 +844,8 @@ public class TransferDataController implements Initializable {
 
 	
 	 
-	private void filterTxtInitialize() {
-		filterTxt.textProperty().addListener((o, oldVal, newVal) -> { 
+	private void filterTxtInitialize(TextField textField) {
+		textField.textProperty().addListener((o, oldVal, newVal) -> { 
 			// 缓存
 			ObservableList<TreeItem<String>> connNodes = root.getChildren();
 			temp.clear();
@@ -938,8 +950,13 @@ public class TransferDataController implements Initializable {
 	public   void insertData(Connection conn, Connection toConn , String tableName,  String schename , String targetSchename, int amount , boolean isThrow) throws SQLException {
 		String sorTable =  getTableName(schename, tableName, tarDbpo);  
 		String sql = "select   *   from   "+sorTable+"    where   1=1  ";
-		
-//		DbTableDatePo dpo = new DbTableDatePo();
+		String countSQL = "select   count(*)  as val  from   "+sorTable+"    where   1=1  ";
+		// 多少行数据
+		Long countVal = DBTools.selectOneLongVal(conn, countSQL);
+		if(countVal == 0) {
+			moniterAppendLog(tableName + " 的数据为"+ countVal +" , 进入下一个表 ");
+			return ;
+		}
 		ObservableList<SheetFieldPo> fields = 
 				FXCollections.observableArrayList();
 		
@@ -972,8 +989,7 @@ public class TransferDataController implements Initializable {
 			 
 			execRs(toConn, rs, 
 					fields
-//					dpo
-					, tarTableName, amount , isThrow );
+					, tarTableName, amount , isThrow,  countVal );
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -983,7 +999,6 @@ public class TransferDataController implements Initializable {
 			if (rs != null)
 				rs.close();
 		}
-//		return dpo;
 	} 
 	
 	// 创建一行数据
@@ -997,7 +1012,8 @@ public class TransferDataController implements Initializable {
 //			SqluckyDbTableDatePo dpo, 
 			ObservableList<SheetFieldPo> fpo,
 			String tableName , int amount,  
-			boolean isThrow) throws SQLException {
+			boolean isThrow,
+			Long countVal) throws SQLException {
 		 
 		Statement stmt = null;
 		int execLine = 500;
@@ -1045,8 +1061,10 @@ public class TransferDataController implements Initializable {
 				if( idx % execLine == 0 ) { 
 					logger.info(insertSql);
 					int[] count = stmt.executeBatch();
-					logger.info("instert = "+count.length);
-					moniterAppendLog(tableName + " exec Batch instert = "+count.length);
+					int execCountLen = count.length;
+					countVal -= execCountLen;
+					logger.info("instert = "+ execCountLen);
+					moniterAppendLog(tableName + " exec Batch instert = "+execCountLen + "; residue : " + countVal);
 				}  
 				 
 			}
@@ -1056,8 +1074,10 @@ public class TransferDataController implements Initializable {
 			if( idx % execLine >  0 ) {
 				logger.info(insertSql);
 				int[] count = stmt.executeBatch();
-				logger.info("instert = "+count.length);
-				moniterAppendLog("Batch instert = "+count.length);
+				int execCountLen = count.length;
+				countVal -= execCountLen;
+				logger.info("instert = "+ execCountLen);
+				moniterAppendLog("Batch instert = "+ execCountLen + "; residue : " + countVal);
 			} 
 		} catch (Exception e1) { 
 			e1.printStackTrace();

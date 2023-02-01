@@ -74,22 +74,27 @@
             <Insets bottom="10.0" left="10.0" />
          </VBox.margin>
       </GridPane>
+      <AnchorPane prefHeight="21.0" prefWidth="601.0">
+         <children>
+            <Label fx:id="tipsLabel" layoutX="15.0" layoutY="2.0" />
+         </children>
+      </AnchorPane>
       <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
          <children>
             <AnchorPane prefHeight="27.0" prefWidth="601.0">
                <children>
                   <Label fx:id="queryLabel" layoutX="15.0" layoutY="6.0" text="查询" />
-                  <TextField fx:id="filterTxt" layoutX="70.0" layoutY="2.0" prefHeight="23.0" prefWidth="137.0" styleClass="myFindTextField" />
-                  <JFXButton fx:id="execBtn" layoutX="229.0" mnemonicParsing="false" styleClass="transfer-btn" text="Run" />
-                  <JFXButton fx:id="stopBtn" layoutX="295.0" mnemonicParsing="false" styleClass="transfer-btn" text="Stop" />
                   <JFXButton fx:id="hideBtn" layoutX="484.0" prefHeight="23.0" prefWidth="117.0" styleClass="transfer-btn" text="Hide Window" />
-                  <JFXButton fx:id="monBtn" layoutX="364.0" text="Monitor" />
+                  <JFXButton fx:id="monBtn" layoutX="406.0" layoutY="2.0" text="Monitor" />
+                  <AnchorPane fx:id="tpane" layoutX="66.0" layoutY="2.0" prefHeight="25.0" prefWidth="200.0" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="35.0" prefWidth="601.0">
                <children>
                   <JFXButton fx:id="upSelBtn" layoutX="14.0" layoutY="6.0" text="Select All Up" />
                   <JFXButton fx:id="downSelBtn" layoutX="102.0" layoutY="6.0" text="Select All Down" />
+                  <JFXButton fx:id="execBtn" layoutX="219.0" layoutY="6.0" mnemonicParsing="false" styleClass="transfer-btn" text="Run" />
+                  <JFXButton fx:id="stopBtn" layoutX="274.0" layoutY="6.0" mnemonicParsing="false" styleClass="transfer-btn" text="Stop" />
                </children>
             </AnchorPane>
             <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" VBox.vgrow="ALWAYS" />
