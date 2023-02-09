@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import javafx.scene.Node;
@@ -59,4 +60,6 @@ public interface AppComponent {
 	public  SqluckyBottomSheet ddlSheet(String name, String ddl, boolean isRunFunc);
 	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc);
 	public SqluckyBottomSheet EmptySheet(String name, String message);
+	
+	public Map<String, SqluckyConnector> getAllConnector();
 }

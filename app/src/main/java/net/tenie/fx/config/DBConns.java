@@ -66,17 +66,13 @@ public final class DBConns {
 	public static void flushChoiceBox(ComboBox<Label> box) {
 		if (box != null) {
 			cb = box;
-		} else {
-//			cb = (ComboBox<Label>) ShareComponnet.name("ComponentGenerator.ChoiceBox.conns");
 		}
 		if (cb == null) {
 			return;
 		}
 		
 		ObservableList<Label> list= getChoiceBoxItems();
-//		Platform.runLater(()->{
-//			
-//		});
+
 		cb.setItems(list);
 
 	}
@@ -181,5 +177,9 @@ public final class DBConns {
 		String connName = getCurrentConnectName();
 		return DBConns.get(connName);
 	}
+	public static Map<String, SqluckyConnector> getDbs() {
+		return dbs;
+	}
+	
 
 }

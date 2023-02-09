@@ -13,11 +13,13 @@ open module SQLucky {
     requires java.sql.rowset;
     
 	requires javafx.base;
+//	requires javafx.we
 	requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;  
 //    requires javafx.swing; 
     requires javafx.media;
+    requires javafx.web;
     
     // mods
 	requires com.jfoenix;  

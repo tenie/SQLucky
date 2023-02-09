@@ -1,16 +1,18 @@
 package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
 import javafx.beans.property.StringProperty;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
  
 
 public interface SqluckyConnector {
 	
+	void setDBConnectorInfoPo(DBConnectorInfoPo po);
+	DBConnectorInfoPo getDBConnectorInfoPo();
 	
 	public String dbRootNodeName();
 	public String translateErrMsg(String errString);

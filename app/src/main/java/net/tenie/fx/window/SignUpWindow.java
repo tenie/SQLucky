@@ -1,4 +1,4 @@
-package net.tenie.plugin.workspace.component;
+package net.tenie.fx.window;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,16 +7,13 @@ import java.util.Map;
 import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.jfoenix.controls.JFXCheckBox;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -28,6 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -42,10 +40,10 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
  * @author tenie
  *
  */
-public class WorkspaceEditor {
+public class SignUpWindow {
 	// 编辑连接时记录连接状态
 	public  static boolean editLinkStatus = false;
-	private static Logger logger = LogManager.getLogger(WorkspaceEditor.class);
+	private static Logger logger = LogManager.getLogger(SignUpWindow.class);
 	public static Stage CreateModalWindow(VBox vb) {
 
 		final Stage stage = new Stage();
@@ -78,16 +76,37 @@ public class WorkspaceEditor {
 		return stage;
 	}
 
-	public static void createWorkspaceConfigWindow( ) {
+	
+	public static void createWorkspaceConfigWindow() { 
+		 
+		   	WebView web = new WebView();
+		   	web.getEngine().load("https://www.tenie.net/");
+			List<Region> list = new ArrayList<>();
+			HBox emailBox = new HBox(); 
+			emailBox.getChildren().add(web);
+		   	list.add(    null);
+		   	list.add(    emailBox);
+			layout(list);
+	}
+	public static void createWorkspaceConfigWindow2( ) {
+		String email = "Email";
 		String userName = "User Name"; 
 		String passwordStr = "Password";
-		String urlStr = "https://example.com";
-		Label lbserverName = new Label("URL");   
+//		String remember =  "Remember Account";
+		String emailStr = "xxx@xxx.xxx";
+		
+		String reg = "Registration code";
+		
+		Label lbEmail = new Label(email);   
 		Label lbUserName= new Label(userName);  
 		Label lbPassword = new Label(passwordStr);   
 		
-		TextField tfserverName = new TextField();
-		tfserverName.setPromptText(urlStr);
+		
+		HBox emailBox = new HBox(); 
+		TextField emailTF = new TextField();
+		emailTF.setPromptText(emailStr);
+		Button sendCodeBtn = createSendCodeBtn(null); // 发送验证码按钮
+		emailBox.getChildren().addAll(emailTF, sendCodeBtn);
 		
 		TextField tfUserName = new TextField();
 		tfUserName.setPromptText(userName);
@@ -97,44 +116,20 @@ public class WorkspaceEditor {
 		
 		
 		
-		HBox hb1 = new HBox();
-		Label Remember = new Label("Remember Account ");
-	    JFXCheckBox rememberCB  = new JFXCheckBox(); 
-	    hb1.getChildren().addAll(Remember, rememberCB);
+//		HBox hb2 = new HBox(); 
+//		Label Remember = new Label(remember);
+//	    JFXCheckBox rememberCB  = new JFXCheckBox();  
+//	    
+//	    hb2.getChildren().addAll(Remember, rememberCB );
 	    
-	    HBox hb2 = new HBox();
-	    Label autoUp = new Label("Auto Upload ");
-	    JFXCheckBox autoUpCB  = new JFXCheckBox(); 
-	    hb2.getChildren().addAll(autoUp, autoUpCB);
-	    
-		
-		Label lbWorkspace = new Label("Workspace");   
-		List<String> liWs = new ArrayList<>();
-		liWs.add("Local Workspace");
-		ObservableList<String>   workspaces   = FXCollections.observableArrayList(liWs);
-		ChoiceBox<String> cbWorkspace = new ChoiceBox<String>(workspaces);
-		Tooltip tt = new Tooltip("select workspace"); 
-		tt.setShowDelay(new Duration(100));
-		cbWorkspace.setTooltip(tt);
-		cbWorkspace.setPrefWidth(250);
-		cbWorkspace.setMinWidth(250);
-		
-		
-
-	 
-		Button uploadBtn = createUploadBtn( tfserverName, tfUserName , password);//new Button("Test");
-		Button downloadBtn = createDownloadBtn( null  );
-		Button saveBtn = createSwitchBtn(  null ) ; // new Button("Save"); 
-		
+//		Button signInBtn = createSignInBtn( null  );
+		Button signUpBtn = createSignUpBtn( null  );
 		List<Region> list = new ArrayList<>();
-		list.add(    lbWorkspace);
-		list.add(    cbWorkspace);
-		list.add(    saveBtn);
-		list.add(    null);
+  
 		
 		
-		list.add(    lbserverName);
-		list.add(    tfserverName);
+		list.add(    lbEmail);
+		list.add(    emailBox);
 		
 		list.add(    lbUserName);
 		list.add(    tfUserName);
@@ -142,44 +137,38 @@ public class WorkspaceEditor {
 		list.add(    lbPassword);
 		list.add(    password); 
 		
-		list.add(    hb1);
-		list.add(    hb2); 
+//		list.add(    null);
+//		list.add(    hb2); 
 		
-		list.add(    downloadBtn);
-		list.add(    uploadBtn);
+//		list.add(    signInBtn); 
+
+		list.add(    signUpBtn);
+		list.add(    null);
 		layout(list);
 
 	}  
 	
-	public static Button createDownloadBtn(Function<String, SqluckyConnector> assembleSqlCon ) {
-		Button testBtn = new Button("Download "); 
-		return testBtn;
-	}
-	public static Button createUploadBtn(TextField tfserverName, TextField tfUserName , PasswordField password) {
-		Button UploadBtn = new Button("Upload Loacl Data ");
-		UploadBtn.setOnMouseClicked(e->{
-			String url = tfserverName.getText();
-			String userName = tfUserName.getText();
-			String pw = password.getText();
-			Map<String, String> pama = new HashMap<>();
-			pama.put("userName", userName);
-			pama.put("password", pw);
-//			pama.put("fileName", ConfigVal.H2_DB_FULL_FILE_NAME);
-			
-			
-			net.tenie.Sqlucky.sdk.utility.net.HttpPostFile.exec(url, ConfigVal.H2_DB_FULL_FILE_NAME, pama );
+	public static Button createSendCodeBtn(Function<String, SqluckyConnector> assembleSqlCon ) {
+		String Send = "Send code ";
+		Button SendBtn = new Button(Send); 
+		SendBtn.setOnAction(e->{
+//			SignInWindow.createWorkspaceConfigWindow();
 		});
-		return UploadBtn;
+		return SendBtn;
 	}
 	
-	public static Button createSwitchBtn(Function<String, SqluckyConnector> assembleSqlCon  ) {
-		Button saveBtn = new Button("Switch");
-		return saveBtn;
+	public static Button createSignUpBtn(Function<String, SqluckyConnector> assembleSqlCon ) {
+		String signUp = "Sign Up ";
+		Button signUpBtn = new Button(signUp); 
+		return signUpBtn;
 	}
+	
+ 
 	// 组件布局
-	public static void layout(List<Region> list    ) {
+	public static void layout(List<Region> list) {
+		String sign = "Sign in ";
 		VBox vb = new VBox();
-		Label title = new Label("Edit Connection Info");
+		Label title = new Label(sign);
 		title.setPadding(new Insets(15));
 		AppComponent appComponent = ComponentGetter.appComponent; 
 		title.setGraphic(appComponent.getIconDefActive("gears"));
