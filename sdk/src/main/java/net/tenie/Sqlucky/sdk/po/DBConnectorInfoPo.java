@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.util.Date;
 import java.util.Map;
 
+import com.alibaba.fastjson.JSONObject;
+
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -38,13 +40,7 @@ public class DBConnectorInfoPo {
 		this.connName = connName;
 		this.hostOrFile = host;
 		this.port = port;
-//		this.defaultSchema = defaultSchema.trim();
 		this.dbVendor = dbVendor;
-//		if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			this.defaultSchema = "public";
-//		} else {
-//			this.defaultSchema = defaultSchema.trim();
-//		}
 		this.defaultSchema = defaultSchema.trim();
 		this.driver = driver;
 		this.user = user;
@@ -55,9 +51,6 @@ public class DBConnectorInfoPo {
 		}
 		this.jdbcUrl = jdbcurlStr;
 		this.autoConnect = autoConn;
-//		this.exportDDL = exportDDL;
-
-//		setExportDDL(dbVendor);
 	}
 	
 	
@@ -257,7 +250,42 @@ public class DBConnectorInfoPo {
 
 
 
+	@Override
+	public String toString() {
+		return "DBConnectorInfoPo [id=" + id + ", connName=" + connName + ", hostOrFile=" + hostOrFile + ", port="
+				+ port + ", driver=" + driver + ", dbVendor=" + dbVendor + ", defaultSchema=" + defaultSchema
+				+ ", displaySchema=" + displaySchema + ", dbName=" + dbName + ", user=" + user + ", passWord="
+				+ passWord + ", jdbcUrl=" + jdbcUrl + ", otherParameter=" + otherParameter + ", comment=" + comment
+				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", recordVersion=" + recordVersion
+				+ ", conn=" + conn + ", exportDDL=" + exportDDL + ", JdbcUrlIsFile=" + JdbcUrlIsFile + ", schemas="
+				+ schemas + ", jdbcUrlUse=" + jdbcUrlUse + ", autoConnect=" + autoConnect + "]";
+	}
 
+
+
+
+	public String toJson() {
+		JSONObject jo =  (JSONObject) JSONObject.toJSON(this);
+		String val = jo.toJSONString();
+		System.out.println(val);
+		return val;
+	}
+	
+	public static DBConnectorInfoPo toPo(String json) {
+		DBConnectorInfoPo val =  JSONObject.parseObject(json, DBConnectorInfoPo.class);
+		return val;
+	}
+	
+//	public static void main(String[] args) {
+//		DBConnectorInfoPo po = new DBConnectorInfoPo("connName", "driver", "host", "port", "user", "password", "dbvendor", "defaultSchema", "dbName", "jdbcurl", false);
+//		String jsonStr = po.toJson();
+//		
+//		DBConnectorInfoPo pp = DBConnectorInfoPo.toPo(jsonStr);
+//		System.out.println(pp.toString());
+//		
+//	}
+	
+	
 
 	
 }

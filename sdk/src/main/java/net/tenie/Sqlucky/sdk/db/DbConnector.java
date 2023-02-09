@@ -2,15 +2,12 @@ package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
@@ -21,11 +18,19 @@ public abstract class DbConnector implements SqluckyConnector {
 	private static Logger logger = LogManager.getLogger(DbConnector.class); 
 	protected DBConnectorInfoPo connPo;
 	
-	 
- 
-	public DbConnector(DBConnectorInfoPo connPo) {
+	
+	
+
+	public void setDBConnectorInfoPo(DBConnectorInfoPo po) {
+		this.connPo = po;
+	}
+	public DBConnectorInfoPo getDBConnectorInfoPo() {
+		return this.connPo;
+	}
+	
+	public DbConnector(DBConnectorInfoPo c) {
 		super();
-		this.connPo = connPo;
+		this.connPo = c;
 	}
  
 

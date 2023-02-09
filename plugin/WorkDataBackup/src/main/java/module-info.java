@@ -1,4 +1,4 @@
-open module SQLucky.plugin.workspace{
+open module SQLucky.plugin.WorkDataBackup{
 	requires javafx.base;
 	requires javafx.graphics;
     requires javafx.controls;
@@ -10,6 +10,6 @@ open module SQLucky.plugin.workspace{
 	requires com.jfoenix;  
 	         
 	
-	exports net.tenie.plugin.workspace.impl;
-    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.workspace.impl.WorkspaceDelegateImpl;
+	exports net.tenie.plugin.backup.impl;
+    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.backup.impl.WorkspaceDelegateImpl;
 }

@@ -23,6 +23,8 @@ import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.plugin.PluginManageWindow;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
+import net.tenie.fx.window.SignInWindow;
+import net.tenie.fx.window.SignUpWindow;
 
 
 /*   @author tenie */
@@ -325,8 +327,21 @@ public class MenuBarContainer {
 		about.setOnAction(value -> {
 			ModalDialog.showAbout();
 		});
+		
+		MenuItem SignInMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign In"));
+		SignInMenuItem.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
+		SignInMenuItem.setOnAction(value -> {
+			SignInWindow.createWorkspaceConfigWindow();
+		});
+		
+		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));
+		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
+		SignUpMenuItem.setOnAction(value -> {
+			SignUpWindow.createWorkspaceConfigWindow();
+		});
 
-		mn.getItems().addAll(about); 
+
+		mn.getItems().addAll(about, SignInMenuItem, SignUpMenuItem); 
 		return mn;
 	}
 	

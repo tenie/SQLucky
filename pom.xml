@@ -9,7 +9,7 @@
 	<modules>
 		<module>sdk</module>
 		<module>plugin/Note</module>
-		<module>plugin/Workspace</module>
+		<module>plugin/WorkDataBackup</module>
 		<module>plugin/DB2_connector</module>
 		<module>plugin/H2_connector</module>
 		<module>plugin/Sqlite_connector</module>
@@ -79,7 +79,7 @@
 			</dependency>
 			<dependency>
 				<groupId>net.tenie</groupId>
-				<artifactId>SQLucky-Plugin-Workspace</artifactId>
+				<artifactId>SQLucky-Plugin-WorkDataBackup</artifactId>
 				<version>${sqlucky.version}</version>
 			</dependency>
 			
@@ -150,6 +150,13 @@
 				<artifactId>javafx-media</artifactId>
 				<version>${javafx.version}</version>
 			</dependency>
+			
+			<dependency>
+			    <groupId>org.openjfx</groupId>
+			    <artifactId>javafx-web</artifactId>
+			   	<version>${javafx.version}</version>
+			</dependency>
+			
 
 			 
 			<dependency>

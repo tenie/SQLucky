@@ -1,12 +1,10 @@
 package net.tenie.sdkImp;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Menu;
@@ -37,9 +35,9 @@ import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
-import net.tenie.fx.component.InfoTree.DBInfoTreeContextMenu;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
+import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.lib.db.h2.AppDao; 
@@ -236,7 +234,6 @@ public class SqluckyAppComponent implements AppComponent {
 		// 表格上面的按钮
 		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(mtb, ddl, isRunFunc, isProc, name);
 		AnchorPane fp = new BottomSheetOptionBtnsPane(btnLs);
-//		AnchorPane fp = new DdlOptionBtnsPane(mtb, ddl, isRunFunc, isProc, name); // ddlOptionBtnsPane(ddl, isRunFunc,
 																					// isProc, name);
 		vb.getChildren().add(fp);
 		vb.getChildren().add(sp);
@@ -249,14 +246,12 @@ public class SqluckyAppComponent implements AppComponent {
 	public void registerDBInfoMenu(List<Menu> otherDBMenu, List<MenuItem> otherDBMenuItem) {
 		var contextMenu = ComponentGetter.dbInfoTreeContextMenu;
 		if(otherDBMenu != null && otherDBMenu.size() > 0) {
-//			DBInfoTreeContextMenu.otherDBMenu.addAll(ms);
 			contextMenu.getItems().add(new SeparatorMenuItem());
         	for(var mn : otherDBMenu ) { 
             	contextMenu.getItems().add(mn);
         	}
 		}
 		if(otherDBMenuItem != null && otherDBMenuItem.size() > 0) {
-//			DBInfoTreeContextMenu.otherDBMenuItem.addAll(mis);
 			contextMenu.getItems().add(new SeparatorMenuItem());
         	for(var mnitem : otherDBMenuItem ) { 
             	contextMenu.getItems().add(mnitem);
@@ -272,14 +267,12 @@ public class SqluckyAppComponent implements AppComponent {
 	public TreeItemType currentDBInfoNodeType() {
 		TreeItem<TreeNodePo>   item = DBinfoTree.DBinfoTreeView.getSelectionModel().getSelectedItem();
 		TreeNodePo np  =	item.getValue();
-//		System.out.println(np.getType());
 		return np.getType();
 	}
 	@Override
 	public DBNodeInfoPo currentDBInfoNode() {
 		TreeItem<TreeNodePo>   item = DBinfoTree.DBinfoTreeView.getSelectionModel().getSelectedItem();
 		TreeNodePo np  =	item.getValue();
-//		System.out.println(np.getType()); SqluckyConnector connpo
 		return np.getDbNodeInfoPo();
 	}
 
@@ -294,6 +287,11 @@ public class SqluckyAppComponent implements AppComponent {
 	@Override
 	public Consumer<String> getDBInfoMenuOnShowing() {
 		return dbInfoMenuOnShowingCaller;
+	}
+
+	@Override
+	public Map<String, SqluckyConnector> getAllConnector() {
+		return DBConns.getDbs();
 	}
 	
 

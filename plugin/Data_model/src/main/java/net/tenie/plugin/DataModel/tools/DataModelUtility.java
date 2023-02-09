@@ -114,7 +114,6 @@ public class DataModelUtility {
 		val = FileUtils.readFileToString(f, encode);
 		if (val != null && !"".equals(val)) {
 		   DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
-//		   System.out.println(DataModelPoVal);
 		}
 		return DataModelPoVal;
 	}
@@ -381,8 +380,6 @@ public class DataModelUtility {
 	}
 
 	public static void main(String[] args) throws IOException {
-
-//		DataSource dataSource = SqluckyAppDB.getH2DataSource();
 		DataSource dataSource = SqluckyAppDB.getSqliteDataSource();
 		TransactionFactory transactionFactory = new JdbcTransactionFactory();
 		Environment environment = new Environment("development", transactionFactory, dataSource);
