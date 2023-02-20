@@ -287,41 +287,6 @@ public class CommonAction {
 		}
 
 	}
-		
-	// 保存脚本文件内容
-//	public static List<ScriptPo>  saveScriptArchive() {
-//		List<ScriptPo> val = new ArrayList<>();
-//		try {
-//			TabPane mainTabPane = ComponentGetter.mainTabPane;
-//			Connection H2conn = H2Db.getConn();
-//			for (Tab t : mainTabPane.getTabs()) {
-////				String idval = t.getId();
-//				MyTab mtab = (MyTab) t;
-//				var 
-//				if (StrUtils.isNotNullOrEmpty(idval)) {
-//					String sql = SqlEditor.getTabSQLText(t);
-//					if (StrUtils.isNotNullOrEmpty(sql)) {
-//						CodeArea code = SqlEditor.getCodeArea(t);
-//						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
-//						if (StrUtils.beginWith(idval, ConfigVal.SAVE_TAG)) {
-//							idval = idval.substring(ConfigVal.SAVE_TAG.length());
-//						} else {
-//							idval = "";
-//						}
-//
-//						String title = CommonUtility.tabText(t); 
-//						String encode = ComponentGetter.getFileEncode(idval);
-//						ScriptPo po= SqlTextDao.scriptArchive(H2conn, title, sql, idval, encode, paragraph);
-//						if(po != null && po.getId() > -1) { 
-//							val.add(po);
-//						}
-//					}
-//				}
-//			}
-//		} finally {
-//		}
-//		return val;
-//	}
 	
 	//TODO archive script
 	public static void archiveAllScript() {
