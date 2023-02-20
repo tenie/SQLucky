@@ -1,11 +1,23 @@
 package net.tenie.Sqlucky.sdk.config;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
  
 
 /*   @author tenie */
 public class ConfigVal {
+	// 模块路径
+	public static File MODULE_PATH ;
+	
+	// 在线信息
+	public static String SQLUCKY_USERNAME ;
+	public static String SQLUCKY_EMAIL ;
+	public static String SQLUCKY_PASSWORD ;
+	
+	
+	
 	// date formate
 	public static String dateFormateL = "yyyy-MM-dd HH:mm:ss";
 	public static String dateFormateS = "yyyy-MM-dd";
@@ -58,6 +70,11 @@ public class ConfigVal {
 	public static List<String> cssListYellow = new ArrayList<>();
 	
 	
-	
-
+	// 获取skd 的路径
+	static {
+		URL url = ConfigVal.class.getClassLoader().getResource("./");
+		String pathVal = url.getPath();
+		MODULE_PATH = new File(pathVal);  
+	}
+		
 }

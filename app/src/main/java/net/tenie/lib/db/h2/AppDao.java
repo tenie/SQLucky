@@ -179,6 +179,17 @@ public class AppDao {
 //			",\n" + 
 //			"  PRIMARY KEY ( `ID`, `PLUGIN_NAME`)\n" + 
 			") ";
+	
+	public static final  String SQLUCKY_USER = 
+			"CREATE TABLE `SQLUCKY_USER` (\n" +
+			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT, \n" + 
+			"  `USER_NAME`  VARCHAR(300)   ,   \n" +   
+			"  `EMAIL` VARCHAR(300)    ,   \n" +  
+			"  `PASSWORD` VARCHAR(300)  , \n" +
+			
+			"  `CREATED_TIME` DATETIME ,\n" + 
+			"  `UPDATED_TIME` DATETIME "+ 
+			") ";
  
 	
 	// 建表 
@@ -193,6 +204,8 @@ public class AppDao {
 			DBTools.execDDLNoErr(conn, DATA_MODEL_TABLE);
 			DBTools.execDDLNoErr(conn, DATA_MODEL_TABLE_FIELDS);
 			DBTools.execDDLNoErr(conn, PLUGIN_INFO);
+			DBTools.execDDLNoErr(conn, SQLUCKY_USER);
+			
 			
 		} catch (Exception e) { 
 			e.printStackTrace();
@@ -458,7 +471,7 @@ public class AppDao {
 	
 	public static void testDbTableExists(Connection conn) {
 		// 第一次启动
-		if (!tabExist(conn, "PLUGIN_INFO")) {
+		if (!tabExist(conn, "SQLUCKY_USER")) {
 			AppDao.createTab(conn);
 			// 数据库迁移
 			transferOldDbData(conn);
@@ -608,5 +621,5 @@ public class AppDao {
 		return ls;
 	}
 	
-	
+
 }
