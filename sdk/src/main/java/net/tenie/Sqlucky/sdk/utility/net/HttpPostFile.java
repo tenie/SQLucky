@@ -187,8 +187,8 @@ public class HttpPostFile {
      * @throws IOException 
      */
     public static void main(String[] args) throws IOException {
-    	
+    	demo1();
 //    	demo2();
-    	demo_post();
+//    	demo_post();
     }
 }

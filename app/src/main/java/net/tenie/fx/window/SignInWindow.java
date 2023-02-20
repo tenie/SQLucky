@@ -8,6 +8,8 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.jfoenix.controls.JFXCheckBox;
+
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -32,7 +34,9 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.fx.component.UserAccount.UserAccountAction;
 
 /**
  * 
@@ -76,22 +80,19 @@ public class SignInWindow {
 	}
 
 	public static void createWorkspaceConfigWindow( ) {
-		String email = "Email";
-		String userName = "User Name"; 
+		String email = "Email"; 
 		String passwordStr = "Password";
 		String remember =  "Remember Account";
 		
 //		String emailStr = "xxx@xxx.xxx";
 //		Label lbEmail = new Label(email);   
 		
-		Label lbUserName= new Label(userName);  
+		Label lbemail= new Label(email);  
 		Label lbPassword = new Label(passwordStr);   
 		
-//		TextField emailTF = new TextField();
-//		emailTF.setPromptText(emailStr);
-		
-		TextField tfUserName = new TextField();
-		tfUserName.setPromptText(userName);
+		TextField tfemail = new TextField();
+		tfemail.setPromptText(email);
+	
 		
 		PasswordField password = new PasswordField();
 		password.setPromptText(passwordStr);
@@ -101,10 +102,52 @@ public class SignInWindow {
 		HBox hb2 = new HBox(); 
 		Label Remember = new Label(remember);
 	    JFXCheckBox rememberCB  = new JFXCheckBox();  
+	   
 	    
 	    hb2.getChildren().addAll(Remember, rememberCB );
-	    
-		Button signInBtn = createSignInBtn( null  );
+	    Function<String, Boolean> singAction = v->{
+	    	String emailVal = tfemail.getText();
+	    	String passwordVal = password.getText();
+	    	if(emailVal == null || emailVal.trim().length() == 0) {
+	    		MyAlert.errorAlert( "Email不能为空");
+	    		return false;
+	    	}
+	    	
+	    	if(passwordVal == null || passwordVal.trim().length() == 0) {
+	    		MyAlert.errorAlert( "密码不能为空");
+	    		return false;
+	    	}
+	    	
+	    	boolean tf = rememberCB.isSelected();
+	    	boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );
+	    	
+	    	if(seccuss) {
+	    		MyAlert.infoAlert("完成", "完成"); 
+	    	}else {
+	    		MyAlert.errorAlert( "失败");
+	    	}
+	    	return true;
+	    };
+		Button signInBtn = createSignInBtn( singAction  );
+		signInBtn.setDisable(true);
+		tfemail.textProperty().addListener(e->{
+			if( tfemail.getText().trim().length() == 0 || password.getText().trim().length() == 0) {
+				signInBtn.setDisable(true);
+			}else {
+				signInBtn.setDisable(false);
+			}
+		});
+		password.textProperty().addListener(e->{
+			if( password.getText().trim().length() == 0 || tfemail.getText().trim().length() == 0 ) {
+				signInBtn.setDisable(true);
+			}else {
+				signInBtn.setDisable(false);
+			}
+		});
+		
+//		signInBtn.setDisable(true);
+//		new SimpleBooleanProperty(true)
+//		signInBtn.disableProperty().bind();
 		Button signUpBtn = createSignUpBtn( null  );
 		List<Region> list = new ArrayList<>();
   
@@ -113,8 +156,8 @@ public class SignInWindow {
 //		list.add(    lbEmail);
 //		list.add(    emailTF);
 //		
-		list.add(    lbUserName);
-		list.add(    tfUserName);
+		list.add(    lbemail);
+		list.add(    tfemail);
 		
 		list.add(    lbPassword);
 		list.add(    password); 
@@ -129,13 +172,17 @@ public class SignInWindow {
 
 	}  
 	
-	public static Button createSignInBtn(Function<String, SqluckyConnector> assembleSqlCon ) {
+	public static Button createSignInBtn(Function<String, Boolean> sinbtn ) {
 		String SignIn = "Sign in ";
 		Button SignInBtn = new Button(SignIn); 
+		SignInBtn.setOnAction(V->{
+//			UserAccountAction.singIn(SignIn, SignIn, editLinkStatus)
+			sinbtn.apply(SignIn);
+		});
 		return SignInBtn;
 	}
 	
-	public static Button createSignUpBtn(Function<String, SqluckyConnector> assembleSqlCon ) {
+	public static Button createSignUpBtn(Function<String, String> sup ) {
 		String signUp = "Sign Up ";
 		Button signUpBtn = new Button(signUp); 
 		signUpBtn.setOnAction(e->{

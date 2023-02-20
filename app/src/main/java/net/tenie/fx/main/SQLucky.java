@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Properties;
 import java.util.function.Consumer;
 import com.sun.javafx.application.LauncherImpl;
 
@@ -217,13 +218,18 @@ public class SQLucky extends Application {
 		if(args!=null && args.length >0) {
 			sysOpenFile = args[0];
 		}
-//		syso
-		var val =System.getProperty("jdk.module.path");
+//		Properties  ps = System.getProperties();
+//		ps.forEach((o1, o2)->{
+//			System.out.println(o1 + " | "+ o2);
+//			
+//		});
+		
+		 
+		
+//		var val =System.getProperty("jdk.module.path");
 //		var val =System.getProperty("jdk.module.upgrade.path");
 //		var val =System.getProperty("jdk.module.main");
-		logger.debug("main.args ==  "+ Arrays.toString(val.split(":")));
-		
-//		System.out.println(val);	
+//		logger.debug("jdk.module.path ==  "+ Arrays.toString(val.split(":")));
 		
 		if(CommonUtility.isLinuxOS()) {
 			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
