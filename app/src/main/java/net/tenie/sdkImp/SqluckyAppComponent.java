@@ -62,11 +62,6 @@ public class SqluckyAppComponent implements AppComponent {
 	public SqluckyTab sqluckyTab() { 
 		return new MyAreaTab(false);
 	}
-//
-//	@Override
-//	public SqluckyTab sqluckyTab(String TabName) { 
-//		return new MyTab(TabName);
-//	}
 
 	@Override
 	public SqluckyTab sqluckyTab(DocumentPo po) { 

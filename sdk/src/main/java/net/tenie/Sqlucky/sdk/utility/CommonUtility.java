@@ -707,7 +707,10 @@ public class CommonUtility {
 		InitFinishCall(Callback);
 		
 	}
-	
+	/**
+	 * 初始化完成后的回调函数
+	 * @param caller
+	 */
 	public static void InitFinishCall(Consumer< String > caller) {
 		try {
 			Thread t = new Thread() {

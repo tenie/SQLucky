@@ -359,11 +359,6 @@ public class AppDao {
 	}
 		
 	public static void saveConfig(Connection conn , String key, String val) {
-		
-//		String kv = readConfig(conn, key);
-//		if(kv !=null && kv.length() > 0) { 
-//			deleteConfigKey(conn, key);
-//		}
 		deleteConfigKey(conn, key);
 		String sql = "insert into APP_CONFIG (NAME, VAL) values ( '"+key+"' , '"+val+"' )"; 
 		try {

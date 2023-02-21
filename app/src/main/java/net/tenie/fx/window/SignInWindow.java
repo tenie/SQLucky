@@ -47,9 +47,22 @@ public class SignInWindow {
 	// 编辑连接时记录连接状态
 	public  static boolean editLinkStatus = false;
 	private static Logger logger = LogManager.getLogger(SignInWindow.class);
+	
+	private static Stage stageWindow = null ;
+	
+	public static void show() {
+		if(stageWindow == null ) { 
+			SignInWindow.createWorkspaceConfigWindow();
+		}else {
+			stageWindow.requestFocus();
+		}
+		
+		
+	}
 	public static Stage CreateModalWindow(VBox vb) {
 
-		final Stage stage = new Stage();
+		stageWindow = new Stage();
+ 
 		vb.getStyleClass().add("connectionEditor");
 
 		Scene scene = new Scene(vb);
@@ -63,20 +76,25 @@ public class SignInWindow {
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
 		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {
-			stage.close();
+			stageWindow.close();
+			
 		});
 		scene.getAccelerators().put(spacebtn, () -> {
-			stage.close();
+			stageWindow.close();
+			
 		});
 
 		CommonUtility.loadCss(scene);
-		stage.initModality(Modality.APPLICATION_MODAL);
-		stage.setScene(scene);
+		stageWindow.initModality(Modality.WINDOW_MODAL);
+		stageWindow.setScene(scene);
 		
-		stage.getIcons().add( ComponentGetter.LogoIcons);
-		stage.setMaximized(false);
-		stage.setResizable(false);
-		return stage;
+		stageWindow.getIcons().add( ComponentGetter.LogoIcons);
+		stageWindow.setMaximized(false);
+		stageWindow.setResizable(false);
+		stageWindow.setOnCloseRequest(v->{
+			stageWindow = null;
+		});
+		return stageWindow;
 	}
 
 	public static void createWorkspaceConfigWindow( ) {
@@ -102,6 +120,11 @@ public class SignInWindow {
 		HBox hb2 = new HBox(); 
 		Label Remember = new Label(remember);
 	    JFXCheckBox rememberCB  = new JFXCheckBox();  
+	    rememberCB.selectedProperty().addListener(v->{
+	    	boolean iss = rememberCB.isSelected();
+	    	UserAccountAction.rememberUser(iss);
+	    	System.out.println("iss = " + iss);
+	    });
 	   
 	    
 	    hb2.getChildren().addAll(Remember, rememberCB );
@@ -125,10 +148,13 @@ public class SignInWindow {
 	    		MyAlert.infoAlert("成功", "成功"); 
 	    		ConfigVal.SQLUCKY_EMAIL = emailVal;
 	    		ConfigVal.SQLUCKY_PASSWORD = passwordVal;
+	    		ConfigVal.SQLUCKY_REMEMBER = tf;
 	    	}else {
 	    		MyAlert.errorAlert( "失败");
 	    		ConfigVal.SQLUCKY_EMAIL = "";
 	    		ConfigVal.SQLUCKY_PASSWORD = "";
+	    		UserAccountAction.delUser();
+	    		
 	    	}
 	    	return true;
 	    };
@@ -153,10 +179,13 @@ public class SignInWindow {
 		// 如果已经登入过, 获取登入信息
 		String siEmail = ConfigVal.SQLUCKY_EMAIL;
 		String siPw = ConfigVal.SQLUCKY_PASSWORD;
+		boolean sky_remb = ConfigVal.SQLUCKY_REMEMBER;
 		
 		if( !"".equals(siEmail) && !"".equals(siPw)  ) {
 			tfemail.setText(siEmail);
 			password.setText(siPw);
+			rememberCB.setSelected(sky_remb);
+			
 		}
 		
 		

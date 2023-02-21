@@ -400,14 +400,30 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 
 	}
 
+	private volatile boolean hasHighring = false;
 	public void highLighting() {
-		Platform.runLater(() -> {
-			try {
-				highLightingHelper.applyHighlighting(codeArea);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		if(hasHighring == false) {
+			hasHighring = true;
+			Thread th = new Thread(()->{
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				Platform.runLater(() -> {
+					try {
+						highLightingHelper.applyHighlighting(codeArea);
+						hasHighring = false;
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				});
+				
+			});
+			th.start();
+		}
+		
+	
 
 	}
 

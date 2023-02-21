@@ -84,8 +84,8 @@
             <AnchorPane prefHeight="27.0" prefWidth="601.0">
                <children>
                   <Label fx:id="queryLabel" layoutX="15.0" layoutY="6.0" text="查询" />
-                  <JFXButton fx:id="hideBtn" layoutX="484.0" prefHeight="23.0" prefWidth="117.0" styleClass="transfer-btn" text="Hide Window" />
-                  <JFXButton fx:id="monBtn" layoutX="406.0" layoutY="2.0" text="Monitor" />
+                  <JFXButton fx:id="hideBtn" layoutX="460.0" layoutY="2.0" prefHeight="23.0" prefWidth="117.0" styleClass="transfer-btn" text="Hide Window" />
+                  <JFXButton fx:id="monBtn" layoutX="380.0" layoutY="2.0" text="Monitor" />
                   <AnchorPane fx:id="tpane" layoutX="66.0" layoutY="2.0" prefHeight="25.0" prefWidth="200.0" />
                </children>
             </AnchorPane>

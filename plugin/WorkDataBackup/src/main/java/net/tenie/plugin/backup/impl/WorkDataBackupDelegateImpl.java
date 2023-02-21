@@ -6,6 +6,7 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.plugin.backup.component.WorkDataBackupController;
 import net.tenie.plugin.backup.component.WorkDataBackupEditorWindow;
 
 public class WorkDataBackupDelegateImpl implements SqluckyPluginDelegate {
@@ -23,7 +24,8 @@ public class WorkDataBackupDelegateImpl implements SqluckyPluginDelegate {
 		MenuItem workspace = new MenuItem(StrUtils.MenuItemNameFormat("Work Data Backup"));
 		workspace.setGraphic(appComponent.getIconDefActive("info-circle"));
 		workspace.setOnAction(value -> {
-			WorkDataBackupEditorWindow.createWorkspaceConfigWindow();
+//			WorkDataBackupEditorWindow.createWorkspaceConfigWindow();
+			WorkDataBackupController.showFxml();
 		});
 
 		pluginMenu.getItems().addAll(workspace); 

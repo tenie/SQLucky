@@ -14,17 +14,6 @@ public class ServiceLoad {
 	private static ServiceLoader<SqluckyPluginDelegate> loader ;
 	// 应用还没实例化前
 	public static void callRegister(){
-//		loader = ServiceLoader.load(SqluckyPluginDelegate.class);
-//		for(SqluckyPluginDelegate plugin: loader ) {
-//			
-//			
-//			String name = plugin.pluginName();
-//			System.out.println("\n====================");
-//			System.out.println(name);
-//			plugin.register();
-//			System.out.println("====================\n");
-//		}
-//		
 		loader = ServiceLoader.load(SqluckyPluginDelegate.class); 
 		if(loader == null  ) return ;
 		Connection conn = SqluckyAppDB.getConn();
@@ -51,7 +40,6 @@ public class ServiceLoad {
 					ppo.setVersion(version);
 					ppo.setDownloadStatus(1);
 					ppo.setReloadStatus(1);
-					
 					
 					ppo.setCreatedTime(new Date());
 					PoDao.insert(conn, ppo);
@@ -144,7 +132,6 @@ public class ServiceLoad {
 			}finally {
 				SqluckyAppDB.closeConn(conn);
 			}
-			
 			
 		});	
 

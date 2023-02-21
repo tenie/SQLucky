@@ -11,10 +11,11 @@ public class ConfigVal {
 	// 模块路径
 	public static File MODULE_PATH ;
 	
-	// 在线信息
+	// 账号信息
 	public static String SQLUCKY_USERNAME = "";
 	public static String SQLUCKY_EMAIL = "" ;
 	public static String SQLUCKY_PASSWORD = "";
+	public static boolean SQLUCKY_REMEMBER = false;
 	
 	
 	

@@ -356,7 +356,9 @@ public class TransferDataController implements Initializable {
 		amountTxt.lengthProperty().addListener(CommonListener.textFieldLimit(amountTxt, 4));
 		amountTxt.textProperty().addListener(CommonListener.textFieldNumChange(amountTxt));  
 		 
-		AnchorPane.setTopAnchor(hideBtn, 0.0); 
+		AnchorPane.setTopAnchor(hideBtn, 2.0); 
+		AnchorPane.setTopAnchor(monBtn, 2.0); 
+		AnchorPane.setRightAnchor(hideBtn, 3.0); 
 	}
 	
 	
