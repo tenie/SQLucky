@@ -12,9 +12,9 @@ public class ConfigVal {
 	public static File MODULE_PATH ;
 	
 	// 在线信息
-	public static String SQLUCKY_USERNAME ;
-	public static String SQLUCKY_EMAIL ;
-	public static String SQLUCKY_PASSWORD ;
+	public static String SQLUCKY_USERNAME = "";
+	public static String SQLUCKY_EMAIL = "" ;
+	public static String SQLUCKY_PASSWORD = "";
 	
 	
 	

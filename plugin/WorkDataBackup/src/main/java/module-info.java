@@ -11,5 +11,5 @@ open module SQLucky.plugin.WorkDataBackup{
 	         
 	
 	exports net.tenie.plugin.backup.impl;
-    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.backup.impl.WorkspaceDelegateImpl;
+    provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.backup.impl.WorkDataBackupDelegateImpl;
 }
