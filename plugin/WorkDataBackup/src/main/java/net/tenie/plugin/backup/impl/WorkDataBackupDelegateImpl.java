@@ -8,15 +8,15 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.backup.component.WorkDataBackupEditorWindow;
 
-public class WorkspaceDelegateImpl implements SqluckyPluginDelegate {
+public class WorkDataBackupDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "WorkDataBackup";
-	public static final String pluginCode = "net.tenie.plugin.workspace";
+	public static final String pluginCode = "net.tenie.plugin.backup";
 	public static final String pluginDescribe = "WorkDataBackup";
 	public static final String version ="0.0.1";
 	
 	@Override
 	public void load() {
-		System.out.println("load:  WorkspaceDelegateImpl..."); 
+		System.out.println("load:  WorkDataBackupDelegateImpl..."); 
 		AppComponent appComponent = ComponentGetter.appComponent; 
 		Menu pluginMenu = ComponentGetter.pluginMenu;
 

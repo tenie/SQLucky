@@ -122,9 +122,13 @@ public class SignInWindow {
 	    	boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );
 	    	
 	    	if(seccuss) {
-	    		MyAlert.infoAlert("完成", "完成"); 
+	    		MyAlert.infoAlert("成功", "成功"); 
+	    		ConfigVal.SQLUCKY_EMAIL = emailVal;
+	    		ConfigVal.SQLUCKY_PASSWORD = passwordVal;
 	    	}else {
 	    		MyAlert.errorAlert( "失败");
+	    		ConfigVal.SQLUCKY_EMAIL = "";
+	    		ConfigVal.SQLUCKY_PASSWORD = "";
 	    	}
 	    	return true;
 	    };
@@ -144,18 +148,21 @@ public class SignInWindow {
 				signInBtn.setDisable(false);
 			}
 		});
-		
-//		signInBtn.setDisable(true);
-//		new SimpleBooleanProperty(true)
-//		signInBtn.disableProperty().bind();
 		Button signUpBtn = createSignUpBtn( null  );
+		
+		// 如果已经登入过, 获取登入信息
+		String siEmail = ConfigVal.SQLUCKY_EMAIL;
+		String siPw = ConfigVal.SQLUCKY_PASSWORD;
+		
+		if( !"".equals(siEmail) && !"".equals(siPw)  ) {
+			tfemail.setText(siEmail);
+			password.setText(siPw);
+		}
+		
+		
+		
 		List<Region> list = new ArrayList<>();
   
-		
-		
-//		list.add(    lbEmail);
-//		list.add(    emailTF);
-//		
 		list.add(    lbemail);
 		list.add(    tfemail);
 		

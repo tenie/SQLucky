@@ -39,10 +39,13 @@ public class UserAccountAction {
 	 * @return
 	 */
 	public static void saveUser(Connection conn, String email, String password) {
-		String sql = "insert into SQLUCKY_USER (EMAIL, PASSWORD) values ( '"+email+"' , '"+password+"' )"; 
 		try {
+			String delSql = "DELETE FROM SQLUCKY_USER";
+			DBTools.execDML(conn, delSql);
+			String sql = "insert into SQLUCKY_USER (EMAIL, PASSWORD) values ( '" + email + "' , '" + password + "' )";
+
 			DBTools.execDML(conn, sql);
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
