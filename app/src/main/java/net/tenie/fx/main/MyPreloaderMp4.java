@@ -1,6 +1,5 @@
 package net.tenie.fx.main;
 
-import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.application.Preloader.StateChangeNotification.Type;
@@ -15,7 +14,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class MyPreloaderMp4 extends Preloader {
 	private static Stage preloaderStage;
@@ -57,7 +55,7 @@ public class MyPreloaderMp4 extends Preloader {
 	   Thread th = new Thread() {
 			public void run() {
 				 try {
-					Thread.sleep(4600);
+					Thread.sleep(3000);
 					isFinish = true;
 				} catch (InterruptedException e) { 
 					e.printStackTrace();
