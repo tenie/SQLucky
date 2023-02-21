@@ -247,15 +247,13 @@ public class CommonAction {
 				var spo = mtab.getDocumentPo();
 				String fp = spo.getFileFullName(); 
 				if (spo != null && spo.getId() != null ) {
-					String sql = mtab.getAreaText() ;// SqlEditor.getTabSQLText(mtab);
+					String sql = mtab.getAreaText() ;
 					if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
-						CodeArea code = mtab.getCodeArea(); //SqlEditor.getCodeArea(mtab);
-						int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
+						int paragraph =  spo.getParagraph(); 
 						String title =  spo.getTitle();
 						String encode = spo.getEncode();
 						AppDao.save(H2conn, title, sql, fp, encode, paragraph, spo.getId());
 					}
-
 				}
 			}
 			// 保存选择的pane 下标
@@ -265,7 +263,6 @@ public class CommonAction {
 			var childs = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
 			int idx = 1;
 			for(int i = 0; i < childs.size() ; i++) {
-//			for(var tv :childs) {
 				var tv = childs.get(i);
 				var mytab = tv.getValue();
 				var scpo = mytab.getDocumentPo();

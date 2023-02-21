@@ -109,7 +109,7 @@ public class ScriptTabTree {
 		if (datas != null && datas.size() > 0) {
 			ConfigVal.pageSize = datas.size();  
 			for (DocumentPo po : datas) {
-				MyAreaTab tb = new MyAreaTab(po);
+				MyAreaTab tb = new MyAreaTab(po, true);
 				
 				TreeItem<MyAreaTab> item = new TreeItem<>(tb);
 //				rootNode.getChildren().add(item);
@@ -262,7 +262,7 @@ public class ScriptTabTree {
 		
 		String title = CommonUtility.tabText(tb);
 		String sql = tb.getAreaText(); // SqlEditor.getTabSQLText(tb);
-		if (title.endsWith("*") && sql.trim().length() > 0) {
+		if (title.endsWith("*") && sql != null && sql.trim().length() > 0) {
 			// 是否保存
 			final Stage stage = new Stage();
 

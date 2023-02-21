@@ -43,6 +43,7 @@ import net.tenie.lib.db.h2.AppDao;
  *
  */
 public class MyAreaTab extends Tab implements SqluckyTab {
+	private boolean isInit = false;
 	private DocumentPo docPo;
 	private SqluckyCodeAreaHolder sqlCodeArea;
 	// 放查找面板, 文本area 的容器
@@ -56,6 +57,28 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	public CodeArea getCodeArea() {
 		return sqlCodeArea.getCodeArea();
 	}
+	
+	// 设置title name
+	public void setTitleName() {
+		String TabName = docPo.getTitle(); 
+		// 名称
+		CommonUtility.setTabName(this, TabName);
+	}
+	// 延迟初始化tab
+	public void delayInit() {
+		// 选择title的时候初始化tab内容
+		this.selectedProperty().addListener(l -> {
+			boolean isSel = this.isSelected();
+			if (isSel && isInit == false) {
+				if (docPo.getType() == DocumentPo.IS_SQL) {
+					createMyTab();
+				} else if (docPo.getType() == DocumentPo.IS_TEXT) {
+					createTextMyTab();
+				}
+				isInit = true;
+			}
+		});
+	}
 
 	public MyAreaTab() {
 		super();
@@ -65,28 +88,28 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		super();
 		this.savePo = save;
 	}
-
+	
+	
 	public MyAreaTab(String TabName) {
 		super();
 		docPo = AppDao.scriptArchive(TabName, "", "", "UTF-8", 0);
+		setTitleName();
 		createMyTab();
 	}
 
-	public MyAreaTab(DocumentPo po) {
-		super();
-		if (po.getId() == null) {
-			docPo = AppDao.scriptArchive(po.getTitle(), po.getText(), po.getFileFullName(), po.getEncode(),
-					po.getParagraph());
-		} else {
-			docPo = po;
-		}
-		if (po.getType() == DocumentPo.IS_SQL) {
-			createMyTab();
-		} else if (po.getType() == DocumentPo.IS_TEXT) {
-			createTextMyTab();
-		}
-	}
-
+	// 延迟初始化构造函数
+//	public MyAreaTab(DocumentPo po) {
+//		super();
+//		if (po.getId() == null) {
+//			docPo = AppDao.scriptArchive(po.getTitle(), po.getText(), po.getFileFullName(), po.getEncode(),
+//					po.getParagraph());
+//		} else {
+//			docPo = po;
+//		}
+//		setTitleName();
+//		delayInit();
+//	}
+	
 	public MyAreaTab(DocumentPo po, boolean save) {
 		super();
 		this.savePo = save;
@@ -100,19 +123,13 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		} else {
 			docPo = po;
 		}
-		if (po.getType() == DocumentPo.IS_SQL) {
-			createMyTab();
-		} else if (po.getType() == DocumentPo.IS_TEXT) {
-			createTextMyTab();
-		}
+		setTitleName();
+		delayInit();
 
 	}
 
-	private void createMyTab() {
-		String TabName = docPo.getTitle();
+	private void createMyTab() { 
 		var myTabPane = ComponentGetter.mainTabPane;
-		// 名称
-		CommonUtility.setTabName(this, TabName);
 		// 添加到缓存
 		MainTabs.add(this);
 		MyAutoComplete myAuto = new MyAutoComplete();
@@ -146,10 +163,8 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	}
 
 	private void createTextMyTab() {
-		String TabName = docPo.getTitle();
 		var myTabPane = ComponentGetter.mainTabPane;
-		// 名称
-		CommonUtility.setTabName(this, TabName);
+		
 		// 添加到缓存
 		MainTabs.add(this);
 		sqlCodeArea = new MyTextArea();
@@ -200,10 +215,25 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 
 	@Override
 	public String getAreaText() {
-		CodeArea code = sqlCodeArea.getCodeArea();
-		String sqlText = code.getText();
-		return sqlText;
+		if(sqlCodeArea != null) {
+			CodeArea code = sqlCodeArea.getCodeArea();
+			String sqlText = code.getText();
+			return sqlText;
+		}
+		
+		return docPo.getText();
 	}
+	
+	public int getParagraph() {
+		if(sqlCodeArea != null) {
+			CodeArea code = sqlCodeArea.getCodeArea();
+			int paragraph = code.getCurrentParagraph() > 11 ? code.getCurrentParagraph() - 10 : 0;
+			return paragraph;
+		}
+		return 0;
+	}
+
+	
 
 	public String getTabTitle() {
 		String title = CommonUtility.tabText(this);
@@ -213,8 +243,10 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	public void syncScriptPo(Connection conn) {
 		String sql = getAreaText();
 		String title = getTabTitle();
-
-		docPo.setText(sql);
+		if(sql != null ) {
+			docPo.setText(sql);
+		}
+		
 		docPo.setTitle(title);
 		if (savePo) {
 			AppDao.updateScriptArchive(conn, docPo);
@@ -235,9 +267,12 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	public void saveScriptPo(Connection conn) {
 		String sql = getAreaText();
 		String title = getTabTitle();
-
-		docPo.setText(sql);
+		if(sql != null) { 
+			docPo.setText(sql);
+		}
+		int p = getParagraph();
 		docPo.setTitle(title);
+		docPo.setParagraph(p);
 		AppDao.updateScriptArchive(conn, docPo);
 	}
 
@@ -357,7 +392,7 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		var myTabPane = ComponentGetter.mainTabPane;
 		int size = myTabPane.getTabs().size();
 		ConfigVal.pageSize++;
-		MyAreaTab nwTab = new MyAreaTab(scpo);
+		MyAreaTab nwTab = new MyAreaTab(scpo, true);
 		myTabPane.getTabs().add(size, nwTab);// 在指定位置添加Tab
 		myTabPane.getSelectionModel().select(size);
 		ScriptTabTree.treeRootAddItem(nwTab);
@@ -373,10 +408,10 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		Platform.runLater(() -> {
 			var myTabPane = ComponentGetter.mainTabPane;
 			if (myTabPane.getTabs().contains(this) == false) {
-				var code = sqlCodeArea.getCodeArea();
-				if (StrUtils.isNullOrEmpty(code.getText().trim())) {
-					setAreaText(docPo.getText());
-				}
+//				var code = sqlCodeArea.getCodeArea();
+//				if (StrUtils.isNullOrEmpty(code.getText().trim())) {
+//					setAreaText(docPo.getText());
+//				}
 				myTabPane.getTabs().add(this);// 在指定位置添加Tab
 			}
 			myTabPane.getSelectionModel().select(this);
@@ -422,12 +457,12 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	public static void mainTabPaneAddAllMyTabs(List<MyAreaTab> ls) {
 		if (ls != null && ls.size() > 0) {
 			var myTabPane = ComponentGetter.mainTabPane;
-			for (var mtb : ls) {
-				var code = mtb.getSqlCodeArea().getCodeArea();
-				if (StrUtils.isNullOrEmpty(code.getText().trim())) {
-					mtb.setAreaText(mtb.getDocumentPo().getText());
-				}
-			}
+//			for (var mtb : ls) {
+//				var code = mtb.getSqlCodeArea().getCodeArea();
+//				if (StrUtils.isNullOrEmpty(code.getText().trim())) {
+//					mtb.setAreaText(mtb.getDocumentPo().getText());
+//				}
+//			}
 
 			myTabPane.getTabs().addAll(ls);
 		}

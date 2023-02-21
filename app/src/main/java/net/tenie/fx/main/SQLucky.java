@@ -5,13 +5,10 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 import java.util.function.Consumer;
 import com.sun.javafx.application.LauncherImpl;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -31,6 +28,7 @@ import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
 import net.tenie.fx.Action.SettingKeyCodeCombination;
 import net.tenie.fx.component.MyAreaTab;
+import net.tenie.fx.component.UserAccount.UserAccountAction;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.AppDao;
@@ -72,8 +70,6 @@ public class SQLucky extends Application {
 	}
 	@Override
 	public void init() throws Exception {
-		
-		
 		Connection conn = SqluckyAppDB.getConn();
 		// 数据库迁移
 		AppDao.testDbTableExists(conn);
@@ -84,7 +80,6 @@ public class SQLucky extends Application {
 	    	AppDao.saveConfig(conn, "THEME", "DARK");
 	    	Theme =  "DARK";
 	    }
-//	    H2Db.updateAppSql(conn);
 	    
 	    ConfigVal.openfileDir = AppDao.readConfig(conn , "OPEN_FILE_DIR"); 
 		SqluckyAppDB.closeConn(conn);
@@ -95,26 +90,15 @@ public class SQLucky extends Application {
 		ServiceLoad.callRegister();
 		
 		app = new AppWindow();
-//		scene = new Scene(app.getMainWindow());
-//		scene.getStylesheets().addAll(ConfigVal.cssList);
-//		ComponentGetter.primaryscene = scene;
 		SettingKeyCodeCombination.Setting();
 		img = ComponentGetter.LogoIcons; //new Image(SQLucky.class.getResourceAsStream(ConfigVal.appIcon));
 		
 		
-//		tmpscene = app.getTmpScene();
-//		CommonUtility.loadCss(tmpscene); 
 		scene = app.getAppScene();
 		CommonAction.setTheme(Theme);
 		// 加载插件
 		ServiceLoad.callLoad();
 		logger.info("完成初始化"); 
-		
-		if(CommonUtility.isLinuxOS()) {
-			MyPreloaderGif.hiden();
-		}else {
-			MyPreloaderMp4.hiden();
-		}
 	}
 	
  
@@ -157,7 +141,11 @@ public class SQLucky extends Application {
 		    primaryStage.centerOnScreen();
 //			  primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
 
-			
+			if(CommonUtility.isLinuxOS()) {
+				MyPreloaderGif.hiden();
+			}else {
+				MyPreloaderMp4.hiden();
+			}
 			primaryStage.show(); 
 			
 			
@@ -192,14 +180,18 @@ public class SQLucky extends Application {
 			
 			ServiceLoad.callShowed(); 
 			
-			// 移除loading...
+			// 界面完成初始化后, 执行的回调函数
 			Consumer< String > cr = v->{ 
 				Platform.runLater(()->{
+					// 移除loading...
 					LoadingAnimation.rmLoading(ComponentGetter.primarySceneRoot);
+					// 账号恢复
+					UserAccountAction.appLanuchInitAccount();
 				});
 				
 			}; 
-			CommonUtility.executeInitTask(cr);
+			// 执行页面初始化好只会要执行的任务
+			CommonUtility.executeInitTask(cr); 
 			Long mm = Runtime.getRuntime().maxMemory()/1024;
 			mm = mm / 1024;
 			logger.info("Runtime.getRuntime().maxMemory = " + mm); 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="231.0" prefWidth="355.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.plugin.backup.component.WorkDataBackupController">
+  <tabs>
+    <Tab text="上传备份">
+         <content>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="14.0" layoutY="165.0" mnemonicParsing="false" text="备份" />
+                  <JFXCheckBox layoutX="16.0" layoutY="109.0" text="端到端加密传输, 密钥需要自己保存!" />
+                  <Label layoutX="16.0" layoutY="134.0" text="端到端加密密钥" />
+                  <TextField layoutX="101.0" layoutY="130.0" />
+                  <Label layoutX="15.0" layoutY="20.0" text="备份名称" />
+                  <TextField layoutX="69.0" layoutY="16.0" />
+                  <JFXCheckBox layoutX="16.0" layoutY="54.0" text="备份脚本文件" />
+                  <JFXCheckBox layoutX="134.0" layoutY="54.0" text="备份脚本文件" />
+                  <JFXCheckBox layoutX="16.0" layoutY="83.0" text="备份数据模型" />
+               </children>
+            </Pane>
+         </content></Tab>
+    <Tab text="下载备份">
+         <content>
+            <Pane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="同步备份文件信息" />
+                  <JFXComboBox layoutX="140.0" layoutY="14.0" prefHeight="23.0" prefWidth="186.0" />
+                  <JFXCheckBox layoutX="14.0" layoutY="63.0" text="使用密钥恢复备份文件" />
+                  <Label layoutX="14.0" layoutY="94.0" text="密钥" />
+                  <TextField layoutX="46.0" layoutY="90.0" />
+                  <Button layoutX="13.0" layoutY="127.0" mnemonicParsing="false" text="使用备份覆盖本地数据" />
+                  <Button layoutX="11.0" layoutY="165.0" mnemonicParsing="false" text="本地数据和备份数据合并" />
+               </children>
+            </Pane>
+         </content></Tab>
+  </tabs>
+</TabPane>
