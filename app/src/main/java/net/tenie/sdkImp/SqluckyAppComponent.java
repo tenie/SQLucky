@@ -193,7 +193,7 @@ public class SqluckyAppComponent implements AppComponent {
 	public  SqluckyBottomSheet ddlSheet(String name, String ddl, boolean isRunFunc) {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
+		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
 		mtb.setSqlArea(sqlArea);
 		VBox box = DDLBox(mtb, ddl, isRunFunc, false, name);
 		mtb.getTab().setContent(box);
@@ -203,7 +203,7 @@ public class SqluckyAppComponent implements AppComponent {
 	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc) {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
+		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
 		mtb.setSqlArea(sqlArea);
 		VBox box = DDLBox(mtb, ddl, isRunFunc, true, name);
 		mtb.getTab().setContent(box);
@@ -213,7 +213,7 @@ public class SqluckyAppComponent implements AppComponent {
 	public SqluckyBottomSheet EmptySheet(String name, String message) {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null);
+		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
 		mtb.setSqlArea(sqlArea);
 		VBox box = DDLBox(mtb, message, false, false, name);
 		mtb.getTab().setContent(box);

@@ -30,7 +30,11 @@ import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 
-
+/**
+ * 自动补全
+ * @author tenie
+ *
+ */
 public class MyAutoComplete implements AutoComplete{
 	private static List<TablePo> keyWords = new ArrayList<>();
 	private static Popup pop ;

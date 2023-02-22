@@ -32,9 +32,11 @@ public class SqluckyAppDB {
 			if (conn == null) {
 //				conn = createH2Conn();
 				conn = createSqliteConn();
+				System.out.println("获取应用本身的数据库链接");
 			} else if (conn.isClosed()) {
 //				conn = createH2Conn();
 				conn = createSqliteConn();
+				System.out.println("获取应用本身的数据库链接");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,24 +82,26 @@ public class SqluckyAppDB {
 	public  static void closeConn(Connection conn) {
 		if (conn != null) {
 			try {
-				int v = connTimes.addAndGet(-1);
-				Thread th = new Thread(()->{
-					while (true){
-						try {
-							Thread.sleep(5000);
-							if(connTimes.get() <= 0){
-								conn.close();
-								System.out.println("closeConncloseConncloseConn = connIdx = "+ connTimes.get());
-								return;
-							}
-						} catch (Exception e) {
-							throw new RuntimeException(e);
+//				connTimes.addAndGet(-1);
+				Thread th = new Thread(() -> {
+					try {
+						Thread.sleep(4000);
+						connTimes.addAndGet(-1); 
+						if (connTimes.get() <= 0) {
+							conn.close();
+							System.out.println("closeConncloseConncloseConn = connIdx = " + connTimes.get());
 						}
+						 
+					} catch (Exception e) {
+						throw new RuntimeException(e);
 					}
 				});
-				if(connTimes.get() <= 0){
-					th.start();
-				}
+				th.start();
+//				if(connTimes.get() <= 0){
+//					th.start();
+//				}else {
+//					System.out.println("connTimes.get()" + connTimes.get());
+//				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

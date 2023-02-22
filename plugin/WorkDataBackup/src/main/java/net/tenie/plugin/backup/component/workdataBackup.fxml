@@ -9,31 +9,31 @@
   <tabs>
     <Tab text="上传备份">
          <content>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="myModalDialog">
                <children>
-                  <Button layoutX="14.0" layoutY="165.0" mnemonicParsing="false" text="备份" />
-                  <JFXCheckBox layoutX="16.0" layoutY="109.0" text="端到端加密传输, 密钥需要自己保存!" />
-                  <Label layoutX="16.0" layoutY="134.0" text="端到端加密密钥" />
-                  <TextField layoutX="101.0" layoutY="130.0" />
+                  <Button fx:id="bakBtn" layoutX="292.0" layoutY="168.0" mnemonicParsing="false" styleClass="myAlertBtn" text="备份" />
+                  <JFXCheckBox layoutX="15.0" layoutY="123.0" text="使用端到端加密传输, 密钥需要自己保存!" />
+                  <Label layoutX="14.0" layoutY="151.0" text="端到端加密密钥" />
+                  <TextField layoutX="112.0" layoutY="149.0" styleClass="myFindTextField" />
                   <Label layoutX="15.0" layoutY="20.0" text="备份名称" />
-                  <TextField layoutX="69.0" layoutY="16.0" />
-                  <JFXCheckBox layoutX="16.0" layoutY="54.0" text="备份脚本文件" />
-                  <JFXCheckBox layoutX="134.0" layoutY="54.0" text="备份脚本文件" />
-                  <JFXCheckBox layoutX="16.0" layoutY="83.0" text="备份数据模型" />
+                  <TextField layoutX="69.0" layoutY="16.0" styleClass="myFindTextField" />
+                  <JFXCheckBox layoutX="14.0" layoutY="48.0" text="备份数据库连接配置" />
+                  <JFXCheckBox layoutX="15.0" layoutY="73.0" text="备份脚本文件" />
+                  <JFXCheckBox layoutX="15.0" layoutY="98.0" text="备份数据模型" />
                </children>
             </Pane>
          </content></Tab>
-    <Tab text="下载备份">
+    <Tab styleClass="myModalDialog" text="下载备份">
          <content>
-            <Pane prefHeight="200.0" prefWidth="200.0">
+            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="myModalDialog">
                <children>
-                  <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="同步备份文件信息" />
+                  <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" styleClass="myAlertBtn" text="同步备份文件信息" />
                   <JFXComboBox layoutX="140.0" layoutY="14.0" prefHeight="23.0" prefWidth="186.0" />
                   <JFXCheckBox layoutX="14.0" layoutY="63.0" text="使用密钥恢复备份文件" />
                   <Label layoutX="14.0" layoutY="94.0" text="密钥" />
-                  <TextField layoutX="46.0" layoutY="90.0" />
-                  <Button layoutX="13.0" layoutY="127.0" mnemonicParsing="false" text="使用备份覆盖本地数据" />
-                  <Button layoutX="11.0" layoutY="165.0" mnemonicParsing="false" text="本地数据和备份数据合并" />
+                  <TextField layoutX="46.0" layoutY="90.0" styleClass="myFindTextField" />
+                  <Button layoutX="13.0" layoutY="127.0" mnemonicParsing="false" styleClass="myAlertBtn" text="使用备份覆盖本地数据" />
+                  <Button layoutX="11.0" layoutY="165.0" mnemonicParsing="false" styleClass="myAlertBtn" text="本地数据和备份数据合并" />
                </children>
             </Pane>
          </content></Tab>

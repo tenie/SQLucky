@@ -12,6 +12,16 @@ import net.tenie.Sqlucky.sdk.po.DataModelPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 
 public class JsonTools {
+	/**
+	 * 对象转字符串
+	 * @param obj
+	 * @return
+	 */
+	public static String objToStr(Object obj) {
+		JSONObject jsonObject = (JSONObject) JSONObject.toJSON(obj);
+		return jsonObject.toJSONString();
+	}
+	
 	public static void getTable(String filename) {
 		String txt =  FileTools.read(filename);
 		JSONObject obj = JSONObject.parseObject(txt);

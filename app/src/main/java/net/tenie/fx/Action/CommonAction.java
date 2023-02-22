@@ -183,7 +183,7 @@ public class CommonAction {
 	}
 	
 	// 保存sql文本到硬盘
-	public static void saveSqlAction(MyAreaTab tb) {
+	public static void saveSqlAction(SqluckyTab tb) {
 		var conn = SqluckyAppDB.getConn();
 		try {			
 			String sql   =  tb.getAreaText();// SqlEditor.getTabSQLText(tb); 
@@ -191,7 +191,8 @@ public class CommonAction {
 			String fileName = scriptPo.getFileFullName();
 			if (StrUtils.isNotNullOrEmpty(fileName)) {
 				FileTools.saveByEncode(fileName, sql, scriptPo.getEncode());
-				CommonUtility.setTabName(tb, FilenameUtils.getName(fileName));
+//				CommonUtility.setTabName(tb, FilenameUtils.getName(fileName));
+				tb.setTitle(FilenameUtils.getName(fileName));
 
 			} else {
 				String title = scriptPo.getTitle();
@@ -201,7 +202,8 @@ public class CommonAction {
 				if (file != null) {
 					FileTools.save(file, sql);
 					String name = FileTools.fileName(file.getPath());
-					CommonUtility.setTabName(tb, name);
+//					CommonUtility.setTabName(tb, name);
+					tb.setTitle( name);
 					scriptPo.setFileFullName(file.getPath());
 					fileName = file.getPath();
 				}
@@ -560,7 +562,7 @@ public class CommonAction {
 			scpo.setFileFullName(f.getAbsolutePath());
 			scpo.setText(val);
 			scpo.setTitle(tabName);
-			MyAreaTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
+			SqluckyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
 			if(mt != null) { // 如果已经存在就不用重新打开
 				mt.showMyTab();
 			}else {
@@ -594,7 +596,7 @@ public class CommonAction {
 			scpo.setFileFullName(f.getAbsolutePath());
 			scpo.setText(val);
 			scpo.setTitle(tabName);
-			MyAreaTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
+			SqluckyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
 			if(mt != null) { // 如果已经存在就不用重新打开
 				mt.showMyTab();
 			}else {

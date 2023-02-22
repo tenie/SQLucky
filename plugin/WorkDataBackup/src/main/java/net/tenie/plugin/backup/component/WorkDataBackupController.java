@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.jfoenix.controls.JFXButton;
+
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -16,18 +20,26 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class WorkDataBackupController implements Initializable {
 
+	@FXML private Button bakBtn; 
+	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+
+		bakBtn.setOnAction(e->{
+			WorkDataBackupAction.BackupBtn();
+		});
 	}
 
+	
+	
+	
 	
 	static public void showFxml() {
 		String fxml = "workdataBackup.fxml";
 		try {
 			Stage  stage = new Stage();
 		    ComponentGetter.dataTransferStage = stage;
-			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.initModality(Modality.WINDOW_MODAL);
 //			stage.initOwner(stg);
 			stage.setTitle("Top Stage With Modality");
 
