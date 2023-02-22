@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk;
  
 import java.io.File;
+import java.sql.Connection;
 
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -32,7 +33,10 @@ public interface SqluckyTab  {
 	// 显示的Tab 是否是当前的对象
 	public boolean isShowing(); 
 	
-	public String getTitle();
+	// 获取title
+	public String getTitle(); 
+	public void setTitle(String val);
+	
 	public String getAreaText();
 	
 	public void setFile(File file);
@@ -44,6 +48,10 @@ public interface SqluckyTab  {
 	public void setFileText(String text);
 	
 	public boolean isModify();
-	
+	public void setModify(boolean isModify);
 	public void saveTextAction() ;
+	
+	public void syncScriptPo(Connection conn );
+	public void syncScriptPo();
+	 
 }

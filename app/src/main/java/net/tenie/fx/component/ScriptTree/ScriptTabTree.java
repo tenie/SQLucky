@@ -20,6 +20,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -45,7 +46,7 @@ public class ScriptTabTree {
 
 	private static Logger logger = LogManager.getLogger(ScriptTabTree.class);
 	
-	public static TreeView<MyAreaTab> ScriptTreeView; 
+	public static TreeView<SqluckyTab> ScriptTreeView; 
 	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
 	private  ScriptTreeContextMenu  menu;
 	
@@ -54,8 +55,9 @@ public class ScriptTabTree {
 	}
 
 	// db节点view
-	public TreeView<MyAreaTab> createScriptTreeView() {
-		var rootNode = new TreeItem<>(new MyAreaTab());
+	public TreeView<SqluckyTab> createScriptTreeView() {
+		TreeItem<SqluckyTab>  rootNode = new TreeItem<>(new MyAreaTab());
+		ComponentGetter.scriptTreeRoot = rootNode;
 		ScriptTreeView = new TreeView<>(rootNode);
 		ScriptTreeView.getStyleClass().add("my-tag");
 		ScriptTreeView.setShowRoot(false); 
@@ -86,7 +88,7 @@ public class ScriptTabTree {
 	
 	
 	// 恢复数据中保存的连接数据
-	public static void recoverScriptNode(TreeItem<MyAreaTab> rootNode) {
+	public static void recoverScriptNode(TreeItem<SqluckyTab> rootNode) {
 		List<DocumentPo> datas ;
 		List<H2SqlTextSavePo> ls;
 		String SELECT_PANE ;
@@ -104,14 +106,14 @@ public class ScriptTabTree {
 			ids.add(sqlpo.getScriptId());
 		}
 		
-		List<TreeItem<MyAreaTab>> itemList = new ArrayList<>();
+		List<TreeItem<SqluckyTab>> itemList = new ArrayList<>();
 		List<MyAreaTab> mtbs = new ArrayList<>();
 		if (datas != null && datas.size() > 0) {
 			ConfigVal.pageSize = datas.size();  
 			for (DocumentPo po : datas) {
 				MyAreaTab tb = new MyAreaTab(po, true);
 				
-				TreeItem<MyAreaTab> item = new TreeItem<>(tb);
+				TreeItem<SqluckyTab> item = new TreeItem<>(tb);
 //				rootNode.getChildren().add(item);
 				itemList.add(item);
 				// 恢复代码编辑框
@@ -178,29 +180,29 @@ public class ScriptTabTree {
 	}
 
 	// 所有连接节点
-	public static ObservableList<TreeItem<MyAreaTab>> allTreeItem() {
-		ObservableList<TreeItem<MyAreaTab>> val = ScriptTreeView.getRoot().getChildren();
+	public static ObservableList<TreeItem<SqluckyTab>> allTreeItem() {
+		ObservableList<TreeItem<SqluckyTab>> val = ScriptTreeView.getRoot().getChildren();
 		return val;
 	}
 
 	   
 
 	// 获取当前选中的节点
-	public static TreeItem<MyAreaTab> getScriptViewCurrentItem() {
-		TreeItem<MyAreaTab> ctt = ScriptTreeView.getSelectionModel().getSelectedItem();
+	public static TreeItem<SqluckyTab> getScriptViewCurrentItem() {
+		TreeItem<SqluckyTab> ctt = ScriptTreeView.getSelectionModel().getSelectedItem();
 		return ctt;
 	}
 
 	 
 
 	// 给root节点加元素 
-	public static void treeRootAddItem(TreeItem<MyAreaTab> item) { 
-		TreeItem<MyAreaTab> rootNode = ScriptTreeView.getRoot();
+	public static void treeRootAddItem(TreeItem<SqluckyTab> item) { 
+		TreeItem<SqluckyTab> rootNode = ScriptTreeView.getRoot();
 		rootNode.getChildren().add(item);		
 	}
 	// 给root节点加元素 
-		public static void treeRootAddItem(MyAreaTab  mytab) {
-			TreeItem<MyAreaTab> item = new TreeItem<MyAreaTab> (mytab); 
+		public static void treeRootAddItem(SqluckyTab  mytab) {
+			TreeItem<SqluckyTab> item = new TreeItem<> (mytab); 
 			treeRootAddItem(item);
 		}
 
@@ -212,7 +214,7 @@ public class ScriptTabTree {
 	}
 	
 	public static void openMyTab() {
-		TreeItem<MyAreaTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
+		TreeItem<SqluckyTab> item = ScriptTreeView.getSelectionModel().getSelectedItem();
 		var mytab = item.getValue(); 
 		if(mytab != null && mytab.getDocumentPo() != null) {
 			mytab.showMyTab();
@@ -220,7 +222,7 @@ public class ScriptTabTree {
 	}
 	 
 	public static  List<DocumentPo>  allScriptPo() {
-		 ObservableList<TreeItem<MyAreaTab>> ls = allTreeItem();
+		 ObservableList<TreeItem<SqluckyTab>> ls = allTreeItem();
 		 List<DocumentPo> list = new ArrayList<>();
 		 for(var ti: ls) {
 			 var mytb = ti.getValue();
@@ -229,9 +231,9 @@ public class ScriptTabTree {
 		 
 		 return list;
 	}
-	public static  List<MyAreaTab>  allMyTab() {
-		 ObservableList<TreeItem<MyAreaTab>> ls = allTreeItem();
-		 List<MyAreaTab> list = new ArrayList<>();
+	public static  List<SqluckyTab>  allMyTab() {
+		 ObservableList<TreeItem<SqluckyTab>> ls = allTreeItem();
+		 List<SqluckyTab> list = new ArrayList<>();
 		 for(var ti: ls) {
 			 var mytb = ti.getValue();
 			 list.add(mytb);
@@ -240,8 +242,8 @@ public class ScriptTabTree {
 	}
 
 	
-	public static MyAreaTab findMyTabByScriptPo(DocumentPo scpo) {
-		 ObservableList<TreeItem<MyAreaTab>> ls = allTreeItem();
+	public static SqluckyTab findMyTabByScriptPo(DocumentPo scpo) {
+		 ObservableList<TreeItem<SqluckyTab>> ls = allTreeItem();
 		 for(var ti: ls) {
 			 var mytb = ti.getValue();
 			 var tmp =  mytb.getDocumentPo();
@@ -254,13 +256,13 @@ public class ScriptTabTree {
 	}
 	
 	// 关闭一个脚本 Node cell
-	public static void closeAction(TreeItem<MyAreaTab> rootNode) {
+	public static void closeAction(TreeItem<SqluckyTab> rootNode) {
 
-		ObservableList<TreeItem<MyAreaTab>>  myTabItemList = rootNode.getChildren();
-		TreeItem<MyAreaTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
-		MyAreaTab tb = ctt.getValue();
+		ObservableList<TreeItem<SqluckyTab>>  myTabItemList = rootNode.getChildren();
+		TreeItem<SqluckyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
+		SqluckyTab tb = ctt.getValue();
 		
-		String title = CommonUtility.tabText(tb);
+		String title = tb.getTitle();// CommonUtility.tabText(tb);
 		String sql = tb.getAreaText(); // SqlEditor.getTabSQLText(tb);
 		if (title.endsWith("*") && sql != null && sql.trim().length() > 0) {
 			// 是否保存
@@ -304,7 +306,7 @@ public class ScriptTabTree {
 	}
 	
 	// 从ScriptTabTree 中移除一个节点
-	public static void removeNode(ObservableList<TreeItem<MyAreaTab>>  myTabItemList, TreeItem<MyAreaTab> ctt, MyAreaTab tb ) {
+	public static void removeNode(ObservableList<TreeItem<SqluckyTab>>  myTabItemList, TreeItem<SqluckyTab> ctt, SqluckyTab tb ) {
 		var conn = SqluckyAppDB.getConn();
 		try { 
 			var myTabPane = ComponentGetter.mainTabPane;

@@ -26,7 +26,6 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
 import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
@@ -133,7 +132,7 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		// 添加到缓存
 		MainTabs.add(this);
 		MyAutoComplete myAuto = new MyAutoComplete();
-		sqlCodeArea = new HighLightingCodeArea(myAuto);
+		sqlCodeArea = new HighLightingCodeArea(myAuto, this);
 //		右键菜单
 		HighLightingSqlCodeAreaContextMenu cm = new HighLightingSqlCodeAreaContextMenu(sqlCodeArea);
 		sqlCodeArea.setContextMenu(cm);
@@ -239,7 +238,7 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		String title = CommonUtility.tabText(this);
 		return title;
 	}
-
+	@Override
 	public void syncScriptPo(Connection conn) {
 		String sql = getAreaText();
 		String title = getTabTitle();
@@ -253,7 +252,7 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		}
 		ScriptTabTree.ScriptTreeView.refresh();
 	}
-
+	@Override
 	public void syncScriptPo() {
 		var conn = SqluckyAppDB.getConn();
 		try {
@@ -480,8 +479,10 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	public VBox getVbox() {
 		return vbox;
 	}
-
+	@Override
 	public DocumentPo getDocumentPo() {
+		//TODO 同步一下
+//		syncScriptPo();
 		return docPo;
 	}
 
@@ -500,6 +501,10 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	@Override
 	public String getTitle() {
 		return CommonUtility.tabText(this);
+	}
+
+	public void setTitle(String val) {
+		CommonUtility.setTabName(this,val);
 	}
 
 	public void setFile(File file) {
@@ -535,7 +540,8 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	public boolean isModify() {
 		return isModify;
 	}
-
+	
+	@Override
 	public void setModify(boolean isModify) {
 		this.isModify = isModify;
 	}

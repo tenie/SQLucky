@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
@@ -26,6 +27,7 @@ import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyLineNumberNode;
@@ -55,7 +57,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	private ChangeListener<String> cl;
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
-
+	private SqluckyTab myAreaTab;
 	public void hideAutoComplete() {
 		myAuto.hide();
 	}
@@ -76,34 +78,43 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 //    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
 
-	public HighLightingCodeArea(MyAutoComplete myAuto) {
+	public HighLightingCodeArea(MyAutoComplete myAuto , SqluckyTab tb) {
+		this.myAreaTab = tb;
 		this.myAuto = myAuto;
 		highLightingHelper = new CodeAreaHighLightingHelper();
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new MyCodeArea();
+		
+		// 文本内容监听事件函数
 		cl = (obj, o, n) -> {
-			Consumer<String> caller = x -> {
-				Tab tb = SqluckyEditor.mainTabPaneSelectedTab();
-				MyAreaTab mtb = (MyAreaTab) tb;
-				if (tb != null) {
+			Consumer<Integer> caller = x -> {
+//				Tab tb = SqluckyEditor.mainTabPaneSelectedTab();
+//				MyAreaTab mtb = (MyAreaTab) tb;
+				if (myAreaTab != null) {
 					Platform.runLater(() -> {
-						String title = CommonUtility.tabText(tb);
+						String title = myAreaTab.getTitle(); //CommonUtility.tabText(tb);
 						if (!title.endsWith("*")) {
-							CommonUtility.setTabName(tb, title + "*");
-							mtb.setModify(true);
+							myAreaTab.setTitle(title + "*");
+							myAreaTab.setModify(true);
+//							CommonUtility.setTabName(tb, title + "*");
+//							mtb.setModify(true);
 						}
-						this.highLighting();
+						this.highLighting(x);
 					});
-
 					// 缓存单词
 					if (myAuto != null) {
 						myAuto.cacheTextWord();
 					}
-
 				}
 			};
-
-			CommonUtility.delayRunThread(caller, 500);
+//			int currentLine = codeArea.getCurrentParagraph();
+//			String text = codeArea.getText(0, 0, currentLine, 0);
+//			int textLength = text.length();
+//			if(textLength > 0 ) {
+//				textLength --;
+//			}
+			delayHighLighting(caller, 600, 0);
+//			CommonUtility.delayRunThread(caller, 600);
 
 		};
 		// 行号主题色
@@ -166,16 +177,51 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 			} else if (e.getCode() == KeyCode.ENTER) {
 				addNewLine(e);
 			} else if (e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE) {
-				codeAreaBackspaceDelete(e, cl);
+//				codeAreaBackspaceDelete(e, cl);
 			} else if (e.getCode() == KeyCode.V) { // 黏贴的时候, 防止页面跳到自己黏贴
 				codeAreaCtrlV(e);
 			} else if (e.getCode() == KeyCode.Z) { // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
-				codeAreaCtrlZ(e, cl);
+//				codeAreaCtrlZ(e, cl);
+			}else {
+				Consumer<Integer> caller = x -> {
+					if (myAreaTab != null) {
+						Platform.runLater(() -> {
+							String title = myAreaTab.getTitle(); //CommonUtility.tabText(tb);
+							if (!title.endsWith("*")) {
+								myAreaTab.setTitle(title + "*");
+								myAreaTab.setModify(true);
+//								CommonUtility.setTabName(tb, title + "*");
+//								mtb.setModify(true);
+							}
+							this.highLighting(x);
+						});
+						// 缓存单词
+						if (myAuto != null) {
+							myAuto.cacheTextWord();
+						}
+					}
+				};
+//				普通输入
+				System.out.println("普通输入");
+				if( ! e.isAltDown() && !e.isControlDown()) {
+					
+					int currentLine = codeArea.getCurrentParagraph();
+					String text = codeArea.getText(0, 0, currentLine, 0);
+					int textLength = text.length();
+					if(textLength > 0 ) {
+						textLength --;
+					}
+					delayHighLighting(caller, 600, textLength);
+				}else {
+					delayHighLighting(caller, 600, 0);
+				}
+				 
+				
 			}
 
 		});
 		// TODO 输入事件
-		codeArea.textProperty().addListener(cl);
+//		codeArea.textProperty().addListener(cl);
 		codeArea.replaceText(0, 0, sampleCode);
 
 		// 中午输入法显示问题
@@ -399,32 +445,21 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		});
 
 	}
+ 
+	public void highLighting(int begin) {
+		System.out.println("highLighting = " +begin );
+		Platform.runLater(() -> {
+			try {
+				highLightingHelper.applyHighlighting(codeArea, begin);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 
-	private volatile boolean hasHighring = false;
-	public void highLighting() {
-		if(hasHighring == false) {
-			hasHighring = true;
-			Thread th = new Thread(()->{
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-				Platform.runLater(() -> {
-					try {
-						highLightingHelper.applyHighlighting(codeArea);
-						hasHighring = false;
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				});
-				
-			});
-			th.start();
-		}
-		
-	
-
+	}
+	@Override
+	public void  highLighting() {
+		highLighting(0);
 	}
 
 	public void errorHighLighting(int begin, String str) {
@@ -444,13 +479,6 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	public MyCodeArea getCodeArea() {
 		return codeArea;
 	}
-
-//	public static ChangeListener< String> codetxtChange(HighLightingCodeArea obj){
-//		return new ChangeListener<String>() {
-//			@Override
-//			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {}
-//		};
-//	}
 
 	static Map<String, String> charMap = new HashMap<>();
 	static Map<String, String> charMapPre = new HashMap<>();
@@ -970,6 +998,41 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 				CodeAreaUtility.add4Space();
 			}
 		}
+	}
+	
+	private   ArrayBlockingQueue<Consumer< Integer >> queue = new ArrayBlockingQueue<>(1);
+	
+	/**
+	 * 延迟执行高亮, 如果有任务在队列中, 会抛弃任务不执行
+	 * @param caller
+	 * @param milliseconds
+	 */
+	public   void delayHighLighting(Consumer< Integer >  caller, int milliseconds , int lineNo) {
+		if ( queue.isEmpty() ) {
+			 queue.offer(caller);  // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
+			 
+			 Thread t = new Thread() {
+					public void run() { 
+						
+						try {
+							Thread.sleep(milliseconds);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						var cl = queue.poll();  // 从队列取出一个元素
+						if(cl != null) {
+							cl.accept(lineNo);
+						}
+					}
+				};
+				t.start();
+			 
+		}else {
+			logger.debug("delayRunThread");
+			return ;
+			
+		}  
+		
 	}
 }
 

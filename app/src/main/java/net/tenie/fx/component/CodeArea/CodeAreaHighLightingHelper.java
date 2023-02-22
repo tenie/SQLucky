@@ -172,14 +172,19 @@ public class CodeAreaHighLightingHelper {
         return spansBuilder.create();
     
     }
-    
     public  void applyHighlighting(CodeArea codeArea) { 
+    	applyHighlighting(codeArea, 0);
+    }
+    public  void applyHighlighting(CodeArea codeArea, int begin) { 
     	try {
-    		if(codeArea.getText().length() > 0) {
-    			StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(codeArea.getText());
+    		String text = codeArea.getText();
+    		if(text.length() > 0 && begin < text.length()) {
+    			
+    			String subText = codeArea.getText().substring(begin);
+    			StyleSpans<Collection<String>> highlighting  = 	computeHighlighting(subText);
     			if(highlighting == null ) return;
     			Platform.runLater(() -> {  
-            		 codeArea.setStyleSpans(0, highlighting);
+            		 codeArea.setStyleSpans(begin, highlighting);
     			});    	    	
         	}
 		} catch (Exception e) {

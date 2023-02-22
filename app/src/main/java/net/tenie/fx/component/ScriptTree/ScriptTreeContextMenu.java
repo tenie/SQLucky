@@ -4,6 +4,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyAreaTab;
 /**
@@ -16,7 +17,7 @@ public class ScriptTreeContextMenu {
 	private MenuItem close; 
 	
 	
-	public ScriptTreeContextMenu(TreeItem<MyAreaTab> rootNode) {
+	public ScriptTreeContextMenu(TreeItem<SqluckyTab> rootNode) {
 
 		contextMenu = new ContextMenu();  
 		

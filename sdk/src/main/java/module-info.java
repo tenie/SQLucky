@@ -1,5 +1,5 @@
 open module SQLucky.sdk {
-//	requires java.base;
+	requires java.base;
 	requires java.desktop;
 //	requires java.naming;
 //	requires java.transaction.xa;

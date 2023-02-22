@@ -73,7 +73,7 @@ public class ConfigVal {
 	
 	// 获取skd 的路径
 	static {
-		URL url = ConfigVal.class.getClassLoader().getResource("");
+		URL url = ConfigVal.class.getResource("");
 		String pathVal = url.getPath();
 		MODULE_PATH = new File(pathVal);  
 	}

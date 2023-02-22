@@ -1,5 +1,7 @@
 package net.tenie.fx.main;
 
+import java.net.URL;
+
 import javafx.application.Platform;
 import javafx.application.Preloader;
 import javafx.application.Preloader.StateChangeNotification.Type;
@@ -55,7 +57,7 @@ public class MyPreloaderMp4 extends Preloader {
 	   Thread th = new Thread() {
 			public void run() {
 				 try {
-					Thread.sleep(3000);
+					Thread.sleep(4000);
 					isFinish = true;
 				} catch (InterruptedException e) { 
 					e.printStackTrace();
@@ -71,7 +73,6 @@ public class MyPreloaderMp4 extends Preloader {
     public void start(Stage primaryStage) throws Exception {
     	double w = 550.0;
     	double h = 319.0;
-    	 
     	String filePath =	MyPreloaderMp4.class.getResource("/image/sqlucky_hd2.mp4").toExternalForm();
     	
        preloaderStage = primaryStage;

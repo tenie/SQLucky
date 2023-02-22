@@ -3,6 +3,8 @@ package net.tenie.Sqlucky.sdk.po;
 import java.io.File;
 import java.io.Serializable;
 
+import com.alibaba.fastjson.JSONObject;
+
 import javafx.scene.layout.Region;
 
 /**
@@ -137,9 +139,22 @@ public class DocumentPo implements Serializable {
 		return serialVersionUID;
 	}
 
+	@Override
+	public String toString() {
+		return "DocumentPo [id=" + id + ", title=" + title + ", text=" + text + ", fileFullName=" + fileFullName
+				+ ", encode=" + encode + ", paragraph=" + paragraph + ", file=" + file + ", icon=" + icon + ", type="
+				+ type + "] \n";
+	}
+
 	
 	 
+	  public String toJsone() { 
+	       
+		    JSONObject jsonObject = (JSONObject) JSONObject.toJSON(this);
+	        System.out.println("Java对象转化为JSON对象\n" + jsonObject.toJSONString());//{"name":"公众号编程大道","age":2,"sex":"m"}
  
+		  return jsonObject.toJSONString();
+	  }
 	
 
 
