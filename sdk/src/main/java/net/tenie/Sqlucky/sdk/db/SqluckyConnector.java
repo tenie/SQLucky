@@ -11,8 +11,8 @@ import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 
 public interface SqluckyConnector {
 	
-	void setDBConnectorInfoPo(DBConnectorInfoPo po);
-	DBConnectorInfoPo getDBConnectorInfoPo();
+	public void setDBConnectorInfoPo(DBConnectorInfoPo po);
+	public DBConnectorInfoPo getDBConnectorInfoPo();
 	
 	public String dbRootNodeName();
 	public String translateErrMsg(String errString);

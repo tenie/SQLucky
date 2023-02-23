@@ -18,7 +18,11 @@ public abstract class DbConnector implements SqluckyConnector {
 	private static Logger logger = LogManager.getLogger(DbConnector.class); 
 	protected DBConnectorInfoPo connPo;
 	
-	
+	public DbConnector(DBConnectorInfoPo c) {
+		super();
+		this.connPo = c;
+	}
+ 
 	
 
 	public void setDBConnectorInfoPo(DBConnectorInfoPo po) {
@@ -28,11 +32,7 @@ public abstract class DbConnector implements SqluckyConnector {
 		return this.connPo;
 	}
 	
-	public DbConnector(DBConnectorInfoPo c) {
-		super();
-		this.connPo = c;
-	}
- 
+	
 
 	//正在连接中, 原子操作
 	private AtomicBoolean finishInitNodeStatus = new AtomicBoolean(true);

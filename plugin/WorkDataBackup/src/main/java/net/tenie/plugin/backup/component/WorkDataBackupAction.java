@@ -2,12 +2,15 @@ package net.tenie.plugin.backup.component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 
 public class WorkDataBackupAction {
 
@@ -18,7 +21,9 @@ public class WorkDataBackupAction {
 	}
 	
 	public static void backupDBInfo(boolean isvip) {
-		
+		 AppComponent appcom = ComponentGetter.appComponent;
+		 Map<String, SqluckyConnector> connMap = appcom.getAllConnector();
+		 ComponentGetter.
 	}
 	
 	public static void backupScript(boolean isvip) {
