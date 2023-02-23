@@ -16,6 +16,7 @@ public class ConfigVal {
 	public static String SQLUCKY_EMAIL = "" ;
 	public static String SQLUCKY_PASSWORD = "";
 	public static boolean SQLUCKY_REMEMBER = false;
+	public static String SQLUCKY_URL = "http://127.0.0.1:8088";
 	
 	
 	

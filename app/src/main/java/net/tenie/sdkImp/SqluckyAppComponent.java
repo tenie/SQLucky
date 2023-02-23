@@ -1,6 +1,7 @@
 package net.tenie.sdkImp;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -13,6 +14,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -287,6 +289,25 @@ public class SqluckyAppComponent implements AppComponent {
 	@Override
 	public Map<String, SqluckyConnector> getAllConnector() {
 		return DBConns.getDbs();
+	}
+
+	/**
+	 * 获取链接名称
+	 */
+	@Override
+	public List<String> getAllConnectorName() {
+		List<String> dbConnNames = new ArrayList<>();
+		TreeView<TreeNodePo> tv = DBinfoTree.DBinfoTreeView;
+		TreeItem<TreeNodePo> root = tv.getRoot();
+		var childrenList = root.getChildren();
+		if (childrenList != null && childrenList.size() > 0) {
+			for (var item : childrenList) {
+				TreeNodePo po = item.getValue();
+				String name = po.getName();
+				dbConnNames.add(name);
+			}
+		}
+		return dbConnNames;
 	}
 	
 

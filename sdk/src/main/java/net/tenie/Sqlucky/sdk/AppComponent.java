@@ -61,5 +61,10 @@ public interface AppComponent {
 	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc);
 	public SqluckyBottomSheet EmptySheet(String name, String message);
 	
+	// 获取 DBconns 中保存的所有数据库链接信息
 	public Map<String, SqluckyConnector> getAllConnector();
+	
+	// 获取 DBinfoTree 中链接的所有名称
+	public List<String> getAllConnectorName();
+	
 }

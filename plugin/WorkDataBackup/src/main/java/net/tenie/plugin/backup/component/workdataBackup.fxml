@@ -14,9 +14,9 @@
                   <Button fx:id="bakBtn" layoutX="292.0" layoutY="168.0" mnemonicParsing="false" styleClass="myAlertBtn" text="备份" />
                   <JFXCheckBox layoutX="15.0" layoutY="123.0" text="使用端到端加密传输, 密钥需要自己保存!" />
                   <Label layoutX="14.0" layoutY="151.0" text="端到端加密密钥" />
-                  <TextField layoutX="112.0" layoutY="149.0" styleClass="myFindTextField" />
+                  <TextField fx:id="privateKey" layoutX="112.0" layoutY="149.0" styleClass="myFindTextField" />
                   <Label layoutX="15.0" layoutY="20.0" text="备份名称" />
-                  <TextField layoutX="69.0" layoutY="16.0" styleClass="myFindTextField" />
+                  <TextField fx:id="bakName" layoutX="69.0" layoutY="16.0" styleClass="myFindTextField" />
                   <JFXCheckBox layoutX="14.0" layoutY="48.0" text="备份数据库连接配置" />
                   <JFXCheckBox layoutX="15.0" layoutY="73.0" text="备份脚本文件" />
                   <JFXCheckBox layoutX="15.0" layoutY="98.0" text="备份数据模型" />
