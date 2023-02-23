@@ -30,13 +30,47 @@ public class DBConnectorInfoPo {
 	private Connection conn;
 	private ExportDDL exportDDL; 
 	private boolean JdbcUrlIsFile = false;
-	private Map<String, DbSchemaPo> schemas;
 	private boolean jdbcUrlUse = false;
 	private boolean autoConnect = false;
+	private Map<String, DbSchemaPo> schemas;
 	
-	public DBConnectorInfoPo(String connName, String driver, String host, String port, String user, String passWord,
-			String dbVendor, String defaultSchema,String dbName , String jdbcurlStr, boolean autoConn
+	public DBConnectorInfoPo(BDConnJsonObj obj) {
+		init( obj.getConnName(), obj.getDriver(), obj.getHostOrFile(), 
+				obj.getPort(),  obj.getUser(), 
+				obj.getPassWord(), obj.getDbVendor(), 
+				obj.getDefaultSchema(), 	obj.getDbName() , 
+				obj.getJdbcurlStr(),  obj.getAutoConnect()
+				);
+	}
+	
+	public DBConnectorInfoPo(String connName,
+			String driver,
+			String HostOrFile, 
+			String port, 
+			String user, 
+			String passWord,
+			String dbVendor, 
+			String defaultSchema,
+			String dbName , 
+			String jdbcurlStr, 
+			boolean autoConn
 	) { 
+		init( connName, driver,  HostOrFile,   port, 
+				 user,   passWord,  dbVendor,   defaultSchema,
+				 dbName ,   jdbcurlStr,   autoConn);
+	}
+	
+	public void init(String connName,
+			String driver,
+			String host, 
+			String port, 
+			String user, 
+			String passWord,
+			String dbVendor, 
+			String defaultSchema,
+			String dbName , 
+			String jdbcurlStr, 
+			boolean autoConn){
 		this.connName = connName;
 		this.hostOrFile = host;
 		this.port = port;
@@ -53,6 +87,22 @@ public class DBConnectorInfoPo {
 		this.autoConnect = autoConn;
 	}
 	
+	public BDConnJsonObj toJsonObj() {
+		BDConnJsonObj obj = new BDConnJsonObj();
+		obj.setConnName(this.connName );
+		obj.setHostOrFile(this.hostOrFile  );
+		obj.setPort(this.port  );
+		obj.setDbVendor(this.dbVendor );
+		obj.setDefaultSchema(this.defaultSchema );
+		obj.setDriver(this.driver  );
+		obj.setUser(this.user  );
+		obj.setPassWord(this.passWord  );
+		obj.setDbName(this.dbName   );
+		obj.setJdbcurlStr(this.jdbcUrl  );
+		obj.setAutoConnect(this.autoConnect  );
+		 
+		return obj;
+	}
 	
 	
 	
@@ -265,9 +315,10 @@ public class DBConnectorInfoPo {
 
 
 	public String toJson() {
-		JSONObject jo =  (JSONObject) JSONObject.toJSON(this);
+		BDConnJsonObj obj =  toJsonObj();
+		JSONObject jo =  (JSONObject) JSONObject.toJSON(obj);
 		String val = jo.toJSONString();
-		System.out.println(val);
+//		System.out.println(val);
 		return val;
 	}
 	
@@ -286,6 +337,8 @@ public class DBConnectorInfoPo {
 //	}
 	
 	
+	
 
 	
 }
+

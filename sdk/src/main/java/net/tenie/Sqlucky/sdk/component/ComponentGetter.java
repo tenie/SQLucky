@@ -67,6 +67,8 @@ public final class ComponentGetter {
 	// 数据库链接信息tree 的右键菜单
 	public static ContextMenu	dbInfoTreeContextMenu;
 	
+	// 链接信息 treeView root
+//	public static TreeItem<TreeNodePo> dbInfoTreeRoot;
 	// 脚本treeView root
 	public static TreeItem<SqluckyTab> scriptTreeRoot;
 	

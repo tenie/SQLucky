@@ -12,6 +12,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -21,12 +22,16 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 public class WorkDataBackupController implements Initializable {
 
 	@FXML private Button bakBtn; 
+	@FXML private TextField bakName;
+	@FXML private TextField privateKey;
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		
 		bakBtn.setOnAction(e->{
-			WorkDataBackupAction.BackupBtn();
+			String bnStr = bakName.getText();
+			String pkStr = privateKey.getText();
+			WorkDataBackupAction.BackupBtn(bnStr, pkStr);
 		});
 	}
 

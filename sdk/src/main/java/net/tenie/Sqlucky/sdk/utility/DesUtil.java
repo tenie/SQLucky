@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.utility;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.security.SecureRandom;
 import java.util.Base64;
 
@@ -23,7 +24,7 @@ public class DesUtil {
 
     private final static String DES = "DES";
     private final static String ENCODE = "UTF-8";
-    private final static String defaultKey = "netwxactive";
+    private final static String defaultKey = "sqluckydefaultKeyval";
 
     /**
      * 使用 默认key 加密
@@ -31,10 +32,16 @@ public class DesUtil {
      * @return
      * @throws Exception
      */
-    public static String encrypt(String data) throws Exception {
-        byte[] bt = encrypt(data.getBytes(ENCODE), defaultKey.getBytes(ENCODE));
-        String strs = Base64.getEncoder().encodeToString(bt );
-//        String strs = new BASE64Encoder().encode(bt);
+    public static String encrypt(String data) {
+        byte[] bt;
+        String strs = "";
+		try {
+			bt = encrypt(data.getBytes(ENCODE), defaultKey.getBytes(ENCODE));
+		    strs = Base64.getEncoder().encodeToString(bt );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+       
         return strs;
     }
 
@@ -45,15 +52,20 @@ public class DesUtil {
      * @throws IOException
      * @throws Exception
      */
-    public static String decrypt(String data) throws IOException, Exception {
+    public static String decrypt(String data) {
+    	String rs = "";
         if (data == null)
-            return null;
-//        BASE64Decoder decoder = new BASE64Decoder();
-//        byte[] buf = decoder.decodeBuffer(data);
+            return rs;
         byte[] buf =  Base64.getDecoder().decode(data);
         
-        byte[] bt = decrypt(buf, defaultKey.getBytes(ENCODE));
-        return new String(bt, ENCODE);
+        byte[] bt;
+		try {
+			bt = decrypt(buf, defaultKey.getBytes(ENCODE));
+			rs =  new String(bt, ENCODE);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}  
+		return rs;
     }
 
     /**
@@ -63,10 +75,19 @@ public class DesUtil {
      * @return
      * @throws Exception
      */
-    public static String encrypt(String data, String key) throws Exception {
-        byte[] bt = encrypt(data.getBytes(ENCODE), key.getBytes(ENCODE));
-//        String strs = new BASE64Encoder().encode(bt);
-        String strs = Base64.getEncoder().encodeToString(bt );
+    public static String encrypt(String data, String key)   {
+    	if(key == null || "".equals(key)) {
+    		key = defaultKey;
+    	}
+    	String strs = "";
+        byte[] bt;
+		try {
+			bt = encrypt(data.getBytes(ENCODE), key.getBytes(ENCODE));
+		    strs = Base64.getEncoder().encodeToString(bt );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+       
         return strs;
     }
 
@@ -82,8 +103,9 @@ public class DesUtil {
             Exception {
         if (data == null)
             return null;
-//        BASE64Decoder decoder = new BASE64Decoder();
-//        byte[] buf = decoder.decodeBuffer(data);
+        if(key == null || "".equals(key)) {
+    		key = defaultKey;
+    	}
         byte[] buf =  Base64.getDecoder().decode(data);
         byte[] bt = decrypt(buf, key.getBytes(ENCODE));
         return new String(bt, ENCODE);
