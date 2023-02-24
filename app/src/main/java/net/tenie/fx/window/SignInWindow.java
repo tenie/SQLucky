@@ -128,6 +128,7 @@ public class SignInWindow {
 	   
 	    
 	    hb2.getChildren().addAll(Remember, rememberCB );
+	    // 登入函数
 	    Function<String, Boolean> singAction = v->{
 	    	String emailVal = tfemail.getText();
 	    	String passwordVal = password.getText();
@@ -174,8 +175,17 @@ public class SignInWindow {
 				signInBtn.setDisable(false);
 			}
 		});
-		Button signUpBtn = createSignUpBtn( null  );
+//		Button signUpBtn = createSignUpBtn( null  );
 		
+		
+		  // 登入函数
+	    Function<String, Boolean> singOutAction = v->{
+	    	tfemail.setText("");
+			password.setText("");
+			rememberCB.setSelected(false);
+	    	return true;
+	    };
+		Button signOutBtn = createSigOutBtn(singOutAction);
 		// 如果已经登入过, 获取登入信息
 		String siEmail = ConfigVal.SQLUCKY_EMAIL;
 		String siPw = ConfigVal.SQLUCKY_PASSWORD;
@@ -202,8 +212,9 @@ public class SignInWindow {
 		list.add(    hb2); 
 		
 		list.add(    signInBtn); 
-
-		list.add(    signUpBtn);
+		list.add(    signOutBtn); 
+//		list.add(    signUpBtn);
+		
 		layout(list);
 
 	}  
@@ -225,6 +236,22 @@ public class SignInWindow {
 			SignUpWindow.createWorkspaceConfigWindow();
 		});
 		return signUpBtn;
+	}
+	
+	public static Button createSigOutBtn(Function<String, Boolean> sup ) {
+		String signOut = "Sign Out ";
+		Button signOutBtn = new Button(signOut); 
+		signOutBtn.setOnAction(e->{
+			ConfigVal.SQLUCKY_EMAIL = "";
+			ConfigVal.SQLUCKY_PASSWORD = "";
+			ConfigVal.SQLUCKY_USERNAME = "";
+			ConfigVal.SQLUCKY_REMEMBER = false;
+			
+			
+			UserAccountAction.delUser();
+			sup.apply("");
+		});
+		return signOutBtn;
 	}
 	
  

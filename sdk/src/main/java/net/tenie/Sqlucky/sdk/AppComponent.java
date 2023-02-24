@@ -67,4 +67,7 @@ public interface AppComponent {
 	// 获取 DBinfoTree 中链接的所有名称
 	public List<String> getAllConnectorName();
 	
+	// 登入窗口
+	public void showSingInWindow() ;
+	
 }

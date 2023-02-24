@@ -28,17 +28,44 @@ import net.tenie.Sqlucky.sdk.utility.net.HttpPostFile;
 public class WorkDataBackupAction {
 
 	// 触发备份按钮
-	public static void BackupBtn(String backupName,  String pKey) {
+	public static void BackupBtn(BackupInfoPO po) {
+		String backupName = po.getBackupName();
 		if(StrUtils.isNullOrEmpty(backupName)) {
 			MyAlert.errorAlert( "备份名称不能为空!");
 			return;
 		}
-		backupDBInfo(backupName, pKey, false);
-		backupScript(backupName, pKey, false);
+		String pKey = "";
+		if(po.getUsePrivateKey()) {
+			 pKey = po.getPrivateKey();
+			 if(StrUtils.isNullOrEmpty(pKey)) {
+					MyAlert.errorAlert( "使用密钥, 请输入密钥!");
+					return;
+			 }
+		}
+		
+		//  校验备份类型
+		if( po.getSaveDB() == false 
+				&& po.getSaveModel() == false 
+				&& po.getSaveScript() == false) {
+			MyAlert.errorAlert( "选择要备份的类型!");
+			return;
+		} 
+		
+		if(po.getSaveDB()){
+			backupDBInfo(backupName, pKey, "1", false);
+		}
+		if(po.getSaveScript()){
+			backupScript(backupName, pKey, "2", false);
+		}
+		
+		if(po.getSaveModel()){
+//			backupScript(backupName, pKey, "3", false);
+		}
+	
 	}
 	
 	// 备份链接信息
-	public static void backupDBInfo(String backupName, String pKey, boolean isvip) {
+	public static void backupDBInfo(String backupName, String pKey, String backuptype, boolean isvip) {
 		 List<String> jsonLs = new ArrayList<>();
 		 AppComponent appcom = ComponentGetter.appComponent;
 		 Map<String, SqluckyConnector> connMap = appcom.getAllConnector();
@@ -58,10 +85,10 @@ public class WorkDataBackupAction {
 			}
 		 }
 		 
-		 UploadData(jsonLs, backupName, "1");
+		 UploadData(jsonLs, backupName, backuptype);
 	}
 	// 备份脚本
-	public static void backupScript(String backupName, String pKey, boolean isvip) {
+	public static void backupScript(String backupName, String pKey, String backuptype, boolean isvip) {
 		TreeItem<SqluckyTab> root = ComponentGetter.scriptTreeRoot;
 		ObservableList<TreeItem<SqluckyTab>> ls = root.getChildren();
 		List<String> vals = new ArrayList<>();
@@ -90,7 +117,7 @@ public class WorkDataBackupAction {
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
-		UploadData(vals, backupName, "2");
+		UploadData(vals, backupName, backuptype);
 		
 	}
 	

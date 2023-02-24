@@ -42,6 +42,7 @@ import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.DmlDdlDao;
+import net.tenie.fx.window.SignInWindow;
 import net.tenie.lib.db.h2.AppDao; 
 
 public class SqluckyAppComponent implements AppComponent { 
@@ -310,10 +311,11 @@ public class SqluckyAppComponent implements AppComponent {
 		return dbConnNames;
 	}
 	
-
-	
-
-
+	// 登入窗口
+	@Override
+	public void showSingInWindow() {
+		SignInWindow.show();
+	}
 	
 
 }
