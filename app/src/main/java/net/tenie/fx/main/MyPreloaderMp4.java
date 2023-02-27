@@ -28,29 +28,37 @@ public class MyPreloaderMp4 extends Preloader {
 		return isFinish;
 	}
 	
-	public static void  hiden() {
-		if(loading!= null) {
-			 var tf = getFinish();
-			 while(!tf) {
-				 tf = getFinish();
-				 try {
-					Thread.sleep(100);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
+	public static void hiden() {
+		if (loading != null) {
+			Thread th = new Thread() {
+				public void run() {
+					var tf = getFinish();
+					while (!tf) {
+						tf = getFinish();
+						try {
+							Thread.sleep(100);
+//								System.out.println("getFinish() = " + getFinish());
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+					}
+					Platform.runLater(() -> {
+						preloaderStage.close();
+					});
+
 				}
-			 }
-			 Platform.runLater(()->{
-				 preloaderStage.close();
-			 });
-			 // 动画有问题, 先注释了
+			};
+			th.start();
+
+			// 动画有问题, 先注释了
 //			 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1200, 0.8);
 //			 fadeTransition.setOnFinished(e -> {
 //				 preloaderStage.close();
 //				  
 //			  });
-			
+
 		}
-		
+
 	}
 	
    private void stopTime() {
@@ -100,7 +108,7 @@ public class MyPreloaderMp4 extends Preloader {
        primaryStage.setMaximized(false);
        primaryStage.setResizable(false);
        primaryStage.initStyle(StageStyle.TRANSPARENT);//设定窗口无边框
-//       primaryStage.setAlwaysOnTop(true);
+       primaryStage.setAlwaysOnTop(true);
        primaryStage.setScene(scene);
        stopTime();
        primaryStage.show();

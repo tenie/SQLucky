@@ -21,20 +21,23 @@ public class MyPreloaderGif extends Preloader {
 	
 	public static void  hiden() {
 		if(preloaderStage!= null) {
-			 var tf = getFinish();
-			 while(!tf) {
-				 tf = getFinish();
-				 try {
-					Thread.sleep(100);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
+			Thread th = new Thread() {
+				public void run() {
+					 var tf = getFinish();
+					 while(!tf) {
+						 tf = getFinish();
+						 try {
+							Thread.sleep(100);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+					 }
+					 Platform.runLater(()->{
+						 preloaderStage.close();
+					 });
 				}
-			 }
-			 Platform.runLater(()->{
-				 preloaderStage.close();
-			 });
-			 
-			
+			};
+			th.start();
 		}
 		
 	}
@@ -43,7 +46,7 @@ public class MyPreloaderGif extends Preloader {
 	   Thread th = new Thread() {
 			public void run() {
 				 try {
-					Thread.sleep(4600);
+					Thread.sleep(4000);
 					isFinish = true;
 				} catch (InterruptedException e) { 
 					e.printStackTrace();
@@ -61,7 +64,8 @@ public class MyPreloaderGif extends Preloader {
        loading.setMaxWidth(Region.USE_PREF_SIZE);
        loading.setMaxHeight(Region.USE_PREF_SIZE);
        loading.setStyle("-fx-background-color: #000000;");  
-       Image i = new Image( MyPreloaderGif.class.getResourceAsStream("/image/sqlucky.gif")); 
+//       Image i = new Image( MyPreloaderGif.class.getResourceAsStream("/image/sqlucky.gif")); 
+       Image i = new Image( MyPreloaderGif.class.getResourceAsStream("/image/sqlucky_img.jpg")); 
        ImageView  mediaView =  new ImageView(i);
        mediaView.setFitWidth(w);
        mediaView.setFitHeight( h); 

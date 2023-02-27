@@ -99,6 +99,7 @@ public class SQLucky extends Application {
 		// 加载插件
 		ServiceLoad.callLoad();
 		logger.info("完成初始化"); 
+
 	}
 	
  
@@ -199,7 +200,7 @@ public class SQLucky extends Application {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-
+			
 		}
 
 	}
@@ -227,7 +228,11 @@ public class SQLucky extends Application {
 			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
 		}else {
 			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderMp4.class, args);
+//			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
+//			LauncherImpl.launchApplication(SQLucky.class, MyPreloader.class, args);
+			
 		}
+		
 //		LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
 	}
 }

@@ -25,7 +25,8 @@ public class MyPreloader extends Preloader {
        loading.setMaxHeight(Region.USE_PREF_SIZE);
        loading.setStyle("-fx-background-color: #000000;");
 //       Image i = new Image( MyPreloader.class.getResourceAsStream("/image/SQL6preLoad.png")); 
-       Image i = new Image( MyPreloader.class.getResourceAsStream("/image/test2.gif")); 
+//       Image i = new Image( MyPreloader.class.getResourceAsStream("/image/test2.gif")); 
+       Image i = new Image( MyPreloader.class.getResourceAsStream("/image/sqlucky_img.jpg")); 
        ImageView  mediaView =  new ImageView(i);
        mediaView.setFitWidth(w);
        mediaView.setFitHeight( h);
@@ -47,7 +48,7 @@ public class MyPreloader extends Preloader {
        primaryStage.setResizable(false);
        primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
        primaryStage.setScene(scene);
-       
+       primaryStage.setAlwaysOnTop(true); // 置顶
        primaryStage.show();
        
       
