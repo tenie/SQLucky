@@ -23,10 +23,10 @@ import net.tenie.Sqlucky.sdk.utility.DesUtil;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.ZipUtil;
-import net.tenie.Sqlucky.sdk.utility.net.HttpPostFile;
+import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
 public class WorkDataBackupAction {
-
+	private static String httpUrl = ConfigVal.SQLUCKY_URL+"/sqlucky/confUpload";
 	// 触发备份按钮
 	public static void BackupBtn(BackupInfoPO po) {
 		String backupName = po.getBackupName();
@@ -128,7 +128,7 @@ public class WorkDataBackupAction {
 			 String tmpDir = FileUtils.getUserDirectoryPath();
 			 zipFile =  stringZipFile(jsonLs.toString(), backupName+"_"+backuptype, tmpDir);
 			 var map = postParam(backupName, backuptype);
-			 HttpPostFile. postFile(ConfigVal.SQLUCKY_URL+"/sqlucky/confUpload", 
+			 HttpUtil. postFile(httpUrl, 
 					 zipFile,
 					 map
 					 );

@@ -1,7 +1,10 @@
 package net.tenie.Sqlucky.sdk.component;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +19,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,10 +38,12 @@ import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SelectInfoTableDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -265,5 +271,77 @@ public class SqluckyTableView {
 		table.tableMenuButtonVisibleProperty().setValue(true);
 
 		return table;
+	}
+	
+	
+	// 提供数据生成表格
+	public static SheetTableData dataToSheet(List<String> fieldNameLs ,
+			List<Map<String, String>> vals) {
+		try {
+			FilteredTableView<ResultSetRowPo> table = SqluckyTableView.creatInfoTableView();
+			// 查询的 的语句可以被修改
+			table.editableProperty().bind(new SimpleBooleanProperty(true));
+			SheetTableData sheetDaV = new SheetTableData();
+			sheetDaV.setSqlStr("");
+			sheetDaV.setInfoTable(table);
+			sheetDaV.setTabName("");
+			sheetDaV.setLock(false);
+//			sheetDaV.setConn(conn);
+
+			ObservableList<SheetFieldPo> fields = createSheetFieldPo(fieldNameLs);
+			ResultSetPo setPo = new ResultSetPo(fields);
+			fetchCellVal(vals, fields, setPo);
+//			
+			sheetDaV.setColss(fields);
+			sheetDaV.setInfoTableVals(setPo);
+
+			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getInfoTableVals().getDatas();
+			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
+
+			 
+
+			// table 添加列和数据
+			// 表格添加列
+			var tableColumns = SqluckyTableView.createTableColForInfo(colss);
+			// 设置 列的 右键菜单
+			table.getColumns().addAll(tableColumns);
+			table.setItems(allRawData);
+
+			return sheetDaV;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	// 生成表格需要的字段信息
+	public static ObservableList<SheetFieldPo> createSheetFieldPo(List<String> fieldNameLs ) {
+		ObservableList<SheetFieldPo> fields = FXCollections.observableArrayList();
+		for(String name : fieldNameLs){
+			SheetFieldPo po = new SheetFieldPo();
+			po.setColumnLabel(name);
+			fields.add(po);
+		} 
+		return fields;
+	}
+	
+	// 讲数据转换为cell 
+	public static void fetchCellVal(  List<Map<String, String>> vals,
+			ObservableList<SheetFieldPo> fpo,
+			ResultSetPo setPo ) throws SQLException {
+		int columnnums = fpo.size(); 
+		for (Map<String, String> map : vals) {
+			ResultSetRowPo rowpo = setPo.creatRow();
+			for (int i = 0; i < columnnums; i++) {
+				SheetFieldPo fieldpo = fpo.get(i); 
+				StringProperty val;
+
+				String cellVal = map.get(fieldpo.getColumnLabel().get());
+				val = new SimpleStringProperty(cellVal);
+				rowpo.addCell(val, fieldpo);
+			}
+		}
+
 	}
 }

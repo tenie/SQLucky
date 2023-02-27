@@ -76,30 +76,30 @@ public class WorkDataBackupController implements Initializable {
 	
 	public void downloadPage() {
 		syncBtn.setOnAction(e->{
-			
+			QueryBackupController.showFxml();
 		});
 	}
 	 
 	
 	static public void showFxml() {
-		String fxml = "workdataBackup.fxml";
+		String fxml = "/workBackupFxml/workdataBackup.fxml";
 		try {
-			Stage  stage = new Stage();
-		    ComponentGetter.dataTransferStage = stage;
+			Stage stage = new Stage();
+			ComponentGetter.dataTransferStage = stage;
 			stage.initModality(Modality.WINDOW_MODAL);
 //			stage.initOwner(stg);
 			stage.setTitle("Top Stage With Modality");
-
+//			URL url = getClass().getResource(fxml);
 			URL url = WorkDataBackupController.class.getResource(fxml);
 			Parent root = FXMLLoader.load(url);
 			Scene scene = new Scene(root);
-		    CommonUtility.loadCss(scene); 
+			CommonUtility.loadCss(scene);
 			stage.setScene(scene);
 			stage.show();
-			
-			Image	img = ComponentGetter.LogoIcons; //new Image(DataTransferWindow.class.getResourceAsStream(ConfigVal.appIcon));
+
+			Image img = ComponentGetter.LogoIcons;
 			stage.getIcons().add(img);
-			stage.setOnCloseRequest(ev->{
+			stage.setOnCloseRequest(ev -> {
 				stage.hide();
 				ev.consume();
 			});
