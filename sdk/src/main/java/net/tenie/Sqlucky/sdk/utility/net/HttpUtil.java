@@ -29,7 +29,7 @@ import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.http.message.StatusLine;
 import org.apache.hc.core5.net.URIBuilder;
 
-public class HttpPostFile {
+public class HttpUtil {
 
 	/**
 	 * post 文件和参数
@@ -226,14 +226,18 @@ public class HttpPostFile {
 	 * @param url
 	 * @return
 	 */
-	public static String post1(String url) {
+	public static String post1(String url, Map<String, String> strPamas) {
 		String result = null;
 		HttpPost httpPost = new HttpPost(url);
 		// 表单参数
 		List<NameValuePair> nvps = new ArrayList<>();
 		// POST 请求参数
-		nvps.add(new BasicNameValuePair("username", "wdbyte.com"));
-		nvps.add(new BasicNameValuePair("password", "secret"));
+		
+		for(String key : strPamas.keySet()) {
+			nvps.add(new BasicNameValuePair(key, strPamas.get(key)));
+		}
+		
+//		nvps.add(new BasicNameValuePair("password", "secret"));
 		httpPost.setEntity(new UrlEncodedFormEntity(nvps));
 		try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
 			try (CloseableHttpResponse response = httpclient.execute(httpPost)) {

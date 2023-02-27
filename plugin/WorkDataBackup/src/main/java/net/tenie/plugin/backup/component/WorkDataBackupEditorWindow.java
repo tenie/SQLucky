@@ -164,7 +164,7 @@ public class WorkDataBackupEditorWindow {
 //			pama.put("fileName", ConfigVal.H2_DB_FULL_FILE_NAME);
 			
 			
-			net.tenie.Sqlucky.sdk.utility.net.HttpPostFile.postFileAndPamas(url, ConfigVal.H2_DB_FULL_FILE_NAME, pama );
+			net.tenie.Sqlucky.sdk.utility.net.HttpUtil.postFileAndPamas(url, ConfigVal.H2_DB_FULL_FILE_NAME, pama );
 		});
 		return UploadBtn;
 	}

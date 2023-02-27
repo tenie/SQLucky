@@ -8,6 +8,8 @@ open module SQLucky.plugin.WorkDataBackup{
 	requires org.slf4j;
 	requires org.apache.logging.log4j;	
 	requires com.jfoenix;  
+
+	requires org.controlsfx.controls;
 	         
 	
 	exports net.tenie.plugin.backup.impl;
