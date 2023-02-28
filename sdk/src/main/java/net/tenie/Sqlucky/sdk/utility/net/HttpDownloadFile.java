@@ -48,12 +48,12 @@ public class HttpDownloadFile {
 
             HttpEntity entity = response.getEntity(); 
             
-//            byte[] data =  EntityUtils.toByteArray(entity);
-//            Files.write(Paths.get("D:\\file.txt"), data);
-
+            byte[] data =  EntityUtils.toByteArray(entity);
+            Files.write(Paths.get("D:\\file_bak.zip"), data);
+            
             //获取响应数据
-            String content = EntityUtils.toString(entity);
-            System.out.println("content:=" + content);
+//            String content = EntityUtils.toString(entity);
+//            System.out.println("content:=" + content);
 
             //清理
             EntityUtils.consume(entity);

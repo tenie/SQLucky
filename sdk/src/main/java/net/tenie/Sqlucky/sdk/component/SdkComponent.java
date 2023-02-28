@@ -284,7 +284,7 @@ public class SdkComponent {
 		return waitTb;
 	}
 
-	private static Tab waitTb;
+	public static Tab waitTb;
 	private static final String WAITTB_NAME = "Loading...";
 	static {
 		waitTb = maskTab(WAITTB_NAME);

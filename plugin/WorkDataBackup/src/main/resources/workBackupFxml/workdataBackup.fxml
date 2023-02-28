@@ -27,13 +27,14 @@
          <content>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="myModalDialog">
                <children>
-                  <Button fx:id="syncBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" styleClass="myAlertBtn" text="同步备份文件信息" />
-                  <JFXComboBox layoutX="140.0" layoutY="14.0" prefHeight="23.0" prefWidth="186.0" />
-                  <JFXCheckBox layoutX="14.0" layoutY="63.0" text="使用密钥恢复备份文件" />
+                  <Button fx:id="syncBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" styleClass="myAlertBtn" text="同步备份文件" />
+                  <JFXCheckBox fx:id="useRPK" layoutX="14.0" layoutY="63.0" text="使用密钥恢复备份文件" />
                   <Label layoutX="14.0" layoutY="94.0" text="密钥" />
-                  <TextField layoutX="46.0" layoutY="90.0" styleClass="myFindTextField" />
-                  <Button layoutX="13.0" layoutY="127.0" mnemonicParsing="false" styleClass="myAlertBtn" text="使用备份覆盖本地数据" />
-                  <Button layoutX="11.0" layoutY="165.0" mnemonicParsing="false" styleClass="myAlertBtn" text="本地数据和备份数据合并" />
+                  <TextField fx:id="recoverPK" layoutX="46.0" layoutY="90.0" styleClass="myFindTextField" />
+                  <Button fx:id="downloadOverlapBtn" layoutX="13.0" layoutY="127.0" mnemonicParsing="false" styleClass="myAlertBtn" text="下载备份覆盖本地数据" />
+                  <Button fx:id="downloadMergeBtn" layoutX="159.0" layoutY="127.0" mnemonicParsing="false" styleClass="myAlertBtn" text="下载备份和本地数据合并" />
+                  <TextField fx:id="selBakName" disable="true" layoutX="109.0" layoutY="14.0" styleClass="myFindTextField" />
+                  <Button fx:id="downloadBtn" layoutX="13.0" layoutY="165.0" mnemonicParsing="false" styleClass="myAlertBtn" text="仅下载备份文件" />
                </children>
             </Pane>
          </content></Tab>

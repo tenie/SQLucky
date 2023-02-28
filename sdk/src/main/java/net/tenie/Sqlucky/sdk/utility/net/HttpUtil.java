@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.http.message.StatusLine;
 import org.apache.hc.core5.net.URIBuilder;
+
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 
 public class HttpUtil {
 
@@ -277,7 +280,14 @@ public class HttpUtil {
         return result;
     }
 
- 
+	private static String post1_test() {
+		Map<String, String> pamas = new HashMap<>();
+		pamas.put("EMAIL", "tenie@tenie.net");
+		pamas.put("PASSWORD", "mima");
+		
+		String val = HttpUtil.post1("http://127.0.0.1:8088/sqlucky/queryAllBackup", pamas);
+		return val;
+	}
 
 	/**
 	 * @param args
@@ -287,7 +297,8 @@ public class HttpUtil {
 //    	demo1();
 //    	demo2();
 //		demo_post();
-		String val = post("http://127.0.0.1:8088/sqlucky/queryAllBackup");
+//		String val = post("http://127.0.0.1:8088/sqlucky/queryAllBackup");
+		String val = post1_test();
 		System.out.println("val = " + val);
 	}
 }

@@ -8,6 +8,7 @@ import org.controlsfx.control.Notifications;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -23,11 +24,16 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 
 public class MyAlert {
 	public static void infoAlert(String title, String containTxt) {
-		showErrorMsg(containTxt,ComponentGetter.INFO);
+		Platform.runLater(()->{
+			showErrorMsg(containTxt,ComponentGetter.INFO);
+		});
+		
 	}
 
 	public static void errorAlert( String containTxt) {
-		showErrorMsg( containTxt , ComponentGetter.ERROR);  
+		Platform.runLater(()->{
+			showErrorMsg( containTxt , ComponentGetter.ERROR);  
+		});
 	}
 	
 	
