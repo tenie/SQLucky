@@ -225,7 +225,8 @@ public class SqluckyEditor {
 			for(Tab tb : tabs) { 
 				SqluckyTab mtb = (SqluckyTab) tb;
 				// 修改代码编辑区域的样式
-				mtb.getSqlCodeArea().changeCodeAreaLineNoThemeHelper();
+				if(mtb.getSqlCodeArea()!= null)
+					mtb.getSqlCodeArea().changeCodeAreaLineNoThemeHelper();
 				// 修改查找替换的样式如果有的话
 				changeFindReplacePaneBtnColor(tb);
 			}

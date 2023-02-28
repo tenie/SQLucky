@@ -348,5 +348,48 @@ public class FileTools {
 //			System.out.println("No encoding detected.");
 //		}
 	}
-
+	
+	/**
+	 * 删除目录, 递归删除
+	 * @param dir
+	 */
+	public static void deleteDir(File dir) {
+		if (dir != null && dir.isDirectory() && dir.exists()) {
+			File[] fs = dir.listFiles();
+			if (fs != null && fs.length > 0) {
+				for (int i = 0; i < fs.length; i++) {
+					File tmp = fs[i];
+					if (tmp.isFile()) {
+						tmp.delete();
+					} else if (tmp.isDirectory()) {
+						deleteDir(tmp);
+					}
+				}
+			}
+			dir.delete();
+		}
+		if(dir != null  && dir.exists() ) {
+			dir.delete();
+		}
+	}
+	
+	/**
+	 * str写入到文件并压缩文件
+	 * @param val
+	 * @param fileName
+	 * @param tmpDir
+	 * @return
+	 */
+	public static String stringZipFile(String val, String fileName, String tmpDir){
+		File file = new File(tmpDir, fileName);
+		String strFile = file.getAbsolutePath();
+		String zipFile = strFile + ".zip";
+		try {
+			FileTools.save(file, val);
+			ZipUtil.zipFile(strFile, zipFile);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return zipFile;
+	}
 }

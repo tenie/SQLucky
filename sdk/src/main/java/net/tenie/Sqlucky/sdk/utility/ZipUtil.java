@@ -30,15 +30,14 @@ public class ZipUtil {
 //		String file2 = "D:\\icon.png";
 //		final List<String> srcFiles = Arrays.asList(file1, file2);
 //		zipMultipleFiles(srcFiles, "D:\\compressed222.zip");
-		
+
 		// 文件夹
 //		ZipDirectory("D:\\mydir\\del", "D:\\compressedDirrrrr.zip");
-		
-		
+
 		// 给已有的zip文件添加新文件
 		zipfileAppendFile("D:\\log_json.txt", "D:\\compressedDirrrrr.zip");
-		
-		//UnzipFile
+
+		// UnzipFile
 //		UnzipFile("D:\\compressedDirrrrr.zip", "D:\\邮件");
 	}
 
@@ -91,7 +90,7 @@ public class ZipUtil {
 	}
 
 	public static void ZipDirectory(String sourceFile, String savePath) throws IOException {
-	 
+
 		FileOutputStream fos = new FileOutputStream(savePath);
 		ZipOutputStream zipOut = new ZipOutputStream(fos);
 
@@ -100,7 +99,13 @@ public class ZipUtil {
 		zipOut.close();
 		fos.close();
 	}
-
+	/**
+	 * 
+	 * @param fileToZip
+	 * @param fileName
+	 * @param zipOut
+	 * @throws IOException
+	 */
 	private static void zipFile(File fileToZip, String fileName, ZipOutputStream zipOut) throws IOException {
 		if (fileToZip.isHidden()) {
 			return;
@@ -129,69 +134,82 @@ public class ZipUtil {
 		}
 		fis.close();
 	}
-	
-//	 Append New Files to Zip File
+
+	/**
+	 * Append New Files to Zip File
+	 * 把文件添加到 zip中
+	 * @param appFile
+	 * @param zipPath
+	 * @throws IOException
+	 */
 	public static void zipfileAppendFile(String appFile, String zipPath) throws IOException {
-//		String file3 = "src/main/resources/zipTest/file3.txt";
 		Map<String, String> env = new HashMap<>();
 		env.put("create", "true");
 
-		Path path = Paths.get(zipPath);  //Paths.get(appFile).getParent() + "/compressed.zip"
+		Path path = Paths.get(zipPath); // Paths.get(appFile).getParent() + "/compressed.zip"
 		URI uri = URI.create("jar:" + path.toUri());
 
 		try (FileSystem fs = FileSystems.newFileSystem(uri, env)) {
-			File tempFile =new File( appFile.trim());
+			File tempFile = new File(appFile.trim());
 			String tmpfileName = tempFile.getName();
 
-		    Path nf = fs.getPath(tmpfileName);
-		    Files.write(nf, Files.readAllBytes(Paths.get(appFile)), StandardOpenOption.CREATE);
+			Path nf = fs.getPath(tmpfileName);
+			Files.write(nf, Files.readAllBytes(Paths.get(appFile)), StandardOpenOption.CREATE);
 		}
 	}
-	
-	public static void UnzipFile (String fileZip , String desDirPath) throws IOException {
+
+	/**
+	 * 解压
+	 * 
+	 * @param fileZip
+	 * @param desDirPath
+	 * @throws IOException
+	 */
+	public static void UnzipFile(String fileZip, String desDirPath) throws IOException {
 //		 	String fileZip = "src/main/resources/unzipTest/compressed.zip";
-	        File destDir = new File(desDirPath);
+		File destDir = new File(desDirPath);
 
-	        byte[] buffer = new byte[1024];
-	        ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
-	        ZipEntry zipEntry = zis.getNextEntry();
-	        while (zipEntry != null) {
-	        		File newFile = newFile(destDir, zipEntry);
-	        	    if (zipEntry.isDirectory()) {
-	        	        if (!newFile.isDirectory() && !newFile.mkdirs()) {
-	        	            throw new IOException("Failed to create directory " + newFile);
-	        	        }
-	        	    } else {
-	        	        // fix for Windows-created archives
-	        	        File parent = newFile.getParentFile();
-	        	        if (!parent.isDirectory() && !parent.mkdirs()) {
-	        	            throw new IOException("Failed to create directory " + parent);
-	        	        }
+		byte[] buffer = new byte[1024];
+		ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip));
+		ZipEntry zipEntry = zis.getNextEntry();
+		while (zipEntry != null) {
+			File newFile = newFile(destDir, zipEntry);
+			if (zipEntry.isDirectory()) {
+				if (!newFile.isDirectory() && !newFile.mkdirs()) {
+					throw new IOException("Failed to create directory " + newFile);
+				}
+			} else {
+				// fix for Windows-created archives
+				File parent = newFile.getParentFile();
+				if (!parent.isDirectory() && !parent.mkdirs()) {
+					throw new IOException("Failed to create directory " + parent);
+				}
 
-	        	        // write file content
-	        	        FileOutputStream fos = new FileOutputStream(newFile);
-	        	        int len;
-	        	        while ((len = zis.read(buffer)) > 0) {
-	        	            fos.write(buffer, 0, len);
-	        	        }
-	        	        fos.close();
-	        	    }
-	        	    zipEntry = zis.getNextEntry();
-	        }
+				// write file content
+				FileOutputStream fos = new FileOutputStream(newFile);
+				int len;
+				while ((len = zis.read(buffer)) > 0) {
+					fos.write(buffer, 0, len);
+				}
+				fos.close();
+			}
+			zipEntry = zis.getNextEntry();
+		}
 
-	        zis.closeEntry();
-	        zis.close();
+		zis.closeEntry();
+		zis.close();
 	}
+
 	public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
-	    File destFile = new File(destinationDir, zipEntry.getName());
+		File destFile = new File(destinationDir, zipEntry.getName());
 
-	    String destDirPath = destinationDir.getCanonicalPath();
-	    String destFilePath = destFile.getCanonicalPath();
+		String destDirPath = destinationDir.getCanonicalPath();
+		String destFilePath = destFile.getCanonicalPath();
 
-	    if (!destFilePath.startsWith(destDirPath + File.separator)) {
-	        throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
-	    }
+		if (!destFilePath.startsWith(destDirPath + File.separator)) {
+			throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
+		}
 
-	    return destFile;
+		return destFile;
 	}
 }

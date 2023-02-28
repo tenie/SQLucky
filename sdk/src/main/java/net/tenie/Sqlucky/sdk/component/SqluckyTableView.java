@@ -194,7 +194,7 @@ public class SqluckyTableView {
 			String colname = cols.get(i).getColumnLabel().get();
 			Double colnameWidth = cols.get(i).getColumnWidth();
 			FilteredTableColumn<ResultSetRowPo, String> col = null;
-			// isInfo 展示执行信息（错误/成功的信息)
+			// isInfo 展示执行信息 
 			col = createColumnForShowInfo(colname, i, colnameWidth);
 			colList.add(col);
 		}
@@ -276,7 +276,7 @@ public class SqluckyTableView {
 	
 	// 提供数据生成表格
 	public static SheetTableData dataToSheet(List<String> fieldNameLs ,
-			List<Map<String, String>> vals) {
+			List<Map<String, String>> vals , List<String> hiddenCol) {
 		try {
 			FilteredTableView<ResultSetRowPo> table = SqluckyTableView.creatInfoTableView();
 			// 查询的 的语句可以被修改
@@ -302,7 +302,18 @@ public class SqluckyTableView {
 
 			// table 添加列和数据
 			// 表格添加列
-			var tableColumns = SqluckyTableView.createTableColForInfo(colss);
+			ObservableList<FilteredTableColumn<ResultSetRowPo, String>> tableColumns 
+				= SqluckyTableView.createTableColForInfo(colss);
+			// 设置隐藏列
+			if(hiddenCol != null && hiddenCol.size() >0) {
+				for(var column : tableColumns) {
+					String colName = column.getText();
+					if(hiddenCol.contains(colName)) {
+						column.setVisible(false);
+					}
+				}
+			}
+			
 			// 设置 列的 右键菜单
 			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);

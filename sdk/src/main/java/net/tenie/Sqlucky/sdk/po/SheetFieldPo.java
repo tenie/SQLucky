@@ -57,6 +57,9 @@ public class SheetFieldPo {
 	}
 
 	public StringProperty getColumnName() {
+		if(columnName == null) {
+			return columnLabel;
+		}
 		return columnName;
 	}
 
@@ -96,6 +99,9 @@ public class SheetFieldPo {
 	}
 
 	public StringProperty getColumnLabel() {
+		if( columnLabel == null) {
+			return columnName;
+		}
 		return columnLabel;
 	}
 
