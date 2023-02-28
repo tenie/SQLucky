@@ -108,7 +108,7 @@ public class MyPreloaderMp4 extends Preloader {
        primaryStage.setMaximized(false);
        primaryStage.setResizable(false);
        primaryStage.initStyle(StageStyle.TRANSPARENT);//设定窗口无边框
-       primaryStage.setAlwaysOnTop(true);
+//       primaryStage.setAlwaysOnTop(true);
        primaryStage.setScene(scene);
        stopTime();
        primaryStage.show();
