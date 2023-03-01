@@ -25,7 +25,7 @@ import org.apache.hc.core5.http.message.BasicNameValuePair;
 public class HttpDownloadFile {
 	
 	//"http://127.0.0.1:8088/sqlucky/confDownload"
-	public static void getInfo(String url, Map<String, String> strPamas) {
+	public static void getInfo(String url, Map<String, String> strPamas, String saveFile) {
 
        
 		//创建HttpClient对象
@@ -49,7 +49,7 @@ public class HttpDownloadFile {
             HttpEntity entity = response.getEntity(); 
             
             byte[] data =  EntityUtils.toByteArray(entity);
-            Files.write(Paths.get("D:\\file_bak.zip"), data);
+            Files.write(Paths.get(saveFile), data);
             
             //获取响应数据
 //            String content = EntityUtils.toString(entity);
@@ -96,19 +96,8 @@ public class HttpDownloadFile {
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        catch (ParseException e) {
-//            e.printStackTrace();
-//        }
     
 	}
 	
-	public static void main(String[] args) {
-//		demo0();
-		Map<String , String> hm = new HashMap<>();
-    	hm.put("userName", "sa");
-    	hm.put("password", "123");
-    	hm.put("configName", "h2db4.mv.dbs");
-    	
-		HttpDownloadFile.getInfo("http://127.0.0.1:8088/sqlucky/confInfo", hm);
-	}
+ 
 }
