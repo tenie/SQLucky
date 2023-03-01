@@ -121,7 +121,7 @@ public class WorkDataBackupController implements Initializable {
 		// 下载按钮
 		downloadBtn.setOnAction(e->{
 			if(idVal != null ) {
-				WorkDataBackupAction.downloadBackup(idVal.get());
+				WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
 			}
 			
 		});

@@ -208,11 +208,12 @@ public class WorkDataBackupAction {
 		return map;
 	}
 	
-	public static Map<String, String> downloadParam(String bakID ){
+	public static Map<String, String> downloadParam(String bakID, String bakName){
 		Map<String, String> map = new HashMap<>();
 		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL); 
 		map.put("PASSWORD",  ConfigVal.SQLUCKY_PASSWORD);
 		map.put("BACKUP_ID", bakID);
+		map.put("BACKUP_NAME", bakName);
 		
 		return map;
 	}
@@ -221,10 +222,11 @@ public class WorkDataBackupAction {
 	/**
 	 * 下载备份文件
 	 */
-	public static void downloadBackup(String id) {
-		Map<String , String> hm =  downloadParam(id);
-    	
-		HttpDownloadFile.getInfo(httpDownloadUrl, hm);
+	public static void downloadBackup(String id ,String bakName) {
+		Map<String , String> hm =  downloadParam(id, bakName);
+		String saveDir = localSaveDir();
+		File sf = new File(saveDir, bakName+".zip");
+		HttpDownloadFile.getInfo(httpDownloadUrl, hm, sf.getAbsolutePath());
 	}
 	
 	
