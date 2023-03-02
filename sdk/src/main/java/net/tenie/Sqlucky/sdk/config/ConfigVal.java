@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
  
 
 /*   @author tenie */
@@ -16,7 +18,9 @@ public class ConfigVal {
 	public static String SQLUCKY_EMAIL = "" ;
 	public static String SQLUCKY_PASSWORD = "";
 	public static boolean SQLUCKY_REMEMBER = false;
-	public static String SQLUCKY_URL = "http://127.0.0.1:8088";
+	public static boolean SQLUCKY_VIP = false;
+	public static String SQLUCKY_URL_DEV = "http://127.0.0.1:8088";
+	public static String SQLUCKY_URL = "https://www.tenie.net";
 	
 	
 	
@@ -79,4 +83,13 @@ public class ConfigVal {
 		MODULE_PATH = new File(pathVal);  
 	}
 		
+	public static String getSqluckyServer() {
+		String tmp = "";
+		if(SqluckyAppDB.isDev()) {
+			tmp = SQLUCKY_URL_DEV;
+		}else {
+			tmp = SQLUCKY_URL;
+		}
+		return tmp;
+	}
 }

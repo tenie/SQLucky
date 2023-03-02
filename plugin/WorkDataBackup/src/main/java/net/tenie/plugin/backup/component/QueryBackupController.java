@@ -37,7 +37,7 @@ import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
 public class QueryBackupController implements Initializable {
-	private static String httpUrl = ConfigVal.SQLUCKY_URL+"/sqlucky/queryAllBackup";
+	private static String httpUrl = ConfigVal.getSqluckyServer()+"/sqlucky/queryAllBackup";
 	@FXML private Button selectBtn;
 	@FXML private VBox	queryBox;
 	 

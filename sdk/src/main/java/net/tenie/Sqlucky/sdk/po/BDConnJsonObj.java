@@ -12,6 +12,9 @@ public class BDConnJsonObj{
 	private String dbName ; 
 	private String jdbcurlStr; 
 	private Boolean autoConnect;
+	private String  comment; // 可以为空,
+//	private Integer id;      // 数据库表CONNECTION_INFO 保存的id
+	
 	public String getDriver() {
 		return driver;
 	}
@@ -79,14 +82,25 @@ public class BDConnJsonObj{
 	public void setAutoConnect(Boolean autoConnect) {
 		this.autoConnect = autoConnect;
 	}
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+//	public Integer getId() {
+//		return id;
+//	}
+//	public void setId(Integer id) {
+//		this.id = id;
+//	}
 	@Override
 	public String toString() {
 		return "BDConnJsonObj [connName=" + connName + ", driver=" + driver + ", hostOrFile=" + hostOrFile + ", port="
 				+ port + ", user=" + user + ", passWord=" + passWord + ", dbVendor=" + dbVendor + ", defaultSchema="
 				+ defaultSchema + ", dbName=" + dbName + ", jdbcurlStr=" + jdbcurlStr + ", autoConnect=" + autoConnect
-				+ "]";
+				+ ", comment=" + comment +  "]";
 	}
- 
 	 
 	
 	

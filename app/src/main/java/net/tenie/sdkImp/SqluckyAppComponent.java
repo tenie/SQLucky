@@ -30,6 +30,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
@@ -41,6 +42,7 @@ import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
+import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.dao.DmlDdlDao;
 import net.tenie.fx.window.SignInWindow;
 import net.tenie.lib.db.h2.AppDao; 
@@ -315,6 +317,14 @@ public class SqluckyAppComponent implements AppComponent {
 	@Override
 	public void showSingInWindow() {
 		SignInWindow.show();
+	}
+	/**
+	 * 使用新数据重建数据库连接节点树
+	 */
+	@Override
+	public void recreateDBinfoTreeData(List<DBConnectorInfoPo> dbciPo) {
+		ConnectionDao.DBInfoTreeReCreate(dbciPo);
+		
 	}
 	
 

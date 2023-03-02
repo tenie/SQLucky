@@ -258,7 +258,7 @@ public class FileTools {
 		return null;
 	}
 
-	public static void main(String[] args) {
+	public static void demo(String[] args) {
 
 		File test = new File("D:\\data\\data.xls");
 		isBinaryFile(test);

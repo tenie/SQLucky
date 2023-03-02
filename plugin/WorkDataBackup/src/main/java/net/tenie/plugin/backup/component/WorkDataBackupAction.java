@@ -26,8 +26,8 @@ import net.tenie.Sqlucky.sdk.utility.net.HttpDownloadFile;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
 public class WorkDataBackupAction {
-	private static String httpUploadUrl = ConfigVal.SQLUCKY_URL+"/sqlucky/backupFileUpload";
-	private static String httpDownloadUrl = ConfigVal.SQLUCKY_URL+"/sqlucky/backupDownload";
+	private static String httpUploadUrl = ConfigVal.getSqluckyServer()+"/sqlucky/backupFileUpload";
+	private static String httpDownloadUrl = ConfigVal.getSqluckyServer()+"/sqlucky/backupDownload";
 	
 	public static String localSaveDir() {
 		String tmpDir = FileUtils.getUserDirectoryPath();
@@ -67,10 +67,10 @@ public class WorkDataBackupAction {
 			String saveBakDir = sf.getAbsolutePath();
 
 			if (po.getSaveDB()) {
-				backupDBInfo(saveBakDir, pKey, "1", false);
+				backupDBInfo(saveBakDir, pKey, "1", ConfigVal.SQLUCKY_VIP);
 			}
 			if (po.getSaveScript()) {
-				backupScript(saveBakDir, pKey, "2", false);
+				backupScript(saveBakDir, pKey, "2", ConfigVal.SQLUCKY_VIP);
 			}
 
 			if (po.getSaveModel()) {
@@ -118,7 +118,7 @@ public class WorkDataBackupAction {
 			 String name = nameList.get(i);
 			 SqluckyConnector sc = connMap.get(name);
 			 DBConnectorInfoPo infopo = sc.getDBConnectorInfoPo();
-			 String json =  infopo.toJson();
+			 String json =  infopo.toJsonStr();
 			 String encsStr = DesUtil.encrypt(json, pKey);
 			 jsonLs.add(encsStr);
 			// 非vip 只能同步2个
@@ -150,7 +150,7 @@ public class WorkDataBackupAction {
 				stab.syncScriptPo(conn);
 				var tmp = item.getValue().getDocumentPo();
 				String jsonStr = tmp.toJsone();
-				String encsStr = DesUtil.encrypt(jsonStr);
+				String encsStr = DesUtil.encrypt(jsonStr,  pKey);
 				vals.add(encsStr);
 
 				// 非vip 只能同步2个
@@ -222,12 +222,66 @@ public class WorkDataBackupAction {
 	/**
 	 * 下载备份文件
 	 */
-	public static void downloadBackup(String id ,String bakName) {
+	public static File downloadBackup(String id ,String bakName) {
 		Map<String , String> hm =  downloadParam(id, bakName);
 		String saveDir = localSaveDir();
-		File sf = new File(saveDir, bakName+".zip");
+		File sf = new File(saveDir, bakName);
 		HttpDownloadFile.getInfo(httpDownloadUrl, hm, sf.getAbsolutePath());
+		return sf;
 	}
 	
+	/**
+	 * 解压缩 备份文件
+	 * @param bakZipFile zip文件
+	 * @param bakName    备份文件名称
+	 * @return 
+	 */
+	public static Map<String, File> unZipBackupFile(File bakZipFile, String bakName){
+		Map<String, File> allBak = new HashMap<>();
+		String saveDir = localSaveDir(); 
+		File uzipDir = new File(saveDir, "unzipdir");
+		try {
+			ZipUtil.UnzipFile(bakZipFile.getAbsolutePath(), uzipDir.getAbsolutePath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		File bakdir = new File(uzipDir, bakName);
+		if(bakdir.exists()) {
+			File[] files = bakdir.listFiles();
+			if(files != null && files.length > 0) {
+				for(int i = 0 ; i < files.length; i++) {
+					var tmp = files[i];
+					allBak.put(tmp.getName(), tmp);
+				}
+			}
+		}
+		return allBak;
+	}
 	
+	/**
+	 * 解析数据
+	 * @param bakFile
+	 */
+	public static List<DBConnectorInfoPo>  parseBackupFile(File bakFile ,String pKey) {
+//		bakFile
+		String jsonStr = FileTools.read(bakFile, "UTF-8");
+		List<String> ls = JsonTools.jsonToList(jsonStr, String.class);
+		List<DBConnectorInfoPo> pols = new ArrayList<>();
+		for(String item : ls) {
+			try {
+				String jsonval = DesUtil.decrypt(item,  pKey);
+				DBConnectorInfoPo po = DBConnectorInfoPo.toPo(jsonval);
+				pols.add(po);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return pols;
+//		DBConnectorInfoPo
+	}
+	
+	public static void main(String[] args) throws IOException {
+		File zipFIle = new File("C:\\Users\\tenie\\.sqlucky" , "yeeerwewe" );
+		ZipUtil.UnzipFile(zipFIle.getAbsolutePath(), "C:\\Users\\tenie\\.sqlucky\\unzipdir");
+	}
 }

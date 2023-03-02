@@ -12,6 +12,7 @@ import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
@@ -69,5 +70,9 @@ public interface AppComponent {
 	
 	// 登入窗口
 	public void showSingInWindow() ;
+	/**
+	 * 使用新数据重建数据库连接节点树
+	 */
+	public void recreateDBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
 	
 }

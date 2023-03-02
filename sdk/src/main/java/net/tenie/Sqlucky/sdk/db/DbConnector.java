@@ -135,7 +135,6 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 
 	public void setId(Integer id) {
-//		this.id = id;
 		this.connPo.setId(id);
 	}
 

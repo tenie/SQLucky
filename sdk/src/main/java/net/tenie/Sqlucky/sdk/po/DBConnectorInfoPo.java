@@ -35,15 +35,18 @@ public class DBConnectorInfoPo {
 	private Map<String, DbSchemaPo> schemas;
 	
 	public DBConnectorInfoPo(BDConnJsonObj obj) {
-		init( obj.getConnName(), obj.getDriver(), obj.getHostOrFile(), 
+		init(
+				obj.getConnName(), obj.getDriver(), obj.getHostOrFile(), 
 				obj.getPort(),  obj.getUser(), 
 				obj.getPassWord(), obj.getDbVendor(), 
 				obj.getDefaultSchema(), 	obj.getDbName() , 
 				obj.getJdbcurlStr(),  obj.getAutoConnect()
 				);
+		this.comment = obj.getComment();
 	}
 	
-	public DBConnectorInfoPo(String connName,
+	public DBConnectorInfoPo(
+			String connName,
 			String driver,
 			String HostOrFile, 
 			String port, 
@@ -55,12 +58,14 @@ public class DBConnectorInfoPo {
 			String jdbcurlStr, 
 			boolean autoConn
 	) { 
-		init( connName, driver,  HostOrFile,   port, 
+		init(
+				connName, driver,  HostOrFile,   port, 
 				 user,   passWord,  dbVendor,   defaultSchema,
 				 dbName ,   jdbcurlStr,   autoConn);
 	}
 	
-	public void init(String connName,
+	public void init(
+			String connName,
 			String driver,
 			String host, 
 			String port, 
@@ -89,6 +94,7 @@ public class DBConnectorInfoPo {
 	
 	public BDConnJsonObj toJsonObj() {
 		BDConnJsonObj obj = new BDConnJsonObj();
+		obj.setComment(this.comment);
 		obj.setConnName(this.connName );
 		obj.setHostOrFile(this.hostOrFile  );
 		obj.setPort(this.port  );
@@ -313,18 +319,21 @@ public class DBConnectorInfoPo {
 
 
 
-
-	public String toJson() {
+	//将DBConnectorInfoPo 转为 BDConnJsonObj 在转为 json
+	public String toJsonStr() {
 		BDConnJsonObj obj =  toJsonObj();
 		JSONObject jo =  (JSONObject) JSONObject.toJSON(obj);
 		String val = jo.toJSONString();
-//		System.out.println(val);
 		return val;
 	}
 	
-	public static DBConnectorInfoPo toPo(String json) {
-		DBConnectorInfoPo val =  JSONObject.parseObject(json, DBConnectorInfoPo.class);
-		return val;
+	// BDConnJsonObj的字符串 转化为 DBConnectorInfoPo
+	public static DBConnectorInfoPo toPo(String json) { 
+		BDConnJsonObj val = JSONObject.parseObject(json, BDConnJsonObj.class);
+		DBConnectorInfoPo valpo = new DBConnectorInfoPo(val);
+		return valpo;
+//		DBConnectorInfoPo val =  JSONObject.parseObject(json, DBConnectorInfoPo.class);
+//		return val;
 	}
 	
 //	public static void main(String[] args) {
