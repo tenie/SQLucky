@@ -1,7 +1,9 @@
 package net.tenie.plugin.backup.component;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import com.jfoenix.controls.JFXCheckBox;
@@ -21,6 +23,7 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -122,6 +125,20 @@ public class WorkDataBackupController implements Initializable {
 		downloadBtn.setOnAction(e->{
 			if(idVal != null ) {
 				WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
+				AppComponent appComponent = ComponentGetter.appComponent; 
+			}
+			
+		});
+		
+		// 下载覆盖
+		downloadOverlapBtn.setOnAction(e->{
+			File zip = WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
+			Map<String, File> allFile = WorkDataBackupAction.unZipBackupFile(zip, nameVal.get());
+			String pkey = "";
+			AppComponent appComponent = ComponentGetter.appComponent; 
+			if(allFile.get("1") != null) {
+				 List<DBConnectorInfoPo> pols =  WorkDataBackupAction.parseBackupFile(allFile.get("1") , pkey);
+				 appComponent.recreateDBinfoTreeData(pols);
 			}
 			
 		});

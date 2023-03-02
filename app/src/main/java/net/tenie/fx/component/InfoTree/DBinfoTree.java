@@ -26,6 +26,7 @@ import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
@@ -51,6 +52,8 @@ import net.tenie.fx.dao.ConnectionDao;
 public class DBinfoTree {
 
 	public static TreeView<TreeNodePo> DBinfoTreeView; 
+	public static TreeItem<TreeNodePo> rootNode;
+	
 //	public static Region icon;
 	private  DBInfoTreeContextMenu  menu;
 	// 缓存 激活的ConnItemContainer
@@ -64,12 +67,14 @@ public class DBinfoTree {
 	// db节点view
 	public TreeView<TreeNodePo> createConnsTreeView() {
 		Region icon =  IconGenerator.svgImageDefActive("windows-globe");
-		var rootNode = new TreeItem<>(new TreeNodePo("Connections",  icon)); 
+		rootNode = new TreeItem<>(new TreeNodePo("Connections",  icon)); 
 		DBinfoTreeView = new TreeView<>(rootNode);
 		DBinfoTreeView.getStyleClass().add("my-tag");
 		DBinfoTreeView.setShowRoot(false);
 		
-		recoverNode(rootNode);// 恢复数据中保存的连接数据
+		// 读取数据库数据
+		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
+		recoverNode(datas);// 恢复数据中保存的连接数据
 		// 展示连接
 		if (rootNode.getChildren().size() > 0)
 			DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
@@ -93,10 +98,9 @@ public class DBinfoTree {
 		return DBinfoTreeView;
 	}
 	
-	// 恢复数据中保存的连接数据
-	public static void recoverNode(TreeItem<TreeNodePo> rootNode) { 
+	// 恢复数据中保存的连接数据, 界面初始化的时候
+	public static void recoverNode(	List<SqluckyConnector> datas) { 
 		List<MyTreeItem<TreeNodePo>> ls = new ArrayList<>();
-		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
 		if (datas != null && datas.size() > 0) {
 			for (SqluckyConnector po : datas) {
 				TreeNodePo tnpo = new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink") );
@@ -129,6 +133,45 @@ public class DBinfoTree {
 			}
 		};
 		CommonUtility.addInitTask(cr);
+	}
+	
+	
+	// 清空root, 然后插入新节点
+	public static void cleanRootRecoverNodeFromList(List<SqluckyConnector> datas) {
+//		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj(dbciPo);
+		rootNode.getChildren().clear();
+		List<MyTreeItem<TreeNodePo>> ls = new ArrayList<>();
+		if (datas != null && datas.size() > 0) {
+			for (SqluckyConnector po : datas) {
+				TreeNodePo tnpo = new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink"));
+				tnpo.setType(TreeItemType.CONNECT_INFO);
+				var item = new MyTreeItem<TreeNodePo>(tnpo, po);
+				ls.add(item);
+			}
+		}
+
+		if (ls.size() > 0) {
+			// 连接方法缓存
+			Platform.runLater(() -> {
+				rootNode.getChildren().addAll(ls);
+				DBConns.addAll(datas);
+			});
+			Platform.runLater(() -> {
+				// 打开自动连接的连接
+				for (MyTreeItem treeItem : ls) {
+					Platform.runLater(() -> {
+						SqluckyConnector scp = treeItem.getSqluckyConn();
+						if (scp != null) {
+							boolean autoConn = scp.getAutoConnect();
+							if (autoConn) {
+								CommonAction.openConn(treeItem);
+							}
+						}
+					});
+				}
+			});
+		}
+
 	}
 	
 

@@ -102,9 +102,6 @@ public class SignInWindow {
 		String passwordStr = "Password";
 		String remember =  "Remember Account";
 		
-//		String emailStr = "xxx@xxx.xxx";
-//		Label lbEmail = new Label(email);   
-		
 		Label lbemail= new Label(email);  
 		Label lbPassword = new Label(passwordStr);   
 		

@@ -10,6 +10,7 @@ import org.apache.hc.client5.http.fluent.Request;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.lib.db.h2.AppDao;
 
@@ -75,15 +76,26 @@ public class UserAccountAction {
 		
 		 SqluckyAppDB.closeConn(conn);
 	}
+	/**
+	 * 登入检查, 账号没问题返回true
+	 * @param email
+	 * @param password
+	 * @return
+	 */
 	public static boolean singInCheck(String email, String password) {
 		boolean success = false;
-		
 		try {
-			String content = Request.post("http://127.0.0.1:8088/sqlucky/login")
+			String content = Request.post(ConfigVal.getSqluckyServer()+"/sqlucky/login")
 			        .bodyForm(Form.form().add("email", email).add("password", password).build())
 			        .execute().returnContent().asString();
-			if(content != null && "ok".equals(content)) {
+			SqluckyUser user = JsonTools.strToObj(content, SqluckyUser.class);
+			if(user.getIsVip() != null ) {
+				if(user.getIsVip() == 1) {
+					ConfigVal.SQLUCKY_VIP = true;
+				}
 				success = true;
+			}else {
+				ConfigVal.SQLUCKY_VIP = false;
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

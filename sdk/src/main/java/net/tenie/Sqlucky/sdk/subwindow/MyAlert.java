@@ -13,14 +13,18 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.myEvent;
 
 public class MyAlert {
 	public static void infoAlert(String title, String containTxt) {
@@ -83,6 +87,8 @@ public class MyAlert {
 	
 		JFXButton btn = new JFXButton("Cancel");
 		btn.getStyleClass().add("myAlertBtn");
+		
+		
 		btn.setOnAction(value -> { 
 			if(cancelCaller !=null) {
 				cancelCaller.accept("");
@@ -92,6 +98,12 @@ public class MyAlert {
 
 		JFXButton okbtn = new JFXButton("Yes");
 		okbtn.setOnAction(value -> {
+			if(okCaller !=null) {
+				okCaller.accept("");
+			} 
+			stage.close(); 
+		});
+		okbtn.setOnMouseClicked(value -> { 
 			if(okCaller !=null) {
 				okCaller.accept("");
 			} 
@@ -116,6 +128,18 @@ public class MyAlert {
 
 		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.INFO, nds, btns);
 		Scene scene = new Scene((Parent) vb);
+		KeyCodeCombination kcY = new KeyCodeCombination(KeyCode.Y);
+		scene.getAccelerators().put(kcY, () -> {
+			for(var nd : btns) {
+				if(nd instanceof Button ) {
+					Button tmp = (Button) nd;
+					if(tmp.getText().equals("Yes")) {
+						myEvent.btnClick(tmp);
+//						tmp.getOnAction()
+					}
+				}
+			}
+		});
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);

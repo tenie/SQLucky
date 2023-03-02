@@ -412,7 +412,7 @@ public class ConnectionEditor {
 		};
 		// TODO
 		if (tmpPo != null) {
-			MyAlert.myConfirmation("OK to delete " + tmpPo.getConnName() + " ?", ok);
+			MyAlert.myConfirmation("Delete " + tmpPo.getConnName() + " ?", ok);
 		}
 
 	}

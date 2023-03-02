@@ -19,7 +19,10 @@ public class myEvent {
         return me;
     }
     
-    
+    /**
+     * 触发button的点击事件
+     * @param btn
+     */
     public static void btnClick(Button btn) {
     	MouseEvent moEv = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
 		Event.fireEvent(btn, moEv);

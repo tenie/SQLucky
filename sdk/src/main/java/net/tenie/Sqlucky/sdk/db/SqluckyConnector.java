@@ -31,8 +31,10 @@ public interface SqluckyConnector {
 //	public Boolean isConnIng();
 	
 	public void closeConn();
+	// 当更新或保存新的连接数据的上海需要id
 	public Integer getId();
 	public void setId(Integer id);
+	
 	// 获取sehema 列表
 	public Set<String> settingSchema();
 	
@@ -41,6 +43,7 @@ public interface SqluckyConnector {
 	public void setInitConnectionNodeStatus(Boolean tf);
 	public boolean isAlive();
 	
+	//目前没用
 	public void setComment(String comment);
 	public String getComment();
 	

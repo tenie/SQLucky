@@ -24,6 +24,19 @@ public class JsonTools {
 		JSONObject jsonObject = (JSONObject) JSONObject.toJSON(obj);
 		return jsonObject.toJSONString();
 	}
+	/**
+	 * json 字符串传为对象
+	 * @param <T>
+	 * @param jsonStr
+	 * @param clazz
+	 * @return
+	 */
+	public static <T> T strToObj(String jsonStr, Class<T> clazz) {
+		T obj = JSONObject.parseObject(jsonStr, clazz);
+		return obj;
+//		JSONObject jsonObject = (JSONObject) JSONObject.toJSON(obj);
+//		return jsonObject.toJSONString();
+	}
 	
 	public static void getTable(String filename) {
 		String txt =  FileTools.read(filename);

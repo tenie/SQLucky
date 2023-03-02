@@ -236,7 +236,7 @@ public class SqluckyEditor {
     // 修改查找替换的样式如果有的话
 	private static void changeFindReplacePaneBtnColor(Tab tb) {
 		VBox vbx = (VBox) tb.getContent();
-		if(vbx.getChildren().size() > 1) {
+		if(vbx != null && vbx.getChildren().size() > 1) {
 			String color = CommonUtility.themeColor();
 			for(int i = 0 ; i< vbx.getChildren().size() -1 ; i++) {
 				Node nd  = vbx.getChildren().get(i);
