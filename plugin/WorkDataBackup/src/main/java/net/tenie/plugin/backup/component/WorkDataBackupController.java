@@ -64,8 +64,8 @@ public class WorkDataBackupController implements Initializable {
 	// 是否登入检查
 	public boolean isLogin() {
 		// 登入校验
-		String sqlEmail = ConfigVal.SQLUCKY_EMAIL;
-		String sqlPW = ConfigVal.SQLUCKY_PASSWORD;
+		String sqlEmail = ConfigVal.SQLUCKY_EMAIL.get();
+		String sqlPW = ConfigVal.SQLUCKY_PASSWORD.get();
 		if(StrUtils.isNullOrEmpty(sqlEmail) || StrUtils.isNullOrEmpty(sqlPW)) {
 			AppComponent app =  ComponentGetter.appComponent;
 			app.showSingInWindow();
