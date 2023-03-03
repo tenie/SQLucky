@@ -8,7 +8,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 
 /**
- * 自定义事件
+ * 自定义事件, 用于触发如鼠标点击的事件函数
+ * 如果要触发 setOnAction() 函数设置的回调函数 可以直接调用 button的.fire()函数
  * @author tenie
  *
  */
@@ -19,8 +20,11 @@ public class myEvent {
         return me;
     }
     
+    
+    
     /**
-     * 触发button的点击事件
+     * 触发button的点击事件 (button的setOnMouseClicked()函数设置的回调函数)
+     * 如果要触发 setOnAction() 函数设置的回调函数 可以直接调用 button的.fire()函数
      * @param btn
      */
     public static void btnClick(Button btn) {

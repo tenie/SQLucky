@@ -116,6 +116,14 @@
 	-fx-background-color: #1E90FF;
 }
 
+.myAlertOkBtn {
+	-fx-background-color: #80FF80;
+}
+/* 按钮中文字的颜色*/
+.myAlertOkBtn .text{
+	-fx-fill: #17181A;
+}
+
 
 
 MenuButton{

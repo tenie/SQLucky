@@ -56,7 +56,24 @@ public class WorkDataBackupController implements Initializable {
 		 uploadPage();
 		 downloadPage();
 	}
-
+/**
+ * AppComponent app =  ComponentGetter.appComponent;
+			app.showSingInWindow();
+ * @return
+ */
+	// 是否登入检查
+	public boolean isLogin() {
+		// 登入校验
+		String sqlEmail = ConfigVal.SQLUCKY_EMAIL;
+		String sqlPW = ConfigVal.SQLUCKY_PASSWORD;
+		if(StrUtils.isNullOrEmpty(sqlEmail) || StrUtils.isNullOrEmpty(sqlPW)) {
+			AppComponent app =  ComponentGetter.appComponent;
+			app.showSingInWindow();
+			return false;
+		}
+		return true;
+	}
+	
 	public void uploadPage() {
 		// 按钮亮起
 		bakBtn.setDisable(true);
@@ -76,13 +93,16 @@ public class WorkDataBackupController implements Initializable {
 		// 备份按钮
 		bakBtn.setOnAction(e -> {
 			// 登入校验
-			String sqlEmail = ConfigVal.SQLUCKY_EMAIL;
-			String sqlPW = ConfigVal.SQLUCKY_PASSWORD;
-			if(StrUtils.isNullOrEmpty(sqlEmail) || StrUtils.isNullOrEmpty(sqlPW)) {
-				AppComponent app =  ComponentGetter.appComponent;
-				app.showSingInWindow();
+			if(isLogin() == false) {
 				return ;
 			}
+//			String sqlEmail = ConfigVal.SQLUCKY_EMAIL;
+//			String sqlPW = ConfigVal.SQLUCKY_PASSWORD;
+//			if(StrUtils.isNullOrEmpty(sqlEmail) || StrUtils.isNullOrEmpty(sqlPW)) {
+//				AppComponent app =  ComponentGetter.appComponent;
+//				app.showSingInWindow();
+//				return ;
+//			}
 			// 
 			bakBtn.disableProperty().unbind();
 			bakBtn.setDisable(true);
@@ -100,6 +120,18 @@ public class WorkDataBackupController implements Initializable {
 	}
 	// 下载页面初始化
 	public void downloadPage() {
+		downloadOverlapBtn.setDisable(true);
+		
+		selBakName.textProperty().addListener((ob, ol, nw)->{
+			if(nw != null ) {
+				if(nw.length() > 0) {
+					downloadOverlapBtn.setDisable(false);
+				}else {
+					downloadOverlapBtn.setDisable(true);
+				}
+			}
+		});
+		
 		recoverPK.disableProperty().bind(useRPK.selectedProperty().not());
 		useRPK.selectedProperty().addListener((ob, old, nw) -> {
 			if (!nw) {
@@ -111,6 +143,10 @@ public class WorkDataBackupController implements Initializable {
 		
 		// 获取服务器上的备份名称
 		syncBtn.setOnAction(e->{
+			// 登入校验
+			if(isLogin() == false) {
+				return ;
+			}
 			Map<String, SimpleStringProperty>  rsVal = QueryBackupController.showFxml();
 			if(rsVal != null) {
 				idVal = rsVal.get("id");
@@ -123,6 +159,10 @@ public class WorkDataBackupController implements Initializable {
 		
 		// 下载按钮
 		downloadBtn.setOnAction(e->{
+			// 登入校验
+			if(isLogin() == false) {
+				return ;
+			}
 			if(idVal != null ) {
 				WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
 				AppComponent appComponent = ComponentGetter.appComponent; 
@@ -132,15 +172,31 @@ public class WorkDataBackupController implements Initializable {
 		
 		// 下载覆盖
 		downloadOverlapBtn.setOnAction(e->{
-			File zip = WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
-			Map<String, File> allFile = WorkDataBackupAction.unZipBackupFile(zip, nameVal.get());
-			String pkey = "";
-			AppComponent appComponent = ComponentGetter.appComponent; 
-			if(allFile.get("1") != null) {
-				 List<DBConnectorInfoPo> pols =  WorkDataBackupAction.parseBackupFile(allFile.get("1") , pkey);
-				 appComponent.recreateDBinfoTreeData(pols);
+			try {
+				// 登入校验
+				if (isLogin() == false) {
+					return;
+				}
+				downloadOverlapBtn.setDisable(true);
+				File zip = WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
+				Map<String, File> allFile = WorkDataBackupAction.unZipBackupFile(zip, nameVal.get());
+				String pkey = "";
+				AppComponent appComponent = ComponentGetter.appComponent;
+				// dbinfo 信息覆盖
+				if (allFile.get("1") != null) {
+					List<DBConnectorInfoPo> pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+					appComponent.recreateDBinfoTreeData(pols);
+				}
+				
+				// 脚本 覆盖
+				if (allFile.get("2") != null) {
+					List<DBConnectorInfoPo> pols = WorkDataBackupAction.parseBackupFile(allFile.get("2"), pkey);
+					appComponent.recreateDBinfoTreeData(pols);
+				}
+				
+			} finally {
+				downloadOverlapBtn.setDisable(false);
 			}
-			
 		});
 	}
 	 

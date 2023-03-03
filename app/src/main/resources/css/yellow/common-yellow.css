@@ -180,6 +180,20 @@ GridPane {
  -fx-border-color: #4C708C;
 }
 
+.myAlertOkBtn {
+	-fx-background-color: #80FF80;
+}
+/* 按钮中文字的颜色*/
+.myAlertOkBtn .text{
+	-fx-fill: #17181A;
+}
+/* 鼠标悬停的时候按钮文字变白*/
+.myAlertOkBtn:hover .text{
+	-fx-fill: white;
+}
+
+
+
 /*箭头颜色(菜单按钮的进入子菜单有一个箭头图标)*/
 .arrow{
 	-fx-background-color: #ffffff;

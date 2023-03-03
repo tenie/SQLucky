@@ -41,9 +41,10 @@ public class UserAccountAction {
 	 */
 	public static void saveUser(String email, String password) {
 		Connection conn = SqluckyAppDB.getConn();
-		AppDao.saveConfig(conn, "SQLUCKY_REMEMBER", "1");
+		AppDao.saveConfig(conn, "SQLUCKY_REMEMBER", ConfigVal.SQLUCKY_VIP ?  "1" : "0");
 		AppDao.saveConfig(conn, "SQLUCKY_EMAIL", email);
-		AppDao.saveConfig(conn, "SQLUCKY_PASSWORD", password);
+		AppDao.saveConfig(conn, "SQLUCKY_PASSWORD", password); 
+		AppDao.saveConfig(conn, "SQLUCKY_VIP", ConfigVal.SQLUCKY_VIP ?  "1" : "0");
 		SqluckyAppDB.closeConn(conn);
 //		try {
 //			String delSql = "DELETE FROM SQLUCKY_USER";
@@ -62,6 +63,7 @@ public class UserAccountAction {
 		 AppDao.deleteConfigKey(conn, "SQLUCKY_REMEMBER");
 		 AppDao.deleteConfigKey(conn, "SQLUCKY_EMAIL");
 		 AppDao.deleteConfigKey(conn, "SQLUCKY_PASSWORD");
+		 AppDao.deleteConfigKey(conn, "SQLUCKY_VIP");
 		 SqluckyAppDB.closeConn(conn);
 	}
 	
@@ -105,7 +107,7 @@ public class UserAccountAction {
 		return success;
 	}
 	
-	
+	// 程序启动的时候恢复保存的账号信息
 	public static void appLanuchInitAccount() {
 		// 账号恢复
 		Connection conn = SqluckyAppDB.getConn();
@@ -113,9 +115,12 @@ public class UserAccountAction {
 		if (StrUtils.isNotNullOrEmpty(remember) && "1".equals(remember)) {
 			String sky_email = AppDao.readConfig(conn, "SQLUCKY_EMAIL");
 			String sky_pw = AppDao.readConfig(conn, "SQLUCKY_PASSWORD");
+			String sky_vip = AppDao.readConfig(conn, "SQLUCKY_VIP");
+			
 			ConfigVal.SQLUCKY_EMAIL = sky_email;
 			ConfigVal.SQLUCKY_PASSWORD = sky_pw;
 			ConfigVal.SQLUCKY_REMEMBER = true;
+			ConfigVal.SQLUCKY_VIP =   "1".equals(sky_vip) ?  true: false;
 		}
 
 		SqluckyAppDB.closeConn(conn);

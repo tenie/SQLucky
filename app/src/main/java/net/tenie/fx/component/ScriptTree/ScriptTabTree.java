@@ -269,7 +269,7 @@ public class ScriptTabTree {
 			final Stage stage = new Stage();
 
 			// 1 保存
-			JFXButton okbtn = new JFXButton("Yes");
+			JFXButton okbtn = new JFXButton("Yes(Y)");
 			okbtn.getStyleClass().add("myAlertBtn");
 			okbtn.setOnAction(value -> {
 				CommonAction.saveSqlAction(tb);
@@ -278,13 +278,13 @@ public class ScriptTabTree {
 			});
 
 			// 2 不保存
-			JFXButton Nobtn = new JFXButton("No");
+			JFXButton Nobtn = new JFXButton("No(N)");
 			Nobtn.setOnAction(value -> {
 				removeNode(myTabItemList, ctt, tb);
 				stage.close();
 			});
 			// 取消
-			JFXButton cancelbtn = new JFXButton("Cancel"); 
+			JFXButton cancelbtn = new JFXButton("Cancel(C)"); 
 			cancelbtn.setOnAction(value -> { 
 				stage.close();
 			});

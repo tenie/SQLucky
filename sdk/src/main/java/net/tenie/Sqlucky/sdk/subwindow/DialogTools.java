@@ -51,7 +51,7 @@ public class DialogTools {
 			for(Node bn : btns) {
 				foot.getChildren().add(bn);
 				AnchorPane.setRightAnchor(bn, i);
-				i +=60;
+				i +=80;
 			}
 			
 		}else {

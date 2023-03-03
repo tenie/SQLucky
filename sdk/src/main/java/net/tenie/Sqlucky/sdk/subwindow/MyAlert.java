@@ -85,7 +85,7 @@ public class MyAlert {
 	public static void myConfirmation(String promptInfo,  Consumer< String >  okCaller, Consumer< String >  cancelCaller ) {
 		final Stage stage = new Stage();
 	
-		JFXButton btn = new JFXButton("Cancel");
+		JFXButton btn = new JFXButton("Cancel(N)");
 		btn.getStyleClass().add("myAlertBtn");
 		
 		
@@ -95,15 +95,10 @@ public class MyAlert {
 			}
 			stage.close();
 		});
-
-		JFXButton okbtn = new JFXButton("Yes");
+		
+		JFXButton okbtn = new JFXButton("Yes(Y)");
+		okbtn.getStyleClass().add("myAlertOkBtn");
 		okbtn.setOnAction(value -> {
-			if(okCaller !=null) {
-				okCaller.accept("");
-			} 
-			stage.close(); 
-		});
-		okbtn.setOnMouseClicked(value -> { 
 			if(okCaller !=null) {
 				okCaller.accept("");
 			} 
@@ -128,22 +123,38 @@ public class MyAlert {
 
 		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.INFO, nds, btns);
 		Scene scene = new Scene((Parent) vb);
-		KeyCodeCombination kcY = new KeyCodeCombination(KeyCode.Y);
-		scene.getAccelerators().put(kcY, () -> {
-			for(var nd : btns) {
-				if(nd instanceof Button ) {
-					Button tmp = (Button) nd;
-					if(tmp.getText().equals("Yes")) {
-						myEvent.btnClick(tmp);
-//						tmp.getOnAction()
-					}
-				}
-			}
-		});
+		setKeyPress(scene, btns);
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 		DialogTools.setSceneAndShow(scene, stage);  
+	}
+	// 设置键盘按钮按下触发button的action事件函数
+	public static void setKeyPress(Scene scene, List<Node> btns) {
+		KeyCodeCombination kcY = new KeyCodeCombination(KeyCode.Y);
+		KeyCodeCombination kcN = new KeyCodeCombination(KeyCode.N);
+		KeyCodeCombination kcC = new KeyCodeCombination(KeyCode.C);
+		for(var nd : btns) {
+			if(nd instanceof Button ) {
+				Button tmp = (Button) nd;
+				if(tmp.getText().contains("(Y)")) {
+					scene.getAccelerators().put(kcY, () -> {
+						tmp.fire();
+					});
+				}
+				if(tmp.getText().contains("(N)")) {
+					scene.getAccelerators().put(kcN, () -> {
+						tmp.fire();
+					});
+				}
+				if(tmp.getText().contains("(C)")) {
+					scene.getAccelerators().put(kcC, () -> {
+						tmp.fire();
+					});
+				}
+			}
+		}
+		
 	}
 	
 	
