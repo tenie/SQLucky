@@ -73,8 +73,8 @@ public class QueryBackupController implements Initializable {
 	
 	private  FilteredTableView<ResultSetRowPo>   FatchAllBackupName() {
 		Map<String, String> pamas = new HashMap<>();
-		pamas.put("EMAIL", ConfigVal.SQLUCKY_EMAIL);
-		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD);
+		pamas.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
+		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
 		
 		String val = HttpUtil.post1(httpUrl, pamas);
 		List<SqluckyBackup> ls = JsonTools.jsonToList(val, SqluckyBackup.class);

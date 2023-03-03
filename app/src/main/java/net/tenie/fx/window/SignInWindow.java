@@ -144,13 +144,13 @@ public class SignInWindow {
 	    	
 	    	if(seccuss) {
 	    		MyAlert.infoAlert("成功", "成功"); 
-	    		ConfigVal.SQLUCKY_EMAIL = emailVal;
-	    		ConfigVal.SQLUCKY_PASSWORD = passwordVal;
-	    		ConfigVal.SQLUCKY_REMEMBER = tf;
+	    		ConfigVal.SQLUCKY_EMAIL.set(emailVal);
+	    		ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
+	    		ConfigVal.SQLUCKY_REMEMBER.set(tf);
 	    	}else {
 	    		MyAlert.errorAlert( "失败");
-	    		ConfigVal.SQLUCKY_EMAIL = "";
-	    		ConfigVal.SQLUCKY_PASSWORD = "";
+	    		ConfigVal.SQLUCKY_EMAIL.set("");
+	    		ConfigVal.SQLUCKY_PASSWORD.set("");
 	    		UserAccountAction.delUser();
 	    		
 	    	}
@@ -184,9 +184,9 @@ public class SignInWindow {
 	    };
 		Button signOutBtn = createSigOutBtn(singOutAction);
 		// 如果已经登入过, 获取登入信息
-		String siEmail = ConfigVal.SQLUCKY_EMAIL;
-		String siPw = ConfigVal.SQLUCKY_PASSWORD;
-		boolean sky_remb = ConfigVal.SQLUCKY_REMEMBER;
+		String siEmail = ConfigVal.SQLUCKY_EMAIL.get();
+		String siPw = ConfigVal.SQLUCKY_PASSWORD.get();
+		boolean sky_remb = ConfigVal.SQLUCKY_REMEMBER.get();
 		
 		if( !"".equals(siEmail) && !"".equals(siPw)  ) {
 			tfemail.setText(siEmail);
@@ -238,11 +238,13 @@ public class SignInWindow {
 	public static Button createSigOutBtn(Function<String, Boolean> sup ) {
 		String signOut = "Sign Out ";
 		Button signOutBtn = new Button(signOut); 
+//		SQLUCKY_EMAIL
+		signOutBtn.disableProperty().bind(ConfigVal.SQLUCKY_EMAIL.isEmpty());
 		signOutBtn.setOnAction(e->{
-			ConfigVal.SQLUCKY_EMAIL = "";
-			ConfigVal.SQLUCKY_PASSWORD = "";
-			ConfigVal.SQLUCKY_USERNAME = "";
-			ConfigVal.SQLUCKY_REMEMBER = false;
+			ConfigVal.SQLUCKY_EMAIL.set("");
+			ConfigVal.SQLUCKY_PASSWORD.set("");
+			ConfigVal.SQLUCKY_USERNAME.set("");
+			ConfigVal.SQLUCKY_REMEMBER.set(false);
 			
 			
 			UserAccountAction.delUser();

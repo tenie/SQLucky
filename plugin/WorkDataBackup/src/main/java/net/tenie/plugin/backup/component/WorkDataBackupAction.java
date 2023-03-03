@@ -67,10 +67,10 @@ public class WorkDataBackupAction {
 			String saveBakDir = sf.getAbsolutePath();
 
 			if (po.getSaveDB()) {
-				backupDBInfo(saveBakDir, pKey, "1", ConfigVal.SQLUCKY_VIP);
+				backupDBInfo(saveBakDir, pKey, "1", ConfigVal.SQLUCKY_VIP.get());
 			}
 			if (po.getSaveScript()) {
-				backupScript(saveBakDir, pKey, "2", ConfigVal.SQLUCKY_VIP);
+				backupScript(saveBakDir, pKey, "2", ConfigVal.SQLUCKY_VIP.get());
 			}
 
 			if (po.getSaveModel()) {
@@ -200,8 +200,8 @@ public class WorkDataBackupAction {
 	 */
 	public static Map<String, String> postParam(String bakName ,String backupType){
 		Map<String, String> map = new HashMap<>();
-		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL); 
-		map.put("PASSWORD",  ConfigVal.SQLUCKY_PASSWORD);
+		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get()); 
+		map.put("PASSWORD",  ConfigVal.SQLUCKY_PASSWORD.get());
 		map.put("BACKUP_NAME", bakName);
 		map.put("BACKUP_TYPE", backupType);
 		
@@ -210,8 +210,8 @@ public class WorkDataBackupAction {
 	
 	public static Map<String, String> downloadParam(String bakID, String bakName){
 		Map<String, String> map = new HashMap<>();
-		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL); 
-		map.put("PASSWORD",  ConfigVal.SQLUCKY_PASSWORD);
+		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get()); 
+		map.put("PASSWORD",  ConfigVal.SQLUCKY_PASSWORD.get());
 		map.put("BACKUP_ID", bakID);
 		map.put("BACKUP_NAME", bakName);
 		

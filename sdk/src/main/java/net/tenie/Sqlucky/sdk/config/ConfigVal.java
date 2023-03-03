@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
  
 
@@ -14,11 +16,11 @@ public class ConfigVal {
 	public static File MODULE_PATH ;
 	
 	// 账号信息
-	public static String SQLUCKY_USERNAME = "";
-	public static String SQLUCKY_EMAIL = "" ;
-	public static String SQLUCKY_PASSWORD = "";
-	public static boolean SQLUCKY_REMEMBER = false;
-	public static boolean SQLUCKY_VIP = false;
+	public static SimpleStringProperty SQLUCKY_USERNAME = new SimpleStringProperty("");
+	public static SimpleStringProperty SQLUCKY_EMAIL = new SimpleStringProperty("");
+	public static SimpleStringProperty SQLUCKY_PASSWORD = new SimpleStringProperty("");
+	public static SimpleBooleanProperty SQLUCKY_REMEMBER = new SimpleBooleanProperty(false);
+	public static SimpleBooleanProperty SQLUCKY_VIP = new SimpleBooleanProperty(false);
 	public static String SQLUCKY_URL_DEV = "http://127.0.0.1:8088";
 	public static String SQLUCKY_URL = "https://www.tenie.net";
 	

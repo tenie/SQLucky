@@ -2,14 +2,10 @@ package net.tenie.fx.component.UserAccount;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.apache.hc.client5.http.fluent.Form;
 import org.apache.hc.client5.http.fluent.Request;
-
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
-import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.lib.db.h2.AppDao;
@@ -20,8 +16,8 @@ public class UserAccountAction {
 	public static boolean  singIn(String email, String password, boolean saveDB) {
 		boolean success = singInCheck(email, password);
 		if(success) {
-			ConfigVal.SQLUCKY_EMAIL = email;
-			ConfigVal.SQLUCKY_PASSWORD = password;
+			ConfigVal.SQLUCKY_EMAIL.set(email);
+			ConfigVal.SQLUCKY_PASSWORD.set(password);
 			
 			if(saveDB) {
 				saveUser( email, password);
@@ -41,10 +37,10 @@ public class UserAccountAction {
 	 */
 	public static void saveUser(String email, String password) {
 		Connection conn = SqluckyAppDB.getConn();
-		AppDao.saveConfig(conn, "SQLUCKY_REMEMBER", ConfigVal.SQLUCKY_VIP ?  "1" : "0");
+		AppDao.saveConfig(conn, "SQLUCKY_REMEMBER", ConfigVal.SQLUCKY_VIP.get() ?  "1" : "0");
 		AppDao.saveConfig(conn, "SQLUCKY_EMAIL", email);
 		AppDao.saveConfig(conn, "SQLUCKY_PASSWORD", password); 
-		AppDao.saveConfig(conn, "SQLUCKY_VIP", ConfigVal.SQLUCKY_VIP ?  "1" : "0");
+		AppDao.saveConfig(conn, "SQLUCKY_VIP", ConfigVal.SQLUCKY_VIP.get() ?  "1" : "0");
 		SqluckyAppDB.closeConn(conn);
 //		try {
 //			String delSql = "DELETE FROM SQLUCKY_USER";
@@ -93,11 +89,11 @@ public class UserAccountAction {
 			SqluckyUser user = JsonTools.strToObj(content, SqluckyUser.class);
 			if(user.getIsVip() != null ) {
 				if(user.getIsVip() == 1) {
-					ConfigVal.SQLUCKY_VIP = true;
+					ConfigVal.SQLUCKY_VIP.set(true);
 				}
 				success = true;
 			}else {
-				ConfigVal.SQLUCKY_VIP = false;
+				ConfigVal.SQLUCKY_VIP.set(false);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -117,10 +113,10 @@ public class UserAccountAction {
 			String sky_pw = AppDao.readConfig(conn, "SQLUCKY_PASSWORD");
 			String sky_vip = AppDao.readConfig(conn, "SQLUCKY_VIP");
 			
-			ConfigVal.SQLUCKY_EMAIL = sky_email;
-			ConfigVal.SQLUCKY_PASSWORD = sky_pw;
-			ConfigVal.SQLUCKY_REMEMBER = true;
-			ConfigVal.SQLUCKY_VIP =   "1".equals(sky_vip) ?  true: false;
+			ConfigVal.SQLUCKY_EMAIL.set(sky_email);
+			ConfigVal.SQLUCKY_PASSWORD.set(sky_pw);
+			ConfigVal.SQLUCKY_REMEMBER.set(true);
+			ConfigVal.SQLUCKY_VIP.set("1".equals(sky_vip) ?  true: false);
 		}
 
 		SqluckyAppDB.closeConn(conn);
