@@ -37,7 +37,7 @@ public class DbVendor {
 
 	public static String getDriver(String name) { 
 		
-		return data.get(name).getDriver();
+		return data.get(name.toUpperCase()).getDriver();
 	}
 	
 	// 获取注册的 db 对象

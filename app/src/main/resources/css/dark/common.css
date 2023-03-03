@@ -126,6 +126,24 @@ GridPane {
 	-fx-background-color: #365880;
 }
 
+
+.myAlertOkBtn {
+	-fx-background-color: #80FF80;
+}
+/* 按钮中文字的颜色*/
+.myAlertOkBtn .text{
+	-fx-fill: #17181A;
+}
+
+/* 鼠标悬停的时候按钮文字变白*/
+.myAlertOkBtn:hover  .text{
+	-fx-fill: white;
+}
+
+
+
+
+
 .myAlert   Button {
 	-fx-background-color: #365880;
 	-fx-text-fill: white;
