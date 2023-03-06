@@ -51,10 +51,6 @@ public class ButtonAction {
 			boolean btnDisable = true;
 			if (!modifyData.isEmpty()) {
 				for (ResultSetRowPo val : modifyData) {
-					// 获取对应旧数据
-//					ObservableList<StringProperty> old = SqluckyBottomSheetUtility.getold( key);
-//					ObservableList<StringProperty> newd = modifyData.get(key);
-					// 拼接update sql
 					try {
 						String msg = UpdateDao.execUpdate(conn, tabName, val);
 						
@@ -69,7 +65,6 @@ public class ButtonAction {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 						btnDisable = false;
-//						ObservableList<StringProperty> val = FXCollections.observableArrayList();
 						String 	msg = "failed : " + e1.getMessage();
 						msg += "\n"+dpo.translateErrMsg(msg);
 						var fds = ddlDmlpo.getFields();
@@ -77,14 +72,6 @@ public class ButtonAction {
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("failed"), fds.get(2));
-//						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("" ), fds.get(3));
-						
-//						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-//						val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
-//						val.add(CommonUtility.createReadOnlyStringProperty("failed")); 
-//						val.add(CommonUtility.createReadOnlyStringProperty("" ));
-						
-//						ddlDmlpo.addData(val);
 					}
 				}
 				SqluckyBottomSheetUtility.rmUpdateData();
@@ -95,54 +82,32 @@ public class ButtonAction {
 			for (ResultSetRowPo os : dataList) {
 				try {
 					String msg = InsertDao.execInsert(conn, tabName, os);
-//					ObservableList<StringProperty> val = FXCollections.observableArrayList();
 					var fds = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
 					ddlDmlpo.addData(row, new SimpleStringProperty(msg), fds.get(1));
 					ddlDmlpo.addData(row, new SimpleStringProperty("success"), fds.get(2));
-//					ddlDmlpo.addData(row, new SimpleStringProperty(""), fds.get(2));
 
-//					val.add(new SimpleStringProperty(msg));
-//					val.add(new SimpleStringProperty("success"));
-//					val.add(new SimpleStringProperty(""));
-//					ddlDmlpo.addData(val);
-
-					// 删除缓存数据
-					SqluckyBottomSheetUtility.rmAppendData();
 					// 对insert 的数据保存后 , 不能再修改
-//					List<StringProperty> templs = new ArrayList<>();
 					ObservableList<ResultSetCellPo> cells = os.getRowDatas();
 					for (int i = 0; i < cells.size(); i++) {
 						var cellpo = cells.get(i);
 						StringProperty sp = cellpo.getCellData();
-//						StringProperty newsp = new SimpleStringProperty(sp.get());
-//						templs.add(newsp);
 						CommonUtility.prohibitChangeListener(sp, sp.get());
 					}
-//					os.clear();
-//					for (int i = 0; i < templs.size(); i++) {
-//						StringProperty newsp = templs.get(i);
-//						os.add(newsp);
-//					}
 
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					btnDisable = false;
-//					ObservableList<StringProperty> val = FXCollections.observableArrayList();
 					var fs = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fs.get(0));
 					ddlDmlpo.addData(row, new SimpleStringProperty(e1.getMessage()), fs.get(1));
 					ddlDmlpo.addData(row, new SimpleStringProperty("failed"), fs.get(2));
-//					ddlDmlpo.addData(row, new SimpleStringProperty(""), fs.get(2));
-					
-//					val.add(new SimpleStringProperty(e1.getMessage()));
-//					val.add(new SimpleStringProperty("failed"));
-//					val.add(new SimpleStringProperty(""));
-//					ddlDmlpo.addData(val);
 				}
 			}
+			// 删除缓存数据
+			SqluckyBottomSheetUtility.rmAppendData();
 
 			// 保存按钮禁用
 			saveBtn.setDisable(btnDisable);
@@ -172,29 +137,16 @@ public class ButtonAction {
 				try {
 					for (int i = 0; i < vals.size(); i++) {
 						ResultSetRowPo sps = vals.get(i);
-//						String ro = sps.get(sps.size() - 1).get();
-//						temp.add(ro);
 						String msg = DeleteDao.execDelete(conn, tabName, sps);
 						var rs = sps.getResultSet();
 						rs.getDatas().remove(sps);
-//						ObservableList<StringProperty> val = FXCollections.observableArrayList();
 						var fs = ddlDmlpo.getFields();
 						var row = ddlDmlpo.addRow();
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())), fs.get(0));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fs.get(1));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fs.get(2));
-//						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(""), fs.get(3));
-//						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())));
-//						val.add(CommonUtility.createReadOnlyStringProperty(msg));
-//						val.add(CommonUtility.createReadOnlyStringProperty("success"));
-//						val.add(CommonUtility.createReadOnlyStringProperty(""));
-
-//						ddlDmlpo.addData(val);
 
 					}
-//					for (String str : temp) {
-//						SqluckyBottomSheetUtility.deleteTabDataRowNo(str);
-//					}
 
 				} catch (Exception e1) {
 					var fs = ddlDmlpo.getFields();
@@ -202,15 +154,6 @@ public class ButtonAction {
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())), fs.get(0));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(e1.getMessage()), fs.get(1));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("fail."), fs.get(2));
-//					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(""), fs.get(3));
-
-//					ObservableList<StringProperty> val = FXCollections.observableArrayList();
-//					val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())));
-//					val.add(CommonUtility.createReadOnlyStringProperty(e1.getMessage()));
-//					val.add(CommonUtility.createReadOnlyStringProperty("fail."));
-//					val.add(CommonUtility.createReadOnlyStringProperty(""));
-//
-//					ddlDmlpo.addData(val);
 				} finally {
 					SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, null);
 				}

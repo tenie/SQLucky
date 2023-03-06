@@ -231,9 +231,9 @@ public final class SettingKeyCodeCombination {
 		scene.getAccelerators().put(F1, () -> {
 //			ComponentGetter.appComponent.currentDBInfoNodeType();
 //			ModalDialog.Confirmation("mmm");
-			MyAlert.myConfirmation("??" ,  v->{
-				System.out.println(1111);
-			});
+//			MyAlert.myConfirmation("??" ,  v->{
+//				System.out.println(1111);
+//			});
 //			AppComponent.currentDBInfoNodeTyp
 //			// test caret
 //			var codeArea = SqlcukyEditor.getCodeArea();
