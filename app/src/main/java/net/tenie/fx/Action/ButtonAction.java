@@ -58,19 +58,14 @@ public class ButtonAction {
 					try {
 						String msg = UpdateDao.execUpdate(conn, tabName, val);
 						
-//						ObservableList<StringProperty> val = FXCollections.observableArrayList();
-						var fds = ddlDmlpo.getFields();
-						var row = ddlDmlpo.addRow();
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fds.get(2));
-//						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("" ), fds.get(3));
-//						val.add(CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ));
-//						val.add(CommonUtility.createReadOnlyStringProperty(msg)); 
-//						val.add(CommonUtility.createReadOnlyStringProperty("success")); 
-//						val.add(CommonUtility.createReadOnlyStringProperty("" ));
-//						
-//						ddlDmlpo.addData(val);
+						if(StrUtils.isNotNullOrEmpty(msg)) {
+							var fds = ddlDmlpo.getFields();
+							var row = ddlDmlpo.addRow();
+							ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
+							ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
+							ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fds.get(2));
+						}
+
 					} catch (Exception e1) {
 						e1.printStackTrace();
 						btnDisable = false;

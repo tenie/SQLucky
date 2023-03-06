@@ -9,6 +9,7 @@ import org.controlsfx.control.Notifications;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -69,7 +70,7 @@ public class MyAlert {
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-		DialogTools.setSceneAndShow(scene, stage);
+		DialogTools.setSceneAndShow(scene, stage, false);
 	}
 	
 
@@ -81,6 +82,31 @@ public class MyAlert {
 	public static void myConfirmation(String promptInfo,  Consumer< String >  caller) {
 		myConfirmation(promptInfo, caller, null);
 	}
+	
+	public static boolean myConfirmationShowAndWait(String promptInfo) {
+		final Stage stage = new Stage();
+		final SimpleBooleanProperty rsval = new SimpleBooleanProperty(false);
+		JFXButton btn = new JFXButton("Cancel(N)");
+		btn.getStyleClass().add("myAlertBtn");
+		btn.setOnAction(value -> {  
+			stage.close();
+		});
+		
+		JFXButton okbtn = new JFXButton("Yes(Y)");
+		okbtn.getStyleClass().add("myAlertOkBtn");
+		okbtn.setOnAction(value -> {
+			rsval.set(true);
+			stage.close(); 
+		});
+		
+		List<Node> btns = new ArrayList<>();
+		btns.add( btn);
+		btns.add( okbtn); 
+		
+		myConfirmation(promptInfo, stage, btns, true);
+		return rsval.get();
+	}
+	
 	
 	public static void myConfirmation(String promptInfo,  Consumer< String >  okCaller, Consumer< String >  cancelCaller ) {
 		final Stage stage = new Stage();
@@ -109,11 +135,11 @@ public class MyAlert {
 		btns.add( btn);
 		btns.add( okbtn); 
 		
-		myConfirmation(promptInfo, stage, btns);
+		myConfirmation(promptInfo, stage, btns, false);
 	}
 	
 	
-	public static void myConfirmation(String promptInfo, Stage stage  , List<Node> btns ) {
+	public static void myConfirmation(String promptInfo, Stage stage  , List<Node> btns, boolean isWait ) {
 		Label space = new Label(""); 
 		Label tit = new Label(promptInfo); 
 		
@@ -127,7 +153,7 @@ public class MyAlert {
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-		DialogTools.setSceneAndShow(scene, stage);  
+		DialogTools.setSceneAndShow(scene, stage, isWait);  
 	}
 	// 设置键盘按钮按下触发button的action事件函数
 	public static void setKeyPress(Scene scene, List<Node> btns) {

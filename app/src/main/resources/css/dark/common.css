@@ -93,6 +93,14 @@ CheckBoxTreeItem {
 	-fx-background-color: #3C3F41;
 }
 
+.dialog-pane{
+	-fx-background-color: #3C3F41;
+}
+
+DialogPane Button{
+	-fx-background-color: #365880;
+}
+
 GridPane {
 	/* -fx-border-color: #4C708C;   -fx-border-color:  transparent ;  */
 	-fx-background-color: #3C3F41;

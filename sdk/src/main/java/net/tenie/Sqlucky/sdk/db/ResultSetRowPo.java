@@ -146,11 +146,12 @@ public class ResultSetRowPo {
 
 
 	public void setHasModify(Boolean hasModify) {
-		this.hasModify = hasModify;
-		if(hasModify) {
-			resultSet.getUpdateDatas().add(this);
-		}
-		
+		if(this.hasModify == false) {
+			this.hasModify = hasModify;
+			if(hasModify) {
+				resultSet.getUpdateDatas().add(this);
+			}
+		} 
 	}
 	
 	

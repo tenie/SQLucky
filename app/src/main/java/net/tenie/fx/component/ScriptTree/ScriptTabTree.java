@@ -297,7 +297,7 @@ public class ScriptTabTree {
 			btns.add(Nobtn);
 			btns.add(okbtn);
 
-			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns);
+			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns, false);
 		}else {
 			removeNode(myTabItemList, ctt, tb);
 		}

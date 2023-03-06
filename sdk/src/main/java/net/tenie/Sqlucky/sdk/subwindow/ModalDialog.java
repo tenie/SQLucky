@@ -296,7 +296,7 @@ public class ModalDialog {
 			stage.initModality(Modality.APPLICATION_MODAL);
 			stage.setTitle(title);
 			stage.setScene(scene);
-			DialogTools.setSceneAndShow(scene, stage);
+			DialogTools.setSceneAndShow(scene, stage, false);
  
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -449,7 +449,7 @@ public class ModalDialog {
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle(title);
 		stage.setScene(scene);
-		DialogTools.setSceneAndShow(scene, stage);
+		DialogTools.setSceneAndShow(scene, stage, false);
 	}
 	
 	
@@ -493,7 +493,7 @@ public class ModalDialog {
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-		DialogTools.setSceneAndShow(scene, stage);  
+		DialogTools.setSceneAndShow(scene, stage, false);  
 	}
 	
 	 
@@ -550,7 +550,7 @@ public class ModalDialog {
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-		DialogTools.setSceneAndShow(scene, stage);  
+		DialogTools.setSceneAndShow(scene, stage, false);  
 	}
 	
 	

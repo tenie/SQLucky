@@ -12,6 +12,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.lib.reflex.BuildObject;
 
 /**
@@ -29,7 +30,7 @@ public class UpdateDao {
 		ResultSet rs = null;
 		String msg = "";
 		try {
-			ObservableList<SheetFieldPo> fpos = mval.getFields();
+//			ObservableList<SheetFieldPo> fpos = mval.getFields();
 			
 			String condition = DaoTools.conditionStr(mval);
 
@@ -37,106 +38,36 @@ public class UpdateDao {
 			String select = "Select count(*) as val from " + tableName + " where " + condition;
 			pstmt = conn.prepareStatement(select);
 			DaoTools.conditionPrepareStatement(mval, pstmt);
-			/*
-			int idx = 0;
-			String logmsg = "[ ";
-			ObservableList<ResultSetCellPo> cellVals = mval.getRowDatas();
-			for (int i = 0; i < cellVals.size(); i++) {
-				idx++;
-				ResultSetCellPo cellpo = cellVals.get(i);
-				String val = cellpo.getCellData().get();
-				String type =cellpo.getField().getColumnClassName().get();
-				if ("<null>".equals(val)) {
-					idx--;
-					continue;
-				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
-						|| type.equals("java.sql.Date")) {
-					idx--;
-					continue;
-					
-				} else {
-//					Object obj = BuildObject.buildObj(type, val);
-//					pstmt.setObject(idx, obj);
-					
-					Object obj = val;
-					pstmt.setObject(idx, obj);
-					logmsg += idx + " : " + obj +"\n";
-				}
-			}
-			
-			logger.info(logmsg +" ]");
-			*/
+			 
 			boolean tf = true;
+			String showMsg = "";
 			logger.info("sql = " + select);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				int val = rs.getInt(1);
 				if (val > 1) {
-					tf = ModalDialog.Confirmation("Finded " + val + " line data , Are you sure continue Update " + val + " line data ?");
+					showMsg = "Finded " + val + " line data , Are you sure continue Update " + val + " line data ?";
+//					tf = ModalDialog.Confirmation("Finded " + val + " line data , Are you sure continue Update " + val + " line data ?");
+					tf = MyAlert.myConfirmationShowAndWait(showMsg);
 				} else if (val == 0) {
-					ModalDialog.Confirmation("Finded " + val + " line data");	
+					showMsg = "Finded " + val + " line data, Skip Update.";
+					MyAlert.myConfirmationShowAndWait(showMsg);
+//					ModalDialog.Confirmation("Finded " + val + " line data");	
 					tf = false; // 没有更新数据
 				}
 			}
 
 			if (!tf) {
-				msg = " Data Not finded, Skip Update.";
+				msg = "";
 				return msg;
 			}
+//			MyAlert.myConfirmation(showMsg, );
 
 			String temp = DaoTools.concatStrSetVal(mval);
 			String sql = "update " + tableName + " set  " + temp + " where " + condition;
 			pstmt = conn.prepareStatement(sql);
 			
 			String valStr = DaoTools.updatePrepareStatement(mval, pstmt);
-/*
-			// 赋值
-			int idx = 0;
-			for (int i = 0; i < newvalsLen; i++) {
-				idx++;
-				String val = newvals.get(i).get();
-				String type = fpos.get(i).getColumnClassName().get();
-				if ("<null>".equals(val)) {
-					idx--;
-					continue;
-				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
-						|| type.equals("java.sql.Date")) {
-//					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
-//					Timestamp ts = new Timestamp(dv.getTime());
-//					pstmt.setTimestamp(idx, ts);
-//					logger.info(idx );
-					idx--;
-					continue;
-				} else {
-//					Object obj = BuildObject.buildObj(type, val);
-					Object obj = val;
-					pstmt.setObject(idx, obj);
-				}
-			}
-			// where 部分
-			for (int i = 0; i < oldvalsLen; i++) {
-				idx++;
-				String val = oldvals.get(i).get();
-				String type = fpos.get(i).getColumnClassName().get();
-				if ("<null>".equals(val)) {
-					idx--;
-					continue;
-				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
-						|| type.equals("java.sql.Date")) {
-//					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
-//					Timestamp ts = new Timestamp(dv.getTime());
-//					pstmt.setTimestamp(idx, ts);
-//					logger.info(idx );
-					idx--;
-					continue;
-				} else { 
-//					Object obj = BuildObject.buildObj(type, val);
-					Object obj = val;
-					pstmt.setObject(idx, obj);
-				}
-			}
-			
-			*/
 
 			// 更新
 			int i = pstmt.executeUpdate();
@@ -153,24 +84,4 @@ public class UpdateDao {
 		return msg;
 	}
 
-//	public static void main(String[] args) {
-//		Date d1 = StrUtils.StrToDate("2021-01-07 11:47:17.0", ConfigVal.dateFormateL);
-//		Date d2 = StrUtils.StrToDate("2021-01-07 11:47:17", ConfigVal.dateFormateL);
-//		logger.info(d1);
-//		logger.info(d2);
-//		java.sql.Date sd = new java.sql.Date(d1.getTime());
-//		logger.info(sd);
-//		Timestamp ts = new Timestamp(d1.getTime());
-//		logger.info(ts);
-//		
-//		Timestamp ts2 = new Timestamp(d2.getTime());
-//		logger.info(ts2);
-//		
-//		java.sql.Time t = new java.sql.Time(d1.getTime());
-//		logger.info(t);
-//		
-//		String s = StrUtils.dateToStr(d1, ConfigVal.dateFormateL);
-//				logger.info(s);
-//		
-//	}
 }

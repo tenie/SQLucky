@@ -56,7 +56,7 @@ public class ConfigVal {
 	// 图标
 	public static String appIcon = "/image/SQL6.png";
 
-	public static String THEME = "";
+	public static String THEME = CommonConst.THEME_DARK ;
 	public static int FONT_SIZE = -1;
 	
 	// h2数据库位置
@@ -94,4 +94,6 @@ public class ConfigVal {
 		}
 		return tmp;
 	}
+	
+	
 }

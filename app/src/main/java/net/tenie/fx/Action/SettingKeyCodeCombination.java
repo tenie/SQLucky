@@ -32,6 +32,7 @@ import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.MyAreaTab;
 
@@ -228,7 +229,11 @@ public final class SettingKeyCodeCombination {
 		
 		
 		scene.getAccelerators().put(F1, () -> {
-			ComponentGetter.appComponent.currentDBInfoNodeType();
+//			ComponentGetter.appComponent.currentDBInfoNodeType();
+//			ModalDialog.Confirmation("mmm");
+			MyAlert.myConfirmation("??" ,  v->{
+				System.out.println(1111);
+			});
 //			AppComponent.currentDBInfoNodeTyp
 //			// test caret
 //			var codeArea = SqlcukyEditor.getCodeArea();
