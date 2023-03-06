@@ -4,18 +4,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 import java.util.Date;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.lib.reflex.BuildObject;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
@@ -64,7 +60,6 @@ public class InsertDao {
 		 
 		int idx = 0;
 		for (int i = 0; i < size; i++) {
-//			String val = data.get(i).get();
 			ResultSetCellPo cellPo = cells.get(i);
 			String val =  cellPo.getCellData().get(); 
 			if ( !"<null>".equals(val)) {
@@ -78,17 +73,10 @@ public class InsertDao {
 					Timestamp ts = new Timestamp(dv.getTime());
 					pstmt.setTimestamp(idx, ts);
 					insertLog += " | "+ ts ;
-//					logger.info(idx + "  " + ts);
 				}
-//				else if(CommonUtility.isString(javatype)) {
-//					pstmt.setString(idx, val);
-//				} 
 				else { 
-//					Object obj = BuildObject.buildObj(type, val);
-//					pstmt.setObject(idx, obj);
 					pstmt.setObject(idx, val);
 					insertLog += " | "+ val ;
-//					logger.info(idx + "  " + obj);
 				}
 			}
 
@@ -96,7 +84,7 @@ public class InsertDao {
 		logger.info(insertLog);
 		int count = pstmt.executeUpdate();
 
-		msg = "Ok, Insert " + count +" ;\n" + insert + " ;\n"+ insertLog ;
+		msg = "Ok, Insert " + count + " ;\n"+ insertLog ;
 		return msg;
 	}
 }

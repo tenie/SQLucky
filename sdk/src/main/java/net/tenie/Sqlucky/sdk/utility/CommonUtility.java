@@ -254,7 +254,8 @@ public class CommonUtility {
 		};
 		val.addListener(cl);
 	}
-
+	
+	// 添加的新行数据, 保存后, 不允许再修改, (要修改刷新页面)
 	public static void prohibitChangeListener(StringProperty val, String original) {
 		ChangeListener<String> cl = new ChangeListener<String>() {
 			@Override
@@ -271,7 +272,7 @@ public class CommonUtility {
 
 			}
 		};
-
+		val.addListener(cl);
 	}
 
 	// 剪贴板 赋值
