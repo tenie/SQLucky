@@ -179,7 +179,7 @@ public class NoteUtility {
 
 		btns.add(cancelbtn);
 		btns.add(okbtn);
-		MyAlert.myConfirmation("Delete  " + fileTyep + ": " + file.getAbsolutePath() + " ? ", stage, btns);
+		MyAlert.myConfirmation("Delete  " + fileTyep + ": " + file.getAbsolutePath() + " ? ", stage, btns, false);
 	}
 
 	// 新建一个文件

@@ -84,7 +84,7 @@ public class DialogTools {
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 //		stage.setScene(scene);
-		setSceneAndShow(scene, stage);
+		setSceneAndShow(scene, stage, false);
 	}
 	
 	
@@ -118,7 +118,8 @@ public class DialogTools {
 		return subWindow;
 	}
  
-	public static void setSceneAndShow(Scene scene , Stage stage ) {
+	 
+	public static void setSceneAndShow(Scene scene , Stage stage , boolean isWait) {
 		 
 		stage.setMaximized(false);
 		stage.setResizable(false);
@@ -141,7 +142,13 @@ public class DialogTools {
 		scene.getAccelerators().put(spacebtn, () -> {
 			stage.close();
 		});
-		stage.show();
+		if(isWait) {
+			stage.showAndWait();
+		}else {
+			stage.show();
+		}
 	}
+	 
+	 
 	
 }

@@ -198,7 +198,7 @@ public class NoteTabTree {
 			btns.add(cancelbtn);
 			btns.add(Nobtn);
 			btns.add(okbtn);
-			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(stb.getTitle(), "*") + "?", stage, btns);
+			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(stb.getTitle(), "*") + "?", stage, btns , false);
 			
 		}else {
 			removeItem(parentNode, treeitem);

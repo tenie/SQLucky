@@ -13,7 +13,12 @@ import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-
+/**
+ * 表格中某一个单元格的对象
+ * 保存类单元格属于哪个字段, 值, 修改前的值等
+ * @author tenie
+ *
+ */
 public class ResultSetCellPo {
 	
 
