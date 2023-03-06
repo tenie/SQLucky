@@ -8,8 +8,6 @@ import java.util.function.Consumer;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -21,12 +19,10 @@ import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -366,14 +362,15 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 		tbv.scrollTo(0);
 		ResultSetPo rspo = SqluckyBottomSheetUtility.getResultSet();
-		ResultSetRowPo rowpo = rspo.createAppendNewRow(); 
+		ResultSetRowPo rowpo = rspo.createAppendNewRow(0 ); 
 		ObservableList<SheetFieldPo> fs = rspo.getFields();
 		for (int i = 0; i < fs.size(); i++) {
 			SheetFieldPo fieldpo = fs.get(i);
 			SimpleStringProperty sp = new SimpleStringProperty("<null>");
 			rowpo.addCell(sp, fieldpo); 
 		}
-		tbv.getItems().add(0, rowpo);
+		// 使用 ResultSetPo对象的createAppendNewRow（）函数， 不需要手动给表添加行了
+//		tbv.getItems().add(0, rowpo);
 
 		// 点亮保存按钮
 		saveBtn.setDisable(false);

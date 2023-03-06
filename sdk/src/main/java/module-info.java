@@ -9,7 +9,8 @@ open module SQLucky.sdk {
     requires java.sql;
     requires java.sql.rowset;
     
-	requires javafx.base;
+    // requires transitive 表示使用这个库的模块也必须依赖这个模块（javafx.base）
+	requires transitive javafx.base; 
 	requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;  

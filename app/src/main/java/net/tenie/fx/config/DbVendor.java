@@ -3,6 +3,7 @@ package net.tenie.fx.config;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
+
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 
 /**
@@ -27,8 +28,9 @@ public class DbVendor {
 //	}
 
 	public static void add(String name, SqluckyDbRegister val) {
-		keys.add(name);
-		data.put(name, val);
+		var tmpName = name.toUpperCase();
+		keys.add(tmpName);
+		data.put(tmpName, val);
 	}
 
 	public static LinkedHashSet<String> getAll() {
@@ -43,7 +45,7 @@ public class DbVendor {
 	// 获取注册的 db 对象
 	public static SqluckyDbRegister register(String name) {
 		for(var key :data.keySet()) {
-			if(key.toLowerCase().equals(name.toLowerCase())) {
+			if(key.toUpperCase().equals(name.toUpperCase())) {
 				return data.get(key);
 			}
 		}

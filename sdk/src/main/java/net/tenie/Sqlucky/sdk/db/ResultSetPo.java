@@ -16,6 +16,14 @@ public class ResultSetPo {
 	/**
 	 * 首次查询数据后, 后期添加一行行的数据
 	 */
+	public ResultSetRowPo createAppendNewRow(int idx) {
+		ResultSetRowPo appendNewpo = new ResultSetRowPo(this);
+		newDatas.add(appendNewpo);
+		datas.add(idx, appendNewpo);
+		return appendNewpo;
+	}
+	
+	
 	public ResultSetRowPo createAppendNewRow() {
 		ResultSetRowPo appendNewpo = new ResultSetRowPo(this);
 		newDatas.add(appendNewpo);
