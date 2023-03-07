@@ -5,8 +5,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
-import com.jfoenix.controls.JFXCheckBox;
+import java.util.ResourceBundle; 
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
@@ -32,10 +32,10 @@ public class WorkDataBackupController implements Initializable {
 	@FXML private Button bakBtn; 
 	@FXML private TextField bakName;
 	@FXML private TextField privateKey;
-	@FXML private JFXCheckBox dbCB;
-	@FXML private JFXCheckBox scriptCB;
-	@FXML private JFXCheckBox modelCB;
-	@FXML private JFXCheckBox pkCB;
+	@FXML private CheckBox dbCB;
+	@FXML private CheckBox scriptCB;
+	@FXML private CheckBox modelCB;
+	@FXML private CheckBox pkCB;
 	
 	// 下载界面
 	@FXML private Button syncBtn;
@@ -43,7 +43,7 @@ public class WorkDataBackupController implements Initializable {
 	
 	@FXML private TextField selBakName;
 	@FXML private TextField recoverPK;
-	@FXML private JFXCheckBox useRPK;
+	@FXML private CheckBox useRPK;
 	
 	@FXML private Button downloadMergeBtn;
 	@FXML private Button downloadOverlapBtn;
@@ -53,22 +53,23 @@ public class WorkDataBackupController implements Initializable {
 	private SimpleStringProperty nameVal ;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		
+		 downloadBtn.setVisible(false);
 		 uploadPage();
 		 downloadPage();
+		 isLogin();
 	}
-/**
- * AppComponent app =  ComponentGetter.appComponent;
-			app.showSingInWindow();
- * @return
- */
 	// 是否登入检查
 	public boolean isLogin() {
 		// 登入校验
 		String sqlEmail = ConfigVal.SQLUCKY_EMAIL.get();
 		String sqlPW = ConfigVal.SQLUCKY_PASSWORD.get();
 		if(StrUtils.isNullOrEmpty(sqlEmail) || StrUtils.isNullOrEmpty(sqlPW)) {
-			AppComponent app =  ComponentGetter.appComponent;
-			app.showSingInWindow();
+			Platform.runLater(()->{
+				AppComponent app =  ComponentGetter.appComponent;
+				app.showSingInWindow("Use Backup must Login");
+			});
+			
 			return false;
 		}
 		return true;
@@ -205,9 +206,10 @@ public class WorkDataBackupController implements Initializable {
 		String fxml = "/workBackupFxml/workdataBackup.fxml";
 		try {
 			Stage stage = new Stage();
-			stage.initModality(Modality.WINDOW_MODAL);
+//			stage.initModality(Modality.WINDOW_MODAL);
+			stage.initModality(Modality.APPLICATION_MODAL);
 //			stage.initOwner(stg);
-			stage.setTitle("Top Stage With Modality");
+			stage.setTitle("");
 //			URL url = getClass().getResource(fxml);
 			URL url = WorkDataBackupController.class.getResource(fxml);
 			Parent root = FXMLLoader.load(url);

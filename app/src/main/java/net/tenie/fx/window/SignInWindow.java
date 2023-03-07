@@ -1,25 +1,17 @@
 package net.tenie.fx.window;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.jfoenix.controls.JFXCheckBox;
-
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -29,11 +21,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
@@ -45,26 +35,21 @@ import net.tenie.fx.component.UserAccount.UserAccountAction;
  */
 public class SignInWindow {
 	// 编辑连接时记录连接状态
-	public  static boolean editLinkStatus = false;
 	private static Logger logger = LogManager.getLogger(SignInWindow.class);
 	
-	private static Stage stageWindow = null ;
+	private Stage stageWindow = null ;
+	private TextField tfemail;
+	private PasswordField password;
+	private JFXCheckBox rememberCB;
 	
-	public static void show() {
-		if(stageWindow == null ) { 
-			SignInWindow.createWorkspaceConfigWindow();
-		}else {
-			stageWindow.requestFocus();
-		}
-		
-		
+	public static void show(String title) {
+		SignInWindow window = new SignInWindow();
+		window.initWindow(title); 
 	}
-	public static Stage CreateModalWindow(VBox vb) {
-
+	// 创建窗口
+	public Stage CreateModalWindow(VBox vb,  String title) {
 		stageWindow = new Stage();
- 
 		vb.getStyleClass().add("connectionEditor");
-
 		Scene scene = new Scene(vb);
 		
 		vb.setPrefWidth(400);
@@ -85,10 +70,11 @@ public class SignInWindow {
 		});
 
 		CommonUtility.loadCss(scene);
-		stageWindow.initModality(Modality.WINDOW_MODAL);
+		stageWindow.initModality(Modality.APPLICATION_MODAL);
 		stageWindow.setScene(scene);
 		
 		stageWindow.getIcons().add( ComponentGetter.LogoIcons);
+		stageWindow.setTitle(title);
 		stageWindow.setMaximized(false);
 		stageWindow.setResizable(false);
 		stageWindow.setOnCloseRequest(v->{
@@ -97,7 +83,8 @@ public class SignInWindow {
 		return stageWindow;
 	}
 
-	public static void createWorkspaceConfigWindow( ) {
+	// 初始化控件
+	public  void initWindow( String title) {
 		String email = "Email"; 
 		String passwordStr = "Password";
 		String remember =  "Remember Account";
@@ -105,58 +92,26 @@ public class SignInWindow {
 		Label lbemail= new Label(email);  
 		Label lbPassword = new Label(passwordStr);   
 		
-		TextField tfemail = new TextField();
+		tfemail = new TextField();
 		tfemail.setPromptText(email);
 	
 		
-		PasswordField password = new PasswordField();
+		password = new PasswordField();
 		password.setPromptText(passwordStr);
-		
-		
 		
 		HBox hb2 = new HBox(); 
 		Label Remember = new Label(remember);
-	    JFXCheckBox rememberCB  = new JFXCheckBox();  
+	    rememberCB  = new JFXCheckBox();  
 	    rememberCB.selectedProperty().addListener(v->{
 	    	boolean iss = rememberCB.isSelected();
 	    	UserAccountAction.rememberUser(iss);
-	    	System.out.println("iss = " + iss);
+	    	logger.debug("iss = " + iss);
 	    });
 	   
 	    
 	    hb2.getChildren().addAll(Remember, rememberCB );
 	    // 登入函数
-	    Function<String, Boolean> singAction = v->{
-	    	String emailVal = tfemail.getText();
-	    	String passwordVal = password.getText();
-	    	if(emailVal == null || emailVal.trim().length() == 0) {
-	    		MyAlert.errorAlert( "Email不能为空");
-	    		return false;
-	    	}
-	    	
-	    	if(passwordVal == null || passwordVal.trim().length() == 0) {
-	    		MyAlert.errorAlert( "密码不能为空");
-	    		return false;
-	    	}
-	    	
-	    	boolean tf = rememberCB.isSelected();
-	    	boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );
-	    	
-	    	if(seccuss) {
-	    		MyAlert.infoAlert("成功", "成功"); 
-	    		ConfigVal.SQLUCKY_EMAIL.set(emailVal);
-	    		ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
-	    		ConfigVal.SQLUCKY_REMEMBER.set(tf);
-	    	}else {
-	    		MyAlert.errorAlert( "失败");
-	    		ConfigVal.SQLUCKY_EMAIL.set("");
-	    		ConfigVal.SQLUCKY_PASSWORD.set("");
-	    		UserAccountAction.delUser();
-	    		
-	    	}
-	    	return true;
-	    };
-		Button signInBtn = createSignInBtn( singAction  );
+		Button signInBtn = createSignInBtn();
 		signInBtn.setDisable(true);
 		tfemail.textProperty().addListener(e->{
 			if( tfemail.getText().trim().length() == 0 || password.getText().trim().length() == 0) {
@@ -172,17 +127,12 @@ public class SignInWindow {
 				signInBtn.setDisable(false);
 			}
 		});
-//		Button signUpBtn = createSignUpBtn( null  );
 		
+		// 退出登入
+		Button signOutBtn = createSigOutBtn( );
 		
-		  // 登入函数
-	    Function<String, Boolean> singOutAction = v->{
-	    	tfemail.setText("");
-			password.setText("");
-			rememberCB.setSelected(false);
-	    	return true;
-	    };
-		Button signOutBtn = createSigOutBtn(singOutAction);
+		// 高级设置
+		Button setbtn = createAdvancedSettings();
 		// 如果已经登入过, 获取登入信息
 		String siEmail = ConfigVal.SQLUCKY_EMAIL.get();
 		String siPw = ConfigVal.SQLUCKY_PASSWORD.get();
@@ -192,10 +142,7 @@ public class SignInWindow {
 			tfemail.setText(siEmail);
 			password.setText(siPw);
 			rememberCB.setSelected(sky_remb);
-			
 		}
-		
-		
 		
 		List<Region> list = new ArrayList<>();
   
@@ -210,23 +157,50 @@ public class SignInWindow {
 		
 		list.add(    signInBtn); 
 		list.add(    signOutBtn); 
-//		list.add(    signUpBtn);
 		
-		layout(list);
-
+		list.add(    setbtn); 
+		list.add(    null); 
+		
+		layout(list, title);
 	}  
-	
-	public static Button createSignInBtn(Function<String, Boolean> sinbtn ) {
+	// 登入按钮
+	public Button createSignInBtn( ) {
 		String SignIn = "Sign in ";
 		Button SignInBtn = new Button(SignIn); 
 		SignInBtn.setOnAction(V->{
-//			UserAccountAction.singIn(SignIn, SignIn, editLinkStatus)
-			sinbtn.apply(SignIn);
+
+	    	String emailVal = tfemail.getText();
+	    	String passwordVal = password.getText();
+	    	if(emailVal == null || emailVal.trim().length() == 0) {
+	    		MyAlert.errorAlert( "Email不能为空");
+	    		return ;
+	    	}
+	    	
+	    	if(passwordVal == null || passwordVal.trim().length() == 0) {
+	    		MyAlert.errorAlert( "密码不能为空");
+	    		return ;
+	    	}
+	    	
+	    	boolean tf = rememberCB.isSelected();
+	    	boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );
+	    	
+	    	if(seccuss) {
+	    		MyAlert.infoAlert("成功", "成功"); 
+	    		ConfigVal.SQLUCKY_EMAIL.set(emailVal);
+	    		ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
+	    		ConfigVal.SQLUCKY_REMEMBER.set(tf);
+	    	}else {
+	    		MyAlert.errorAlert( "失败");
+	    		ConfigVal.SQLUCKY_EMAIL.set("");
+	    		ConfigVal.SQLUCKY_PASSWORD.set("");
+	    		UserAccountAction.delUser();
+	    	}
+	    
 		});
 		return SignInBtn;
 	}
-	
-	public static Button createSignUpBtn(Function<String, String> sup ) {
+	// 注册按钮
+	public Button createSignUpBtn(Function<String, String> sup ) {
 		String signUp = "Sign Up ";
 		Button signUpBtn = new Button(signUp); 
 		signUpBtn.setOnAction(e->{
@@ -234,28 +208,37 @@ public class SignInWindow {
 		});
 		return signUpBtn;
 	}
-	
-	public static Button createSigOutBtn(Function<String, Boolean> sup ) {
+	// 退出按钮
+	public Button createSigOutBtn() {
 		String signOut = "Sign Out ";
 		Button signOutBtn = new Button(signOut); 
-//		SQLUCKY_EMAIL
 		signOutBtn.disableProperty().bind(ConfigVal.SQLUCKY_EMAIL.isEmpty());
 		signOutBtn.setOnAction(e->{
 			ConfigVal.SQLUCKY_EMAIL.set("");
 			ConfigVal.SQLUCKY_PASSWORD.set("");
 			ConfigVal.SQLUCKY_USERNAME.set("");
 			ConfigVal.SQLUCKY_REMEMBER.set(false);
-			
-			
+			// 删除app数据库中的用户信息
 			UserAccountAction.delUser();
-			sup.apply("");
+			tfemail.setText("");
+			password.setText("");
+			rememberCB.setSelected(false);
 		});
 		return signOutBtn;
 	}
 	
+	// 高级设置按钮
+	public Button createAdvancedSettings() {
+		String btnName = "Advanced Settings";
+		Button btn = new Button(btnName); 
+		btn.setOnAction(v->{
+			SignInAdvancedSettingsWindow.show("");
+		});
+		return btn;
+	}
  
-	// 组件布局
-	public static void layout(List<Region> list) {
+	// 控件布局, 并显示窗口
+	public void layout(List<Region> list, String titleStage) {
 		String sign = "Sign in ";
 		VBox vb = new VBox();
 		Label title = new Label(sign);
@@ -266,7 +249,7 @@ public class SignInWindow {
 		GridPane grid = new GridPane();
 		vb.getChildren().add(grid);
 		vb.setPadding( new Insets(5));
-		Stage stage = CreateModalWindow(vb);
+		Stage stage = CreateModalWindow(vb, titleStage);
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 10, 10, 10));
@@ -284,7 +267,6 @@ public class SignInWindow {
 			if(node2 !=null ) grid.add(node2, 1, idxj);
 		}
 		
-	 
 		stage.show();
 	}
 	

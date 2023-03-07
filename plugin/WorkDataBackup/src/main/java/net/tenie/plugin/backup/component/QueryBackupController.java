@@ -22,31 +22,34 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
 public class QueryBackupController implements Initializable {
 	private static String httpUrl = ConfigVal.getSqluckyServer()+"/sqlucky/queryAllBackup";
+	private static String delUrl = ConfigVal.getSqluckyServer()+"/sqlucky/delBackup";
 	@FXML private Button selectBtn;
 	@FXML private VBox	queryBox;
-	 
+	
+	@FXML private Button delBtn;
+	
 	MaskerPane masker = new MaskerPane();
 	
 	private String selectDataID = "";
 	private static SimpleStringProperty  idVal = new SimpleStringProperty("");
 	private static SimpleStringProperty  nameVal = new SimpleStringProperty("");
-	
+	private FilteredTableView<ResultSetRowPo>   dataTable ;
 	private static Stage  stage ;
 	
 	@Override
@@ -57,28 +60,106 @@ public class QueryBackupController implements Initializable {
 			stage.close();
 		});
 		
+		// delete btn
+		delBtn.disableProperty().bind(selectBtn.disabledProperty());
+		delBtn.setOnAction(v->{
+			try {
+				// 调用删除函数
+				deleteBakInfo(idVal.get(), nameVal.get());
+				queryHelper("");
+				// 界面上删除
+//				var items = dataTable.getItems();
+//				ResultSetRowPo tmp = null;
+//				for(ResultSetRowPo item : items) {
+//					String val = item.getValueByFieldName("ID");
+//					if(val != null || val.equals(idVal.get())) {
+//						tmp = item;
+//						break;
+//					}
+//				}
+//				items.remove(tmp);
+			} catch (Exception e) {
+				MyAlert.errorAlert("服务器报错");
+				e.printStackTrace();
+			
+			}
+		});
+		
+		
 		// 表放入界面
+		queryHelper("");
+	}
+	
+	//
+	private void queryHelper(String bakName) {
+		if(queryBox.getChildren().size() > 1) {
+			queryBox.getChildren().remove(1);
+		}
 		queryBox.getChildren().add(masker);
 		Thread th =  new Thread(()->{
-			FilteredTableView<ResultSetRowPo>   dataTable = FatchAllBackupName();
-			Platform.runLater(()->{
-				queryBox.getChildren().remove(masker);
-				queryBox.getChildren().add(dataTable);
-			});
-			
+			String bakInfoJson = null;
+			try {
+				bakInfoJson = queryBakInfoFromServer(bakName);
+			} catch (Exception e) {
+				Platform.runLater( ()->{
+					MyAlert.errorAlert("服务器请求失败", true);
+					System.out.println("???????????");
+					stage.close();
+				});
+				
+				
+				e.printStackTrace();
+			}
+			if(bakInfoJson != null) {
+				dataTable = createBakInfoShowTable(bakInfoJson);
+				Platform.runLater(()->{
+					queryBox.getChildren().remove(masker);
+					queryBox.getChildren().add(dataTable);
+				});
+			}
 		});
 		th.start();
 	}
 	
+	 
 	
-	private  FilteredTableView<ResultSetRowPo>   FatchAllBackupName() {
+	/**
+	 * 从服务器获取之前备份的文件信息 FatchAllBackupName
+	 * @return
+	 * @throws Exception 
+	 */
+	private  String  queryBakInfoFromServer(String bakName) throws Exception {
 		Map<String, String> pamas = new HashMap<>();
 		pamas.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
 		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
+		pamas.put("BAK_NAME", ConfigVal.SQLUCKY_PASSWORD.get());
 		
-		String val = HttpUtil.post1(httpUrl, pamas);
-		List<SqluckyBackup> ls = JsonTools.jsonToList(val, SqluckyBackup.class);
-		
+		String bakInfoJson = HttpUtil.post1(httpUrl, pamas);
+		 
+		return bakInfoJson;
+	}
+	
+	// 调用后台删除操作, 返回删除的对象json
+	private boolean deleteBakInfo(String id, String bakname) throws Exception {
+		Map<String, String> pamas = new HashMap<>();
+		pamas.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
+		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
+		pamas.put("BAK_ID",  id);
+		pamas.put("BAK_NAME",  bakname);
+		String bakInfoJson = HttpUtil.post1(delUrl, pamas);
+		if(StrUtils.isNotNullOrEmpty(bakInfoJson)) {
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * 根据服务器返回的数据创建展示的表
+	 * @param ls
+	 * @return
+	 */
+	private   FilteredTableView<ResultSetRowPo>  createBakInfoShowTable(String bakInfoJson ){
+		List<SqluckyBackup> ls = JsonTools.jsonToList(bakInfoJson, SqluckyBackup.class);
 		List<String >  colName = new ArrayList<>();
 		colName.add("Backup Name"); 
 		colName.add("Created At");
@@ -102,7 +183,6 @@ public class QueryBackupController implements Initializable {
 				System.out.println("selectDataID = " + selectDataID);
 				idVal.setValue(selectDataID);
 				nameVal.setValue(selectDataBAKName);
-//				rtVal.setId(Long.valueOf(selectDataID));
 			}
 		});
 		return table;

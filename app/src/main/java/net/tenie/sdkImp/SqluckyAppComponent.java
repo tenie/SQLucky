@@ -315,8 +315,8 @@ public class SqluckyAppComponent implements AppComponent {
 	
 	// 登入窗口
 	@Override
-	public void showSingInWindow() {
-		SignInWindow.show();
+	public void showSingInWindow(String title) {
+		SignInWindow.show(title);
 	}
 	/**
 	 * 使用新数据重建数据库连接节点树
