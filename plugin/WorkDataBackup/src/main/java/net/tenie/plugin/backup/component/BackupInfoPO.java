@@ -1,6 +1,6 @@
 package net.tenie.plugin.backup.component;
-
-import com.jfoenix.controls.JFXCheckBox;
+ 
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 public class BackupInfoPO {
@@ -15,7 +15,7 @@ public class BackupInfoPO {
 		
 	}
 	
-	public BackupInfoPO(TextField bakName, TextField privateKey, JFXCheckBox dbCB, JFXCheckBox scriptCB, JFXCheckBox modelCB, JFXCheckBox pkCB) {
+	public BackupInfoPO(TextField bakName, TextField privateKey, CheckBox dbCB, CheckBox scriptCB, CheckBox modelCB, CheckBox pkCB) {
 		this.backupName = bakName.getText();
 		this.privateKey = privateKey.getText();
 		this.saveDB = dbCB.isSelected();

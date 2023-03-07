@@ -12,14 +12,14 @@
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="myModalDialog">
                <children>
                   <Button fx:id="bakBtn" layoutX="292.0" layoutY="168.0" mnemonicParsing="false" styleClass="myAlertBtn" text="备份" />
-                  <JFXCheckBox fx:id="pkCB" layoutX="15.0" layoutY="123.0" text="使用端到端加密传输, 密钥需要自己保存!" />
+                  <CheckBox fx:id="pkCB" layoutX="15.0" layoutY="123.0" text="使用端到端加密传输, 密钥需要自己保存!" />
                   <Label layoutX="14.0" layoutY="151.0" text="端到端加密密钥" />
                   <TextField fx:id="privateKey" layoutX="112.0" layoutY="149.0" styleClass="myFindTextField" />
                   <Label layoutX="15.0" layoutY="20.0" text="备份名称" />
                   <TextField fx:id="bakName" layoutX="69.0" layoutY="16.0" styleClass="myFindTextField" />
-                  <JFXCheckBox fx:id="dbCB" layoutX="14.0" layoutY="48.0" text="备份数据库连接配置" />
-                  <JFXCheckBox fx:id="scriptCB" layoutX="15.0" layoutY="73.0" text="备份脚本文件" />
-                  <JFXCheckBox fx:id="modelCB" layoutX="15.0" layoutY="98.0" text="备份数据模型" />
+                  <CheckBox fx:id="dbCB" layoutX="14.0" layoutY="48.0" text="备份数据库连接配置" />
+                  <CheckBox fx:id="scriptCB" layoutX="15.0" layoutY="73.0" text="备份脚本文件" />
+                  <CheckBox fx:id="modelCB" layoutX="15.0" layoutY="98.0" text="备份数据模型" />
                </children>
             </Pane>
          </content></Tab>
@@ -28,7 +28,7 @@
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="myModalDialog">
                <children>
                   <Button fx:id="syncBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" styleClass="myAlertBtn" text="同步备份文件" />
-                  <JFXCheckBox fx:id="useRPK" layoutX="14.0" layoutY="63.0" text="使用密钥恢复备份文件" />
+                  <CheckBox fx:id="useRPK" layoutX="14.0" layoutY="63.0" text="使用密钥恢复备份文件" />
                   <Label layoutX="14.0" layoutY="94.0" text="密钥" />
                   <TextField fx:id="recoverPK" layoutX="46.0" layoutY="90.0" styleClass="myFindTextField" />
                   <Button fx:id="downloadOverlapBtn" layoutX="13.0" layoutY="127.0" mnemonicParsing="false" styleClass="myAlertBtn" text="下载备份覆盖本地数据" />

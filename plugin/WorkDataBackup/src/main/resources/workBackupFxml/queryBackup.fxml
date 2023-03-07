@@ -12,6 +12,7 @@
             <TextField layoutX="79.0" layoutY="13.0" styleClass="myFindTextField" />
             <Button fx:id="selectBtn" layoutX="513.0" layoutY="13.0" mnemonicParsing="false" styleClass="myAlertBtn" text="选择" />
             <Label layoutX="24.0" layoutY="17.0" text="备份名称" />
+            <Button fx:id="delBtn" layoutX="455.0" layoutY="13.0" mnemonicParsing="false" styleClass="myAlertBtn" text="删除" />
          </children>
       </AnchorPane>
    </children>

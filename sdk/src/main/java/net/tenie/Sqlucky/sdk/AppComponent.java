@@ -69,7 +69,7 @@ public interface AppComponent {
 	public List<String> getAllConnectorName();
 	
 	// 登入窗口
-	public void showSingInWindow() ;
+	public void showSingInWindow(String title) ;
 	/**
 	 * 使用新数据重建数据库连接节点树
 	 */

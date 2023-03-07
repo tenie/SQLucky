@@ -332,7 +332,7 @@ public class MenuBarContainer {
 		SignInMenuItem.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
 		SignInMenuItem.setOnAction(value -> {
 //			SignInWindow.createWorkspaceConfigWindow();
-			SignInWindow.show();
+			SignInWindow.show("");
 		});
 		
 		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));

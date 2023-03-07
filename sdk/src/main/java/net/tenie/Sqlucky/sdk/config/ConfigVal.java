@@ -20,9 +20,12 @@ public class ConfigVal {
 	public static SimpleStringProperty SQLUCKY_EMAIL = new SimpleStringProperty("");
 	public static SimpleStringProperty SQLUCKY_PASSWORD = new SimpleStringProperty("");
 	public static SimpleBooleanProperty SQLUCKY_REMEMBER = new SimpleBooleanProperty(false);
+	public static SimpleBooleanProperty SQLUCKY_REMEMBER_SETTINGS = new SimpleBooleanProperty(false);
 	public static SimpleBooleanProperty SQLUCKY_VIP = new SimpleBooleanProperty(false);
+	
 	public static String SQLUCKY_URL_DEV = "http://127.0.0.1:8088";
 	public static String SQLUCKY_URL = "https://www.tenie.net";
+	public static String SQLUCKY_URL_CUSTOM = "";
 	
 	
 	
@@ -86,7 +89,11 @@ public class ConfigVal {
 	}
 		
 	public static String getSqluckyServer() {
+	
 		String tmp = "";
+		if(SQLUCKY_URL_CUSTOM != null && !"".equals(SQLUCKY_URL_CUSTOM) ) {
+			return SQLUCKY_URL_CUSTOM;
+		}
 		if(SqluckyAppDB.isDev()) {
 			tmp = SQLUCKY_URL_DEV;
 		}else {
@@ -94,6 +101,8 @@ public class ConfigVal {
 		}
 		return tmp;
 	}
+	
+ 
 	
 	
 }

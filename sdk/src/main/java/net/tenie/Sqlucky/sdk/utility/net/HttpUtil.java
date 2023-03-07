@@ -11,11 +11,11 @@ import java.util.Map;
 
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
 import org.apache.hc.client5.http.entity.mime.FileBody;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.entity.mime.StringBody;
-import org.apache.hc.client5.http.fluent.Form;
 import org.apache.hc.client5.http.fluent.Request;
 import org.apache.hc.client5.http.fluent.Response;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -29,6 +29,7 @@ import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 import org.apache.hc.core5.http.message.StatusLine;
 import org.apache.hc.core5.net.URIBuilder;
+import org.apache.hc.core5.util.Timeout;
 
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 
@@ -228,10 +229,16 @@ public class HttpUtil {
 	 * 
 	 * @param url
 	 * @return
+	 * @throws Exception 
 	 */
-	public static String post1(String url, Map<String, String> strPamas) {
+	public static String post1(String url, Map<String, String> strPamas) throws Exception {
 		String result = null;
 		HttpPost httpPost = new HttpPost(url);
+		// 超时配置
+//		RequestConfig requestConfig = RequestConfig.custom()
+//				.setConnectTimeout(Timeout.ofSeconds(10))
+//				.setConnectionRequestTimeout(Timeout.ofSeconds(10)).build();
+//		httpPost.setConfig(requestConfig);		
 		// 表单参数
 		List<NameValuePair> nvps = new ArrayList<>();
 		// POST 请求参数
@@ -256,6 +263,7 @@ public class HttpUtil {
 			}
 		} catch (IOException | ParseException e) {
 			e.printStackTrace();
+			throw e;
 		}
 		return result;
 	}
@@ -280,7 +288,7 @@ public class HttpUtil {
         return result;
     }
 
-	private static String post1_test() {
+	private static String post1_test() throws Exception {
 		Map<String, String> pamas = new HashMap<>();
 		pamas.put("EMAIL", "tenie@tenie.net");
 		pamas.put("PASSWORD", "mima");
@@ -291,9 +299,9 @@ public class HttpUtil {
 
 	/**
 	 * @param args
-	 * @throws IOException
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
 //    	demo1();
 //    	demo2();
 //		demo_post();

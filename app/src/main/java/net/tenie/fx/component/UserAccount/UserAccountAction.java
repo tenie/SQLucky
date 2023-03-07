@@ -118,8 +118,34 @@ public class UserAccountAction {
 			ConfigVal.SQLUCKY_REMEMBER.set(true);
 			ConfigVal.SQLUCKY_VIP.set("1".equals(sky_vip) ?  true: false);
 		}
-
+		// 读取 自定义的 服务器地址
+		String hostUrl = AppDao.readConfig(conn, "SQLUCKY_URL_CUSTOM");
+		if (StrUtils.isNotNullOrEmpty(hostUrl) ) {
+			ConfigVal.SQLUCKY_URL_CUSTOM =  hostUrl;
+		}
+		String remSet = AppDao.readConfig(conn, "SQLUCKY_REMEMBER_SETTINGS");
+		if (StrUtils.isNotNullOrEmpty(remSet)  && "1".equals(remSet) ) {
+			ConfigVal.SQLUCKY_REMEMBER_SETTINGS.set(true);
+		}
 		SqluckyAppDB.closeConn(conn);
 
+	}
+	
+	// 保存自定义的url 地址
+	public static void saveHostValAccount(String hostVal) {
+		Connection conn = SqluckyAppDB.getConn();
+		AppDao.saveConfig(conn, "SQLUCKY_URL_CUSTOM", hostVal);
+		AppDao.saveConfig(conn, "SQLUCKY_REMEMBER_SETTINGS", "1");
+		
+		SqluckyAppDB.closeConn(conn);
+	}
+	// 删除自定义的url 地址
+	public static void delHostValAccount() {
+		Connection conn = SqluckyAppDB.getConn();
+//		ConfigVal.SQLUCKY_URL_CUSTOM = "";
+		ConfigVal.SQLUCKY_REMEMBER_SETTINGS.set(false);
+		AppDao.deleteConfigKey(conn, "SQLUCKY_URL_CUSTOM");
+		AppDao.deleteConfigKey(conn, "SQLUCKY_REMEMBER_SETTINGS");
+		SqluckyAppDB.closeConn(conn);
 	}
 }

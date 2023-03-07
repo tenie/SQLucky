@@ -25,7 +25,6 @@ import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.utility.myEvent;
 
 public class MyAlert {
 	public static void infoAlert(String title, String containTxt) {
@@ -40,10 +39,18 @@ public class MyAlert {
 			showErrorMsg( containTxt , ComponentGetter.ERROR);  
 		});
 	}
+	// 显示警告, 会阻塞ui线程, 等前台关闭警告窗口后执行后面的代码
+	public static void errorAlert( String containTxt, boolean isWait) {
+		showErrorMsg( containTxt , ComponentGetter.ERROR, isWait);  
+	}
 	
 	
 	public static void showErrorMsg( String containTxt ,Label tit) {
- 
+		showErrorMsg(containTxt, tit, false);
+	}
+	
+	public static void showErrorMsg( String containTxt ,Label tit, boolean iswait) {
+		 
 		TextField tf1 = new TextField("");
 		tf1.setEditable(false);
 		tf1.setPrefWidth(500);
@@ -70,7 +77,7 @@ public class MyAlert {
 		
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-		DialogTools.setSceneAndShow(scene, stage, false);
+		DialogTools.setSceneAndShow(scene, stage, iswait);
 	}
 	
 
