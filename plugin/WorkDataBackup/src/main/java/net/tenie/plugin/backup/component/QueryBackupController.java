@@ -22,6 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -40,9 +41,11 @@ public class QueryBackupController implements Initializable {
 	private static String httpUrl = ConfigVal.getSqluckyServer()+"/sqlucky/queryAllBackup";
 	private static String delUrl = ConfigVal.getSqluckyServer()+"/sqlucky/delBackup";
 	@FXML private Button selectBtn;
+	@FXML private Button queryBtn;
 	@FXML private VBox	queryBox;
-	
 	@FXML private Button delBtn;
+	
+	@FXML private TextField queryVal;
 	
 	MaskerPane masker = new MaskerPane();
 	
@@ -54,30 +57,33 @@ public class QueryBackupController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
+		// 查询按钮
+		queryBtn.setOnAction(e->{
+			String queryText = queryVal.getText();
+			queryHelper(queryText);
+		});
+		
 		// selectBtn
-		selectBtn.setDisable(true);
+//		selectBtn.setDisable(dataTable.getSelectionModel().isEmpty());
 		selectBtn.setOnAction(v->{
 			stage.close();
 		});
 		
+//		dataTable.getSelectionModel().isEmpty()
 		// delete btn
 		delBtn.disableProperty().bind(selectBtn.disabledProperty());
 		delBtn.setOnAction(v->{
 			try {
-				// 调用删除函数
-				deleteBakInfo(idVal.get(), nameVal.get());
-				queryHelper("");
-				// 界面上删除
-//				var items = dataTable.getItems();
-//				ResultSetRowPo tmp = null;
-//				for(ResultSetRowPo item : items) {
-//					String val = item.getValueByFieldName("ID");
-//					if(val != null || val.equals(idVal.get())) {
-//						tmp = item;
-//						break;
-//					}
-//				}
-//				items.remove(tmp);
+				boolean sure = MyAlert.myConfirmationShowAndWait("Delete " + nameVal.get() + "?");
+				if(sure) {
+					// 调用删除函数
+					deleteBakInfo(idVal.get(), nameVal.get());
+					idVal.set("");
+					nameVal.set("");
+					String queryText = queryVal.getText();
+					queryHelper(queryText);
+				}
+				
 			} catch (Exception e) {
 				MyAlert.errorAlert("服务器报错");
 				e.printStackTrace();
@@ -115,6 +121,7 @@ public class QueryBackupController implements Initializable {
 				Platform.runLater(()->{
 					queryBox.getChildren().remove(masker);
 					queryBox.getChildren().add(dataTable);
+					selectBtn.setDisable(dataTable.getSelectionModel().isEmpty());
 				});
 			}
 		});
@@ -132,7 +139,7 @@ public class QueryBackupController implements Initializable {
 		Map<String, String> pamas = new HashMap<>();
 		pamas.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
 		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
-		pamas.put("BAK_NAME", ConfigVal.SQLUCKY_PASSWORD.get());
+		pamas.put("BAK_NAME", bakName);
 		
 		String bakInfoJson = HttpUtil.post1(httpUrl, pamas);
 		 

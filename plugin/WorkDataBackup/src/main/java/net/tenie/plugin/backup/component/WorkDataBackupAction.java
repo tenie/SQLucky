@@ -34,7 +34,13 @@ public class WorkDataBackupAction {
 		tmpDir += "/.sqlucky";
 		return tmpDir;
 	}
-	
+	// 检查密钥最小长度
+	public static boolean checkMinLength(String val) {
+		if( val.length() >= 8) {
+			return true;
+		}
+		return false;
+	}
 	// 触发备份按钮
 	public static void BackupBtn(BackupInfoPO po) {
 		File diskPath = null;
@@ -52,6 +58,11 @@ public class WorkDataBackupAction {
 					MyAlert.errorAlert("使用密钥, 请输入密钥!");
 					return;
 				}
+				if( checkMinLength(pKey) == false) {
+					MyAlert.errorAlert("密钥字符长度不小于8位!");
+					return;
+				}
+				
 			}
 
 			// 校验备份类型
@@ -76,6 +87,11 @@ public class WorkDataBackupAction {
 			if (po.getSaveModel()) {
 //				backupScript(backupName, pKey, "3", false);
 			}
+			// 使用 密钥, 在压缩包里放一个空文件
+			if (po.getUsePrivateKey()) {
+				stringToFile(" ",  "PK", saveBakDir);
+			}
+			
 			diskPath = new File(saveDir, backupName + ".zip");
 
 			ZipUtil.ZipDirectory(saveBakDir, diskPath.getAbsolutePath());
@@ -174,7 +190,7 @@ public class WorkDataBackupAction {
 		
 		return strFile;
 	}
-	
+ 
 	/**
 	 * str写入到文件并压缩文件
 	 * @param val
@@ -261,27 +277,29 @@ public class WorkDataBackupAction {
 	/**
 	 * 解析数据
 	 * @param bakFile
+	 * @throws Exception 
 	 */
-	public static List<DBConnectorInfoPo>  parseBackupFile(File bakFile ,String pKey) {
-//		bakFile
+	public static List<DBConnectorInfoPo> parseBackupFile(File bakFile, String pKey) throws Exception {
 		String jsonStr = FileTools.read(bakFile, "UTF-8");
 		List<String> ls = JsonTools.jsonToList(jsonStr, String.class);
 		List<DBConnectorInfoPo> pols = new ArrayList<>();
-		for(String item : ls) {
-			try {
-				String jsonval = DesUtil.decrypt(item,  pKey);
+		try {
+			for (String item : ls) {
+				String jsonval = DesUtil.decrypt(item, pKey);
 				DBConnectorInfoPo po = DBConnectorInfoPo.toPo(jsonval);
 				pols.add(po);
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
 		}
 		return pols;
-//		DBConnectorInfoPo
 	}
 	
 	public static void main(String[] args) throws IOException {
-		File zipFIle = new File("C:\\Users\\tenie\\.sqlucky" , "yeeerwewe" );
-		ZipUtil.UnzipFile(zipFIle.getAbsolutePath(), "C:\\Users\\tenie\\.sqlucky\\unzipdir");
+//		File zipFIle = new File("C:\\Users\\tenie\\.sqlucky" , "yeeerwewe" );
+//		ZipUtil.UnzipFile(zipFIle.getAbsolutePath(), "C:\\Users\\tenie\\.sqlucky\\unzipdir");
+		stringToFile(" ",  "Pk", "C:\\Users\\tenie\\.sqlucky\\kkk1");
+//		System.out.println("???");
 	}
 }
