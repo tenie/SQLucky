@@ -24,8 +24,10 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 
 public class WorkDataBackupController implements Initializable {
 
@@ -53,12 +55,18 @@ public class WorkDataBackupController implements Initializable {
 	private SimpleStringProperty nameVal ;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		
+	 	 modelCB.setVisible(false);
 		 downloadBtn.setVisible(false);
+		 TextFieldSetup.setMaxLength(privateKey, 30);
+		 TextFieldSetup.setMaxLength(recoverPK, 30); 
+		 TextFieldSetup.setMaxLength(bakName, 30); 
+		 
+		 
 		 uploadPage();
 		 downloadPage();
 		 isLogin();
 	}
+	
 	// 是否登入检查
 	public boolean isLogin() {
 		// 登入校验
@@ -158,18 +166,18 @@ public class WorkDataBackupController implements Initializable {
 		});
 		
 		
-		// 下载按钮
-		downloadBtn.setOnAction(e->{
-			// 登入校验
-			if(isLogin() == false) {
-				return ;
-			}
-			if(idVal != null ) {
-				WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
-				AppComponent appComponent = ComponentGetter.appComponent; 
-			}
-			
-		});
+//		// 下载按钮
+//		downloadBtn.setOnAction(e->{
+//			// 登入校验
+//			if(isLogin() == false) {
+//				return ;
+//			}
+//			if(idVal != null ) {
+//				WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
+//				AppComponent appComponent = ComponentGetter.appComponent; 
+//			}
+//			
+//		});
 		
 		// 下载覆盖
 		downloadOverlapBtn.setOnAction(e->{
@@ -178,23 +186,54 @@ public class WorkDataBackupController implements Initializable {
 				if (isLogin() == false) {
 					return;
 				}
+				// 密钥检查
+				String pkey = "";
+				if(useRPK.isSelected()) {
+					pkey = recoverPK.getText();
+					if( WorkDataBackupAction.checkMinLength(pkey) == false) {
+						MyAlert.errorAlert("密钥字符长度不小于8位!");
+						return;
+					}
+				}
+				
 				downloadOverlapBtn.setDisable(true);
+				
+				
 				File zip = WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
 				Map<String, File> allFile = WorkDataBackupAction.unZipBackupFile(zip, nameVal.get());
-				String pkey = "";
+				
+				// 检查是否使用密钥的tag文件
+				if (allFile.get("PK") != null) {
+					if(useRPK.isSelected() == false) {
+						MyAlert.errorAlert("备份文件已加密, 需要密钥才可操作!");
+						return;
+					}
+				}
+				
 				AppComponent appComponent = ComponentGetter.appComponent;
 				// dbinfo 信息覆盖
 				if (allFile.get("1") != null) {
-					List<DBConnectorInfoPo> pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+					List<DBConnectorInfoPo> pols =  null;
+					try {
+						 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+					} catch (Exception e2) {
+						MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
+						return;
+					}
 					appComponent.recreateDBinfoTreeData(pols);
 				}
 				
 				// 脚本 覆盖
 				if (allFile.get("2") != null) {
-					List<DBConnectorInfoPo> pols = WorkDataBackupAction.parseBackupFile(allFile.get("2"), pkey);
-					appComponent.recreateDBinfoTreeData(pols);
+					List<DBConnectorInfoPo> pols =  null;
+					try {
+						 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+					} catch (Exception e2) {
+						MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
+						return;
+					}
 				}
-				
+				MyAlert.infoAlert("", "已完成!");
 			} finally {
 				downloadOverlapBtn.setDisable(false);
 			}
