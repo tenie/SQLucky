@@ -7,7 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.io.FileUtils;
+
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
@@ -26,8 +32,15 @@ import net.tenie.Sqlucky.sdk.utility.net.HttpDownloadFile;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
 public class WorkDataBackupAction {
-	private static String httpUploadUrl = ConfigVal.getSqluckyServer()+"/sqlucky/backupFileUpload";
-	private static String httpDownloadUrl = ConfigVal.getSqluckyServer()+"/sqlucky/backupDownload";
+	private static String httpUploadUrl() {
+		return ConfigVal.getSqluckyServer()+"/sqlucky/backupFileUpload";
+	}
+	private static String httpDownloadUrl() {
+		return  ConfigVal.getSqluckyServer()+"/sqlucky/backupDownload";
+		 
+	}
+	
+	
 	
 	public static String localSaveDir() {
 		String tmpDir = FileUtils.getUserDirectoryPath();
@@ -76,11 +89,14 @@ public class WorkDataBackupAction {
 			sf = new File(saveDir, backupName);
 			sf.mkdir();
 			String saveBakDir = sf.getAbsolutePath();
-
+			String type = "";
+			String usePrivateKey = "N";
 			if (po.getSaveDB()) {
+				type +="Connection Info, ";
 				backupDBInfo(saveBakDir, pKey, "1", ConfigVal.SQLUCKY_VIP.get());
 			}
 			if (po.getSaveScript()) {
+				type +="Script, ";
 				backupScript(saveBakDir, pKey, "2", ConfigVal.SQLUCKY_VIP.get());
 			}
 
@@ -89,15 +105,17 @@ public class WorkDataBackupAction {
 			}
 			// 使用 密钥, 在压缩包里放一个空文件
 			if (po.getUsePrivateKey()) {
+				usePrivateKey = "Y";
 				stringToFile(" ",  "PK", saveBakDir);
 			}
 			
 			diskPath = new File(saveDir, backupName + ".zip");
 
 			ZipUtil.ZipDirectory(saveBakDir, diskPath.getAbsolutePath());
+			
 			// 上传 zip
-			var map = postParam(backupName, "4");
-			HttpUtil.postFile(httpUploadUrl, diskPath.getAbsolutePath(), map);
+			var map = postParam(backupName, type, usePrivateKey);
+			HttpUtil.postFile(httpUploadUrl(), diskPath.getAbsolutePath(), map);
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -214,12 +232,13 @@ public class WorkDataBackupAction {
 	 * @param backupType
 	 * @return
 	 */
-	public static Map<String, String> postParam(String bakName ,String backupType){
+	public static Map<String, String> postParam(String bakName ,String backupType, String usePrivatekey){
 		Map<String, String> map = new HashMap<>();
 		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get()); 
 		map.put("PASSWORD",  ConfigVal.SQLUCKY_PASSWORD.get());
 		map.put("BACKUP_NAME", bakName);
 		map.put("BACKUP_TYPE", backupType);
+		map.put("BACKUP_PRIVATE", usePrivatekey);
 		
 		return map;
 	}
@@ -242,7 +261,7 @@ public class WorkDataBackupAction {
 		Map<String , String> hm =  downloadParam(id, bakName);
 		String saveDir = localSaveDir();
 		File sf = new File(saveDir, bakName);
-		HttpDownloadFile.getInfo(httpDownloadUrl, hm, sf.getAbsolutePath());
+		HttpDownloadFile.getInfo(httpDownloadUrl(), hm, sf.getAbsolutePath());
 		return sf;
 	}
 	
@@ -296,6 +315,148 @@ public class WorkDataBackupAction {
 		return pols;
 	}
 	
+	// 下载覆盖
+	public static void downloadOverlap(
+			Button downloadOverlapBtn,Button downloadMergeBtn,
+			TextField recoverPK,
+			Map<String, File> allFile,
+			boolean dbInfo, boolean script) {
+		try {
+			// 登入校验
+			if (isLogin() == false) {
+				return;
+			}
+			// 密钥检查
+			String pkey = "";
+			if(recoverPK.isDisabled() == false) {
+				pkey = recoverPK.getText();
+				if( WorkDataBackupAction.checkMinLength(pkey) == false) {
+					MyAlert.errorAlert("密钥字符长度不小于8位!");
+					return;
+				}
+			}
+			
+			downloadOverlapBtn.setDisable(true);
+			downloadMergeBtn.setDisable(true);
+			// 检查是否使用密钥的tag文件
+			if (allFile.get("PK") != null) { 
+				if(recoverPK.getText().length() == 0) {
+					MyAlert.errorAlert("备份文件已加密, 需要密钥才可操作!");
+					return;
+				}
+			}
+			
+			AppComponent appComponent = ComponentGetter.appComponent;
+			// dbinfo 信息覆盖
+			if (dbInfo && allFile.get("1") != null) {
+				List<DBConnectorInfoPo> pols =  null;
+				try {
+					 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+				} catch (Exception e2) {
+					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
+					return;
+				}
+				// 使用新的数据重建界面上的链接节点树的数据
+				appComponent.recreateDBinfoTreeData(pols);
+			}
+			
+			// 脚本 覆盖
+			if (script && allFile.get("2") != null) {
+				List<DBConnectorInfoPo> pols =  null;
+				try {
+					 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+				} catch (Exception e2) {
+					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
+					return;
+				}
+			}
+			MyAlert.infoAlert("", "已完成!");
+		} finally {
+			downloadOverlapBtn.setDisable(false);
+			downloadMergeBtn.setDisable(false);
+		}
+	
+	}
+	
+	// 下载合并
+	public static void downloadMerge(
+			Button downloadOverlapBtn, Button downloadMergeBtn,
+			TextField recoverPK,
+			Map<String, File> allFile,
+			boolean dbInfo, boolean script) {
+		try {
+			// 登入校验
+			if (isLogin() == false) {
+				return;
+			}
+			// 密钥检查
+			String pkey = "";
+			if(recoverPK.isDisabled() == false) {
+				pkey = recoverPK.getText();
+				if( WorkDataBackupAction.checkMinLength(pkey) == false) {
+					MyAlert.errorAlert("密钥字符长度不小于8位!");
+					return;
+				}
+			}
+			
+			downloadOverlapBtn.setDisable(true);
+			downloadMergeBtn.setDisable(true);
+			// 检查是否使用密钥的tag文件
+			if (allFile.get("PK") != null) { 
+				if(recoverPK.getText().length() == 0) {
+					MyAlert.errorAlert("备份文件已加密, 需要密钥才可操作!");
+					return;
+				}
+			}
+			
+			AppComponent appComponent = ComponentGetter.appComponent;
+			// dbinfo 信息覆盖
+			if (dbInfo && allFile.get("1") != null) {
+				List<DBConnectorInfoPo> pols =  null;
+				try {
+					 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+				} catch (Exception e2) {
+					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
+					return;
+				}
+				// 使用新的数据重建界面上的链接节点树的数据
+				appComponent.MergeBinfoTreeData(pols);
+			}
+			
+			// 脚本 覆盖
+			if (script && allFile.get("2") != null) {
+				List<DBConnectorInfoPo> pols =  null;
+				try {
+					 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+				} catch (Exception e2) {
+					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
+					return;
+				}
+			}
+			MyAlert.infoAlert("", "已完成!");
+		} finally {
+			downloadOverlapBtn.setDisable(false);
+			downloadMergeBtn.setDisable(false);
+		}
+	
+	}
+	
+
+	// 是否登入检查
+	public static boolean isLogin() {
+		// 登入校验
+		String sqlEmail = ConfigVal.SQLUCKY_EMAIL.get();
+		String sqlPW = ConfigVal.SQLUCKY_PASSWORD.get();
+		if(StrUtils.isNullOrEmpty(sqlEmail) || StrUtils.isNullOrEmpty(sqlPW)) {
+			Platform.runLater(()->{
+				AppComponent app =  ComponentGetter.appComponent;
+				app.showSingInWindow("Use Backup must Login");
+			});
+			
+			return false;
+		}
+		return true;
+	}
 	public static void main(String[] args) throws IOException {
 //		File zipFIle = new File("C:\\Users\\tenie\\.sqlucky" , "yeeerwewe" );
 //		ZipUtil.UnzipFile(zipFIle.getAbsolutePath(), "C:\\Users\\tenie\\.sqlucky\\unzipdir");

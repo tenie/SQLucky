@@ -326,6 +326,13 @@ public class SqluckyAppComponent implements AppComponent {
 		ConnectionDao.DBInfoTreeReCreate(dbciPo);
 		
 	}
+	/**
+	 * 使用新数据合并入数据库连接节点树
+	 */
+	@Override
+	public void MergeBinfoTreeData(List<DBConnectorInfoPo> dbciPo) {
+		ConnectionDao.DBInfoTreeMerge(dbciPo);
+	}
 	
 
 }

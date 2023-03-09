@@ -5,13 +5,13 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="231.0" prefWidth="355.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.plugin.backup.component.WorkDataBackupController">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="382.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.plugin.backup.component.WorkDataBackupController">
   <tabs>
     <Tab text="上传备份">
          <content>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="myModalDialog">
                <children>
-                  <Button fx:id="bakBtn" layoutX="292.0" layoutY="168.0" mnemonicParsing="false" styleClass="myAlertBtn" text="备份" />
+                  <Button fx:id="bakBtn" layoutX="320.0" layoutY="178.0" mnemonicParsing="false" styleClass="myAlertBtn" text="备份" />
                   <CheckBox fx:id="pkCB" layoutX="15.0" layoutY="123.0" text="使用端到端加密传输, 密钥需要自己保存!" />
                   <Label layoutX="14.0" layoutY="151.0" text="端到端加密密钥" />
                   <TextField fx:id="privateKey" layoutX="112.0" layoutY="149.0" styleClass="myFindTextField" />
@@ -27,14 +27,15 @@
          <content>
             <Pane prefHeight="200.0" prefWidth="200.0" styleClass="myModalDialog">
                <children>
-                  <Button fx:id="syncBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" styleClass="myAlertBtn" text="同步备份文件" />
-                  <CheckBox fx:id="useRPK" layoutX="14.0" layoutY="63.0" text="使用密钥恢复备份文件" />
-                  <Label layoutX="14.0" layoutY="94.0" text="密钥" />
-                  <TextField fx:id="recoverPK" layoutX="46.0" layoutY="90.0" styleClass="myFindTextField" />
-                  <Button fx:id="downloadOverlapBtn" layoutX="13.0" layoutY="127.0" mnemonicParsing="false" styleClass="myAlertBtn" text="下载备份覆盖本地数据" />
-                  <Button fx:id="downloadMergeBtn" layoutX="159.0" layoutY="127.0" mnemonicParsing="false" styleClass="myAlertBtn" text="下载备份和本地数据合并" />
+                  <Button fx:id="syncBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" styleClass="myAlertBtn" text="下载备份文件" />
+                  <Label layoutX="13.0" layoutY="139.0" text="密钥" />
+                  <TextField fx:id="recoverPK" layoutX="45.0" layoutY="135.0" styleClass="myFindTextField" />
+                  <Button fx:id="downloadOverlapBtn" layoutX="14.0" layoutY="178.0" mnemonicParsing="false" styleClass="myAlertBtn" text="覆盖本地数据" />
+                  <Button fx:id="downloadMergeBtn" layoutX="114.0" layoutY="178.0" mnemonicParsing="false" styleClass="myAlertBtn" text="和本地数据合并" />
                   <TextField fx:id="selBakName" disable="true" layoutX="109.0" layoutY="14.0" styleClass="myFindTextField" />
-                  <Button fx:id="downloadBtn" layoutX="13.0" layoutY="165.0" mnemonicParsing="false" styleClass="myAlertBtn" text="仅下载备份文件" />
+                  <Button fx:id="downloadBtn" layoutX="229.0" layoutY="178.0" mnemonicParsing="false" styleClass="myAlertBtn" text="仅下载备份文件" />
+                  <CheckBox fx:id="bakdbCB" layoutX="13.0" layoutY="50.0" text="使用数据库连接配置" />
+                  <CheckBox fx:id="bakscriptCB" layoutX="14.0" layoutY="80.0" text="使用脚本文件" />
                </children>
             </Pane>
          </content></Tab>

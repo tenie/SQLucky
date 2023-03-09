@@ -138,7 +138,6 @@ public class DBinfoTree {
 	
 	// 清空root, 然后插入新节点
 	public static void cleanRootRecoverNodeFromList(List<SqluckyConnector> datas) {
-//		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj(dbciPo);
 		rootNode.getChildren().clear();
 		List<MyTreeItem<TreeNodePo>> ls = new ArrayList<>();
 		if (datas != null && datas.size() > 0) {
