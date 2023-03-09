@@ -221,17 +221,73 @@ public class ConnectionDao {
 			e.printStackTrace();
 		}
 	}
+	// 根据名称查找旧数据, 如果查询的名称已经存在就添加后缀查找, 直到名称为唯一的返回
+	public static String queryConnectionInfoName(Connection conn, String qname) {
+		String val = DBTools.selectOne(conn, "Select CONN_NAME from CONNECTION_INFO WHERE CONN_NAME = '"+qname+"'");
+		if("".equals(val)) {
+			return qname;
+		}else {
+			val = queryConnectionInfoName(conn, qname+"*");
+		}
+		return val; 
+	}
 	
 	// 从新创建dbinfoTree的数据, 删除旧数据
 	public static void DBInfoTreeReCreate(List<DBConnectorInfoPo> dbciPo) {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
+			// 删除表里的旧数据
 			deleteConnectionInfo(conn);
+			// 处理数据DBConnectorInfoPo 转为SqluckyConnector
 			List<SqluckyConnector>  ls = recoverConnObj(dbciPo);
+			// 将新数据插入到表里
 			for(SqluckyConnector item : ls) {
 				createOrUpdate(conn, item);
 			}
+			// 页面数据清空, 再加载新数据
 			DBinfoTree.cleanRootRecoverNodeFromList(ls);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+	
+	// 将DBConnectorInfoPo 的连接名称和数据库中已有的连接名称重复就重命名
+	public static void renameOverlapDBinfoName(List<DBConnectorInfoPo> dbciPo) {
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			if(dbciPo != null && dbciPo.size() > 0) {
+				for(var po : dbciPo) {
+					String name = po.getConnName();
+					String val = queryConnectionInfoName(conn, name);
+					po.setConnName(val);
+				}
+			}
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+		
+	} 
+	
+	// 将新数据和旧数据合并起来
+	public static void DBInfoTreeMerge(List<DBConnectorInfoPo> dbciPo) {
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			// 判断链接名称是否重复, 重复添加后缀
+			renameOverlapDBinfoName(dbciPo);
+			
+			// 处理数据DBConnectorInfoPo 转为SqluckyConnector
+			List<SqluckyConnector>  ls = recoverConnObj(dbciPo);
+			// 将新数据插入到表里
+			for(SqluckyConnector item : ls) {
+				createOrUpdate(conn, item);
+			}
+			// 从数据库从新读取数据
+			List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
+			// 页面数据清空, 再加载新数据
+			DBinfoTree.cleanRootRecoverNodeFromList(datas);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

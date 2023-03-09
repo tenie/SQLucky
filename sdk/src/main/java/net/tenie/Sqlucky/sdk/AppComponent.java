@@ -74,5 +74,9 @@ public interface AppComponent {
 	 * 使用新数据重建数据库连接节点树
 	 */
 	public void recreateDBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
+	/**
+	 * 使用新数据合并入数据库连接节点树
+	 */
+	public void MergeBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
 	
 }

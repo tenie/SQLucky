@@ -3,10 +3,8 @@ package net.tenie.plugin.backup.component;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle; 
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
@@ -20,13 +18,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 
 public class WorkDataBackupController implements Initializable {
@@ -45,43 +39,37 @@ public class WorkDataBackupController implements Initializable {
 	
 	@FXML private TextField selBakName;
 	@FXML private TextField recoverPK;
-	@FXML private CheckBox useRPK;
+//	@FXML private CheckBox useRPK;
 	
 	@FXML private Button downloadMergeBtn;
 	@FXML private Button downloadOverlapBtn;
 	@FXML private Button downloadBtn;
 	
-	private SimpleStringProperty idVal ;
-	private SimpleStringProperty nameVal ;
+	private SimpleStringProperty idVal = new  SimpleStringProperty("");
+	private SimpleStringProperty nameVal  = new  SimpleStringProperty("");;
+	private DownloadBackupPo  rsVal ;
+	
+	@FXML private CheckBox bakdbCB;
+	@FXML private CheckBox bakscriptCB;
+//	private	File bakFile;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 	 	 modelCB.setVisible(false);
 		 downloadBtn.setVisible(false);
-		 TextFieldSetup.setMaxLength(privateKey, 30);
-		 TextFieldSetup.setMaxLength(recoverPK, 30); 
-		 TextFieldSetup.setMaxLength(bakName, 30); 
+		 // 下载页面 使用使用框默认禁用
+		 bakdbCB.setDisable(true);
+		 bakscriptCB.setDisable(true);
+//		 useRPK.setDisable(true);
+		 TextFieldSetup.setMaxLength(privateKey, 50);
+		 TextFieldSetup.setMaxLength(recoverPK, 50); 
+		 TextFieldSetup.setMaxLength(bakName, 50); 
 		 
 		 
 		 uploadPage();
 		 downloadPage();
-		 isLogin();
+		 WorkDataBackupAction.isLogin();
 	}
 	
-	// 是否登入检查
-	public boolean isLogin() {
-		// 登入校验
-		String sqlEmail = ConfigVal.SQLUCKY_EMAIL.get();
-		String sqlPW = ConfigVal.SQLUCKY_PASSWORD.get();
-		if(StrUtils.isNullOrEmpty(sqlEmail) || StrUtils.isNullOrEmpty(sqlPW)) {
-			Platform.runLater(()->{
-				AppComponent app =  ComponentGetter.appComponent;
-				app.showSingInWindow("Use Backup must Login");
-			});
-			
-			return false;
-		}
-		return true;
-	}
 	
 	public void uploadPage() {
 		// 按钮亮起
@@ -102,16 +90,9 @@ public class WorkDataBackupController implements Initializable {
 		// 备份按钮
 		bakBtn.setOnAction(e -> {
 			// 登入校验
-			if(isLogin() == false) {
+			if(WorkDataBackupAction.isLogin() == false) {
 				return ;
 			}
-//			String sqlEmail = ConfigVal.SQLUCKY_EMAIL;
-//			String sqlPW = ConfigVal.SQLUCKY_PASSWORD;
-//			if(StrUtils.isNullOrEmpty(sqlEmail) || StrUtils.isNullOrEmpty(sqlPW)) {
-//				AppComponent app =  ComponentGetter.appComponent;
-//				app.showSingInWindow();
-//				return ;
-//			}
 			// 
 			bakBtn.disableProperty().unbind();
 			bakBtn.setDisable(true);
@@ -129,38 +110,76 @@ public class WorkDataBackupController implements Initializable {
 	}
 	// 下载页面初始化
 	public void downloadPage() {
-		downloadOverlapBtn.setDisable(true);
 		
+		// 还原备份文件按钮, 默认不启用
+		downloadOverlapBtn.setDisable(true); 
+		downloadMergeBtn.setDisable(true);
+		// 当有文件名称了, 就可以当按钮启用
 		selBakName.textProperty().addListener((ob, ol, nw)->{
 			if(nw != null ) {
 				if(nw.length() > 0) {
 					downloadOverlapBtn.setDisable(false);
+					downloadMergeBtn.setDisable(false);
 				}else {
 					downloadOverlapBtn.setDisable(true);
+					downloadMergeBtn.setDisable(true);
 				}
 			}
 		});
-		
-		recoverPK.disableProperty().bind(useRPK.selectedProperty().not());
-		useRPK.selectedProperty().addListener((ob, old, nw) -> {
-			if (!nw) {
+		// 恢复密钥, 如果是不启用, 就清空内容
+		recoverPK.disableProperty().addListener((ob, old, nw) -> {
+			if(recoverPK.isDisable()) {
 				recoverPK.clear();
-			} else {
+			}else {
 				recoverPK.requestFocus();
 			}
 		});
+		recoverPK.setDisable(true);
+//		recoverPK.disableProperty().bind(useRPK.selectedProperty().not());
+//		useRPK.selectedProperty().addListener((ob, old, nw) -> {
+//			if (!nw) {
+//				recoverPK.clear();
+//			} else {
+//				recoverPK.requestFocus();
+//			}
+//		});
 		
 		// 获取服务器上的备份名称
 		syncBtn.setOnAction(e->{
 			// 登入校验
-			if(isLogin() == false) {
+			if(WorkDataBackupAction.isLogin() == false) {
 				return ;
 			}
-			Map<String, SimpleStringProperty>  rsVal = QueryBackupController.showFxml();
+			// 开始之前先禁用选中框 
+			 bakdbCB.setDisable(true);
+			 bakscriptCB.setDisable(true);
+			 recoverPK.setDisable(true);
+//			 useRPK.setDisable(true);
+			
+			 idVal.set("");
+			 nameVal.set("");
+			// 获取选中备份页面的返回值
+		    rsVal = QueryBackupController.showFxml();
 			if(rsVal != null) {
-				idVal = rsVal.get("id");
-				nameVal = 	rsVal.get("name");
+				idVal.set(rsVal.getIdVal().get());
+				nameVal.set(rsVal.getNameVal().get());
 				selBakName.textProperty().bind(nameVal);
+				// 判断 文件中有哪几类备份文件, 来开启使用勾选框
+				Map<String, File> allFile = rsVal.fileDetail();
+				if (allFile.get("1") != null) {
+					 bakdbCB.setDisable(false);
+					
+				}
+				if (allFile.get("2") != null) {
+					 bakscriptCB.setDisable(false);
+				}
+				if (allFile.get("PK") != null) {
+//					useRPK.setDisable(false); 
+					recoverPK.setDisable(false);
+				}
+				
+//				Map<String, File> allFile = WorkDataBackupAction.unZipBackupFile(bakZip, nameVal.get());
+				
 			}
 			
 		});
@@ -181,67 +200,38 @@ public class WorkDataBackupController implements Initializable {
 		
 		// 下载覆盖
 		downloadOverlapBtn.setOnAction(e->{
-			try {
-				// 登入校验
-				if (isLogin() == false) {
-					return;
-				}
-				// 密钥检查
-				String pkey = "";
-				if(useRPK.isSelected()) {
-					pkey = recoverPK.getText();
-					if( WorkDataBackupAction.checkMinLength(pkey) == false) {
-						MyAlert.errorAlert("密钥字符长度不小于8位!");
-						return;
+			if(rsVal.fileDetail().isEmpty() == false) {
+				if(bakdbCB.isSelected() || bakscriptCB.isSelected() ) {
+					// 提示覆盖后不开还原
+					boolean isContinue = MyAlert.myConfirmationShowAndWait("本地数据将被覆盖, 继续?");
+					if(isContinue) {
+						WorkDataBackupAction.downloadOverlap(
+								downloadOverlapBtn, downloadMergeBtn,
+								recoverPK, rsVal.fileDetail(),
+								bakdbCB.isSelected(), bakscriptCB.isSelected());
 					}
 				}
-				
-				downloadOverlapBtn.setDisable(true);
-				
-				
-				File zip = WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
-				Map<String, File> allFile = WorkDataBackupAction.unZipBackupFile(zip, nameVal.get());
-				
-				// 检查是否使用密钥的tag文件
-				if (allFile.get("PK") != null) {
-					if(useRPK.isSelected() == false) {
-						MyAlert.errorAlert("备份文件已加密, 需要密钥才可操作!");
-						return;
+			}
+		});
+		// 合并
+		downloadMergeBtn.setOnAction(e->{
+			if(rsVal.fileDetail().isEmpty() == false) {
+				if(bakdbCB.isSelected() || bakscriptCB.isSelected() ) {
+					// 提示覆盖后不开还原
+					boolean isContinue = MyAlert.myConfirmationShowAndWait("和本地数据合并, 名称相同会被添加*符予以区分, 继续?");
+					if(isContinue) {
+						WorkDataBackupAction.downloadMerge(
+								downloadOverlapBtn, downloadMergeBtn,
+								recoverPK, rsVal.fileDetail(),
+								bakdbCB.isSelected(), bakscriptCB.isSelected());
 					}
 				}
-				
-				AppComponent appComponent = ComponentGetter.appComponent;
-				// dbinfo 信息覆盖
-				if (allFile.get("1") != null) {
-					List<DBConnectorInfoPo> pols =  null;
-					try {
-						 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
-					} catch (Exception e2) {
-						MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
-						return;
-					}
-					appComponent.recreateDBinfoTreeData(pols);
-				}
-				
-				// 脚本 覆盖
-				if (allFile.get("2") != null) {
-					List<DBConnectorInfoPo> pols =  null;
-					try {
-						 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
-					} catch (Exception e2) {
-						MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
-						return;
-					}
-				}
-				MyAlert.infoAlert("", "已完成!");
-			} finally {
-				downloadOverlapBtn.setDisable(false);
 			}
 		});
 	}
 	 
 	
-	static public void showFxml() {
+	 public static void showFxml() {
 		String fxml = "/workBackupFxml/workdataBackup.fxml";
 		try {
 			Stage stage = new Stage();

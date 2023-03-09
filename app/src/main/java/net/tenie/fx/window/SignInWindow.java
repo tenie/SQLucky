@@ -26,6 +26,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
 
 /**
@@ -94,10 +95,11 @@ public class SignInWindow {
 		
 		tfemail = new TextField();
 		tfemail.setPromptText(email);
-	
+		TextFieldSetup.setMaxLength(tfemail, 100);
 		
 		password = new PasswordField();
 		password.setPromptText(passwordStr);
+		TextFieldSetup.setMaxLength(password, 50);
 		
 		HBox hb2 = new HBox(); 
 		Label Remember = new Label(remember);
@@ -176,10 +178,12 @@ public class SignInWindow {
 	    		return ;
 	    	}
 	    	
-	    	if(passwordVal == null || passwordVal.trim().length() == 0) {
-	    		MyAlert.errorAlert( "密码不能为空");
+	    	if(passwordVal == null || passwordVal.trim().length() < 16) {
+	    		MyAlert.errorAlert( "密码不能小于16位");
 	    		return ;
 	    	}
+	    	
+	    	 
 	    	
 	    	boolean tf = rememberCB.isSelected();
 	    	boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );

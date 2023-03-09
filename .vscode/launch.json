@@ -1,0 +1,252 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "Db2ErrorCode",
+            "request": "launch",
+            "mainClass": "SQLucky.plugin.connector.db2/net.tenie.plugin.DB2Connector.impl.Db2ErrorCode",
+            "projectName": "SQLucky-Connector-DB2"
+        },
+        {
+            "type": "java",
+            "name": "DataModelUtility",
+            "request": "launch",
+            "mainClass": "SQLucky.plugin.DataModel/net.tenie.plugin.DataModel.tools.DataModelUtility",
+            "projectName": "SQLucky-Plugin-Data-model"
+        },
+        {
+            "type": "java",
+            "name": "WorkDataBackupAction",
+            "request": "launch",
+            "mainClass": "SQLucky.plugin.WorkDataBackup/net.tenie.plugin.backup.component.WorkDataBackupAction",
+            "projectName": "SQLucky-Plugin-WorkDataBackup"
+        },
+        {
+            "type": "java",
+            "name": "DesUtil",
+            "request": "launch",
+            "mainClass": "SQLucky.sdk/net.tenie.Sqlucky.sdk.utility.DesUtil",
+            "projectName": "SQLucky-SDK"
+        },
+        {
+            "type": "java",
+            "name": "JsonTools",
+            "request": "launch",
+            "mainClass": "SQLucky.sdk/net.tenie.Sqlucky.sdk.utility.JsonTools",
+            "projectName": "SQLucky-SDK"
+        },
+        {
+            "type": "java",
+            "name": "ObjFormater",
+            "request": "launch",
+            "mainClass": "SQLucky.sdk/net.tenie.Sqlucky.sdk.utility.ObjFormater",
+            "projectName": "SQLucky-SDK"
+        },
+        {
+            "type": "java",
+            "name": "TestDetector",
+            "request": "launch",
+            "mainClass": "SQLucky.sdk/net.tenie.Sqlucky.sdk.utility.TestDetector",
+            "projectName": "SQLucky-SDK"
+        },
+        {
+            "type": "java",
+            "name": "ZipUtil",
+            "request": "launch",
+            "mainClass": "SQLucky.sdk/net.tenie.Sqlucky.sdk.utility.ZipUtil",
+            "projectName": "SQLucky-SDK"
+        },
+        {
+            "type": "java",
+            "name": "HttpUtil",
+            "request": "launch",
+            "mainClass": "SQLucky.sdk/net.tenie.Sqlucky.sdk.utility.net.HttpUtil",
+            "projectName": "SQLucky-SDK"
+        },
+        {
+            "type": "java",
+            "name": "FXSampler",
+            "request": "launch",
+            "mainClass": "SQLucky/fxsampler.FXSampler",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "LogSystem",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.Action.LogSystem",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "MyAppTest",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.main.MyAppTest",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "NotificationPaneApp",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.main.NotificationPaneApp",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "NotificationsApp",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.main.NotificationsApp",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "Restart",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.main.Restart",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "SQLucky",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.main.SQLucky",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "BlockingQueueTs",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.api.BlockingQueueTs",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "App16_8",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.app.App16_8",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "DialogTest",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.app.DialogTest",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "MCVE",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.app.MCVE",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "MediaSlider",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.app.MediaSlider",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "ScrollTrackingTextArea",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.app.ScrollTrackingTextArea",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "TimelineEvents",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.app.TimelineEvents",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "TreeViewDemo",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.app.TreeViewDemo",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "TreeViewExample",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.app.TreeViewExample",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "inputTextField",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.app.inputTextField",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "AnchorPaneApp",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.control.AnchorPaneApp",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "NotificationPaneApp(1)",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.control.NotificationPaneApp",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "TableViewSample",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.control.TableViewSample",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "WebViewTest",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.fx.test.control.WebViewTest",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "Sample",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.lib.db.h2.Sample",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "DynamicJarApp",
+            "request": "launch",
+            "mainClass": "SQLucky/net.tenie.lib.tools.DynamicJarApp",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "HelloFilteredTableView",
+            "request": "launch",
+            "mainClass": "SQLucky/org.controlsfx.samples.tableview2.HelloFilteredTableView",
+            "projectName": "SQLucky"
+        },
+        {
+            "type": "java",
+            "name": "HelloTableView2",
+            "request": "launch",
+            "mainClass": "SQLucky/org.controlsfx.samples.tableview2.HelloTableView2",
+            "projectName": "SQLucky"
+        }
+    ]
+}

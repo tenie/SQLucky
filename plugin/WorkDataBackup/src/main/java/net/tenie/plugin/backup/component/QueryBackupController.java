@@ -1,5 +1,6 @@
 package net.tenie.plugin.backup.component;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -24,10 +26,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -38,8 +42,14 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
 public class QueryBackupController implements Initializable {
-	private static String httpUrl = ConfigVal.getSqluckyServer()+"/sqlucky/queryAllBackup";
-	private static String delUrl = ConfigVal.getSqluckyServer()+"/sqlucky/delBackup";
+	private static String httpUrl() {
+		return ConfigVal.getSqluckyServer()+"/sqlucky/queryAllBackup";
+	}
+	private static String delUrl() {
+		return ConfigVal.getSqluckyServer()+"/sqlucky/delBackup";
+	}
+	
+	
 	@FXML private Button selectBtn;
 	@FXML private Button queryBtn;
 	@FXML private VBox	queryBox;
@@ -54,7 +64,9 @@ public class QueryBackupController implements Initializable {
 	private static SimpleStringProperty  nameVal = new SimpleStringProperty("");
 	private FilteredTableView<ResultSetRowPo>   dataTable ;
 	private static Stage  stage ;
-	
+	private static StackPane stkp;
+//	private static File bakFile;
+	private static DownloadBackupPo po ;
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// 查询按钮
@@ -66,7 +78,15 @@ public class QueryBackupController implements Initializable {
 		// selectBtn
 //		selectBtn.setDisable(dataTable.getSelectionModel().isEmpty());
 		selectBtn.setOnAction(v->{
-			stage.close();
+			Consumer<String> consumer = s->{
+				File  bakFile = WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
+			    po.setBakFile(bakFile);
+			    Platform.runLater(()->{
+					stage.close();
+				});
+			};
+			LoadingAnimation.loadingAnimation(stkp, "Downloading", consumer);
+			
 		});
 		
 //		dataTable.getSelectionModel().isEmpty()
@@ -141,7 +161,7 @@ public class QueryBackupController implements Initializable {
 		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
 		pamas.put("BAK_NAME", bakName);
 		
-		String bakInfoJson = HttpUtil.post1(httpUrl, pamas);
+		String bakInfoJson = HttpUtil.post1(httpUrl(), pamas);
 		 
 		return bakInfoJson;
 	}
@@ -153,7 +173,7 @@ public class QueryBackupController implements Initializable {
 		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
 		pamas.put("BAK_ID",  id);
 		pamas.put("BAK_NAME",  bakname);
-		String bakInfoJson = HttpUtil.post1(delUrl, pamas);
+		String bakInfoJson = HttpUtil.post1(delUrl(), pamas);
 		if(StrUtils.isNotNullOrEmpty(bakInfoJson)) {
 			return true;
 		}
@@ -171,6 +191,7 @@ public class QueryBackupController implements Initializable {
 		colName.add("Backup Name"); 
 		colName.add("Created At");
 		colName.add("ID");
+//		TYPE_INFO
 		
 		List<String> hiddenCol =  new ArrayList<>();
 		hiddenCol.add("ID");
@@ -213,7 +234,7 @@ public class QueryBackupController implements Initializable {
 		return vals;
 	} 
 	 
-	static public Map<String, SimpleStringProperty>  showFxml() {
+	static public DownloadBackupPo  showFxml() {
 		String fxml = "/workBackupFxml/queryBackup.fxml";
 		Parent root = null;
 		try {
@@ -224,10 +245,13 @@ public class QueryBackupController implements Initializable {
 //			URL url = getClass().getResource(fxml);
 			URL url =  WorkDataBackupController.class.getResource(fxml);
 			root = FXMLLoader.load(url);
-			Scene scene = new Scene(root);
+			stkp = new StackPane();
+			stkp.getChildren().add(root);
+			Scene scene = new Scene(stkp);
+			
 		    CommonUtility.loadCss(scene); 
 			stage.setScene(scene);
-			stage.show();
+			
 			
 			Image	img = ComponentGetter.LogoIcons; //new Image(DataTransferWindow.class.getResourceAsStream(ConfigVal.appIcon));
 			stage.getIcons().add(img);
@@ -236,15 +260,19 @@ public class QueryBackupController implements Initializable {
 				ev.consume();
 			});
 			
+			idVal = new SimpleStringProperty();
+			nameVal = new SimpleStringProperty();
+			po = new DownloadBackupPo();
+			po.setIdVal(idVal);
+			po.setNameVal(nameVal);
+			
+			stage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		idVal = new SimpleStringProperty();
-		nameVal = new SimpleStringProperty();
-		Map<String, SimpleStringProperty> rsMap = new HashMap<>();
-		rsMap.put("id", idVal);
-		rsMap.put("name", nameVal);
-		return rsMap;
+		
+		 
+		return po;
 	}
 	
 

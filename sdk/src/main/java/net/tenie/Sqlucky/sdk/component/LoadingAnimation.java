@@ -1,5 +1,7 @@
 package net.tenie.Sqlucky.sdk.component;
 
+import java.util.function.Consumer;
+
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -64,6 +66,16 @@ public class LoadingAnimation {
 //			 });
 		});
 		 
+	}
+	
+	public static void loadingAnimation(StackPane root, String loadingString, Consumer<String> consumer) {
+		addLoading(root, loadingString , 30);
+		Thread th =  new Thread(()->{
+			consumer.accept("");
+			rmLoading(root);
+		});
+		th.start();
+		
 	}
 	
 }
