@@ -129,11 +129,8 @@ public class QueryBackupController implements Initializable {
 			} catch (Exception e) {
 				Platform.runLater( ()->{
 					MyAlert.errorAlert("服务器请求失败", true);
-					System.out.println("???????????");
 					stage.close();
-				});
-				
-				
+				}); 
 				e.printStackTrace();
 			}
 			if(bakInfoJson != null) {
@@ -191,11 +188,13 @@ public class QueryBackupController implements Initializable {
 		colName.add("Backup Name"); 
 		colName.add("Created At");
 		colName.add("ID");
+		colName.add("Backup Type");
+		colName.add("Use Private Key");
 //		TYPE_INFO
 		
 		List<String> hiddenCol =  new ArrayList<>();
 		hiddenCol.add("ID");
-		
+		// 对象集合转换为map集合
 		List<Map<String, String>> vals =	toMap(ls);
 		
 		var sheetDaV = SqluckyTableView.dataToSheet(colName, vals, hiddenCol);
@@ -215,7 +214,7 @@ public class QueryBackupController implements Initializable {
 		});
 		return table;
 	}
-	
+	// 将List中的对象转换为MAP 后返回一个新的list
 	private static  List<Map<String, String>>  toMap(List<SqluckyBackup>  ls){
 		List<Map<String, String>> vals = new ArrayList<>();
 		 
@@ -224,10 +223,15 @@ public class QueryBackupController implements Initializable {
 			String name = sbp.getBackupName();
 			Date created = sbp.getCreatedAt();
 			String dastr =  sdfs.format(created);
+			String typeInfo =  sbp.getTypeInfo();
+			String usePrivateKey =  sbp.getUsePrivateKey();
+			
 			Map<String, String> tmpMap = new HashMap<>();
 			tmpMap.put("Backup Name", name);
 			tmpMap.put("Created At", dastr);
 			tmpMap.put("ID", sbp.getId().toString());
+			tmpMap.put("Backup Type", typeInfo);
+			tmpMap.put("Use Private Key", usePrivateKey);
 			vals.add(tmpMap);
 		} 
 		
