@@ -16,12 +16,14 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
+import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 
@@ -221,6 +223,18 @@ public class ConnectionDao {
 			e.printStackTrace();
 		}
 	}
+	/**
+	 * 删除 SCRIPT_ARCHIVE 表数据
+	 * @param conn
+	 */
+	public static  void deleteScript(Connection conn) {
+		try {
+			DBTools.execDelTab(conn, "SCRIPT_ARCHIVE");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	// 根据名称查找旧数据, 如果查询的名称已经存在就添加后缀查找, 直到名称为唯一的返回
 	public static String queryConnectionInfoName(Connection conn, String qname) {
 		String val = DBTools.selectOne(conn, "Select CONN_NAME from CONNECTION_INFO WHERE CONN_NAME = '"+qname+"'");
@@ -271,7 +285,7 @@ public class ConnectionDao {
 		
 	} 
 	
-	// 将新数据和旧数据合并起来
+	// 将新的数据库连接数据和旧数据合并起来
 	public static void DBInfoTreeMerge(List<DBConnectorInfoPo> dbciPo) {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
@@ -295,4 +309,44 @@ public class ConnectionDao {
 			SqluckyAppDB.closeConn(conn);
 		}
 	}
+	// 从新创建scriptTree的数据, 删除旧数据
+	public static void scriptTreeReCreate(List<DocumentPo> docPo) {
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			// 删除表里的旧数据
+			deleteScript(conn);
+			// 清空并还原
+			ScriptTabTree.cleanOldAndRecover(docPo); 
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+	
+	// 将新sript数据和旧数据合并起来
+//	public static void scriptTreeMerge(List<DocumentPo> dbciPo) {
+//		Connection conn = SqluckyAppDB.getConn();
+//		try {
+//			// 判断链接名称是否重复, 重复添加后缀
+//			renameOverlapDBinfoName(dbciPo);
+//			
+//			// 处理数据DBConnectorInfoPo 转为SqluckyConnector
+//			List<SqluckyConnector>  ls = recoverConnObj(dbciPo);
+//			// 将新数据插入到表里
+//			for(SqluckyConnector item : ls) {
+//				createOrUpdate(conn, item);
+//			}
+//			// 从数据库从新读取数据
+//			List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
+//			// 页面数据清空, 再加载新数据
+//			DBinfoTree.cleanRootRecoverNodeFromList(datas);
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}finally {
+//			SqluckyAppDB.closeConn(conn);
+//		}
+//	}
 }

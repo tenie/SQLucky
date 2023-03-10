@@ -77,6 +77,8 @@ public interface AppComponent {
 	/**
 	 * 使用新数据合并入数据库连接节点树
 	 */
-	public void MergeBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
+	public void mergeDBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
 	
+	public void recreateScriptTreeData(List<DocumentPo> dbciPo);
+	public void mergeScriptTreeData(List<DocumentPo> dbciPo);
 }

@@ -2,9 +2,7 @@ package net.tenie.Sqlucky.sdk.po;
 
 import java.io.File;
 import java.io.Serializable;
-
 import com.alibaba.fastjson.JSONObject;
-
 import javafx.scene.layout.Region;
 
 /**
@@ -28,6 +26,8 @@ public class DocumentPo implements Serializable {
 	private File file;
 	private Region icon;
 	private int type;
+	private Integer openStatus;  // 是否在文本编辑区域中打开, 1: 打开; 0: 没打开
+	private Integer isActivate;  // 是否激活, 在编辑区域打开的状态, 只有openStatus 为1时才有意义
 	
 	public DocumentPo() {
 		this.id = null;
@@ -39,7 +39,8 @@ public class DocumentPo implements Serializable {
 		this.file = null;
 		this.icon = null;
 		this.type = IS_SQL;
-		
+		this.openStatus = 0;
+		this.isActivate = 0;
 	}
 	
 	public Integer getId() {
@@ -139,23 +140,51 @@ public class DocumentPo implements Serializable {
 		return serialVersionUID;
 	}
 
+	
+	public Integer getOpenStatus() {
+		return openStatus;
+	}
+
+	public void setOpenStatus(Integer openStatus) {
+		this.openStatus = openStatus;
+	}
+
+	 
+	public Integer getIsActivate() {
+		return isActivate;
+	}
+
+	public void setIsActivate(Integer isActivate) {
+		this.isActivate = isActivate;
+	}
+
 	@Override
 	public String toString() {
 		return "DocumentPo [id=" + id + ", title=" + title + ", text=" + text + ", fileFullName=" + fileFullName
 				+ ", encode=" + encode + ", paragraph=" + paragraph + ", file=" + file + ", icon=" + icon + ", type="
-				+ type + "] \n";
+				+ type + ", openStatus=" + openStatus + ", isActivate=" + isActivate + "]";
 	}
+	
+	/**
+	 * 对象转换为json 字符串
+	 * @return
+	 */
+	public String toJsone() {
 
-	
-	 
-	  public String toJsone() { 
-	       
-		    JSONObject jsonObject = (JSONObject) JSONObject.toJSON(this);
-	        System.out.println("Java对象转化为JSON对象\n" + jsonObject.toJSONString());//{"name":"公众号编程大道","age":2,"sex":"m"}
- 
-		  return jsonObject.toJSONString();
-	  }
-	
+		JSONObject jsonObject = (JSONObject) JSONObject.toJSON(this);
+		System.out.println("Java对象转化为JSON对象\n" + jsonObject.toJSONString());// {"name":"公众号编程大道","age":2,"sex":"m"}
+
+		return jsonObject.toJSONString();
+	}
+	/**
+	 * 将json字符串转换对象
+	 * @param json
+	 * @return
+	 */
+	public static DocumentPo toPo(String json) { 
+		DocumentPo val = JSONObject.parseObject(json, DocumentPo.class); 
+		return val;
+	}
 
 
 }

@@ -5,12 +5,9 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -34,7 +31,6 @@ import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.main.SQLucky;
 import net.tenie.lib.db.h2.AppDao;
-import net.tenie.lib.db.h2.H2SqlTextSavePo;
 
 
 /**
@@ -47,6 +43,7 @@ public class ScriptTabTree {
 	private static Logger logger = LogManager.getLogger(ScriptTabTree.class);
 	
 	public static TreeView<SqluckyTab> ScriptTreeView; 
+	public static TreeItem<SqluckyTab> rootNode; 
 	List<ConnItemContainer> connItemParent = new ArrayList<>(); 
 	private  ScriptTreeContextMenu  menu;
 	
@@ -56,7 +53,7 @@ public class ScriptTabTree {
 
 	// db节点view
 	public TreeView<SqluckyTab> createScriptTreeView() {
-		TreeItem<SqluckyTab>  rootNode = new TreeItem<>(new MyAreaTab());
+		rootNode = new TreeItem<>(new MyAreaTab());
 		ComponentGetter.scriptTreeRoot = rootNode;
 		ScriptTreeView = new TreeView<>(rootNode);
 		ScriptTreeView.getStyleClass().add("my-tag");
@@ -81,45 +78,45 @@ public class ScriptTabTree {
 		// 显示设置
 		ScriptTreeView.setCellFactory(new ScriptTabNodeCellFactory());
 		 
-
-		recoverScriptNode(rootNode);
+		// 恢复
+		recoverScriptNode();
 		return ScriptTreeView;
 	}
 	
 	
 	// 恢复数据中保存的连接数据
-	public static void recoverScriptNode(TreeItem<SqluckyTab> rootNode) {
-		List<DocumentPo> datas ;
-		List<H2SqlTextSavePo> ls;
-		String SELECT_PANE ;
-		MyAreaTab sysOpenFileTB = null;
+	public static void recoverScriptNode() {
+		List<DocumentPo> scriptDatas ;
+		// 上次的激活页面
+		MyAreaTab activateMyTab = null;
+		// 从系统中打开 .sql文件时, 大概这个sql的编辑页面
+		MyAreaTab sysOpenFileTB = null;  
 		Connection H2conn = SqluckyAppDB.getConn();
 		try {
-			ls = AppDao.read(H2conn);
-			SELECT_PANE = AppDao.readConfig(H2conn, "SELECT_PANE");
-			datas = AppDao.readScriptPo(H2conn);
+			// 读取 上次左侧script tree中的所有数据
+			scriptDatas = AppDao.readScriptPo(H2conn);
 		} finally {
 			SqluckyAppDB.closeConn(H2conn);
 		}
-		List<Integer> ids = new ArrayList<>();
-		for (H2SqlTextSavePo sqlpo : ls) {
-			ids.add(sqlpo.getScriptId());
-		}
-		
-		List<TreeItem<SqluckyTab>> itemList = new ArrayList<>();
-		List<MyAreaTab> mtbs = new ArrayList<>();
-		if (datas != null && datas.size() > 0) {
-			ConfigVal.pageSize = datas.size();  
-			for (DocumentPo po : datas) {
-				MyAreaTab tb = new MyAreaTab(po, true);
-				
+		//
+		List<TreeItem<SqluckyTab>> treeItems = new ArrayList<>();
+		List<MyAreaTab> myAreaTabs = new ArrayList<>();
+		// 将DocumentPo 对象转换位tree的节点对象
+		if (scriptDatas != null && scriptDatas.size() > 0) {
+			ConfigVal.pageSize = scriptDatas.size();  
+			for (DocumentPo po : scriptDatas) {
+				MyAreaTab tb = new MyAreaTab(po, true); 
 				TreeItem<SqluckyTab> item = new TreeItem<>(tb);
-//				rootNode.getChildren().add(item);
-				itemList.add(item);
-				// 恢复代码编辑框
-				if (ids.contains(po.getId())) {
-					mtbs.add(tb);
-					// 再操作系统中通过鼠标双击打开的文件, 如果再在以前打开过就直接选中
+				treeItems.add(item);
+				// 将需要恢复代码编辑框, 缓存到集合中
+				if(po.getOpenStatus() !=null && po.getOpenStatus() == 1) {
+					myAreaTabs.add(tb);
+					// 设置上次激活的编辑页面
+					if(po.getIsActivate() == 1) {
+						activateMyTab = tb;
+					}
+					
+					// 在操作系统中通过鼠标双击打开的文件, 如果再在以前打开过就直接选中
 					if(StrUtils.isNotNullOrEmpty(SQLucky.sysOpenFile) ) {
 						var filePath = po.getFileFullName();
 						if(StrUtils.isNotNullOrEmpty(filePath) ) {
@@ -131,19 +128,19 @@ public class ScriptTabTree {
 					}
 					
 				}
-				
-				
 			}
 		}
+		
 		MyAreaTab tmpSysOpenFileTB = sysOpenFileTB;
+		MyAreaTab activateTmpMyTab = activateMyTab;
 		// 页面显示后 执行下吗
 		Consumer< String > cr = v->{		
-				if(itemList.size() > 0 ) {
+				if(treeItems.size() > 0 ) {
 				Platform.runLater(() -> {
-					rootNode.getChildren().addAll(itemList);
+					rootNode.getChildren().addAll(treeItems);
 					// 恢复代码编辑框
-					if (mtbs.size() > 0) {
-						MyAreaTab.mainTabPaneAddAllMyTabs(mtbs);
+					if (myAreaTabs.size() > 0) {
+						MyAreaTab.mainTabPaneAddAllMyTabs(myAreaTabs);
 						
 						// 系统打开文件触发启动APP时, 恢复历史中的文件
 						if (tmpSysOpenFileTB != null) {
@@ -154,16 +151,13 @@ public class ScriptTabTree {
 							File sif = new File(SQLucky.sysOpenFile);
 							CommonAction.openSqlFile(sif);
 						}
-						else if (StrUtils.isNotNullOrEmpty(SELECT_PANE)) {// 恢复选中上次选中页面
+						else if (activateTmpMyTab != null) {// 恢复选中上次选中页面
 							logger.info(" 恢复选中上次选中页面" );
-							int sps = Integer.valueOf(SELECT_PANE);
-							if (mtbs.size() > sps) {
-								ComponentGetter.mainTabPane.getSelectionModel().select(sps);
-							}
+							ComponentGetter.mainTabPane.getSelectionModel().select(activateTmpMyTab);
 						}
 					}
 					// 没有tab被添加, 添加一新的
-					if (mtbs.size() == 0) {
+					if (myAreaTabs.size() == 0) {
 						MyAreaTab.addCodeEmptyTabMethod();
 					}
 				});
@@ -175,10 +169,65 @@ public class ScriptTabTree {
 			 
 		};
 		CommonUtility.addInitTask(cr);
-		
-
 	}
 
+	// 使用外部数据还原script tree节点, 清空节点和 清空tabpane打开的编辑tab
+	public static void cleanOldAndRecover(List<DocumentPo> scriptDatas) {
+		rootNode.getChildren().clear();
+		var myTabPane = ComponentGetter.mainTabPane;
+		myTabPane.getTabs().clear();
+		
+		MyAreaTab activateMyTab = null;
+		List<TreeItem<SqluckyTab>> treeItems = new ArrayList<>();
+		List<MyAreaTab> myAreaTabs = new ArrayList<>();
+		// 将DocumentPo 对象转换位tree的节点对象
+		if (scriptDatas != null && scriptDatas.size() > 0) {
+			ConfigVal.pageSize = scriptDatas.size();  
+			for (DocumentPo po : scriptDatas) {
+				// 使用外部数据, 还原将数据保存到数据库, 
+				//只要确保DocumentPo id为null, new MyAreaTab时会保存到数据库 
+				po.setId(null);
+				MyAreaTab tb = new MyAreaTab(po, true); 
+				TreeItem<SqluckyTab> item = new TreeItem<>(tb);
+				treeItems.add(item);
+				// 将需要恢复代码编辑框, 缓存到集合中
+				if(po.getOpenStatus() !=null && po.getOpenStatus() == 1) {
+					myAreaTabs.add(tb);
+					// 设置上次激活的编辑页面
+					if(po.getIsActivate() == 1) {
+						activateMyTab = tb;
+					}
+				}
+				
+			}
+		}
+		
+		MyAreaTab activateTmpMyTab = activateMyTab;
+		// 页面显示后 执行下吗
+		if (treeItems.size() > 0) {
+			Platform.runLater(() -> {
+				rootNode.getChildren().addAll(treeItems);
+				// 恢复代码编辑框
+				if (myAreaTabs.size() > 0) {
+					 MyAreaTab.mainTabPaneAddAllMyTabs(myAreaTabs); 
+					 if (activateTmpMyTab != null ) {// 恢复选中上次选中页面
+						logger.info(" 恢复选中上次选中页面");
+						ComponentGetter.mainTabPane.getSelectionModel().select(activateTmpMyTab);
+					}
+				}
+				// 没有tab被添加, 添加一新的
+				if (myAreaTabs.size() == 0) {
+					MyAreaTab.addCodeEmptyTabMethod();
+				}
+			});
+		}else {
+			Platform.runLater(()->{
+				MyAreaTab.addCodeEmptyTabMethod();
+			});
+		}
+			 
+	}
+	
 	// 所有连接节点
 	public static ObservableList<TreeItem<SqluckyTab>> allTreeItem() {
 		ObservableList<TreeItem<SqluckyTab>> val = ScriptTreeView.getRoot().getChildren();

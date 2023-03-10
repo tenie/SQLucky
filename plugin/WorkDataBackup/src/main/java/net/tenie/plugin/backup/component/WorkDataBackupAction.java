@@ -22,6 +22,7 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.DesUtil;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
@@ -182,7 +183,7 @@ public class WorkDataBackupAction {
 				var item = ls.get(i);
 				SqluckyTab stab = item.getValue();
 				stab.syncScriptPo(conn);
-				var tmp = item.getValue().getDocumentPo();
+				DocumentPo tmp = item.getValue().getDocumentPo();
 				String jsonStr = tmp.toJsone();
 				String encsStr = DesUtil.encrypt(jsonStr,  pKey);
 				vals.add(encsStr);
@@ -294,11 +295,11 @@ public class WorkDataBackupAction {
 	}
 	
 	/**
-	 * 解析数据
+	 * 将连接信息的文件转换为 DBConnectorInfoPo 对象
 	 * @param bakFile
 	 * @throws Exception 
 	 */
-	public static List<DBConnectorInfoPo> parseBackupFile(File bakFile, String pKey) throws Exception {
+	public static List<DBConnectorInfoPo> decrypDBInfoFile(File bakFile, String pKey) throws Exception {
 		String jsonStr = FileTools.read(bakFile, "UTF-8");
 		List<String> ls = JsonTools.jsonToList(jsonStr, String.class);
 		List<DBConnectorInfoPo> pols = new ArrayList<>();
@@ -314,6 +315,31 @@ public class WorkDataBackupAction {
 		}
 		return pols;
 	}
+	
+	/**
+	 * 将script文件 转为对象
+	 * @param bakFile
+	 * @param pKey
+	 * @return
+	 * @throws Exception
+	 */
+	public static List<DocumentPo> decrypScriptFile(File bakFile, String pKey) throws Exception {
+		String jsonStr = FileTools.read(bakFile, "UTF-8");
+		List<String> ls = JsonTools.jsonToList(jsonStr, String.class);
+		List<DocumentPo> pols = new ArrayList<>();
+		try {
+			for (String item : ls) {
+				String jsonval = DesUtil.decrypt(item, pKey);
+				DocumentPo po = DocumentPo.toPo(jsonval);
+				pols.add(po);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return pols;
+	}
+	
 	
 	// 下载覆盖
 	public static void downloadOverlap(
@@ -346,29 +372,45 @@ public class WorkDataBackupAction {
 				}
 			}
 			
+			// 执行中记录是否发生过错误
+			boolean tf = false;
 			AppComponent appComponent = ComponentGetter.appComponent;
 			// dbinfo 信息覆盖
 			if (dbInfo && allFile.get("1") != null) {
 				List<DBConnectorInfoPo> pols =  null;
 				try {
-					 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+					 pols = WorkDataBackupAction.decrypDBInfoFile(allFile.get("1"), pkey);
 				} catch (Exception e2) {
 					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
 					return;
 				}
 				// 使用新的数据重建界面上的链接节点树的数据
-				appComponent.recreateDBinfoTreeData(pols);
+				if(pols !=null && pols.size() > 0) {
+					appComponent.recreateDBinfoTreeData(pols);
+				}else {
+					MyAlert.errorAlert("数据库连接数据为空, 不操作!");
+					tf = true;
+				}
 			}
 			
 			// 脚本 覆盖
 			if (script && allFile.get("2") != null) {
-				List<DBConnectorInfoPo> pols =  null;
+				List<DocumentPo> DocumentPoList =  null;
 				try {
-					 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+					DocumentPoList = WorkDataBackupAction.decrypScriptFile(allFile.get("2"), pkey);
 				} catch (Exception e2) {
 					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
 					return;
 				}
+				
+				if(DocumentPoList !=null && DocumentPoList.size() > 0) {
+					appComponent.recreateScriptTreeData(DocumentPoList);
+//					appComponent.recreateDBinfoTreeData(DocumentPoList);
+				}else {
+					MyAlert.errorAlert("脚本数据为空, 不操作!");
+					tf = true;
+				}
+				
 			}
 			MyAlert.infoAlert("", "已完成!");
 		} finally {
@@ -414,20 +456,20 @@ public class WorkDataBackupAction {
 			if (dbInfo && allFile.get("1") != null) {
 				List<DBConnectorInfoPo> pols =  null;
 				try {
-					 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+					 pols = WorkDataBackupAction.decrypDBInfoFile(allFile.get("1"), pkey);
 				} catch (Exception e2) {
 					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
 					return;
 				}
 				// 使用新的数据重建界面上的链接节点树的数据
-				appComponent.MergeBinfoTreeData(pols);
+				appComponent.mergeDBinfoTreeData(pols);
 			}
 			
 			// 脚本 覆盖
 			if (script && allFile.get("2") != null) {
 				List<DBConnectorInfoPo> pols =  null;
 				try {
-					 pols = WorkDataBackupAction.parseBackupFile(allFile.get("1"), pkey);
+					 pols = WorkDataBackupAction.decrypDBInfoFile(allFile.get("1"), pkey);
 				} catch (Exception e2) {
 					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
 					return;
