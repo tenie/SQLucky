@@ -332,22 +332,6 @@ public class DBConnectorInfoPo {
 		BDConnJsonObj val = JSONObject.parseObject(json, BDConnJsonObj.class);
 		DBConnectorInfoPo valpo = new DBConnectorInfoPo(val);
 		return valpo;
-//		DBConnectorInfoPo val =  JSONObject.parseObject(json, DBConnectorInfoPo.class);
-//		return val;
 	}
-	
-//	public static void main(String[] args) {
-//		DBConnectorInfoPo po = new DBConnectorInfoPo("connName", "driver", "host", "port", "user", "password", "dbvendor", "defaultSchema", "dbName", "jdbcurl", false);
-//		String jsonStr = po.toJson();
-//		
-//		DBConnectorInfoPo pp = DBConnectorInfoPo.toPo(jsonStr);
-//		System.out.println(pp.toString());
-//		
-//	}
-	
-	
-	
-
-	
 }
 

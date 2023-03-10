@@ -239,27 +239,34 @@ public class CommonAction {
 		try {
 			ConnectionDao.refreshConnOrder();
 			TabPane mainTabPane = ComponentGetter.mainTabPane;
-			int SELECT_PANE = mainTabPane.getSelectionModel().getSelectedIndex();
-			
-			AppDao.deleteAll(H2conn);
-			for (Tab t : mainTabPane.getTabs()) {
+			int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();
+			var alltabs = mainTabPane.getTabs();
+			for (int i = 0 ; i < alltabs.size(); i++ ) {
+				Tab tab = alltabs.get(i);
 				//TODO close save
-				MyAreaTab mtab = (MyAreaTab) t;
+				MyAreaTab mtab = (MyAreaTab) tab;
 				mtab.saveScriptPo(H2conn);
 				var spo = mtab.getDocumentPo();
-				String fp = spo.getFileFullName(); 
+				
+				// 将打开状态设置为1, 之后根据这个状态来恢复
 				if (spo != null && spo.getId() != null ) {
 					String sql = mtab.getAreaText() ;
 					if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
-						int paragraph =  spo.getParagraph(); 
-						String title =  spo.getTitle();
-						String encode = spo.getEncode();
-						AppDao.save(H2conn, title, sql, fp, encode, paragraph, spo.getId());
+						spo.setOpenStatus(1); 
+						// 当前激活的编辑页面
+						if(activateTabPane == i) {
+							spo.setIsActivate(1); 
+						}else {
+							spo.setIsActivate(0);
+						}
+					}else {
+						spo.setOpenStatus(0);
+						spo.setIsActivate(0);
 					}
 				}
 			}
 			// 保存选择的pane 下标
-			AppDao.saveConfig(H2conn, "SELECT_PANE", SELECT_PANE + "");
+//			AppDao.saveConfig(H2conn, "SELECT_PANE", activateTabPane + "");
 			
 			// 删除 script tree view 中的空内容tab
 			var childs = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
@@ -275,9 +282,10 @@ public class CommonAction {
 					String fp = scpo.getFileFullName();
 					if(StrUtils.isNullOrEmpty(fp)) {
 						scpo.setTitle("Untitled_"+ idx +"*");
-						AppDao.updateScriptArchive(H2conn , scpo);  
 						idx++;
 					}
+					AppDao.updateScriptArchive(H2conn , scpo);  
+					
 				}				
 			}
 
@@ -293,6 +301,7 @@ public class CommonAction {
 		var tabs = mainTabPane.getTabs(); 
 		for(var tab : tabs) { 
 			MyAreaTab mtb = (MyAreaTab) tab;
+			mtb.getDocumentPo().setOpenStatus(0);
 			mtb.syncScriptPo();
 		} 
 		tabs.clear();

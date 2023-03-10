@@ -92,6 +92,7 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	public MyAreaTab(String TabName) {
 		super();
 		docPo = AppDao.scriptArchive(TabName, "", "", "UTF-8", 0);
+//		docPo.setOpenStatus(1);
 		setTitleName();
 		createMyTab();
 	}
@@ -142,9 +143,10 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		vbox.getChildren().add(pane);
 		VBox.setVgrow(pane, Priority.ALWAYS);
 		this.setContent(vbox);
+		this.docPo.setOpenStatus(1);
 
 		// 关闭前事件
-		this.setOnCloseRequest(tabCloseReq(myTabPane));
+		this.setOnCloseRequest(tabCloseReq(myTabPane , this.docPo));
 		// 选中事件
 		this.setOnSelectionChanged(value -> {
 			MainTabInfo ti = MainTabs.get(this);
@@ -173,9 +175,9 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		vbox.getChildren().add(pane);
 		VBox.setVgrow(pane, Priority.ALWAYS);
 		this.setContent(vbox);
-
+		this.docPo.setOpenStatus(1);
 		// 关闭前事件
-		this.setOnCloseRequest(tabCloseReq(myTabPane));
+		this.setOnCloseRequest(tabCloseReq(myTabPane, docPo));
 		// 选中事件
 		this.setOnSelectionChanged(value -> {
 			MainTabInfo ti = MainTabs.get(this);
@@ -278,10 +280,11 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	/**
 	 * tab 关闭时：阻止关闭最后一个
 	 */
-	public EventHandler<Event> tabCloseReq(TabPane myTabPane) {
+	public EventHandler<Event> tabCloseReq(TabPane myTabPane, DocumentPo po) {
 		return new EventHandler<Event>() {
 			public void handle(Event e) {
 				syncScriptPo();
+				po.setOpenStatus(0);
 //				 // 如果只有一个窗口就不能关闭 
 //				if (myTabPane.getTabs().size() == 1) {
 //  					e.consume();
@@ -321,7 +324,8 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 			if ((idx + 1) < tsize) {
 				for (int i = idx + 1; i < tsize; i++) {
 					var t = tabs.get(i);
-					MyAreaTab mt = (MyAreaTab) t;
+					MyAreaTab mt = (MyAreaTab) t; 
+					mt.getDocumentPo().setOpenStatus(0);
 					mt.syncScriptPo();
 				}
 				tabs.remove(idx + 1, tsize);
@@ -337,6 +341,7 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 				for (int i = 0; i < idx; i++) {
 					var t = tabs.get(i);
 					MyAreaTab mt = (MyAreaTab) t;
+					mt.getDocumentPo().setOpenStatus(0);
 					mt.syncScriptPo();
 				}
 				tabs.remove(0, idx);
