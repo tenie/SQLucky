@@ -79,6 +79,6 @@ public interface AppComponent {
 	 */
 	public void mergeDBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
 	
-	public void recreateScriptTreeData(List<DocumentPo> dbciPo);
-	public void mergeScriptTreeData(List<DocumentPo> dbciPo);
+	public void recreateScriptTreeData(List<DocumentPo> docs);
+	public void mergeScriptTreeData(List<DocumentPo> docs);
 }

@@ -24,22 +24,46 @@ import net.tenie.lib.db.ExportDefaultImp;
  * @author tenie
  *
  */
-public class MyH2Connector extends DbConnector {
- 
-	
-	public MyH2Connector(DBConnectorInfoPo connPo) {
+public class SqluckySqliteConnector extends DbConnector {
+
+	public SqluckySqliteConnector(DBConnectorInfoPo connPo) {
 		super(connPo);
 		ExportDefaultImp ex = new ExportDefaultImp();
 		getConnPo().setExportDDL( ex);
 	} 
 	 
+	public static SqluckySqliteConnector  createTmpConnector(String user, String password, String jdbcUrl) {
+		DBConnectorInfoPo connPo = new DBConnectorInfoPo(
+				"CONN_NAME",  
+				"",
+				"", 
+				"", 
+				user, 
+				password, 
+				"VENDOR",  
+				"SCHEMA",  
+				"DB_NAME",  
+				jdbcUrl,
+				false
+		);
+		SqluckySqliteConnector val = new SqluckySqliteConnector(connPo);
+		return val;
+	} 
+
 
 	@Override
 	public StringProperty DateToStringStringProperty(Object obj) {  
-		Date dv = (Date) obj;
-		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-		StringProperty val = new SimpleStringProperty(v);
-		
+//		Date dv = (Date) obj;
+//		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+//		StringProperty val = new SimpleStringProperty(v);
+		StringProperty val = null;
+		if(obj instanceof String) {
+			val = new SimpleStringProperty((String) obj);
+		}else if( obj instanceof Long) {
+			Date date = new Date((long) obj);
+			String v = StrUtils.dateToStr(date, ConfigVal.dateFormateL);
+			val = new SimpleStringProperty(v);
+		}
 		return val;
 	} 
 
@@ -113,7 +137,7 @@ public class MyH2Connector extends DbConnector {
 				getJdbcUrl(),
 				getAutoConnect()
 				);
-		var dbc = new MyH2Connector(val);
+		var dbc = new SqluckySqliteConnector(val);
 		
 		return dbc;
 	}
@@ -132,15 +156,7 @@ public class MyH2Connector extends DbConnector {
 			return jdbcUrlstr;
 		}else {
 			
-			String fp = connPo.getHostOrFile();
-			if(fp.endsWith(".mv.db"))
-				fp= fp.substring(0, fp.lastIndexOf(".mv.db"));
-			if(fp.endsWith(".trace.db"))
-				fp= fp.substring(0, fp.lastIndexOf(".trace.db"));
-			if(fp.endsWith(".db"))
-				fp= fp.substring(0, fp.lastIndexOf(".db")); 
-			
-			jdbcUrlstr = "jdbc:h2:" +fp;
+			jdbcUrlstr  = "jdbc:sqlite:" + getHostOrFile(); 
 			connPo.setJdbcUrl(jdbcUrlstr);
 		}
 		

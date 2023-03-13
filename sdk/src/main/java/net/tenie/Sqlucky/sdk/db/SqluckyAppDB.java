@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.db;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -157,6 +158,11 @@ public class SqluckyAppDB {
 		String path = DBTools.dbFilePath(); 
 		ConfigVal.H2_DB_FILE_NAME = path + ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION + "_sqlite.db";
 		ConfigVal.H2_DB_FULL_FILE_NAME = ConfigVal.H2_DB_FILE_NAME ;
+		// 如果db文件还不存在, 就说明时新的版本
+		File dbfile = new File(ConfigVal.H2_DB_FILE_NAME);
+		if(dbfile.exists() == false) {
+			ConfigVal.IS_NEW_DB_VERSION = true;
+		}
 		return ConfigVal.H2_DB_FILE_NAME;
 	}
 

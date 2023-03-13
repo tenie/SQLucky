@@ -42,7 +42,7 @@ public class SignInWindow {
 	private TextField tfemail;
 	private PasswordField password;
 	private JFXCheckBox rememberCB;
-	
+	private Button signInBtn ;
 	public static void show(String title) {
 		SignInWindow window = new SignInWindow();
 		window.initWindow(title); 
@@ -86,6 +86,7 @@ public class SignInWindow {
 
 	// 初始化控件
 	public  void initWindow( String title) {
+		
 		String email = "Email"; 
 		String passwordStr = "Password";
 		String remember =  "Remember Account";
@@ -100,6 +101,10 @@ public class SignInWindow {
 		password = new PasswordField();
 		password.setPromptText(passwordStr);
 		TextFieldSetup.setMaxLength(password, 50);
+		 
+		tfemail.disableProperty().bind(ConfigVal.SQLUCKY_LOGIN_STATUS);
+		password.disableProperty().bind(ConfigVal.SQLUCKY_LOGIN_STATUS);
+		
 		
 		HBox hb2 = new HBox(); 
 		Label Remember = new Label(remember);
@@ -113,26 +118,31 @@ public class SignInWindow {
 	    
 	    hb2.getChildren().addAll(Remember, rememberCB );
 	    // 登入函数
-		Button signInBtn = createSignInBtn();
+	    signInBtn = createSignInBtn();
 		signInBtn.setDisable(true);
 		tfemail.textProperty().addListener(e->{
-			if( tfemail.getText().trim().length() == 0 || password.getText().trim().length() == 0) {
-				signInBtn.setDisable(true);
-			}else {
-				signInBtn.setDisable(false);
+			if(ConfigVal.SQLUCKY_LOGIN_STATUS.get() == false) {
+				if( tfemail.getText().trim().length() == 0 || password.getText().trim().length() == 0) {
+					signInBtn.setDisable(true);
+				}else {
+					signInBtn.setDisable(false);
+				}
 			}
+			
 		});
 		password.textProperty().addListener(e->{
-			if( password.getText().trim().length() == 0 || tfemail.getText().trim().length() == 0 ) {
-				signInBtn.setDisable(true);
-			}else {
-				signInBtn.setDisable(false);
+			if(ConfigVal.SQLUCKY_LOGIN_STATUS.get() == false) {
+				if( password.getText().trim().length() == 0 || tfemail.getText().trim().length() == 0 ) {
+					signInBtn.setDisable(true);
+				}else {
+					signInBtn.setDisable(false);
+				}
 			}
 		});
 		
 		// 退出登入
 		Button signOutBtn = createSigOutBtn( );
-		
+		signOutBtn.disableProperty().bind(signInBtn.disabledProperty().not());
 		// 高级设置
 		Button setbtn = createAdvancedSettings();
 		// 如果已经登入过, 获取登入信息
@@ -154,23 +164,34 @@ public class SignInWindow {
 		list.add(    lbPassword);
 		list.add(    password); 
 		
-		list.add(    null);
-		list.add(    hb2); 
 		
-		list.add(    signInBtn); 
+		list.add(    hb2); 
+		list.add(    null);
+		
+		list.add(    signInBtn);
+		list.add(    null);
+		
 		list.add(    signOutBtn); 
+		list.add(    null);
 		
 		list.add(    setbtn); 
 		list.add(    null); 
 		
 		layout(list, title);
 	}  
+	
+	private String SignIn = "Sign in ";
+	private String signedIn = "Signed In";
 	// 登入按钮
 	public Button createSignInBtn( ) {
-		String SignIn = "Sign in ";
-		Button SignInBtn = new Button(SignIn); 
-		SignInBtn.setOnAction(V->{
-
+		
+		Button SignInBtn = null; 
+		if(ConfigVal.SQLUCKY_LOGIN_STATUS.get()) {
+			SignInBtn = new Button(signedIn); 
+		}else {
+			SignInBtn = new Button(SignIn); 
+		}
+		SignInBtn.setOnAction(V->{ 
 	    	String emailVal = tfemail.getText();
 	    	String passwordVal = password.getText();
 	    	if(emailVal == null || emailVal.trim().length() == 0) {
@@ -193,11 +214,18 @@ public class SignInWindow {
 	    		ConfigVal.SQLUCKY_EMAIL.set(emailVal);
 	    		ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
 	    		ConfigVal.SQLUCKY_REMEMBER.set(tf);
+	    		ConfigVal.SQLUCKY_LOGIN_STATUS.set(true);
+	    		signInBtn.setText(signedIn);
+	    		signInBtn.setDisable(true);
+	    		
 	    	}else {
 	    		MyAlert.errorAlert( "失败");
 	    		ConfigVal.SQLUCKY_EMAIL.set("");
 	    		ConfigVal.SQLUCKY_PASSWORD.set("");
 	    		UserAccountAction.delUser();
+	    		ConfigVal.SQLUCKY_LOGIN_STATUS.set(false);
+	    		signInBtn.setText(SignIn);
+	    		signInBtn.setDisable(false);
 	    	}
 	    
 		});
@@ -222,11 +250,15 @@ public class SignInWindow {
 			ConfigVal.SQLUCKY_PASSWORD.set("");
 			ConfigVal.SQLUCKY_USERNAME.set("");
 			ConfigVal.SQLUCKY_REMEMBER.set(false);
+			ConfigVal.SQLUCKY_LOGIN_STATUS.set(false);
 			// 删除app数据库中的用户信息
 			UserAccountAction.delUser();
 			tfemail.setText("");
 			password.setText("");
 			rememberCB.setSelected(false);
+			
+			signInBtn.setDisable(false);
+			signInBtn.setText(SignIn);
 		});
 		return signOutBtn;
 	}

@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.SelectInfoTableDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsData;
@@ -34,9 +35,9 @@ public class DBTools {
 	
 	public static String dbFilePath() {
 		String dir = "/.sqlucky/";
-//		if(isDev()) {
-//			dir = "/.sqlucky_dev/";
-//		}
+		if(SqluckyAppDB.isDev()) {
+			dir = "/.sqlucky_dev/";
+		}
 		String path = FileUtils.getUserDirectoryPath() + dir;
 		return path;
 	}

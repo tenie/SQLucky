@@ -64,7 +64,7 @@ public class MyAlert {
 		nds.add( tf1);
 		
 		final Stage stage = new Stage(); 
-		JFXButton btn = new JFXButton("Cancel");
+		JFXButton btn = new JFXButton("Close(C) ");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(value -> {
 			stage.close();
@@ -74,7 +74,7 @@ public class MyAlert {
 		
 		Node vb = DialogTools.setVboxShape(stage, tit, nds, btns);
 		Scene scene = new Scene((Parent) vb);
-		
+		setKeyPress(scene, btns);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 		DialogTools.setSceneAndShow(scene, stage, iswait);

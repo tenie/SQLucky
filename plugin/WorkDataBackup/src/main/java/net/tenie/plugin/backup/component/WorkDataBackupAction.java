@@ -24,6 +24,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.DesUtil;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
@@ -44,9 +45,10 @@ public class WorkDataBackupAction {
 	
 	
 	public static String localSaveDir() {
-		String tmpDir = FileUtils.getUserDirectoryPath();
-		tmpDir += "/.sqlucky";
-		return tmpDir;
+		return DBTools.dbFilePath();
+//		String tmpDir = FileUtils.getUserDirectoryPath();
+//		tmpDir += "/.sqlucky";
+//		return tmpDir;
 	}
 	// 检查密钥最小长度
 	public static boolean checkMinLength(String val) {
@@ -93,12 +95,13 @@ public class WorkDataBackupAction {
 			String type = "";
 			String usePrivateKey = "N";
 			if (po.getSaveDB()) {
-				type +="Connection Info, ";
-				backupDBInfo(saveBakDir, pKey, "1", ConfigVal.SQLUCKY_VIP.get());
+				int length = backupDBInfo(saveBakDir, pKey, "1", ConfigVal.SQLUCKY_VIP.get());
+				type +="Connection "+length+", ";
 			}
 			if (po.getSaveScript()) {
-				type +="Script, ";
-				backupScript(saveBakDir, pKey, "2", ConfigVal.SQLUCKY_VIP.get());
+				
+				int length = backupScript(saveBakDir, pKey, "2", ConfigVal.SQLUCKY_VIP.get());
+				type +="Script " +length;
 			}
 
 			if (po.getSaveModel()) {
@@ -144,12 +147,13 @@ public class WorkDataBackupAction {
 	 * @param isvip 是否vip
 	 * @return
 	 */
-	public static String backupDBInfo(String tmpDir, String pKey, String backuptype, boolean isvip) {
+	public static int backupDBInfo(String tmpDir, String pKey, String backuptype, boolean isvip) {
 		 List<String> jsonLs = new ArrayList<>();
 		 AppComponent appcom = ComponentGetter.appComponent;
 		 Map<String, SqluckyConnector> connMap = appcom.getAllConnector();
 		 List<String> nameList = appcom.getAllConnectorName();
-		 for(int i= 0; i<nameList.size() ; i++) {
+		 int i= 0;
+		 for(i= 0; i<nameList.size() ; i++) {
 			 String name = nameList.get(i);
 			 SqluckyConnector sc = connMap.get(name);
 			 DBConnectorInfoPo infopo = sc.getDBConnectorInfoPo();
@@ -170,16 +174,18 @@ public class WorkDataBackupAction {
 		    strFile = stringToFile(jsonStr,  backuptype, tmpDir);
 		 }
 	
-		return strFile;
+		return i > 0 ? i+1 : i;
 	}
 	// 备份脚本
-	public static String backupScript(String tmpDir, String pKey, String backuptype, boolean isvip) {
+	public static int backupScript(String tmpDir, String pKey, String backuptype, boolean isvip) {
 		TreeItem<SqluckyTab> root = ComponentGetter.scriptTreeRoot;
 		ObservableList<TreeItem<SqluckyTab>> ls = root.getChildren();
 		List<String> vals = new ArrayList<>();
 		var conn = SqluckyAppDB.getConn();
+		int i = 0;
 		try {
-			for (int i = 0; i < ls.size(); i++) {
+			
+			for ( i = 0; i < ls.size(); i++) {
 				var item = ls.get(i);
 				SqluckyTab stab = item.getValue();
 				stab.syncScriptPo(conn);
@@ -207,7 +213,7 @@ public class WorkDataBackupAction {
 		    strFile = stringToFile(jsonStr,  backuptype, tmpDir);
 		 }
 		
-		return strFile;
+		return i > 0 ? i+1 : i;
 	}
  
 	/**
@@ -450,30 +456,53 @@ public class WorkDataBackupAction {
 					return;
 				}
 			}
-			
+			// 执行中记录是否发生过错误
+			boolean tf = false;
 			AppComponent appComponent = ComponentGetter.appComponent;
-			// dbinfo 信息覆盖
+			// dbinfo 信息Merge
 			if (dbInfo && allFile.get("1") != null) {
-				List<DBConnectorInfoPo> pols =  null;
-				try {
-					 pols = WorkDataBackupAction.decrypDBInfoFile(allFile.get("1"), pkey);
-				} catch (Exception e2) {
-					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
-					return;
+				boolean isContinue = MyAlert.myConfirmationShowAndWait("连接信息和本地数据合并, 名称相同会被添加*符予以区分, 继续?");
+				if(isContinue) {
+					List<DBConnectorInfoPo> pols =  null;
+					try {
+						 pols = WorkDataBackupAction.decrypDBInfoFile(allFile.get("1"), pkey);
+					} catch (Exception e2) {
+						MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
+						return;
+					}
+					// 连接合并操作
+					if(pols !=null && pols.size() > 0) {
+						appComponent.mergeDBinfoTreeData(pols);
+					}else {
+						MyAlert.errorAlert("数据库连接数据为空, 不操作!");
+						tf = true;
+					}
 				}
-				// 使用新的数据重建界面上的链接节点树的数据
-				appComponent.mergeDBinfoTreeData(pols);
 			}
 			
-			// 脚本 覆盖
+			// 脚本 Merge
 			if (script && allFile.get("2") != null) {
-				List<DBConnectorInfoPo> pols =  null;
-				try {
-					 pols = WorkDataBackupAction.decrypDBInfoFile(allFile.get("1"), pkey);
-				} catch (Exception e2) {
-					MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
-					return;
+				
+				boolean isContinue = MyAlert.myConfirmationShowAndWait("Script和本地数据合并, 名称和内容相同会跳过, 继续?");
+				if(isContinue) {
+					List<DocumentPo> DocumentPoList =  null;
+					try {
+						DocumentPoList = WorkDataBackupAction.decrypScriptFile(allFile.get("2"), pkey);
+					} catch (Exception e2) {
+						MyAlert.errorAlert("数据解压失败, 可能密钥不正确!");
+						return;
+					}
+					// 脚本合并操作
+					if(DocumentPoList !=null && DocumentPoList.size() > 0) {
+						appComponent.mergeScriptTreeData(DocumentPoList);
+					}else {
+						MyAlert.errorAlert("脚本数据为空, 不操作!");
+						tf = true;
+					}
 				}
+				
+			
+				
 			}
 			MyAlert.infoAlert("", "已完成!");
 		} finally {
@@ -487,9 +516,7 @@ public class WorkDataBackupAction {
 	// 是否登入检查
 	public static boolean isLogin() {
 		// 登入校验
-		String sqlEmail = ConfigVal.SQLUCKY_EMAIL.get();
-		String sqlPW = ConfigVal.SQLUCKY_PASSWORD.get();
-		if(StrUtils.isNullOrEmpty(sqlEmail) || StrUtils.isNullOrEmpty(sqlPW)) {
+		if( ConfigVal.SQLUCKY_LOGIN_STATUS.get() == false) {
 			Platform.runLater(()->{
 				AppComponent app =  ComponentGetter.appComponent;
 				app.showSingInWindow("Use Backup must Login");
@@ -498,11 +525,5 @@ public class WorkDataBackupAction {
 			return false;
 		}
 		return true;
-	}
-	public static void main(String[] args) throws IOException {
-//		File zipFIle = new File("C:\\Users\\tenie\\.sqlucky" , "yeeerwewe" );
-//		ZipUtil.UnzipFile(zipFIle.getAbsolutePath(), "C:\\Users\\tenie\\.sqlucky\\unzipdir");
-		stringToFile(" ",  "Pk", "C:\\Users\\tenie\\.sqlucky\\kkk1");
-//		System.out.println("???");
 	}
 }

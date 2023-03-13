@@ -27,11 +27,14 @@ public class InsertDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String execInsert(Connection conn, String tableName,  ResultSetRowPo data) throws Exception {
+	public static String execInsert(Connection conn,
+			String tableName,  ObservableList<ResultSetCellPo> cells
+//			ResultSetRowPo data
+			) throws Exception {
 		String msg = "";
 		StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
 		StringBuilder values = new StringBuilder("");
-		ObservableList<ResultSetCellPo> cells = data.getRowDatas();
+//		ObservableList<ResultSetCellPo> cells = data.getRowDatas();
 		int size = cells.size();
 		for (int i = 0; i < size; i++) {
 			ResultSetCellPo cellPo = cells.get(i);
