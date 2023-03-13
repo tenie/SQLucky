@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.utility;
 
+import java.io.File;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,6 +40,10 @@ public class DBTools {
 			dir = "/.sqlucky_dev/";
 		}
 		String path = FileUtils.getUserDirectoryPath() + dir;
+		File file = new File(path);
+		if(file.exists() == false) {
+			file.mkdir();
+		}
 		return path;
 	}
 	
