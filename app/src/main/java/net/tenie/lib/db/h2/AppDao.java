@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
@@ -405,6 +406,7 @@ public class AppDao {
 //			UpdateScript.execUpdate(conn);
 
 		}
+		 
 	}
 	
 	// 检查表是否存在
@@ -423,43 +425,39 @@ public class AppDao {
 	}
 	// 旧的数据 转移 到新的 表里
 	private static void transferOldDbData(Connection conn) {
-		String path = oldDbFiles();
+		String path = appOldDbFiles();
 		if (StrUtils.isNotNullOrEmpty(path)) {
-			DBConnectorInfoPo connPo = new DBConnectorInfoPo("CONN_NAME",  
-					"", // rd.getString("DRIVER"),
-					"", // rd.getString("HOST"),
-					"", // rd.getString("PORT"),
-					ConfigVal.USER, 
-					ConfigVal.PASSWD, 
-					"VENDOR",  
-					"SCHEMA",  
-					"DB_NAME",  
-					"jdbc:h2:" + path  ,
-					false
-			);
-			SqluckyConnector cnor = new MyH2Connector(connPo);
+			SqluckyConnector sqluckyConn = SqluckySqliteConnector.createTmpConnector(
+							ConfigVal.USER,
+							ConfigVal.PASSWD, 
+							"jdbc:sqlite:" + path );
 			List<String> tableNames = new ArrayList<>();
 			tableNames.add("CONNECTION_INFO");
 //			tableNames.add("SQL_TEXT_SAVE");
 			tableNames.add("SCRIPT_ARCHIVE");
 			tableNames.add("APP_CONFIG");
+			
+			tableNames.add("DATA_MODEL_INFO");
+			tableNames.add("DATA_MODEL_TABLE");
+			tableNames.add("DATA_MODEL_TABLE_FIELDS");
+			tableNames.add("PLUGIN_INFO");
+			tableNames.add("SQLUCKY_USER");
+			
 
 			for (int i = 0; i < tableNames.size(); i++) {
 				String tableName = tableNames.get(i);
 				String sql = "select   *   from  " + tableName;
 				SheetDataValue dvt = new SheetDataValue();
-				dvt.setDbConnection(cnor);
+				dvt.setDbConnection(sqluckyConn);
 				dvt.setSqlStr(sql);
 				dvt.setTabName(tableName);
 				try {
-					SelectDao.selectSql(sql, -1, dvt);
-//					var datas = dvt.getRawData();
-					ResultSetPo rspo = dvt.getDataRs();
+					ResultSetPo rspo =  SelectDao.selectSqlToRS(sql, sqluckyConn);
 					ObservableList<ResultSetRowPo> datas = rspo.getDatas();
-					var fs = dvt.getColss();
 					if (datas != null) {
-						for (ResultSetRowPo data : datas) {
-							InsertDao.execInsert(conn, tableName, data);
+						for (ResultSetRowPo resultSetRow : datas) {
+							ObservableList<ResultSetCellPo> cells = resultSetRow.getRowDatas();
+							InsertDao.execInsert(conn, tableName, cells);
 						}
 					}
 
@@ -468,7 +466,7 @@ public class AppDao {
 				}
 
 			}
-			cnor.closeConn();
+			sqluckyConn.closeConn();
 
 		}
 	}
@@ -498,6 +496,33 @@ public class AppDao {
 		return rs;
 	}
 
+	
+	// 获取目录下的旧db文件, 从旧文件中找一个最新的
+	private static String appOldDbFiles(){
+		String rs = "";
+		String path = DBTools.dbFilePath() ;
+		File dir = new File(path);
+		
+		File[] files = dir.listFiles(name->{
+				return name.getName().startsWith(ConfigVal.H2_DB_NAME) && name.getName().endsWith("_sqlite.db");
+			});
+		if(files != null && files.length > 0) {
+			long lastModifiedTime = 0;
+			for(var fl : files) {
+				String flName = fl.getName(); 
+				if(!flName.startsWith(ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION) ) {					
+					long ltmp = fl.lastModified();
+					if(ltmp > lastModifiedTime) {
+						lastModifiedTime = ltmp;
+						rs =  path  + flName ;// .substring(0, flName.indexOf("_sqlite.db")); 
+					}
+					System.out.println(rs);
+				} 
+			}
+		}  
+		return rs;
+	}
+	
 	// 执行更新脚本
 	public static void updateAppSql(Connection conn) {
 		 String  UPDATE_SQL =  AppDao.readConfig(conn , "UPDATE_SQL"); 

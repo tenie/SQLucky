@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -248,6 +250,7 @@ public class ConnectionDao {
 	
 	// 从新创建dbinfoTree的数据, 删除旧数据
 	public static void DBInfoTreeReCreate(List<DBConnectorInfoPo> dbciPo) {
+		if(dbciPo == null || dbciPo.size() == 0) return;
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 删除表里的旧数据
@@ -287,6 +290,7 @@ public class ConnectionDao {
 	
 	// 将新的数据库连接数据和旧数据合并起来
 	public static void DBInfoTreeMerge(List<DBConnectorInfoPo> dbciPo) {
+		if(dbciPo == null || dbciPo.size() == 0) return;
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 判断链接名称是否重复, 重复添加后缀
@@ -311,6 +315,7 @@ public class ConnectionDao {
 	}
 	// 从新创建scriptTree的数据, 删除旧数据
 	public static void scriptTreeReCreate(List<DocumentPo> docPo) {
+		if(docPo == null || docPo.size() == 0) return;
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 删除表里的旧数据
@@ -326,27 +331,46 @@ public class ConnectionDao {
 	}
 	
 	// 将新sript数据和旧数据合并起来
-//	public static void scriptTreeMerge(List<DocumentPo> dbciPo) {
-//		Connection conn = SqluckyAppDB.getConn();
-//		try {
-//			// 判断链接名称是否重复, 重复添加后缀
-//			renameOverlapDBinfoName(dbciPo);
-//			
-//			// 处理数据DBConnectorInfoPo 转为SqluckyConnector
-//			List<SqluckyConnector>  ls = recoverConnObj(dbciPo);
-//			// 将新数据插入到表里
-//			for(SqluckyConnector item : ls) {
-//				createOrUpdate(conn, item);
-//			}
-//			// 从数据库从新读取数据
-//			List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
-//			// 页面数据清空, 再加载新数据
-//			DBinfoTree.cleanRootRecoverNodeFromList(datas);
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}finally {
-//			SqluckyAppDB.closeConn(conn);
-//		}
-//	}
+	public static void scriptTreeMerge(List<DocumentPo> docPo) {
+		if(docPo == null || docPo.size() == 0) return;
+		
+		List<DocumentPo> tmpDocs = new ArrayList<>();
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			// 相同内容跳过
+			TreeItem<SqluckyTab>  root = ScriptTabTree.rootNode;
+			ObservableList<TreeItem<SqluckyTab>> ls = root.getChildren();
+			for(TreeItem<SqluckyTab> item : ls) {
+				DocumentPo treeDoc = item.getValue().getDocumentPo();
+				var treetitle = treeDoc.getTitle();
+				var treetext = treeDoc.getText();
+				for(var doc : docPo) {
+					String title = doc.getTitle();
+					String text = doc.getText();
+					if(treetitle.equals(title) && treetext.equals(text) ) {
+						logger.debug(treetitle+" : 找到相同的");
+						tmpDocs.add(doc);
+						break;
+					}
+					
+				}
+			}
+			
+			
+			// 合并还原
+			if(tmpDocs.size() > 0 ) {
+				for(var tmpdoc : tmpDocs) {
+					docPo.remove(tmpdoc);
+				}
+				ScriptTabTree.recoverFromDocumentPos(docPo); 
+				ConfigVal.pageSize += tmpDocs.size();
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
 }

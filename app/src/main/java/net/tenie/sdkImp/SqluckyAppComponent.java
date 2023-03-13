@@ -339,16 +339,16 @@ public class SqluckyAppComponent implements AppComponent {
 	 * 使用新数据重建数据库连接节点树
 	 */
 	@Override
-	public void recreateScriptTreeData(List<DocumentPo> dbciPo) {
-		ConnectionDao.scriptTreeReCreate(dbciPo);
+	public void recreateScriptTreeData(List<DocumentPo> docs) {
+		ConnectionDao.scriptTreeReCreate(docs);
 		
 	}
 	/**
 	 * 使用新数据合并入数据库连接节点树
 	 */
 	@Override
-	public void mergeScriptTreeData(List<DocumentPo> dbciPo) {
-//		ConnectionDao.scriptTreeMerge(dbciPo);
+	public void mergeScriptTreeData(List<DocumentPo> docs) {
+		ConnectionDao.scriptTreeMerge(docs);
 	}
 	
 

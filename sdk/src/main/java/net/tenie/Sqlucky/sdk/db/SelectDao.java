@@ -106,10 +106,37 @@ public class SelectDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			System.out.println("finally");
+			logger.debug("finally : selectSql()");
 			if (rs != null)
 				rs.close();
 		} 
+	}
+	
+	public static ResultSetPo selectSqlToRS( String sql , SqluckyConnector sqlConn) throws SQLException {
+		Connection conn = sqlConn.getConn();
+		ResultSetPo setPo = null;
+		// DB对象
+		PreparedStatement pstate = null;
+		ResultSet rs = null;
+		try {
+			pstate = conn.prepareStatement(sql);
+			// 处理结果集
+			rs = pstate.executeQuery();
+//			// 获取元数据
+			ObservableList<SheetFieldPo> fields = resultSetMetaData(rs);
+		    setPo = new ResultSetPo(fields);
+			
+			// 数据
+		    execDBRs(rs,  sqlConn, setPo);
+			
+		} catch (SQLException e) {
+			throw e;
+		} finally {
+			logger.debug("finally: selectSql() return ResultSetPo");
+			if (rs != null)
+				rs.close();
+		} 
+		return setPo;
 	}
 	
 	
@@ -391,7 +418,42 @@ public class SelectDao {
 			throws SQLException {
 		  execRs(Integer.MAX_VALUE, rs, dpo, setPo);
 	}
-
+	
+	/**
+	 * 从数据库返回集中获取数据后转换为对象
+	 * @param rs
+	 * @param sqlConn
+	 * @param setPo
+	 * @throws SQLException
+	 */
+	public static void execDBRs(ResultSet rs, SqluckyConnector sqlConn, ResultSetPo setPo ) throws SQLException {
+		ObservableList<SheetFieldPo> fpo = setPo.getFields();
+		int columnnums = fpo.size();
+		while (rs.next()) {
+			ResultSetRowPo rowpo = new ResultSetRowPo(setPo);
+			
+			for (int i = 0; i < columnnums; i++) {
+				SheetFieldPo fieldpo = fpo.get(i);
+				int dbtype = fieldpo.getColumnType().get();
+				StringProperty val;
+				
+				Object obj = rs.getObject(i + 1);
+				if(obj == null) {
+					val = new SimpleStringProperty("<null>");
+				}else {
+					if (CommonUtility.isDateTime(dbtype)) {
+						val = sqlConn.DateToStringStringProperty(rs.getObject(i + 1));
+					} else {
+						String temp = rs.getString(i+1);
+						val = new SimpleStringProperty(temp); 
+					}
+				}
+				rowpo.addCell(val, fieldpo);
+			}
+			setPo.addRow(rowpo); 
+		}
+		
+	}
 	
  
 }

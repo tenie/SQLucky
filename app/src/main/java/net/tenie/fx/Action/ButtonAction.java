@@ -81,7 +81,8 @@ public class ButtonAction {
 			ObservableList<ResultSetRowPo> dataList = SqluckyBottomSheetUtility.getAppendData();
 			for (ResultSetRowPo os : dataList) {
 				try {
-					String msg = InsertDao.execInsert(conn, tabName, os);
+					ObservableList<ResultSetCellPo> cells = os.getRowDatas();
+					String msg = InsertDao.execInsert(conn, tabName, cells);
 					var fds = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
@@ -89,7 +90,7 @@ public class ButtonAction {
 					ddlDmlpo.addData(row, new SimpleStringProperty("success"), fds.get(2));
 
 					// 对insert 的数据保存后 , 不能再修改
-					ObservableList<ResultSetCellPo> cells = os.getRowDatas();
+//					ObservableList<ResultSetCellPo> cells = os.getRowDatas();
 					for (int i = 0; i < cells.size(); i++) {
 						var cellpo = cells.get(i);
 						StringProperty sp = cellpo.getCellData();

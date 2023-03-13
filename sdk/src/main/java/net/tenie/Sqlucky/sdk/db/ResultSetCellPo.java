@@ -105,7 +105,7 @@ public class ResultSetCellPo {
 	}
 	
 	// 数据单元格添加监听
-		// 字段修改事件
+	// 字段修改事件
 	public static void addStringPropertyChangeListener(ResultSetCellPo cell) {
 		ChangeListener<String> cl = new ChangeListener<String>() {
 			@Override

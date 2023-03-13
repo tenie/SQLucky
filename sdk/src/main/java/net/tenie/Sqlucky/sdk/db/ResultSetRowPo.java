@@ -90,7 +90,7 @@ public class ResultSetRowPo {
 		}
 	}
 	
-	// cell 添加监听时间
+	// cell 添加事件, 当单元格被修改做一些处理
 	public void cellAddChangeListener() {
 		if( rowDatas != null && rowDatas.size() > 0) {
 			for(ResultSetCellPo cell : rowDatas) {

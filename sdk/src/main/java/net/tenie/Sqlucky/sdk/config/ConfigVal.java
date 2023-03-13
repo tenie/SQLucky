@@ -16,6 +16,7 @@ public class ConfigVal {
 	public static File MODULE_PATH ;
 	
 	// 账号信息
+	public static SimpleBooleanProperty SQLUCKY_LOGIN_STATUS = new SimpleBooleanProperty(false);
 	public static SimpleStringProperty SQLUCKY_USERNAME = new SimpleStringProperty("");
 	public static SimpleStringProperty SQLUCKY_EMAIL = new SimpleStringProperty("");
 	public static SimpleStringProperty SQLUCKY_PASSWORD = new SimpleStringProperty("");
@@ -63,12 +64,13 @@ public class ConfigVal {
 	public static int FONT_SIZE = -1;
 	
 	// h2数据库位置
+	public static boolean IS_NEW_DB_VERSION = false;
 	public static String H2_DIRVER = "org.h2.Driver";
 	public static String H2_DB_FILE_NAME = "";
 	public static String H2_DB_FULL_FILE_NAME = "";
 	
 	public static String H2_DB_NAME = "h2db";
-	public static int H2_DB_VERSION = 4;
+	public static int H2_DB_VERSION = 5;
 	  
 	public static String USER = "sa";
 	public static String PASSWD = "xyz123qweasd";

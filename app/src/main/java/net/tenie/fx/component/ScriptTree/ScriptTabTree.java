@@ -171,11 +171,11 @@ public class ScriptTabTree {
 		CommonUtility.addInitTask(cr);
 	}
 
-	// 使用外部数据还原script tree节点, 清空节点和 清空tabpane打开的编辑tab
-	public static void cleanOldAndRecover(List<DocumentPo> scriptDatas) {
-		rootNode.getChildren().clear();
-		var myTabPane = ComponentGetter.mainTabPane;
-		myTabPane.getTabs().clear();
+	//使用外部数据还原script tree节点
+	public static void recoverFromDocumentPos(List<DocumentPo> scriptDatas) {
+//		rootNode.getChildren().clear();
+//		var myTabPane = ComponentGetter.mainTabPane;
+//		myTabPane.getTabs().clear();
 		
 		MyAreaTab activateMyTab = null;
 		List<TreeItem<SqluckyTab>> treeItems = new ArrayList<>();
@@ -226,6 +226,17 @@ public class ScriptTabTree {
 			});
 		}
 			 
+	
+		
+	}
+	
+	// 使用外部数据还原script tree节点, 清空节点和 清空tabpane打开的编辑tab
+	public static void cleanOldAndRecover(List<DocumentPo> scriptDatas) {
+		rootNode.getChildren().clear();
+		var myTabPane = ComponentGetter.mainTabPane;
+		myTabPane.getTabs().clear();
+	
+		recoverFromDocumentPos(scriptDatas);
 	}
 	
 	// 所有连接节点

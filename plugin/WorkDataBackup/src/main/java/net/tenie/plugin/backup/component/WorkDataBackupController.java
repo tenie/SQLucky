@@ -218,13 +218,13 @@ public class WorkDataBackupController implements Initializable {
 			if(rsVal.fileDetail().isEmpty() == false) {
 				if(bakdbCB.isSelected() || bakscriptCB.isSelected() ) {
 					// 提示覆盖后不开还原
-					boolean isContinue = MyAlert.myConfirmationShowAndWait("和本地数据合并, 名称相同会被添加*符予以区分, 继续?");
-					if(isContinue) {
+//					boolean isContinue = MyAlert.myConfirmationShowAndWait("和本地数据合并, 名称相同会被添加*符予以区分, 继续?");
+//					if(isContinue) {
 						WorkDataBackupAction.downloadMerge(
 								downloadOverlapBtn, downloadMergeBtn,
 								recoverPK, rsVal.fileDetail(),
 								bakdbCB.isSelected(), bakscriptCB.isSelected());
-					}
+//					}
 				}
 			}
 		});
