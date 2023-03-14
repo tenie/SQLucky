@@ -33,6 +33,10 @@ public class MyAlert {
 		});
 		
 	}
+	public static void alert(String title, String containTxt) {
+		showMsg(containTxt, ComponentGetter.INFO, true);
+	}
+
 
 	public static void errorAlert( String containTxt) {
 		Platform.runLater(()->{
@@ -41,15 +45,15 @@ public class MyAlert {
 	}
 	// 显示警告, 会阻塞ui线程, 等前台关闭警告窗口后执行后面的代码
 	public static void errorAlert( String containTxt, boolean isWait) {
-		showErrorMsg( containTxt , ComponentGetter.ERROR, isWait);  
+		showMsg( containTxt , ComponentGetter.ERROR, isWait);  
 	}
 	
 	
 	public static void showErrorMsg( String containTxt ,Label tit) {
-		showErrorMsg(containTxt, tit, false);
+		showMsg(containTxt, tit, false);
 	}
 	
-	public static void showErrorMsg( String containTxt ,Label tit, boolean iswait) {
+	public static void showMsg( String containTxt ,Label tit, boolean iswait) {
 		 
 		TextField tf1 = new TextField("");
 		tf1.setEditable(false);

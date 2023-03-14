@@ -210,14 +210,14 @@ public class SignInWindow {
 	    	boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );
 	    	
 	    	if(seccuss) {
-	    		MyAlert.infoAlert("成功", "成功"); 
+	    		MyAlert.alert("登入成功", "登入成功"); 
 	    		ConfigVal.SQLUCKY_EMAIL.set(emailVal);
 	    		ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
 	    		ConfigVal.SQLUCKY_REMEMBER.set(tf);
 	    		ConfigVal.SQLUCKY_LOGIN_STATUS.set(true);
 	    		signInBtn.setText(signedIn);
 	    		signInBtn.setDisable(true);
-	    		
+	    		stageWindow.close();
 	    	}else {
 	    		MyAlert.errorAlert( "失败");
 	    		ConfigVal.SQLUCKY_EMAIL.set("");
