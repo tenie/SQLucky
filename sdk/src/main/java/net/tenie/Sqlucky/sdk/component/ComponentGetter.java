@@ -3,6 +3,8 @@ package net.tenie.Sqlucky.sdk.component;
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
+
+import javafx.application.Application;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -30,12 +32,13 @@ import net.tenie.Sqlucky.sdk.SqluckyTab;
  *
  */
 public final class ComponentGetter {
+	public static Application SQLucky;
 	public static PopupFilter<ObservableList<StringProperty>, String> popupFirstNameFilter;
 	public static TabPane dataTabPane;
 	public static TabPane mainTabPane;
 
 	public static TextField dbInfoFilter;
-
+	
 	public static MasterDetailPane masterDetailPane;
 	public static MasterDetailPane treeAreaDetailPane;
 	

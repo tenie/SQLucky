@@ -106,6 +106,7 @@ public class SQLucky extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
+		ComponentGetter.SQLucky = this;
 		try {
 			pStage = primaryStage;
 			
