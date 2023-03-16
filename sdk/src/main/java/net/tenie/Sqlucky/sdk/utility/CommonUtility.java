@@ -22,6 +22,8 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
+import javafx.application.Application;
+import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.property.StringProperty;
@@ -945,6 +947,14 @@ public class CommonUtility {
 		findReplace(isReplace, "", null);
 	}
 	
+	
+	
+	// 在浏览器中打开 URL
+	public static void OpenURLInBrowser(String url) {
+		Application application =ComponentGetter.SQLucky;
+	    HostServices host = application.getHostServices();
+        host.showDocument(url);
+	}
 	
 	
 }

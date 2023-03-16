@@ -338,7 +338,8 @@ public class MenuBarContainer {
 		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));
 		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
 		SignUpMenuItem.setOnAction(value -> {
-			SignUpWindow.createWorkspaceConfigWindow();
+//			SignUpWindow.createWorkspaceConfigWindow();
+			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/");
 		});
 
 
