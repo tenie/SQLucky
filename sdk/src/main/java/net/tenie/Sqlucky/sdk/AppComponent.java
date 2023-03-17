@@ -58,9 +58,9 @@ public interface AppComponent {
 	public  SqluckyBottomSheet sqlDataSheet(SheetDataValue data, int idx, boolean disable);
 	public  SqluckyBottomSheet tableViewSheet(SheetDataValue data, List<Node> nodeLs);
 	// 表, 视图 等 数据库对象的ddl语句
-	public  SqluckyBottomSheet ddlSheet(String name, String ddl, boolean isRunFunc);
-	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc);
-	public SqluckyBottomSheet EmptySheet(String name, String message);
+	public  SqluckyBottomSheet ddlSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc , boolean isSelect);
+	public SqluckyBottomSheet ProcedureSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc);
+	public SqluckyBottomSheet EmptySheet(SqluckyConnector sqluckyConn, String name, String message);
 	
 	// 获取 DBconns 中保存的所有数据库链接信息
 	public Map<String, SqluckyConnector> getAllConnector();

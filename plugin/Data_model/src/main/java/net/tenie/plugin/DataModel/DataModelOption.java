@@ -81,8 +81,7 @@ public class DataModelOption {
 				SdkComponent.addWaitingPane(-1);
 				try {
 					exeQueryTable(txtVal);
-					// 获取展开的模型id
-					
+					// 查询字段
 					exeQueryTableFields(txtVal);
 				} finally {
 					SdkComponent.rmWaitingPane();
@@ -165,7 +164,7 @@ public class DataModelOption {
 		queryStr = queryStr.toUpperCase();
 				
 		var conn = SqluckyAppDB.getConn();
-		String sql =  "SELECT b.DEF_KEY AS TABLE, a.DEF_KEY AS  FIELD,  a.DEF_NAME AS FIELD_NAME , a.COMMENT FROM DATA_MODEL_TABLE_FIELDS  a\n"
+		String sql =  "SELECT b.DEF_KEY AS TABLE_NAME, a.DEF_KEY AS  FIELD,  a.DEF_NAME AS FIELD_NAME , a.COMMENT FROM DATA_MODEL_TABLE_FIELDS  a\n"
 				+ "left join DATA_MODEL_TABLE b on b.ITEM_ID = a.TABLE_ID\n"
 				+ "where b.MODEL_ID in ( "+modelIds+") and ( a.DEF_KEY like '%"+queryStr+"%' or  a.DEF_NAME  like '%"+queryStr+"%' or a.COMMENT like '%"+queryStr+"%' )";
 		try {
@@ -247,12 +246,16 @@ public class DataModelOption {
 						filterTable.add(v);
 					}
 				});
-				// 情况原来的表集合
-				model.getChildren().clear();
-				// 加入新的表集合
-				model.getChildren().addAll(filterTable);
+				
 				if(filterTable.size() > 0) {
 					exists = true;
+					// 清空原来的表集合
+					model.getChildren().clear();
+					// 加入新的表集合
+					model.getChildren().addAll(filterTable);
+				}
+				if(model.getChildren().size() > 0) {
+					model.setExpanded(exists);
 				}
 			}
 		}

@@ -12,21 +12,33 @@ import net.tenie.fx.Po.DBOptionHelper;
 
 
 public class TreeObjAction {
-	public static void showTableSql(SqluckyConnector dpo ,TablePo table, String title) {
+	/**
+	 * 显示table ,view 的创建语句
+	 * @param sqluckyConn
+	 * @param table
+	 * @param tableName
+	 */
+	public static void showTableSql(SqluckyConnector sqluckyConn ,TablePo table, String tableName) {
 		String type = table.getTableType();
 		String createTableSql = table.getDdl();
 		if (StrUtils.isNullOrEmpty(createTableSql)) {
 			if(type.equals( CommonConst.TYPE_TABLE )) {
-				createTableSql = DBOptionHelper.getCreateTableSQL(dpo, table.getTableSchema(), table.getTableName());	
+				createTableSql = DBOptionHelper.getCreateTableSQL(sqluckyConn, table.getTableSchema(), table.getTableName());	
 			}else if(type.equals( CommonConst.TYPE_VIEW ) ) {
-				createTableSql = DBOptionHelper.getViewSQL(dpo, table.getTableSchema(), table.getTableName());			
+				createTableSql = DBOptionHelper.getViewSQL(sqluckyConn, table.getTableSchema(), table.getTableName());			
 			}
 			
 			createTableSql = SqlFormatter.format(createTableSql);
 			table.setDdl(createTableSql);
 		}
-//		new DataViewTab().showDdlPanel(title, createTableSql);
-		SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(title, createTableSql, false);
+		SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyConn, tableName, createTableSql, false , true);
 		mtd.show();
 	}
+	
+	public static String getTableSQL(SqluckyConnector sqluckyConn ,String tableSchema, String tableName) {
+		String createTableSql = DBOptionHelper.getCreateTableSQL(sqluckyConn, tableSchema, tableName);
+		
+		return createTableSql;
+	}
+	
 }

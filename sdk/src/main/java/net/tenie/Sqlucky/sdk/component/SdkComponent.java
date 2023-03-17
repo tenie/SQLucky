@@ -266,10 +266,15 @@ public class SdkComponent {
 			Map<String, Double> fieldWidthMap) throws Exception {
 		try {
 			SheetDataValue sheetDaV = sqlToSheet(sql, conn, tableName, fieldWidthMap);
-			// 渲染界面
-			SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(sheetDaV, optionNodes);
-			mtd.show();
+			// 如果查询到数据才展示
+			if(sheetDaV.getTable().getItems().size() > 0) {
+				// 渲染界面
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(sheetDaV, optionNodes);
+				mtd.show();
 
+			}
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -314,13 +319,13 @@ public class SdkComponent {
 				dataTab.getTabs().remove(waitTb);
 			}
 			
-			CommonUtility.delayRunThread(v->{
-				Platform.runLater(()->{
-					if(dataTab.getTabs().size() == 0) {
-						SdkComponent.hideBottom(); 
-					} 
-				});
-			}, 1000);
+//			CommonUtility.delayRunThread(v->{
+//				Platform.runLater(()->{
+//					if(dataTab.getTabs().size() == 0) {
+//						SdkComponent.hideBottom(); 
+//					} 
+//				});
+//			}, 1000);
 //			if (dataTab.getTabs().size() == 0) {
 //				SdkComponent.hideBottom();
 //			}
@@ -377,6 +382,14 @@ public class SdkComponent {
 			SdkComponent.escapeWindowsUiBug(); 
 		}
 	}
+	
+	public static void hideBottomPane() {
+		
+		JFXButton btn =   CommonButtons.hideBottom; //   AllButtons.btns.get("hideBottom");
+		hideShowBottomHelper(false, btn);
+		 
+	}
+	
 	
 	//TODO 显示或隐藏 数据面板, 修改控制按钮图标
 	public static void hideShowBottomHelper(boolean isShow, JFXButton btn) {
@@ -449,13 +462,13 @@ public class SdkComponent {
 		long costTime = (endtime - begintime);
 		logger.info("关闭使用时间 = "+ costTime);
 		
-		CommonUtility.delayRunThread(v->{
-			Platform.runLater(()->{
-				if(tabPane.getTabs().size() == 0) {
-					SdkComponent.hideBottom(); 
-				} 
-			});
-		}, 1000);
+//		CommonUtility.delayRunThread(v->{
+//			Platform.runLater(()->{
+//				if(tabPane.getTabs().size() == 0) {
+//					SdkComponent.hideBottom(); 
+//				} 
+//			});
+//		}, 1000);
 		
 		 
 	}
@@ -470,13 +483,13 @@ public class SdkComponent {
 //		System.gc();
 		MyOption.gc(SdkComponent.class, "clearDataTable");
 		logger.info("关闭使用时间 = "+ costTime);
-		CommonUtility.delayRunThread(v->{
-			Platform.runLater(()->{
-				if(tabPane.getTabs().size() == 0) {
-					SdkComponent.hideBottom(); 
-				} 
-			});
-		}, 200);
+//		CommonUtility.delayRunThread(v->{
+//			Platform.runLater(()->{
+//				if(tabPane.getTabs().size() == 0) {
+//					SdkComponent.hideBottom(); 
+//				} 
+//			});
+//		}, 200);
 		
 	}
 	

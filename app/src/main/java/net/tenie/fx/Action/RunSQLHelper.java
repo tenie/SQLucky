@@ -408,6 +408,34 @@ public class RunSQLHelper {
 		thread = createThread( RunSQLHelper::runMain, state);
 		thread.start();
 	}
+	/**
+	 * 根据自己提供的SqluckyConnector, 来执行sql
+	 * @param sqlConn
+	 * @param sqlv
+	 * @param isCreateFunc 执行create 语句
+	 */
+	public static void runSQL( SqluckyConnector sqlConn , String sqlv,  boolean isCreateFunc) {
+		Connection connv = sqlConn.getConn();
+		try {
+			if (connv == null) {
+				return;
+			} else if (connv.isClosed()) {
+				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+
+		settingBtn();
+		SdkComponent.showDetailPane();
+		
+		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
+		state.setIsCreateFunc(isCreateFunc);
+		
+		thread = createThread( RunSQLHelper::runMain, state);
+		thread.start();
+	}
 
 
 	// stop 入口

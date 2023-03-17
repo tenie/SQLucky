@@ -171,6 +171,9 @@ public class ConnItemDbObjects {
 				IconGenerator.svgImage("object-group", "blue"), connpo));
 		List<TablePo> tabs = DBOptionHelper.getViewsName(connpo, sche);// connpo.getViews(sche);
  
+		// 缓存起来
+		String cacheKey = connpo.getConnName() + "_" +sche;
+		TreeObjCache.viewCache.put(cacheKey, tabs);
 		for(TablePo po: tabs) {
 			po.setTableType(CommonConst.TYPE_VIEW);
 		}

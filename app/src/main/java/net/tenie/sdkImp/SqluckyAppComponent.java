@@ -192,47 +192,55 @@ public class SqluckyAppComponent implements AppComponent {
 	}
 	
 	
-	
-	// 表, 视图 等 数据库对象的ddl语句
+	 
+	/**
+	 * 表, 视图 等 数据库对象的ddl语句
+	 * @param sqluckyConn
+	 * @param name
+	 * @param ddl
+	 * @param isRunFunc 是否显示 运行函数按钮, 如函数, 过程, 需要运行的, true显示运行按钮
+	 * @param isSelect  是否显示 查询按钮, 如table view 可以select数据的,  true显示select按钮
+	 * @return
+	 */
 	@Override
-	public  SqluckyBottomSheet ddlSheet(String name, String ddl, boolean isRunFunc) {
+	public  SqluckyBottomSheet ddlSheet(SqluckyConnector sqluckyConn , String name, String ddl, boolean isRunFunc, boolean isSelect) {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
 		mtb.setSqlArea(sqlArea);
-		VBox box = DDLBox(mtb, ddl, isRunFunc, false, name);
+		VBox box = DDLBox(sqluckyConn , mtb, ddl, isRunFunc, false, name , isSelect);
 		mtb.getTab().setContent(box);
 		return mtb;
 	}
 	@Override
-	public SqluckyBottomSheet ProcedureSheet(String name, String ddl, boolean isRunFunc) {
+	public SqluckyBottomSheet ProcedureSheet(SqluckyConnector sqluckyConn , String name, String ddl, boolean isRunFunc) {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
 		mtb.setSqlArea(sqlArea);
-		VBox box = DDLBox(mtb, ddl, isRunFunc, true, name);
+		VBox box = DDLBox(sqluckyConn , mtb, ddl, isRunFunc, true, name, false);
 		mtb.getTab().setContent(box);
 		return mtb;
 	}
 	@Override
-	public SqluckyBottomSheet EmptySheet(String name, String message) {
+	public SqluckyBottomSheet EmptySheet(SqluckyConnector sqluckyConn ,String name, String message) {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
 		mtb.setSqlArea(sqlArea);
-		VBox box = DDLBox(mtb, message, false, false, name);
+		VBox box = DDLBox(sqluckyConn, mtb, message, false, false, name, false);
 		mtb.getTab().setContent(box);
 		return mtb;
 	}
 
  
 	// 数据tab中的组件
-	public static VBox DDLBox(MyBottomSheet mtb, String ddl, boolean isRunFunc, boolean isProc, String name) {
+	public static VBox DDLBox(SqluckyConnector sqluckyConn ,MyBottomSheet mtb, String ddl, boolean isRunFunc, boolean isProc, String name ,boolean isSelect) {
 		VBox vb = new VBox();
 
 		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);
 		// 表格上面的按钮
-		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(mtb, ddl, isRunFunc, isProc, name);
+		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(sqluckyConn, mtb, ddl, isRunFunc, isProc, name, isSelect);
 		AnchorPane fp = new BottomSheetOptionBtnsPane(btnLs);
 																					// isProc, name);
 		vb.getChildren().add(fp);

@@ -168,14 +168,13 @@ public class SignInWindow {
 		list.add(    hb2); 
 		list.add(    null);
 		
-		list.add(    signInBtn);
-		list.add(    null);
-		
-		list.add(    signOutBtn); 
-		list.add(    null);
+		list.add(    signInBtn); 
+		list.add(    signOutBtn);  
 		
 		list.add(    setbtn); 
-		list.add(    null); 
+		// 注册按钮
+		var signUp = createSignUpSettings();
+		list.add(    signUp); 
 		
 		layout(list, title);
 	}  
@@ -269,6 +268,15 @@ public class SignInWindow {
 		Button btn = new Button(btnName); 
 		btn.setOnAction(v->{
 			SignInAdvancedSettingsWindow.show("");
+		});
+		return btn;
+	}
+	// 注册按钮
+	public Button createSignUpSettings() {
+		String btnName = "Sign Up";
+		Button btn = new Button(btnName); 
+		btn.setOnAction(v->{
+			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/");
 		});
 		return btn;
 	}

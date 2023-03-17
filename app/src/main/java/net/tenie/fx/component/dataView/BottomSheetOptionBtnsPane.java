@@ -260,7 +260,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	 * @param name
 	 * @return
 	 */
-	public static List<Node> DDLOptionBtns(MyBottomSheet mytb, String ddl, boolean isRunFunc, boolean isProc, String name) {
+	public static List<Node> DDLOptionBtns(SqluckyConnector sqluckyConn , MyBottomSheet mytb, String ddl, boolean isRunFunc, boolean isProc, String name, boolean isSelect) {
 		List<Node> ls = new ArrayList<>();
 		// 锁
 		JFXButton lockbtn = SdkComponent.createLockBtn(mytb);
@@ -270,7 +270,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
 		saveBtn.setOnMouseClicked(e -> {
 			// TODO 保存存储过程
-			RunSQLHelper.runSQLMethod(mytb.getSqlArea().getCodeArea().getText(), null, true, null);
+			RunSQLHelper.runSQL(sqluckyConn, mytb.getSqlArea().getCodeArea().getText(),  true);
 			saveBtn.setDisable(true);
 
 		});
@@ -295,7 +295,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		editBtn.setTooltip(MyTooltipTool.instance("Edit"));
 		ls.add(editBtn);
 
-
+	
 		// 运行按钮
 		if (isRunFunc) {
 			JFXButton runFuncBtn = new JFXButton();
@@ -332,9 +332,21 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			ls.add(runFuncBtn);
 		}
 		
+		if(isSelect){
+			// 查询按钮 
+			JFXButton selectBtn = new JFXButton();
+			selectBtn.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
+			selectBtn.setTooltip(MyTooltipTool.instance("Run SQL: SELECT * FROM " + name));
+			selectBtn.setOnAction(e->{
+				RunSQLHelper.runSQL(sqluckyConn, "SELECT * FROM " + name,   false);
+				
+			});
+			
+			ls.add(selectBtn);
+		}
 		
 		
-		 
+		
 		return ls;
 	}
 	

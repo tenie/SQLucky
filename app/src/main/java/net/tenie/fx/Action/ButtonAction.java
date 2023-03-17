@@ -263,8 +263,9 @@ public class ButtonAction {
 		}
 		String tbn = rv.tableName;
 		String key = dbcp.getConnName() + "_" +dbcp.getDefaultSchema();
+		// 从表格缓存中查找表
 		List<TablePo> tbs = TreeObjCache.tableCache.get(key);
-		
+		 
 		TablePo tbrs = null; 
 		for(TablePo po: tbs) {
 			if( po.getTableName().equals(tbn) ){
@@ -272,6 +273,17 @@ public class ButtonAction {
 				break;
 			}
 		}
+		// 从试图缓存中查找
+		if(tbrs == null ) {
+			 tbs = TreeObjCache.viewCache.get(key);
+			 for(TablePo po: tbs) {
+					if( po.getTableName().equals(tbn) ){
+						tbrs = po;
+						break;
+					}
+				}
+		}
+		
 		if( tbrs != null)
 		TreeObjAction.showTableSql(dbcp, tbrs, tbn);
 		

@@ -2,14 +2,19 @@ package net.tenie.fx.component.container;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
 
+import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.utility.DraggingTabPaneSupport;
 
 /*   
@@ -34,6 +39,21 @@ public class DataViewContainer {
 		ComponentGetter.dataTabPane = dataView;
 		DraggingTabPaneSupport support2 = new DraggingTabPaneSupport();
 		support2.addSupport(dataView);
+		
+		dataView.getTabs().addListener((ListChangeListener<? super Tab>) c -> { 
+			var list = c.getList();
+			if(list.size() == 0) {
+//				SdkComponent.hideBottomPane(); 
+				CommonUtility.delayRunThread(v -> {
+					Platform.runLater(() -> {
+						if (dataView.getTabs().size() == 0) {
+							SdkComponent.hideBottomPane();
+						}
+					});
+				}, 200);
+			}
+					
+		});
 	}
 
 //	public static void showTableDate(DataViewTab dvt, String time , String rows) {

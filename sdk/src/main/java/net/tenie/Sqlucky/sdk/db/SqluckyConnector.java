@@ -5,11 +5,15 @@ import java.util.Map;
 import java.util.Set;
 
 import javafx.beans.property.StringProperty;
+import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
  
 
 public interface SqluckyConnector {
+	
+	public void setDbInfoTreeNode(TreeItem item);
+	public TreeItem getDbInfoTreeNode();
 	
 	public void setDBConnectorInfoPo(DBConnectorInfoPo po);
 	public DBConnectorInfoPo getDBConnectorInfoPo();
