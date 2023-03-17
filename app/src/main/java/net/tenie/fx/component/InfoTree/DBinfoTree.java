@@ -106,6 +106,7 @@ public class DBinfoTree {
 				TreeNodePo tnpo = new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink") );
 				tnpo.setType(TreeItemType.CONNECT_INFO);
 				var item = new MyTreeItem<TreeNodePo>( tnpo, po);
+				po.setDbInfoTreeNode(item);
 				ls.add(item); 
 			} 
 		} 
@@ -281,36 +282,36 @@ public class DBinfoTree {
 			// 视图
 			else if (parentItem.getValue().getType() != null && 
 					 parentItem.getValue().getType() == TreeItemType.VIEW_ROOT) {
-				SqluckyConnector dpo = item.getValue().getConnpo(); 
+				SqluckyConnector sqluckyconn = item.getValue().getConnpo(); 
 				TablePo table = item.getValue().getTable();
-				TreeObjAction.showTableSql(dpo, table, item.getValue().getName());
+				TreeObjAction.showTableSql(sqluckyconn, table, item.getValue().getName());
 			}
 			// 函数
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.FUNCTION_ROOT) {
-				SqluckyConnector dpo = item.getValue().getConnpo();
+				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl();
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
-					sqlStr = dpo.getExportDDL().exportCreateFunction(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					sqlStr = sqluckyconn.getExportDDL().exportCreateFunction(sqluckyconn.getConn(), fpt.getSchema(), fpt.getName());
 					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
 //						sqlStr = SqlFormatter.format(sqlStr);
 						fpt.setDdl(sqlStr);
 					}
 				}
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, true);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(item.getValue().getName(), sqlStr, true);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(), sqlStr, true, false);
 				mtd.show();
 
 			} // 过程
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.PROCEDURE_ROOT) {
-				SqluckyConnector dpo = item.getValue().getConnpo();
+				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl(); 
 				
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
-					sqlStr = dpo.getExportDDL().exportCreateProcedure(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					sqlStr = sqluckyconn.getExportDDL().exportCreateProcedure(sqluckyconn.getConn(), fpt.getSchema(), fpt.getName());
 					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
 //						sqlStr = SqlFormatter.format(sqlStr);
 						fpt.setDdl(sqlStr);
@@ -321,59 +322,59 @@ public class DBinfoTree {
 					fpt.setProcedure(true);
 				}
 //				new DataViewTab().showProcedurePanel(item.getValue().getName(), sqlStr, true);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ProcedureSheet(item.getValue().getName(), sqlStr, true);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ProcedureSheet(sqluckyconn, item.getValue().getName(), sqlStr, true);
 				mtd.show();
 
 			} // trigger
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.TRIGGER_ROOT) {
-				SqluckyConnector dpo = item.getValue().getConnpo();
+				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl(); 
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
-					sqlStr = dpo.getExportDDL().exportCreateTrigger(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					sqlStr = sqluckyconn.getExportDDL().exportCreateTrigger(sqluckyconn.getConn(), fpt.getSchema(), fpt.getName());
 					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
 						sqlStr = SqlFormatter.format(sqlStr);
 						fpt.setDdl(sqlStr);
 					}
 				} 
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(item.getValue().getName(), sqlStr, false);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
 				mtd.show();
 
 			}// index
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.INDEX_ROOT) {
-				SqluckyConnector dpo = item.getValue().getConnpo();
+				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl(); 
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
-					sqlStr = dpo.getExportDDL().exportCreateIndex(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					sqlStr = sqluckyconn.getExportDDL().exportCreateIndex(sqluckyconn.getConn(), fpt.getSchema(), fpt.getName());
 					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
 						sqlStr = SqlFormatter.format(sqlStr);
 						fpt.setDdl(sqlStr);
 					}
 				}
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(item.getValue().getName(), sqlStr, false);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
 				mtd.show();
 
 
 			}// Sequence
 			else if (parentItem.getValue().getType() != null
 					&& parentItem.getValue().getType() == TreeItemType.SEQUENCE_ROOT) {
-				SqluckyConnector dpo = item.getValue().getConnpo();
+				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
 				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
 				String sqlStr = fpt.getDdl();  
 				if(StrUtils.isNullOrEmpty(sqlStr)) { 
-					sqlStr = dpo.getExportDDL().exportCreateSequence(dpo.getConn(), fpt.getSchema(), fpt.getName());
+					sqlStr = sqluckyconn.getExportDDL().exportCreateSequence(sqluckyconn.getConn(), fpt.getSchema(), fpt.getName());
 					if(StrUtils.isNotNullOrEmpty(sqlStr)) {
 						sqlStr = SqlFormatter.format(sqlStr);
 						fpt.setDdl(sqlStr);
 					}
 				} 
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(item.getValue().getName(), sqlStr, false);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
 				mtd.show();
 
 

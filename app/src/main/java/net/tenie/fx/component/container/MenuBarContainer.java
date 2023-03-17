@@ -115,7 +115,7 @@ public class MenuBarContainer {
 				//都关闭页, 隐藏下半窗体
 				int tabSize = ComponentGetter.dataTabPane.getTabs().size();
 				if( tabSize == 0) {
-					SdkComponent.hideBottom();
+//					SdkComponent.hideBottom();
 				}else {
 					//选择最后一个
 					if( ConfigVal.EXEC_INFO_TITLE.equals(title) ) {
@@ -336,7 +336,7 @@ public class MenuBarContainer {
 		});
 		
 		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));
-		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
+//		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
 		SignUpMenuItem.setOnAction(value -> {
 //			SignUpWindow.createWorkspaceConfigWindow();
 			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/");

@@ -8,6 +8,8 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
@@ -17,6 +19,7 @@ public abstract class DbConnector implements SqluckyConnector {
 
 	private static Logger logger = LogManager.getLogger(DbConnector.class); 
 	protected DBConnectorInfoPo connPo;
+	protected TreeItem connTreeItem;
 	
 	public DbConnector(DBConnectorInfoPo c) {
 		super();
@@ -24,7 +27,14 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
  
 	
-
+	//保存 树节点上显示的链接节点
+	public void setDbInfoTreeNode(TreeItem item) {
+		this.connTreeItem = item;
+	}
+	public TreeItem getDbInfoTreeNode() {
+		return this.connTreeItem;
+	}
+	
 	public void setDBConnectorInfoPo(DBConnectorInfoPo po) {
 		this.connPo = po;
 	}
