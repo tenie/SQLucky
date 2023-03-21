@@ -32,13 +32,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
 public class QueryBackupController implements Initializable {
@@ -197,7 +197,7 @@ public class QueryBackupController implements Initializable {
 		// 对象集合转换为map集合
 		List<Map<String, String>> vals =	toMap(ls);
 		
-		var sheetDaV = SqluckyTableView.dataToSheet(colName, vals, hiddenCol);
+		var sheetDaV = TableViewUtil.dataToSheet(colName, vals, hiddenCol);
 		// 获取表
 		FilteredTableView<ResultSetRowPo>  table = sheetDaV.getInfoTable();
 		// 表不可编辑

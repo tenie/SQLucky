@@ -17,7 +17,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.db.PoDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -29,6 +28,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 import net.tenie.fx.main.Restart;
 
 public class PluginManageWindow {
@@ -152,7 +152,7 @@ public class PluginManageWindow {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 		    // 查询
-			sheetDaV = SqluckyTableView.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+			sheetDaV = TableViewUtil.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
 			// 获取表
 			allPluginTable = sheetDaV.getInfoTable();
 			// 表不可编辑

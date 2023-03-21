@@ -14,6 +14,7 @@ import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
@@ -50,6 +51,66 @@ public class SelectAction {
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			SheetDataValue sheetDaV = new SheetDataValue();
 			sheetDaV.setDbConnection(dpo); 
+			String connectName = DBConns.getCurrentConnectName();
+			sheetDaV.setSqlStr(sql);
+			sheetDaV.setTable(table);
+			sheetDaV.setTabName(tableName);
+			sheetDaV.setConnName(connectName);
+			sheetDaV.setLock(isLock);
+
+			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV); 
+			DataViewContainer.setTabRowWith(table, sheetDaV.getDataRs().getDatas().size()); 
+			
+			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getDataRs().getDatas();
+			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
+			  
+			//缓存
+			sheetDaV.setTable(table);
+			// 查询的 的语句可以被修改
+			table.editableProperty().bind(new SimpleBooleanProperty(true)); 
+			
+			//根据表名获取tablepo对象
+			List<String> keys = SqlExecuteOption.findPrimaryKeys(conn, tableName);
+			// table 添加列和数据 
+			// 表格添加列
+			var tableColumns = SqlExecuteOption.createTableColForSqlData( colss, keys , sheetDaV); 
+			// 设置 列的 右键菜单
+			SqlExecuteOption.setDataTableContextMenu(tableColumns, colss);
+			table.getColumns().addAll(tableColumns);
+			table.setItems(allRawData);  
+
+			// 列顺序重排
+			CacheDataTableViewShapeChange.colReorder(sheetDaV.getTabName(), colss, table);
+			// 渲染界面
+			if (thread != null && !thread.isInterrupted()) {
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(sheetDaV, tidx, false);
+				SqlExecuteOption.rmWaitingPane( isRefresh);
+				mtd.show();
+				// 水平滚顶条位置设置和字段类型
+				CacheDataTableViewShapeChange.setDataTableViewShapeCache(sheetDaV.getTabName(), sheetDaV.getTable(), colss); 		
+			}
+		} catch (Exception e) { 
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
+	
+
+	public static void selectAction2(String sql, SqluckyConnector sqluckyConn , int tidx, boolean isLock, Thread thread, boolean isRefresh) throws Exception {
+		try { 
+//			staticThread = thread;
+		    Connection conn = sqluckyConn.getConn();
+		    SqluckyTableView<ResultSetRowPo> table = new SqluckyTableView<>();
+			
+		    // 获取表名
+			String tableName = ParseSQL.tabName(sql);
+			if(StrUtils.isNullOrEmpty(tableName)) {
+				tableName = "Table Name Not Finded";
+			}
+			logger.info("tableName= " + tableName + "\n sql = " + sql);
+			SheetDataValue sheetDaV = new SheetDataValue();
+			sheetDaV.setDbConnection(sqluckyConn); 
 			String connectName = DBConns.getCurrentConnectName();
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTable(table);

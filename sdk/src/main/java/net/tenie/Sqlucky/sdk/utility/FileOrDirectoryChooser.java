@@ -22,10 +22,15 @@ public final class FileOrDirectoryChooser {
 			}else {
 				 
 				File f = new File(ConfigVal.openfileDir);
-				if(f.isFile()) {
-					String fp = f.getParent(); 
-				    f =  new File(fp);
-				} 
+				if( f.exists()) {
+					if(f.isFile()) {
+						String fp = f.getParent(); 
+					    f =  new File(fp);
+					} 
+				}else {
+					return  FileUtils.getUserDirectory();
+				}
+				
 				return  f;
 			} 
 	}

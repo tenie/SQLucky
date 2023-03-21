@@ -162,12 +162,9 @@ public class SdkComponent {
 		col.setCellValueFactory(new ResultSetCellValueFactory(colIdx));
 		return col;
 	}
-//                ObservableList<FilteredTableColumn<ResultSetRowPo, String>>
-	public static ObservableList<FilteredTableColumn<ResultSetRowPo, String>> createTableColForInfo(
-			ObservableList<SheetFieldPo> cols) {
+	public static ObservableList<FilteredTableColumn<ResultSetRowPo, String>> createTableColForInfo(ObservableList<SheetFieldPo> cols) {
 		int len = cols.size();
-		ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList 
-			= FXCollections.observableArrayList();
+		ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList = FXCollections.observableArrayList();
 		for (int i = 0; i < len; i++) {
 			String colname = cols.get(i).getColumnLabel().get();
 			Double colnameWidth = cols.get(i).getColumnWidth();
@@ -204,7 +201,8 @@ public class SdkComponent {
 		try {
 			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
 			// 查询的 的语句可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(false));
+//			table.editableProperty().bind(new SimpleBooleanProperty(false));
+//			table.setEditable(false);
 
 			// 获取表名
 			if (tableName == null || "".equals(tableName)) {
@@ -222,7 +220,7 @@ public class SdkComponent {
 			sheetDaV.setLock(false);
 			sheetDaV.setConn(conn);
 
-			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV);
+			SelectDao.selectSql(sql, Integer.MAX_VALUE, sheetDaV);
 
 			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getDataRs().getDatas();
 			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
@@ -262,10 +260,11 @@ public class SdkComponent {
 	 * @param fieldWidthMap
 	 * @throws Exception
 	 */
-	public static void dataModelQueryFieldsShow(String sql, Connection conn, String tableName, List<Node> optionNodes,
+	public static SheetDataValue dataModelQueryFieldsShow(String sql, Connection conn, String tableName, List<Node> optionNodes,
 			Map<String, Double> fieldWidthMap) throws Exception {
+		SheetDataValue sheetDaV = null;
 		try {
-			SheetDataValue sheetDaV = sqlToSheet(sql, conn, tableName, fieldWidthMap);
+		    sheetDaV = sqlToSheet(sql, conn, tableName, fieldWidthMap);
 			// 如果查询到数据才展示
 			if(sheetDaV.getTable().getItems().size() > 0) {
 				// 渲染界面
@@ -279,6 +278,7 @@ public class SdkComponent {
 			e.printStackTrace();
 			throw e;
 		}
+		return sheetDaV;
 	}
 
 	// 查询时等待画面
