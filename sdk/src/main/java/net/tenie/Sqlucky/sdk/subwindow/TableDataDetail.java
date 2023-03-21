@@ -32,7 +32,9 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie 
  * */
 public class TableDataDetail {
-
+	/**
+	 * 双击当前行, 子窗口显示行的数据
+	 */
 	public static void show() {
 		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tb = mtd.getTableData().getTable();

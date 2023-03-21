@@ -63,10 +63,10 @@ public class SelectDao {
 	
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
 	public static void selectSql( String sql, int limit, SheetDataValue dvt ) throws SQLException {
-		SqluckyConnector dpo  = dvt.getDbConnection();
+		SqluckyConnector sqluckyConn  = dvt.getDbConnection();
 		Connection conn = null;
-		if(dpo != null) {
-			 conn = dpo.getConn();
+		if(sqluckyConn != null) {
+			 conn = sqluckyConn.getConn();
 		}else {
 			conn =  dvt.getConn();
 		}
@@ -92,9 +92,9 @@ public class SelectDao {
 //			ObservableList<ObservableList<StringProperty>>  val ;
 			// 数据
 			if (limit > 0) {
-				execRs(limit, rs, dpo, setPo);
+				execRs(limit, rs, sqluckyConn, setPo);
 			} else {
-				execRs(rs,  dpo, setPo);
+				execRs(rs,  sqluckyConn, setPo);
 			}
 			int rowSize = setPo.getDatas().size();
 			

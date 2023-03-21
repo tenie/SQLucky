@@ -2,23 +2,26 @@ package net.tenie.plugin.DataModel;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.DataModelTablePo;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
 import net.tenie.plugin.DataModel.tools.DataModelDAO;
@@ -113,16 +116,58 @@ public class DataModelTabTree {
 	
 	static String tableName = "";
 	/**
-	 * 字段展示
+	 * 界面上展示, 字段数据的表格
 	 * @return
 	 */
 	public static void showFields(Long tableId) {
 		SdkComponent.addWaitingPane(-1);
-		List<Node> rs = tableInfoToLabels(tableId);
+		
+		// 
+		DataModelTablePo tbpo = DataModelDAO.selectTableById(tableId);
+		String table = tbpo.getDefKey();
+		tableName = tbpo.getDefName();
+		String tableComment = tbpo.getComment();
+		Label t = new Label(table + "   ");
+		t.setGraphic(IconGenerator.svgImageUnactive("table"));
+		Label tN = new Label(tableName  + "   ");
+		tN.setGraphic(IconGenerator.svgImageUnactive("table"));
+		Label tC = new Label(tableComment  + "   ");
+		tC.setGraphic(IconGenerator.svgImageUnactive("table"));
+		List<Node> tableHeadOptionNode = new ArrayList<>();
+		
+		if(StrUtils.isNullOrEmpty(tableName)) {
+			tableName = table;
+		}
+		// 查询框
+		JFXButton query = new JFXButton();
+		query.setGraphic(ComponentGetter.getIconDefActive("search"));
+		TextField textField = new TextField();
+		textField.getStyleClass().add("myTextField");
+		
+		tableHeadOptionNode.add(t);
+		tableHeadOptionNode.add(tN);
+		tableHeadOptionNode.add(tC);
+		tableHeadOptionNode.add(query);
+		tableHeadOptionNode.add(textField);
+		
+		// 查询数据库, 获取字段信息
 		var conn = SqluckyAppDB.getConn();
 		String sql = "select DEF_KEY as FIELD, DEF_NAME AS NAME , COMMENT, TYPE_FULL_NAME, PRIMARY_KEY, NOT_NULL, AUTO_INCREMENT, DEFAULT_VALUE,PRIMARY_KEY_NAME,NOT_NULL_NAME, AUTO_INCREMENT_NAME  from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "+ tableId;
 		try {
-			SdkComponent.dataModelQueryFieldsShow(sql, conn , tableName, rs, DataModelOption.tableInfoColWidth);
+			SheetDataValue sheetDaV = SdkComponent.dataModelQueryFieldsShow(sql, conn , tableName, tableHeadOptionNode, DataModelOption.tableInfoColWidth);
+			TableView<ResultSetRowPo>  tableView = sheetDaV.getTable();
+			ObservableList<ResultSetRowPo> items = tableView.getItems();
+			
+			// 添加过滤功能
+			textField.textProperty().addListener((o, oldVal, newVal) -> {
+				if (StrUtils.isNotNullOrEmpty(newVal)) {
+					bindTableViewFilter(tableView, items, newVal);
+				} else {
+					tableView.setItems(items);
+				}
+
+			});
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
@@ -134,10 +179,42 @@ public class DataModelTabTree {
 	}
 	
 	/**
-	 * 表信息， 转换为label
-	 * @return
+	 * 查询过滤
+	 * @param tableView
+	 * @param observableList
+	 * @param newValue
 	 */
-	public static List<Node>  tableInfoToLabels(Long tableId ) {
+	public static final void bindTableViewFilter(TableView<ResultSetRowPo> tableView,
+			ObservableList<ResultSetRowPo> observableList, String newValue) {
+		FilteredList<ResultSetRowPo> filteredData = new FilteredList<>(observableList, p -> true);
+		filteredData.setPredicate(entity -> {
+				String upperCaseVal = newValue.toUpperCase();
+	
+				ObservableList<ResultSetCellPo> rowDatas = entity.getRowDatas();
+				for (var cell : rowDatas) {
+					String cellFieldName = cell.getField().getColumnLabel().get();
+					if ("FIELD".equals(cellFieldName) || "NAME".equals(cellFieldName) || "COMMENT".equals(cellFieldName)) {
+						String cellVal = cell.getCellData().get();
+						if (cellVal.toUpperCase().contains(upperCaseVal)) {
+							return true;
+						}
+					}
+	
+				}
+	
+				return false;
+			} 
+		);
+		SortedList<ResultSetRowPo> sortedData = new SortedList<>(filteredData);
+		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+		tableView.setItems(sortedData);
+	}
+	
+	/**
+	 * 表头option区域
+	 * @return 返回表信息的Label, 查询框
+	 */
+	public static List<Node>  tableHeadOptionNodes2(Long tableId ) {
 		DataModelTablePo tbpo = DataModelDAO.selectTableById(tableId);
 		String table = tbpo.getDefKey();
 		tableName = tbpo.getDefName();
@@ -154,9 +231,20 @@ public class DataModelTabTree {
 			tableName = table;
 		}
 		
+		// 查询框
+		JFXButton query = new JFXButton();
+		query.setGraphic(ComponentGetter.getIconDefActive("search"));
+		TextField textField = new TextField();
+
+		textField.getStyleClass().add("myTextField");
+		 
+		
 		rs.add(t);
 		rs.add(tN);
 		rs.add(tC);
+		rs.add(query);
+		rs.add(textField);
+		
 		return rs;
 	}
 	
