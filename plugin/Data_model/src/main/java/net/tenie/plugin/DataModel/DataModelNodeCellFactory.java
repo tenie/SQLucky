@@ -67,9 +67,11 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 			if (e.getClickCount() == 2) {
 				if (cell == null || cell.getTreeItem() == null)
 					return;
+				// 模型节点双击, 展示所有的表节点
 				if (cell.getTreeItem().getValue().getIsModel()) {
 					DataModelTabTree.modelInfoTreeAddTableTreeNode(cell.getTreeItem());
 				}else {
+					// 查询表的字段信息, 在表格中展示
 					DataModelTabTree.showFields(cell.getTreeItem().getValue().getTableId());	
 				}
 			}
