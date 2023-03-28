@@ -162,20 +162,46 @@ public class SdkComponent {
 		col.setCellValueFactory(new ResultSetCellValueFactory(colIdx));
 		return col;
 	}
-	public static ObservableList<FilteredTableColumn<ResultSetRowPo, String>> createTableColForInfo(ObservableList<SheetFieldPo> cols) {
-		int len = cols.size();
-		ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList = FXCollections.observableArrayList();
-		for (int i = 0; i < len; i++) {
-			String colname = cols.get(i).getColumnLabel().get();
-			Double colnameWidth = cols.get(i).getColumnWidth();
-			FilteredTableColumn<ResultSetRowPo, String> col = null;
-			// isInfo 展示执行信息（错误/成功的信息)
-			col = createColumnForShowInfo(colname, i, colnameWidth);
-			colList.add(col);
-		}
-
-		return colList;
+	/**
+	 *根据字段创建所有列
+	 * @param cols
+	 * @return
+	 */
+	public static ObservableList<FilteredTableColumn<ResultSetRowPo, String>>
+		createTableColForInfo(ObservableList<SheetFieldPo> cols) { 
+		return createTableColForInfo(cols, null);
 	}
+	/**
+	 * 根据字段创建所有列, 通过editableColName 设置可以编辑的列
+	 * @param cols
+	 * @param editableColName
+	 * @return
+	 */
+	public static ObservableList<FilteredTableColumn<ResultSetRowPo, String>>
+	createTableColForInfo(ObservableList<SheetFieldPo> cols, List<String> editableColName) {
+	int len = cols.size();
+	ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList = FXCollections.observableArrayList();
+	for (int i = 0; i < len; i++) {
+		String colname = cols.get(i).getColumnLabel().get();
+		Double colnameWidth = cols.get(i).getColumnWidth();
+		FilteredTableColumn<ResultSetRowPo, String> col = null;
+		// isInfo 展示执行信息（错误/成功的信息)
+		col = createColumnForShowInfo(colname, i, colnameWidth);
+		
+		// 如果有启用编辑列, 那么对非编辑的列设值不可编辑
+		if(editableColName != null && editableColName.size() > 0)  {
+			if(editableColName.contains(colname)) {
+				col.setEditable(true);
+			}else {
+				col.setEditable(false);
+			}
+		}
+		
+		colList.add(col);
+	}
+
+	return colList;
+}
 
 	/**
 	 * 创建列
@@ -196,13 +222,14 @@ public class SdkComponent {
 	 * @param fieldWidthMap
 	 * @return
 	 */
-	public static SheetDataValue sqlToSheet(String sql, Connection conn, String tableName, Map<String, Double> fieldWidthMap) {
+	public static SheetDataValue sqlToSheet(String sql, Connection conn,
+			String tableName, Map<String, Double> fieldWidthMap, List<String> editableColName  ) {
 
 		try {
 			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
 			// 查询的 的语句可以被修改
 //			table.editableProperty().bind(new SimpleBooleanProperty(false));
-//			table.setEditable(false);
+			table.setEditable(true);
 
 			// 获取表名
 			if (tableName == null || "".equals(tableName)) {
@@ -237,10 +264,17 @@ public class SdkComponent {
 
 			// table 添加列和数据
 			// 表格添加列
-			var tableColumns = SdkComponent.createTableColForInfo(colss);
+			var tableColumns = SdkComponent.createTableColForInfo(colss, editableColName);
 			// 设置 列的 右键菜单
 			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);
+			// 表格选中事件, 对表格中的字段添加修改监听
+			table.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> { 
+				// 
+				if(newValue != null) {
+					newValue.cellAddChangeListener();
+				}
+			});
 			
 			return sheetDaV;
 
@@ -250,36 +284,6 @@ public class SdkComponent {
 		return null;
 	}
 	
-	/**
-	 * 数据模型查询字段时， 对展示列宽度做调整
-	 * 
-	 * @param sql
-	 * @param conn
-	 * @param tableName
-	 * @param optionNodes  按钮等组件的集合
-	 * @param fieldWidthMap
-	 * @throws Exception
-	 */
-	public static SheetDataValue dataModelQueryFieldsShow(String sql, Connection conn, String tableName, List<Node> optionNodes,
-			Map<String, Double> fieldWidthMap) throws Exception {
-		SheetDataValue sheetDaV = null;
-		try {
-		    sheetDaV = sqlToSheet(sql, conn, tableName, fieldWidthMap);
-			// 如果查询到数据才展示
-			if(sheetDaV.getTable().getItems().size() > 0) {
-				// 渲染界面
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(sheetDaV, optionNodes);
-				mtd.show();
-
-			}
-			
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw e;
-		}
-		return sheetDaV;
-	}
 
 	// 查询时等待画面
 	public static Tab maskTab(String waittbName) {

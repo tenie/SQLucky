@@ -10,6 +10,8 @@ open module SQLucky.plugin.DataModel{
 	requires java.sql;
 	requires org.mybatis; 
 	requires org.apache.logging.log4j;	
+
+	requires org.controlsfx.controls;
 	
 	exports net.tenie.plugin.DataModel.impl;
     provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.DataModel.impl.DataModelDelegateImpl;

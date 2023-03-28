@@ -37,7 +37,7 @@ public class SheetDataValue {
 	// 列
 	private ObservableList<SheetFieldPo> colss;
 	// 数据添加到表格 更简洁的api   , 数据库查询结果的表格原始数据
-	// tab中的表格
+	// tableView
 	private FilteredTableView<ResultSetRowPo> dbValTable;
 	
 	// 操作数据的按钮

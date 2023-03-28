@@ -17,6 +17,7 @@ import javafx.scene.layout.Pane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
+import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
@@ -122,31 +123,44 @@ public class DataModelTabTree {
 	public static void showFields(Long tableId) {
 		SdkComponent.addWaitingPane(-1);
 		
-		// 
+		// 操作区, 控件
 		DataModelTablePo tbpo = DataModelDAO.selectTableById(tableId);
 		String table = tbpo.getDefKey();
 		tableName = tbpo.getDefName();
 		String tableComment = tbpo.getComment();
-		Label t = new Label(table + "   ");
-		t.setGraphic(IconGenerator.svgImageUnactive("table"));
-		Label tN = new Label(tableName  + "   ");
-		tN.setGraphic(IconGenerator.svgImageUnactive("table"));
-		Label tC = new Label(tableComment  + "   ");
-		tC.setGraphic(IconGenerator.svgImageUnactive("table"));
-		List<Node> tableHeadOptionNode = new ArrayList<>();
+		Label tabNameLabel = new Label(table + "   ");
+		tabNameLabel.setGraphic(IconGenerator.svgImageUnactive("table"));
+		Label tabNameLabel2 = new Label(tableName  + "   ");
+		tabNameLabel2.setGraphic(IconGenerator.svgImageUnactive("table"));
+		Label commentLabel = new Label(tableComment  + "   ");
+		commentLabel.setGraphic(IconGenerator.svgImageUnactive("table"));
+		
 		
 		if(StrUtils.isNullOrEmpty(tableName)) {
 			tableName = table;
 		}
 		// 查询框
-		JFXButton query = new JFXButton();
-		query.setGraphic(ComponentGetter.getIconDefActive("search"));
 		TextField textField = new TextField();
 		textField.getStyleClass().add("myTextField");
+		textField.setVisible(false);
 		
-		tableHeadOptionNode.add(t);
-		tableHeadOptionNode.add(tN);
-		tableHeadOptionNode.add(tC);
+
+		JFXButton query = new JFXButton();
+		query.setGraphic(ComponentGetter.getIconDefActive("search"));
+		query.setOnAction(e->{
+			textField.setVisible(! textField.isVisible());
+		});
+		
+		// 字段信息保存按钮
+		JFXButton saveBtn = new JFXButton();
+		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
+		saveBtn.setDisable(true);
+		
+		List<Node> tableHeadOptionNode = new ArrayList<>();
+		tableHeadOptionNode.add(tabNameLabel);
+		tableHeadOptionNode.add(tabNameLabel2);
+		tableHeadOptionNode.add(commentLabel);
+		tableHeadOptionNode.add(saveBtn);
 		tableHeadOptionNode.add(query);
 		tableHeadOptionNode.add(textField);
 		
@@ -154,7 +168,15 @@ public class DataModelTabTree {
 		var conn = SqluckyAppDB.getConn();
 		String sql = "select DEF_KEY as FIELD, DEF_NAME AS NAME , COMMENT, TYPE_FULL_NAME, PRIMARY_KEY, NOT_NULL, AUTO_INCREMENT, DEFAULT_VALUE,PRIMARY_KEY_NAME,NOT_NULL_NAME, AUTO_INCREMENT_NAME  from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "+ tableId;
 		try {
-			SheetDataValue sheetDaV = SdkComponent.dataModelQueryFieldsShow(sql, conn , tableName, tableHeadOptionNode, DataModelOption.tableInfoColWidth);
+			SheetDataValue sheetDaV =
+					DataModelUtility.dataModelQueryFieldsShow(sql, conn , tableName, tableHeadOptionNode, DataModelOption.tableInfoColWidth);
+			// 保存按钮处理
+//			ResultSetPo resultSetPo = sheetDaV.getDataRs();
+//			saveBtn.setOnAction(e->{
+//				
+//			});
+			
+			//  tableView 处理
 			TableView<ResultSetRowPo>  tableView = sheetDaV.getTable();
 			ObservableList<ResultSetRowPo> items = tableView.getItems();
 			

@@ -88,8 +88,7 @@ public class SelectDao {
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = resultSetMetaData(rs);
 			ResultSetPo setPo = new ResultSetPo(fields);
-			
-//			ObservableList<ObservableList<StringProperty>>  val ;
+			 
 			// 数据
 			if (limit > 0) {
 				execRs(limit, rs, sqluckyConn, setPo);
@@ -100,9 +99,7 @@ public class SelectDao {
 			
 			dvt.setDataRs(setPo);
 			dvt.setColss(fields);
-			dvt.setRows(rowSize);
-//			dvt.setRawData(val);
-//			dvt.setRows(val.size());
+			dvt.setRows(rowSize); 
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -315,15 +312,9 @@ public class SelectDao {
 	private static void execRs(int limit, ResultSet rs, 
 			  SqluckyConnector dpo, ResultSetPo setPo ) throws SQLException {
 		int idx = 1;
-		int rowNo = 0;
-		int rowIdx = 0;
 		ObservableList<SheetFieldPo> fpo = setPo.getFields();
 		int columnnums = fpo.size();
-//		ObservableList<ObservableList<StringProperty>> allDatas = FXCollections.observableArrayList();
 		while (rs.next()) {
-//			ObservableList<ResultSetCellPo> rowDatas = FXCollections.observableArrayList();
-//			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
-			int rn = rowNo++;
 			ResultSetRowPo rowpo = new ResultSetRowPo(setPo);
 			
 			for (int i = 0; i < columnnums; i++) {
@@ -350,26 +341,18 @@ public class SelectDao {
 						val = new SimpleStringProperty(temp); 
 					}
 				}
-//				ResultSetCellPo cellVal = new ResultSetCellPo(i, val, fieldpo);
 				rowpo.addCell(val, fieldpo);
-//				rowDatas.add(cellVal);
-//				vals.add(val);
 			}
 
-//			vals.add(new SimpleStringProperty(rn + ""));
-//			allDatas.add(vals);
-			
-			rowIdx++;
 			setPo.addRow(rowpo); 
-			rowpo.cellAddChangeListener();
+			// CELL 监听
+//			rowpo.cellAddChangeListener();
 			if (idx == limit) {
 				break;
 			}
 				
 			idx++;
 		}
-		
-//		return allDatas;
 	}
 
 	

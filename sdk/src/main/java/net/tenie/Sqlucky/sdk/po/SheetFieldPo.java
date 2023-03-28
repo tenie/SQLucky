@@ -6,27 +6,32 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
-/*   @author tenie */
+/**
+ * 数据库表的字段数据结构
+ * @author tenie
+ *
+ */
 public class SheetFieldPo {
+
+	public static final String TEXT_TYPE = "TEXT_TYPE";
+	public static final String CHECK_BOX_TYPE = "CHECK_BOX_TYPE";
 	
-	private StringProperty columnName;
+	// 字段名称, 这个可能会没有
+	private StringProperty columnName; 
+	// 这个也是字段名称
+	private StringProperty columnLabel;
+	
 	private StringProperty columnClassName;
 	private IntegerProperty columnDisplaySize;
-	private StringProperty columnLabel;
 	private IntegerProperty columnType;
 	private StringProperty columnTypeName;
-	private IntegerProperty scale;
-
-	private StringProperty value;
-	
-	
+	private IntegerProperty scale; 
+	private StringProperty value; 
 	private Double columnWidth;
 
-	// 类型
+	// 类型, 在界面上显示的时候, 默认文本类型
 	private String Type = TEXT_TYPE; 
 	
-	public static String TEXT_TYPE = "TEXT_TYPE";
-	public static String CHECK_BOX_TYPE = "CHECK_BOX_TYPE";
 	
 	public String getType() {
 		return Type;
