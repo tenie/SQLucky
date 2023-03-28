@@ -4,21 +4,18 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-
 import org.controlsfx.control.tableview2.FilteredTableView;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.UpdateDao;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsVal;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -31,11 +28,18 @@ import net.tenie.fx.component.InfoTree.TreeObjAction;
 import net.tenie.fx.component.InfoTree.TreeItem.TreeObjCache;
 import net.tenie.fx.dao.DeleteDao;
 import net.tenie.fx.dao.InsertDao;
-import net.tenie.fx.dao.UpdateDao;
 
-
+/**
+ * 查询slq后, 面板上的操作按钮要执行的逻辑
+ * @author tenie
+ *
+ */
 public class ButtonAction {
-	
+	/**
+	 * 执行保存按钮的逻辑:
+	 * 新数据插入数据库
+	 * 字段更新的,执行update
+	 */
 	public static void dataSave() {
 		Button saveBtn = SqluckyBottomSheetUtility.dataPaneSaveBtn();
 		String tabName = SqluckyBottomSheetUtility.getTableName();
@@ -125,12 +129,12 @@ public class ButtonAction {
 			FilteredTableView<ResultSetRowPo> table = SqluckyBottomSheetUtility.dataTableView();
 			String tabName = SqluckyBottomSheetUtility.getTableName();
 			Connection conn = SqluckyBottomSheetUtility.getDbconn();
-			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
+//			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
 
 			ObservableList<ResultSetRowPo> vals = table.getSelectionModel().getSelectedItems();
 
 			// 行号集合
-			List<String> temp = new ArrayList<>();
+//			List<String> temp = new ArrayList<>();
 
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
 			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();

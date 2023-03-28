@@ -168,7 +168,7 @@ public class DataModelOption {
 				+ "left join DATA_MODEL_TABLE b on b.ITEM_ID = a.TABLE_ID\n"
 				+ "where b.MODEL_ID in ( "+modelIds+") and ( a.DEF_KEY like '%"+queryStr+"%' or  a.DEF_NAME  like '%"+queryStr+"%' or a.COMMENT like '%"+queryStr+"%' )";
 		try {
-			SdkComponent.dataModelQueryFieldsShow(sql, conn , queryStr, new ArrayList(), queryFieldColWidth);
+			DataModelUtility.dataModelQueryFieldsShow(sql, conn , queryStr, new ArrayList(), queryFieldColWidth);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {

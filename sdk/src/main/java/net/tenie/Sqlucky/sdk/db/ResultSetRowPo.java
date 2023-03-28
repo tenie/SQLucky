@@ -6,16 +6,19 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 /**
- * 行的数
+ * 一行的数据的数据结构
+ * 
  * @author tenie
  *
  */
 public class ResultSetRowPo {
+	// 对整个结果集的应用
 	private ResultSetPo resultSet ;
-//	private	ObservableList<SheetFieldPo> fields;
+	// 所有单元格
 	private ObservableList<ResultSetCellPo> rowDatas; 
-//	private ObservableList<ResultSetCellPo> oldCellVal;
+	// 是否修改过的标记
 	private Boolean hasModify = false;
+	// 当前行所在的位置(可以理解为下标)
 	private int rowIndex = -1;
 	
 	public void clean() {

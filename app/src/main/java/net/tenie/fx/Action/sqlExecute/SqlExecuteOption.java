@@ -188,14 +188,6 @@ public class SqlExecuteOption {
 			} 
 
 			boolean showtab = true;
-//			if (ddlDmlpo.getResultSet().getDatas().size() == 1) {
-//				var list = ddlDmlpo.getResultSet().getDatas().get(0);
-//				var strfield = list.getRowDatas().get(1).getCellData().get();   
-//				if (!strfield.startsWith("failed")) {
-//					CommonAction.showNotifiaction(strfield);
-//					showtab = false;
-//				}
-//			}
 			if (showtab) {
 				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
 

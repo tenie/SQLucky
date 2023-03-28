@@ -3,9 +3,17 @@ package net.tenie.Sqlucky.sdk.db;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-
+/*
+ * sql查询结果最终转换为一个数据结构, 包含如下内容:
+ *    所有的字段
+ *    所有的行数据
+ *    新增行的数据
+ *    有过修改的行数据
+ */
 public class ResultSetPo {
+	// 所有的字段
 	private ObservableList<SheetFieldPo> fields;
+	// 所有行的数据
 	private ObservableList<ResultSetRowPo> datas;
 	
 	// 新增数据
