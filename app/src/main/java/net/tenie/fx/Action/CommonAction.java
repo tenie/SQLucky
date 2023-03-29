@@ -621,8 +621,11 @@ public class CommonAction {
 	// 查看表明细(一行数据) 快捷键
 	public static void shortcutShowDataDatil() {
 		Button btn = 	SqluckyBottomSheetUtility.dataPaneDetailBtn();
-		MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
-		Event.fireEvent(btn, me);
+		if(btn != null ) {
+			MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
+			Event.fireEvent(btn, me);
+		}
+	
 	}
 
 	

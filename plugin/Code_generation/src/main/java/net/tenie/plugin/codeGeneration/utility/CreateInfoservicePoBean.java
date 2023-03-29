@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 
 import net.tenie.Sqlucky.sdk.db.PoDaoUtil;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 
 public class CreateInfoservicePoBean {
 
@@ -63,6 +64,7 @@ public class CreateInfoservicePoBean {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			MyAlert.errorAlert(e.toString());
 		} finally {
 			rs.close();
 			ste.close();

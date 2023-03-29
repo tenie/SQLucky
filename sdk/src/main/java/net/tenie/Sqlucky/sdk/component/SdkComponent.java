@@ -22,6 +22,7 @@ import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
@@ -272,7 +273,13 @@ public class SdkComponent {
 			table.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> { 
 				// 
 				if(newValue != null) {
-					newValue.cellAddChangeListener();
+					List<Button> btns = null;
+					if(sheetDaV.getBtnMap() != null) {
+						var btnNodes = sheetDaV.getBtnMap().values();
+						btns = new ArrayList<>();
+						btns.addAll(btnNodes);
+					}
+					newValue.cellAddChangeListener(btns);
 				}
 			});
 			

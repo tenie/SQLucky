@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
@@ -19,26 +17,26 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
-
+import org.controlsfx.control.tableview2.FilteredTableView;
 import com.alibaba.fastjson.JSONObject;
 import com.jfoenix.controls.JFXButton;
-
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.PoDao;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -433,85 +431,50 @@ public class DataModelUtility {
 		}
 	}
 	
-	/*
-	 * 对数据库表的信息修改(name, comment) 进行保存
-	 */
-	public static void saveTableInfo(JFXButton saveBtn, ResultSetPo resultSetPo, String tabName, SqluckyConnector  sqluckyConn ) {
-		var conn = sqluckyConn.getConn();
-		// 字段
-		ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
-		// 待保存数据
-		 ObservableList<ResultSetRowPo> modifyData = SqluckyBottomSheetUtility.getModifyData();
-		// 执行sql 后的信息 (主要是错误后显示到界面上)
-		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
-		boolean btnDisable = true;
-		if (!modifyData.isEmpty()) {
-			for (ResultSetRowPo val : modifyData) {
-				try {
-					String msg = UpdateDao.execUpdate(conn, tabName, val);
-					
-					if(StrUtils.isNotNullOrEmpty(msg)) {
-						var fds = ddlDmlpo.getFields();
-						var row = ddlDmlpo.addRow();
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fds.get(2));
-					}
-
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					btnDisable = false;
-					String 	msg = "failed : " + e1.getMessage();
-					msg += "\n"+sqluckyConn.translateErrMsg(msg);
-					var fds = ddlDmlpo.getFields();
-					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("failed"), fds.get(2));
-				}
-			}
-			SqluckyBottomSheetUtility.rmUpdateData();
-		}
-
-		// 插入操作
-//		ObservableList<ResultSetRowPo> dataList = SqluckyBottomSheetUtility.getAppendData();
-//		for (ResultSetRowPo os : dataList) {
-//			try {
-//				ObservableList<ResultSetCellPo> cells = os.getRowDatas();
-//				String msg = InsertDao.execInsert(conn, tabName, cells);
-//				var fds = ddlDmlpo.getFields();
-//				var row = ddlDmlpo.addRow();
-//				ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
-//				ddlDmlpo.addData(row, new SimpleStringProperty(msg), fds.get(1));
-//				ddlDmlpo.addData(row, new SimpleStringProperty("success"), fds.get(2));
-//
-//				// 对insert 的数据保存后 , 不能再修改
-////				ObservableList<ResultSetCellPo> cells = os.getRowDatas();
-//				for (int i = 0; i < cells.size(); i++) {
-//					var cellpo = cells.get(i);
-//					StringProperty sp = cellpo.getCellData();
-//					CommonUtility.prohibitChangeListener(sp, sp.get());
-//				}
-//
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//				btnDisable = false;
-//				var fs = ddlDmlpo.getFields();
-//				var row = ddlDmlpo.addRow();
-//				ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fs.get(0));
-//				ddlDmlpo.addData(row, new SimpleStringProperty(e1.getMessage()), fs.get(1));
-//				ddlDmlpo.addData(row, new SimpleStringProperty("failed"), fs.get(2));
-//			}
-//		}
-		// 删除缓存数据
-		SqluckyBottomSheetUtility.rmAppendData();
-
-		// 保存按钮禁用
-		saveBtn.setDisable(btnDisable);
-//		SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, null);
-	}
 	
+	// 展示信息窗口,
+		public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo, Thread thread) {
+			// 有数据才展示
+			if (ddlDmlpo.getResultSet().getDatas().size() > 0) {
+				FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
+				// 表内容可以被修改
+				table.editableProperty().bind(new SimpleBooleanProperty(true));
+				DataViewContainer.setTabRowWith(table, ddlDmlpo.getResultSet().getDatas().size());
+				// table 添加列和数据
+				ObservableList<SheetFieldPo> colss = ddlDmlpo.getFields();
+				ObservableList<ResultSetRowPo> alldata = ddlDmlpo.getResultSet().getDatas();
+				SheetDataValue dvt = new SheetDataValue(table, ConfigVal.EXEC_INFO_TITLE, colss, ddlDmlpo.getResultSet());
 
+				var cols = SdkComponent.createTableColForInfo(colss);
+				table.getColumns().addAll(cols);
+				table.setItems(alldata);
+
+				rmWaitingPane(true);
+				// 渲染界面
+				if (thread != null && thread.isInterrupted()) {
+					return;
+				} 
+
+				boolean showtab = true;
+				if (showtab) {
+					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
+
+					mtd.show();
+				}
+
+			
+			}
+		}
+		public static void rmWaitingPane(boolean holdSheet) {
+			SdkComponent.rmWaitingPane();
+			Platform.runLater(() -> {
+				if (holdSheet == false) { // 非刷新的， 删除多余的页
+					TabPane dataTab = ComponentGetter.dataTabPane;
+					SdkComponent.deleteEmptyTab(dataTab);
+				}
+			});
+
+		}
 	public static void main(String[] args) throws IOException {
 		DataSource dataSource = SqluckyAppDB.getSqliteDataSource();
 		TransactionFactory transactionFactory = new JdbcTransactionFactory();

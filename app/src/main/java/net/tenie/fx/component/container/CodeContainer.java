@@ -9,9 +9,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DraggingTabPaneSupport;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.factory.ButtonFactory;
-import net.tenie.fx.utility.DraggingTabPaneSupport;
 
 /*   @author tenie */
 public class CodeContainer {

@@ -425,6 +425,7 @@ public class DBinfoTree {
 					String schema = nd.getTable().getTableSchema();
 					String viewName = nd.getTable().getTableName();
 					menu.setViewAction(  newValue , dbc, schema, viewName);
+					menu.setSelectMenuDisable(false, dbc , viewName);
 				}else if(nd != null && nd.getType() == TreeItemType.FUNCTION) {
 					//TODO  
 					menu.setNodeType(TreeItemType.FUNCTION);

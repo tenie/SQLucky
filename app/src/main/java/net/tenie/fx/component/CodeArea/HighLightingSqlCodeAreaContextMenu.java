@@ -33,7 +33,7 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu{
 		
 		
 		
-		MenuItem del = new MenuItem("Delete                      (ctrl+D)"); 
+		MenuItem del = new MenuItem("Delete                      "); 
 		del.setOnAction(e->{
 //			SqlEditor.deleteSelectionText(); 
 			codeArea.delLineOrSelectTxt();

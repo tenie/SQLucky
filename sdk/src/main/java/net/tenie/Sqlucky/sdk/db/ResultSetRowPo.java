@@ -1,9 +1,12 @@
 package net.tenie.Sqlucky.sdk.db;
 
+import java.util.List;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 /**
  * 一行的数据的数据结构
@@ -26,32 +29,21 @@ public class ResultSetRowPo {
 			resultSet.getFields().clear();
 			resultSet = null;
 		}
-//		fields.clear();
-//		fields = null;
 		rowDatas.forEach(v->{ v.clean(); });
-//		oldCellVal.forEach(v->{ v.clean(); });
 		hasModify = null;
 	}
 	
-//	public ResultSetRowPo(int idx, ObservableList<ResultSetCellPo> val, ObservableList<SheetFieldPo> fields) {
-//		rowIndex = idx;
-//		rowDatas = val;
-//		this.fields = fields;
-//		for(var cell : rowDatas) {
-//			cell.setCurrentRow(this);
-//		}
-//	}
 	
 	protected ResultSetRowPo(ResultSetPo rs) {
 		resultSet = rs;
 		rowIndex = resultSet.getDatas().size();
 		rowDatas = FXCollections.observableArrayList();
-//		this.fields = fields;
 	}
-	
-//	public void addCell(ResultSetCellPo cell) {
-//		rowDatas.add(cell);
-//	}
+	/**
+	 * 给一行数据, 添加一个cell
+	 * @param cellData
+	 * @param field
+	 */
 	public void addCell(StringProperty cellData, SheetFieldPo field) {
 		ResultSetCellPo cell = new ResultSetCellPo(this, cellData, field);
 		rowDatas.add(cell);
@@ -60,7 +52,10 @@ public class ResultSetRowPo {
 		StringProperty sp = new SimpleStringProperty(cellstr);
 		addCell(sp, field);
 	}
-	
+	/**
+	 * 一行中有多少个cell
+	 * @return
+	 */
 	public int cellSize() {
 		if(rowDatas != null) {
 			return rowDatas.size();
@@ -94,10 +89,10 @@ public class ResultSetRowPo {
 	}
 	
 	// cell 添加事件, 当单元格被修改做一些处理
-	public void cellAddChangeListener() {
+	public void cellAddChangeListener(List<Button> btns) {
 		if( rowDatas != null && rowDatas.size() > 0) {
 			for(ResultSetCellPo cell : rowDatas) {
-				ResultSetCellPo.addStringPropertyChangeListener(cell);
+				ResultSetCellPo.addStringPropertyChangeListener(cell , btns);
 			}
 		}
 		

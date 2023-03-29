@@ -3,14 +3,11 @@ package net.tenie.fx.Action.sqlExecute;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.fxmisc.richtext.CodeArea;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
@@ -21,6 +18,7 @@ import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -32,12 +30,10 @@ import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Po.SqlData;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
-import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.component.dataView.DataTableContextMenu;
 import net.tenie.fx.config.DBConns;
 

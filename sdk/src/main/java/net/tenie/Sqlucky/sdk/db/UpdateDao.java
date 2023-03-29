@@ -24,8 +24,6 @@ public class UpdateDao {
 		ResultSet rs = null;
 		String msg = "";
 		try {
-//			ObservableList<SheetFieldPo> fpos = mval.getFields();
-			
 			String condition = DaoTools.conditionStr(mval);
 
 			// 校验 更新sql 会更1条以上, 如果查到一天以上给予提示确认!
