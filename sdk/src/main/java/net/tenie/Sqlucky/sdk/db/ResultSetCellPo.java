@@ -1,5 +1,7 @@
 package net.tenie.Sqlucky.sdk.db;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javafx.application.Platform;
@@ -7,6 +9,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -118,7 +121,7 @@ public class ResultSetCellPo {
 	
 	// 数据单元格添加监听
 	// 字段修改事件
-	public static void addStringPropertyChangeListener(ResultSetCellPo cell) {
+	public static void addStringPropertyChangeListener(ResultSetCellPo cell , List<Button> btns) {
 		if (cell.hasListener == false) {
 
 			ChangeListener<String> cl = new ChangeListener<String>() {
@@ -143,6 +146,13 @@ public class ResultSetCellPo {
 						cell.setOldCellData(new SimpleStringProperty(oldValue));
 						cell.setHasModify(true);
 						cell.getCurrentRow().setHasModify(true);
+						// 保存按钮启用
+						if(btns !=null && btns.size() > 0) {
+							btns.forEach(btn->{
+								btn.setDisable(false);
+							});
+						}
+						
 					}
 
 				}

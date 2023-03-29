@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyTableView;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -23,7 +24,6 @@ import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.container.DataViewContainer;
 import net.tenie.fx.config.DBConns;
 
 
@@ -82,7 +82,7 @@ public class SelectAction {
 			table.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> { 
 				// 
 				if(newValue != null) {
-					newValue.cellAddChangeListener();
+					newValue.cellAddChangeListener(null);
 				}
 			});
 

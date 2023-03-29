@@ -10,6 +10,7 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -40,8 +41,8 @@ public class SheetDataValue {
 	// tableView
 	private FilteredTableView<ResultSetRowPo> dbValTable;
 	
-	// 操作数据的按钮
-	private List<Node> btnLs ;
+	// 操作数据的按钮, 按钮名称和控件对象方式保存
+	private Map<String, Button> btnMap ;
 	
 	
 	public void clean() {
@@ -61,8 +62,8 @@ public class SheetDataValue {
 		
 		 
 		
-		if(btnLs != null) btnLs.clear();
-		btnLs = null;
+		if(btnMap != null) btnMap.clear();
+		btnMap = null;
 	}
 
  
@@ -91,6 +92,18 @@ public class SheetDataValue {
 
 	}
  
+	public Map<String, Button> getBtnMap() {
+		return btnMap;
+	}
+
+
+
+	public void setBtnMap(Map<String, Button> btnMap) {
+		this.btnMap = btnMap;
+	}
+
+
+
 	public String getTabName() {
 		return tabName;
 	}
@@ -169,15 +182,20 @@ public class SheetDataValue {
 
 
 
-	public List<Node> getBtnLs() {
-		return btnLs;
+	 
+	/**
+	 * 添加按钮
+	 * @param btnName
+	 * @param btn
+	 */
+	public void addBtn(String btnName, Button btn) {
+		if(btnMap == null) {
+			btnMap = new HashMap<String, Button>();
+		}
+		btnMap.put(btnName, btn);
 	}
 
-
-
-	public void setBtnLs(List<Node> btnLs) {
-		this.btnLs = btnLs;
-	}
+ 
 
 
 

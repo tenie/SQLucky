@@ -956,6 +956,47 @@ public class CommonUtility {
         host.showDocument(url);
 	}
 	
+	// 获取运行时app的可以执行程序(文件)
+	public static String sqluckyAppPath() {
+		String os_name = System.getProperty("os.name");
+		String java_home = System.getProperty("java.home");
+		logger.info("os_name = " + os_name);
+		logger.info("java_home = " + java_home);
+		String app = "";
+		if (os_name.toLowerCase().startsWith("win")) {
+			app =java_home.replace("runtime", "SQLucky.exe");
+			logger.info("win app = " + app); 
+		} else if (os_name.toLowerCase().startsWith("mac")) {
+			app = java_home.replace("runtime/Contents/Home", "MacOS/SQLucky");
+			logger.info("mac app = " + app); 
+		} else if (os_name.toLowerCase().startsWith("linux")) {
+		    app = java_home.replace("lib/runtime", "bin/SQLucky");
+			logger.info(" linux app = " + app); 
+		}
+		
+		return app;
+	}
+	
+	// 获取运行时app的模块路径
+	public static String sqluckyAppModsPath() {
+		String os_name = System.getProperty("os.name");
+		String java_home = System.getProperty("java.home");
+		logger.info("os_name = " + os_name);
+		logger.info("java_home = " + java_home);
+		String modsdir = "";
+		if (os_name.toLowerCase().startsWith("win")) { 
+			  modsdir =  java_home.replace("runtime", "app/mods/"); 
+			logger.info("win app = " + modsdir); 
+		} else if (os_name.toLowerCase().startsWith("mac")) {
+			//TODO
+			logger.info("mac app = " + modsdir); 
+		} else if (os_name.toLowerCase().startsWith("linux")) {
+		    modsdir =  java_home.replace("lib/runtime", "lib/app/mods/"); 
+			logger.info(" linux app = " + modsdir); 
+		}
+		
+		return modsdir;
+	}
 	
 }
 

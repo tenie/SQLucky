@@ -1,21 +1,17 @@
-package net.tenie.fx.component.container;
+package net.tenie.Sqlucky.sdk.component;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.fx.utility.DraggingTabPaneSupport;
+import net.tenie.Sqlucky.sdk.utility.DraggingTabPaneSupport;
 
 /*   
  * 展示(数据, ddl等)面板的容器

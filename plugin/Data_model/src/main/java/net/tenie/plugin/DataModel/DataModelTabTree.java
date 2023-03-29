@@ -166,15 +166,33 @@ public class DataModelTabTree {
 		
 		// 查询数据库, 获取字段信息
 		var conn = SqluckyAppDB.getConn();
-		String sql = "select DEF_KEY as FIELD, DEF_NAME AS NAME , COMMENT, TYPE_FULL_NAME, PRIMARY_KEY, NOT_NULL, AUTO_INCREMENT, DEFAULT_VALUE,PRIMARY_KEY_NAME,NOT_NULL_NAME, AUTO_INCREMENT_NAME  from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "+ tableId;
+		String sql = "select DEF_KEY as FIELD,"
+					  + " DEF_NAME AS NAME , "
+					  + "COMMENT, "
+					  + "TYPE_FULL_NAME, "
+					  + "PRIMARY_KEY, "
+					  + "NOT_NULL, "
+					  + "AUTO_INCREMENT, "
+					  + "DEFAULT_VALUE, "
+					  + "PRIMARY_KEY_NAME, "
+					  + "NOT_NULL_NAME, "
+					  + "AUTO_INCREMENT_NAME  "
+				   + "from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "+ tableId;
 		try {
 			SheetDataValue sheetDaV =
 					DataModelUtility.dataModelQueryFieldsShow(sql, conn , tableName, tableHeadOptionNode, DataModelOption.tableInfoColWidth);
+			sheetDaV.addBtn("save", saveBtn);
 			// 保存按钮处理
-//			ResultSetPo resultSetPo = sheetDaV.getDataRs();
-//			saveBtn.setOnAction(e->{
-//				
-//			});
+			ResultSetPo resultSetPo = sheetDaV.getDataRs();
+			saveBtn.setOnAction(e->{
+				var connObj = SqluckyAppDB.getConn();
+				try { 
+					DataModelDAO.saveTableInfo(saveBtn, resultSetPo, tableId, connObj);
+				} finally {
+					SqluckyAppDB.closeConn(connObj);
+				}
+				
+			});
 			
 			//  tableView 处理
 			TableView<ResultSetRowPo>  tableView = sheetDaV.getTable();

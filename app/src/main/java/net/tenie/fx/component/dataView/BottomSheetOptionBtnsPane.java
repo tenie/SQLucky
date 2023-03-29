@@ -9,11 +9,15 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
@@ -23,6 +27,7 @@ import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -238,6 +243,31 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 				}
 			}
 		});
+		
+		// 搜索
+		// 查询框
+		TextField searchField = new TextField();
+		searchField.getStyleClass().add("myTextField");
+		searchField.setVisible(false);  
+		JFXButton searchBtn = new JFXButton();
+		searchBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
+		searchBtn.setTooltip(MyTooltipTool.instance("Search "));
+		searchBtn.setOnAction(e->{
+			searchField.setVisible(! searchField.isVisible());
+		});
+		TableView<ResultSetRowPo>  tableView = mytb.getTableData().getDbValTable();
+		ObservableList<ResultSetRowPo> items = tableView.getItems();
+		
+		// 添加过滤功能
+		searchField.textProperty().addListener((o, oldVal, newVal) -> {
+			if (StrUtils.isNotNullOrEmpty(newVal)) {
+				tableViewAllDataFilter(tableView, items, newVal);
+			} else {
+				tableView.setItems(items);
+			}
+
+		});
+		
 		ls.add(lockbtn);
 		ls.add(saveBtn);
 		ls.add(detailBtn);
@@ -247,8 +277,38 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		ls.add(minusBtn);
 		ls.add(copyBtn);
 		ls.add(exportBtn);
+		ls.add(searchBtn);
+		ls.add(searchField);
+		
 		
 		return ls;
+	}
+	/**
+	 * 对sql查询结果, 在界面上所有的数据进行模糊查询
+	 * @param tableView
+	 * @param observableList
+	 * @param newValue
+	 */
+	public static final void tableViewAllDataFilter(TableView<ResultSetRowPo> tableView,
+			ObservableList<ResultSetRowPo> observableList, String newValue) {
+		FilteredList<ResultSetRowPo> filteredData = new FilteredList<>(observableList, p -> true);
+		filteredData.setPredicate(entity -> {
+				String upperCaseVal = newValue.toUpperCase();
+	
+				ObservableList<ResultSetCellPo> rowDatas = entity.getRowDatas();
+				for (var cell : rowDatas) {
+					String cellVal = cell.getCellData().get();
+					if (cellVal.toUpperCase().contains(upperCaseVal)) {
+						return true;
+					}
+				}
+	
+				return false;
+			} 
+		);
+		SortedList<ResultSetRowPo> sortedData = new SortedList<>(filteredData);
+		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+		tableView.setItems(sortedData);
 	}
 	
 	/**

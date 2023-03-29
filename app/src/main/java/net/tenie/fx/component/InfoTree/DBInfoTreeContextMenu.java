@@ -22,6 +22,7 @@ import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.window.ConnectionEditor;
 
@@ -44,8 +45,11 @@ public class DBInfoTreeContextMenu {
     private MenuItem delete;
 
     private MenuItem refresh;
-
+    private MenuItem  selectMenu;
+    
     private TreeItemType nodeType;
+
+    
     
     public DBInfoTreeContextMenu() {
 
@@ -61,6 +65,7 @@ public class DBInfoTreeContextMenu {
         unlink = new MenuItem("Close Connection");
         unlink.setOnAction(e -> {
             ConnectionEditor.closeDbConn();
+            link.setDisable(false);
         });
         unlink.setGraphic(IconGenerator.svgImageDefActive("unlink"));
         unlink.setDisable(true);
@@ -105,11 +110,18 @@ public class DBInfoTreeContextMenu {
         tableDrop = new MenuItem("Drop ");
         tableDrop.setGraphic(IconGenerator.svgImageDefActive("minus-square"));
         tableDrop.setDisable(true);
+        
+        // 查询
+        selectMenu = new MenuItem("Select * from ");
+        selectMenu.setGraphic(IconGenerator.svgImageDefActive("search"));
+        selectMenu.setDisable(true);
+        
+        
        
         
         contextMenu.getItems().addAll(
                 link, unlink, Edit, Add, delete, new SeparatorMenuItem(), refresh, new SeparatorMenuItem(),
-                tableAddNewCol, tableShow, tableDrop);
+                tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu);
         
       
         // 菜单显示调用回调函数
@@ -136,31 +148,60 @@ public class DBInfoTreeContextMenu {
     public void setTableDisable(boolean tf) {
         tableAddNewCol.setDisable(tf);
         tableDrop.setDisable(tf);
+        selectMenu.setDisable(tf);
+        if(tf) {
+        	selectMenu.setText("Select");
+        }
         tableShow.setDisable(tf);
+        
     }
 
     // 设置选中 视图/函数 时右键菜单的可以和禁用
     public void setViewFuncProcTriDisable(boolean tf) {
         tableDrop.setDisable(tf);
     }
-
+    // 设置select * from 按钮的启用/禁用
+    public void setSelectMenuDisable(boolean tf ,SqluckyConnector sqluckyConn, String tablename) {
+    	if(tf == false) {
+    		  // selectMenu 的设置
+            setSelectMenuAction(sqluckyConn, tablename);
+    	} 
+       	selectMenu.setDisable(tf);
+    }
 
     public void setRefreshDisable(boolean tf) {
         refresh.setDisable(tf);
     }
 
-
-    public void setTableAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector dbc, String schema, String tablename) {
+    /**
+     * 右键是table类型的node的时候, 设置对应按钮执行的函数
+     * @param treeItem
+     * @param sqluckyConn
+     * @param schema
+     * @param tablename
+     */
+    public void setTableAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector sqluckyConn, String schema, String tablename) {
         tableAddNewCol.setOnAction(e -> {
-            CommonAction.addNewColumn(dbc, schema, tablename);
+            CommonAction.addNewColumn(sqluckyConn, schema, tablename);
         });
 
         tableDrop.setOnAction(e -> {
-            DBInfoTreeContextMenuAction.dropTable(treeItem, dbc, schema, tablename);
+            DBInfoTreeContextMenuAction.dropTable(treeItem, sqluckyConn, schema, tablename);
         });
 
         tableShow.setOnAction(e -> {
-            showTableFieldType(dbc, schema, tablename);
+            showTableFieldType(sqluckyConn, schema, tablename);
+        });
+        // selectMenu 的设置
+        setSelectMenuAction(sqluckyConn, tablename);
+      
+    }
+    //右键菜单, 查询按钮设置
+    public void setSelectMenuAction(SqluckyConnector sqluckyConn, String tablename) {
+        String str = "SELECT * FROM " + tablename;
+    	selectMenu.setText(str);
+        selectMenu.setOnAction(e -> { 
+        	RunSQLHelper.runSQL(sqluckyConn,  str,   false);
         });
     }
 

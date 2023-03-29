@@ -1,4 +1,4 @@
-package net.tenie.fx.utility;
+package net.tenie.Sqlucky.sdk.utility;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -10,7 +10,11 @@ import javafx.scene.control.TabPane;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-/*   @author tenie */
+/**
+ * Tab 位置拖到设置
+ * @author tenie
+ *
+ */
 public class DraggingTabPaneSupport {
 
     private Tab currentDraggingTab ;
