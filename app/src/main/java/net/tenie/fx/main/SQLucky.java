@@ -1,11 +1,15 @@
 package net.tenie.fx.main;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+
+import javax.net.ssl.SSLContext;
+
 import com.sun.javafx.application.LauncherImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,6 +36,7 @@ import net.tenie.fx.component.UserAccount.UserAccountAction;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.AppDao;
+import net.tenie.lib.tools.UnlimitedCryptoPoliciesCheck;
 import net.tenie.sdkImp.SqluckyAppComponent;
 
 /**
@@ -211,6 +216,16 @@ public class SQLucky extends Application {
 		logger.debug("main.args ==  "+ Arrays.toString(args)); 
 		if(args!=null && args.length >0) {
 			sysOpenFile = args[0];
+		}
+		try {
+			String str = UnlimitedCryptoPoliciesCheck.getInfo();
+			logger.debug("UnlimitedCryptoPoliciesCheck ==  "+ str); 
+			
+
+			System.setProperty("https.protocols", "TLSv1.2");
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 //		Properties  ps = System.getProperties();
 //		ps.forEach((o1, o2)->{

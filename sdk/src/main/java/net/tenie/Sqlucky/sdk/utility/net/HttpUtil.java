@@ -32,6 +32,10 @@ import org.apache.hc.core5.net.URIBuilder;
 import org.apache.hc.core5.util.Timeout;
 
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.JsonTools;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
 
 public class HttpUtil {
 
@@ -231,7 +235,7 @@ public class HttpUtil {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static String post1(String url, Map<String, String> strPamas) throws Exception {
+	public static String post1_bak(String url, Map<String, String> strPamas) throws Exception {
 		String result = null;
 		HttpPost httpPost = new HttpPost(url);
 		// 超时配置
@@ -267,6 +271,22 @@ public class HttpUtil {
 		}
 		return result;
 	}
+	
+	public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+	public static String post1(String url, Map<String, String> strPamas) throws Exception {
+		JsonTools.objToStr(strPamas)
+		OkHttpClient client = new OkHttpClient();
+		RequestBody body = RequestBody.create(json, JSON);
+		  Request request = new Request.Builder()
+		      .url(url)
+		      .post(body)
+		      .build();
+		  try (Response response = client.newCall(request).execute()) {
+		    return response.body().string();
+		  }
+	}
+	
 	/**
 	 * 简洁版本的post
 	 * @param url
