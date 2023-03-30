@@ -95,7 +95,7 @@ public class JsonTools {
 	/**
 	 * jsonToMap
 	 */
-	public  Map<String,Object> jsonStrToMap(String str){
+	public static Map<String,Object> jsonStrToMap(String str){
 //	    String str = "{\"age\":\"24\",\"name\":\"cool_summer_moon\"}";
 	    JSONObject  jsonObject = JSONObject.parseObject(str);
 	    //json对象转Map
@@ -107,7 +107,7 @@ public class JsonTools {
 	}
 	
 	//Map 转 Json
-	public String  mapToJson(Map<String,Object> map){ 
+	public static String  mapToJson(Map<String,Object> map){ 
 	    JSONObject json = new JSONObject(map);
 	    return json.toString(); 
 	}

@@ -435,6 +435,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		tbv.scrollTo(0);
 		ResultSetPo rspo = SqluckyBottomSheetUtility.getResultSet();
 		ResultSetRowPo rowpo = rspo.createAppendNewRow(0 ); 
+		rowpo.setIsNewAdd(true);
 		ObservableList<SheetFieldPo> fs = rspo.getFields();
 		for (int i = 0; i < fs.size(); i++) {
 			SheetFieldPo fieldpo = fs.get(i);

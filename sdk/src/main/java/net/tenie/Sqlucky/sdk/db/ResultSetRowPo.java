@@ -21,6 +21,9 @@ public class ResultSetRowPo {
 	private ObservableList<ResultSetCellPo> rowDatas; 
 	// 是否修改过的标记
 	private Boolean hasModify = false;
+	// 是后期手动添加的新行
+	private Boolean isNewAdd = false;
+	
 	// 当前行所在的位置(可以理解为下标)
 	private int rowIndex = -1;
 	
@@ -90,6 +93,8 @@ public class ResultSetRowPo {
 	
 	// cell 添加事件, 当单元格被修改做一些处理
 	public void cellAddChangeListener(List<Button> btns) {
+		// 手动添加 不用给cell添加监听
+		if(isNewAdd ) return;
 		if( rowDatas != null && rowDatas.size() > 0) {
 			for(ResultSetCellPo cell : rowDatas) {
 				ResultSetCellPo.addStringPropertyChangeListener(cell , btns);
@@ -149,6 +154,16 @@ public class ResultSetRowPo {
 				resultSet.getUpdateDatas().add(this);
 			}
 		} 
+	}
+
+
+	public Boolean getIsNewAdd() {
+		return isNewAdd;
+	}
+
+
+	public void setIsNewAdd(Boolean isNewAdd) {
+		this.isNewAdd = isNewAdd;
 	}
 	
 	

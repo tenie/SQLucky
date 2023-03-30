@@ -39,7 +39,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
-import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
+import net.tenie.Sqlucky.sdk.utility.net.OkHttpUtil;
 
 public class QueryBackupController implements Initializable {
 	private static String httpUrl() {
@@ -158,7 +158,7 @@ public class QueryBackupController implements Initializable {
 		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
 		pamas.put("BAK_NAME", bakName);
 		
-		String bakInfoJson = HttpUtil.post1(httpUrl(), pamas);
+		String bakInfoJson = OkHttpUtil.post1(httpUrl(), pamas);
 		 
 		return bakInfoJson;
 	}
@@ -170,7 +170,7 @@ public class QueryBackupController implements Initializable {
 		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
 		pamas.put("BAK_ID",  id);
 		pamas.put("BAK_NAME",  bakname);
-		String bakInfoJson = HttpUtil.post1(delUrl(), pamas);
+		String bakInfoJson = OkHttpUtil.post1(delUrl(), pamas);
 		if(StrUtils.isNotNullOrEmpty(bakInfoJson)) {
 			return true;
 		}

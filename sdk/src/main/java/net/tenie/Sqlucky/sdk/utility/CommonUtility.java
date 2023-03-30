@@ -988,7 +988,8 @@ public class CommonUtility {
 			  modsdir =  java_home.replace("runtime", "app/mods/"); 
 			logger.info("win app = " + modsdir); 
 		} else if (os_name.toLowerCase().startsWith("mac")) {
-			//TODO
+			//TODO 
+			modsdir = java_home.replace("runtime/Contents/Home", "app/mods");
 			logger.info("mac app = " + modsdir); 
 		} else if (os_name.toLowerCase().startsWith("linux")) {
 		    modsdir =  java_home.replace("lib/runtime", "lib/app/mods/"); 

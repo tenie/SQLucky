@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -122,7 +123,7 @@ public class ResultSetCellPo {
 	// 数据单元格添加监听
 	// 字段修改事件
 	public static void addStringPropertyChangeListener(ResultSetCellPo cell , List<Button> btns) {
-		if (cell.hasListener == false) {
+		if (cell.hasListener == false ) {
 
 			ChangeListener<String> cl = new ChangeListener<String>() {
 				@Override
