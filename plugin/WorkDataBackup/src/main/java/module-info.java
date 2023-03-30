@@ -1,4 +1,5 @@
 open module SQLucky.plugin.WorkDataBackup{
+	requires java.base;
 	requires javafx.base;
 	requires javafx.graphics;
     requires javafx.controls;
