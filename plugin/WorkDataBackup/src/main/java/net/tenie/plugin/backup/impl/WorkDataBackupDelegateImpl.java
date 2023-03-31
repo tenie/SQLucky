@@ -7,7 +7,6 @@ import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.backup.component.WorkDataBackupController;
-import net.tenie.plugin.backup.component.WorkDataBackupEditorWindow;
 
 public class WorkDataBackupDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "WorkDataBackup";

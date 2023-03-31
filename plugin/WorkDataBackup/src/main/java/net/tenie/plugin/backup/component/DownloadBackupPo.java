@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javafx.beans.property.SimpleStringProperty;
 
+/**
+ */
 public class DownloadBackupPo {
 	private SimpleStringProperty idVal = new SimpleStringProperty();
 	private SimpleStringProperty nameVal = new SimpleStringProperty();

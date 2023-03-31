@@ -25,7 +25,7 @@ import org.apache.hc.core5.http.message.BasicNameValuePair;
 public class HttpDownloadFile {
 	
 	//"http://127.0.0.1:8088/sqlucky/confDownload"
-	public static void getInfo(String url, Map<String, String> strPamas, String saveFile) {
+	public static void getInfo2(String url, Map<String, String> strPamas, String saveFile) {
 
        
 		//创建HttpClient对象
