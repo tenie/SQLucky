@@ -35,7 +35,7 @@ open module SQLucky.sdk {
 	requires org.apache.httpcomponents.core5.httpcore5;
 	requires org.mybatis;
 	requires com.github.albfernandez.juniversalchardet;
-	requires okhttp3;
+//	requires okhttp3;
 	
 	exports net.tenie.Sqlucky.sdk;
 	exports net.tenie.Sqlucky.sdk.utility;

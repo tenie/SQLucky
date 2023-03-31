@@ -11,10 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.function.Consumer;
-
 import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.tableview2.FilteredTableView;
-
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -39,8 +37,13 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
-import net.tenie.Sqlucky.sdk.utility.net.OkHttpUtil;
+import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
+/**
+ * 查询界面fxml 的controller
+ * @author tenie
+ *
+ */
 public class QueryBackupController implements Initializable {
 	private static String httpUrl() {
 		return ConfigVal.getSqluckyServer()+"/sqlucky/queryAllBackup";
@@ -158,7 +161,7 @@ public class QueryBackupController implements Initializable {
 		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
 		pamas.put("BAK_NAME", bakName);
 		
-		String bakInfoJson = OkHttpUtil.post1(httpUrl(), pamas);
+		String bakInfoJson = HttpUtil.post(httpUrl(), pamas);
 		 
 		return bakInfoJson;
 	}
@@ -170,7 +173,7 @@ public class QueryBackupController implements Initializable {
 		pamas.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
 		pamas.put("BAK_ID",  id);
 		pamas.put("BAK_NAME",  bakname);
-		String bakInfoJson = OkHttpUtil.post1(delUrl(), pamas);
+		String bakInfoJson = HttpUtil.post(delUrl(), pamas);
 		if(StrUtils.isNotNullOrEmpty(bakInfoJson)) {
 			return true;
 		}
@@ -269,7 +272,7 @@ public class QueryBackupController implements Initializable {
 			po = new DownloadBackupPo();
 			po.setIdVal(idVal);
 			po.setNameVal(nameVal);
-			
+			stage.setResizable(false);
 			stage.showAndWait();
 		} catch (IOException e) {
 			e.printStackTrace();

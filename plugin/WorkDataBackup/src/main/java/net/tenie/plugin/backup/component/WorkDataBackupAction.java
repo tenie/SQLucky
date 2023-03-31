@@ -6,13 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.io.FileUtils;
-
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.AppComponent;
@@ -32,7 +28,11 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.ZipUtil;
 import net.tenie.Sqlucky.sdk.utility.net.HttpDownloadFile;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
-
+/**
+ * 备份相关的一些执行函数
+ * @author tenie
+ *
+ */
 public class WorkDataBackupAction {
 	private static String httpUploadUrl() {
 		return ConfigVal.getSqluckyServer()+"/sqlucky/backupFileUpload";
@@ -268,7 +268,8 @@ public class WorkDataBackupAction {
 		Map<String , String> hm =  downloadParam(id, bakName);
 		String saveDir = localSaveDir();
 		File sf = new File(saveDir, bakName);
-		HttpDownloadFile.getInfo(httpDownloadUrl(), hm, sf.getAbsolutePath());
+		HttpUtil.downloadByPost(httpDownloadUrl(), sf.getAbsolutePath(), hm);
+//		HttpDownloadFile.getInfo(httpDownloadUrl(), hm, sf.getAbsolutePath());
 		return sf;
 	}
 	

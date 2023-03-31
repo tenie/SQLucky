@@ -2,12 +2,16 @@ package net.tenie.fx.component.UserAccount;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.hc.client5.http.fluent.Form;
 import org.apache.hc.client5.http.fluent.Request;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.lib.db.h2.AppDao;
 
 public class UserAccountAction {
@@ -83,9 +87,14 @@ public class UserAccountAction {
 	public static boolean singInCheck(String email, String password) {
 		boolean success = false;
 		try {
-			String content = Request.post(ConfigVal.getSqluckyServer()+"/sqlucky/login")
-			        .bodyForm(Form.form().add("email", email).add("password", password).build())
-			        .execute().returnContent().asString();
+			Map<String, String> vals = new HashMap<>();
+			vals.put("email", email);	
+			vals.put("password", password);
+			String content = 
+					HttpUtil.post(ConfigVal.getSqluckyServer()+"/sqlucky/login", vals);
+//			String content = Request.post(ConfigVal.getSqluckyServer()+"/sqlucky/login")
+//			        .bodyForm(Form.form().add("email", email).add("password", password).build())
+//			        .execute().returnContent().asString();
 			SqluckyUser user = JsonTools.strToObj(content, SqluckyUser.class);
 			if(user.getIsVip() != null ) {
 				if(user.getIsVip() == 1) {
@@ -95,7 +104,7 @@ public class UserAccountAction {
 			}else {
 				ConfigVal.SQLUCKY_VIP.set(false);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return success;
 		} 

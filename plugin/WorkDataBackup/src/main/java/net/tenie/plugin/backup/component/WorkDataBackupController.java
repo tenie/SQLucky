@@ -22,7 +22,11 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
-
+/**
+ * 备份主界面fxml 的controller
+ * @author tenie
+ *
+ */
 public class WorkDataBackupController implements Initializable {
 
 	@FXML private Button bakBtn; 
@@ -245,6 +249,7 @@ public class WorkDataBackupController implements Initializable {
 			Scene scene = new Scene(root);
 			CommonUtility.loadCss(scene);
 			stage.setScene(scene);
+			stage.setResizable(false);
 			stage.show();
 
 			Image img = ComponentGetter.LogoIcons;

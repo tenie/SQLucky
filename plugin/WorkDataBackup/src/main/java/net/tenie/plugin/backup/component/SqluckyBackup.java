@@ -2,7 +2,11 @@ package net.tenie.plugin.backup.component;
 
 import java.util.Date;
 
-
+/**
+ * jopo
+ * @author tenie
+ *
+ */
 public class SqluckyBackup {
 	private Long id; 
 	private Long userId;
