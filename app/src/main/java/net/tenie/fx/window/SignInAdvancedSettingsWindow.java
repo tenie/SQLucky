@@ -2,10 +2,12 @@ package net.tenie.fx.window;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import com.jfoenix.controls.JFXCheckBox;
+
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -15,7 +17,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -106,7 +107,7 @@ public class SignInAdvancedSettingsWindow {
 		});
 		
 		 // 清空
-		Button cleanBtn = createCleanBtn( );
+//		Button cleanBtn = createCleanBtn( );
 		// 如果已经登入过, 获取登入信息
 		String cfhost = ConfigVal.SQLUCKY_URL_CUSTOM; 
 		boolean cf_remb = ConfigVal.SQLUCKY_REMEMBER_SETTINGS.get();
@@ -124,7 +125,13 @@ public class SignInAdvancedSettingsWindow {
 		list.add(    rememberCB); 
 		
 		list.add(    saveBtn); 
-		list.add(    cleanBtn); 
+		// 取消按钮
+		Button cancel = new Button("Cancel");
+		cancel.setOnAction(e->{
+			stageWindow.close();
+		});
+		list.add(    cancel); 
+//		list.add(    cleanBtn); 
 		
 		list.add(    null); 
 		list.add(    null); 
@@ -146,6 +153,7 @@ public class SignInAdvancedSettingsWindow {
 			ConfigVal.SQLUCKY_REMEMBER_SETTINGS.set(tf);
 			if (tf) {
 				UserAccountAction.saveHostValAccount(hostval);
+				ConfigVal.SQLUCKY_LOGIN_STATUS.set(false);
 			} else {
 				UserAccountAction.delHostValAccount();
 			}
