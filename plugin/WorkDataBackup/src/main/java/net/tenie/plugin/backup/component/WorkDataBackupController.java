@@ -71,7 +71,7 @@ public class WorkDataBackupController implements Initializable {
 		 
 		 uploadPage();
 		 downloadPage();
-		 WorkDataBackupAction.isLogin();
+		 CommonUtility.isLogin("Use Backup must Login");
 	}
 	
 	
@@ -94,7 +94,7 @@ public class WorkDataBackupController implements Initializable {
 		// 备份按钮
 		bakBtn.setOnAction(e -> {
 			// 登入校验
-			if(WorkDataBackupAction.isLogin() == false) {
+			if(CommonUtility.isLogin("Use Backup must Login") == false) {
 				return ;
 			}
 			// 
@@ -151,7 +151,7 @@ public class WorkDataBackupController implements Initializable {
 		// 获取服务器上的备份名称
 		syncBtn.setOnAction(e->{
 			// 登入校验
-			if(WorkDataBackupAction.isLogin() == false) {
+			if(CommonUtility.isLogin("Use Backup must Login") == false) {
 				return ;
 			}
 			// 开始之前先禁用选中框 

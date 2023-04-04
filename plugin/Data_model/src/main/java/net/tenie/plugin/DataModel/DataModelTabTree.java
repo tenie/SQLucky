@@ -1,5 +1,6 @@
 package net.tenie.plugin.DataModel;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import com.jfoenix.controls.JFXButton;
@@ -121,83 +122,77 @@ public class DataModelTabTree {
 	 * @return
 	 */
 	public static void showFields(Long tableId) {
-		SdkComponent.addWaitingPane(-1);
-		
-		// 操作区, 控件
-		DataModelTablePo tbpo = DataModelDAO.selectTableById(tableId);
-		String table = tbpo.getDefKey();
-		tableName = tbpo.getDefName();
-		String tableComment = tbpo.getComment();
-		Label tabNameLabel = new Label(table + "   ");
-		tabNameLabel.setGraphic(IconGenerator.svgImageUnactive("table"));
-		Label tabNameLabel2 = new Label(tableName  + "   ");
-		tabNameLabel2.setGraphic(IconGenerator.svgImageUnactive("table"));
-		Label commentLabel = new Label(tableComment  + "   ");
-		commentLabel.setGraphic(IconGenerator.svgImageUnactive("table"));
-		
-		
-		if(StrUtils.isNullOrEmpty(tableName)) {
-			tableName = table;
-		}
-		// 查询框
-		TextField textField = new TextField();
-		textField.getStyleClass().add("myTextField");
-		textField.setVisible(false);
-		
-
-		JFXButton query = new JFXButton();
-		query.setGraphic(ComponentGetter.getIconDefActive("search"));
-		query.setOnAction(e->{
-			textField.setVisible(! textField.isVisible());
-		});
-		
-		// 字段信息保存按钮
-		JFXButton saveBtn = new JFXButton();
-		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
-		saveBtn.setDisable(true);
-		
-		List<Node> tableHeadOptionNode = new ArrayList<>();
-		tableHeadOptionNode.add(tabNameLabel);
-		tableHeadOptionNode.add(tabNameLabel2);
-		tableHeadOptionNode.add(commentLabel);
-		tableHeadOptionNode.add(saveBtn);
-		tableHeadOptionNode.add(query);
-		tableHeadOptionNode.add(textField);
-		
-		// 查询数据库, 获取字段信息
-		var conn = SqluckyAppDB.getConn();
-		String sql = "select DEF_KEY as FIELD,"
-					  + " DEF_NAME AS NAME , "
-					  + "COMMENT, "
-					  + "TYPE_FULL_NAME, "
-					  + "PRIMARY_KEY, "
-					  + "NOT_NULL, "
-					  + "AUTO_INCREMENT, "
-					  + "DEFAULT_VALUE, "
-					  + "PRIMARY_KEY_NAME, "
-					  + "NOT_NULL_NAME, "
-					  + "AUTO_INCREMENT_NAME  "
-				   + "from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "+ tableId;
+		Connection conn =  null;
 		try {
-			SheetDataValue sheetDaV =
-					DataModelUtility.dataModelQueryFieldsShow(sql, conn , tableName, tableHeadOptionNode, DataModelOption.tableInfoColWidth);
+			SdkComponent.addWaitingPane(-1);
+
+			// 操作区, 控件
+			DataModelTablePo tbpo = DataModelDAO.selectTableById(tableId);
+			if (tbpo != null) {
+			}
+			String table = tbpo.getDefKey();
+			tableName = tbpo.getDefName();
+			String tableComment = tbpo.getComment();
+			Label tabNameLabel = new Label(table + "   ");
+			tabNameLabel.setGraphic(IconGenerator.svgImageUnactive("table"));
+			Label tabNameLabel2 = new Label(tableName + "   ");
+			tabNameLabel2.setGraphic(IconGenerator.svgImageUnactive("table"));
+			Label commentLabel = new Label(tableComment + "   ");
+			commentLabel.setGraphic(IconGenerator.svgImageUnactive("table"));
+
+			if (StrUtils.isNullOrEmpty(tableName)) {
+				tableName = table;
+			}
+			// 查询框
+			TextField textField = new TextField();
+			textField.getStyleClass().add("myTextField");
+			textField.setVisible(false);
+
+			JFXButton query = new JFXButton();
+			query.setGraphic(ComponentGetter.getIconDefActive("search"));
+			query.setOnAction(e -> {
+				textField.setVisible(!textField.isVisible());
+			});
+
+			// 字段信息保存按钮
+			JFXButton saveBtn = new JFXButton();
+			saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
+			saveBtn.setDisable(true);
+
+			List<Node> tableHeadOptionNode = new ArrayList<>();
+			tableHeadOptionNode.add(tabNameLabel);
+			tableHeadOptionNode.add(tabNameLabel2);
+			tableHeadOptionNode.add(commentLabel);
+			tableHeadOptionNode.add(saveBtn);
+			tableHeadOptionNode.add(query);
+			tableHeadOptionNode.add(textField);
+
+			// 查询数据库, 获取字段信息
+			conn = SqluckyAppDB.getConn();
+			String sql = "select DEF_KEY as FIELD," + " DEF_NAME AS NAME , " + "COMMENT, " + "TYPE_FULL_NAME, "
+					+ "PRIMARY_KEY, " + "NOT_NULL, " + "AUTO_INCREMENT, " + "DEFAULT_VALUE, " + "PRIMARY_KEY_NAME, "
+					+ "NOT_NULL_NAME, " + "AUTO_INCREMENT_NAME  " + "from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "
+					+ tableId;
+
+			SheetDataValue sheetDaV = DataModelUtility.dataModelQueryFieldsShow(sql, conn, tableName,
+					tableHeadOptionNode, DataModelOption.tableInfoColWidth);
 			sheetDaV.addBtn("save", saveBtn);
 			// 保存按钮处理
 			ResultSetPo resultSetPo = sheetDaV.getDataRs();
-			saveBtn.setOnAction(e->{
+			saveBtn.setOnAction(e -> {
 				var connObj = SqluckyAppDB.getConn();
-				try { 
+				try {
 					DataModelDAO.saveTableInfo(saveBtn, resultSetPo, tableId, connObj);
 				} finally {
 					SqluckyAppDB.closeConn(connObj);
 				}
-				
+
 			});
-			
-			//  tableView 处理
-			TableView<ResultSetRowPo>  tableView = sheetDaV.getTable();
+
+			// tableView 处理
+			TableView<ResultSetRowPo> tableView = sheetDaV.getTable();
 			ObservableList<ResultSetRowPo> items = tableView.getItems();
-			
+
 			// 添加过滤功能
 			textField.textProperty().addListener((o, oldVal, newVal) -> {
 				if (StrUtils.isNotNullOrEmpty(newVal)) {
@@ -207,10 +202,11 @@ public class DataModelTabTree {
 				}
 
 			});
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
+			if(conn != null)
 			SqluckyAppDB.closeConn(conn);
 			SdkComponent.rmWaitingPane();
 		}
