@@ -20,6 +20,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.DesUtil;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
@@ -356,7 +357,7 @@ public class WorkDataBackupAction {
 			boolean dbInfo, boolean script) {
 		try {
 			// 登入校验
-			if (isLogin() == false) {
+			if (CommonUtility.isLogin("Use Backup must Login") == false) {
 				return;
 			}
 			// 密钥检查
@@ -435,7 +436,7 @@ public class WorkDataBackupAction {
 			boolean dbInfo, boolean script) {
 		try {
 			// 登入校验
-			if (isLogin() == false) {
+			if (CommonUtility.isLogin("Use Backup must Login") == false) {
 				return;
 			}
 			// 密钥检查
@@ -512,19 +513,5 @@ public class WorkDataBackupAction {
 		}
 	
 	}
-	
-
-	// 是否登入检查
-	public static boolean isLogin() {
-		// 登入校验
-		if( ConfigVal.SQLUCKY_LOGIN_STATUS.get() == false) {
-			Platform.runLater(()->{
-				AppComponent app =  ComponentGetter.appComponent;
-				app.showSingInWindow("Use Backup must Login");
-			});
-			
-			return false;
-		}
-		return true;
-	}
+ 
 }

@@ -44,6 +44,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
+import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
@@ -998,7 +999,20 @@ public class CommonUtility {
 		
 		return modsdir;
 	}
-	
+
+	// 判断是否登过, 没有就跳出登入窗口
+	public static boolean isLogin(String title) {
+		// 登入校验
+		if( ConfigVal.SQLUCKY_LOGIN_STATUS.get() == false) {
+			Platform.runLater(()->{
+				AppComponent app =  ComponentGetter.appComponent;
+				app.showSingInWindow(title);
+			});
+			
+			return false;
+		}
+		return true;
+	}
 }
 
 

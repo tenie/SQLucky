@@ -171,8 +171,8 @@ public class AppDao {
 			"CREATE TABLE `PLUGIN_INFO` (\n" +
 //			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
 			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT, \n" + 
-			"  `PLUGIN_NAME` VARCHAR(200)    ,   \n" +  //字段名称
-			"  `PLUGIN_CODE` VARCHAR(200)    ,   \n" +  //字段名称
+			"  `PLUGIN_NAME` VARCHAR(200)    ,   \n" +   
+			"  `PLUGIN_CODE` VARCHAR(200)    ,   \n" +   
 			"  `PLUGIN_DESCRIBE` VARCHAR(1000)  , \n" +
 			"  `COMMENT` VARCHAR(1000)  , \n" +
 			"  `DOWNLOAD_STATUS` INT(1) ,\n" +            //下载状态, 0:未安装, 1: 以安装
