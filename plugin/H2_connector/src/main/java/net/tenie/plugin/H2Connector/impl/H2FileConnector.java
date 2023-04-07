@@ -22,6 +22,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -42,9 +43,11 @@ public class H2FileConnector extends DbConnector {
 	 
 
 	@Override
-	public StringProperty DateToStringStringProperty(Object obj) {  
+	public StringProperty DateToStringStringProperty(Object obj, int type) {  
 		Date dv = (Date) obj;
-		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+//		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+
+		String v = CommonUtility.DateOrDateTimeToString(type, dv);
 		StringProperty val = new SimpleStringProperty(v);
 		
 		return val;

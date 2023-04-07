@@ -26,6 +26,7 @@ import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -218,10 +219,24 @@ public class CommonUtility {
 		}
 		return false;
 	}
-
-	// 时间类型判断
-	public static boolean isDateTime(int type) {
+	
+	public static boolean isDateAndDateTime(int type) {
 		if (type == java.sql.Types.DATE || type == java.sql.Types.TIME || type == java.sql.Types.TIMESTAMP) {
+			return true;
+		}
+		return false;
+	}
+	
+	// 时间类型判断, 时分秒
+	public static boolean isDateTime(int type) {
+		if ( type == java.sql.Types.TIME || type == java.sql.Types.TIMESTAMP) {
+			return true;
+		}
+		return false;
+	}
+	// 时间类型判断, 没有时分秒
+	public static boolean isDate(int type) {
+		if (type == java.sql.Types.DATE) {
 			return true;
 		}
 		return false;
@@ -239,7 +254,17 @@ public class CommonUtility {
 		}
 		return false;
 	}
-
+	// 日期类型或时间类型转换为字符串
+	public static String DateOrDateTimeToString(int type, Date dv) {
+		String val = "";
+		if(isDate(type)) {
+			val = StrUtils.dateToStr(dv, ConfigVal.dateFormateS); 
+		}else if(isDateTime(type)) {
+			val = StrUtils.dateToStr(dv, ConfigVal.dateFormateL); 
+		}
+		
+		return val;
+	}
 	 
 
 	public static void newStringPropertyChangeListener(StringProperty val, int dbtype) {
@@ -978,24 +1003,38 @@ public class CommonUtility {
 		return app;
 	}
 	
-	// 获取运行时app的模块路径
-	public static String sqluckyAppModsPath() {
-		String os_name = System.getProperty("os.name");
-		String java_home = System.getProperty("java.home");
-		logger.info("os_name = " + os_name);
-		logger.info("java_home = " + java_home);
-		String modsdir = "";
-		if (os_name.toLowerCase().startsWith("win")) { 
-			  modsdir =  java_home.replace("runtime", "app/mods/"); 
-			logger.info("win app = " + modsdir); 
-		} else if (os_name.toLowerCase().startsWith("mac")) {
-			//TODO 
-			modsdir = java_home.replace("runtime/Contents/Home", "app/mods");
-			logger.info("mac app = " + modsdir); 
-		} else if (os_name.toLowerCase().startsWith("linux")) {
-		    modsdir =  java_home.replace("lib/runtime", "lib/app/mods/"); 
-			logger.info(" linux app = " + modsdir); 
+	public static String getFirstJdkModulePath() {
+		String  modulePath = System.getProperty("jdk.module.path");
+		String strSplit = ":";
+		if(CommonUtility.isWinOS()) {
+			strSplit = ";";
 		}
+		String[] ls  = modulePath.split( strSplit );
+		return ls[0];
+	}
+	
+	// 运行时判断是不是开发环境
+	public static boolean isDev() {
+		String  modulePath = System.getProperty("jdk.module.path");
+		String strSplit = ":";
+		if(CommonUtility.isWinOS()) {
+			strSplit = ";";
+		}
+		String[] ls  = modulePath.split( strSplit );
+		if(ls.length > 1) {
+			return true;
+		}
+		return false;
+	}
+	// 获取运行时app的模块路径
+	public static String sqluckyAppModsPath() {  
+		// 判断是否是在开发时
+		if(isDev() == false) {
+			String jdk_module_path = System.getProperty("jdk.module.path");
+			return jdk_module_path;
+		}
+		
+		String modsdir = getFirstJdkModulePath();
 		
 		return modsdir;
 	}

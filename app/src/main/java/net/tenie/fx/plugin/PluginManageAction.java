@@ -2,7 +2,9 @@ package net.tenie.fx.plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -20,6 +22,7 @@ import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
@@ -33,6 +36,7 @@ public class PluginManageAction {
 			ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
 			
 			String id = selectRow.getValueByFieldName("ID");
+			
 			
 			PluginInfoPO infoPo = new PluginInfoPO();
 			infoPo.setId(Integer.valueOf(id));
@@ -72,29 +76,51 @@ public class PluginManageAction {
 			+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
 			+ " from PLUGIN_INFO";
 	
-	public static void createTable(SheetTableData sheetDaV  , VBox  pluginBox , MyCodeArea describe, JFXButton enable , JFXButton disable, FilteredTableView<ResultSetRowPo> allPluginTable ) {
+	/**
+	 * 创建插件数据显示的表格
+	 * @param window
+	 * @param pluginBox
+	 * @param describe
+	 * @param enable
+	 * @param disable
+	 */
+	public static void createTable(PluginManageWindow window, VBox  pluginBox , MyCodeArea describe, JFXButton enable , JFXButton disable,JFXButton download  ) {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 		    // 查询
-			sheetDaV = TableViewUtil.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+			SheetTableData sheetDaV   = TableViewUtil.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
 			// 获取表
-			allPluginTable = sheetDaV.getInfoTable();
+			FilteredTableView<ResultSetRowPo>  allPluginTable = sheetDaV.getInfoTable();
+			  window.setSheetDaV(sheetDaV);
+			  window.setAllPluginTable(allPluginTable);
 			// 表不可编辑
 			allPluginTable.editableProperty().bind(new SimpleBooleanProperty(false));
 			// 选中事件
 			allPluginTable.getSelectionModel().selectedItemProperty().addListener((ob, ov ,nv)->{
 				describe.clear();
+				if(nv == null) return;
 				String strDescribe = nv.getValueByFieldName("Describe");
 				 
 				describe.appendText(strDescribe);
-				String loadStatus = nv.getValueByFieldName("Load Status");
-				if("√".equals(loadStatus)) {
-					disable.setDisable(false);
-					enable.setDisable(true);
-				}else {
+				String downloadStatus = nv.getValueByFieldName("Download Status");
+				if("".equals(downloadStatus)) {
 					disable.setDisable(true);
-					enable.setDisable(false);
+					enable.setDisable(true);
+					download.setDisable(false);
+				}else { 
+					download.setDisable(true);
+					String loadStatus = nv.getValueByFieldName("Load Status");
+					if("√".equals(loadStatus)) {
+						disable.setDisable(false);
+						enable.setDisable(true);
+					}else {
+						disable.setDisable(true);
+						enable.setDisable(false);
+					}
 				}
+				
+				
+				
 			});
 			// 表放入界面
 			pluginBox.getChildren().add(allPluginTable);
@@ -125,23 +151,82 @@ public class PluginManageAction {
 	
  
 	// 同步服务器的插件信息
-	public static void queryServerPluginInfo() {
-		if( CommonUtility.isLogin("Use Backup must Login") == false) {
+	public static void queryServerPluginInfo(SheetTableData sheetDaV , FilteredTableView<ResultSetRowPo> allPluginTable) {
+		if( CommonUtility.isLogin("Please Login First") == false) {
 			return ;
 		}
 		Map<String, String> vals = new HashMap<>();
 		vals.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());	
 		vals.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
 		String content = "";
+		Connection conn = SqluckyAppDB.getConn();
 		try {
 			content = HttpUtil.post(ConfigVal.getSqluckyServer()+"/sqlucky/queryAllPlugin", vals);
 			System.out.println("content ==" + content);
+			 List<PluginInfoPO> ls=  JsonTools.jsonToList(content, PluginInfoPO.class);
+			 System.out.println(ls);
+			 List<Object> localVals = PoDao.selectFieldVal(conn, new  PluginInfoPO(), "PLUGIN_CODE");
+			 int count = 0;
+			 for(PluginInfoPO info : ls) {
+				 	String tmpPluginCode = info.getPluginCode();
+				 	if(localVals.contains(tmpPluginCode)) {
+				 		continue;
+				 	}
+				 	PluginInfoPO ppo = new PluginInfoPO();
+					ppo.setPluginCode(info.getPluginCode());
+					ppo.setPluginName(info.getPluginName());
+					ppo.setPluginCode(info.getPluginCode());
+					ppo.setPluginDescribe(info.getPluginDescribe());
+					ppo.setVersion(info.getVersion());
+					ppo.setDownloadStatus(0);
+					ppo.setReloadStatus(0);
+					
+					ppo.setCreatedTime(new Date());
+					PoDao.insert(conn, ppo);
+					count++;
+			 }
+			 
+			 MyAlert.alert("同步插件信息", "同步到新插件" + count + "个");
+			 if(count > 0) {
+					PluginManageAction.queryAction("", sheetDaV , allPluginTable);
+			 }
 		} catch (Exception e) {
 			e.printStackTrace();
+		}finally {
+			SqluckyAppDB.closeConn(conn);
 		}
 		
 	}
 	
+	public static void downloadPlugin(FilteredTableView<ResultSetRowPo>  allPluginTable) {
+		//
+		String pluginName = getSelectPluginName(allPluginTable);
+		Map<String, String> vals = new HashMap<>();
+		vals.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());	
+		vals.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
+		vals.put("PLUGIN_NAME", pluginName);
+		
+		
+		String modelPath = CommonUtility.sqluckyAppModsPath();
+		HttpUtil.downloadByPost(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, vals);
+	}
 	
+	
+	
+	public static String getSelectPluginName(FilteredTableView<ResultSetRowPo>  allPluginTable) {
+		ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
+		String name = selectRow.getValueByFieldName("Name");
+		return name;
+	}
+	
+	public static void main(String[] args) {
+		
+		String  v = System.getProperty("jdk.module.path");
+		System.out.println(v);
+//		System.out.println(System.getProperties().toString());
+//		String str = "[{\"id\":1,\"pluginName\":\"test plugin name\",\"pluginCode\":\"1111\",\"pluginDescribe\":\"test test test \",\"comment\":\"test commtest comm\",\"filePath\":\"D:/test/instw.db\",\"createdAt\":null,\"updatedAt\":null}]";
+//		 List<PluginInfoPO> ls=  JsonTools.jsonToList(str, PluginInfoPO.class);
+//		 System.out.println(ls);
+	}
  
 }

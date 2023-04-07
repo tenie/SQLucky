@@ -95,4 +95,12 @@ public class PluginInfoPO  {
 		this.version = version;
 	}
 
+	@Override
+	public String toString() {
+		return "PluginInfoPO [reloadStatus=" + reloadStatus + ", createdTime=" + createdTime + ", updatedTime="
+				+ updatedTime + ", pluginCode=" + pluginCode + ", pluginDescribe=" + pluginDescribe + ", pluginName="
+				+ pluginName + ", downloadStatus=" + downloadStatus + ", id=" + id + ", comment=" + comment
+				+ ", version=" + version + "]";
+	}
+
 }

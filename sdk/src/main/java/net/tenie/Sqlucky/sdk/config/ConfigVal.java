@@ -4,10 +4,9 @@ import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
  
 
 /*   @author tenie */
@@ -96,7 +95,7 @@ public class ConfigVal {
 		if(SQLUCKY_URL_CUSTOM != null && !"".equals(SQLUCKY_URL_CUSTOM) ) {
 			return SQLUCKY_URL_CUSTOM;
 		}
-		if(SqluckyAppDB.isDev()) {
+		if(CommonUtility.isDev()) {
 			tmp = SQLUCKY_URL_DEV;
 		}else {
 			tmp = SQLUCKY_URL;

@@ -326,17 +326,18 @@ public class SelectDao {
 				if(obj == null) {
 					val = new SimpleStringProperty("<null>");
 				}else {
-					if (CommonUtility.isDateTime(dbtype)) {
+					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						if (dpo != null) {
-							val = dpo.DateToStringStringProperty(rs.getObject(i + 1));
+							val = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
 						} else {
 							// TODO dpo null 的情况下
 							Date dv = (Date) rs.getObject(i + 1);
-							String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+							String v = CommonUtility.DateOrDateTimeToString(dbtype, dv);
+//							String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
 							val = new SimpleStringProperty(v);
 						}
 
-					} else {
+					}else{
 						String temp = rs.getString(i+1);
 						val = new SimpleStringProperty(temp); 
 					}
@@ -373,10 +374,11 @@ public class SelectDao {
 				if(obj == null) {
 					val = new SimpleStringProperty("<null>");
 				}else {
-					if (CommonUtility.isDateTime(dbtype)) {
+					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						java.sql.Timestamp ts = rs.getTimestamp(i + 1);
 						Date d = new Date(ts.getTime());
-						String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
+						String v = CommonUtility.DateOrDateTimeToString(dbtype, d);
+//						String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
 						val = new SimpleStringProperty(v);
 					} else {
 						String temp = rs.getString(i+1);
@@ -424,8 +426,8 @@ public class SelectDao {
 				if(obj == null) {
 					val = new SimpleStringProperty("<null>");
 				}else {
-					if (CommonUtility.isDateTime(dbtype)) {
-						val = sqlConn.DateToStringStringProperty(rs.getObject(i + 1));
+					if (CommonUtility.isDateAndDateTime(dbtype)) {
+						val = sqlConn.DateToStringStringProperty(rs.getObject(i + 1) , dbtype);
 					} else {
 						String temp = rs.getString(i+1);
 						val = new SimpleStringProperty(temp); 
