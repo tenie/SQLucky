@@ -14,6 +14,7 @@ import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -34,7 +35,7 @@ public class SqliteConnector extends DbConnector {
 	 
 
 	@Override
-	public StringProperty DateToStringStringProperty(Object obj) {  
+	public StringProperty DateToStringStringProperty(Object obj, int type) {  
 //		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
 //		StringProperty val = new SimpleStringProperty((String) dv);
 		StringProperty val = null;
@@ -42,7 +43,9 @@ public class SqliteConnector extends DbConnector {
 			val = new SimpleStringProperty((String) obj);
 		}else if( obj instanceof Long) {
 			Date date = new Date((long) obj);
-			String v = StrUtils.dateToStr(date, ConfigVal.dateFormateL);
+			String v = CommonUtility.DateOrDateTimeToString(type, date);
+			
+//			String v = StrUtils.dateToStr(date, ConfigVal.dateFormateL);
 			val = new SimpleStringProperty(v);
 		}
 		return val;

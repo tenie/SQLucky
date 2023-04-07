@@ -37,13 +37,14 @@ public class DaoTools {
 					}else {
 						String type = fpos.get(i).getColumnClassName().get();
 						// 日期直接拼接字符串, 防止毫秒的情况, 多加了1秒后的比较 
-						if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
-								|| type.equals("java.sql.Date")) {
+						if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")  ) {
 							str.append(field + " >= '"+valStr+"'  and ");
 							Date v =  StrUtils.datePlus1Second(valStr);
 							String p1s = StrUtils.dateToStr(v, ConfigVal.dateFormateL);
 							str.append(field + " <'"+p1s+"'  and ");
 						 
+						}else if(type.equals("java.sql.Date")) {
+							str.append(field + " = '"+valStr+"'  and ");
 						}else {
 							str.append(field + " = ?  and ");
 						}

@@ -11,15 +11,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.SelectInfoTableDao;
-import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsData;
@@ -36,7 +33,7 @@ public class DBTools {
 	
 	public static String dbFilePath() {
 		String dir = "/.sqlucky/";
-		if(SqluckyAppDB.isDev()) {
+		if(CommonUtility.isDev()) {
 			dir = "/.sqlucky_dev/";
 		}
 		String path = FileUtils.getUserDirectoryPath() + dir;

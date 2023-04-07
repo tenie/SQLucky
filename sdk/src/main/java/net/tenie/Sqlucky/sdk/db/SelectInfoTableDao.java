@@ -103,13 +103,15 @@ public class SelectInfoTableDao {
 				if (obj == null) {
 					val = new SimpleStringProperty("<null>");
 				} else {
-					if (CommonUtility.isDateTime(dbtype)) {
+					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						if (dpo != null) {
-							val = dpo.DateToStringStringProperty(rs.getObject(i + 1));
+							val = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
 						} else {
 							// TODO dpo null 的情况下
 							Date dv = (Date) rs.getObject(i + 1);
-							String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+//							String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+
+							String v = CommonUtility.DateOrDateTimeToString(dbtype, dv);
 							val = new SimpleStringProperty(v);
 						}
 

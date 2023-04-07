@@ -109,6 +109,18 @@ public class PoDaoUtil {
 		}
 		return sbuf.toString();
 	}
+	public static String getSelectSqlByField(PoInfo info, Object condition, String fieldName) throws Exception {
+		StringBuffer sbuf = new StringBuffer();
+		sbuf.append("select " + fieldName);
+		int size = info.getColSize();
+		int i;
+		sbuf.append(" from " + info.getTabName() + " where 1=1 ");
+		for (i = 0; i < size; i++) {
+			if (info.getColVal(condition, i) != null)
+				sbuf.append(" and " + info.getColName(i) + "=? ");
+		}
+		return sbuf.toString();
+	}
 
 	public static Timestamp toSqlDate(Date dt) {
 		if (dt == null)

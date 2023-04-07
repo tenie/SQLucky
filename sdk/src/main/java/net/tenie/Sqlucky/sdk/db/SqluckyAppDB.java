@@ -109,21 +109,6 @@ public class SqluckyAppDB {
 		}
 	}
 	
- 
-	
-	public static boolean isDev() {
-		String  modulePath = System.getProperty("jdk.module.path");
-		String strSplit = ":";
-		if(CommonUtility.isWinOS()) {
-			strSplit = ";";
-		}
-		String[] ls  = modulePath.split( strSplit );
-		if(ls.length > 1) {
-			return true;
-		}
-		return false;
-	}
-
 	// test mybites
 //	public static DataSource getH2DataSource() {
 //		  UnpooledDataSource dataSource = null;

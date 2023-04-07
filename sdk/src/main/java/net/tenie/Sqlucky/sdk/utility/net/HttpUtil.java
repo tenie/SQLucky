@@ -80,10 +80,10 @@ public class HttpUtil {
 	}
  
 	// 使用post下载文件
-	public static void downloadByPost(String url, String filepath, Map<String, String> Param) {
+	public static void downloadByPost(String url, String fileSaveDir, Map<String, String> Param) {
 		var nvps = mapToPairs(Param);
 		 try {
-			Request.post(url).bodyForm(nvps).execute().saveContent(new File(filepath));
+			Request.post(url).bodyForm(nvps).execute().saveContent(new File(fileSaveDir));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

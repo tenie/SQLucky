@@ -42,6 +42,8 @@ public class PluginManageWindow {
 	SheetTableData sheetDaV = null;
 	FilteredTableView<ResultSetRowPo> allPluginTable = null;
 
+
+
 	public PluginManageWindow() {
 		searchBtn.setGraphic(IconGenerator.svgImageDefActive("search"));
 		searchText.getStyleClass().add("myTextField");
@@ -58,7 +60,7 @@ public class PluginManageWindow {
 		// 同步按钮
 		sync.getStyleClass().add("myAlertBtn");
 		sync.setOnAction(e->{
-			PluginManageAction.queryServerPluginInfo();
+			PluginManageAction.queryServerPluginInfo(sheetDaV , allPluginTable);
 		});
 		SearchPane.getChildren().addAll(searchBtn, searchText , sync);
 		SearchPane.setMinHeight(35);
@@ -103,6 +105,10 @@ public class PluginManageWindow {
 			PluginManageAction.enableOrDisableAction(true, allPluginTable);
 		});
 		
+		download.setOnAction(e->{
+			PluginManageAction.downloadPlugin(allPluginTable);
+		});
+		
 		disable.setDisable(true);
 		enable.setDisable(true);
 		download.setDisable(true);
@@ -112,7 +118,7 @@ public class PluginManageWindow {
 	
 	// 显示窗口
 	public void show() {
-		PluginManageAction.createTable(sheetDaV, pluginBox, describe, enable, disable, allPluginTable);
+		PluginManageAction.createTable(this, pluginBox, describe, enable, disable, download);
 		var stage = CreateModalWindow(pluginManageBox);
 		stage.show();
 		searchText.requestFocus();
@@ -147,5 +153,23 @@ public class PluginManageWindow {
 		stage.setOnHidden(e->{
 		});
 		return stage;
+	}
+
+
+	
+	public SheetTableData getSheetDaV() {
+		return sheetDaV;
+	}
+
+	public void setSheetDaV(SheetTableData sheetDaV) {
+		this.sheetDaV = sheetDaV;
+	}
+
+	public FilteredTableView<ResultSetRowPo> getAllPluginTable() {
+		return allPluginTable;
+	}
+
+	public void setAllPluginTable(FilteredTableView<ResultSetRowPo> allPluginTable) {
+		this.allPluginTable = allPluginTable;
 	}
 }

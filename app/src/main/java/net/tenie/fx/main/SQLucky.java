@@ -68,7 +68,7 @@ public class SQLucky extends Application {
 
 
 	static {
-		if( ! SqluckyAppDB.isDev()) {
+		if( ! CommonUtility.isDev()) {
 			Log4jPrintStream.redirectSystemOut();
 		} 
 //		Log4jPrintStream.redirectSystemOut();
@@ -217,16 +217,17 @@ public class SQLucky extends Application {
 		if(args!=null && args.length >0) {
 			sysOpenFile = args[0];
 		}
-		try {
-			String str = UnlimitedCryptoPoliciesCheck.getInfo();
-			logger.debug("UnlimitedCryptoPoliciesCheck ==  "+ str); 
-			
-
-			System.setProperty("https.protocols", "TLSv1.2");
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+//		String  v = System.getProperty("jdk.module.path");
+//		logger.debug("jdk.module.path = "+ v);
+//		try {
+//			String str = UnlimitedCryptoPoliciesCheck.getInfo();
+//			logger.debug("UnlimitedCryptoPoliciesCheck ==  "+ str); 
+//			System.setProperty("https.protocols", "TLSv1.2");
+//		} catch (NoSuchAlgorithmException e) {
+//			e.printStackTrace();
+//		}
+		
 //		Properties  ps = System.getProperties();
 //		ps.forEach((o1, o2)->{
 //			System.out.println(o1 + " | "+ o2);

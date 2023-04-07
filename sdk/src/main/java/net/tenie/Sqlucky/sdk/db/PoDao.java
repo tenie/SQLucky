@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -277,7 +278,7 @@ public class PoDao {
 
 		return var11;
 	}
-
+	
 	public static <T> List<T> select(Connection conn, T condition) throws Exception {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
@@ -304,6 +305,42 @@ public class PoDao {
 			rs = ps.executeQuery();
 			List var11 = PoDaoUtil.getDataBeansFromResultSet(condition, rs);
 			return var11;
+		} catch (Throwable var14) {
+			throw new Exception("Exception", var14);
+		} finally {
+			clean(ps, rs);
+		}
+	}
+	
+	public static <T> List<Object> selectFieldVal(Connection conn, T condition, String fieldName) throws Exception {
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		LinkedList params = new LinkedList();
+		List<Object>  vals = new ArrayList<>();
+		try {
+//			POValidate.getInstance().validate(condition, 8);
+			PoInfo binfo = PoDaoUtil.getDataBeanInfo(condition);
+			String sql = PoDaoUtil.getSelectSqlByField(binfo, condition, fieldName);
+			ps = conn.prepareStatement(sql);
+			int size = binfo.getColSize();
+			int idx = 1;
+
+			for (int i = 0; i < size; ++i) {
+				if (binfo.getColVal(condition, i) != null) {
+					ps.setObject(idx, binfo.getColVal(condition, i));
+					++idx;
+					params.addLast(binfo.getColVal(condition, i).toString());
+				}
+			}
+
+			logger.debug(sql + " " + params);
+
+			rs = ps.executeQuery(); 
+			while(rs.next()) {
+				Object val = rs.getObject(1);
+				vals.add(val);
+			}
+			return vals;
 		} catch (Throwable var14) {
 			throw new Exception("Exception", var14);
 		} finally {

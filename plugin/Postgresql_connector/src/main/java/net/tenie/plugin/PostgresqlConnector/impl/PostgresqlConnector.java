@@ -33,14 +33,14 @@ public class PostgresqlConnector extends DbConnector {
 	} 
 	 
 
-	@Override
-	public StringProperty DateToStringStringProperty(Object obj) {  
-		Date dv = (Date) obj;
-		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-		StringProperty val = new SimpleStringProperty(v);
-		
-		return val;
-	}
+//	@Override
+//	public StringProperty DateToStringStringProperty(Object obj) {  
+//		Date dv = (Date) obj;
+//		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+//		StringProperty val = new SimpleStringProperty(v);
+//		
+//		return val;
+//	}
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
