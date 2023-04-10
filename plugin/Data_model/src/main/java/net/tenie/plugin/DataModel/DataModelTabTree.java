@@ -21,6 +21,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -122,7 +123,8 @@ public class DataModelTabTree {
 	 * @return
 	 */
 	public static void showFields(Long tableId) {
-		Connection conn =  null;
+//		Connection conn =  null;
+		SqluckyConnector SqluckyConn = null;
 		try {
 			SdkComponent.addWaitingPane(-1);
 
@@ -168,13 +170,14 @@ public class DataModelTabTree {
 			tableHeadOptionNode.add(textField);
 
 			// 查询数据库, 获取字段信息
-			conn = SqluckyAppDB.getConn();
+//			conn = SqluckyAppDB.getConn();
+		    SqluckyConn = SqluckyAppDB.getSqluckyConnector();
 			String sql = "select DEF_KEY as FIELD," + " DEF_NAME AS NAME , " + "COMMENT, " + "TYPE_FULL_NAME, "
 					+ "PRIMARY_KEY, " + "NOT_NULL, " + "AUTO_INCREMENT, " + "DEFAULT_VALUE, " + "PRIMARY_KEY_NAME, "
 					+ "NOT_NULL_NAME, " + "AUTO_INCREMENT_NAME  " + "from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "
 					+ tableId;
 
-			SheetDataValue sheetDaV = DataModelUtility.dataModelQueryFieldsShow(sql, conn, tableName,
+			SheetDataValue sheetDaV = DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn, tableName,
 					tableHeadOptionNode, DataModelOption.tableInfoColWidth);
 			sheetDaV.addBtn("save", saveBtn);
 			// 保存按钮处理
@@ -206,8 +209,8 @@ public class DataModelTabTree {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			if(conn != null)
-			SqluckyAppDB.closeConn(conn);
+			if(SqluckyConn != null)
+				SqluckyAppDB.closeSqluckyConnector(SqluckyConn);
 			SdkComponent.rmWaitingPane();
 		}
 		

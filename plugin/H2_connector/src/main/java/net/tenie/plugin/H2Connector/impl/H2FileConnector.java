@@ -33,17 +33,6 @@ public class H2FileConnector extends DbConnector {
 	 
 
 	@Override
-	public String DateToStringStringProperty(Object obj, int type) {  
-		Date dv = (Date) obj;
-//		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-
-		String v = CommonUtility.DateOrDateTimeToString(type, dv);
-//		StringProperty val = new SimpleStringProperty(v);
-		
-		return v;
-	} 
-
-	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
 		var schemas = getConnPo().getSchemas();
 		try {

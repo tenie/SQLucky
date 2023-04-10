@@ -106,7 +106,7 @@ public class PluginManageWindow {
 		});
 		
 		download.setOnAction(e->{
-			PluginManageAction.downloadPlugin(allPluginTable);
+			PluginManageAction.downloadPlugin(sheetDaV, allPluginTable);
 		});
 		
 		disable.setDisable(true);

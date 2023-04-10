@@ -82,11 +82,9 @@ public class SelectInfoTableDao {
 	}
  
 	public static void execRs(  ResultSet rs, ObservableList<SheetFieldPo> fpo,
-			SqluckyConnector dpo,ResultSetPo setPo ) throws SQLException {
-		int idx = 1;
+			SqluckyConnector sqluckyConn,ResultSetPo setPo ) throws SQLException {
 		int rowNo = 0;
 		int columnnums = fpo.size();
-		int rowIdx = 0;
 
 		while (rs.next()) {
 			ResultSetRowPo rowpo = setPo.creatRow();
@@ -96,40 +94,37 @@ public class SelectInfoTableDao {
 				SheetFieldPo fieldpo = fpo.get(i);
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
-
+				Date valDate = null;
 				Object obj = rs.getObject(i + 1);
 				if (obj == null) {
 					val = new SimpleStringProperty("<null>");
 				} else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
-						if (dpo != null) {
-							var v = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
-							val = new SimpleStringProperty(v);
-						} else {
-							// TODO dpo null 的情况下
-							Date dv = (Date) rs.getObject(i + 1);
-//							String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-
-							String v = CommonUtility.DateOrDateTimeToString(dbtype, dv);
-							val = new SimpleStringProperty(v);
-						}
+						Object objtmp = rs.getObject(i + 1);
+						DbDatePOJO pojo = sqluckyConn.DateToStringStringProperty(objtmp, dbtype);
+						var dateStr =pojo.getDateStr();
+						var dateVal =pojo.getDateVal();
+						val = new SimpleStringProperty(dateStr);
+						valDate = dateVal;
+//						if (dpo != null) {
+//							var v = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
+//							val = new SimpleStringProperty(v);
+//						} else {
+//							// TODO dpo null 的情况下
+//							Date dv = (Date) rs.getObject(i + 1);
+////							String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+//
+//							String v = CommonUtility.DateOrDateTimeToString(dbtype, dv);
+//							val = new SimpleStringProperty(v);
+//						}
 
 					} else {
 						String temp = rs.getString(i + 1);
 						val = new SimpleStringProperty(temp);
 					}
 				}
-				rowpo.addCell(val, fieldpo);
-//				ResultSetCellPo cellVal = new ResultSetCellPo(i, val, fieldpo); 
-				// 修改监听
-//				addStringPropertyChangeListener(val, rn, i, rowDatas, dbtype,  setPo );
-//				rowDatas.add(cellVal);
-
+				rowpo.addCell(val, valDate, fieldpo);
 			}
-//			ResultSetRowPo rowpo = new ResultSetRowPo(rowIdx, rowDatas, fpo);
-			rowIdx++;
-//			setPo.addRow(rowpo); 
-			idx++;
 		}
 
 	}

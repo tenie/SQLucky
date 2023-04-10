@@ -2,11 +2,13 @@ package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 /**
  * 
@@ -24,6 +26,7 @@ public class DaoTools {
 			for (int i = 0; i < cellVals.size(); i++) {
 				ResultSetCellPo cellpo = cellVals.get(i);
 				String field = cellpo.getField().getColumnLabel().get();
+				
 				String valStr = null;
 				if(cellpo.getHasModify() ) {
 					valStr = cellpo.getOldCellData().get();
@@ -36,16 +39,22 @@ public class DaoTools {
 						str.append(field + " is null and ");
 					}else {
 						String type = fpos.get(i).getColumnClassName().get();
+						Integer dataType = cellpo.getField().getColumnType().get();
+						System.out.println("field name = " + field + " | dataType = " + dataType + " | value = " + valStr);
 						// 日期直接拼接字符串, 防止毫秒的情况, 多加了1秒后的比较 
-						if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")  ) {
-							str.append(field + " >= '"+valStr+"'  and ");
-							Date v =  StrUtils.datePlus1Second(valStr);
-							String p1s = StrUtils.dateToStr(v, ConfigVal.dateFormateL);
-							str.append(field + " <'"+p1s+"'  and ");
-						 
-						}else if(type.equals("java.sql.Date")) {
-							str.append(field + " = '"+valStr+"'  and ");
-						}else {
+						if( CommonUtility.isDateAndDateTime(dataType)) {
+							str.append(field + " = ?  and ");
+						}
+//						if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")  ) {
+//							str.append(field + " >= '"+valStr+"'  and ");
+//							Date v =  StrUtils.datePlus1Second(valStr);
+//							String p1s = StrUtils.dateToStr(v, ConfigVal.dateFormateL);
+//							str.append(field + " <'"+p1s+"'  and ");
+//						 
+//						}else if(type.equals("java.sql.Date")) {
+//							str.append(field + " = '"+valStr+"'  and ");
+//						}
+						else {
 							str.append(field + " = ?  and ");
 						}
 						
@@ -74,6 +83,7 @@ public class DaoTools {
 				ResultSetCellPo cellpo = cellVals.get(i);
 //				String val = cellpo.getCellData().get();
 				String type = cellpo.getField().getColumnClassName().get();
+				Integer datetype = cellpo.getField().getColumnType().get();
 				
 				String val = null;
 				if(cellpo.getHasModify() ) {
@@ -85,12 +95,27 @@ public class DaoTools {
 				if ("<null>".equals(val)) {
 					idx--;
 					continue;
-				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
-						|| type.equals("java.sql.Date")) {
-					idx--;
-					continue;
-
-				} else {
+				}else if(CommonUtility.isDateAndDateTime(datetype)) {
+					//TODO 使用接口中的 时间转换
+//					if(CommonUtility.isDate(datetype)) {
+//						var tmpv = StrUtils.StrToDate_S(val);
+//						pstmt.setDate(idx, tmpv);
+//						logmsg += idx + " : " + tmpv + "\n";
+//					}else {
+//						Date tmpv = StrUtils.StrToDate_L(val);
+//						pstmt.setTimestamp(idx, new Timestamp(tmpv.getTime()));
+//						logmsg += idx + " : " + tmpv + "\n";
+//					}
+					Date tmpv = StrUtils.StrToDate_L(val);
+					pstmt.setTimestamp(idx, new Timestamp(tmpv.getTime()));
+					logmsg += idx + " : " + tmpv + "\n";
+				}
+//				else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
+//						|| type.equals("java.sql.Date")) {
+//					idx--;
+//					continue; 
+//				} 
+				else {
 //				Object obj = BuildObject.buildObj(type, val);
 //				pstmt.setObject(idx, obj);
 

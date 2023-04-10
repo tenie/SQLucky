@@ -32,6 +32,8 @@ import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.SelectExecInfo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
@@ -223,7 +225,7 @@ public class SdkComponent {
 	 * @param fieldWidthMap
 	 * @return
 	 */
-	public static SheetDataValue sqlToSheet(String sql, Connection conn,
+	public static SheetDataValue sqlToSheet(String sql, SqluckyConnector sqluckyConn,
 			String tableName, Map<String, Double> fieldWidthMap, List<String> editableColName  ) {
 
 		try {
@@ -246,10 +248,11 @@ public class SdkComponent {
 			sheetDaV.setTable(table);
 			sheetDaV.setTabName(tableName);
 			sheetDaV.setLock(false);
-			sheetDaV.setConn(conn);
+			sheetDaV.setConn(sqluckyConn.getConn());
 
-			SelectDao.selectSql(sql, Integer.MAX_VALUE, sheetDaV);
+			SelectExecInfo execInfo = SelectDao.selectSql2(sql, Integer.MAX_VALUE, sqluckyConn);
 
+			sheetDaV.setSelectExecInfo(execInfo);
 			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getDataRs().getDatas();
 			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
 

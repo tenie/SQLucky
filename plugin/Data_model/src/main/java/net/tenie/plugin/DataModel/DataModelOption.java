@@ -163,16 +163,17 @@ public class DataModelOption {
 		
 		queryStr = queryStr.toUpperCase();
 				
-		var conn = SqluckyAppDB.getConn();
+//		var conn = SqluckyAppDB.getConn();
+		var SqluckyConn = SqluckyAppDB.getSqluckyConnector();
 		String sql =  "SELECT b.DEF_KEY AS TABLE_NAME, a.DEF_KEY AS  FIELD,  a.DEF_NAME AS FIELD_NAME , a.COMMENT FROM DATA_MODEL_TABLE_FIELDS  a\n"
 				+ "left join DATA_MODEL_TABLE b on b.ITEM_ID = a.TABLE_ID\n"
 				+ "where b.MODEL_ID in ( "+modelIds+") and ( a.DEF_KEY like '%"+queryStr+"%' or  a.DEF_NAME  like '%"+queryStr+"%' or a.COMMENT like '%"+queryStr+"%' )";
 		try {
-			DataModelUtility.dataModelQueryFieldsShow(sql, conn , queryStr, new ArrayList(), queryFieldColWidth);
+			DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn , queryStr, new ArrayList(), queryFieldColWidth);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}finally {
-			SqluckyAppDB.closeConn(conn);
+			SqluckyAppDB.closeSqluckyConnector(SqluckyConn);
 		}
 	}
 	

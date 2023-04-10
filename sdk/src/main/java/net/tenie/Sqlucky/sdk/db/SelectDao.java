@@ -20,6 +20,7 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.po.SelectExecInfo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -56,14 +57,19 @@ public class SelectDao {
 	}
 	
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void selectSql( String sql, int limit, SheetDataValue dvt ) throws SQLException {
-		SqluckyConnector sqluckyConn  = dvt.getDbConnection();
-		Connection conn = null;
-		if(sqluckyConn != null) {
-			 conn = sqluckyConn.getConn();
-		}else {
-			conn =  dvt.getConn();
-		}
+	public static SelectExecInfo selectSql2( String sql, int limit,SqluckyConnector sqluckyConn
+//			SheetDataValue dvt
+			) throws SQLException {
+		Connection conn = sqluckyConn.getConn();
+		SelectExecInfo execInfo = new SelectExecInfo();
+//		SqluckyConnector sqluckyConn  = dvt.getDbConnection();
+//		Connection conn = null;
+//		if(sqluckyConn != null) {
+//			 conn = sqluckyConn.getConn();
+//		}else {
+//			conn =  dvt.getConn();
+//		}
+		
 		// DB对象
 		PreparedStatement pstate = null;
 		ResultSet rs = null;
@@ -78,7 +84,7 @@ public class SelectDao {
 			long usetime = endTime-startTime;
 			double vt = usetime / 1000.0;
 			logger.info("查询时间： "+usetime+"ms");
-			dvt.setExecTime(vt); 
+			execInfo.setExecTime(vt); 
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = resultSetMetaData(rs);
 			ResultSetPo setPo = new ResultSetPo(fields);
@@ -91,9 +97,9 @@ public class SelectDao {
 			}
 			int rowSize = setPo.getDatas().size();
 			
-			dvt.setDataRs(setPo);
-			dvt.setColss(fields);
-			dvt.setRows(rowSize); 
+			execInfo.setDataRs(setPo);
+			execInfo.setColss(fields);
+			execInfo.setRowSize(rowSize); 
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -101,6 +107,8 @@ public class SelectDao {
 			if (rs != null)
 				rs.close();
 		} 
+		
+		return execInfo;
 	}
 	
 	public static ResultSetPo selectSqlToRS( String sql , SqluckyConnector sqlConn) throws SQLException {
@@ -304,7 +312,7 @@ public class SelectDao {
 	
 
 	private static void execRs(int limit, ResultSet rs, 
-			  SqluckyConnector dpo, ResultSetPo setPo ) throws SQLException {
+			  SqluckyConnector sqluckyConn, ResultSetPo setPo ) throws SQLException {
 		int idx = 1;
 		ObservableList<SheetFieldPo> fpo = setPo.getFields();
 		int columnnums = fpo.size();
@@ -313,31 +321,43 @@ public class SelectDao {
 			
 			for (int i = 0; i < columnnums; i++) {
 				SheetFieldPo fieldpo = fpo.get(i);
+				String clabel = fieldpo.getColumnLabel().get();
+				
+				String cclaz = fieldpo.getColumnClassName().get();
+				System.out.println("field name = " + clabel + " | class name = " + cclaz );
+				
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
+				Date valDate = null;
 				
 				Object obj = rs.getObject(i + 1);
 				if(obj == null) {
 					val = new SimpleStringProperty("<null>");
 				}else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
-						if (dpo != null) {
-							var v = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
-							val = new SimpleStringProperty(v);
-						} else {
-							// TODO dpo null 的情况下
-							Date dv = (Date) rs.getObject(i + 1);
-							String v = CommonUtility.DateOrDateTimeToString(dbtype, dv);
-//							String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-							val = new SimpleStringProperty(v);
-						}
+						Object objtmp = rs.getObject(i + 1);
+						DbDatePOJO pojo = sqluckyConn.DateToStringStringProperty(objtmp, dbtype);
+						var dateStr =pojo.getDateStr();
+						var dateVal =pojo.getDateVal();
+						val = new SimpleStringProperty(dateStr);
+						valDate = dateVal;
+//						if (sqluckyConn != null) {
+//							
+//						}
+//						else {
+//							// TODO dpo null 的情况下
+//							Date dv = (Date) rs.getObject(i + 1);
+//							String v = CommonUtility.DateOrDateTimeToString(dbtype, dv);
+////							String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+//							val = new SimpleStringProperty(v);
+//						}
 
 					}else{
 						String temp = rs.getString(i+1);
 						val = new SimpleStringProperty(temp); 
 					}
 				}
-				rowpo.addCell(val, fieldpo);
+				rowpo.addCell(val, valDate, fieldpo);
 			}
 
 			setPo.addRow(rowpo); 
@@ -353,43 +373,43 @@ public class SelectDao {
 
 	
 
-	public static ObservableList<ObservableList<StringProperty>>  simpleExecRs( ResultSet rs, ObservableList<SheetFieldPo> fpo ) throws SQLException {
-		int idx = 1;
-		int rowNo = 0; 
-		int columnnums = fpo.size(); 
-		ObservableList<ObservableList<StringProperty>> allDatas = FXCollections.observableArrayList();
-		while (rs.next()) {
-			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
-			int rn = rowNo++;
-			for (int i = 0; i < columnnums; i++) { 
-				int dbtype = fpo.get(i).getColumnType().get();
-				StringProperty val;
-				
-				Object obj = rs.getObject(i + 1);
-				if(obj == null) {
-					val = new SimpleStringProperty("<null>");
-				}else {
-					if (CommonUtility.isDateAndDateTime(dbtype)) {
-						java.sql.Timestamp ts = rs.getTimestamp(i + 1);
-						Date d = new Date(ts.getTime());
-						String v = CommonUtility.DateOrDateTimeToString(dbtype, d);
-//						String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
-						val = new SimpleStringProperty(v);
-					} else {
-						String temp = rs.getString(i+1);
-						val = new SimpleStringProperty(temp); 
-					}
-				}
-				 
-				vals.add(val);
-			} 
-			vals.add(new SimpleStringProperty(rn + "")); 
-			allDatas.add(vals); 
-			idx++;
-		}
-		
-		return allDatas;
-	}
+//	public static ObservableList<ObservableList<StringProperty>>  simpleExecRs( ResultSet rs, ObservableList<SheetFieldPo> fpo ) throws SQLException {
+//		int idx = 1;
+//		int rowNo = 0; 
+//		int columnnums = fpo.size(); 
+//		ObservableList<ObservableList<StringProperty>> allDatas = FXCollections.observableArrayList();
+//		while (rs.next()) {
+//			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
+//			int rn = rowNo++;
+//			for (int i = 0; i < columnnums; i++) { 
+//				int dbtype = fpo.get(i).getColumnType().get();
+//				StringProperty val;
+//				
+//				Object obj = rs.getObject(i + 1);
+//				if(obj == null) {
+//					val = new SimpleStringProperty("<null>");
+//				}else {
+//					if (CommonUtility.isDateAndDateTime(dbtype)) {
+//						java.sql.Timestamp ts = rs.getTimestamp(i + 1);
+//						Date d = new Date(ts.getTime());
+//						String v = CommonUtility.DateOrDateTimeToString(dbtype, d);
+////						String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
+//						val = new SimpleStringProperty(v);
+//					} else {
+//						String temp = rs.getString(i+1);
+//						val = new SimpleStringProperty(temp); 
+//					}
+//				}
+//				 
+//				vals.add(val);
+//			} 
+//			vals.add(new SimpleStringProperty(rn + "")); 
+//			allDatas.add(vals); 
+//			idx++;
+//		}
+//		
+//		return allDatas;
+//	}
 
 	
 	
@@ -406,7 +426,7 @@ public class SelectDao {
 	 * @param setPo
 	 * @throws SQLException
 	 */
-	public static void execDBRs(ResultSet rs, SqluckyConnector sqlConn, ResultSetPo setPo ) throws SQLException {
+	public static void execDBRs(ResultSet rs, SqluckyConnector sqluckyConn, ResultSetPo setPo ) throws SQLException {
 		ObservableList<SheetFieldPo> fpo = setPo.getFields();
 		int columnnums = fpo.size();
 		while (rs.next()) {
@@ -416,20 +436,24 @@ public class SelectDao {
 				SheetFieldPo fieldpo = fpo.get(i);
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
-				
+				Date valDate = null;
 				Object obj = rs.getObject(i + 1);
 				if(obj == null) {
 					val = new SimpleStringProperty("<null>");
 				}else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
-						var v = sqlConn.DateToStringStringProperty(rs.getObject(i + 1) , dbtype);
-						val = new SimpleStringProperty(v);
+						Object objtmp = rs.getObject(i + 1);
+						DbDatePOJO pojo = sqluckyConn.DateToStringStringProperty(objtmp, dbtype);
+						var dateStr =pojo.getDateStr();
+						var dateVal =pojo.getDateVal();
+						val = new SimpleStringProperty(dateStr);
+						valDate = dateVal;
 					} else {
 						String temp = rs.getString(i+1);
 						val = new SimpleStringProperty(temp); 
 					}
 				}
-				rowpo.addCell(val, fieldpo);
+				rowpo.addCell(val,valDate, fieldpo);
 			}
 			setPo.addRow(rowpo); 
 		}

@@ -1,5 +1,6 @@
 package net.tenie.fx.plugin;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -198,7 +199,7 @@ public class PluginManageAction {
 		
 	}
 	
-	public static void downloadPlugin(FilteredTableView<ResultSetRowPo>  allPluginTable) {
+	public static void downloadPlugin(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo>  allPluginTable) {
 		//
 		String pluginName = getSelectPluginName(allPluginTable);
 		Map<String, String> vals = new HashMap<>();
@@ -208,7 +209,33 @@ public class PluginManageAction {
 		
 		
 		String modelPath = CommonUtility.sqluckyAppModsPath();
-		HttpUtil.downloadByPost(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, vals);
+//		modelPath += "/test.jar";
+		String fileName = HttpUtil.downloadPluginByPostToDir(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, vals);
+		
+		File pluginFile = new File(fileName);
+		if(pluginFile.exists()) {
+			// 更新 为以下载
+			ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
+			String id = selectRow.getValueByFieldName("ID");
+			PluginInfoPO ppo = new PluginInfoPO();
+			ppo.setId(Integer.valueOf(id));
+			PluginInfoPO valpo = new PluginInfoPO();
+			valpo.setDownloadStatus(1);
+			var conn = SqluckyAppDB.getConn();
+			try {
+				PoDao.update(conn, ppo, valpo);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}finally {
+				SqluckyAppDB.closeConn(conn);
+			}
+			
+			MyAlert.alert("提示", "下载成功");
+			PluginManageAction.queryAction("", sheetDaV , allPluginTable);
+			allPluginTable.getSelectionModel().select(0);
+		}
+		
+		 
 	}
 	
 	

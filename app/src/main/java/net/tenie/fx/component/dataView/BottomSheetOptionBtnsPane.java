@@ -440,7 +440,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		for (int i = 0; i < fs.size(); i++) {
 			SheetFieldPo fieldpo = fs.get(i);
 			SimpleStringProperty sp = new SimpleStringProperty("<null>");
-			rowpo.addCell(sp, fieldpo); 
+			rowpo.addCell(sp, null, fieldpo); 
 		}
 		// 使用 ResultSetPo对象的createAppendNewRow（）函数， 不需要手动给表添加行了
 //		tbv.getItems().add(0, rowpo);

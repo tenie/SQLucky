@@ -1,5 +1,6 @@
 package net.tenie.fx.main;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -217,6 +218,12 @@ public class SQLucky extends Application {
 		if(args!=null && args.length >0) {
 			sysOpenFile = args[0];
 		}
+		
+//		String dir = CommonUtility.sqluckyAppModsPath();
+//		File file = new File(dir , "text");
+//		System.out.println(file.getAbsolutePath());
+//		file.createNewFile();
+		
 		
 //		String  v = System.getProperty("jdk.module.path");
 //		logger.debug("jdk.module.path = "+ v);

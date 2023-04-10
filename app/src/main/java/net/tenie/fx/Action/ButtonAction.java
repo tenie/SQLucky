@@ -192,7 +192,7 @@ public class ButtonAction {
 					ResultSetCellPo cellPo = cells.get(j);
 					
 					StringProperty newsp = new SimpleStringProperty(cellPo.getCellData().get());
-					appendRow.addCell(newsp, cellPo.getField());
+					appendRow.addCell(newsp, null, cellPo.getField());
 					int dataType = fs.get(j).getColumnType().get();
 					CommonUtility.newStringPropertyChangeListener(newsp, dataType);
 					item.add(newsp);

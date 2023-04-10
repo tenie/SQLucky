@@ -2,18 +2,26 @@ package net.tenie.Sqlucky.sdk.utility.net;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.hc.client5.http.entity.mime.FileBody;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.entity.mime.StringBody;
+import org.apache.hc.client5.http.fluent.Content;
 import org.apache.hc.client5.http.fluent.Request;
 import org.apache.hc.client5.http.fluent.Response;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.HttpEntity; 
+import org.apache.hc.core5.http.Header;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
 /**
  * 
@@ -79,13 +87,41 @@ public class HttpUtil {
 		return result;
 	}
  
-	// 使用post下载文件
-	public static void downloadByPost(String url, String fileSaveDir, Map<String, String> Param) {
+	// 使用post下载插件文件, 到指定目录
+	public static String downloadPluginByPostToDir(String url, String fileSaveDir, Map<String, String> Param) {
 		var nvps = mapToPairs(Param);
+		String name = "";
 		 try {
-			Request.post(url).bodyForm(nvps).execute().saveContent(new File(fileSaveDir));
+			 Response re =	Request.post(url).bodyForm(nvps).execute();
+			 name = re.handleResponse(response -> {
+				 		String sqluckyPluginName = response.getHeader("SQLUCKY_PLUGIN").getValue();
+				 		HttpEntity entity = response.getEntity(); 
+			            
+			            byte[] data =  EntityUtils.toByteArray(entity);
+			            String fileName = fileSaveDir + "/" + sqluckyPluginName;
+			            Files.write(Paths.get(fileName), data);
+
+			            //清理
+			            EntityUtils.consume(entity);
+				 	
+			            return fileName;
+				 });
 		} catch (IOException e) {
 			e.printStackTrace();
+			
+		}
+		return name;
+	}
+	
+	// 使用post下载文件
+	public static void downloadByPost(String url, String filepath, Map<String, String> Param) {
+		var nvps = mapToPairs(Param);
+		 try {
+			Request.post(url).bodyForm(nvps).execute().saveContent(new File(filepath));
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			
 		}
 	}
 	

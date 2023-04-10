@@ -49,6 +49,26 @@ public class SqluckyAppDB {
 		return conn;
 	}
 	
+	// 获取 应用数据库连接的SqluckyConnector对象
+	public  static SqluckyConnector getSqluckyConnector() { 
+		SqluckyConnector sqluckyConn = SqluckySqliteConnector.createTmpConnector(
+				ConfigVal.USER,
+				ConfigVal.PASSWD, 
+				sqliteJdbcURL() );
+		return sqluckyConn;
+	}
+	public  static SqluckyConnector getSqluckyConnector(String user, String passwd, String jdbcUrl) { 
+		SqluckyConnector sqluckyConn = SqluckySqliteConnector.createTmpConnector(
+				user,
+				passwd, 
+				jdbcUrl );
+		return sqluckyConn;
+	}
+	
+	public static void closeSqluckyConnector(SqluckyConnector sqluckyConn) {
+		sqluckyConn.closeConn();
+	}
+	
 	
 	public  static Connection getConnNotAutoCommit() {
 //		Connection conn = createH2Conn();

@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.po;
 
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -28,6 +29,7 @@ public class SheetFieldPo {
 	private IntegerProperty scale; 
 	private StringProperty value; 
 	private Double columnWidth;
+	private LongProperty dateValue; // 如果是时间, 保存为long
 
 	// 类型, 在界面上显示的时候, 默认文本类型
 	private String Type = TEXT_TYPE; 
@@ -153,13 +155,22 @@ public class SheetFieldPo {
 		this.columnWidth = columnWidth;
 	}
 
-	@Override
-	public String toString() {
-		return "SheetFieldPo [columnName=" + columnName + ", columnClassName=" + columnClassName
-				+ ", columnDisplaySize=" + columnDisplaySize + ", columnLabel=" + columnLabel + ", columnType="
-				+ columnType + ", columnTypeName=" + columnTypeName + ", scale=" + scale + ", value=" + value
-				+ ", columnWidth=" + columnWidth + ", Type=" + Type + "]";
+	public LongProperty getDateValue() {
+		return dateValue;
 	}
 
+	public void setDateValue(LongProperty dateValue) {
+		this.dateValue = dateValue;
+	}
+
+	@Override
+	public String toString() {
+		return "SheetFieldPo [columnName=" + columnName + ", columnLabel=" + columnLabel + ", columnClassName="
+				+ columnClassName + ", columnDisplaySize=" + columnDisplaySize + ", columnType=" + columnType
+				+ ", columnTypeName=" + columnTypeName + ", scale=" + scale + ", value=" + value + ", columnWidth="
+				+ columnWidth + ", dateValue=" + dateValue + ", Type=" + Type + "]";
+	}
+
+ 
  
 }

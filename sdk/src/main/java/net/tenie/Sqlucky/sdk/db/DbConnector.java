@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -169,17 +170,55 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo.setComment(comment);
 	}
 
+//	@Override
+//	public String DateToStringStringProperty(Object obj, int type ) {  
+//		Date dv = (Date) obj;
+////		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
+//
+//		String v = CommonUtility.DateOrDateTimeToString(type, dv);
+////		StringProperty val = new SimpleStringProperty(v);
+//		
+//		return v;
+//	}
 	@Override
-	public String DateToStringStringProperty(Object obj, int type ) {  
+	public DbDatePOJO DateToStringStringProperty(Object obj, int type ) {  
 		Date dv = (Date) obj;
 //		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
 
 		String v = CommonUtility.DateOrDateTimeToString(type, dv);
 //		StringProperty val = new SimpleStringProperty(v);
-		
-		return v;
+		DbDatePOJO po = new DbDatePOJO();
+		po.setDateStr(v);
+		po.setDateVal(dv);
+		return po;
 	}
 	
+	@Override
+	public void setDatePreparedStatement(PreparedStatement pstmt, int idx , ResultSetCellPo cellpo) {
+		Integer datetype = cellpo.getField().getColumnType().get();
+		String val = "";
+		Date dateVal = cellpo.getCellDataByDate();
+		if(cellpo.getHasModify() ) {
+			val = cellpo.getOldCellData().get();
+			
+		}else {
+			val = cellpo.getCellData().get();
+		}
+		 
+		// 如果是日期
+		if(CommonUtility.isDate(datetype)) {
+			if(dateVal != null) {
+//				pstmt.setDate(idx, (java.sql.Date) dateVal);
+				java.sql.Date sqldate = new java.sql.Date(dateVal.getTime());
+				try {
+					pstmt.setDate(idx, sqldate);
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
+			}
+			 
+		}
+	}
 	
 //	public abstract String getJdbcUrl();
 
