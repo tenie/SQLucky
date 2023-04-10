@@ -20,6 +20,7 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.SelectExecInfo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
@@ -37,10 +38,10 @@ public class SelectAction {
 	private static Logger logger = LogManager.getLogger(SelectAction.class);
 //	private static Thread staticThread;
 	
-	public static void selectAction(String sql, SqluckyConnector dpo , int tidx, boolean isLock, Thread thread, boolean isRefresh) throws Exception {
+	public static void selectAction(String sql, SqluckyConnector sqluckyConn , int tidx, boolean isLock, Thread thread, boolean isRefresh) throws Exception {
 		try { 
 //			staticThread = thread;
-		    Connection conn = dpo.getConn();
+		    Connection conn = sqluckyConn.getConn();
 			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
 			
 		    // 获取表名
@@ -50,7 +51,7 @@ public class SelectAction {
 			}
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			SheetDataValue sheetDaV = new SheetDataValue();
-			sheetDaV.setDbConnection(dpo); 
+			sheetDaV.setDbConnection(sqluckyConn); 
 			String connectName = DBConns.getCurrentConnectName();
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTable(table);
@@ -58,7 +59,9 @@ public class SelectAction {
 			sheetDaV.setConnName(connectName);
 			sheetDaV.setLock(isLock);
 
-			SelectDao.selectSql(sql, ConfigVal.MaxRows, sheetDaV); 
+			SelectExecInfo execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, sqluckyConn); 
+			sheetDaV.setSelectExecInfo(execInfo);
+			
 			DataViewContainer.setTabRowWith(table, sheetDaV.getDataRs().getDatas().size()); 
 			
 			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getDataRs().getDatas();

@@ -69,7 +69,7 @@ public class DataModelUtility {
 	 * @param fieldWidthMap
 	 * @throws Exception
 	 */
-	public static SheetDataValue dataModelQueryFieldsShow(String sql, Connection conn, String tableName, List<Node> optionNodes,
+	public static SheetDataValue dataModelQueryFieldsShow(String sql, SqluckyConnector sqluckyConn, String tableName, List<Node> optionNodes,
 			Map<String, Double> fieldWidthMap) throws Exception {
 		SheetDataValue sheetDaV = null;
 		try {
@@ -78,7 +78,7 @@ public class DataModelUtility {
 			List<String> editableColName = new ArrayList<>();
 			editableColName.add("NAME");
 			editableColName.add("COMMENT");
-		    sheetDaV = SdkComponent.sqlToSheet(sql, conn, tableName, fieldWidthMap, editableColName);
+		    sheetDaV = SdkComponent.sqlToSheet(sql, sqluckyConn, tableName, fieldWidthMap, editableColName);
 			// 如果查询到数据才展示
 			if(sheetDaV.getTable().getItems().size() > 0) {
 				// 渲染界面

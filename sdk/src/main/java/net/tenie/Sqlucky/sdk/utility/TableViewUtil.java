@@ -348,7 +348,7 @@ public class TableViewUtil {
 
 				String cellVal = map.get(fieldpo.getColumnLabel().get());
 				val = new SimpleStringProperty(cellVal);
-				rowpo.addCell(val, fieldpo);
+				rowpo.addCell(val, null, fieldpo);
 			}
 		}
 

@@ -1,4 +1,4 @@
-package net.tenie.lib.db.h2;
+package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -8,14 +8,11 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.db.DbConnector;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.lib.db.ExportDefaultImp;
 
 
 /**
@@ -49,20 +46,42 @@ public class SqluckySqliteConnector extends DbConnector {
 		return val;
 	} 
 
-
 	@Override
-	public String DateToStringStringProperty(Object obj, int type) {  
-		String val = "";
+	public DbDatePOJO DateToStringStringProperty(Object obj, int type) {  
+		String val = null;
+		DbDatePOJO po = new DbDatePOJO();
+		
 		if(obj instanceof String) {
 			val = (String) obj;
+			po.setDateStr(val);
+			po.setDateVal(StrUtils.StrToDate(val, ConfigVal.dateFormateL));
 		}else if( obj instanceof Long) {
 			Date date = new Date((long) obj);
-
-			val = CommonUtility.DateOrDateTimeToString(type, date);
-			 
+//			val = CommonUtility.DateOrDateTimeToString(type, date);
+			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
+			
+			po.setDateStr(val);
+			po.setDateVal(date);
 		}
-		return val;
-	} 
+		
+	
+		return po;
+	}
+//	@Override
+//	public String DateToStringStringProperty(Object obj, int type) {  
+//		String val = "";
+//		if(obj instanceof String) {
+//			val = (String) obj;
+//		}else if( obj instanceof Long) {
+//			Date date = new Date((long) obj);
+//
+////			val = CommonUtility.DateOrDateTimeToString(type, date);
+//			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
+//			 
+//		}
+//		return val;
+//	} 
+	
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {

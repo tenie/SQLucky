@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.db;
 
+import java.util.Date;
 import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -47,13 +48,13 @@ public class ResultSetRowPo {
 	 * @param cellData
 	 * @param field
 	 */
-	public void addCell(StringProperty cellData, SheetFieldPo field) {
-		ResultSetCellPo cell = new ResultSetCellPo(this, cellData, field);
+	public void addCell(StringProperty cellData, Date cellValByDate, SheetFieldPo field) {
+		ResultSetCellPo cell = new ResultSetCellPo(this, cellData, cellValByDate, field);
 		rowDatas.add(cell);
 	}
-	public void addCell(String cellstr, SheetFieldPo field) {
+	public void addCell(String cellstr,  Date cellValByDate, SheetFieldPo field) {
 		StringProperty sp = new SimpleStringProperty(cellstr);
-		addCell(sp, field);
+		addCell(sp,cellValByDate, field);
 	}
 	/**
 	 * 一行中有多少个cell

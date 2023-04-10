@@ -21,6 +21,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.SqluckySqliteConnector;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
@@ -424,10 +425,12 @@ public class AppDao {
 	private static void transferOldDbData(Connection conn) {
 		String path = appOldDbFiles();
 		if (StrUtils.isNotNullOrEmpty(path)) {
-			SqluckyConnector sqluckyConn = SqluckySqliteConnector.createTmpConnector(
-							ConfigVal.USER,
-							ConfigVal.PASSWD, 
-							"jdbc:sqlite:" + path );
+			
+			SqluckyConnector sqluckyConn = SqluckyAppDB.getSqluckyConnector(ConfigVal.USER, ConfigVal.PASSWD,"jdbc:sqlite:" + path);
+//					SqluckySqliteConnector.createTmpConnector(
+//							ConfigVal.USER,
+//							ConfigVal.PASSWD, 
+//							"jdbc:sqlite:" + path );
 			List<String> tableNames = new ArrayList<>();
 			tableNames.add("CONNECTION_INFO");
 //			tableNames.add("SQL_TEXT_SAVE");

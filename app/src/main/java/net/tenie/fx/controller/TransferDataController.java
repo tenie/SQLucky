@@ -1055,7 +1055,7 @@ public class TransferDataController implements Initializable {
 					}
 					// 给行的字段赋值
 //					dpo.addData(row, val, fpo.get(i));
-					row.addCell(val, fpo.get(i));
+					row.addCell(val, null, fpo.get(i));
 				}
 			    insertSql = GenerateSQLString.insertSQL(tableName , row, false);  
 //				moniterAppendLog(insertSql);

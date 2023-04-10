@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.db;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,8 +28,12 @@ public class ResultSetCellPo {
 	private SheetFieldPo field;
 	// 单元格的值
 	private StringProperty cellData; 
+	// 单元格的值-- 如果是时间, 保存时间的值, 保存字符串可能会丢失精度
+	private Date cellDataByDate; 
+	
 	// 单元格初始值
 	private StringProperty oldCellData;  // 如果被更新, 旧的值放这个理
+//	private Date  oldCellDataByDate;  // 如果被更新, 旧的值放这个理
 	// 单元格所在行对象的引用
 	private ResultSetRowPo currentRow;
 	// 单元格的位置
@@ -41,7 +46,9 @@ public class ResultSetCellPo {
 	public void clean() {
 		field = null;
 		cellData = null;
+		cellDataByDate = null;
 		oldCellData = null;
+//		oldCellDataByDate = null;
 		currentRow = null;
 	}
 	
@@ -52,9 +59,10 @@ public class ResultSetCellPo {
 //		addStringPropertyChangeListener();
 //	}
 	
-	protected ResultSetCellPo(ResultSetRowPo currentRow, StringProperty cellData, SheetFieldPo field) {
+	protected ResultSetCellPo(ResultSetRowPo currentRow, StringProperty cellData, Date cellValByDate, SheetFieldPo field) {
 		this.index = currentRow.cellSize();
 		this.cellData = cellData;
+		this.cellDataByDate = cellValByDate;
 		this.field = field; 
 		this.currentRow = currentRow;  
 	}
@@ -114,12 +122,28 @@ public class ResultSetCellPo {
 		this.hasListener = hasListener;
 	}
 
+	public Date getCellDataByDate() {
+		return cellDataByDate;
+	}
+
+	public void setCellDataByDate(Date cellDataByDate) {
+		this.cellDataByDate = cellDataByDate;
+	}
+
 	@Override
 	public String toString() {
 		return "ResultSetCellPo [field=" + field + ", cellData=" + cellData + ", oldCellData=" + oldCellData
 				+ ", index=" + index + "]";
 	}
 	
+//	public Date getOldCellDataByDate() {
+//		return oldCellDataByDate;
+//	}
+//
+//	public void setOldCellDataByDate(Date oldCellDataByDate) {
+//		this.oldCellDataByDate = oldCellDataByDate;
+//	}
+
 	// 数据单元格添加监听
 	// 字段修改事件
 	public static void addStringPropertyChangeListener(ResultSetCellPo cell , List<Button> btns) {
@@ -155,6 +179,7 @@ public class ResultSetCellPo {
 						}
 						
 					}
+					 
 
 				}
 			};

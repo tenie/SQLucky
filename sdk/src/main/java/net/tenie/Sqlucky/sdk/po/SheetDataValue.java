@@ -95,6 +95,15 @@ public class SheetDataValue {
 	public Map<String, Button> getBtnMap() {
 		return btnMap;
 	}
+	
+	// 将select sql 执行的结果信息复制给当前对象
+	public void setSelectExecInfo(SelectExecInfo execInfo) {
+		this.setColss(  execInfo.getColss());
+		this.setDataRs(  execInfo.getDataRs());
+		
+		this.setExecTime(  execInfo.getExecTime());
+		this.setRows(  execInfo.getRowSize());
+	}
 
 
 

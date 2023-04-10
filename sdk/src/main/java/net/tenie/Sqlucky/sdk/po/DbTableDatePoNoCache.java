@@ -53,7 +53,7 @@ public class DbTableDatePoNoCache implements SqluckyDbTableDatePo {
 		errdpo.addField(p);
 
 		ResultSetRowPo  rowpo = errdpo.getResultSet().creatRow();
-		rowpo.addCell(new SimpleStringProperty(errorMessage), p);
+		rowpo.addCell(new SimpleStringProperty(errorMessage), null, p);
 		return errdpo;
 	}
 	public ResultSetRowPo addRow() {
@@ -62,10 +62,10 @@ public class DbTableDatePoNoCache implements SqluckyDbTableDatePo {
 	}
 	
 	public void addData(ResultSetRowPo row, String data, SheetFieldPo field) {
-		row.addCell(data, field);
+		row.addCell(data, null, field);
 	}
 	public void addData(ResultSetRowPo row, StringProperty data, SheetFieldPo field) {
-		row.addCell(data, field);
+		row.addCell(data, null, field);
 	}
 
 	public void addField(SheetFieldPo data) {
