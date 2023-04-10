@@ -26,7 +26,6 @@ import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -226,14 +225,21 @@ public class CommonUtility {
 		}
 		return false;
 	}
-	
+	// 时间类型判断, 时分秒
+		public static boolean isTime(int type) {
+			if ( type == java.sql.Types.TIME) {
+				return true;
+			}
+			return false;
+		}
 	// 时间类型判断, 时分秒
 	public static boolean isDateTime(int type) {
-		if ( type == java.sql.Types.TIME || type == java.sql.Types.TIMESTAMP) {
+		if ( type == java.sql.Types.TIMESTAMP) {
 			return true;
 		}
 		return false;
 	}
+	
 	// 时间类型判断, 没有时分秒
 	public static boolean isDate(int type) {
 		if (type == java.sql.Types.DATE) {

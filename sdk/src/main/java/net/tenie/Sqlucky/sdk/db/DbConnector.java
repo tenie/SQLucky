@@ -3,6 +3,8 @@ package net.tenie.Sqlucky.sdk.db;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -217,6 +219,29 @@ public abstract class DbConnector implements SqluckyConnector {
 				}
 			}
 			 
+		}else if(CommonUtility.isDateTime(datetype)) {
+			if(dateVal != null) {
+//				pstmt.setDate(idx, (java.sql.Date) dateVal);
+				Timestamp sqldate = new Timestamp(dateVal.getTime());
+				try {
+					pstmt.setTimestamp(idx ,sqldate );
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
+			}
+			 
+		}else if(CommonUtility.isTime(datetype)) {
+			if(dateVal != null) {
+//				pstmt.setDate(idx, (java.sql.Date) dateVal);
+				Time sqldate = new Time(dateVal.getTime());
+				try {
+					pstmt.setTime(idx ,sqldate );
+				} catch (SQLException e) { 
+					e.printStackTrace();
+				}
+			}
+		}else {
+			
 		}
 	}
 	
