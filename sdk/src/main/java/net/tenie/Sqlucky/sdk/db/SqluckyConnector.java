@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.util.Map;
 import java.util.Set;
 
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
@@ -65,7 +64,7 @@ public interface SqluckyConnector {
 	public boolean isJdbcUrlUse();
 	
 	// 自定义需要展示的时间格式, 转换成字符串
-	public StringProperty DateToStringStringProperty(Object dateVal, int type);
+	public String DateToStringStringProperty(Object dateVal, int type);
 	
 //	public  Map<String, DbSchemaPo> fetchSchemasInfo();
 //	String getJdbcUrl();

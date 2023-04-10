@@ -1,15 +1,10 @@
 package net.tenie.plugin.sqliteConnector.impl;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
+
 import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -35,18 +30,13 @@ public class SqliteConnector extends DbConnector {
 	 
 
 	@Override
-	public StringProperty DateToStringStringProperty(Object obj, int type) {  
-//		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-//		StringProperty val = new SimpleStringProperty((String) dv);
-		StringProperty val = null;
+	public String DateToStringStringProperty(Object obj, int type) {  
+		String val = null;
 		if(obj instanceof String) {
-			val = new SimpleStringProperty((String) obj);
+			val = (String) obj;
 		}else if( obj instanceof Long) {
 			Date date = new Date((long) obj);
-			String v = CommonUtility.DateOrDateTimeToString(type, date);
-			
-//			String v = StrUtils.dateToStr(date, ConfigVal.dateFormateL);
-			val = new SimpleStringProperty(v);
+			val = CommonUtility.DateOrDateTimeToString(type, date);
 		}
 		return val;
 	}

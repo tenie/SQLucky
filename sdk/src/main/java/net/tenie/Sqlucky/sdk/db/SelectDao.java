@@ -13,22 +13,16 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 
@@ -328,7 +322,8 @@ public class SelectDao {
 				}else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						if (dpo != null) {
-							val = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
+							var v = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
+							val = new SimpleStringProperty(v);
 						} else {
 							// TODO dpo null 的情况下
 							Date dv = (Date) rs.getObject(i + 1);
@@ -427,7 +422,8 @@ public class SelectDao {
 					val = new SimpleStringProperty("<null>");
 				}else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
-						val = sqlConn.DateToStringStringProperty(rs.getObject(i + 1) , dbtype);
+						var v = sqlConn.DateToStringStringProperty(rs.getObject(i + 1) , dbtype);
+						val = new SimpleStringProperty(v);
 					} else {
 						String temp = rs.getString(i+1);
 						val = new SimpleStringProperty(temp); 
