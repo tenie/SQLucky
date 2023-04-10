@@ -14,10 +14,8 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -105,7 +103,8 @@ public class SelectInfoTableDao {
 				} else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						if (dpo != null) {
-							val = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
+							var v = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
+							val = new SimpleStringProperty(v);
 						} else {
 							// TODO dpo null 的情况下
 							Date dv = (Date) rs.getObject(i + 1);

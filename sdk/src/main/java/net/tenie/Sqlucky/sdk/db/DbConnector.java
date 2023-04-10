@@ -7,11 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
@@ -171,15 +170,17 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 
 	@Override
-	public StringProperty DateToStringStringProperty(Object obj, int type ) {  
+	public String DateToStringStringProperty(Object obj, int type ) {  
 		Date dv = (Date) obj;
 //		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
 
 		String v = CommonUtility.DateOrDateTimeToString(type, dv);
-		StringProperty val = new SimpleStringProperty(v);
+//		StringProperty val = new SimpleStringProperty(v);
 		
-		return val;
+		return v;
 	}
+	
+	
 //	public abstract String getJdbcUrl();
 
 //	public void setJdbcUrl(String jdbcUrl) {
