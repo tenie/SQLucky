@@ -19,7 +19,9 @@ import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 /**
@@ -97,10 +99,11 @@ public class WorkDataBackupController implements Initializable {
 			if(CommonUtility.isLogin("Use Backup must Login") == false) {
 				return ;
 			}
+			
 			// 
 			bakBtn.disableProperty().unbind();
 			bakBtn.setDisable(true);
-			Thread th = new Thread(()->{
+			LoadingAnimation.loadingAnimation("Backup...", v->{
 				BackupInfoPO po = new BackupInfoPO(bakName, privateKey, dbCB, scriptCB, modelCB, pkCB);
 				WorkDataBackupAction.BackupBtn(po );
 				Platform.runLater(()->{
@@ -108,7 +111,7 @@ public class WorkDataBackupController implements Initializable {
 					bakBtn.disableProperty().bind(bakName.textProperty().isEmpty());
 				});
 			});
-			th.start();
+			
 			
 		});
 	}
@@ -209,10 +212,13 @@ public class WorkDataBackupController implements Initializable {
 					// 提示覆盖后不开还原
 					boolean isContinue = MyAlert.myConfirmationShowAndWait("本地数据将被覆盖, 继续?");
 					if(isContinue) {
-						WorkDataBackupAction.downloadOverlap(
-								downloadOverlapBtn, downloadMergeBtn,
-								recoverPK, rsVal.fileDetail(),
-								bakdbCB.isSelected(), bakscriptCB.isSelected());
+						LoadingAnimation.loadingAnimation("Loading...", v->{
+							WorkDataBackupAction.downloadOverlap(
+									downloadOverlapBtn, downloadMergeBtn,
+									recoverPK, rsVal.fileDetail(),
+									bakdbCB.isSelected(), bakscriptCB.isSelected());
+						});
+						
 					}
 				}
 			}
@@ -224,10 +230,13 @@ public class WorkDataBackupController implements Initializable {
 					// 提示覆盖后不开还原
 //					boolean isContinue = MyAlert.myConfirmationShowAndWait("和本地数据合并, 名称相同会被添加*符予以区分, 继续?");
 //					if(isContinue) {
+					LoadingAnimation.loadingAnimation("Loading...", v->{
 						WorkDataBackupAction.downloadMerge(
 								downloadOverlapBtn, downloadMergeBtn,
 								recoverPK, rsVal.fileDetail(),
 								bakdbCB.isSelected(), bakscriptCB.isSelected());
+					});
+						
 //					}
 				}
 			}
@@ -238,22 +247,19 @@ public class WorkDataBackupController implements Initializable {
 	 public static void showFxml() {
 		String fxml = "/workBackupFxml/workdataBackup.fxml";
 		try {
-			Stage stage = new Stage();
-//			stage.initModality(Modality.WINDOW_MODAL);
-			stage.initModality(Modality.APPLICATION_MODAL);
-//			stage.initOwner(stg);
-			stage.setTitle("");
-//			URL url = getClass().getResource(fxml);
 			URL url = WorkDataBackupController.class.getResource(fxml);
 			Parent root = FXMLLoader.load(url);
-			Scene scene = new Scene(root);
-			CommonUtility.loadCss(scene);
-			stage.setScene(scene);
+			
+			SqluckyStage sqlStage = new SqluckyStage(root);
+			Stage stage = sqlStage.getStage();
+			
+//			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.initModality(Modality.APPLICATION_MODAL);
+			stage.setTitle("");
+			
 			stage.setResizable(false);
 			stage.show();
 
-			Image img = ComponentGetter.LogoIcons;
-			stage.getIcons().add(img);
 			stage.setOnCloseRequest(ev -> {
 				stage.hide();
 				ev.consume();

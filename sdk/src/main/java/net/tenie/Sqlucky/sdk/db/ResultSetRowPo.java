@@ -48,8 +48,8 @@ public class ResultSetRowPo {
 	 * @param cellData
 	 * @param field
 	 */
-	public void addCell(StringProperty cellData, Date cellValByDate, SheetFieldPo field) {
-		ResultSetCellPo cell = new ResultSetCellPo(this, cellData, cellValByDate, field);
+	public void addCell(StringProperty cellData, Object dbValObj, SheetFieldPo field) {
+		ResultSetCellPo cell = new ResultSetCellPo(this, cellData, dbValObj, field);
 		rowDatas.add(cell);
 	}
 	public void addCell(String cellstr,  Date cellValByDate, SheetFieldPo field) {

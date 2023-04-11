@@ -1,25 +1,22 @@
 package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public abstract class DbConnector implements SqluckyConnector { 
 
@@ -171,94 +168,27 @@ public abstract class DbConnector implements SqluckyConnector {
 //		this.comment = comment;
 		this.connPo.setComment(comment);
 	}
-
-//	@Override
-//	public String DateToStringStringProperty(Object obj, int type ) {  
-//		Date dv = (Date) obj;
-////		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-//
-//		String v = CommonUtility.DateOrDateTimeToString(type, dv);
-////		StringProperty val = new SimpleStringProperty(v);
-//		
-//		return v;
-//	}
+	
+	//sqlFiledtype
 	@Override
-	public DbDatePOJO DateToStringStringProperty(Object obj, int type ) {  
-		Date dv = (Date) obj;
-//		String v = StrUtils.dateToStr(dv, ConfigVal.dateFormateL);
-
-		String v = CommonUtility.DateOrDateTimeToString(type, dv);
-//		StringProperty val = new SimpleStringProperty(v);
-		DbDatePOJO po = new DbDatePOJO();
-		po.setDateStr(v);
-		po.setDateVal(dv);
-		return po;
+	public String DateTimeToString(Object obj, int sqlFiledtype ) {
+		
+		String val = null;
+		if(obj instanceof Date) {
+			Date dv = (Date) obj;
+			val = CommonUtility.DateOrDateTimeToString(sqlFiledtype, dv);
+		}else if(obj instanceof String) {
+			val = (String) obj;
+		}else if( obj instanceof Long) {
+			Date date = new Date((long) obj);
+			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
+		}
+	
+		return val;
+		
+	
 	}
 	
-	@Override
-	public void setDatePreparedStatement(PreparedStatement pstmt, int idx , ResultSetCellPo cellpo) {
-		Integer datetype = cellpo.getField().getColumnType().get();
-		String val = "";
-		Date dateVal = cellpo.getCellDataByDate();
-		if(cellpo.getHasModify() ) {
-			val = cellpo.getOldCellData().get();
-			
-		}else {
-			val = cellpo.getCellData().get();
-		}
-		 
-		// 如果是日期
-		if(CommonUtility.isDate(datetype)) {
-			if(dateVal != null) {
-//				pstmt.setDate(idx, (java.sql.Date) dateVal);
-				java.sql.Date sqldate = new java.sql.Date(dateVal.getTime());
-				try {
-					pstmt.setDate(idx, sqldate);
-				} catch (SQLException e) { 
-					e.printStackTrace();
-				}
-			}
-			 
-		}else if(CommonUtility.isDateTime(datetype)) {
-			if(dateVal != null) {
-//				pstmt.setDate(idx, (java.sql.Date) dateVal);
-				Timestamp sqldate = new Timestamp(dateVal.getTime());
-				try {
-					pstmt.setTimestamp(idx ,sqldate );
-				} catch (SQLException e) { 
-					e.printStackTrace();
-				}
-			}
-			 
-		}else if(CommonUtility.isTime(datetype)) {
-			if(dateVal != null) {
-//				pstmt.setDate(idx, (java.sql.Date) dateVal);
-				Time sqldate = new Time(dateVal.getTime());
-				try {
-					pstmt.setTime(idx ,sqldate );
-				} catch (SQLException e) { 
-					e.printStackTrace();
-				}
-			}
-		}else {
-			
-		}
-	}
-	
-//	public abstract String getJdbcUrl();
-
-//	public void setJdbcUrl(String jdbcUrl) {
-////		this.jdbcUrl = jdbcUrl;
-//		this.connPo.setJdbcUrl(jdbcUrl);
-//	}
-
-//	public String getOtherParameter() {
-//		return otherParameter;
-//	}
-//
-//	public void setOtherParameter(String otherParameter) {
-//		this.otherParameter = otherParameter;
-//	}
 
 	public String getDriver() {
 //		return driver;

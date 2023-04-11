@@ -13,8 +13,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
+import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 
@@ -35,6 +37,8 @@ public class PluginManageWindow {
 	private JFXButton download = new JFXButton("Download");
 	private JFXButton disable = new JFXButton("Disable");
 	private JFXButton enable = new JFXButton("Enable");
+
+	private JFXButton delete = new JFXButton("Delete");
 	// 同步服务器插件
 	private JFXButton sync = new JFXButton(" 同步服务器插件");
 	
@@ -70,7 +74,7 @@ public class PluginManageWindow {
 
 		// 操作面板
 		optionPane.setHgap(10); // 横向间距
-		optionPane.getChildren().addAll(download, disable, enable);
+		optionPane.getChildren().addAll(download, disable, enable, delete);
 		optionPane.setMinHeight(35);
 		optionPane.setPrefHeight(35);
 		optionPane.getStyleClass().add("topPadding5");
@@ -87,6 +91,7 @@ public class PluginManageWindow {
 		download.getStyleClass().add("myAlertBtn");
 		disable.getStyleClass().add("myAlertBtn");
 		enable.getStyleClass().add("myAlertBtn");
+		delete.getStyleClass().add("myAlertBtn");
 		searchBtn.getStyleClass().add("myAlertBtn");
 
 	}
@@ -96,6 +101,7 @@ public class PluginManageWindow {
 		
 		disable.setGraphic(IconGenerator.svgImageDefActive("toggle-off"));
 		enable.setGraphic(IconGenerator.svgImageDefActive("toggle-on"));
+		delete.setGraphic(IconGenerator.svgImageDefActive("trash"));
 		
 		disable.setOnAction(e->{
 			PluginManageAction.enableOrDisableAction(false, allPluginTable);
@@ -109,9 +115,16 @@ public class PluginManageWindow {
 			PluginManageAction.downloadPlugin(sheetDaV, allPluginTable);
 		});
 		
+		delete.setOnAction(e->{
+			PluginManageAction.deletePluginAction(sheetDaV, allPluginTable);
+		});
+		
 		disable.setDisable(true);
 		enable.setDisable(true);
 		download.setDisable(true);
+		delete.disableProperty().bind(download.disableProperty().not());
+		delete.visibleProperty().bind(ConfigVal.SQLUCKY_VIP);
+		 
 	}
 	
    
@@ -126,16 +139,21 @@ public class PluginManageWindow {
 	
 	// 创建一个窗体
 	public static Stage CreateModalWindow(VBox vb) {
-		Stage	stage = new Stage();
+//		Stage	stage = new Stage();
 		vb.getStyleClass().add("myPluginManager-vbox");
 
-		Scene scene = new Scene(vb);
+//		Scene scene = new Scene(vb);
 		
 		vb.setPrefWidth(720);
 		vb.maxWidth(720);
 
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
 		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+		
+		SqluckyStage sqlStage = new SqluckyStage(vb);
+		Stage	stage = sqlStage.getStage();
+		Scene scene = sqlStage.getScene();
+		
 		scene.getAccelerators().put(escbtn, () -> {
 			stage.close();
 		});
@@ -143,11 +161,11 @@ public class PluginManageWindow {
 			stage.close();
 		});
 
-		CommonUtility.loadCss(scene);
+//		CommonUtility.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
-		stage.setScene(scene);
+//		stage.setScene(scene);
 		
-		stage.getIcons().add(ComponentGetter.LogoIcons);
+//		stage.getIcons().add(ComponentGetter.LogoIcons);
 		stage.setMaximized(false);
 		stage.setResizable(false);
 		stage.setOnHidden(e->{

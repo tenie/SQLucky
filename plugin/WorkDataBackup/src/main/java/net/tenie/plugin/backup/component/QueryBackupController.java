@@ -33,6 +33,7 @@ import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -245,23 +246,18 @@ public class QueryBackupController implements Initializable {
 		String fxml = "/workBackupFxml/queryBackup.fxml";
 		Parent root = null;
 		try {
-		    stage = new Stage();
-			stage.initModality(Modality.WINDOW_MODAL);
-//			stage.initOwner(stg);
-			stage.setTitle("Query");
-//			URL url = getClass().getResource(fxml);
 			URL url =  WorkDataBackupController.class.getResource(fxml);
 			root = FXMLLoader.load(url);
 			stkp = new StackPane();
 			stkp.getChildren().add(root);
-			Scene scene = new Scene(stkp);
 			
-		    CommonUtility.loadCss(scene); 
-			stage.setScene(scene);
+			SqluckyStage sqlStage = new SqluckyStage(stkp);
+			stage = sqlStage.getStage();
+//			Scene scene = sqlStage.getScene();
 			
+			stage.setTitle("Query");
+			stage.initModality(Modality.WINDOW_MODAL);
 			
-			Image	img = ComponentGetter.LogoIcons; //new Image(DataTransferWindow.class.getResourceAsStream(ConfigVal.appIcon));
-			stage.getIcons().add(img);
 			stage.setOnCloseRequest(ev->{
 				stage.hide();
 				ev.consume();

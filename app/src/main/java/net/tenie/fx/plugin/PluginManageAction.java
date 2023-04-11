@@ -10,8 +10,11 @@ import java.util.Map;
 import java.util.function.Consumer;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import com.jfoenix.controls.JFXButton;
+
+import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.PoDao;
@@ -67,6 +70,34 @@ public class PluginManageAction {
 			MyAlert.myConfirmation("Setting up requires reboot , ok ? ", ok, null);
 		 
 	}
+	// 删除插件
+	public static  void deletePluginAction(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo> allPluginTable) {
+		ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
+		
+		String id = selectRow.getValueByFieldName("ID");
+		
+		
+		PluginInfoPO infoPo = new PluginInfoPO();
+		infoPo.setId(Integer.valueOf(id));  
+		
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			PoDao.delete(conn, infoPo);
+			
+			// 删除文件
+			
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+		
+//		MyAlert.infoAlert("info", "Delete Succeed, Need Reboot App ");
+		Platform.runLater(()->{
+				PluginManageAction.queryAction("", sheetDaV , allPluginTable);
+		});
+		
+}
 	
 	static String sql = "select" 
 			+ " ID , "
@@ -156,85 +187,110 @@ public class PluginManageAction {
 		if( CommonUtility.isLogin("Please Login First") == false) {
 			return ;
 		}
-		Map<String, String> vals = new HashMap<>();
-		vals.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());	
-		vals.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
-		String content = "";
-		Connection conn = SqluckyAppDB.getConn();
-		try {
-			content = HttpUtil.post(ConfigVal.getSqluckyServer()+"/sqlucky/queryAllPlugin", vals);
-			System.out.println("content ==" + content);
-			 List<PluginInfoPO> ls=  JsonTools.jsonToList(content, PluginInfoPO.class);
-			 System.out.println(ls);
-			 List<Object> localVals = PoDao.selectFieldVal(conn, new  PluginInfoPO(), "PLUGIN_CODE");
-			 int count = 0;
-			 for(PluginInfoPO info : ls) {
-				 	String tmpPluginCode = info.getPluginCode();
-				 	if(localVals.contains(tmpPluginCode)) {
-				 		continue;
-				 	}
-				 	PluginInfoPO ppo = new PluginInfoPO();
-					ppo.setPluginCode(info.getPluginCode());
-					ppo.setPluginName(info.getPluginName());
-					ppo.setPluginCode(info.getPluginCode());
-					ppo.setPluginDescribe(info.getPluginDescribe());
-					ppo.setVersion(info.getVersion());
-					ppo.setDownloadStatus(0);
-					ppo.setReloadStatus(0);
+		LoadingAnimation.loadingAnimation("Loading...", v->{
+			Map<String, String> vals = new HashMap<>();
+			vals.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());	
+			vals.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
+			String content = "";
+			Connection conn = SqluckyAppDB.getConn();
+			try { 
+				
+				content = HttpUtil.post(ConfigVal.getSqluckyServer()+"/sqlucky/queryAllPlugin", vals);
+				System.out.println("content ==" + content);
+				 List<PluginInfoPO> ls=  JsonTools.jsonToList(content, PluginInfoPO.class);
+				 System.out.println(ls);
+				 List<Object> localVals = PoDao.selectFieldVal(conn, new  PluginInfoPO(), "PLUGIN_CODE");
+				 int count = 0;
+				 for(PluginInfoPO info : ls) {
+					 	String tmpPluginCode = info.getPluginCode();
+					 	if(localVals.contains(tmpPluginCode)) {
+					 		continue;
+					 	}
+					 	PluginInfoPO ppo = new PluginInfoPO();
+						ppo.setPluginCode(info.getPluginCode());
+						ppo.setPluginName(info.getPluginName());
+						ppo.setPluginCode(info.getPluginCode());
+						ppo.setPluginDescribe(info.getPluginDescribe());
+						ppo.setVersion(info.getVersion());
+						ppo.setDownloadStatus(0);
+						ppo.setReloadStatus(0);
+						
+						ppo.setCreatedTime(new Date());
+						PoDao.insert(conn, ppo);
+						count++;
+				 }
+				 
+				 MyAlert.infoAlert("同步插件信息", "同步到新插件" + count + "个");
+				 if(count > 0) {
+					 Platform.runLater(()->{
+							PluginManageAction.queryAction("", sheetDaV , allPluginTable);
+					 });
 					
-					ppo.setCreatedTime(new Date());
-					PoDao.insert(conn, ppo);
-					count++;
-			 }
-			 
-			 MyAlert.alert("同步插件信息", "同步到新插件" + count + "个");
-			 if(count > 0) {
-					PluginManageAction.queryAction("", sheetDaV , allPluginTable);
-			 }
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			SqluckyAppDB.closeConn(conn);
-		}
-		
-	}
-	
-	public static void downloadPlugin(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo>  allPluginTable) {
-		//
-		String pluginName = getSelectPluginName(allPluginTable);
-		Map<String, String> vals = new HashMap<>();
-		vals.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());	
-		vals.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
-		vals.put("PLUGIN_NAME", pluginName);
-		
-		
-		String modelPath = CommonUtility.sqluckyAppModsPath();
-//		modelPath += "/test.jar";
-		String fileName = HttpUtil.downloadPluginByPostToDir(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, vals);
-		
-		File pluginFile = new File(fileName);
-		if(pluginFile.exists()) {
-			// 更新 为以下载
-			ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
-			String id = selectRow.getValueByFieldName("ID");
-			PluginInfoPO ppo = new PluginInfoPO();
-			ppo.setId(Integer.valueOf(id));
-			PluginInfoPO valpo = new PluginInfoPO();
-			valpo.setDownloadStatus(1);
-			var conn = SqluckyAppDB.getConn();
-			try {
-				PoDao.update(conn, ppo, valpo);
+				 }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}finally {
 				SqluckyAppDB.closeConn(conn);
 			}
-			
-			MyAlert.alert("提示", "下载成功");
-			PluginManageAction.queryAction("", sheetDaV , allPluginTable);
-			allPluginTable.getSelectionModel().select(0);
-		}
+		});
 		
+		
+		
+	}
+	
+	public static void downloadPlugin(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo>  allPluginTable) {
+		if( CommonUtility.isLogin("Please Login First") == false) {
+			return ;
+		}
+		LoadingAnimation.addLoading("Download ...");
+		
+		CommonUtility.runThread(v->{
+			try {
+				int currentSelectIndex = allPluginTable.getSelectionModel().getSelectedIndex();
+				
+				String pluginName = getSelectPluginName(allPluginTable);
+				Map<String, String> vals = new HashMap<>();
+				vals.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());	
+				vals.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
+				vals.put("PLUGIN_NAME", pluginName);
+				
+				
+				String modelPath = CommonUtility.sqluckyAppModsPath();
+//				modelPath += "/test.jar";
+				String fileName = HttpUtil.downloadPluginByPostToDir(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, vals);
+				
+				File pluginFile = new File(fileName);
+				if(pluginFile.exists()) {
+					// 更新 为以下载
+					ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
+					String id = selectRow.getValueByFieldName("ID");
+					PluginInfoPO ppo = new PluginInfoPO();
+					ppo.setId(Integer.valueOf(id));
+					PluginInfoPO valpo = new PluginInfoPO();
+					valpo.setDownloadStatus(1);
+					var conn = SqluckyAppDB.getConn();
+					try {
+						PoDao.update(conn, ppo, valpo);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}finally {
+						SqluckyAppDB.closeConn(conn);
+					}
+					Platform.runLater(()->{
+						MyAlert.infoAlert("提示", "下载成功");
+						PluginManageAction.queryAction("", sheetDaV , allPluginTable);
+						allPluginTable.getSelectionModel().select(currentSelectIndex);
+					});
+					
+				}
+			} finally {
+				LoadingAnimation.rmLoading();
+			}
+		
+		});
+		
+		
+	
 		 
 	}
 	
@@ -246,14 +302,5 @@ public class PluginManageAction {
 		return name;
 	}
 	
-	public static void main(String[] args) {
-		
-		String  v = System.getProperty("jdk.module.path");
-		System.out.println(v);
-//		System.out.println(System.getProperties().toString());
-//		String str = "[{\"id\":1,\"pluginName\":\"test plugin name\",\"pluginCode\":\"1111\",\"pluginDescribe\":\"test test test \",\"comment\":\"test commtest comm\",\"filePath\":\"D:/test/instw.db\",\"createdAt\":null,\"updatedAt\":null}]";
-//		 List<PluginInfoPO> ls=  JsonTools.jsonToList(str, PluginInfoPO.class);
-//		 System.out.println(ls);
-	}
  
 }

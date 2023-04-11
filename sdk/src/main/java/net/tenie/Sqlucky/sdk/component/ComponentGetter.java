@@ -54,7 +54,8 @@ public final class ComponentGetter {
 	// 主界面 scene root
 	public static StackPane primarySceneRoot;
 		
-	
+	// 当前激活的 stage
+	public static StackPane currentStackPane;
 
 	public static ComboBox<Label> connComboBox;
 	

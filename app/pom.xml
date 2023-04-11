@@ -255,6 +255,7 @@
 					<mainClass>SQLucky/net.tenie.fx.main.SQLucky</mainClass>
 					<runtimePathOption>MODULEPATH </runtimePathOption>
 					<options>
+						<option>-Dhttps.protocols=TLSv1.2</option> 
 						<option>--add-modules=javafx.controls,javafx.fxml</option>
 						<option>--add-opens</option>
 						<option>javafx.graphics/javafx.scene.text=ALL-UNNAMED</option>

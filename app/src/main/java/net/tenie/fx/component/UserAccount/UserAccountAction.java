@@ -90,11 +90,11 @@ public class UserAccountAction {
 			Map<String, String> vals = new HashMap<>();
 			vals.put("email", email);	
 			vals.put("password", password);
-			String content = 
-					HttpUtil.post(ConfigVal.getSqluckyServer()+"/sqlucky/login", vals);
-//			String content = Request.post(ConfigVal.getSqluckyServer()+"/sqlucky/login")
-//			        .bodyForm(Form.form().add("email", email).add("password", password).build())
-//			        .execute().returnContent().asString();
+//			String content = 
+//					HttpUtil.post(ConfigVal.getSqluckyServer()+"/sqlucky/login", vals);
+			String content = Request.post(ConfigVal.getSqluckyServer()+"/sqlucky/login")
+			        .bodyForm(Form.form().add("email", email).add("password", password).build())
+			        .execute().returnContent().asString();
 			SqluckyUser user = JsonTools.strToObj(content, SqluckyUser.class);
 			if(user.getIsVip() != null ) {
 				if(user.getIsVip() == 1) {

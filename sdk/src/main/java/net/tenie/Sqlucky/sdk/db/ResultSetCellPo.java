@@ -26,13 +26,13 @@ public class ResultSetCellPo {
 	private static Logger logger = LogManager.getLogger(ResultSetCellPo.class);
 	// 单元哥的字段
 	private SheetFieldPo field;
-	// 单元格的值
+	// 单元格的值, 界面上显示的值
 	private StringProperty cellData; 
-	// 单元格的值-- 如果是时间, 保存时间的值, 保存字符串可能会丢失精度
-	private Date cellDataByDate; 
+	// 原始值, 在数据库里读到的原始的值
+	private Object dbOriginalValue; 
 	
 	// 单元格初始值
-	private StringProperty oldCellData;  // 如果被更新, 旧的值放这个理
+//	private StringProperty oldCellData;  // 如果被更新, 旧的值放这个理
 //	private Date  oldCellDataByDate;  // 如果被更新, 旧的值放这个理
 	// 单元格所在行对象的引用
 	private ResultSetRowPo currentRow;
@@ -46,8 +46,8 @@ public class ResultSetCellPo {
 	public void clean() {
 		field = null;
 		cellData = null;
-		cellDataByDate = null;
-		oldCellData = null;
+		dbOriginalValue = null;
+//		oldCellData = null;
 //		oldCellDataByDate = null;
 		currentRow = null;
 	}
@@ -59,10 +59,10 @@ public class ResultSetCellPo {
 //		addStringPropertyChangeListener();
 //	}
 	
-	protected ResultSetCellPo(ResultSetRowPo currentRow, StringProperty cellData, Date cellValByDate, SheetFieldPo field) {
+	protected ResultSetCellPo(ResultSetRowPo currentRow, StringProperty cellData, Object origVal, SheetFieldPo field) {
 		this.index = currentRow.cellSize();
 		this.cellData = cellData;
-		this.cellDataByDate = cellValByDate;
+		this.dbOriginalValue = origVal;
 		this.field = field; 
 		this.currentRow = currentRow;  
 	}
@@ -90,14 +90,6 @@ public class ResultSetCellPo {
 		this.field = field;
 	}
 
-	public StringProperty getOldCellData() {
-		return oldCellData;
-	}
-
-	public void setOldCellData(StringProperty oldCellData) {
-		this.oldCellData = oldCellData;
-	}
-
 	public ResultSetRowPo getCurrentRow() {
 		return currentRow;
 	}
@@ -122,26 +114,27 @@ public class ResultSetCellPo {
 		this.hasListener = hasListener;
 	}
 
-	public Date getCellDataByDate() {
-		return cellDataByDate;
+ 
+	public Object getDbOriginalValue() {
+		return dbOriginalValue;
 	}
 
-	public void setCellDataByDate(Date cellDataByDate) {
-		this.cellDataByDate = cellDataByDate;
+	public void setDbOriginalValue(Object dbOriginalValue) {
+		this.dbOriginalValue = dbOriginalValue;
 	}
 
 	@Override
 	public String toString() {
-		return "ResultSetCellPo [field=" + field + ", cellData=" + cellData + ", oldCellData=" + oldCellData
+		return "ResultSetCellPo [field=" + field + ", cellData=" + cellData  
 				+ ", index=" + index + "]";
 	}
 	
-//	public Date getOldCellDataByDate() {
-//		return oldCellDataByDate;
+//	public StringProperty getOldCellData() {
+//		return oldCellData;
 //	}
 //
-//	public void setOldCellDataByDate(Date oldCellDataByDate) {
-//		this.oldCellDataByDate = oldCellDataByDate;
+//	public void setOldCellData(StringProperty oldCellData) {
+//		this.oldCellData = oldCellData;
 //	}
 
 	// 数据单元格添加监听
@@ -167,8 +160,7 @@ public class ResultSetCellPo {
 					if (SqluckyBottomSheetUtility.dataPaneSaveBtn() != null) {
 						SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
 					}
-					if (cell.getOldCellData() == null) {
-						cell.setOldCellData(new SimpleStringProperty(oldValue));
+					if(cell.getHasModify() == false) {
 						cell.setHasModify(true);
 						cell.getCurrentRow().setHasModify(true);
 						// 保存按钮启用
@@ -177,8 +169,21 @@ public class ResultSetCellPo {
 								btn.setDisable(false);
 							});
 						}
-						
 					}
+						
+					// cell 发生改变, 对旧值进行缓存(现在已经没用用了, 但不能洁身)
+//					if (cell.getOldCellData() == null) {
+//						cell.setOldCellData(new SimpleStringProperty(oldValue));
+//						cell.setHasModify(true);
+//						cell.getCurrentRow().setHasModify(true);
+//						// 保存按钮启用
+//						if(btns !=null && btns.size() > 0) {
+//							btns.forEach(btn->{
+//								btn.setDisable(false);
+//							});
+//						}
+//						
+//					}
 					 
 
 				}

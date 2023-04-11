@@ -94,18 +94,14 @@ public class SelectInfoTableDao {
 				SheetFieldPo fieldpo = fpo.get(i);
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
-				Date valDate = null;
 				Object obj = rs.getObject(i + 1);
 				if (obj == null) {
 					val = new SimpleStringProperty("<null>");
 				} else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						Object objtmp = rs.getObject(i + 1);
-						DbDatePOJO pojo = sqluckyConn.DateToStringStringProperty(objtmp, dbtype);
-						var dateStr =pojo.getDateStr();
-						var dateVal =pojo.getDateVal();
+						var dateStr= sqluckyConn.DateTimeToString(objtmp, dbtype);
 						val = new SimpleStringProperty(dateStr);
-						valDate = dateVal;
 //						if (dpo != null) {
 //							var v = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
 //							val = new SimpleStringProperty(v);
@@ -123,7 +119,7 @@ public class SelectInfoTableDao {
 						val = new SimpleStringProperty(temp);
 					}
 				}
-				rowpo.addCell(val, valDate, fieldpo);
+				rowpo.addCell(val, obj, fieldpo);
 			}
 		}
 
