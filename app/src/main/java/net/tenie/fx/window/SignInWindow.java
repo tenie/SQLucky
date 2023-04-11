@@ -6,6 +6,8 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.jfoenix.controls.JFXCheckBox;
+
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,8 +25,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
@@ -49,9 +53,12 @@ public class SignInWindow {
 	}
 	// 创建窗口
 	public Stage CreateModalWindow(VBox vb,  String title) {
-		stageWindow = new Stage();
+		SqluckyStage sqlStage = new SqluckyStage(vb);
+		stageWindow = sqlStage.getStage();
+		Scene scene = sqlStage.getScene();
+//		stageWindow = new Stage();
 		vb.getStyleClass().add("connectionEditor");
-		Scene scene = new Scene(vb);
+//		Scene scene = new Scene(vb);
 		
 		vb.setPrefWidth(400);
 		vb.maxWidth(400);
@@ -70,11 +77,11 @@ public class SignInWindow {
 			
 		});
 
-		CommonUtility.loadCss(scene);
+//		CommonUtility.loadCss(scene);
 		stageWindow.initModality(Modality.APPLICATION_MODAL);
-		stageWindow.setScene(scene);
+//		stageWindow.setScene(scene);
 		
-		stageWindow.getIcons().add( ComponentGetter.LogoIcons);
+//		stageWindow.getIcons().add( ComponentGetter.LogoIcons);
 		stageWindow.setTitle(title);
 		stageWindow.setMaximized(false);
 		stageWindow.setResizable(false);
@@ -190,7 +197,8 @@ public class SignInWindow {
 		}else {
 			SignInBtn = new Button(SignIn); 
 		}
-		SignInBtn.setOnAction(V->{ 
+		SignInBtn.setOnAction(V->{
+			
 	    	String emailVal = tfemail.getText();
 	    	String passwordVal = password.getText();
 	    	if(emailVal == null || emailVal.trim().length() == 0) {
@@ -206,26 +214,35 @@ public class SignInWindow {
 	    	 
 	    	
 	    	boolean tf = rememberCB.isSelected();
-	    	boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );
+	    	LoadingAnimation.loadingAnimation("Sign In...", v->{
+	    		boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );
+		    	
+		    	if(seccuss) {
+		    		MyAlert.infoAlert("登入成功", "登入成功"); 
+		    		ConfigVal.SQLUCKY_EMAIL.set(emailVal);
+		    		ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
+		    		ConfigVal.SQLUCKY_REMEMBER.set(tf);
+		    		ConfigVal.SQLUCKY_LOGIN_STATUS.set(true);
+		    		Platform.runLater(()->{
+		    			signInBtn.setText(signedIn);
+			    		signInBtn.setDisable(true);
+		    		});
+		    		
+//		    		stageWindow.close();
+		    	}else {
+		    		MyAlert.errorAlert( "失败");
+		    		ConfigVal.SQLUCKY_EMAIL.set("");
+		    		ConfigVal.SQLUCKY_PASSWORD.set("");
+		    		UserAccountAction.delUser();
+		    		ConfigVal.SQLUCKY_LOGIN_STATUS.set(false);
+		    		
+		    		Platform.runLater(()->{
+		    			signInBtn.setText(SignIn);
+			    		signInBtn.setDisable(false);
+		    		});
+		    	}
+			});
 	    	
-	    	if(seccuss) {
-	    		MyAlert.alert("登入成功", "登入成功"); 
-	    		ConfigVal.SQLUCKY_EMAIL.set(emailVal);
-	    		ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
-	    		ConfigVal.SQLUCKY_REMEMBER.set(tf);
-	    		ConfigVal.SQLUCKY_LOGIN_STATUS.set(true);
-	    		signInBtn.setText(signedIn);
-	    		signInBtn.setDisable(true);
-	    		stageWindow.close();
-	    	}else {
-	    		MyAlert.errorAlert( "失败");
-	    		ConfigVal.SQLUCKY_EMAIL.set("");
-	    		ConfigVal.SQLUCKY_PASSWORD.set("");
-	    		UserAccountAction.delUser();
-	    		ConfigVal.SQLUCKY_LOGIN_STATUS.set(false);
-	    		signInBtn.setText(SignIn);
-	    		signInBtn.setDisable(false);
-	    	}
 	    
 		});
 		return SignInBtn;

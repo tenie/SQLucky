@@ -328,7 +328,7 @@ public class SelectDao {
 				
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
-				Date valDate = null;
+//				Date valDate = null;
 				
 				Object obj = rs.getObject(i + 1);
 				if(obj == null) {
@@ -336,11 +336,8 @@ public class SelectDao {
 				}else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						Object objtmp = rs.getObject(i + 1);
-						DbDatePOJO pojo = sqluckyConn.DateToStringStringProperty(objtmp, dbtype);
-						var dateStr =pojo.getDateStr();
-						var dateVal =pojo.getDateVal();
+						var dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
 						val = new SimpleStringProperty(dateStr);
-						valDate = dateVal;
 //						if (sqluckyConn != null) {
 //							
 //						}
@@ -357,7 +354,7 @@ public class SelectDao {
 						val = new SimpleStringProperty(temp); 
 					}
 				}
-				rowpo.addCell(val, valDate, fieldpo);
+				rowpo.addCell(val, obj, fieldpo);
 			}
 
 			setPo.addRow(rowpo); 
@@ -436,24 +433,19 @@ public class SelectDao {
 				SheetFieldPo fieldpo = fpo.get(i);
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
-				Date valDate = null;
 				Object obj = rs.getObject(i + 1);
 				if(obj == null) {
 					val = new SimpleStringProperty("<null>");
 				}else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
-						Object objtmp = rs.getObject(i + 1);
-						DbDatePOJO pojo = sqluckyConn.DateToStringStringProperty(objtmp, dbtype);
-						var dateStr =pojo.getDateStr();
-						var dateVal =pojo.getDateVal();
+						var dateStr = sqluckyConn.DateTimeToString(obj, dbtype);
 						val = new SimpleStringProperty(dateStr);
-						valDate = dateVal;
 					} else {
 						String temp = rs.getString(i+1);
 						val = new SimpleStringProperty(temp); 
 					}
 				}
-				rowpo.addCell(val,valDate, fieldpo);
+				rowpo.addCell(val, obj, fieldpo);
 			}
 			setPo.addRow(rowpo); 
 		}

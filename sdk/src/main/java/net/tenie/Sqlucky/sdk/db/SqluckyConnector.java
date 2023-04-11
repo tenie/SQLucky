@@ -1,16 +1,11 @@
 package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.util.Date;
 import java.util.Map;
 import java.util.Set;
-
 import javafx.scene.control.TreeItem;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
  
 
 public interface SqluckyConnector {
@@ -68,9 +63,7 @@ public interface SqluckyConnector {
 	public boolean isJdbcUrlUse();
 	
 	// 自定义需要展示的时间格式, 转换成字符串
-	public DbDatePOJO DateToStringStringProperty(Object dateVal, int type);
-	// 在sql 中 关于时间 的PreparedStatement 设置 
-	public void setDatePreparedStatement(PreparedStatement pstmt, int idx, ResultSetCellPo cellpo);
+	public String DateTimeToString(Object dateVal, int sqlFiledtype);
 //	public String sqlDateToConditionStr(String dateStr, int type);
 //	public  Map<String, DbSchemaPo> fetchSchemasInfo();
 //	String getJdbcUrl();

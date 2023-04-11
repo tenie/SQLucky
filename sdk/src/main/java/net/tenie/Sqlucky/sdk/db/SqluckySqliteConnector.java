@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -46,27 +47,22 @@ public class SqluckySqliteConnector extends DbConnector {
 		return val;
 	} 
 
-	@Override
-	public DbDatePOJO DateToStringStringProperty(Object obj, int type) {  
-		String val = null;
-		DbDatePOJO po = new DbDatePOJO();
-		
-		if(obj instanceof String) {
-			val = (String) obj;
-			po.setDateStr(val);
-			po.setDateVal(StrUtils.StrToDate(val, ConfigVal.dateFormateL));
-		}else if( obj instanceof Long) {
-			Date date = new Date((long) obj);
-//			val = CommonUtility.DateOrDateTimeToString(type, date);
-			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
-			
-			po.setDateStr(val);
-			po.setDateVal(date);
-		}
-		
-	
-		return po;
-	}
+//	@Override
+//	public String DateToStringStringProperty(Object obj, int type){  
+//		String val = null; 
+//		
+//		if(obj instanceof String) {
+//			val = (String) obj;
+//		}else if( obj instanceof Long) {
+//			Date date = new Date((long) obj);
+////			val = CommonUtility.DateOrDateTimeToString(type, date);
+//			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
+//			
+//		}
+//		
+//	
+//		return val;
+//	}
 //	@Override
 //	public String DateToStringStringProperty(Object obj, int type) {  
 //		String val = "";
@@ -189,6 +185,8 @@ public class SqluckySqliteConnector extends DbConnector {
 		}
 		return getConnPo().getConn();
 	}
+
+ 
 
  
 

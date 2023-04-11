@@ -64,6 +64,7 @@ public class UpdateDao {
 			// 更新
 			int i = pstmt.executeUpdate();
 			msg = "Ok, Update " + i + " ;\n" + sql +" ;\n"+ valStr;
+			logger.info( msg);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;

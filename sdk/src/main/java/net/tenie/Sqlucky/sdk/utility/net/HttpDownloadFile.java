@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.net.ssl.SSLSocket;
+
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
@@ -15,22 +17,42 @@ import org.apache.hc.client5.http.entity.mime.StringBody;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClients;
+//import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.ContentType;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.ParseException;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
+import org.apache.hc.core5.ssl.SSLContexts;
 
 public class HttpDownloadFile {
 	
 	//"http://127.0.0.1:8088/sqlucky/confDownload"
 	public static void getInfo2(String url, Map<String, String> strPamas, String saveFile) {
+		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(SSLContexts.createDefault()){
 
+		    @Override
+		    protected void prepareSocket(SSLSocket socket) {
+
+		        String hostname = socket.getInetAddress().getHostName();
+		        if (hostname.endsWith("internal.system.com")){
+		            socket.setEnabledProtocols(new String[] { "TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3" });
+		        }
+		        else {
+		            socket.setEnabledProtocols(new String[] {"TLSv1.3"});
+		        }
+		    }
+		}; 
+//		HttpClients.custom().
+//		CloseableHttpClient httpClient2 = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+		  
        
 		//创建HttpClient对象
+//        try( httpClient){
         try( CloseableHttpClient httpClient = HttpClients.createDefault()){
-        	
+            		
             //以Get方式访问
             HttpPost httpPost = new HttpPost(url);
             List<NameValuePair> nvps = new ArrayList<>();

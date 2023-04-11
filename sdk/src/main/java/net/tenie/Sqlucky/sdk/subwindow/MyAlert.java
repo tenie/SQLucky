@@ -33,7 +33,7 @@ public class MyAlert {
 		});
 		
 	}
-	public static void alert(String title, String containTxt) {
+	public static void alertWait(String title, String containTxt) {
 		showMsg(containTxt, ComponentGetter.INFO, true);
 	}
 

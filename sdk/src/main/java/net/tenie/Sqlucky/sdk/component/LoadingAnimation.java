@@ -27,6 +27,7 @@ public class LoadingAnimation {
 	
 	public static  void addLoading(StackPane root, String loadingString,  int fontSize) {
 		Platform.runLater(() -> {
+			root.getChildren().get(0).setDisable(true);
 			lb = new Label(loadingString);
 			Animation = IconGenerator.svgImageUnactive("icomoon-spinner3",  fontSize);
 			CommonUtility.rotateTransition(Animation);
@@ -50,12 +51,23 @@ public class LoadingAnimation {
 
 	}
 	
+	
+//	
+	public static  void addLoading(String loadingString) { 
+		addLoading(ComponentGetter.currentStackPane, loadingString , 30);
+	}
+	public static  void rmLoading() {
+		StackPane root = ComponentGetter.currentStackPane;
+		rmLoading(root);
+	}
+	
+	
 	//	移除loading...
 	public static  void rmLoading(StackPane root) {
 		Platform.runLater(()->{
 			 root.getChildren().remove(lb);
 			 root.setCursor(Cursor.DEFAULT);
-			
+			 root.getChildren().get(0).setDisable(false);
 //			 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(lb, 1500);
 //			 fadeTransition.setOnFinished(e ->{
 //				 root.getChildren().remove(lb);
@@ -77,5 +89,19 @@ public class LoadingAnimation {
 		th.start();
 		
 	}
+	
+	public static void loadingAnimation( String loadingString, Consumer<String> consumer) {
+		StackPane root = ComponentGetter.currentStackPane;
+		addLoading(root, loadingString , 30);
+		Thread th =  new Thread(()->{
+			consumer.accept("");
+			rmLoading(root);
+		});
+		th.start();
+		
+	}
+	
+	
+	
 	
 }
