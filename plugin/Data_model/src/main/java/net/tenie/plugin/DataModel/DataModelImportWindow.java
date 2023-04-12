@@ -127,8 +127,8 @@ public class DataModelImportWindow {
 	
 	public static DataModelInfoPo tmpDataModelPoVal  = null;
 	public static Button openFileBtn(TextField tfFilePath ,TextField tfModelName ) {
-		Button saveBtn = new Button("...");
-		saveBtn.setOnMouseClicked(e->{
+		Button selectFileBtn = new Button("...");
+		selectFileBtn.setOnMouseClicked(e->{
 			// 获取文件
 			File jsonFile = FileOrDirectoryChooser.showOpenJsonFile("Open", ComponentGetter.primaryStage);
 			if(jsonFile != null) {
@@ -150,7 +150,7 @@ public class DataModelImportWindow {
 		
 			
 		});
-		return saveBtn;
+		return selectFileBtn;
 	}
 	
 	public static Button saveBtn(TextField tfModelName) {

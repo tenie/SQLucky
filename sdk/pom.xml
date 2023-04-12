@@ -17,8 +17,6 @@
 <dependency>
     <groupId>org.projectlombok</groupId>
     <artifactId>lombok</artifactId>
-    <version>1.18.26</version>
-    <scope>provided</scope>
 </dependency>
 	
 <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations -->
@@ -180,6 +178,14 @@
 						<arg>--add-exports</arg>
 						<arg>org.controlsfx.controls/impl.org.controlsfx.i18n=SQLucky.sdk</arg>
 					</compilerArgs>
+					
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>1.18.26</version>
+						</path>
+					</annotationProcessorPaths>
 				</configuration>
 			</plugin>
 

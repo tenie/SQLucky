@@ -261,7 +261,8 @@ public class DataModelOption {
 			}
 		}
 		// 展开模型treeItem
-		DataModelTabTree.treeRoot.getChildren().get(0).setExpanded(exists);
+		if( DataModelTabTree.treeRoot.getChildren().size() > 0)
+			DataModelTabTree.treeRoot.getChildren().get(0).setExpanded(exists);
 	}
 	
 	// 查询字符串 ObservableList<TreeItem<TreeNodePo>> rs =  FXCollections.observableArrayList();
