@@ -1,0 +1,22 @@
+package net.tenie.Sqlucky.sdk.po.component;
+
+import java.util.List;
+
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+
+//<Model xmlns:a="attribute" xmlns:c="collection" xmlns:o="object">
+@JacksonXmlRootElement(namespace = "collection", localName = "Tables")
+public class xmlPdmCTables {
+	
+//	c:Tables
+	@JacksonXmlElementWrapper(namespace = "object", localName = "Table")
+    private List<xmlPdmOTable> oTable;
+
+	@Override
+	public String toString() {
+		return "xmlPdmCTables [oTable=" + oTable + "]";
+	}
+    
+    
+}
