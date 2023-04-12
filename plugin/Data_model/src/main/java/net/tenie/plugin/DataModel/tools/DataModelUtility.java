@@ -2,13 +2,14 @@ package net.tenie.plugin.DataModel.tools;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
 import javax.sql.DataSource;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.mapping.Environment;
 import org.apache.ibatis.session.Configuration;
@@ -18,8 +19,9 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.controlsfx.control.tableview2.FilteredTableView;
+
 import com.alibaba.fastjson.JSONObject;
-import com.jfoenix.controls.JFXButton;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ListChangeListener;
@@ -30,18 +32,15 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.PoDao;
-import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.db.UpdateDao;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -172,7 +171,8 @@ public class DataModelUtility {
 
 	// 模型插入到数据库
 	public static Long insertDataModel(DataModelInfoPo dmp) {
-		var conn = SqluckyAppDB.getConnNotAutoCommit();
+		var conn = SqluckyAppDB.getConn();
+//		var conn = SqluckyAppDB.getConnNotAutoCommit();
 		
 		Long modelID = -1L;
 		try {  
@@ -194,11 +194,14 @@ public class DataModelUtility {
 				}
 
 			}
-			SqluckyAppDB.closeConnAndCommit(conn);
+//			SqluckyAppDB.closeConnAndCommit(conn);
 		} catch (Exception e) {
-			SqluckyAppDB.closeConnAndRollback(conn);
+//			SqluckyAppDB.closeConnAndRollback(conn);
 			e.printStackTrace();
-		} 
+		}finally {
+			SqluckyAppDB.closeConn(conn);
+			
+		}
 		return modelID;
 	}
 	
