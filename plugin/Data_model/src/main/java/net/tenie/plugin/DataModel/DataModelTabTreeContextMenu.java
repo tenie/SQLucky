@@ -1,7 +1,5 @@
 package net.tenie.plugin.DataModel;
 
-import java.util.function.Consumer;
-
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -32,7 +30,8 @@ public class DataModelTabTreeContextMenu {
 		modelImport = new MenuItem("Import Model");
 		modelImport.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
 		modelImport.setOnAction(e -> {
-			DataModelUtility.modelFileImport("UTF-8");
+//			DataModelUtility.modelFileImport("UTF-8");
+			DataModelImportWindow.createModelImportWindow();
 		});
 		 
 		query = new MenuItem("Query Model");
@@ -90,14 +89,14 @@ public class DataModelTabTreeContextMenu {
 		contextMenu.getItems().addAll(modelImport,query,new SeparatorMenuItem(),  open, close, rename, delete);
 		contextMenu.setOnShowing(e->{
 			var item = DataModelTabTree.currentSelectItem();
-			boolean ismodel =  false;
+			Boolean ismodel = null ;
 			if(item != null) {
 				if( item.getValue() != null ) {
 					ismodel = item.getValue().getIsModel();
 				}
 			}
 //			boolean ismodel = item.getValue().getIsModel();
-			if(ismodel) {
+			if(ismodel !=null && ismodel) {
 				delete.setDisable(false);
 //				refresh.setDisable(false);
 				if( item.getChildren().size() == 0) {

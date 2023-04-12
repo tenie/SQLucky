@@ -1,5 +1,16 @@
 package net.tenie.Sqlucky.sdk.utility;
  
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.Map;
+
+import org.dom4j.DocumentException;
+import org.dom4j.io.OutputFormat;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -8,20 +19,8 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-
 import lombok.extern.slf4j.Slf4j;
 import net.tenie.Sqlucky.sdk.po.component.xmlPdmModel;
-
-import org.dom4j.DocumentException;
-import org.dom4j.io.OutputFormat;
-import org.dom4j.io.SAXReader;
-import org.dom4j.io.XMLWriter;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * @ClassName: XMLUtil
@@ -142,7 +141,7 @@ public class XmlUtil {
 //        String xmlStr = XMLUtil.beanToXmlStr(xmlSendFileModel);
 //        // 写入xml字符串到文件。
 //        XMLUtil.strToXmlFile(xmlStr, new File("D:\\myGit\\xmltext.xml"));
-//        log.info("xml文件生成完毕");
+        log.info("xml文件生成完毕");
 //
 //        //读取一个XML文件成XML字符串格式。
 ////        log.info("输出XML文件的字符串 = " + XMLUtil.xmlFileToString("D:\\myGit\\xmltext.xml"));
