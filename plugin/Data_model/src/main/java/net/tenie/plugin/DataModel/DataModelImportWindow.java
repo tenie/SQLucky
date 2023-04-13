@@ -9,9 +9,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
@@ -26,10 +29,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
+import net.tenie.plugin.DataModel.po.ModelFileType;
 import net.tenie.plugin.DataModel.tools.DataModelDAO;
 import net.tenie.plugin.DataModel.tools.DataModelUtility;
 
@@ -42,17 +48,21 @@ public class DataModelImportWindow {
 	// 编辑连接时记录连接状态
 	public  static boolean editLinkStatus = false;
 	// 
-	public  static StackPane wdroot;
+//	public  static StackPane wdroot;
 	public  static Stage stage;
 	
 	private static Logger logger = LogManager.getLogger(DataModelImportWindow.class);
 	public static Stage CreateModalWindow(VBox vb) {
 
-	    stage = new Stage();
+//	    stage = new Stage();
+	   
+//	    wdroot =  new StackPane(vb);
+//		Scene scene = new Scene(wdroot);
 		
-	    wdroot =  new StackPane(vb);
-		Scene scene = new Scene(wdroot);
-		CommonUtility.loadCss(scene);
+		 SqluckyStage sqluckyStatge = new SqluckyStage(vb);
+		 stage =  sqluckyStatge.getStage();
+		 Scene scene = sqluckyStatge.getScene();
+//		CommonUtility.loadCss(scene);
 		
 		vb.getStyleClass().add("connectionEditor");
 	
@@ -75,13 +85,24 @@ public class DataModelImportWindow {
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 		
-		stage.getIcons().add( ComponentGetter.LogoIcons);
+//		stage.getIcons().add( ComponentGetter.LogoIcons);
 		stage.setMaximized(false);
 		stage.setResizable(false);
 		return stage;
 	}
 
 	public static void createModelImportWindow( ) {
+		
+		
+		Label lbType= new Label("Model File Type"); 
+		// 文件类型选择
+		ChoiceBox<String> typeChoiceBox = new ChoiceBox<String>(ModelFileType.allModeFileType());
+//		typeChoiceBox.getItems().add(".pdm");
+//		typeChoiceBox.getItems().add(".chnr.json");
+		typeChoiceBox.setTooltip(MyTooltipTool.instance("Select File Type"));
+//		.
+		 
+		
 		String filePath = "File path"; 
 		
 		Label lbFilePath= new Label(filePath);  
@@ -103,15 +124,27 @@ public class DataModelImportWindow {
 		 
 	    
 		// 文件选择按钮
-		var selectFile = openFileBtn(tfFilePath, tfModelName ); 
+		var selectFile = openFileBtn(tfFilePath, tfModelName ,typeChoiceBox); 
+		selectFile.setDisable(true);
 		HBox fileBox = new HBox();
 		fileBox.getChildren().addAll( tfFilePath, selectFile);
 		var savebtn = saveBtn( tfModelName );
 		savebtn.disableProperty().bind( tfFilePath.textProperty().isEmpty());
 		var cancel = cancelBtn();
 				 
+		// 类型必填, 类型没有值不能选文件
+		typeChoiceBox.valueProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
+			if(newValue!=null && !"".equals(newValue)) {
+				selectFile.setDisable(false);
+			}else {
+				selectFile.setDisable(true);
+			}
+		});
 		
 		List<Region> list = new ArrayList<>();
+		list.add(    lbType);
+		list.add(    typeChoiceBox);
+		
 		list.add(    lbFilePath);
 		list.add(    fileBox);
 		list.add(    lbModelName);
@@ -126,26 +159,39 @@ public class DataModelImportWindow {
 	}  
 	
 	public static DataModelInfoPo tmpDataModelPoVal  = null;
-	public static Button openFileBtn(TextField tfFilePath ,TextField tfModelName ) {
+	
+	
+	public static Button openFileBtn(TextField tfFilePath ,TextField tfModelName, ChoiceBox<String> typeChoiceBox ) {
 		Button selectFileBtn = new Button("...");
 		selectFileBtn.setOnMouseClicked(e->{
+			// 文件类型
+			String fileType = typeChoiceBox.getValue();
+			String fileTypeName  = fileType.substring(1);
 			// 获取文件
-			File jsonFile = FileOrDirectoryChooser.showOpenJsonFile("Open", ComponentGetter.primaryStage);
-			if(jsonFile != null) {
+			File modelfile = FileOrDirectoryChooser.showOpen("Open",fileTypeName, ComponentGetter.primaryStage);
+			if(modelfile != null) {
 				tmpDataModelPoVal = null;
-				String path = jsonFile.getAbsolutePath();
+				String path = modelfile.getAbsolutePath();
 				// 读模型数据
-				try {
-					tmpDataModelPoVal = DataModelUtility.readJosnModel("UTF-8", jsonFile);
-					String mdName = tmpDataModelPoVal.getName();
-					
-					tfFilePath.setText(path);
-					tfModelName.setText(mdName);
-					
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				
+			 
+//					tmpDataModelPoVal = DataModelUtility.readJosnModel("UTF-8", jsonFile);
+					try {
+						tmpDataModelPoVal = DataModelUtility.readModelFileByType("UTF-8", modelfile, fileType);
+					} catch (Exception e1) { 
+						e1.printStackTrace();
+						if(fileType.equals(ModelFileType.PDM) || fileType.equals(ModelFileType.CDM)) {
+							MyAlert.errorAlert("文件解析失败, 可能文件格式未适配, 可能xml中有非法unicode字符, 等等状况");
+						}else {
+							MyAlert.errorAlert("文件解析失败");
+						}
+						
+					}
+					if(tmpDataModelPoVal != null) {
+						String mdName = tmpDataModelPoVal.getName();
+						
+						tfFilePath.setText(path);
+						tfModelName.setText(mdName);
+					}
 			}
 		
 			
@@ -175,7 +221,7 @@ public class DataModelImportWindow {
 				
 				tmpDataModelPoVal.setName(mdName);
 				
-				DataModelUtility.saveDataModelToDB(wdroot, tmpDataModelPoVal, v->{
+				DataModelUtility.saveDataModelToDB( tmpDataModelPoVal, v->{
 					Platform.runLater(()->{
 						stage.close();
 					});
@@ -202,7 +248,7 @@ public class DataModelImportWindow {
 	// 组件布局
 	public static void layout(List<Region> list    ) {
 		VBox vb = new VBox();
-		Label title = new Label("Import Model Json File");
+		Label title = new Label("Import Model File");
 		title.setPadding(new Insets(15));
 		AppComponent appComponent = ComponentGetter.appComponent; 
 		title.setGraphic(appComponent.getIconDefActive("gears"));

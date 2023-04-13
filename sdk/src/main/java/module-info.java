@@ -27,12 +27,12 @@ open module SQLucky.sdk {
 	requires flowless;
 	requires sql.formatter;
 	requires org.slf4j;
-	requires fastjson;
-	requires com.fasterxml.jackson.dataformat.xml;
-	requires com.fasterxml.jackson.core;
+	requires fastjson; 
 	
-	requires com.fasterxml.jackson.databind;
 	requires org.dom4j;
+	requires com.fasterxml.jackson.dataformat.xml;
+	requires com.fasterxml.jackson.core; 
+	requires com.fasterxml.jackson.databind;
 	requires com.fasterxml.jackson.annotation;
 	requires lombok;
 	

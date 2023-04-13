@@ -56,6 +56,8 @@ import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.DataModelTableFieldsPo;
 import net.tenie.plugin.DataModel.po.DataModelTablePo;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
+import net.tenie.plugin.DataModel.po.ModelFileType;
+import net.tenie.plugin.DataModel.xmlPDM.OptionPdmFile;
 
 public class DataModelUtility {
 	/**
@@ -130,11 +132,9 @@ public class DataModelUtility {
 		}
 	}
 	// 保存按钮触发保存数据操作
-	public static void saveDataModelToDB(StackPane wdroot , DataModelInfoPo val, Consumer< String >  caller) {
+	public static void saveDataModelToDB( DataModelInfoPo val, Consumer< String >  caller) {
 		// 载入动画
-		LoadingAnimation.addLoading(wdroot, "Saving....");
-//		后台执行 数据导入
-		CommonUtility.runThread(v -> {
+		LoadingAnimation.loadingAnimation("Saving....", v->{
 			try {
 				// 数据插入到数据库
 				Long mid = DataModelUtility.insertDataModel(val);
@@ -144,11 +144,32 @@ public class DataModelUtility {
 			} catch (Exception e) {
 				e.printStackTrace();
 				MyAlert.errorAlert(e.getMessage());
-			} finally {
-				// 移除动画
-				LoadingAnimation.rmLoading(wdroot);
 			}
 		});
+//		
+	}
+	
+	/**
+	 * 根据文件类型, 调用不同的文件解析方法
+	 * @param encode
+	 * @param f
+	 * @param fileType
+	 * @return
+	 * @throws Exception 
+	 */
+	public static DataModelInfoPo readModelFileByType(String encode, File f, String fileType) throws Exception {
+		DataModelInfoPo po = null;
+		try {
+			if(fileType.equals(ModelFileType.CHNR_JSON)) {
+					po =  readJosnModel(encode, f);
+			}else if(fileType.equals(ModelFileType.PDM) || fileType.equals(ModelFileType.CDM)) {
+					po = OptionPdmFile.read(f);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+		return po;
 	}
 	
 	

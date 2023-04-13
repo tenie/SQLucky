@@ -39,6 +39,8 @@ import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
+import net.tenie.plugin.backup.po.DownloadBackupPo;
+import net.tenie.plugin.backup.po.SqluckyBackup;
 
 /**
  * 查询界面fxml 的controller

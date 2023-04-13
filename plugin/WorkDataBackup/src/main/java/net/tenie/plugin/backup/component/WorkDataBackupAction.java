@@ -29,6 +29,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.ZipUtil;
 import net.tenie.Sqlucky.sdk.utility.net.HttpDownloadFile;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
+import net.tenie.plugin.backup.po.BackupInfoPO;
 /**
  * 备份相关的一些执行函数
  * @author tenie

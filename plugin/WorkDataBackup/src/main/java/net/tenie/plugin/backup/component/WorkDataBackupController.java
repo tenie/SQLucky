@@ -24,6 +24,8 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
+import net.tenie.plugin.backup.po.BackupInfoPO;
+import net.tenie.plugin.backup.po.DownloadBackupPo;
 /**
  * 备份主界面fxml 的controller
  * @author tenie

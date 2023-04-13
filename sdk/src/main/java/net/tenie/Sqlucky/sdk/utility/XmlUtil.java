@@ -2,8 +2,13 @@ package net.tenie.Sqlucky.sdk.utility;
  
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import org.dom4j.DocumentException;
@@ -20,7 +25,6 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
 import lombok.extern.slf4j.Slf4j;
-import net.tenie.Sqlucky.sdk.po.component.xmlPdmModel;
 
 /**
  * @ClassName: XMLUtil
@@ -95,15 +99,19 @@ public class XmlUtil {
      * @Param [fileName]
      * @return java.lang.String
      */
-    public static String xmlFileToString(String fileName) {
+    public static String xmlFileToString(String fileName) throws Exception {
         try {
+        	InputStream in = new FileInputStream(fileName);
+            InputStreamReader reader = new InputStreamReader(in, Charset.forName("utf-8"));
+            
             SAXReader saxReader = new SAXReader();//新建一个解析类
-            org.dom4j.Document tempDocument = saxReader.read(fileName);//读入一个文件
+            org.dom4j.Document tempDocument = saxReader.read(reader);//读入一个文件
             return tempDocument.asXML();
-        } catch (DocumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
-        return null;
+//        return null;
     }
 
     /**
@@ -131,38 +139,7 @@ public class XmlUtil {
 
     }
     
-    public static void main(String[] args) throws IOException {
-//    	//构造数据模型实例并赋值
-//        XmlSendFileModel xmlSendFileModel = XmlSendFileModel.builder(). 
-//                bankType("SELF").
-//                moneySum(new BigDecimal(20)).
-//                totalIty(new BigDecimal(20)).build();
-//        //调用util类把bean对象转换成XML字符串
-//        String xmlStr = XMLUtil.beanToXmlStr(xmlSendFileModel);
-//        // 写入xml字符串到文件。
-//        XMLUtil.strToXmlFile(xmlStr, new File("D:\\myGit\\xmltext.xml"));
-        log.info("xml文件生成完毕");
-//
-//        //读取一个XML文件成XML字符串格式。
-////        log.info("输出XML文件的字符串 = " + XMLUtil.xmlFileToString("D:\\myGit\\xmltext.xml"));
-//        String xmlFileToString = XmlUtil.xmlFileToString("D:\\myGit\\xmltext.xml");
-    	  String xmlFileToString = XmlUtil.xmlFileToString("D:\\workDir\\data\\InfoDMS&GMS_DB2.pdm");
-//        
-//        
-//        //读取一个XML文件成XML字符串格式。
-////        String xmlFileToString = XmlUtil.xmlFileToString(file.getAbsolutePath());
-        xmlPdmModel model = XmlUtil.xmlToBean(xmlFileToString, xmlPdmModel.class);
-        
-//       System.out.println(model);
-       System.out.println(model.getoRootObject().getcChildren().size());
-       System.out.println(model.getoRootObject().getcChildren().get(0).getcPackages().size());
 
-       System.out.println(model.getoRootObject().getcChildren().get(0).getcPackages().get(0).getcTables().size());
-
-       System.out.println(model.getoRootObject().getcChildren().get(0).getcPackages().get(1).getcTables().size());
-       System.out.println(model.getoRootObject().getcChildren().get(0).getcPackages().get(2).getcTables());
-       System.out.println(model.getoRootObject().getcChildren().get(0).getcPackages().get(3));
-	}
     
     
 }
