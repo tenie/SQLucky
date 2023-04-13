@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.po.component;
+package net.tenie.plugin.DataModel.xmlCDM;
 
 import java.util.List;
 
@@ -7,17 +7,19 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 //<Model xmlns:a="attribute" xmlns:c="collection" xmlns:o="object">
-@JacksonXmlRootElement(namespace = "object", localName = "Column")
-public class xmlPdmOIndex {
+//@JacksonXmlRootElement(namespace = "object", localName = "Model")
+public class xmlCdmOModel {
 
 	@JacksonXmlProperty(namespace = "attribute", localName = "ObjectID")
 	private String objectId;
-
 	@JacksonXmlProperty(namespace = "attribute", localName = "Name")
 	private String name;
 
 	@JacksonXmlProperty(namespace = "attribute", localName = "Code")
 	private String code;
+	 
+	@JacksonXmlElementWrapper(namespace = "collection", localName = "Packages")
+    private List<xmlCdmOPackage> cPackages;
 
 	public String getObjectId() {
 		return objectId;
@@ -45,10 +47,28 @@ public class xmlPdmOIndex {
 
 	@Override
 	public String toString() {
-		return "xmlPdmOIndex [objectId=" + objectId + ", name=" + name + ", code=" + code + "]";
+		return "xmlPdmOModel [objectId=" + objectId + ", name=" + name + ", code=" + code + ", cPackages=" + cPackages
+				+ "]";
 	}
+
+	public List<xmlCdmOPackage> getcPackages() {
+		return cPackages;
+	}
+
+	public void setcPackages(List<xmlCdmOPackage> cPackages) {
+		this.cPackages = cPackages;
+	}
+
+//	public List<xmlPdmOPackage> getcPackages() {
+//		return cPackages;
+//	}
+//
+//	public void setcPackages(List<xmlPdmOPackage> cPackages) {
+//		this.cPackages = cPackages;
+//	}
+
+ 
+	 
     
-    
-	
     
 }

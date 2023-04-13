@@ -38,6 +38,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.IconGenerator;
@@ -62,13 +63,18 @@ public class ConnectionEditor {
 	private static Logger logger = LogManager.getLogger(ConnectionEditor.class);
 	private static   Stage stage;
 	public static Stage CreateModalWindow(VBox vb) {
-		stage = new Stage();
+//		stage = new Stage();
 		vb.getStyleClass().add("connectionEditor");
-
-		Scene scene = new Scene(vb);
-		
 		vb.setPrefWidth(450);
 		vb.maxWidth(450);
+		
+//		Scene scene = new Scene(vb);
+		SqluckyStage sqluckyStage = new SqluckyStage(vb);
+		Scene scene = sqluckyStage.getScene();
+		stage = sqluckyStage.getStage();
+				
+				
+		
 		AnchorPane bottomPane = new AnchorPane();
 		bottomPane.setPadding(new Insets(10));
 
@@ -82,11 +88,11 @@ public class ConnectionEditor {
 			stage.close();
 		});
 
-		CommonUtility.loadCss(scene);
+//		CommonUtility.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 		
-		stage.getIcons().add(ComponentGetter.LogoIcons);
+//		stage.getIcons().add(ComponentGetter.LogoIcons);
 		stage.setMaximized(false);
 		stage.setResizable(false);
 		stage.setOnHidden(e->{

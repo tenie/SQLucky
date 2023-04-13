@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ 
+  
+<Model xmlns:a="attribute" xmlns:c="collection" xmlns:o="object">
+  <o:RootObject>
+	<c:Children> 
+		<o:Model>
+			<a:ObjectID>BECD3CEE-78B2-4801-81C8-05D7CF1689F2</a:ObjectID>
+			<a:Name>InfoDMS&amp;GMS_DB2</a:Name>
+			<a:Code>INFODMS&amp;GMS_DB2</a:Code>
+			<c:Packages>
+				<o:Package >
+					<c:Tables>
+						<o:Table>
+							<a:ObjectID>1B9FD347-66F7-4912-9682-ACF8999BB847</a:ObjectID>
+							<a:Name>维修站主要人员</a:Name>
+							<a:Code>TM_ASC_MAIN_PERSON</a:Code> 
+							<c:Columns>
+								<o:Column Id="o14982">
+									<a:ObjectID>0FFA6F2F-1526-4B6F-BA19-A05F42CAC06B</a:ObjectID>
+									<a:Name>ENTITY_CODE</a:Name>
+									<a:Code>ENTITY_CODE</a:Code> 
+									<a:Comment>全局唯一,区分不同实体,由系统部署时候指定.
+									</a:Comment> 
+									<a:DataType>CHAR(8)</a:DataType>
+									<a:Length>8</a:Length>
+								</o:Column>
+								<o:Column Id="o14983">
+									<a:ObjectID>18C524AB-E3C9-4A13-BB41-FF0338CF4E54</a:ObjectID>
+									<a:Name>职务名称</a:Name>
+									<a:Code>POSITION_NAME</a:Code>
+									<a:DataType>VARCHAR(30)</a:DataType>
+									<a:Length>30</a:Length>
+								</o:Column> 
+							</c:Columns>
+							<c:Indexes>
+								<o:Index Id="o14995">
+									<a:ObjectID>8F44056B-4599-4850-9264-5D637EE38EF1</a:ObjectID>
+									<a:Name>FK_ASC_PERSON</a:Name>
+									<a:Code>FK_ASC_PERSON</a:Code>
+						  
+								</o:Index>
+							</c:Indexes>
+						</o:Table>
+					</c:Tables>
+				</o:Package >
+			</c:Packages>
+		</o:Model >
+	</c:Children>
+  </o:RootObject>
+  
+</Model>
+
+ 

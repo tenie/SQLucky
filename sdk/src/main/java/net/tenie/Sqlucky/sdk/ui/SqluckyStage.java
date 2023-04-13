@@ -2,7 +2,6 @@ package net.tenie.Sqlucky.sdk.ui;
 
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;

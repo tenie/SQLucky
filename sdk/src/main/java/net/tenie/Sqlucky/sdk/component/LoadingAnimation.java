@@ -93,11 +93,17 @@ public class LoadingAnimation {
 	public static void loadingAnimation( String loadingString, Consumer<String> consumer) {
 		StackPane root = ComponentGetter.currentStackPane;
 		addLoading(root, loadingString , 30);
-		Thread th =  new Thread(()->{
+//		后台执行
+		CommonUtility.runThread(v -> {
 			consumer.accept("");
 			rmLoading(root);
 		});
-		th.start();
+		
+//		Thread th =  new Thread(()->{
+//			consumer.accept("");
+//			rmLoading(root);
+//		});
+//		th.start();
 		
 	}
 	

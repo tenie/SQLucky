@@ -1,4 +1,4 @@
-package net.tenie.plugin.backup.component;
+package net.tenie.plugin.backup.po;
  
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
