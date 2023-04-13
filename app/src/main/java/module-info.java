@@ -26,6 +26,13 @@ open module SQLucky {
 	requires org.controlsfx.controls;
 	requires org.apache.logging.log4j;	
 	
+	requires org.dom4j;
+	requires com.fasterxml.jackson.dataformat.xml;
+	requires com.fasterxml.jackson.core; 
+	requires com.fasterxml.jackson.databind;
+	requires com.fasterxml.jackson.annotation;
+	requires lombok;
+	
 
 	requires org.apache.httpcomponents.client5.httpclient5;
 	requires org.apache.httpcomponents.client5.httpclient5.fluent;

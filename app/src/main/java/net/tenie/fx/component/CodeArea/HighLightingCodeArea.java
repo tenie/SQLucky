@@ -54,7 +54,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	private StackPane codeAreaPane;
 	private MyCodeArea codeArea;
 	private ExecutorService executor;
-	private ChangeListener<String> cl;
+//	private ChangeListener<String> textChangeListener;
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
 	private SqluckyTab myAreaTab;
@@ -76,6 +76,24 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 			codeArea.setContextMenu(cm);
 		}
 	}
+	// 文本修改后title设置保存提示
+	Consumer<Integer> caller = x -> {
+		if (myAreaTab != null) {
+			Platform.runLater(() -> {
+				String title = myAreaTab.getTitle(); //CommonUtility.tabText(tb);
+				if (!title.endsWith("*")) {
+					myAreaTab.setTitle(title + "*");
+					myAreaTab.setModify(true);
+				}
+				this.highLighting(x);
+			});
+			// 缓存单词
+			if (myAuto != null) {
+				myAuto.cacheTextWord();
+			}
+		}
+	};
+	
 //    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
 
 	public HighLightingCodeArea(MyAutoComplete myAuto , SqluckyTab tb) {
@@ -86,37 +104,9 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		codeArea = new MyCodeArea();
 		
 		// 文本内容监听事件函数
-		cl = (obj, o, n) -> {
-			Consumer<Integer> caller = x -> {
-//				Tab tb = SqluckyEditor.mainTabPaneSelectedTab();
-//				MyAreaTab mtb = (MyAreaTab) tb;
-				if (myAreaTab != null) {
-					Platform.runLater(() -> {
-						String title = myAreaTab.getTitle(); //CommonUtility.tabText(tb);
-						if (!title.endsWith("*")) {
-							myAreaTab.setTitle(title + "*");
-							myAreaTab.setModify(true);
-//							CommonUtility.setTabName(tb, title + "*");
-//							mtb.setModify(true);
-						}
-						this.highLighting(x);
-					});
-					// 缓存单词
-					if (myAuto != null) {
-						myAuto.cacheTextWord();
-					}
-				}
-			};
-//			int currentLine = codeArea.getCurrentParagraph();
-//			String text = codeArea.getText(0, 0, currentLine, 0);
-//			int textLength = text.length();
-//			if(textLength > 0 ) {
-//				textLength --;
-//			}
-			delayHighLighting(caller, 600, 0);
-//			CommonUtility.delayRunThread(caller, 600);
-
-		};
+//		textChangeListener = (obj, o, n) -> { 
+//			delayHighLighting(caller, 600, 0);
+//		};
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 
@@ -183,26 +173,24 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 			} else if (e.getCode() == KeyCode.Z) { // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
 //				codeAreaCtrlZ(e, cl);
 			}else {
-				Consumer<Integer> caller = x -> {
-					if (myAreaTab != null) {
-						Platform.runLater(() -> {
-							String title = myAreaTab.getTitle(); //CommonUtility.tabText(tb);
-							if (!title.endsWith("*")) {
-								myAreaTab.setTitle(title + "*");
-								myAreaTab.setModify(true);
-//								CommonUtility.setTabName(tb, title + "*");
-//								mtb.setModify(true);
-							}
-							this.highLighting(x);
-						});
-						// 缓存单词
-						if (myAuto != null) {
-							myAuto.cacheTextWord();
-						}
-					}
-				};
+//				Consumer<Integer> caller = x -> {
+//					if (myAreaTab != null) {
+//						Platform.runLater(() -> {
+//							String title = myAreaTab.getTitle(); //CommonUtility.tabText(tb);
+//							if (!title.endsWith("*")) {
+//								myAreaTab.setTitle(title + "*");
+//								myAreaTab.setModify(true);
+//							}
+//							this.highLighting(x);
+//						});
+//						// 缓存单词
+//						if (myAuto != null) {
+//							myAuto.cacheTextWord();
+//						}
+//					}
+//				};
 //				普通输入
-				System.out.println("普通输入");
+//				System.out.println("普通输入");
 				if( ! e.isAltDown() && !e.isControlDown()) {
 					
 					int currentLine = codeArea.getCurrentParagraph();
@@ -212,6 +200,12 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 						textLength --;
 					}
 					delayHighLighting(caller, 600, textLength);
+					
+					var selection = codeArea.getSelection();
+					if(selection != null &&  selection.getLength() > 0 ) { 
+						codeArea.deleteText( selection );
+					}
+					
 				}else {
 					delayHighLighting(caller, 600, 0);
 				}

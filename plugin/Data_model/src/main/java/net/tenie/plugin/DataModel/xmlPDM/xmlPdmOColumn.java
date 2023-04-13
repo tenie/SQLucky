@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.po.component;
+package net.tenie.plugin.DataModel.xmlPDM;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

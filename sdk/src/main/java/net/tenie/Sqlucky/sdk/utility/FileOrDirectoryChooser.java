@@ -82,6 +82,19 @@ public final class FileOrDirectoryChooser {
 				new FileChooser.ExtensionFilter("All", "*.*"));
 			
 	}
+	/**
+	 * 指定文件类型
+	 * @param fileChooser
+	 * @param title
+	 * @param Type
+	 */
+	private static void fileChooser(final FileChooser fileChooser, String title, String Type) {
+		fileChooser.setTitle(title);
+	    fileChooser.setInitialDirectory( new File(System.getProperty("user.home"))  );
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().addAll( 
+				new FileChooser.ExtensionFilter(Type, "*."+Type));
+	}
 	
 	
 	// 选择目录
@@ -201,6 +214,12 @@ public final class FileOrDirectoryChooser {
 	// json类型的文件
 	public static File showOpenJsonFile(String title, Stage stage) {
 		jsonFileChooser(fileChooser, title);
+		File file = fileChooser.showOpenDialog(stage);
+		return file;
+	}
+	//指定文件类型
+	public static File showOpen(String title,String type , Stage stage) {
+		fileChooser(fileChooser, title, type);
 		File file = fileChooser.showOpenDialog(stage);
 		return file;
 	}

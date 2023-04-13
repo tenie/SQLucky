@@ -1,4 +1,4 @@
-package net.tenie.plugin.backup.component;
+package net.tenie.plugin.backup.po;
 
 import java.util.Date;
 
