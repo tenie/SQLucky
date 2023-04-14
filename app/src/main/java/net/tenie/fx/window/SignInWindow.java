@@ -113,7 +113,7 @@ public class SignInWindow {
 		password.disableProperty().bind(ConfigVal.SQLUCKY_LOGIN_STATUS);
 		
 		
-		HBox hb2 = new HBox(); 
+//		HBox hb2 = new HBox(); 
 		Label Remember = new Label(remember);
 	    rememberCB  = new JFXCheckBox();  
 	    rememberCB.selectedProperty().addListener(v->{
@@ -123,7 +123,7 @@ public class SignInWindow {
 	    });
 	   
 	    
-	    hb2.getChildren().addAll(Remember, rememberCB );
+//	    hb2.getChildren().addAll(Remember, rememberCB );
 	    // 登入函数
 	    signInBtn = createSignInBtn();
 		signInBtn.setDisable(true);
@@ -171,9 +171,8 @@ public class SignInWindow {
 		list.add(    lbPassword);
 		list.add(    password); 
 		
-		
-		list.add(    hb2); 
-		list.add(    null);
+		list.add(    Remember); 
+		list.add(    rememberCB);
 		
 		list.add(    signInBtn); 
 		list.add(    signOutBtn);  
