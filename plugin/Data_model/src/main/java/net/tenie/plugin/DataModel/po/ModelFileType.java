@@ -14,7 +14,7 @@ public class ModelFileType {
 		if(all.size() == 0) {
 			all.add(CHNR_JSON);
 			all.add(PDM);
-			all.add(CDM);
+//			all.add(CDM);
 		}
 		
 		return all;
