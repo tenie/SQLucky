@@ -7,16 +7,12 @@ import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 
 //<Model xmlns:a="attribute" xmlns:c="collection" xmlns:o="object">
 //@JacksonXmlRootElement(namespace = "object", localName = "Package")
-public class xmlCdmOPackage {
+public class xmlCdmODataItem {
 	
 //	c:Tables
 	@JacksonXmlElementWrapper(namespace = "collection", localName = "Packages")
-    private List<xmlCdmOPPackage> cPackages;
+    private List<xmlPdmOTable> cPackages;
 
     
-    @JacksonXmlElementWrapper(namespace = "collection", localName = "Entities")
-    private List<xmlCdmOPEntitie> cEntities;
     
-    @JacksonXmlElementWrapper(namespace = "collection", localName = "DataItems")
-    private List<xmlCdmOPDataItem> cDataItems;
 }
