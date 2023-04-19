@@ -268,8 +268,8 @@ public class SignInWindow {
 			ConfigVal.SQLUCKY_LOGIN_STATUS.set(false);
 			// 删除app数据库中的用户信息
 			UserAccountAction.delUser();
-			tfemail.setText("");
-			password.setText("");
+//			tfemail.setText("");
+//			password.setText("");
 			rememberCB.setSelected(false);
 			
 			signInBtn.setDisable(false);
