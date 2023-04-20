@@ -302,7 +302,7 @@ public final class SettingKeyCodeCombination {
 			    
 
 	            Object objRtn =   call.getObject(2 );
-	            System.out.println(objRtn);
+//	            System.out.println(objRtn);
 //			    call.registerOutParameter(0, null);
 //			    call.
 			    

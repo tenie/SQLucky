@@ -46,10 +46,10 @@ public class ServiceLoad {
 					loadStatus = 1;
 				}
 				if(loadStatus == 1) {
-					System.out.println("\n====================");
-					System.out.println(pluginName);
+//					System.out.println("\n====================");
+//					System.out.println(pluginName);
 					plugin.register();
-					System.out.println("====================\n");
+//					System.out.println("====================\n");
 				}
 			}
 		} catch (Exception e) {
@@ -83,10 +83,10 @@ public class ServiceLoad {
 					loadStatus = ppo.getReloadStatus();
 				} 
 				if(loadStatus == 1) {
-					System.out.println("\n====================");
-					System.out.println(pluginName);
+//					System.out.println("\n====================");
+//					System.out.println(pluginName);
 					plugin.load();
-					System.out.println("====================\n");
+//					System.out.println("====================\n");
 				}
 			}
 		} catch (Exception e) {
@@ -121,10 +121,10 @@ public class ServiceLoad {
 					} 
 					if(loadStatus == 1) {
 						String name = plugin.pluginName();
-						System.out.println("\n====================");
-						System.out.println(name);
+//						System.out.println("\n====================");
+//						System.out.println(name);
 						plugin.showed();
-						System.out.println("====================\n");
+//						System.out.println("====================\n");
 					}
 				}
 			} catch (Exception e) {

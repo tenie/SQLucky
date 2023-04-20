@@ -17,7 +17,7 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 	private static TitledPane NotePane;
 	@Override
 	public void load() {
-		System.out.println("load:  DataModelDelegateImpl..."); 
+//		System.out.println("load:  DataModelDelegateImpl..."); 
 		AppComponent appComponent = ComponentGetter.appComponent;
 		
 		
@@ -48,7 +48,7 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: DataModelDelegateImpl...");
+//		System.out.println("unload: DataModelDelegateImpl...");
 
 	}
 

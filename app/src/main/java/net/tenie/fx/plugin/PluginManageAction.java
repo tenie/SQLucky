@@ -196,9 +196,9 @@ public class PluginManageAction {
 			try { 
 				
 				content = HttpUtil.post(ConfigVal.getSqluckyServer()+"/sqlucky/queryAllPlugin", vals);
-				System.out.println("content ==" + content);
+//				System.out.println("content ==" + content);
 				 List<PluginInfoPO> ls=  JsonTools.jsonToList(content, PluginInfoPO.class);
-				 System.out.println(ls);
+//				 System.out.println(ls);
 				 List<Object> localVals = PoDao.selectFieldVal(conn, new  PluginInfoPO(), "PLUGIN_CODE");
 				 int count = 0;
 				 for(PluginInfoPO info : ls) {

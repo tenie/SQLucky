@@ -34,7 +34,7 @@ public class PoDao {
 			try {
 				PoInfo binfo = PoDaoUtil.getDataBeanInfo(bean);
 				String sql = PoDaoUtil.getInsertSql(binfo, bean);
-				System.out.println(sql);
+//				System.out.println(sql);
 				ps = conn.prepareStatement(sql);
 				int size = binfo.getColSize();
 				Object obj = null;

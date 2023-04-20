@@ -123,7 +123,7 @@ public class CreateInfoservicePoBean {
             sbd.append("}");
 
 //            writePOFile(tabName, sbd);
-            System.out.println(sbd);
+//            System.out.println(sbd);
             rsval = sbd.toString();
         } catch (Exception e) {
             e.printStackTrace();
@@ -165,7 +165,7 @@ public class CreateInfoservicePoBean {
                 dir.mkdirs();
             file += this.tabName2PoName(CreateInfoservicePoBean.TYPE_CLSNAME, tabName) + "PO.java";
 
-            System.out.println("Write Class File : " + file);
+//            System.out.println("Write Class File : " + file);
             FileWriter fw = new FileWriter(file);
             fw.write(sbd.toString());
             fw.close();

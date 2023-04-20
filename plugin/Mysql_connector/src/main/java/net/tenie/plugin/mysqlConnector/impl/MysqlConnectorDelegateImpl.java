@@ -10,7 +10,7 @@ public class MysqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 	public static final String version ="0.0.1";
 	@Override
 	public void register() {
-		System.out.println("register:  MysqlConnectorDelegateImpl ..."); 
+//		System.out.println("register:  MysqlConnectorDelegateImpl ..."); 
 		// 注册
 		MysqlRegister reg = new MysqlRegister();
 		ComponentGetter.appComponent.registerDBConnector(reg);
@@ -24,7 +24,7 @@ public class MysqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: MysqlConnectorDelegateImpl...");
+//		System.out.println("unload: MysqlConnectorDelegateImpl...");
 
 	}
 

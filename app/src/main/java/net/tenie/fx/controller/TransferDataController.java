@@ -943,7 +943,7 @@ public class TransferDataController implements Initializable {
 					}
 				} 
 			} 
-			System.out.println("完成execListSQL"); 
+//			System.out.println("完成execListSQL"); 
 		}
 	
 	

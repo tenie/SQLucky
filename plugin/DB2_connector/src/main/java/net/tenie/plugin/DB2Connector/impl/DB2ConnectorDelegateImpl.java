@@ -11,7 +11,7 @@ public class DB2ConnectorDelegateImpl implements SqluckyPluginDelegate {
 	
 	@Override
 	public void register() {
-		System.out.println("register:  DB2ConnectorDelegateImpl..."); 
+//		System.out.println("register:  DB2ConnectorDelegateImpl..."); 
 		// 注册
 		Db2Register reg = new Db2Register();
 		ComponentGetter.appComponent.registerDBConnector(reg);
@@ -25,7 +25,7 @@ public class DB2ConnectorDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: DB2ConnectorDelegateImpl...");
+//		System.out.println("unload: DB2ConnectorDelegateImpl...");
 
 	}
 

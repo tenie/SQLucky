@@ -33,18 +33,18 @@ public class SqluckyAppDB {
 			if (conn == null) {
 //				conn = createH2Conn();
 				conn = createSqliteConn();
-				System.out.println("获取应用本身的数据库链接");
+//				System.out.println("获取应用本身的数据库链接");
 			} else if (conn.isClosed()) {
 //				conn = createH2Conn();
 				conn = createSqliteConn();
-				System.out.println("获取应用本身的数据库链接");
+//				System.out.println("获取应用本身的数据库链接");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		int v = connTimes.addAndGet(1);
-		System.out.println("getConn = connIdx = " + connTimes.get() + " v = " + v);
+//		System.out.println("getConn = connIdx = " + connTimes.get() + " v = " + v);
 
 		return conn;
 	}
@@ -110,7 +110,7 @@ public class SqluckyAppDB {
 						connTimes.addAndGet(-1); 
 						if (connTimes.get() <= 0) {
 							conn.close();
-							System.out.println("closeConncloseConncloseConn = connIdx = " + connTimes.get());
+//							System.out.println("closeConncloseConncloseConn = connIdx = " + connTimes.get());
 						}
 						 
 					} catch (Exception e) {

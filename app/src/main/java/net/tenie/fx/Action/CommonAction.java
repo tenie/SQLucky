@@ -780,7 +780,7 @@ public class CommonAction {
 			String str = FileTools.read(path);
 			String val = str.split("\n")[0];
 			val = val.substring(2, val.lastIndexOf("*/"));
-			System.out.println(val);
+//			System.out.println(val);
 			ConfigVal.FONT_SIZE = Integer.valueOf(val);
 		}
 		int sz = ConfigVal.FONT_SIZE ;

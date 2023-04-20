@@ -207,7 +207,7 @@ public class DataModelUtility {
 				// 字段
 				var fields = tab.getFields();
 				for (var field : fields) {
-					System.out.println(field);
+//					System.out.println(field);
 					field.setTableId(tableId);
 					field.setModelId(modelID);
 					field.setCreatedTime(new Date());
@@ -363,7 +363,7 @@ public class DataModelUtility {
 			@Override
 			public void onChanged(Change c) {
 				var list = c.getList();
-				System.out.println("list.size() = " + list.size());
+//				System.out.println("list.size() = " + list.size());
 				if(list.size() > 0) {
 					treeNode.setActive(true);
 				}
@@ -424,7 +424,7 @@ public class DataModelUtility {
 			List<DataModelInfoPo> val;
 
 			val = PoDao.select(conn, po);
-			System.out.println(val);
+//			System.out.println(val);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -451,7 +451,7 @@ public class DataModelUtility {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			DataModelInfoMapper mapper = session.getMapper(DataModelInfoMapper.class);
 			DataModelInfoPo val = mapper.selectDataModelInfo(1);
-			System.out.println(val);
+//			System.out.println(val);
 		}
 	}
 	
@@ -510,7 +510,7 @@ public class DataModelUtility {
 		try (SqlSession session = sqlSessionFactory.openSession()) {
 			DataModelInfoMapper mapper = session.getMapper(DataModelInfoMapper.class);
 			DataModelInfoPo val = mapper.selectDataModelInfo(11);
-			System.out.println(val);
+//			System.out.println(val);
 		}
 
 	}

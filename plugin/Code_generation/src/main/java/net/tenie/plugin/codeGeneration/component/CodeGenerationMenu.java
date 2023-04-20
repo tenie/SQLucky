@@ -32,7 +32,7 @@ public class CodeGenerationMenu {
 		Infoservice.setDisable(true);
 		Infoservice.setOnAction(v->{
 			DBNodeInfoPo info =  ComponentGetter.appComponent.currentDBInfoNode();
-			System.out.println("test  :  " +info.getType());
+//			System.out.println("test  :  " +info.getType());
 			if( info.getType() == TreeItemType.TABLE) {
 				SqluckyConnector sqlcon = info.getConnpo();
 				String  tab = info.getName();

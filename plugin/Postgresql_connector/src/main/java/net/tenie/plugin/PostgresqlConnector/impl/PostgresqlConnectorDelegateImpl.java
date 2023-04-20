@@ -11,7 +11,7 @@ public class PostgresqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 	 
 	@Override
 	public void register() {
-		System.out.println("register:  PostgresqlConnectorDelegateImpl ..."); 
+//		System.out.println("register:  PostgresqlConnectorDelegateImpl ..."); 
 		// 注册
 		PostgresqlRegister reg = new PostgresqlRegister();
 		ComponentGetter.appComponent.registerDBConnector(reg);
@@ -25,7 +25,7 @@ public class PostgresqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: PostgresqlConnectorDelegateImpl...");
+//		System.out.println("unload: PostgresqlConnectorDelegateImpl...");
 
 	}
 

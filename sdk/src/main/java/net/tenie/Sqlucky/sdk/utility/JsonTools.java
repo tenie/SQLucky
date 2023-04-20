@@ -43,7 +43,7 @@ public class JsonTools {
 		JSONObject obj = JSONObject.parseObject(txt);
 		  
 		String  ja = obj.getString("name");
-		System.out.println(ja);
+//		System.out.println(ja);
 	}
 	
 	
@@ -56,7 +56,7 @@ public class JsonTools {
 			val = FileUtils.readFileToString(f, encode);
 			if(val != null && !"".equals(val) ) { 
 				DataModelPo DataModelPoVal = JSONObject.parseObject(val, DataModelPo.class);
-				System.out.println(DataModelPoVal);
+//				System.out.println(DataModelPoVal);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

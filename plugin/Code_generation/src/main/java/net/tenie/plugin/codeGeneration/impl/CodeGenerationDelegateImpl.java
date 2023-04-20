@@ -14,7 +14,7 @@ public class CodeGenerationDelegateImpl implements SqluckyPluginDelegate {
 	
 	@Override
 	public void load() {
-		System.out.println("load:  CodeGenerationDelegateImpl..."); 
+//		System.out.println("load:  CodeGenerationDelegateImpl..."); 
 		AppComponent appComponent = ComponentGetter.appComponent;
 		CodeGenerationMenu cgm = new CodeGenerationMenu();
 		
@@ -28,7 +28,7 @@ public class CodeGenerationDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: CodeGenerationDelegateImpl...");
+//		System.out.println("unload: CodeGenerationDelegateImpl...");
 
 	}
 
