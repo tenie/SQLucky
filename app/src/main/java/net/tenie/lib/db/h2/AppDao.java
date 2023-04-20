@@ -489,7 +489,7 @@ public class AppDao {
 						lastModifiedTime = ltmp;
 						rs =  path + flName.substring(0, flName.indexOf(".mv.db")); 
 					}
-					System.out.println(rs);
+//					System.out.println(rs);
 				} 
 			}
 		}  
@@ -516,7 +516,7 @@ public class AppDao {
 						lastModifiedTime = ltmp;
 						rs =  path  + flName ;// .substring(0, flName.indexOf("_sqlite.db")); 
 					}
-					System.out.println(rs);
+//					System.out.println(rs);
 				} 
 			}
 		}  

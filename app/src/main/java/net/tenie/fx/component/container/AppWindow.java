@@ -56,7 +56,7 @@ public class AppWindow {
 					double wi = ComponentGetter.masterDetailPane.getWidth();
 					double tbp = 275.0;
 					double val =  tbp / wi;  
-					System.out.println("设置窗口比例 :" + val);
+//					System.out.println("设置窗口比例 :" + val);
 					ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
 				}
 		});  
@@ -81,8 +81,8 @@ public class AppWindow {
 
  
 	static {
-		System.out.println(AppWindow.class.getResource("/css/application.css").toExternalForm());
-		System.out.println("\n\n\n\n\n\n\n\n\n==========================\n\n\n\n");
+//		System.out.println(AppWindow.class.getResource("/css/application.css").toExternalForm());
+//		System.out.println("\n\n\n\n\n\n\n\n\n==========================\n\n\n\n");
 		ConfigVal.cssList.add(AppWindow.class.getResource("/css/application.css").toExternalForm());	
 		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/common.css").toExternalForm());	
 		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/sql-keywords.css").toExternalForm());	    

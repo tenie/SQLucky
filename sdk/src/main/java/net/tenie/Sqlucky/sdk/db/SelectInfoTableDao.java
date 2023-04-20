@@ -75,7 +75,7 @@ public class SelectInfoTableDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			System.out.println("finally");
+//			System.out.println("finally");
 			if (rs != null)
 				rs.close();
 		}

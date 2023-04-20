@@ -10,7 +10,7 @@ public class SqliteConnectorDelegateImpl implements SqluckyPluginDelegate {
 	public static final String version ="0.0.1";
 	@Override
 	public void register() {
-		System.out.println("load:  SqliteConnectorDelegateImpl..."); 
+//		System.out.println("load:  SqliteConnectorDelegateImpl..."); 
 		// 注册
 		SqliteRegister reg = new SqliteRegister();
 		ComponentGetter.appComponent.registerDBConnector(reg);
@@ -24,7 +24,7 @@ public class SqliteConnectorDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: SqliteConnectorDelegateImpl...");
+//		System.out.println("unload: SqliteConnectorDelegateImpl...");
 
 	}
 

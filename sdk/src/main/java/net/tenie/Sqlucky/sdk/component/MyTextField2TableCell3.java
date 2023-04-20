@@ -117,7 +117,7 @@ public class MyTextField2TableCell3<ResultSetRowPo, T> extends TextFieldTableCel
     
     public void textFieldSetON(TextField textField) {
     	textField.setOnAction(v->{
-    		System.out.println(textField.getText());
+//    		System.out.println(textField.getText());
     	});
     }
     

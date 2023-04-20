@@ -119,7 +119,7 @@ public class MyTextField2ReadOnlyTableCell<S, T> extends TextFieldTableCell<S, T
     
     public void textFieldSetON(TextField textField) {
     	textField.setOnAction(v->{
-    		System.out.println(textField.getText());
+//    		System.out.println(textField.getText());
     	});
     }
     

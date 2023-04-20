@@ -19,9 +19,11 @@ public class DynamicJarClassLoader extends URLClassLoader {
             URLClassLoader.class.getMethod("close");
             canCloseJar = true;
         } catch (NoSuchMethodException e) {
-            System.out.println(e);
+//            System.out.println(e);
+            e.printStackTrace();
         } catch (SecurityException e) {
-            System.out.println(e);
+//            System.out.println(e);
+            e.printStackTrace();
         }
     }
  
@@ -42,10 +44,11 @@ public class DynamicJarClassLoader extends URLClassLoader {
             for (int j = 0; j < files.length; j++) {
                 try {
                     URL element = files[j].toURI().normalize().toURL();
-                    System.out.println("Adding '" + element.toString() + "' to classloader");
+//                    System.out.println("Adding '" + element.toString() + "' to classloader");
                     urls[j] = element;
                 } catch (MalformedURLException e) {
-                    System.out.println(e);
+//                    System.out.println(e);
+                	e.printStackTrace();
                 }
             }
         }
@@ -83,7 +86,8 @@ public class DynamicJarClassLoader extends URLClassLoader {
             try {
                 super.close();
             } catch (IOException e) {
-                System.out.println(e);
+//                System.out.println(e);
+            	e.printStackTrace();
             }
         } else {
             for (JarURLConnection conn : cachedJarFiles) {
@@ -133,7 +137,7 @@ class DynamicJarApp {
             changeLastModified=changeJarVersion(libDir);
             currentClassload= new DynamicJarClassLoader(libDir, null);
             Class<?> clazz = currentClassload.loadClass(testClass);
-            System.out.println(clazz.getName());
+//            System.out.println(clazz.getName());
             Object object= clazz.newInstance();
             Method method= clazz.getDeclaredMethod("info");
             method.setAccessible(true);
@@ -144,7 +148,7 @@ class DynamicJarApp {
                 public void run() {
                     while (true) {
                         try {
-                            System.out.println("wait......");
+//                            System.out.println("wait......");
                             Thread.sleep(10000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
@@ -157,7 +161,7 @@ class DynamicJarApp {
                             try {
                                 //关闭旧的类加载器
                                 currentClassload.close();
-                                System.out.println("close......");
+//                                System.out.println("close......");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -172,7 +176,7 @@ class DynamicJarApp {
                         try {
                             //执行jar包类方法
                             Class<?> clazz = currentClassload.loadClass(testClass);
-                            System.out.println(clazz.getName());
+//                            System.out.println(clazz.getName());
                             Object object = clazz.newInstance();
                             Method method = clazz.getDeclaredMethod("info");
                             method.setAccessible(true);

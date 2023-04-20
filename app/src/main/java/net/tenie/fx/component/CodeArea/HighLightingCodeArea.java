@@ -441,7 +441,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
  
 	public void highLighting(int begin) {
-		System.out.println("highLighting = " +begin );
+//		System.out.println("highLighting = " +begin );
 		Platform.runLater(() -> {
 			try {
 				highLightingHelper.applyHighlighting(codeArea, begin);

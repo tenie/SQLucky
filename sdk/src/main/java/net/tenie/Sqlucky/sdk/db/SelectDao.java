@@ -324,7 +324,7 @@ public class SelectDao {
 				String clabel = fieldpo.getColumnLabel().get();
 				
 				String cclaz = fieldpo.getColumnClassName().get();
-				System.out.println("field name = " + clabel + " | class name = " + cclaz );
+//				System.out.println("field name = " + clabel + " | class name = " + cclaz );
 				
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
