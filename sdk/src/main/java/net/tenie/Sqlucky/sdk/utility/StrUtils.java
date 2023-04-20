@@ -120,7 +120,7 @@ public class StrUtils {
 //     }
 
 		String val = m.replaceAll("");
-		System.out.println(val);
+//		System.out.println(val);
 		return val;
 	}
 
@@ -494,7 +494,7 @@ public class StrUtils {
 			count++;
 			idx = str.indexOf(sub, idx + sub.length());
 		}
-		System.out.println(count); 
+//		System.out.println(count); 
 		return count ;
 		
 	}

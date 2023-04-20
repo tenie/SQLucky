@@ -138,7 +138,7 @@ public class ButtonFactory {
 			// change 事件
 			connsComboBox.getSelectionModel().selectedIndexProperty()
 			.addListener((obj, ov, newValue)->{
-				System.out.println("choiceBoxChange" + newValue);
+//				System.out.println("choiceBoxChange" + newValue);
 				if(newValue!=null && newValue.intValue() > 0) {
 					runbtn.setDisable(false);
 					runLinebtn.setDisable(false);

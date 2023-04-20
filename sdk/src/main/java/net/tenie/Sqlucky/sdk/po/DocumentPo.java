@@ -172,7 +172,7 @@ public class DocumentPo implements Serializable {
 	public String toJsone() {
 
 		JSONObject jsonObject = (JSONObject) JSONObject.toJSON(this);
-		System.out.println("Java对象转化为JSON对象\n" + jsonObject.toJSONString());// {"name":"公众号编程大道","age":2,"sex":"m"}
+//		System.out.println("Java对象转化为JSON对象\n" + jsonObject.toJSONString());// {"name":"公众号编程大道","age":2,"sex":"m"}
 
 		return jsonObject.toJSONString();
 	}

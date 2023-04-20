@@ -66,7 +66,7 @@ public class HttpDownloadFile {
             //执行
             CloseableHttpResponse response = httpClient.execute(httpPost);
 
-            System.out.println("状态码: "+ response.getCode() +" | "+ response.getReasonPhrase());
+//            System.out.println("状态码: "+ response.getCode() +" | "+ response.getReasonPhrase());
 
             HttpEntity entity = response.getEntity(); 
             

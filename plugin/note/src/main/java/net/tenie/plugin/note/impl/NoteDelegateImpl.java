@@ -17,7 +17,7 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 	
 	@Override
 	public void load() {
-		System.out.println("load:  NoteDelegateImp..."); 
+//		System.out.println("load:  NoteDelegateImp..."); 
 		AppComponent appComponent = ComponentGetter.appComponent;
 		
 		
@@ -50,7 +50,7 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: NoteDelegateImp...");
+//		System.out.println("unload: NoteDelegateImp...");
 
 	}
 

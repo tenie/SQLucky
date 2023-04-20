@@ -288,9 +288,9 @@ public class DataModelOption {
 			String val = FileUtils.readFileToString(f, encode);
 			if(val != null && !"".equals(val) ) { 
 			    DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
-				System.out.println(DataModelPoVal);
-				System.out.println("======================");
-				System.out.println(DataModelPoVal.getEntities().get(0)); 
+//				System.out.println(DataModelPoVal);
+//				System.out.println("======================");
+//				System.out.println(DataModelPoVal.getEntities().get(0)); 
 //				AddModelFile.insertDataModel(DataModelPoVal);
 //				PoDao.insert(null, null);
 				

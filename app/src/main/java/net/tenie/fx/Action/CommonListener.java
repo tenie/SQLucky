@@ -73,7 +73,7 @@ public class CommonListener {
 		return new ChangeListener() {
 			@Override
 			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-				System.out.println("choiceBoxChange");
+//				System.out.println("choiceBoxChange");
 				// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
 				MainTabs.setBoxIdx( CommonUtility.tabText(  MainTabs.getActTab()), newValue.toString());
 			}
@@ -85,7 +85,7 @@ public class CommonListener {
 		return new ChangeListener<Label>() {
 			@Override
 			public void changed(ObservableValue<? extends Label> observable, Label oldValue, Label newValue) {
-				System.out.println("choiceBoxChange2");
+//				System.out.println("choiceBoxChange2");
 				if (newValue != null) {
 					SqluckyConnector cnnpo = DBConns.get(newValue.getText());
 					if (cnnpo != null && !cnnpo.isAlive()) {

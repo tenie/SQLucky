@@ -16,7 +16,7 @@ public class WorkDataBackupDelegateImpl implements SqluckyPluginDelegate {
 	
 	@Override
 	public void load() {
-		System.out.println("load:  WorkDataBackupDelegateImpl..."); 
+//		System.out.println("load:  WorkDataBackupDelegateImpl..."); 
 		AppComponent appComponent = ComponentGetter.appComponent; 
 		Menu pluginMenu = ComponentGetter.pluginMenu;
 
@@ -35,7 +35,7 @@ public class WorkDataBackupDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: WorkspaceDelegateImpl...");
+//		System.out.println("unload: WorkspaceDelegateImpl...");
 
 	}
 

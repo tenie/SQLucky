@@ -213,7 +213,7 @@ public class QueryBackupController implements Initializable {
 				selectBtn.setDisable(false);
 				selectDataID = nv.getValueByFieldName("ID");
 				String selectDataBAKName = nv.getValueByFieldName("Backup Name");
-				System.out.println("selectDataID = " + selectDataID);
+//				System.out.println("selectDataID = " + selectDataID);
 				idVal.setValue(selectDataID);
 				nameVal.setValue(selectDataBAKName);
 			}

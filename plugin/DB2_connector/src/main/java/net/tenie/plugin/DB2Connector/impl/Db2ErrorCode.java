@@ -8,7 +8,7 @@ public class Db2ErrorCode {
 	public static void main(String[] args) {
 		String msg = "failed : DB2 SQL Error: SQLCODE=-153, SQLSTATE=42908, SQLERRMC=null, DRIVER=4.22.29";
 		String v = translateErrMsg(msg);
-		System.out.println(v);
+//		System.out.println(v);
 	}
 	static private Map<String, String> code = new HashMap<>();
 	

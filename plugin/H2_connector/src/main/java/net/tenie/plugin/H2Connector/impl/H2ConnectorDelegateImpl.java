@@ -11,7 +11,7 @@ public class H2ConnectorDelegateImpl implements SqluckyPluginDelegate {
 	
 	@Override
 	public void register() {
-		System.out.println("register:  h2-file-ConnectorDelegateImpl..."); 
+//		System.out.println("register:  h2-file-ConnectorDelegateImpl..."); 
 		// 注册
 		H2Register reg = new H2Register();
 		ComponentGetter.appComponent.registerDBConnector(reg);
@@ -26,7 +26,7 @@ public class H2ConnectorDelegateImpl implements SqluckyPluginDelegate {
 
 	@Override
 	public void unload() {
-		System.out.println("unload: H2ConnectorDelegateImpl...");
+//		System.out.println("unload: H2ConnectorDelegateImpl...");
 
 	}
 

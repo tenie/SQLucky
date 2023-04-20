@@ -65,13 +65,13 @@ public class Restart {
 		System.exit(0);
 	}
 	
-	public static void main(String[] args) {
-		String ops = System.getProperty("os.name");
-		String userDir = System.getProperty("user.dir");
-		String val =System.getProperty("sun.java.command");
-		System.out.println(ops);
-		System.out.println(userDir);
-		System.out.println(val);
-	}
+//	public static void main(String[] args) {
+//		String ops = System.getProperty("os.name");
+//		String userDir = System.getProperty("user.dir");
+//		String val =System.getProperty("sun.java.command");
+//		System.out.println(ops);
+//		System.out.println(userDir);
+//		System.out.println(val);
+//	}
 	
 }
