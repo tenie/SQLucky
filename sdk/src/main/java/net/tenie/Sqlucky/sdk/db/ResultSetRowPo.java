@@ -166,6 +166,14 @@ public class ResultSetRowPo {
 	public void setIsNewAdd(Boolean isNewAdd) {
 		this.isNewAdd = isNewAdd;
 	}
+
+
+	@Override
+	public String toString() {
+		return "ResultSetRowPo [resultSet=" + resultSet + ", rowDatas=" + rowDatas + ", hasModify=" + hasModify
+				+ ", isNewAdd=" + isNewAdd + ", rowIndex=" + rowIndex + "]";
+	}
+	
 	
 	
 }
