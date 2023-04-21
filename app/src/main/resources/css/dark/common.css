@@ -8,6 +8,9 @@
 .my-tag {
 	
 }
+.testBGC {
+	-fx-background-color: red;
+}
 /* 插件管理界面 */
 .myPluginManager-vbox{
 	-fx-padding: 5px 0px 5px 0px;

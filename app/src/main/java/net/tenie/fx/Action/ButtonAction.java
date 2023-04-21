@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 import org.controlsfx.control.tableview2.FilteredTableView;
+
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -139,10 +141,18 @@ public class ButtonAction {
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
 			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 			Consumer<String> caller = x -> {
+				Boolean showDBExecInfo = false;
 				try {
 					for (int i = 0; i < vals.size(); i++) {
 						ResultSetRowPo sps = vals.get(i);
-						String msg = DeleteDao.execDelete(conn, tabName, sps);
+						String msg = "";
+						// 如果不是后期手动添加的行, 就不需要执行数据库删除操作
+						Boolean isNewAdd = sps.getIsNewAdd();
+						if(isNewAdd == false) {
+							showDBExecInfo = true;
+							 msg = DeleteDao.execDelete(conn, tabName, sps);
+						}
+						
 						var rs = sps.getResultSet();
 						rs.getDatas().remove(sps);
 						var fs = ddlDmlpo.getFields();
@@ -160,7 +170,9 @@ public class ButtonAction {
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(e1.getMessage()), fs.get(1));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("fail."), fs.get(2));
 				} finally {
-					SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, null);
+					if(showDBExecInfo) {
+						SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, null);
+					}
 				}
 			};
 		if(vals.size() >0 ) {
@@ -176,14 +188,17 @@ public class ButtonAction {
 		// 获取字段属性信息
 		ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
 		// 选中的行数据
-		ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
+		ObservableList<ResultSetRowPo> selectedRows = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
+		if ( selectedRows == null || selectedRows.size() == 0) {
+			return;
+		}
 		try {
 			// 遍历选中的行
-			for (int i = 0; i < vals.size(); i++) {
+			for (int i = 0; i < selectedRows.size(); i++) {
 				// 一行数据, 提醒: 最后一列是行号
-				ResultSetRowPo rowPo = vals.get(i);
-				var rs = rowPo.getResultSet();
-				ResultSetRowPo appendRow = rs.createAppendNewRow();
+				ResultSetRowPo rowPo = selectedRows.get(i);
+				var rs = rowPo.getResultSet(); 
+				ResultSetRowPo appendRow = rs.manualAppendNewRow();
 				ObservableList<ResultSetCellPo> cells = rowPo.getRowDatas();
 				// copy 一行
 				ObservableList<StringProperty> item = FXCollections.observableArrayList();
@@ -192,7 +207,7 @@ public class ButtonAction {
 					ResultSetCellPo cellPo = cells.get(j);
 					
 					StringProperty newsp = new SimpleStringProperty(cellPo.getCellData().get());
-					appendRow.addCell(newsp, null, cellPo.getField());
+					appendRow.addCell(newsp, cellPo.getDbOriginalValue(), cellPo.getField());
 					int dataType = fs.get(j).getColumnType().get();
 					CommonUtility.newStringPropertyChangeListener(newsp, dataType);
 					item.add(newsp);
@@ -203,6 +218,9 @@ public class ButtonAction {
 
 			// 保存按钮亮起
 			SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
+//			Platform.runLater(()->{
+//				table.getSelectionModel().select(rs)
+//			});
 		} catch (Exception e2) {
 			MyAlert.errorAlert( e2.getMessage());
 		}

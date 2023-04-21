@@ -21,21 +21,29 @@ public class ResultSetPo {
 	// 待更新的数据
 	private ObservableList<ResultSetRowPo> updateDatas;
 	
-	/**
-	 * 首次查询数据后, 后期添加一行行的数据
-	 */
-	public ResultSetRowPo createAppendNewRow(int idx) {
+	//手动添加一行的数据, 在指定下标位置
+	public ResultSetRowPo manualAppendNewRow(int idx) {
 		ResultSetRowPo appendNewpo = new ResultSetRowPo(this);
 		newDatas.add(appendNewpo);
 		datas.add(idx, appendNewpo);
+		appendNewpo.setIsNewAdd(true);
 		return appendNewpo;
 	}
 	
-	
-	public ResultSetRowPo createAppendNewRow() {
+//	//后期添加一行行的数据
+//	public ResultSetRowPo createAppendNewRow() {
+//		ResultSetRowPo appendNewpo = new ResultSetRowPo(this);
+//		newDatas.add(appendNewpo);
+//		datas.add(appendNewpo);
+//		return appendNewpo;
+//	}
+//	
+	//手动添加一行的数据
+	public ResultSetRowPo manualAppendNewRow() {
 		ResultSetRowPo appendNewpo = new ResultSetRowPo(this);
 		newDatas.add(appendNewpo);
 		datas.add(appendNewpo);
+		appendNewpo.setIsNewAdd(true);
 		return appendNewpo;
 	}
 	

@@ -162,7 +162,7 @@ public class SdkComponent {
 		Label label = new Label();
 		col.setGraphic(label);
 		// 通过下标从ObservableList 获取对应列显示的字符串值
-		col.setCellValueFactory(new ResultSetCellValueFactory(colIdx));
+		col.setCellValueFactory(new ResultSetCellValueFactory(colIdx)); 
 		return col;
 	}
 	/**

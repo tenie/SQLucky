@@ -1,7 +1,6 @@
 package net.tenie.Sqlucky.sdk.component;
 
- 
-
+import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
 import javafx.beans.Observable;
 import javafx.event.Event;
@@ -11,6 +10,7 @@ import javafx.scene.control.OverrunStyle;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -23,6 +23,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
     
     public static <S> Callback<TableColumn<S,String>, TableCell<S,String>> forTableColumn() {
+    	
         return forTableColumn(new DefaultStringConverter());
     }
 
@@ -61,11 +62,14 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
         cm.getItems().addAll(copyVal, setNull);
         setContextMenu(cm);
     }
-    
+    boolean colSortable = true;
     public MyTextField2TableCell2(StringConverter<T> converter) {
         super(converter); 
         initMenu(converter);
+        
+        // 在表格cell中, 显示不下就以省略号结尾
         this.setTextOverrun(OverrunStyle.ELLIPSIS);
+       
         graphicProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
@@ -74,10 +78,32 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
                     
                     // commit on focus lost
                     textField.focusedProperty().addListener((obs, ov, nv) -> {
-                        if (! nv) {
+                        if (! nv) { 
                             commitEdit(converter.fromString(textField.getText()));
-                        }
+                        }  
                     });
+                  
+                    // 如果做了修改, 修改背景颜色, 并设置列不能再排序
+                    textField.textProperty().addListener((obs, ov, nv) -> {
+                    	if( nv != null) {
+                    		if(! nv.equals(ov)) {
+                    			Platform.runLater(()->{
+                    				 setStyle("-fx-background-color: #1AD0DF; -fx-text-fill: #2B2B2B;"); //#2F65CA
+	                       			 if(colSortable ) {
+	                       				 // 设置列禁止排序
+	                           			 TableView<S> table = getTableView();
+	                           	         var cols =    table.getColumns();
+	                           	         for(var col: cols) {
+	                           	        	 col.setSortable(false);
+	                           	         }
+	                           	         colSortable = false;
+	                       			 }
+                    			});
+                    		}
+                    	}
+                    	
+                    });
+                   
                     
                     // cancel with Escape, on key pressed, not released
                     textField.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
@@ -147,6 +173,17 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
 //    		System.out.println(textField.getText());
     	});
     }
+    //TODO
+    @Override
+	public void updateItem(T item, boolean empty) {
+    	super.updateItem(item, empty);
+    	System.out.println(item);
+//    	ResultSetRowPo
+    	TableRow<S> tr = getTableRow();
+    	S v = tr.getItem();
+    	System.out.println(v);
+    }
+    
     
     /** {@inheritDoc} */
     @Override public void commitEdit(T item) {
@@ -159,7 +196,7 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
                 Event.fireEvent(column, event);
             }
         }
-
+       
         super.commitEdit(item);
     }
     

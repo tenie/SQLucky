@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -434,14 +435,23 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 		tbv.scrollTo(0);
 		ResultSetPo rspo = SqluckyBottomSheetUtility.getResultSet();
-		ResultSetRowPo rowpo = rspo.createAppendNewRow(0 ); 
-		rowpo.setIsNewAdd(true);
+		ResultSetRowPo rowpo = rspo.manualAppendNewRow(0); 
+		
 		ObservableList<SheetFieldPo> fs = rspo.getFields();
 		for (int i = 0; i < fs.size(); i++) {
 			SheetFieldPo fieldpo = fs.get(i);
-			SimpleStringProperty sp = new SimpleStringProperty("<null>");
+			SimpleStringProperty sp = new SimpleStringProperty("");
+//			SimpleStringProperty sp = new SimpleStringProperty("<null>");
 			rowpo.addCell(sp, null, fieldpo); 
 		}
+		Platform.runLater(()->{
+			ObservableList<ResultSetCellPo> vals = rowpo.getRowDatas();
+			for(ResultSetCellPo val : vals) {
+				var cel = val.getCellData();
+				cel.set("<null>");
+			}
+		});
+		
 		// 使用 ResultSetPo对象的createAppendNewRow（）函数， 不需要手动给表添加行了
 //		tbv.getItems().add(0, rowpo);
 
