@@ -3,7 +3,7 @@ package net.tenie.Sqlucky.sdk.po.component;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 
 public class SqluckyTextField {
 	private AnchorPane pane;

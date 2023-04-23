@@ -3,8 +3,10 @@ package net.tenie.plugin.DataModel;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
 import net.tenie.plugin.DataModel.tools.DataModelUtility;
 
 public class DataModelTabTreeContextMenu {
@@ -19,7 +21,7 @@ public class DataModelTabTreeContextMenu {
 	
 	
 	private MenuItem delete;
-	
+	private MenuItem copyName;
 	private MenuItem refresh;
 	
 	
@@ -78,6 +80,17 @@ public class DataModelTabTreeContextMenu {
 			DataModelUtility.delAction();
 		});
 			
+		
+		copyName = new MenuItem("Copy Name");
+		copyName.setGraphic(IconGenerator.svgImageDefActive("files-o"));
+		copyName.setOnAction(e -> {
+			TreeItem<DataModelTreeNodePo> item = DataModelTabTree.currentSelectItem();
+			if(item !=null && item.getValue() !=null) {
+				String name = item.getValue().getName();
+				CommonUtility.setClipboardVal(name);
+			}
+			
+		});
 //		
 //		refresh = new MenuItem("Refresh Connection");
 //		
@@ -86,7 +99,8 @@ public class DataModelTabTreeContextMenu {
 		
 		
 		
-		contextMenu.getItems().addAll(modelImport,query,new SeparatorMenuItem(),  open, close, rename, delete);
+		contextMenu.getItems().addAll(modelImport,query,new SeparatorMenuItem(),  open, close, rename, delete,
+				new SeparatorMenuItem(),copyName);
 		contextMenu.setOnShowing(e->{
 			var item = DataModelTabTree.currentSelectItem();
 			Boolean ismodel = null ;
