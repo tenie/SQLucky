@@ -23,7 +23,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.DataModel.po.DataModelTablePo;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;

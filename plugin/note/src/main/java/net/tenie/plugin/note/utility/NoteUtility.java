@@ -25,6 +25,7 @@ import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.*;
 import net.tenie.plugin.note.component.NoteOptionPanel;
 import net.tenie.plugin.note.component.NoteTabTree;

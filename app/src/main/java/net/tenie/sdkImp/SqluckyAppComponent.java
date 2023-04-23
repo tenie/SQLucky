@@ -34,7 +34,7 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;

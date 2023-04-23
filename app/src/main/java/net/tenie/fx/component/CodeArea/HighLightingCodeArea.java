@@ -191,7 +191,8 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 //				};
 //				普通输入
 //				System.out.println("普通输入");
-				if( ! e.isAltDown() && !e.isControlDown()) {
+				e.getCode();
+				if( ! e.isShortcutDown() && ! e.isAltDown() && !e.isControlDown() && ! e.isShiftDown() && e.getCode() != KeyCode.CAPS) {
 					
 					int currentLine = codeArea.getCurrentParagraph();
 					String text = codeArea.getText(0, 0, currentLine, 0);

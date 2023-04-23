@@ -43,8 +43,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 
 /**
  * 

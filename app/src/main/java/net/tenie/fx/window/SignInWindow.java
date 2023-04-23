@@ -6,7 +6,6 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.jfoenix.controls.JFXCheckBox;
-
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -18,7 +17,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -113,7 +111,6 @@ public class SignInWindow {
 		password.disableProperty().bind(ConfigVal.SQLUCKY_LOGIN_STATUS);
 		
 		
-//		HBox hb2 = new HBox(); 
 		Label Remember = new Label(remember);
 	    rememberCB  = new JFXCheckBox();  
 	    rememberCB.selectedProperty().addListener(v->{
@@ -123,7 +120,6 @@ public class SignInWindow {
 	    });
 	   
 	    
-//	    hb2.getChildren().addAll(Remember, rememberCB );
 	    // 登入函数
 	    signInBtn = createSignInBtn();
 		signInBtn.setDisable(true);

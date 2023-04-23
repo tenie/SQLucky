@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
@@ -62,7 +63,6 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
         cm.getItems().addAll(copyVal, setNull);
         setContextMenu(cm);
     }
-    boolean colSortable = true;
     public MyTextField2TableCell2(StringConverter<T> converter) {
         super(converter); 
         initMenu(converter);
@@ -87,17 +87,8 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
                     textField.textProperty().addListener((obs, ov, nv) -> {
                     	if( nv != null) {
                     		if(! nv.equals(ov)) {
-                    			Platform.runLater(()->{
-                    				 setStyle("-fx-background-color: #1AD0DF; -fx-text-fill: #2B2B2B;"); //#2F65CA
-	                       			 if(colSortable ) {
-	                       				 // 设置列禁止排序
-	                           			 TableView<S> table = getTableView();
-	                           	         var cols =    table.getColumns();
-	                           	         for(var col: cols) {
-	                           	        	 col.setSortable(false);
-	                           	         }
-	                           	         colSortable = false;
-	                       			 }
+                    			Platform.runLater(()->{ 
+                    				setCellColorForNewOrChange();
                     			});
                     		}
                     	}
@@ -173,15 +164,22 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
 //    		System.out.println(textField.getText());
     	});
     }
-    //TODO
+    
     @Override
 	public void updateItem(T item, boolean empty) {
     	super.updateItem(item, empty);
-    	System.out.println(item);
-//    	ResultSetRowPo
-    	TableRow<S> tr = getTableRow();
-    	S v = tr.getItem();
-    	System.out.println(v);
+    	if(item != null) {
+    		// 如果是手动添加的行, 那么对应的单元格变色
+        	TableRow<S> tr = getTableRow();
+        	S v = tr.getItem();
+        	if(v instanceof ResultSetRowPo) {
+        		Boolean isNewAdd = ((ResultSetRowPo) v).getIsNewAdd();
+        		if(isNewAdd) {
+        			setCellColorForNewOrChange();
+        		}
+        	}
+        	
+    	}
     }
     
     
@@ -198,6 +196,24 @@ public class MyTextField2TableCell2<S, T> extends TextFieldTableCell<S, T> {
         }
        
         super.commitEdit(item);
+    }
+    
+    // 更改单元格颜色并且让整个表格禁用排序功能
+    boolean colSortable = true;  
+    public void setCellColorForNewOrChange() {
+		 setStyle("-fx-background-color: #1AD0DF; -fx-text-fill: #2B2B2B;"); //#2F65CA
+			 if(colSortable ) {
+				 // 设置列禁止排序
+				 TableView<S> table = getTableView();
+				 if(table != null) {
+					 var cols =    table.getColumns();
+		  	         for(var col: cols) {
+		  	        	 col.setSortable(false);
+		  	         }
+		  	         colSortable = false;
+				 }
+			 }
+	
     }
     
 }

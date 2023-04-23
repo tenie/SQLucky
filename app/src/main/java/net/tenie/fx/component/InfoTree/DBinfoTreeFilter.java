@@ -11,7 +11,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Po.TreeNodePo;
