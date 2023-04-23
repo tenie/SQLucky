@@ -15,8 +15,8 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyAreaTab;
@@ -329,7 +329,7 @@ public class MenuBarContainer {
 		});
 		
 		MenuItem SignInMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign In"));
-		SignInMenuItem.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
+		SignInMenuItem.setGraphic(IconGenerator.svgImageDefActive("sign-in"));
 		SignInMenuItem.setOnAction(value -> {
 //			SignInWindow.createWorkspaceConfigWindow();
 			SignInWindow.show("");
