@@ -71,6 +71,7 @@ public final class SettingKeyCodeCombination {
 
 		KeyCodeCombination F6 = new KeyCodeCombination(KeyCode.F6);
 		KeyCodeCombination F9 = new KeyCodeCombination(KeyCode.F9);
+		KeyCodeCombination F11 = new KeyCodeCombination(KeyCode.F11);
 
 		KeyCodeCombination ctrlO = new KeyCodeCombination(KeyCode.O, KeyCodeCombination.SHORTCUT_DOWN);
 		
@@ -90,6 +91,19 @@ public final class SettingKeyCodeCombination {
 		JFXButton stopbtn = CommonButtons.stopbtn; //  AllButtons.btns.get("stopbtn");
 		JFXButton runFunPro = CommonButtons.runFunPro; //  AllButtons.btns.get("runFunPro");
 
+		
+		
+		scene.getAccelerators().put(F11, () -> {
+			
+			var stage = ComponentGetter.primaryStage;
+			if( stage.isMaximized()) {
+				stage.setMaximized(false);
+			}else {
+				stage.setMaximized(true);
+			}
+			
+		});
+		
 		scene.getAccelerators().put(altSlash, () -> {
 			var codeArea = SqluckyEditor.getCodeArea();
 			if ( CommonUtility.isMacOS() ) {
