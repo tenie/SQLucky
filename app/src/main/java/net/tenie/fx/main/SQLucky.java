@@ -22,6 +22,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -147,8 +148,8 @@ public class SQLucky extends Application {
 //			primaryStage.setWidth(100);
 //			primaryStage.setHeight(0);
 		    primaryStage.centerOnScreen();
-//			  primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
-
+//			primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
+//		    primaryStage.setIconified(true); //最小化窗口，任务栏可见图标
 			if(CommonUtility.isLinuxOS()) {
 				MyPreloaderGif.hiden();
 			}else {
