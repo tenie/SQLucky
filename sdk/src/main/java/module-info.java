@@ -41,6 +41,8 @@ open module SQLucky.sdk {
 	requires org.apache.httpcomponents.core5.httpcore5;
 	requires org.mybatis;
 	requires com.github.albfernandez.juniversalchardet;
+	requires org.apache.poi.poi;
+	requires org.apache.poi.ooxml;
 //	requires okhttp3;
 	
 	exports net.tenie.Sqlucky.sdk;
@@ -53,5 +55,6 @@ open module SQLucky.sdk {
 	exports net.tenie.Sqlucky.sdk.po.component;
 	exports net.tenie.Sqlucky.sdk.db; 
 	exports net.tenie.Sqlucky.sdk.ui;
+	exports net.tenie.Sqlucky.sdk.excel;
 	
 }

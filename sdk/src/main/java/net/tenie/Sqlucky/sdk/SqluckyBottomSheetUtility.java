@@ -15,6 +15,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.excel.ExcelDataPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.RsVal;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -321,5 +322,40 @@ public class SqluckyBottomSheetUtility {
 				vals =  SqluckyBottomSheetUtility.getTabData();
 			}
 			return vals;
+		}
+		
+		
+		//TODO table view 数据转换为excel导出的数据结构
+		public static ExcelDataPo tableValueToExcelDataPo() {
+
+			String tabName = SqluckyBottomSheetUtility.getTableName(); 
+			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
+			ResultSetPo valpo = SqluckyBottomSheetUtility.getResultSet();
+			ObservableList<ResultSetRowPo> rows = valpo.getDatas();
+			
+			ExcelDataPo po = new ExcelDataPo();
+			po.setSheetName(tabName);
+			
+			// 表头字段
+			List<String> fields = new ArrayList<>();
+			for(var fpo : fpos) {
+				fields.add(fpo.getColumnLabel().get());
+			}
+			// 数据
+			List<List<String>> datas = new ArrayList<>();
+			for(var rowpo : rows) {
+				List<String> rowlist = new ArrayList<>();
+				ObservableList<ResultSetCellPo>  cells = rowpo.getRowDatas();
+				for(ResultSetCellPo cell : cells) {
+					var cellval = cell.getCellData().get();
+					rowlist.add(cellval);
+				}
+				datas.add(rowlist);
+				
+			}
+			
+			
+			
+			return po;
 		}
 }

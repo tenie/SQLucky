@@ -134,6 +134,10 @@ public class ButtonAction {
 //			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
 
 			ObservableList<ResultSetRowPo> vals = table.getSelectionModel().getSelectedItems();
+			List<ResultSetRowPo> selectRows = new ArrayList<>();
+			for(var vl : vals) {
+				selectRows.add(vl);
+			}
 
 			// 行号集合
 //			List<String> temp = new ArrayList<>();
@@ -143,8 +147,8 @@ public class ButtonAction {
 			Consumer<String> caller = x -> {
 				Boolean showDBExecInfo = false;
 				try {
-					for (int i = 0; i < vals.size(); i++) {
-						ResultSetRowPo sps = vals.get(i);
+					for (int i = 0; i < selectRows.size(); i++) {
+						ResultSetRowPo sps = selectRows.get(i);
 						String msg = "";
 						// 如果不是后期手动添加的行, 就不需要执行数据库删除操作
 						Boolean isNewAdd = sps.getIsNewAdd();
@@ -175,7 +179,7 @@ public class ButtonAction {
 					}
 				}
 			};
-		if(vals.size() >0 ) {
+		if(selectRows.size() >0 ) {
 			MyAlert.myConfirmation("Sure to delete selected rows?", caller);
 		}
 		
