@@ -32,6 +32,8 @@ import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.excel.ExcelDataPo;
+import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
@@ -179,6 +181,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		exportBtn.setTooltip(MyTooltipTool.instance("Export data"));
 		exportBtn.setDisable(disable);
 
+		// 导出sql
 		Menu insertSQL = new Menu("Export Insert SQL Format ");
 		MenuItem selected = new MenuItem("Selected Data to Clipboard ");
 		selected.setOnAction(CommonEventHandler.InsertSQLClipboard(true, false));
@@ -191,7 +194,9 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		allfile.setOnAction(CommonEventHandler.InsertSQLClipboard(false, true));
 
 		insertSQL.getItems().addAll(selected, selectedfile, all, allfile);
-
+		
+		
+		// 导出csv
 		Menu csv = new Menu("Export CSV Format ");
 		MenuItem csvselected = new MenuItem("Selected Data to Clipboard ");
 		csvselected.setOnAction(CommonEventHandler.csvStrClipboard(true, false));
@@ -204,20 +209,41 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		csvallfile.setOnAction(CommonEventHandler.csvStrClipboard(false, true));
 
 		csv.getItems().addAll(csvselected, csvselectedfile, csvall, csvallfile);
+		
+		//TODO 导出 excel
+		Menu excel = new Menu("Export Excel "); 
+		MenuItem excelSelected = new MenuItem("Export Selected Data ");
+		excelSelected.setOnAction(e->{
+			ExcelDataPo po = new ExcelDataPo();
+			String tabName = SqluckyBottomSheetUtility.getTableName();
 
-		Menu txt = new Menu("Export TXT Format ");
-		MenuItem txtselected = new MenuItem("Selected Data to Clipboard ");
-		txtselected.setOnAction(CommonEventHandler.txtStrClipboard(true, false));
-		MenuItem txtselectedfile = new MenuItem("Selected Data to file");
-		txtselectedfile.setOnAction(CommonEventHandler.txtStrClipboard(true, true));
+			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
+			ResultSetPo valpo = SqluckyBottomSheetUtility.getResultSet();
+			 ObservableList<ResultSetRowPo> rowPO = valpo.getDatas();
+			ExcelUtil.createXlsWritValue(po, null);
+		});
 
-		MenuItem txtall = new MenuItem("All Data to Clipboard ");
-		txtall.setOnAction(CommonEventHandler.txtStrClipboard(false, false));
-		MenuItem txtallfile = new MenuItem("All Data to file");
-		txtallfile.setOnAction(CommonEventHandler.txtStrClipboard(false, true));
+		MenuItem excelAll = new MenuItem("Export All Data  ");
+		excelAll.setOnAction(CommonEventHandler.txtStrClipboard(false, false)); 
 
-		txt.getItems().addAll(txtselected, txtselectedfile, txtall, txtallfile);
+		excel.getItems().addAll(excelSelected,  excelAll);
 
+		
+		// 导出 txt
+//		Menu txt = new Menu("Export TXT Format ");
+//		MenuItem txtselected = new MenuItem("Selected Data to Clipboard ");
+//		txtselected.setOnAction(CommonEventHandler.txtStrClipboard(true, false));
+//		MenuItem txtselectedfile = new MenuItem("Selected Data to file");
+//		txtselectedfile.setOnAction(CommonEventHandler.txtStrClipboard(true, true));
+//
+//		MenuItem txtall = new MenuItem("All Data to Clipboard ");
+//		txtall.setOnAction(CommonEventHandler.txtStrClipboard(false, false));
+//		MenuItem txtallfile = new MenuItem("All Data to file");
+//		txtallfile.setOnAction(CommonEventHandler.txtStrClipboard(false, true));
+//
+//		txt.getItems().addAll(txtselected, txtselectedfile, txtall, txtallfile);
+
+		// 导出字段
 		Menu fieldNames = new Menu("Export Table Field Name ");
 		MenuItem CommaSplit = new MenuItem("Comma splitting");
 		CommaSplit.setOnAction(CommonEventHandler.commaSplitTableFields());
@@ -227,7 +253,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 		fieldNames.getItems().addAll(CommaSplit, CommaSplitIncludeType);
 
-		exportBtn.getItems().addAll(insertSQL, csv, txt, fieldNames);
+		exportBtn.getItems().addAll(insertSQL, csv, excel, fieldNames);
 		
 		
 		// 锁

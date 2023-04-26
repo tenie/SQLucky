@@ -219,7 +219,12 @@ public class CommonEventHandler {
 
 		};
 	}
-
+	/**
+	 * 将table中的数据以普通文本方式导出
+	 * @param isSelected
+	 * @param isFile
+	 * @return
+	 */
 	public static EventHandler<ActionEvent> txtStrClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) { 
