@@ -321,7 +321,7 @@ public class MenuBarContainer {
 
 	Menu createHelpMenu() {
 		Menu mn = new Menu("Help");
-		mn.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
+//		mn.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
 		MenuItem about = new MenuItem(StrUtils.MenuItemNameFormat("About"));
 		about.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
 		about.setOnAction(value -> {
