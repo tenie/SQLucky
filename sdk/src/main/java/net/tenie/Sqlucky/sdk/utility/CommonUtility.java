@@ -146,7 +146,7 @@ public class CommonUtility {
 				t.start();
 			 
 		}else {
-			logger.debug("delayRunThread");
+//			logger.debug("delayRunThread");
 			return ;
 			
 		}  
