@@ -22,9 +22,9 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
-import net.tenie.Sqlucky.sdk.component.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.*;
 import net.tenie.plugin.codeGeneration.impl.CodeGenerationDelegateImpl;
 

@@ -43,6 +43,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
@@ -812,6 +813,20 @@ public class CommonUtility {
 			file = FileOrDirectoryChooser.showSaveDefault("Save", ComponentGetter.primaryStage);
 		}
 		return file;
+	}
+	
+	// 创建文件事, 让用户现在文件的绝对路径和文件名
+	public static File getFilePathHelper(String fileType) {
+		FileChooser fileChooser = new FileChooser(); 
+//		fileChooser.setTitle(title);
+		File dir =  FileOrDirectoryChooser.getOpenfileDir();
+		
+		fileChooser.setInitialDirectory( dir);
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(fileType, "*."+fileType)); 
+		File file = fileChooser.showSaveDialog( ComponentGetter.primaryStage);
+		return file;
+		 
 	}
 	// 字段值被修改还原, 不允许修改
 	public static   StringProperty createReadOnlyStringProperty(String val ) {

@@ -2,6 +2,11 @@ package net.tenie.Sqlucky.sdk.excel;
 
 import java.util.List;
 
+/**
+ * excel 导出的时候, 使用的数据结构
+ * @author tenie
+ *
+ */
 public class ExcelDataPo {
 	private String sheetName = "Sheet1";
 	// 行首的列名
@@ -32,9 +37,5 @@ public class ExcelDataPo {
 	public void setDatas(List<List<String>> datas) {
 		this.datas = datas;
 	}
-	
-	
-	
-	
-	
+
 }
