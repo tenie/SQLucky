@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component;
+package net.tenie.Sqlucky.sdk.ui;
 
 import java.util.function.Consumer;
 
@@ -10,7 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
-import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class LoadingAnimation {
@@ -90,6 +90,19 @@ public class LoadingAnimation {
 		
 	}
 	
+	// 主界面上加载Loading 动画
+	public static void  primarySceneRootLoadingAnimation(String loadingString, Consumer<String> consumer) {
+		 StackPane root = ComponentGetter.primarySceneRoot;
+			addLoading(root, loadingString , 30);
+//			后台执行
+			CommonUtility.runThread(v -> {
+				consumer.accept("");
+				rmLoading(root);
+			});
+			
+	 }
+	
+	// 当前激活的界面StackPane 添加loading , 在子界面有效
 	public static void loadingAnimation( String loadingString, Consumer<String> consumer) {
 		StackPane root = ComponentGetter.currentStackPane;
 		addLoading(root, loadingString , 30);
@@ -99,11 +112,6 @@ public class LoadingAnimation {
 			rmLoading(root);
 		});
 		
-//		Thread th =  new Thread(()->{
-//			consumer.accept("");
-//			rmLoading(root);
-//		});
-//		th.start();
 		
 	}
 	

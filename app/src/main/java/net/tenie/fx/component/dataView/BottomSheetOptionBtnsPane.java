@@ -1,5 +1,6 @@
 package net.tenie.fx.component.dataView;
 
+import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +37,10 @@ import net.tenie.Sqlucky.sdk.excel.ExcelDataPo;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.ButtonAction;
@@ -211,22 +214,52 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		csv.getItems().addAll(csvselected, csvselectedfile, csvall, csvallfile);
 		
 		//TODO 导出 excel
-		Menu excel = new Menu("Export Excel "); 
+		Menu excel = new Menu("Export Excel ");
+		
+		// 导出选中的数据
 		MenuItem excelSelected = new MenuItem("Export Selected Data ");
-		excelSelected.setOnAction(e->{
-			ExcelDataPo po = new ExcelDataPo();
-			String tabName = SqluckyBottomSheetUtility.getTableName();
+		excelSelected.setOnAction(e -> {
+			File ff = CommonUtility.getFilePathHelper("xls");
+			if(ff.exists()) {
+				MyAlert.errorAlert("File Name Exist. Need A New File Name, Please!");
+				return ;
+			}
+			LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
+				ExcelDataPo po = SqluckyBottomSheetUtility.tableValueToExcelDataPo(true);
+				try {
+					ExcelUtil.createXlsWritValue(po, ff);
+				} catch (Exception e1) { 
+					e1.printStackTrace();
+					MyAlert.errorAlert("Error");
+				}
 
-			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
-			ResultSetPo valpo = SqluckyBottomSheetUtility.getResultSet();
-			 ObservableList<ResultSetRowPo> rowPO = valpo.getDatas();
-			ExcelUtil.createXlsWritValue(po, null);
+			});
 		});
 
+		// 导出所有数据
 		MenuItem excelAll = new MenuItem("Export All Data  ");
-		excelAll.setOnAction(CommonEventHandler.txtStrClipboard(false, false)); 
+		excelAll.setOnAction(e -> {
+			File ff = CommonUtility.getFilePathHelper("xls");
+			if(ff.exists()) {
+				MyAlert.errorAlert("File Name Exist. Need A New File Name, Please!");
+				return ;
+			}
+			LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
+				ExcelDataPo po = SqluckyBottomSheetUtility.tableValueToExcelDataPo(false);
+				try {
+					ExcelUtil.createXlsWritValue(po, ff);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					MyAlert.errorAlert("Error");
+				}
+
+			});
+		});
 
 		excel.getItems().addAll(excelSelected,  excelAll);
+//		excel.setOnShowing(e->{
+//			
+//		});
 
 		
 		// 导出 txt
@@ -255,6 +288,24 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 		exportBtn.getItems().addAll(insertSQL, csv, excel, fieldNames);
 		
+		exportBtn.setOnShowing(e->{
+			var vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
+			if(vals!=null && vals.size() > 0) {
+				selected.setDisable(false);
+				selectedfile.setDisable(false);
+				
+				csvselected.setDisable(false);
+				csvselectedfile.setDisable(false);
+				excelSelected.setDisable(false);
+			}else {
+				selected.setDisable(true);
+				selectedfile.setDisable(true);
+				
+				csvselected.setDisable(true);
+				csvselectedfile.setDisable(true);
+				excelSelected.setDisable(true);
+			}
+		});
 		
 		// 锁
 		JFXButton lockbtn = SdkComponent.createLockBtn(mytb);

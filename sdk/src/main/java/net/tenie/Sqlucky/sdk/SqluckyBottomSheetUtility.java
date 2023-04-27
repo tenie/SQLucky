@@ -3,11 +3,7 @@ package net.tenie.Sqlucky.sdk;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-
 import org.controlsfx.control.tableview2.FilteredTableView;
-
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -102,27 +98,6 @@ public class SqluckyBottomSheetUtility {
 			return ComponentGetter.currentDataTab().getDetailBtn();
 		}
 
-		public static boolean exist(int row) {
-			//TODO 后期重构
-//			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
-//			if (dvt != null) {
-//				Map<String, ObservableList<StringProperty>> oldval = dvt.getNewLineDate();
-//				if (null != oldval.get(row + "")) {
-//					return true;
-//				}
-//			}
-			return false;
-		}
-
-		public static void addData(int rowNo,ResultSetRowPo newDate,
-				ResultSetRowPo oldDate) {
-			if (!exist(rowNo)) {
-				addDataOldVal(rowNo, oldDate);
-			}
-			addDataNewLine(rowNo, newDate);
-
-		}
-
 		public static void addData(int rowNo, ResultSetRowPo newDate) {
 			addDataNewLine(rowNo, newDate);
 		}
@@ -135,13 +110,11 @@ public class SqluckyBottomSheetUtility {
 			return "";
 		}
 
-//		// 添加一行新数据
+  		// 添加一行新数据
 		public static void addDataNewLine(int rowNo, ResultSetRowPo  vals) {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				dvt.getDataRs().getNewDatas().add(vals);
-//				Map<String, ObservableList<StringProperty>> map = dvt.getNewLineDate();
-//				map.put(rowNo + "", vals);
 			}
 		}
 
@@ -150,16 +123,9 @@ public class SqluckyBottomSheetUtility {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 			if (dvt != null) {
 				dvt.getDataRs().getUpdateDatas().add(vals);
-//				Map<String, ObservableList<StringProperty>> map = dvt.getOldval();
-//				map.put(rowNo + "", vals);
 			}
 		}
 
-		public static ObservableList<StringProperty> getold2(String row) {
-//			var ov = getOldval();
-//			return ov.get(row);
-			return null;
-		}
 
 		public static ObservableList<ResultSetRowPo> getOldval() {
 			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
@@ -212,8 +178,6 @@ public class SqluckyBottomSheetUtility {
 			if (dvt != null) {
 				dvt.getDataRs().getNewDatas().add(newDate);
 				dvt.getDataRs().getDatas().add(newDate);
-//				Map<String, ObservableList<StringProperty>> map = dvt.getAppendData();
-//				map.put(rowNo + "", newDate);
 			}
 		}
 
@@ -222,37 +186,9 @@ public class SqluckyBottomSheetUtility {
 			if (dvt != null) {
 				return dvt.getDataRs().getNewDatas();
 			}
-			//TODO 后期重构
-//			SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
-//			if (dvt != null) {
-//				List<ObservableList<StringProperty>> dataList = new ArrayList<>();
-//
-//				var map = dvt.getAppendData();
-//				for (String key : map.keySet()) {
-//					dataList.add(map.get(key));
-//				}
-//				return dataList;
-//			}
 			return null;
-
 		}
 
-		public static void deleteTabDataRowNo2(String no) {
-			//TODO 后期重构
-//			ObservableList<ObservableList<StringProperty>> ol = getTabData();
-//			if (ol == null)
-//				return;
-//			for (int i = 0; i < ol.size(); i++) {
-//				ObservableList<StringProperty> sps = ol.get(i);
-//				int len = sps.size();
-//				String dro = sps.get(len - 1).get();
-//				if (dro.equals(no)) {
-//					ol.remove(i);
-//					break;
-//				}
-//			}
-
-		}
 
 		public static Connection getDbconn() {
 			return getDbConnection().getConn();
@@ -286,34 +222,6 @@ public class SqluckyBottomSheetUtility {
 			return vals;
 		}
 
-		// 获取 当前table view 的控制面板
-//		public static AnchorPane optionPane() {
-//			if (ComponentGetter.dataTabPane == null || ComponentGetter.dataTabPane.getSelectionModel() == null
-//					|| ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem() == null)
-//				return null;
-//			Node vb = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem().getContent();
-//			if (vb != null) {
-//				VBox vbx = (VBox) vb;
-//				AnchorPane fp = (AnchorPane) vbx.getChildren().get(0);
-//				return fp;
-//			}
-//			return null;
-//		}
-
-		// 获取当前数据页面 中的 某个按钮
-//		public static Button getDataOptionBtn(String btnName) {
-//			AnchorPane fp = optionPane();
-//			if (fp == null)
-//				return null;
-//			Optional<Node> fn = fp.getChildren().stream().filter(v -> {
-//				return v.getId().equals(btnName);
-//			}).findFirst();
-//			Button btn = (Button) fn.get();
-//
-//			return btn;
-//		}
-
-		
 		public static ObservableList<ResultSetRowPo> getValsHelper(boolean isSelected) {
 			ObservableList<ResultSetRowPo> vals = null;
 			if (isSelected) {
@@ -326,15 +234,16 @@ public class SqluckyBottomSheetUtility {
 		
 		
 		//TODO table view 数据转换为excel导出的数据结构
-		public static ExcelDataPo tableValueToExcelDataPo() {
+		public static ExcelDataPo tableValueToExcelDataPo(boolean isSelect) {
 
 			String tabName = SqluckyBottomSheetUtility.getTableName(); 
 			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
-			ResultSetPo valpo = SqluckyBottomSheetUtility.getResultSet();
-			ObservableList<ResultSetRowPo> rows = valpo.getDatas();
+			
+			
+			ObservableList<ResultSetRowPo> rows = getValsHelper(isSelect);//valpo.getDatas();
 			
 			ExcelDataPo po = new ExcelDataPo();
-			po.setSheetName(tabName);
+			
 			
 			// 表头字段
 			List<String> fields = new ArrayList<>();
@@ -348,12 +257,18 @@ public class SqluckyBottomSheetUtility {
 				ObservableList<ResultSetCellPo>  cells = rowpo.getRowDatas();
 				for(ResultSetCellPo cell : cells) {
 					var cellval = cell.getCellData().get();
+					if(cellval != null && "<null>".equals(cellval)) {
+						cellval = null;
+					}
 					rowlist.add(cellval);
 				}
 				datas.add(rowlist);
 				
 			}
 			
+			po.setSheetName(tabName);
+			po.setHeaderFields(fields);
+			po.setDatas(datas);
 			
 			
 			return po;

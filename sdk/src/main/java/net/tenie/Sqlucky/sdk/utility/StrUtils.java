@@ -24,9 +24,10 @@ import org.apache.logging.log4j.Logger;
 /*   @author tenie */
 public class StrUtils {
 	private static Logger logger = LogManager.getLogger(StrUtils.class);
-	public final static SimpleDateFormat sdf_s = new SimpleDateFormat("yyyy-MM-dd");
-	public final static SimpleDateFormat sdf_l = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+	public final static SimpleDateFormat sdf_Date = new SimpleDateFormat("yyyy-MM-dd");
+	public final static SimpleDateFormat sdf_DateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
 	public static String dateFormateL = "yyyy-MM-dd HH:mm:ss";
+	public static String dateTimeForFileName = "yyyy-MM-dd_HH_mm_ss";
 	public final static String EMPTY_STRING = "";
 	public final static String BLANK_SPRING_STRING = " ";
 	public static final char CHAR_TILDE = '~';
@@ -411,12 +412,17 @@ public class StrUtils {
 	}
 
 	public static String dateToStrL(Date d) {
-		return sdf_l.format(d);
+		return sdf_DateTime.format(d);
 	}
 
 	public static String dateToStr(Date d, String formate) {
 		SimpleDateFormat sdf = new SimpleDateFormat(formate);
 		return sdf.format(d);
+	}
+	
+	// 返回一个时间字符串, 可用于文件名的一部分
+	public static String currentDateTimeToFileNameStr() {
+		return dateToStr(new Date(), dateTimeForFileName);
 	}
 
 	public static Date StrToDate(String str, String formate) {
@@ -446,7 +452,7 @@ public class StrUtils {
 	// 字符串转时间
 	public static Date StrToDate_L(String str) {
 		try {
-			return new Date(sdf_l.parse(str).getTime());
+			return new Date(sdf_DateTime.parse(str).getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new RuntimeException();
@@ -457,7 +463,7 @@ public class StrUtils {
 	public static java.sql.Date StrToDate_S(String str) {
 
 		try {
-			return new java.sql.Date(sdf_s.parse(str).getTime());
+			return new java.sql.Date(sdf_Date.parse(str).getTime());
 		} catch (ParseException e) {
 			e.printStackTrace();
 			throw new RuntimeException();
@@ -568,4 +574,6 @@ public class StrUtils {
 		}
 		return rtVal;
 	}
+	
+	
 }

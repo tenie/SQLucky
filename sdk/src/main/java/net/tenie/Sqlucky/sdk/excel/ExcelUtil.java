@@ -78,8 +78,9 @@ public class ExcelUtil {
 	    * @param dataList 	数据
 	    * @param cloumnCount  
 	    * @param finalXlsxPath 文件存在就删除,再创建
+	    * @throws Exception 
 	    */
-		public static void createXlsWritValue(ExcelDataPo dataPo, File finalXlsxFile ) {
+		public static void createXlsWritValue(ExcelDataPo dataPo, File finalXlsxFile ) throws Exception {
 			OutputStream out = null;
 			Workbook workBook = null;
 			try {
@@ -97,8 +98,17 @@ public class ExcelUtil {
 					// 创建表头
 					Row headerRow = sheet.createRow(0);
 					for(int i = 0 ; i< fields.size(); i++) {
+						String fieldName = fields.get(i);
 						Cell cellTmp = headerRow.createCell(i);
-						cellTmp.setCellValue(fields.get(i)); 
+						cellTmp.setCellValue(fields.get(i));
+						
+						// 设置列宽带
+						var cw = sheet.getColumnWidth(i);
+						int colWidth =  fieldName.length()* 330;
+						if(colWidth > cw) {
+							sheet.setColumnWidth(i,  colWidth);
+						}
+						
 					}
 					tableHeader++;
 					
@@ -110,12 +120,13 @@ public class ExcelUtil {
 				for (int j = 0; j < dataList.size(); j++) {
 					// 创建一行数据：在表头之下, 如果没有表头就是第一行开始
 					Row row = sheet.createRow(j + tableHeader);
+				
 					// 得到要插入的每一条记录
 					List<String> data = dataList.get(j); 
 					for (int k = 0; k < data.size(); k++) {
 						// 在一行内循环
-						Cell first = row.createCell(k);
-						first.setCellValue(data.get(k)); 
+						Cell cell = row.createCell(k); 
+						cell.setCellValue(data.get(k)); 
 					}
 				}
 				// 创建文件输出流，准备输出电子表格：这个必须有，否则你在sheet上做的任何操作都不会有效
@@ -123,6 +134,7 @@ public class ExcelUtil {
 				workBook.write(out);
 			} catch (Exception e) {
 				e.printStackTrace();
+				throw e;
 			} finally {
 				try {
 					if (out != null) {
