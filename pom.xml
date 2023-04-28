@@ -8,7 +8,7 @@
 	<packaging>pom</packaging>
 	<modules>
 		<module>sdk</module>
-		<module>plugin/Note</module>
+		<module>plugin/note</module>
 		<module>plugin/WorkDataBackup</module>
 		<module>plugin/DB2_connector</module>
 		<module>plugin/H2_connector</module>
@@ -42,7 +42,8 @@
 	</properties>
 
 	<dependencyManagement>
-		<dependencies>
+<dependencies>
+
 		  
 <dependency>
     <groupId>org.apache.poi</groupId>
@@ -54,6 +55,38 @@
     <artifactId>poi-ooxml</artifactId>
     <version>5.2.3</version>
 </dependency>
+
+<dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-collections4</artifactId> 
+	  <version>4.4</version>
+</dependency>
+
+<dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-math3</artifactId>
+	  <version>3.6.1</version>
+</dependency>
+<dependency>
+	  <groupId>commons-codec</groupId>
+	  <artifactId>commons-codec</artifactId> 
+	  <version>1.15</version>
+</dependency>
+
+	
+<dependency>
+	 <groupId>com.zaxxer</groupId>
+   <artifactId>SparseBitSet</artifactId>
+   <version>1.2</version>
+</dependency>	
+<dependency>
+	  <groupId>org.apache.xmlbeans</groupId>
+    <artifactId>xmlbeans</artifactId>
+    <version>5.1.1</version>
+</dependency>
+
+
+ 
 
 	
 <dependency>
@@ -133,7 +166,7 @@
 			<dependency>
 				<groupId>commons-beanutils</groupId>
 				<artifactId>commons-beanutils</artifactId>
-				<version>1.9.2</version>
+				<version>1.9.4</version>
 			</dependency>
 		
 			<dependency>

@@ -39,6 +39,8 @@ open module SQLucky {
 	requires org.apache.httpcomponents.core5.httpcore5;
 	
 	requires com.github.albfernandez.juniversalchardet;
+	requires org.apache.poi.poi;
+	requires org.apache.poi.ooxml;
 	
 	// non-mods
 	requires org.apache.commons.io;
