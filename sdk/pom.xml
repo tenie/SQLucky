@@ -12,8 +12,15 @@
 	<packaging>jar</packaging>
 	<name>SQLucky-SDK</name>
 
-	<dependencies>
-	
+
+<dependencies>
+
+
+
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+</dependency>
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
@@ -22,15 +29,35 @@
     <groupId>org.apache.poi</groupId>
     <artifactId>poi-ooxml</artifactId>
 </dependency>
+ 
+<dependency>
+	  <groupId>org.apache.xmlbeans</groupId>
+      <artifactId>xmlbeans</artifactId>
+</dependency>
+<dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-collections4</artifactId> 
+</dependency>
+
+<dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-math3</artifactId>
+</dependency>
+<dependency>
+	  <groupId>commons-codec</groupId>
+	  <artifactId>commons-codec</artifactId> 
+</dependency>
 
 	
 <dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
+	 <groupId>com.zaxxer</groupId>
+ 	  <artifactId>SparseBitSet</artifactId>
 </dependency>
+ 
+ 
 	
 <dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
+ 	<groupId>com.fasterxml.jackson.core</groupId>
     <artifactId>jackson-annotations</artifactId>
 </dependency>
 

@@ -15,9 +15,41 @@
 	<organization>
 		<name>https://github.com/tenie/SQLucky</name>
 	</organization>
-	<dependencies>
+<dependencies>
+ 
+
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi</artifactId>
+</dependency> 
+<dependency>
+    <groupId>org.apache.poi</groupId>
+    <artifactId>poi-ooxml</artifactId>
+</dependency>
+ 
+<dependency>
+	  <groupId>org.apache.xmlbeans</groupId>
+      <artifactId>xmlbeans</artifactId>
+</dependency>
+<dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-collections4</artifactId> 
+</dependency>
+
+<dependency>
+	  <groupId>org.apache.commons</groupId>
+	  <artifactId>commons-math3</artifactId>
+</dependency>
+<dependency>
+	  <groupId>commons-codec</groupId>
+	  <artifactId>commons-codec</artifactId> 
+</dependency>
+
 	
-	
+<dependency>
+	 <groupId>com.zaxxer</groupId>
+ 	  <artifactId>SparseBitSet</artifactId>
+</dependency>	
 
 <dependency>
     <groupId>org.projectlombok</groupId>
@@ -126,10 +158,11 @@
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>commons-beanutils</groupId>
 			<artifactId>commons-beanutils</artifactId>
-		</dependency>
+			<version>1.9.4</version>
+		</dependency> -->
 
 		<dependency>
 			<groupId>org.openjfx</groupId>

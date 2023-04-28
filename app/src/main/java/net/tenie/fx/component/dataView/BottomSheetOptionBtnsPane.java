@@ -224,16 +224,16 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 				MyAlert.errorAlert("File Name Exist. Need A New File Name, Please!");
 				return ;
 			}
-			LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-				ExcelDataPo po = SqluckyBottomSheetUtility.tableValueToExcelDataPo(true);
-				try {
-					ExcelUtil.createXlsWritValue(po, ff);
-				} catch (Exception e1) { 
-					e1.printStackTrace();
-					MyAlert.errorAlert("Error");
-				}
-
-			});
+//			LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
+//				ExcelDataPo po = SqluckyBottomSheetUtility.tableValueToExcelDataPo(true);
+//				try {
+//					ExcelUtil.createXlsWritValue(po, ff);
+//				} catch (Exception e1) { 
+//					e1.printStackTrace();
+//					MyAlert.errorAlert("Error");
+//				}
+//
+//			});
 		});
 
 		// 导出所有数据
@@ -244,16 +244,16 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 				MyAlert.errorAlert("File Name Exist. Need A New File Name, Please!");
 				return ;
 			}
-			LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-				ExcelDataPo po = SqluckyBottomSheetUtility.tableValueToExcelDataPo(false);
-				try {
-					ExcelUtil.createXlsWritValue(po, ff);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					MyAlert.errorAlert("Error");
-				}
-
-			});
+//			LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
+//				ExcelDataPo po = SqluckyBottomSheetUtility.tableValueToExcelDataPo(false);
+//				try {
+//					ExcelUtil.createXlsWritValue(po, ff);
+//				} catch (Exception e1) {
+//					e1.printStackTrace();
+//					MyAlert.errorAlert("Error");
+//				}
+//
+//			});
 		});
 
 		excel.getItems().addAll(excelSelected,  excelAll);
