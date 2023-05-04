@@ -12,6 +12,16 @@ public class SqluckyStage {
 	private Scene scene ; // = new Scene(stackPane);
 	private  StackPane stackPane ;
 	
+	public static void initStageCss(Stage	stage) {
+		 var sc = stage.getScene();
+		 CommonUtility.loadCss(sc);
+		 // 图标
+		 stage.getIcons().add(ComponentGetter.LogoIcons);
+		 
+		 
+	}
+	
+	
 	public SqluckyStage(Node pane) {
 		 stage =  new Stage();
 		 
