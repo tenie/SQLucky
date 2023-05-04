@@ -36,6 +36,7 @@ import net.tenie.fx.Action.SettingKeyCodeCombination;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
 import net.tenie.fx.component.container.AppWindow;
+import net.tenie.fx.component.container.AppWindowReStyleByWinOS;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.AppDao;
 import net.tenie.lib.tools.UnlimitedCryptoPoliciesCheck;
@@ -136,8 +137,8 @@ public class SQLucky extends Application {
 			primaryStage.setY(primaryScreenBounds.getMinY());
 			primaryStage.setWidth(primaryScreenBounds.getWidth());
 			primaryStage.setHeight(primaryScreenBounds.getHeight());
-			primaryStage.setMaximized(true); 
-			primaryStage.setResizable(false);
+			primaryStage.setMaximized(false); 
+//			primaryStage.setResizable(false);
 
 			primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
 			ComponentGetter.primaryStage = primaryStage; 
@@ -155,6 +156,14 @@ public class SQLucky extends Application {
 			}else {
 				MyPreloaderMp4.hiden();
 			}
+			// windows 系统, 使用自己的关闭窗口
+			if(CommonUtility.isWinOS()) {
+				AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
+				winos.start(primaryStage, app.getHeadAnchorPane());
+			}
+			
+			
+			
 			primaryStage.show(); 
 			
 			

@@ -3,10 +3,12 @@ package net.tenie.fx.component.container;
 import org.controlsfx.control.MasterDetailPane;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
@@ -28,6 +30,9 @@ public class AppWindow {
 	private DataViewContainer dataView;
 	private Scene appScene;
 	private StackPane root;
+	
+	// 窗口的顶部(主菜单的位置)
+	private AnchorPane headAnchorPane;
 	
 
 	public AppWindow() {
@@ -67,9 +72,18 @@ public class AppWindow {
 		ComponentGetter.primaryscene = appScene;
 		ComponentGetter.primarySceneRoot = root; 
 		
+		// 主菜单加入到顶部pane中
+		headAnchorPane  = new AnchorPane();
+		var mmb = mainMenuBar.getMainMenuBar();
+		headAnchorPane.getChildren().add(mmb);
+		AnchorPane.setLeftAnchor(mmb, 3.0); 
+		AnchorPane.setTopAnchor(mmb, 3.0);
+		
 		Platform.runLater(()->{
 //			CommonUtility.platformAwait();
-			mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
+			mainWindow.getChildren().addAll(headAnchorPane, masterDetailPane);
+			VBox.setMargin(masterDetailPane, new Insets(3, 3, 3, 3));
+//TODO			mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
 			CommonUtility.fadeTransition(operate.getContainer(), 2000); 
 			CommonUtility.fadeTransition(dataView.getContainer(), 2000); 
 			CommonUtility.fadeTransition(mainMenuBar.getMainMenuBar(), 2000); 
@@ -188,6 +202,14 @@ public class AppWindow {
 		tmpbox.getStyleClass().add("main-background");
 		Scene tmpscene = new Scene( root);
 		return tmpscene;
+	}
+
+	public AnchorPane getHeadAnchorPane() {
+		return headAnchorPane;
+	}
+
+	public void setHeadAnchorPane(AnchorPane headAnchorPane) {
+		this.headAnchorPane = headAnchorPane;
 	}
 
 
