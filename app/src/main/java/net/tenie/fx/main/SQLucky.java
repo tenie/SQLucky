@@ -116,39 +116,24 @@ public class SQLucky extends Application {
 	public void start(Stage primaryStage) {
 		ComponentGetter.SQLucky = this;
 		try {
-			pStage = primaryStage;
-			
-			// 图标 
-			primaryStage.getIcons().add(img);
-			primaryStage.setTitle("SQLucky"); 
-//			primaryStage.centerOnScreen();
-//			primaryStage.initStyle(StageStyle);			
-//			primaryStage.setScene(tmpscene); 
+			pStage = primaryStage; 
+			ComponentGetter.primaryStage = primaryStage; 
+		
 			primaryStage.setScene(scene); 
 //			var sceneRoot = scene.getRoot();
 //			CommonUtility.fadeTransition(sceneRoot, 2000); 
 //			app.fadeTransition();
 
-//			 primaryStage.setIconified(true); 
-			primaryStage.setIconified(true);
+//			primaryStage.setIconified(true);
 			// 确保全屏显示
-			Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-			primaryStage.setX(primaryScreenBounds.getMinX());
-			primaryStage.setY(primaryScreenBounds.getMinY());
-			primaryStage.setWidth(primaryScreenBounds.getWidth());
-			primaryStage.setHeight(primaryScreenBounds.getHeight());
-			primaryStage.setMaximized(false); 
+
+//			primaryStage.setMaximized(false); 
 //			primaryStage.setResizable(false);
 
 			primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
-			ComponentGetter.primaryStage = primaryStage; 
 //			CommonAction.setTheme(Theme);
 			 
-//			 primaryStage.setX(500); 
-//			 primaryStage.setY(100);
-//			primaryStage.setWidth(100);
-//			primaryStage.setHeight(0);
-		    primaryStage.centerOnScreen();
+		    primaryStage.centerOnScreen(); // 居中
 //			primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
 //		    primaryStage.setIconified(true); //最小化窗口，任务栏可见图标
 			if(CommonUtility.isLinuxOS()) {
@@ -159,7 +144,12 @@ public class SQLucky extends Application {
 			// windows 系统, 使用自己的关闭窗口
 			if(CommonUtility.isWinOS()) {
 				AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
-				winos.start(primaryStage, app.getHeadAnchorPane());
+				winos.setWindow(primaryStage, app.getHeadAnchorPane());
+			}else {
+				
+				// 图标 
+				primaryStage.getIcons().add(img);
+				primaryStage.setTitle("SQLucky"); 
 			}
 			
 			
@@ -176,11 +166,16 @@ public class SQLucky extends Application {
 				if(! primaryStage.isFocused()) {
 					primaryStage.toFront();
 				}
-//				primaryStage.toFront();
-				primaryStage.setMaximized(true);
-				primaryStage.setResizable(true);
+				primaryStage.toFront();
+//				primaryStage.setMaximized(true);
+//				primaryStage.setResizable(true);
 //				 primaryStage.setX(500); 
 //				 primaryStage.setY(500);
+				Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+				primaryStage.setX(primaryScreenBounds.getMinX());
+				primaryStage.setY(primaryScreenBounds.getMinY());
+				primaryStage.setWidth(primaryScreenBounds.getWidth());
+				primaryStage.setHeight(primaryScreenBounds.getHeight());
 				
 				
 				
@@ -213,6 +208,14 @@ public class SQLucky extends Application {
 			Long mm = Runtime.getRuntime().maxMemory()/1024;
 			mm = mm / 1024;
 			logger.info("Runtime.getRuntime().maxMemory = " + mm); 
+//			Platform.runLater(()->{
+//				Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+//				primaryStage.setX(primaryScreenBounds.getMinX());
+//				primaryStage.setY(primaryScreenBounds.getMinY());
+//				primaryStage.setWidth(primaryScreenBounds.getWidth());
+//				primaryStage.setHeight(primaryScreenBounds.getHeight());
+//			});
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

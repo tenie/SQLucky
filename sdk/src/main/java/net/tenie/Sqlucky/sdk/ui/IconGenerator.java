@@ -41,6 +41,13 @@ public final class IconGenerator {
 	public static Region svgImage(String name, String color) {
 		return svgImage(name, 16, color);
 	}
+	
+	public static Region svgImageCss(String name,  double width, double height, String css) {
+//		return svgImage(name, 16, color);
+		Region rs = svgImage(name, width, height, "");
+		rs.getStyleClass().add(css);
+		return rs;
+	}
 
 	// svg 图片
 	public static Region svgImage(String name, double size, String color ) {
@@ -52,6 +59,25 @@ public final class IconGenerator {
 		svgShape.setMinSize(size, size);
 		svgShape.setPrefSize(size, size);
 		svgShape.setMaxSize(size, size);
+		if( ! "".equals(color)) {
+			svgShape.setStyle("-fx-background-color: " + color + ";");
+		}
+		
+		return svgShape;
+	}
+	
+	
+
+	// svg 图片
+	public static Region svgImage(String name, double width, double height, String color ) {
+		SVGPath p = new SVGPath();
+		p.setContent(getSvgStr(name));
+
+		Region svgShape = new Region();
+		svgShape.setShape(p);
+		svgShape.setMinSize(width, height);
+		svgShape.setPrefSize(width, height);
+		svgShape.setMaxSize(width, height);
 		if( ! "".equals(color)) {
 			svgShape.setStyle("-fx-background-color: " + color + ";");
 		}

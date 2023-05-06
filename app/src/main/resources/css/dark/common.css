@@ -3,8 +3,19 @@
 按钮一般用 myAlertBtn
 容器一般用 myModalDialog
 */
+/* 顶部 pane 给一个下划线, 只要yellow 需要
+.window-head-pane{
+	-fx-background-color: transparent; 
+	-fx-border-color: #000000 #000000 #323232 #000000;
+} */
+/*
+.window-head-pane .menu-button {
+	-fx-background-color: transparent; 
+} */
 
-
+/* .window-head-pane  .arrow{
+	-fx-background-color: transparent; 
+} */
 
 /* 空标记 */
 .my-tag {
@@ -23,6 +34,11 @@
 .Icon-color {
 	-fx-background-color: #1C94FF;
 }
+.top-btn-Icon-color {
+	-fx-background-color: #E2DFDE;
+}
+ 
+
 
 /*  button 样式*/
 .mybutton{
@@ -172,6 +188,12 @@ GridPane {
 	-fx-background-color: #BBBBBB;
 }
 
+/* .menu-bar{
+	
+}
+.menu{
+	-fx-background-color: red;
+} */
 .menu:hover {
 	-fx-background-color: #2F65CA;
 }
@@ -283,9 +305,10 @@ FlowPane TextField {
 	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
 }
 
-.menu-bar {
-	/* -fx-background-color: red; */
-	-fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41;
+/* 顶部菜单bar的样式 */
+.menu-bar { 
+  -fx-background-color: #2E2E2E;  
+ 		/*  -fx-border-color: #3C3F41 #3C3F41 #323232 #3C3F41; */
 }
 
 .button:hover {
