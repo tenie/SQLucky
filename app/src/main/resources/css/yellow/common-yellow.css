@@ -2,6 +2,10 @@
 .my-tag{
 	
 }
+.window-head-pane{
+	-fx-background-color: transparent; 
+	-fx-border-color: #000000 #000000 #323232 #000000;
+}
 
 /* 插件管理界面 #000000 */
 .myPluginManager-vbox{
@@ -13,6 +17,10 @@
 
 .Icon-color{
 	-fx-background-color: #FDA232;
+}
+/* 顶部 svg 图标的颜色 */
+.top-btn-Icon-color {
+	-fx-background-color: #E2DFDE;
 }
 
 /* 左侧折叠面板的title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 #FDA232 */
@@ -122,7 +130,10 @@
 	-fx-text-fill:   #bdcddf;
 	-fx-background-color: #000000;  
 }
-
+/* .menu-bar { 
+	-fx-border-color: #000000 #000000 #323232 #000000;
+}
+ */
 /* splitPane 样式 */
 .split-pane{
 	-fx-background-color: #000000; 
@@ -293,9 +304,7 @@ FlowPane TextField{
 	-fx-border-color: #000000 #000000 #323232 #000000;
 }
 
-.menu-bar { 
-	-fx-border-color: #000000 #000000 #323232 #000000;
-}
+
 
 .menu:hover {
 	 -fx-background-color: #323232;
