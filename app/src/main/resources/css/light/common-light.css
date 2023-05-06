@@ -1,7 +1,15 @@
+/* .window-head-pane{
+	-fx-background-color: transparent; 
+	-fx-border-color: #000000 #000000 #323232 #000000;
+} */
 
 .Icon-color{
 	-fx-background-color: #1C94FF;
 }
+.top-btn-Icon-color {
+	-fx-background-color: #000000;
+}
+ 
 
 /* 插件管理界面 #000000 */
 .myPluginManager-vbox{
@@ -145,4 +153,27 @@ MenuButton{
 }
 .myCleanBtn:hover{
 	-fx-background-color:  transparent;
+}
+
+
+/* 顶部 菜单按钮 */
+
+.menu:hover {
+	-fx-background-color: #F4F4F4;
+}
+
+.menu:showing {
+	-fx-background-color: #F4F4F4;
+}
+
+.menu:selected {
+	-fx-background-color: #F4F4F4;
+}
+
+.menu-item:hover {
+	-fx-background-color: #F4F4F4;
+}
+
+.menu-bar{
+	-fx-background-color: #F4F4F4;
 }

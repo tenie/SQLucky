@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -74,10 +75,15 @@ public class AppWindow {
 		
 		// 主菜单加入到顶部pane中
 		headAnchorPane  = new AnchorPane();
-		var mmb = mainMenuBar.getMainMenuBar();
+		MenuBar mmb = mainMenuBar.getMainMenuBar();
 		headAnchorPane.getChildren().add(mmb);
 		AnchorPane.setLeftAnchor(mmb, 3.0); 
 		AnchorPane.setTopAnchor(mmb, 3.0);
+//		if( mmb.getStyleClass().contains("menu-bar")) {
+//			mmb.getStyleClass().remove("menu-bar");
+//		}
+		headAnchorPane.getStyleClass().add("window-head-pane"); 
+//		mmb.getStyleClass().add("window-head-pane"); 
 		
 		Platform.runLater(()->{
 //			CommonUtility.platformAwait();
