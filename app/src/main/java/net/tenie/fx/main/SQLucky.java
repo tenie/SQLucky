@@ -1,19 +1,17 @@
 package net.tenie.fx.main;
 
-import java.io.File;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
-import javax.net.ssl.SSLContext;
-
-import com.sun.javafx.application.LauncherImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import com.sun.javafx.application.LauncherImpl;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -22,7 +20,6 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -39,7 +36,6 @@ import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.AppWindowReStyleByWinOS;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.AppDao;
-import net.tenie.lib.tools.UnlimitedCryptoPoliciesCheck;
 import net.tenie.sdkImp.SqluckyAppComponent;
 
 /**
@@ -145,10 +141,11 @@ public class SQLucky extends Application {
 			if(CommonUtility.isWinOS()) {
 				AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
 				winos.setWindow(primaryStage, app.getHeadAnchorPane());
-			}else {
-				
+			}else if(CommonUtility.isLinuxOS()) {
 				// 图标 
 				primaryStage.getIcons().add(img);
+				primaryStage.setTitle("SQLucky"); 
+			}else if(CommonUtility.isMacOS()) {
 				primaryStage.setTitle("SQLucky"); 
 			}
 			
