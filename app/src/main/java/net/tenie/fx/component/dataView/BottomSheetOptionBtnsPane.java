@@ -376,9 +376,14 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 				ObservableList<ResultSetCellPo> rowDatas = entity.getRowDatas();
 				for (var cell : rowDatas) {
 					String cellVal = cell.getCellData().get();
-					if (cellVal.toUpperCase().contains(upperCaseVal)) {
-						return true;
+					if(cellVal != null) {
+						if (cellVal.toUpperCase().contains(upperCaseVal)) {
+							return true;
+						}
+					}else{
+						System.out.println(cell);
 					}
+					
 				}
 	
 				return false;

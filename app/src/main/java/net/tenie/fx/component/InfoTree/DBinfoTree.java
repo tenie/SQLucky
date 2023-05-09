@@ -241,6 +241,7 @@ public class DBinfoTree {
 	public void treeViewDoubleClick(MouseEvent mouseEvent) {
 		if (mouseEvent.getClickCount() == 2) {
 			TreeItem<TreeNodePo> item = DBinfoTree.getTrewViewCurrentItem();
+			if(item == null ) return;
 			TreeItem<TreeNodePo> parentItem = item.getParent();
 			if(parentItem == null ) return ;
 			// 连接节点双击, 打开节点

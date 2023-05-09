@@ -329,15 +329,24 @@ public class SelectDao {
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
 //				Date valDate = null;
+				Object obj = null;
+				try {
+				    obj = rs.getObject(i + 1);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				
-				Object obj = rs.getObject(i + 1);
 				if(obj == null) {
 					val = new SimpleStringProperty("<null>");
 				}else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						Object objtmp = rs.getObject(i + 1);
 						var dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
-						val = new SimpleStringProperty(dateStr);
+						if(dateStr != null) {
+							val = new SimpleStringProperty(dateStr);
+						}else {
+							val = new SimpleStringProperty("<null>");
+						}
 //						if (sqluckyConn != null) {
 //							
 //						}

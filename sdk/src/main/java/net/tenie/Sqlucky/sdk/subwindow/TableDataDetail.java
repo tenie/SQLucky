@@ -187,15 +187,17 @@ public class TableDataDetail {
 			ObservableList<SheetFieldPo> observableList, String newValue) {
 		FilteredList<SheetFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
 		filteredData.setPredicate(entity -> {
+			
 			boolean tf1 = false;
 			boolean tf2 = false;
-			if (entity.getColumnLabel() != null) {
-				tf1 = entity.getColumnLabel().get().toUpperCase().contains(newValue.toUpperCase());
-			}
-			if (entity.getValue() != null) {
-				tf2 = entity.getValue().get().toUpperCase().contains(newValue.toUpperCase());
-			}
-
+			if(entity != null ) {
+				if (entity.getColumnLabel() != null &&  entity.getColumnLabel().get() != null) { 
+					tf1 = entity.getColumnLabel().get().toUpperCase().contains(newValue.toUpperCase());
+				}
+				if (entity.getValue() != null && entity.getValue().get() != null ) {
+					tf2 = entity.getValue().get().toUpperCase().contains(newValue.toUpperCase());
+				}
+			} 
 			return tf1 || tf2;
 		}
 

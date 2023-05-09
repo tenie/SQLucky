@@ -12,6 +12,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   @author tenie */
@@ -72,7 +73,7 @@ public class InsertDao {
 				String columnTypeName =  cellPo.getField().getColumnTypeName().get();
 				logger.info("javatype = "+javatype +" | " +columnTypeName);
 				if (CommonUtility.isDateTime(javatype)) {
-					Date dv = StrUtils.StrToDate(val, ConfigVal.dateFormateL);
+					Date dv = DateUtils.StrToDate(val, ConfigVal.dateFormateL);
 					Timestamp ts = new Timestamp(dv.getTime());
 					pstmt.setTimestamp(idx, ts);
 					insertLog += " | "+ ts ;

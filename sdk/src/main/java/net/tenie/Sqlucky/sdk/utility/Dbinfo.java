@@ -745,5 +745,28 @@ public class Dbinfo {
 //			}
 //		}
 //	}
+	
+	public static String getDBInfo(Connection connection) {
+		// 2.获取元数据
+		DatabaseMetaData metaData;
+		StringBuilder infoStr = new StringBuilder("");
+		try {
+			metaData = connection.getMetaData();
+
+			// 3.获取数据库基本信息
+//	  infoStr.append(metaData.getUserName());
+
+//	  infoStr.append(metaData.supportsTransactions());//是否支持事务
+
+			infoStr.append("Database Name: " + metaData.getDatabaseProductName() + " ");
+			infoStr.append("Database Version: " +metaData.getDatabaseProductVersion() );
+			 
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return infoStr.toString();
+	}
 
 }

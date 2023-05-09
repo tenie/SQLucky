@@ -24,6 +24,7 @@ import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.config.DBConns;
 
@@ -100,7 +101,7 @@ public class ProcedureAction {
 			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 			ObservableList<SheetFieldPo>  fieldpols = ddlDmlpo.getFields();
 			var row = ddlDmlpo.addRow();
-			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fieldpols.get(0));
+			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fieldpols.get(0));
 			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg),  fieldpols.get(1));
 			
 			int endIdx = sql.length() > 100 ? 100 : sql.length();

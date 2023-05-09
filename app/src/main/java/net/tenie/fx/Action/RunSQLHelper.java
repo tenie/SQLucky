@@ -32,6 +32,7 @@ import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.sqlExecute.ProcedureAction;
@@ -183,7 +184,7 @@ public class RunSQLHelper {
 //					ObservableList<StringProperty> val = FXCollections.observableArrayList();
 					ObservableList<SheetFieldPo> fls = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fls.get(0));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fls.get(0));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fls.get(1));
 					int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... "), fls.get(2));
