@@ -2,6 +2,8 @@ package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +17,7 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -173,15 +176,20 @@ public abstract class DbConnector implements SqluckyConnector {
 	@Override
 	public String DateTimeToString(Object obj, int sqlFiledtype ) {
 		
-		String val = null;
-		if(obj instanceof Date) {
+		String val = null; 
+		if(obj instanceof LocalDateTime) {
+			LocalDateTime ldt = (LocalDateTime) obj; 
+			Date dv = Date.from( ldt.atZone( ZoneId.systemDefault()).toInstant());
+			val = DateUtils.DateOrDateTimeToString(sqlFiledtype, dv);
+		}
+		else if(obj instanceof Date) {
 			Date dv = (Date) obj;
-			val = CommonUtility.DateOrDateTimeToString(sqlFiledtype, dv);
+			val = DateUtils.DateOrDateTimeToString(sqlFiledtype, dv);
 		}else if(obj instanceof String) {
 			val = (String) obj;
 		}else if( obj instanceof Long) {
 			Date date = new Date((long) obj);
-			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
+			val = DateUtils.dateToStr(date, ConfigVal.dateFormateL); 
 		}
 	
 		return val;

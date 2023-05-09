@@ -46,37 +46,7 @@ public class SqluckySqliteConnector extends DbConnector {
 		SqluckySqliteConnector val = new SqluckySqliteConnector(connPo);
 		return val;
 	} 
-
-//	@Override
-//	public String DateToStringStringProperty(Object obj, int type){  
-//		String val = null; 
-//		
-//		if(obj instanceof String) {
-//			val = (String) obj;
-//		}else if( obj instanceof Long) {
-//			Date date = new Date((long) obj);
-////			val = CommonUtility.DateOrDateTimeToString(type, date);
-//			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
-//			
-//		}
-//		
-//	
-//		return val;
-//	}
-//	@Override
-//	public String DateToStringStringProperty(Object obj, int type) {  
-//		String val = "";
-//		if(obj instanceof String) {
-//			val = (String) obj;
-//		}else if( obj instanceof Long) {
-//			Date date = new Date((long) obj);
-//
-////			val = CommonUtility.DateOrDateTimeToString(type, date);
-//			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
-//			 
-//		}
-//		return val;
-//	} 
+ 
 	
 
 	@Override

@@ -411,43 +411,43 @@ public class StrUtils {
 		}
 	}
 
-	public static String dateToStrL(Date d) {
-		return sdf_DateTime.format(d);
-	}
-
-	public static String dateToStr(Date d, String formate) {
-		SimpleDateFormat sdf = new SimpleDateFormat(formate);
-		return sdf.format(d);
-	}
+//	public static String dateToStrL(Date d) {
+//		return sdf_DateTime.format(d);
+//	}
+//
+//	public static String dateToStr(Date d, String formate) {
+//		SimpleDateFormat sdf = new SimpleDateFormat(formate);
+//		return sdf.format(d);
+//	}
 	
 	// 返回一个时间字符串, 可用于文件名的一部分
 	public static String currentDateTimeToFileNameStr() {
-		return dateToStr(new Date(), dateTimeForFileName);
+		return DateUtils.dateToStr(new Date(), dateTimeForFileName);
 	}
 
-	public static Date StrToDate(String str, String formate) {
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat(formate);
-			return new Date(sdf.parse(str).getTime());
-		} catch (ParseException e) {
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
-	}
+//	public static Date StrToDate(String str, String formate) {
+//		try {
+//			SimpleDateFormat sdf = new SimpleDateFormat(formate);
+//			return new Date(sdf.parse(str).getTime());
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//			throw new RuntimeException();
+//		}
+//	}
 
-	public static Date datePlus1Second(String str) {
-		try {
-			Date d = StrUtils.StrToDate(str, dateFormateL);
-			Calendar c = Calendar.getInstance();
-			c.setTime(d);
-			c.add(Calendar.SECOND, 1);
-
-			return c.getTime();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException();
-		}
-	}
+//	public static Date datePlus1Second(String str) {
+//		try {
+//			Date d = DateUtils.StrToDate(str, dateFormateL);
+//			Calendar c = Calendar.getInstance();
+//			c.setTime(d);
+//			c.add(Calendar.SECOND, 1);
+//
+//			return c.getTime();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			throw new RuntimeException();
+//		}
+//	}
 
 	// 字符串转时间
 	public static Date StrToDate_L(String str) {

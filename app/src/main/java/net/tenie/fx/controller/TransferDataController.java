@@ -43,6 +43,7 @@ import net.tenie.Sqlucky.sdk.component.MyTextArea;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ExportDDL;
+import net.tenie.Sqlucky.sdk.db.InsertPreparedStatementDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -52,6 +53,7 @@ import net.tenie.fx.config.DBConns;
 import net.tenie.Sqlucky.sdk.utility.CodeRunTimeCalculate;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -989,7 +991,7 @@ public class TransferDataController implements Initializable {
 
 			String tarTableName =  getTableName(targetSchename, tableName, tarDbpo); 
 			 
-			execRs(toConn, rs, 
+			rsToPs(toConn, rs, 
 					fields
 					, tarTableName, amount , isThrow,  countVal );
 			
@@ -1010,72 +1012,150 @@ public class TransferDataController implements Initializable {
 		return row;
 	}
 	
-	private   void execRs( Connection toConn ,ResultSet rs, 
+//	private   void execRs( Connection toConn ,ResultSet rs, 
+////			SqluckyDbTableDatePo dpo, 
+//			ObservableList<SheetFieldPo> fpo,
+//			String tableName , int amount,  
+//			boolean isThrow,
+//			Long countVal) throws SQLException {
+//		 
+//		Statement stmt = null;
+//		int execLine = 500;
+//		if(  amount > 0 ) {
+//			execLine = amount;
+//		} 
+//		
+//		try {
+//			stmt = toConn.createStatement();
+//			int idx = 0 ; 
+////			ObservableList<SheetFieldPo> fpo = dpo.getFields();
+//		
+//			int columnnums = fpo.size();
+//			String  insertSql = "";
+//			while (rs.next()) {
+//				idx++;
+//				// 创建一个行
+////				var row = dpo.addRow();
+//				var row = createRow(fpo);
+//				for (int i = 0; i < columnnums; i++) {
+//					int dbtype = fpo.get(i).getColumnType().get();
+//					StringProperty val;
+//					
+//					Object obj = rs.getObject(i + 1);
+//					if(obj == null) {
+//						val = new SimpleStringProperty("<null>");
+//					}else {
+//						if (CommonUtility.isDateTime(dbtype)) {
+//							java.sql.Timestamp ts = rs.getTimestamp(i + 1);
+//							Date d = new Date(ts.getTime());
+//							String v = DateUtils.dateToStr(d, ConfigVal.dateFormateL);
+//							val = new SimpleStringProperty(v);
+//						} else {
+//							String temp = rs.getString(i+1);
+//							val = new SimpleStringProperty(temp); 
+//						}
+//					}
+//					// 给行的字段赋值
+////					dpo.addData(row, val, fpo.get(i));
+//					row.addCell(val, null, fpo.get(i));
+//				}
+//			    insertSql = GenerateSQLString.insertSQL(tableName , row, false);  
+////				moniterAppendLog(insertSql);
+//				stmt.addBatch(insertSql); 
+//				if( idx % execLine == 0 ) { 
+//					logger.info(insertSql);
+//					int[] count = stmt.executeBatch();
+//					int execCountLen = count.length;
+//					countVal -= execCountLen;
+//					logger.info("instert = "+ execCountLen);
+//					moniterAppendLog(tableName + " exec Batch instert = "+execCountLen + "; residue : " + countVal);
+//				}  
+//				 
+//			}
+//			// while循环完成后输出insert sql ,否则太多了
+//			moniterAppendLog(insertSql);
+//			
+//			if( idx % execLine >  0 ) {
+//				logger.info(insertSql);
+//				int[] count = stmt.executeBatch();
+//				int execCountLen = count.length;
+//				countVal -= execCountLen;
+//				logger.info("instert = "+ execCountLen);
+//				moniterAppendLog("Batch instert = "+ execCountLen + "; residue : " + countVal);
+//			} 
+//		} catch (Exception e1) { 
+//			e1.printStackTrace();
+//			logger.debug(e1.getMessage());
+//			moniterAppendLog( e1.getMessage());
+//			if(isThrow) throw e1;
+//		}finally {
+//			if (stmt != null)
+//				stmt.close();
+//		}
+//	}
+	
+	
+	// 遍历查询结果,将查询结果的字段作为插入语句的字段值插入到数据库
+	private   void rsToPs( Connection toConn ,ResultSet rs, 
 //			SqluckyDbTableDatePo dpo, 
 			ObservableList<SheetFieldPo> fpo,
 			String tableName , int amount,  
 			boolean isThrow,
 			Long countVal) throws SQLException {
 		 
-		Statement stmt = null;
-		int execLine = 500;
+		PreparedStatement pstmt = null;
+		int execLine = 100;
 		if(  amount > 0 ) {
 			execLine = amount;
 		} 
-		
+
+		boolean isAutoCommit = toConn.getAutoCommit();
+		if(isAutoCommit) {
+			toConn.setAutoCommit(false);
+			moniterAppendLog("getAutoCommit = " + isAutoCommit );
+		}
 		try {
-			stmt = toConn.createStatement();
+			
+			toConn.setAutoCommit(false);
+			String insertSql = InsertPreparedStatementDao.createPreparedStatementSql(tableName, fpo);
+
+			logger.info(insertSql); 
+//			界面上输出sql
+			moniterAppendLog(insertSql);
+			
+			pstmt = toConn.prepareStatement(insertSql);
 			int idx = 0 ; 
-//			ObservableList<SheetFieldPo> fpo = dpo.getFields();
 		
 			int columnnums = fpo.size();
-			String  insertSql = "";
+			// 循环查询结果
 			while (rs.next()) {
 				idx++;
-				// 创建一个行
-//				var row = dpo.addRow();
-				var row = createRow(fpo);
 				for (int i = 0; i < columnnums; i++) {
-					int dbtype = fpo.get(i).getColumnType().get();
-					StringProperty val;
-					
-					Object obj = rs.getObject(i + 1);
-					if(obj == null) {
-						val = new SimpleStringProperty("<null>");
-					}else {
-						if (CommonUtility.isDateTime(dbtype)) {
-							java.sql.Timestamp ts = rs.getTimestamp(i + 1);
-							Date d = new Date(ts.getTime());
-							String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
-							val = new SimpleStringProperty(v);
-						} else {
-							String temp = rs.getString(i+1);
-							val = new SimpleStringProperty(temp); 
-						}
-					}
-					// 给行的字段赋值
-//					dpo.addData(row, val, fpo.get(i));
-					row.addCell(val, null, fpo.get(i));
+//					logger.info(fpo.get(i).getColumnLabel());
+					Object obj = null;
+					try {
+						 obj = rs.getObject(i + 1);
+					} catch (Exception e) {
+						e.printStackTrace();
+					} 
+				
+					pstmt.setObject(i+1, obj);
 				}
-			    insertSql = GenerateSQLString.insertSQL(tableName , row, false);  
-//				moniterAppendLog(insertSql);
-				stmt.addBatch(insertSql); 
-				if( idx % execLine == 0 ) { 
-					logger.info(insertSql);
-					int[] count = stmt.executeBatch();
+				pstmt.addBatch(); 
+				if( idx % execLine == 0 ) {
+					int[] count = pstmt.executeBatch();
+					toConn.commit();
 					int execCountLen = count.length;
 					countVal -= execCountLen;
 					logger.info("instert = "+ execCountLen);
 					moniterAppendLog(tableName + " exec Batch instert = "+execCountLen + "; residue : " + countVal);
 				}  
 				 
-			}
-			// while循环完成后输出insert sql ,否则太多了
-			moniterAppendLog(insertSql);
+			} 
 			
 			if( idx % execLine >  0 ) {
-				logger.info(insertSql);
-				int[] count = stmt.executeBatch();
+				int[] count = pstmt.executeBatch();
+				toConn.commit();
 				int execCountLen = count.length;
 				countVal -= execCountLen;
 				logger.info("instert = "+ execCountLen);
@@ -1087,8 +1167,13 @@ public class TransferDataController implements Initializable {
 			moniterAppendLog( e1.getMessage());
 			if(isThrow) throw e1;
 		}finally {
-			if (stmt != null)
-				stmt.close();
+			if (pstmt != null)
+				pstmt.close();
+
+			boolean tmpisAutoCommit = toConn.getAutoCommit();
+			if(isAutoCommit != tmpisAutoCommit) {
+				toConn.setAutoCommit(isAutoCommit);
+			}
 		}
 	}
 	
