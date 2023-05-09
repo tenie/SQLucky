@@ -261,17 +261,7 @@ public class CommonUtility {
 		}
 		return false;
 	}
-	// 日期类型或时间类型转换为字符串
-	public static String DateOrDateTimeToString(int type, Date dv) {
-		String val = "";
-		if(isDate(type)) {
-			val = StrUtils.dateToStr(dv, ConfigVal.dateFormateS); 
-		}else if(isDateTime(type)) {
-			val = StrUtils.dateToStr(dv, ConfigVal.dateFormateL); 
-		}
-		
-		return val;
-	}
+	
 	 
 
 	public static void newStringPropertyChangeListener(StringProperty val, int dbtype) {

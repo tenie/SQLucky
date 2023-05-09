@@ -21,6 +21,7 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
@@ -175,7 +176,7 @@ public class ConnectionDao {
 					+ " SCHEMA = '" + defaultSchema + "', " + " DB_NAME = '" + dbName + "', " + " JDBC_URL = '"
 					+ jdbcurl + "', " + " AUTO_CONNECT = " + autoC + ", "
 
-					+ " UPDATED_AT = '" + StrUtils.dateToStrL(new Date()) + "'";
+					+ " UPDATED_AT = '" + DateUtils.dateToStrL(new Date()) + "'";
 			if (StrUtils.isNotNullOrEmpty(comment)) {
 				sql += ", COMMENT = '" + comment + "' ";
 			}
@@ -193,7 +194,7 @@ public class ConnectionDao {
 					+ hostOrFile + "' ," + "'" + port + "' , " + "'" + driver + "' , " + "'" + dbVendor + "' , " + "'"
 					+ defaultSchema + "', " + "'" + dbName + "', " + "'" + jdbcurl + "', " + autoC + ", "
 
-					+ "'" + StrUtils.dateToStrL(new Date()) + "'";
+					+ "'" + DateUtils.dateToStrL(new Date()) + "'";
 			if (StrUtils.isNotNullOrEmpty(comment)) {
 				sql += ", '" + comment + "' ";
 			}

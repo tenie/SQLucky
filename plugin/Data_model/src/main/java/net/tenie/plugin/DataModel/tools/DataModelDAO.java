@@ -17,6 +17,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.UpdateDao;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.DataModelTableFieldsPo;
@@ -215,7 +216,7 @@ public class DataModelDAO {
 					if(StrUtils.isNotNullOrEmpty(msg)) {
 						var fds = ddlDmlpo.getFields();
 						var row = ddlDmlpo.addRow();
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fds.get(0));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fds.get(2));
 					}
@@ -227,7 +228,7 @@ public class DataModelDAO {
 					msg += "\n"+msg;
 					var fds = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fds.get(0));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("failed"), fds.get(2));
 				}

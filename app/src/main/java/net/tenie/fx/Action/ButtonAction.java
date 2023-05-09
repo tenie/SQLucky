@@ -24,6 +24,7 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.sqlExecute.SqlExecuteOption;
 import net.tenie.fx.component.InfoTree.TreeObjAction;
@@ -63,7 +64,7 @@ public class ButtonAction {
 						if(StrUtils.isNotNullOrEmpty(msg)) {
 							var fds = ddlDmlpo.getFields();
 							var row = ddlDmlpo.addRow();
-							ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
+							ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fds.get(0));
 							ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
 							ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fds.get(2));
 						}
@@ -75,7 +76,7 @@ public class ButtonAction {
 						msg += "\n"+dpo.translateErrMsg(msg);
 						var fds = ddlDmlpo.getFields();
 						var row = ddlDmlpo.addRow();
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fds.get(0));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("failed"), fds.get(2));
 					}
@@ -91,7 +92,7 @@ public class ButtonAction {
 					String msg = InsertDao.execInsert(conn, tabName, cells);
 					var fds = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fds.get(0));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fds.get(0));
 					ddlDmlpo.addData(row, new SimpleStringProperty(msg), fds.get(1));
 					ddlDmlpo.addData(row, new SimpleStringProperty("success"), fds.get(2));
 
@@ -108,7 +109,7 @@ public class ButtonAction {
 					btnDisable = false;
 					var fs = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL( new Date()) ), fs.get(0));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fs.get(0));
 					ddlDmlpo.addData(row, new SimpleStringProperty(e1.getMessage()), fs.get(1));
 					ddlDmlpo.addData(row, new SimpleStringProperty("failed"), fs.get(2));
 				}
@@ -161,7 +162,7 @@ public class ButtonAction {
 						rs.getDatas().remove(sps);
 						var fs = ddlDmlpo.getFields();
 						var row = ddlDmlpo.addRow();
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())), fs.get(0));
+						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())), fs.get(0));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fs.get(1));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fs.get(2));
 
@@ -170,7 +171,7 @@ public class ButtonAction {
 				} catch (Exception e1) {
 					var fs = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(StrUtils.dateToStrL(new Date())), fs.get(0));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())), fs.get(0));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(e1.getMessage()), fs.get(1));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("fail."), fs.get(2));
 				} finally {

@@ -43,6 +43,7 @@ import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -694,7 +695,8 @@ public class CommonAction {
 				connpo.getConn();
 				Platform.runLater(() -> {
 					if (connpo.isAlive()) {
-						MyAlert.infoAlert("Information!", "  Successfully  !");
+						String infoStr = Dbinfo.getDBInfo(connpo.getConn());
+						MyAlert.infoAlert("Information!", "  Successfully  ! \n" + infoStr);
 						connpo.closeConn();
 						testBtn.setStyle("-fx-background-color: green ");
 					} else {
