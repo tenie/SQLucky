@@ -1,17 +1,22 @@
 package net.tenie.plugin.DB2Connector.impl;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import net.tenie.Sqlucky.sdk.db.ExportDDL;
-import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
+import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
+import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 /* 
  *  @author tenie 
  *  
  */
-public class ExportSqlDB2Imp implements ExportDDL {
+public class ExportSqlDB2Imp implements ExportDBObjects {
 
 	private FetchDB2InfoImp fdb2;
 
@@ -151,7 +156,7 @@ public class ExportSqlDB2Imp implements ExportDDL {
 	}
 	
 	/**
-	 * 索引
+	 * 所有索引
 	 */
 	@Override
 	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
@@ -199,7 +204,7 @@ public class ExportSqlDB2Imp implements ExportDDL {
 	
 	@Override
 	public List<FuncProcTriggerPo> allPrimaryKeyObj(Connection conn, String schema) {
-		// TODO Auto-generated method stub
+		String sql = "select * from syscat.references where TYPE  ='P' and OWNER = '"+schema+"' ";
 		return null;
 	}
 
@@ -207,7 +212,7 @@ public class ExportSqlDB2Imp implements ExportDDL {
 
 	@Override
 	public List<FuncProcTriggerPo> allForeignKeyObj(Connection conn, String schema) {
-		// TODO Auto-generated method stub
+		String sql = "select * from syscat.references where TYPE  ='F' and OWNER = '"+schema+"' ";
 		return null;
 	}
 
@@ -395,6 +400,98 @@ public class ExportSqlDB2Imp implements ExportDDL {
 	public String exportCallFuncSql(String funcStr) {
 		String sql = "values "+funcStr;
 		return sql;
+	}
+
+
+	//TODO 表格索引
+	@Override
+	public List<TableIndexPo> tableIndex(Connection conn, String schema, String tableName) {
+		String sql = "select *  from syscat.indexes where   INDSCHEMA = '"+schema+"'   "
+				    + "	 and TABNAME = '"+tableName+"' "
+					+ "	 and UNIQUERULE <> 'P'";
+		ResultSet rs = null;
+		Statement sm = null;
+		List<TableIndexPo> ls = new ArrayList<>();
+		
+		try {
+			sm = conn.createStatement();
+			rs = sm.executeQuery(sql);
+			
+			while(rs.next()) {
+				TableIndexPo po = new TableIndexPo();
+//				private String indname; // INDNAME 索引名称
+//				private String tabname;  // TABNAME 表名
+//				private String indschema; // INDSCHEMA 索引schema
+//				private String colnames; // COLNAMES 索引的列
+				po.setIndname(rs.getString("INDNAME"));
+				po.setTabname(rs.getString("TABNAME"));
+				po.setIndschema(rs.getString("INDSCHEMA"));
+				po.setColnames(rs.getString("COLNAMES"));
+				ls.add(po);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return ls;
+	}
+
+
+
+	@Override
+	public List<TableForeignKeyPo> tableForeignKey(Connection conn, String schema, String tableName) {
+
+		String sql = "select *  from syscat.references where   TABSCHEMA = '"+schema+"'   "
+				    + "	 and TABNAME = '"+tableName+"' \n"
+				    + " and TABSCHEMA = '"+schema+"' \n" ;
+		ResultSet rs = null;
+		Statement sm = null;
+		List<TableForeignKeyPo> ls = new ArrayList<>();
+		
+		try {
+			sm = conn.createStatement();
+			rs = sm.executeQuery(sql);
+			
+			while(rs.next()) {
+				TableForeignKeyPo po = new TableForeignKeyPo();
+
+//				private String tabName; // TABNAME
+//				private String constname; // CONSTNAME 	约束名称 外键名称
+//				private String fkColnames; // FK_COLNAMES	外键字段
+//				private String refTabname; // REFTABNAME 引用表名称 (主表)
+//				private String pkColnames; //	PK_COLNAMES	引用表字段名称(就是主表的主键)
+//				private String refKeyname;  // REFKEYNAME 主表的主键名称
+				
+				po.setTabName(sql);
+				po.setConstname(sql);
+				po.setFkColnames(sql);
+				po.setRefTabname(sql);
+
+
+				po.setPkColnames(sql);
+				po.setRefKeyname(sql);
+				ls.add(po);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			if(rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return ls;
+	
 	}
 
 	

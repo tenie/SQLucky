@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -200,6 +201,10 @@ public class PoDaoUtil {
 					continue;
 				}
 				if (Date.class.equals(val)) {
+					bean.add(key, (rs.getTimestamp(key) == null) ? null : new Date(rs.getTimestamp(key).getTime()));
+					continue;
+				}
+				if (LocalDateTime.class.equals(val)) {
 					bean.add(key, (rs.getTimestamp(key) == null) ? null : new Date(rs.getTimestamp(key).getTime()));
 					continue;
 				}

@@ -146,14 +146,16 @@ public class SQLucky extends Application {
 			if(CommonUtility.isWinOS()) {
 				AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
 				winos.setWindow(primaryStage, app.getHeadAnchorPane());
-			}else if(CommonUtility.isLinuxOS()) {
-				// 图标 
-				primaryStage.getIcons().add(img);
-				primaryStage.setTitle("SQLucky"); 
-			}else if(CommonUtility.isMacOS()) {
-				primaryStage.setTitle("SQLucky"); 
 			}
-			
+//			else if(CommonUtility.isLinuxOS()) {
+//				// 图标 
+//				primaryStage.getIcons().add(img);
+//				primaryStage.setTitle("SQLucky"); 
+//			}else if(CommonUtility.isMacOS()) {
+//				primaryStage.setTitle("SQLucky"); 
+//			}
+			primaryStage.getIcons().add(img);
+			primaryStage.setTitle("SQLucky"); 
 			
 			
 			primaryStage.show(); 

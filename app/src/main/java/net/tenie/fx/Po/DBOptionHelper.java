@@ -6,8 +6,9 @@ import java.util.Map;
 
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
 /**
  * 
@@ -165,6 +166,13 @@ public class DBOptionHelper {
 	public static String getCreateTableSQL(SqluckyConnector cp, String schema, String tab) {
 		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
 		return ddl;
+	}
+//	 获取表的索引
+	public static List<TableIndexPo> getTableIndex(SqluckyConnector cp, String schema, String tab) {
+		List<TableIndexPo>  ls = cp.getExportDDL().tableIndex(null, schema, tab);
+		
+//		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
+		return ls;
 	}
 
 //	 获取视图的语句

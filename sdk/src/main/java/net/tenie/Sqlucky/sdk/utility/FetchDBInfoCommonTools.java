@@ -11,10 +11,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.tenie.Sqlucky.sdk.po.RsData;
-import net.tenie.Sqlucky.sdk.po.TableFieldPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.po.myEntry;
+import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 /* 
  *  * @author tenie 
  *  

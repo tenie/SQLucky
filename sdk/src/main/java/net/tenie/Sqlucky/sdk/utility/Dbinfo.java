@@ -13,10 +13,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
-import net.tenie.Sqlucky.sdk.po.TableFieldPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
+import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 
 /**
  * 获取表的连接
@@ -311,7 +311,7 @@ public class Dbinfo {
 	public static List<TablePo> fetchAllTableViewName(Connection conn, String schemaOrCatalog, boolean istable)
 			throws Exception {
 		ResultSet tablesResultSet = null;
-		ResultSet rs = null;
+//		ResultSet rs = null;
 		Statement sm = null;
 		List<TablePo> tbls = new ArrayList<TablePo>();
 		try {
@@ -358,8 +358,8 @@ public class Dbinfo {
 		} finally {
 			if (tablesResultSet != null)
 				tablesResultSet.close();
-			if (rs != null)
-				rs.close();
+//			if (rs != null)
+//				rs.close();
 			if (sm != null)
 				sm.close();
 		}
@@ -368,7 +368,7 @@ public class Dbinfo {
 	public static List<TablePo> fetchAllTableViewName(Connection conn, boolean istable)
 			throws Exception {
 		ResultSet tablesResultSet = null;
-		ResultSet rs = null;
+//		ResultSet rs = null;
 		Statement sm = null;
 		List<TablePo> tbls = new ArrayList<TablePo>();
 		try {
@@ -410,8 +410,8 @@ public class Dbinfo {
 		} finally {
 			if (tablesResultSet != null)
 				tablesResultSet.close();
-			if (rs != null)
-				rs.close();
+//			if (rs != null)
+//				rs.close();
 			if (sm != null)
 				sm.close();
 		}
@@ -421,7 +421,7 @@ public class Dbinfo {
 	public static TablePo fetchTableObjByName(Connection conn, String schemaOrCatalog, String tabName)
 			throws Exception {
 		ResultSet tablesResultSet = null;
-		ResultSet rs = null;
+//		ResultSet rs = null;
 		Statement sm = null;
 		TablePo po = new TablePo();
 		try {
@@ -457,8 +457,8 @@ public class Dbinfo {
 		} finally {
 			if (tablesResultSet != null)
 				tablesResultSet.close();
-			if (rs != null)
-				rs.close();
+//			if (rs != null)
+//				rs.close();
 			if (sm != null)
 				sm.close();
 		}
@@ -468,7 +468,7 @@ public class Dbinfo {
 	// 函数
 	public static List<FuncProcTriggerPo> fetchAllFunctions(Connection conn, String schemaOrCatalog) throws Exception {
 		ResultSet funRs = null;
-		ResultSet rs = null;
+//		ResultSet rs = null;
 		Statement sm = null;
 		List<FuncProcTriggerPo> ls = new ArrayList<FuncProcTriggerPo>();
 		try {
@@ -499,8 +499,8 @@ public class Dbinfo {
 		} finally {
 			if (funRs != null)
 				funRs.close();
-			if (rs != null)
-				rs.close();
+//			if (rs != null)
+//				rs.close();
 			if (sm != null)
 				sm.close();
 		}
@@ -510,7 +510,6 @@ public class Dbinfo {
 	// procedure
 	public static List<FuncProcTriggerPo> fetchAllProcedures(Connection conn, String schemaOrCatalog) throws Exception {
 		ResultSet proRs = null;
-		ResultSet rs = null;
 		Statement sm = null;
 		List<FuncProcTriggerPo> ls = new ArrayList<FuncProcTriggerPo>();
 		try {
@@ -540,8 +539,6 @@ public class Dbinfo {
 		} finally {
 			if (proRs != null)
 				proRs.close();
-			if (rs != null)
-				rs.close();
 			if (sm != null)
 				sm.close();
 		}
@@ -551,7 +548,6 @@ public class Dbinfo {
 	// triggers
 	public static List<FuncProcTriggerPo> fetchAllTriggers(Connection conn, String schemaOrCatalog) throws Exception {
 		ResultSet proRs = null;
-		ResultSet rs = null;
 		Statement sm = null;
 		List<FuncProcTriggerPo> ls = new ArrayList<FuncProcTriggerPo>();
 		try {
@@ -581,8 +577,6 @@ public class Dbinfo {
 		} finally {
 			if (proRs != null)
 				proRs.close();
-			if (rs != null)
-				rs.close();
 			if (sm != null)
 				sm.close();
 		}
