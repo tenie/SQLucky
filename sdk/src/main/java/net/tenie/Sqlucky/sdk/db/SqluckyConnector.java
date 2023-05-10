@@ -20,7 +20,7 @@ public interface SqluckyConnector {
 	public String translateErrMsg(String errString);
 	
 	public Map<String, DbSchemaPo> getSchemas();
-	public ExportDDL getExportDDL();
+	public ExportDBObjects getExportDDL();
 //	public void setExportDDL(ExportDDL exportDDL);
 	
 	

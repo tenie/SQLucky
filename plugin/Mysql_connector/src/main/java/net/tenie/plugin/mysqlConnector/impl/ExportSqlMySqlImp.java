@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import net.tenie.Sqlucky.sdk.db.ExportDDL;
-import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
+import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
@@ -20,7 +21,7 @@ import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
  * @author tenie
  *
  */
-public class ExportSqlMySqlImp implements ExportDDL {
+public class ExportSqlMySqlImp implements ExportDBObjects {
 	private static Logger logger = LogManager.getLogger(ExportSqlMySqlImp.class);
 
 	private FetchDBInfoCommonTools fdb2;
@@ -522,5 +523,19 @@ public class ExportSqlMySqlImp implements ExportDDL {
 	public String exportCallFuncSql(String funcStr) {
 		String sql = "select "+funcStr+" from dual";
 		return sql;
+	}
+
+
+	@Override
+	public List<TableIndexPo> tableIndex(Connection conn, String schema, String tableName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public TableIndexPo tableForeignKey(Connection conn, String schema, String tableName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

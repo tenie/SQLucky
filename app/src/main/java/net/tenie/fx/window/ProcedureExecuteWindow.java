@@ -22,7 +22,7 @@ import javafx.stage.Stage;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.fx.config.DBConns;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;

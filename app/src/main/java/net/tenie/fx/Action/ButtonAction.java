@@ -21,7 +21,7 @@ import net.tenie.Sqlucky.sdk.db.UpdateDao;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsVal;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;

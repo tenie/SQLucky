@@ -7,9 +7,9 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.Sqlucky.sdk.db.ExportDDL;
-import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
+import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.fx.Action.SettingKeyCodeCombination;
 /*   
@@ -18,9 +18,9 @@ import net.tenie.fx.Action.SettingKeyCodeCombination;
 public class CommonFetchDBInfo {
 	private static Logger logger = LogManager.getLogger(CommonFetchDBInfo.class);
 
-	private ExportDDL exportDDL;
+	private ExportDBObjects exportDDL;
 
-	public CommonFetchDBInfo(ExportDDL ddl) {
+	public CommonFetchDBInfo(ExportDBObjects ddl) {
 		this.exportDDL = ddl;
 	}
 

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.alibaba.fastjson.JSONObject;
 
-import net.tenie.Sqlucky.sdk.db.ExportDDL;
+import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class DBConnectorInfoPo {
@@ -28,7 +28,7 @@ public class DBConnectorInfoPo {
 	private Date updatedAt;
 	private Integer recordVersion;
 	private Connection conn;
-	private ExportDDL exportDDL; 
+	private ExportDBObjects exportDDL; 
 	private boolean JdbcUrlIsFile = false;
 	private boolean jdbcUrlUse = false;
 	private boolean autoConnect = false;
@@ -218,12 +218,12 @@ public class DBConnectorInfoPo {
 	}
 
 
-	public ExportDDL getExportDDL() {
+	public ExportDBObjects getExportDDL() {
 		return exportDDL;
 	}
 
 
-	public void setExportDDL(ExportDDL exportDDL) {
+	public void setExportDDL(ExportDBObjects exportDDL) {
 		this.exportDDL = exportDDL;
 	}
 

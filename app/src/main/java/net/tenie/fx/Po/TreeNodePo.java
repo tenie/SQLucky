@@ -5,13 +5,17 @@ import java.io.Serializable;
 import javafx.scene.Node;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
-import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
+import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 
-/*   @author tenie */
+/**
+ * treeView 节点保存的数据对象
+ * @author tenie
+ *
+ */
 public class TreeNodePo implements Serializable {
 
 	private static final long serialVersionUID = 1L;

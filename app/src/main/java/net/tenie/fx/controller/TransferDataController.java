@@ -42,7 +42,7 @@ import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTextArea;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.ExportDDL;
+import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
 import net.tenie.Sqlucky.sdk.db.InsertPreparedStatementDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -654,7 +654,7 @@ public class TransferDataController implements Initializable {
 	//  获取drop 语句
 	private String  getDropDDL( String type, String schename, String objName, String tarSchename) {
 		String drop = "";
-		ExportDDL export =  soDbpo.getExportDDL();
+		ExportDBObjects export =  soDbpo.getExportDDL();
 		if(type.equals(TABLE)) {
 			drop = export.exportDropTable(schename, objName);
 		}else if(type.equals(VIEW)) {
@@ -679,7 +679,7 @@ public class TransferDataController implements Initializable {
 	//  获取Create 语句
 	private String  getCreateDDL(Connection  conn, String type, String schename, String objName, String tarSchename) {
 		String createDDL = "";
-		ExportDDL export =  soDbpo.getExportDDL();
+		ExportDBObjects export =  soDbpo.getExportDDL();
 		if(type.equals(TABLE)) {
 			createDDL = export.exportCreateTable(conn, schename, objName);
 		}else if(type.equals(VIEW)) {

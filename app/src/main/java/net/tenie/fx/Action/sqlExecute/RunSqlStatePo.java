@@ -3,7 +3,7 @@ package net.tenie.fx.Action.sqlExecute;
 import java.util.List;
 
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class RunSqlStatePo {
