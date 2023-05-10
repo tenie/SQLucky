@@ -2,23 +2,18 @@ package net.tenie.plugin.MybatisGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 import javafx.application.Platform;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.plugin.MybatisGenerator.po.DataModelInfoPo;
 import net.tenie.plugin.MybatisGenerator.po.DataModelTablePo;
 import net.tenie.plugin.MybatisGenerator.po.DataModelTreeNodePo;
 import net.tenie.plugin.MybatisGenerator.tools.DataModelDAO;

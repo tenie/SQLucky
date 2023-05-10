@@ -8,6 +8,7 @@ import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -31,6 +32,8 @@ public class TreeObjAction {
 				createTableSql = DBOptionHelper.getCreateTableSQL(sqluckyConn, table.getTableSchema(), table.getTableName());	
 				// 获取索引 
 				List<TableIndexPo> indexLs = DBOptionHelper.getTableIndex(sqluckyConn,table.getTableSchema(), table.getTableName());	
+				//TODO 获取外键
+				List<TableForeignKeyPo> foreignKeyLs = DBOptionHelper.getTableForeignKey(sqluckyConn,table.getTableSchema(), table.getTableName());	
 				//TODO 获取外键
 				
 				
