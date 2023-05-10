@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.List;
 
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
@@ -357,10 +358,11 @@ public class ExportDefaultImp implements ExportDBObjects {
 	}
 
 	@Override
-	public TableIndexPo tableForeignKey(Connection conn, String schema, String tableName) {
+	public List<TableForeignKeyPo> tableForeignKey(Connection conn, String schema, String tableName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 
 	
 }

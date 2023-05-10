@@ -5,10 +5,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
@@ -534,8 +537,9 @@ public class ExportSqlMySqlImp implements ExportDBObjects {
 
 
 	@Override
-	public TableIndexPo tableForeignKey(Connection conn, String schema, String tableName) {
+	public List<TableForeignKeyPo> tableForeignKey(Connection conn, String schema, String tableName) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
 }
