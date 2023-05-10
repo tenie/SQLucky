@@ -26,7 +26,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -85,6 +85,7 @@ public class SqlExecuteOption {
 		return keys;
 	}
 
+	// 获取表格的主键
 	private static List<String> getKeys(Connection conn, TreeItem<TreeNodePo> node) {
 		List<String> keys = new ArrayList<>();
 		try {

@@ -3,7 +3,7 @@ package net.tenie.fx.component.CodeArea;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;
 import javafx.util.Callback;
-import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
 /**
  * 把TablePo对象的属性 赋值给 TreeItem显示(节点名称,图标)

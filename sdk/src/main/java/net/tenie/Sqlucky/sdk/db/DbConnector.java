@@ -15,7 +15,7 @@ import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
@@ -309,7 +309,7 @@ public abstract class DbConnector implements SqluckyConnector {
 //		this.recordVersion = recordVersion;
 //	}
 
-	public ExportDDL getExportDDL() {
+	public ExportDBObjects getExportDDL() {
 		return this.connPo.getExportDDL();
 	}
 

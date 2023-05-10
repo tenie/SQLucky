@@ -1,12 +1,15 @@
 package net.tenie.fx.component.InfoTree;
 
+import java.util.List;
+
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.TablePo;
+import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Po.DBOptionHelper;
 
@@ -21,9 +24,16 @@ public class TreeObjAction {
 	public static void showTableSql(SqluckyConnector sqluckyConn ,TablePo table, String tableName) {
 		String type = table.getTableType();
 		String createTableSql = table.getDdl();
+		// 如果建表语句是空的, 那么导出建表语句
 		if (StrUtils.isNullOrEmpty(createTableSql)) {
 			if(type.equals( CommonConst.TYPE_TABLE )) {
+				// 
 				createTableSql = DBOptionHelper.getCreateTableSQL(sqluckyConn, table.getTableSchema(), table.getTableName());	
+				// 获取索引 
+				List<TableIndexPo> indexLs = DBOptionHelper.getTableIndex(sqluckyConn,table.getTableSchema(), table.getTableName());	
+				//TODO 获取外键
+				
+				
 			}else if(type.equals( CommonConst.TYPE_VIEW ) ) {
 				createTableSql = DBOptionHelper.getViewSQL(sqluckyConn, table.getTableSchema(), table.getTableName());			
 			}

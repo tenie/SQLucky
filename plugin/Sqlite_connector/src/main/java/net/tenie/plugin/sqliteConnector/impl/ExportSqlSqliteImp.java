@@ -4,11 +4,12 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import net.tenie.Sqlucky.sdk.db.ExportDDL;
-import net.tenie.Sqlucky.sdk.po.FuncProcTriggerPo;
-import net.tenie.Sqlucky.sdk.po.TableFieldPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
+import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
+import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -18,7 +19,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class ExportSqlSqliteImp implements ExportDDL {
+public class ExportSqlSqliteImp implements ExportDBObjects {
  
 	private	FetchDBInfoCommonTools fdbtool;
 	public ExportSqlSqliteImp() { 
@@ -336,5 +337,17 @@ public class ExportSqlSqliteImp implements ExportDDL {
 	public String exportCallFuncSql(String funcStr) {
 		String sql = "select "+funcStr+" from dual";
 		return sql;
+	}
+
+	@Override
+	public List<TableIndexPo> tableIndex(Connection conn, String schema, String tableName) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public TableIndexPo tableForeignKey(Connection conn, String schema, String tableName) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

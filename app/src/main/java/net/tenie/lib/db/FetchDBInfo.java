@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import net.tenie.Sqlucky.sdk.po.TableFieldPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
 import net.tenie.Sqlucky.sdk.po.myEntry;
+import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
 import java.util.Set;
 /* 

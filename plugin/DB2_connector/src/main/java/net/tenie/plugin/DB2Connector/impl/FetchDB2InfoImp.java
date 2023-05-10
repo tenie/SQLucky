@@ -11,9 +11,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.tenie.Sqlucky.sdk.po.RsData;
-import net.tenie.Sqlucky.sdk.po.TableFieldPo;
-import net.tenie.Sqlucky.sdk.po.TablePo;
-import net.tenie.Sqlucky.sdk.po.TablePrimaryKeysPo;
+import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.po.myEntry;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
@@ -734,7 +734,10 @@ public class FetchDB2InfoImp {
 		return ls;
 	}
 
-	// 根据类型导出index
+	// 根据类型导出index  , 3种类型
+	// P(主键建表时候指定的)Implements primary key, 
+	// U (类似主键,保证数据唯一性)Unique ; 
+	// D 允许重复 Permits duplicates
 	public List<String> getIndexs(Connection conn, String schema, String type) {
 		String sql = "select INDNAME   " + " from syscat.indexes" + " where  INDSCHEMA = '" + schema + "' "
 				+ "    and UNIQUERULE ='" + type + "'"; // db2类型有 P(主键建表时候指定的), U (类似主键,保证数据唯一性) D 普通索引
@@ -745,7 +748,7 @@ public class FetchDB2InfoImp {
 	// 导出非主键的索引
 	public List<String> getIndexs(Connection conn, String schema) {
 		String sql = "select INDNAME   " + " from syscat.indexes" + " where  INDSCHEMA = '" + schema + "' "
-				+ "    and UNIQUERULE <> 'P'"; // db2类型有 P(主键建表时候指定的), U (类似主键,保证数据唯一性) D 普通索引
+				+ "    and UNIQUERULE <> 'P'"; // db2类型有 P(主键建表时候指定的)Implements primary key, U (类似主键,保证数据唯一性)Unique ;  D 允许重复 Permits duplicates
 		List<String> ls = execSQL(conn, sql);
 		return ls;
 	}

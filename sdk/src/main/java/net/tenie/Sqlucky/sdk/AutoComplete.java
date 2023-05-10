@@ -1,7 +1,8 @@
 package net.tenie.Sqlucky.sdk;
 
 import java.util.Collection;
-import net.tenie.Sqlucky.sdk.po.TablePo;
+
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
 public interface AutoComplete {
 	public   void hide();

@@ -2,7 +2,10 @@ package net.tenie.Sqlucky.sdk.po;
 
 import javafx.scene.Node;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
+// 数据库连接节点属性数据
 public class DBNodeInfoPo {
 	private String name;
 	private TreeItemType type;
