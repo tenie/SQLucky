@@ -22,6 +22,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -403,7 +404,11 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	 * @param name
 	 * @return
 	 */
-	public static List<Node> DDLOptionBtns(SqluckyConnector sqluckyConn , MyBottomSheet mytb, String ddl, boolean isRunFunc, boolean isProc, String name, boolean isSelect) {
+	public static List<Node> DDLOptionBtns(SqluckyConnector sqluckyConn , 
+			MyBottomSheet mytb, String ddl,
+			boolean isRunFunc, boolean isProc,
+			String name, boolean isSelect,
+			VBox vb ) {
 		List<Node> ls = new ArrayList<>();
 		// 锁
 		JFXButton lockbtn = SdkComponent.createLockBtn(mytb);
@@ -437,6 +442,15 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		});
 		editBtn.setTooltip(MyTooltipTool.instance("Edit"));
 		ls.add(editBtn);
+		
+		// 编辑
+		JFXButton showIndexBtn = new JFXButton();
+		showIndexBtn.setGraphic(IconGenerator.svgImageDefActive("edit"));
+		showIndexBtn.setOnMouseClicked(e -> {
+			vb.getChildren().remove(1);
+		});
+		showIndexBtn.setTooltip(MyTooltipTool.instance("Edit"));
+		ls.add(showIndexBtn);
 
 	
 		// 运行按钮

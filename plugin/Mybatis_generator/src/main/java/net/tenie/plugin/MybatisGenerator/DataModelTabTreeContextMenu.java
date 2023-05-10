@@ -1,12 +1,10 @@
 package net.tenie.plugin.MybatisGenerator;
 
-import java.util.function.Consumer;
-
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.IconGenerator;
 import net.tenie.plugin.MybatisGenerator.tools.DataModelUtility;
 
 public class DataModelTabTreeContextMenu {

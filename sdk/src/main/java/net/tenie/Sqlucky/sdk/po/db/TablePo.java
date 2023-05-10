@@ -16,6 +16,10 @@ public class TablePo {
 	private String tableRemarks;
 	private String tableSchema;
 	private String tableType;
+
+	// 创建语句
+	private String ddl;
+	// 字段
 	private LinkedHashSet<TableFieldPo> fields;
 	// 主键
 	private ArrayList<TablePrimaryKeysPo> primaryKeys; 
@@ -24,7 +28,6 @@ public class TablePo {
 	// 索引 
 	private ArrayList<TableIndexPo> indexs;
 	
-	private String ddl;
 	private Boolean dbObj = true;
 	
 	public TablePo() {}
@@ -32,6 +35,7 @@ public class TablePo {
 	public TablePo(String name ) {
 		tableName = name;
 	}
+	 // 用于自动补全创建TablePo， 方便遍历表格实现对表名称输入自动补全， noDbObj表示创建的TablePo 是自定义的自动补全字符串
 	public static TablePo noDbObj(String name ) {
 		TablePo po = new TablePo(name);
 		po.setDbObj(false);

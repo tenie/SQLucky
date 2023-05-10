@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
 import com.jfoenix.controls.JFXButton;
+
 import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Menu;
@@ -29,10 +31,10 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
-import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.fx.Po.TreeNodePo;
@@ -240,7 +242,7 @@ public class SqluckyAppComponent implements AppComponent {
 
 		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);
 		// 表格上面的按钮
-		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(sqluckyConn, mtb, ddl, isRunFunc, isProc, name, isSelect);
+		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(sqluckyConn, mtb, ddl, isRunFunc, isProc, name, isSelect, vb);
 		AnchorPane fp = new BottomSheetOptionBtnsPane(btnLs);
 																					// isProc, name);
 		vb.getChildren().add(fp);

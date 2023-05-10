@@ -7,6 +7,7 @@ import java.util.Map;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
+import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
@@ -170,6 +171,14 @@ public class DBOptionHelper {
 //	 获取表的索引
 	public static List<TableIndexPo> getTableIndex(SqluckyConnector cp, String schema, String tab) {
 		List<TableIndexPo>  ls = cp.getExportDDL().tableIndex(null, schema, tab);
+		
+//		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
+		return ls;
+	}
+	
+//	 获取表的外键  List<TableForeignKeyPo> tableForeignKey
+	public static List<TableForeignKeyPo> getTableForeignKey(SqluckyConnector cp, String schema, String tab) {
+		List<TableForeignKeyPo>  ls = cp.getExportDDL().tableForeignKey(null, schema, tab);
 		
 //		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
 		return ls;
