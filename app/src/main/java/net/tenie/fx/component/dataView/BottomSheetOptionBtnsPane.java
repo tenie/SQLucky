@@ -4,7 +4,10 @@ import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+
+import org.controlsfx.control.tableview2.FilteredTableView;
 
 import com.jfoenix.controls.JFXButton;
 
@@ -22,6 +25,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
@@ -37,6 +42,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.ExcelDataPo;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
@@ -44,6 +50,7 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RunSQLHelper;
@@ -58,9 +65,9 @@ import net.tenie.fx.window.ProcedureExecuteWindow;
  */
 public class BottomSheetOptionBtnsPane extends AnchorPane {
 
-	public  BottomSheetOptionBtnsPane( List<Node> btnLs) {
+	public  BottomSheetOptionBtnsPane( List<Node> btnLs, String connName) {
 		super();
-		initObj(  btnLs, null, null, null);
+		initObj(  btnLs, null, null, connName);
 	}
 	public BottomSheetOptionBtnsPane( List<Node> btnLs, String time, String rows, String connName) {
 		super();
@@ -82,8 +89,11 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 		// 计时/查询行数
 		String info = "";
+		if (StrUtils.isNotNullOrEmpty(connName)) {
+			info = connName;
+		}
 		if (StrUtils.isNotNullOrEmpty(time)) {
-			info = connName + " : " + time + " s / " + rows + " rows";
+			info += " : " + time + " s / " + rows + " rows";
 		}
 		Label lb = new Label(info);
 		
@@ -408,53 +418,51 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			MyBottomSheet mytb, String ddl,
 			boolean isRunFunc, boolean isProc,
 			String name, boolean isSelect,
-			VBox vb ) {
+			VBox vb ,StackPane sp, TablePo table) {
 		List<Node> ls = new ArrayList<>();
 		// 锁
 		JFXButton lockbtn = SdkComponent.createLockBtn(mytb);
 		ls.add(lockbtn);
-		// 保存
-		JFXButton saveBtn = new JFXButton();
-		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
-		saveBtn.setOnMouseClicked(e -> {
-			// TODO 保存存储过程
-			RunSQLHelper.runSQL(sqluckyConn, mytb.getSqlArea().getCodeArea().getText(),  true);
+		
+		
+		if(table == null && false) {
+			// 保存
+			JFXButton saveBtn = new JFXButton();
+			saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
+			saveBtn.setOnMouseClicked(e -> {
+				// TODO 保存存储过程
+				RunSQLHelper.runSQL(sqluckyConn, mytb.getSqlArea().getCodeArea().getText(),  true);
+				saveBtn.setDisable(true);
+
+			});
+			saveBtn.setTooltip(MyTooltipTool.instance("save"));
 			saveBtn.setDisable(true);
+			mytb.setSaveBtn(saveBtn);
+			ls.add(saveBtn);
+			// 编辑
+			JFXButton editBtn = new JFXButton();
+			editBtn.setGraphic(IconGenerator.svgImageDefActive("edit"));
+			editBtn.setOnMouseClicked(e -> {
+				if (mytb.getSqlArea() != null) {
+					MyCodeArea codeArea = mytb.getSqlArea().getCodeArea();
+					codeArea.setEditable(true);
+					saveBtn.setDisable(false);
+					ButtonFactory.lockLockBtn(mytb, lockbtn);
 
-		});
-		saveBtn.setTooltip(MyTooltipTool.instance("save"));
-		saveBtn.setDisable(true);
-		mytb.setSaveBtn(saveBtn);
-		ls.add(saveBtn);
+				}
+			});
+			editBtn.setTooltip(MyTooltipTool.instance("Edit"));
+			ls.add(editBtn);
+		}
+		
 		
 
-		// 编辑
-		JFXButton editBtn = new JFXButton();
-		editBtn.setGraphic(IconGenerator.svgImageDefActive("edit"));
-		editBtn.setOnMouseClicked(e -> {
-			if (mytb.getSqlArea() != null) {
-				MyCodeArea codeArea = mytb.getSqlArea().getCodeArea();
-				codeArea.setEditable(true);
-				saveBtn.setDisable(false);
-				ButtonFactory.lockLockBtn(mytb, lockbtn);
-
-			}
-		});
-		editBtn.setTooltip(MyTooltipTool.instance("Edit"));
-		ls.add(editBtn);
 		
-		// 编辑
-		JFXButton showIndexBtn = new JFXButton();
-		showIndexBtn.setGraphic(IconGenerator.svgImageDefActive("edit"));
-		showIndexBtn.setOnMouseClicked(e -> {
-			vb.getChildren().remove(1);
-		});
-		showIndexBtn.setTooltip(MyTooltipTool.instance("Edit"));
-		ls.add(showIndexBtn);
-
+		
+	
 	
 		// 运行按钮
-		if (isRunFunc) {
+		if (isRunFunc && false) {
 			JFXButton runFuncBtn = new JFXButton();
 			runFuncBtn.setGraphic(IconGenerator.svgImageDefActive("play"));
 			runFuncBtn.setOnMouseClicked(e -> {
@@ -495,11 +503,51 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			selectBtn.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
 			selectBtn.setTooltip(MyTooltipTool.instance("Run SQL: SELECT * FROM " + name));
 			selectBtn.setOnAction(e->{
-				RunSQLHelper.runSQL(sqluckyConn, "SELECT * FROM " + name,   false);
+				RunSQLHelper.runSelectSqlLockTabPane(sqluckyConn, "SELECT * FROM " + name);
 				
 			});
 			
 			ls.add(selectBtn);
+		}
+		if (table != null) {
+			JFXButton showTableDDLBtn = new JFXButton("Table DDL");
+			JFXButton showIndexBtn = new JFXButton("Index");  
+			JFXButton showFKBtn = new JFXButton("Foreign Key"); 
+			// table ddl
+			showTableDDLBtn.setDisable(true);
+			showTableDDLBtn.setOnMouseClicked(e -> {
+				vb.getChildren().remove(1); 
+				vb.getChildren().add(sp);
+				showTableDDLBtn.setDisable(true);
+				showIndexBtn.setDisable(false);
+				showFKBtn.setDisable(false);
+			});
+			ls.add(showTableDDLBtn);
+
+			// 索引
+			showIndexBtn.setOnMouseClicked(e -> {
+				vb.getChildren().remove(1); 
+				var indexView = table.indexTableView();
+				vb.getChildren().add(indexView);
+				showTableDDLBtn.setDisable(false);
+				showIndexBtn.setDisable(true);
+				showFKBtn.setDisable(false);
+
+			});
+			ls.add(showIndexBtn);
+			
+			// 外键 
+			showFKBtn.setOnMouseClicked(e -> {
+				vb.getChildren().remove(1); 
+				var foreignKeyTable = table.foreignKeyTableView();
+				vb.getChildren().add(foreignKeyTable);
+				
+				showFKBtn.setDisable(true);
+				showTableDDLBtn.setDisable(false);
+				showIndexBtn.setDisable(false);
+			});
+			ls.add(showFKBtn);
+			
 		}
 		
 		

@@ -22,7 +22,8 @@ public class TreeObjAction {
 	 * @param table
 	 * @param tableName
 	 */
-	public static void showTableSql(SqluckyConnector sqluckyConn ,TablePo table, String tableName) {
+	public static void showTableSql(SqluckyConnector sqluckyConn ,TablePo table) {
+		String tableName = table.getTableName();
 		String type = table.getTableType();
 		String createTableSql = table.getDdl();
 		// 如果建表语句是空的, 那么导出建表语句
@@ -32,20 +33,33 @@ public class TreeObjAction {
 				createTableSql = DBOptionHelper.getCreateTableSQL(sqluckyConn, table.getTableSchema(), table.getTableName());	
 				// 获取索引 
 				List<TableIndexPo> indexLs = DBOptionHelper.getTableIndex(sqluckyConn,table.getTableSchema(), table.getTableName());	
+				table.setIndexs(indexLs);
 				//TODO 获取外键
 				List<TableForeignKeyPo> foreignKeyLs = DBOptionHelper.getTableForeignKey(sqluckyConn,table.getTableSchema(), table.getTableName());	
-				//TODO 获取外键
+				table.setForeignKeys(foreignKeyLs);
+			 
+				createTableSql = SqlFormatter.format(createTableSql);
+				table.setDdl(createTableSql);
 				
 				
 			}else if(type.equals( CommonConst.TYPE_VIEW ) ) {
 				createTableSql = DBOptionHelper.getViewSQL(sqluckyConn, table.getTableSchema(), table.getTableName());			
+				createTableSql = SqlFormatter.format(createTableSql);
+				table.setDdl(createTableSql);
+				
 			}
 			
-			createTableSql = SqlFormatter.format(createTableSql);
-			table.setDdl(createTableSql);
+			
 		}
-		SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyConn, tableName, createTableSql, false , true);
-		mtd.show();
+		
+		if(type.equals( CommonConst.TYPE_TABLE )) {
+			SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableInfoSheet(sqluckyConn, table );
+			mtd.show();
+		}else if(type.equals( CommonConst.TYPE_VIEW ) ) {
+			SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyConn, tableName, createTableSql, false , true);
+			mtd.show();
+		}
+		
 	}
 	
 	public static String getTableSQL(SqluckyConnector sqluckyConn ,String tableSchema, String tableName) {

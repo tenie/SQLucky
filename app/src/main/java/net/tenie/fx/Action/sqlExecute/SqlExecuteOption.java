@@ -89,7 +89,7 @@ public class SqlExecuteOption {
 	private static List<String> getKeys(Connection conn, TreeItem<TreeNodePo> node) {
 		List<String> keys = new ArrayList<>();
 		try {
-			ArrayList<TablePrimaryKeysPo> pks = node.getValue().getTable().getPrimaryKeys();
+			List<TablePrimaryKeysPo> pks = node.getValue().getTable().getPrimaryKeys();
 			if (pks == null || pks.size() == 0) {
 				Dbinfo.fetchTablePrimaryKeys(conn, node.getValue().getTable());
 			}

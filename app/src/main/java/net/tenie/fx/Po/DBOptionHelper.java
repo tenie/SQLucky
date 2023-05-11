@@ -170,7 +170,7 @@ public class DBOptionHelper {
 	}
 //	 获取表的索引
 	public static List<TableIndexPo> getTableIndex(SqluckyConnector cp, String schema, String tab) {
-		List<TableIndexPo>  ls = cp.getExportDDL().tableIndex(null, schema, tab);
+		List<TableIndexPo>  ls = cp.getExportDDL().tableIndex(cp.getConn(), schema, tab);
 		
 //		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
 		return ls;
@@ -178,7 +178,7 @@ public class DBOptionHelper {
 	
 //	 获取表的外键  List<TableForeignKeyPo> tableForeignKey
 	public static List<TableForeignKeyPo> getTableForeignKey(SqluckyConnector cp, String schema, String tab) {
-		List<TableForeignKeyPo>  ls = cp.getExportDDL().tableForeignKey(null, schema, tab);
+		List<TableForeignKeyPo>  ls = cp.getExportDDL().tableForeignKey(cp.getConn(), schema, tab);
 		
 //		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
 		return ls;

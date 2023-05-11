@@ -110,6 +110,11 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 
+		if(myAuto == null && tb == null) {
+			codeArea.setEditable(false);
+			return;
+			
+		}
 		// 事件KeyEvent
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
 

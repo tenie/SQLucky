@@ -15,8 +15,10 @@ public class RunSqlStatePo {
 	private  List<ProcedureFieldPo> callProcedureFields = null;
 
 	private  Boolean isCreateFunc = false;
+	// 执行语句的时候, 对其余tab不做操作, 正常情况会把非锁定的tab关闭
 	private  Boolean isRefresh = false;
-	private  Boolean isLock =false;
+	// 查询后锁定下面的tab, 避免执行其他语句后被关闭
+	private  Boolean isLock =false;   
 	private  Boolean isCallFunc = false;
 	private  Boolean isCurrentLine = false;
 	
