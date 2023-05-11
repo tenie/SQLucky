@@ -469,14 +469,13 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 //				private String pkColnames; //	PK_COLNAMES	引用表字段名称(就是主表的主键)
 //				private String refKeyname;  // REFKEYNAME 主表的主键名称
 				
-				po.setTabName(sql);
-				po.setConstname(sql);
-				po.setFkColnames(sql);
-				po.setRefTabname(sql);
+				po.setTabName(rs.getString("TABNAME"));
+				po.setConstname(rs.getString("CONSTNAME"));
+				po.setFkColnames(rs.getString("FK_COLNAMES"));
+				po.setRefTabname(rs.getString("REFTABNAME"));
 
-
-				po.setPkColnames(sql);
-				po.setRefKeyname(sql);
+				po.setPkColnames(rs.getString("PK_COLNAMES"));
+				po.setRefKeyname(rs.getString("REFKEYNAME"));
 				ls.add(po);
 			}
 		} catch (SQLException e) {

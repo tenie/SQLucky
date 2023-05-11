@@ -287,8 +287,8 @@ public class TableViewUtil {
 //			sheetDaV.setConn(conn);
 
 			ObservableList<SheetFieldPo> fields = createSheetFieldPo(fieldNameLs);
-			ResultSetPo setPo = new ResultSetPo(fields);
-			fetchCellVal(vals, fields, setPo);
+//			ResultSetPo setPo = new ResultSetPo(fields);
+			ResultSetPo setPo = fetchCellVal(vals, fields);
 //			
 			sheetDaV.setColss(fields);
 			sheetDaV.setInfoTableVals(setPo);
@@ -335,10 +335,12 @@ public class TableViewUtil {
 		return fields;
 	}
 	
-	// 讲数据转换为cell 
-	public static void fetchCellVal(  List<Map<String, String>> vals,
-			ObservableList<SheetFieldPo> fpo,
-			ResultSetPo setPo ) throws SQLException {
+	//将数据转换为cell 
+	public static ResultSetPo fetchCellVal(  List<Map<String, String>> vals,
+			ObservableList<SheetFieldPo> fpo
+//			,ResultSetPo setPo 
+			) throws SQLException {
+		ResultSetPo setPo = new ResultSetPo(fpo);
 		int columnnums = fpo.size(); 
 		for (Map<String, String> map : vals) {
 			ResultSetRowPo rowpo = setPo.creatRow();
@@ -351,6 +353,6 @@ public class TableViewUtil {
 				rowpo.addCell(val, null, fieldpo);
 			}
 		}
-
+		return setPo;
 	}
 }

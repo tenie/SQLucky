@@ -437,6 +437,30 @@ public class RunSQLHelper {
 		thread = createThread( RunSQLHelper::runMain, state);
 		thread.start();
 	}
+	/*
+	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab  
+	 */
+	public static void runSelectSqlLockTabPane( SqluckyConnector sqlConn , String sqlv) {
+		Connection connv = sqlConn.getConn();
+		try {
+			if (connv == null) {
+				return;
+			} else if (connv.isClosed()) {
+				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+
+		settingBtn();
+		SdkComponent.showDetailPane();
+		
+		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
+		state.setIsRefresh(true);
+		thread = createThread( RunSQLHelper::runMain, state);
+		thread.start();
+	}
 
 
 	// stop 入口

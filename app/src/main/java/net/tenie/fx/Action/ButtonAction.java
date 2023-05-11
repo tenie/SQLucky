@@ -312,7 +312,7 @@ public class ButtonAction {
 		}
 		
 		if( tbrs != null)
-		TreeObjAction.showTableSql(dbcp, tbrs, tbn);
+		TreeObjAction.showTableSql(dbcp, tbrs);
 		
 	}
 	
