@@ -154,7 +154,7 @@ public class ExportSqlSqliteImp implements ExportDBObjects {
  
 		}
 		// 获取主键
-		ArrayList<TablePrimaryKeysPo> ls = tab.getPrimaryKeys();
+		List<TablePrimaryKeysPo> ls = tab.getPrimaryKeys();
 		String pkn = "";
 		if (ls.size() > 0) {
 			for (TablePrimaryKeysPo kp : ls) {

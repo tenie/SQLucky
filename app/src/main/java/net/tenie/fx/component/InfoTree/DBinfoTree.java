@@ -278,14 +278,14 @@ public class DBinfoTree {
 					 parentItem.getValue().getType() == TreeItemType.TABLE_ROOT) {
 				SqluckyConnector dpo = item.getValue().getConnpo();
 				TablePo table = item.getValue().getTable();
-				TreeObjAction.showTableSql(dpo, table, item.getValue().getName());
+				TreeObjAction.showTableSql(dpo, table );
 			}
 			// 视图
 			else if (parentItem.getValue().getType() != null && 
 					 parentItem.getValue().getType() == TreeItemType.VIEW_ROOT) {
 				SqluckyConnector sqluckyconn = item.getValue().getConnpo(); 
 				TablePo table = item.getValue().getTable();
-				TreeObjAction.showTableSql(sqluckyconn, table, item.getValue().getName());
+				TreeObjAction.showTableSql(sqluckyconn, table);
 			}
 			// 函数
 			else if (parentItem.getValue().getType() != null

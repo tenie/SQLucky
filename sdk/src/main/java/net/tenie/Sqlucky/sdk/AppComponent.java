@@ -16,6 +16,7 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
 public interface AppComponent {
 	
@@ -59,6 +60,8 @@ public interface AppComponent {
 	public  SqluckyBottomSheet tableViewSheet(SheetDataValue data, List<Node> nodeLs);
 	// 表, 视图 等 数据库对象的ddl语句
 	public  SqluckyBottomSheet ddlSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc , boolean isSelect);
+	public  SqluckyBottomSheet tableInfoSheet(SqluckyConnector sqluckyConn, TablePo table);
+
 	public SqluckyBottomSheet ProcedureSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc);
 	public SqluckyBottomSheet EmptySheet(SqluckyConnector sqluckyConn, String name, String message);
 	

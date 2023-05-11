@@ -1,7 +1,18 @@
 package net.tenie.Sqlucky.sdk.po.db;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+
+import org.controlsfx.control.tableview2.FilteredTableView;
+
+import javafx.scene.control.TableView;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 
 
 /**
@@ -22,13 +33,17 @@ public class TablePo {
 	// 字段
 	private LinkedHashSet<TableFieldPo> fields;
 	// 主键
-	private ArrayList<TablePrimaryKeysPo> primaryKeys; 
+	private List<TablePrimaryKeysPo> primaryKeys; 
 	// 外键
-	private ArrayList<TableForeignKeyPo> foreignKeys;
+	private List<TableForeignKeyPo> foreignKeys;
 	// 索引 
-	private ArrayList<TableIndexPo> indexs;
+	private List<TableIndexPo> indexs;
 	
 	private Boolean dbObj = true;
+	
+	// 获取TableView ,foreignKey
+    FilteredTableView<ResultSetRowPo> foreignKeyTable;
+    FilteredTableView<ResultSetRowPo> indexTableView;
 	
 	public TablePo() {}
 	
@@ -41,6 +56,102 @@ public class TablePo {
 		po.setDbObj(false);
 		return po;
 	}
+	
+	
+	// show Index
+	public TableView<ResultSetRowPo> indexTableView(){
+		if(indexTableView == null) {
+			List<String> colName = new ArrayList<>();
+			colName.add("INDEX NAME");
+			colName.add("TABLE NAME");
+			colName.add("INDEX SCHEMA");
+			colName.add("COL NAMES"); 
+			List<Map<String, String>> vals = toMapByIndex();
+			var sheetDaV = TableViewUtil.dataToSheet(colName, vals, null);
+			// 获取TableView
+		    indexTableView = sheetDaV.getInfoTable();
+		}
+		
+		
+		return indexTableView;
+	}
+	
+	// show foreign key 
+	public TableView<ResultSetRowPo> foreignKeyTableView() {
+		if (foreignKeyTable == null) {
+			List<String> foreignKeyColnames = new ArrayList<>();
+
+			foreignKeyColnames.add("TABLE NAME");
+			foreignKeyColnames.add("FOREIGN KEY NAME");
+			foreignKeyColnames.add("PK COLNAMES");
+			foreignKeyColnames.add("REF TABLE NAME");
+			foreignKeyColnames.add("REF KEY NAME");
+			foreignKeyColnames.add("PK COLNAMES");
+
+			List<Map<String, String>> foreignKeyVals = toMapByFK();
+
+			var foreignKeysheetDaV = TableViewUtil.dataToSheet(foreignKeyColnames, foreignKeyVals, null);
+			// 获取TableView
+			foreignKeyTable = foreignKeysheetDaV.getInfoTable();
+
+		}
+		return foreignKeyTable;
+	}
+	
+	// 将List中的对象转换为MAP 后返回一个新的list
+	private    List<Map<String, String>>  toMapByIndex(){
+		List<Map<String, String>> vals = new ArrayList<>();
+		 
+		for(TableIndexPo idxpo : indexs) {
+			String iname = idxpo.getIndname();
+			String tname =idxpo.getTabname();
+			String she =idxpo.getIndschema();
+			String cols =idxpo.getColnames();
+			
+			Map<String, String> tmpMap = new HashMap<>();
+			tmpMap.put("INDEX NAME", iname);
+			tmpMap.put("TABLE NAME", tname);
+			tmpMap.put("INDEX SCHEMA", she);
+			tmpMap.put("COL NAMES", cols);
+			vals.add(tmpMap);
+		} 
+		
+		return vals;
+	} 
+	// 将List中的对象转换为MAP 后返回一个新的list
+	private    List<Map<String, String>>  toMapByFK(){
+		List<Map<String, String>> vals = new ArrayList<>();
+		 /**
+		  foreignKeyColnames.add("TABLE NAME");
+		foreignKeyColnames.add("FOREIGN KEY NAME"); 
+		foreignKeyColnames.add("PK COLNAMES");
+		foreignKeyColnames.add("");
+		foreignKeyColnames.add("");
+		foreignKeyColnames.add("");
+		  */
+//		if(foreignKeys == null ) return vals;
+		for(TableForeignKeyPo fkpo : foreignKeys) {
+			String TabName = fkpo.getTabName();
+			String Constname =fkpo.getConstname();
+			String FkColnames =fkpo.getFkColnames();
+			String RefTabname =fkpo.getRefTabname();
+			String refKeyname =fkpo.getRefKeyname();
+			String pkColnames =fkpo.getPkColnames();
+			
+			
+			Map<String, String> tmpMap = new HashMap<>();
+			tmpMap.put("TABLE NAME", TabName);
+			tmpMap.put("FOREIGN KEY NAME", Constname);
+			tmpMap.put("PK COLNAMES", FkColnames);
+
+			tmpMap.put("REF TABLE NAME", RefTabname);
+			tmpMap.put("REF KEY NAME", refKeyname);
+			tmpMap.put("PK COLNAMES", pkColnames);
+			vals.add(tmpMap);
+		} 
+		
+		return vals;
+	} 
 
 	public String getDdl() {
 		return ddl;
@@ -50,11 +161,11 @@ public class TablePo {
 		this.ddl = ddl;
 	}
 
-	public ArrayList<TablePrimaryKeysPo> getPrimaryKeys() {
+	public List<TablePrimaryKeysPo> getPrimaryKeys() {
 		return primaryKeys;
 	}
 
-	public void setPrimaryKeys(ArrayList<TablePrimaryKeysPo> primaryKeys) {
+	public void setPrimaryKeys(List<TablePrimaryKeysPo> primaryKeys) {
 		this.primaryKeys = primaryKeys;
 	}
 
@@ -99,19 +210,19 @@ public class TablePo {
 	}
 
  
-	public ArrayList<TableForeignKeyPo> getForeignKeys() {
+	public List<TableForeignKeyPo> getForeignKeys() {
 		return foreignKeys;
 	}
 
-	public void setForeignKeys(ArrayList<TableForeignKeyPo> foreignKeys) {
+	public void setForeignKeys(List<TableForeignKeyPo> foreignKeys) {
 		this.foreignKeys = foreignKeys;
 	}
 
-	public ArrayList<TableIndexPo> getIndexs() {
+	public List<TableIndexPo> getIndexs() {
 		return indexs;
 	}
 
-	public void setIndexs(ArrayList<TableIndexPo> indexs) {
+	public void setIndexs(List<TableIndexPo> indexs) {
 		this.indexs = indexs;
 	}
 
