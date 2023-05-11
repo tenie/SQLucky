@@ -1,47 +1,34 @@
 package net.tenie.Sqlucky.sdk.utility;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.MaskerPane;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
-import com.jfoenix.controls.JFXButton;
-
-import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import net.tenie.Sqlucky.sdk.component.MyButtonTableCell;
 import net.tenie.Sqlucky.sdk.component.MyTextField2TableCell3;
 import net.tenie.Sqlucky.sdk.component.ResultSetCellValueFactory;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SelectInfoTableDao;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
@@ -284,19 +271,14 @@ public class TableViewUtil {
 			sheetDaV.setInfoTable(table);
 			sheetDaV.setTabName("");
 			sheetDaV.setLock(false);
-//			sheetDaV.setConn(conn);
 
 			ObservableList<SheetFieldPo> fields = createSheetFieldPo(fieldNameLs);
-//			ResultSetPo setPo = new ResultSetPo(fields);
 			ResultSetPo setPo = fetchCellVal(vals, fields);
-//			
 			sheetDaV.setColss(fields);
 			sheetDaV.setInfoTableVals(setPo);
 
 			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getInfoTableVals().getDatas();
 			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
-
-			 
 
 			// table 添加列和数据
 			// 表格添加列
@@ -312,7 +294,7 @@ public class TableViewUtil {
 				}
 			}
 			
-			// 设置 列的 右键菜单
+			// 设置 列的  
 			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);
 
@@ -337,8 +319,7 @@ public class TableViewUtil {
 	
 	//将数据转换为cell 
 	public static ResultSetPo fetchCellVal(  List<Map<String, String>> vals,
-			ObservableList<SheetFieldPo> fpo
-//			,ResultSetPo setPo 
+			ObservableList<SheetFieldPo> fpo 
 			) throws SQLException {
 		ResultSetPo setPo = new ResultSetPo(fpo);
 		int columnnums = fpo.size(); 
@@ -355,4 +336,40 @@ public class TableViewUtil {
 		}
 		return setPo;
 	}
+
+
+	// Show db Table index foregin key TableView
+	public static TableView<ResultSetRowPo>  dbTableIndexFkTableView(List<String> fieldNameLs ,
+			List<Map<String, String>> vals ) {
+		try {
+			FilteredTableView<ResultSetRowPo> tableView = TableViewUtil.creatInfoTableView();
+			// 查询的 的语句可以被修改
+			tableView.editableProperty().bind(new SimpleBooleanProperty(true));
+
+			ObservableList<SheetFieldPo> fields = createSheetFieldPo(fieldNameLs);
+			ResultSetPo setPo = fetchCellVal(vals, fields);
+			
+
+			ObservableList<ResultSetRowPo> allRawData = setPo.getDatas(); //sheetDaV.getInfoTableVals().getDatas();
+			// table 添加列和数据
+			// 表格添加列
+			ObservableList<FilteredTableColumn<ResultSetRowPo, String>> tableColumns 
+				= TableViewUtil.createTableColForInfo(fields);
+			FilteredTableColumn<ResultSetRowPo, String> column = tableColumns.get(tableColumns.size()-1);
+			Button btn = new Button("Drop");
+			
+			MyButtonTableCell<TableColumn<ResultSetRowPo, String>, TableCell<ResultSetRowPo, String>>  btncell = new MyButtonTableCell<>(btn);
+			column.setCellFactory(btncell);
+			// 设置 列的  
+			tableView.getColumns().addAll(tableColumns);
+			tableView.setItems(allRawData);
+
+			return tableView;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 }

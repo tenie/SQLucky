@@ -1,14 +1,10 @@
 package net.tenie.Sqlucky.sdk.po.db;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-
-import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.scene.control.TableView;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -42,8 +38,8 @@ public class TablePo {
 	private Boolean dbObj = true;
 	
 	// 获取TableView ,foreignKey
-    FilteredTableView<ResultSetRowPo> foreignKeyTable;
-    FilteredTableView<ResultSetRowPo> indexTableView;
+	TableView<ResultSetRowPo> foreignKeyTable;
+	TableView<ResultSetRowPo> indexTableView;
 	
 	public TablePo() {}
 	
@@ -87,69 +83,74 @@ public class TablePo {
 			foreignKeyColnames.add("REF TABLE NAME");
 			foreignKeyColnames.add("REF KEY NAME");
 			foreignKeyColnames.add("PK COLNAMES");
+			foreignKeyColnames.add("Drop FOREIGN KEY");
 
 			List<Map<String, String>> foreignKeyVals = toMapByFK();
 
-			var foreignKeysheetDaV = TableViewUtil.dataToSheet(foreignKeyColnames, foreignKeyVals, null);
-			// 获取TableView
-			foreignKeyTable = foreignKeysheetDaV.getInfoTable();
-
+//			var foreignKeysheetDaV = TableViewUtil.dataToSheet(foreignKeyColnames, foreignKeyVals, null);
+//			// 获取TableView
+//			foreignKeyTable = foreignKeysheetDaV.getInfoTable();
+			foreignKeyTable = TableViewUtil.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals);
 		}
 		return foreignKeyTable;
 	}
 	
 	// 将List中的对象转换为MAP 后返回一个新的list
-	private    List<Map<String, String>>  toMapByIndex(){
+	private List<Map<String, String>> toMapByIndex() {
 		List<Map<String, String>> vals = new ArrayList<>();
-		 
-		for(TableIndexPo idxpo : indexs) {
-			String iname = idxpo.getIndname();
-			String tname =idxpo.getTabname();
-			String she =idxpo.getIndschema();
-			String cols =idxpo.getColnames();
-			
-			Map<String, String> tmpMap = new HashMap<>();
-			tmpMap.put("INDEX NAME", iname);
-			tmpMap.put("TABLE NAME", tname);
-			tmpMap.put("INDEX SCHEMA", she);
-			tmpMap.put("COL NAMES", cols);
-			vals.add(tmpMap);
-		} 
-		
+		if (indexs != null) {
+			for (TableIndexPo idxpo : indexs) {
+				String iname = idxpo.getIndname();
+				String tname = idxpo.getTabname();
+				String she = idxpo.getIndschema();
+				String cols = idxpo.getColnames();
+
+				Map<String, String> tmpMap = new HashMap<>();
+				tmpMap.put("INDEX NAME", iname);
+				tmpMap.put("TABLE NAME", tname);
+				tmpMap.put("INDEX SCHEMA", she);
+				tmpMap.put("COL NAMES", cols);
+				vals.add(tmpMap);
+			}
+
+		}
+
 		return vals;
 	} 
 	// 将List中的对象转换为MAP 后返回一个新的list
-	private    List<Map<String, String>>  toMapByFK(){
+	private List<Map<String, String>> toMapByFK() {
 		List<Map<String, String>> vals = new ArrayList<>();
-		 /**
-		  foreignKeyColnames.add("TABLE NAME");
-		foreignKeyColnames.add("FOREIGN KEY NAME"); 
-		foreignKeyColnames.add("PK COLNAMES");
-		foreignKeyColnames.add("");
-		foreignKeyColnames.add("");
-		foreignKeyColnames.add("");
-		  */
-//		if(foreignKeys == null ) return vals;
-		for(TableForeignKeyPo fkpo : foreignKeys) {
-			String TabName = fkpo.getTabName();
-			String Constname =fkpo.getConstname();
-			String FkColnames =fkpo.getFkColnames();
-			String RefTabname =fkpo.getRefTabname();
-			String refKeyname =fkpo.getRefKeyname();
-			String pkColnames =fkpo.getPkColnames();
-			
-			
-			Map<String, String> tmpMap = new HashMap<>();
-			tmpMap.put("TABLE NAME", TabName);
-			tmpMap.put("FOREIGN KEY NAME", Constname);
-			tmpMap.put("PK COLNAMES", FkColnames);
+		 foreignKeys = new ArrayList<>();
+		 TableForeignKeyPo fkpoval  = new TableForeignKeyPo();
+		 fkpoval.setTabName("1");
+		 fkpoval.setConstname("12");
+		 fkpoval.setFkColnames("13");
+		 fkpoval.setRefTabname("14");
+		 fkpoval.setRefKeyname("15");
+		 fkpoval.setPkColnames("11");
+		 foreignKeys.add(fkpoval);
+		if (foreignKeys != null) {
+			 
+			for (TableForeignKeyPo fkpo : foreignKeys) {
+				String TabName = fkpo.getTabName();
+				String Constname = fkpo.getConstname();
+				String FkColnames = fkpo.getFkColnames();
+				String RefTabname = fkpo.getRefTabname();
+				String refKeyname = fkpo.getRefKeyname();
+				String pkColnames = fkpo.getPkColnames();
 
-			tmpMap.put("REF TABLE NAME", RefTabname);
-			tmpMap.put("REF KEY NAME", refKeyname);
-			tmpMap.put("PK COLNAMES", pkColnames);
-			vals.add(tmpMap);
-		} 
-		
+				Map<String, String> tmpMap = new HashMap<>();
+				tmpMap.put("TABLE NAME", TabName);
+				tmpMap.put("FOREIGN KEY NAME", Constname);
+				tmpMap.put("PK COLNAMES", FkColnames);
+
+				tmpMap.put("REF TABLE NAME", RefTabname);
+				tmpMap.put("REF KEY NAME", refKeyname);
+				tmpMap.put("PK COLNAMES", pkColnames);
+				tmpMap.put("Drop FOREIGN KEY", "");
+				vals.add(tmpMap);
+			}
+		}
 		return vals;
 	} 
 
