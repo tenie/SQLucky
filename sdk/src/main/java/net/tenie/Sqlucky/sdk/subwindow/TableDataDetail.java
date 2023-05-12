@@ -19,7 +19,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyTextField2ReadOnlyTableCell;
+import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
@@ -133,7 +133,7 @@ public class TableDataDetail {
 		
 		
 		
-		fieldNameCol.setCellFactory(MyTextField2ReadOnlyTableCell.forTableColumn());
+		fieldNameCol.setCellFactory(MyTableCellTextField2ReadOnly.forTableColumn());
 //		fieldNameCol.setEditable(false);
 		fieldNameCol.setPrefWidth(200);
 

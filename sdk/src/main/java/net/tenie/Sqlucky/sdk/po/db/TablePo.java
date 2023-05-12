@@ -1,13 +1,22 @@
 package net.tenie.Sqlucky.sdk.po.db;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import net.tenie.Sqlucky.sdk.component.MyCellOperateButton;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 
 
@@ -37,9 +46,12 @@ public class TablePo {
 	
 	private Boolean dbObj = true;
 	
+	
 	// 获取TableView ,foreignKey
-	TableView<ResultSetRowPo> foreignKeyTable;
-	TableView<ResultSetRowPo> indexTableView;
+	private TableView<ResultSetRowPo> foreignKeyTable;
+	private TableView<ResultSetRowPo> indexTableView;
+	
+	private SqluckyConnector sqluckyConnector;
 	
 	public TablePo() {}
 	
@@ -83,18 +95,80 @@ public class TablePo {
 			foreignKeyColnames.add("REF TABLE NAME");
 			foreignKeyColnames.add("REF KEY NAME");
 			foreignKeyColnames.add("PK COLNAMES");
-			foreignKeyColnames.add("Drop FOREIGN KEY");
+			foreignKeyColnames.add("Operate Button");
 
 			List<Map<String, String>> foreignKeyVals = toMapByFK();
-
+			
+			// drop button
+			MyCellOperateButton drop = dropFKBtn();
+			MyCellOperateButton export =exportFKBtn();
+			List<MyCellOperateButton> btnvals = new ArrayList<>();
+			btnvals.add(drop);
+			btnvals.add(export);
 //			var foreignKeysheetDaV = TableViewUtil.dataToSheet(foreignKeyColnames, foreignKeyVals, null);
 //			// 获取TableView
 //			foreignKeyTable = foreignKeysheetDaV.getInfoTable();
-			foreignKeyTable = TableViewUtil.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals);
+			foreignKeyTable = TableViewUtil.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals,   btnvals );
 		}
 		return foreignKeyTable;
 	}
 	
+	private MyCellOperateButton dropFKBtn() {
+		Button btn = new Button("Drop"); 
+		Consumer<ResultSetRowPo> btnCaller = v -> {
+			String fkName = v.getValueByFieldName("FOREIGN KEY NAME"); 
+			String tableName = v.getValueByFieldName("TABLE NAME"); 
+			
+			if(StrUtils.isNotNullOrEmpty(fkName)) {
+				if(this.sqluckyConnector != null) {
+					String schema = sqluckyConnector.getDefaultSchema();
+					String ddl = this.sqluckyConnector.getExportDDL().exportDropForeignKey(schema, fkName, tableName);
+					
+					boolean tf = MyAlert.myConfirmationShowAndWait("Dorp FOREIGN KEY? Run DDL: " + ddl);
+					if(tf) {
+						try {
+							DBTools.execDDL(sqluckyConnector.getConn(), ddl);
+						} catch (SQLException e) { 
+							e.printStackTrace();
+							MyAlert.errorAlert(e.getMessage());
+						}
+					}
+					
+				}
+			}
+			
+		}; 
+		
+		
+		MyCellOperateButton drop = new MyCellOperateButton(btn, btnCaller);
+		
+		return drop;
+	}
+	
+	
+	private MyCellOperateButton exportFKBtn() {
+		Button btn = new Button("Export DDL");
+		Consumer<ResultSetRowPo> btnCaller = v -> {
+			String fkName = v.getValueByFieldName("FOREIGN KEY NAME");
+			String tableName = v.getValueByFieldName("TABLE NAME");
+
+			if (StrUtils.isNotNullOrEmpty(fkName)) {
+				if (this.sqluckyConnector != null) {
+					String schema = sqluckyConnector.getDefaultSchema();
+					String ddl = this.sqluckyConnector.getExportDDL().exportCreateForeignKey(sqluckyConnector.getConn(),
+							schema, fkName);
+					CommonUtility.setClipboardVal(ddl);
+					MyAlert.infoAlert("", "Successfully exported to the clipboard");
+
+				}
+			}
+
+		};
+
+		MyCellOperateButton export = new MyCellOperateButton(btn, btnCaller);
+
+		return export;
+	}
 	// 将List中的对象转换为MAP 后返回一个新的list
 	private List<Map<String, String>> toMapByIndex() {
 		List<Map<String, String>> vals = new ArrayList<>();
@@ -120,15 +194,15 @@ public class TablePo {
 	// 将List中的对象转换为MAP 后返回一个新的list
 	private List<Map<String, String>> toMapByFK() {
 		List<Map<String, String>> vals = new ArrayList<>();
-		 foreignKeys = new ArrayList<>();
-		 TableForeignKeyPo fkpoval  = new TableForeignKeyPo();
-		 fkpoval.setTabName("1");
-		 fkpoval.setConstname("12");
-		 fkpoval.setFkColnames("13");
-		 fkpoval.setRefTabname("14");
-		 fkpoval.setRefKeyname("15");
-		 fkpoval.setPkColnames("11");
-		 foreignKeys.add(fkpoval);
+//		 foreignKeys = new ArrayList<>();
+//		 TableForeignKeyPo fkpoval  = new TableForeignKeyPo();
+//		 fkpoval.setTabName("1");
+//		 fkpoval.setConstname("12");
+//		 fkpoval.setFkColnames("13");
+//		 fkpoval.setRefTabname("14");
+//		 fkpoval.setRefKeyname("15");
+//		 fkpoval.setPkColnames("11");
+//		 foreignKeys.add(fkpoval);
 		if (foreignKeys != null) {
 			 
 			for (TableForeignKeyPo fkpo : foreignKeys) {
@@ -147,7 +221,7 @@ public class TablePo {
 				tmpMap.put("REF TABLE NAME", RefTabname);
 				tmpMap.put("REF KEY NAME", refKeyname);
 				tmpMap.put("PK COLNAMES", pkColnames);
-				tmpMap.put("Drop FOREIGN KEY", "");
+				tmpMap.put("Operate Button", "");
 				vals.add(tmpMap);
 			}
 		}
@@ -241,6 +315,14 @@ public class TablePo {
 
 	public void setDbObj(Boolean dbObj) {
 		this.dbObj = dbObj;
+	}
+
+	public SqluckyConnector getSqluckyConnector() {
+		return sqluckyConnector;
+	}
+
+	public void setSqluckyConnector(SqluckyConnector sqluckyConnector) {
+		this.sqluckyConnector = sqluckyConnector;
 	}
 
 	@Override

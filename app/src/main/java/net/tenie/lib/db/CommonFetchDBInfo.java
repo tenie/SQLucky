@@ -212,7 +212,7 @@ public class CommonFetchDBInfo {
 
 	// 删除外键
 	public String exportDropForeignKey(String schema, String name) {
-		String sql = exportDDL.exportDropForeignKey(schema, name);
+		String sql = exportDDL.exportDropForeignKey(schema, name, null);
 		return sql;
 	}
 

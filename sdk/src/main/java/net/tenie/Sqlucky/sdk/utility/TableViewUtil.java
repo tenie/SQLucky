@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,8 +23,9 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import net.tenie.Sqlucky.sdk.component.MyButtonTableCell;
-import net.tenie.Sqlucky.sdk.component.MyTextField2TableCell3;
+import net.tenie.Sqlucky.sdk.component.MyCellOperateButton;
+import net.tenie.Sqlucky.sdk.component.MyTableCellButton;
+import net.tenie.Sqlucky.sdk.component.MyTableCellTextField3;
 import net.tenie.Sqlucky.sdk.component.ResultSetCellValueFactory;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
@@ -161,7 +163,7 @@ public class TableViewUtil {
 	// 创建列
 	public static FilteredTableColumn<ResultSetRowPo, String> createColumn(String colname, int colIdx) {
 		FilteredTableColumn<ResultSetRowPo, String> col = new FilteredTableColumn<>();
-		col.setCellFactory(MyTextField2TableCell3.forTableColumn());
+		col.setCellFactory(MyTableCellTextField3.forTableColumn());
 		col.setText(colname);
 		Label label = new Label();
 		col.setGraphic(label);
@@ -340,7 +342,7 @@ public class TableViewUtil {
 
 	// Show db Table index foregin key TableView
 	public static TableView<ResultSetRowPo>  dbTableIndexFkTableView(List<String> fieldNameLs ,
-			List<Map<String, String>> vals ) {
+			List<Map<String, String>> vals ,List<MyCellOperateButton> btnvals ) {
 		try {
 			FilteredTableView<ResultSetRowPo> tableView = TableViewUtil.creatInfoTableView();
 			// 查询的 的语句可以被修改
@@ -356,10 +358,9 @@ public class TableViewUtil {
 			ObservableList<FilteredTableColumn<ResultSetRowPo, String>> tableColumns 
 				= TableViewUtil.createTableColForInfo(fields);
 			FilteredTableColumn<ResultSetRowPo, String> column = tableColumns.get(tableColumns.size()-1);
-			Button btn = new Button("Drop");
-			
-			MyButtonTableCell<TableColumn<ResultSetRowPo, String>, TableCell<ResultSetRowPo, String>>  btncell = new MyButtonTableCell<>(btn);
-			column.setCellFactory(btncell);
+		
+			MyTableCellButton  btncell = new MyTableCellButton( btnvals);
+			column.setCellFactory(btncell.callback());
 			// 设置 列的  
 			tableView.getColumns().addAll(tableColumns);
 			tableView.setItems(allRawData);
