@@ -306,7 +306,7 @@ public class ExportSqlSqliteImp implements ExportDBObjects {
 	}
 
 	@Override
-	public String exportDropForeignKey(String schema , String name) {
+	public String exportDropForeignKey(String schema , String foreignKeyName, String tableName) {
 		// TODO Auto-generated method stub
 		return null;
 	}

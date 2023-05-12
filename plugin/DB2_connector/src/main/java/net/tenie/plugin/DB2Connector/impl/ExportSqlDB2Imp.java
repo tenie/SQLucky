@@ -391,9 +391,10 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	}
 
 	@Override
-	public String exportDropForeignKey(String schema, String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public String exportDropForeignKey(String schema, String foreignKeyName, String tableName) {
+//		ALTER TABLE 子表  DROP CONSTRAINT 外键名称 ;
+		String sql = "ALTER TABLE "+tableName+" DROP CONSTRAINT " + foreignKeyName;
+		return sql;
 	}
 	
 	@Override

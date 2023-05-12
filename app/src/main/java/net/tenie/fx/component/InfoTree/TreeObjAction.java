@@ -29,6 +29,7 @@ public class TreeObjAction {
 		// 如果建表语句是空的, 那么导出建表语句
 		if (StrUtils.isNullOrEmpty(createTableSql)) {
 			if(type.equals( CommonConst.TYPE_TABLE )) {
+				table.setSqluckyConnector(sqluckyConn);
 				// 
 				createTableSql = DBOptionHelper.getCreateTableSQL(sqluckyConn, table.getTableSchema(), table.getTableName());	
 				// 获取索引 

@@ -81,7 +81,7 @@ public interface ExportDBObjects {
 
 	String exportDropPrimaryKey(String schema, String name);
 
-	String exportDropForeignKey(String schema, String name);
+	String exportDropForeignKey(String schema, String foreignKeyName, String tableName);
 	
 	String exportCallFuncSql(String funcStr);
 }
