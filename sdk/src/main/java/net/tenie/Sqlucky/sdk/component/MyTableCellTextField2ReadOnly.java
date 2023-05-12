@@ -19,7 +19,7 @@ import javafx.util.converter.DefaultStringConverter;
  * @param <S>
  * @param <T>
  */
-public class MyTextField2ReadOnlyTableCell<S, T> extends TextFieldTableCell<S, T> {
+public class MyTableCellTextField2ReadOnly<S, T> extends TextFieldTableCell<S, T> {
     
     public static <S> Callback<TableColumn<S,String>, TableCell<S,String>> forTableColumn() {
         return forTableColumn(new DefaultStringConverter());
@@ -27,17 +27,17 @@ public class MyTextField2ReadOnlyTableCell<S, T> extends TextFieldTableCell<S, T
 
     public static <S,T> Callback<TableColumn<S,T>, TableCell<S,T>> forTableColumn(
             final StringConverter<T> converter) {
-        return list -> new MyTextField2ReadOnlyTableCell<>(converter);
+        return list -> new MyTableCellTextField2ReadOnly<>(converter);
     }
 
 
     private TextField textField;
 
-    public MyTextField2ReadOnlyTableCell() {
+    public MyTableCellTextField2ReadOnly() {
         this(null);
     }
 
-    public MyTextField2ReadOnlyTableCell(StringConverter<T> converter) {
+    public MyTableCellTextField2ReadOnly(StringConverter<T> converter) {
         super(converter);
 //      this.setMaxHeight(50);
       this.setTextOverrun(OverrunStyle.ELLIPSIS);

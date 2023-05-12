@@ -157,7 +157,7 @@ public class SdkComponent {
 	// 创建列
 	public static FilteredTableColumn<ResultSetRowPo, String> createColumn(String colname, int colIdx) {
 		FilteredTableColumn<ResultSetRowPo, String> col = new FilteredTableColumn<>();
-		col.setCellFactory(MyTextField2TableCell2.forTableColumn());
+		col.setCellFactory(MyTableCellTextField2.forTableColumn());
 		col.setText(colname);
 		Label label = new Label();
 		col.setGraphic(label);
