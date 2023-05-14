@@ -184,10 +184,10 @@
 			<artifactId>javafx-media</artifactId>
 		</dependency>
 		
-		<dependency>
+		<!-- <dependency>
 		    <groupId>org.openjfx</groupId>
 		    <artifactId>javafx-web</artifactId> 
-		</dependency>
+		</dependency> -->
 			
 
 		<!-- 控件库 -->
