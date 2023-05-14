@@ -25,7 +25,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebView;
+//import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -77,17 +77,14 @@ public class SignUpWindow {
 	}
 
 	
-	public static void createWorkspaceConfigWindow() { 
-		 
-		   	WebView web = new WebView();
-		   	web.getEngine().load("https://www.tenie.net/");
-			List<Region> list = new ArrayList<>();
-			HBox emailBox = new HBox(); 
-			emailBox.getChildren().add(web);
-		   	list.add(    null);
-		   	list.add(    emailBox);
-			layout(list);
-	}
+	public static void createWorkspaceConfigWindow() {
+		/*
+		 * 
+		 * WebView web = new WebView(); web.getEngine().load("https://www.tenie.net/");
+		 * List<Region> list = new ArrayList<>(); HBox emailBox = new HBox();
+		 * emailBox.getChildren().add(web); list.add( null); list.add( emailBox);
+		 * layout(list);
+		 */}
 	public static void createWorkspaceConfigWindow2( ) {
 		String email = "Email";
 		String userName = "User Name"; 
