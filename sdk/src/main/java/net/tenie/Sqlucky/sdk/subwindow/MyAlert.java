@@ -19,41 +19,72 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTextArea;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class MyAlert {
-	public static void infoAlert(String title, String containTxt) {
+	/**
+	 * 不会阻塞当前线程的 alert 
+	 * @param title 
+	 * @param containTxt 要展示的内容
+	 */
+	public static void infoAlert( String containTxt) {
 		Platform.runLater(()->{
 			showErrorMsg(containTxt,ComponentGetter.INFO);
 		});
 		
 	}
-	public static void alertWait(String title, String containTxt) {
+	/**
+	 *  会阻塞当前线程的alert,  关闭alert窗口才会执行之后的代码
+	 * @param title
+	 * @param containTxt
+	 */
+	public static void alertWait( String containTxt) {
 		showMsg(containTxt, ComponentGetter.INFO, true);
 	}
 
-
+	/**
+	 * 不会阻塞当前线程的 错误信息 alert 
+	 * @param containTxt
+	 */
 	public static void errorAlert( String containTxt) {
 		Platform.runLater(()->{
 			showErrorMsg( containTxt , ComponentGetter.ERROR);  
 		});
 	}
-	// 显示警告, 会阻塞ui线程, 等前台关闭警告窗口后执行后面的代码
+	/**
+	 *  错误信息 alert , 通过isWait 可以阻塞ui线程, 等前台关闭警告窗口后执行后面的代码
+	 * @param containTxt
+	 * @param isWait   是否阻塞参数
+	 */
 	public static void errorAlert( String containTxt, boolean isWait) {
 		showMsg( containTxt , ComponentGetter.ERROR, isWait);  
 	}
 	
-	
-	public static void showErrorMsg( String containTxt ,Label tit) {
-		showMsg(containTxt, tit, false);
+	/**
+	 *  不会阻塞当前线程的 错误信息 alert 
+	 * @param containTxt  要展示的信息
+	 * @param title    自定义tiele
+	 */
+	public static void showErrorMsg( String containTxt ,Label title) {
+		showMsg(containTxt, title, false);
 	}
 	
-	public static void showMsg( String containTxt ,Label tit, boolean iswait) {
+	/**
+	 * alter 展示框的代码, 可以自定义 title ,信息, 是否阻塞ui
+	 * @param containTxt
+	 * @param title
+	 * @param iswait
+	 */
+	public static void showMsg( String containTxt ,Label title, boolean iswait) {
 		 
 		TextField tf1 = new TextField("");
 		tf1.setEditable(false);
@@ -76,7 +107,7 @@ public class MyAlert {
 		List<Node> btns = new ArrayList<>();
 		btns.add( btn); 
 		
-		Node vb = DialogTools.setVboxShape(stage, tit, nds, btns);
+		Node vb = DialogTools.setVboxShape(stage, title, nds, btns);
 		Scene scene = new Scene((Parent) vb);
 		setKeyPress(scene, btns);
 		stage.initModality(Modality.APPLICATION_MODAL);
@@ -94,6 +125,11 @@ public class MyAlert {
 		myConfirmation(promptInfo, caller, null);
 	}
 	
+	/**
+	 * 确认窗口, 返回 true/false
+	 * @param promptInfo
+	 * @return
+	 */
 	public static boolean myConfirmationShowAndWait(String promptInfo) {
 		final Stage stage = new Stage();
 		final SimpleBooleanProperty rsval = new SimpleBooleanProperty(false);
@@ -117,6 +153,60 @@ public class MyAlert {
 		myConfirmation(promptInfo, stage, btns, true);
 		return rsval.get();
 	}
+	/**
+	 * 对展示的代码, 进行确认
+	 * @param promptInfo
+	 * @param code
+	 * @return
+	 */
+	public static boolean myCodeAreaConfirmation(String promptInfo, String code) {
+		final Stage stage = new Stage();
+		
+		// 按钮设置
+		final SimpleBooleanProperty rsval = new SimpleBooleanProperty(false);
+		JFXButton btn = new JFXButton("Cancel(N)");
+		btn.getStyleClass().add("myAlertBtn");
+		btn.setOnAction(value -> {  
+			rsval.set(false);
+			stage.close();
+		});
+		
+		JFXButton okbtn = new JFXButton("Yes(Y)");
+		okbtn.getStyleClass().add("myAlertOkBtn");
+		okbtn.setOnAction(value -> {
+			rsval.set(true);
+			stage.close(); 
+		});
+		
+		List<Node> btns = new ArrayList<>();
+		btns.add( btn);
+		btns.add( okbtn); 
+		 
+		//内容设置
+		Label question = new Label(promptInfo); 
+		// code
+		MyTextArea myTextArea = new MyTextArea();
+	 	StackPane codeAreaPane = myTextArea.getCodeAreaPane(code, false);
+	 	codeAreaPane.setStyle("-fx-background-color: transparent;");
+		
+		
+		List<Node> nds = new ArrayList<>();
+		nds.add( codeAreaPane);  
+		nds.add( question); 
+
+		Node vb = DialogTools.setVboxShape(500, 150, stage, ComponentGetter.INFO, nds, btns);
+		Scene scene = new Scene((Parent) vb);
+		setKeyPress(scene, btns);
+		
+		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setScene(scene);
+		DialogTools.setSceneAndShow(scene, stage, true);  
+//		myConfirmation(promptInfo, stage, btns, true);
+		
+		return rsval.get();
+	}
+	
+	
 	
 	
 	public static void myConfirmation(String promptInfo,  Consumer< String >  okCaller, Consumer< String >  cancelCaller ) {
@@ -247,5 +337,45 @@ public class MyAlert {
 		 Confirm,
 		 show;
 		 
+	 }
+	 /**
+	  * 弹出 TextArea 的窗口
+	  */
+	 public static void showTextArea(String title, String text) {
+		 Platform.runLater(()->{
+			 	Label titleLabel = new Label(title);  
+			 	titleLabel.setGraphic( IconGenerator.svgImage("info-circle", "#7CFC00"));
+			 	MyTextArea myTextArea = new MyTextArea();
+			 	StackPane codeAreaPane = myTextArea.getCodeAreaPane(text, false);
+			 	codeAreaPane.setStyle("-fx-background-color: transparent;");
+				
+		        List<Node> nds = new ArrayList<>();
+				 
+				nds.add( codeAreaPane);
+				
+				final Stage stage = new Stage(); 
+				JFXButton btn = new JFXButton("Close(C) ");
+				btn.getStyleClass().add("myAlertBtn");
+				btn.setOnAction(value -> {
+					stage.close();
+				});
+				
+				JFXButton copyText = new JFXButton("Copy");
+				copyText.getStyleClass().add("myAlertBtn");
+				copyText.setOnAction(value -> {
+					CommonUtility.setClipboardVal(text);
+//					stage.close();
+				});
+				
+				List<Node> btns = new ArrayList<>();
+				btns.add( btn); 
+				btns.add( copyText); 
+				Node vb = DialogTools.setVboxShape(500, 180, stage, titleLabel, nds, btns);
+				Scene scene = new Scene((Parent) vb);
+				setKeyPress(scene, btns);
+				stage.initModality(Modality.APPLICATION_MODAL);
+				stage.setScene(scene);
+				DialogTools.setSceneAndShow(scene, stage, true);
+			});
 	 }
 }

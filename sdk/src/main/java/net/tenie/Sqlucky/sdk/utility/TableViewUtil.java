@@ -332,7 +332,12 @@ public class TableViewUtil {
 				StringProperty val;
 
 				String cellVal = map.get(fieldpo.getColumnLabel().get());
-				val = new SimpleStringProperty(cellVal);
+				if(cellVal != null ) {
+					val = new SimpleStringProperty(cellVal);
+				}else {
+					val = new SimpleStringProperty("");
+				}
+				
 				rowpo.addCell(val, null, fieldpo);
 			}
 		}

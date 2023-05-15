@@ -213,7 +213,7 @@ public class SignInWindow {
 	    		boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );
 		    	
 		    	if(seccuss) {
-		    		MyAlert.infoAlert("登入成功", "登入成功"); 
+		    		MyAlert.infoAlert("登入成功"); 
 		    		ConfigVal.SQLUCKY_EMAIL.set(emailVal);
 		    		ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
 		    		ConfigVal.SQLUCKY_REMEMBER.set(tf);

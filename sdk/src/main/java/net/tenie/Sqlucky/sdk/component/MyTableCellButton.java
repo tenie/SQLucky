@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
@@ -25,7 +27,9 @@ public class MyTableCellButton {
 		this.btns = btnvals;
 		if(btns != null ) {
 			for(var ob : btns) {
-				btnBox.getChildren().add(ob.getBtn());
+				Button btn = ob.getBtn();
+				btnBox.getChildren().add(btn);
+				HBox.setMargin(btn, new Insets(0, 3, 0, 0));
 			}
 		}
 		
