@@ -281,7 +281,7 @@ public class TransferDataController implements Initializable {
 					moniterAppendLog("........begin ......");
 					runBtnAction();  
 					Platform.runLater(() -> { 
-						MyAlert.infoAlert("完成", "完成"); 
+						MyAlert.infoAlert("完成"); 
 					});
 				} catch (Exception e2) {
 					e2.printStackTrace();

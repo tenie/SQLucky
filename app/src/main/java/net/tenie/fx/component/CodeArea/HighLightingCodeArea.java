@@ -18,22 +18,20 @@ import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.IndexRange;
-import javafx.scene.control.Tab;
 import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.MyAreaTab;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyLineNumberNode;
-import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,7 +52,6 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	private StackPane codeAreaPane;
 	private MyCodeArea codeArea;
 	private ExecutorService executor;
-//	private ChangeListener<String> textChangeListener;
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
 	private SqluckyTab myAreaTab;
@@ -447,7 +444,6 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
  
 	public void highLighting(int begin) {
-//		System.out.println("highLighting = " +begin );
 		Platform.runLater(() -> {
 			try {
 				highLightingHelper.applyHighlighting(codeArea, begin);

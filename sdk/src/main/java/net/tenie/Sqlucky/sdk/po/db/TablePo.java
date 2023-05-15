@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import com.github.vertical_blank.sqlformatter.SqlFormatter;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import net.tenie.Sqlucky.sdk.component.MyCellOperateButton;
@@ -74,10 +76,18 @@ public class TablePo {
 			colName.add("TABLE NAME");
 			colName.add("INDEX SCHEMA");
 			colName.add("COL NAMES"); 
+			colName.add("Operate Button");
 			List<Map<String, String>> vals = toMapByIndex();
-			var sheetDaV = TableViewUtil.dataToSheet(colName, vals, null);
-			// 获取TableView
-		    indexTableView = sheetDaV.getInfoTable();
+			
+			//operate btns 
+			List<MyCellOperateButton> btnvals = new ArrayList<>();
+			var dropIdx = dropIndexBtn() ;
+			var showIdxDDL = showIndexBtn();
+			btnvals.add(dropIdx);
+			btnvals.add(showIdxDDL);
+			indexTableView = TableViewUtil.dbTableIndexFkTableView(colName, vals, btnvals);
+//			// 获取TableView
+//		    indexTableView = sheetDaV.getInfoTable();
 		}
 		
 		
@@ -101,20 +111,78 @@ public class TablePo {
 			
 			// drop button
 			MyCellOperateButton drop = dropFKBtn();
-			MyCellOperateButton export =exportFKBtn();
+			MyCellOperateButton export =ShowFKBtn();
 			List<MyCellOperateButton> btnvals = new ArrayList<>();
 			btnvals.add(drop);
 			btnvals.add(export);
-//			var foreignKeysheetDaV = TableViewUtil.dataToSheet(foreignKeyColnames, foreignKeyVals, null);
 //			// 获取TableView
-//			foreignKeyTable = foreignKeysheetDaV.getInfoTable();
 			foreignKeyTable = TableViewUtil.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals,   btnvals );
 		}
 		return foreignKeyTable;
 	}
+
+	private MyCellOperateButton dropIndexBtn() {
+		Button btn = new Button("Drop"); 
+		btn.getStyleClass().add("myAlertBtn");
+		Consumer<ResultSetRowPo> btnCaller = v -> {
+			String schName = v.getValueByFieldName("INDEX SCHEMA"); 
+			String idxName = v.getValueByFieldName("INDEX NAME"); 
+			
+			if(StrUtils.isNotNullOrEmpty(idxName)) {
+				if(this.sqluckyConnector != null) {
+//					String schema = sqluckyConnector.getDefaultSchema();
+					String ddl = this.sqluckyConnector.getExportDDL().exportDropIndex(schName, idxName);
+					
+					boolean tf = MyAlert.myCodeAreaConfirmation("Dorp Index ?  ", ddl);
+					if(tf) {
+						try {
+							DBTools.execDDL(sqluckyConnector.getConn(), ddl);
+						} catch (SQLException e) { 
+							e.printStackTrace();
+							MyAlert.errorAlert(e.getMessage());
+						}
+					}
+					
+				}
+			}
+			
+		}; 
+		MyCellOperateButton drop = new MyCellOperateButton(btn, btnCaller);
+		return drop;
+	}
+	private MyCellOperateButton showIndexBtn() {
+		Button btn = new Button("Show DDL");
+		btn.getStyleClass().add("myAlertBtn");
+		Consumer<ResultSetRowPo> btnCaller = v -> {
+			String schName = v.getValueByFieldName("INDEX SCHEMA"); 
+			String idxName = v.getValueByFieldName("INDEX NAME"); 
+
+			if (StrUtils.isNotNullOrEmpty(idxName)) {
+				if (this.sqluckyConnector != null) {
+					String schema = sqluckyConnector.getDefaultSchema();
+					String ddl = this.sqluckyConnector.getExportDDL().exportCreateIndex(sqluckyConnector.getConn(),
+							schema, idxName);
+					ddl = SqlFormatter.format(ddl);
+					MyAlert.showTextArea("Index", ddl);
+//					CommonUtility.setClipboardVal(ddl);
+//					MyAlert.infoAlert("", "Successfully exported to the clipboard");
+
+				}
+			}
+
+		};
+
+		MyCellOperateButton export = new MyCellOperateButton(btn, btnCaller);
+
+		return export;
+	}
+	
+	
 	
 	private MyCellOperateButton dropFKBtn() {
 		Button btn = new Button("Drop"); 
+		btn.getStyleClass().add("myAlertBtn");
+		
 		Consumer<ResultSetRowPo> btnCaller = v -> {
 			String fkName = v.getValueByFieldName("FOREIGN KEY NAME"); 
 			String tableName = v.getValueByFieldName("TABLE NAME"); 
@@ -124,7 +192,7 @@ public class TablePo {
 					String schema = sqluckyConnector.getDefaultSchema();
 					String ddl = this.sqluckyConnector.getExportDDL().exportDropForeignKey(schema, fkName, tableName);
 					
-					boolean tf = MyAlert.myConfirmationShowAndWait("Dorp FOREIGN KEY? Run DDL: " + ddl);
+					boolean tf = MyAlert.myCodeAreaConfirmation("Dorp FOREIGN KEY?  " , ddl);
 					if(tf) {
 						try {
 							DBTools.execDDL(sqluckyConnector.getConn(), ddl);
@@ -139,15 +207,14 @@ public class TablePo {
 			
 		}; 
 		
-		
 		MyCellOperateButton drop = new MyCellOperateButton(btn, btnCaller);
-		
 		return drop;
 	}
 	
 	
-	private MyCellOperateButton exportFKBtn() {
-		Button btn = new Button("Export DDL");
+	private MyCellOperateButton ShowFKBtn() {
+		Button btn = new Button("Show DDL");
+		btn.getStyleClass().add("myAlertBtn");
 		Consumer<ResultSetRowPo> btnCaller = v -> {
 			String fkName = v.getValueByFieldName("FOREIGN KEY NAME");
 			String tableName = v.getValueByFieldName("TABLE NAME");
@@ -157,8 +224,10 @@ public class TablePo {
 					String schema = sqluckyConnector.getDefaultSchema();
 					String ddl = this.sqluckyConnector.getExportDDL().exportCreateForeignKey(sqluckyConnector.getConn(),
 							schema, fkName);
-					CommonUtility.setClipboardVal(ddl);
-					MyAlert.infoAlert("", "Successfully exported to the clipboard");
+					ddl = SqlFormatter.format(ddl);
+					MyAlert.showTextArea("FOREIGN KEY", ddl);
+//					CommonUtility.setClipboardVal(ddl);
+//					MyAlert.infoAlert("", "Successfully exported to the clipboard");
 
 				}
 			}
@@ -194,15 +263,6 @@ public class TablePo {
 	// 将List中的对象转换为MAP 后返回一个新的list
 	private List<Map<String, String>> toMapByFK() {
 		List<Map<String, String>> vals = new ArrayList<>();
-//		 foreignKeys = new ArrayList<>();
-//		 TableForeignKeyPo fkpoval  = new TableForeignKeyPo();
-//		 fkpoval.setTabName("1");
-//		 fkpoval.setConstname("12");
-//		 fkpoval.setFkColnames("13");
-//		 fkpoval.setRefTabname("14");
-//		 fkpoval.setRefKeyname("15");
-//		 fkpoval.setPkColnames("11");
-//		 foreignKeys.add(fkpoval);
 		if (foreignKeys != null) {
 			 
 			for (TableForeignKeyPo fkpo : foreignKeys) {
@@ -221,7 +281,6 @@ public class TablePo {
 				tmpMap.put("REF TABLE NAME", RefTabname);
 				tmpMap.put("REF KEY NAME", refKeyname);
 				tmpMap.put("PK COLNAMES", pkColnames);
-				tmpMap.put("Operate Button", "");
 				vals.add(tmpMap);
 			}
 		}

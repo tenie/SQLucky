@@ -510,9 +510,20 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			ls.add(selectBtn);
 		}
 		if (table != null) {
+			// operate 
+			// drop
+			
+			//
+			
+			
 			JFXButton showTableDDLBtn = new JFXButton("Table DDL");
+			showTableDDLBtn.setGraphic(IconGenerator.svgImageDefActive("table"));
+			
 			JFXButton showIndexBtn = new JFXButton("Index");  
+			showIndexBtn.setGraphic(IconGenerator.svgImageDefActive("gears"));
+			
 			JFXButton showFKBtn = new JFXButton("Foreign Key"); 
+			showFKBtn.setGraphic(IconGenerator.svgImageDefActive("foreign-key"));
 			// table ddl
 			showTableDDLBtn.setDisable(true);
 			showTableDDLBtn.setOnMouseClicked(e -> {
