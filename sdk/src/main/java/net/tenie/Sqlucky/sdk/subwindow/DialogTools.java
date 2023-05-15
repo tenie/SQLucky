@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -41,6 +42,7 @@ public class DialogTools {
 			subWindow.getChildren().add(nd);
 			VBox.setMargin(nd, new Insets(0, 0, 5, 0));
 		}
+		VBox.setVgrow(nds.get(0), Priority.ALWAYS);
 		
 		// 最后的按钮
 		AnchorPane foot = new AnchorPane();  

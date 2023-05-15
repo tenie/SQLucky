@@ -220,7 +220,7 @@ public class PluginManageAction {
 						count++;
 				 }
 				 
-				 MyAlert.infoAlert("同步插件信息", "同步到新插件" + count + "个");
+				 MyAlert.infoAlert( "同步到新插件" + count + "个");
 				 if(count > 0) {
 					 Platform.runLater(()->{
 							PluginManageAction.queryAction("", sheetDaV , allPluginTable);
@@ -277,7 +277,7 @@ public class PluginManageAction {
 						SqluckyAppDB.closeConn(conn);
 					}
 					Platform.runLater(()->{
-						MyAlert.infoAlert("提示", "下载成功");
+						MyAlert.infoAlert("下载成功");
 						PluginManageAction.queryAction("", sheetDaV , allPluginTable);
 						allPluginTable.getSelectionModel().select(currentSelectIndex);
 					});

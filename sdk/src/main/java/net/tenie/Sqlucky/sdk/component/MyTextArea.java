@@ -1,11 +1,13 @@
 package net.tenie.Sqlucky.sdk.component;
 
+import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 
 import java.util.List;
 
@@ -23,12 +25,26 @@ public class MyTextArea implements SqluckyCodeAreaHolder {
 	private static Logger logger = LogManager.getLogger(MyTextArea.class);
 	private StackPane codeAreaPane;
 	private MyCodeArea codeArea;
+	private CodeAreaHighLightingHelper highLightingHelper ;
 
 	public MyTextArea() {
 		codeArea = new MyCodeArea();
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 	}
+	
+//	public MyTextArea(String text) {
+//		codeArea = new MyCodeArea();
+//		// 行号主题色
+//		changeCodeAreaLineNoThemeHelper();
+//		setText(text);
+//	}
+	
+	
+//	public void setText(String text) {
+//		codeArea.appendText(text); 
+//		highLighting();
+//	}
 
 	@Override
 	public void hideAutoComplete() {
@@ -40,16 +56,50 @@ public class MyTextArea implements SqluckyCodeAreaHolder {
 
 	@Override
 	public void nextBookmark(boolean tf) {
+		codeArea.getMylineNumber().nextBookmark(tf);
 	}
 
+//	@Override
+	public void highLighting(int begin) {
+		Platform.runLater(() -> {
+			try {
+				if(highLightingHelper == null) {
+					highLightingHelper	= new CodeAreaHighLightingHelper();
+				}
+			
+				highLightingHelper.applyHighlighting(codeArea, begin);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
+
+	}
+	@Override
+	public void  highLighting() {
+		highLighting(0);
+	}
 	@Override
 	public void highLighting(String str) {
-		
-	}
+		Platform.runLater(() -> {
+			try {
+				if(highLightingHelper == null) {
+					highLightingHelper	= new CodeAreaHighLightingHelper();
+				}
+				highLightingHelper.applyFindWordHighlighting(codeArea, str);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 
-	@Override
-	public void highLighting() {
 	}
+//	
+//	public void highLighting(String str) {
+//		
+//	}
+
+//	@Override
+//	public void highLighting() {
+//	}
 
 	@Override
 	public void errorHighLighting(int begin, String str) {
@@ -100,6 +150,9 @@ public class MyTextArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	/**
+	 * 初始化codeArea 文本和是否可编辑, 返回StackPane容器
+	 */
 	@Override
 	public StackPane getCodeAreaPane(String text, boolean editable) {
 		if( codeAreaPane == null) { 
@@ -155,4 +208,6 @@ public class MyTextArea implements SqluckyCodeAreaHolder {
 	@Override
 	public void delAnchorAfterString() {
 	}
+
+	 
 }

@@ -696,7 +696,7 @@ public class CommonAction {
 				Platform.runLater(() -> {
 					if (connpo.isAlive()) {
 						String infoStr = Dbinfo.getDBInfo(connpo.getConn());
-						MyAlert.infoAlert("Information!", "  Successfully  ! \n" + infoStr);
+						MyAlert.infoAlert("  Successfully  ! \n" + infoStr);
 						connpo.closeConn();
 						testBtn.setStyle("-fx-background-color: green ");
 					} else {

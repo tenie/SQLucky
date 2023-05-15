@@ -137,7 +137,7 @@ public class WorkDataBackupAction {
 			} 
 			
 		}
-		MyAlert.infoAlert("ok", "ok");
+		MyAlert.infoAlert("ok");
 
 	}
 	
@@ -421,7 +421,7 @@ public class WorkDataBackupAction {
 				}
 				
 			}
-			MyAlert.infoAlert("", "已完成!");
+			MyAlert.infoAlert("已完成!");
 		} finally {
 			downloadOverlapBtn.setDisable(false);
 			downloadMergeBtn.setDisable(false);
@@ -507,7 +507,7 @@ public class WorkDataBackupAction {
 			
 				
 			}
-			MyAlert.infoAlert("", "已完成!");
+			MyAlert.infoAlert("已完成!");
 		} finally {
 			downloadOverlapBtn.setDisable(false);
 			downloadMergeBtn.setDisable(false);
