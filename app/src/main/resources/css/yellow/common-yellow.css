@@ -181,9 +181,9 @@ GridPane {
 .myAlert  TextField{
  -fx-text-fill: white;
 }
-
+/* 子界面按钮颜色 FDA232 */
 .myAlertBtn{
-	-fx-background-color: #FDA232;
+	-fx-background-color: #955302;
 }
 .myAlert Button{
  -fx-background-color: #FDA232;

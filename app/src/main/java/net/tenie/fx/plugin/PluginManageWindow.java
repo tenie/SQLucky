@@ -122,8 +122,9 @@ public class PluginManageWindow {
 		disable.setDisable(true);
 		enable.setDisable(true);
 		download.setDisable(true);
-		delete.disableProperty().bind(download.disableProperty().not());
-		delete.visibleProperty().bind(ConfigVal.SQLUCKY_VIP);
+//		delete.disableProperty().bind(download.disableProperty().not());
+//		delete.visibleProperty().bind(ConfigVal.SQLUCKY_VIP);
+		delete.setVisible(false);
 		 
 	}
 	
