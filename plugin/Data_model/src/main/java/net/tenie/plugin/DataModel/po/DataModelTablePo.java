@@ -11,7 +11,7 @@ public class DataModelTablePo {
 	private Long itemId;		// 自增id
 	private Long modelId;      // 主表id ,自动生成
 	private String id;			// 模型文件里的id
-	private String defKey;      // 表名 
+	private String defKey;      // 表名 , 建表语句的表面
 	private String defName;	
 	private String comment; 
 	
