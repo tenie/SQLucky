@@ -19,7 +19,7 @@ public class DataModelMySQLDao {
 		try {
 			rs = conn.createStatement().executeQuery(sql);
 			if (rs.next()) {
-				str = rs.getString(1);
+//				tableFieldsPo.se
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
