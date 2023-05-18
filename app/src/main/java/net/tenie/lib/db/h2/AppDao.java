@@ -117,7 +117,6 @@ public class AppDao {
 	
 	public static final  String DATA_MODEL_TABLE = 
 			"CREATE TABLE `DATA_MODEL_TABLE` (\n" +
-//			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
 			"  `ITEM_ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + 
 			"  `MODEL_ID` INT(11)   ,\n" + 		
 			"  `ID` VARCHAR(100) ,\n" + 
@@ -132,7 +131,6 @@ public class AppDao {
 			") ";
 	public static final  String DATA_MODEL_TABLE_FIELDS = 
 			"CREATE TABLE `DATA_MODEL_TABLE_FIELDS` (\n" +
-//			"  `ITEM_ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
 			"  `ITEM_ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + 
 			"  `TABLE_ID` INT(11) NOT NULL ,\n" +
 			"  `MODEL_ID` INT(11)   ,\n" + 	

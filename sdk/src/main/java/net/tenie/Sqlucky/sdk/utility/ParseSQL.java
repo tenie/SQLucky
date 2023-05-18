@@ -33,6 +33,8 @@ public class ParseSQL {
 		}
 		if (StrUtils.beginWithNotSensitive(temp, "SELECT")) {
 			return SELECT;
+		} else if (StrUtils.beginWithNotSensitive(temp, "SHOW")) {
+			return SELECT;
 		} else if (StrUtils.beginWithNotSensitive(temp, "WITH")) {
 			return SELECT;
 		} else if (StrUtils.beginWithNotSensitive(temp, "VALUES")) {

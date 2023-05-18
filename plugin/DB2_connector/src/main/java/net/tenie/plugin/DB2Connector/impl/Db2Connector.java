@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
@@ -23,8 +24,8 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 public class Db2Connector extends DbConnector {
  
 	
-	public Db2Connector(DBConnectorInfoPo connPo) {
-		super(connPo);
+	public Db2Connector(DBConnectorInfoPo connPo, SqluckyDbRegister dbRegister) {
+		super(connPo, dbRegister);
 		ExportSqlDB2Imp ex = new ExportSqlDB2Imp();
 		getConnPo().setExportDDL( ex);
 	} 
@@ -120,7 +121,7 @@ public class Db2Connector extends DbConnector {
 				getJdbcUrl(),
 				getAutoConnect()
 				);
-		var dbc = new Db2Connector(val);
+		var dbc = new Db2Connector(val , getDbRegister());
 		
 		return dbc;
 	}

@@ -7,6 +7,7 @@ import java.util.Map;
 import com.alibaba.fastjson.JSONObject;
 
 import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class DBConnectorInfoPo {
@@ -32,7 +33,7 @@ public class DBConnectorInfoPo {
 	private boolean JdbcUrlIsFile = false;
 	private boolean jdbcUrlUse = false;
 	private boolean autoConnect = false;
-	private Map<String, DbSchemaPo> schemas;
+	private Map<String, DbSchemaPo> schemas; 
 	
 	public DBConnectorInfoPo(BDConnJsonObj obj) {
 		init(

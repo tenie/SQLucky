@@ -140,14 +140,6 @@ public final class DBConns {
 		flushChoiceBox(cb);
 	}
 	
-//	public static void update(String oldName, String newName,) {
-//		set.remove(name);
-//		dbs.remove(name);
-//		flushChoiceBox(cb);
-//	}
-	
-	
-
 	public static SqluckyConnector get(String name) {
 		return dbs.get(name);
 	}

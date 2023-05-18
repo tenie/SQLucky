@@ -25,7 +25,7 @@ public class H2FileRegister implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new H2FileConnector(connPo);
+		return new H2FileConnector(connPo, this);
 	}
 
 	public String getDbVendor() {

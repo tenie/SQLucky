@@ -1,6 +1,5 @@
 package net.tenie.plugin.DataModel;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import com.jfoenix.controls.JFXButton;
@@ -39,22 +38,17 @@ public class DataModelTabTree {
 
 	public static TreeView<DataModelTreeNodePo> DataModelTreeView;
 	public static TreeItem<DataModelTreeNodePo> treeRoot;
-//	public static VBox vbox = new VBox();
-	
-//	public static TreeView<DataModelTreeNodePo> treeView ;
-	private DataModelOption optionPanel ;
-	private Pane btnsBox ; 
+	private DataModelOperate optionPanel;
+	private Pane btnsBox;
 	String filePath = "";
 
 	public DataModelTabTree() {
 		createDataModelTreeView();
 	}
-	
-	
 
 	// 节点view
 	public TreeView<DataModelTreeNodePo> createDataModelTreeView() {
-		
+
 		DataModelTreeNodePo treeNodePo = new DataModelTreeNodePo();
 		treeRoot = new TreeItem<>(treeNodePo);
 		DataModelTreeView = new TreeView<>(treeRoot);
@@ -71,38 +65,36 @@ public class DataModelTabTree {
 		DataModelTreeView.getSelectionModel().select(treeRoot);
 
 //		DataModelTreeView = treeView;
-		
-		
+
 		// 显示设置, 双击事件也在这里设置
 		DataModelTreeView.setCellFactory(new DataModelNodeCellFactory());
-		
-		
-	    optionPanel = new DataModelOption(); 
-		btnsBox  = optionPanel.getOptionVbox();
+
+		optionPanel = new DataModelOperate();
+		btnsBox = optionPanel.getOptionVbox();
 
 //		vbox.getStyleClass().add("myTreeView-vbox");
 //		vbox.getChildren().addAll( filterHbox, treeView);
 //		vbox.getStyleClass().add("myModalDialog");
 //		VBox.setVgrow(treeView, Priority.ALWAYS);
-		
+
 		// 恢复上次的数据
 		DataModelUtility.recoverModelInfoNode(treeRoot);
 		return DataModelTreeView;
 	}
 
-	
 	/**
 	 * 双击模型节点时， 查询数据库表， 添加表节点都模型节点下
+	 * 
 	 * @param mdTreeNode
 	 */
-	public static void modelInfoTreeAddTableTreeNode(TreeItem<DataModelTreeNodePo>  mdTreeNode) {
+	public static void modelInfoTreeAddTableTreeNode(TreeItem<DataModelTreeNodePo> mdTreeNode) {
 		List<TreeItem<DataModelTreeNodePo>> nodels = new ArrayList<>();
-		
+
 		DataModelTreeNodePo dmpo = mdTreeNode.getValue();
 		Long id = dmpo.getModelId();
 		List<DataModelTablePo> tableLs = DataModelDAO.selectDMTable(id);
-		
-		for( var table : tableLs) {
+
+		for (var table : tableLs) {
 			DataModelTreeNodePo ndpo = new DataModelTreeNodePo(table);
 			TreeItem<DataModelTreeNodePo> treeNode = DataModelUtility.createItemNode(ndpo);
 			nodels.add(treeNode);
@@ -113,13 +105,14 @@ public class DataModelTabTree {
 				DataModelTreeView.getSelectionModel().select(mdTreeNode.getChildren().get(0)); // 选中节点
 			});
 		}
-		
+
 	}
-	
-	
+
 	static String tableName = "";
+
 	/**
 	 * 界面上展示, 字段数据的表格
+	 * 
 	 * @return
 	 */
 	public static void showFields(Long tableId) {
@@ -171,14 +164,23 @@ public class DataModelTabTree {
 
 			// 查询数据库, 获取字段信息
 //			conn = SqluckyAppDB.getConn();
-		    SqluckyConn = SqluckyAppDB.getSqluckyConnector();
-			String sql = "select DEF_KEY as FIELD," + " DEF_NAME AS NAME , " + "COMMENT, " + "TYPE_FULL_NAME, "
-					+ "PRIMARY_KEY, " + "NOT_NULL, " + "AUTO_INCREMENT, " + "DEFAULT_VALUE, " + "PRIMARY_KEY_NAME, "
-					+ "NOT_NULL_NAME, " + "AUTO_INCREMENT_NAME  " + "from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "
-					+ tableId;
+			SqluckyConn = SqluckyAppDB.getSqluckyConnector();
+			String sql = "select DEF_KEY as FIELD,"
+							+ " DEF_NAME AS NAME , " 
+							+ "COMMENT, " 
+							+ "TYPE_FULL_NAME, "
+							+ "PRIMARY_KEY, " 
+							+ "NOT_NULL, " 
+							+ "AUTO_INCREMENT, "
+							+ "DEFAULT_VALUE, " 
+							+ "PRIMARY_KEY_NAME, "
+							+ "NOT_NULL_NAME, " 
+							+ "AUTO_INCREMENT_NAME  "
+							+ "from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "
+							+ tableId;
 
 			SheetDataValue sheetDaV = DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn, tableName,
-					tableHeadOptionNode, DataModelOption.tableInfoColWidth);
+					tableHeadOptionNode, DataModelOperate.tableInfoColWidth);
 			sheetDaV.addBtn("save", saveBtn);
 			// 保存按钮处理
 			ResultSetPo resultSetPo = sheetDaV.getDataRs();
@@ -208,17 +210,17 @@ public class DataModelTabTree {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
-			if(SqluckyConn != null)
+		} finally {
+			if (SqluckyConn != null)
 				SqluckyAppDB.closeSqluckyConnector(SqluckyConn);
 			SdkComponent.rmWaitingPane();
 		}
-		
-		
+
 	}
-	
+
 	/**
 	 * 查询过滤
+	 * 
 	 * @param tableView
 	 * @param observableList
 	 * @param newValue
@@ -227,66 +229,65 @@ public class DataModelTabTree {
 			ObservableList<ResultSetRowPo> observableList, String newValue) {
 		FilteredList<ResultSetRowPo> filteredData = new FilteredList<>(observableList, p -> true);
 		filteredData.setPredicate(entity -> {
-				String upperCaseVal = newValue.toUpperCase();
-	
-				ObservableList<ResultSetCellPo> rowDatas = entity.getRowDatas();
-				for (var cell : rowDatas) {
-					String cellFieldName = cell.getField().getColumnLabel().get();
-					if ("FIELD".equals(cellFieldName) || "NAME".equals(cellFieldName) || "COMMENT".equals(cellFieldName)) {
-						String cellVal = cell.getCellData().get();
-						if (cellVal.toUpperCase().contains(upperCaseVal)) {
-							return true;
-						}
+			String upperCaseVal = newValue.toUpperCase();
+
+			ObservableList<ResultSetCellPo> rowDatas = entity.getRowDatas();
+			for (var cell : rowDatas) {
+				String cellFieldName = cell.getField().getColumnLabel().get();
+				if ("FIELD".equals(cellFieldName) || "NAME".equals(cellFieldName) || "COMMENT".equals(cellFieldName)) {
+					String cellVal = cell.getCellData().get();
+					if (cellVal.toUpperCase().contains(upperCaseVal)) {
+						return true;
 					}
-	
 				}
-	
-				return false;
-			} 
-		);
+
+			}
+
+			return false;
+		});
 		SortedList<ResultSetRowPo> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 		tableView.setItems(sortedData);
 	}
-	
+
 	/**
 	 * 表头option区域
+	 * 
 	 * @return 返回表信息的Label, 查询框
 	 */
-	public static List<Node>  tableHeadOptionNodes2(Long tableId ) {
+	public static List<Node> tableHeadOptionNodes2(Long tableId) {
 		DataModelTablePo tbpo = DataModelDAO.selectTableById(tableId);
 		String table = tbpo.getDefKey();
 		tableName = tbpo.getDefName();
 		String tableComment = tbpo.getComment();
 		Label t = new Label(table + "   ");
 		t.setGraphic(IconGenerator.svgImageUnactive("table"));
-		Label tN = new Label(tableName  + "   ");
+		Label tN = new Label(tableName + "   ");
 		tN.setGraphic(IconGenerator.svgImageUnactive("table"));
-		Label tC = new Label(tableComment  + "   ");
+		Label tC = new Label(tableComment + "   ");
 		tC.setGraphic(IconGenerator.svgImageUnactive("table"));
 		List<Node> rs = new ArrayList<>();
-		
-		if(StrUtils.isNullOrEmpty(tableName)) {
+
+		if (StrUtils.isNullOrEmpty(tableName)) {
 			tableName = table;
 		}
-		
+
 		// 查询框
 		JFXButton query = new JFXButton();
 		query.setGraphic(ComponentGetter.getIconDefActive("search"));
 		TextField textField = new TextField();
 
 		textField.getStyleClass().add("myTextField");
-		 
-		
+
 		rs.add(t);
 		rs.add(tN);
 		rs.add(tC);
 		rs.add(query);
 		rs.add(textField);
-		
+
 		return rs;
 	}
-	
+
 	// 所有连接节点
 	public static ObservableList<TreeItem<DataModelTreeNodePo>> allTreeItem() {
 		ObservableList<TreeItem<DataModelTreeNodePo>> val = DataModelTreeView.getRoot().getChildren();
@@ -311,47 +312,32 @@ public class DataModelTabTree {
 		treeRootAddItem(item);
 	}
 
-
-
-
-
 	public Pane getBtnsBox() {
 		return btnsBox;
 	}
-
-
 
 	public void setBtnsBox(Pane btnsBox) {
 		this.btnsBox = btnsBox;
 	}
 
-
-
 	public static TreeView<DataModelTreeNodePo> getDataModelTreeView() {
 		return DataModelTreeView;
 	}
 
-
-
 	public static void setDataModelTreeView(TreeView<DataModelTreeNodePo> dataModelTreeView) {
 		DataModelTreeView = dataModelTreeView;
 	}
-	
-	
+
 	public static TreeItem<DataModelTreeNodePo> currentSelectItem() {
 		TreeItem<DataModelTreeNodePo> item = DataModelTabTree.DataModelTreeView.getSelectionModel().getSelectedItem();
 		return item;
 	}
 
-
-
-	public DataModelOption getOptionPanel() {
+	public DataModelOperate getOptionPanel() {
 		return optionPanel;
 	}
 
-
-
-	public void setOptionPanel(DataModelOption optionPanel) {
+	public void setOptionPanel(DataModelOperate optionPanel) {
 		this.optionPanel = optionPanel;
 	}
 
@@ -486,7 +472,5 @@ public class DataModelTabTree {
 //		});
 //		return contextMenu;
 //	}
-
-	
 
 }

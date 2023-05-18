@@ -14,6 +14,7 @@ public class DataModelTabTreeContextMenu {
 	private ContextMenu contextMenu;
 
 	private MenuItem modelImport;
+	private MenuItem Generate;
 	private MenuItem open;
 	private MenuItem close;
 	private MenuItem rename;
@@ -29,12 +30,21 @@ public class DataModelTabTreeContextMenu {
 		
 		contextMenu = new ContextMenu();  
 		
+		// 导出模型文件
 		modelImport = new MenuItem("Import Model");
 		modelImport.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
 		modelImport.setOnAction(e -> {
-//			DataModelUtility.modelFileImport("UTF-8");
 			DataModelImportWindow.createModelImportWindow();
 		});
+		
+		// 通过mysql create table ddl 生成
+		Generate = new MenuItem("Generate Model ");
+		Generate.setGraphic(IconGenerator.svgImage("database", "#7CFC00"));
+		Generate.setOnAction(e -> {
+			DataModelGenerateWindow.showWindow();
+		});
+		
+		
 		 
 		query = new MenuItem("Query Model");
 		query.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
@@ -99,7 +109,7 @@ public class DataModelTabTreeContextMenu {
 		
 		
 		
-		contextMenu.getItems().addAll(modelImport,query,new SeparatorMenuItem(),  open, close, rename, delete,
+		contextMenu.getItems().addAll(modelImport, Generate, query, new SeparatorMenuItem(),  open, close, rename, delete,
 				new SeparatorMenuItem(),copyName);
 		contextMenu.setOnShowing(e->{
 			var item = DataModelTabTree.currentSelectItem();

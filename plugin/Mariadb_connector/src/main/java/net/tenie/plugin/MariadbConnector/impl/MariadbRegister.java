@@ -16,7 +16,7 @@ public class MariadbRegister implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new MariadbConnector(connPo);
+		return new MariadbConnector(connPo, this);
 	}
 
 	public String getDbVendor() {

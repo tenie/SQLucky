@@ -58,17 +58,9 @@ public class SelectDao {
 	
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
 	public static SelectExecInfo selectSql2( String sql, int limit,SqluckyConnector sqluckyConn
-//			SheetDataValue dvt
 			) throws SQLException {
 		Connection conn = sqluckyConn.getConn();
 		SelectExecInfo execInfo = new SelectExecInfo();
-//		SqluckyConnector sqluckyConn  = dvt.getDbConnection();
-//		Connection conn = null;
-//		if(sqluckyConn != null) {
-//			 conn = sqluckyConn.getConn();
-//		}else {
-//			conn =  dvt.getConn();
-//		}
 		
 		// DB对象
 		PreparedStatement pstate = null;
@@ -376,46 +368,6 @@ public class SelectDao {
 			idx++;
 		}
 	}
-
-	
-
-//	public static ObservableList<ObservableList<StringProperty>>  simpleExecRs( ResultSet rs, ObservableList<SheetFieldPo> fpo ) throws SQLException {
-//		int idx = 1;
-//		int rowNo = 0; 
-//		int columnnums = fpo.size(); 
-//		ObservableList<ObservableList<StringProperty>> allDatas = FXCollections.observableArrayList();
-//		while (rs.next()) {
-//			ObservableList<StringProperty> vals = FXCollections.observableArrayList();
-//			int rn = rowNo++;
-//			for (int i = 0; i < columnnums; i++) { 
-//				int dbtype = fpo.get(i).getColumnType().get();
-//				StringProperty val;
-//				
-//				Object obj = rs.getObject(i + 1);
-//				if(obj == null) {
-//					val = new SimpleStringProperty("<null>");
-//				}else {
-//					if (CommonUtility.isDateAndDateTime(dbtype)) {
-//						java.sql.Timestamp ts = rs.getTimestamp(i + 1);
-//						Date d = new Date(ts.getTime());
-//						String v = CommonUtility.DateOrDateTimeToString(dbtype, d);
-////						String v = StrUtils.dateToStr(d, ConfigVal.dateFormateL);
-//						val = new SimpleStringProperty(v);
-//					} else {
-//						String temp = rs.getString(i+1);
-//						val = new SimpleStringProperty(temp); 
-//					}
-//				}
-//				 
-//				vals.add(val);
-//			} 
-//			vals.add(new SimpleStringProperty(rn + "")); 
-//			allDatas.add(vals); 
-//			idx++;
-//		}
-//		
-//		return allDatas;
-//	}
 
 	
 	

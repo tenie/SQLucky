@@ -259,7 +259,7 @@ public class ConnectionEditor {
 		
 		// 方法
 		Function<String, SqluckyConnector> assembleSqlCon = x -> {
-			var dbpo = DbVendor.register(dbDriver.getValue()); 
+			SqluckyDbRegister dbRegister = DbVendor.register(dbDriver.getValue()); 
 			String connName = connectionName.getText();
 			// check date
 			if (StrUtils.isNullOrEmpty(connName)) {
@@ -278,7 +278,7 @@ public class ConnectionEditor {
 				}
 			}else {
 				if (StrUtils.isNullOrEmpty(host.getText())) { 
-					if (dbpo.getJdbcUrlIsFile()) {
+					if (dbRegister.getJdbcUrlIsFile()) {
 						MyAlert.errorAlert( "DB File is empty !");
 					} else {
 						MyAlert.errorAlert( "host is empty !");
@@ -286,7 +286,7 @@ public class ConnectionEditor {
 					return null;
 				} 
 				
-				if (! dbpo.getJdbcUrlIsFile() ) {
+				if (! dbRegister.getJdbcUrlIsFile() ) {
 					if (StrUtils.isNullOrEmpty(port.getText())) {
 						MyAlert.errorAlert( "port is empty !");
 						return null;
@@ -316,16 +316,13 @@ public class ConnectionEditor {
 			DBConnectorInfoPo connPo = new DBConnectorInfoPo(connName, DbVendor.getDriver(dbDriver.getValue()),
 					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
 					defaultSchema.getText(), defaultSchema.getText(), jdbcUrl.getText(), autoConnectCB.isSelected());
-			SqluckyDbRegister reg = DbVendor.register(dbDriver.getValue());
-			SqluckyConnector connpo = reg.createConnector(connPo);
-//			SqluckyConnector connpo = new DbConnectionPo2(connName, DbVendor.getDriver(dbDriver.getValue()),
-//					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
-//					defaultSchema.getText(), defaultSchema.getText());
+//			SqluckyDbRegister reg = DbVendor.register(dbDriver.getValue());
+			SqluckyConnector sqluckyConnnector = dbRegister.createConnector(connPo);
 			if (dp != null) {
 				dp.closeConn();
-				connpo.setId(dp.getId());
+				sqluckyConnnector.setId(dp.getId());
 			}
-			return connpo;
+			return sqluckyConnnector;
 
 		};
 //TODO

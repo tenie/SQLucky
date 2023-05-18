@@ -16,7 +16,7 @@ public class MysqlRegister implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new MysqlConnector(connPo);
+		return new MysqlConnector(connPo, this);
 	}
 
 	public String getDbVendor() {
