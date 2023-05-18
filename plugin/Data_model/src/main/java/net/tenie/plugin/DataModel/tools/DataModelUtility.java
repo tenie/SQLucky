@@ -193,7 +193,6 @@ public class DataModelUtility {
 	// 模型插入到数据库
 	public static Long insertDataModel(DataModelInfoPo dmp) {
 		var conn = SqluckyAppDB.getConn();
-//		var conn = SqluckyAppDB.getConnNotAutoCommit();
 		
 		Long modelID = -1L;
 		try {  
@@ -206,7 +205,7 @@ public class DataModelUtility {
 
 				// 字段
 				var fields = tab.getFields();
-				for (var field : fields) {
+				for (DataModelTableFieldsPo field : fields) {
 //					System.out.println(field);
 					field.setTableId(tableId);
 					field.setModelId(modelID);

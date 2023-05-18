@@ -16,7 +16,7 @@ public class PostgresqlRegister implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new PostgresqlConnector(connPo);
+		return new PostgresqlConnector(connPo, this);
 	}
 
 	public String getDbVendor() {

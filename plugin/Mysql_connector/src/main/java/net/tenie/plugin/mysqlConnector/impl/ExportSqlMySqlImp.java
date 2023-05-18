@@ -42,24 +42,6 @@ public class ExportSqlMySqlImp implements ExportDBObjects {
 	public List<TablePo> allTableObj(Connection conn, String schema) {
 		try {
 			List<TablePo> vals = Dbinfo.fetchAllTableName(conn, schema);
-//			if (vals != null && vals.size() > 0) {
-//				vals.stream().forEach(v -> {
-//					try {
-//						// 表对象字段赋值
-//						Dbinfo.fetchTableInfo(conn, v);
-//						// 表对象 主键赋值
-//						Dbinfo.fetchTablePrimaryKeys(conn, v);
-//						// 表对象ddl语句
-//						String ddl = fdb2.createTab(v);
-//						v.setDdl(ddl);
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//
-//				});
-//			}
-			// 缓存数据
-//			allTableObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -172,28 +154,6 @@ public class ExportSqlMySqlImp implements ExportDBObjects {
 		}
 		return null;
 	}
-//
-//	@Override
-//	public List<String> allIndexName(Connection conn, String schema) {
-//		return fdb2.exportAllIndexs(conn, schema);
-//	}
-//
-//	@Override
-//	public List<String> allSequenceName(Connection conn, String schema) {
-//		return fdb2.exportAllSeqs(conn, schema);
-//	}
-//
-//	@Override
-//	public List<String> allForeignKeyName(Connection conn, String schema) {
-//		return fdb2.exportAllForeignKeys(conn, schema);
-//	}
-//
-//	@Override
-//	public List<String> allPrimaryKeyName(Connection conn, String schema) {
-//		// TODO 先不需要
-//		List<String> vals = new ArrayList<String>();
-//		return vals;
-//	}
 
 	// 表对象ddl语句
 	@Override

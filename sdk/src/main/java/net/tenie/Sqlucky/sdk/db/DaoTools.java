@@ -128,30 +128,6 @@ public class DaoTools {
 					idx--;
 					continue;
 				}
-//				if(cellpo.getHasModify() ) {
-//					val = cellpo.getOldCellData().get();
-//				}else {
-//					val = cellpo.getCellData().get();
-//				}
-				
-				
-//				String type = cellpo.getField().getColumnClassName().get();
-//				if ("<null>".equals(val)) {
-//					idx--;
-//					continue;
-//				} else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
-//						|| type.equals("java.sql.Date")) {
-//					idx--;
-//					continue;
-//	
-//				} else {
-//	//						Object obj = BuildObject.buildObj(type, val);
-//	//						pstmt.setObject(idx, obj);
-//	
-//					Object obj = val;
-//					pstmt.setObject(idx, obj);
-//					logmsg += idx + " : " + obj + "\n";
-//				}
 			}
 			logmsg += " ]";
 			logger.info(logmsg);
@@ -185,32 +161,5 @@ public class DaoTools {
 			return rs;
 		}
 		
-		
-//		public static void deleteConditionSetVal2(PreparedStatement pstmt ,  ResultSetRowPo mval) throws Exception {
-//			ObservableList<ResultSetCellPo> cells = mval.getRowDatas();
-//			int idx = 0;
-//			for (int i = 0; i < cells.size(); i++) {
-//				ResultSetCellPo cellpo = cells.get(i);
-//				idx++;
-//				String val = cellpo.getCellData().get();
-//				String type = cellpo.getField().getColumnClassName().get();
-//				if ( "<null>".equals(val)) {
-//					idx--;
-//					continue;
-//				}else if (type.equals("java.sql.Timestamp") || type.equals("java.sql.Time")
-//						|| type.equals("java.sql.Date")) {
-//					idx--;
-//					continue;
-//				} if (type.equals("java.lang.Object") ) {
-//					pstmt.setObject(idx, val);
-//					logger.info(idx + "  " + val);
-//				 } else {
-////					Object obj = BuildObject.buildObj(type, val);
-//					Object obj = val;
-//					pstmt.setObject(idx, obj);
-//					logger.info(idx + "  " + obj);
-//				}
-//			}
-//		}
 		
 }

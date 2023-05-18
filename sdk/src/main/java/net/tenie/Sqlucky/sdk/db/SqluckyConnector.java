@@ -64,7 +64,10 @@ public interface SqluckyConnector {
 	
 	// 自定义需要展示的时间格式, 转换成字符串
 	public String DateTimeToString(Object dateVal, int sqlFiledtype);
+	
+	public String DBInfo(Connection conn);
+	public SqluckyDbRegister getDbRegister();
+	
 //	public String sqlDateToConditionStr(String dateStr, int type);
 //	public  Map<String, DbSchemaPo> fetchSchemasInfo();
-//	String getJdbcUrl();
 }

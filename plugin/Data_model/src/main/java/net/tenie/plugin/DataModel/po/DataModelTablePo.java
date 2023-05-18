@@ -8,11 +8,11 @@ import java.util.List;
  *
  */
 public class DataModelTablePo {
-	private Long itemId;
-	private Long modelId;
-	private String id;
-	private String defKey;
-	private String defName;
+	private Long itemId;		// 自增id
+	private Long modelId;      // 主表id ,自动生成
+	private String id;			// 模型文件里的id
+	private String defKey;      // 表名 
+	private String defName;	
 	private String comment; 
 	
 	private Date createdTime;

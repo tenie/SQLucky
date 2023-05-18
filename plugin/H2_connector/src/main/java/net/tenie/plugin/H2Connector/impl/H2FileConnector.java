@@ -10,6 +10,7 @@ import java.util.Map;
 
 import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -25,8 +26,8 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 public class H2FileConnector extends DbConnector {
  
 	
-	public H2FileConnector(DBConnectorInfoPo connPo) {
-		super(connPo);
+	public H2FileConnector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {
+		super(connPo, dbReg);
 		ExportSqlH2Imp ex = new ExportSqlH2Imp();
 		getConnPo().setExportDDL( ex); 
 	} 
@@ -106,7 +107,7 @@ public class H2FileConnector extends DbConnector {
 				getAutoConnect()
 				
 				);
-		var dbc = new H2FileConnector(val);
+		var dbc = new H2FileConnector(val, getDbRegister());
 		
 		return dbc;
 	}

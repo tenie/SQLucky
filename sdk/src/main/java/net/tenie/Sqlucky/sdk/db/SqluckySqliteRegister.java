@@ -1,14 +1,15 @@
-package net.tenie.plugin.DB2Connector.impl;
+package net.tenie.Sqlucky.sdk.db;
 
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 
-public class Db2Register implements SqluckyDbRegister{
-	private String driver = "com.ibm.db2.jcc.DB2Driver";
-	private String dbVendor = "DB2";
-	private boolean JdbcUrlIsFile = false;
-	private String instanceName = "";  // 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称
+public class SqluckySqliteRegister implements SqluckyDbRegister{
+	private String driver = "";
+	private String dbVendor = "Sqlite";
+	private boolean JdbcUrlIsFile = true;
+	public static  String instanceName = "SQLITE DATABASE";// 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称   
+	
 	
 	@Override
 	public String getDriver() { 
@@ -16,7 +17,7 @@ public class Db2Register implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new Db2Connector(connPo, this);
+		return new SqluckySqliteConnector(connPo, this);
 	}
 
 	public String getDbVendor() {
@@ -56,7 +57,7 @@ public class Db2Register implements SqluckyDbRegister{
 
 	@Override
 	public boolean hasUser() {
-		return true;
+		return false;
 	}
 	
 }

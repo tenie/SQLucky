@@ -139,7 +139,7 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
-		if (draggedItem.getParent() == null) {
+		if (draggedItem != null && draggedItem.getParent() == null) {
 			ComponentGetter.dragTreeItemName = "";
 			return;
 		}else {

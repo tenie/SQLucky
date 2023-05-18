@@ -20,10 +20,11 @@ import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
 public interface AppComponent {
 	
+	
 	void addTitledPane(TitledPane tp);
 	void addIconBySvg(String name, String svg);
+	// 创建 SqluckyTab
 	SqluckyTab sqluckyTab();
-//	SqluckyTab sqluckyTab(String TabName);
 	SqluckyTab sqluckyTab(DocumentPo po);
 	void tabPaneRemoveSqluckyTab(SqluckyTab stb);
 	
@@ -34,10 +35,10 @@ public interface AppComponent {
 	public String fetchData(String name, String key);
 	
 	
-	//DB DB2Connector 
+	//注册数据库连接对象 DB DB2Connector 
 	public void registerDBConnector(SqluckyDbRegister ctr);
 	
-	// DB info Node Menu register 注册插件的menu
+	// 让插件可以对数据库节点右键菜单增加插件的菜单按钮
 	public void registerDBInfoMenu(List<Menu> ms, List<MenuItem> mis);
 	// 获取选中的 dbInfo 节点的类型(表格, 视图, 等)
 	public TreeItemType currentDBInfoNodeType();
@@ -51,9 +52,6 @@ public interface AppComponent {
 	
 	// 执行dml sql语句
 	public boolean execDML(String sql);
-	// 获取链接/断开链接
-//	public void closeConn();
-//	public void openConn();
 	
     //创建数据tableview
 	public  SqluckyBottomSheet sqlDataSheet(SheetDataValue data, int idx, boolean disable);

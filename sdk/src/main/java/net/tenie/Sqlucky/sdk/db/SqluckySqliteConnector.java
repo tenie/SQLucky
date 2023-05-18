@@ -23,8 +23,9 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  */
 public class SqluckySqliteConnector extends DbConnector {
 
-	public SqluckySqliteConnector(DBConnectorInfoPo connPo) {
-		super(connPo);
+	public SqluckySqliteConnector(DBConnectorInfoPo connPo,  SqluckyDbRegister dbReg) {
+		
+		super(connPo, dbReg);
 		ExportDefaultImp ex = new ExportDefaultImp();
 		getConnPo().setExportDDL( ex);
 	} 
@@ -43,7 +44,9 @@ public class SqluckySqliteConnector extends DbConnector {
 				jdbcUrl,
 				false
 		);
-		SqluckySqliteConnector val = new SqluckySqliteConnector(connPo);
+		SqluckySqliteRegister dbReg = new SqluckySqliteRegister();
+		SqluckySqliteConnector val = (SqluckySqliteConnector) dbReg.createConnector(connPo);
+//		SqluckySqliteConnector val = new SqluckySqliteConnector(connPo);
 		return val;
 	} 
  
@@ -119,7 +122,9 @@ public class SqluckySqliteConnector extends DbConnector {
 				getJdbcUrl(),
 				getAutoConnect()
 				);
-		var dbc = new SqluckySqliteConnector(val);
+//		var dbc = new SqluckySqliteConnector(val);
+		SqluckySqliteRegister dbReg = new SqluckySqliteRegister();
+		SqluckySqliteConnector dbc = (SqluckySqliteConnector) dbReg.createConnector(connPo);
 		
 		return dbc;
 	}
