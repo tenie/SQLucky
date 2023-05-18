@@ -35,7 +35,7 @@ import net.tenie.plugin.DataModel.tools.DataModelUtility;
  * @author tenie
  *
  */
-public class DataModelOption {
+public class DataModelOperate {
 	private VBox optionVbox = new VBox();
 	private HBox filterHbox = new HBox();
 	private HBox btnHbox = new HBox();
@@ -45,7 +45,6 @@ public class DataModelOption {
 	private JFXButton addBtn = new JFXButton();
 	private JFXButton delBtn = new JFXButton();
 	
-//	private ObservableList<TreeItem<DataModelTreeNodePo>>  filterTables2 ;
 	public static Map<String, Double> queryFieldColWidth = new HashMap<>();
 	public static Map<String, Double> tableInfoColWidth = new HashMap<>();
 	
@@ -65,7 +64,7 @@ public class DataModelOption {
 	Map<String, ObservableList<TreeItem<DataModelTreeNodePo> >>  rootMap = new HashMap<>();
 	
 	
-	public DataModelOption(){
+	public DataModelOperate(){
 		//  search
 		queryBtn.setGraphic(ComponentGetter.getIconDefActive("windows-magnify-browse"));
 		queryBtn.setTooltip(CommonUtility.instanceTooltip("Search table & field info "));

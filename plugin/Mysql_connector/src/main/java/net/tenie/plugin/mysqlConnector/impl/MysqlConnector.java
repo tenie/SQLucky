@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
@@ -23,8 +24,8 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 public class MysqlConnector extends DbConnector {
  
 	
-	public MysqlConnector(DBConnectorInfoPo connPo) {
-		super(connPo); 
+	public MysqlConnector(DBConnectorInfoPo connPo , SqluckyDbRegister dbReg) {
+		super(connPo, dbReg); 
 		ExportSqlMySqlImp ex = new ExportSqlMySqlImp();
 		getConnPo().setExportDDL( ex);
 	} 
@@ -122,7 +123,7 @@ public class MysqlConnector extends DbConnector {
 				getJdbcUrl(),
 				getAutoConnect()
 				);
-		var dbc = new MysqlConnector(val);
+		var dbc = new MysqlConnector(val, getDbRegister());
 		
 		return dbc;
 	}

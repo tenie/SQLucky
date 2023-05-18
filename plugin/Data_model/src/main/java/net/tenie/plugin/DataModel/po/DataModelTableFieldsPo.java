@@ -1,25 +1,39 @@
 package net.tenie.plugin.DataModel.po;
 
 import java.util.Date;
-
+/**
+ * 		   DEF_KEY as FIELD,"
+		+ " DEF_NAME AS NAME , " 
+		+ "COMMENT, " 
+		+ "TYPE_FULL_NAME, "
+		+ "PRIMARYKEY, " 
+		+ "NOT_NULL, " 
+		+ "AUTO_INCREMENT, "
+		+ "DEFAULT_VALUE, " 
+		+ "PRIMARY_KEY_NAME, "
+		+ "NOT_NULL_NAME, " 
+		+ "AUTO_INCREMENT_NAME  "
+ * @author tenie
+ *
+ */
 public class DataModelTableFieldsPo {
 
-	private Long itemId;
-	private Long tableId;
-	private Long modelId;
-	private String id; 
-	private Integer rowNo;
-	private String defKey;
-	private String defName;
-	private String comment; 
+	private Long itemId; 	// 自增长 id
+	private Long tableId;	// table的自增长id
+	private Long modelId;	// 模型的自增长id
+	private String id; 		// 模型文件里的id
+	private Integer rowNo;		//--- mysql: ORDINAL_POSITION
+	private String defKey;		// FIELD , 表的字段    mysql: COLUMN_NAME
+	private String defName;		// NAME , 字段的名称,  mysql 可以认为是COMMENT
+	private String comment;     // COMMENT 			mysql: COMMENT
 	private String domain;
 	private String type;
 	private Integer len; 
 	private String scale;
 
-	private String defaultValue;
-	private String typeFullName;
-	private String primaryKeyName;
+	private String defaultValue;	// 默认值	    		mysql: COLUMN_DEFAULT
+	private String typeFullName;    // TYPE_FULL_NAME , 字段类型, 如: char(10)  mysql:COLUMN_TYPE
+	private String primaryKeyName;  // 标记字段是不是主键字段, 值为 √, 或空   mysql: COLUMN_KEY
 	private String notNullName; 
 	private String autoIncrementName;
 	private String refDict; 
@@ -28,9 +42,9 @@ public class DataModelTableFieldsPo {
 	private Date updatedTime;
 	
 	
-	private String primaryKey;
-	private String notNull; 
-	private String autoIncrement; 
+	private String primaryKey;		// 标记字段是不是主键字段, 值为 √, 或空  mysql: COLUMN_KEY
+	private String notNull; 		// 标记不允许为null			 mysql: IS_NULLABLE , 不能为空NO 否则YES
+	private String autoIncrement;   // 是不是 自动增长    		 mysql: EXTRA , auto_increment
 	private String hideInGraph; 
 	
 	public Integer getRowNo() {

@@ -26,10 +26,16 @@ public abstract class DbConnector implements SqluckyConnector {
 	private static Logger logger = LogManager.getLogger(DbConnector.class); 
 	protected DBConnectorInfoPo connPo;
 	protected TreeItem connTreeItem;
+	protected SqluckyDbRegister dbRegister;
 	
-	public DbConnector(DBConnectorInfoPo c) {
+	public SqluckyDbRegister getDbRegister() {
+		return dbRegister;
+	}
+	
+	public DbConnector(DBConnectorInfoPo c , SqluckyDbRegister dbRegister) {
 		super();
 		this.connPo = c;
+		this.dbRegister = dbRegister;
 	}
  
 	
@@ -95,24 +101,13 @@ public abstract class DbConnector implements SqluckyConnector {
 		return map.keySet();
 	}
 
+	@Override
+	public String DBInfo(Connection conn) {
+		String infoStr = Dbinfo.getDBInfo(conn);
+		return infoStr;
+	}
+	
 	public abstract Connection getConn();
-//	{
-//		if (this.connPo.getConn() == null) {
-//			logger.info(this.connPo.getDriver());
-//			logger.info(getJdbcUrl());
-//			logger.info(this.connPo.getUser());
-////			logger.info(passWord);
-////			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-////				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
-////				conn = dbinfo.getconn();
-////			}else {
-////				Dbinfo dbinfo = new Dbinfo(driver, getJdbcUrl(), user, passWord);
-////				conn = dbinfo.getconn();
-////			}			
-//		}
-//
-//		return this.connPo.getConn();
-//	}
 
 	// 关闭连接
 	public void closeConn() {

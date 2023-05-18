@@ -18,7 +18,7 @@ public class H2Register implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new H2Connector(connPo);
+		return new H2Connector(connPo, this);
 	}
 
 	public String getDbVendor() {

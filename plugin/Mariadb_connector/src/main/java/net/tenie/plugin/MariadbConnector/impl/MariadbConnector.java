@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
@@ -23,8 +24,8 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 public class MariadbConnector extends DbConnector {
  
 	
-	public MariadbConnector(DBConnectorInfoPo connPo) {
-		super(connPo); 
+	public MariadbConnector(DBConnectorInfoPo connPo , SqluckyDbRegister dbRe) {
+		super(connPo, dbRe); 
 		ExportSqlMariadbImp ex = new ExportSqlMariadbImp();
 		getConnPo().setExportDDL( ex);
 	} 
@@ -111,7 +112,7 @@ public class MariadbConnector extends DbConnector {
 				getJdbcUrl(),
 				getAutoConnect()
 				);
-		var dbc = new MariadbConnector(val);
+		var dbc = new MariadbConnector(val, getDbRegister());
 		
 		return dbc;
 	}

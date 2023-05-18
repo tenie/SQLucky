@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
@@ -19,40 +20,11 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 public class SqliteConnector extends DbConnector {
  
 	
-	public SqliteConnector(DBConnectorInfoPo connPo) {
-		super(connPo);
+	public SqliteConnector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {
+		super(connPo, dbReg);
 		ExportSqlSqliteImp ex = new ExportSqlSqliteImp();
 		getConnPo().setExportDDL( ex);
 	} 
-	
-//	@Override
-//	public String DateToStringStringProperty(Object obj, int type) {  
-//		String val = null;
-//		if(obj instanceof String) {
-//			val = (String) obj;
-//		}else if( obj instanceof Long) {
-//			Date date = new Date((long) obj);
-////			val = CommonUtility.DateOrDateTimeToString(type, date);
-//			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
-//		}
-//		return val;
-//	}
-
-//	@Override
-//	public String DateToStringStringProperty(Object obj, int type) {  
-//		String val = null;
-//		
-//		if(obj instanceof String) {
-//			val = (String) obj;
-//		}else if( obj instanceof Long) {
-//			Date date = new Date((long) obj);
-////			val = CommonUtility.DateOrDateTimeToString(type, date);
-//			val = StrUtils.dateToStr(date, ConfigVal.dateFormateL); 
-//			
-//		}
-//	
-//		return val;
-//	}
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
@@ -138,7 +110,7 @@ public class SqliteConnector extends DbConnector {
 				getJdbcUrl(),
 				getAutoConnect()
 				);
-		var dbc = new SqliteConnector(val);
+		var dbc = new SqliteConnector(val, getDbRegister());
 		
 		return dbc;
 	}

@@ -17,7 +17,7 @@ public class SqliteRegister implements SqluckyDbRegister{
 	}
  
 	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new SqliteConnector(connPo);
+		return new SqliteConnector(connPo, this);
 	}
 
 	public String getDbVendor() {

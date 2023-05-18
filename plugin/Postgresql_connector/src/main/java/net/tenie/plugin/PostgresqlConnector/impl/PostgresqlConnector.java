@@ -12,6 +12,7 @@ import javafx.beans.property.StringProperty;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
@@ -26,8 +27,8 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 public class PostgresqlConnector extends DbConnector {
  
 	
-	public PostgresqlConnector(DBConnectorInfoPo connPo) {
-		super(connPo); 
+	public PostgresqlConnector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {
+		super(connPo, dbReg); 
 		ExportSqlPostgresqlImp ex = new ExportSqlPostgresqlImp();
 		getConnPo().setExportDDL( ex);
 	} 
@@ -123,7 +124,7 @@ public class PostgresqlConnector extends DbConnector {
 				getJdbcUrl(),
 				getAutoConnect()
 				);
-		var dbc = new PostgresqlConnector(val);
+		var dbc = new PostgresqlConnector(val, getDbRegister());
 		
 		return dbc;
 	}
