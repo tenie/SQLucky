@@ -128,7 +128,6 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 
 	public void setDbVendor(String dbVendor) {
-//		this.dbVendor = dbVendor;
 		this.connPo.setDbVendor(dbVendor);
 	}
 
@@ -137,7 +136,6 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 
 	public void setUser(String user) {
-//		this.user = user;
 		this.connPo.setUser(user);
 	}
 
@@ -154,7 +152,6 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 
 	public void setPassWord(String passWord) {
-//		this.passWord = passWord;
 		this.connPo.setPassWord(passWord);
 	}
 
@@ -167,7 +164,6 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo.setComment(comment);
 	}
 	
-	//sqlFiledtype
 	@Override
 	public String DateTimeToString(Object obj, int sqlFiledtype ) {
 		
@@ -188,18 +184,14 @@ public abstract class DbConnector implements SqluckyConnector {
 		}
 	
 		return val;
-		
-	
 	}
 	
 
 	public String getDriver() {
-//		return driver;
 		return this.connPo.getDriver();
 	}
 
 	public void setDriver(String driver) {
-//		this.driver = driver;
 		this.connPo.setDriver(driver);
 	}
 
@@ -207,127 +199,31 @@ public abstract class DbConnector implements SqluckyConnector {
 		return this.connPo.getConnName();
 	}
 
-//	public void setConnName(String connName) {
-////		this.connName = connName;
-//	}
-
 	public String getHostOrFile() {
 		return this.connPo.getHostOrFile();
 	}
-
-//	public void setHost(String host) {
-//		this.host = host;
-//	}
 
 	public String getPort() {
 		return this.connPo.getPort();
 	}
 
-//	public void setPort(String port) {
-//		this.port = port;
-//	}
 
 	public String getDefaultSchema() {
 		return this.connPo.getDefaultSchema();
 	}
-
-//	public void setDefaultSchema(String defaultSchema) {
-//		this.defaultSchema = defaultSchema;
-//	}
-
-//	public Map<String, DbSchemaPo> getSchemas() {
-//		try { 
-//			if (schemas == null || schemas.isEmpty()) { 
-//				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//					Map<String, DbSchemaPo> sch = new HashMap<>();
-//					DbSchemaPo sp = new DbSchemaPo();
-//					sp.setSchemaName(SQLITE_DATABASE);
-//					sch.put(SQLITE_DATABASE, sp);
-//					schemas = sch;
-//				} else {
-//					schemas = Dbinfo.fetchSchemasInfo(this);					
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return schemas;
-//	}
 	
-//	private ExportDDL setExportDDL(String dbvendor) {
-//
-//		if (DbVendor.db2.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			exportDDL = new ExportSqlDB2Imp();
-//		} else if (DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			exportDDL = new ExportSqlMySqlImp();
-//		} else if (DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			exportDDL = new ExportSqlMariadbImp();
-//		}else if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			exportDDL = new ExportSqlH2Imp();
-//		}else if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			exportDDL = new ExportSqlSqliteImp();
-//		}else if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
-//			exportDDL = new ExportDefaultImp();
-//		}   else {
-//			exportDDL = new ExportDefaultImp();
-//		}
-//
-//		return exportDDL;
-//	}
-	
-
 	public void setSchemas(Map<String, DbSchemaPo> schemas) {
 		this.connPo.setSchemas(schemas);// = schemas;
 	}
-
-//	public Date getCreatedAt() {
-//		return createdAt;
-//	}
-//
-//	public void setCreatedAt(Date createdAt) {
-//		this.createdAt = createdAt;
-//	}
-//
-//	public Date getUpdatedAt() {
-//		return updatedAt;
-//	}
-
-//	public void setUpdatedAt(Date updatedAt) {
-//		this.updatedAt = updatedAt;
-//	}
-
-//	public Integer getRecordVersion() {
-//		return recordVersion;
-//	}
-//
-//	public void setRecordVersion(Integer recordVersion) {
-//		this.recordVersion = recordVersion;
-//	}
 
 	public ExportDBObjects getExportDDL() {
 		return this.connPo.getExportDDL();
 	}
 
-//	public void setExportDDL(ExportDDL exportDDL) {
-//		this.exportDDL = exportDDL;
-//	}
-
-	
-//	public ConnItemContainer getItemContainer() {
-//		return itemContainer;
-//	}
-//
-//	public void setItemContainer(ConnItemContainer itemContainer) {
-//		this.itemContainer = itemContainer;
-//	}
 
 	public String getDbName() {
 		return this.connPo.getDbName();
 	}
-
-//	public void setDbName(String dbName) {
-//		this.dbName = dbName;
-//	}
 
 	@Override
 	public String toString() {
@@ -351,31 +247,5 @@ public abstract class DbConnector implements SqluckyConnector {
 	public boolean getAutoConnect() {
 		return this.connPo.isAutoConnect();
 	}
-//	public boolean isSqlite() {
-////		if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-////			return true;
-////		}
-//		return false;
-//	}
-	
-//	public boolean isH2() {
-////		if (DbVendor.h2.toUpperCase().equals(dbVendor.toUpperCase())) {
-////			return true;
-////		}
-//		return false;
-//	}
-	
-//	public boolean isPostgresql() {
-////		if (DbVendor.postgresql.toUpperCase().equals(dbVendor.toUpperCase())) {
-////			return true;
-////		}
-//		return false;
-//	}
-
-//	@Override
-//	public SqluckyConnector copyObj(SqluckyConnector sopo, String schema) {
-//		// TODO Auto-generated method stub
-//		return null;
-//	}
 	
 }

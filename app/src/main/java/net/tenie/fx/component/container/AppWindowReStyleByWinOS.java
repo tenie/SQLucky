@@ -55,9 +55,9 @@ public class AppWindowReStyleByWinOS {
 	
 	private Boolean isMaxWindow = true;  // 窗口是否最大化, (拖拽窗口有用, 最大化时不能拖拽)
 	// 关闭, 最小化, 还原的图标
-	private JFXButton hidden ;
+//	private JFXButton hidden ;
 	private JFXButton windowResize;
-	private JFXButton close;
+//	private JFXButton close;
 	private SVGPath svgRestore;
 	private SVGPath svgMax;
 	
@@ -177,13 +177,13 @@ public class AppWindowReStyleByWinOS {
 			operateBtnPane.getChildren().add(windowResize);
 			operateBtnPane.getChildren().add(close);
 
-			AnchorPane.setTopAnchor(hidden, 6.0);
-			AnchorPane.setTopAnchor(windowResize, 6.0);
-			AnchorPane.setTopAnchor(close, 6.0);
+			AnchorPane.setTopAnchor(hidden, 2.0);
+			AnchorPane.setTopAnchor(windowResize, 2.0);
+			AnchorPane.setTopAnchor(close, 2.0);
 
 			AnchorPane.setRightAnchor(hidden, 60.0);
 			AnchorPane.setRightAnchor(windowResize, 30.0);
-			AnchorPane.setRightAnchor(close, 5.0);
+			AnchorPane.setRightAnchor(close, 2.0);
 		}
 		
 		// 最大化和还原的切换

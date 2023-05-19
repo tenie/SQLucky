@@ -75,9 +75,11 @@ public class SQLucky extends Application {
 //		Log4jPrintStream.redirectSystemOut();
 	}
 	
+
 	
 	@Override
 	public void init() throws Exception {
+		logger.info(ConfigVal.textLogo); 
 		Connection conn = SqluckyAppDB.getConn();
 		
 		// 数据库迁移
