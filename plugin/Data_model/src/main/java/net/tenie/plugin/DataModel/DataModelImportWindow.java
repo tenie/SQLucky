@@ -34,6 +34,7 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.ModelFileType;
 import net.tenie.plugin.DataModel.tools.DataModelDAO;
@@ -105,7 +106,7 @@ public class DataModelImportWindow {
 		tfModelName.setPromptText(modelName);
 		tfModelName.setDisable(true);
 		tfModelName.disableProperty().bind(tfFilePath.textProperty().isEmpty());
-
+		TextFieldSetup.setMaxLength(tfModelName, 60);
 		// 文件选择按钮
 		var selectFile = openFileBtn(tfFilePath, tfModelName, typeChoiceBox);
 		selectFile.setDisable(true);

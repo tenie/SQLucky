@@ -99,7 +99,6 @@ public class AppDao {
 	
 	public static final  String DATA_MODEL_INFO = 
 			"CREATE TABLE `DATA_MODEL_INFO` (\n" +
-//			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
 			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + 
 			"  `NAME` VARCHAR(200)   NOT NULL,\n" + 
 			"  `DESCRIBE` VARCHAR(300)  , \n" +

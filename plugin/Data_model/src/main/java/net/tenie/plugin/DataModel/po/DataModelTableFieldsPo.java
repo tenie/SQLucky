@@ -2,17 +2,6 @@ package net.tenie.plugin.DataModel.po;
 
 import java.util.Date;
 /**
- * 		   DEF_KEY as FIELD,"
-		+ " DEF_NAME AS NAME , " 
-		+ "COMMENT, " 
-		+ "TYPE_FULL_NAME, "
-		+ "PRIMARYKEY, " 
-		+ "NOT_NULL, " 
-		+ "AUTO_INCREMENT, "
-		+ "DEFAULT_VALUE, " 
-		+ "PRIMARY_KEY_NAME, "
-		+ "NOT_NULL_NAME, " 
-		+ "AUTO_INCREMENT_NAME  "
  * @author tenie
  *
  */
@@ -24,8 +13,8 @@ public class DataModelTableFieldsPo {
 	private String id; 		// 模型文件里的id
 	private Integer rowNo;		//--- mysql: ORDINAL_POSITION
 	private String defKey;		// FIELD , 表的字段    mysql: COLUMN_NAME
-	private String defName;		// NAME , 字段的名称,  mysql 可以认为是COMMENT
-	private String comment;     // COMMENT 			mysql: COMMENT
+	private String defName;		// NAME , 字段的名称,  mysql 可以认为是 COLUMN_COMMENT
+	private String comment;     // COMMENT 			mysql: COLUMN_COMMENT
 	private String domain;
 	private String type;
 	private Integer len; 

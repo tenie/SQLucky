@@ -29,13 +29,16 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.ModelDBType;
 import net.tenie.plugin.DataModel.po.ModelFileType;
 import net.tenie.plugin.DataModel.tools.DataModelDAO;
+import net.tenie.plugin.DataModel.tools.DataModelMySQLDao;
 import net.tenie.plugin.DataModel.tools.DataModelUtility;
 
 /**
@@ -138,6 +141,7 @@ public class DataModelGenerateWindow {
 		return connNameChoiceBox;
 	}
 	static ChoiceBox<String> connNameChoiceBox ;
+ 
 	public static void showWindow() {
 
 		Label lbType = new Label("DB Type");
@@ -154,11 +158,19 @@ public class DataModelGenerateWindow {
 
 		String modelName = "Model name";
 		Label lbModelName = new Label(modelName);
-		TextField tfModelName = new TextField();
+		TextField   tfModelName = new TextField();
 		tfModelName.setPromptText(modelName);
 		tfModelName.setDisable(true);
 		tfModelName.disableProperty().bind(connNameChoiceBox.valueProperty().isNull());
-
+		TextFieldSetup.setMaxLength(tfModelName, 60);
+		connNameChoiceBox.valueProperty().addListener((obj, ol, ne)->{
+			if(ne != null && !"".equals(ne)) {
+				tfModelName.setText(ne+"_");
+				tfModelName.requestFocus();
+			}
+		});
+		
+		// 保存按钮
 		var savebtn = saveBtn(tfModelName);
 		savebtn.disableProperty().bind(tfModelName.textProperty().isEmpty());
 		var cancel = cancelBtn();
@@ -179,88 +191,54 @@ public class DataModelGenerateWindow {
 
 	}
 
-	public static DataModelInfoPo tmpDataModelPoVal = null;
-	
-	
-	public static Button openFileBtn(TextField tfFilePath, TextField tfModelName, ChoiceBox<String> typeChoiceBox) {
-		Button selectFileBtn = new Button("...");
-		selectFileBtn.setOnMouseClicked(e -> {
-			// 文件类型
-			String fileType = typeChoiceBox.getValue();
-			String fileTypeName = fileType.substring(1);
-			// 获取文件
-			File modelfile = FileOrDirectoryChooser.showOpen("Open", fileTypeName, ComponentGetter.primaryStage);
-			if (modelfile != null) {
-				tmpDataModelPoVal = null;
-				String path = modelfile.getAbsolutePath();
-				// 读模型数据
-				try {
-					tmpDataModelPoVal = DataModelUtility.readModelFileByType("UTF-8", modelfile, fileType);
-				} catch (Exception e1) {
-					e1.printStackTrace();
-					if (fileType.equals(ModelFileType.PDM) || fileType.equals(ModelFileType.CDM)) {
-						MyAlert.errorAlert("文件解析失败, 可能文件格式未适配, 可能xml中有非法unicode字符, 等等状况");
-					} else {
-						MyAlert.errorAlert("文件解析失败");
-					}
-
-				}
-				if (tmpDataModelPoVal != null) {
-					String mdName = tmpDataModelPoVal.getName();
-
-					tfFilePath.setText(path);
-					tfModelName.setText(mdName);
-				}
-			}
-
-		});
-		return selectFileBtn;
-	}
+	 
 
 	// 通过数据库的链接 生成数据模型
-	public static void generateModelData() {
+	public static SqluckyConnector generateModelData(TextField tfModelName) {
 		AppComponent appComponent = ComponentGetter.appComponent;
 		Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
 		String selectConnName = connNameChoiceBox.getValue();
 		SqluckyConnector sqluckyConn = sqluckyConnMap.get(selectConnName);
-//		
-//		sqluckyConn
+		String modelNameStr = tfModelName.getText();
+		
+		// 载入动画
+		LoadingAnimation.loadingAnimation("Saving....", v->{
+			try {
+				// 生成数据
+				var tmpDataModelPoVal = DataModelMySQLDao.generateMySqlModel(sqluckyConn, modelNameStr);
+				var mid = tmpDataModelPoVal.getId();
+				// 数据插入到数据库
+//				Long mid = DataModelUtility.insertDataModel(tmpDataModelPoVal);
+				// 插入模型节点
+				DataModelUtility.addModelItem(mid, DataModelTabTree.treeRoot);
+				Platform.runLater(() -> {
+					stage.close();
+				});
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				MyAlert.errorAlert(e1.getMessage());
+			}
+		});
+			
+		return sqluckyConn;
 	}
 	
 	public static Button saveBtn(TextField tfModelName) {
 		Button saveBtn = new Button("Save");
 		saveBtn.getStyleClass().add("myAlertBtn");
 		saveBtn.setOnMouseClicked(e -> {
-			// 生成数据
-			generateModelData();
-			
-			String mdName = "";
-			if (tmpDataModelPoVal != null) {
-				if (tfModelName.getText() != null && tfModelName.getText().length() > 0) {
-					mdName = tfModelName.getText();
-
-				} else {
-					mdName = tmpDataModelPoVal.getName();
-				}
-				// 查找模型名称是否存在， 存在不能保存
-				var mdpo = DataModelDAO.selectDMInfoByName(mdName);
-				// 同名模型存在
-				if (mdpo != null) {
-					MyAlert.errorAlert("Exist model name: " + mdName + ", Please,  Rename !");
-					return;
-				}
-				//
-				
-				
-				tmpDataModelPoVal.setName(mdName);
-
-				DataModelUtility.saveDataModelToDB(tmpDataModelPoVal, v -> {
-					Platform.runLater(() -> {
-						stage.close();
-					});
-				});
-
+			String modelNameStr = tfModelName.getText();
+			// 查找模型名称是否存在， 存在不能保存
+			var mdpo = DataModelDAO.selectDMInfoByName(modelNameStr);
+			// 同名模型存在
+			if (mdpo != null) {
+				MyAlert.errorAlert("Exist model name: " + modelNameStr + ", Please,  Rename !");
+				return;
 			}
+		
+			
+			generateModelData(tfModelName);
+			 
 
 		});
 		return saveBtn;

@@ -206,7 +206,6 @@ public class DataModelUtility {
 				// 字段
 				var fields = tab.getFields();
 				for (DataModelTableFieldsPo field : fields) {
-//					System.out.println(field);
 					field.setTableId(tableId);
 					field.setModelId(modelID);
 					field.setCreatedTime(new Date());
@@ -214,9 +213,7 @@ public class DataModelUtility {
 				}
 
 			}
-//			SqluckyAppDB.closeConnAndCommit(conn);
 		} catch (Exception e) {
-//			SqluckyAppDB.closeConnAndRollback(conn);
 			e.printStackTrace();
 		}finally {
 			SqluckyAppDB.closeConn(conn);

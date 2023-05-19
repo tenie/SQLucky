@@ -142,9 +142,12 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 		if (draggedItem != null && draggedItem.getParent() == null) {
 			ComponentGetter.dragTreeItemName = "";
 			return;
-		}else {
-			ComponentGetter.dragTreeItemName =  draggedItem.getValue().getName();
-			logger.info("ComponentGetter.dragTreeItemName =" +ComponentGetter.dragTreeItemName);
+		} else {
+			if (draggedItem != null) {
+				ComponentGetter.dragTreeItemName = draggedItem.getValue().getName();
+				logger.info("ComponentGetter.dragTreeItemName =" + ComponentGetter.dragTreeItemName);
+
+			}
 		}
 			
 		Dragboard db = treeCell.startDragAndDrop(TransferMode.ANY);
