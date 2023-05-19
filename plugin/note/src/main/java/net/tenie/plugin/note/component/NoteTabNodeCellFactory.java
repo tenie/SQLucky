@@ -36,7 +36,17 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
 	private TreeCell<SqluckyTab> dropZone;
 	private TreeItem<SqluckyTab> draggedItem;
-
+	private NoteOptionPanel optPane;
+	private Button showInFolder ;
+	
+	TreeView<SqluckyTab> treeView;
+	
+	public NoteTabNodeCellFactory(NoteOptionPanel optPane, TreeView<SqluckyTab> treeView ) {
+		this.optPane = optPane;
+		showInFolder = optPane.getShowInFolder();
+		this.treeView = treeView;
+	}
+	
 	@Override
 	public TreeCell<SqluckyTab> call(TreeView<SqluckyTab> treeView) {
 //		Button clean = new Button(); 
@@ -98,10 +108,20 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 //			if(cell.isSelected()) {
 //				clean.setVisible(true);
 //			}
-			
-			if(e.getClickCount() == 2) {
+			if(e.getClickCount() == 1) {
+				var item =	treeView.getSelectionModel().getSelectedItem();
+				
+//				var item = cell.getItem(); 
+				if(item!=null) {
+					showInFolder.setDisable(false);
+				}else {
+					showInFolder.setDisable(true);
+				} 
+			}
+			else if(e.getClickCount() == 2) {
 				NoteUtility.doubleClickItem(cell.getTreeItem());
 			}
+			
 		});
 		cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
 		cell.setOnDragOver((DragEvent event) -> dragOver(event, cell, treeView));
@@ -117,7 +137,7 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
-		if (draggedItem == null && draggedItem.getParent() == null) { 
+		if (draggedItem == null || draggedItem.getParent() == null) { 
 			return;
 		} 
 			

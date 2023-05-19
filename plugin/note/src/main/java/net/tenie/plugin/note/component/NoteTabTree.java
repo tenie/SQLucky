@@ -40,14 +40,15 @@ public class NoteTabTree {
 	public static String filePath = "";
 //	private static VBox treeBox = new VBox();
 	private static VBox optionBox ;
-	
+	private static NoteOptionPanel optPane;
 	public NoteTabTree() {
+
+	    optPane = new NoteOptionPanel();
 		noteTabTreeView = createScriptTreeView();
-		NoteOptionPanel optPane = new NoteOptionPanel();
 		optionBox = optPane.getOptionVbox();
 		noteStackPane.getChildren().add(noteTabTreeView);
 		noteStackPane.getStyleClass().add("myStackPane");
-		
+		 
 //		treeBox.getChildren().addAll(btnsBox, noteTabTreeView);
 //		treeBox.getStyleClass().add("myTreeView-vbox");
 //		treeBox.getStyleClass().add("myModalDialog");
@@ -73,7 +74,7 @@ public class NoteTabTree {
 		treeView.getSelectionModel().select(rootNode);
 
 		// cell显示设置(图标），cell 双击设置
-		treeView.setCellFactory(new NoteTabNodeCellFactory());
+		treeView.setCellFactory(new NoteTabNodeCellFactory(optPane, noteTabTreeView));
 		 
 		
 		recoverNode(rootNode);
