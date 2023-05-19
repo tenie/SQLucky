@@ -6,10 +6,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -105,6 +107,7 @@ public class NoteOptionPanel {
 		showInFolder.setOnMouseClicked(e->{
 			NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
 		});
+		showInFolder.setDisable(true);
 		
 //		search.setGraphic(ComponentGetter.getIconDefActive("search")   );
 //		search.setOnMouseClicked(e->{
@@ -304,6 +307,16 @@ public class NoteOptionPanel {
 
 	public VBox getOptionVbox() {
 		return optionVbox;
+	}
+
+
+	public JFXButton getShowInFolder() {
+		return showInFolder;
+	}
+
+
+	public void setShowInFolder(JFXButton showInFolder) {
+		this.showInFolder = showInFolder;
 	}
 
 
