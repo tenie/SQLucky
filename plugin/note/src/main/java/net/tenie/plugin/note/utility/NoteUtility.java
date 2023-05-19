@@ -82,12 +82,13 @@ public class NoteUtility {
 		TreeItem<SqluckyTab> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
 		SqluckyTab tb = ctt.getValue();
 		try {
-			String fn = tb.getDocumentPo().getFileFullName();
-			if (StrUtils.isNotNullOrEmpty(fn)) {
-				File file = new File(fn);
-				CommonUtility.openExplorer(file.getParentFile());
+			if(tb.getDocumentPo() != null) {
+				String fn = tb.getDocumentPo().getFileFullName();
+				if (StrUtils.isNotNullOrEmpty(fn)) {
+					File file = new File(fn);
+					CommonUtility.openExplorer(file.getParentFile());
+				}
 			}
-
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
