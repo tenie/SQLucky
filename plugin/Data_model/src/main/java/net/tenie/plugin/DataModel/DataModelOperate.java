@@ -14,6 +14,9 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
@@ -24,6 +27,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
@@ -42,7 +46,10 @@ public class DataModelOperate {
 	private TextField txt  = new TextField();
 	private JFXButton queryBtn  = new JFXButton();
 	private JFXButton queryExecBtn  = new JFXButton();
-	private JFXButton addBtn = new JFXButton();
+//	private JFXButton addBtn = new JFXButton();
+	private MenuItem importFile = new MenuItem();
+	private MenuItem Generate = new MenuItem();
+	
 	private JFXButton delBtn = new JFXButton();
 	
 	public static Map<String, Double> queryFieldColWidth = new HashMap<>();
@@ -119,12 +126,29 @@ public class DataModelOperate {
 		});
 		
 		// 导入文件按钮
-		addBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-		addBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
-		addBtn.setOnAction(e->{
-//			DataModelUtility.modelFileImport("UTF-8");
+		MenuButton menuButton = new MenuButton();
+		menuButton.setGraphic(IconGenerator.svgImageDefActive("my-import"));
+		
+//		addBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
+//		addBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
+//		addBtn.setOnAction(e->{
+////			DataModelUtility.modelFileImport("UTF-8");
+//			DataModelImportWindow.createModelImportWindow();
+//		});
+		importFile.setText("Import File Model");
+		importFile.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
+		importFile.setOnAction(e->{
 			DataModelImportWindow.createModelImportWindow();
 		});
+		Generate.setText("Generate Model");
+		Generate.setGraphic(IconGenerator.svgImage("database", "#7CFC00")); 
+		Generate.setOnAction(e->{
+			DataModelGenerateWindow.showWindow();
+		});
+		
+		menuButton.getItems().add(importFile);
+		menuButton.getItems().add(Generate);
+		
 		// 删除
 		delBtn.setGraphic(ComponentGetter.getIconDefActive("trash"));
 		delBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
@@ -134,7 +158,7 @@ public class DataModelOperate {
 		
 		
 		
-		btnHbox.getChildren().addAll(queryBtn, addBtn, delBtn);
+		btnHbox.getChildren().addAll(queryBtn, menuButton, delBtn);
 		
 		filterHbox.getChildren().addAll(queryExecBtn, txt );
 		HBox.setHgrow(txt, Priority.ALWAYS);
@@ -234,8 +258,13 @@ public class DataModelOperate {
 					// 备注
 					var comment =  "";
 					if(tabpo!=null) {
-						tabName = tabpo.getDefName().toUpperCase();
-						comment = tabpo.getComment().toLowerCase();
+						if(tabpo.getDefName() != null) {
+							tabName = tabpo.getDefName().toUpperCase();
+						}
+						if(tabpo.getComment() != null) {
+							comment = tabpo.getComment().toLowerCase();
+						}
+						
 					}
 					
 					// 表名， 表中文名， 表的备注根据查询字符串能匹配就加入到新表集合

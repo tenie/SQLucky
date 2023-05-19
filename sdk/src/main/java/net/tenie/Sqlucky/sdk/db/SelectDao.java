@@ -413,5 +413,26 @@ public class SelectDao {
 		
 	}
 	
- 
+	// 执行sql只返回第一个字段的list
+	public static  String selectOne(Connection conn, String sql) {
+		ResultSet rs = null;
+		String str = "";
+		try {
+			rs = conn.createStatement().executeQuery(sql);
+			if (rs.next()) {
+				str = rs.getString(1);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+
+		return str;
+	}
 }

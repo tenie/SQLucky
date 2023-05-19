@@ -8,12 +8,12 @@ import java.util.List;
  *
  */
 public class DataModelTablePo {
-	private Long itemId;		// 自增id
-	private Long modelId;      // 主表id ,自动生成
+	private Long itemId;		// 自增id  
+	private Long modelId;      // 主表id ,自动生成   ,必填字段
 	private String id;			// 模型文件里的id
-	private String defKey;      // 表名 , 建表语句的表面
-	private String defName;	
-	private String comment; 
+	private String defKey;      // 表名 , 建表语句的表名 ,必填字段
+	private String defName;		// 中文表名 , 必填字段
+	private String comment;     //   ,必填字段
 	
 	private Date createdTime;
 	private Date updatedTime;

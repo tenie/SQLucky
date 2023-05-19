@@ -1,6 +1,8 @@
 package net.tenie.plugin.DataModel;
 
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
@@ -30,8 +32,10 @@ public class DataModelTabTreeContextMenu {
 		
 		contextMenu = new ContextMenu();  
 		
+		Menu mdImportMenu = new Menu("Import Model");
+		mdImportMenu.setGraphic(IconGenerator.svgImageDefActive("my-import"));
 		// 导出模型文件
-		modelImport = new MenuItem("Import Model");
+		modelImport = new MenuItem("Import File Model");
 		modelImport.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
 		modelImport.setOnAction(e -> {
 			DataModelImportWindow.createModelImportWindow();
@@ -44,7 +48,9 @@ public class DataModelTabTreeContextMenu {
 			DataModelGenerateWindow.showWindow();
 		});
 		
-		
+		mdImportMenu.getItems().add(modelImport);
+
+		mdImportMenu.getItems().add(Generate);
 		 
 		query = new MenuItem("Query Model");
 		query.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
@@ -109,7 +115,10 @@ public class DataModelTabTreeContextMenu {
 		
 		
 		
-		contextMenu.getItems().addAll(modelImport, Generate, query, new SeparatorMenuItem(),  open, close, rename, delete,
+		contextMenu.getItems().addAll(
+//				modelImport, Generate, 
+				mdImportMenu,
+				query, new SeparatorMenuItem(),  open, close, rename, delete,
 				new SeparatorMenuItem(),copyName);
 		contextMenu.setOnShowing(e->{
 			var item = DataModelTabTree.currentSelectItem();
