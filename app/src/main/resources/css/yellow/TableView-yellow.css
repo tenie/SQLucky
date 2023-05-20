@@ -161,12 +161,16 @@
 .myTableTag   .scroll-bar .increment-arrow,
 .myTableTag   .scroll-bar .decrement-arrow{
     -fx-shape : " ";    
+    /* 滚动条的粗细     -fx-padding */
+    -fx-padding: 0.1em 0.0;   
   /*  -fx-padding :0.0 0.15em;       序列的 滚动条隐藏*/
 }
 
  .myTableTag  .scroll-bar:vertical .increment-arrow,
  .myTableTag  .scroll-bar:vertical .decrement-arrow{
     -fx-shape : " "; 
+      /* 滚动条的粗细     -fx-padding */
+    -fx-padding: 0.1em 0.0;
    /* -fx-padding :0.0 0.15em;       序列的 滚动条隐藏*/
 }
 

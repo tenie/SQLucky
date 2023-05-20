@@ -226,21 +226,25 @@ Pane VBox {
 .myTableTag   .scroll-bar .increment-arrow,
 .myTableTag   .scroll-bar .decrement-arrow{
     -fx-shape : " ";
+      /* 滚动条的粗细     -fx-padding */
+    -fx-padding: 0.1em 0.0;
 }
 
 .myTableTag  .scroll-bar:vertical .increment-arrow,
 .myTableTag  .scroll-bar:vertical .decrement-arrow{
     -fx-shape : " ";
+      /* 滚动条的粗细     -fx-padding */
+    -fx-padding: 0.1em 0.0;
 }
 
 .myTableTag  .scroll-bar:horizontal .thumb,
 .myTableTag  .scroll-bar:vertical .thumb { 
-    -fx-background-color:
-        #4E5254,
-        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
-        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%)); 
+   	    -fx-background-color:
+			        #4E5254,
+			        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
+			        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%)); 
         -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 0.5em;
+  	    -fx-background-radius: 0.5em;
 }
 
 .myTableTag  .scroll-bar:horizontal .thumb:hover,

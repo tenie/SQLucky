@@ -9,20 +9,17 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.fxmisc.richtext.CodeArea;
 
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
 import javafx.event.Event;
-import javafx.geometry.Bounds;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
@@ -31,7 +28,6 @@ import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.MyAreaTab;
@@ -273,8 +269,8 @@ public final class SettingKeyCodeCombination {
 		
 		scene.getAccelerators().put(F4, () -> {  
 //			CommonAction.dbInfoTreeQuery(AppWindowComponentGetter.dbInfoTreeFilter);
-			StackPane root = ComponentGetter.primarySceneRoot;
-			LoadingAnimation.addLoading(root);
+//			StackPane root = ComponentGetter.primarySceneRoot;
+//			LoadingAnimation.addLoading(root);
 		});
 		
 		scene.getAccelerators().put(F6, () -> {  
