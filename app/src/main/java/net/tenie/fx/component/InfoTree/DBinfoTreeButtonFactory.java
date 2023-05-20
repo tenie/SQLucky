@@ -66,7 +66,7 @@ public class DBinfoTreeButtonFactory {
 			queryTab.setOnMouseClicked(e->{
 				CommonAction.dbInfoTreeQuery(optionVbox, filter);
 			});
-			queryTab.setTooltip(MyTooltipTool.instance("Find Table  (F4)"));
+//			queryTab.setTooltip(MyTooltipTool.instance("Find Table  (F4)"));
 			
 			
 			
@@ -77,7 +77,7 @@ public class DBinfoTreeButtonFactory {
 			shrink.setOnMouseClicked(e -> {
 				CommonAction.shrinkTreeView();
 			});
-			shrink.setTooltip(MyTooltipTool.instance("Shrink Tree"));
+//			shrink.setTooltip(MyTooltipTool.instance("Shrink Tree"));
 			
 			
 			// 删除连接
