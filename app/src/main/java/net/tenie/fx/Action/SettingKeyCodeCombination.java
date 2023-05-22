@@ -28,6 +28,7 @@ import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.component.MyAreaTab;
@@ -239,6 +240,7 @@ public final class SettingKeyCodeCombination {
 		
 		
 		scene.getAccelerators().put(F1, () -> {
+			MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
 //			ComponentGetter.appComponent.currentDBInfoNodeType();
 //			ModalDialog.Confirmation("mmm");
 //			MyAlert.myConfirmation("??" ,  v->{
