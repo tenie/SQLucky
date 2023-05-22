@@ -21,7 +21,7 @@ public class WorkDataBackupDelegateImpl implements SqluckyPluginDelegate {
 		Menu pluginMenu = ComponentGetter.pluginMenu;
 
 		MenuItem workspace = new MenuItem(StrUtils.MenuItemNameFormat("Work Data Backup"));
-		workspace.setGraphic(appComponent.getIconDefActive("info-circle"));
+		workspace.setGraphic(appComponent.getIconDefActive("oct-cloud-upload"));
 		workspace.setOnAction(value -> {
 //			WorkDataBackupEditorWindow.createWorkspaceConfigWindow();
 			WorkDataBackupController.showFxml();

@@ -20,6 +20,8 @@ public class ConfigVal {
 			+ "╚══════╝ ╚══▀▀═╝ ╚══════╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝   ╚═╝   \n"
 			+ "                                                           \n"
 			+ "\n";
+	
+	public static final String version = "3.0.0-Beta";
 	// 模块路径
 	public static File MODULE_PATH ;
 	

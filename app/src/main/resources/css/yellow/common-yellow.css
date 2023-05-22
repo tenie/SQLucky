@@ -422,21 +422,25 @@ FlowPane TextField{
 .my-tag   .scroll-bar .increment-arrow,
 .my-tag   .scroll-bar .decrement-arrow{
     -fx-shape : " ";    
-    -fx-padding :0.15em 0.0;
+    -fx-padding :0.1em 0.0;
 }
 
  .my-tag  .scroll-bar:vertical .increment-arrow,
  .my-tag  .scroll-bar:vertical .decrement-arrow{
     -fx-shape : " ";    
-    -fx-padding :0.0 0.15em;
+    -fx-padding :0.0 0.1em;
 }
 
 .my-tag  .scroll-bar:horizontal .thumb,
 .my-tag  .scroll-bar:vertical .thumb {
-    -fx-background-color:
+	 -fx-background-color:  #3c3f41;
+/*
+ -fx-background-color:
         #000000,
         linear-gradient(to right, derive( #000000 ,95%), derive( #000000 ,10%)),
         linear-gradient(to right, derive( #000000 ,38%), derive(#000000 ,-16%));
+   
+*/
     -fx-background-insets: 0, 1, 2;
     -fx-background-radius: 0.5em;
 }
