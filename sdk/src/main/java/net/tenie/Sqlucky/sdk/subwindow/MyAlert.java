@@ -291,7 +291,7 @@ public class MyAlert {
 	                .title(title)
 	                .text(str)
 //	                .graphic(graphic)
-	                .hideAfter(Duration.seconds(2.5))
+	                .hideAfter(Duration.seconds(10000))
 	                .position(Pos.TOP_RIGHT)
 //	                .onAction(e -> System.out.println("Notification clicked on!"))
 //	                .threshold((int) thresholdSlider.getValue(),
