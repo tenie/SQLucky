@@ -145,7 +145,7 @@ public class SQLucky extends Application {
 				MyPreloaderMp4.hiden();
 			}
 			// windows 系统, 使用自己的关闭窗口
-			if(CommonUtility.isWinOS()) {
+			if(! CommonUtility.isMacOS()) {
 				AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
 				winos.setWindow(primaryStage, app.getHeadAnchorPane());
 			}

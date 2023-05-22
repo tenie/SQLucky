@@ -173,16 +173,18 @@
     -fx-padding: 0.1em 0.0;
    /* -fx-padding :0.0 0.15em;       序列的 滚动条隐藏*/
 }
-
-.myTableTag  .scroll-bar:horizontal .thumb,
+.myTableTag  .scroll-bar:horizontal .thumb ,
 .myTableTag  .scroll-bar:vertical .thumb { 
-    -fx-background-color:
+	  -fx-background-color:  #3c3f41;
+/*     -fx-background-color:
         #464646,
         linear-gradient(to right, derive( #c2c2c2 ,95%), derive( #c2c2c2 ,10%)),
-        linear-gradient(to right, derive( #000000 ,38%), derive(#000000 ,-16%));
+        linear-gradient(to right, derive( #000000 ,38%), derive(#000000 ,-16%)); */
     -fx-background-insets: 0, 1, 1;
     -fx-background-radius: 0.5em;
 }
+
+ 
 
 .myTableTag  .scroll-bar:horizontal .thumb:hover,
 .myTableTag  .scroll-bar:vertical .thumb:hover { 
