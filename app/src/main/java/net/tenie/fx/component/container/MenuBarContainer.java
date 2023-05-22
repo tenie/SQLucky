@@ -15,9 +15,11 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.plugin.PluginManageWindow;
@@ -336,14 +338,27 @@ public class MenuBarContainer {
 		});
 		
 		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));
-//		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
+		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("windows-clipboard-variant-edit"));
 		SignUpMenuItem.setOnAction(value -> {
 //			SignUpWindow.createWorkspaceConfigWindow();
-			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/");
+			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/")	;
 		});
 
+		MenuItem checkForUpdates = new MenuItem(StrUtils.MenuItemNameFormat("Check For Updates"));
+		checkForUpdates.setGraphic(IconGenerator.svgImageDefActive("zero-app-pai"));
+		checkForUpdates.setOnAction(value -> {
+			String version = HttpUtil.get("http://127.0.0.1:8088/sqlucky/version");
+			if(ConfigVal.version.equals(version)) {
+				MyAlert.alertWait("已经是最新版本!");
+			}else {
+				
+			}
+			
+		});
 
-		mn.getItems().addAll(about, SignInMenuItem, SignUpMenuItem); 
+		mn.getItems().addAll( SignInMenuItem, SignUpMenuItem, checkForUpdates ,
+				new SeparatorMenuItem(), 
+				about); 
 		return mn;
 	}
 	
@@ -351,7 +366,8 @@ public class MenuBarContainer {
 		Menu mn = new Menu("Plugin");
 
 		MenuItem plugin = new MenuItem(StrUtils.MenuItemNameFormat("Plugin Manage "));
-//		about.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
+		plugin.setGraphic(IconGenerator.svgImageDefActive("metro-power-cord"));
+		
 	
 		plugin.setOnAction(value -> {
 			PluginManageWindow pw = new PluginManageWindow();

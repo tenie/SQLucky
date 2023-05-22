@@ -42,6 +42,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -522,8 +523,8 @@ public class ModalDialog {
 	// about window
 	public static void showAbout() { 
 		
-		Label tit = new Label("Version: 2.0.0");  
-		Label text0 = new Label("#DataBase Tool #Open Source  #JAVA17 #JAVAFX ");  
+		Label tit = new Label("Version: " + ConfigVal.version);  
+		Label text0 = new Label("DataBase Tool ");  
 		Label text1 = new Label("Author: tenie  Email: tenie@tenie.net");  
 		Label text2 = new Label("Github: https://github.com/tenie/SQLucky");  
 		
