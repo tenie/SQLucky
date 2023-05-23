@@ -240,7 +240,7 @@ public final class SettingKeyCodeCombination {
 		
 		
 		scene.getAccelerators().put(F1, () -> {
-			MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
+//			MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
 //			ComponentGetter.appComponent.currentDBInfoNodeType();
 //			ModalDialog.Confirmation("mmm");
 //			MyAlert.myConfirmation("??" ,  v->{

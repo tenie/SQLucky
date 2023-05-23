@@ -2,6 +2,13 @@
 .my-tag{
 	
 }
+
+/* MyAlert.notification  窗口的边框颜色*/
+Pane  GridPane{
+	-fx-border-color: #4e4e4e;
+	-fx-border-width: 3; 
+/* 	-fx-background-color: #4e4e4e; */
+}
 .window-head-pane{
 	-fx-background-color: transparent; 
 	-fx-border-color: #000000 #000000 #323232 #000000;

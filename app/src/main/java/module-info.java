@@ -18,7 +18,7 @@ open module SQLucky {
     requires javafx.fxml;  
     requires javafx.media;
 //    requires javafx.web;
-//  requires javafx.swing; 
+  requires javafx.swing; 
     
     // mods
 	requires com.jfoenix;  
