@@ -295,7 +295,7 @@ public class ButtonAction {
 		 
 		TablePo tbrs = null; 
 		for(TablePo po: tbs) {
-			if( po.getTableName().equals(tbn) ){
+			if( po.getTableName().toUpperCase().equals(tbn) ){
 				tbrs = po;
 				break;
 			}
@@ -304,7 +304,7 @@ public class ButtonAction {
 		if(tbrs == null ) {
 			 tbs = TreeObjCache.viewCache.get(key);
 			 for(TablePo po: tbs) {
-					if( po.getTableName().equals(tbn) ){
+					if( po.getTableName().toUpperCase().equals(tbn) ){
 						tbrs = po;
 						break;
 					}

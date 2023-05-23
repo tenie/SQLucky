@@ -23,6 +23,7 @@ import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.plugin.PluginManageWindow;
+import net.tenie.fx.window.CheckUpdateWindow;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
 import net.tenie.fx.window.SignInWindow;
@@ -347,12 +348,14 @@ public class MenuBarContainer {
 		MenuItem checkForUpdates = new MenuItem(StrUtils.MenuItemNameFormat("Check For Updates"));
 		checkForUpdates.setGraphic(IconGenerator.svgImageDefActive("zero-app-pai"));
 		checkForUpdates.setOnAction(value -> {
-			String version = HttpUtil.get("http://127.0.0.1:8088/sqlucky/version");
-			if(ConfigVal.version.equals(version)) {
-				MyAlert.alertWait("已经是最新版本!");
-			}else {
-				
-			}
+			
+			CheckUpdateWindow.show("");
+//			String version = HttpUtil.get("http://127.0.0.1:8088/sqlucky/version");
+//			if(ConfigVal.version.equals(version)) {
+//				MyAlert.alertWait("已经是最新版本!");
+//			}else {
+//				
+//			}
 			
 		});
 

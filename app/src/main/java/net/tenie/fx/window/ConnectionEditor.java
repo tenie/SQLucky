@@ -369,7 +369,7 @@ public class ConnectionEditor {
 			SqluckyConnector dp = DBConns.get(str);
 			ConnectionEditor.ConnectionInfoSetting(dp);
 		}else {
-			CommonAction.showNotifiaction("编辑需要选中连接名称!");
+			MyAlert.showNotifiaction("编辑需要选中连接名称!");
 //			MyAlert.notification("Error", "编辑需要选中连接名称!", MyAlert.NotificationType.Error);
 		}
 	}
