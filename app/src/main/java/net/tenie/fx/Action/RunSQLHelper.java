@@ -176,7 +176,7 @@ public class RunSQLHelper {
 				if(sqllenght == -1 && !msg.startsWith("failed")) {
 					final String msgVal = msg; 
 					Platform.runLater(()->{
-						CommonAction.showNotifiaction(msgVal);
+						MyAlert.showNotifiaction(msgVal);
 						SqlExecuteOption.rmWaitingPane(true);
 					});
 				}else {

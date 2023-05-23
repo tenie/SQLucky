@@ -906,26 +906,7 @@ public class CommonAction {
 			}
 		}
 	}
-	
-	public static void showNotifiaction(String title) {
-		var notificationPane =  ComponentGetter.notificationPane;
-		notificationPane.setText(title);
-		if(! CommonConst.THEME_LIGHT.equals(ConfigVal.THEME)) { 
-			if( ! notificationPane.getStyleClass().contains(NotificationPane.STYLE_CLASS_DARK)) {
-				notificationPane.getStyleClass().add(NotificationPane.STYLE_CLASS_DARK);
-			} 
-		}else {
-			if( notificationPane.getStyleClass().contains(NotificationPane.STYLE_CLASS_DARK)) {
-				notificationPane.getStyleClass().remove(NotificationPane.STYLE_CLASS_DARK);
-			} 
-		}
-		 
-		if (notificationPane.isShowing()) {
-            notificationPane.hide();
-        } else {
-            notificationPane.show();
-        }
-	}
+
 	
 	
 		
