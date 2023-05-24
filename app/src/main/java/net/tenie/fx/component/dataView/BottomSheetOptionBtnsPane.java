@@ -503,7 +503,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			selectBtn.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
 			selectBtn.setTooltip(MyTooltipTool.instance("Run SQL: SELECT * FROM " + name));
 			selectBtn.setOnAction(e->{
-				RunSQLHelper.runSelectSqlLockTabPane(sqluckyConn, "SELECT * FROM " + name);
+				RunSQLHelper.runSelectSqlLockTabPane(sqluckyConn, "SELECT * FROM " + table.getTableSchema()+"."+name);
 				
 			});
 			
