@@ -73,6 +73,7 @@ public class TransferDataController implements Initializable {
 	
 	
 	@FXML private  AnchorPane tpane;
+	@FXML private  AnchorPane optionPane;
 	
 	private static Thread currentThread; 
 	@FXML private Label title;
@@ -358,9 +359,10 @@ public class TransferDataController implements Initializable {
 		amountTxt.lengthProperty().addListener(CommonListener.textFieldLimit(amountTxt, 4));
 		amountTxt.textProperty().addListener(CommonListener.textFieldNumChange(amountTxt));  
 		 
-		AnchorPane.setTopAnchor(hideBtn, 2.0); 
-		AnchorPane.setTopAnchor(monBtn, 2.0); 
+//		AnchorPane.setTopAnchor(hideBtn, 2.0); 
+//		AnchorPane.setTopAnchor(monBtn, 2.0); 
 		AnchorPane.setRightAnchor(hideBtn, 3.0); 
+//		AnchorPane.setRightAnchor(monBtn, 120.0); 
 	}
 	
 	

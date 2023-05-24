@@ -422,11 +422,12 @@ public class DBinfoTree {
 					//TODO  
 					menu.setConnectDisable(true);
 					menu.setViewFuncProcTriDisable(false);
-					SqluckyConnector  dbc =nd.getConnpo();
+					SqluckyConnector  dbc = nd.getConnpo();
 					String schema = nd.getTable().getTableSchema();
 					String viewName = nd.getTable().getTableName();
+//					var tabpo = nd.getTable();
 					menu.setViewAction(  newValue , dbc, schema, viewName);
-					menu.setSelectMenuDisable(false, dbc , viewName);
+					menu.setSelectMenuDisable(false, dbc , nd);
 				}else if(nd != null && nd.getType() == TreeItemType.FUNCTION) {
 					//TODO  
 					menu.setNodeType(TreeItemType.FUNCTION);

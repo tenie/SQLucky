@@ -353,6 +353,7 @@ public class TablePo {
 	}
 
 	public List<TableIndexPo> getIndexs() {
+//		在 TreeObjAction 中对indexs 赋值
 		return indexs;
 	}
 
