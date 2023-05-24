@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import com.jfoenix.controls.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="601.0" styleClass="myModalDialog" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.fx.controller.TransferDataController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="601.0" styleClass="myModalDialog" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.fx.controller.TransferDataController">
    <children>
       <Pane prefHeight="38.0" prefWidth="601.0" styleClass="myModalDialog">
          <children>
@@ -81,11 +90,9 @@
       </AnchorPane>
       <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
          <children>
-            <AnchorPane prefHeight="27.0" prefWidth="601.0">
+            <AnchorPane fx:id="optionPane" prefHeight="27.0" prefWidth="601.0">
                <children>
                   <Label fx:id="queryLabel" layoutX="15.0" layoutY="6.0" text="查询" />
-                  <JFXButton fx:id="hideBtn" layoutX="460.0" layoutY="2.0" prefHeight="23.0" prefWidth="117.0" styleClass="transfer-btn" text="Hide Window" />
-                  <JFXButton fx:id="monBtn" layoutX="380.0" layoutY="2.0" text="Monitor" />
                   <AnchorPane fx:id="tpane" layoutX="66.0" layoutY="2.0" prefHeight="25.0" prefWidth="200.0" />
                </children>
             </AnchorPane>
@@ -95,6 +102,8 @@
                   <JFXButton fx:id="downSelBtn" layoutX="102.0" layoutY="6.0" text="Select All Down" />
                   <JFXButton fx:id="execBtn" layoutX="219.0" layoutY="6.0" mnemonicParsing="false" styleClass="transfer-btn" text="Run" />
                   <JFXButton fx:id="stopBtn" layoutX="274.0" layoutY="6.0" mnemonicParsing="false" styleClass="transfer-btn" text="Stop" />
+                  <JFXButton fx:id="monBtn" layoutX="350.0" layoutY="6.0" text="Monitor" />
+                  <JFXButton fx:id="hideBtn" layoutX="455.0" layoutY="6.0" prefHeight="23.0" prefWidth="117.0" styleClass="transfer-btn" text="Hide Window" />
                </children>
             </AnchorPane>
             <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" VBox.vgrow="ALWAYS" />

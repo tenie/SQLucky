@@ -161,10 +161,10 @@ public class DBInfoTreeContextMenu {
         tableDrop.setDisable(tf);
     }
     // 设置select * from 按钮的启用/禁用
-    public void setSelectMenuDisable(boolean tf ,SqluckyConnector sqluckyConn, String tablename) {
+    public void setSelectMenuDisable(boolean tf ,SqluckyConnector sqluckyConn, TreeNodePo treeNPO) {
     	if(tf == false) {
     		  // selectMenu 的设置
-            setSelectMenuAction(sqluckyConn, tablename);
+            setSelectMenuAction(sqluckyConn, treeNPO);
     	} 
        	selectMenu.setDisable(tf);
     }
@@ -193,12 +193,15 @@ public class DBInfoTreeContextMenu {
             showTableFieldType(sqluckyConn, schema, tablename);
         });
         // selectMenu 的设置
-        setSelectMenuAction(sqluckyConn, tablename);
+        setSelectMenuAction(sqluckyConn,   treeItem.getValue());
       
     }
     //右键菜单, 查询按钮设置
-    public void setSelectMenuAction(SqluckyConnector sqluckyConn, String tablename) {
-        String str = "SELECT * FROM " + tablename;
+    public void setSelectMenuAction(SqluckyConnector sqluckyConn, TreeNodePo treeNPO) {
+    	var tbpo = treeNPO.getTable();
+    	String tablename = tbpo.getTableName();
+    	String tabSchema = tbpo.getTableSchema();
+        String str = "SELECT * FROM "+ tabSchema +"." + tablename;
     	selectMenu.setText(str);
         selectMenu.setOnAction(e -> { 
         	RunSQLHelper.runSQL(sqluckyConn,  str,   false);
