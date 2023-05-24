@@ -40,6 +40,7 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
@@ -153,7 +154,7 @@ public class CheckUpdateWindow {
 		});
 		return btn;
 	}
-	public  void downloadNewVersionAPP(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo>  allPluginTable) {
+	public  void downloadNewPatch(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo>  allPluginTable) {
 //		if( CommonUtility.isLogin("Please Login First") == false) {
 //			return ;
 //		}
@@ -171,33 +172,21 @@ public class CheckUpdateWindow {
 				}else if(CommonUtility.isMacOS()) {
 					vals.put("OS", "mac");	
 				} 
-				vals.put("VERSION", appVersion); 
+				vals.put("CLIENT_VERSION", ConfigVal.version); 
 				
-				String modelPath = CommonUtility.sqluckyAppModsPath();
-				String fileName = HttpUtil.downloadPluginByPostToDir(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, vals);
+				String dir = DBTools.dbFilePath() + "newPatch";
+				File patchDir = new File(dir);
+				if(patchDir.exists()) {
+					patchDir.deleteOnExit();
+				}else {
+					patchDir.mkdir();
+				}
+				// fileName 是新下载的文件名
+				String fileName = HttpUtil.downloadAppPatchByPostToDir(ConfigVal.getSqluckyServer()+"/sqlucky/downloadNewPatch",dir, vals);
 				
 				File pluginFile = new File(fileName);
 				if(pluginFile.exists()) {
-					// 更新 为以下载
-					ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
-					String id = selectRow.getValueByFieldName("ID");
-					PluginInfoPO ppo = new PluginInfoPO();
-					ppo.setId(Integer.valueOf(id));
-					PluginInfoPO valpo = new PluginInfoPO();
-					valpo.setDownloadStatus(1);
-					var conn = SqluckyAppDB.getConn();
-					try {
-						PoDao.update(conn, ppo, valpo);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}finally {
-						SqluckyAppDB.closeConn(conn);
-					}
-					Platform.runLater(()->{
-						MyAlert.infoAlert("下载成功");
-						PluginManageAction.queryAction("", sheetDaV , allPluginTable);
-						allPluginTable.getSelectionModel().select(currentSelectIndex);
-					});
+					// 更新操作
 					
 				}
 			} finally {
