@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
 import org.apache.hc.client5.http.entity.mime.FileBody;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.entity.mime.StringBody;
@@ -113,6 +115,32 @@ public class HttpUtil {
 		return name;
 	}
 	
+	// 使用post下载插件文件, 到指定目录
+		public static String downloadAppPatchByPostToDir(String url, String fileSaveDir, Map<String, String> Param) {
+			var nvps = mapToPairs(Param);
+			String name = "";
+			 try {
+				 Response re =	Request.post(url).bodyForm(nvps).execute();
+				 name = re.handleResponse(response -> {
+					 		String sqluckyPluginName = response.getHeader("SQLUCKY_PATH").getValue();
+					 		HttpEntity entity = response.getEntity(); 
+				            
+				            byte[] data =  EntityUtils.toByteArray(entity);
+				            String fileName = fileSaveDir + "/" + sqluckyPluginName;
+				            Files.write(Paths.get(fileName), data);
+
+				            //清理
+				            EntityUtils.consume(entity);
+					 	
+				            return fileName;
+					 });
+			} catch (IOException e) {
+				e.printStackTrace();
+				
+			}
+			return name;
+		}
+	
 	// 使用post下载文件
 	public static void downloadByPost(String url, String filepath, Map<String, String> Param) {
 		var nvps = mapToPairs(Param);
@@ -156,7 +184,20 @@ public class HttpUtil {
 //    	demo2();
 //		demo_post();
 //		String val = post("http://127.0.0.1:8088/sqlucky/queryAllBackup");
-		String val = post1_test();
-		System.out.println("val = " + val);
+//		String val = post1_test();
+//		System.out.println("val = " + val);
+		String path = FileUtils.getUserDirectoryPath();
+		path += "/.sqlucky/NEWPATH/";
+		File patchDir = new File(path);
+		if(patchDir.exists()) {
+			patchDir.deleteOnExit();
+		}else {
+			patchDir.mkdir();
+		}
+		var fileName = path + "FOO.TXT";
+	 var val =	FileUtils.readFileToByteArray(new File("D:\\workDir\\.gitignore") );
+		
+	    Files.write(Paths.get(fileName), val);
+		
 	}
 }
