@@ -50,8 +50,10 @@ open module SQLucky {
 	requires flowless;
 	requires sql.formatter;
 	requires org.slf4j;
+//	requires batik.transcoder;
+//	requires batik.script;
 	
-	requires SQLucky.sdk;
+	requires SQLucky.sdk; 
 	
 	
 	

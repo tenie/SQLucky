@@ -17,7 +17,11 @@
 	</organization>
 <dependencies>
  
-
+<!-- <dependency>
+    <groupId>org.apache.xmlgraphics</groupId>
+    <artifactId>batik-transcoder</artifactId>
+    <version>1.13</version>
+</dependency> -->
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
