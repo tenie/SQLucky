@@ -138,7 +138,7 @@ public class ConnItemDbObjects {
 		List<TablePo> tabs = DBOptionHelper.getTabsName(connpo, sche);
 		// 缓存起来
 		String cacheKey = connpo.getConnName() + "_" +sche;
-		TreeObjCache.tableCache.put(cacheKey, tabs);
+		TreeObjCache.tableCache.put(cacheKey.toUpperCase(), tabs);
 		for(TablePo po: tabs) {
 			po.setTableType(CommonConst.TYPE_TABLE);
 		}
@@ -173,7 +173,7 @@ public class ConnItemDbObjects {
  
 		// 缓存起来
 		String cacheKey = connpo.getConnName() + "_" +sche;
-		TreeObjCache.viewCache.put(cacheKey, tabs);
+		TreeObjCache.viewCache.put(cacheKey.toUpperCase(), tabs);
 		for(TablePo po: tabs) {
 			po.setTableType(CommonConst.TYPE_VIEW);
 		}
