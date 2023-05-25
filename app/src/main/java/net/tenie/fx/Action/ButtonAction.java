@@ -289,9 +289,17 @@ public class ButtonAction {
 			return ;
 		}
 		String tbn = rv.tableName;
-		String key = dbcp.getConnName() + "_" +dbcp.getDefaultSchema();
+		String key =  "";
+		int idx = tbn.indexOf(".");
+		if( idx > 0) {
+			  key = dbcp.getConnName() + "_" +tbn.substring(0, idx);
+			  tbn = tbn.substring(idx+1); //去除schema , 得到表名
+		}else {
+			  key = dbcp.getConnName() + "_" +dbcp.getDefaultSchema();
+		}
+		
 		// 从表格缓存中查找表
-		List<TablePo> tbs = TreeObjCache.tableCache.get(key);
+		List<TablePo> tbs = TreeObjCache.tableCache.get(key.toUpperCase());
 		 
 		TablePo tbrs = null; 
 		for(TablePo po: tbs) {
@@ -302,7 +310,7 @@ public class ButtonAction {
 		}
 		// 从试图缓存中查找
 		if(tbrs == null ) {
-			 tbs = TreeObjCache.viewCache.get(key);
+			 tbs = TreeObjCache.viewCache.get(key.toUpperCase());
 			 for(TablePo po: tbs) {
 					if( po.getTableName().toUpperCase().equals(tbn) ){
 						tbrs = po;

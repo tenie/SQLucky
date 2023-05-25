@@ -41,6 +41,7 @@ import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
+import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
@@ -201,10 +202,10 @@ public class CheckUpdateWindow {
 		VBox vb = new VBox();
 		List<Region> list = new ArrayList<>();
 		// 下载按钮
-		Button btn = new Button("Update"); 
+		Button btn = new Button("Download"); 
 		btn.setDisable(true);
 		btn.setOnAction(v->{
-			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/");
+			CommonUtility.OpenURLInBrowser("https://github.com/tenie/SQLucky/releases");
 		});
 		list.add(null);
 		list.add(btn);
@@ -222,7 +223,7 @@ public class CheckUpdateWindow {
 		CommonUtility.runThread(str->{
 			String msg = "检测失败";
 			try {
-				String version = HttpUtil.get(ConfigVal.getSqluckyServer()+"/sqlucky/version");
+				String version = newAppVersionCode();//HttpUtil.get(ConfigVal.getSqluckyServer()+"/sqlucky/version");
 				if(version != null) {
 					if(ConfigVal.version.equals(version)) {
 //						MyAlert.alertWait("已经是最新版本!");
@@ -273,6 +274,17 @@ public class CheckUpdateWindow {
 		}
 		
 		stage.show();
+	}
+	
+	/**
+	 * 获取github上最新版本的版本号
+	 * @return
+	 */
+	private String newAppVersionCode() {
+		String url = "https://api.github.com/repos/tenie/SQLucky/releases/latest";
+		String valSr = HttpUtil.get(url);
+		String version = JsonTools.getJsonKeyValue(valSr, "tag_name");
+		return version;
 	}
 	
 }
