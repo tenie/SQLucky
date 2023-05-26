@@ -52,6 +52,7 @@ open module SQLucky {
 	requires org.slf4j;
 //	requires batik.transcoder;
 //	requires batik.script;
+//	requires org.girod.javafx.svgimage;
 	
 	requires SQLucky.sdk; 
 	

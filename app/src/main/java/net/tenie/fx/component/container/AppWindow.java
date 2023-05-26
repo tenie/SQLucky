@@ -144,6 +144,7 @@ public class AppWindow {
 		ComponentGetter.iconRight  = IconGenerator.svgImageDefActive("chevron-circle-right", 14);
 		ComponentGetter.iconLeft   = IconGenerator.svgImageDefActive("chevron-circle-down", 14);
 		 
+//		ComponentGetter.LogoIcons   =   IconGenerator.sqluckyLogoSVGImage();
 		ComponentGetter.LogoIcons   = new Image(AppWindow.class.getResourceAsStream(ConfigVal.appIcon ));
 	
 		 
