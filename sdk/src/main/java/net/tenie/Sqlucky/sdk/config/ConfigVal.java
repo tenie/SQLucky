@@ -68,7 +68,8 @@ public class ConfigVal {
 	public static final String  EXEC_INFO_TITLE = "Execute Info";
 
 	// 图标
-	public static String appIcon = "/image/SQL6.png";
+//	public static String appIcon = "/image/SQL6.png";
+	public static String appIcon = "/image/ss.png";
 
 	public static String THEME = CommonConst.THEME_DARK ;
 	public static int FONT_SIZE = -1;

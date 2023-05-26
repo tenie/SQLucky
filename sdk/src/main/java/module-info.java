@@ -14,6 +14,7 @@ open module SQLucky.sdk {
 	requires javafx.graphics;
     requires javafx.controls;
     requires javafx.fxml;  
+    requires javafx.swing;
     // mods
 	requires com.jfoenix;  
 	requires org.controlsfx.controls;
@@ -57,5 +58,5 @@ open module SQLucky.sdk {
 	exports net.tenie.Sqlucky.sdk.db; 
 	exports net.tenie.Sqlucky.sdk.ui;
 	exports net.tenie.Sqlucky.sdk.excel;
-	
+	exports org.girod.javafx.svgimage;
 }
