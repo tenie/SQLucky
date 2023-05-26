@@ -207,6 +207,8 @@ public class CheckUpdateWindow {
 		btn.setOnAction(v->{
 			CommonUtility.OpenURLInBrowser("https://github.com/tenie/SQLucky/releases");
 		});
+//		var svgs = IconGenerator.sqluckyLogoSVGImage();
+//		btn.setGraphic(svgs);
 		list.add(null);
 		list.add(btn);
 		
@@ -244,6 +246,7 @@ public class CheckUpdateWindow {
 			Platform.runLater(()->{
 				title.setText(showMsg); 
 				Node svg = IconGenerator.svgImageDefActive("ionic-ios-medical", 30 );
+//				var svg = IconGenerator.sqluckyLogoSVG();
 				title.setGraphic(svg); 
 			});
 			

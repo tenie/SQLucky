@@ -1,7 +1,20 @@
 package net.tenie.Sqlucky.sdk.ui;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
+import org.girod.javafx.svgimage.LoaderParameters;
+import org.girod.javafx.svgimage.SVGImage;
+import org.girod.javafx.svgimage.SVGLoader;
+
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Ellipse;
@@ -15,6 +28,46 @@ import javafx.scene.shape.Shape;
  *
  */
 public final class IconGenerator {
+	
+	
+	/**
+	 * LoaderParameters params = LoaderParameters.createWidthParameters(25);
+      SVGImage result = SVGLoader.load(url, params);
+      Image img = result.toImage();
+	 * @return
+	 */
+	public static Image sqluckyLogoSVGImage(){
+		Image svgImage = null;
+		try {
+				URL url = IconGenerator.class.getResource("/s.svg");
+				LoaderParameters params = LoaderParameters.createWidthParameters(25);
+		      SVGImage result = SVGLoader.load(url, params);
+		      svgImage = result.toImage();
+		      
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return svgImage;
+	}
+	
+	public static Node sqluckyLogoSVG(){
+//		SVGImage svgImage = null;
+		ImageView iv = null;
+		try {
+//			String val = IconGenerator.class.getResource("/s.svg").toExternalForm();
+			URL URL = IconGenerator.class.getResource("/s.svg");
+//			File svgFile = new File("D:\\myGit\\Learning_Notes\\图标\\s.svg");
+			SVGImage  svgImage = SVGLoader.load(URL);
+			svgImage.scaleTo(16); 
+			Image img = svgImage.toImage();
+		     iv = new ImageView(img);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return iv;
+	}
 	
 	public static SVGPath gitHubSvg() {
 		SVGPath githubIcon = new SVGPath();
