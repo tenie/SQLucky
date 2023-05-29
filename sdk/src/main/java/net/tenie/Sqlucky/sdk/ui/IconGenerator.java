@@ -36,14 +36,27 @@ public final class IconGenerator {
       Image img = result.toImage();
 	 * @return
 	 */
-	public static Image sqluckyLogoSVGImage(){
-		Image svgImage = null;
+//	public static Image sqluckyLogoSVGImage(){
+//		Image svgImage = null;
+//		try {
+//				URL url = IconGenerator.class.getResource("/s.svg");
+//				LoaderParameters params = LoaderParameters.createWidthParameters(25);
+//		      SVGImage result = SVGLoader.load(url, params);
+//		      svgImage = result.toImage();
+//		      
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		
+//		return svgImage;
+//	}
+	
+	// 加载 svg文件
+	public static Node sqluckyLogoSVG(){
+		SVGImage svgImage = null;
 		try {
-				URL url = IconGenerator.class.getResource("/s.svg");
-				LoaderParameters params = LoaderParameters.createWidthParameters(25);
-		      SVGImage result = SVGLoader.load(url, params);
-		      svgImage = result.toImage();
-		      
+			URL URL = IconGenerator.class.getResource("/logo16.svg");
+			svgImage = SVGLoader.load(URL);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -51,23 +64,6 @@ public final class IconGenerator {
 		return svgImage;
 	}
 	
-	public static Node sqluckyLogoSVG(){
-//		SVGImage svgImage = null;
-		ImageView iv = null;
-		try {
-//			String val = IconGenerator.class.getResource("/s.svg").toExternalForm();
-			URL URL = IconGenerator.class.getResource("/s.svg");
-//			File svgFile = new File("D:\\myGit\\Learning_Notes\\图标\\s.svg");
-			SVGImage  svgImage = SVGLoader.load(URL);
-			svgImage.scaleTo(16); 
-			Image img = svgImage.toImage();
-		     iv = new ImageView(img);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return iv;
-	}
 	
 	public static SVGPath gitHubSvg() {
 		SVGPath githubIcon = new SVGPath();

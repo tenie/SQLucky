@@ -346,7 +346,9 @@ public class MenuBarContainer {
 		});
 
 		MenuItem checkForUpdates = new MenuItem(StrUtils.MenuItemNameFormat("Check For Updates"));
-		checkForUpdates.setGraphic(IconGenerator.svgImageDefActive("zero-app-pai"));
+//		checkForUpdates.setGraphic(IconGenerator.svgImageDefActive("zero-app-pai"));
+		var svg = IconGenerator.sqluckyLogoSVG();
+		checkForUpdates.setGraphic(svg);
 		checkForUpdates.setOnAction(value -> {
 			
 			CheckUpdateWindow.show("");
