@@ -69,7 +69,7 @@ public class ConfigVal {
 
 	// 图标
 //	public static String appIcon = "/image/SQL6.png";
-	public static String appIcon = "/image/ss.png";
+	public static String appIcon = "/image/logo32.png";
 
 	public static String THEME = CommonConst.THEME_DARK ;
 	public static int FONT_SIZE = -1;
