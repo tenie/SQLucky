@@ -3,6 +3,7 @@ package net.tenie.plugin.mysqlConnector.impl;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -491,8 +492,42 @@ public class ExportSqlMySqlImp implements ExportDBObjects {
 
 	@Override
 	public List<TableIndexPo> tableIndex(Connection conn, String schema, String tableName) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT DISTINCT * \n"
+				+ "FROM INFORMATION_SCHEMA.STATISTICS \n"
+				+ "WHERE TABLE_SCHEMA = '" + schema + "' and TABLE_NAME = '" + tableName + "'";
+
+		ResultSet rs = null;
+		Statement sm = null;
+		List<TableIndexPo> ls = new ArrayList<>();
+
+		try {
+			sm = conn.createStatement();
+			rs = sm.executeQuery(sql);
+
+			while (rs.next()) {
+				TableIndexPo po = new TableIndexPo();
+//			private String indname; // INDNAME 索引名称
+//			private String tabname;  // TABNAME 表名
+//			private String indschema; // INDSCHEMA 索引schema
+//			private String colnames; // COLNAMES 索引的列
+				po.setIndname(rs.getString("INDEX_NAME"));
+				po.setTabname(rs.getString("TABLE_NAME"));
+				po.setIndschema(rs.getString("INDEX_SCHEMA"));
+				po.setColnames(rs.getString("COLUMN_NAME"));
+				ls.add(po);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return ls; 
 	}
 
 

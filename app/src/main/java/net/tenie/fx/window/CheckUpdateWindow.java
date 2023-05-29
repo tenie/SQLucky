@@ -245,8 +245,8 @@ public class CheckUpdateWindow {
 			String showMsg = msg;
 			Platform.runLater(()->{
 				title.setText(showMsg); 
-				Node svg = IconGenerator.svgImageDefActive("ionic-ios-medical", 30 );
-//				var svg = IconGenerator.sqluckyLogoSVG();
+//				Node svg = IconGenerator.svgImageDefActive("ionic-ios-medical", 30 );
+				var svg = IconGenerator.sqluckyLogoSVG();
 				title.setGraphic(svg); 
 			});
 			
