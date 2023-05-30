@@ -668,7 +668,7 @@ public class TransferDataController implements Initializable {
 		}else if(type.equals(TRIGGER)) {
 			drop =  export.exportDropTrigger(schename, objName);
 		}else if(type.equals(INDEX)) {
-			drop =  export.exportDropIndex(schename, objName);
+			drop =  export.exportDropIndex(schename, objName, null);
 		}else if(type.equals(SEQUENCE)) {
 			drop =  export.exportDropSequence(schename, objName);
 		}

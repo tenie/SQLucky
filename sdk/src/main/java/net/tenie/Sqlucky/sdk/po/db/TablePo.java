@@ -122,21 +122,25 @@ public class TablePo {
 	}
 
 	private MyCellOperateButton dropIndexBtn() {
-		Button btn = new Button("Drop"); 
-		btn.getStyleClass().add("myAlertBtn");
+//		Button btn = new Button("Drop"); 
+		String btnName = "Drop";
+//		btn.getStyleClass().add("myAlertBtn");
 		Consumer<ResultSetRowPo> btnCaller = v -> {
-			String schName = v.getValueByFieldName("INDEX SCHEMA"); 
-			String idxName = v.getValueByFieldName("INDEX NAME"); 
+			String schName = v.getValueByFieldName("INDEX SCHEMA").trim(); 
+			String idxName = v.getValueByFieldName("INDEX NAME").trim(); 
+			String tableName = v.getValueByFieldName("TABLE NAME").trim(); 
 			
 			if(StrUtils.isNotNullOrEmpty(idxName)) {
 				if(this.sqluckyConnector != null) {
 //					String schema = sqluckyConnector.getDefaultSchema();
-					String ddl = this.sqluckyConnector.getExportDDL().exportDropIndex(schName, idxName);
+					String ddl = this.sqluckyConnector.getExportDDL().exportDropIndex(schName, idxName, tableName);
 					
 					boolean tf = MyAlert.myCodeAreaConfirmation("Dorp Index ?  ", ddl);
+					
 					if(tf) {
 						try {
 							DBTools.execDDL(sqluckyConnector.getConn(), ddl);
+							v.getResultSet().getDatas().remove(v);
 						} catch (SQLException e) { 
 							e.printStackTrace();
 							MyAlert.errorAlert(e.getMessage());
@@ -147,15 +151,16 @@ public class TablePo {
 			}
 			
 		}; 
-		MyCellOperateButton drop = new MyCellOperateButton(btn, btnCaller);
+		MyCellOperateButton drop = new MyCellOperateButton(btnName, btnCaller);
 		return drop;
 	}
 	private MyCellOperateButton showIndexBtn() {
-		Button btn = new Button("Show DDL");
-		btn.getStyleClass().add("myAlertBtn");
+//		Button btn = new Button("Show DDL");
+		String btnName = "Show DDL";
+//		btn.getStyleClass().add("myAlertBtn");
 		Consumer<ResultSetRowPo> btnCaller = v -> {
-			String schName = v.getValueByFieldName("INDEX SCHEMA"); 
-			String idxName = v.getValueByFieldName("INDEX NAME"); 
+			String schName = v.getValueByFieldName("INDEX SCHEMA").trim(); 
+			String idxName = v.getValueByFieldName("INDEX NAME").trim(); 
 
 			if (StrUtils.isNotNullOrEmpty(idxName)) {
 				if (this.sqluckyConnector != null) {
@@ -172,7 +177,7 @@ public class TablePo {
 
 		};
 
-		MyCellOperateButton export = new MyCellOperateButton(btn, btnCaller);
+		MyCellOperateButton export = new MyCellOperateButton(btnName, btnCaller);
 
 		return export;
 	}
@@ -180,12 +185,12 @@ public class TablePo {
 	
 	
 	private MyCellOperateButton dropFKBtn() {
-		Button btn = new Button("Drop"); 
-		btn.getStyleClass().add("myAlertBtn");
-		
+//		Button btn = new Button("Drop"); 
+//		btn.getStyleClass().add("myAlertBtn");
+		String btnName = "Drop";
 		Consumer<ResultSetRowPo> btnCaller = v -> {
-			String fkName = v.getValueByFieldName("FOREIGN KEY NAME"); 
-			String tableName = v.getValueByFieldName("TABLE NAME"); 
+			String fkName = v.getValueByFieldName("FOREIGN KEY NAME").trim(); 
+			String tableName = v.getValueByFieldName("TABLE NAME").trim(); 
 			
 			if(StrUtils.isNotNullOrEmpty(fkName)) {
 				if(this.sqluckyConnector != null) {
@@ -196,6 +201,7 @@ public class TablePo {
 					if(tf) {
 						try {
 							DBTools.execDDL(sqluckyConnector.getConn(), ddl);
+							v.getResultSet().getDatas().remove(v);
 						} catch (SQLException e) { 
 							e.printStackTrace();
 							MyAlert.errorAlert(e.getMessage());
@@ -207,17 +213,18 @@ public class TablePo {
 			
 		}; 
 		
-		MyCellOperateButton drop = new MyCellOperateButton(btn, btnCaller);
+		MyCellOperateButton drop = new MyCellOperateButton(btnName, btnCaller);
 		return drop;
 	}
 	
 	
 	private MyCellOperateButton ShowFKBtn() {
-		Button btn = new Button("Show DDL");
-		btn.getStyleClass().add("myAlertBtn");
+//		Button btn = new Button("Show DDL");
+//		btn.getStyleClass().add("myAlertBtn");
+		String btnName = "Show DDL";
 		Consumer<ResultSetRowPo> btnCaller = v -> {
-			String fkName = v.getValueByFieldName("FOREIGN KEY NAME");
-			String tableName = v.getValueByFieldName("TABLE NAME");
+			String fkName = v.getValueByFieldName("FOREIGN KEY NAME").trim(); 
+			String tableName = v.getValueByFieldName("TABLE NAME").trim(); 
 
 			if (StrUtils.isNotNullOrEmpty(fkName)) {
 				if (this.sqluckyConnector != null) {
@@ -234,7 +241,7 @@ public class TablePo {
 
 		};
 
-		MyCellOperateButton export = new MyCellOperateButton(btn, btnCaller);
+		MyCellOperateButton export = new MyCellOperateButton(btnName, btnCaller);
 
 		return export;
 	}

@@ -1,7 +1,12 @@
 package net.tenie.fx.component.InfoTree;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.jfoenix.controls.JFXButton;
 
+import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -15,8 +20,9 @@ import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.window.ConnectionEditor;
 
 public class DBinfoTreeButtonFactory {
-		
+		 
 		public static VBox createTreeViewbtn( TreeView<TreeNodePo> treeView) {
+			List<Node> btns = new ArrayList<>();
 		    VBox optionVbox = new VBox();
 			
 			// 查询过滤
@@ -30,7 +36,7 @@ public class DBinfoTreeButtonFactory {
 			addConnbtn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 			addConnbtn.setOnMouseClicked(CommonEventHandler.addConnEvent());
 			addConnbtn.setTooltip(MyTooltipTool.instance("Add new DB Connection"));
-
+			btns.add(addConnbtn);
 			// open连接
 			JFXButton openConn = new JFXButton();
 			openConn.setGraphic(IconGenerator.svgImageDefActive("link"));
@@ -39,6 +45,7 @@ public class DBinfoTreeButtonFactory {
 			});
 			openConn.setTooltip(MyTooltipTool.instance("Open DB Connection"));
 
+			btns.add(openConn);
 			// 断开连接
 			JFXButton closeConn = new JFXButton();
 			closeConn.setGraphic(IconGenerator.svgImageDefActive("unlink"));
@@ -46,12 +53,14 @@ public class DBinfoTreeButtonFactory {
 				ConnectionEditor.closeDbConn();
 			});
 			closeConn.setTooltip(MyTooltipTool.instance("Close DB Connection"));
-
+			btns.add(closeConn);
+			
 			JFXButton closeALlConn = new JFXButton();
 			closeALlConn.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 			closeALlConn.setOnMouseClicked(CommonEventHandler.closeAllConnEvent());
 			closeALlConn.setTooltip(MyTooltipTool.instance("Close All DB Connection"));
-
+			btns.add(closeALlConn);
+			
 			JFXButton editConn = new JFXButton();
 			editConn.setGraphic(IconGenerator.svgImageDefActive("edit"));
 			editConn.setOnMouseClicked(e->{
@@ -59,12 +68,14 @@ public class DBinfoTreeButtonFactory {
 				
 			});
 			editConn.setTooltip(MyTooltipTool.instance("Edit DB Connection"));
-
+			btns.add(editConn);
+			
+			
 			// 查找
 			JFXButton queryTab = new JFXButton();
 			queryTab.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
-			queryTab.setOnMouseClicked(e->{
-				CommonAction.dbInfoTreeQuery(optionVbox, filter);
+			queryTab.setOnMouseClicked(e->{ 
+				CommonAction.dbInfoTreeQuery(optionVbox, filter, btns);
 			});
 //			queryTab.setTooltip(MyTooltipTool.instance("Find Table  (F4)"));
 			
@@ -77,6 +88,7 @@ public class DBinfoTreeButtonFactory {
 			shrink.setOnMouseClicked(e -> {
 				CommonAction.shrinkTreeView();
 			});
+			btns.add(shrink);
 //			shrink.setTooltip(MyTooltipTool.instance("Shrink Tree"));
 			
 			
@@ -85,7 +97,7 @@ public class DBinfoTreeButtonFactory {
 			deleteConn.setGraphic(IconGenerator.svgImageDefActive("trash"));
 			deleteConn.setOnMouseClicked(CommonEventHandler.deleteConnEvent());
 			deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
-
+			btns.add(deleteConn);
 			
 			// 脚本
 //			JFXButton script = new JFXButton();
