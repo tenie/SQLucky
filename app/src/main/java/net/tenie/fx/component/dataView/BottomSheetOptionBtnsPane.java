@@ -4,10 +4,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-
-import org.controlsfx.control.tableview2.FilteredTableView;
 
 import com.jfoenix.controls.JFXButton;
 
@@ -25,7 +22,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
@@ -50,7 +46,6 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RunSQLHelper;
@@ -503,7 +498,13 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			selectBtn.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
 			selectBtn.setTooltip(MyTooltipTool.instance("Run SQL: SELECT * FROM " + name));
 			selectBtn.setOnAction(e->{
-				RunSQLHelper.runSelectSqlLockTabPane(sqluckyConn, "SELECT * FROM " + table.getTableSchema()+"."+name);
+				String sqlstr =  "";
+				if( StrUtils.isNotNullOrEmpty(table.getTableSchema())) {
+					sqlstr =  "SELECT * FROM " + table.getTableSchema()+"."+name;
+				}else {
+					sqlstr =  "SELECT * FROM " +name;
+				}
+				RunSQLHelper.runSelectSqlLockTabPane(sqluckyConn, sqlstr);
 				
 			});
 			
