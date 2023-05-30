@@ -65,7 +65,6 @@ public class ExportSqlMySqlImp implements ExportDBObjects {
 					v.setDdl(ddl);
 				});
 			}
-//			allViewObjs = vals;
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -304,8 +303,8 @@ public class ExportSqlMySqlImp implements ExportDBObjects {
 	}
 
 	@Override
-	public String exportDropIndex(String schema, String name) {
-		String sql = "DROP INDEX " + schema + "." + name.trim();
+	public String exportDropIndex(String schema, String name, String tableName) {
+		String sql = "DROP INDEX " + name.trim() + " on " + schema + "." + tableName;
 		return sql;
 	}
 
@@ -492,9 +491,10 @@ public class ExportSqlMySqlImp implements ExportDBObjects {
 
 	@Override
 	public List<TableIndexPo> tableIndex(Connection conn, String schema, String tableName) {
-		String sql = "SELECT DISTINCT * \n"
+		String sql = "SELECT DISTINCT INDEX_NAME, TABLE_NAME, INDEX_SCHEMA, GROUP_CONCAT(COLUMN_NAME)  as COLUMN_NAME \n"
 				+ "FROM INFORMATION_SCHEMA.STATISTICS \n"
-				+ "WHERE TABLE_SCHEMA = '" + schema + "' and TABLE_NAME = '" + tableName + "'";
+				+ "WHERE  any_value(NON_UNIQUE )= 1  and TABLE_SCHEMA = '" + schema + "' and TABLE_NAME = '" + tableName + "' \n"
+			    + "GROUP BY TABLE_NAME, INDEX_NAME  , INDEX_SCHEMA";
 
 		ResultSet rs = null;
 		Statement sm = null;

@@ -29,6 +29,7 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -867,11 +868,17 @@ public class CommonUtility {
 	
 	
 	// 左侧添加隐藏操作按钮/查询框
-	public static void leftHideOrShowSecondOptionBox(Pane container, Node box) {
+	public static void leftHideOrShowSecondOptionBox(Pane container, Node box , List<Node>  btnList) {
 		if (container.getChildren().contains(box)) {
 			container.getChildren().remove(box);
+			for(var btn : btnList) {
+				btn.setDisable(false);
+			}
 		} else {
 			container.getChildren().add(1, box);
+			for(var btn : btnList) {
+				btn.setDisable(true);
+			}
 		}
 		
 	}
@@ -880,11 +887,13 @@ public class CommonUtility {
 		public static void leftHideOrShowSecondOptionBox(Pane container, Node box, TextField txt ) {
 			if (container.getChildren().contains(box)) {
 				container.getChildren().remove(box);
+				
 			} else {
 				container.getChildren().add(1, box);
 				if(txt != null ) {
 					txt.requestFocus();
 				}
+				
 			}
 			
 		}

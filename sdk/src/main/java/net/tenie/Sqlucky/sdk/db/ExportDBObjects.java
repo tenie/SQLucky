@@ -73,7 +73,7 @@ public interface ExportDBObjects {
 
 	String exportDropProcedure(String schema, String name);
 
-	String exportDropIndex(String schema, String name);
+	String exportDropIndex(String schema, String indexName, String tableName);
 
 	String exportDropSequence(String schema, String name);
 

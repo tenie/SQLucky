@@ -22,16 +22,16 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
  */
 public class MyTableCellButton {
 	private List<MyCellOperateButton>  btns;
-	HBox btnBox = new HBox(); 
+//	HBox btnBox = new HBox(); 
 	public MyTableCellButton(List<MyCellOperateButton> btnvals) {
 		this.btns = btnvals;
-		if(btns != null ) {
-			for(var ob : btns) {
-				Button btn = ob.getBtn();
-				btnBox.getChildren().add(btn);
-				HBox.setMargin(btn, new Insets(0, 3, 0, 0));
-			}
-		}
+//		if(btns != null ) {
+//			for(var ob : btns) {
+//				Button btn = ob.getBtn();
+//				btnBox.getChildren().add(btn);
+//				HBox.setMargin(btn, new Insets(0, 3, 0, 0));
+//			}
+//		}
 		
 	}
 
@@ -49,9 +49,14 @@ public class MyTableCellButton {
 									setGraphic(null);
 									setText(null);
 								} else { 
-									if(btns != null ) {
+									HBox btnBox = new HBox(); 
+									if(btns != null ) { 
 										for(MyCellOperateButton ob : btns) {
-											var btn = ob.getBtn();
+											var btnName = ob.getButtonName();
+											Button btn = new Button(btnName);
+											btn.getStyleClass().add("myAlertBtn");
+//											btn.setText(btnName); 
+											btnBox.getChildren().add(btn);
 											btn.setOnAction(event -> {
 												ResultSetRowPo rowpo = getTableView().getItems().get(getIndex());
 												ob.getBtnCaller().accept(rowpo);

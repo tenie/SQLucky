@@ -367,7 +367,7 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	}
 
 	@Override
-	public String exportDropIndex(String schema, String name) {
+	public String exportDropIndex(String schema, String name, String tableName) {
 		String sql = "DROP INDEX " + schema + "." + name.trim();
 		return sql;
 	}

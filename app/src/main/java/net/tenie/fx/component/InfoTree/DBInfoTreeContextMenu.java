@@ -21,6 +21,7 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Po.TreeNodePo;
@@ -46,6 +47,7 @@ public class DBInfoTreeContextMenu {
 
     private MenuItem refresh;
     private MenuItem  selectMenu;
+    private MenuItem  copyNameMenu;
     
     private TreeItemType nodeType;
 
@@ -116,12 +118,17 @@ public class DBInfoTreeContextMenu {
         selectMenu.setGraphic(IconGenerator.svgImageDefActive("search"));
         selectMenu.setDisable(true);
         
+
+        copyNameMenu = new MenuItem("Copy Name");
+        copyNameMenu.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
+//        copyNameMenu.setDisable(true);
+        
         
        
         
         contextMenu.getItems().addAll(
                 link, unlink, Edit, Add, delete, new SeparatorMenuItem(), refresh, new SeparatorMenuItem(),
-                tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu);
+                tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu, copyNameMenu);
         
       
         // 菜单显示调用回调函数
@@ -168,6 +175,14 @@ public class DBInfoTreeContextMenu {
     	} 
        	selectMenu.setDisable(tf);
     }
+    
+    // 设置复制节点名称
+    public void copuNodeName(String nodeName) {
+    	copyNameMenu.setOnAction(e->{
+    		CommonUtility.setClipboardVal(nodeName);
+    	});
+    }
+    
 
     public void setRefreshDisable(boolean tf) {
         refresh.setDisable(tf);
@@ -266,7 +281,6 @@ public class DBInfoTreeContextMenu {
 
 
     public void setRefreshAction(TreeItem<TreeNodePo> newValue) {
-
         refresh.setOnAction(e -> {
             DBinfoTree.DBinfoTreeView.getSelectionModel().select(newValue);
             ConnectionEditor.closeDbConn();
