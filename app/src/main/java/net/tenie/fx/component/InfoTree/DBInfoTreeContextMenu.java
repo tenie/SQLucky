@@ -1,15 +1,12 @@
 package net.tenie.fx.component.InfoTree;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
@@ -22,6 +19,7 @@ import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Po.TreeNodePo;
@@ -216,7 +214,13 @@ public class DBInfoTreeContextMenu {
     	var tbpo = treeNPO.getTable();
     	String tablename = tbpo.getTableName();
     	String tabSchema = tbpo.getTableSchema();
-        String str = "SELECT * FROM "+ tabSchema +"." + tablename;
+    	String sql = "";
+    	if(StrUtils.isNotNullOrEmpty(tabSchema)) {
+    		sql = "SELECT * FROM "+ tabSchema +"." + tablename;
+    	}else {
+    		sql = "SELECT * FROM " + tablename;
+    	}
+        String str = sql;
     	selectMenu.setText(str);
         selectMenu.setOnAction(e -> { 
         	RunSQLHelper.runSQL(sqluckyConn,  str,   false);
