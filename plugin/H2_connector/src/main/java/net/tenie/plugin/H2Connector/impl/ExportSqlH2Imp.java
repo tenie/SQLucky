@@ -222,37 +222,43 @@ public class ExportSqlH2Imp implements ExportDBObjects {
 
 	@Override
 	public String exportCreateView(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportView(conn, schema, obj);
+//		String ddl = fdbtool.exportView(conn, schema, obj);
+		String ddl = "";
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateFunction(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportFunction(conn,  schema, obj);
+//		String ddl = fdbtool.exportFunction(conn,  schema, obj);
+		String ddl = ""; 
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateProcedure(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportProcedure(conn,  schema, obj);
+//		String ddl = fdbtool.exportProcedure(conn,  schema, obj);
+		String ddl = "";
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateIndex(Connection conn, String schema, String obj) { 
-		String ddl = fdbtool.exportIndex(conn,  schema, obj); 
+//		String ddl = fdbtool.exportIndex(conn,  schema, obj); 
+		String ddl = "";
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateSequence(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportSeq(conn, schema,  obj);
+//		String ddl = fdbtool.exportSeq(conn, schema,  obj);
+		String ddl = "";
 		return ddl;
 	}
 
 	@Override
 	public String exportCreateTrigger(Connection conn, String schema, String obj) { 
-		String ddl = fdbtool.exportTrigger(conn,  schema, obj);
+//		String ddl = fdbtool.exportTrigger(conn,  schema, obj);
+		String ddl = "";
 		return ddl;
 	}
 
@@ -264,7 +270,8 @@ public class ExportSqlH2Imp implements ExportDBObjects {
 
 	@Override
 	public String exportCreateForeignKey(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportForeignKey(conn,  schema, obj);
+//		String ddl = fdbtool.exportForeignKey(conn,  schema, obj);
+		String ddl = "";
 		return ddl;
 	}
 
