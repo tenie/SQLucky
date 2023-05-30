@@ -3,6 +3,7 @@ package net.tenie.fx.Action;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
@@ -884,11 +885,11 @@ public class CommonAction {
 
 
 	// 数据库表名的查询输入框
-	public static void dbInfoTreeQuery(Pane container, Node filter) {
+	public static void dbInfoTreeQuery(Pane container, Node filter, List<Node>  btnList) {
 		
 //		var container = ComponentGetter.leftNodeContainer;
 
-		CommonUtility.leftHideOrShowSecondOptionBox(container, filter);
+		CommonUtility.leftHideOrShowSecondOptionBox(container, filter, btnList);
 //		//显示或隐藏 filter
 ////		var filter = AppWindowComponentGetter.dbInfoTreeFilter;
 //		if (container.getChildren().contains(filter)) {

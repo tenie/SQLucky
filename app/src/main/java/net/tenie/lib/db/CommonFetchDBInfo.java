@@ -188,7 +188,7 @@ public class CommonFetchDBInfo {
 
 	// 删索引
 	public String exportDropIndex(String schema, String name) {
-		String sql = exportDDL.exportDropIndex(schema, name);
+		String sql = exportDDL.exportDropIndex(schema, name, null);
 		return sql;
 	}
 

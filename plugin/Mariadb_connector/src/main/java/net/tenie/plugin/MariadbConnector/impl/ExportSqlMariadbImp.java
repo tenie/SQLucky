@@ -3,6 +3,7 @@ package net.tenie.plugin.MariadbConnector.impl;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,22 +40,6 @@ public class ExportSqlMariadbImp implements ExportDBObjects {
 	public List<TablePo> allTableObj(Connection conn, String schema) {
 		try {
 			List<TablePo> vals = Dbinfo.fetchAllTableName(conn, schema);
-//			if (vals != null && vals.size() > 0) {
-//				vals.stream().forEach(v -> {
-//					try {
-//						// 表对象字段赋值
-//						Dbinfo.fetchTableInfo(conn, v);
-//						// 表对象 主键赋值
-//						Dbinfo.fetchTablePrimaryKeys(conn, v);
-//						// 表对象ddl语句
-//						String ddl = fdb2.createTab(v);
-//						v.setDdl(ddl);
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//
-//				});
-//			}
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -152,28 +137,6 @@ public class ExportSqlMariadbImp implements ExportDBObjects {
 		}
 		return null;
 	}
-//
-//	@Override
-//	public List<String> allIndexName(Connection conn, String schema) {
-//		return fdb2.exportAllIndexs(conn, schema);
-//	}
-//
-//	@Override
-//	public List<String> allSequenceName(Connection conn, String schema) {
-//		return fdb2.exportAllSeqs(conn, schema);
-//	}
-//
-//	@Override
-//	public List<String> allForeignKeyName(Connection conn, String schema) {
-//		return fdb2.exportAllForeignKeys(conn, schema);
-//	}
-//
-//	@Override
-//	public List<String> allPrimaryKeyName(Connection conn, String schema) {
-//		// TODO 先不需要
-//		List<String> vals = new ArrayList<String>();
-//		return vals;
-//	}
 
 	// 表对象ddl语句
 	@Override
@@ -323,8 +286,8 @@ public class ExportSqlMariadbImp implements ExportDBObjects {
 	}
 
 	@Override
-	public String exportDropIndex(String schema, String name) {
-		String sql = "DROP INDEX " + schema + "." + name.trim();
+	public String exportDropIndex(String schema, String name, String tableName) {
+		String sql = "DROP INDEX " + name.trim() + " on " + schema + "." + tableName;
 		return sql;
 	}
 
@@ -511,8 +474,43 @@ public class ExportSqlMariadbImp implements ExportDBObjects {
 
 	@Override
 	public List<TableIndexPo> tableIndex(Connection conn, String schema, String tableName) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT DISTINCT INDEX_NAME, TABLE_NAME, INDEX_SCHEMA, GROUP_CONCAT(COLUMN_NAME)  as COLUMN_NAME \n"
+				+ "FROM INFORMATION_SCHEMA.STATISTICS \n"
+				+ "WHERE  any_value(NON_UNIQUE )= 1  and TABLE_SCHEMA = '" + schema + "' and TABLE_NAME = '" + tableName + "' \n"
+			    + "GROUP BY TABLE_NAME, INDEX_NAME  , INDEX_SCHEMA";
+
+		ResultSet rs = null;
+		Statement sm = null;
+		List<TableIndexPo> ls = new ArrayList<>();
+
+		try {
+			sm = conn.createStatement();
+			rs = sm.executeQuery(sql);
+
+			while (rs.next()) {
+				TableIndexPo po = new TableIndexPo();
+//			private String indname; // INDNAME 索引名称
+//			private String tabname;  // TABNAME 表名
+//			private String indschema; // INDSCHEMA 索引schema
+//			private String colnames; // COLNAMES 索引的列
+				po.setIndname(rs.getString("INDEX_NAME"));
+				po.setTabname(rs.getString("TABLE_NAME"));
+				po.setIndschema(rs.getString("INDEX_SCHEMA"));
+				po.setColnames(rs.getString("COLUMN_NAME"));
+				ls.add(po);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return ls; 
 	}
 
 

@@ -6,19 +6,23 @@ import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 
 public class MyCellOperateButton {
-	private Button btn;
+//	private Button btn;
+	private String buttonName;
 	private Consumer<ResultSetRowPo> btnCaller;
 	
-	public MyCellOperateButton(Button btn, Consumer<ResultSetRowPo> btnCaller) {
-		this.btn = btn;
+	public MyCellOperateButton(String buttonName, Consumer<ResultSetRowPo> btnCaller) {
+		this.buttonName = buttonName;
 		this.btnCaller = btnCaller;
 	}
-	public Button getBtn() {
-		return btn;
+	 
+	public String getButtonName() {
+		return buttonName;
 	}
-	public void setBtn(Button btn) {
-		this.btn = btn;
+
+	public void setButtonName(String buttonName) {
+		this.buttonName = buttonName;
 	}
+
 	public Consumer<ResultSetRowPo> getBtnCaller() {
 		return btnCaller;
 	}

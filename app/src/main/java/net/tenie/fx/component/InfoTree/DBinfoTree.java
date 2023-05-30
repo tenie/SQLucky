@@ -74,7 +74,8 @@ public class DBinfoTree {
 		
 		// 读取数据库数据
 		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
-		recoverNode(datas);// 恢复数据中保存的连接数据
+		// 恢复数据中保存的连接数据
+		recoverNode(datas);
 		// 展示连接
 		if (rootNode.getChildren().size() > 0)
 			DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
@@ -394,6 +395,11 @@ public class DBinfoTree {
 				// 如果是table 节点 启用add new column
 				TreeNodePo nd = newValue != null ? newValue.getValue() : null;
 				if(newValue == null ||  DBinfoTreeView == null) return;
+				
+				//复制节点名称
+				var nodeName = newValue.getValue().getName();
+				menu.copuNodeName(nodeName);
+				
 				// 获取链接的TreeItem
 				if(Objects.equals(newValue,  DBinfoTreeView.getRoot())) { // root
 					menu.setConnectDisable(true);

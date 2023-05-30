@@ -323,7 +323,7 @@ public class ExportSqlH2Imp implements ExportDBObjects {
 	}
 
 	@Override
-	public String exportDropIndex(String schema, String name) {
+	public String exportDropIndex(String schema, String name, String tableName) {
 		String sql = "DROP INDEX "  + name.trim();
 		return sql;
 	}
