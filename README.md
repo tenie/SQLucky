@@ -1,5 +1,5 @@
 
-#  ![image](https://github.com/tenie/SQLucky/blob/0a5b2709f6a65774458ccee2aa4d81d8b7006a84/app/src/main/resources/icon/24.png) SQLucky
+# <img src="https://github.com/tenie/SQLucky/blob/0a5b2709f6a65774458ccee2aa4d81d8b7006a84/app/src/main/resources/icon/24.png" >   SQLucky
 
 > 数据库可视化操作工具, 多平台支持, 以插件形式支持各种数据库.
 为平替同类付费软件而生.
@@ -39,5 +39,5 @@
 ---
 This project is supported by:
 
-![image](https://github.com/tenie/SQLucky/blob/5af1c1e2b48fb012ff4f14508be0089ddefb65cc/app/src/main/resources/icon/jetbrains.svg)
+<img src="https://github.com/tenie/SQLucky/blob/5af1c1e2b48fb012ff4f14508be0089ddefb65cc/app/src/main/resources/icon/jetbrains.svg"> 
 
