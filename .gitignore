@@ -18,3 +18,4 @@ dependency-reduced-pom.xml
 *_hd.mp4
 *.eml
 */SQLucky-Plugin/
+*.log
