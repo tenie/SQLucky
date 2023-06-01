@@ -41,5 +41,5 @@
 ---
 This project is supported by:
 
-<img src="https://github.com/tenie/SQLucky/blob/5af1c1e2b48fb012ff4f14508be0089ddefb65cc/app/src/main/resources/icon/jetbrains.svg"> 
+[<img src="https://github.com/tenie/SQLucky/blob/5af1c1e2b48fb012ff4f14508be0089ddefb65cc/app/src/main/resources/icon/jetbrains.svg">](https://www.jetbrains.com/)
 
