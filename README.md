@@ -16,13 +16,13 @@
    
 ---
 
-> 依赖:
+> 开发依赖:
 
     Java 20 
     maven  latest
     git    latest
     
-> 快速启动:
+> 源码快速启动:
    
      
     $ git clone git@github.com:tenie/SQLucky.git
