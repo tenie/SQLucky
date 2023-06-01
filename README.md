@@ -7,7 +7,15 @@
 ---
 
 > 下载:
-   [链接](https://github.com/tenie/SQLucky/releases/)
+   
+-    [Releases 页面下载](https://github.com/tenie/SQLucky/releases/)
+   
+-    [mac amd64](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/SQLucky-Mac-x64.dmg)
+   
+-    [ubuntu amd64](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/sqlucky-ubuntu-x64.deb)
+   
+-    [Windows amd64](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/SQLucky-windows-x64.zip)
+   
 ---
 
 > 依赖:
