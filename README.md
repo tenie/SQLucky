@@ -37,6 +37,9 @@
 ## 界面截图 ## 
 <img src="https://github.com/tenie/SQLucky/blob/main/demo.png" width="800px"> 
 
+---
+
+> [wiki 页面](https://github.com/tenie/SQLucky/wiki)
 
 ---
 This project is supported by:
