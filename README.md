@@ -9,12 +9,10 @@
 > 下载:
    
 -    [Releases 页面下载](https://github.com/tenie/SQLucky/releases/)
-   
--    [mac amd64](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/SQLucky-Mac-x64.dmg)
-   
--    [ubuntu amd64](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/sqlucky-ubuntu-x64.deb)
-   
--    [Windows amd64](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/SQLucky-windows-x64.zip)
+-    [Mac amd64 (dmg安装包)](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/SQLucky-Mac-x64.dmg)
+-    [Ubuntu amd64 (deb安装包)](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/sqlucky-ubuntu-x64.deb)
+-    [Windows amd64 (msi安装包)](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/SQLucky-windows-x64.msi)
+-    [Windows amd64 (zip压缩包)](https://github.com/tenie/SQLucky/releases/download/3.0.0-Beta/SQLucky-windows-x64.zip)
    
 ---
 
