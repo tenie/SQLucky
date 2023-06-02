@@ -46,14 +46,13 @@ public class DataTransferWindow {
 	}
 	
 	// 根据给定的fxml 创建 模态框
-	public void showFxml(    String fxml) {
+	public void showFxml(String fxml) {
 
 		try {
 		    stage = new Stage();
 		    ComponentGetter.dataTransferStage = stage;
 			stage.initModality(Modality.APPLICATION_MODAL);
-//			stage.initOwner(stg);
-			stage.setTitle("Top Stage With Modality");
+			stage.setTitle("");
 
 			URL url = getClass().getResource(fxml);
 			Parent root = FXMLLoader.load(url);
