@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
@@ -33,23 +34,6 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	public List<TablePo> allTableObj(Connection conn, String schema) {
 		try {
 			List<TablePo> vals = Dbinfo.fetchAllTableName(conn, schema);
-			
-//			if (vals != null && vals.size() > 0) {
-//				vals.stream().forEach(v -> {
-//					try {
-//						// 表对象字段赋值
-////						Dbinfo.fetchTableInfo(conn, v);
-//						// 表对象 主键赋值
-////						Dbinfo.fetchTablePrimaryKeys(conn, v);
-//						// 表对象ddl语句
-////						String ddl = fdb2.createTab(v);
-////						v.setDdl(ddl);
-//					} catch (Exception e) {
-//						e.printStackTrace();
-//					}
-//
-//				});
-//			}
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,13 +49,6 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		try {
 			// 获取视图名称
 			List<TablePo> vals = Dbinfo.fetchAllViewName(conn, schema);
-//			if (vals != null && vals.size() > 0) {
-//				vals.stream().forEach(v -> {
-//					// 视图ddl
-//					String ddl = exportCreateView(conn, schema, v.getTableName());
-//					v.setDdl(ddl);
-//				});
-//			}
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -88,13 +65,6 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		try {
 			// 函数名称
 			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllFunctions(conn, schema);
-//			if (vals != null && vals.size() > 0) {
-//				vals.forEach(v -> {
-//					String ddl = exportCreateFunction(conn, schema, v.getName());
-//					v.setDdl(ddl);
-//				});
-//			}
-
 			return vals;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -110,12 +80,6 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		try {
 			// 名称
 			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllProcedures(conn, schema);
-//			if (vals != null && vals.size() > 0) {
-//				vals.forEach(v -> {
-//					String ddl = exportCreateProcedure(conn, schema, v.getName());
-//					v.setDdl(ddl);
-//				});
-//			}
 
 			return vals;
 		} catch (Exception e) {
@@ -141,12 +105,6 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 			 }
 			
 //			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
-//			if (vals != null && vals.size() > 0) {
-//				vals.forEach(v -> {
-//					String ddl = exportCreateTrigger(conn, schema, v.getName());
-//					v.setDdl(ddl);
-//				});
-//			}
 
 			return vals;
 		} catch (Exception e) {
@@ -185,7 +143,6 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	public List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema) {
 		try {
 			// 名称
-//			fdb2.getSeq(conn, schema)
 			List<String> names =fdb2.getSeq(conn, schema);
 			List<FuncProcTriggerPo> vals = new ArrayList<>();
 			for(String name : names ) {
@@ -202,6 +159,7 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		return null;
 	}
 	
+	// 目前没有
 	@Override
 	public List<FuncProcTriggerPo> allPrimaryKeyObj(Connection conn, String schema) {
 		String sql = "select * from syscat.references where TYPE  ='P' and OWNER = '"+schema+"' ";
@@ -209,35 +167,13 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	}
 
 
-
+	// 目前没有
 	@Override
 	public List<FuncProcTriggerPo> allForeignKeyObj(Connection conn, String schema) {
 		String sql = "select * from syscat.references where TYPE  ='F' and OWNER = '"+schema+"' ";
 		return null;
 	}
 
-
-//	@Override
-//	public List<String> allIndexName(Connection conn, String schema) {
-//		return fdb2.getIndexs(conn, schema);
-//	}
-//
-//	@Override
-//	public List<String> allSequenceName(Connection conn, String schema) {
-//		return fdb2.exportAllSeqs(conn, schema);
-//	}
-//
-//	@Override
-//	public List<String> allForeignKeyName(Connection conn, String schema) {
-//		return fdb2.exportAllForeignKeys(conn, schema);
-//	}
-//
-//	@Override
-//	public List<String> allPrimaryKeyName(Connection conn, String schema) {
-//		// TODO 先不需要
-//		List<String> vals = new ArrayList<String>();
-//		return vals;
-//	}
 
 	// 表对象ddl语句
 	@Override
@@ -295,9 +231,10 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		return ddl;
 	}
 
+	// 目前没用
 	@Override
 	public String exportCreatePrimaryKey(Connection conn, String schema, String obj) {
-		// TODO 暂时不用
+		
 		return "";
 	}
 
@@ -329,16 +266,16 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		String sql = "ALTER TABLE "+schema+"."+tableName+"  ALTER  " + tmp +";";
 		return sql;
 	}
-
+	
+	// 目前没用
 	@Override
 	public String exportAlterTableAddPrimaryKey(Connection conn, String schema, String tableName, String key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
+	// 目前没用
 	@Override
 	public String exportAlterTableAddForeignKey(Connection conn, String schema, String tableName, String key) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -383,10 +320,9 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		String sql = "DROP TRIGGER " + schema + "." + name.trim();
 		return sql;
 	}
-
+	// 目前没用
 	@Override
 	public String exportDropPrimaryKey(String schema, String name) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -28,9 +28,9 @@ public interface ExportDBObjects {
 	// 所有序列
 	List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema); 
 
-	// 所有主键
+	//  目前没用， 所有主键
 	List<FuncProcTriggerPo> allPrimaryKeyObj(Connection conn, String schema); 
-	// 所有外键
+	//  目前没用， 所有外键
 	List<FuncProcTriggerPo> allForeignKeyObj(Connection conn, String schema); 
 	// 获取表的索引
 	List<TableIndexPo>  tableIndex(Connection conn, String schema, String tableName); 
@@ -51,6 +51,7 @@ public interface ExportDBObjects {
 
 	String exportCreateTrigger(Connection conn, String schema, String obj);
 
+	// 目前没用
 	String exportCreatePrimaryKey(Connection conn, String schema, String obj);
 
 	String exportCreateForeignKey(Connection conn, String schema, String obj);
@@ -60,9 +61,9 @@ public interface ExportDBObjects {
 	String exportAlterTableDropColumn(Connection conn, String schema, String tableName, String col);
 
 	String exportAlterTableModifyColumn(Connection conn, String schema, String tableName, String col);
-
+	// 目前没用
 	String exportAlterTableAddPrimaryKey(Connection conn, String schema, String tableName, String key);
-
+	// 目前没用
 	String exportAlterTableAddForeignKey(Connection conn, String schema, String tableName, String key);
 
 	String exportDropTable(String schema, String name);
@@ -78,10 +79,11 @@ public interface ExportDBObjects {
 	String exportDropSequence(String schema, String name);
 
 	String exportDropTrigger(String schema, String name);
-
+	
+	// 目前没用
 	String exportDropPrimaryKey(String schema, String name);
 
 	String exportDropForeignKey(String schema, String foreignKeyName, String tableName);
-	
+	// 单纯调用函数的方法
 	String exportCallFuncSql(String funcStr);
 }
