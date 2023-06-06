@@ -81,8 +81,6 @@ public class QueryBackupController implements Initializable {
 			queryHelper(queryText);
 		});
 		
-		// selectBtn
-//		selectBtn.setDisable(dataTable.getSelectionModel().isEmpty());
 		selectBtn.setOnAction(v->{
 			Consumer<String> consumer = s->{
 				File  bakFile = WorkDataBackupAction.downloadBackup(idVal.get(), nameVal.get());
@@ -95,7 +93,6 @@ public class QueryBackupController implements Initializable {
 			
 		});
 		
-//		dataTable.getSelectionModel().isEmpty()
 		// delete btn
 		delBtn.disableProperty().bind(selectBtn.disabledProperty());
 		delBtn.setOnAction(v->{

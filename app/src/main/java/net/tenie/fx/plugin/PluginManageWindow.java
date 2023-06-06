@@ -11,15 +11,16 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-
+/**
+ * 插件界面
+ * @author tenie
+ *
+ */
 public class PluginManageWindow {
 	private VBox pluginManageBox = new VBox();
 	private FlowPane SearchPane = new FlowPane();
@@ -122,10 +123,7 @@ public class PluginManageWindow {
 		disable.setDisable(true);
 		enable.setDisable(true);
 		download.setDisable(true);
-//		delete.disableProperty().bind(download.disableProperty().not());
-//		delete.visibleProperty().bind(ConfigVal.SQLUCKY_VIP);
 		delete.setVisible(false);
-		 
 	}
 	
    
@@ -140,11 +138,7 @@ public class PluginManageWindow {
 	
 	// 创建一个窗体
 	public static Stage CreateModalWindow(VBox vb) {
-//		Stage	stage = new Stage();
 		vb.getStyleClass().add("myPluginManager-vbox");
-
-//		Scene scene = new Scene(vb);
-		
 		vb.setPrefWidth(720);
 		vb.maxWidth(720);
 
@@ -162,11 +156,8 @@ public class PluginManageWindow {
 			stage.close();
 		});
 
-//		CommonUtility.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
-//		stage.setScene(scene);
 		
-//		stage.getIcons().add(ComponentGetter.LogoIcons);
 		stage.setMaximized(false);
 		stage.setResizable(false);
 		stage.setOnHidden(e->{

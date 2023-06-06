@@ -61,17 +61,6 @@ public class AppDao {
 //			"  PRIMARY KEY (`ID`,`CONN_NAME`)\n" + 
 			") ";
 
-//	public static  final String SQL_TEXT_SAVE = 
-//			"CREATE TABLE `SQL_TEXT_SAVE` (\n" +  
-//			"  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n" + 
-//			"  `SQL_TEXT` CLOB, \n" +
-//			"  `FILE_NAME` VARCHAR(1000) ,\n" + 
-//			"  `ENCODE` VARCHAR(100) ,\n" + 
-//			"  `PARAGRAPH` INT(11) DEFAULT '0',\n" + 
-//			"  `SCRIPT_ID` INT(11) NOT NULL ,\n" + 
-//			
-//			"  PRIMARY KEY (`TITLE_NAME`)\n" + 
-//			") ";
 	
 	public static final  String SCRIPT_ARCHIVE = 
 			"CREATE TABLE `SCRIPT_ARCHIVE` (\n" +
@@ -190,13 +179,25 @@ public class AppDao {
 			"  `CREATED_TIME` DATETIME ,\n" + 
 			"  `UPDATED_TIME` DATETIME "+ 
 			") ";
+	
+	
+	public static final  String KEYS_BINDING = 
+			"CREATE TABLE `KEYS_BINDING` (\n" +
+			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT, \n" + 
+			"  `ACTION_NAME`  VARCHAR(300)   ,   \n" +   
+			"  `BINDING` VARCHAR(300)    ,   \n" +  
+			"  `CODE` VARCHAR(300)  , \n" +
+			
+			"  `CREATED_TIME` DATETIME ,\n" + 
+			"  `UPDATED_TIME` DATETIME "+ 
+			") ";
+	
  
 	
 	// 建表 
 	public static void createTab(Connection conn) {
 		try {
 			DBTools.execDDLNoErr(conn, CONNECTION_INFO);
-//			DBTools.execDDLNoErr(conn, SQL_TEXT_SAVE);
 			DBTools.execDDLNoErr(conn, SCRIPT_ARCHIVE); 
 			DBTools.execDDLNoErr(conn, APP_CONFIG);
 			
@@ -205,6 +206,7 @@ public class AppDao {
 			DBTools.execDDLNoErr(conn, DATA_MODEL_TABLE_FIELDS);
 			DBTools.execDDLNoErr(conn, PLUGIN_INFO);
 			DBTools.execDDLNoErr(conn, SQLUCKY_USER);
+			DBTools.execDDLNoErr(conn, KEYS_BINDING);
 			
 			
 		} catch (Exception e) { 
@@ -393,7 +395,7 @@ public class AppDao {
 	
 	public static void testDbTableExists(Connection conn) {
 		// 第一次启动
-		if (!tabExist(conn, "SQLUCKY_USER")) {
+		if (!tabExist(conn, "KEYS_BINDING")) {
 			AppDao.createTab(conn);
 			// 数据库迁移
 			transferOldDbData(conn);
