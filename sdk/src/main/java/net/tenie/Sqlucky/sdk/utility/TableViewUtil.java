@@ -60,7 +60,23 @@ public class TableViewUtil {
 	 * @return
 	 */
 	public static SheetTableData sqlToSheet(String sql, Connection conn, String tableName,
-			Map<String, Double> fieldWidthMap) {
+			Map<String, Double> fieldWidthMap ) {
+
+		 return sqlToSheet(sql, conn, tableName, fieldWidthMap, null);
+	}
+	
+
+	/**
+	 * sql 查询结果生成表格
+	 * 
+	 * @param sql
+	 * @param conn
+	 * @param tableName
+	 * @param fieldWidthMap
+	 * @return
+	 */
+	public static SheetTableData sqlToSheet(String sql, Connection conn, String tableName,
+			Map<String, Double> fieldWidthMap ,  List<String> hiddenCol) {
 
 		try {
 			FilteredTableView<ResultSetRowPo> table = TableViewUtil.creatInfoTableView();
@@ -101,6 +117,17 @@ public class TableViewUtil {
 			// table 添加列和数据
 			// 表格添加列
 			var tableColumns = TableViewUtil.createTableColForInfo(colss);
+			
+			
+			// 设置隐藏列
+			if(hiddenCol != null && hiddenCol.size() >0) {
+				for(var column : tableColumns) {
+					String colName = column.getText();
+					if(hiddenCol.contains(colName)) {
+						column.setVisible(false);
+					}
+				}
+			}
 			// 设置 列的 右键菜单
 			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);
@@ -129,31 +156,6 @@ public class TableViewUtil {
 		table.setId(tableIdx);
 		table.getStyleClass().add("myTableTag");
 
-//		FilteredTableColumn<ResultSetRowPo, Number> tc = new FilteredTableColumn<>();
-
-		// 点击 行号, 显示一个 当前行的明细窗口
-//		tc.setCellFactory(col -> {
-//			TableCell<ResultSetRowPo, Number> cell = new TableCell<>() {
-//				@Override
-//				public void updateItem(Number item, boolean empty) {
-//					super.updateItem(item, empty);
-//					this.setText(null);
-//					this.setGraphic(null);
-//					if (!empty) {
-//						int rowIndex = this.getIndex();
-//						this.setText((rowIndex + 1) + "");
-//						this.setOnMouseClicked(e -> {
-//							if (e.getClickCount() == 2) {
-//								TableDataDetail.show();
-//							}
-//						});
-//					}
-//				}
-//			};
-//			return cell;
-//		});
-
-//		table.setRowHeader(tc);
 		// 启用 隐藏列的控制按钮
 		table.tableMenuButtonVisibleProperty().setValue(true);
 
