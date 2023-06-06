@@ -42,8 +42,10 @@ public final class SettingKeyCodeCombination {
 		
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
 		
-		KeyCombination cx = KeyCombination.keyCombination("shortcut+X");
+		KeyCombination cx = KeyCombination.keyCombination("alt+/");
 
+		KeyCombination tmpF11 = KeyCombination.keyCombination("F11");
+		
 		KeyCodeCombination ctrlEnter = new KeyCodeCombination(KeyCode.ENTER, KeyCodeCombination.SHORTCUT_DOWN);
 		KeyCodeCombination altR = new KeyCodeCombination(KeyCode.R, KeyCodeCombination.ALT_DOWN);
 		
@@ -90,7 +92,7 @@ public final class SettingKeyCodeCombination {
 
 		
 		
-		scene.getAccelerators().put(F11, () -> {
+		scene.getAccelerators().put(tmpF11, () -> {
 			
 			var stage = ComponentGetter.primaryStage;
 			if( stage.isMaximized()) {
@@ -101,26 +103,28 @@ public final class SettingKeyCodeCombination {
 			
 		});
 		
-		scene.getAccelerators().put(altSlash, () -> {
+//		scene.getAccelerators().put(altSlash, () -> {
+		scene.getAccelerators().put(cx, () -> {
 			var codeArea = SqluckyEditor.getCodeArea();
-			if ( CommonUtility.isMacOS() ) {
-				Platform.runLater(()->{
-					int ar = codeArea.getAnchor();
-					String str = codeArea.getText(ar -1 , ar);
-					if(str.equals("÷")) {
-						codeArea.deleteText(ar - 1, ar);
-					}
-				});  
-			}else if ( CommonUtility.isLinuxOS() ) {
-				Platform.runLater(()->{
-					int ar = codeArea.getAnchor();
-					String str = codeArea.getText(ar -1 , ar);
-					if(str.equals("/")) {
-						codeArea.deleteText(ar - 1, ar);
-					}
-				});  
-			}
 			if (codeArea.isFocused()) {
+				if ( CommonUtility.isMacOS() ) {
+					Platform.runLater(()->{
+						int ar = codeArea.getAnchor();
+						String str = codeArea.getText(ar -1 , ar);
+						if(str.equals("÷")) {
+							codeArea.deleteText(ar - 1, ar);
+						}
+					});  
+				}else if ( CommonUtility.isLinuxOS() ) {
+					Platform.runLater(()->{
+						int ar = codeArea.getAnchor();
+						String str = codeArea.getText(ar -1 , ar);
+						if(str.equals("/")) {
+							codeArea.deleteText(ar - 1, ar);
+						}
+					});  
+				}
+				
 				SqluckyEditor.currentMyTab().getSqlCodeArea().callPopup();
 			}
 			
