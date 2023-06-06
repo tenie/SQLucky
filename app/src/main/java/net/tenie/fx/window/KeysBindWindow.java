@@ -1,15 +1,20 @@
 package net.tenie.fx.window;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.tableview2.FilteredTableView;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXTextField;
 
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -19,20 +24,31 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
+import net.tenie.fx.plugin.PluginManageAction;
+import net.tenie.fx.plugin.PluginManageWindow;
 
 /**
  * 快捷键绑定
@@ -40,111 +56,148 @@ import net.tenie.fx.component.UserAccount.UserAccountAction;
  *
  */
 public class KeysBindWindow {
+	private VBox keysManageBox = new VBox();
+	private FlowPane SearchPane = new FlowPane();
+	private JFXButton searchBtn = new JFXButton("Search");
+	private JFXTextField searchText = new JFXTextField();
 
-	// 编辑连接时记录连接状态
-	private static Logger logger = LogManager.getLogger(KeysBindWindow.class);
-	
-	private Stage stageWindow = null ;
-	public static void show(String title) {
-		KeysBindWindow window = new KeysBindWindow();
-		window.initWindow(title); 
-	}
-	// 创建窗口
-	public Stage CreateModalWindow(VBox vb,  String title) {
-		SqluckyStage sqlStage = new SqluckyStage(vb);
-		stageWindow = sqlStage.getStage();
-		Scene scene = sqlStage.getScene();
-		vb.getStyleClass().add("connectionEditor");
+	private VBox  keysBox = new VBox();
+ 
+	// 设置按钮
+	JFXButton bindingBtn = new JFXButton("Binding");
+	SheetTableData sheetDaV = null;
+	FilteredTableView<ResultSetRowPo> allkeysTable = null;
+
+
+
+	public KeysBindWindow() {
+		searchBtn.setGraphic(IconGenerator.svgImageDefActive("search"));
+		searchText.getStyleClass().add("myTextField");
+		// 回车后触发查询按钮
+		searchText.setOnKeyPressed(val->{
+			 
+		});
+		searchBtn.setOnMouseClicked(e->{ 
+		});
 		
+		SearchPane.getChildren().addAll(searchBtn, searchText );
+		SearchPane.setMinHeight(35);
+		SearchPane.setPrefHeight(35);
+		SearchPane.getStyleClass().add("topPadding5");
+		SearchPane.setHgap(10); // 横向间距
+		
+		
+		// 绑定按钮
+		bindingBtn.getStyleClass().add("myAlertBtn");
+		bindingBtn.setDisable(true);
+		
+		HBox bindingBox = new HBox();
+		bindingBox.getChildren().add(bindingBtn);
+		HBox.setMargin(bindingBtn, new Insets(10));
+		
+		// 关闭按钮
+		JFXButton closeBtn = new JFXButton("Close");
+		closeBtn.getStyleClass().add("myAlertBtn");
+		AnchorPane bottomPane = new AnchorPane(); 
+		bottomPane.getChildren().add(closeBtn);
+		AnchorPane.setRightAnchor(closeBtn, 33.3);
+		AnchorPane.setBottomAnchor(closeBtn, 10.0);
+		
+		keysManageBox.getChildren().addAll(SearchPane, keysBox, bindingBox, bottomPane);
+		VBox.setVgrow(keysBox, Priority.ALWAYS);
+		
+		searchBtn.getStyleClass().add("myAlertBtn");
+
+	}
+	
+   
+	
+	// 显示窗口
+	public void show() {
+		createTable( keysBox);
+		var stage = CreateModalWindow(keysManageBox);
+		stage.show();
+		searchText.requestFocus();
+	}
+	
+	
+	public   void createTable( VBox  keysBox) {
+		Connection conn = SqluckyAppDB.getConn();
+		String sql = "select" 
+				+ " ID , "
+				+ " ACTION_NAME, "
+				+ " BINDING" 
+				+ " from KEYS_BINDING ";
+		try {
+			List<String> hiddenCol = new ArrayList<>();
+			hiddenCol.add("ID");
+		    // 查询
+			SheetTableData sheetDaV   = TableViewUtil.sqlToSheet(sql, conn, "KEYS_BINDING", null, hiddenCol );
+			// 获取表
+			FilteredTableView<ResultSetRowPo>  allkeysTable = sheetDaV.getInfoTable();
+			  this.setSheetDaV(sheetDaV);
+//			  this.allkeysTable(allkeysTable);
+			// 表不可编辑
+			allkeysTable.editableProperty().bind(new SimpleBooleanProperty(false));
+			 
+			// 表放入界面
+			keysBox.getChildren().add(allkeysTable);
+			
+			// 行选中时间
+			allkeysTable.getSelectionModel().selectedItemProperty().addListener((o, old, nnew)->{
+				if(nnew !=null) {
+					String idField = nnew.getValueByFieldName("ID");
+					System.out.println("idField = " + idField);
+					bindingBtn.setDisable(false);
+					bindingBtn.setOnAction(e->{
+						KeyBindingSubWindow.show(sql);
+					});
+				}
+			} );
+			
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+	
+	// 创建一个窗体
+	public static Stage CreateModalWindow(VBox vb) {
+		vb.getStyleClass().add("myPluginManager-vbox");
 		vb.setPrefWidth(400);
 		vb.maxWidth(400);
-		AnchorPane bottomPane = new AnchorPane();
-		bottomPane.setPadding(new Insets(10));
 
-		vb.getChildren().add(bottomPane);
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
 		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+		
+		SqluckyStage sqlStage = new SqluckyStage(vb);
+		Stage	stage = sqlStage.getStage();
+		Scene scene = sqlStage.getScene();
+		
 		scene.getAccelerators().put(escbtn, () -> {
-			stageWindow.close();
-			
+			stage.close();
 		});
 		scene.getAccelerators().put(spacebtn, () -> {
-			stageWindow.close();
-			
+			stage.close();
 		});
 
-		stageWindow.initModality(Modality.APPLICATION_MODAL);
+		stage.initModality(Modality.APPLICATION_MODAL);
 		
-		stageWindow.setTitle(title);
-		stageWindow.setMaximized(false);
-		stageWindow.setResizable(false);
-		stageWindow.setOnCloseRequest(v->{
-			stageWindow = null;
+		stage.setMaximized(false);
+		stage.setResizable(false);
+		stage.setOnHidden(e->{
 		});
-		return stageWindow;
+		return stage;
 	}
 
-	// 初始化控件
-	public  void initWindow( String title) {
-		
-		
-		Label lb1 = new Label("Auto Complete");  
-		Label lb2 = new Label("Comment code");   
-		
-		TextField autoC = new TextField();  
-		 
-		
-		   
-		
-//		layout(list, title);
-	}  
-	
-	private String SignIn = "Sign in ";
-	private String signedIn = "Signed In";
-	// 登入按钮
-	// 注册按钮
-	public Button createSignUpBtn(Function<String, String> sup ) {
-		String signUp = "Sign Up ";
-		Button signUpBtn = new Button(signUp); 
-		signUpBtn.setOnAction(e->{
-			SignUpWindow.createWorkspaceConfigWindow();
-		});
-		return signUpBtn;
-	}
- 
-	// 控件布局, 并显示窗口
-	public void layout(List<Region> list, String titleStage) {
-		String sign = "Sign in ";
-		VBox vb = new VBox();
-		Label title = new Label(sign);
-		title.setPadding(new Insets(15));
-		AppComponent appComponent = ComponentGetter.appComponent; 
-		title.setGraphic(appComponent.getIconDefActive("gears"));
-		vb.getChildren().add(title);
-		GridPane grid = new GridPane();
-		vb.getChildren().add(grid);
-		vb.setPadding( new Insets(5));
-		Stage stage = CreateModalWindow(vb, titleStage);
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 10, 10, 10));
-		
-		
-		int i = 0;
-		int j = 0;
-		
-		for(int k = 0 ; k< list.size() ; k+=2) {
-			var node1 = list.get(k);
-			var node2 = list.get(k+1);
-			int idxi= i++;
-			int idxj= j++;
-			if(node1 !=null ) grid.add(node1, 0, idxi);
-			if(node2 !=null ) grid.add(node2, 1, idxj);
-		}
-		
-		stage.show();
-	}
-	
 
 	
+	public SheetTableData getSheetDaV() {
+		return sheetDaV;
+	}
+
+	public void setSheetDaV(SheetTableData sheetDaV) {
+		this.sheetDaV = sheetDaV;
+	}
+
+	 
 }

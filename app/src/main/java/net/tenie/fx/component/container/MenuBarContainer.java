@@ -26,6 +26,7 @@ import net.tenie.fx.plugin.PluginManageWindow;
 import net.tenie.fx.window.CheckUpdateWindow;
 import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
+import net.tenie.fx.window.KeysBindWindow;
 import net.tenie.fx.window.SignInWindow;
 import net.tenie.fx.window.SignUpWindow;
 
@@ -253,18 +254,6 @@ public class MenuBarContainer {
 			CommonAction.hideLeftBottom();
 		});
 		
-//		MenuItem EnCoding = new MenuItem(StrUtils.MenuItemNameFormat("EnCoding"));
-//		EnCoding.setGraphic(IconGenerator.svgImageDefActive("mfglabs-random"));
-//		EnCoding.setOnAction(value -> {
-//			String txt = SqlcukyEditor.getCurrentCodeAreaSQLText();
-//		    try {
-//				String unicode = new String(txt.getBytes(""),"GBK");
-//				logger.info(unicode);
-//			} catch (UnsupportedEncodingException e) {
-//				e.printStackTrace();
-//			}
-//		});
-		
 		// 主题变化
 		Menu Theme = new Menu(StrUtils.MenuItemNameFormat("Theme"));
 		Theme.setGraphic(IconGenerator.svgImageDefActive("icomoon-contrast")); 
@@ -311,13 +300,23 @@ public class MenuBarContainer {
 		fontSize.getItems().addAll(fontSizePlus , fontSizeMinus); 
 		
 		
+		// 快捷键设置
+		MenuItem keysBind = new MenuItem(StrUtils.MenuItemNameFormat("Keys Binding"));
+		keysBind.setGraphic(IconGenerator.svgImageDefActive("keyboard-o"));
+		keysBind.setOnAction(value -> {
+			 KeysBindWindow kbw = new KeysBindWindow();
+			 kbw.show();
+					 
+		});
+		
+		
 		mn.getItems().addAll(dataTransfer, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn, closeALlConn, deleteConn, new SeparatorMenuItem(),
 				hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem()
 //				, EnCoding
 				,Theme
 				, new SeparatorMenuItem()
 				,fontSize
-				
+				,keysBind
 				); 
 		return mn;
 	}
