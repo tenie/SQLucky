@@ -1,17 +1,9 @@
- 
-.tab:hover  {
- 
-    -fx-border-color: transparent transparent #4C708C transparent ;   
-     -fx-border-width : 2
-} 
-
-.tab:selected {  
-    -fx-border-color: transparent transparent #4C708C transparent ;   
-    -fx-border-width : 2
+.tab:hover {
+	-fx-border-color: transparent transparent #4C708C transparent;
+	-fx-border-width: 2
 }
 
- 
- 
- 
-
- 
+.tab:selected {
+	-fx-border-color: transparent transparent #4C708C transparent;
+	-fx-border-width: 2
+}

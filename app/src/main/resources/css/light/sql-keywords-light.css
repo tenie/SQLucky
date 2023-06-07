@@ -1,63 +1,60 @@
-
 .findword {
-    -rtfx-background-color: #FFF59D !important; 
+	-rtfx-background-color: #FFF59D !important;
 }
 
-.findparenthesis {  
-    -rtfx-background-color: #3169ce!important;
-    -fx-font-weight: bold; 
+.findparenthesis {
+	-rtfx-background-color: #3169ce !important;
+	-fx-font-weight: bold;
 }
 
-.errorword{
-    -fx-fill: red;
-    -fx-font-weight: bold;
-    -fx-underline: true ;
+.errorword {
+	-fx-fill: red;
+	-fx-font-weight: bold;
+	-fx-underline: true;
 }
 
 .keyword {
-    -fx-fill:  #7F0055;
-    -fx-font-weight: bold;  
+	-fx-fill: #7F0055;
+	-fx-font-weight: bold;
 }
+
 .semicolon {
-    -fx-font-weight: bold;
+	-fx-font-weight: bold;
 }
+
 .paren {
-    -fx-fill: firebrick;
-    -fx-font-weight: bold;
+	-fx-fill: firebrick;
+	-fx-font-weight: bold;
 }
+
 .bracket {
-    -fx-fill: darkgreen;
-    -fx-font-weight: bold;
+	-fx-fill: darkgreen;
+	-fx-font-weight: bold;
 }
+
 .brace {
-    -fx-fill: teal;
-    -fx-font-weight: bold;
+	-fx-fill: teal;
+	-fx-font-weight: bold;
 }
+
 .string {
-    -fx-fill: red;
+	-fx-fill: red;
 }
 
 .comment {
-	-fx-fill:  #808080; 
+	-fx-fill: #808080;
 }
 
 .paragraph-box:has-caret {
-    -fx-background-color: #f2f9fc;
+	-fx-background-color: #f2f9fc;
 }
-
- /* 选中颜色 
- .selection {
-    -fx-fill: #214283;
-}
- */
 
 .caret {
-    -rtfx-blink-rate: 100ms;
-    -fx-stroke-width: 10.0;
+	-rtfx-blink-rate: 100ms;
+	-fx-stroke-width: 10.0;
 }
 
-
 /* 文本框基本色 */
-.styled-text-area {  
-    -fx-font-size: 14;
-} 
+.styled-text-area {
+	-fx-font-size: 14;
+}

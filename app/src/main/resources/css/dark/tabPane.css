@@ -5,14 +5,9 @@
 }  
 
 .tab {
-   /*  -fx-background-insets: 0, 1, 2; */
-  -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0;   /*  eckig */
-    /* -fx-border-radius: 2px; 圆角*/
-/*     -fx-background-color: #3C3F41;  */
-	/*  -fx-border-color: #4E5254 #323232 #323232 #4E5254  ; */
+  -fx-background-radius: 0 0 0 0, 0 0 0 0, 0 0 0 0;
      -fx-background-color: #3C3F41;
      -fx-border-color: transparent #5D6163   transparent transparent ;  
-   /*    #2B2B2B #4C708C   #4E5254   #323232*/
 }
 
 .tab:hover  {
@@ -21,7 +16,7 @@
 
 .tab:selected {
     -fx-background-color:  #323232 ; 
-    -fx-border-color: transparent transparent #059BCE transparent ;  /* transparent 透明  #059BCE*/
+    -fx-border-color: transparent transparent #059BCE transparent ;
     -fx-border-width : 2
 }
 
@@ -33,52 +28,7 @@
 .tab:selected  .tab-label { 
     -fx-text-fill:   #ccd171; 
 }
-/* .tab .tab-close-button {
-    -fx-shape: "M19,6.41L17.59,5 12,10.59 6.41,5 5,6.41 10.59,12 5,17.59 6.41,19 12,13.41 17.59,19 19,17.59 13.41,12z";
-    -fx-scale-shape: false; 
-    -fx-background-color:  #5e6771;   
-} */
 
 .tab .tab-label {
     -fx-text-fill:   #bdcddf;
 }
- 
-
-/* 
-
-
- 
- 使用CSS修饰Javafx TabPane的样式
-  修改TabPane的Pane区域背景颜色 
-.tab-pane {
-    -fx-background-color: #e6e6e6;
-}
-  修改Tab的背景颜色  
-.tab {
-    -fx-background-color: #333333;
-}
-  修改顶栏的背景颜色  
-.tab-pane>*.tab-header-area>*.tab-header-background
-{
-    -fx-background-color: -fx-outer-border, -fx-text-box-border, #333333;
-}
-  修改Tab中文本的颜色 
-.tab-label {
-    -fx-text-fill: #e6e6e6;
-}
-  子代选择器，Tab选中的时候选择其子元素tab-label  
-.tab:selected .tab-label {
-    -fx-text-fill: #003333ff;
-}
-  tab选中时设置背景颜色   
-.tab:selected {
-    -fx-background-color: #990000ff;
-}
- Tab选中的时候选中其边框并修改样式  
-.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
-    -fx-border-radius: 0px;
-    -fx-border-width: 1px 1px 1px 1px;
-    -fx-border-color: #4d1a4dff;
-}
-
- */

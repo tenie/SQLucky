@@ -1,14 +1,8 @@
-/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
-/* css  doc
-https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
- */
 .titledPane-color .title{
 	 -fx-font-size : 13; 
 	 -fx-font-weight: bold; 
 }
  
-
-
 .myAlert{
  	-fx-font-size : 12; 
 	-fx-font-weight: bold ;
@@ -20,9 +14,7 @@ https://docs.oracle.com/javase/8/javafx/api/javafx/scene/doc-files/cssref.html
 
 .myTreeView-vbox{
 	-fx-padding: 0;
-	/* -fx-spacing box 之间的间距 */
 	-fx-spacing: 2px; 
-	/* -fx-background-color: red; */
 }
 
 .myIcon{ 
