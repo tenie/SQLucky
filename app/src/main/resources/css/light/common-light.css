@@ -1,126 +1,107 @@
-/* .window-head-pane{
-	-fx-background-color: transparent; 
-	-fx-border-color: #000000 #000000 #323232 #000000;
-} */
-
-.Icon-color{
+.Icon-color {
 	-fx-background-color: #1C94FF;
 }
+
 .top-btn-Icon-color {
 	-fx-background-color: #000000;
 }
- 
 
-/* 插件管理界面 #000000 */
-.myPluginManager-vbox{
+/* 插件管理界面*/
+.myPluginManager-vbox {
 	-fx-padding: 5px 0px 5px 0px;
-	/* -fx-spacing box 之间的间距 */
-	-fx-spacing: 2px; 
-	/*-fx-background-color: #2B2B2B; */
+	-fx-spacing: 2px;
 }
 
 /* 左侧折叠面板的title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 */
-.myTitleTxtActiveColor .title .text{
-	  -fx-fill:  #0595ff; 
-	 /*  -fx-font-size: 15px;  */
+.myTitleTxtActiveColor .title .text {
+	-fx-fill: #0595ff;
 }
 
-.main-background{
-	 
+.main-background {
+	
 }
 
 /* tree view 中文字按钮边框 */
-.myTxtBtnBorder{
+.myTxtBtnBorder {
 	-fx-border-color: #1C94FF;
 	-fx-border-radius: 3px;
-	-fx-padding: 2px 3px 1px 3px;  
-	-fx-border-insets: 2 0 1 0;  
+	-fx-padding: 2px 3px 1px 3px;
+	-fx-border-insets: 2 0 1 0;
 }
 
-
-/* tabpane 选择tab按钮 .tab-down-button */
+/* tabpane 选择tab按钮 */
 .control-buttons-tab .arrow {
-	-fx-background-color: #1C94FF; 
-}
-.control-buttons-tab .tab-down-button {
-	-fx-background-color: #DCDCDC; 
+	-fx-background-color: #1C94FF;
 }
 
-
-
-/*
 .control-buttons-tab .tab-down-button {
-	-fx-background-color:  #333333; 
-}*/
-
+	-fx-background-color: #DCDCDC;
+}
 
 /*  搜索框 */
-.myFindTextField{  
-	-fx-border-color: #5E6060 ;
-	-fx-border-radius: 3px; /* 圆角 */
+.myFindTextField {
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px;
 }
- 
-.label{
+
+.label {
 	-fx-text-fill: #000000;
 }
 
-
-.myTextField{
+.myTextField {
 	-fx-text-fill: #000000;
 	-fx-background-color: #F1F1F1;
-    -fx-border-color:transparent transparent #4C708C transparent;
-    -fx-border-width: 1 1 1 1;
-    -fx-background-radius: 0px; /* 圆角 */
+	-fx-border-color: transparent transparent #4C708C transparent;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-radius: 0px;
 }
-.myTextField:hover{
+
+.myTextField:hover {
 	-fx-background-color: #D3D3D3;
 }
 
-
- 
- 
 .myComboBox {
 	-fx-text-fill: #000000;
 	-fx-background-color: #F1F1F1;
- 	-fx-border-color:transparent transparent transparent transparent;
-    -fx-background-radius: 0px; /* 圆角  #4C708C*/
-} 
+	-fx-border-color: transparent transparent transparent transparent;
+	-fx-background-radius: 0px;
+}
 
-.myComboBox:hover{
+.myComboBox:hover {
 	-fx-background-color: #D3D3D3;
 }
 
-.myComboBox:showing{
-	-fx-border-color:transparent transparent transparent transparent;
+.myComboBox:showing {
+	-fx-border-color: transparent transparent transparent transparent;
 }
-.myComboBox:focused{
-	-fx-border-color:transparent transparent transparent transparent;
+
+.myComboBox:focused {
+	-fx-border-color: transparent transparent transparent transparent;
 }
 
 /* combo-box 下划线*/
-.combo-box .input-line{
- 	 -fx-background-color:   #4C708C ;
+.combo-box .input-line {
+	-fx-background-color: #4C708C;
 }
 
-.combo-box .input-focused-line{
- 	 -fx-background-color:  transparent;
+.combo-box .input-focused-line {
+	-fx-background-color: transparent;
 }
 
- 
-.myShellWindow{
- -fx-border-color: #E2E2E2; 
+.myShellWindow {
+	-fx-border-color: #E2E2E2;
 }
 
 /* 子窗口壳的顶部关闭区域*/
-.subWindowClose{
-	 -fx-background-color:#DDDDDD;
+.subWindowClose {
+	-fx-background-color: #DDDDDD;
 }
 
-.myAlert { 
+.myAlert {
 	-fx-background-color: #EAEAEA;
 }
 
-.myAlertBtn{
+.myAlertBtn {
 	-fx-background-color: #1E90FF;
 }
 
@@ -128,36 +109,33 @@
 	-fx-background-color: #80FF80;
 }
 /* 按钮中文字的颜色*/
-.myAlertOkBtn .text{
+.myAlertOkBtn .text {
 	-fx-fill: #17181A;
 }
 
-
-
-MenuButton{
+MenuButton {
 	-fx-background-color: #F4F4F4;
 }
 
-.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
-    -fx-border-radius: 0px;
-    -fx-border-width: 1px 1px 1px 1px;
-    -fx-border-color: transparent;
+.tab-pane:focused>.tab-header-area>.headers-region>.tab:selected .focus-indicator
+	{
+	-fx-border-radius: 0px;
+	-fx-border-width: 1px 1px 1px 1px;
+	-fx-border-color: transparent;
 }
- 
 
 /* tree 过滤清空按钮 #DDDDDD*/
-.myCleanBtn{
-	 -fx-background-color: transparent;
-     -fx-background-radius: 10px;
-	 -fx-padding: 1;
-}
-.myCleanBtn:hover{
-	-fx-background-color:  transparent;
+.myCleanBtn {
+	-fx-background-color: transparent;
+	-fx-background-radius: 10px;
+	-fx-padding: 1;
 }
 
+.myCleanBtn:hover {
+	-fx-background-color: transparent;
+}
 
 /* 顶部 菜单按钮 */
-
 .menu:hover {
 	-fx-background-color: #F4F4F4;
 }
@@ -174,6 +152,6 @@ MenuButton{
 	-fx-background-color: #F4F4F4;
 }
 
-.menu-bar{
+.menu-bar {
 	-fx-background-color: #F4F4F4;
 }

@@ -1,209 +1,181 @@
-/* 显示列隐藏列面板*/ 
-/* Pane VBox {
-	-fx-background-color: red; 	
-}
- */
-.pop-up-filter{
-	-fx-background-color: #000000; 
-} 
-.table-view2{
-	-fx-background-color: #000000; 
-}
-
-.table-view{
-	-fx-background-color: #000000; 
-}
-.column-header-background{
-	-fx-background-color: #000000; 
-}
-
-.myTableTag .filler{
-		-fx-background-color: #000000; 
-}
-.myTableTag .column-header-background{
-	-fx-background-color: #000000; 
- }
- .myTableTag .column-header-background .show-hide-columns-button{
- 	-fx-background-color: #000000;
- }
- /* nested-column-header */
- 
- 
- /*  序号部分 底部的一个展位框*/
- .myTableTag .hbar{
+.pop-up-filter {
 	-fx-background-color: #000000;
 }
 
-/*表头  */ 
- 
- 
-.myTableTag   .row-header  * .table-column{
+.table-view2 {
+	-fx-background-color: #000000;
+}
+
+.table-view {
+	-fx-background-color: #000000;
+}
+
+.column-header-background {
+	-fx-background-color: #000000;
+}
+
+.myTableTag .filler {
+	-fx-background-color: #000000;
+}
+
+.myTableTag .column-header-background {
+	-fx-background-color: #000000;
+}
+
+.myTableTag .column-header-background .show-hide-columns-button {
+	-fx-background-color: #000000;
+}
+
+/*  序号部分 底部的一个展位框*/
+.myTableTag .hbar {
+	-fx-background-color: #000000;
+}
+
+/*表头  */
+.myTableTag   .row-header  * .table-column {
 	-fx-background-color: #000000;
 	-fx-border-color: #000000 #000000 #323232 #000000;
 }
+
 .myTableTag   .row-header  * .table-column:selected {
 	-fx-background-color: red;
 	-fx-border-color: #000000 #000000 #323232 #000000;
 }
 
-/* 表头 列 column-header table-column */
+/* 表头 列 */
 .myTableTag .nested-column-header  .column-header {
 	-fx-background-color: #000000;
 	-fx-border-color: #000000 #323232 #000000 #000000;
 }
 
- /* 表头中的文本  */
-.myTableTag    .label{
-/*	-fx-background-color: #000000;
-	 -fx-border-color: #000000 #000000 #323232 #000000; */
-}
- /* 表头  column-header table-column */
- .myTableTag  .column-header{
+/* 表头  */
+.myTableTag  .column-header {
 	-fx-background-color: #000000;
 	-fx-border-color: #000000 #000000 #323232 #000000;
 }
 
+/* 数据部分 */
+.myTableTag .clipped-container .sheet .table-row-cell {
+	-fx-background-color: #000000;
+}
+/* 选中行颜色 */
+.myTableTag .clipped-container .table-row-cell:selected .table-column {
+	-fx-background-color: #2F65CA;
+}
 
- /* 数据部分 */
-.myTableTag .clipped-container .sheet .table-row-cell{
-	 -fx-background-color: #000000;
-}
- /* 选中行颜色 */
-.myTableTag .clipped-container .table-row-cell:selected .table-column{
-	 -fx-background-color: #2F65CA  ;
-}
-.myTableTag .clipped-container .table-row-cell:hover .table-column{
-	 -fx-background-color: #387af9  ;
+.myTableTag .clipped-container .table-row-cell:hover .table-column {
+	-fx-background-color: #387af9;
 }
 /* 每个单元格背景色 */
- .myTableTag  .clipped-container .sheet .table-column {
+.myTableTag  .clipped-container .sheet .table-column {
 	-fx-background-color: #000000;
-	-fx-border-color: #323232  #323232  #000000 #000000;
-} 
-
-
-
- /****** 表格过滤功能弹出框样式  原始/org/controlsfx/control/tableview2/popupfilter.css *****/
-.mypopup  .pop-up-filter { 
-    -fx-background-color: #000000;
-    -fx-border-width: 1;
-    -fx-border-color: black;
-    -fx-pref-width: 300px;
-    -fx-spacing: 2;
-    -fx-padding: 2;
+	-fx-border-color: #323232 #323232 #000000 #000000;
 }
 
-.mypopup  .pop-up-filter > VBox  {
+/****** 表格过滤功能弹出框样式 *****/
+.mypopup  .pop-up-filter {
+	-fx-background-color: #000000;
+	-fx-border-width: 1;
+	-fx-border-color: black;
+	-fx-pref-width: 300px;
+	-fx-spacing: 2;
+	-fx-padding: 2;
+}
+
+.mypopup  .pop-up-filter>VBox {
 	-fx-text-fill: yellow;
-    -fx-background-color: #000000; 
+	-fx-background-color: #000000;
 }
 
-.mypopup  .pop-up-filter  .label.operation  {
-    -fx-background-color: #4a2ade; 
-    -fx-text-fill : white;
-    -fx-background-radius: 5;
-    -fx-padding: 1 2 1 2;
-}  
+.mypopup  .pop-up-filter  .label.operation {
+	-fx-background-color: #4a2ade;
+	-fx-text-fill: white;
+	-fx-background-radius: 5;
+	-fx-padding: 1 2 1 2;
+}
 
-.pop-up-filter > VBox > HBox {
-    -fx-spacing: 2;
-     -fx-background-color: #000000;
-    -fx-alignment: center-left;
+.pop-up-filter>VBox>HBox {
+	-fx-spacing: 2;
+	-fx-background-color: #000000;
+	-fx-alignment: center-left;
 }
 /* 文本框样式 */
-.pop-up-filter > VBox > HBox  .text-field{
-    -fx-spacing: 2;
-    -fx-background-color: #414141;
-    -fx-text-fill : white;
-    -fx-alignment: center-left;
+.pop-up-filter>VBox>HBox  .text-field {
+	-fx-spacing: 2;
+	-fx-background-color: #414141;
+	-fx-text-fill: white;
+	-fx-alignment: center-left;
 }
 
 /* 错误输入文本框样式 */
-.pop-up-filter > VBox > HBox  .text-field:error{
-   /* -fx-background-color:  red; */
-   -fx-control-inner-background: #414141;
-   -fx-text-fill : red;
-   -fx-alignment: center-left;
+.pop-up-filter>VBox>HBox  .text-field:error {
+	-fx-control-inner-background: #414141;
+	-fx-text-fill: red;
+	-fx-alignment: center-left;
 }
 
-.pop-up-filter > VBox > HBox > .toggle-button {
-	 -fx-background-color: #000000;
-    -fx-padding: 0.16666em 0.33333em 0.16666em 0.33333em; /* 2 4 2 4 */
+.pop-up-filter>VBox>HBox>.toggle-button {
+	-fx-background-color: #000000;
+	-fx-padding: 0.16666em 0.33333em 0.16666em 0.33333em;
 }
-  /****** END 表格过滤功能弹出框样式 END *****/
+/****** END 表格过滤功能弹出框样式 END *****/
 
- 
- 
- /* 滚动条部分 */ 
- 
+/* 滚动条部分 */
 /* 滚动条角的颜色 */
-.myTableTag  .corner   {
-	-fx-background-color:  #000000;
-}  
+.myTableTag  .corner {
+	-fx-background-color: #000000;
+}
 
 .myTableTag   .scroll-bar {
-    -fx-background-color:  #000000; 
+	-fx-background-color: #000000;
 }
- /* 滚动条上下2端的按钮  */ 
-.myTableTag  .scroll-bar:vertical .increment-button ,
-.myTableTag  .scroll-bar:vertical .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em; 
-} 
+/* 滚动条上下2端的按钮  */
+.myTableTag  .scroll-bar:vertical .increment-button, .myTableTag  .scroll-bar:vertical .decrement-button
+	{
+	-fx-background-color: transparent;
+	-fx-background-radius: 0.0em;
+}
 
 /* 水平滚动条两端的按钮 */
-.myTableTag  .scroll-bar:horizontal .increment-button ,
-.myTableTag  .scroll-bar:horizontal .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em; 
+.myTableTag  .scroll-bar:horizontal .increment-button, .myTableTag  .scroll-bar:horizontal .decrement-button
+	{
+	-fx-background-color: transparent;
+	-fx-background-radius: 0.0em;
 }
 
-.myTableTag   .scroll-bar .increment-arrow,
-.myTableTag   .scroll-bar .decrement-arrow{
-    -fx-shape : " ";    
-    /* 滚动条的粗细     -fx-padding */
-    -fx-padding: 0.1em 0.0;   
-  /*  -fx-padding :0.0 0.15em;       序列的 滚动条隐藏*/
+.myTableTag   .scroll-bar .increment-arrow, .myTableTag   .scroll-bar .decrement-arrow
+	{
+	-fx-shape: " ";
+	-fx-padding: 0.1em 0.0;
 }
 
- .myTableTag  .scroll-bar:vertical .increment-arrow,
- .myTableTag  .scroll-bar:vertical .decrement-arrow{
-    -fx-shape : " "; 
-      /* 滚动条的粗细     -fx-padding */
-    -fx-padding: 0.1em 0.0;
-   /* -fx-padding :0.0 0.15em;       序列的 滚动条隐藏*/
-}
-.myTableTag  .scroll-bar:horizontal .thumb ,
-.myTableTag  .scroll-bar:vertical .thumb { 
-	  -fx-background-color:  #3c3f41;
-/*     -fx-background-color:
-        #464646,
-        linear-gradient(to right, derive( #c2c2c2 ,95%), derive( #c2c2c2 ,10%)),
-        linear-gradient(to right, derive( #000000 ,38%), derive(#000000 ,-16%)); */
-    -fx-background-insets: 0, 1, 1;
-    -fx-background-radius: 0.5em;
+.myTableTag  .scroll-bar:vertical .increment-arrow, .myTableTag  .scroll-bar:vertical .decrement-arrow
+	{
+	-fx-shape: " ";
+	-fx-padding: 0.1em 0.0;
 }
 
- 
-
-.myTableTag  .scroll-bar:horizontal .thumb:hover,
-.myTableTag  .scroll-bar:vertical .thumb:hover { 
-    -fx-background-color:
-        #B9B9B9,
-        linear-gradient(to right, derive( #B9B9B9,95%), derive( #B9B9B9,10%)),
-        linear-gradient(to right, derive( #B9B9B9,38%), derive(#B9B9B9,-16%));
-    -fx-background-insets: 0, 1, 1;
-    -fx-background-radius: 0.5em;
+.myTableTag  .scroll-bar:horizontal .thumb, .myTableTag  .scroll-bar:vertical .thumb
+	{
+	-fx-background-color: #3c3f41;
+	-fx-background-insets: 0, 1, 1;
+	-fx-background-radius: 0.5em;
 }
- 
- 
- /* 数据表格操作按钮面板 */
- .data-table-btn-anchor-pane{
- 	 -fx-background-color: #0C0C0C;
- }
- 
-  .data-table-btn-anchor-pane > .menu-button{
- 	 -fx-background-color: #0C0C0C;
- }
 
- 
+.myTableTag  .scroll-bar:horizontal .thumb:hover, .myTableTag  .scroll-bar:vertical .thumb:hover
+	{
+	-fx-background-color: #B9B9B9,
+		linear-gradient(to right, derive(#B9B9B9, 95%), derive(#B9B9B9, 10%)),
+		linear-gradient(to right, derive(#B9B9B9, 38%), derive(#B9B9B9, -16%));
+	-fx-background-insets: 0, 1, 1;
+	-fx-background-radius: 0.5em;
+}
+
+/* 数据表格操作按钮面板 */
+.data-table-btn-anchor-pane {
+	-fx-background-color: #0C0C0C;
+}
+
+.data-table-btn-anchor-pane>.menu-button {
+	-fx-background-color: #0C0C0C;
+}

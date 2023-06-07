@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,6 +18,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
@@ -24,14 +26,18 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.DaoTools;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
 /**
@@ -44,18 +50,80 @@ public class KeyBindingSubWindow {
 	private static Logger logger = LogManager.getLogger(KeyBindingSubWindow.class);
 	
 	private Stage stageWindow = null ;
-	
+	private Consumer<String> caller;
 	private String actionId;
-	public KeyBindingSubWindow(String id) {
+	public KeyBindingSubWindow(String id, Consumer<String> caller) {
 		actionId = id;
+		this.caller = caller;
 	}
 	
-	public static void show(String id) {
-		KeyBindingSubWindow window = new KeyBindingSubWindow(id);
-		window.layout();
+	public static void show(String id, String currentKey, Consumer<String> caller) {
+		KeyBindingSubWindow window = new KeyBindingSubWindow(id, caller);
+		window.layout(currentKey);
 	}
-	// 创建窗口
-	public Stage CreateModalWindow(VBox vb,  String title) {
+	 
+ 
+ 
+	// 控件布局, 并显示窗口
+	public void layout(String currentKey ) {
+		VBox vb = new VBox();
+		// 显示输入的快捷键字符串
+		Label valLb = new Label(currentKey);
+		
+		List<Region> list = new ArrayList<>();
+		// 下载按钮
+		Button btn = new Button("Save"); 
+		btn.setDisable(true);
+		btn.setOnAction(e->{
+			String v = valLb.getText();
+			String selectSQL = "select count(*) from KEYS_BINDING where BINDING = '"+v+"' ";
+			String count = SqluckyAppDB.selectOne(selectSQL);
+			if(StrUtils.isNotNullOrEmpty(count)) {
+				if(! "0".equals(count)) {
+					MyAlert.errorAlert("快捷以存在:" + v);
+					return;
+				}
+			}
+//			保存数据库 
+			String updateSQL = "update KEYS_BINDING set BINDING = '"+v+"' where id = " + actionId;
+			SqluckyAppDB.execDDL(updateSQL);
+			this.caller.accept("");
+			stageWindow.close();
+		});
+		Consumer<String> setLabel = v->{
+			valLb.setText(v);
+			btn.setDisable(false);
+			
+		};
+		list.add(null);
+		list.add(btn);
+		 
+		
+		
+		vb.getChildren().add(valLb);
+		VBox.setMargin(valLb, new  Insets(60, 30, 60, 150));
+		
+		GridPane grid = new GridPane();
+		vb.getChildren().add(grid);
+		vb.setPadding( new Insets(5));
+//		Stage stage = CreateModalWindow(vb);
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 10, 10, 10));
+		
+		
+		int i = 0;
+		int j = 0;
+		
+		for(int k = 0 ; k< list.size() ; k+=2) {
+			var node1 = list.get(k);
+			var node2 = list.get(k+1);
+			int idxi= i++;
+			int idxj= j++;
+			if(node1 !=null ) grid.add(node1, 0, idxi);
+			if(node2 !=null ) grid.add(node2, 1, idxj);
+		}
+		
 		SqluckyStage sqlStage = new SqluckyStage(vb);
 		stageWindow = sqlStage.getStage();
 		Scene scene = sqlStage.getScene();
@@ -77,57 +145,86 @@ public class KeyBindingSubWindow {
 			stageWindow.close();
 			
 		});
-
-		stageWindow.initModality(Modality.APPLICATION_MODAL);
 		
-		stageWindow.setTitle(title);
+		 
+		sceneEventFilter(scene, setLabel);
+		stageWindow.initModality(Modality.APPLICATION_MODAL);
+		stageWindow.setTitle("请直接再键盘上输入新的快捷键");
+//		stageWindow.setTitle(title);
 		stageWindow.setMaximized(false);
 		stageWindow.setResizable(false);
 		stageWindow.setOnCloseRequest(v->{
 			stageWindow = null;
 		});
-		return stageWindow;
-	}
- 
- 
-	// 控件布局, 并显示窗口
-	public void layout( ) {
-		VBox vb = new VBox();
-		List<Region> list = new ArrayList<>();
-		// 下载按钮
-		Button btn = new Button("Save"); 
-		btn.setDisable(true);
-		btn.setOnAction(v->{
-		});
-		list.add(null);
-		list.add(btn);
-		
-//		vb.getChildren().add( );
-		 
-		
-		
-		GridPane grid = new GridPane();
-		vb.getChildren().add(grid);
-		vb.setPadding( new Insets(5));
-		Stage stage = CreateModalWindow(vb, "Key Binding");
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 10, 10, 10));
-		
-		
-		int i = 0;
-		int j = 0;
-		
-		for(int k = 0 ; k< list.size() ; k+=2) {
-			var node1 = list.get(k);
-			var node2 = list.get(k+1);
-			int idxi= i++;
-			int idxj= j++;
-			if(node1 !=null ) grid.add(node1, 0, idxi);
-			if(node2 !=null ) grid.add(node2, 1, idxj);
-		}
-		
-		stage.show();
+		stageWindow.showAndWait();
 	}
 	
+	void sceneEventFilter(Scene scene, Consumer<String> call) {
+		 scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+			 	String val = "";
+			    if(KeyCode.UNDEFINED == e.getCode() ) {
+			    	 val = "";
+			    }else
+	    		if(e.isControlDown() && e.isAltDown() && e.isShiftDown() ) {
+	    			if(e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
+	    				
+	    			}else{
+	    				val = "Ctrl + Alt + Shift + " + e.getCode().getName();
+	        			System.out.println(val);
+	    			}
+	    			
+	    		}else if(e.isControlDown() && e.isAltDown()) {
+	    			if(e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT ) {
+	    				
+	    			}else{
+	    				val = "Ctrl + Alt + " + e.getCode().getName() ;
+	        			System.out.println(val);
+	    			}
+	    			
+				} else if (e.isControlDown() && e.isShiftDown()) {
+					if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHIFT) {
+
+					} else {
+						val = "Ctrl + Shift + " + e.getCode().getName();
+	        			System.out.println(val);
+					}
+
+				} else if (e.isAltDown() && e.isShiftDown()) {
+					if ( e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
+
+					} else {
+						val = "Alt + Shift + " + e.getCode().getName();
+	        			System.out.println(val);
+					}
+					
+				} else if (e.isControlDown()) {
+					if (e.getCode() == KeyCode.CONTROL ) {
+
+					} else {
+						val = "Ctrl + " + e.getCode().getName();
+	        			System.out.println(val);
+					}
+				}else if (e.isAltDown()) {
+					if (e.getCode() == KeyCode.ALT ) {
+
+					} else {
+						val = "ALT + " + e.getCode().getName();
+	        			System.out.println(val);
+					}
+				}else if (e.isShiftDown()) {
+					if (e.getCode() == KeyCode.SHIFT ) {
+
+					} else {
+						val = "Shift + " + e.getCode().getName();
+	        			System.out.println(val);
+					}
+				}else {
+					System.out.println("其他 : " + e.getCode().getName());
+					val =  e.getCode().getName();
+        			System.out.println(val);
+				}
+	    		
+	    		call.accept(val);
+	    	});
+	}
 }
