@@ -2,8 +2,6 @@ package net.tenie.fx.main;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -101,11 +99,12 @@ public class SQLucky extends Application {
 		ServiceLoad.callRegister();
 		
 		app = new AppWindow();
-		SettingKeyCodeCombination.Setting();
 		img = ComponentGetter.LogoIcons; //new Image(SQLucky.class.getResourceAsStream(ConfigVal.appIcon));
 		
 		
 		scene = app.getAppScene();
+
+		SettingKeyCodeCombination.Setting(scene);
 		CommonAction.setTheme(Theme);
 		// 加载插件
 		ServiceLoad.callLoad();

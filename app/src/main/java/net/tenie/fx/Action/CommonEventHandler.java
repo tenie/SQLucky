@@ -3,7 +3,6 @@ package net.tenie.fx.Action;
 import java.io.File;
 import java.io.IOException;
 
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -27,19 +26,6 @@ import net.tenie.fx.window.ConnectionEditor;
  *
  */
 public class CommonEventHandler {
-	
-	/**
-	 * 数据table关闭的时候 
-	 */
-//	public static EventHandler<Event> dataTabCloseReq( MyTabData tb) {
-//		return new EventHandler<Event>() {
-//			public void handle(Event e) { 
-//				tb.getTableData().clean();
-//				SdkComponent.clearDataTable( tb);
-//				 
-//			}
-//		};
-//	}
 
 	// 添加按钮点击事件
 	public static EventHandler<Event> addConnEvent() {
@@ -49,24 +35,6 @@ public class CommonEventHandler {
 			}
 		};
 	}
-
-	// 打开连接按钮点击事件
-//	public static EventHandler openConnEvent() {
-//		return new EventHandler() {
-//			public void handle(Event e) {
-//				ConnectionEditor.openDbConn();
-//			}
-//		};
-//	}
-
-	// 断开连接按钮点击事件
-//	public static EventHandler closeConnEvent() {
-//		return new EventHandler() {
-//			public void handle(Event e) {
-//				ConnectionEditor.closeDbConn();
-//			}
-//		};
-//	}
 
 	// 断开所有连接按钮点击事件
 	public static EventHandler<Event> closeAllConnEvent() {
@@ -85,16 +53,6 @@ public class CommonEventHandler {
 			}
 		};
 	}
-
-	// 编辑连接节点信息
-//	public static EventHandler editConnEvent() {
-//		return new EventHandler() {
-//			public void handle(Event e) {
-//				ConnectionEditor.closeDbConn();
-//				ConnectionEditor.editDbConn();
-//			}
-//		};
-//	}
 
 	// 添加code area 面板
 	public static EventHandler<Event> addCodeTab() {
@@ -149,17 +107,12 @@ public class CommonEventHandler {
 			}
 		};
 	}
- 
-
-	
-
-	
 
 	public static EventHandler<ActionEvent> InsertSQLClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
 				File tmpFile = null;
-				if(isFile) {
+				if (isFile) {
 					tmpFile = CommonUtility.getFilePathHelper("sql");
 				}
 				final File ff = tmpFile;
@@ -167,8 +120,9 @@ public class CommonEventHandler {
 					Thread t = new Thread() {
 						public void run() {
 							String tableName = SqluckyBottomSheetUtility.getTableName();
-							final ObservableList<ResultSetRowPo> fvals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
-							
+							final ObservableList<ResultSetRowPo> fvals = SqluckyBottomSheetUtility
+									.getValsHelper(isSelected);
+
 							String sql = GenerateSQLString.insertSQLHelper(fvals, tableName);
 							if (StrUtils.isNotNullOrEmpty(sql)) {
 								if (isFile) {
@@ -188,7 +142,6 @@ public class CommonEventHandler {
 					};
 					t.start();
 				});
-				
 
 			}
 
@@ -198,13 +151,13 @@ public class CommonEventHandler {
 	public static EventHandler<ActionEvent> csvStrClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-				
+
 				File tmpFile = null;
-				if(isFile) {
+				if (isFile) {
 					tmpFile = CommonUtility.getFilePathHelper("csv");
 				}
 				final File ff = tmpFile;
-				
+
 				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
 					Thread t = new Thread() {
 						public void run() {
@@ -232,16 +185,17 @@ public class CommonEventHandler {
 
 		};
 	}
+
 	/**
 	 * 将table中的数据以普通文本方式导出
+	 * 
 	 * @param isSelected
 	 * @param isFile
 	 * @return
 	 */
 	public static EventHandler<ActionEvent> txtStrClipboard(boolean isSelected, boolean isFile) {
 		return new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) { 
-//				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields(); 
+			public void handle(ActionEvent e) {
 				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {
@@ -268,11 +222,10 @@ public class CommonEventHandler {
 
 		};
 	}
-	
+
 	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName) {
 		return new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent e) {
-//				ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields(); 
 				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {
@@ -300,8 +253,6 @@ public class CommonEventHandler {
 		};
 	}
 
-	
-	
 	// 导出表的字段, 使用逗号分割
 	public static EventHandler<ActionEvent> commaSplitTableFields() {
 		return new EventHandler<ActionEvent>() {
@@ -333,7 +284,7 @@ public class CommonEventHandler {
 
 		};
 	}
-	
+
 	// 导出表的字段包含类型, 使用逗号分割
 	public static EventHandler<ActionEvent> commaSplitTableFiledsIncludeType() {
 		return new EventHandler<ActionEvent>() {
@@ -364,5 +315,5 @@ public class CommonEventHandler {
 
 		};
 	}
-	
+
 }
