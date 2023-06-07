@@ -1,44 +1,29 @@
 package net.tenie.fx.window;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.controlsfx.control.tableview2.FilteredTableView;
-import javafx.application.Platform;
+
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.DaoTools;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
-import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.DBTools;
-import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
+import net.tenie.fx.Action.SettingKeyCodeCombination;
 
 /**
  * 
@@ -147,7 +132,7 @@ public class KeyBindingSubWindow {
 		});
 		
 		 
-		sceneEventFilter(scene, setLabel);
+		SettingKeyCodeCombination.sceneEventFilter(scene, setLabel);
 		stageWindow.initModality(Modality.APPLICATION_MODAL);
 		stageWindow.setTitle("请直接再键盘上输入新的快捷键");
 //		stageWindow.setTitle(title);
@@ -159,72 +144,5 @@ public class KeyBindingSubWindow {
 		stageWindow.showAndWait();
 	}
 	
-	void sceneEventFilter(Scene scene, Consumer<String> call) {
-		 scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-			 	String val = "";
-			    if(KeyCode.UNDEFINED == e.getCode() ) {
-			    	 val = "";
-			    }else
-	    		if(e.isControlDown() && e.isAltDown() && e.isShiftDown() ) {
-	    			if(e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
-	    				
-	    			}else{
-	    				val = "Ctrl + Alt + Shift + " + e.getCode().getName();
-	        			System.out.println(val);
-	    			}
-	    			
-	    		}else if(e.isControlDown() && e.isAltDown()) {
-	    			if(e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT ) {
-	    				
-	    			}else{
-	    				val = "Ctrl + Alt + " + e.getCode().getName() ;
-	        			System.out.println(val);
-	    			}
-	    			
-				} else if (e.isControlDown() && e.isShiftDown()) {
-					if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHIFT) {
 
-					} else {
-						val = "Ctrl + Shift + " + e.getCode().getName();
-	        			System.out.println(val);
-					}
-
-				} else if (e.isAltDown() && e.isShiftDown()) {
-					if ( e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
-
-					} else {
-						val = "Alt + Shift + " + e.getCode().getName();
-	        			System.out.println(val);
-					}
-					
-				} else if (e.isControlDown()) {
-					if (e.getCode() == KeyCode.CONTROL ) {
-
-					} else {
-						val = "Ctrl + " + e.getCode().getName();
-	        			System.out.println(val);
-					}
-				}else if (e.isAltDown()) {
-					if (e.getCode() == KeyCode.ALT ) {
-
-					} else {
-						val = "ALT + " + e.getCode().getName();
-	        			System.out.println(val);
-					}
-				}else if (e.isShiftDown()) {
-					if (e.getCode() == KeyCode.SHIFT ) {
-
-					} else {
-						val = "Shift + " + e.getCode().getName();
-	        			System.out.println(val);
-					}
-				}else {
-					System.out.println("其他 : " + e.getCode().getName());
-					val =  e.getCode().getName();
-        			System.out.println(val);
-				}
-	    		
-	    		call.accept(val);
-	    	});
-	}
 }

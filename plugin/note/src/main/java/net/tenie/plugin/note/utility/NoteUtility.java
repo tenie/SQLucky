@@ -26,7 +26,10 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.utility.*;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.Sqlucky.sdk.utility.FileTools;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.note.component.NoteOptionPanel;
 import net.tenie.plugin.note.component.NoteTabTree;
 import net.tenie.plugin.note.impl.NoteDelegateImpl;
@@ -37,52 +40,45 @@ public class NoteUtility {
 	public static boolean isFile = false;
 	public static boolean isText = false;
 
-	
-	 public static void doubleClickItem(TreeItem<SqluckyTab> item) {
-		 	SqluckyTab stb = item.getValue();
-			File file = stb.getFile();
-			if(! file.exists()) return;
-			if(file.isFile()) {
-				if(StrUtils.isNotNullOrEmpty(file.getAbsolutePath() ) ){
-//					String fp = file.getAbsolutePath().toLowerCase();
-//					if(fp.endsWith(".md") 
-//					   || fp.endsWith(".text") 
-//					   || fp.endsWith(".sql") 
-//					   || fp.endsWith(".txt") 
-//				    )  
-
-					String charset = FileTools.detectFileCharset(file);
-					if( charset != null ){
-						boolean isExist = stb.existTabShow(); 
-						if(! isExist) {
-							String  val = CommonUtility.readFileText(file, charset);
-							stb.setFileText(val);
-							stb.showMyTab();
-						}
-					}else {
-						CommonUtility.openExplorer(file);
+	public static void doubleClickItem(TreeItem<SqluckyTab> item) {
+		SqluckyTab stb = item.getValue();
+		File file = stb.getFile();
+		if (!file.exists())
+			return;
+		if (file.isFile()) {
+			if (StrUtils.isNotNullOrEmpty(file.getAbsolutePath())) {
+				String charset = FileTools.detectFileCharset(file);
+				if (charset != null) {
+					boolean isExist = stb.existTabShow();
+					if (!isExist) {
+						String val = CommonUtility.readFileText(file, charset);
+						stb.setFileText(val);
+						stb.showMyTab();
 					}
-					
-				}else {
+				} else {
 					CommonUtility.openExplorer(file);
 				}
-				
-			}else if(file.isDirectory()) {
-				if(item.getChildren().size() == 0) {
-					NoteUtility.openNoteDir(item, file);
-					item.setExpanded(true);
-				}
-				
+
+			} else {
+				CommonUtility.openExplorer(file);
 			}
-	 }
-	
+
+		} else if (file.isDirectory()) {
+			if (item.getChildren().size() == 0) {
+				NoteUtility.openNoteDir(item, file);
+				item.setExpanded(true);
+			}
+
+		}
+	}
+
 	// 在系统的目录里打开
 	public static void showInSystem(TreeView<SqluckyTab> NoteTabTreeView) {
 
 		TreeItem<SqluckyTab> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
 		SqluckyTab tb = ctt.getValue();
 		try {
-			if(tb.getDocumentPo() != null) {
+			if (tb.getDocumentPo() != null) {
 				String fn = tb.getDocumentPo().getFileFullName();
 				if (StrUtils.isNotNullOrEmpty(fn)) {
 					File file = new File(fn);
@@ -101,19 +97,10 @@ public class NoteUtility {
 		return ctt;
 	}
 
-	// 获取选中的treeItem中的Tab
-//	public static SqluckyTab currentTreeItemSqluckyTab2() {
-//		var cit = currentTreeItem();
-//		if(cit != null ) {
-//			SqluckyTab val = currentTreeItem().getValue();
-//			return val;
-//		}
-//		return null;
-//	}
 	// 获取选中的treeItem中的Tab中的file
 	public static File currentTreeItemFile() {
 		var cit = currentTreeItem();
-		if(cit != null) {
+		if (cit != null) {
 			SqluckyTab val = currentTreeItem().getValue();
 			File file = val.getFile();
 			return file;
@@ -230,7 +217,7 @@ public class NoteUtility {
 
 	}
 
-	// TODO 打开sql文件
+	// 打开sql文件
 	public static void openNoteDir(TreeItem<SqluckyTab> node, File openFile) {
 		try {
 			Consumer<String> caller = x -> {
@@ -281,24 +268,20 @@ public class NoteUtility {
 			DocumentPo fileNode = new DocumentPo();
 			fileNode.setFileFullName(file.getAbsolutePath());
 			fileNode.setTitle(file.getName());
-			if(file.getAbsolutePath().toLowerCase().endsWith(".sql")) {
+			if (file.getAbsolutePath().toLowerCase().endsWith(".sql")) {
 				fileNode.setType(DocumentPo.IS_SQL);
-			}else {
+			} else {
 				fileNode.setType(DocumentPo.IS_TEXT);
 			}
-			
+
 			SqluckyTab mtb = ComponentGetter.appComponent.sqluckyTab(fileNode);
 
 			mtb.setFile(file);
 			Region icon;
 			if (file.isFile()) {
 				icon = IconGenerator.svgImage("file-text-o", "#C1C1C3 ");
-//				icon = 	ComponentGetter.appComponent.getIconDefActive("file-text-o"); //#ACBDE8
-
 			} else {
 				icon = IconGenerator.svgImage("folder", "#ACBDE8 ");
-//				icon = ComponentGetter.appComponent.getIconDefActive("folder");
-
 			}
 			mtb.setIcon(icon);
 
@@ -316,9 +299,9 @@ public class NoteUtility {
 		} else {
 			queryStr = queryStr.toLowerCase();
 		}
-		var windowSceneRoot = NoteTabTree.noteStackPane; //ComponentGetter.primarySceneRoot; 
+		var windowSceneRoot = NoteTabTree.noteStackPane;
 		LoadingAnimation.addLoading(windowSceneRoot, "Search....", 14);
-		
+
 		String searchStr = queryStr;
 		CommonUtility.runThread(v -> {
 			try {
@@ -346,7 +329,7 @@ public class NoteUtility {
 						});
 
 						Function<File, Boolean> caller = tmpfile -> {
-							if(  isStopSearch()) {
+							if (isStopSearch()) {
 								return true;
 							}
 							if (isFile) { // 文件名搜索
@@ -403,38 +386,35 @@ public class NoteUtility {
 
 		});
 	}
-	
+
 	private static volatile boolean stopTag = false;
-	
+
 	public static boolean getStopTag() {
 		return stopTag;
 	}
-	
+
 	public static void beginSearch() {
 		stopTag = false;
 	}
-	
+
 	public static void stopSearch() {
 		stopTag = true;
 	}
-	
-	public static boolean isStopSearch() {  
+
+	public static boolean isStopSearch() {
 		return getStopTag();
 	}
-	
-	
+
 	public static SqluckyTab openNextNote(ObservableList<TreeItem<SqluckyTab>> ls, int next) {
-		if( ls != null && next < ls.size()  ) {
+		if (ls != null && next < ls.size()) {
 			var nextItem = ls.get(next);
-			NoteUtility.doubleClickItem( nextItem);
+			NoteUtility.doubleClickItem(nextItem);
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(next);
-			return  nextItem.getValue();
+			return nextItem.getValue();
 		}
 		return null;
 	}
-	
- 
-	
+
 	/**
 	 * 上下切换搜索的文件
 	 */
@@ -449,26 +429,26 @@ public class NoteUtility {
 		if (currentItem == null) {
 			return;
 		}
-		
+
 		int startIdx = 0;
-		if(isUp) {
+		if (isUp) {
 			startIdx = -1;
 		}
-		
+
 		// 判断当前节点是否大开着
 		SqluckyTab currentSktb = currentItem.getValue();
-		boolean isfind =  false;
-		if(currentSktb.isShowing() ) {
+		boolean isfind = false;
+		if (currentSktb.isShowing()) {
 			FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
-			if(fpanel == null ) {
+			if (fpanel == null) {
 				CommonUtility.findReplace(false, txt, currentSktb);
 				fpanel = currentSktb.getFindReplacePanel();
 				isfind = fpanel.findStringStopFromCodeArea(txt, startIdx, !isUp, false);
-			}else {
+			} else {
 				isfind = fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
 			}
-			
-			if(! isfind && currentSktb.isShowing() ) {
+
+			if (!isfind && currentSktb.isShowing()) {
 				// 获取所有搜索到的文件节点
 				var ls = currentItem.getParent().getChildren();
 				int idx = ls.indexOf(currentItem);
@@ -483,89 +463,35 @@ public class NoteUtility {
 					if (ls.size() == next) {
 						next = 0;
 					}
-		
+
 				}
-				
+
 				SqluckyTab skTab = openNextNote(ls, next);
 			}
-			
-			 
-		}else {
+
+		} else {
 			// 没有展示的情况, 先展示再查找
-			NoteUtility.doubleClickItem( currentItem);
+			NoteUtility.doubleClickItem(currentItem);
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(currentItem);
-			
+
 			// 展示之后开始查找
-			Platform.runLater(()->{
+			Platform.runLater(() -> {
 				int startIdx2 = 0;
-				if(isUp) {
+				if (isUp) {
 					startIdx2 = -1;
 				}
 				FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
-				if(fpanel == null ) {
+				if (fpanel == null) {
 					CommonUtility.findReplace(false, txt, currentSktb);
 					fpanel = currentSktb.getFindReplacePanel();
-					 fpanel.findStringStopFromCodeArea(txt, startIdx2, !isUp, false);
-				}else {
-					 fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
+					fpanel.findStringStopFromCodeArea(txt, startIdx2, !isUp, false);
+				} else {
+					fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
 				}
 			});
-			
-//			
-//			FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
-//			if(fpanel == null ) {
-//				CommonUtility.findReplace(false, txt, currentSktb);
-//				fpanel = currentSktb.getFindReplacePanel();
-//				isfind = fpanel.findStringStopFromCodeArea(txt, startIdx, !isUp, false);
-//			}else {
-//				isfind = fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
-//			}
-			
-		}
-		
-		
-		
-		
-		// 获取所有搜索到的文件节点
-//		var ls = currentItem.getParent().getChildren();
-//		int idx = ls.indexOf(currentItem);
-//		int next;
-//		if (isUp) {
-//			next = idx - 1;
-//			if (next < 0) {
-//				next = ls.size() - 1;
-//			}
-//		} else {
-//			next = idx + 1;
-//			if (ls.size() == next) {
-//				next = 0;
-//			}
-//
-//		}
 
-//			var nextItem = ls.get(next);
-//			NoteUtility.doubleClickItem( nextItem);
-//			NoteTabTree.noteTabTreeView.getSelectionModel().select(next);
-//		SqluckyTab skTab = openNextNote(ls, next);
-//		if (skTab != null && StrUtils.isNotNullOrEmpty(txt)) {
-//			FindReplaceTextPanel fpanel = skTab.getFindReplacePanel();
-//			if (fpanel == null) {
-//				CommonUtility.findReplace(false, txt, skTab);
-//			} else {
-//				boolean isfind = fpanel.findStringStopFromCodeArea(txt, !isUp, false);
-//
-//				// 没有找到切换到下一个文件
-//				if (!isfind) {
-//					SqluckyTab skTab2 = openNextNote(ls, next + 1);
-//					FindReplaceTextPanel fpanel2 = skTab2.getFindReplacePanel();
-//					if (fpanel == null) {
-//						CommonUtility.findReplace(false, txt, skTab2);
-//					}
-//				}
-//			}
-//
-//		}
+		}
 
 	}
-	
+
 }
