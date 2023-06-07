@@ -62,7 +62,9 @@ public class KeysBindWindow {
 	private JFXTextField searchText = new JFXTextField();
 
 	private VBox  keysBox = new VBox();
- 
+	
+	private Stage stage;
+	
 	// 设置按钮
 	JFXButton bindingBtn = new JFXButton("Binding");
 	SheetTableData sheetDaV = null;
@@ -91,6 +93,7 @@ public class KeysBindWindow {
 		bindingBtn.getStyleClass().add("myAlertBtn");
 		bindingBtn.setDisable(true);
 		
+		
 		HBox bindingBox = new HBox();
 		bindingBox.getChildren().add(bindingBtn);
 		HBox.setMargin(bindingBtn, new Insets(10));
@@ -98,6 +101,11 @@ public class KeysBindWindow {
 		// 关闭按钮
 		JFXButton closeBtn = new JFXButton("Close");
 		closeBtn.getStyleClass().add("myAlertBtn");
+		
+		closeBtn.setOnAction(e->{
+			stage.close();
+		});
+		
 		AnchorPane bottomPane = new AnchorPane(); 
 		bottomPane.getChildren().add(closeBtn);
 		AnchorPane.setRightAnchor(closeBtn, 33.3);
@@ -115,19 +123,19 @@ public class KeysBindWindow {
 	// 显示窗口
 	public void show() {
 		createTable( keysBox);
-		var stage = CreateModalWindow(keysManageBox);
+		stage = CreateModalWindow(keysManageBox);
 		stage.show();
 		searchText.requestFocus();
 	}
-	
+	String sql = "select" 
+			+ " ID , "
+			+ " ACTION_NAME, "
+			+ " BINDING" 
+			+ " from KEYS_BINDING ";
 	
 	public   void createTable( VBox  keysBox) {
 		Connection conn = SqluckyAppDB.getConn();
-		String sql = "select" 
-				+ " ID , "
-				+ " ACTION_NAME, "
-				+ " BINDING" 
-				+ " from KEYS_BINDING ";
+		
 		try {
 			List<String> hiddenCol = new ArrayList<>();
 			hiddenCol.add("ID");
@@ -143,18 +151,42 @@ public class KeysBindWindow {
 			// 表放入界面
 			keysBox.getChildren().add(allkeysTable);
 			
+			
 			// 行选中时间
 			allkeysTable.getSelectionModel().selectedItemProperty().addListener((o, old, nnew)->{
 				if(nnew !=null) {
 					String idField = nnew.getValueByFieldName("ID");
+					String bindingField = nnew.getValueByFieldName("BINDING");
 					System.out.println("idField = " + idField);
 					bindingBtn.setDisable(false);
 					bindingBtn.setOnAction(e->{
-						KeyBindingSubWindow.show(sql);
+						KeyBindingSubWindow.show(idField, bindingField, v->{
+							 udateTable();
+						});
+
+						
 					});
 				}
 			} );
 			
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+	
+	// 更新界面
+	public void udateTable() {
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			List<String> hiddenCol = new ArrayList<>();
+			hiddenCol.add("ID");
+			SheetTableData sheetDaV2 = TableViewUtil.sqlToSheet(sql, conn, "KEYS_BINDING", null, hiddenCol);
+			this.setSheetDaV(sheetDaV2);
+			FilteredTableView<ResultSetRowPo> allkeysTable2 = sheetDaV2.getInfoTable();
+			allkeysTable2.editableProperty().bind(new SimpleBooleanProperty(false));
+			keysBox.getChildren().clear();
+			// 表放入界面
+			keysBox.getChildren().add(allkeysTable2);
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}

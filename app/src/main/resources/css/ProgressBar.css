@@ -1,38 +1,8 @@
- 
-.myProgressBar{
-	-fx-background-color: #000000; 
-/*   	-fx-box-border: red;   
- 	-fx-box-background:  red; */
-	-fx-accent: green;    
-/* 	-fx-box-border: black; 
-	-fx-accent: red; */
-	
+.myProgressBar {
+	-fx-background-color: #000000;
+	-fx-accent: green;
 }
+
 .myProgressBar .track {
-    -fx-background-color:  transparent;
+	-fx-background-color: transparent;
 }
-/* .myProgressBar .bar {
-        -fx-background-color: red;
-} */
-
-/* .myProgressBar .bar {
-    -fx-background-color:
-        -fx-box-border,
-        linear-gradient(to bottom, derive(-fx-accent,95%), derive(-fx-accent,10%)),
-        linear-gradient(to bottom, derive(-fx-accent,38%), -fx-accent);
-    -fx-background-insets: 0, 1, 2;
-    -fx-padding: 0.416667em; 5
-} 
-
-.progress-bar > .track {
-  -fx-background-color: transparent;
-}
-.progress-bar > .bar {
-  -fx-background-color: transparent;
-  -fx-background-image: url('/images/progress_bar.png');
-  -fx-background-size: 1600px 50px;
-  -fx-background-repeat: no-repeat;
-}
-*/
-
- 
