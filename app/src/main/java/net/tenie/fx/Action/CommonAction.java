@@ -499,19 +499,6 @@ public class CommonAction {
 			code.deleteText(start, end);
 			code.insertText(start, txt);
 
-			// TODO
-//			String temp = "";
-//			for (int t = 0; t < start; t++) {
-//				temp += " ";
-//			}
-//			txt = txt.replaceAll("\n", "\n-- ");
-//			txt = temp + "\n-- " + txt;
-//			logger.info(txt);
-//			int k = txt.indexOf('\n', 0);
-//			while (k >= 0) {
-//				code.insertText(k, "-- ");
-//				k = txt.indexOf('\n', k + 1);
-//			}
 		} else {// 去除注释
 			String valStr = "";
 
