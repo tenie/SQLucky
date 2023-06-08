@@ -15,11 +15,9 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.plugin.PluginManageWindow;
@@ -28,20 +26,19 @@ import net.tenie.fx.window.ConnectionEditor;
 import net.tenie.fx.window.DataTransferWindow;
 import net.tenie.fx.window.KeysBindWindow;
 import net.tenie.fx.window.SignInWindow;
-import net.tenie.fx.window.SignUpWindow;
-
 
 /*   @author tenie */
 public class MenuBarContainer {
-	private static Logger logger = LogManager.getLogger(MenuBarContainer.class); 
+	private static Logger logger = LogManager.getLogger(MenuBarContainer.class);
 	private MenuBar mainMenuBar;
 	private Menu mnfile;
 	private Menu mnEdit;
 	private Menu mnTools;
 	private Menu mnplugin;
-	
+
 	private Menu mnHelp;
 	private DataTransferWindow dtw;
+
 	public MenuBarContainer() {
 		mainMenuBar = new MenuBar();
 		mnfile = createFileMenu();
@@ -64,22 +61,21 @@ public class MenuBarContainer {
 		open.setOnAction(value -> {
 			CommonAction.openSqlFile();
 		});
-		
+
 //		Menu openEncoding = new Menu(StrUtils.MenuItemNameFormat("Open With Encoding "));
 //		openEncoding.setGraphic(IconGenerator.svgImageDefActive("folder-open")); 
-		 
-		
+
 //		MenuItem openGBK = new MenuItem(StrUtils.MenuItemNameFormat("GBK"));
 //		openGBK.setGraphic(IconGenerator.svgImageDefActive("folder-open")); 
 //		openGBK.setOnAction(value -> {
 //			CommonAction.openSqlFile("GBK");
 //		});
-		
+
 //		openEncoding.getItems().addAll(openGBK );
 
 		MenuItem Save = new MenuItem(StrUtils.MenuItemNameFormat("Save"));
 		Save.setGraphic(IconGenerator.svgImageDefActive("floppy-o"));
-		Save.setOnAction(value -> { 
+		Save.setOnAction(value -> {
 			// 保存sql文本到硬盘
 			CommonAction.saveSqlAction();
 		});
@@ -91,7 +87,7 @@ public class MenuBarContainer {
 			CommonAction.mainPageClose();
 		});
 
-		mn.getItems().addAll(open, 
+		mn.getItems().addAll(open,
 //				openEncoding, 
 				Save, new SeparatorMenuItem(), exit);
 		return mn;
@@ -112,24 +108,23 @@ public class MenuBarContainer {
 //			SqlEditor.closeEditor();
 //			关闭数据显示tab页
 			Tab t = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-			if( t != null) {
+			if (t != null) {
 				// tab 名称
 				String title = CommonUtility.tabText(t);
-				ComponentGetter.dataTabPane.getTabs().remove(t); 
-				//都关闭页, 隐藏下半窗体
+				ComponentGetter.dataTabPane.getTabs().remove(t);
+				// 都关闭页, 隐藏下半窗体
 				int tabSize = ComponentGetter.dataTabPane.getTabs().size();
-				if( tabSize == 0) {
+				if (tabSize == 0) {
 //					SdkComponent.hideBottom();
-				}else {
-					//选择最后一个
-					if( ConfigVal.EXEC_INFO_TITLE.equals(title) ) {
-						ComponentGetter.dataTabPane.getSelectionModel().select(tabSize -1 );
+				} else {
+					// 选择最后一个
+					if (ConfigVal.EXEC_INFO_TITLE.equals(title)) {
+						ComponentGetter.dataTabPane.getSelectionModel().select(tabSize - 1);
 					}
-					 
+
 				}
 			}
-			
-			
+
 		});
 
 		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
@@ -152,7 +147,7 @@ public class MenuBarContainer {
 		});
 
 		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Comment Code"));
-		commentCode.setAccelerator(KeyCombination.keyCombination("shortcut+/"));
+//		commentCode.setAccelerator(KeyCombination.keyCombination("shortcut+/"));
 		commentCode.setOnAction(value -> {
 			CommonAction.addAnnotationSQLTextSelectText();
 		});
@@ -194,12 +189,12 @@ public class MenuBarContainer {
 		MenuItem dataTransfer = new MenuItem(StrUtils.MenuItemNameFormat("Data TransFer"));
 		dataTransfer.setGraphic(IconGenerator.svgImageDefActive("mfglabs-random"));
 		dataTransfer.setOnAction(value -> {
-			//TODO 
-			if(dtw == null ) {
-				 dtw = new DataTransferWindow();
+			// TODO
+			if (dtw == null) {
+				dtw = new DataTransferWindow();
 			}
 			dtw.show();
-			
+
 		});
 		MenuItem addDB = new MenuItem(StrUtils.MenuItemNameFormat("Add New DB Connection"));
 		addDB.setOnAction(value -> {
@@ -253,71 +248,65 @@ public class MenuBarContainer {
 		hideLeftBottom.setOnAction(value -> {
 			CommonAction.hideLeftBottom();
 		});
-		
+
 		// 主题变化
 		Menu Theme = new Menu(StrUtils.MenuItemNameFormat("Theme"));
-		Theme.setGraphic(IconGenerator.svgImageDefActive("icomoon-contrast")); 
-		
-		MenuItem themeDark = new MenuItem(StrUtils.MenuItemNameFormat("Dark")); 
-		themeDark.setGraphic(IconGenerator.svgImageDefActive("moon")); 
+		Theme.setGraphic(IconGenerator.svgImageDefActive("icomoon-contrast"));
+
+		MenuItem themeDark = new MenuItem(StrUtils.MenuItemNameFormat("Dark"));
+		themeDark.setGraphic(IconGenerator.svgImageDefActive("moon"));
 		themeDark.setOnAction(value -> {
 			CommonAction.setThemeRestart(CommonConst.THEME_DARK);
-			
+
 		});
-		
+
 		MenuItem themeLight = new MenuItem(StrUtils.MenuItemNameFormat("Light"));
-		themeLight.setGraphic(IconGenerator.svgImageDefActive("sun")); 
+		themeLight.setGraphic(IconGenerator.svgImageDefActive("sun"));
 		themeLight.setOnAction(value -> {
 			CommonAction.setThemeRestart(CommonConst.THEME_LIGHT);
 		});
-		
-		MenuItem themeYellow = new MenuItem(StrUtils.MenuItemNameFormat("Yellow")); 
-		themeYellow.setGraphic(IconGenerator.svgImageDefActive("adjust")); 
+
+		MenuItem themeYellow = new MenuItem(StrUtils.MenuItemNameFormat("Yellow"));
+		themeYellow.setGraphic(IconGenerator.svgImageDefActive("adjust"));
 		themeYellow.setOnAction(value -> {
 			CommonAction.setThemeRestart(CommonConst.THEME_YELLOW);
 		});
-		
-		Theme.getItems().addAll(themeDark , themeLight, themeYellow); 
-		
-		//TODO 字体大小
+
+		Theme.getItems().addAll(themeDark, themeLight, themeYellow);
+
+		// TODO 字体大小
 		Menu fontSize = new Menu(StrUtils.MenuItemNameFormat("Code Font Size"));
-		fontSize.setGraphic(IconGenerator.svgImageDefActive("text-height")); 
-		
+		fontSize.setGraphic(IconGenerator.svgImageDefActive("text-height"));
+
 		MenuItem fontSizePlus = new MenuItem(StrUtils.MenuItemNameFormat("Code Font Size +"));
-		fontSizePlus.setAccelerator(KeyCombination.keyCombination( "shortcut+EQUALS") );
-		fontSizePlus.setGraphic(IconGenerator.svgImageDefActive("plus-circle")); 
+		fontSizePlus.setAccelerator(KeyCombination.keyCombination("shortcut+EQUALS"));
+		fontSizePlus.setGraphic(IconGenerator.svgImageDefActive("plus-circle"));
 		fontSizePlus.setOnAction(value -> {
 			CommonAction.changeFontSize(true);
 		});
-		
-		MenuItem fontSizeMinus = new MenuItem(StrUtils.MenuItemNameFormat("Code Font Size -")); 
+
+		MenuItem fontSizeMinus = new MenuItem(StrUtils.MenuItemNameFormat("Code Font Size -"));
 		fontSizeMinus.setAccelerator(KeyCombination.keyCombination("shortcut+MINUS"));
-		fontSizeMinus.setGraphic(IconGenerator.svgImageDefActive("minus-circle")); 
+		fontSizeMinus.setGraphic(IconGenerator.svgImageDefActive("minus-circle"));
 		fontSizeMinus.setOnAction(value -> {
 			CommonAction.changeFontSize(false);
 		});
-		
-		fontSize.getItems().addAll(fontSizePlus , fontSizeMinus); 
-		
-		
+
+		fontSize.getItems().addAll(fontSizePlus, fontSizeMinus);
+
 		// 快捷键设置
 		MenuItem keysBind = new MenuItem(StrUtils.MenuItemNameFormat("Keys Binding"));
 		keysBind.setGraphic(IconGenerator.svgImageDefActive("keyboard-o"));
 		keysBind.setOnAction(value -> {
-			 KeysBindWindow kbw = new KeysBindWindow();
-			 kbw.show();
-					 
+			KeysBindWindow kbw = new KeysBindWindow();
+			kbw.show();
+
 		});
-		
-		
-		mn.getItems().addAll(dataTransfer, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn, closeALlConn, deleteConn, new SeparatorMenuItem(),
-				hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem()
+
+		mn.getItems().addAll(dataTransfer, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn, closeALlConn,
+				deleteConn, new SeparatorMenuItem(), hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem()
 //				, EnCoding
-				,Theme
-				, new SeparatorMenuItem()
-				,fontSize
-				,keysBind
-				); 
+				, Theme, new SeparatorMenuItem(), fontSize, keysBind);
 		return mn;
 	}
 
@@ -329,19 +318,19 @@ public class MenuBarContainer {
 		about.setOnAction(value -> {
 			ModalDialog.showAbout();
 		});
-		
+
 		MenuItem SignInMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign In"));
 		SignInMenuItem.setGraphic(IconGenerator.svgImageDefActive("sign-in"));
 		SignInMenuItem.setOnAction(value -> {
 //			SignInWindow.createWorkspaceConfigWindow();
 			SignInWindow.show("");
 		});
-		
+
 		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));
 		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("windows-clipboard-variant-edit"));
 		SignUpMenuItem.setOnAction(value -> {
 //			SignUpWindow.createWorkspaceConfigWindow();
-			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/")	;
+			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/");
 		});
 
 		MenuItem checkForUpdates = new MenuItem(StrUtils.MenuItemNameFormat("Check For Updates"));
@@ -349,7 +338,7 @@ public class MenuBarContainer {
 		var svg = IconGenerator.sqluckyLogoSVG();
 		checkForUpdates.setGraphic(svg);
 		checkForUpdates.setOnAction(value -> {
-			
+
 			CheckUpdateWindow.show("");
 //			String version = HttpUtil.get("http://127.0.0.1:8088/sqlucky/version");
 //			if(ConfigVal.version.equals(version)) {
@@ -357,28 +346,25 @@ public class MenuBarContainer {
 //			}else {
 //				
 //			}
-			
+
 		});
 
-		mn.getItems().addAll( SignInMenuItem, SignUpMenuItem, checkForUpdates ,
-				new SeparatorMenuItem(), 
-				about); 
+		mn.getItems().addAll(SignInMenuItem, SignUpMenuItem, checkForUpdates, new SeparatorMenuItem(), about);
 		return mn;
 	}
-	
+
 	Menu createPluginMenu() {
 		Menu mn = new Menu("Plugin");
 
 		MenuItem plugin = new MenuItem(StrUtils.MenuItemNameFormat("Plugin Manage "));
 		plugin.setGraphic(IconGenerator.svgImageDefActive("metro-power-cord"));
-		
-	
+
 		plugin.setOnAction(value -> {
 			PluginManageWindow pw = new PluginManageWindow();
 			pw.show();
 		});
 //
-		mn.getItems().addAll(plugin); 
+		mn.getItems().addAll(plugin);
 		ComponentGetter.pluginMenu = mn;
 		return mn;
 	}
@@ -398,7 +384,5 @@ public class MenuBarContainer {
 	public void setMnfile(Menu mnfile) {
 		this.mnfile = mnfile;
 	}
-
-	
 
 }

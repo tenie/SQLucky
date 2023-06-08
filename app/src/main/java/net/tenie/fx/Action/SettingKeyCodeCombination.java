@@ -30,10 +30,14 @@ import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.PoDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.Po.KeysBindingPO;
 import net.tenie.fx.component.MyAreaTab;
 
 /*   @author tenie */
@@ -42,9 +46,36 @@ public final class SettingKeyCodeCombination {
 
 	private static Map<String, Consumer<String>> keyAction;
 
+	private static Map<String, String> bindingkeyVal;
+
+	/**
+	 * 1. 初始化可以被快捷键调用的函数和对应的名称(名称对应的函数) 2. 从数据库获取快捷的配置信息, (名称对应的按键)
+	 */
 	private static void initKeyAction() {
+		// 给函数定义字符串名称
 		if (keyAction == null) {
 			keyAction = new HashMap<>();
+			keyAction.put("Line Comment", v -> {
+				CommonAction.addAnnotationSQLTextSelectText();
+			});
+		}
+
+		// 从数据库获取按键对应的函数名称
+		if (bindingkeyVal == null) {
+			bindingkeyVal = new HashMap<>();
+			KeysBindingPO po = new KeysBindingPO();
+			var conn = SqluckyAppDB.getConn();
+			try {
+				List<KeysBindingPO> ls = PoDao.select(conn, po);
+				if (ls != null && ls.size() > 0) {
+					KeysBindingPO poVal = ls.get(0);
+					bindingkeyVal.put(poVal.getBinding(), poVal.getActionName());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				SqluckyAppDB.closeConn(conn);
+			}
 
 		}
 	}
@@ -52,23 +83,64 @@ public final class SettingKeyCodeCombination {
 	public static void Setting(Scene scene) {
 		initKeyAction();
 
+		// 回调函数, 当scene按键事件触发后会调用, 将把触发的按钮名称给回调函数, 通过传入的按钮字符串, 去找函数名称, 有了函数名称去找函数然后调用
 		Consumer<String> call = keyVal -> {
-			Consumer<String> action = keyAction.get(keyVal);
-			action.accept("");
+			if (StrUtils.isNotNullOrEmpty(keyVal)) {
+				// 通过按键字符串找函数名称
+				String actionName = bindingkeyVal.get(keyVal);
+				// 通过函数名称找函数来调用
+				Consumer<String> action = keyAction.get(actionName);
+				if (action != null) {
+					action.accept("");
+				}
+			}
+
 		};
 		sceneEventFilter(scene, call);
+	}
+
+	public static String codeNameToSymbol(String codeName) {
+		if ("Slash".equals(codeName)) {
+			codeName = "/";
+		} else if ("Period".equals(codeName)) {
+			codeName = ".";
+		} else if ("Minus".equals(codeName)) {
+			codeName = "-";
+		} else if ("Comma".equals(codeName)) {
+			codeName = ",";
+		} else if ("Back Quote".equals(codeName)) {
+			codeName = "`";
+		} else if ("Equals".equals(codeName)) {
+			codeName = "=";
+		} else if ("Open Bracket".equals(codeName)) {
+			codeName = "[";
+		} else if ("Close Bracket".equals(codeName)) {
+			codeName = "]";
+		} else if ("Back Slash".equals(codeName)) {
+			codeName = "\\";
+		} else if ("Semicolon".equals(codeName)) {
+			codeName = ";";
+		} else if ("Quote".equals(codeName)) {
+			codeName = "'";
+		}
+
+		return codeName;
+
 	}
 
 	public static void sceneEventFilter(Scene scene, Consumer<String> call) {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
 			String val = "";
+//			KeyCode code = e.getCode();
+			String codeName = e.getCode().getName();
+			codeName = codeNameToSymbol(codeName);
 			if (KeyCode.UNDEFINED == e.getCode()) {
 				val = "";
 			} else if (e.isControlDown() && e.isAltDown() && e.isShiftDown()) {
 				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Ctrl + Alt + Shift + " + e.getCode().getName();
+					val = "Ctrl + Alt + Shift + " + codeName;
 					System.out.println(val);
 				}
 
@@ -76,7 +148,7 @@ public final class SettingKeyCodeCombination {
 				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT) {
 
 				} else {
-					val = "Ctrl + Alt + " + e.getCode().getName();
+					val = "Ctrl + Alt + " + codeName;
 					System.out.println(val);
 				}
 
@@ -84,7 +156,7 @@ public final class SettingKeyCodeCombination {
 				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Ctrl + Shift + " + e.getCode().getName();
+					val = "Ctrl + Shift + " + codeName;
 					System.out.println(val);
 				}
 
@@ -92,7 +164,7 @@ public final class SettingKeyCodeCombination {
 				if (e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Alt + Shift + " + e.getCode().getName();
+					val = "Alt + Shift + " + codeName;
 					System.out.println(val);
 				}
 
@@ -100,26 +172,26 @@ public final class SettingKeyCodeCombination {
 				if (e.getCode() == KeyCode.CONTROL) {
 
 				} else {
-					val = "Ctrl + " + e.getCode().getName();
+					val = "Ctrl + " + codeName;
 					System.out.println(val);
 				}
 			} else if (e.isAltDown()) {
 				if (e.getCode() == KeyCode.ALT) {
 
 				} else {
-					val = "ALT + " + e.getCode().getName();
+					val = "ALT + " + codeName;
 					System.out.println(val);
 				}
 			} else if (e.isShiftDown()) {
 				if (e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Shift + " + e.getCode().getName();
+					val = "Shift + " + codeName;
 					System.out.println(val);
 				}
 			} else {
-				System.out.println("其他 : " + e.getCode().getName());
-				val = e.getCode().getName();
+				System.out.println("其他 : " + codeName);
+				val = codeName;
 				System.out.println(val);
 			}
 
