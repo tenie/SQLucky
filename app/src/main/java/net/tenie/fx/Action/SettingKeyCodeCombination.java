@@ -49,14 +49,100 @@ public final class SettingKeyCodeCombination {
 	private static Map<String, String> bindingkeyVal;
 
 	/**
-	 * 1. 初始化可以被快捷键调用的函数和对应的名称(名称对应的函数) 2. 从数据库获取快捷的配置信息, (名称对应的按键)
+	 * 1. 初始化可以被快捷键调用的函数和对应的名称(名称对应的函数) 2. 从数据库获取快捷的配置信息, (名称对应的按键) Ctrl + Alt +
+	 * Shift
 	 */
 	private static void initKeyAction() {
 		// 给函数定义字符串名称
 		if (keyAction == null) {
 			keyAction = new HashMap<>();
+			// 注释代码 Ctrl + /
 			keyAction.put("Line Comment", v -> {
 				CommonAction.addAnnotationSQLTextSelectText();
+			});
+
+			// 运行sql Ctrl + Enter
+			keyAction.put("Run SQL", v -> {
+				RunSQLHelper.runSQLMethod();
+			});
+
+			// 运行sql 当前行 Alt + R
+			keyAction.put("Run SQL Current Line", v -> {
+				RunSQLHelper.runCurrentLineSQLMethod();
+			});
+
+			// 新代码编辑 Ctrl + T
+			keyAction.put("Add New Edit Page", v -> {
+				MyAreaTab.addCodeEmptyTabMethod();
+			});
+
+			// 保存代码 Ctrl + S
+			keyAction.put("Save", v -> {
+				CommonAction.saveSqlAction();
+			});
+
+			// 格式化代码 Ctrl + Shift + F
+			keyAction.put("Format", v -> {
+				CommonAction.formatSqlText();
+			});
+
+			// 查找 Ctrl + F
+			keyAction.put("Find", v -> {
+				CommonUtility.findReplace(false);
+			});
+
+			// 查找 替换 Ctrl + R
+			keyAction.put("Replace", v -> {
+				CommonUtility.findReplace(true);
+			});
+
+			// 打开文件 Ctrl + O
+			keyAction.put("Open", v -> {
+				CommonAction.openSqlFile();
+			});
+			// 关闭app Ctrl + Q
+			keyAction.put("Exit", v -> {
+				CommonAction.mainPageClose();
+			});
+
+			// 关闭表格 Alt + W
+			keyAction.put("Close Data Table", v -> {
+				CommonAction.closeDataTable();
+			});
+
+			// 字符串大写 Ctrl + Shift + X
+			keyAction.put("Upper Case", v -> {
+				CommonAction.UpperCaseSQLTextSelectText();
+			});
+
+			// 字符串小写 Ctrl + Shift + Y
+			keyAction.put("Lower Case", v -> {
+				CommonAction.LowerCaseSQLTextSelectText();
+			});
+
+			// 下划线转驼峰 Ctrl + Shift + R
+			keyAction.put("Underscore To Hump", v -> {
+				CommonAction.underlineCaseCamel();
+			});
+
+			// 驼峰转下划线 Ctrl + Shift + T
+			keyAction.put("Underscore To Hump", v -> {
+				CommonAction.CamelCaseUnderline();
+			});
+
+			// 隐藏副面板 Ctrl + H
+			keyAction.put("Hide/Show All Panels", v -> {
+				CommonAction.hideLeftBottom();
+			});
+
+			// 字体变大 Ctrl + =
+			keyAction.put("Font Size +", v -> {
+				CommonAction.changeFontSize(true);
+			});
+
+			// 字体变小 Ctrl + -
+			keyAction.put("Font Size -", v -> {
+				CommonAction.changeFontSize(false);
 			});
 		}
 
@@ -80,6 +166,24 @@ public final class SettingKeyCodeCombination {
 		}
 	}
 
+	// 用按键(key)获取函数
+	public static Consumer<String> getConsumerUseKey(String key) {
+		// 通过按键字符串找函数名称
+		String actionName = bindingkeyVal.get(key);
+		if (StrUtils.isNotNullOrEmpty(actionName)) {
+			// 通过函数名称找函数来调用
+			Consumer<String> action = keyAction.get(actionName);
+			return action;
+		}
+		return null;
+	}
+
+	// 用名称获取key
+	public static String getKeyByActionName(Sting ActionName) {
+
+		return null;
+	}
+
 	public static void Setting(Scene scene) {
 		initKeyAction();
 
@@ -87,9 +191,10 @@ public final class SettingKeyCodeCombination {
 		Consumer<String> call = keyVal -> {
 			if (StrUtils.isNotNullOrEmpty(keyVal)) {
 				// 通过按键字符串找函数名称
-				String actionName = bindingkeyVal.get(keyVal);
-				// 通过函数名称找函数来调用
-				Consumer<String> action = keyAction.get(actionName);
+//				String actionName = bindingkeyVal.get(keyVal);
+//				// 通过函数名称找函数来调用
+//				Consumer<String> action = keyAction.get(actionName);
+				Consumer<String> action = getConsumerUseKey(keyVal);
 				if (action != null) {
 					action.accept("");
 				}
@@ -122,6 +227,8 @@ public final class SettingKeyCodeCombination {
 			codeName = ";";
 		} else if ("Quote".equals(codeName)) {
 			codeName = "'";
+		} else {
+			codeName = codeName.toUpperCase();
 		}
 
 		return codeName;

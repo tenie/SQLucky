@@ -902,6 +902,29 @@ public class CommonAction {
 
 	}
 
+	// 关闭数据展示表格
+	public static void closeDataTable() {
+//		关闭数据显示tab页
+		Tab t = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
+		if (t != null) {
+			// tab 名称
+			String title = CommonUtility.tabText(t);
+			ComponentGetter.dataTabPane.getTabs().remove(t);
+			// 都关闭页, 隐藏下半窗体
+			int tabSize = ComponentGetter.dataTabPane.getTabs().size();
+			if (tabSize == 0) {
+//				SdkComponent.hideBottom();
+			} else {
+				// 选择最后一个
+				if (ConfigVal.EXEC_INFO_TITLE.equals(title)) {
+					ComponentGetter.dataTabPane.getSelectionModel().select(tabSize - 1);
+				}
+
+			}
+		}
+
+	}
+
 	public static void demo() {
 	}
 
