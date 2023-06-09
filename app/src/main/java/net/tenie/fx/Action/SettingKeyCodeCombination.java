@@ -46,7 +46,11 @@ public final class SettingKeyCodeCombination {
 
 	private static Map<String, Consumer<String>> keyAction;
 
+	// <keys, actionName>
 	private static Map<String, String> bindingkeyVal;
+
+	// <actionName, keys>
+	private static Map<String, String> actionName;
 
 	/**
 	 * 1. 初始化可以被快捷键调用的函数和对应的名称(名称对应的函数) 2. 从数据库获取快捷的配置信息, (名称对应的按键) Ctrl + Alt +
@@ -149,6 +153,7 @@ public final class SettingKeyCodeCombination {
 		// 从数据库获取按键对应的函数名称
 		if (bindingkeyVal == null) {
 			bindingkeyVal = new HashMap<>();
+			actionName = new HashMap<>();
 			KeysBindingPO po = new KeysBindingPO();
 			var conn = SqluckyAppDB.getConn();
 			try {
@@ -156,6 +161,7 @@ public final class SettingKeyCodeCombination {
 				if (ls != null && ls.size() > 0) {
 					KeysBindingPO poVal = ls.get(0);
 					bindingkeyVal.put(poVal.getBinding(), poVal.getActionName());
+					actionName.put( poVal.getActionName(), poVal.getBinding());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -179,9 +185,9 @@ public final class SettingKeyCodeCombination {
 	}
 
 	// 用名称获取key
-	public static String getKeyByActionName(Sting ActionName) {
-
-		return null;
+	public static String getKeyByActionName(String ActionName) {
+		String keys = actionName.get(ActionName);
+		return keys;
 	}
 
 	public static void Setting(Scene scene) {
