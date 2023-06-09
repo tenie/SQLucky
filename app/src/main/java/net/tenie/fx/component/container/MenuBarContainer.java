@@ -8,12 +8,9 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.input.KeyCombination;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -57,7 +54,7 @@ public class MenuBarContainer {
 
 		MenuItem open = new MenuItem(StrUtils.MenuItemNameFormat("Open"));
 		open.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
-		open.setAccelerator(KeyCombination.keyCombination("shortcut+O"));
+//		open.setAccelerator(KeyCombination.keyCombination("shortcut+O"));
 		open.setOnAction(value -> {
 			CommonAction.openSqlFile();
 		});
@@ -82,7 +79,7 @@ public class MenuBarContainer {
 
 		MenuItem exit = new MenuItem("Exit");
 		exit.setGraphic(IconGenerator.svgImageDefActive("power-off"));
-		exit.setAccelerator(KeyCombination.keyCombination("shortcut+Q"));
+//		exit.setAccelerator(KeyCombination.keyCombination("shortcut+Q"));
 		exit.setOnAction((ActionEvent t) -> {
 			CommonAction.mainPageClose();
 		});
@@ -96,35 +93,16 @@ public class MenuBarContainer {
 	Menu createEditMenu() {
 		Menu mn = new Menu("Edit");
 
-		MenuItem nce = new MenuItem(StrUtils.MenuItemNameFormat("Add Code Editer"));
-		nce.setAccelerator(KeyCombination.keyCombination("shortcut+T"));
+		MenuItem nce = new MenuItem(StrUtils.MenuItemNameFormat("Add New Edit Page"));
+//		nce.setAccelerator(KeyCombination.keyCombination("shortcut+T"));
 		nce.setOnAction(value -> {
 			MyAreaTab.addCodeEmptyTabMethod();
 		});
 
 		MenuItem cce = new MenuItem(StrUtils.MenuItemNameFormat("Close Data Table"));
-		cce.setAccelerator(KeyCombination.keyCombination("alt+W"));
+//		cce.setAccelerator(KeyCombination.keyCombination("alt+W"));
 		cce.setOnAction(value -> {
-//			SqlEditor.closeEditor();
-//			关闭数据显示tab页
-			Tab t = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-			if (t != null) {
-				// tab 名称
-				String title = CommonUtility.tabText(t);
-				ComponentGetter.dataTabPane.getTabs().remove(t);
-				// 都关闭页, 隐藏下半窗体
-				int tabSize = ComponentGetter.dataTabPane.getTabs().size();
-				if (tabSize == 0) {
-//					SdkComponent.hideBottom();
-				} else {
-					// 选择最后一个
-					if (ConfigVal.EXEC_INFO_TITLE.equals(title)) {
-						ComponentGetter.dataTabPane.getSelectionModel().select(tabSize - 1);
-					}
-
-				}
-			}
-
+			CommonAction.closeDataTable();
 		});
 
 		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
@@ -154,26 +132,26 @@ public class MenuBarContainer {
 
 		// 大写
 		MenuItem UpperCase = new MenuItem(StrUtils.MenuItemNameFormat("Upper Case"));
-		UpperCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+X"));
+//		UpperCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+X"));
 		UpperCase.setOnAction(value -> {
 			CommonAction.UpperCaseSQLTextSelectText();
 		});
 
 		MenuItem LowerCase = new MenuItem(StrUtils.MenuItemNameFormat("Lower Case"));
-		LowerCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+Y"));
+//		LowerCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+Y"));
 		LowerCase.setOnAction(value -> {
 			CommonAction.LowerCaseSQLTextSelectText();
 		});
 
 		// Underscore to hump
 		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underscore To Hump"));
-		underscore.setAccelerator(KeyCombination.keyCombination("shortcut+shift+R"));
+//		underscore.setAccelerator(KeyCombination.keyCombination("shortcut+shift+R"));
 		underscore.setOnAction(value -> {
 			CommonAction.underlineCaseCamel();
 		});
 
 		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underscore"));
-		Hump.setAccelerator(KeyCombination.keyCombination("shortcut+shift+T"));
+//		Hump.setAccelerator(KeyCombination.keyCombination("shortcut+shift+T"));
 		Hump.setOnAction(value -> {
 			CommonAction.CamelCaseUnderline();
 		});
@@ -243,7 +221,7 @@ public class MenuBarContainer {
 		});
 
 		MenuItem hideLeftBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show All Panels"));
-		hideLeftBottom.setAccelerator(KeyCombination.keyCombination("shortcut+H"));
+//		hideLeftBottom.setAccelerator(KeyCombination.keyCombination("shortcut+H"));
 		hideLeftBottom.setGraphic(IconGenerator.svgImageDefActive("arrows-alt"));
 		hideLeftBottom.setOnAction(value -> {
 			CommonAction.hideLeftBottom();
@@ -275,18 +253,18 @@ public class MenuBarContainer {
 		Theme.getItems().addAll(themeDark, themeLight, themeYellow);
 
 		// TODO 字体大小
-		Menu fontSize = new Menu(StrUtils.MenuItemNameFormat("Code Font Size"));
+		Menu fontSize = new Menu(StrUtils.MenuItemNameFormat("Font Size"));
 		fontSize.setGraphic(IconGenerator.svgImageDefActive("text-height"));
 
-		MenuItem fontSizePlus = new MenuItem(StrUtils.MenuItemNameFormat("Code Font Size +"));
-		fontSizePlus.setAccelerator(KeyCombination.keyCombination("shortcut+EQUALS"));
+		MenuItem fontSizePlus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size +"));
+//		fontSizePlus.setAccelerator(KeyCombination.keyCombination("shortcut+EQUALS"));
 		fontSizePlus.setGraphic(IconGenerator.svgImageDefActive("plus-circle"));
 		fontSizePlus.setOnAction(value -> {
 			CommonAction.changeFontSize(true);
 		});
 
-		MenuItem fontSizeMinus = new MenuItem(StrUtils.MenuItemNameFormat("Code Font Size -"));
-		fontSizeMinus.setAccelerator(KeyCombination.keyCombination("shortcut+MINUS"));
+		MenuItem fontSizeMinus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size -"));
+//		fontSizeMinus.setAccelerator(KeyCombination.keyCombination("shortcut+MINUS"));
 		fontSizeMinus.setGraphic(IconGenerator.svgImageDefActive("minus-circle"));
 		fontSizeMinus.setOnAction(value -> {
 			CommonAction.changeFontSize(false);
