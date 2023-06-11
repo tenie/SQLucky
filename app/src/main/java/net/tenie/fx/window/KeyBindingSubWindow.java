@@ -23,7 +23,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.SettingKeyCodeCombination;
+import net.tenie.fx.Action.SettingKeyBinding;
 
 /**
  * 
@@ -132,7 +132,7 @@ public class KeyBindingSubWindow {
 		});
 		
 		 
-		SettingKeyCodeCombination.sceneEventFilter(scene, setLabel);
+		SettingKeyBinding.sceneEventFilter(scene, setLabel);
 		stageWindow.initModality(Modality.APPLICATION_MODAL);
 		stageWindow.setTitle("请直接再键盘上输入新的快捷键");
 //		stageWindow.setTitle(title);

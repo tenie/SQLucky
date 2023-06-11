@@ -52,7 +52,7 @@ public class MenuBarContainer {
 	Menu createFileMenu() {
 		Menu mn = new Menu("File");
 
-		MenuItem open = new MenuItem(StrUtils.MenuItemNameFormat("Open"));
+		MenuItem open = new MenuItem("Open");
 		open.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
 //		open.setAccelerator(KeyCombination.keyCombination("shortcut+O"));
 		open.setOnAction(value -> {
@@ -87,6 +87,11 @@ public class MenuBarContainer {
 		mn.getItems().addAll(open,
 //				openEncoding, 
 				Save, new SeparatorMenuItem(), exit);
+//		mn.setOnShown(null);
+		mn.setOnShowing(e->{
+			open.setText(StrUtils.MenuItemNameFormat("Open"));
+			
+		});
 		return mn;
 	}
 

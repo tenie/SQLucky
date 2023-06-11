@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
@@ -16,13 +15,11 @@ import org.apache.logging.log4j.Logger;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
-import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -36,21 +33,15 @@ import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.KeyBindingUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Po.KeysBindingPO;
 import net.tenie.fx.component.MyAreaTab;
 
 /*   @author tenie */
-public final class SettingKeyCodeCombination {
-	private static Logger logger = LogManager.getLogger(SettingKeyCodeCombination.class);
+public final class SettingKeyBinding {
+	private static Logger logger = LogManager.getLogger(SettingKeyBinding.class);
 
-	private static Map<String, Consumer<String>> keyAction;
-
-	// <keys, actionName>
-	private static Map<String, String> bindingkeyVal;
-
-	// <actionName, keys>
-	private static Map<String, String> actionName;
 
 	/**
 	 * 1. 初始化可以被快捷键调用的函数和对应的名称(名称对应的函数) 2. 从数据库获取快捷的配置信息, (名称对应的按键) Ctrl + Alt +
@@ -58,110 +49,113 @@ public final class SettingKeyCodeCombination {
 	 */
 	private static void initKeyAction() {
 		// 给函数定义字符串名称
-		if (keyAction == null) {
-			keyAction = new HashMap<>();
-			// 注释代码 Ctrl + /
-			keyAction.put("Line Comment", v -> {
+		if (KeyBindingUtils.keyAction == null) {
+			KeyBindingUtils.keyAction = new HashMap<>();
+			// 注释代码 Ctrl /
+			KeyBindingUtils.keyAction.put("Line Comment", v -> {
 				CommonAction.addAnnotationSQLTextSelectText();
 			});
 
-			// 运行sql Ctrl + Enter
-			keyAction.put("Run SQL", v -> {
+			// 运行sql Ctrl Enter
+			KeyBindingUtils.keyAction.put("Run SQL", v -> {
 				RunSQLHelper.runSQLMethod();
 			});
 
-			// 运行sql 当前行 Alt + R
-			keyAction.put("Run SQL Current Line", v -> {
+			// 运行sql 当前行 Alt R
+			KeyBindingUtils.keyAction.put("Run SQL Current Line", v -> {
 				RunSQLHelper.runCurrentLineSQLMethod();
 			});
 
-			// 新代码编辑 Ctrl + T
-			keyAction.put("Add New Edit Page", v -> {
+			// 新代码编辑 Ctrl T
+			KeyBindingUtils.keyAction.put("Add New Edit Page", v -> {
 				MyAreaTab.addCodeEmptyTabMethod();
 			});
 
-			// 保存代码 Ctrl + S
-			keyAction.put("Save", v -> {
+			// 保存代码 Ctrl S
+			KeyBindingUtils.keyAction.put("Save", v -> {
 				CommonAction.saveSqlAction();
 			});
 
-			// 格式化代码 Ctrl + Shift + F
-			keyAction.put("Format", v -> {
+			// 格式化代码 Ctrl Shift F
+			KeyBindingUtils.keyAction.put("Format", v -> {
 				CommonAction.formatSqlText();
 			});
 
-			// 查找 Ctrl + F
-			keyAction.put("Find", v -> {
+			// 查找 Ctrl F
+			KeyBindingUtils.keyAction.put("Find", v -> {
 				CommonUtility.findReplace(false);
 			});
 
-			// 查找 替换 Ctrl + R
-			keyAction.put("Replace", v -> {
+			// 查找 替换 Ctrl R
+			KeyBindingUtils.keyAction.put("Replace", v -> {
 				CommonUtility.findReplace(true);
 			});
 
-			// 打开文件 Ctrl + O
-			keyAction.put("Open", v -> {
+			// 打开文件 Ctrl O
+			KeyBindingUtils.keyAction.put("Open", v -> {
 				CommonAction.openSqlFile();
 			});
-			// 关闭app Ctrl + Q
-			keyAction.put("Exit", v -> {
+			// 关闭app Ctrl Q
+			KeyBindingUtils.keyAction.put("Exit", v -> {
 				CommonAction.mainPageClose();
 			});
 
-			// 关闭表格 Alt + W
-			keyAction.put("Close Data Table", v -> {
+			// 关闭表格 Alt W
+			KeyBindingUtils.keyAction.put("Close Data Table", v -> {
 				CommonAction.closeDataTable();
 			});
 
-			// 字符串大写 Ctrl + Shift + X
-			keyAction.put("Upper Case", v -> {
+			// 字符串大写 Ctrl Shift X
+			KeyBindingUtils.keyAction.put("Upper Case", v -> {
 				CommonAction.UpperCaseSQLTextSelectText();
 			});
 
-			// 字符串小写 Ctrl + Shift + Y
-			keyAction.put("Lower Case", v -> {
+			// 字符串小写 Ctrl Shift Y
+			KeyBindingUtils.keyAction.put("Lower Case", v -> {
 				CommonAction.LowerCaseSQLTextSelectText();
 			});
 
-			// 下划线转驼峰 Ctrl + Shift + R
-			keyAction.put("Underscore To Hump", v -> {
+			// 下划线转驼峰 Ctrl Shift R
+			KeyBindingUtils.keyAction.put("Underscore To Hump", v -> {
 				CommonAction.underlineCaseCamel();
 			});
 
-			// 驼峰转下划线 Ctrl + Shift + T
-			keyAction.put("Underscore To Hump", v -> {
+			// 驼峰转下划线 Ctrl Shift T
+			KeyBindingUtils.keyAction.put("Underscore To Hump", v -> {
 				CommonAction.CamelCaseUnderline();
 			});
 
-			// 隐藏副面板 Ctrl + H
-			keyAction.put("Hide/Show All Panels", v -> {
+			// 隐藏副面板 Ctrl H
+			KeyBindingUtils.keyAction.put("Hide/Show All Panels", v -> {
 				CommonAction.hideLeftBottom();
 			});
 
-			// 字体变大 Ctrl + =
-			keyAction.put("Font Size +", v -> {
+			// 字体变大 Ctrl =
+			KeyBindingUtils.keyAction.put("Font Size +", v -> {
 				CommonAction.changeFontSize(true);
 			});
 
-			// 字体变小 Ctrl + -
-			keyAction.put("Font Size -", v -> {
+			// 字体变小 Ctrl -
+			KeyBindingUtils.keyAction.put("Font Size -", v -> {
 				CommonAction.changeFontSize(false);
 			});
 		}
 
 		// 从数据库获取按键对应的函数名称
-		if (bindingkeyVal == null) {
-			bindingkeyVal = new HashMap<>();
-			actionName = new HashMap<>();
+		if (KeyBindingUtils.bindingkeyVal == null) {
+			KeyBindingUtils.bindingkeyVal = new HashMap<>();
+			KeyBindingUtils.actionName = new HashMap<>();
 			KeysBindingPO po = new KeysBindingPO();
 			var conn = SqluckyAppDB.getConn();
 			try {
 				List<KeysBindingPO> ls = PoDao.select(conn, po);
 				if (ls != null && ls.size() > 0) {
-					KeysBindingPO poVal = ls.get(0);
-					bindingkeyVal.put(poVal.getBinding(), poVal.getActionName());
-					actionName.put( poVal.getActionName(), poVal.getBinding());
+					for (KeysBindingPO poVal : ls) {
+//						KeysBindingPO poVal = ls.get(0);
+						KeyBindingUtils.bindingkeyVal.put(poVal.getBinding(), poVal.getActionName());
+						KeyBindingUtils.actionName.put(poVal.getActionName(), poVal.getBinding());
+
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -174,6 +168,9 @@ public final class SettingKeyCodeCombination {
 
 	// 用按键(key)获取函数
 	public static Consumer<String> getConsumerUseKey(String key) {
+		var bindingkeyVal = KeyBindingUtils.bindingkeyVal;
+		var keyAction = KeyBindingUtils.keyAction;
+		
 		// 通过按键字符串找函数名称
 		String actionName = bindingkeyVal.get(key);
 		if (StrUtils.isNotNullOrEmpty(actionName)) {
@@ -186,6 +183,7 @@ public final class SettingKeyCodeCombination {
 
 	// 用名称获取key
 	public static String getKeyByActionName(String ActionName) {
+		var actionName = KeyBindingUtils.actionName;
 		String keys = actionName.get(ActionName);
 		return keys;
 	}
@@ -202,6 +200,7 @@ public final class SettingKeyCodeCombination {
 //				Consumer<String> action = keyAction.get(actionName);
 				Consumer<String> action = getConsumerUseKey(keyVal);
 				if (action != null) {
+					System.out.println("执行快捷："+keyVal);
 					action.accept("");
 				}
 			}
@@ -253,7 +252,7 @@ public final class SettingKeyCodeCombination {
 				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Ctrl + Alt + Shift + " + codeName;
+					val = "Ctrl Alt Shift " + codeName;
 					System.out.println(val);
 				}
 
@@ -261,7 +260,7 @@ public final class SettingKeyCodeCombination {
 				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT) {
 
 				} else {
-					val = "Ctrl + Alt + " + codeName;
+					val = "Ctrl Alt " + codeName;
 					System.out.println(val);
 				}
 
@@ -269,7 +268,7 @@ public final class SettingKeyCodeCombination {
 				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Ctrl + Shift + " + codeName;
+					val = "Ctrl Shift " + codeName;
 					System.out.println(val);
 				}
 
@@ -277,7 +276,7 @@ public final class SettingKeyCodeCombination {
 				if (e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Alt + Shift + " + codeName;
+					val = "Alt Shift " + codeName;
 					System.out.println(val);
 				}
 
@@ -285,21 +284,21 @@ public final class SettingKeyCodeCombination {
 				if (e.getCode() == KeyCode.CONTROL) {
 
 				} else {
-					val = "Ctrl + " + codeName;
+					val = "Ctrl " + codeName;
 					System.out.println(val);
 				}
 			} else if (e.isAltDown()) {
 				if (e.getCode() == KeyCode.ALT) {
 
 				} else {
-					val = "ALT + " + codeName;
+					val = "ALT " + codeName;
 					System.out.println(val);
 				}
 			} else if (e.isShiftDown()) {
 				if (e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Shift + " + codeName;
+					val = "Shift " + codeName;
 					System.out.println(val);
 				}
 			} else {
@@ -309,6 +308,34 @@ public final class SettingKeyCodeCombination {
 			}
 
 			call.accept(val);
+			
+		});
+
+		KeyCombination cx = KeyCombination.keyCombination("alt+/");
+		scene.getAccelerators().put(cx, () -> {
+			var codeArea = SqluckyEditor.getCodeArea();
+			if (codeArea.isFocused()) {
+				if (CommonUtility.isMacOS()) {
+					Platform.runLater(() -> {
+						int ar = codeArea.getAnchor();
+						String str = codeArea.getText(ar - 1, ar);
+						if (str.equals("÷")) {
+							codeArea.deleteText(ar - 1, ar);
+						}
+					});
+				} else if (CommonUtility.isLinuxOS()) {
+					Platform.runLater(() -> {
+						int ar = codeArea.getAnchor();
+						String str = codeArea.getText(ar - 1, ar);
+						if (str.equals("/")) {
+							codeArea.deleteText(ar - 1, ar);
+						}
+					});
+				}
+
+				SqluckyEditor.currentMyTab().getSqlCodeArea().callPopup();
+			}
+
 		});
 	}
 
@@ -637,9 +664,6 @@ public final class SettingKeyCodeCombination {
 				rs.close();
 		}
 	}
-
-	private static void fireEvent(JFXButton btn) {
-		btn.fireEvent(new Event(MouseEvent.MOUSE_CLICKED));
-	}
+	
 
 }
