@@ -70,7 +70,7 @@ public class MenuBarContainer {
 
 //		openEncoding.getItems().addAll(openGBK );
 
-		MenuItem Save = new MenuItem(StrUtils.MenuItemNameFormat("Save"));
+		MenuItem Save = new MenuItem("Save");
 		Save.setGraphic(IconGenerator.svgImageDefActive("floppy-o"));
 		Save.setOnAction(value -> {
 			// 保存sql文本到硬盘
@@ -87,9 +87,10 @@ public class MenuBarContainer {
 		mn.getItems().addAll(open,
 //				openEncoding, 
 				Save, new SeparatorMenuItem(), exit);
-//		mn.setOnShown(null);
 		mn.setOnShowing(e->{
 			open.setText(StrUtils.MenuItemNameFormat("Open"));
+			exit.setText(StrUtils.MenuItemNameFormat("Exit"));
+			Save.setText(StrUtils.MenuItemNameFormat("Save"));
 			
 		});
 		return mn;
@@ -98,64 +99,64 @@ public class MenuBarContainer {
 	Menu createEditMenu() {
 		Menu mn = new Menu("Edit");
 
-		MenuItem nce = new MenuItem(StrUtils.MenuItemNameFormat("Add New Edit Page"));
+		MenuItem nce = new MenuItem("Add New Edit Page");
 //		nce.setAccelerator(KeyCombination.keyCombination("shortcut+T"));
 		nce.setOnAction(value -> {
 			MyAreaTab.addCodeEmptyTabMethod();
 		});
 
-		MenuItem cce = new MenuItem(StrUtils.MenuItemNameFormat("Close Data Table"));
+		MenuItem cce = new MenuItem("Close Data Table");
 //		cce.setAccelerator(KeyCombination.keyCombination("alt+W"));
 		cce.setOnAction(value -> {
 			CommonAction.closeDataTable();
 		});
 
-		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
+		MenuItem Find = new MenuItem("Find");
 		Find.setGraphic(IconGenerator.svgImageDefActive("search"));
 //		Find.setAccelerator(KeyCombination.keyCombination("shortcut+F"));
 		Find.setOnAction(value -> {
 			CommonUtility.findReplace(false);
 		});
 
-		MenuItem FindReplace = new MenuItem(StrUtils.MenuItemNameFormat("Replace"));
+		MenuItem FindReplace = new MenuItem("Replace");
 //		FindReplace.setAccelerator(KeyCombination.keyCombination("shortcut+R"));
 		FindReplace.setOnAction(value -> {
 			CommonUtility.findReplace(true);
 		});
 
-		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format Text"));
+		MenuItem Format = new MenuItem("Format");
 //		Format.setAccelerator(KeyCombination.keyCombination("shortcut+shift+F"));
 		Format.setOnAction(value -> {
 			CommonAction.formatSqlText();
 		});
 
-		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Comment Code"));
+		MenuItem commentCode = new MenuItem("Line Comment");
 //		commentCode.setAccelerator(KeyCombination.keyCombination("shortcut+/"));
 		commentCode.setOnAction(value -> {
 			CommonAction.addAnnotationSQLTextSelectText();
 		});
 
 		// 大写
-		MenuItem UpperCase = new MenuItem(StrUtils.MenuItemNameFormat("Upper Case"));
+		MenuItem UpperCase = new MenuItem("Upper Case");
 //		UpperCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+X"));
 		UpperCase.setOnAction(value -> {
 			CommonAction.UpperCaseSQLTextSelectText();
 		});
 
-		MenuItem LowerCase = new MenuItem(StrUtils.MenuItemNameFormat("Lower Case"));
+		MenuItem LowerCase = new MenuItem("Lower Case");
 //		LowerCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+Y"));
 		LowerCase.setOnAction(value -> {
 			CommonAction.LowerCaseSQLTextSelectText();
 		});
 
 		// Underscore to hump
-		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underscore To Hump"));
+		MenuItem underscore = new MenuItem("Underscore To Hump");
 //		underscore.setAccelerator(KeyCombination.keyCombination("shortcut+shift+R"));
 		underscore.setOnAction(value -> {
 			CommonAction.underlineCaseCamel();
 		});
 
-		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underscore"));
+		MenuItem Hump = new MenuItem("Hump To Underscore");
 //		Hump.setAccelerator(KeyCombination.keyCombination("shortcut+shift+T"));
 		Hump.setOnAction(value -> {
 			CommonAction.CamelCaseUnderline();
@@ -163,6 +164,20 @@ public class MenuBarContainer {
 
 		mn.getItems().addAll(nce, cce, new SeparatorMenuItem(), Find, FindReplace, new SeparatorMenuItem(), Format,
 				commentCode, new SeparatorMenuItem(), UpperCase, LowerCase, underscore, Hump, new SeparatorMenuItem());
+		
+		mn.setOnShowing(e->{
+			nce.setText(StrUtils.MenuItemNameFormat("Add New Edit Page"));
+			cce.setText(StrUtils.MenuItemNameFormat("Close Data Table"));
+			Find.setText(StrUtils.MenuItemNameFormat("Find"));
+			FindReplace.setText(StrUtils.MenuItemNameFormat("Replace"));
+			Format.setText(StrUtils.MenuItemNameFormat("Format"));
+			commentCode.setText(StrUtils.MenuItemNameFormat("Line Comment"));
+			UpperCase.setText(StrUtils.MenuItemNameFormat("Upper Case"));
+			LowerCase.setText(StrUtils.MenuItemNameFormat("Lower Case"));
+			underscore.setText(StrUtils.MenuItemNameFormat("Underscore To Hump"));
+			Hump.setText(StrUtils.MenuItemNameFormat("Hump To Underscore"));
+			
+		});
 		return mn;
 	}
 
@@ -290,6 +305,20 @@ public class MenuBarContainer {
 				deleteConn, new SeparatorMenuItem(), hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem()
 //				, EnCoding
 				, Theme, new SeparatorMenuItem(), fontSize, keysBind);
+		
+//		mn.setOnShowing(e->{
+//			nce.setText(StrUtils.MenuItemNameFormat("Add New Edit Page"));
+//			cce.setText(StrUtils.MenuItemNameFormat("Close Data Table"));
+//			Find.setText(StrUtils.MenuItemNameFormat("Find"));
+//			FindReplace.setText(StrUtils.MenuItemNameFormat("Replace"));
+//			Format.setText(StrUtils.MenuItemNameFormat("Format"));
+//			commentCode.setText(StrUtils.MenuItemNameFormat("Line Comment"));
+//			UpperCase.setText(StrUtils.MenuItemNameFormat("Upper Case"));
+//			LowerCase.setText(StrUtils.MenuItemNameFormat("Lower Case"));
+//			underscore.setText(StrUtils.MenuItemNameFormat("Underscore To Hump"));
+//			Hump.setText(StrUtils.MenuItemNameFormat("Hump To Underscore"));
+//			
+//		});
 		return mn;
 	}
 
