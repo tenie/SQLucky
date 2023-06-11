@@ -4,7 +4,6 @@ import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
@@ -506,12 +505,23 @@ public class StrUtils {
 	}
 	
 	public static  String MenuItemNameFormat(String name) {
-		String str =MenuItemNameFormat(name, 30);
+		var actionName = KeyBindingUtils.actionName;
+		String key = "";
+		if(actionName !=null) {
+			key = actionName.get(name) ;
+			if(key == null ) {
+				key = "";
+			}
+		} 
+		String str =MenuItemNameFormat(name, key, 30);
 		return str;
 	}
-	
 	public static  String MenuItemNameFormat(String name ,int size) {
 		String str = String.format("  %-"+size+"s", name);
+		return str;
+	}
+	public static  String MenuItemNameFormat(String name , String key, int size) {
+		String str = String.format("  %-"+size+"s %s", name, key);
 		return str;
 	}
 	

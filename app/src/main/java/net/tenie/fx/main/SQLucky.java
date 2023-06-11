@@ -29,7 +29,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
-import net.tenie.fx.Action.SettingKeyCodeCombination;
+import net.tenie.fx.Action.SettingKeyBinding;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
 import net.tenie.fx.component.container.AppWindow;
@@ -104,7 +104,7 @@ public class SQLucky extends Application {
 		
 		scene = app.getAppScene();
 
-		SettingKeyCodeCombination.Setting(scene);
+		SettingKeyBinding.Setting(scene);
 		CommonAction.setTheme(Theme);
 		// 加载插件
 		ServiceLoad.callLoad();
