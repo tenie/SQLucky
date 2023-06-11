@@ -516,12 +516,23 @@ public class StrUtils {
 		String str =MenuItemNameFormat(name, key, 30);
 		return str;
 	}
-	public static  String MenuItemNameFormat(String name ,int size) {
-		String str = String.format("  %-"+size+"s", name);
-		return str;
-	}
 	public static  String MenuItemNameFormat(String name , String key, int size) {
-		String str = String.format("  %-"+size+"s %s", name, key);
+		String str ="";
+		if(StrUtils.isNotNullOrEmpty(key)) {
+			 str = String.format("  %-"+size+"s", name+" ( "+ key + " )");
+		}else {
+			 str = String.format("  %-"+size+"s", name);
+		}
+		
+//		int len = name.length();
+//		int tmp = size - len;
+//		if(tmp > 0) {
+//			for(int i = 0 ; i< tmp ; i++) {
+//				name += " ";
+//			}
+//			
+//		}
+//		String str = name + key;
 		return str;
 	}
 	
