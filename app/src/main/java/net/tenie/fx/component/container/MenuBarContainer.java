@@ -87,11 +87,11 @@ public class MenuBarContainer {
 		mn.getItems().addAll(open,
 //				openEncoding, 
 				Save, new SeparatorMenuItem(), exit);
-		mn.setOnShowing(e->{
+		mn.setOnShowing(e -> {
 			open.setText(StrUtils.MenuItemNameFormat("Open"));
 			exit.setText(StrUtils.MenuItemNameFormat("Exit"));
 			Save.setText(StrUtils.MenuItemNameFormat("Save"));
-			
+
 		});
 		return mn;
 	}
@@ -164,8 +164,8 @@ public class MenuBarContainer {
 
 		mn.getItems().addAll(nce, cce, new SeparatorMenuItem(), Find, FindReplace, new SeparatorMenuItem(), Format,
 				commentCode, new SeparatorMenuItem(), UpperCase, LowerCase, underscore, Hump, new SeparatorMenuItem());
-		
-		mn.setOnShowing(e->{
+
+		mn.setOnShowing(e -> {
 			nce.setText(StrUtils.MenuItemNameFormat("Add New Edit Page"));
 			cce.setText(StrUtils.MenuItemNameFormat("Close Data Table"));
 			Find.setText(StrUtils.MenuItemNameFormat("Find"));
@@ -176,7 +176,7 @@ public class MenuBarContainer {
 			LowerCase.setText(StrUtils.MenuItemNameFormat("Lower Case"));
 			underscore.setText(StrUtils.MenuItemNameFormat("Underscore To Hump"));
 			Hump.setText(StrUtils.MenuItemNameFormat("Hump To Underscore"));
-			
+
 		});
 		return mn;
 	}
@@ -240,7 +240,7 @@ public class MenuBarContainer {
 			SdkComponent.hideBottom();
 		});
 
-		MenuItem hideLeftBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show All Panels"));
+		MenuItem hideLeftBottom = new MenuItem("Hide/Show All Panels");
 //		hideLeftBottom.setAccelerator(KeyCombination.keyCombination("shortcut+H"));
 		hideLeftBottom.setGraphic(IconGenerator.svgImageDefActive("arrows-alt"));
 		hideLeftBottom.setOnAction(value -> {
@@ -276,14 +276,14 @@ public class MenuBarContainer {
 		Menu fontSize = new Menu(StrUtils.MenuItemNameFormat("Font Size"));
 		fontSize.setGraphic(IconGenerator.svgImageDefActive("text-height"));
 
-		MenuItem fontSizePlus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size +"));
+		MenuItem fontSizePlus = new MenuItem("Font Size +");
 //		fontSizePlus.setAccelerator(KeyCombination.keyCombination("shortcut+EQUALS"));
 		fontSizePlus.setGraphic(IconGenerator.svgImageDefActive("plus-circle"));
 		fontSizePlus.setOnAction(value -> {
 			CommonAction.changeFontSize(true);
 		});
 
-		MenuItem fontSizeMinus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size -"));
+		MenuItem fontSizeMinus = new MenuItem("Font Size -");
 //		fontSizeMinus.setAccelerator(KeyCombination.keyCombination("shortcut+MINUS"));
 		fontSizeMinus.setGraphic(IconGenerator.svgImageDefActive("minus-circle"));
 		fontSizeMinus.setOnAction(value -> {
@@ -305,20 +305,12 @@ public class MenuBarContainer {
 				deleteConn, new SeparatorMenuItem(), hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem()
 //				, EnCoding
 				, Theme, new SeparatorMenuItem(), fontSize, keysBind);
-		
-//		mn.setOnShowing(e->{
-//			nce.setText(StrUtils.MenuItemNameFormat("Add New Edit Page"));
-//			cce.setText(StrUtils.MenuItemNameFormat("Close Data Table"));
-//			Find.setText(StrUtils.MenuItemNameFormat("Find"));
-//			FindReplace.setText(StrUtils.MenuItemNameFormat("Replace"));
-//			Format.setText(StrUtils.MenuItemNameFormat("Format"));
-//			commentCode.setText(StrUtils.MenuItemNameFormat("Line Comment"));
-//			UpperCase.setText(StrUtils.MenuItemNameFormat("Upper Case"));
-//			LowerCase.setText(StrUtils.MenuItemNameFormat("Lower Case"));
-//			underscore.setText(StrUtils.MenuItemNameFormat("Underscore To Hump"));
-//			Hump.setText(StrUtils.MenuItemNameFormat("Hump To Underscore"));
-//			
-//		});
+
+		mn.setOnShowing(e -> {
+			fontSizeMinus.setText(StrUtils.MenuItemNameFormat("Font Size -"));
+			fontSizePlus.setText(StrUtils.MenuItemNameFormat("Font Size +"));
+			hideLeftBottom.setText(StrUtils.MenuItemNameFormat("Hide/Show All Panels"));
+		});
 		return mn;
 	}
 
