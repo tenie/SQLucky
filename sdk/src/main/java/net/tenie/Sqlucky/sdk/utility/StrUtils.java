@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 public class StrUtils {
 	private static Logger logger = LogManager.getLogger(StrUtils.class);
 	public final static SimpleDateFormat sdf_Date = new SimpleDateFormat("yyyy-MM-dd");
-	public final static SimpleDateFormat sdf_DateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); 
+	public final static SimpleDateFormat sdf_DateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	public static String dateFormateL = "yyyy-MM-dd HH:mm:ss";
 	public static String dateTimeForFileName = "yyyy-MM-dd_HH_mm_ss";
 	public final static String EMPTY_STRING = "";
@@ -64,31 +64,30 @@ public class StrUtils {
 		}
 		return strb.toString();
 	}
-	
-	//提取string 中的单词
-	public static Set<String> splitWordByStr(String str){
+
+	// 提取string 中的单词
+	public static Set<String> splitWordByStr(String str) {
 		String tmp = str.replaceAll(" ", "\n");
-		tmp =  tmp.replaceAll("\t", "\n");
+		tmp = tmp.replaceAll("\t", "\n");
 		String vals[] = tmp.split("\n");
-		
+
 		Set<String> rsset = new HashSet<>();
-		if(vals != null) {
-			for(var v : vals) {
+		if (vals != null) {
+			for (var v : vals) {
 				String rsstr = v.trim();
-				if(rsstr.length() > 0) {
+				if (rsstr.length() > 0) {
 					rsset.add(rsstr);
 				}
 			}
 		}
-		
+
 		return rsset;
 	}
 //	public static void main(String[] args) {
 //		String  str = " sss bbb ccc 11asda dsad.ads";
 //		splitWordByStr(str);
 //	}
-	
-	
+
 	// 驼峰命名转下划线
 	public static String CamelCaseUnderline(String str) {
 		StringBuilder rs = new StringBuilder();
@@ -105,8 +104,6 @@ public class StrUtils {
 		}
 		return rs.toString();
 	}
-
-   
 
 // 去除多行注释 /*  ??  */   "(/\\*[\\s\\S]*?\\*/)";
 	public static String rmMultiLineComment(String sql) {
@@ -127,7 +124,7 @@ public class StrUtils {
 //去除多行注释 /*  ??  */   "(/\\*[\\s\\S]*?\\*/)";
 	public static String multiLineCommentToSpace(String sql) {
 		String ps = "/\\*([\\s\\S]*?)\\*/";
-		Pattern p = Pattern.compile(ps); 
+		Pattern p = Pattern.compile(ps);
 		Matcher m = p.matcher(sql);
 
 		String val = m.replaceAll(" ");
@@ -141,7 +138,7 @@ public class StrUtils {
 		str = str.trim();
 		if (str.indexOf(tag) == 0) {
 			rs = str.substring(1);
-		}else {
+		} else {
 			rs = str;
 		}
 		if (rs.lastIndexOf(tag) == rs.length() - 1) {
@@ -150,16 +147,14 @@ public class StrUtils {
 
 		return rs;
 	}
-	
-	public static String trimRightChar(String str, String tag) { 
-		String rs = str.trim(); 
+
+	public static String trimRightChar(String str, String tag) {
+		String rs = str.trim();
 		if (rs.lastIndexOf(tag) == rs.length() - 1) {
 			rs = rs.substring(0, rs.length() - 1);
-		} 
+		}
 		return rs;
 	}
-	
-	
 
 	// 下划线 轉 驼峰命名
 	public static String underlineCaseCamel(String str) {
@@ -326,11 +321,6 @@ public class StrUtils {
 		return nstr.trim();
 	}
 
-
-
-	
-
-
 	// 根据; 分割字符串, 需要忽略在注释下的分号
 	public static List<String> splitSqlStr(String sql) {
 		List<String> rs = new ArrayList<>();
@@ -418,7 +408,7 @@ public class StrUtils {
 //		SimpleDateFormat sdf = new SimpleDateFormat(formate);
 //		return sdf.format(d);
 //	}
-	
+
 	// 返回一个时间字符串, 可用于文件名的一部分
 	public static String currentDateTimeToFileNameStr() {
 		return DateUtils.dateToStr(new Date(), dateTimeForFileName);
@@ -486,44 +476,54 @@ public class StrUtils {
 			rs = rs.substring(0, rs.length() - 1);
 		return rs;
 	}
-	
-	
+
 	// 字符串计数
-	public static int countSubString(String str, String sub) { 
-		if(StrUtils.isNullOrEmpty(sub) || StrUtils.isNullOrEmpty(str)) {
+	public static int countSubString(String str, String sub) {
+		if (StrUtils.isNullOrEmpty(sub) || StrUtils.isNullOrEmpty(str)) {
 			return 0;
 		}
 		int idx = str.indexOf(sub);
 		int count = 0;
-		while(idx > -1) {
+		while (idx > -1) {
 			count++;
 			idx = str.indexOf(sub, idx + sub.length());
 		}
 //		System.out.println(count); 
-		return count ;
-		
+		return count;
+
 	}
-	
-	public static  String MenuItemNameFormat(String name) {
+
+	public static String MenuItemNameFormat(String name) {
 		var actionName = KeyBindingUtils.actionName;
 		String key = "";
-		if(actionName !=null) {
-			key = actionName.get(name) ;
-			if(key == null ) {
+		if (actionName != null) {
+			key = actionName.get(name);
+			if (key == null) {
 				key = "";
 			}
-		} 
-		String str =MenuItemNameFormat(name, key, 30);
+		}
+		String str = MenuItemNameFormat(name, key, 30);
 		return str;
 	}
-	public static  String MenuItemNameFormat(String name , String key, int size) {
-		String str ="";
-		if(StrUtils.isNotNullOrEmpty(key)) {
-			 str = String.format("  %-"+size+"s", name+" ( "+ key + " )");
-		}else {
-			 str = String.format("  %-"+size+"s", name);
-		}
-		
+
+	public static String MenuItemNameFormat(String name, String key, int size) {
+//		int nameLen = name.length();
+//		int keyLen = key.length();
+//		String str = "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　";
+//		String str1 = str.substring(nameLen + keyLen);
+//		String val = name + str1 + key;
+//		System.out.println("val len = " + val.length());
+//		return val;
+
+		String str = String.format("  %-" + size + "s \t\t\t%s", name, key);
+		return str;
+
+//		if(StrUtils.isNotNullOrEmpty(key)) {
+//			 str = String.format("  %-"+size+"s", name+" ( "+ key + " )");
+//		}else {
+//			 str = String.format("  %-"+size+"s", name);
+//		}
+
 //		int len = name.length();
 //		int tmp = size - len;
 //		if(tmp > 0) {
@@ -533,68 +533,65 @@ public class StrUtils {
 //			
 //		}
 //		String str = name + key;
-		return str;
+
 	}
-	
+
 	// 匹配文件名
 	public static boolean matchFileName(String fileTyleStr, File file) {
-		
+
 		String fileName = file.getName();
 		boolean rtVal = false;
-		if(StrUtils.isNullOrEmpty(fileTyleStr)) {
-			rtVal = true ;
+		if (StrUtils.isNullOrEmpty(fileTyleStr)) {
+			rtVal = true;
 		}
-		
-		if("*.*".equals(fileTyleStr)) {
-			//all
-			if(fileName.contains(".")) {
-				rtVal = true; 
+
+		if ("*.*".equals(fileTyleStr)) {
+			// all
+			if (fileName.contains(".")) {
+				rtVal = true;
 			}
-			
-		}else {
-			if(  fileTyleStr.startsWith("*")&& !fileTyleStr.endsWith("*")) {
+
+		} else {
+			if (fileTyleStr.startsWith("*") && !fileTyleStr.endsWith("*")) {
 				String queryStr = fileTyleStr.substring(1);
 				// 前缀
-				if(fileName.endsWith(queryStr)) {
-					rtVal = true; 
+				if (fileName.endsWith(queryStr)) {
+					rtVal = true;
 				}
-				
-				
-			}else if( !fileTyleStr.startsWith("*")&& fileTyleStr.endsWith("*")) {
+
+			} else if (!fileTyleStr.startsWith("*") && fileTyleStr.endsWith("*")) {
 				String queryStr = fileTyleStr.substring(0, fileTyleStr.lastIndexOf("*"));
 				// 后缀
-				if(fileName.startsWith(queryStr)) {
-					rtVal = true; 
+				if (fileName.startsWith(queryStr)) {
+					rtVal = true;
 				}
-				
-			}else if( fileTyleStr.startsWith("*")&& fileTyleStr.endsWith("*")) {
+
+			} else if (fileTyleStr.startsWith("*") && fileTyleStr.endsWith("*")) {
 				// 包含
 				String queryStr = fileTyleStr.substring(1, fileTyleStr.lastIndexOf("*"));
-				if(fileName.contains(queryStr)) {
-					rtVal = true; 
+				if (fileName.contains(queryStr)) {
+					rtVal = true;
 				}
-				
-			}else if( fileTyleStr.contains("*") ) {
+
+			} else if (fileTyleStr.contains("*")) {
 				// 前后包含
 				String arrStr[] = fileTyleStr.split("\\*");
 				String qStr1 = arrStr[0];
 				String qStr2 = arrStr[1];
-				if(fileName.startsWith(qStr1) && fileName.endsWith(qStr2)) {
-					rtVal = true; 
+				if (fileName.startsWith(qStr1) && fileName.endsWith(qStr2)) {
+					rtVal = true;
 				}
-				
-				
-			}else if(! fileTyleStr.contains("*")) { 
+
+			} else if (!fileTyleStr.contains("*")) {
 				// 全匹配
-				if(fileTyleStr.equals(fileName)) {
-					rtVal = true; 
+				if (fileTyleStr.equals(fileName)) {
+					rtVal = true;
 				}
-				
+
 			}
-			
+
 		}
 		return rtVal;
 	}
-	
-	
+
 }
