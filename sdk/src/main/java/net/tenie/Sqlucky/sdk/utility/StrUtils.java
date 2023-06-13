@@ -494,19 +494,19 @@ public class StrUtils {
 	}
 
 	public static String MenuItemNameFormat(String name) {
-		var actionName = KeyBindingUtils.actionName;
-		String key = "";
-		if (actionName != null) {
-			key = actionName.get(name);
-			if (key == null) {
-				key = "";
-			}
-		}
-		String str = MenuItemNameFormat(name, key, 30);
+//		var actionName = KeyBindingUtils.actionName;
+//		String key = "";
+//		if (actionName != null) {
+//			key = actionName.get(name);
+//			if (key == null) {
+//				key = "";
+//			}
+//		}
+		String str = MenuItemNameFormat(name, 40);
 		return str;
 	}
 
-	public static String MenuItemNameFormat(String name, String key, int size) {
+	public static String MenuItemNameFormat(String name, int size) {
 //		int nameLen = name.length();
 //		int keyLen = key.length();
 //		String str = "　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　";
@@ -515,7 +515,8 @@ public class StrUtils {
 //		System.out.println("val len = " + val.length());
 //		return val;
 
-		String str = String.format("  %-" + size + "s \t\t\t%s", name, key);
+//		String str = String.format("  %-" + size + "s \t\t\t%s", name, key);
+		String str = String.format("  %-" + size + "s", name);
 		return str;
 
 //		if(StrUtils.isNotNullOrEmpty(key)) {
