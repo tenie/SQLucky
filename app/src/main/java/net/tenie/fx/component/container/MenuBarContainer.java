@@ -10,12 +10,15 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
+import net.tenie.Sqlucky.sdk.config.KeyBindingCache;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.plugin.PluginManageWindow;
 import net.tenie.fx.window.CheckUpdateWindow;
@@ -52,12 +55,13 @@ public class MenuBarContainer {
 	Menu createFileMenu() {
 		Menu mn = new Menu("File");
 
-		MenuItem open = new MenuItem("Open");
+		MenuItem open = new MenuItem(StrUtils.MenuItemNameFormat("Open"));
 		open.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
-//		open.setAccelerator(KeyCombination.keyCombination("shortcut+O"));
+//		open.setAccelerator(KeyCombination.keyCombination("shortcut + u"));
 		open.setOnAction(value -> {
 			CommonAction.openSqlFile();
 		});
+		KeyBindingCache.menuItemBinding(open);
 
 //		Menu openEncoding = new Menu(StrUtils.MenuItemNameFormat("Open With Encoding "));
 //		openEncoding.setGraphic(IconGenerator.svgImageDefActive("folder-open")); 
@@ -70,114 +74,179 @@ public class MenuBarContainer {
 
 //		openEncoding.getItems().addAll(openGBK );
 
-		MenuItem Save = new MenuItem("Save");
+		MenuItem Save = new MenuItem(StrUtils.MenuItemNameFormat("Save"));
 		Save.setGraphic(IconGenerator.svgImageDefActive("floppy-o"));
 		Save.setOnAction(value -> {
 			// 保存sql文本到硬盘
 			CommonAction.saveSqlAction();
 		});
 
-		MenuItem exit = new MenuItem("Exit");
+		KeyBindingCache.menuItemBinding(Save);
+
+		MenuItem exit = new MenuItem(StrUtils.MenuItemNameFormat("Exit"));
 		exit.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 //		exit.setAccelerator(KeyCombination.keyCombination("shortcut+Q"));
 		exit.setOnAction((ActionEvent t) -> {
 			CommonAction.mainPageClose();
 		});
+		KeyBindingCache.menuItemBinding(exit);
 
 		mn.getItems().addAll(open,
 //				openEncoding, 
 				Save, new SeparatorMenuItem(), exit);
-		mn.setOnShowing(e -> {
-			open.setText(StrUtils.MenuItemNameFormat("Open"));
-			exit.setText(StrUtils.MenuItemNameFormat("Exit"));
-			Save.setText(StrUtils.MenuItemNameFormat("Save"));
-
-		});
 		return mn;
 	}
 
 	Menu createEditMenu() {
 		Menu mn = new Menu("Edit");
 
-		MenuItem nce = new MenuItem("Add New Edit Page");
+		MenuItem runMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL"));
+		runMenu.setOnAction(value -> {
+			RunSQLHelper.runSQLMethod();
+		});
+		MenuItem runCurrentMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL Current Line"));
+		runCurrentMenu.setOnAction(value -> {
+			RunSQLHelper.runCurrentLineSQLMethod();
+		});
+
+		MenuItem codeAutocompletionMenu = new MenuItem(StrUtils.MenuItemNameFormat("Code Autocompletion"));
+		codeAutocompletionMenu.setOnAction(value -> {
+			SqluckyEditor.currentMyTab().getSqlCodeArea().callPopup();
+		});
+
+		MenuItem nce = new MenuItem(StrUtils.MenuItemNameFormat("Add New Edit Page"));
 //		nce.setAccelerator(KeyCombination.keyCombination("shortcut+T"));
 		nce.setOnAction(value -> {
 			MyAreaTab.addCodeEmptyTabMethod();
 		});
 
-		MenuItem cce = new MenuItem("Close Data Table");
+		MenuItem cce = new MenuItem(StrUtils.MenuItemNameFormat("Close Data Table"));
 //		cce.setAccelerator(KeyCombination.keyCombination("alt+W"));
 		cce.setOnAction(value -> {
 			CommonAction.closeDataTable();
 		});
 
-		MenuItem Find = new MenuItem("Find");
+		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
 		Find.setGraphic(IconGenerator.svgImageDefActive("search"));
 //		Find.setAccelerator(KeyCombination.keyCombination("shortcut+F"));
 		Find.setOnAction(value -> {
 			CommonUtility.findReplace(false);
 		});
 
-		MenuItem FindReplace = new MenuItem("Replace");
+		MenuItem FindReplace = new MenuItem(StrUtils.MenuItemNameFormat("Replace"));
 //		FindReplace.setAccelerator(KeyCombination.keyCombination("shortcut+R"));
 		FindReplace.setOnAction(value -> {
 			CommonUtility.findReplace(true);
 		});
 
-		MenuItem Format = new MenuItem("Format");
+		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format"));
 //		Format.setAccelerator(KeyCombination.keyCombination("shortcut+shift+F"));
 		Format.setOnAction(value -> {
 			CommonAction.formatSqlText();
 		});
 
-		MenuItem commentCode = new MenuItem("Line Comment");
+		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Line Comment"));
 //		commentCode.setAccelerator(KeyCombination.keyCombination("shortcut+/"));
 		commentCode.setOnAction(value -> {
 			CommonAction.addAnnotationSQLTextSelectText();
 		});
 
 		// 大写
-		MenuItem UpperCase = new MenuItem("Upper Case");
+		MenuItem UpperCase = new MenuItem(StrUtils.MenuItemNameFormat("Upper Case"));
 //		UpperCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+X"));
 		UpperCase.setOnAction(value -> {
 			CommonAction.UpperCaseSQLTextSelectText();
 		});
 
-		MenuItem LowerCase = new MenuItem("Lower Case");
+		MenuItem LowerCase = new MenuItem(StrUtils.MenuItemNameFormat("Lower Case"));
 //		LowerCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+Y"));
 		LowerCase.setOnAction(value -> {
 			CommonAction.LowerCaseSQLTextSelectText();
 		});
 
 		// Underscore to hump
-		MenuItem underscore = new MenuItem("Underscore To Hump");
+		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underscore To Hump"));
 //		underscore.setAccelerator(KeyCombination.keyCombination("shortcut+shift+R"));
 		underscore.setOnAction(value -> {
 			CommonAction.underlineCaseCamel();
 		});
 
-		MenuItem Hump = new MenuItem("Hump To Underscore");
+		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underscore"));
 //		Hump.setAccelerator(KeyCombination.keyCombination("shortcut+shift+T"));
 		Hump.setOnAction(value -> {
 			CommonAction.CamelCaseUnderline();
 		});
 
-		mn.getItems().addAll(nce, cce, new SeparatorMenuItem(), Find, FindReplace, new SeparatorMenuItem(), Format,
-				commentCode, new SeparatorMenuItem(), UpperCase, LowerCase, underscore, Hump, new SeparatorMenuItem());
-
-		mn.setOnShowing(e -> {
-			nce.setText(StrUtils.MenuItemNameFormat("Add New Edit Page"));
-			cce.setText(StrUtils.MenuItemNameFormat("Close Data Table"));
-			Find.setText(StrUtils.MenuItemNameFormat("Find"));
-			FindReplace.setText(StrUtils.MenuItemNameFormat("Replace"));
-			Format.setText(StrUtils.MenuItemNameFormat("Format"));
-			commentCode.setText(StrUtils.MenuItemNameFormat("Line Comment"));
-			UpperCase.setText(StrUtils.MenuItemNameFormat("Upper Case"));
-			LowerCase.setText(StrUtils.MenuItemNameFormat("Lower Case"));
-			underscore.setText(StrUtils.MenuItemNameFormat("Underscore To Hump"));
-			Hump.setText(StrUtils.MenuItemNameFormat("Hump To Underscore"));
-
+		Menu cursorMenu = new Menu("Cursor");
+		MenuItem mvB = new MenuItem(StrUtils.MenuItemNameFormat("Move to begin of line")); // (ctrl+shift+A)
+		mvB.setGraphic(IconGenerator.svgImageDefActive("step-backward"));
+		mvB.setOnAction(e -> {
+			SqluckyEditor.currentMyTab().getSqlCodeArea().moveAnchorToLineBegin();
 		});
+
+		MenuItem mvE = new MenuItem(StrUtils.MenuItemNameFormat("Move to end of line")); // (ctrl+shift+E)
+		mvE.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
+		mvE.setOnAction(e -> {
+			SqluckyEditor.currentMyTab().getSqlCodeArea().moveAnchorToLineEnd();
+		});
+
+		cursorMenu.getItems().addAll(mvB, mvE);
+
+		Menu enditLine = new Menu("Edit Line");
+		MenuItem delWord = new MenuItem(StrUtils.MenuItemNameFormat("Delete the word before the cursor")); // (ctrl+shift+W)
+		delWord.setOnAction(e -> {
+			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorBeforeWord();
+		});
+
+		MenuItem delChar = new MenuItem(StrUtils.MenuItemNameFormat("Delete the character before the cursor")); // (ctrl+shift+H)
+		delChar.setOnAction(e -> {
+			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorBeforeChar();
+		});
+
+		MenuItem delAllChar = new MenuItem(StrUtils.MenuItemNameFormat("Delete all characters before the cursor"));// (ctrl+shift+U)
+		delAllChar.setOnAction(e -> {
+			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorBeforeString();
+		});
+
+		MenuItem delWordBackward = new MenuItem(StrUtils.MenuItemNameFormat("Delete the word after the cursor"));// (alt+shift+D)
+		delWordBackward.setOnAction(e -> {
+			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorAfterWord();
+		});
+
+		MenuItem delCharBackward = new MenuItem(StrUtils.MenuItemNameFormat("Delete the character after the cursor"));// (ctrl+shift+D)
+		delCharBackward.setOnAction(e -> {
+			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorAfterChar();
+		});
+		MenuItem delAllCharBackward = new MenuItem(
+				StrUtils.MenuItemNameFormat("Delete all characters after the cursor"));// (ctrl+shift+K)
+		delAllCharBackward.setOnAction(e -> {
+			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorAfterString();
+		});
+		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
+
+		mn.getItems().addAll(runMenu, runCurrentMenu, codeAutocompletionMenu, nce, cce, new SeparatorMenuItem(), Find,
+				FindReplace, new SeparatorMenuItem(), Format, commentCode, new SeparatorMenuItem(), UpperCase,
+				LowerCase, underscore, Hump, new SeparatorMenuItem(), cursorMenu, enditLine);
+
+		KeyBindingCache.menuItemBinding(runMenu);
+		KeyBindingCache.menuItemBinding(runCurrentMenu);
+		KeyBindingCache.menuItemBinding(codeAutocompletionMenu);
+
+		KeyBindingCache.menuItemBinding(nce);
+		KeyBindingCache.menuItemBinding(cce);
+		KeyBindingCache.menuItemBinding(Find);
+		KeyBindingCache.menuItemBinding(FindReplace);
+		KeyBindingCache.menuItemBinding(Format);
+		KeyBindingCache.menuItemBinding(commentCode);
+		KeyBindingCache.menuItemBinding(UpperCase);
+		KeyBindingCache.menuItemBinding(LowerCase);
+		KeyBindingCache.menuItemBinding(underscore);
+		KeyBindingCache.menuItemBinding(Hump);
+
+		KeyBindingCache.allMenuItemBinding(delWord, delChar, delAllChar, delWordBackward, delCharBackward,
+				delAllCharBackward);
+		KeyBindingCache.allMenuItemBinding(mvB, mvE);
+
 		return mn;
 	}
 
@@ -240,7 +309,7 @@ public class MenuBarContainer {
 			SdkComponent.hideBottom();
 		});
 
-		MenuItem hideLeftBottom = new MenuItem("Hide/Show All Panels");
+		MenuItem hideLeftBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show All Panels"));
 //		hideLeftBottom.setAccelerator(KeyCombination.keyCombination("shortcut+H"));
 		hideLeftBottom.setGraphic(IconGenerator.svgImageDefActive("arrows-alt"));
 		hideLeftBottom.setOnAction(value -> {
@@ -276,14 +345,14 @@ public class MenuBarContainer {
 		Menu fontSize = new Menu(StrUtils.MenuItemNameFormat("Font Size"));
 		fontSize.setGraphic(IconGenerator.svgImageDefActive("text-height"));
 
-		MenuItem fontSizePlus = new MenuItem("Font Size +");
+		MenuItem fontSizePlus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size +"));
 //		fontSizePlus.setAccelerator(KeyCombination.keyCombination("shortcut+EQUALS"));
 		fontSizePlus.setGraphic(IconGenerator.svgImageDefActive("plus-circle"));
 		fontSizePlus.setOnAction(value -> {
 			CommonAction.changeFontSize(true);
 		});
 
-		MenuItem fontSizeMinus = new MenuItem("Font Size -");
+		MenuItem fontSizeMinus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size -"));
 //		fontSizeMinus.setAccelerator(KeyCombination.keyCombination("shortcut+MINUS"));
 		fontSizeMinus.setGraphic(IconGenerator.svgImageDefActive("minus-circle"));
 		fontSizeMinus.setOnAction(value -> {
@@ -306,11 +375,10 @@ public class MenuBarContainer {
 //				, EnCoding
 				, Theme, new SeparatorMenuItem(), fontSize, keysBind);
 
-		mn.setOnShowing(e -> {
-			fontSizeMinus.setText(StrUtils.MenuItemNameFormat("Font Size -"));
-			fontSizePlus.setText(StrUtils.MenuItemNameFormat("Font Size +"));
-			hideLeftBottom.setText(StrUtils.MenuItemNameFormat("Hide/Show All Panels"));
-		});
+		KeyBindingCache.menuItemBinding(fontSizeMinus);
+		KeyBindingCache.menuItemBinding(fontSizePlus);
+		KeyBindingCache.menuItemBinding(hideLeftBottom);
+
 		return mn;
 	}
 
@@ -367,7 +435,6 @@ public class MenuBarContainer {
 			PluginManageWindow pw = new PluginManageWindow();
 			pw.show();
 		});
-//
 		mn.getItems().addAll(plugin);
 		ComponentGetter.pluginMenu = mn;
 		return mn;

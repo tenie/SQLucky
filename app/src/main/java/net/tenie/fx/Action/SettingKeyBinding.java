@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -27,187 +26,15 @@ import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.PoDao;
-import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.KeyBindingUtils;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Po.KeysBindingPO;
 import net.tenie.fx.component.MyAreaTab;
 
 /*   @author tenie */
 public final class SettingKeyBinding {
 	private static Logger logger = LogManager.getLogger(SettingKeyBinding.class);
-
-
-	/**
-	 * 1. 初始化可以被快捷键调用的函数和对应的名称(名称对应的函数) 2. 从数据库获取快捷的配置信息, (名称对应的按键) Ctrl + Alt +
-	 * Shift
-	 */
-	private static void initKeyAction() {
-		// 给函数定义字符串名称
-		if (KeyBindingUtils.keyAction == null) {
-			KeyBindingUtils.keyAction = new HashMap<>();
-			// 注释代码 Ctrl /
-			KeyBindingUtils.keyAction.put("Line Comment", v -> {
-				CommonAction.addAnnotationSQLTextSelectText();
-			});
-
-			// 运行sql Ctrl Enter
-			KeyBindingUtils.keyAction.put("Run SQL", v -> {
-				RunSQLHelper.runSQLMethod();
-			});
-
-			// 运行sql 当前行 Alt R
-			KeyBindingUtils.keyAction.put("Run SQL Current Line", v -> {
-				RunSQLHelper.runCurrentLineSQLMethod();
-			});
-
-			// 新代码编辑 Ctrl T
-			KeyBindingUtils.keyAction.put("Add New Edit Page", v -> {
-				MyAreaTab.addCodeEmptyTabMethod();
-			});
-
-			// 保存代码 Ctrl S
-			KeyBindingUtils.keyAction.put("Save", v -> {
-				CommonAction.saveSqlAction();
-			});
-
-			// 格式化代码 Ctrl Shift F
-			KeyBindingUtils.keyAction.put("Format", v -> {
-				CommonAction.formatSqlText();
-			});
-
-			// 查找 Ctrl F
-			KeyBindingUtils.keyAction.put("Find", v -> {
-				CommonUtility.findReplace(false);
-			});
-
-			// 查找 替换 Ctrl R
-			KeyBindingUtils.keyAction.put("Replace", v -> {
-				CommonUtility.findReplace(true);
-			});
-
-			// 打开文件 Ctrl O
-			KeyBindingUtils.keyAction.put("Open", v -> {
-				CommonAction.openSqlFile();
-			});
-			// 关闭app Ctrl Q
-			KeyBindingUtils.keyAction.put("Exit", v -> {
-				CommonAction.mainPageClose();
-			});
-
-			// 关闭表格 Alt W
-			KeyBindingUtils.keyAction.put("Close Data Table", v -> {
-				CommonAction.closeDataTable();
-			});
-
-			// 字符串大写 Ctrl Shift X
-			KeyBindingUtils.keyAction.put("Upper Case", v -> {
-				CommonAction.UpperCaseSQLTextSelectText();
-			});
-
-			// 字符串小写 Ctrl Shift Y
-			KeyBindingUtils.keyAction.put("Lower Case", v -> {
-				CommonAction.LowerCaseSQLTextSelectText();
-			});
-
-			// 下划线转驼峰 Ctrl Shift R
-			KeyBindingUtils.keyAction.put("Underscore To Hump", v -> {
-				CommonAction.underlineCaseCamel();
-			});
-
-			// 驼峰转下划线 Ctrl Shift T
-			KeyBindingUtils.keyAction.put("Underscore To Hump", v -> {
-				CommonAction.CamelCaseUnderline();
-			});
-
-			// 隐藏副面板 Ctrl H
-			KeyBindingUtils.keyAction.put("Hide/Show All Panels", v -> {
-				CommonAction.hideLeftBottom();
-			});
-
-			// 字体变大 Ctrl =
-			KeyBindingUtils.keyAction.put("Font Size +", v -> {
-				CommonAction.changeFontSize(true);
-			});
-
-			// 字体变小 Ctrl -
-			KeyBindingUtils.keyAction.put("Font Size -", v -> {
-				CommonAction.changeFontSize(false);
-			});
-		}
-
-		// 从数据库获取按键对应的函数名称
-		if (KeyBindingUtils.bindingkeyVal == null) {
-			KeyBindingUtils.bindingkeyVal = new HashMap<>();
-			KeyBindingUtils.actionName = new HashMap<>();
-			KeysBindingPO po = new KeysBindingPO();
-			var conn = SqluckyAppDB.getConn();
-			try {
-				List<KeysBindingPO> ls = PoDao.select(conn, po);
-				if (ls != null && ls.size() > 0) {
-					for (KeysBindingPO poVal : ls) {
-//						KeysBindingPO poVal = ls.get(0);
-						KeyBindingUtils.bindingkeyVal.put(poVal.getBinding(), poVal.getActionName());
-						KeyBindingUtils.actionName.put(poVal.getActionName(), poVal.getBinding());
-
-					}
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				SqluckyAppDB.closeConn(conn);
-			}
-
-		}
-	}
-
-	// 用按键(key)获取函数
-	public static Consumer<String> getConsumerUseKey(String key) {
-		var bindingkeyVal = KeyBindingUtils.bindingkeyVal;
-		var keyAction = KeyBindingUtils.keyAction;
-		
-		// 通过按键字符串找函数名称
-		String actionName = bindingkeyVal.get(key);
-		if (StrUtils.isNotNullOrEmpty(actionName)) {
-			// 通过函数名称找函数来调用
-			Consumer<String> action = keyAction.get(actionName);
-			return action;
-		}
-		return null;
-	}
-
-	// 用名称获取key
-	public static String getKeyByActionName(String ActionName) {
-		var actionName = KeyBindingUtils.actionName;
-		String keys = actionName.get(ActionName);
-		return keys;
-	}
-
-	public static void Setting(Scene scene) {
-		initKeyAction();
-
-		// 回调函数, 当scene按键事件触发后会调用, 将把触发的按钮名称给回调函数, 通过传入的按钮字符串, 去找函数名称, 有了函数名称去找函数然后调用
-		Consumer<String> call = keyVal -> {
-			if (StrUtils.isNotNullOrEmpty(keyVal)) {
-				// 通过按键字符串找函数名称
-//				String actionName = bindingkeyVal.get(keyVal);
-//				// 通过函数名称找函数来调用
-//				Consumer<String> action = keyAction.get(actionName);
-				Consumer<String> action = getConsumerUseKey(keyVal);
-				if (action != null) {
-					System.out.println("执行快捷："+keyVal);
-					action.accept("");
-				}
-			}
-
-		};
-		sceneEventFilter(scene, call);
-	}
 
 	public static String codeNameToSymbol(String codeName) {
 		if ("Slash".equals(codeName)) {
@@ -240,75 +67,252 @@ public final class SettingKeyBinding {
 
 	}
 
+	public static String windowsSetup(KeyEvent e) {
+		String val = "";
+		String codeName = e.getCode().getName();
+		codeName = codeNameToSymbol(codeName);
+		if (KeyCode.UNDEFINED == e.getCode()) {
+			val = "";
+		} else if (e.isControlDown() && e.isAltDown() && e.isShiftDown()) {
+			if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Ctrl + Alt + Shift + " + codeName;
+			}
+
+		} else if (e.isControlDown() && e.isAltDown()) {
+			if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT) {
+
+			} else {
+				val = "Ctrl + Alt + " + codeName;
+			}
+
+		} else if (e.isControlDown() && e.isShiftDown()) {
+			if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Ctrl + Shift + " + codeName;
+			}
+
+		} else if (e.isAltDown() && e.isShiftDown()) {
+			if (e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Alt + Shift + " + codeName;
+			}
+
+		} else if (e.isControlDown()) {
+			if (e.getCode() == KeyCode.CONTROL) {
+
+			} else {
+				val = "Ctrl + " + codeName;
+			}
+		} else if (e.isAltDown()) {
+			if (e.getCode() == KeyCode.ALT) {
+
+			} else {
+				val = "ALT + " + codeName;
+			}
+		} else if (e.isShiftDown()) {
+			if (e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Shift + " + codeName;
+			}
+		} else {
+			logger.debug("其他 : " + codeName);
+			val = codeName;
+		}
+		logger.debug(val);
+		return val;
+	}
+
+	public static String macOsSetup(KeyEvent e) {
+		String val = "";
+		String codeName = e.getCode().getName();
+		codeName = codeNameToSymbol(codeName);
+		if (KeyCode.UNDEFINED == e.getCode()) {
+			val = "";
+		} else if (e.isMetaDown() && e.isAltDown() && e.isShiftDown()) {
+			if (e.getCode() == KeyCode.META || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Meta + Alt + Shift + " + codeName;
+			}
+
+		} else if (e.isMetaDown() && e.isAltDown()) {
+			if (e.getCode() == KeyCode.META || e.getCode() == KeyCode.ALT) {
+
+			} else {
+				val = "Meta + Alt + " + codeName;
+			}
+
+		} else if (e.isMetaDown() && e.isShiftDown()) {
+			if (e.getCode() == KeyCode.META || e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Meta + Shift + " + codeName;
+			}
+
+		} else if (e.isControlDown() && e.isAltDown() && e.isShiftDown()) {
+			if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Ctrl + Alt + Shift + " + codeName;
+			}
+
+		} else if (e.isControlDown() && e.isAltDown()) {
+			if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT) {
+
+			} else {
+				val = "Ctrl + Alt + " + codeName;
+			}
+
+		} else if (e.isControlDown() && e.isShiftDown()) {
+			if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Ctrl + Shift + " + codeName;
+			}
+
+		} else if (e.isAltDown() && e.isShiftDown()) {
+			if (e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Alt + Shift + " + codeName;
+			}
+
+		} else if (e.isControlDown()) {
+			if (e.getCode() == KeyCode.CONTROL) {
+
+			} else {
+				val = "Ctrl + " + codeName;
+			}
+		} else if (e.isAltDown()) {
+			if (e.getCode() == KeyCode.ALT) {
+
+			} else {
+				val = "ALT + " + codeName;
+			}
+		} else if (e.isShiftDown()) {
+			if (e.getCode() == KeyCode.SHIFT) {
+
+			} else {
+				val = "Shift + " + codeName;
+			}
+		} else {
+			logger.debug("其他 : " + codeName);
+			val = codeName;
+		}
+		logger.debug(val);
+		return val;
+	}
+
 	public static void sceneEventFilter(Scene scene, Consumer<String> call) {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
 			String val = "";
+			boolean isMacOs = CommonUtility.isMacOS();
 //			KeyCode code = e.getCode();
 			String codeName = e.getCode().getName();
 			codeName = codeNameToSymbol(codeName);
 			if (KeyCode.UNDEFINED == e.getCode()) {
 				val = "";
-			} else if (e.isControlDown() && e.isAltDown() && e.isShiftDown()) {
-				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
+			}
+//			else if(isMacOs && e.isShortcutDown()) {
+//				
+//			}
+			else if (e.isShortcutDown() && e.isAltDown() && e.isShiftDown()) {
+				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHORTCUT || e.getCode() == KeyCode.ALT
+						|| e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Ctrl Alt Shift " + codeName;
-					System.out.println(val);
+					if (isMacOs) {
+						val = "Shortcut + Alt + Shift + " + codeName;
+					} else {
+						val = "Ctrl + Alt + Shift + " + codeName;
+					}
+
+					logger.debug(val);
 				}
 
-			} else if (e.isControlDown() && e.isAltDown()) {
-				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT) {
+			} else if (e.isShortcutDown() && e.isAltDown()) {
+				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHORTCUT || e.getCode() == KeyCode.ALT) {
 
 				} else {
-					val = "Ctrl Alt " + codeName;
-					System.out.println(val);
+					if (isMacOs) {
+						val = "Shortcut + Alt + " + codeName;
+					} else {
+						val = "Ctrl + Alt + " + codeName;
+					}
+
+					logger.debug(val);
 				}
 
-			} else if (e.isControlDown() && e.isShiftDown()) {
-				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHIFT) {
+			} else if (e.isShortcutDown() && e.isShiftDown()) {
+				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHORTCUT || e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Ctrl Shift " + codeName;
-					System.out.println(val);
+					if (isMacOs) {
+						val = "Shortcut + Shift + " + codeName;
+					} else {
+						val = "Ctrl + Shift + " + codeName;
+					}
+//					val = "Ctrl + Shift + " + codeName;
+					logger.debug(val);
 				}
 
 			} else if (e.isAltDown() && e.isShiftDown()) {
 				if (e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Alt Shift " + codeName;
-					System.out.println(val);
+					val = "Alt + Shift + " + codeName;
+					logger.debug(val);
 				}
 
-			} else if (e.isControlDown()) {
-				if (e.getCode() == KeyCode.CONTROL) {
+			} else if (isMacOs && e.isControlDown()) {
+				val = "Ctrl + " + codeName;
+				logger.debug(val);
+			} else if (e.isShortcutDown()) {
+				if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.SHORTCUT) {
 
 				} else {
-					val = "Ctrl " + codeName;
-					System.out.println(val);
+					if (isMacOs) {
+						val = "Shortcut + " + codeName;
+					} else {
+						val = "Ctrl + " + codeName;
+					}
+//					val = "Ctrl + " + codeName;
+					logger.debug(val);
 				}
 			} else if (e.isAltDown()) {
 				if (e.getCode() == KeyCode.ALT) {
 
 				} else {
-					val = "ALT " + codeName;
-					System.out.println(val);
+					val = "ALT + " + codeName;
+					logger.debug(val);
 				}
 			} else if (e.isShiftDown()) {
 				if (e.getCode() == KeyCode.SHIFT) {
 
 				} else {
-					val = "Shift " + codeName;
-					System.out.println(val);
+					val = "Shift + " + codeName;
+					logger.debug(val);
+				}
+			} else if (isMacOs && e.isShortcutDown() && e.isControlDown()) {
+				if (e.getCode() == KeyCode.SHORTCUT || e.getCode() == KeyCode.CONTROL) {
+
+				} else {
+					val = "Shortcut + Ctrl + " + codeName;
+					logger.debug(val);
 				}
 			} else {
-				System.out.println("其他 : " + codeName);
+				logger.debug("其他 : " + codeName);
 				val = codeName;
-				System.out.println(val);
+				logger.debug(val);
 			}
 
 			call.accept(val);
-			
+
 		});
 
 		KeyCombination cx = KeyCombination.keyCombination("alt+/");
@@ -440,7 +444,7 @@ public final class SettingKeyBinding {
 //					tmp += pgs.get(i).getText()+ "\n"; 
 //				} 
 //			}
-//			System.out.println(tmp);
+//			logger.debug(tmp);
 
 		});
 
@@ -491,7 +495,7 @@ public final class SettingKeyBinding {
 		});
 		// close code tab
 //		scene.getAccelerators().put(ctrlW, () -> {
-//			System.out.println("???");
+//			logger.debug("???");
 //			SqlEditor.closeEditor();
 		// 关闭数据窗口
 //			logger.info(ctrlW);
@@ -531,7 +535,7 @@ public final class SettingKeyBinding {
 		scene.getAccelerators().put(F5, () -> {
 //			CodeArea code = SqlcukyEditor.getCodeArea();
 //			int idx =	code.getCaretPosition();  // 光标位置		
-//			System.out.println(idx);
+//			logger.debug(idx);
 		});
 
 		scene.getAccelerators().put(F1, () -> {
@@ -539,7 +543,7 @@ public final class SettingKeyBinding {
 //			ComponentGetter.appComponent.currentDBInfoNodeType();
 //			ModalDialog.Confirmation("mmm");
 //			MyAlert.myConfirmation("??" ,  v->{
-//				System.out.println(1111);
+//				logger.debug(1111);
 //			});
 //			AppComponent.currentDBInfoNodeTyp
 //			// test caret
@@ -549,9 +553,9 @@ public final class SettingKeyBinding {
 //			double y = bd.getCenterY();
 //			double z = bd.getCenterZ();
 //			
-//			System.out.println(x);
-//			System.out.println(y);
-//			System.out.println(z);
+//			logger.debug(x);
+//			logger.debug(y);
+//			logger.debug(z);
 //			 
 ////			MyAutoComplete.showPop(x, y+7, ""); 
 //			SqlcukyEditor.currentMyTab().getSqlCodeArea().showAutoComplete(x, y, ""); 
@@ -605,7 +609,7 @@ public final class SettingKeyBinding {
 			call.execute();
 
 			Object objRtn = call.getObject(2);
-//	            System.out.println(objRtn);
+//	            logger.debug(objRtn);
 //			    call.registerOutParameter(0, null);
 //			    call.
 
@@ -664,6 +668,5 @@ public final class SettingKeyBinding {
 				rs.close();
 		}
 	}
-	
 
 }
