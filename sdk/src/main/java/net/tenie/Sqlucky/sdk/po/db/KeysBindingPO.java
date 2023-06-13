@@ -1,4 +1,4 @@
-package net.tenie.fx.Po;
+package net.tenie.Sqlucky.sdk.po.db;
 
 public class KeysBindingPO {
 	private Long id;
