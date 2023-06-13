@@ -27,6 +27,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.dao.InsertDao;
@@ -163,6 +164,23 @@ public class AppDao {
 			}
 		}
 	}
+	
+	public static String macKeyChange(String sqlStr ) {
+		 
+			if(sqlStr.contains("Ctrl ")) {
+				sqlStr = sqlStr.replaceAll("Ctrl ", "⌘ ");
+			}
+			if(sqlStr.contains("Alt ")) {
+				sqlStr = sqlStr.replace("Alt ", "⌥ " );
+			}
+
+			if(sqlStr.contains("Shift ")) {
+				sqlStr = sqlStr.replace("Shift " , "⇧ " );
+			}
+			 
+		 
+		return sqlStr;
+	}
 
 	// 建表
 	public static void createTab(Connection conn) {
@@ -170,6 +188,9 @@ public class AppDao {
 			String sql = readSqlFile("/db/app.sql");
 			execSqlFileString(conn, sql.trim());
 			sql = readSqlFile("/db/keysBinding.sql");
+			if(CommonUtility.isMacOS()) {
+				sql = macKeyChange(sql);
+			}
 			execSqlFileString(conn, sql);
 
 //
