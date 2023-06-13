@@ -25,14 +25,12 @@ public class DBOptionHelper {
 		List<TablePo> tbs = new ArrayList<>();
 		if (spo != null) {
 			tbs = spo.getTabs();
-//			if ( tbs == null) {
-				try {
-					tbs = po.getExportDDL().allTableObj(po.getConn(), schemasName);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				spo.setTabs(tbs);
-//			}
+			try {
+				tbs = po.getExportDDL().allTableObj(po.getConn(), schemasName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			spo.setTabs(tbs);
 		}
 
 		return tbs;
@@ -43,16 +41,13 @@ public class DBOptionHelper {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<TablePo> views = new ArrayList<TablePo>();
-		if (  spo != null) {
-//			views = spo.getViews();
-//			if (  views == null) {
-				try {
-					views = po.getExportDDL().allViewObj(po.getConn(), schemasName);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				spo.setViews(views);
-//			}
+		if (spo != null) {
+			try {
+				views = po.getExportDDL().allViewObj(po.getConn(), schemasName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			spo.setViews(views);
 		}
 
 		return views;
@@ -63,16 +58,13 @@ public class DBOptionHelper {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
-		if ( spo != null) {
-//			val = spo.getFunctions();
-//			if ( val == null) {
-				try {
-					val = po.getExportDDL().allFunctionObj(po.getConn(), schemasName);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				spo.setFunctions(val);
-//			}
+		if (spo != null) {
+			try {
+				val = po.getExportDDL().allFunctionObj(po.getConn(), schemasName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			spo.setFunctions(val);
 		}
 
 		return val;
@@ -83,16 +75,13 @@ public class DBOptionHelper {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
-		if ( spo != null) {
-//			val = spo.getProcedures();
-//			if ( val == null) {
-				try {
-					val = po.getExportDDL().allProcedureObj(po.getConn(), schemasName);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				spo.setProcedures(val);
-//			}
+		if (spo != null) {
+			try {
+				val = po.getExportDDL().allProcedureObj(po.getConn(), schemasName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			spo.setProcedures(val);
 		}
 
 		return val;
@@ -102,85 +91,66 @@ public class DBOptionHelper {
 	static public List<FuncProcTriggerPo> getTriggers(SqluckyConnector po, String schemasName) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
-		List<FuncProcTriggerPo> val =new ArrayList<>();
-		if ( spo != null) {
-//			val = spo.getTriggers();
-//			if (  val == null) {
-				try {
-					val = po.getExportDDL().allTriggerObj(po.getConn(), schemasName);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				spo.setTriggers(val);
-//			}
+		List<FuncProcTriggerPo> val = new ArrayList<>();
+		if (spo != null) {
+			try {
+				val = po.getExportDDL().allTriggerObj(po.getConn(), schemasName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			spo.setTriggers(val);
 		}
 
 		return val;
 	}
-	
+
 	// 返回 指定schema中所有的 INDEX
-	static public List<FuncProcTriggerPo> getIndexs(SqluckyConnector po, String schemasName ) {
+	static public List<FuncProcTriggerPo> getIndexs(SqluckyConnector po, String schemasName) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
-		if ( spo != null) {
-//			val = spo.getTriggers();
-//			if (  val == null) {
-				try {
-					val = po.getExportDDL().allIndexObj(po.getConn(), schemasName);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				//TODO 缓存
-//				spo.setTriggers(val);
-//			}
+		if (spo != null) {
+			try {
+				val = po.getExportDDL().allIndexObj(po.getConn(), schemasName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return val;
 	}
-	
+
 	// 返回 指定schema中所有的 Sequence
 	static public List<FuncProcTriggerPo> getSequences(SqluckyConnector po, String schemasName, boolean isNew) {
 		Map<String, DbSchemaPo> map = po.getSchemas();
 		DbSchemaPo spo = map.get(schemasName);
 		List<FuncProcTriggerPo> val = new ArrayList<>();
 		if (isNew || spo != null) {
-//			val = spo.getTriggers();
-//			if (isNew || val == null) {
-				try {
-					val = po.getExportDDL().allSequenceObj(po.getConn(), schemasName);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				//TODO 缓存
-//				spo.setTriggers(val);
-//			}
+			try {
+				val = po.getExportDDL().allSequenceObj(po.getConn(), schemasName);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		return val;
 	}
-		
-	
-	
 
 //	 获取表的建表语句
 	public static String getCreateTableSQL(SqluckyConnector cp, String schema, String tab) {
 		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
 		return ddl;
 	}
+
 //	 获取表的索引
 	public static List<TableIndexPo> getTableIndex(SqluckyConnector cp, String schema, String tab) {
-		List<TableIndexPo>  ls = cp.getExportDDL().tableIndex(cp.getConn(), schema, tab);
-		
-//		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
+		List<TableIndexPo> ls = cp.getExportDDL().tableIndex(cp.getConn(), schema, tab);
 		return ls;
 	}
-	
+
 //	 获取表的外键  List<TableForeignKeyPo> tableForeignKey
 	public static List<TableForeignKeyPo> getTableForeignKey(SqluckyConnector cp, String schema, String tab) {
-		List<TableForeignKeyPo>  ls = cp.getExportDDL().tableForeignKey(cp.getConn(), schema, tab);
-		
-//		String ddl = cp.getExportDDL().exportCreateTable(cp.getConn(), schema, tab);
+		List<TableForeignKeyPo> ls = cp.getExportDDL().tableForeignKey(cp.getConn(), schema, tab);
 		return ls;
 	}
 

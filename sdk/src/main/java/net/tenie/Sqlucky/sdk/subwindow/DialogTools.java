@@ -101,7 +101,6 @@ public class DialogTools {
 		JFXButton btn = new JFXButton(); 
 		btn.setGraphic(ComponentGetter.getIconUnActive("window-close"));
 		AnchorPane.setRightAnchor(btn, 0.0);
-//		Label titlb = new Label(title);
 		AnchorPane.setTopAnchor(title, 4.0);
 		AnchorPane.setLeftAnchor(title, 4.0);
 		pn.getChildren().addAll(btn, title );
@@ -111,7 +110,6 @@ public class DialogTools {
 		subWindow.getChildren().add(subNode);
 		
 		VBox.setMargin(pn, new Insets(0, 0, 5, 0));
-//		subWindow.setPadding(new Insets(0, 0, 5, 0));
 		
 		btn.setOnAction(e->{
 			stage.close();

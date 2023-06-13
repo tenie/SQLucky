@@ -13,6 +13,7 @@ import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 
 /**
  * treeView 节点保存的数据对象
+ * 
  * @author tenie
  *
  */
@@ -29,9 +30,7 @@ public class TreeNodePo implements Serializable {
 	private SqluckyConnector connpo;
 	private ConnItemContainer connItemContainer;
 	private ConnItemDbObjects connItem;
-	
-//	private DBNodeInfoPo dbNodeInfoPo;
-	
+
 	public TreeNodePo(String name, Node cion) {
 		super();
 		this.name = name;
@@ -160,8 +159,6 @@ public class TreeNodePo implements Serializable {
 		this.funcProTri = funcProTri;
 	}
 
-	
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -234,7 +231,5 @@ public class TreeNodePo implements Serializable {
 		po.setType(type);
 		return po;
 	}
-
-	 
 
 }

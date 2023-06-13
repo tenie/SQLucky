@@ -9,16 +9,12 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableView;
-
-import com.jfoenix.controls.JFXCheckBox;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -27,25 +23,16 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.PoDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
-import net.tenie.Sqlucky.sdk.po.PluginInfoPO;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
-import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
-import net.tenie.fx.component.UserAccount.UserAccountAction;
-import net.tenie.fx.plugin.PluginManageAction;
 
 /**
  * 
@@ -56,25 +43,17 @@ public class CheckUpdateWindow {
 	// 编辑连接时记录连接状态
 	private static Logger logger = LogManager.getLogger(CheckUpdateWindow.class);
 	
-	
-	private String appVersion = "";
 	private Stage stageWindow = null ;
-	private TextField tfemail;
-	private PasswordField password;
-	private JFXCheckBox rememberCB;
-	private Button signInBtn ;
 	public static void show(String title) {
 		CheckUpdateWindow window = new CheckUpdateWindow();
-		window.initWindow(title); 
+		window.layout(title);
 	}
 	// 创建窗口
 	public Stage CreateModalWindow(VBox vb,  String title) {
 		SqluckyStage sqlStage = new SqluckyStage(vb);
 		stageWindow = sqlStage.getStage();
 		Scene scene = sqlStage.getScene();
-//		stageWindow = new Stage();
 		vb.getStyleClass().add("connectionEditor");
-//		Scene scene = new Scene(vb);
 		
 		vb.setPrefWidth(400);
 		vb.maxWidth(400);
@@ -93,11 +72,8 @@ public class CheckUpdateWindow {
 			
 		});
 
-//		CommonUtility.loadCss(scene);
 		stageWindow.initModality(Modality.APPLICATION_MODAL);
-//		stageWindow.setScene(scene);
 		
-//		stageWindow.getIcons().add( ComponentGetter.LogoIcons);
 		stageWindow.setTitle(title);
 		stageWindow.setMaximized(false);
 		stageWindow.setResizable(false);
@@ -107,34 +83,7 @@ public class CheckUpdateWindow {
 		return stageWindow;
 	}
 
-	// 初始化控件
-	public  void initWindow( String title) {
-		
-		String email = "Email"; 
-		String passwordStr = "Password";
-		String remember =  "Remember Account";
-		
-		Label lbemail= new Label(email);  
-		Label lbPassword = new Label(passwordStr);   
-		 
-		List<Region> list = new ArrayList<>();
   
-//		list.add(    lbemail);
-//		list.add(    tfemail);
-//		
-//		list.add(    lbPassword);
-//		list.add(    password); 
-//		
-//		list.add(    Remember); 
-//		list.add(    rememberCB);
-//		
-//		list.add(    signInBtn); 
-//		list.add(    signOutBtn);  
-//		
-//		list.add(    setbtn);   
-		
-		layout(list, title);
-	}  
 	 
 	// 注册按钮
 	public Button createSignUpBtn(Function<String, String> sup ) {
@@ -156,14 +105,11 @@ public class CheckUpdateWindow {
 		return btn;
 	}
 	public  void downloadNewPatch(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo>  allPluginTable) {
-//		if( CommonUtility.isLogin("Please Login First") == false) {
-//			return ;
-//		}
 		LoadingAnimation.addLoading("Download ...");
 		
 		CommonUtility.runThread(v->{
 			try {
-				int currentSelectIndex = allPluginTable.getSelectionModel().getSelectedIndex();
+//				int currentSelectIndex = allPluginTable.getSelectionModel().getSelectedIndex();
 				
 				Map<String, String> vals = new HashMap<>();
 				if(CommonUtility.isWinOS()) {
@@ -198,7 +144,7 @@ public class CheckUpdateWindow {
 	}
  
 	// 控件布局, 并显示窗口
-	public void layout(List<Region> list2, String titleStage) {
+	public void layout( String titleStage) {
 		VBox vb = new VBox();
 		List<Region> list = new ArrayList<>();
 		// 下载按钮
@@ -207,15 +153,12 @@ public class CheckUpdateWindow {
 		btn.setOnAction(v->{
 			CommonUtility.OpenURLInBrowser("https://github.com/tenie/SQLucky/releases");
 		});
-//		var svgs = IconGenerator.sqluckyLogoSVGImage();
-//		btn.setGraphic(svgs);
 		list.add(null);
 		list.add(btn);
 		
 		String sign = "Checking ";
 		Label title = new Label(sign);
 		title.setPadding(new Insets(15));
-//		AppComponent appComponent = ComponentGetter.appComponent;
 		Node nd = IconGenerator.svgImage("icomoon-spinner9", 30 , "#7CFC00"); 
 		CommonUtility.rotateTransition(nd);
 		title.setGraphic(nd);
@@ -228,10 +171,8 @@ public class CheckUpdateWindow {
 				String version = newAppVersionCode();//HttpUtil.get(ConfigVal.getSqluckyServer()+"/sqlucky/version");
 				if(version != null) {
 					if(ConfigVal.version.equals(version)) {
-//						MyAlert.alertWait("已经是最新版本!");
 						msg = "已经是最新版本!";
-//						btn.setDisable(false);
-						appVersion = version;
+//						appVersion = version;
 					}else {
 						msg = "当前版本: " + ConfigVal.version + "; 最新版本: " + version;
 						btn.setDisable(false);
@@ -245,7 +186,6 @@ public class CheckUpdateWindow {
 			String showMsg = msg;
 			Platform.runLater(()->{
 				title.setText(showMsg); 
-//				Node svg = IconGenerator.svgImageDefActive("ionic-ios-medical", 30 );
 				var svg = IconGenerator.sqluckyLogoSVG();
 				title.setGraphic(svg); 
 			});

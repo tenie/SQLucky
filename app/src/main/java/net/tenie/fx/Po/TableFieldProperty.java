@@ -54,7 +54,7 @@ public class TableFieldProperty {
 	public void setType(String type) {
 		this.type.set(type);
 	}
- 
+
 	public String getIsNullable() {
 		return isNullable.get();
 	}
@@ -63,7 +63,6 @@ public class TableFieldProperty {
 		this.isNullable.set(isNullable);
 	}
 
-	// remarks
 	public String getRemarks() {
 		return remarks.get();
 	}

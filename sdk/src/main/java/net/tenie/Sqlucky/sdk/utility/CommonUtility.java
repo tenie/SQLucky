@@ -29,7 +29,6 @@ import javafx.beans.InvalidationListener;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -74,7 +73,6 @@ public class CommonUtility {
 	}
 	// 加载css样式
 		public static void loadCss(Scene scene) {
-//			if(scene ==null) return;
 			scene.getStylesheets().clear();
 			logger.info(ConfigVal.THEME);
 			if(ConfigVal.THEME.equals( CommonConst.THEME_DARK )) {
@@ -147,9 +145,7 @@ public class CommonUtility {
 				t.start();
 			 
 		}else {
-//			logger.debug("delayRunThread");
 			return ;
-			
 		}  
 		
 	}

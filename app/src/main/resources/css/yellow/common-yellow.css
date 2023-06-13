@@ -1,28 +1,27 @@
 /* 空标记 */
-.my-tag{
+.my-tag {
 	
 }
 
 /* MyAlert.notification  窗口的边框颜色*/
-Pane  GridPane{
+Pane  GridPane {
 	-fx-border-color: #4e4e4e;
-	-fx-border-width: 3; 
-/* 	-fx-background-color: #4e4e4e; */
+	-fx-border-width: 3;
 }
-.window-head-pane{
-	-fx-background-color: transparent; 
+
+.window-head-pane {
+	-fx-background-color: transparent;
 	-fx-border-color: #000000 #000000 #323232 #000000;
 }
 
-/* 插件管理界面 #000000 */
-.myPluginManager-vbox{
+/* 插件管理界面 */
+.myPluginManager-vbox {
 	-fx-padding: 5px 0px 5px 0px;
-	/* -fx-spacing box 之间的间距 */
-	-fx-spacing: 2px; 
-	-fx-background-color: #000000; 
+	-fx-spacing: 2px;
+	-fx-background-color: #000000;
 }
 
-.Icon-color{
+.Icon-color {
 	-fx-background-color: #FDA232;
 }
 /* 顶部 svg 图标的颜色 */
@@ -31,246 +30,223 @@ Pane  GridPane{
 }
 
 /* 左侧折叠面板的title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 #FDA232 */
-.myTitleTxtActiveColor .title .text{
-	  -fx-fill:  #FDA232; 
-	 /*  -fx-font-size: 15px;  */
+.myTitleTxtActiveColor .title .text {
+	-fx-fill: #FDA232;
+	/*  -fx-font-size: 15px;  */
 }
 
 /* tree view 中文字按钮边框 */
-.myTxtBtnBorder{
+.myTxtBtnBorder {
 	-fx-border-color: #FDA232;
 	-fx-border-radius: 3px;
-	-fx-padding: 2px 3px 1px 3px;  
-	-fx-border-insets: 2 0 1 0;  
+	-fx-padding: 2px 3px 1px 3px;
+	-fx-border-insets: 2 0 1 0;
 }
 
-.main-background{
-	 -fx-background-color:  #000000 ;
+.main-background {
+	-fx-background-color: #000000;
 }
 
 /* titledPane 背景色*/
-.titledPane-color .title{ 
-	 -fx-background-color: #000000 ;
-	 -fx-border-color: #323232 transparent #323232 transparent ; 
-	 -fx-border-width: 1 0 1 0; 
+.titledPane-color .title {
+	-fx-background-color: #000000;
+	-fx-border-color: #323232 transparent #323232 transparent;
+	-fx-border-width: 1 0 1 0;
 }
 
 /* 查找替换面板 */
-.myFindPane{
-	-fx-background-color: #161616; 
+.myFindPane {
+	-fx-background-color: #161616;
 }
 
-/* tabpane 选择tab按钮 .tab-down-button */
+/* tabpane 选择tab按钮 */
 .control-buttons-tab .arrow {
-	-fx-background-color: #FDA232; 
-}
-.control-buttons-tab .tab-down-button {
-	-fx-background-color: #000000; 
+	-fx-background-color: #FDA232;
 }
 
-
-/*
 .control-buttons-tab .tab-down-button {
-	-fx-background-color:  #333333; 
-}*/
-
+	-fx-background-color: #000000;
+}
 
 /*书签*/
-.myLineBookMark{
-	 
-
- 	-fx-background-color: red; 
-	-fx-background-radius: 10 10 10 10; 
- /*-fx-background-color: linear-gradient(from 0px 0px to 0px 50px, gray, darkgray 50%, dimgray 99%, white);
-*/	
-	 
- 
+.myLineBookMark {
+	-fx-background-color: red;
+	-fx-background-radius: 10 10 10 10;
 }
 
 /* 文本颜色 */
 .text {
-     -fx-fill: #ffffff;   /* 文本颜色 */  
+	-fx-fill: #ffffff;
 }
 
 /* 光标所在行背景背景色 */
 .styled-text-area .paragraph-box:has-caret {
-    -fx-background-color: #323232; 
+	-fx-background-color: #323232;
 }
 
 /* 光标 */
-.caret {  
-    -fx-stroke:  #ffffff;  
-}  
- 
- 
- 
+.caret {
+	-fx-stroke: #ffffff;
+}
+
 /* CodeArea 基本色 */
 .styled-text-area {
-	-fx-background-color: #000000;  
-    -fx-font-size: 14;
-} 
- 
- 
-
- /* 选中颜色 */
- .styled-text-area .selection {
-    -fx-fill: #214283;
+	-fx-background-color: #000000;
+	-fx-font-size: 14;
 }
+
+/* 选中颜色 */
+.styled-text-area .selection {
+	-fx-fill: #214283;
+}
+
 .styled-text-area .caret {
-    -rtfx-blink-rate: 100ms;
-    -fx-stroke-width: 10.0;
+	-rtfx-blink-rate: 100ms;
+	-fx-stroke-width: 10.0;
 }
 
-.styled-text-area .sql-error{
-	-fx-underline: true ; 
+.styled-text-area .sql-error {
+	-fx-underline: true;
 }
 
- 
 .styled-text-area .text.highlight {
-    -fx-fill: yellow;
+	-fx-fill: yellow;
 }
-
-
 
 /*  菜单  */
-.menu-bar{
-	-fx-text-fill:   #bdcddf;
-	-fx-background-color: #000000;  
+.menu-bar {
+	-fx-text-fill: #bdcddf;
+	-fx-background-color: #000000;
 }
-/* .menu-bar { 
-	-fx-border-color: #000000 #000000 #323232 #000000;
-}
- */
 /* splitPane 样式 */
-.split-pane{
-	-fx-background-color: #000000; 
+.split-pane {
+	-fx-background-color: #000000;
 }
-
- 
 
 /* 分割符  */
 .split-pane *.split-pane-divider {
-     -fx-padding: 0 1 0 1; 
-    -fx-background-color:#323232;    
+	-fx-padding: 0 1 0 1;
+	-fx-background-color: #323232;
 }
 
-.subWindowClose{
-	 -fx-background-color:#323232;
-}
-.transfer-run-btn{
-	 -fx-background-color: #008000;
-}
-.transfer-stop-btn{
-	 -fx-background-color: red;
+.subWindowClose {
+	-fx-background-color: #323232;
 }
 
-.transfer-btn{
-	-fx-border-color: #333333; 
+.transfer-run-btn {
+	-fx-background-color: #008000;
 }
 
-CheckBoxTreeItem{
-	-fx-checked-color: red; 
+.transfer-stop-btn {
+	-fx-background-color: red;
 }
 
+.transfer-btn {
+	-fx-border-color: #333333;
+}
+
+CheckBoxTreeItem {
+	-fx-checked-color: red;
+}
 
 .myModalDialog {
- -fx-background-color: #000000;
+	-fx-background-color: #000000;
 }
 
 GridPane {
- -fx-background-color: #000000;
+	-fx-background-color: #000000;
 }
 
- 
-.myAlert { 
- -fx-background-color: #3C3F41;
+.myAlert {
+	-fx-background-color: #3C3F41;
 }
-.myAlert  TextField{
- -fx-text-fill: white;
+
+.myAlert  TextField {
+	-fx-text-fill: white;
 }
 /* 子界面按钮颜色 FDA232 */
-.myAlertBtn{
+.myAlertBtn {
 	-fx-background-color: #955302;
 }
-.myAlert Button{
- -fx-background-color: #FDA232;
- -fx-text-fill: white;
- -fx-border-color: #4C708C;
+
+.myAlert Button {
+	-fx-background-color: #FDA232;
+	-fx-text-fill: white;
+	-fx-border-color: #4C708C;
 }
 
 .myAlertOkBtn {
 	-fx-background-color: #80FF80;
 }
 /* 按钮中文字的颜色*/
-.myAlertOkBtn .text{
+.myAlertOkBtn .text {
 	-fx-fill: #17181A;
 }
 /* 鼠标悬停的时候按钮文字变白*/
-.myAlertOkBtn:hover .text{
+.myAlertOkBtn:hover .text {
 	-fx-fill: white;
 }
 
-
-
 /*箭头颜色(菜单按钮的进入子菜单有一个箭头图标)*/
-.arrow{
+.arrow {
 	-fx-background-color: #ffffff;
 }
 /* 表格头最右侧的控制列隐藏的一个菜单按钮图标*/
-.show-hide-column-image{
+.show-hide-column-image {
 	-fx-background-color: #BBBBBB;
 }
 
-
-MenuButton{
+MenuButton {
 	-fx-background-color: #000000;
 }
-MenuItem{
-	-fx-background-color:  #000000;
-}
-ContextMenu{
-	-fx-background-color:  #000000;
+
+MenuItem {
+	-fx-background-color: #000000;
 }
 
-FlowPane{
+ContextMenu {
+	-fx-background-color: #000000;
+}
+
+FlowPane {
 	-fx-background-color: #000000;
 	-fx-text-fill: white;
 }
 
-FlowPane TextField{ 
+FlowPane TextField {
 	-fx-text-fill: white;
 }
-
 
 /*连接编辑窗口*/
 .connectionEditor {
-    -fx-background-color: #000000;
-}
-.connectionEditor  TextField{
-    -fx-text-fill: white;
-    -fx-background-color: #0C0C0C;
-    -fx-border-color: #5E6060 ;
-    -fx-border-radius: 3px; /* 圆角 */
+	-fx-background-color: #000000;
 }
 
-.connectionEditor  PasswordField{
-    -fx-text-fill: white;
-    -fx-background-color: #0C0C0C;
-    -fx-border-color: #5E6060 ;
-    -fx-border-radius: 3px; /* 圆角 */
-}
-.connectionEditor  ChoiceBox{
-    -fx-text-fill: white;
-    -fx-background-color: #0C0C0C;
-    -fx-border-color: #5E6060 ;
-    -fx-border-radius: 3px; /* 圆角 */
+.connectionEditor  TextField {
+	-fx-text-fill: white;
+	-fx-background-color: #0C0C0C;
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px;
 }
 
+.connectionEditor  PasswordField {
+	-fx-text-fill: white;
+	-fx-background-color: #0C0C0C;
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px;
+}
+
+.connectionEditor  ChoiceBox {
+	-fx-text-fill: white;
+	-fx-background-color: #0C0C0C;
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px;
+}
 
 /* 添加数据库信息界面 按钮*/
-.connectionEditor   Button{
-    -fx-background-color: #FDA232;
-    -fx-text-fill: white; 
+.connectionEditor   Button {
+	-fx-background-color: #FDA232;
+	-fx-text-fill: white;
 }
 
 /* 
@@ -278,311 +254,197 @@ FlowPane TextField{
 	-fx-visible: true;
 } */
 /*搜索 替换 按钮*/
-.myReplaceBtn{
-    -fx-border-color: #5E6060 ;
-    -fx-border-radius: 3px;
+.myReplaceBtn {
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px;
 }
 
 /*  搜索框 */
-.myFindTextField{
+.myFindTextField {
 	-fx-text-fill: white;
 	-fx-background-color: #0C0C0C;
-	-fx-border-color: #5E6060 ;
-	-fx-border-radius: 3px; /* 圆角 */
+	-fx-border-color: #5E6060;
+	-fx-border-radius: 3px;
 }
 
-.myTextField{
+.myTextField {
 	-fx-text-fill: white;
 	-fx-background-color: #0C0C0C;
-    -fx-border-color:transparent transparent #FDA232 transparent;
-    -fx-border-width: 1 1 1 1;
-    -fx-background-radius: 1px; /* 圆角 */
+	-fx-border-color: transparent transparent #FDA232 transparent;
+	-fx-border-width: 1 1 1 1;
+	-fx-background-radius: 1px;
 }
-.myTextField:hover{
+
+.myTextField:hover {
 	-fx-background-color: #323232;
 }
 
-.myTextField:focused{ 
-    -fx-border-color: #FDA232;
-    -fx-border-width: 0 0 1 0;
+.myTextField:focused {
+	-fx-border-color: #FDA232;
+	-fx-border-width: 0 0 1 0;
 }
 
-.myBorderColor{
+.myBorderColor {
 	-fx-border-color: #000000 #000000 #323232 #000000;
 }
 
-
-
 .menu:hover {
-	 -fx-background-color: #323232;
+	-fx-background-color: #323232;
 }
+
 .menu:showing {
-	 -fx-background-color: #323232;
+	-fx-background-color: #323232;
 }
+
 .menu:selected {
-	 -fx-background-color: #323232;
+	-fx-background-color: #323232;
 }
+
 .menu-item:hover {
-	 -fx-background-color: #323232;
+	-fx-background-color: #323232;
 }
-
-
 
 .menu-item:focused {
-	 -fx-background-color: #323232;
+	-fx-background-color: #323232;
 }
 
-
-.button:hover{
-	 -fx-background-color: #323232;
+.button:hover {
+	-fx-background-color: #323232;
 }
- 
 
 /* 右键菜单  */
-.context-menu{
-	 -fx-background-color: #292929;
+.context-menu {
+	-fx-background-color: #292929;
 }
 
-.myComboBox{
-	 
+.myComboBox {
+	
 }
- 
 
-.combo-box {   
-     -fx-border-color: #FDA232;
-     -fx-border-width: 0 0 1 0;
-     -fx-background-radius: 0; 
-     -fx-background-color: #0C0C0C;   
-     -fx-font-size: 12px;
-     -fx-text-fill: #ffffff;
-     -fx-background-insets: 0;
-     -fx-alignment: center;
-     -fx-content-display: center;
- }
+.combo-box {
+	-fx-border-color: #FDA232;
+	-fx-border-width: 0 0 1 0;
+	-fx-background-radius: 0;
+	-fx-background-color: #0C0C0C;
+	-fx-font-size: 12px;
+	-fx-text-fill: #ffffff;
+	-fx-background-insets: 0;
+	-fx-alignment: center;
+	-fx-content-display: center;
+}
 
- .combo-box > .cell {   
-     -fx-text-fill: #ffffff;
-     -fx-alignment: center;
- }
+.combo-box>.cell {
+	-fx-text-fill: #ffffff;
+	-fx-alignment: center;
+}
 
- .combo-box:hover {   
-     -fx-background-color: #323232; 
- }
- .combo-box-popup .list-view {
- 	 -fx-background-color: #000000;  
- }
- .combo-box-popup .list-view .list-cell {
-     -fx-background-color: #323232;  
-     -fx-text-fill: #ffffff;
-     -fx-text-alignment: center;
- }
- 
- .combo-box-popup .list-view .list-cell:filled:hover {
-     -fx-background-color: #494949 ;
-     -fx-text-alignment: center;
- }
+.combo-box:hover {
+	-fx-background-color: #323232;
+}
+
+.combo-box-popup .list-view {
+	-fx-background-color: #000000;
+}
+
+.combo-box-popup .list-view .list-cell {
+	-fx-background-color: #323232;
+	-fx-text-fill: #ffffff;
+	-fx-text-alignment: center;
+}
+
+.combo-box-popup .list-view .list-cell:filled:hover {
+	-fx-background-color: #494949;
+	-fx-text-alignment: center;
+}
 
 /* combo-box 下划线*/
-.combo-box .input-line{
- 	 -fx-background-color:  #323232 ;
+.combo-box .input-line {
+	-fx-background-color: #323232;
 }
 
-.combo-box .input-focused-line{
- 	 -fx-background-color:  #323232 ;
+.combo-box .input-focused-line {
+	-fx-background-color: #323232;
 }
-
-
 
 .my-jfx-text-field {
-    -fx-focus-color: #77acf4;
-    -fx-unfocus-color: #00f900;
-    -fx-padding: 0.333333em 0 0.333333em 0;
+	-fx-focus-color: #77acf4;
+	-fx-unfocus-color: #00f900;
+	-fx-padding: 0.333333em 0 0.333333em 0;
 }
 
 /* 滚动条角的颜色 */
-.my-tag  .corner   {
-	-fx-background-color:  #000000;
+.my-tag  .corner {
+	-fx-background-color: #000000;
 }
- 
 
 .my-tag   .scroll-bar {
-    -fx-background-color:  #000000;
+	-fx-background-color: #000000;
 }
 
-
-
-.my-tag  .scroll-bar:horizontal .increment-button ,
-.my-tag  .scroll-bar:horizontal .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 0.0 7.0 0.0; 
+.my-tag  .scroll-bar:horizontal .increment-button, .my-tag  .scroll-bar:horizontal .decrement-button
+	{
+	-fx-background-color: transparent;
+	-fx-background-radius: 0.0em;
+	-fx-padding: 0.0 0.0 7.0 0.0;
 }
 
-.my-tag  .scroll-bar:vertical .increment-button ,
-.my-tag  .scroll-bar:vertical .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 7.0 0.0 0.0;
-
+.my-tag  .scroll-bar:vertical .increment-button, .my-tag  .scroll-bar:vertical .decrement-button
+	{
+	-fx-background-color: transparent;
+	-fx-background-radius: 0.0em;
+	-fx-padding: 0.0 7.0 0.0 0.0;
 }
 
-.my-tag   .scroll-bar .increment-arrow,
-.my-tag   .scroll-bar .decrement-arrow{
-    -fx-shape : " ";    
-    -fx-padding :0.1em 0.0;
+.my-tag   .scroll-bar .increment-arrow, .my-tag   .scroll-bar .decrement-arrow
+	{
+	-fx-shape: " ";
+	-fx-padding: 0.1em 0.0;
 }
 
- .my-tag  .scroll-bar:vertical .increment-arrow,
- .my-tag  .scroll-bar:vertical .decrement-arrow{
-    -fx-shape : " ";    
-    -fx-padding :0.0 0.1em;
+.my-tag  .scroll-bar:vertical .increment-arrow, .my-tag  .scroll-bar:vertical .decrement-arrow
+	{
+	-fx-shape: " ";
+	-fx-padding: 0.0 0.1em;
 }
 
-.my-tag  .scroll-bar:horizontal .thumb,
-.my-tag  .scroll-bar:vertical .thumb {
-	 -fx-background-color:  #3c3f41;
-/*
- -fx-background-color:
-        #000000,
-        linear-gradient(to right, derive( #000000 ,95%), derive( #000000 ,10%)),
-        linear-gradient(to right, derive( #000000 ,38%), derive(#000000 ,-16%));
-   
-*/
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 0.5em;
+.my-tag  .scroll-bar:horizontal .thumb, .my-tag  .scroll-bar:vertical .thumb
+	{
+	-fx-background-color: #3c3f41;
+	-fx-background-insets: 0, 1, 2;
+	-fx-background-radius: 0.5em;
 }
 
-.my-tag  .scroll-bar:horizontal .thumb:hover,
-.my-tag  .scroll-bar:vertical .thumb:hover {
-    -fx-background-color:
-        #B9B9B9,
-        linear-gradient(to right, derive( #B9B9B9,95%), derive( #B9B9B9,10%)),
-        linear-gradient(to right, derive( #B9B9B9,38%), derive(#B9B9B9,-16%));
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 0.5em;
+.my-tag  .scroll-bar:horizontal .thumb:hover, .my-tag  .scroll-bar:vertical .thumb:hover
+	{
+	-fx-background-color: #B9B9B9,
+		linear-gradient(to right, derive(#B9B9B9, 95%), derive(#B9B9B9, 10%)),
+		linear-gradient(to right, derive(#B9B9B9, 38%), derive(#B9B9B9, -16%));
+	-fx-background-insets: 0, 1, 2;
+	-fx-background-radius: 0.5em;
 }
- 
 
 /**Costumization of Buttons**/
-.dialog-pane .button{
-   -fx-background-color:black;
-   -fx-text-fill:white;
-   -fx-wrap-text: true;
-   -fx-effect: dropshadow( three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
-   -fx-cursor:hand;
- }
+.dialog-pane .button {
+	-fx-background-color: black;
+	-fx-text-fill: white;
+	-fx-wrap-text: true;
+	-fx-effect: dropshadow(three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
+	-fx-cursor: hand;
+}
 
-.dialog-pane .button:hover{     
-  -fx-background-color:white;
-  -fx-text-fill:black;
-  -fx-font-weight:bold; 
- }
+.dialog-pane .button:hover {
+	-fx-background-color: white;
+	-fx-text-fill: black;
+	-fx-font-weight: bold;
+}
 
 /* tree 过滤清空按钮  #363636*/
-.myCleanBtn{
-	 -fx-background-color:  transparent ;
-	 -fx-padding: 1;
-	 -fx-background-radius: 10px;
-}
-.myCleanBtn:hover{
-	-fx-background-color:  transparent;
+.myCleanBtn {
+	-fx-background-color: transparent;
+	-fx-padding: 1;
+	-fx-background-radius: 10px;
 }
 
-
-/*  表格头, 分割线  */
-/* Rectangle{
-	-fx-fill: #323232; 
-} */
-
-/*  失去焦点隐藏
-.scroll-bar{ 
-    visibility:hidden;
-} */
-
-/*
-note:
-	  设置背景颜色渐变,where <side-or-corner> = [left | right] || [top | bottom] 
-	-fx-background-color: linear-gradient(to bottom,#99CCFF,#CCFFFF)
-	 
-	  边角圆弧,参数分别是左上角→右上角→左下角→右下角,全部统一就只输50 
-	-fx-background-radius: 50 0 50 0
-	
-	内边距  
-	-fx-background-insets:10 0 10 0
-	
-	标题面板  
-	-fx-background-color: linear-gradient(from 0px 0px to 0px 50px, gray, darkgray 50%, dimgray 99%, white)
-	-fx-background-radius: 30 30 0 0
-	
-	
-	
-	
-	JavaFX——CSS选择器
-
-  
-一、类型选择器（TypeSelector)
-   大部分JavaFX控件类都对应一个CSS Type，我们可以使用类型选择器来控制类型控件的外观。对应的命名为：将JavaFX的类名给改成首字母小写，如果有多个单词拼接的类名，将每个单词原来大写的首字母小写然后用连字符将多个单词连接。如：
-
-JavaFX Class	CSS Type class
-Button	button
-Label    	label
-CheckBox    	check-box
-TextField   	text-field
-...    	...
-  类型选择器的用法如下：
-
-.label{
-     -fx-text-fill:red
+.myCleanBtn:hover {
+	-fx-background-color: transparent;
 }
-   这样我们就将应用了这个CSS文件的FXML文件里的所有label的文字样式都设置成了红色。
-
-
-
-二、类选择器（Class selector)
-   在Javafx中有些控件是没有自己的类型选择器的，这个时候要定义要是可以实用类选择器，给相应的控件设置样式。类选择器可以应用到多个控件上，只要在相应的控件里加上StyleClass即可。
-
-   类选择器用法如下：
-
-.background-color{
-     -fx-background-color:black;
-}
-这样就定义了一个background-color的类型选择器，对于Node的任意子类都有一个getStyleClass 的方法，可以通过getStyleClass().add("background-color");，也可以在FXML文件上可以通过StyleClass标签添加background-color这个选择器的样式。类选择器会覆盖类型选择的样式。
-
-
-
-三、ID选择器
-ID选择器由#开始进行定义，一般情况下一个ID选择器对一个唯一一个控件。
-
-ID选择器的用法如下：
-
-#ok-button{
-   -fx-font-color:rgb(255,0,0,0);
-   -fx-font-size:25px;
-}
-   这个时候ID为okbutton的Button,通过这个ID选择器改变样式。
-
-
-
-四、伪类选择器（CSS Pseudo-class）
-   伪类的语法为：selector : pseudo-class {property: value} 
-
-   比如我们设置当鼠标移动到Button上是背景颜色变成灰色：
-
-.button:hover{
-   -fx-background-color:gray;
-}
-   JavaFx 中的伪类选择器大概有以下几种：
-
-disabled
-focused
-selected
-hover
-empty
-pressed
-show-mnemonic
-总结
-JavaFX CSS文档不是很全，摸索的地方很多，还是得在项目中多用多积累经验，这样才能熟能生巧。
-	
-	
-	
-*/
