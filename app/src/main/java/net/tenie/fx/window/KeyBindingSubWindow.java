@@ -67,15 +67,16 @@ public class KeyBindingSubWindow {
 			String count = SqluckyAppDB.selectOne(selectSQL);
 			if (StrUtils.isNotNullOrEmpty(count)) {
 				if (!"0".equals(count)) {
-					MyAlert.errorAlert("快捷以存在:" + v);
+					MyAlert.errorAlert("快捷键已经存在:" + v);
 					return;
 				}
 			}
+			// action 重新绑定key
+			KeyBindingCache.rebingdingKey(actionNameField, v);
 //			保存数据库 
 			String updateSQL = "update KEYS_BINDING set BINDING = '" + v + "' where id = " + actionId;
 			SqluckyAppDB.execDDL(updateSQL);
-			// action 重新绑定key
-			KeyBindingCache.rebingdingKey(actionNameField, v);
+			
 			this.caller.accept(v);
 			stageWindow.close();
 		});
