@@ -158,6 +158,7 @@ public class AppDao {
 				String createSQL = arr[i];
 				createSQL = createSQL.trim();
 				if (StrUtils.isNotNullOrEmpty(createSQL)) {
+					logger.debug(createSQL);
 					DBTools.execDDLNoErr(conn, createSQL);
 				}
 
