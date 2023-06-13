@@ -1,6 +1,5 @@
 package net.tenie.plugin.note.component;
 
-import java.io.File;
 import java.util.Objects;
 
 import javafx.scene.control.Button;
@@ -18,129 +17,95 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.FileTools;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.note.utility.NoteUtility;
-
 
 /**
  * 
  * @author tenie
  *
  */
-public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, TreeCell<SqluckyTab>> { 
-//	private static Logger logger = LogManager.getLogger(NoteTabNodeCellFactory.class);
+public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, TreeCell<SqluckyTab>> {
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
 	private TreeCell<SqluckyTab> dropZone;
 	private TreeItem<SqluckyTab> draggedItem;
 	private NoteOptionPanel optPane;
-	private Button showInFolder ;
-	
+	private Button showInFolder;
+
 	TreeView<SqluckyTab> treeView;
-	
-	public NoteTabNodeCellFactory(NoteOptionPanel optPane, TreeView<SqluckyTab> treeView ) {
+
+	public NoteTabNodeCellFactory(NoteOptionPanel optPane, TreeView<SqluckyTab> treeView) {
 		this.optPane = optPane;
 		showInFolder = optPane.getShowInFolder();
 		this.treeView = treeView;
 	}
-	
+
 	@Override
 	public TreeCell<SqluckyTab> call(TreeView<SqluckyTab> treeView) {
-//		Button clean = new Button(); 
 		TreeCell<SqluckyTab> cell = new TreeCell<SqluckyTab>() {
-		
+
 			@Override
 			public void updateItem(SqluckyTab item, boolean empty) {
-				super.updateItem(item, empty);				
+				super.updateItem(item, empty);
 				// 给cell 内容添加 button
-				   // If the cell is empty we don't show anything.
-	            if (isEmpty()) {
-	                setGraphic(null);
-	                setText(null);
-	            } else {	                
+				// If the cell is empty we don't show anything.
+				if (isEmpty()) {
+					setGraphic(null);
+					setText(null);
+				} else {
 //	                if (this.getTreeItem().isLeaf()) {   // We only show the custom cell if it is a leaf, meaning it has no children.
 
-	                    // A custom HBox that will contain your check box, label and
-	                    // button.
-	                    AnchorPane pn = new AnchorPane();
-	                	DocumentPo po =  item.getDocumentPo();
-	                	Region icon = item.getIcon();
-	                	
-	                    Label label = new Label(po.getTitle());
-	                    label.setGraphic(icon);
-	                    
-	                    pn.getChildren().add(label);
+					// A custom HBox that will contain your check box, label and
+					// button.
+					AnchorPane pn = new AnchorPane();
+					DocumentPo po = item.getDocumentPo();
+					Region icon = item.getIcon();
+
+					Label label = new Label(po.getTitle());
+					label.setGraphic(icon);
+
+					pn.getChildren().add(label);
 //	                    pn.getChildren().add(clean); 
 //	                    AnchorPane.setRightAnchor(clean, 5.0);
-	                    setGraphic(pn);
-	                    
-	                    setText(null);
-	            }
+					setGraphic(pn);
+
+					setText(null);
+				}
 			}
-
-
 
 		};
-//		clean.setMaxSize(12, 12); 
-//  		clean.setGraphic(ComponentGetter.getIconUnActive("times-circle"));
-//  		clean.getStyleClass().add("myCleanBtn");
-//  		clean.setVisible(false); //clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
-//  		clean.setOnAction(e->{
-//  			var it = cell.getTreeItem();
-//  			NoteTabTree.closeAction(it);
-//  		}); 
-  		 
-//  		cell.setOnMouseEntered(e->{
-//			if(cell.isSelected()) {
-//				clean.setVisible(true);
-//			}
-//		
-//		});
-  		
-//		cell.setOnMouseExited(e->{
-//			clean.setVisible(false);
-//		});
-		
-		cell.setOnMouseClicked(e->{
-//			if(cell.isSelected()) {
-//				clean.setVisible(true);
-//			}
-			if(e.getClickCount() == 1) {
-				var item =	treeView.getSelectionModel().getSelectedItem();
-				
-//				var item = cell.getItem(); 
-				if(item!=null) {
+
+		cell.setOnMouseClicked(e -> {
+			if (e.getClickCount() == 1) {
+				var item = treeView.getSelectionModel().getSelectedItem();
+
+				if (item != null) {
 					showInFolder.setDisable(false);
-				}else {
+				} else {
 					showInFolder.setDisable(true);
-				} 
-			}
-			else if(e.getClickCount() == 2) {
+				}
+			} else if (e.getClickCount() == 2) {
 				NoteUtility.doubleClickItem(cell.getTreeItem());
 			}
-			
+
 		});
 		cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
 		cell.setOnDragOver((DragEvent event) -> dragOver(event, cell, treeView));
 		cell.setOnDragDropped((DragEvent event) -> drop(event, cell, treeView));
 		cell.setOnDragDone((DragEvent event) -> clearDropLocation());
-		
+
 		return cell;
 	}
-	
 
 	// 发现拖动 当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个
 	private void dragDetected(MouseEvent event, TreeCell<SqluckyTab> treeCell, TreeView<SqluckyTab> treeView) {
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
-		if (draggedItem == null || draggedItem.getParent() == null) { 
+		if (draggedItem == null || draggedItem.getParent() == null) {
 			return;
-		} 
-			
+		}
+
 		Dragboard db = treeCell.startDragAndDrop(TransferMode.ANY);
 
 		ClipboardContent content = new ClipboardContent();
@@ -148,11 +113,11 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 		db.setContent(content);
 		db.setDragView(treeCell.snapshot(null, null));
 		event.consume();
-	
+
 	}
 
 	private void dragOver(DragEvent event, TreeCell<SqluckyTab> treeCell, TreeView<SqluckyTab> treeView) {
-  
+
 		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT))
 			return;
 		TreeItem<SqluckyTab> thisItem = treeCell.getTreeItem();
@@ -172,8 +137,7 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 			this.dropZone = treeCell;
 			dropZone.setStyle(DROP_HINT_STYLE);
 		}
-		
-		 
+
 	}
 
 	// 放下后执行
@@ -191,7 +155,6 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 			droppedItemParent.getChildren().remove(draggedItem);
 			int indexInParent = thisItem.getParent().getChildren().indexOf(thisItem);
 			thisItem.getParent().getChildren().add(indexInParent + 1, draggedItem);
-			
 
 		}
 		if (Objects.equals(droppedItemParent, thisItem)) {
@@ -208,5 +171,5 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 		if (dropZone != null)
 			dropZone.setStyle("");
 	}
-	    
+
 }

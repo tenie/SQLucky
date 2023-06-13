@@ -1,72 +1,56 @@
 .titledPane-color {
- 	-fx-color: #000000 ;
+	-fx-color: #000000;
 }
 
-.titledPane-color .title:hover{
- 	-fx-color: #000000 ;
- 	-fx-background-color: #2B2B2B  ;
+.titledPane-color .title:hover {
+	-fx-color: #000000;
+	-fx-background-color: #2B2B2B;
 }
- 
 
 /* tree  */
 .tree-view, .tree-cell {
-    -fx-background-color: #000000 ;
-    -fx-text-fill: white ;
+	-fx-background-color: #000000;
+	-fx-text-fill: white;
 }
 
 /* 自动补全 窗口*/
 .auto-comolete  .tree-cell {
-    -fx-background-color: #323232 ;
-    -fx-text-fill: white ;
+	-fx-background-color: #323232;
+	-fx-text-fill: white;
 }
 
-/* check box tree */
-/*.clipped-container{
-	 -fx-color: #000000 ;
-}*/
+.check-box .box {
+	-fx-color: #FDA232;
+}
 
-/*.clipped-container:hover{
-	 -fx-color: #000000 ;
+.check-box .box:hover {
+	-fx-color: #FDA232;
 }
-*/
-.check-box .box{
-	 -fx-color: #FDA232 ;
-}
-.check-box .box:hover{
-	 -fx-color: #FDA232 ;
-}
-              
- 
-
 
 /*  选中的颜色 */
 .tree-cell:selected {
-    -fx-font-weight: bold ;
-    -fx-background-color: #363636 ;
+	-fx-font-weight: bold;
+	-fx-background-color: #363636;
 }
-
 
 /* 自动补全 窗口*/
 .auto-comolete .tree-cell:selected {
-    -fx-font-weight: bold ;
-    -fx-background-color: #1D1D1D ;
+	-fx-font-weight: bold;
+	-fx-background-color: #1D1D1D;
 }
 
-.tree-cell:hover { 
-    -fx-background-color: #363636  ;
+.tree-cell:hover {
+	-fx-background-color: #363636;
 }
 
 .tree-cell {
-    -fx-padding: 0.5em 0em 0.5em 0em ;
+	-fx-padding: 0.5em 0em 0.5em 0em;
 }
+
 .tree-cell:sub-tree-item {
-    -fx-padding: 0.25em ;
+	-fx-padding: 0.25em;
 }
 
 .tree-cell .tree-disclosure-node .arrow {
-     -fx-background-color: #ADADAD ;
+	-fx-background-color: #ADADAD;
 }
-
- 
-
- 

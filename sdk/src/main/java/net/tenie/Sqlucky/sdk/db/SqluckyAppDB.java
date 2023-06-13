@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.db;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -202,7 +203,33 @@ public class SqluckyAppDB {
 		String val = "jdbc:sqlite:" + getSqliteFilePath();
 		return val;
 	}
-
 	
+	// 给app的数据库插入数据
+	public static void execDDL( String sql) {
+		var conn = SqluckyAppDB.getConn();
+		try {
+			DBTools.execDDL(conn, sql);
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+		
+	}
+	
+	
+	// 返回第一个字段的字符串值
+	public static String selectOne(String sql) {
+		var conn = SqluckyAppDB.getConn();
+		String val = "" ;
+		try {
+		   val = DBTools.selectOne(conn, sql);
+		}catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+		return val;
+	}
 	
 }

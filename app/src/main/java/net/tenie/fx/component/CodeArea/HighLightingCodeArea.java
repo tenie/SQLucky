@@ -12,6 +12,14 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.fxmisc.flowless.VirtualizedScrollPane;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.Paragraph;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
@@ -23,7 +31,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -33,12 +40,7 @@ import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.fxmisc.flowless.VirtualizedScrollPane;
-import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.model.Paragraph;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * sql文本编辑组件
@@ -55,6 +57,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
 	private SqluckyTab myAreaTab;
+
 	public void hideAutoComplete() {
 		myAuto.hide();
 	}
@@ -73,11 +76,12 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 			codeArea.setContextMenu(cm);
 		}
 	}
+
 	// 文本修改后title设置保存提示
 	Consumer<Integer> caller = x -> {
 		if (myAreaTab != null) {
 			Platform.runLater(() -> {
-				String title = myAreaTab.getTitle(); //CommonUtility.tabText(tb);
+				String title = myAreaTab.getTitle(); // CommonUtility.tabText(tb);
 				if (!title.endsWith("*")) {
 					myAreaTab.setTitle(title + "*");
 					myAreaTab.setModify(true);
@@ -90,16 +94,16 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 			}
 		}
 	};
-	
+
 //    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
 
-	public HighLightingCodeArea(MyAutoComplete myAuto , SqluckyTab tb) {
+	public HighLightingCodeArea(MyAutoComplete myAuto, SqluckyTab tb) {
 		this.myAreaTab = tb;
 		this.myAuto = myAuto;
 		highLightingHelper = new CodeAreaHighLightingHelper();
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new MyCodeArea();
-		
+
 		// 文本内容监听事件函数
 //		textChangeListener = (obj, o, n) -> { 
 //			delayHighLighting(caller, 600, 0);
@@ -107,10 +111,10 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 
-		if(myAuto == null && tb == null) {
+		if (myAuto == null && tb == null) {
 			codeArea.setEditable(false);
 			return;
-			
+
 		}
 		// 事件KeyEvent
 		codeArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
@@ -174,7 +178,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 				codeAreaCtrlV(e);
 			} else if (e.getCode() == KeyCode.Z) { // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
 //				codeAreaCtrlZ(e, cl);
-			}else {
+			} else {
 //				Consumer<Integer> caller = x -> {
 //					if (myAreaTab != null) {
 //						Platform.runLater(() -> {
@@ -192,28 +196,34 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 //					}
 //				};
 //				普通输入
-//				System.out.println("普通输入");
-				e.getCode();
-				if( ! e.isShortcutDown() && ! e.isAltDown() && !e.isControlDown() && ! e.isShiftDown() && e.getCode() != KeyCode.CAPS) {
-					
-					int currentLine = codeArea.getCurrentParagraph();
-					String text = codeArea.getText(0, 0, currentLine, 0);
-					int textLength = text.length();
-					if(textLength > 0 ) {
-						textLength --;
-					}
-					delayHighLighting(caller, 600, textLength);
-					
-					var selection = codeArea.getSelection();
-					if(selection != null &&  selection.getLength() > 0 ) { 
-						codeArea.deleteText( selection );
-					}
-					
-				}else {
-					delayHighLighting(caller, 600, 0);
-				}
-				 
-				
+//				System.out.println("普通输入"); 
+//				var ecode = e.getCode();
+//				ecode.isModifierKey();
+//				ecode.isWhitespaceKey();
+//				
+//				if (!e.isShortcutDown() && !e.isAltDown() && !e.isControlDown() && !e.isShiftDown()
+//						&& e.getCode() != KeyCode.CAPS && e.getCode() != KeyCode.CAPS 
+//						&& (e.getCode().isLetterKey() || e.getCode().isDigitKey() || e.getCode().isKeypadKey())
+//						) {
+//
+//					int currentLine = codeArea.getCurrentParagraph();
+//					String text = codeArea.getText(0, 0, currentLine, 0);
+//					int textLength = text.length();
+//					if (textLength > 0) {
+//						textLength--;
+//					}
+//					delayHighLighting(caller, 600, textLength);
+//
+//					var selection = codeArea.getSelection();
+//					if (selection != null && selection.getLength() > 0) {
+//						codeArea.deleteText(selection);
+//					}
+//
+//				} else {
+//					delayHighLighting(caller, 600, 0);
+//				}
+
+				delayHighLighting(caller, 600, 0);
 			}
 
 		});
@@ -442,7 +452,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		});
 
 	}
- 
+
 	public void highLighting(int begin) {
 		Platform.runLater(() -> {
 			try {
@@ -453,8 +463,9 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		});
 
 	}
+
 	@Override
-	public void  highLighting() {
+	public void highLighting() {
 		highLighting(0);
 	}
 
@@ -602,26 +613,52 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	/**
+	 * 自动补全
+	 * 
+	 */
 	public void callPopup() {
-		if (myAuto == null)
-			return;
-		Platform.runLater(() -> {
-			Bounds bd = codeArea.caretBoundsProperty().getValue().get();
-			double x = bd.getCenterX();
-			double y = bd.getCenterY();
-			int anchor = codeArea.getAnchor();
-			String str = "";
-			for (int i = 1; anchor - i >= 0; i++) {
-				var tmp = codeArea.getText(anchor - i, anchor);
-				int tmplen = tmp.length();
-				int idx = anchor - tmplen;
-				if (tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") || idx <= 0) {
-					str = tmp;
-					break;
-				}
+		if (codeArea.isFocused()) {
+			if (CommonUtility.isMacOS()) {
+				Platform.runLater(() -> {
+					int ar = codeArea.getAnchor();
+					String str = codeArea.getText(ar - 1, ar);
+					if (str.equals("÷")) {
+						codeArea.deleteText(ar - 1, ar);
+					}
+				});
+			} else if (CommonUtility.isLinuxOS()) {
+				Platform.runLater(() -> {
+					int ar = codeArea.getAnchor();
+					String str = codeArea.getText(ar - 1, ar);
+					if (str.equals("/")) {
+						codeArea.deleteText(ar - 1, ar);
+					}
+				});
 			}
-			myAuto.showPop(x, y + 9, str);
-		});
+			if (myAuto == null)
+				return;
+			Platform.runLater(() -> {
+				Bounds bd = codeArea.caretBoundsProperty().getValue().get();
+				double x = bd.getCenterX();
+				double y = bd.getCenterY();
+				int anchor = codeArea.getAnchor();
+				String str = "";
+				for (int i = 1; anchor - i >= 0; i++) {
+					var tmp = codeArea.getText(anchor - i, anchor);
+					int tmplen = tmp.length();
+					int idx = anchor - tmplen;
+					if (tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") || idx <= 0) {
+						str = tmp;
+						break;
+					}
+				}
+				myAuto.showPop(x, y + 9, str);
+			});
+//			SqluckyEditor.currentMyTab().getSqlCodeArea().callPopup();
+
+		}
+
 	}
 
 	/**
@@ -637,9 +674,13 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	// 移动光标到行开头
 	public void moveAnchorToLineBegin() {
-		int idx = codeArea.getCurrentParagraph(); // 获取当前行号
-		codeArea.moveTo(idx, 0);
+		if (codeArea.isFocused()) {
+			int idx = codeArea.getCurrentParagraph(); // 获取当前行号
+			codeArea.moveTo(idx, 0);
+		}
+
 	}
 
 	/**
@@ -656,10 +697,13 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 
 	public void moveAnchorToLineEnd() {
-		int idx = codeArea.getCurrentParagraph(); // 获取当前行号
-		Paragraph<Collection<String>, String, Collection<String>> p = codeArea.getParagraph(idx);
-		String ptxt = p.getText();
-		codeArea.moveTo(idx, ptxt.length());
+		if (codeArea.isFocused()) {
+			int idx = codeArea.getCurrentParagraph(); // 获取当前行号
+			Paragraph<Collection<String>, String, Collection<String>> p = codeArea.getParagraph(idx);
+			String ptxt = p.getText();
+			codeArea.moveTo(idx, ptxt.length());
+
+		}
 	}
 
 	/**
@@ -676,15 +720,18 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 
 	public void delAnchorBeforeWord() {
-		int anchor = codeArea.getAnchor(); // 光标位置
-		String txt = codeArea.getText(0, anchor);
+		if (codeArea.isFocused()) {
+			int anchor = codeArea.getAnchor(); // 光标位置
+			String txt = codeArea.getText(0, anchor);
 
-		int[] a = { 0, 0, 0 };
-		a[0] = txt.lastIndexOf(" ");
-		a[1] = txt.lastIndexOf("\t");
-		a[2] = txt.lastIndexOf("\n") + 1;
-		int max = CommonUtility.getMax(a);
-		codeArea.deleteText(max, anchor);
+			int[] a = { 0, 0, 0 };
+			a[0] = txt.lastIndexOf(" ");
+			a[1] = txt.lastIndexOf("\t");
+			a[2] = txt.lastIndexOf("\n") + 1;
+			int max = CommonUtility.getMax(a);
+			codeArea.deleteText(max, anchor);
+		}
+
 	}
 
 	/**
@@ -701,10 +748,13 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 
 	public void delAnchorBeforeChar() {
-		int anchor = codeArea.getAnchor(); // 光标位置
-		String txt = codeArea.getText(anchor - 1, anchor);
-		if (!txt.equals("\n"))
-			codeArea.deleteText(anchor - 1, anchor);
+		if (codeArea.isFocused()) {
+			int anchor = codeArea.getAnchor(); // 光标位置
+			String txt = codeArea.getText(anchor - 1, anchor);
+			if (!txt.equals("\n"))
+				codeArea.deleteText(anchor - 1, anchor);
+
+		}
 	}
 
 	/**
@@ -721,19 +771,21 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 
 	public void delAnchorAfterWord() {
-		int anchor = codeArea.getAnchor(); // 光标位置
-		String txt = codeArea.getText();
-		int txtLen = txt.length();
-		int[] a = { 0, 0, 0 };
-		int val = 0;
-		val = txt.indexOf(" ", anchor);
-		a[0] = val == -1 ? txtLen : val + 1;
-		val = txt.indexOf("\t", anchor);
-		a[1] = val == -1 ? txtLen : val + 1;
-		val = txt.indexOf("\n", anchor);
-		a[2] = val == -1 ? txtLen : val;
-		int min = CommonUtility.getMin(a);
-		codeArea.deleteText(anchor, min);
+		if (codeArea.isFocused()) {
+			int anchor = codeArea.getAnchor(); // 光标位置
+			String txt = codeArea.getText();
+			int txtLen = txt.length();
+			int[] a = { 0, 0, 0 };
+			int val = 0;
+			val = txt.indexOf(" ", anchor);
+			a[0] = val == -1 ? txtLen : val + 1;
+			val = txt.indexOf("\t", anchor);
+			a[1] = val == -1 ? txtLen : val + 1;
+			val = txt.indexOf("\n", anchor);
+			a[2] = val == -1 ? txtLen : val;
+			int min = CommonUtility.getMin(a);
+			codeArea.deleteText(anchor, min);
+		}
 	}
 
 	/**
@@ -750,10 +802,12 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 
 	public void delAnchorAfterChar() {
-		int anchor = codeArea.getAnchor(); // 光标位置
-		String txt = codeArea.getText(anchor, anchor + 1);
-		if (!txt.equals("\n"))
-			codeArea.deleteText(anchor, anchor + 1);
+		if (codeArea.isFocused()) {
+			int anchor = codeArea.getAnchor(); // 光标位置
+			String txt = codeArea.getText(anchor, anchor + 1);
+			if (!txt.equals("\n"))
+				codeArea.deleteText(anchor, anchor + 1);
+		}
 	}
 
 	/**
@@ -770,16 +824,18 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 
 	public void delAnchorBeforeString() {
-		int anchor = codeArea.getAnchor(); // 光标位置
-		String txt = codeArea.getText(0, anchor);
+		if (codeArea.isFocused()) {
+			int anchor = codeArea.getAnchor(); // 光标位置
+			String txt = codeArea.getText(0, anchor);
 
-		int idx = txt.lastIndexOf("\n");
-		if (idx == -1) {
-			idx = 0;
-		} else {
-			idx++;
+			int idx = txt.lastIndexOf("\n");
+			if (idx == -1) {
+				idx = 0;
+			} else {
+				idx++;
+			}
+			codeArea.deleteText(idx, anchor);
 		}
-		codeArea.deleteText(idx, anchor);
 	}
 
 	/**
@@ -796,16 +852,18 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 
 	public void delAnchorAfterString() {
-		int anchor = codeArea.getAnchor(); // 光标位置
-		String txt = codeArea.getText();
+		if (codeArea.isFocused()) {
+			int anchor = codeArea.getAnchor(); // 光标位置
+			String txt = codeArea.getText();
 
-		int idx = txt.indexOf("\n", anchor);
-		if (idx == -1) {
-			idx = 0;
-		} else {
-			idx++;
+			int idx = txt.indexOf("\n", anchor);
+			if (idx == -1) {
+				idx = 0;
+			} else {
+				idx++;
+			}
+			codeArea.deleteText(anchor, idx - 1);
 		}
-		codeArea.deleteText(anchor, idx - 1);
 	}
 
 	/**
@@ -869,15 +927,15 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 					fstr = strb;
 				}
 
-				// 当前行的前缀时空白符, 回车后在新行前面填入相同数量的空白符 
+				// 当前行的前缀时空白符, 回车后在新行前面填入相同数量的空白符
 				if (fstr.length() > 0) {
 //					e.consume();
-					String addstr =  fstr;
+					String addstr = fstr;
 					// 回车后, 在回车那行补上前缀空白符
 					Platform.runLater(() -> {
-						codeArea.insertText(idx +1, 0, addstr);
+						codeArea.insertText(idx + 1, 0, addstr);
 					});
-					
+
 				} else {
 					// 如果光标在起始位, 那么回车后光标移动到起始再会到回车后的位置, 目的是防止页面不滚动
 					if (anchor == 0) {
@@ -995,40 +1053,41 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 			}
 		}
 	}
-	
-	private   ArrayBlockingQueue<Consumer< Integer >> queue = new ArrayBlockingQueue<>(1);
-	
+
+	private ArrayBlockingQueue<Consumer<Integer>> queue = new ArrayBlockingQueue<>(1);
+
 	/**
 	 * 延迟执行高亮, 如果有任务在队列中, 会抛弃任务不执行
+	 * 
 	 * @param caller
 	 * @param milliseconds
 	 */
-	public   void delayHighLighting(Consumer< Integer >  caller, int milliseconds , int lineNo) {
-		if ( queue.isEmpty() ) {
-			 queue.offer(caller);  // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
-			 
-			 Thread t = new Thread() {
-					public void run() { 
-						
-						try {
-							Thread.sleep(milliseconds);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						var cl = queue.poll();  // 从队列取出一个元素
-						if(cl != null) {
-							cl.accept(lineNo);
-						}
+	public void delayHighLighting(Consumer<Integer> caller, int milliseconds, int lineNo) {
+		if (queue.isEmpty()) {
+			queue.offer(caller); // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
+
+			Thread t = new Thread() {
+				public void run() {
+
+					try {
+						Thread.sleep(milliseconds);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
-				};
-				t.start();
-			 
-		}else {
+					var cl = queue.poll(); // 从队列取出一个元素
+					if (cl != null) {
+						cl.accept(lineNo);
+					}
+				}
+			};
+			t.start();
+
+		} else {
 			logger.debug("delayRunThread");
-			return ;
-			
-		}  
-		
+			return;
+
+		}
+
 	}
 }
 

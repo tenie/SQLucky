@@ -1,21 +1,22 @@
 package net.tenie.plugin.backup.po;
- 
+
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 
 public class BackupInfoPO {
-	private String backupName ;
-	private String privateKey  ;
-	private Boolean saveDB  ;
-	private Boolean saveScript  ;
-	private Boolean saveModel  ;
-	private Boolean usePrivateKey  ;
-	
+	private String backupName;
+	private String privateKey;
+	private Boolean saveDB;
+	private Boolean saveScript;
+	private Boolean saveModel;
+	private Boolean usePrivateKey;
+
 	public BackupInfoPO() {
-		
+
 	}
-	
-	public BackupInfoPO(TextField bakName, TextField privateKey, CheckBox dbCB, CheckBox scriptCB, CheckBox modelCB, CheckBox pkCB) {
+
+	public BackupInfoPO(TextField bakName, TextField privateKey, CheckBox dbCB, CheckBox scriptCB, CheckBox modelCB,
+			CheckBox pkCB) {
 		this.backupName = bakName.getText();
 		this.privateKey = privateKey.getText();
 		this.saveDB = dbCB.isSelected();
@@ -78,6 +79,4 @@ public class BackupInfoPO {
 				+ ", saveScript=" + saveScript + ", saveModel=" + saveModel + ", usePrivateKey=" + usePrivateKey + "]";
 	}
 
-	  
-	
 }

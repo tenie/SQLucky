@@ -15,16 +15,9 @@ import org.apache.logging.log4j.Logger;
 
 import net.tenie.Sqlucky.sdk.po.DynaPo;
 import net.tenie.Sqlucky.sdk.po.PoInfo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
 public class PoDao {
-	private static Logger logger = LogManager.getLogger(CommonUtility.class);
-//	public static void main(String[] args) throws Exception {
-//		TablePo po = new TablePo();
-//		po.setId(1);
-//		po.setTableName("22");
-//		PoDao.insert(null, po);
-//	}
+	private static Logger logger = LogManager.getLogger(PoDao.class);
 
 	public static void insert(Connection conn, Object bean) throws Exception {
 		if (bean != null ) {

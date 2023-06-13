@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import net.tenie.Sqlucky.sdk.po.DynaPo;
 import net.tenie.Sqlucky.sdk.po.PoInfo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.ObjFormater;
 
 public class PoDaoUtil {
@@ -201,13 +203,22 @@ public class PoDaoUtil {
 					continue;
 				}
 				if (Date.class.equals(val)) {
-					bean.add(key, (rs.getTimestamp(key) == null) ? null : new Date(rs.getTimestamp(key).getTime()));
+					Object obj = rs.getObject(key);
+					
+					if(obj != null && obj instanceof LocalDateTime) {
+						LocalDateTime ldt = (LocalDateTime) obj; 
+						Date dv = Date.from( ldt.atZone( ZoneId.systemDefault()).toInstant());
+						bean.add(key, dv);
+					}else {
+						bean.add(key, (rs.getTimestamp(key) == null) ? null : new Date(rs.getTimestamp(key).getTime()));
+					}
+					
 					continue;
 				}
-				if (LocalDateTime.class.equals(val)) {
-					bean.add(key, (rs.getTimestamp(key) == null) ? null : new Date(rs.getTimestamp(key).getTime()));
-					continue;
-				}
+//				if (LocalDateTime.class.equals(val)) {
+//					bean.add(key, (rs.getTimestamp(key) == null) ? null : new Date(rs.getTimestamp(key).getTime()));
+//					continue;
+//				}
 				bean.add(key, rs.getObject(key));
 			}
 			result.addLast(bean);

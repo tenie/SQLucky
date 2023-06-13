@@ -1,216 +1,123 @@
 /* 文本颜色 */
 .text {
-     -fx-fill: #bdcddf;   /* 文本颜色!important; */  
+	-fx-fill: #bdcddf;
 }
 
 .findword {
-    -rtfx-background-color: #FFF59D!important;
-    -fx-fill: #000000; 
-   /*   -fx-fill: yellow;  
-        -fx-underline: true;
-        -fx-stroke: green;
-        -fx-stroke-width: 5; */   
+	-rtfx-background-color: #FFF59D !important;
+	-fx-fill: #000000;
 }
 
 .findparenthesis {
-    -rtfx-background-color: #3169ce!important; 
-    -fx-font-weight: bold;
+	-rtfx-background-color: #3169ce !important;
+	-fx-font-weight: bold;
 }
 
-.errorword{
-    -fx-fill: red;
-    -fx-font-weight: bold;
-    -fx-underline: true ;
+.errorword {
+	-fx-fill: red;
+	-fx-font-weight: bold;
+	-fx-underline: true;
 }
 
-.keyword { 
-    -fx-fill: #C97632;
-    -fx-font-weight: bold;
+.keyword {
+	-fx-fill: #C97632;
+	-fx-font-weight: bold;
 }
 
-.keyword-error { 
-    -fx-fill: #C97632;
-    -fx-font-weight: bold;
-    -fx-underline: true ;
+.keyword-error {
+	-fx-fill: #C97632;
+	-fx-font-weight: bold;
+	-fx-underline: true;
 }
 
 .semicolon {
-    -fx-font-weight: bold;
+	-fx-font-weight: bold;
 }
+
 .paren {
-    -fx-fill: firebrick;
-    -fx-font-weight: bold;
+	-fx-fill: firebrick;
+	-fx-font-weight: bold;
 }
+
 .bracket {
-    -fx-fill: darkgreen;
-    -fx-font-weight: bold;
+	-fx-fill: darkgreen;
+	-fx-font-weight: bold;
 }
+
 .brace {
-    -fx-fill: teal;
-    -fx-font-weight: bold;
+	-fx-fill: teal;
+	-fx-font-weight: bold;
 }
+
 .string {
-    -fx-fill: yellow;
+	-fx-fill: yellow;
 }
-.string-error{
-    -fx-fill: yellow;
-    -fx-underline: true ;
+
+.string-error {
+	-fx-fill: yellow;
+	-fx-underline: true;
 }
 
 .comment {
-	-fx-fill:  #808080; 
+	-fx-fill: #808080;
 }
 
-.comment-error{
-	-fx-fill:  #808080; 
-	 -fx-underline: true ;
+.comment-error {
+	-fx-fill: #808080;
+	-fx-underline: true;
 }
 
 /* 光标所在行背景背景色 */
 .styled-text-area .paragraph-box:has-caret {
-    -fx-background-color: #323232; 
+	-fx-background-color: #323232;
 }
 
 /* 光标 */
-.caret {  
-    -fx-stroke:  #ffffff;  
-}  
- 
- 
- 
+.caret {
+	-fx-stroke: #ffffff;
+}
+
 /* 文本框基本色 */
 .styled-text-area {
-	-fx-background-color: #2B2B2B;  
-    -fx-font-size: 14;
-} 
-
- 
-
-
-/* 关键字颜色  #C97632; -fx-text-decoration: line-through;
-    -fx-text-decoration-color: red;
-.styled-text-area .keyword {
-    -fx-fill:  #C97632;
-    -fx-font-weight: bold;  
-} */
+	-fx-background-color: #2B2B2B;
+	-fx-font-size: 14;
+}
 
 .styled-text-area .keyword-error {
-    -fx-fill:  #C97632;
-    -fx-font-weight: bold; 
-    -fx-underline: true ;  
+	-fx-fill: #C97632;
+	-fx-font-weight: bold;
+	-fx-underline: true;
 }
 
- /* 选中颜色 */
- .styled-text-area .selection {
-    -fx-fill: #214283;
+/* 选中颜色 */
+.styled-text-area .selection {
+	-fx-fill: #214283;
 }
+
 .styled-text-area .caret {
-    -rtfx-blink-rate: 100ms;
-    -fx-stroke-width: 10.0;
+	-rtfx-blink-rate: 100ms;
+	-fx-stroke-width: 10.0;
 }
 
-.styled-text-area .sql-error{
-	-fx-underline: true ; 
+.styled-text-area .sql-error {
+	-fx-underline: true;
 }
 
-
-/* .myLineNumberlineno {
-    -fx-background-color: red;
-    -fx-fill: #214283;
-}   */
 .styled-text-area .text.highlight {
-    -fx-fill: yellow;
+	-fx-fill: yellow;
 }
-
-/* .myclass {
-	-fx-fill: #bdcddf;   文本颜色 
-	-fx-background-color: rgba(60, 63, 65); 
-} */
- 
-
-/*  菜单  */
-/* .menu-bar{
-	-fx-text-fill:   #bdcddf;
-	-fx-background-color: #3C3F41;  
-} */
 
 /* splitPane 样式 */
-.split-pane{
-	-fx-background-color: #3C3F41; 
+.split-pane {
+	-fx-background-color: #3C3F41;
 }
 
-.myMainPane > .split-pane{ 
+.myMainPane>.split-pane {
 	-fx-border-color: red red yellow yellow;
 }
 
 /* 分割符  */
 .split-pane *.split-pane-divider {
-     -fx-padding: 0 1 0 1; 
-     /*0 3 0 3 */
-    /*  #3C3F41;  */
-    -fx-background-color:#323232;    
+	-fx-padding: 0 1 0 1;
+	-fx-background-color: #323232;
 }
- 
- 
- 
- 
-/*  .scroll-pane {
-    -fx-background-color: black;
-} */
-
-/* .scroll-bar {
-    -fx-background-color: black;
-}
- */
-/* .scroll-bar:horizontal, .scroll-bar:vertical{
-    -fx-background-color:transparent;
-} */
-
-/* .increment-button, .decrement-button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-} */
-
-/* .scroll-bar:horizontal .track,
-.scroll-bar:vertical .track{
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-background-radius: 0em;
-} */
-
-/* .scroll-bar:horizontal .thumb,
-.scroll-bar:vertical .thumb {
-    -fx-background-color: white;
-    -fx-background-radius: 5em;
-} */
-
-/* 
-.scroll-pane > .corner {
-    -fx-background-color: black;
-}  
-.scroll-bar > .corner {
-    -fx-background-color: black;
-}
-
-
-.scroll-bar:vertical .thumb {
-    -fx-background-color:
-        #4E5254,
-        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
-        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%));
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 0.5em;
-}
-
-.scroll-bar:horizontal .thumb {
-    -fx-background-color:
-        #4E5254,
-        linear-gradient(to right, derive( #4E5254,95%), derive( #4E5254,10%)),
-        linear-gradient(to right, derive( #4E5254,38%), derive(#4E5254,-16%));
-    -fx-background-insets: 0, 1, 2;
-    -fx-background-radius: 0.5em;
-}
-
-.scroll-bar{ 
-    visibility:hidden;
-} */

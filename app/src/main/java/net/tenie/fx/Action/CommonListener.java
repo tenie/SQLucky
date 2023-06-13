@@ -5,15 +5,14 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.window.ConnectionEditor;
-
 
 /**
  * 
@@ -21,8 +20,7 @@ import net.tenie.fx.window.ConnectionEditor;
  *
  */
 public class CommonListener {
-	
-	
+
 	// 文本框只能输入ip字符串
 	public static ChangeListener<String> textFieldIp(TextField rows) {
 		return new ChangeListener<String>() {
@@ -39,7 +37,7 @@ public class CommonListener {
 		return new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if(StrUtils.isNotNullOrEmpty(newValue)) {
+				if (StrUtils.isNotNullOrEmpty(newValue)) {
 					String str = StrUtils.clearString(newValue);
 					if (str != null && str.length() > 0) {
 						ConfigVal.MaxRows = Integer.valueOf(str);
@@ -73,9 +71,8 @@ public class CommonListener {
 		return new ChangeListener() {
 			@Override
 			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-//				System.out.println("choiceBoxChange");
 				// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
-				MainTabs.setBoxIdx( CommonUtility.tabText(  MainTabs.getActTab()), newValue.toString());
+				MainTabs.setBoxIdx(CommonUtility.tabText(MainTabs.getActTab()), newValue.toString());
 			}
 		};
 	}
@@ -85,25 +82,20 @@ public class CommonListener {
 		return new ChangeListener<Label>() {
 			@Override
 			public void changed(ObservableValue<? extends Label> observable, Label oldValue, Label newValue) {
-//				System.out.println("choiceBoxChange2");
 				if (newValue != null) {
 					SqluckyConnector cnnpo = DBConns.get(newValue.getText());
 					if (cnnpo != null && !cnnpo.isAlive()) {
-						//清除查找字符串
+						// 清除查找字符串
 						IndexRange ir = SqluckyEditor.getSelection();
-						CommonAction.pressBtnESC();	
+						CommonAction.pressBtnESC();
 						CommonAction.shrinkTreeView();
 						ConnectionEditor.openConn(cnnpo.getConnName());
 						SqluckyEditor.selectRange(ir);
 					}
 				}
-			    
 
 			}
 		};
 	}
-	
-	
-	
 
 }
