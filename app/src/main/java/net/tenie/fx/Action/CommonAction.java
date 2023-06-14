@@ -763,14 +763,6 @@ public class CommonAction {
 			sz = 10;
 		}
 		CommonUtility.setFontSize(sz);
-		for (SqluckyTab mtb : SqluckyEditor.getAllgetMyTabs()) {
-			var obj = mtb.getSqlCodeArea();
-			var code = obj.getCodeArea();
-			logger.info(code.getStyle());
-			String txt = code.getText();
-			code.replaceText(0, txt.length(), txt);
-			obj.highLighting();
-		}
 
 		ConfigVal.FONT_SIZE = sz;
 
