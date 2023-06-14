@@ -57,7 +57,6 @@ public class MenuBarContainer {
 
 		MenuItem open = new MenuItem(StrUtils.MenuItemNameFormat("Open"));
 		open.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
-//		open.setAccelerator(KeyCombination.keyCombination("shortcut + u"));
 		open.setOnAction(value -> {
 			CommonAction.openSqlFile();
 		});
@@ -85,7 +84,6 @@ public class MenuBarContainer {
 
 		MenuItem exit = new MenuItem(StrUtils.MenuItemNameFormat("Exit"));
 		exit.setGraphic(IconGenerator.svgImageDefActive("power-off"));
-//		exit.setAccelerator(KeyCombination.keyCombination("shortcut+Q"));
 		exit.setOnAction((ActionEvent t) -> {
 			CommonAction.mainPageClose();
 		});
@@ -101,10 +99,12 @@ public class MenuBarContainer {
 		Menu mn = new Menu("Edit");
 
 		MenuItem runMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL"));
+		runMenu.setGraphic(IconGenerator.svgImageDefActive("play"));
 		runMenu.setOnAction(value -> {
 			RunSQLHelper.runSQLMethod();
 		});
 		MenuItem runCurrentMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL Current Line"));
+		runCurrentMenu.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
 		runCurrentMenu.setOnAction(value -> {
 			RunSQLHelper.runCurrentLineSQLMethod();
 		});
@@ -115,76 +115,68 @@ public class MenuBarContainer {
 		});
 
 		MenuItem nce = new MenuItem(StrUtils.MenuItemNameFormat("Add New Edit Page"));
-//		nce.setAccelerator(KeyCombination.keyCombination("shortcut+T"));
+		nce.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
 		nce.setOnAction(value -> {
 			MyAreaTab.addCodeEmptyTabMethod();
 		});
 
 		MenuItem cce = new MenuItem(StrUtils.MenuItemNameFormat("Close Data Table"));
-//		cce.setAccelerator(KeyCombination.keyCombination("alt+W"));
 		cce.setOnAction(value -> {
 			CommonAction.closeDataTable();
 		});
 
 		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
 		Find.setGraphic(IconGenerator.svgImageDefActive("search"));
-//		Find.setAccelerator(KeyCombination.keyCombination("shortcut+F"));
 		Find.setOnAction(value -> {
 			CommonUtility.findReplace(false);
 		});
 
 		MenuItem FindReplace = new MenuItem(StrUtils.MenuItemNameFormat("Replace"));
-//		FindReplace.setAccelerator(KeyCombination.keyCombination("shortcut+R"));
 		FindReplace.setOnAction(value -> {
 			CommonUtility.findReplace(true);
 		});
 
 		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format"));
-//		Format.setAccelerator(KeyCombination.keyCombination("shortcut+shift+F"));
+		Format.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		Format.setOnAction(value -> {
 			CommonAction.formatSqlText();
 		});
 
 		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Line Comment"));
-//		commentCode.setAccelerator(KeyCombination.keyCombination("shortcut+/"));
 		commentCode.setOnAction(value -> {
 			CommonAction.addAnnotationSQLTextSelectText();
 		});
 
 		// 大写
 		MenuItem UpperCase = new MenuItem(StrUtils.MenuItemNameFormat("Upper Case"));
-//		UpperCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+X"));
 		UpperCase.setOnAction(value -> {
 			CommonAction.UpperCaseSQLTextSelectText();
 		});
 
 		MenuItem LowerCase = new MenuItem(StrUtils.MenuItemNameFormat("Lower Case"));
-//		LowerCase.setAccelerator(KeyCombination.keyCombination("shortcut+shift+Y"));
 		LowerCase.setOnAction(value -> {
 			CommonAction.LowerCaseSQLTextSelectText();
 		});
 
 		// Underscore to hump
 		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underscore To Hump"));
-//		underscore.setAccelerator(KeyCombination.keyCombination("shortcut+shift+R"));
 		underscore.setOnAction(value -> {
 			CommonAction.underlineCaseCamel();
 		});
 
 		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underscore"));
-//		Hump.setAccelerator(KeyCombination.keyCombination("shortcut+shift+T"));
 		Hump.setOnAction(value -> {
 			CommonAction.CamelCaseUnderline();
 		});
 
 		Menu cursorMenu = new Menu("Cursor");
-		MenuItem mvB = new MenuItem(StrUtils.MenuItemNameFormat("Move to begin of line")); // (ctrl+shift+A)
+		MenuItem mvB = new MenuItem(StrUtils.MenuItemNameFormat("Move to begin of line"));
 		mvB.setGraphic(IconGenerator.svgImageDefActive("step-backward"));
 		mvB.setOnAction(e -> {
 			SqluckyEditor.currentMyTab().getSqlCodeArea().moveAnchorToLineBegin();
 		});
 
-		MenuItem mvE = new MenuItem(StrUtils.MenuItemNameFormat("Move to end of line")); // (ctrl+shift+E)
+		MenuItem mvE = new MenuItem(StrUtils.MenuItemNameFormat("Move to end of line"));
 		mvE.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
 		mvE.setOnAction(e -> {
 			SqluckyEditor.currentMyTab().getSqlCodeArea().moveAnchorToLineEnd();
@@ -218,7 +210,7 @@ public class MenuBarContainer {
 			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorAfterChar();
 		});
 		MenuItem delAllCharBackward = new MenuItem(
-				StrUtils.MenuItemNameFormat("Delete all characters after the cursor"));// (ctrl+shift+K)
+				StrUtils.MenuItemNameFormat("Delete all characters after the cursor"));
 		delAllCharBackward.setOnAction(e -> {
 			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorAfterString();
 		});
@@ -256,7 +248,6 @@ public class MenuBarContainer {
 		MenuItem dataTransfer = new MenuItem(StrUtils.MenuItemNameFormat("Data TransFer"));
 		dataTransfer.setGraphic(IconGenerator.svgImageDefActive("mfglabs-random"));
 		dataTransfer.setOnAction(value -> {
-			// TODO
 			if (dtw == null) {
 				dtw = new DataTransferWindow();
 			}
@@ -310,7 +301,6 @@ public class MenuBarContainer {
 		});
 
 		MenuItem hideLeftBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show All Panels"));
-//		hideLeftBottom.setAccelerator(KeyCombination.keyCombination("shortcut+H"));
 		hideLeftBottom.setGraphic(IconGenerator.svgImageDefActive("arrows-alt"));
 		hideLeftBottom.setOnAction(value -> {
 			CommonAction.hideLeftBottom();
@@ -346,14 +336,12 @@ public class MenuBarContainer {
 		fontSize.setGraphic(IconGenerator.svgImageDefActive("text-height"));
 
 		MenuItem fontSizePlus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size +"));
-//		fontSizePlus.setAccelerator(KeyCombination.keyCombination("shortcut+EQUALS"));
 		fontSizePlus.setGraphic(IconGenerator.svgImageDefActive("plus-circle"));
 		fontSizePlus.setOnAction(value -> {
 			CommonAction.changeFontSize(true);
 		});
 
 		MenuItem fontSizeMinus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size -"));
-//		fontSizeMinus.setAccelerator(KeyCombination.keyCombination("shortcut+MINUS"));
 		fontSizeMinus.setGraphic(IconGenerator.svgImageDefActive("minus-circle"));
 		fontSizeMinus.setOnAction(value -> {
 			CommonAction.changeFontSize(false);
