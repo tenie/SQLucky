@@ -37,12 +37,12 @@ public class ButtonFactory {
 		AnchorPane pn = new AnchorPane();
 		JFXButton runbtn = new JFXButton();
 		runbtn.setGraphic(IconGenerator.svgImageDefActive("play"));
-		runbtn.setTooltip(MyTooltipTool.instance("Run SQL")); // (ctrl + Enter)
+		runbtn.setTooltip(MyTooltipTool.instance("Run SQL"));
 		runbtn.setDisable(true);
 
 		JFXButton runLinebtn = new JFXButton();
 		runLinebtn.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
-		runLinebtn.setTooltip(MyTooltipTool.instance("Run SQL Current Line")); // (Alt + R)
+		runLinebtn.setTooltip(MyTooltipTool.instance("Run SQL Current Line"));
 		runLinebtn.setDisable(true);
 
 		// 执行存储过程
@@ -61,15 +61,15 @@ public class ButtonFactory {
 		JFXButton addcodeArea = new JFXButton();
 		addcodeArea.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
 		addcodeArea.setOnMouseClicked(CommonEventHandler.addCodeTab());
-		addcodeArea.setTooltip(MyTooltipTool.instance("Add New Edit Page")); // ctrl + T
+		addcodeArea.setTooltip(MyTooltipTool.instance("Add New Edit Page"));
 
 		JFXButton saveSQL = new JFXButton();
 		saveSQL.setGraphic(IconGenerator.svgImageDefActive("save"));
 		saveSQL.setOnMouseClicked(CommonEventHandler.saveSQl());
-		saveSQL.setTooltip(MyTooltipTool.instance("Save")); // ctrl + S
+		saveSQL.setTooltip(MyTooltipTool.instance("Save"));
 
 		JFXButton formatSQL = new JFXButton();
-		formatSQL.setGraphic(IconGenerator.svgImageDefActive("paragraph")); // i-cursor
+		formatSQL.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		formatSQL.setOnMouseClicked(v -> {
 			CommonAction.formatSqlText();
 		});
@@ -79,7 +79,7 @@ public class ButtonFactory {
 		JFXButton findSQlTxt = new JFXButton();
 		findSQlTxt.setGraphic(IconGenerator.svgImageDefActive("search"));
 		findSQlTxt.setId("runFunPro");
-		findSQlTxt.setTooltip(MyTooltipTool.instance("Find")); // (Ctrl + F)
+		findSQlTxt.setTooltip(MyTooltipTool.instance("Find"));
 		findSQlTxt.setOnMouseClicked(e -> CommonUtility.findReplace(false));
 
 		runbtn.setOnMouseClicked(e -> {
@@ -129,7 +129,6 @@ public class ButtonFactory {
 		DBConns.flushChoiceBox(connsComboBox); // 填充内容
 		// change 事件
 		connsComboBox.getSelectionModel().selectedIndexProperty().addListener((obj, ov, newValue) -> {
-//				System.out.println("choiceBoxChange" + newValue);
 			if (newValue != null && newValue.intValue() > 0) {
 				runbtn.setDisable(false);
 				runLinebtn.setDisable(false);
@@ -160,8 +159,6 @@ public class ButtonFactory {
 		rows.setTooltip(MyTooltipTool.instance("Load query data rows, suggest <10000 "));
 		rows.setText(ConfigVal.MaxRows + "");
 
-//			rows.lengthProperty().addListener(CommonListener.textFieldLimit(rows, 9));
-//			rows.textProperty().addListener(CommonListener.textFieldNumChange(rows));
 		TextFieldSetup.setMaxLength(rows, 9);
 		TextFieldSetup.numberOnly(rows);
 
@@ -234,12 +231,6 @@ public class ButtonFactory {
 		rows.setLayoutY(0);
 		y += fix + 35;
 		rows.setLayoutX(y);
-
-//			AllButtons.btns.put("runbtn", runbtn);
-//			AllButtons.btns.put("stopbtn", stopbtn);
-//			AllButtons.btns.put("runFunPro", runFunPro);
-//			AllButtons.btns.put("runLinebtn", runLinebtn); 
-//			AllButtons.btns.put("addcodeArea", addcodeArea);
 
 		CommonButtons.runbtn = runbtn;
 		CommonButtons.stopbtn = stopbtn;
