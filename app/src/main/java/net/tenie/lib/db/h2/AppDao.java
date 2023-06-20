@@ -2,8 +2,9 @@ package net.tenie.lib.db.h2;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -136,15 +138,15 @@ public class AppDao {
 			"  `CREATED_TIME` DATETIME ,\n" + "  `UPDATED_TIME` DATETIME " + ") ";
 
 	public static String readSqlFile(String path) {
-		URI fileUri;
 		String sql = "";
 		try {
-			fileUri = AppDao.class.getResource(path).toURI();
-			File targetFile = new File(fileUri);
+			URL url = AppDao.class.getResource(path);
+			InputStream is = url.openStream();
 
-			sql = FileUtils.readFileToString(targetFile, "UTF-8");
-		} catch (URISyntaxException | IOException e) {
+			sql = IOUtils.toString(is, StandardCharsets.UTF_8.name());
+			logger.debug(" sql = " + sql.toString());
 
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
@@ -165,21 +167,20 @@ public class AppDao {
 			}
 		}
 	}
-	
-	public static String macKeyChange(String sqlStr ) {
-		 
-			if(sqlStr.contains("Ctrl ")) {
-				sqlStr = sqlStr.replaceAll("Ctrl ", "⌘ ");
-			}
-			if(sqlStr.contains("Alt ")) {
-				sqlStr = sqlStr.replace("Alt ", "⌥ " );
-			}
 
-			if(sqlStr.contains("Shift ")) {
-				sqlStr = sqlStr.replace("Shift " , "⇧ " );
-			}
-			 
-		 
+	public static String macKeyChange(String sqlStr) {
+
+		if (sqlStr.contains("Ctrl ")) {
+			sqlStr = sqlStr.replaceAll("Ctrl ", "⌘ ");
+		}
+		if (sqlStr.contains("Alt ")) {
+			sqlStr = sqlStr.replace("Alt ", "⌥ ");
+		}
+
+		if (sqlStr.contains("Shift ")) {
+			sqlStr = sqlStr.replace("Shift ", "⇧ ");
+		}
+
 		return sqlStr;
 	}
 
@@ -189,7 +190,7 @@ public class AppDao {
 			String sql = readSqlFile("/db/app.sql");
 			execSqlFileString(conn, sql.trim());
 			sql = readSqlFile("/db/keysBinding.sql");
-			if(CommonUtility.isMacOS()) {
+			if (CommonUtility.isMacOS()) {
 				sql = macKeyChange(sql);
 			}
 			execSqlFileString(conn, sql);
