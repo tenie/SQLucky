@@ -816,14 +816,20 @@ public class CommonAction {
 	public static void dbInfoTreeQuery(Pane container, Node filter, List<Node> btnList) {
 
 		CommonUtility.leftHideOrShowSecondOptionBox(container, filter, btnList);
-		// 如果有选中的字符串, 进行查询
-		String str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText();
-		if (str.trim().length() > 0) {
-			ComponentGetter.dbInfoFilter.setText(str.trim());
-			if (!container.getChildren().contains(filter)) {
-				container.getChildren().add(1, filter);
+
+		// 如果输入框为空就将选中的文本放入输入框
+		String text = ComponentGetter.dbInfoFilter.getText();
+		if (StrUtils.isNullOrEmpty(text)) {
+			// 如果有选中的字符串, 进行查询
+			String str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText();
+			if (str.trim().length() > 0) {
+				ComponentGetter.dbInfoFilter.setText(str.trim());
+				if (!container.getChildren().contains(filter)) {
+					container.getChildren().add(1, filter);
+				}
 			}
 		}
+
 	}
 
 	public static final int DROP_COLUMN = 1;
