@@ -184,7 +184,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
 		excelImportBtn.setOnMouseClicked(e -> {
 //			MyAlert.alertWait(mytb.getTableData().getTabName());
-			ImportExcelWindow.showWindow();
+			ImportExcelWindow.showWindow(mytb.getTableData().getTabName());
 		});
 		excelImportBtn.setTooltip(MyTooltipTool.instance("Import"));
 		excelImportBtn.setDisable(disable);
