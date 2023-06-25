@@ -36,6 +36,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -178,6 +179,17 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		copyBtn.setTooltip(MyTooltipTool.instance("copy selected row data "));
 		copyBtn.setDisable(disable);
 
+		// excel 导入
+		JFXButton excelImportBtn = new JFXButton();
+		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		excelImportBtn.setOnMouseClicked(e -> {
+//			MyAlert.alertWait(mytb.getTableData().getTabName());
+			ImportExcelWindow.showWindow();
+		});
+		excelImportBtn.setTooltip(MyTooltipTool.instance("Import"));
+		excelImportBtn.setDisable(disable);
+
+		// 导出
 		MenuButton exportBtn = new MenuButton();
 		exportBtn.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
 		exportBtn.setTooltip(MyTooltipTool.instance("Export data"));
@@ -323,6 +335,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		ls.add(addBtn);
 		ls.add(minusBtn);
 		ls.add(copyBtn);
+		ls.add(excelImportBtn);
 		ls.add(exportBtn);
 		ls.add(searchBtn);
 		ls.add(searchField);
