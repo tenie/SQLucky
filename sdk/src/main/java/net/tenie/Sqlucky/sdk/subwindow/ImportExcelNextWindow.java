@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.subwindow;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
@@ -40,10 +44,10 @@ import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
  * @author tenie
  *
  */
-public class ImportExcelWindow {
+public class ImportExcelNextWindow {
 
 	private static Stage stage;
-	private static Logger logger = LogManager.getLogger(ImportExcelWindow.class);
+	private static Logger logger = LogManager.getLogger(ImportExcelNextWindow.class);
 
 	private static ChoiceBox<String> connNameChoiceBox;
 	private static TextField tfTabName;
@@ -64,6 +68,32 @@ public class ImportExcelWindow {
 		AnchorPane.setRightAnchor(nextbtn, 10.0);
 		AnchorPane.setRightAnchor(cancel, 60.0);
 		return btnPane;
+	}
+
+	public static ObservableList<SheetFieldPo> showTableFieldType(SqluckyConnector dbc, String schema,
+			String tablename) {
+		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
+		ObservableList<SheetFieldPo> fields = null;
+		try {
+			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
+			fields = DP.getFields();
+
+//			for (int i = 0; i < fields.size(); i++) {
+//				SheetFieldPo p = fields.get(i);
+//				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
+//				if (p.getScale() != null && p.getScale().get() > 0) {
+//					tyNa += ", " + p.getScale().get();
+//				}
+//				tyNa += ")";
+//				StringProperty strp = new SimpleStringProperty(tyNa);
+//				p.setValue(strp);
+//			}
+//			TableDataDetail.showTableDetail(tablename, "Field Name", "Field Type", fields);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return fields;
 	}
 
 	// 组件布局
