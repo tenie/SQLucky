@@ -1,7 +1,6 @@
 package net.tenie.plugin.DataModel;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -23,7 +21,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -42,6 +39,7 @@ import net.tenie.plugin.DataModel.tools.DataModelUtility;
 
 /**
  * 模型导入子界面
+ * 
  * @author tenie
  *
  */
@@ -50,6 +48,8 @@ public class DataModelImportWindow {
 	public static boolean editLinkStatus = false;
 	public static Stage stage;
 	private static Logger logger = LogManager.getLogger(DataModelImportWindow.class);
+
+	public static DataModelInfoPo tmpDataModelPoVal = null;
 
 	public static Stage CreateModalWindow(VBox vb) {
 		SqluckyStage sqluckyStatge = new SqluckyStage(vb);
@@ -87,10 +87,7 @@ public class DataModelImportWindow {
 		Label lbType = new Label("Model File Type");
 		// 文件类型选择
 		ChoiceBox<String> typeChoiceBox = new ChoiceBox<String>(ModelFileType.allModeFileType());
-//		typeChoiceBox.getItems().add(".pdm");
-//		typeChoiceBox.getItems().add(".chnr.json");
 		typeChoiceBox.setTooltip(MyTooltipTool.instance("Select File Type"));
-//		.
 
 		String filePath = "File path";
 
@@ -108,7 +105,7 @@ public class DataModelImportWindow {
 		tfModelName.disableProperty().bind(tfFilePath.textProperty().isEmpty());
 		TextFieldSetup.setMaxLength(tfModelName, 60);
 		// 文件选择按钮
-		var selectFile = openFileBtn(tfFilePath, tfModelName, typeChoiceBox);
+		Button selectFile = openFileBtn(tfFilePath, tfModelName, typeChoiceBox);
 		selectFile.setDisable(true);
 		HBox fileBox = new HBox();
 		fileBox.getChildren().addAll(tfFilePath, selectFile);
@@ -141,8 +138,6 @@ public class DataModelImportWindow {
 
 	}
 
-	public static DataModelInfoPo tmpDataModelPoVal = null;
-
 	public static Button openFileBtn(TextField tfFilePath, TextField tfModelName, ChoiceBox<String> typeChoiceBox) {
 		Button selectFileBtn = new Button("...");
 		selectFileBtn.setOnMouseClicked(e -> {
@@ -155,8 +150,6 @@ public class DataModelImportWindow {
 				tmpDataModelPoVal = null;
 				String path = modelfile.getAbsolutePath();
 				// 读模型数据
-
-//					tmpDataModelPoVal = DataModelUtility.readJosnModel("UTF-8", jsonFile);
 				try {
 					tmpDataModelPoVal = DataModelUtility.readModelFileByType("UTF-8", modelfile, fileType);
 				} catch (Exception e1) {
