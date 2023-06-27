@@ -9,6 +9,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 数据库表的字段数据结构
+ * 
  * @author tenie
  *
  */
@@ -16,25 +17,28 @@ public class SheetFieldPo {
 
 	public static final String TEXT_TYPE = "TEXT_TYPE";
 	public static final String CHECK_BOX_TYPE = "CHECK_BOX_TYPE";
-	
+
 	// 字段名称, 这个可能会没有
-	private StringProperty columnName; 
+	private StringProperty columnName;
 	// 这个也是字段名称
 	private StringProperty columnLabel;
-	
+
 	private StringProperty columnClassName;
 	private IntegerProperty columnDisplaySize;
 	private IntegerProperty columnType;
 	private StringProperty columnTypeName;
-	private IntegerProperty scale; 
-	private StringProperty value; 
+	private IntegerProperty scale;
+	private StringProperty value;
 	private Double columnWidth;
 	private LongProperty dateValue; // 如果是时间, 保存为long
 
+	// excel数据导入表需要使用下面2个字段
+	private StringProperty excelRowVal; // excel 对应列
+	private StringProperty fixedValue; // 不使用excel对应的列, 使用固定值
+
 	// 类型, 在界面上显示的时候, 默认文本类型
-	private String Type = TEXT_TYPE; 
-	
-	
+	private String Type = TEXT_TYPE;
+
 	public String getType() {
 		return Type;
 	}
@@ -64,7 +68,7 @@ public class SheetFieldPo {
 	}
 
 	public StringProperty getColumnName() {
-		if(columnName == null) {
+		if (columnName == null) {
 			return columnLabel;
 		}
 		return columnName;
@@ -106,7 +110,7 @@ public class SheetFieldPo {
 	}
 
 	public StringProperty getColumnLabel() {
-		if( columnLabel == null) {
+		if (columnLabel == null) {
 			return columnName;
 		}
 		return columnLabel;
@@ -163,6 +167,22 @@ public class SheetFieldPo {
 		this.dateValue = dateValue;
 	}
 
+	public StringProperty getExcelRowVal() {
+		return excelRowVal;
+	}
+
+	public void setExcelRowVal(StringProperty excelRowVal) {
+		this.excelRowVal = excelRowVal;
+	}
+
+	public StringProperty getFixedValue() {
+		return fixedValue;
+	}
+
+	public void setFixedValue(StringProperty fixedValue) {
+		this.fixedValue = fixedValue;
+	}
+
 	@Override
 	public String toString() {
 		return "SheetFieldPo [columnName=" + columnName + ", columnLabel=" + columnLabel + ", columnClassName="
@@ -171,6 +191,4 @@ public class SheetFieldPo {
 				+ columnWidth + ", dateValue=" + dateValue + ", Type=" + Type + "]";
 	}
 
- 
- 
 }

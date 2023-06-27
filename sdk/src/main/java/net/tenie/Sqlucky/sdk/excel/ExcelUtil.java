@@ -20,26 +20,6 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 public class ExcelUtil {
 	private static final String EXCEL_XLS = "xls";
 	private static final String EXCEL_XLSX = "xlsx";
-	/*
-	 * 读取excel文件, 根据xls和xlsx格式调用不同的函数
-	 */
-//	public static 	List<ArrayList<String>>  readExcelFile(String filename) throws IOException {
-//		String suffixStr = filename.substring(filename.lastIndexOf("."), filename.length());
-//		System.out.println(suffixStr);
-//		
-//		List<ArrayList<String>>  rs = new ArrayList<>(); //new ReadExcel2().readXls(filename);
-//		
-//		if(".xls".equals(suffixStr)){
-//			 System.out.println("===== 开始执行 xls 方法=====");
-//			 rs =  new ReadExcel().readXls(filename);
-//		}else if(".xlsx".equals(suffixStr)){
-//			 System.out.println("===== 开始执行 xlsx 方法=====");
-//			 rs =  new ReadExcel().readXlsx(filename);
-//		}else{
-//			 System.out.println("===== 没有执行 xls 方法=====");
-//		}
-//		return rs; 
-//	}
 
 	/**
 	 * 创建一个 .xls文件, 如果文件存在,就先删除旧文件
@@ -186,6 +166,29 @@ public class ExcelUtil {
 			wb = new XSSFWorkbook(in);
 		}
 		return wb;
+	}
+
+	/*
+	 * 读取excel文件, 根据xls和xlsx格式调用不同的函数
+	 */
+	public static List<ArrayList<String>> readExcelFile(String filename, Integer beginRowIdx, Integer endRowIdx) {
+		String suffixStr = filename.substring(filename.lastIndexOf("."), filename.length());
+
+		List<ArrayList<String>> rs = new ArrayList<>();
+		try {
+			if (".xls".equals(suffixStr)) {
+				System.out.println("===== 开始执行 xls 方法=====");
+				rs = new ReadExcel2().readXls(filename, beginRowIdx, endRowIdx);
+			} else if (".xlsx".equals(suffixStr)) {
+				System.out.println("===== 开始执行 xlsx 方法=====");
+				rs = new ReadExcel2().readXlsx(filename, beginRowIdx, endRowIdx);
+			} else {
+				System.out.println("===== 没有执行 xls 方法=====");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rs;
 	}
 
 	public static void main(String[] args) {
