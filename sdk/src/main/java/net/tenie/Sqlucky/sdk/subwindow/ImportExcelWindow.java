@@ -50,10 +50,18 @@ public class ImportExcelWindow {
 	private static TextField tfFilePath;
 
 	// 按钮面板
-	private static AnchorPane btnPane() {
+	private static AnchorPane btnPane(String tableName) {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
 		Button nextbtn = nextBtn();
+		nextbtn.setOnAction(v -> {
+			String connName = connNameChoiceBox.getValue();
+			AppComponent appComponent = ComponentGetter.appComponent;
+			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
+			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
+
+			ImportExcelNextWindow.test(sqluckyConn, tableName);
+		});
 
 		nextbtn.disableProperty().bind(connNameChoiceBox.valueProperty().isNull()
 				.or(tfTabName.textProperty().isEmpty().or(tfFilePath.textProperty().isEmpty())));
@@ -67,7 +75,7 @@ public class ImportExcelWindow {
 	}
 
 	// 组件布局
-	public static void layout(List<Region> list) {
+	public static void layout(List<Region> list, String tableName) {
 		VBox vb = new VBox();
 		Label title = new Label("Import Excel To DB Table");
 		title.setPadding(new Insets(15));
@@ -79,7 +87,7 @@ public class ImportExcelWindow {
 		vb.setPadding(new Insets(5));
 
 		// 按钮
-		AnchorPane btnsPane = btnPane();
+		AnchorPane btnsPane = btnPane(tableName);
 		vb.getChildren().add(btnsPane);
 
 		Stage stage = CreateWindow(vb);
@@ -154,7 +162,7 @@ public class ImportExcelWindow {
 		list.add(lbFilePath);
 		list.add(fileBox);
 
-		layout(list);
+		layout(list, tableName);
 
 	}
 

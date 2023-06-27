@@ -9,7 +9,8 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.collections.FXCollections;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -21,7 +22,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -31,12 +31,11 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.ExcelMapper;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 
 /**
  * excel导入
@@ -53,14 +52,44 @@ public class ImportExcelNextWindow {
 	private static TextField tfTabName;
 	private static TextField tfFilePath;
 
+	public static void showWindow(SqluckyConnector dbc, String tableName) {
+		ObservableList<SheetFieldPo> fieldPos = showTableFieldType(dbc, tableName);
+		List<ExcelMapper> ls = FieldToList(fieldPos, tableName);
+		List<Region> nodes = fieldListToComponents(ls);
+
+		layout(nodes);
+
+	}
+
+	public static void test(SqluckyConnector dbc, String tablename) {
+		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
+		try {
+			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
+			ObservableList<SheetFieldPo> fields = DP.getFields();
+
+			for (int i = 0; i < fields.size(); i++) {
+				SheetFieldPo p = fields.get(i);
+				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
+				if (p.getScale() != null && p.getScale().get() > 0) {
+					tyNa += ", " + p.getScale().get();
+				}
+				tyNa += ")";
+				StringProperty strp = new SimpleStringProperty("");
+				p.setValue(strp);
+			}
+			TableDataDetail.tableFiledMapExcelRow(tablename, fields);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	// 按钮面板
 	private static AnchorPane btnPane() {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
 		Button nextbtn = nextBtn();
-
-		nextbtn.disableProperty().bind(connNameChoiceBox.valueProperty().isNull()
-				.or(tfTabName.textProperty().isEmpty().or(tfFilePath.textProperty().isEmpty())));
 
 		Button cancel = cancelBtn();
 
@@ -70,25 +99,12 @@ public class ImportExcelNextWindow {
 		return btnPane;
 	}
 
-	public static ObservableList<SheetFieldPo> showTableFieldType(SqluckyConnector dbc, String schema,
-			String tablename) {
+	public static ObservableList<SheetFieldPo> showTableFieldType(SqluckyConnector dbc, String tablename) {
 		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
 		ObservableList<SheetFieldPo> fields = null;
 		try {
 			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
 			fields = DP.getFields();
-
-//			for (int i = 0; i < fields.size(); i++) {
-//				SheetFieldPo p = fields.get(i);
-//				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
-//				if (p.getScale() != null && p.getScale().get() > 0) {
-//					tyNa += ", " + p.getScale().get();
-//				}
-//				tyNa += ")";
-//				StringProperty strp = new SimpleStringProperty(tyNa);
-//				p.setValue(strp);
-//			}
-//			TableDataDetail.showTableDetail(tablename, "Field Name", "Field Type", fields);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -96,9 +112,40 @@ public class ImportExcelNextWindow {
 		return fields;
 	}
 
+	// 将表字段对象转换为列表
+	public static List<ExcelMapper> FieldToList(ObservableList<SheetFieldPo> fields, String tableName) {
+		List<ExcelMapper> ls = new ArrayList<>();
+		for (SheetFieldPo po : fields) {
+			ExcelMapper em = new ExcelMapper();
+			em.setTableName(new SimpleStringProperty(tableName));
+			em.setFieldName(new SimpleStringProperty(po.getColumnLabel().get()));
+			em.setExcelRow(new SimpleStringProperty(""));
+			em.setValue(new SimpleStringProperty(""));
+			ls.add(em);
+		}
+		return ls;
+	}
+
+	//
+	public static List<Region> fieldListToComponents(List<ExcelMapper> fields) {
+
+		List<Region> list = new ArrayList<>();
+		for (ExcelMapper em : fields) {
+			Label fieldLabel = new Label(em.getFieldName().get());
+
+			TextField fieldVal = new TextField();
+			fieldVal.textProperty().bind(em.getValue());
+			list.add(fieldLabel);
+			list.add(fieldVal);
+		}
+
+		return list;
+	}
+
 	// 组件布局
 	public static void layout(List<Region> list) {
 		VBox vb = new VBox();
+		vb.maxHeight(600);
 		Label title = new Label("Import Excel To DB Table");
 		title.setPadding(new Insets(15));
 		AppComponent appComponent = ComponentGetter.appComponent;
@@ -132,60 +179,6 @@ public class ImportExcelNextWindow {
 		}
 
 		stage.show();
-	}
-
-	// 选择数据链接名称
-	public static ChoiceBox<String> ChoiceBoxDbConnection(String selVal) {
-		AppComponent appComponent = ComponentGetter.appComponent;
-		List<String> connNames = appComponent.getAllConnectorName();
-
-		ObservableList<String> connNameVals = FXCollections.observableArrayList(connNames);
-
-		ChoiceBox<String> connNameChoiceBox = new ChoiceBox<String>(connNameVals);
-
-		if (StrUtils.isNotNullOrEmpty(selVal)) {
-			connNameChoiceBox.getSelectionModel().select(selVal);
-		}
-
-		return connNameChoiceBox;
-	}
-
-	public static void showWindow(String tableName, String connName) {
-
-		String str = "DB Connection";
-		Label lbDBconn = new Label(str);
-		connNameChoiceBox = ChoiceBoxDbConnection(connName);
-		String tabNameStr = "Table Name";
-		Label lbModelName = new Label(tabNameStr);
-
-		tfTabName = new TextField();
-		tfTabName.setPromptText(tabNameStr);
-		tfTabName.setText(tableName);
-
-		TextFieldSetup.setMaxLength(tfTabName, 100);
-
-		// 选择文件
-		String filePath = "File path";
-		Label lbFilePath = new Label(filePath);
-
-		tfFilePath = new TextField();
-		tfFilePath.setPromptText(filePath);
-		HBox fileBox = new HBox();
-		Button selectFile = openFileBtn(tfFilePath);
-		fileBox.getChildren().addAll(tfFilePath, selectFile);
-
-		List<Region> list = new ArrayList<>();
-
-		list.add(lbDBconn);
-		list.add(connNameChoiceBox);
-		list.add(lbModelName);
-		list.add(tfTabName);
-
-		list.add(lbFilePath);
-		list.add(fileBox);
-
-		layout(list);
-
 	}
 
 	// 选取文件按钮
