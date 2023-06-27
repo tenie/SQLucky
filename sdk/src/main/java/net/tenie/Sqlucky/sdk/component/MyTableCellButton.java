@@ -1,19 +1,13 @@
 package net.tenie.Sqlucky.sdk.component;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.FlowPane;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 
 /**
  * tabelView 按钮单元格
@@ -21,18 +15,11 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
  * @author tenie
  */
 public class MyTableCellButton {
-	private List<MyCellOperateButton>  btns;
-//	HBox btnBox = new HBox(); 
+	private List<MyCellOperateButton> btns;
+
 	public MyTableCellButton(List<MyCellOperateButton> btnvals) {
 		this.btns = btnvals;
-//		if(btns != null ) {
-//			for(var ob : btns) {
-//				Button btn = ob.getBtn();
-//				btnBox.getChildren().add(btn);
-//				HBox.setMargin(btn, new Insets(0, 3, 0, 0));
-//			}
-//		}
-		
+
 	}
 
 	public Callback<TableColumn<ResultSetRowPo, String>, TableCell<ResultSetRowPo, String>> callback() {
@@ -48,23 +35,24 @@ public class MyTableCellButton {
 								if (empty) {
 									setGraphic(null);
 									setText(null);
-								} else { 
-									HBox btnBox = new HBox(); 
-									if(btns != null ) { 
-										for(MyCellOperateButton ob : btns) {
+								} else {
+//									HBox btnBox = new HBox();
+									FlowPane fpane = new FlowPane();
+									if (btns != null) {
+										for (MyCellOperateButton ob : btns) {
 											var btnName = ob.getButtonName();
 											Button btn = new Button(btnName);
 											btn.getStyleClass().add("myAlertBtn");
-//											btn.setText(btnName); 
-											btnBox.getChildren().add(btn);
+//											btnBox.getChildren().add(btn);
+											fpane.getChildren().add(btn);
 											btn.setOnAction(event -> {
 												ResultSetRowPo rowpo = getTableView().getItems().get(getIndex());
 												ob.getBtnCaller().accept(rowpo);
 											});
 										}
 									}
-									 
-									setGraphic(btnBox);
+									fpane.setHgap(5); // 横向间距
+									setGraphic(fpane);
 									setText(null);
 								}
 							}
