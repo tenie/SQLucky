@@ -171,17 +171,47 @@ public class ExcelUtil {
 	/*
 	 * 读取excel文件, 根据xls和xlsx格式调用不同的函数
 	 */
-	public static List<ArrayList<String>> readExcelFile(String filename, Integer beginRowIdx, Integer endRowIdx) {
+	public static List<ArrayList<String>> readExcelFile(String filename, Integer beginRowIdx, Integer count) {
 		String suffixStr = filename.substring(filename.lastIndexOf("."), filename.length());
 
 		List<ArrayList<String>> rs = new ArrayList<>();
 		try {
 			if (".xls".equals(suffixStr)) {
 				System.out.println("===== 开始执行 xls 方法=====");
-				rs = new ReadExcel2().readXls(filename, beginRowIdx, endRowIdx);
+				rs = new ReadExcel2().readXls(filename, beginRowIdx, count);
 			} else if (".xlsx".equals(suffixStr)) {
 				System.out.println("===== 开始执行 xlsx 方法=====");
-				rs = new ReadExcel2().readXlsx(filename, beginRowIdx, endRowIdx);
+				rs = new ReadExcel2().readXlsx(filename, beginRowIdx, count);
+			} else {
+				System.out.println("===== 没有执行 xls 方法=====");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return rs;
+	}
+
+	public static List<ArrayList<String>> readExcelFile(String filename) {
+		return readExcelFile(filename, null, null);
+	}
+
+	// 获取excel头部(第一行)
+//	public static List<ArrayList<String>> readExcelFileHead(String filename) {
+//		return readExcelFile(filename, null, 1);
+//	}
+
+	// 获取excel头部(第一行)
+	public static List<ExcelHeadCellInfo> readExcelFileHead(String filename) {
+		String suffixStr = filename.substring(filename.lastIndexOf("."), filename.length());
+
+		List<ExcelHeadCellInfo> rs = new ArrayList<>();
+		try {
+			if (".xls".equals(suffixStr)) {
+				System.out.println("===== 开始执行 xls 方法=====");
+				rs = new ReadExcel2().readXlsHeadInfo(filename);
+			} else if (".xlsx".equals(suffixStr)) {
+				System.out.println("===== 开始执行 xlsx 方法=====");
+				rs = new ReadExcel2().readXlsxHeadInfo(filename);
 			} else {
 				System.out.println("===== 没有执行 xls 方法=====");
 			}
@@ -192,6 +222,12 @@ public class ExcelUtil {
 	}
 
 	public static void main(String[] args) {
+//		List<ArrayList<String>> ls = readExcelFile("C:\\Users\\tenie\\TT_FORD_RO_LABOUR.xls", null, null);
+		List<ExcelHeadCellInfo> ls = readExcelFileHead("C:\\Users\\tenie\\TT_FORD_RO_LABOUR.xls");
+		System.out.println(ls);
+	}
+
+	public static void main2(String[] args) {
 		try {
 //			createBlankXlsFile(new File("D:/textXls2.xls"));
 

@@ -33,8 +33,8 @@ public class SheetFieldPo {
 	private LongProperty dateValue; // 如果是时间, 保存为long
 
 	// excel数据导入表需要使用下面2个字段
-	private StringProperty excelRowVal; // excel 对应列
-	private StringProperty fixedValue; // 不使用excel对应的列, 使用固定值
+	private StringProperty excelRowVal = new SimpleStringProperty(""); // excel 对应列
+	private StringProperty fixedValue = new SimpleStringProperty("");; // 不使用excel对应的列, 使用固定值
 
 	// 类型, 在界面上显示的时候, 默认文本类型
 	private String Type = TEXT_TYPE;

@@ -53,15 +53,7 @@ public class ImportExcelWindow {
 	private static AnchorPane btnPane(String tableName) {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
-		Button nextbtn = nextBtn();
-		nextbtn.setOnAction(v -> {
-			String connName = connNameChoiceBox.getValue();
-			AppComponent appComponent = ComponentGetter.appComponent;
-			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
-			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
-
-			ImportExcelNextWindow.test(sqluckyConn, tableName);
-		});
+		Button nextbtn = nextBtn(tableName);
 
 		nextbtn.disableProperty().bind(connNameChoiceBox.valueProperty().isNull()
 				.or(tfTabName.textProperty().isEmpty().or(tfFilePath.textProperty().isEmpty())));
@@ -211,12 +203,19 @@ public class ImportExcelWindow {
 	}
 
 	// 下一步按钮
-	public static Button nextBtn() {
+	public static Button nextBtn(String tableName) {
 		Button btn = new Button("next");
 		btn.getStyleClass().add("myAlertBtn");
-		btn.setOnMouseClicked(e -> {
+		btn.setOnAction(v -> {
+			String connName = connNameChoiceBox.getValue();
+			AppComponent appComponent = ComponentGetter.appComponent;
+			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
+			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
 
+			ImportExcelNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText());
+			stage.close();
 		});
+
 		return btn;
 	}
 
