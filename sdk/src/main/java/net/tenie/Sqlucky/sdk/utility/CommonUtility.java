@@ -44,6 +44,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
@@ -798,7 +799,7 @@ public class CommonUtility {
 	public static File getFileHelper(boolean isFile) {
 		File file = null;
 		if (isFile) {
-			file = FileOrDirectoryChooser.showSaveDefault("Save", ComponentGetter.primaryStage);
+			file = FileOrDirectoryChooser.showSaveDefault("Save", new Stage());
 		}
 		return file;
 	}
@@ -812,7 +813,7 @@ public class CommonUtility {
 		fileChooser.setInitialDirectory(dir);
 		fileChooser.getExtensionFilters().clear();
 		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(fileType, "*." + fileType));
-		File file = fileChooser.showSaveDialog(ComponentGetter.primaryStage);
+		File file = fileChooser.showSaveDialog(new Stage());
 		return file;
 
 	}
