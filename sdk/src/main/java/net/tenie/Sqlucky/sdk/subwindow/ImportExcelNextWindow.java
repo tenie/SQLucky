@@ -61,12 +61,16 @@ public class ImportExcelNextWindow {
 	private static ChoiceBox<String> connNameChoiceBox;
 	private static TextField tfTabName;
 	private static TextField tfFilePath;
-
-	public static void showWindow(SqluckyConnector dbc, String tableName, String excelFile) {
+	
+	private static String excelFile;
+	private static String tableName;
+	
+	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath) {
 //		ObservableList<SheetFieldPo> fieldPos = showTableFieldType(dbc, tableName);
 //		List<ExcelMapper> ls = FieldToList(fieldPos, tableName);
 //		List<Region> nodes = fieldListToComponents(ls);
-
+		excelFile = excelFilePath;
+		tableName = tableNameVal;
 		VBox tbox = tableBox(dbc, tableName, excelFile);
 		layout(tbox, tableName);
 
@@ -126,18 +130,23 @@ public class ImportExcelNextWindow {
 		String colName1 = "字段名称";
 		String colName2 = "Excel列";
 		String colName3 = "自定义值";
-		TextField tf1 = new TextField("");
-		tf1.setEditable(false);
+//		TextField tf1 = new TextField("");
+		Label tf1 = new Label();
+//		tf1.setEditable(false);
 		tf1.setPrefWidth(150);
-		tf1.setStyle("-fx-background-color: transparent;");
-		TextField tf2 = new TextField("");
-		tf2.setEditable(false);
+//		tf1.setStyle("-fx-background-color: transparent;");
+//		tf1.getStyleClass().add("myFindTextField");
+		
+//		TextField tf2 = new TextField("");
+		Label tf2 = new Label();
+//		tf2.setEditable(false);
 		tf2.setPrefWidth(150);
-		tf2.setStyle("-fx-background-color: transparent;");
-		TextField tf3 = new TextField("");
-		tf3.setEditable(false);
+//		tf2.setStyle("-fx-background-color: transparent;");
+//		TextField tf3 = new TextField("");
+//		tf3.setEditable(false);
+		Label tf3 = new Label();
 		tf3.setPrefWidth(150);
-		tf3.setStyle("-fx-background-color: transparent;");
+//		tf3.setStyle("-fx-background-color: transparent;");
 
 		fp.getChildren().add(tf1);
 		fp.getChildren().add(tf2);
@@ -299,11 +308,12 @@ public class ImportExcelNextWindow {
 
 	// 其他设置
 	public static List<Region> otherSet() {
-		Label lb1 = new Label("起始行号(默认第一行开始)");
-		Label lb2 = new Label("导入行号(默认全部)");
+		Label lb1 = new Label("起始行号");
+		Label lb2 = new Label("导入行数");
 		beginIdTF = new TextField();
-//	    beginIdTF.setPromptText(lb1);
+	    beginIdTF.setPromptText("默认第一行开始");
 		conuntTF = new TextField();
+		conuntTF.setPromptText("默认全部");
 
 		List<Region> nds = new ArrayList<>();
 		nds.add(lb1);
@@ -389,10 +399,10 @@ public class ImportExcelNextWindow {
 
 	// 下一步按钮
 	public static Button nextBtn() {
-		Button btn = new Button("next");
+		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
-		btn.setOnMouseClicked(e -> {
-
+		btn.setOnAction(e -> {
+				//
 		});
 		return btn;
 	}
@@ -400,7 +410,7 @@ public class ImportExcelNextWindow {
 	public static Button cancelBtn() {
 		Button cancelBtn = new Button("Cancel");
 		cancelBtn.getStyleClass().add("myAlertBtn");
-		cancelBtn.setOnMouseClicked(e -> {
+		cancelBtn.setOnAction(e -> {
 			stage.close();
 
 		});
