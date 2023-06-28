@@ -293,7 +293,7 @@ public class SqluckyBottomSheetUtility {
 		LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
 			ExcelDataPo po = SqluckyBottomSheetUtility.tableValueToExcelDataPo(isSelect);
 			try {
-				ExcelUtil.createXlsWritValue(po, ff);
+				ExcelUtil.createExcel(po, ff);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				MyAlert.errorAlert("Error");

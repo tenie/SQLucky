@@ -163,7 +163,7 @@ public class ImportExcelWindow {
 		Button selectFileBtn = new Button("...");
 		selectFileBtn.setOnAction(e -> {
 			// 获取文件
-			File file = FileOrDirectoryChooser.selectExcelFile(ComponentGetter.primaryStage);
+			File file = FileOrDirectoryChooser.selectExcelFile(new Stage());
 			if (file != null) {
 				tfFilePath.setText(file.getAbsolutePath());
 			}

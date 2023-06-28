@@ -13,6 +13,9 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellAddress;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
@@ -23,6 +26,59 @@ public class ReadExcel2 {
 
 	private static Logger logger = LogManager.getLogger(ReadExcel2.class);
 
+	/**
+	 * 通过Workbook 读 excel
+	 * 
+	 */
+	public static List<ArrayList<String>> readExcel(Workbook workbook, Integer beginRowIdx, Integer count) throws IOException {
+
+ 
+		List<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
+		// Read the Sheet
+		for (int numSheet = 0; numSheet < workbook.getNumberOfSheets(); numSheet++) {
+			Sheet sheet = workbook.getSheetAt(numSheet);
+			if (sheet == null) {
+				continue;
+			}
+
+			logger.debug("行数: = " + sheet.getLastRowNum());
+			System.out.println("行数: = " + sheet.getLastRowNum());
+			logger.debug("\n第一行idx: = " + sheet.getFirstRowNum());
+			System.out.println("\n第一行idx: = " + sheet.getFirstRowNum());
+			int begin = sheet.getFirstRowNum();
+			int end = sheet.getLastRowNum();
+
+			if (beginRowIdx != null && beginRowIdx > -1) {
+				begin = beginRowIdx;
+			}
+			if (count != null && count > 0 && count < (end - begin)) {
+				end = count;
+			}
+
+			// Read the Row
+			for (int rowNum = begin; rowNum <= end; rowNum++) {
+				Row hssfRow = sheet.getRow(rowNum);
+				if (hssfRow != null) {
+					ArrayList<String> innerlist = new ArrayList<>();
+					// hssfRow.getLastCellNum() 有多少个列
+					for (int j = 0; j < hssfRow.getLastCellNum(); j++) {
+						if (hssfRow.getCell(j) != null) {
+							String cellStr = hssfRow.getCell(j).toString();
+							innerlist.add(cellStr);
+						} else {
+							innerlist.add("");
+						}
+					}
+
+					list.add(innerlist);
+				}
+			}
+		}
+		return list;
+	
+	}
+
+	
 	/**
 	 * Read the Excel 2010
 	 * 
