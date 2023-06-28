@@ -2,16 +2,18 @@ package net.tenie.Sqlucky.sdk.component;
 
 import java.util.List;
 
+import com.jfoenix.controls.JFXComboBox;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.layout.FlowPane;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -19,44 +21,53 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * 
  * @author tenie
  */
-public class MyTableCellChoiceBox<T, S> {
+public class MyTableCellChoiceBox<T> {
 //	private ChoiceBox<S> excelRow;
-	private List<S> vals;
+	private List<String> vals;
 
-	public MyTableCellChoiceBox(List<S> vals) {
+	public MyTableCellChoiceBox(List<String> vals) {
 
 		this.vals = vals;
 
 	}
 
-	public Callback<TableColumn<T, S>, TableCell<T, S>> callback() {
-		Callback<TableColumn<T, S>, TableCell<T, S>> cellFactory = //
-				new Callback<TableColumn<T, S>, TableCell<T, S>>() {
+	public Callback<TableColumn<SheetFieldPo, String>, TableCell<SheetFieldPo, String>> callback() {
+		Callback<TableColumn<SheetFieldPo, String>, TableCell<SheetFieldPo, String>> cellFactory = //
+				new Callback<TableColumn<SheetFieldPo, String>, TableCell<SheetFieldPo, String>>() {
 					@Override
-					public TableCell<T, S> call(final TableColumn<T, S> param) {
-						final TableCell<T, S> cell = new TableCell<T, S>() {
+					public TableCell<SheetFieldPo, String> call(final TableColumn<SheetFieldPo, String> param) {
+						final TableCell<SheetFieldPo, String> cell = new TableCell<SheetFieldPo, String>() {
 
 							@Override
-							public void updateItem(S item, boolean empty) {
+							public void updateItem(String item, boolean empty) {
 								super.updateItem(item, empty);
+
 								if (empty) {
 									setGraphic(null);
 									setText(null);
 								} else {
 									FlowPane fpane = new FlowPane();
-									ObservableList<S> obVals = FXCollections.observableArrayList(vals);
-
-									ChoiceBox<S> excelRow = new ChoiceBox<S>(obVals);
-									excelRow.valueProperty().addListener((obj, oldv, newv) -> {
+									ObservableList<String> obVals = FXCollections.observableArrayList();
+									for (String v : vals) {
+										String tmp = v;
+										obVals.add(tmp);
+									}
+//									ChoiceBox<String> excelRow = new ChoiceBox<String>(obVals);
+									JFXComboBox<String> connsComboBox = new JFXComboBox<String>();
+									connsComboBox.setMaxWidth(10);
+									connsComboBox.setPrefWidth(10);
+									connsComboBox.setItems(obVals);
+									connsComboBox.valueProperty().addListener((obj, oldv, newv) -> {
+										MyAlert.alertWait(oldv);
 										if (StrUtils.isNotNullOrEmpty(newv)) {
-											TableRow<T> tr = this.getTableRow();
-											SheetFieldPo rowItem = (SheetFieldPo) tr.getItem();
+											TableRow<SheetFieldPo> tr = this.getTableRow();
+											SheetFieldPo rowItem = tr.getItem();
 											rowItem.setExcelRowVal(new SimpleStringProperty((String) newv));
-
+											setText(newv);
 										}
 									});
-									fpane.getChildren().add(excelRow);
-									setGraphic(fpane);
+//									fpane.getChildren().add(connsComboBox);
+									setGraphic(connsComboBox);
 									setText(null);
 								}
 							}

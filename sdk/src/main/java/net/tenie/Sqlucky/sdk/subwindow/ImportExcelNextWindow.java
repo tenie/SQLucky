@@ -1,6 +1,5 @@
 package net.tenie.Sqlucky.sdk.subwindow;
 
-import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,34 +7,45 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.controlsfx.control.tableview2.cell.ComboBox2TableCell;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
+import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
-import net.tenie.Sqlucky.sdk.po.ExcelMapper;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * excel导入
@@ -52,16 +62,17 @@ public class ImportExcelNextWindow {
 	private static TextField tfTabName;
 	private static TextField tfFilePath;
 
-	public static void showWindow(SqluckyConnector dbc, String tableName) {
-		ObservableList<SheetFieldPo> fieldPos = showTableFieldType(dbc, tableName);
-		List<ExcelMapper> ls = FieldToList(fieldPos, tableName);
-		List<Region> nodes = fieldListToComponents(ls);
+	public static void showWindow(SqluckyConnector dbc, String tableName, String excelFile) {
+//		ObservableList<SheetFieldPo> fieldPos = showTableFieldType(dbc, tableName);
+//		List<ExcelMapper> ls = FieldToList(fieldPos, tableName);
+//		List<Region> nodes = fieldListToComponents(ls);
 
-		layout(nodes);
+		VBox tbox = tableBox(dbc, tableName, excelFile);
+		layout(tbox, tableName);
 
 	}
 
-	public static void test(SqluckyConnector dbc, String tablename) {
+	public static VBox tableBox(SqluckyConnector dbc, String tablename, String excelFile) {
 		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
 		try {
 			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
@@ -77,12 +88,152 @@ public class ImportExcelNextWindow {
 				StringProperty strp = new SimpleStringProperty("");
 				p.setValue(strp);
 			}
-			TableDataDetail.tableFiledMapExcelRow(tablename, fields);
-
+			VBox tableBox = tableFiledMapExcelRowBox(tablename, fields, excelFile);
+			return tableBox;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return new VBox();
+	}
 
+	/**
+	 * excel 文件头信息
+	 * 
+	 * @param excelFile
+	 * @return
+	 */
+	private static String[] excelHeadArray(String excelFile) {
+		List<ExcelHeadCellInfo> row1 = ExcelUtil.readExcelFileHead(excelFile);
+		if (row1 != null) {
+
+			String[] headArr = new String[row1.size()];
+			for (int i = 0; i < row1.size(); i++) {
+				ExcelHeadCellInfo cell = row1.get(i);
+
+				headArr[i] = cell.getCellAddress() + " - " + cell.getCellVal();
+
+			}
+			return headArr;
+		}
+
+		return new String[0];
+	}
+
+	public static VBox tableFiledMapExcelRowBox(String tableName, ObservableList<SheetFieldPo> fields,
+			String excelFile) {
+		FlowPane fp = new FlowPane();
+
+		String colName1 = "字段名称";
+		String colName2 = "Excel列";
+		String colName3 = "自定义值";
+		TextField tf1 = new TextField("");
+		tf1.setEditable(false);
+		tf1.setPrefWidth(150);
+		tf1.setStyle("-fx-background-color: transparent;");
+		TextField tf2 = new TextField("");
+		tf2.setEditable(false);
+		tf2.setPrefWidth(150);
+		tf2.setStyle("-fx-background-color: transparent;");
+		TextField tf3 = new TextField("");
+		tf3.setEditable(false);
+		tf3.setPrefWidth(150);
+		tf3.setStyle("-fx-background-color: transparent;");
+
+		fp.getChildren().add(tf1);
+		fp.getChildren().add(tf2);
+		fp.getChildren().add(tf3);
+		fp.setPadding(new Insets(8, 0, 0, 0));
+		Insets is = new Insets(0, 8, 8, 8);
+		FlowPane.setMargin(tf1, is);
+		FlowPane.setMargin(tf2, is);
+		FlowPane.setMargin(tf3, is);
+
+		// table
+		TableView<SheetFieldPo> tv = new TableView<>();
+		tv.getStyleClass().add("myTableTag");
+		tv.setEditable(true);
+		tv.getSelectionModel().selectedItemProperty().addListener(// 选中某一行
+				new ChangeListener<SheetFieldPo>() {
+					@Override
+					public void changed(ObservableValue<? extends SheetFieldPo> observableValue, SheetFieldPo oldItem,
+							SheetFieldPo newItem) {
+						SheetFieldPo p = newItem;
+						if (p == null)
+							return;
+						tf1.setText(p.getColumnLabel().get());
+						String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
+						if (p.getScale() != null && p.getScale().get() > 0) {
+							tyNa += ", " + p.getScale().get();
+						}
+						tyNa += ")";
+						tf2.setText(tyNa);
+						tf3.setText(p.getColumnClassName().get());
+					}
+				});
+		// 第一列
+		TableColumn<SheetFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
+		// 给单元格赋值
+		fieldNameCol.setCellValueFactory(cellData -> {
+			return cellData.getValue().getColumnLabel();
+		});
+
+		fieldNameCol.setCellFactory(MyTableCellTextField2ReadOnly.forTableColumn());
+		fieldNameCol.setPrefWidth(180);
+
+		tv.getColumns().add(fieldNameCol);
+
+		// 第二列
+		TableColumn<SheetFieldPo, String> valueCol = new TableColumn<>(colName2);
+		valueCol.setPrefWidth(180);
+
+		String[] headArr = excelHeadArray(excelFile);
+		valueCol.setCellValueFactory(p -> p.getValue().getExcelRowVal());
+		valueCol.setCellFactory(ComboBox2TableCell.forTableColumn(headArr));
+		tv.getColumns().add(valueCol);
+
+		// 第三列
+		TableColumn<SheetFieldPo, String> valueCol3 = new TableColumn<>(colName3);
+		valueCol3.setPrefWidth(180);
+
+		valueCol3.setCellValueFactory(p -> p.getValue().getFixedValue());
+		valueCol3.setCellFactory(TextFieldTableCell.forTableColumn());
+
+		tv.getColumns().add(valueCol3);
+
+		tv.getItems().addAll(fields);
+
+		VBox subvb = new VBox();
+		FlowPane topfp = new FlowPane();
+		topfp.setPadding(new Insets(8, 5, 8, 8));
+		Label lb = new Label();
+		lb.setGraphic(IconGenerator.svgImageDefActive("search"));
+		TextField filterField = new TextField();
+
+		filterField.getStyleClass().add("myTextField");
+		topfp.getChildren().add(lb);
+		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
+		topfp.getChildren().add(filterField);
+		topfp.setMinHeight(30);
+		topfp.prefHeight(30);
+		filterField.setPrefWidth(200);
+
+		subvb.getChildren().add(topfp);
+
+		subvb.getChildren().add(tv);
+		VBox.setVgrow(tv, Priority.ALWAYS);
+		subvb.getChildren().add(fp);
+
+		// 过滤功能
+		filterField.textProperty().addListener((o, oldVal, newVal) -> {
+			if (StrUtils.isNotNullOrEmpty(newVal)) {
+				TableDataDetail.bindTableViewFilter(tv, fields, newVal);
+			} else {
+				tv.setItems(fields);
+			}
+
+		});
+
+		return subvb;
 	}
 
 	// 按钮面板
@@ -99,58 +250,80 @@ public class ImportExcelNextWindow {
 		return btnPane;
 	}
 
-	public static ObservableList<SheetFieldPo> showTableFieldType(SqluckyConnector dbc, String tablename) {
-		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
-		ObservableList<SheetFieldPo> fields = null;
-		try {
-			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
-			fields = DP.getFields();
-
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return fields;
-	}
+//	public static ObservableList<SheetFieldPo> showTableFieldType(SqluckyConnector dbc, String tablename) {
+//		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
+//		ObservableList<SheetFieldPo> fields = null;
+//		try {
+//			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
+//			fields = DP.getFields();
+//
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		return fields;
+//	}
 
 	// 将表字段对象转换为列表
-	public static List<ExcelMapper> FieldToList(ObservableList<SheetFieldPo> fields, String tableName) {
-		List<ExcelMapper> ls = new ArrayList<>();
-		for (SheetFieldPo po : fields) {
-			ExcelMapper em = new ExcelMapper();
-			em.setTableName(new SimpleStringProperty(tableName));
-			em.setFieldName(new SimpleStringProperty(po.getColumnLabel().get()));
-			em.setExcelRow(new SimpleStringProperty(""));
-			em.setValue(new SimpleStringProperty(""));
-			ls.add(em);
-		}
-		return ls;
-	}
+//	public static List<ExcelMapper> FieldToList(ObservableList<SheetFieldPo> fields, String tableName) {
+//		List<ExcelMapper> ls = new ArrayList<>();
+//		for (SheetFieldPo po : fields) {
+//			ExcelMapper em = new ExcelMapper();
+//			em.setTableName(new SimpleStringProperty(tableName));
+//			em.setFieldName(new SimpleStringProperty(po.getColumnLabel().get()));
+//			em.setExcelRow(new SimpleStringProperty(""));
+//			em.setValue(new SimpleStringProperty(""));
+//			ls.add(em);
+//		}
+//		return ls;
+//	}
 
 	//
-	public static List<Region> fieldListToComponents(List<ExcelMapper> fields) {
+//	public static List<Region> fieldListToComponents(List<ExcelMapper> fields) {
+//
+//		List<Region> list = new ArrayList<>();
+//		for (ExcelMapper em : fields) {
+//			Label fieldLabel = new Label(em.getFieldName().get());
+//
+//			TextField fieldVal = new TextField();
+//			fieldVal.textProperty().bind(em.getValue());
+//			list.add(fieldLabel);
+//			list.add(fieldVal);
+//		}
+//
+//		return list;
+//	}
 
-		List<Region> list = new ArrayList<>();
-		for (ExcelMapper em : fields) {
-			Label fieldLabel = new Label(em.getFieldName().get());
+	static TextField beginIdTF;
 
-			TextField fieldVal = new TextField();
-			fieldVal.textProperty().bind(em.getValue());
-			list.add(fieldLabel);
-			list.add(fieldVal);
-		}
+	static TextField conuntTF;
 
-		return list;
+	// 其他设置
+	public static List<Region> otherSet() {
+		Label lb1 = new Label("起始行号(默认第一行开始)");
+		Label lb2 = new Label("导入行号(默认全部)");
+		beginIdTF = new TextField();
+//	    beginIdTF.setPromptText(lb1);
+		conuntTF = new TextField();
+
+		List<Region> nds = new ArrayList<>();
+		nds.add(lb1);
+		nds.add(beginIdTF);
+		nds.add(lb2);
+		nds.add(conuntTF);
+		return nds;
 	}
 
 	// 组件布局
-	public static void layout(List<Region> list) {
+	public static void layout(VBox tbox, String table) {
 		VBox vb = new VBox();
 		vb.maxHeight(600);
-		Label title = new Label("Import Excel To DB Table");
-		title.setPadding(new Insets(15));
-		AppComponent appComponent = ComponentGetter.appComponent;
-		title.setGraphic(appComponent.getIconDefActive("gears"));
-		vb.getChildren().add(title);
+//		Label title = new Label("Excel Row Map Table Field");
+//		title.setPadding(new Insets(15));
+//		AppComponent appComponent = ComponentGetter.appComponent;
+//		title.setGraphic(appComponent.getIconDefActive("gears"));
+//		vb.getChildren().add(title);
+		vb.getChildren().add(tbox);
+
 		GridPane grid = new GridPane();
 		vb.getChildren().add(grid);
 		vb.setPadding(new Insets(5));
@@ -159,10 +332,13 @@ public class ImportExcelNextWindow {
 		AnchorPane btnsPane = btnPane();
 		vb.getChildren().add(btnsPane);
 
-		Stage stage = CreateWindow(vb);
+		Stage stage = CreateWindow(vb, "Excel Row Map " + table + " Field");
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 10, 10, 10));
+
+		// new ArrayList<>();
+		List<Region> list = otherSet();
 
 		int i = 0;
 		int j = 0;
@@ -179,20 +355,6 @@ public class ImportExcelNextWindow {
 		}
 
 		stage.show();
-	}
-
-	// 选取文件按钮
-	public static Button openFileBtn(TextField tfFilePath) {
-		Button selectFileBtn = new Button("...");
-		selectFileBtn.setOnAction(e -> {
-			// 获取文件
-			File file = FileOrDirectoryChooser.selectExcelFile(ComponentGetter.primaryStage);
-			if (file != null) {
-				tfFilePath.setText(file.getAbsolutePath());
-			}
-
-		});
-		return selectFileBtn;
 	}
 
 	// 通过数据库的链接 生成数据模型
@@ -245,15 +407,15 @@ public class ImportExcelNextWindow {
 		return cancelBtn;
 	}
 
-	public static Stage CreateWindow(VBox vb) {
+	public static Stage CreateWindow(VBox vb, String title) {
 		SqluckyStage sqluckyStatge = new SqluckyStage(vb);
 		stage = sqluckyStatge.getStage();
 		Scene scene = sqluckyStatge.getScene();
 
 		vb.getStyleClass().add("connectionEditor");
 
-		vb.setPrefWidth(400);
-		vb.maxWidth(400);
+		vb.setPrefWidth(600);
+		vb.maxWidth(600);
 		AnchorPane bottomPane = new AnchorPane();
 		bottomPane.setPadding(new Insets(10));
 
@@ -267,6 +429,7 @@ public class ImportExcelNextWindow {
 			stage.close();
 		});
 
+		stage.setTitle(title);
 		CommonUtility.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
