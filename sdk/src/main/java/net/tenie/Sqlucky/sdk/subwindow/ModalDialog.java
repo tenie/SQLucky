@@ -54,6 +54,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
  */
 public class ModalDialog {
 	private static Logger logger = LogManager.getLogger(ModalDialog.class);
+
 	private static void resize(SVGPath svg, double width, double height) {
 
 		double originalWidth = svg.prefWidth(-1);
@@ -65,7 +66,6 @@ public class ModalDialog {
 		svg.setScaleX(scaleX);
 		svg.setScaleY(scaleY);
 	}
-	
 
 	// 根据给定的fxml 创建 模态框
 	public static void test() {
@@ -111,7 +111,7 @@ public class ModalDialog {
 
 			stage.setScene(scene);
 
-			stage.show(); 
+			stage.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -155,16 +155,16 @@ public class ModalDialog {
 	}
 
 	// 根据给定的node 创建 模态框
-	public ModalDialog(Parent node, TableView<SheetFieldPo>  tv ,String title) {
+	public ModalDialog(Parent node, TableView<SheetFieldPo> tv, String title) {
 		try {
-			
+
 			final Stage stage = new Stage();
 			Scene scene = new Scene(node);
-			 
+
 			CommonUtility.loadCss(scene);
-			Image img = ComponentGetter.LogoIcons; //new Image(ModalDialog.class.getResourceAsStream(ConfigVal.appIcon));
+			Image img = ComponentGetter.LogoIcons; // new
+													// Image(ModalDialog.class.getResourceAsStream(ConfigVal.appIcon));
 			stage.getIcons().add(img);
-			
 
 			stage.initModality(Modality.WINDOW_MODAL);
 			stage.setTitle(title);
@@ -180,32 +180,30 @@ public class ModalDialog {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// 根据给定的node 创建 模态框
-		public ModalDialog(Parent node, String title) {
-			try {
-				
-				final Stage stage = new Stage();
-				Scene scene = new Scene(node);
-				 
-				CommonUtility.loadCss(scene);
-				Image img = ComponentGetter.LogoIcons; //new Image(ModalDialog.class.getResourceAsStream(ConfigVal.appIcon));
-				stage.getIcons().add(img);
+	public ModalDialog(Parent node, String title) {
+		try {
+			final Stage stage = new Stage();
+			Scene scene = new Scene(node);
 
-				stage.initModality(Modality.WINDOW_MODAL);
-				stage.setTitle(title);
+			CommonUtility.loadCss(scene);
+			Image img = ComponentGetter.LogoIcons;
+			stage.getIcons().add(img);
 
-				stage.setScene(scene);
+			stage.initModality(Modality.WINDOW_MODAL);
+			stage.setTitle(title);
 
-				stage.show();
-//				tv.getSelectionModel().select(0);
-				stage.setOnCloseRequest(v -> {
+			stage.setScene(scene);
 
-				});
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			stage.show();
+			stage.setOnCloseRequest(v -> {
+
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
+	}
 
 	public static Stage CreateModalWindow() {
 
@@ -266,10 +264,9 @@ public class ModalDialog {
 		});
 		return stage;
 	}
-	
 
 	// 在提示框里执行
-	public static void ModalDialogAppCallConsumer(VBox node, String title, Consumer< String >  caller) {
+	public static void ModalDialogAppCallConsumer(VBox node, String title, Consumer<String> caller) {
 		try {
 			node.getStyleClass().add("myAlert");
 			final Stage stage = new Stage();
@@ -278,32 +275,28 @@ public class ModalDialog {
 			btn.setOnAction(value -> {
 				stage.close();
 			});
-			
+
 			JFXButton okbtn = new JFXButton("YES");
 			okbtn.setOnAction(value -> {
 				caller.accept("");
 				stage.close();
 			});
-			
-			
+
 			AnchorPane pn = new AnchorPane();
 			pn.getChildren().addAll(okbtn, btn);
 			AnchorPane.setRightAnchor(btn, 0.0);
 			AnchorPane.setRightAnchor(okbtn, 60.0);
 			node.getChildren().add(pn);
- 
-			
 
 			stage.initModality(Modality.APPLICATION_MODAL);
 			stage.setTitle(title);
 			stage.setScene(scene);
 			DialogTools.setSceneAndShow(scene, stage, false);
- 
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
 
 	// 根据给定的fxml 创建 模态框
 	public ModalDialog(final Stage stg, String fxml, Modality modality) {
@@ -349,8 +342,6 @@ public class ModalDialog {
 		});
 	}
 
-
-	
 	public static void showErrorMsg2(String title, String containTxt) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error Info");
@@ -376,11 +367,7 @@ public class ModalDialog {
 		alert.showAndWait();
 	}
 
-	
-	
-	
-	
-	public static void showComfirmExec(String title, String containTxt ,  Consumer< String >  caller) {
+	public static void showComfirmExec(String title, String containTxt, Consumer<String> caller) {
 		VBox vb = new VBox();
 		TextField tf1 = new TextField("");
 		tf1.setEditable(false);
@@ -390,8 +377,7 @@ public class ModalDialog {
 		tf1.setPrefHeight(40);
 		tf1.setFocusTraversable(false);
 		Label tit = new Label(title);
-		
-		
+
 		vb.getChildren().add(tit);
 		vb.getChildren().add(tf1);
 		vb.setPrefWidth(500);
@@ -399,21 +385,21 @@ public class ModalDialog {
 		vb.setPrefHeight(100);
 		vb.maxHeight(100);
 		vb.maxWidth(500);
-		ModalDialog.ModalDialogAppCallConsumer(vb, title, caller); 
+		ModalDialog.ModalDialogAppCallConsumer(vb, title, caller);
 	}
-	
-	//TODO
-	public static void showExecWindow2(String title, String containTxt ,  Consumer< String >  caller) {
+
+	// TODO
+	public static void showExecWindow2(String title, String containTxt, Consumer<String> caller) {
 		VBox vb = new VBox();
 		TextField tf1 = new TextField("");
 		tf1.getStyleClass().add("myFindTextField");
 		tf1.setEditable(true);
 		tf1.setPrefWidth(500);
-		//tf1.setStyle("-fx-background-color: transparent;");
+		// tf1.setStyle("-fx-background-color: transparent;");
 		tf1.setText(containTxt);
 		tf1.setPrefHeight(40);
 		tf1.setFocusTraversable(false);
-		
+
 		Label tit = new Label(title);
 		vb.getChildren().add(tit);
 		vb.getChildren().add(tf1);
@@ -430,15 +416,14 @@ public class ModalDialog {
 		btn.setOnAction(value -> {
 			stage.close();
 		});
-		
+
 		JFXButton okbtn = new JFXButton("OK");
 		okbtn.setOnAction(value -> {
 			String val = tf1.getText();
 			caller.accept(val);
 			stage.close();
 		});
-		
-		
+
 		AnchorPane pn = new AnchorPane();
 		pn.getChildren().addAll(okbtn, btn);
 		AnchorPane.setRightAnchor(btn, 0.0);
@@ -452,9 +437,8 @@ public class ModalDialog {
 		stage.setScene(scene);
 		DialogTools.setSceneAndShow(scene, stage, false);
 	}
-	
-	
-	public static void showExecWindow(String promptInfo, String containTxt ,  Consumer< String >  caller) {
+
+	public static void showExecWindow(String promptInfo, String containTxt, Consumer<String> caller) {
 		TextField tf1 = new TextField("");
 		tf1.getStyleClass().add("myFindTextField");
 		tf1.setEditable(true);
@@ -462,43 +446,39 @@ public class ModalDialog {
 		tf1.setText(containTxt);
 		tf1.setPrefHeight(40);
 		tf1.setFocusTraversable(false);
-		
-		Label tit = new Label(promptInfo);  
+
+		Label tit = new Label(promptInfo);
 		final Stage stage = new Stage();
-		
+
 		JFXButton btn = new JFXButton("Cancel");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(value -> {
 			stage.close();
 		});
-		
+
 		JFXButton okbtn = new JFXButton("OK");
 		okbtn.setOnAction(value -> {
 			String val = tf1.getText();
 			caller.accept(val);
 			stage.close();
 		});
-		
+
 		List<Node> nds = new ArrayList<>();
-		
-		nds.add( tit);
-		nds.add( tf1);
-		
+
+		nds.add(tit);
+		nds.add(tf1);
+
 		List<Node> btns = new ArrayList<>();
-		btns.add( btn);
-		btns.add( okbtn);
-		
-		
+		btns.add(btn);
+		btns.add(okbtn);
+
 		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.INFO, nds, btns);
 		Scene scene = new Scene((Parent) vb);
-		
+
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-		DialogTools.setSceneAndShow(scene, stage, false);  
+		DialogTools.setSceneAndShow(scene, stage, false);
 	}
-	
-	 
-	
 
 	// javafx 默认的确认对话框
 	public static boolean Confirmation(String msg) {
@@ -518,41 +498,37 @@ public class ModalDialog {
 		}
 		return tf;
 	}
-	
 
 	// about window
-	public static void showAbout() { 
-		
-		Label tit = new Label("Version: " + ConfigVal.version);  
-		Label text0 = new Label("DataBase Tool ");  
-		Label text1 = new Label("Author: tenie  Email: tenie@tenie.net");  
-		Label text2 = new Label("Github: https://github.com/tenie/SQLucky");  
-		
-		 
-		final Stage stage = new Stage(); 
-		
+	public static void showAbout() {
+
+		Label tit = new Label("Version: " + ConfigVal.version);
+		Label text0 = new Label("DataBase Tool ");
+		Label text1 = new Label("Author: tenie  Email: tenie@tenie.net");
+		Label text2 = new Label("Github: https://github.com/tenie/SQLucky");
+
+		final Stage stage = new Stage();
+
 		JFXButton okbtn = new JFXButton("OK");
 		CommonUtility.addCssClass(okbtn, "myAlertBtn");
 		okbtn.setOnAction(value -> {
 			stage.close();
-		}); 
-		List<Node> nds = new ArrayList<>(); 
-		nds.add( tit); 
-		nds.add( text0); 
-		nds.add( text1); 
-		nds.add( text2);  
-		
-		List<Node> btns = new ArrayList<>(); 
-		btns.add( okbtn);
-		
-		
+		});
+		List<Node> nds = new ArrayList<>();
+		nds.add(tit);
+		nds.add(text0);
+		nds.add(text1);
+		nds.add(text2);
+
+		List<Node> btns = new ArrayList<>();
+		btns.add(okbtn);
+
 		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.ABOUT, nds, btns);
 		Scene scene = new Scene((Parent) vb);
-		
+
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-		DialogTools.setSceneAndShow(scene, stage, false);  
+		DialogTools.setSceneAndShow(scene, stage, false);
 	}
-	
-	
+
 }
