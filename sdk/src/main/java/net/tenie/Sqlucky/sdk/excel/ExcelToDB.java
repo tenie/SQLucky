@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.excel;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,6 +11,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.InsertPreparedStatementDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -27,7 +29,7 @@ public class ExcelToDB {
 	public static void toTable(SqluckyConnector dbc, String tablename, String excelFile, List<SheetFieldPo> fields,
 			Integer beginRowIdx, Integer count) {
 		String insertSql = InsertPreparedStatementDao.createPreparedStatementSql(tablename, fields);
-
+		Connection conn = dbc.getConn();
 		try {
 			Workbook workbook = ExcelUtil.readFileToWorkbok(excelFile);
 
@@ -53,22 +55,31 @@ public class ExcelToDB {
 				}
 
 				// Read the Row
+				int idx = 0;
+				List<List<String>> rowVals = new ArrayList<>();
 				for (int rowNum = begin; rowNum <= end; rowNum++) {
 					Row hssfRow = sheet.getRow(rowNum);
 					if (hssfRow != null) {
-						ArrayList<String> innerlist = new ArrayList<>();
+						List<String> cellVals = new ArrayList<>();
+						rowVals.add(cellVals);
 						// hssfRow.getLastCellNum() 有多少个列
 						for (int j = 0; j < hssfRow.getLastCellNum(); j++) {
 							Cell cell = hssfRow.getCell(j);
 							if (cell != null) {
 								String cellStr = cell.toString();
-								innerlist.add(cellStr);
+								cellVals.add(cellStr);
 							} else {
-								innerlist.add("");
+								cellVals.add("");
 							}
 						}
 
+						idx++;
+						if (idx % 100 == 0) {
+							InsertDao.execInsertBySheetFieldPo(conn, tablename, fields, rowVals);
+							rowVals.clear();
+						}
 					}
+
 				}
 			}
 
