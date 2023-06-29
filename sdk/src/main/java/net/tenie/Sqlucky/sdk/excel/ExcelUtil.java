@@ -18,12 +18,13 @@ public class ExcelUtil {
 	public static void createExcel(ExcelDataPo dataPo, File finalXlsxFile) {
 		var sheetName = dataPo.getSheetName();
 		try {
-			Workbook workBook =  writeFileToWorkbook(finalXlsxFile, sheetName);
+			Workbook workBook = writeFileToWorkbook(finalXlsxFile, sheetName);
 			WriteExcel.createExcel(workBook, dataPo, finalXlsxFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * 判断Excel的版本,获取Workbook
 	 * 
@@ -45,7 +46,11 @@ public class ExcelUtil {
 		}
 		return wb;
 	}
-	
+
+	public static Workbook readFileToWorkbok(String fname) throws IOException {
+		File file = new File(fname);
+		return readFileToWorkbok(file);
+	}
 
 	/**
 	 * 创建一个 .xls文件, 如果文件存在,就先删除旧文件
@@ -110,8 +115,7 @@ public class ExcelUtil {
 		}
 		return rs;
 	}
-	
-	
+
 	public static List<ArrayList<String>> readExcel(String filename, Integer beginRowIdx, Integer count)
 			throws IOException {
 //		String suffixStr = filename.substring(filename.lastIndexOf("."), filename.length());
@@ -125,13 +129,12 @@ public class ExcelUtil {
 //			HSSFWorkbook workbook = new HSSFWorkbook(is);
 //			rs = new ReadExcel2().readExcel(workbook, beginRowIdx, count);
 //		}
-		
-		 Workbook workbook = readFileToWorkbok(new File(filename));
-		 List<ArrayList<String>> rs = new ArrayList<>();
-		 rs = new ReadExcel2().readExcel(workbook, beginRowIdx, count);
+
+		Workbook workbook = readFileToWorkbok(new File(filename));
+		List<ArrayList<String>> rs = new ArrayList<>();
+		rs = new ReadExcel2().readExcel(workbook, beginRowIdx, count);
 		return rs;
 	}
-	
 
 	public static List<ArrayList<String>> readExcelFile(String filename) {
 		return readExcelFile(filename, null, null);
@@ -168,7 +171,5 @@ public class ExcelUtil {
 		List<ExcelHeadCellInfo> ls = readExcelFileHead("C:\\Users\\tenie\\TT_FORD_RO_LABOUR.xls");
 		System.out.println(ls);
 	}
-
-	
 
 }
