@@ -4,33 +4,31 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 生成insert的PreparedStatement
+ * 
  * @author tenie
  *
  */
 public class InsertPreparedStatementDao {
 	private static Logger logger = LogManager.getLogger(InsertPreparedStatementDao.class);
-	
-	
-	public static String createPreparedStatementSql(String tableName ,ObservableList<SheetFieldPo> fpos) {
 
+	public static String createPreparedStatementSql(String tableName, List<SheetFieldPo> fpos) {
 
 		StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
 		StringBuilder values = new StringBuilder("");
 		int size = fpos.size();
 		for (int i = 0; i < size; i++) {
 			SheetFieldPo po = fpos.get(i);
-			sql.append(po.getColumnLabel().get() +" ,");
+			sql.append(po.getColumnLabel().get() + " ,");
 			values.append("?,");
 		}
 		String insert = sql.toString();
@@ -43,13 +41,10 @@ public class InsertPreparedStatementDao {
 		insert += " ) VALUES (" + valstr + ") ";
 
 		return insert;
-	
+
 	}
-	
-	
-	public static String execInsert(Connection conn,
-			String tableName,
-			ResultSetRowPo mval) throws Exception {
+
+	public static String execInsert(Connection conn, String tableName, ResultSetRowPo mval) throws Exception {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		String msg = "";
@@ -60,7 +55,7 @@ public class InsertPreparedStatementDao {
 			String select = "Select count(*) as val from " + tableName + " where " + condition;
 			pstmt = conn.prepareStatement(select);
 			DaoTools.conditionPrepareStatement(mval, pstmt);
-			 
+
 			boolean tf = true;
 			String showMsg = "";
 			logger.info("sql = " + select);
@@ -88,14 +83,14 @@ public class InsertPreparedStatementDao {
 			String temp = DaoTools.concatStrSetVal(mval);
 			String sql = "update " + tableName + " set  " + temp + " where " + condition;
 			pstmt = conn.prepareStatement(sql);
-			
+
 			String valStr = DaoTools.updatePrepareStatement(mval, pstmt);
 			pstmt.addBatch();
 //			pstmt.executeBatch()
 			// 更新
 			int i = pstmt.executeUpdate();
-			msg = "Ok, Update " + i + " ;\n" + sql +" ;\n"+ valStr;
-			logger.info( msg);
+			msg = "Ok, Update " + i + " ;\n" + sql + " ;\n" + valStr;
+			logger.info(msg);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;

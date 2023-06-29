@@ -36,11 +36,11 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
-import net.tenie.Sqlucky.sdk.db.SelectDao;
+import net.tenie.Sqlucky.sdk.db.DaoTools;
+import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
-import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
@@ -61,14 +61,17 @@ public class ImportExcelNextWindow {
 	private static ChoiceBox<String> connNameChoiceBox;
 	private static TextField tfTabName;
 	private static TextField tfFilePath;
-	
+
 	private static String excelFile;
 	private static String tableName;
-	
+	private static ObservableList<SheetFieldPo> fields;
+	private static SqluckyConnector sqluckyConn;
+
 	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath) {
 //		ObservableList<SheetFieldPo> fieldPos = showTableFieldType(dbc, tableName);
 //		List<ExcelMapper> ls = FieldToList(fieldPos, tableName);
 //		List<Region> nodes = fieldListToComponents(ls);
+		sqluckyConn = dbc;
 		excelFile = excelFilePath;
 		tableName = tableNameVal;
 		VBox tbox = tableBox(dbc, tableName, excelFile);
@@ -77,10 +80,8 @@ public class ImportExcelNextWindow {
 	}
 
 	public static VBox tableBox(SqluckyConnector dbc, String tablename, String excelFile) {
-		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
 		try {
-			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
-			ObservableList<SheetFieldPo> fields = DP.getFields();
+			fields = DaoTools.tableFields(dbc.getConn(), tablename);
 
 			for (int i = 0; i < fields.size(); i++) {
 				SheetFieldPo p = fields.get(i);
@@ -136,7 +137,7 @@ public class ImportExcelNextWindow {
 		tf1.setPrefWidth(150);
 //		tf1.setStyle("-fx-background-color: transparent;");
 //		tf1.getStyleClass().add("myFindTextField");
-		
+
 //		TextField tf2 = new TextField("");
 		Label tf2 = new Label();
 //		tf2.setEditable(false);
@@ -311,7 +312,7 @@ public class ImportExcelNextWindow {
 		Label lb1 = new Label("起始行号");
 		Label lb2 = new Label("导入行数");
 		beginIdTF = new TextField();
-	    beginIdTF.setPromptText("默认第一行开始");
+		beginIdTF.setPromptText("默认第一行开始");
 		conuntTF = new TextField();
 		conuntTF.setPromptText("默认全部");
 
@@ -402,7 +403,18 @@ public class ImportExcelNextWindow {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(e -> {
-				//
+			List<SheetFieldPo> vals = new ArrayList<>();
+			// 提取有被映射的字段
+			for (SheetFieldPo fieldpo : fields) {
+				fieldpo.getExcelRowVal().getValue();
+				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelRowVal())
+						|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
+					vals.add(fieldpo);
+				}
+
+			}
+			//
+
 		});
 		return btn;
 	}
@@ -411,7 +423,22 @@ public class ImportExcelNextWindow {
 		Button cancelBtn = new Button("Cancel");
 		cancelBtn.getStyleClass().add("myAlertBtn");
 		cancelBtn.setOnAction(e -> {
-			stage.close();
+//			stage.close();
+			try {
+				var fieldss = DaoTools.tableFields(sqluckyConn.getConn(), "APP_VERSION23");
+				List<String> fieldsValue = new ArrayList<>();
+				fieldsValue.add("vv5");
+				fieldsValue.add("");
+				fieldsValue.add("");
+				fieldsValue.add("");
+				fieldsValue.add("");
+				fieldsValue.add("");
+				fieldsValue.add("");
+
+				InsertDao.execInsertBySheetFieldPo(sqluckyConn.getConn(), "APP_VERSION23", fields, fieldsValue);
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
 
 		});
 		return cancelBtn;
