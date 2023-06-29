@@ -19,6 +19,7 @@ open module SQLucky.sdk {
 	requires com.jfoenix;  
 	requires org.controlsfx.controls;
 	requires org.apache.logging.log4j;	
+	requires org.apache.commons.lang3;
 	 
 	
 	// non-mods
