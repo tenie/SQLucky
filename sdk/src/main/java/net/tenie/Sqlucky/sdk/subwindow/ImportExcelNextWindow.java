@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -37,12 +38,14 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.DaoTools;
-import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
+import net.tenie.Sqlucky.sdk.excel.ExcelToDB;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
+import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -62,9 +65,12 @@ public class ImportExcelNextWindow {
 	private static TextField tfTabName;
 	private static TextField tfFilePath;
 
+	private static TextField beginIdTF;
+	private static TextField conuntTF;
+
 	private static String excelFile;
 	private static String tableName;
-	private static ObservableList<SheetFieldPo> fields;
+	private static ObservableList<ExcelFieldPo> excelFields;
 	private static SqluckyConnector sqluckyConn;
 
 	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath) {
@@ -81,7 +87,7 @@ public class ImportExcelNextWindow {
 
 	public static VBox tableBox(SqluckyConnector dbc, String tablename, String excelFile) {
 		try {
-			fields = DaoTools.tableFields(dbc.getConn(), tablename);
+			ObservableList<SheetFieldPo> fields = DaoTools.tableFields(dbc.getConn(), tablename);
 
 			for (int i = 0; i < fields.size(); i++) {
 				SheetFieldPo p = fields.get(i);
@@ -93,7 +99,14 @@ public class ImportExcelNextWindow {
 				StringProperty strp = new SimpleStringProperty("");
 				p.setValue(strp);
 			}
-			VBox tableBox = tableFiledMapExcelRowBox(tablename, fields, excelFile);
+
+			excelFields = FXCollections.observableArrayList();
+			for (var fd : fields) {
+				ExcelFieldPo excelpo = new ExcelFieldPo(fd);
+				excelFields.add(excelpo);
+			}
+
+			VBox tableBox = tableFiledMapExcelRowBox(tablename, excelFields, excelFile);
 			return tableBox;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -107,47 +120,43 @@ public class ImportExcelNextWindow {
 	 * @param excelFile
 	 * @return
 	 */
-	private static String[] excelHeadArray(String excelFile) {
+	private static String[] excelHeadArray(String excelFile, ObservableList<ExcelFieldPo> fields) {
 		List<ExcelHeadCellInfo> row1 = ExcelUtil.readExcelFileHead(excelFile);
+
 		if (row1 != null) {
 
 			String[] headArr = new String[row1.size()];
+			List<String> selectVal = new ArrayList<>();
 			for (int i = 0; i < row1.size(); i++) {
 				ExcelHeadCellInfo cell = row1.get(i);
-
-				headArr[i] = cell.getCellAddress() + " - " + cell.getCellVal();
-
+				String val = (cell.getCellIdx() + 1) + " - " + cell.getCellAddress() + " - " + cell.getCellVal();
+				headArr[i] = val;
+				selectVal.add(val);
 			}
+			for (var tmp : fields) {
+				tmp.setExcelRowInfo(selectVal);
+			}
+
 			return headArr;
 		}
 
 		return new String[0];
 	}
 
-	public static VBox tableFiledMapExcelRowBox(String tableName, ObservableList<SheetFieldPo> fields,
+	public static VBox tableFiledMapExcelRowBox(String tableName, ObservableList<ExcelFieldPo> fields,
 			String excelFile) {
 		FlowPane fp = new FlowPane();
 
 		String colName1 = "字段名称";
 		String colName2 = "Excel列";
 		String colName3 = "自定义值";
-//		TextField tf1 = new TextField("");
 		Label tf1 = new Label();
-//		tf1.setEditable(false);
 		tf1.setPrefWidth(150);
-//		tf1.setStyle("-fx-background-color: transparent;");
-//		tf1.getStyleClass().add("myFindTextField");
 
-//		TextField tf2 = new TextField("");
 		Label tf2 = new Label();
-//		tf2.setEditable(false);
 		tf2.setPrefWidth(150);
-//		tf2.setStyle("-fx-background-color: transparent;");
-//		TextField tf3 = new TextField("");
-//		tf3.setEditable(false);
 		Label tf3 = new Label();
 		tf3.setPrefWidth(150);
-//		tf3.setStyle("-fx-background-color: transparent;");
 
 		fp.getChildren().add(tf1);
 		fp.getChildren().add(tf2);
@@ -159,15 +168,15 @@ public class ImportExcelNextWindow {
 		FlowPane.setMargin(tf3, is);
 
 		// table
-		TableView<SheetFieldPo> tv = new TableView<>();
+		TableView<ExcelFieldPo> tv = new TableView<>();
 		tv.getStyleClass().add("myTableTag");
 		tv.setEditable(true);
 		tv.getSelectionModel().selectedItemProperty().addListener(// 选中某一行
-				new ChangeListener<SheetFieldPo>() {
+				new ChangeListener<ExcelFieldPo>() {
 					@Override
-					public void changed(ObservableValue<? extends SheetFieldPo> observableValue, SheetFieldPo oldItem,
-							SheetFieldPo newItem) {
-						SheetFieldPo p = newItem;
+					public void changed(ObservableValue<? extends ExcelFieldPo> observableValue, ExcelFieldPo oldItem,
+							ExcelFieldPo newItem) {
+						ExcelFieldPo p = newItem;
 						if (p == null)
 							return;
 						tf1.setText(p.getColumnLabel().get());
@@ -181,7 +190,8 @@ public class ImportExcelNextWindow {
 					}
 				});
 		// 第一列
-		TableColumn<SheetFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
+		TableColumn<ExcelFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
+		fieldNameCol.setEditable(false);
 		// 给单元格赋值
 		fieldNameCol.setCellValueFactory(cellData -> {
 			return cellData.getValue().getColumnLabel();
@@ -193,16 +203,17 @@ public class ImportExcelNextWindow {
 		tv.getColumns().add(fieldNameCol);
 
 		// 第二列
-		TableColumn<SheetFieldPo, String> valueCol = new TableColumn<>(colName2);
+		TableColumn<ExcelFieldPo, String> valueCol = new TableColumn<>(colName2);
 		valueCol.setPrefWidth(180);
 
-		String[] headArr = excelHeadArray(excelFile);
+		String[] headArr = excelHeadArray(excelFile, fields);
 		valueCol.setCellValueFactory(p -> p.getValue().getExcelRowVal());
 		valueCol.setCellFactory(ComboBox2TableCell.forTableColumn(headArr));
+
 		tv.getColumns().add(valueCol);
 
 		// 第三列
-		TableColumn<SheetFieldPo, String> valueCol3 = new TableColumn<>(colName3);
+		TableColumn<ExcelFieldPo, String> valueCol3 = new TableColumn<>(colName3);
 		valueCol3.setPrefWidth(180);
 
 		valueCol3.setCellValueFactory(p -> p.getValue().getFixedValue());
@@ -236,7 +247,7 @@ public class ImportExcelNextWindow {
 		// 过滤功能
 		filterField.textProperty().addListener((o, oldVal, newVal) -> {
 			if (StrUtils.isNotNullOrEmpty(newVal)) {
-				TableDataDetail.bindTableViewFilter(tv, fields, newVal);
+				TableDataDetail.bindTableViewExcelFieldFilter(tv, fields, newVal);
 			} else {
 				tv.setItems(fields);
 			}
@@ -250,7 +261,7 @@ public class ImportExcelNextWindow {
 	private static AnchorPane btnPane() {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
-		Button nextbtn = nextBtn();
+		Button nextbtn = saveBtnSetup();
 
 		Button cancel = cancelBtn();
 
@@ -303,10 +314,6 @@ public class ImportExcelNextWindow {
 //		return list;
 //	}
 
-	static TextField beginIdTF;
-
-	static TextField conuntTF;
-
 	// 其他设置
 	public static List<Region> otherSet() {
 		Label lb1 = new Label("起始行号");
@@ -328,11 +335,6 @@ public class ImportExcelNextWindow {
 	public static void layout(VBox tbox, String table) {
 		VBox vb = new VBox();
 		vb.maxHeight(600);
-//		Label title = new Label("Excel Row Map Table Field");
-//		title.setPadding(new Insets(15));
-//		AppComponent appComponent = ComponentGetter.appComponent;
-//		title.setGraphic(appComponent.getIconDefActive("gears"));
-//		vb.getChildren().add(title);
 		vb.getChildren().add(tbox);
 
 		GridPane grid = new GridPane();
@@ -399,13 +401,13 @@ public class ImportExcelNextWindow {
 	}
 
 	// 下一步按钮
-	public static Button nextBtn() {
+	public static Button saveBtnSetup() {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(e -> {
-			List<SheetFieldPo> vals = new ArrayList<>();
+			List<ExcelFieldPo> vals = new ArrayList<>();
 			// 提取有被映射的字段
-			for (SheetFieldPo fieldpo : fields) {
+			for (ExcelFieldPo fieldpo : excelFields) {
 				fieldpo.getExcelRowVal().getValue();
 				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelRowVal())
 						|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
@@ -414,6 +416,31 @@ public class ImportExcelNextWindow {
 
 			}
 			//
+			String beginInt = beginIdTF.getText();
+			String countInt = conuntTF.getText();
+			Integer beginval = null;
+			Integer countval = null;
+			if (StrUtils.isNotNullOrEmpty(beginInt)) {
+				beginval = Integer.valueOf(beginInt);
+				// 程序的下标是从0开始, 需要减 1
+				beginval = beginval - 1;
+			}
+			if (StrUtils.isNotNullOrEmpty(countInt)) {
+				countval = Integer.valueOf(countInt);
+			}
+			btn.setDisable(true);
+
+			Integer tmpBeginval = beginval;
+			Integer tmpCountval = countval;
+			LoadingAnimation.loadingAnimation("Saving....", v -> {
+				try {
+					ExcelToDB.toTable(sqluckyConn, tableName, excelFile, vals, tmpBeginval, tmpCountval);
+					MyAlert.infoAlert("导入成功!");
+				} catch (Exception e1) {
+					MyAlert.showTextArea("Error", "导入失败 ! \n" + e1.getMessage());
+				}
+				btn.setDisable(false);
+			});
 
 		});
 		return btn;
@@ -423,23 +450,7 @@ public class ImportExcelNextWindow {
 		Button cancelBtn = new Button("Cancel");
 		cancelBtn.getStyleClass().add("myAlertBtn");
 		cancelBtn.setOnAction(e -> {
-//			stage.close();
-			try {
-				var fieldss = DaoTools.tableFields(sqluckyConn.getConn(), "APP_VERSION23");
-				List<String> fieldsValue = new ArrayList<>();
-				fieldsValue.add("vv5");
-				fieldsValue.add("");
-				fieldsValue.add("");
-				fieldsValue.add("");
-				fieldsValue.add("");
-				fieldsValue.add("");
-				fieldsValue.add("");
-
-				InsertDao.execInsertBySheetFieldPo(sqluckyConn.getConn(), "APP_VERSION23", fields, fieldsValue);
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-
+			stage.close();
 		});
 		return cancelBtn;
 	}

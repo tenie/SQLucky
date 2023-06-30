@@ -33,11 +33,25 @@ public class SheetFieldPo {
 	private LongProperty dateValue; // 如果是时间, 保存为long
 
 	// excel数据导入表需要使用下面2个字段
-	private StringProperty excelRowVal = new SimpleStringProperty(""); // excel 对应列
-	private StringProperty fixedValue = new SimpleStringProperty("");; // 不使用excel对应的列, 使用固定值
+//	private StringProperty excelRowVal = new SimpleStringProperty(""); // excel 对应列
+//	private SimpleStringProperty excelRowIdx = new SimpleStringProperty(""); // excel 对应列号
+//	private StringProperty fixedValue = new SimpleStringProperty("");; // 不使用excel对应的列, 使用固定值
 
 	// 类型, 在界面上显示的时候, 默认文本类型
 	private String Type = TEXT_TYPE;
+
+//	public SheetFieldPo() {
+//		excelRowValListener();
+//	}
+//
+//	public void excelRowValListener() {
+//		excelRowVal.addListener((obj, valOld, valNew) -> {
+//			if (StrUtils.isNotNullOrEmpty(valNew)) {
+//				String[] excelInfo = valNew.split(" - ");
+//				excelRowIdx.setValue(excelInfo[0]);
+//			}
+//		});
+//	}
 
 	public String getType() {
 		return Type;
@@ -165,22 +179,6 @@ public class SheetFieldPo {
 
 	public void setDateValue(LongProperty dateValue) {
 		this.dateValue = dateValue;
-	}
-
-	public StringProperty getExcelRowVal() {
-		return excelRowVal;
-	}
-
-	public void setExcelRowVal(StringProperty excelRowVal) {
-		this.excelRowVal = excelRowVal;
-	}
-
-	public StringProperty getFixedValue() {
-		return fixedValue;
-	}
-
-	public void setFixedValue(StringProperty fixedValue) {
-		this.fixedValue = fixedValue;
 	}
 
 	@Override
