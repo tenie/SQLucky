@@ -9,6 +9,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 
@@ -22,6 +23,29 @@ public class InsertPreparedStatementDao {
 	private static Logger logger = LogManager.getLogger(InsertPreparedStatementDao.class);
 
 	public static String createPreparedStatementSql(String tableName, List<SheetFieldPo> fpos) {
+
+		StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
+		StringBuilder values = new StringBuilder("");
+		int size = fpos.size();
+		for (int i = 0; i < size; i++) {
+			SheetFieldPo po = fpos.get(i);
+			sql.append(po.getColumnLabel().get() + " ,");
+			values.append("?,");
+		}
+		String insert = sql.toString();
+		String valstr = values.toString();
+		if (insert.endsWith(",")) {
+			insert = insert.substring(0, insert.length() - 1);
+			valstr = valstr.substring(0, values.length() - 1);
+		}
+
+		insert += " ) VALUES (" + valstr + ") ";
+
+		return insert;
+
+	}
+
+	public static String createPreparedStatementSqlForExcel(String tableName, List<ExcelFieldPo> fpos) {
 
 		StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
 		StringBuilder values = new StringBuilder("");

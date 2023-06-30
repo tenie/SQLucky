@@ -22,6 +22,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -219,6 +220,37 @@ public class TableDataDetail {
 
 		);
 		SortedList<SheetFieldPo> sortedData = new SortedList<>(filteredData);
+		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+		tableView.setItems(sortedData);
+	}
+
+	/**
+	 * 过滤
+	 * 
+	 * @param tableView
+	 * @param observableList
+	 * @param newValue
+	 */
+	public static final void bindTableViewExcelFieldFilter(TableView<ExcelFieldPo> tableView,
+			ObservableList<ExcelFieldPo> observableList, String newValue) {
+		FilteredList<ExcelFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
+		filteredData.setPredicate(entity -> {
+
+			boolean tf1 = false;
+			boolean tf2 = false;
+			if (entity != null) {
+				if (entity.getColumnLabel() != null && entity.getColumnLabel().get() != null) {
+					tf1 = entity.getColumnLabel().get().toUpperCase().contains(newValue.toUpperCase());
+				}
+				if (entity.getValue() != null && entity.getValue().get() != null) {
+					tf2 = entity.getValue().get().toUpperCase().contains(newValue.toUpperCase());
+				}
+			}
+			return tf1 || tf2;
+		}
+
+		);
+		SortedList<ExcelFieldPo> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 		tableView.setItems(sortedData);
 	}
