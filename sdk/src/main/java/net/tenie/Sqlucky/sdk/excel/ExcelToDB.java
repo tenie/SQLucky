@@ -12,9 +12,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import net.tenie.Sqlucky.sdk.db.InsertDao;
-import net.tenie.Sqlucky.sdk.db.InsertPreparedStatementDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
+import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * excel 导入到数据库
@@ -26,10 +26,22 @@ public class ExcelToDB {
 
 	private static Logger logger = LogManager.getLogger(ExcelToDB.class);
 
-	public static void toTable(SqluckyConnector dbc, String tablename, String excelFile, List<SheetFieldPo> fields,
-			Integer beginRowIdx, Integer count) {
-		String insertSql = InsertPreparedStatementDao.createPreparedStatementSql(tablename, fields);
+	/**
+	 * excel 数据 插入到数据库
+	 * 
+	 * @param dbc         数据库链接
+	 * @param tablename   数据库表
+	 * @param excelFile   excel文件路径
+	 * @param fields      excel要插入的字段
+	 * @param beginRowIdx 从excel第几行开始插入
+	 * @param count       定义插入的行数
+	 * @throws Exception
+	 */
+	public static void toTable(SqluckyConnector dbc, String tablename, String excelFile, List<ExcelFieldPo> fields,
+			Integer beginRowIdx, Integer count) throws Exception {
+//		String insertSql = InsertPreparedStatementDao.createPreparedStatementSqlForExcel(tablename, fields);
 		Connection conn = dbc.getConn();
+		String errorData = "";
 		try {
 			Workbook workbook = ExcelUtil.readFileToWorkbok(excelFile);
 
@@ -59,32 +71,44 @@ public class ExcelToDB {
 				List<List<String>> rowVals = new ArrayList<>();
 				for (int rowNum = begin; rowNum <= end; rowNum++) {
 					Row hssfRow = sheet.getRow(rowNum);
-					if (hssfRow != null) {
-						List<String> cellVals = new ArrayList<>();
-						rowVals.add(cellVals);
-						// hssfRow.getLastCellNum() 有多少个列
-						for (int j = 0; j < hssfRow.getLastCellNum(); j++) {
-							Cell cell = hssfRow.getCell(j);
-							if (cell != null) {
-								String cellStr = cell.toString();
-								cellVals.add(cellStr);
-							} else {
-								cellVals.add("");
-							}
+					if (hssfRow == null) {
+						continue;
+					}
+					List<String> cellVals = new ArrayList<>();
+					rowVals.add(cellVals);
+					for (ExcelFieldPo epo : fields) {
+						// 匹配到excel的列
+						String rowIdxStr = epo.getExcelRowIdx().get();
+						if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
+							Integer rowidx = Integer.valueOf(rowIdxStr);
+							// 下标从0开始, 需要减1
+							Cell cell = hssfRow.getCell(rowidx - 1);
+							String cellStr = cell.toString();
+							cellVals.add(cellStr);
+						} else { // 使用固定值
+							String fixVal = epo.getFixedValue().get();
+							cellVals.add(fixVal);
 						}
 
-						idx++;
-						if (idx % 100 == 0) {
-							InsertDao.execInsertBySheetFieldPo(conn, tablename, fields, rowVals);
-							rowVals.clear();
-						}
 					}
 
+//					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals);
+//					rowVals.clear();
+					idx++;
+					if (idx % 100 == 0) {
+						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals);
+						rowVals.clear();
+					}
+				}
+				if (rowVals.size() > 0) {
+					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals);
+					rowVals.clear();
 				}
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
 
 	}
