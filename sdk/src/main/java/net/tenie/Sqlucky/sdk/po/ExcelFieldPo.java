@@ -51,6 +51,8 @@ public class ExcelFieldPo extends SheetFieldPo {
 					}
 				}
 
+			} else {
+				excelRowIdx.setValue("");
 			}
 		});
 	}
