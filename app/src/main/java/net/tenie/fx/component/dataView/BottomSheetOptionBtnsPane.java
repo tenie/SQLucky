@@ -101,9 +101,10 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		this.getChildren().addAll(btnHbox, hideBottom, lb);
 
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
-
-		AnchorPane.setTopAnchor(lb, 3.0);
 		AnchorPane.setRightAnchor(lb, 40.0);
+		AnchorPane.setTopAnchor(hideBottom, 3.0);
+		AnchorPane.setTopAnchor(lb, 6.0);
+		AnchorPane.setTopAnchor(btnHbox, 3.0);
 	}
 
 	/**

@@ -163,43 +163,13 @@ public class ImportExcelWindow {
 		Button selectFileBtn = new Button("...");
 		selectFileBtn.setOnAction(e -> {
 			// 获取文件
-			File file = FileOrDirectoryChooser.selectExcelFile(new Stage());
+			File file = FileOrDirectoryChooser.selectExcelFile(stage);
 			if (file != null) {
 				tfFilePath.setText(file.getAbsolutePath());
 			}
 
 		});
 		return selectFileBtn;
-	}
-
-	// 通过数据库的链接 生成数据模型
-	public static SqluckyConnector generateModelData(TextField tfModelName) {
-		AppComponent appComponent = ComponentGetter.appComponent;
-		Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
-		String selectConnName = connNameChoiceBox.getValue();
-		SqluckyConnector sqluckyConn = sqluckyConnMap.get(selectConnName);
-		String modelNameStr = tfModelName.getText();
-
-		// 载入动画
-//		LoadingAnimation.loadingAnimation("Saving....", v -> {
-//			try {
-//				// 生成数据
-//				var tmpDataModelPoVal = DataModelMySQLDao.generateMySqlModel(sqluckyConn, modelNameStr);
-//				var mid = tmpDataModelPoVal.getId();
-//				// 数据插入到数据库
-////					Long mid = DataModelUtility.insertDataModel(tmpDataModelPoVal);
-//				// 插入模型节点
-//				DataModelUtility.addModelItem(mid, DataModelTabTree.treeRoot);
-//				Platform.runLater(() -> {
-//					stage.close();
-//				});
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//				MyAlert.errorAlert(e1.getMessage());
-//			}
-//		});
-
-		return sqluckyConn;
 	}
 
 	// 下一步按钮
