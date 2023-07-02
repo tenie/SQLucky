@@ -74,9 +74,6 @@ public class ImportExcelNextWindow {
 	private static SqluckyConnector sqluckyConn;
 
 	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath) {
-//		ObservableList<SheetFieldPo> fieldPos = showTableFieldType(dbc, tableName);
-//		List<ExcelMapper> ls = FieldToList(fieldPos, tableName);
-//		List<Region> nodes = fieldListToComponents(ls);
 		sqluckyConn = dbc;
 		excelFile = excelFilePath;
 		tableName = tableNameVal;
@@ -270,49 +267,6 @@ public class ImportExcelNextWindow {
 		AnchorPane.setRightAnchor(cancel, 60.0);
 		return btnPane;
 	}
-
-//	public static ObservableList<SheetFieldPo> showTableFieldType(SqluckyConnector dbc, String tablename) {
-//		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
-//		ObservableList<SheetFieldPo> fields = null;
-//		try {
-//			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
-//			fields = DP.getFields();
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		}
-//		return fields;
-//	}
-
-	// 将表字段对象转换为列表
-//	public static List<ExcelMapper> FieldToList(ObservableList<SheetFieldPo> fields, String tableName) {
-//		List<ExcelMapper> ls = new ArrayList<>();
-//		for (SheetFieldPo po : fields) {
-//			ExcelMapper em = new ExcelMapper();
-//			em.setTableName(new SimpleStringProperty(tableName));
-//			em.setFieldName(new SimpleStringProperty(po.getColumnLabel().get()));
-//			em.setExcelRow(new SimpleStringProperty(""));
-//			em.setValue(new SimpleStringProperty(""));
-//			ls.add(em);
-//		}
-//		return ls;
-//	}
-
-	//
-//	public static List<Region> fieldListToComponents(List<ExcelMapper> fields) {
-//
-//		List<Region> list = new ArrayList<>();
-//		for (ExcelMapper em : fields) {
-//			Label fieldLabel = new Label(em.getFieldName().get());
-//
-//			TextField fieldVal = new TextField();
-//			fieldVal.textProperty().bind(em.getValue());
-//			list.add(fieldLabel);
-//			list.add(fieldVal);
-//		}
-//
-//		return list;
-//	}
 
 	// 其他设置
 	public static List<Region> otherSet() {
