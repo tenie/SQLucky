@@ -107,7 +107,7 @@ public class ImportExcelWindow {
 	// 选择数据链接名称
 	public static ChoiceBox<String> ChoiceBoxDbConnection(String selVal) {
 		AppComponent appComponent = ComponentGetter.appComponent;
-		List<String> connNames = appComponent.getAllConnectorName();
+		List<String> connNames = appComponent.getAllActiveConnectorName();
 
 		ObservableList<String> connNameVals = FXCollections.observableArrayList(connNames);
 
@@ -140,6 +140,14 @@ public class ImportExcelWindow {
 
 		tfFilePath = new TextField();
 		tfFilePath.setPromptText(filePath);
+		tfFilePath.setOnMouseClicked(v -> {
+			String fileVal = tfFilePath.getText();
+			if (StrUtils.isNullOrEmpty(fileVal)) {
+				getFilePathAction();
+			}
+
+		});
+
 		HBox fileBox = new HBox();
 		Button selectFile = openFileBtn(tfFilePath);
 		fileBox.getChildren().addAll(tfFilePath, selectFile);
@@ -158,16 +166,19 @@ public class ImportExcelWindow {
 
 	}
 
+	private static void getFilePathAction() {
+		// 获取文件
+		File file = FileOrDirectoryChooser.selectExcelFile(stage);
+		if (file != null) {
+			tfFilePath.setText(file.getAbsolutePath());
+		}
+	}
+
 	// 选取文件按钮
 	public static Button openFileBtn(TextField tfFilePath) {
 		Button selectFileBtn = new Button("...");
 		selectFileBtn.setOnAction(e -> {
-			// 获取文件
-			File file = FileOrDirectoryChooser.selectExcelFile(stage);
-			if (file != null) {
-				tfFilePath.setText(file.getAbsolutePath());
-			}
-
+			getFilePathAction();
 		});
 		return selectFileBtn;
 	}
@@ -177,6 +188,14 @@ public class ImportExcelWindow {
 		Button btn = new Button("next");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(v -> {
+			// 文件是否存在
+			String fileval = tfFilePath.getText();
+			File filePath = new File(fileval);
+			if (!filePath.exists()) {
+				MyAlert.errorAlert("文件不存在; " + filePath, true);
+				return;
+			}
+
 			String connName = connNameChoiceBox.getValue();
 			AppComponent appComponent = ComponentGetter.appComponent;
 			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();

@@ -3,7 +3,6 @@ package net.tenie.Sqlucky.sdk.subwindow;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,7 +17,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -34,8 +32,6 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.DaoTools;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -60,10 +56,6 @@ public class ImportExcelNextWindow {
 
 	private static Stage stage;
 	private static Logger logger = LogManager.getLogger(ImportExcelNextWindow.class);
-
-	private static ChoiceBox<String> connNameChoiceBox;
-	private static TextField tfTabName;
-	private static TextField tfFilePath;
 
 	private static TextField beginIdTF;
 	private static TextField conuntTF;
@@ -304,7 +296,6 @@ public class ImportExcelNextWindow {
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 10, 10, 10));
 
-		// new ArrayList<>();
 		List<Region> list = otherSet();
 
 		int i = 0;
@@ -324,41 +315,12 @@ public class ImportExcelNextWindow {
 		stage.show();
 	}
 
-	// 通过数据库的链接 生成数据模型
-	public static SqluckyConnector generateModelData(TextField tfModelName) {
-		AppComponent appComponent = ComponentGetter.appComponent;
-		Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
-		String selectConnName = connNameChoiceBox.getValue();
-		SqluckyConnector sqluckyConn = sqluckyConnMap.get(selectConnName);
-		String modelNameStr = tfModelName.getText();
-
-		// 载入动画
-//		LoadingAnimation.loadingAnimation("Saving....", v -> {
-//			try {
-//				// 生成数据
-//				var tmpDataModelPoVal = DataModelMySQLDao.generateMySqlModel(sqluckyConn, modelNameStr);
-//				var mid = tmpDataModelPoVal.getId();
-//				// 数据插入到数据库
-////					Long mid = DataModelUtility.insertDataModel(tmpDataModelPoVal);
-//				// 插入模型节点
-//				DataModelUtility.addModelItem(mid, DataModelTabTree.treeRoot);
-//				Platform.runLater(() -> {
-//					stage.close();
-//				});
-//			} catch (Exception e1) {
-//				e1.printStackTrace();
-//				MyAlert.errorAlert(e1.getMessage());
-//			}
-//		});
-
-		return sqluckyConn;
-	}
-
 	// 下一步按钮
 	public static Button saveBtnSetup() {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(e -> {
+
 			List<ExcelFieldPo> vals = new ArrayList<>();
 			// 提取有被映射的字段
 			for (ExcelFieldPo fieldpo : excelFields) {
@@ -369,7 +331,6 @@ public class ImportExcelNextWindow {
 				}
 
 			}
-			//
 			String beginInt = beginIdTF.getText();
 			String countInt = conuntTF.getText();
 			Integer beginval = null;
