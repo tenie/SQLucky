@@ -13,6 +13,7 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.KeyBindingCache;
+import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -27,7 +28,12 @@ import net.tenie.fx.window.DataTransferWindow;
 import net.tenie.fx.window.KeysBindWindow;
 import net.tenie.fx.window.SignInWindow;
 
-/*   @author tenie */
+/**
+ * 顶部菜单栏
+ * 
+ * @author tenie
+ *
+ */
 public class MenuBarContainer {
 	private static Logger logger = LogManager.getLogger(MenuBarContainer.class);
 	private MenuBar mainMenuBar;
@@ -89,9 +95,7 @@ public class MenuBarContainer {
 		});
 		KeyBindingCache.menuItemBinding(exit);
 
-		mn.getItems().addAll(open,
-//				openEncoding, 
-				Save, new SeparatorMenuItem(), exit);
+		mn.getItems().addAll(open, Save, new SeparatorMenuItem(), exit);
 		return mn;
 	}
 
@@ -245,7 +249,7 @@ public class MenuBarContainer {
 	Menu createToolsMenu() {
 		Menu mn = new Menu("Tools");
 		// 数据迁移
-		MenuItem dataTransfer = new MenuItem(StrUtils.MenuItemNameFormat("Data TransFer"));
+		MenuItem dataTransfer = new MenuItem(StrUtils.MenuItemNameFormat("Data Transfer"));
 		dataTransfer.setGraphic(IconGenerator.svgImageDefActive("mfglabs-random"));
 		dataTransfer.setOnAction(value -> {
 			if (dtw == null) {
@@ -254,6 +258,14 @@ public class MenuBarContainer {
 			dtw.show();
 
 		});
+
+		// 导入数据
+		MenuItem importExcel = new MenuItem(StrUtils.MenuItemNameFormat("Import Excel"));
+		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		importExcel.setOnAction(value -> {
+			ImportExcelWindow.showWindow("", "");
+		});
+
 		MenuItem addDB = new MenuItem(StrUtils.MenuItemNameFormat("Add New DB Connection"));
 		addDB.setOnAction(value -> {
 			ConnectionEditor.ConnectionInfoSetting();
@@ -358,10 +370,9 @@ public class MenuBarContainer {
 
 		});
 
-		mn.getItems().addAll(dataTransfer, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn, closeALlConn,
-				deleteConn, new SeparatorMenuItem(), hideLeft, hideBottom, hideLeftBottom, new SeparatorMenuItem()
-//				, EnCoding
-				, Theme, new SeparatorMenuItem(), fontSize, keysBind);
+		mn.getItems().addAll(dataTransfer, importExcel, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn,
+				closeALlConn, deleteConn, new SeparatorMenuItem(), hideLeft, hideBottom, hideLeftBottom,
+				new SeparatorMenuItem(), Theme, new SeparatorMenuItem(), fontSize, keysBind);
 
 		KeyBindingCache.menuItemBinding(fontSizeMinus);
 		KeyBindingCache.menuItemBinding(fontSizePlus);
@@ -372,7 +383,6 @@ public class MenuBarContainer {
 
 	Menu createHelpMenu() {
 		Menu mn = new Menu("Help");
-//		mn.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
 		MenuItem about = new MenuItem(StrUtils.MenuItemNameFormat("About"));
 		about.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
 		about.setOnAction(value -> {
@@ -382,31 +392,20 @@ public class MenuBarContainer {
 		MenuItem SignInMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign In"));
 		SignInMenuItem.setGraphic(IconGenerator.svgImageDefActive("sign-in"));
 		SignInMenuItem.setOnAction(value -> {
-//			SignInWindow.createWorkspaceConfigWindow();
 			SignInWindow.show("");
 		});
 
 		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));
 		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("windows-clipboard-variant-edit"));
 		SignUpMenuItem.setOnAction(value -> {
-//			SignUpWindow.createWorkspaceConfigWindow();
 			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/");
 		});
 
 		MenuItem checkForUpdates = new MenuItem(StrUtils.MenuItemNameFormat("Check For Updates"));
-//		checkForUpdates.setGraphic(IconGenerator.svgImageDefActive("zero-app-pai"));
 		var svg = IconGenerator.sqluckyLogoSVG();
 		checkForUpdates.setGraphic(svg);
 		checkForUpdates.setOnAction(value -> {
-
 			CheckUpdateWindow.show("");
-//			String version = HttpUtil.get("http://127.0.0.1:8088/sqlucky/version");
-//			if(ConfigVal.version.equals(version)) {
-//				MyAlert.alertWait("已经是最新版本!");
-//			}else {
-//				
-//			}
-
 		});
 
 		mn.getItems().addAll(SignInMenuItem, SignUpMenuItem, checkForUpdates, new SeparatorMenuItem(), about);
