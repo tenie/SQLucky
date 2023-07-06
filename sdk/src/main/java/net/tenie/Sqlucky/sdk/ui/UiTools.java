@@ -3,6 +3,8 @@ package net.tenie.Sqlucky.sdk.ui;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 
 public class UiTools {
 	/**
@@ -40,5 +42,23 @@ public class UiTools {
 		filterPane.getChildren().addAll(txt, clean);
 
 		return filterPane;
+	}
+
+	// 选取文件按钮
+	public static Button openExcelFileBtn(TextField tfFilePath, Stage stage) {
+		Button selectFileBtn = new Button("...");
+		selectFileBtn.setOnAction(e -> {
+			FileOrDirectoryChooser.getExcelFilePathAction(tfFilePath, stage);
+		});
+		return selectFileBtn;
+	}
+
+	// 选取文件按钮
+	public static Button openFileBtn(TextField tfFilePath, Stage stage) {
+		Button selectFileBtn = new Button("...");
+		selectFileBtn.setOnAction(e -> {
+			FileOrDirectoryChooser.getAllFilePathAction(tfFilePath, stage);
+		});
+		return selectFileBtn;
 	}
 }
