@@ -29,6 +29,7 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
+import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -53,7 +54,7 @@ public class ImportExcelWindow {
 	private static AnchorPane btnPane(String tableName) {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
-		Button nextbtn = nextBtn(tableName);
+		Button nextbtn = nextBtn();
 
 		nextbtn.disableProperty().bind(connNameChoiceBox.valueProperty().isNull()
 				.or(tfTabName.textProperty().isEmpty().or(tfFilePath.textProperty().isEmpty())));
@@ -143,13 +144,13 @@ public class ImportExcelWindow {
 		tfFilePath.setOnMouseClicked(v -> {
 			String fileVal = tfFilePath.getText();
 			if (StrUtils.isNullOrEmpty(fileVal)) {
-				getFilePathAction();
+				FileOrDirectoryChooser.getExcelFilePathAction(tfFilePath, stage);
 			}
 
 		});
 
 		HBox fileBox = new HBox();
-		Button selectFile = openFileBtn(tfFilePath);
+		Button selectFile = UiTools.openExcelFileBtn(tfFilePath, stage);
 		fileBox.getChildren().addAll(tfFilePath, selectFile);
 
 		List<Region> list = new ArrayList<>();
@@ -166,25 +167,17 @@ public class ImportExcelWindow {
 
 	}
 
-	private static void getFilePathAction() {
-		// 获取文件
-		File file = FileOrDirectoryChooser.selectExcelFile(stage);
-		if (file != null) {
-			tfFilePath.setText(file.getAbsolutePath());
-		}
-	}
-
-	// 选取文件按钮
-	public static Button openFileBtn(TextField tfFilePath) {
-		Button selectFileBtn = new Button("...");
-		selectFileBtn.setOnAction(e -> {
-			getFilePathAction();
-		});
-		return selectFileBtn;
-	}
+//	// 选取文件按钮
+//	public static Button openFileBtn(TextField tfFilePath) {
+//		Button selectFileBtn = new Button("...");
+//		selectFileBtn.setOnAction(e -> {
+//			FileOrDirectoryChooser.getFilePathAction(tfFilePath, stage);
+//		});
+//		return selectFileBtn;
+//	}
 
 	// 下一步按钮
-	public static Button nextBtn(String tableName) {
+	public static Button nextBtn() {
 		Button btn = new Button("next");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(v -> {
@@ -200,7 +193,7 @@ public class ImportExcelWindow {
 			AppComponent appComponent = ComponentGetter.appComponent;
 			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
 			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
-
+			String tableName = tfTabName.getText();
 			ImportExcelNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText());
 			stage.close();
 		});
@@ -241,7 +234,7 @@ public class ImportExcelWindow {
 		});
 
 		CommonUtility.loadCss(scene);
-		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setScene(scene);
 
 		stage.setMaximized(false);

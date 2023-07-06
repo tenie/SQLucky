@@ -37,8 +37,8 @@ public class ExcelToDB {
 	 * @param count       定义插入的行数
 	 * @throws Exception
 	 */
-	public static void toTable(SqluckyConnector dbc, String tablename, String excelFile, List<ExcelFieldPo> fields,
-			Integer beginRowIdx, Integer count) throws Exception {
+	public static void toTable(SqluckyConnector dbc, String tablename, String excelFile, String saveSqlFile,
+			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count) throws Exception {
 //		String insertSql = InsertPreparedStatementDao.createPreparedStatementSqlForExcel(tablename, fields);
 		Connection conn = dbc.getConn();
 		String errorData = "";
@@ -96,12 +96,12 @@ public class ExcelToDB {
 //					rowVals.clear();
 					idx++;
 					if (idx % 100 == 0) {
-						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals);
+						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile);
 						rowVals.clear();
 					}
 				}
 				if (rowVals.size() > 0) {
-					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals);
+					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile);
 					rowVals.clear();
 				}
 			}
