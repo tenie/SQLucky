@@ -1,11 +1,14 @@
 package net.tenie.Sqlucky.sdk.db;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -232,7 +235,7 @@ public class InsertDao {
 	 * @throws Exception
 	 */
 	public static String execInsertByExcelField(Connection conn, String tableName, List<ExcelFieldPo> fields,
-			List<List<String>> rowVals) throws Exception {
+			List<List<String>> rowVals, String saveSqlfile) throws Exception {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
@@ -255,6 +258,7 @@ public class InsertDao {
 
 			Statement sm = conn.createStatement();
 			insertLog = insert;
+			List<String> inSqls = new ArrayList<>();
 
 			for (List<String> fieldsValue : rowVals) {
 				String insertValue = "";
@@ -302,15 +306,17 @@ public class InsertDao {
 				}
 				if (insertValue.endsWith(",")) {
 					insertValue = insertValue.substring(0, insertValue.length() - 1);
-					insert += insertValue + " )";
-					logger.info(insert);
-					sm.addBatch(insert);
+//					insert += insertValue + " )";
+					insertValue = insert + insertValue + " )";
+					logger.info(insertValue);
+					sm.addBatch(insertValue);
+					inSqls.add(insertValue + ";");
 				}
 			}
 			int[] count = sm.executeBatch();
 			int execCountLen = count.length;
 			logger.info("instert = " + execCountLen);
-
+			FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
 			msg = "Insert " + execCountLen + " ;\n" + insertLog + "; \n" + valLog;
 		} catch (Exception e) {
 			e.printStackTrace();

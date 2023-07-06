@@ -8,6 +8,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.cell.ComboBox2TableCell;
 
+import com.jfoenix.controls.JFXCheckBox;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -27,6 +29,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
@@ -43,6 +46,7 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
+import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -59,6 +63,7 @@ public class ImportExcelNextWindow {
 
 	private static TextField beginIdTF;
 	private static TextField conuntTF;
+	private static TextField tfFilePath;
 
 	private static String excelFile;
 	private static String tableName;
@@ -263,17 +268,36 @@ public class ImportExcelNextWindow {
 	// 其他设置
 	public static List<Region> otherSet() {
 		Label lb1 = new Label("起始行号");
-		Label lb2 = new Label("导入行数");
 		beginIdTF = new TextField();
 		beginIdTF.setPromptText("默认第一行开始");
+//		HBox b1 = new HBox();
+//		b1.getChildren().addAll(lb1, beginIdTF);
+
+		Label lb2 = new Label("导入行数");
 		conuntTF = new TextField();
 		conuntTF.setPromptText("默认全部");
+//		HBox b2 = new HBox();
+//		b2.getChildren().addAll(lb2, conuntTF);
+
+		JFXCheckBox saveSql = new JFXCheckBox("导入SQL保存到文件");
+		tfFilePath = new TextField();
+		tfFilePath.disableProperty().bind(saveSql.selectedProperty().not());
+		Button selectFile = UiTools.openFileBtn(tfFilePath, stage);
+		selectFile.disableProperty().bind(saveSql.selectedProperty().not());
+
+		HBox b2 = new HBox();
+		b2.getChildren().addAll(tfFilePath, selectFile);
 
 		List<Region> nds = new ArrayList<>();
+//		nds.add(b1);
+//		nds.add(b2);
 		nds.add(lb1);
 		nds.add(beginIdTF);
 		nds.add(lb2);
 		nds.add(conuntTF);
+		nds.add(saveSql);
+		nds.add(b2);
+
 		return nds;
 	}
 
@@ -349,7 +373,8 @@ public class ImportExcelNextWindow {
 			Integer tmpCountval = countval;
 			LoadingAnimation.loadingAnimation("Saving....", v -> {
 				try {
-					ExcelToDB.toTable(sqluckyConn, tableName, excelFile, vals, tmpBeginval, tmpCountval);
+					ExcelToDB.toTable(sqluckyConn, tableName, excelFile, tfFilePath.getText(), vals, tmpBeginval,
+							tmpCountval);
 					MyAlert.infoAlert("导入成功!");
 				} catch (Exception e1) {
 					MyAlert.showTextArea("Error", "导入失败 ! \n" + e1.getMessage());
@@ -394,7 +419,7 @@ public class ImportExcelNextWindow {
 
 		stage.setTitle(title);
 		CommonUtility.loadCss(scene);
-		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setScene(scene);
 
 		stage.setMaximized(false);

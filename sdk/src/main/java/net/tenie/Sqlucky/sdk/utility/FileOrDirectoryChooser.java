@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 
+import javafx.scene.control.TextField;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -221,6 +222,22 @@ public final class FileOrDirectoryChooser {
 		getExcelFileChooser();
 		File file = fileChooser.showOpenDialog(stage);
 		return file;
+	}
+
+	public static void getExcelFilePathAction(TextField tfFilePath, Stage stage) {
+		// 获取文件
+		File file = FileOrDirectoryChooser.selectExcelFile(stage);
+		if (file != null) {
+			tfFilePath.setText(file.getAbsolutePath());
+		}
+	}
+
+	public static void getAllFilePathAction(TextField tfFilePath, Stage stage) {
+		// 获取文件
+		File file = FileOrDirectoryChooser.showOpenAllFile("", stage);
+		if (file != null) {
+			tfFilePath.setText(file.getAbsolutePath());
+		}
 	}
 
 }
