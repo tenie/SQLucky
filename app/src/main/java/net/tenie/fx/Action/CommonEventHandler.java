@@ -270,7 +270,7 @@ public class CommonEventHandler {
 								fieldsName.append(", \n");
 
 							}
-							if (StrUtils.isNotNullOrEmpty(fieldsName)) {
+							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
 								String rsStr = fieldsName.toString().trim();
 								CommonUtility.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
 							}
@@ -304,7 +304,7 @@ public class CommonEventHandler {
 								fieldsName.append("\n");
 
 							}
-							if (StrUtils.isNotNullOrEmpty(fieldsName)) {
+							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
 								CommonUtility.setClipboardVal(fieldsName.toString());
 							}
 						}

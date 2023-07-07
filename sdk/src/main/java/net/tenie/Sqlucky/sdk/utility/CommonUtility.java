@@ -44,6 +44,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
@@ -62,94 +63,100 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
  */
 public class CommonUtility {
 	private static Logger logger = LogManager.getLogger(CommonUtility.class);
-	private static ArrayBlockingQueue<Consumer< String >> queue = new ArrayBlockingQueue<>(1);
-	
+	private static ArrayBlockingQueue<Consumer<String>> queue = new ArrayBlockingQueue<>(1);
+
 	public static String themeColor() {
 		String color = "#1C94FF";
-		if(ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+		if (ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
 			color = "#FDA232";
 		}
 		return color;
 	}
+
 	// 加载css样式
-		public static void loadCss(Scene scene) {
-			scene.getStylesheets().clear();
-			logger.info(ConfigVal.THEME);
-			if(ConfigVal.THEME.equals( CommonConst.THEME_DARK )) {
-				scene.getStylesheets().addAll(ConfigVal.cssList);
-			}else if(ConfigVal.THEME.equals( CommonConst.THEME_LIGHT)) { 
-				scene.getStylesheets().addAll(ConfigVal.cssListLight); 
-				
-			}else if(ConfigVal.THEME.equals( CommonConst.THEME_YELLOW)) { 
-				scene.getStylesheets().addAll(ConfigVal.cssListYellow); 
-				
-			}
-			
+	public static void loadCss(Scene scene) {
+		scene.getStylesheets().clear();
+		logger.info(ConfigVal.THEME);
+		if (ConfigVal.THEME.equals(CommonConst.THEME_DARK)) {
+			scene.getStylesheets().addAll(ConfigVal.cssList);
+		} else if (ConfigVal.THEME.equals(CommonConst.THEME_LIGHT)) {
+			scene.getStylesheets().addAll(ConfigVal.cssListLight);
+
+		} else if (ConfigVal.THEME.equals(CommonConst.THEME_YELLOW)) {
+			scene.getStylesheets().addAll(ConfigVal.cssListYellow);
+
+		}
+
+		// 加载自定义的css
+		String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
+		File cssf = new File(path);
+		if (!cssf.exists()) {
+			setFontSize(14);
+		}
+		String uri = Paths.get(path).toUri().toString();
+
+		scene.getStylesheets().add(uri);
+
+	}
+
+	// 设置字符大小
+	static public void setFontSize(int i) {
+		String val = "/*" + i + "*/ \n" + ".myLineNumberlineno{ \n" + "	-fx-font-size :	" + i + "; \n" + "} \n"
+				+ ".code-area{\n" + "	-fx-font-size :	" + i + "; \n" + "} \n" + "";
+		try {
+			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
+			FileTools.saveByEncode(path, val, "UTF-8");
+//				loadCss(ComponentGetter.primaryscene);  
 			// 加载自定义的css
-			String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css"; 
-			File cssf = new File(path); 
-			if( ! cssf.exists() ) { 
+			File cssf = new File(path);
+			if (!cssf.exists()) {
 				setFontSize(14);
 			}
-			String uri = Paths.get(path).toUri().toString();  
-			 
-			scene.getStylesheets().add(uri);
-			
-		     
-		}
-		
-		// 设置字符大小
-		static public void setFontSize(int i) { 
-			String val = 
-					"/*"+i+"*/ \n" +
-					".myLineNumberlineno{ \n" + 
-					"	-fx-font-size :	"+i+"; \n" + 
-					"} \n" +
-					".code-area{\n"+
-					"	-fx-font-size :	"+i+"; \n" +
-				    "} \n" +
-					"";
-			try {
-				String path = FileUtils.getUserDirectoryPath() + "/.sqlucky/font-size.css";
-				FileTools.saveByEncode( path , val,"UTF-8");
-				loadCss(ComponentGetter.primaryscene);  
-				
-			} catch (IOException e) { 
-				e.printStackTrace();
+			String uri = Paths.get(path).toUri().toString();
+			if (ComponentGetter.primaryscene.getStylesheets().contains(uri)) {
+				ComponentGetter.primaryscene.getStylesheets().remove(uri);
 			}
+			Platform.runLater(() -> {
+				ComponentGetter.primaryscene.getStylesheets().add(uri);
+			});
+
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		 
+	}
+
 	/**
 	 * 延迟执行, 如果有任务在队列中, 会抛弃任务不执行
+	 * 
 	 * @param caller
 	 * @param milliseconds
 	 */
-	public static void delayRunThread(Consumer< String >  caller, int milliseconds) {
-		if ( queue.isEmpty() ) {
-			 queue.offer(caller);  // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
-			 
-			 Thread t = new Thread() {
-					public void run() { 
-						
-						try {
-							Thread.sleep(milliseconds);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						var cl = queue.poll();  // 从队列取出一个元素
-						if(cl != null) {
-							cl.accept("");
-						}
+	public static void delayRunThread(Consumer<String> caller, int milliseconds) {
+		if (queue.isEmpty()) {
+			queue.offer(caller); // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
+
+			Thread t = new Thread() {
+				public void run() {
+
+					try {
+						Thread.sleep(milliseconds);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
 					}
-				};
-				t.start();
-			 
-		}else {
-			return ;
-		}  
-		
+					var cl = queue.poll(); // 从队列取出一个元素
+					if (cl != null) {
+						cl.accept("");
+					}
+				}
+			};
+			t.start();
+
+		} else {
+			return;
+		}
+
 	}
-	
+
 	public static void runThread(Function<Object, Object> fun) {
 		Thread t = new Thread() {
 			public void run() {
@@ -158,8 +165,8 @@ public class CommonUtility {
 		};
 		t.start();
 	}
-	
-	public static void runThread(Consumer< String >  caller) {
+
+	public static void runThread(Consumer<String> caller) {
 		Thread t = new Thread() {
 			public void run() {
 				caller.accept("");
@@ -167,16 +174,16 @@ public class CommonUtility {
 		};
 		t.start();
 	}
-	
+
 	// 检测文件是否存在
 	public static boolean checkFileExist(String fileName) {
-		File file = new File(fileName); 
+		File file = new File(fileName);
 		if (file.exists() && file.isFile()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	// 获取Tab 中的文本
 	public static String tabText(Tab tb) {
 		String title = tb.getText();
@@ -202,42 +209,38 @@ public class CommonUtility {
 
 	// 判断数据库字段是否是数字类型
 	public static boolean isNum(int type) {
-		if (type == java.sql.Types.BIGINT 
-				|| type == java.sql.Types.BIT 
-				|| type == java.sql.Types.DECIMAL
-				|| type == java.sql.Types.DOUBLE 
-				|| type == java.sql.Types.FLOAT
-				|| type == java.sql.Types.NUMERIC
-				|| type == java.sql.Types.REAL 
-				|| type == java.sql.Types.TINYINT
-				|| type == java.sql.Types.SMALLINT
+		if (type == java.sql.Types.BIGINT || type == java.sql.Types.BIT || type == java.sql.Types.DECIMAL
+				|| type == java.sql.Types.DOUBLE || type == java.sql.Types.FLOAT || type == java.sql.Types.NUMERIC
+				|| type == java.sql.Types.REAL || type == java.sql.Types.TINYINT || type == java.sql.Types.SMALLINT
 				|| type == java.sql.Types.INTEGER) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public static boolean isDateAndDateTime(int type) {
 		if (type == java.sql.Types.DATE || type == java.sql.Types.TIME || type == java.sql.Types.TIMESTAMP) {
 			return true;
 		}
 		return false;
 	}
+
 	// 时间类型判断, 时分秒
-		public static boolean isTime(int type) {
-			if ( type == java.sql.Types.TIME) {
-				return true;
-			}
-			return false;
-		}
-	// 时间类型判断, 时分秒
-	public static boolean isDateTime(int type) {
-		if ( type == java.sql.Types.TIMESTAMP) {
+	public static boolean isTime(int type) {
+		if (type == java.sql.Types.TIME) {
 			return true;
 		}
 		return false;
 	}
-	
+
+	// 时间类型判断, 时分秒
+	public static boolean isDateTime(int type) {
+		if (type == java.sql.Types.TIMESTAMP) {
+			return true;
+		}
+		return false;
+	}
+
 	// 时间类型判断, 没有时分秒
 	public static boolean isDate(int type) {
 		if (type == java.sql.Types.DATE) {
@@ -248,27 +251,21 @@ public class CommonUtility {
 
 	// 字符串类型判断
 	public static boolean isString(int type) {
-		if (type == java.sql.Types.CHAR || 
-				type == java.sql.Types.VARCHAR ||
-				type == java.sql.Types.LONGVARCHAR ||
-				type == java.sql.Types.CLOB
-				
-				) {
+		if (type == java.sql.Types.CHAR || type == java.sql.Types.VARCHAR || type == java.sql.Types.LONGVARCHAR
+				|| type == java.sql.Types.CLOB
+
+		) {
 			return true;
 		}
 		return false;
 	}
-	
-	 
 
 	public static void newStringPropertyChangeListener(StringProperty val, int dbtype) {
 		ChangeListener<String> cl = new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (CommonUtility.isNum(dbtype) 
-				&& !StrUtils.isNumeric(newValue) 
-				&& !"<null>".equals(newValue)) {
-					logger.info("newStringPropertyChangeListener() : newValue= "+newValue+"set fail" );
+				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
+					logger.info("newStringPropertyChangeListener() : newValue= " + newValue + "set fail");
 					Platform.runLater(() -> val.setValue(oldValue));
 					return;
 				}
@@ -276,7 +273,7 @@ public class CommonUtility {
 		};
 		val.addListener(cl);
 	}
-	
+
 	// 添加的新行数据, 保存后, 不允许再修改, (要修改刷新页面)
 	public static void prohibitChangeListener(StringProperty val, String original) {
 		ChangeListener<String> cl = new ChangeListener<String>() {
@@ -307,56 +304,56 @@ public class CommonUtility {
 		});
 
 	}
-	
+
 	// 获取剪贴板的值
 	public static String getClipboardVal() {
 		var cbd = Clipboard.getSystemClipboard();
-		if(cbd != null && cbd.hasString()) {
+		if (cbd != null && cbd.hasString()) {
 			return cbd.getString();
 		}
 		return "";
 	}
-	
+
 	public static boolean clipboardHasString() {
-		var cbd = Clipboard.getSystemClipboard(); 
-		if(cbd != null) {
+		var cbd = Clipboard.getSystemClipboard();
+		if (cbd != null) {
 			return cbd.hasString();
 		}
 		return false;
 	}
-	
+
 	/**
-	 *  等待正在执行的Platform队列执行完毕 
-	 *  在 Platform.runLater中放入一个计数器, 等执行到这个计数器完成说明在它前面的任务已经完成了
+	 * 等待正在执行的Platform队列执行完毕 在 Platform.runLater中放入一个计数器, 等执行到这个计数器完成说明在它前面的任务已经完成了
 	 */
-	public static void platformAwait(){
+	public static void platformAwait() {
 		threadAwait(1);
 	}
-	//TODO
-	public static void threadAwait(int second){
+
+	// TODO
+	public static void threadAwait(int second) {
 		// 设置一次计数
 		CountDownLatch countDownLatch = new CountDownLatch(1);
-		
+
 		// 子线程中睡眠和减计数
 		Thread t = new Thread() {
-			public void run() { 
+			public void run() {
 				try {
 					// 在子线程里 睡眠
 					Thread.sleep(second * 1000);
-				} catch (InterruptedException e) { 
+				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}finally {
+				} finally {
 					// 睡眠完成后 计数减一
 					countDownLatch.countDown();
 				}
 			}
 		};
 		t.start();
-		
-	    try {
-	    	// countDownLatch 如果不为0 会在这阻塞.
+
+		try {
+			// countDownLatch 如果不为0 会在这阻塞.
 			countDownLatch.await();
-		} catch (InterruptedException e) { 
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
@@ -371,7 +368,7 @@ public class CommonUtility {
 		logger.debug(max);
 		return max;
 	}
-	
+
 	public static int getMin(int[] arr) {
 		int min = arr[0];
 		for (int i = 1; i < arr.length; i++) {
@@ -382,8 +379,10 @@ public class CommonUtility {
 		logger.debug(min);
 		return min;
 	}
+
 	/**
 	 * node 进行旋转的动画, 设置旋转9999次
+	 * 
 	 * @param pointer
 	 */
 	public static void rotateTransition(Node pointer) {
@@ -406,13 +405,15 @@ public class CommonUtility {
 		rotateTransition.setAutoReverse(false);
 		rotateTransition.play();
 	}
+
 	/**
 	 * 添加显示动画, 动画有问题先注释了
+	 * 
 	 * @param node
 	 * @param ms
 	 */
-	public static void fadeTransition(Node node , double ms ) {
-		   // 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
+	public static void fadeTransition(Node node, double ms) {
+		// 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
 //        FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
 //        fadeTransition.setFromValue(0.0);   // 设置起始透明度为1.0，表示不透明
 //        fadeTransition.setToValue(1.0);     // 设置结束透明度为0.0，表示透明
@@ -421,32 +422,34 @@ public class CommonUtility {
 //        fadeTransition.setNode(node);         // 设置动画应用的节点
 //        fadeTransition.play();                  // 播放动画 
 	}
+
 	// 对节点实验隐藏动画, 动画有问题, 先注释了
-	public static FadeTransition fadeTransitionHidden(Node node , double ms ) {
-		   // 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
-     FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
+	public static FadeTransition fadeTransitionHidden(Node node, double ms) {
+		// 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
+		FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
 //     fadeTransition.setFromValue(1);   // 设置起始透明度为1.0，表示不透明
 //     fadeTransition.setToValue(0);     // 设置结束透明度为0.0，表示透明
 //     fadeTransition.setCycleCount(1);     // 设置循环周期为无限
 //     fadeTransition.setAutoReverse(true);    // 设置自动反转
 //     fadeTransition.setNode(node);         // 设置动画应用的节点
 //     fadeTransition.play();                  // 播放动画 
-     return fadeTransition;
+		return fadeTransition;
 	}
+
 	// 对节点实验隐藏动画, 动画有问题, 先注释了
-	public static FadeTransition fadeTransitionHidden(Node node , double ms, double val) {
-		   // 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
-		  FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
+	public static FadeTransition fadeTransitionHidden(Node node, double ms, double val) {
+		// 从下面语句创建一个淡入淡出效果对象并设置持续事件为2S
+		FadeTransition fadeTransition = new FadeTransition(Duration.millis(ms));
 //		  fadeTransition.setFromValue(1);   // 设置起始透明度为1.0，表示不透明
 //		  fadeTransition.setToValue(val);     // 设置结束透明度为0.0，表示透明
 //		  fadeTransition.setCycleCount(1);     // 设置循环周期为无限
 //		  fadeTransition.setAutoReverse(true);    // 设置自动反转
 //		  fadeTransition.setNode(node);         // 设置动画应用的节点
 //		  fadeTransition.play();                  // 播放动画 
-		  return fadeTransition;
+		return fadeTransition;
 	}
-	
-	public static  boolean isMacOS() {
+
+	public static boolean isMacOS() {
 		String os_name = System.getProperty("os.name");
 		if (os_name.toLowerCase().startsWith("mac")) {
 			return true;
@@ -454,40 +457,41 @@ public class CommonUtility {
 		return false;
 	}
 
-	public static   boolean isWinOS() {
+	public static boolean isWinOS() {
 		String os_name = System.getProperty("os.name");
 		if (os_name.toLowerCase().startsWith("win")) {
 			return true;
 		}
 		return false;
 	}
-	
-	public static   boolean isLinuxOS() {
+
+	public static boolean isLinuxOS() {
 		String os_name = System.getProperty("os.name");
 		if (os_name.toLowerCase().startsWith("linux")) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	public static String osName() {
 		String os_name = System.getProperty("os.name");
 		if (os_name.toLowerCase().startsWith("linux")) {
 			return "linux";
-		}else if (os_name.toLowerCase().startsWith("win")) {
+		} else if (os_name.toLowerCase().startsWith("win")) {
 			return "win";
-		}else if (os_name.toLowerCase().startsWith("mac")) {
+		} else if (os_name.toLowerCase().startsWith("mac")) {
 			return "mac";
 		}
 		return "";
 	}
+
 	// 给控件加样式
 	public static void addCssClass(Node nd, String css) {
 		nd.getStyleClass().add(css);
 	}
-	
+
 	// 打开系统的文件窗口
-	public static void openExplorer(File file) { 
+	public static void openExplorer(File file) {
 		EventQueue.invokeLater(() -> {
 			try {
 				Desktop.getDesktop().open(file);
@@ -497,220 +501,217 @@ public class CommonUtility {
 		});
 
 	}
-	
+
 	//
-	public static String  readFileText(File file, String encode) {
+	public static String readFileText(File file, String encode) {
 		String val = "";
-		try { 
-			if( ! file.exists()) return val;
-			val = FileUtils.readFileToString(file, encode); 
-			
-		} catch (IOException e) { 
+		try {
+			if (!file.exists())
+				return val;
+			val = FileUtils.readFileToString(file, encode);
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		 return val;
+		return val;
 	}
 
-	
-	
-	
 	public static void folderMethod1(String path) {
-        int fileNum = 0, folderNum = 0;
-        File file = new File(path);
-        LinkedList<File> list = new LinkedList<>();
+		int fileNum = 0, folderNum = 0;
+		File file = new File(path);
+		LinkedList<File> list = new LinkedList<>();
 
-        if (file.exists()) {
-            if (null == file.listFiles()) {
-                return;
-            }
-            list.addAll(Arrays.asList(file.listFiles()));
-            while (!list.isEmpty()) {
-                File[] files = list.removeFirst().listFiles();
-                if (null == files) {
-                    continue;
-                }
-                for (File f : files) {
-                    if (f.isDirectory()) {
-                        logger.debug("文件夹:" + f.getAbsolutePath());
-                        list.add(f);
-                        folderNum++;
-                    } else {
-                        logger.debug("文件:" + f.getAbsolutePath());
-                        fileNum++;
-                    }
-                }
-            }
-        } else {
-            logger.debug("文件不存在!");
-        }
-        logger.debug("文件夹数量:" + folderNum + ",文件数量:" + fileNum);
-    }
-	
+		if (file.exists()) {
+			if (null == file.listFiles()) {
+				return;
+			}
+			list.addAll(Arrays.asList(file.listFiles()));
+			while (!list.isEmpty()) {
+				File[] files = list.removeFirst().listFiles();
+				if (null == files) {
+					continue;
+				}
+				for (File f : files) {
+					if (f.isDirectory()) {
+						logger.debug("文件夹:" + f.getAbsolutePath());
+						list.add(f);
+						folderNum++;
+					} else {
+						logger.debug("文件:" + f.getAbsolutePath());
+						fileNum++;
+					}
+				}
+			}
+		} else {
+			logger.debug("文件不存在!");
+		}
+		logger.debug("文件夹数量:" + folderNum + ",文件数量:" + fileNum);
+	}
+
 	public static void folderMethod2(String path) {
-        File file = new File(path);
-        if (file.exists()) {
-            File[] files = file.listFiles();
-            if (null != files) {
-                for (File file2 : files) {
-                    if (file2.isDirectory()) {
-                        logger.debug("文件夹:" + file2.getAbsolutePath());
-                        folderMethod2(file2.getAbsolutePath());
-                    } else {
-                        logger.debug("文件:" + file2.getAbsolutePath());
-                    }
-                }
-            }
-        } else {
-            logger.debug("文件不存在!");
-        }
-    }
-	
+		File file = new File(path);
+		if (file.exists()) {
+			File[] files = file.listFiles();
+			if (null != files) {
+				for (File file2 : files) {
+					if (file2.isDirectory()) {
+						logger.debug("文件夹:" + file2.getAbsolutePath());
+						folderMethod2(file2.getAbsolutePath());
+					} else {
+						logger.debug("文件:" + file2.getAbsolutePath());
+					}
+				}
+			}
+		} else {
+			logger.debug("文件不存在!");
+		}
+	}
 
-	// 用在存储过程, 第一个括号内的字符串, 
+	// 用在存储过程, 第一个括号内的字符串,
 	public static String firstParenthesisInsideString(String text) {
 		// 括号开始的位置, 不包括括号自己
 		int begin = text.indexOf("(") + 1;
-		int end = findBeginParenthesisRange(text, begin ,"(", ")");
+		int end = findBeginParenthesisRange(text, begin, "(", ")");
 		String str = text.substring(begin, end);
 		return str;
 	}
-	
+
 	// 获取 IN 字段
-	public static List<String> findInField(String sql){
+	public static List<String> findInField(String sql) {
 		String pstr = firstParenthesisInsideString(sql);
-		 List<String> list = new ArrayList<>();
+		List<String> list = new ArrayList<>();
 		String[] sarr = pstr.split(",");
-		for(String str: sarr) {
+		for (String str : sarr) {
 			str = str.trim();
-			if(str.length() > 0) {
-				 int idx = str.toUpperCase().indexOf("IN");
-				 if(idx == 0) {
-					 list.add(str);
-				 }
+			if (str.length() > 0) {
+				int idx = str.toUpperCase().indexOf("IN");
+				if (idx == 0) {
+					list.add(str);
+				}
 			}
-		} 
+		}
 		return list;
 	}
-	
+
 	// 判断是否是没有参数的存储过程, 没有参数 返回true
 	public static boolean procedureIsNoParameter(String sqlddl) {
 //		sqlddl = StrUtils.pressString(sqlddl).toUpperCase();
-		if(sqlddl.indexOf("(") > -1) {
+		if (sqlddl.indexOf("(") > -1) {
 			String tmp = sqlddl.substring(0, sqlddl.indexOf("("));
-			if(tmp.contains(" BEGIN ")) {
+			if (tmp.contains(" BEGIN ")) {
 				return true;
-			}else {
+			} else {
 				return false;
 			}
-			
+
 		}
 		return true;
 //		sqlddl = sqlddl.substring(0, sqlddl.indexOf(" BEGIN "));
-		 
+
 	}
-	
-	//TODO 从存储过程语句中提取参数
-	public static List<ProcedureFieldPo> getProcedureFields(String ddl){
-		 List<ProcedureFieldPo> rs = new ArrayList<>();
-		 ddl = StrUtils.multiLineCommentToSpace(ddl);
-		 ddl = SqluckyEditor.trimCommentToSpace(ddl, "--");
-		 // 给ddl分词, 找到过程名称后面的参数列表
-		 ddl = StrUtils.pressString(ddl).toUpperCase();
-		 if( procedureIsNoParameter(ddl) ) { // 没有参数直接返回
-			 return rs;
-		 }
-		 
+
+	// TODO 从存储过程语句中提取参数
+	public static List<ProcedureFieldPo> getProcedureFields(String ddl) {
+		List<ProcedureFieldPo> rs = new ArrayList<>();
+		ddl = StrUtils.multiLineCommentToSpace(ddl);
+		ddl = SqluckyEditor.trimCommentToSpace(ddl, "--");
+		// 给ddl分词, 找到过程名称后面的参数列表
+		ddl = StrUtils.pressString(ddl).toUpperCase();
+		if (procedureIsNoParameter(ddl)) { // 没有参数直接返回
+			return rs;
+		}
+
 //		 ddl = ddl.substring(0, ddl.indexOf(" BEGIN "));
-		 
-		 String val = firstParenthesisInsideString(ddl);
-		 val = val !=null ? val.trim() : "";
-		 if(val.length() > 1) {
-			String args[] =  val.split(",");
-			for(int i=0; i<args.length; i++) {
+
+		String val = firstParenthesisInsideString(ddl);
+		val = val != null ? val.trim() : "";
+		if (val.length() > 1) {
+			String args[] = val.split(",");
+			for (int i = 0; i < args.length; i++) {
 				String str = args[i].trim();
-			
+
 				String fields[] = str.split(" ");
 				String inout = fields[0].toUpperCase();
 				boolean in = inout.contains("IN");
 				boolean out = inout.contains("OUT");
-				
+
 				ProcedureFieldPo po = new ProcedureFieldPo();
-				po.setName(str); 
+				po.setName(str);
 				po.setIn(in);
-				po.setOut(out); 
+				po.setOut(out);
 //				po.setType( fields[2]);
 				rs.add(po);
 			}
-		 }
-		 logger.debug(rs);
-		 return rs;
+		}
+		logger.debug(rs);
+		return rs;
 	}
 
 	// 根据括号( 寻找配对的 结束)括号所在的位置.
-	public static int findBeginParenthesisRange(String text, int start, String pb , String pe) {
+	public static int findBeginParenthesisRange(String text, int start, String pb, String pe) {
 		String startStr = text.substring(start);
 		int end = 0;
-		int strSz =  startStr.length();
-		if( strSz == 0) return end;
-		if( ! startStr.contains(pe))  return end;
+		int strSz = startStr.length();
+		if (strSz == 0)
+			return end;
+		if (!startStr.contains(pe))
+			return end;
 		int idx = 1;
-		for(int i = 0; i < startStr.length(); i++ ) {
-			if(idx == 0) break;
-			String tmp = startStr.substring(i, i+1);
-			
-			if( pe.equals(tmp)) {
+		for (int i = 0; i < startStr.length(); i++) {
+			if (idx == 0)
+				break;
+			String tmp = startStr.substring(i, i + 1);
+
+			if (pe.equals(tmp)) {
 				idx--;
 				end = i;
-			}else if( pb.equals(tmp) ) {
+			} else if (pb.equals(tmp)) {
 				idx++;
 			}
-		} 
+		}
 		return start + end;
 	}
-	
-	
+
 	// 鼠标等待
 	public static void setCursor(Cursor cursorVal) {
-		Platform.runLater(()->{
-			ComponentGetter.primaryscene.addEventHandler(MouseEvent.ANY,e->{ 
+		Platform.runLater(() -> {
+			ComponentGetter.primaryscene.addEventHandler(MouseEvent.ANY, e -> {
 				ComponentGetter.primaryscene.setCursor(cursorVal);
 			});
 		});
-		
+
 	}
-	
+
 	// 应用创建完后, 执行一些初始化的任务
-	private static List<Consumer< String >> initTasks = new ArrayList<>();
+	private static List<Consumer<String>> initTasks = new ArrayList<>();
 	private static volatile int tasksCount = 0;
-	
+
 	private static synchronized int getTaskCount() {
 		return tasksCount;
 	}
-	
+
 	private static synchronized int addTaskCount() {
 		return tasksCount++;
 	}
-	
+
 	private static synchronized int minusTaskCount() {
 		return tasksCount--;
 	}
-	
-	
-	public static void addInitTask(Consumer< String > v) {
+
+	public static void addInitTask(Consumer<String> v) {
 		initTasks.add(v);
 		addTaskCount();
-		logger.debug("addTaskCount == getTaskCount()  = " + CommonUtility.getTaskCount() );
-		
+		logger.debug("addTaskCount == getTaskCount()  = " + CommonUtility.getTaskCount());
+
 	}
-	
+
 	public static synchronized int countTask() {
 		return initTasks.size();
 	}
-	
-	
+
 	// 子线程执行初始化任务
-	public static void executeInitTask(Consumer< String > Callback) {
-		for(Consumer< String > caller: initTasks) {
+	public static void executeInitTask(Consumer<String> Callback) {
+		for (Consumer<String> caller : initTasks) {
 			try {
 				Thread t = new Thread() {
 					public void run() {
@@ -718,30 +719,32 @@ public class CommonUtility {
 							caller.accept("");
 						} finally {
 							minusTaskCount();
-							logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtility.getTaskCount() );
+							logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtility.getTaskCount());
 						}
 					}
 				};
 				t.start();
 			} catch (Exception e) {
 				e.printStackTrace();
-			} 
+			}
 		}
 		InitFinishCall(Callback);
-		
+
 	}
+
 	/**
 	 * 初始化完成后的回调函数
+	 * 
 	 * @param caller
 	 */
-	public static void InitFinishCall(Consumer< String > caller) {
+	public static void InitFinishCall(Consumer<String> caller) {
 		try {
 			Thread t = new Thread() {
 				public void run() {
-					while(CommonUtility.getTaskCount() > 0){
+					while (CommonUtility.getTaskCount() > 0) {
 						try {
 							Thread.sleep(500);
-							logger.debug("getTaskCount()  = " + CommonUtility.getTaskCount() );
+							logger.debug("getTaskCount()  = " + CommonUtility.getTaskCount());
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -753,22 +756,22 @@ public class CommonUtility {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	// 上传 app h2数据库文件
 	public static void uploadFile() {
-		
+
 	}
-	
+
 	// 组件的悬停提示
-	public static Tooltip instanceTooltip(String msg){
-		Tooltip tt = new Tooltip(msg); 
+	public static Tooltip instanceTooltip(String msg) {
+		Tooltip tt = new Tooltip(msg);
 		tt.setShowDelay(new Duration(100));
 		return tt;
 	}
-	
-	// 读选择系统中的文件读取为字符串  UTF-8
+
+	// 读选择系统中的文件读取为字符串 UTF-8
 	public static String openFileReadToString(String encode) {
 		File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
 		if (f == null)
@@ -778,82 +781,97 @@ public class CommonUtility {
 			val = FileUtils.readFileToString(f, encode);
 		} catch (IOException e) {
 			e.printStackTrace();
-			MyAlert.errorAlert( e.getMessage());
-		} 
+			MyAlert.errorAlert(e.getMessage());
+		}
 		return val;
 	}
-	
-	public static int  RandomInt() {
-		 Random r = new Random();
-		 return r.nextInt(); 
-	}
-	
-	public static Long  dateTime() {
-		 Date d = new Date();
-		 return d.getTime();
+
+	public static int RandomInt() {
+		Random r = new Random();
+		return r.nextInt();
 	}
 
+	public static Long dateTime() {
+		Date d = new Date();
+		return d.getTime();
+	}
 
 	public static File getFileHelper(boolean isFile) {
 		File file = null;
 		if (isFile) {
-			file = FileOrDirectoryChooser.showSaveDefault("Save", ComponentGetter.primaryStage);
+			file = FileOrDirectoryChooser.showSaveDefault("Save", new Stage());
 		}
 		return file;
 	}
-	
+
 	// 创建文件事, 让用户现在文件的绝对路径和文件名
 	public static File getFilePathHelper(String fileType) {
-		FileChooser fileChooser = new FileChooser(); 
+		FileChooser fileChooser = new FileChooser();
 //		fileChooser.setTitle(title);
-		File dir =  FileOrDirectoryChooser.getOpenfileDir();
-		
-		fileChooser.setInitialDirectory( dir);
+		File dir = FileOrDirectoryChooser.getOpenfileDir();
+
+		fileChooser.setInitialDirectory(dir);
 		fileChooser.getExtensionFilters().clear();
-		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(fileType, "*."+fileType)); 
-		File file = fileChooser.showSaveDialog( ComponentGetter.primaryStage);
+		fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(fileType, "*." + fileType));
+		File file = fileChooser.showSaveDialog(new Stage());
 		return file;
-		 
+
 	}
+
 	// 字段值被修改还原, 不允许修改
-	public static   StringProperty createReadOnlyStringProperty(String val ) {
-		StringProperty sp =  new StringProperty() {
+	public static StringProperty createReadOnlyStringProperty(String val) {
+		StringProperty sp = new StringProperty() {
 			@Override
-			public String get() { 
+			public String get() {
 				return val;
 			}
-			
-			@Override
-			public void bind(ObservableValue<? extends String> arg0) { }
-			@Override
-			public boolean isBound() { 
-				return false;
-			}
-			@Override
-			public void unbind() { }
 
 			@Override
-			public Object getBean() { 
+			public void bind(ObservableValue<? extends String> arg0) {
+			}
+
+			@Override
+			public boolean isBound() {
+				return false;
+			}
+
+			@Override
+			public void unbind() {
+			}
+
+			@Override
+			public Object getBean() {
 				return null;
 			}
+
 			@Override
-			public String getName() { 
+			public String getName() {
 				return null;
-			} 
+			}
+
 			@Override
-			public void addListener(ChangeListener<? super String> arg0) { } 
+			public void addListener(ChangeListener<? super String> arg0) {
+			}
+
 			@Override
-			public void removeListener(ChangeListener<? super String> arg0) { } 
+			public void removeListener(ChangeListener<? super String> arg0) {
+			}
+
 			@Override
-			public void addListener(InvalidationListener arg0) { }
+			public void addListener(InvalidationListener arg0) {
+			}
+
 			@Override
-			public void removeListener(InvalidationListener arg0) { } 		
+			public void removeListener(InvalidationListener arg0) {
+			}
+
 			@Override
-			public void set(String arg0) {}  
-		}; 		
+			public void set(String arg0) {
+			}
+		};
 		return sp;
 	}
-	
+
 	public static void sleep(long millis) {
 		try {
 			Thread.sleep(millis);
@@ -861,106 +879,101 @@ public class CommonUtility {
 			e.printStackTrace();
 		}
 	}
-	
-	
+
 	// 左侧添加隐藏操作按钮/查询框
-	public static void leftHideOrShowSecondOptionBox(Pane container, Node box , List<Node>  btnList) {
+	public static void leftHideOrShowSecondOptionBox(Pane container, Node box, List<Node> btnList) {
 		if (container.getChildren().contains(box)) {
 			container.getChildren().remove(box);
-			for(var btn : btnList) {
+			for (var btn : btnList) {
 				btn.setDisable(false);
 			}
 		} else {
 			container.getChildren().add(1, box);
-			for(var btn : btnList) {
+			for (var btn : btnList) {
 				btn.setDisable(true);
 			}
 		}
-		
+
 	}
-	
+
 	// 左侧添加隐藏操作按钮/查询框
-		public static void leftHideOrShowSecondOptionBox(Pane container, Node box, TextField txt ) {
-			if (container.getChildren().contains(box)) {
-				container.getChildren().remove(box);
-				
-			} else {
-				container.getChildren().add(1, box);
-				if(txt != null ) {
-					txt.requestFocus();
-				}
-				
+	public static void leftHideOrShowSecondOptionBox(Pane container, Node box, TextField txt) {
+		if (container.getChildren().contains(box)) {
+			container.getChildren().remove(box);
+
+		} else {
+			container.getChildren().add(1, box);
+			if (txt != null) {
+				txt.requestFocus();
 			}
-			
+
 		}
-	
+
+	}
+
 	// 左侧折叠面板的图标切换
-	public static void leftPaneChangeIcon(TitledPane NotePane,  StackPane Node,  Region icon,Region uaicon) {
-		if(NotePane.isExpanded()) {
+	public static void leftPaneChangeIcon(TitledPane NotePane, StackPane Node, Region icon, Region uaicon) {
+		if (NotePane.isExpanded()) {
 			Node.getChildren().add(icon);
 			NotePane.getStyleClass().add("myTitleTxtActiveColor");
-		}else {
+		} else {
 			Node.getChildren().add(uaicon);
 			NotePane.getStyleClass().remove("myTitleTxtActiveColor");
 		}
 	}
-	
-	
-	public static void setLeftPaneIcon(TitledPane NotePane, Region icon,  Region uaicon ) {
+
+	public static void setLeftPaneIcon(TitledPane NotePane, Region icon, Region uaicon) {
 		// 图标切换
-		final StackPane Node = (StackPane)NotePane.lookup(".arrow-button");
-		Node.getChildren().clear(); 
+		final StackPane Node = (StackPane) NotePane.lookup(".arrow-button");
+		Node.getChildren().clear();
 		CommonUtility.leftPaneChangeIcon(NotePane, Node, icon, uaicon);
 		// 监听展开状态
 		NotePane.expandedProperty().addListener((obs, ov, nv) -> {
 			Node.getChildren().clear();
 			NotePane.getStyleClass().remove("myTitleTxtActiveColor");
-			if(nv) {
+			if (nv) {
 				Node.getChildren().add(icon);
 				NotePane.getStyleClass().add("myTitleTxtActiveColor");
-			}else {
+			} else {
 				Node.getChildren().add(uaicon);
 //				NotePane.getStyleClass().remove("myTitleTxtActiveColor");
 			}
 		});
-		
+
 		var title = NotePane.lookup(".title");
 		// 鼠标进入后， 切换图标
-		title.setOnMouseEntered( e->{ 
+		title.setOnMouseEntered(e -> {
 			Node.getChildren().clear();
 			NotePane.getStyleClass().remove("myTitleTxtActiveColor");
 			NotePane.getStyleClass().add("myTitleTxtActiveColor");
-			if(NotePane.isExpanded()) {
+			if (NotePane.isExpanded()) {
 				Node.getChildren().add(ComponentGetter.iconLeft);
-			}else {
+			} else {
 				Node.getChildren().add(ComponentGetter.iconRight);
 			}
 
-		
-			
 		});
 		// 鼠标离开后使用原来的图标
-		title.setOnMouseExited( e->{ 
+		title.setOnMouseExited(e -> {
 			Node.getChildren().clear();
 			NotePane.getStyleClass().remove("myTitleTxtActiveColor");
 			CommonUtility.leftPaneChangeIcon(NotePane, Node, icon, uaicon);
 		});
-		
-		
+
 	}
-	
+
 	// 查找替换
 	public static void findReplace(boolean isReplace, String findStr, SqluckyTab skTab) {
 		VBox b = null;
-		if(skTab == null) {
-		   skTab = SqluckyEditor.currentMyTab();
-		   b = skTab.getVbox();
-		}else {
-		   b = skTab.getVbox();
+		if (skTab == null) {
+			skTab = SqluckyEditor.currentMyTab();
+			b = skTab.getVbox();
+		} else {
+			b = skTab.getVbox();
 		}
 //		VBox b = SqlcukyEditor.getTabVbox();
 		int bsize = b.getChildren().size();
-	    if (bsize > 1) {
+		if (bsize > 1) {
 			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
 			if (bsize == 2 && isReplace) {
 				FindReplaceTextPanel.delFindReplacePane(skTab);
@@ -973,10 +986,10 @@ public class CommonUtility {
 				FindReplaceTextPanel.delFindReplacePane(skTab);
 			}
 			// 如果是指定查询, 需要清除之前的查询界面, 新建一个
-			if(StrUtils.isNotNullOrEmpty(findStr)) {
+			if (StrUtils.isNotNullOrEmpty(findStr)) {
 				FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, skTab);
 				skTab.setFindReplacePanel(findPanel);
-			} 
+			}
 
 		} else {
 			FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, skTab);
@@ -988,16 +1001,14 @@ public class CommonUtility {
 	public static void findReplace(boolean isReplace) {
 		findReplace(isReplace, "", null);
 	}
-	
-	
-	
+
 	// 在浏览器中打开 URL
 	public static void OpenURLInBrowser(String url) {
-		Application application =ComponentGetter.SQLucky;
-	    HostServices host = application.getHostServices();
-        host.showDocument(url);
+		Application application = ComponentGetter.SQLucky;
+		HostServices host = application.getHostServices();
+		host.showDocument(url);
 	}
-	
+
 	// 获取运行时app的可以执行程序(文件)
 	public static String sqluckyAppPath() {
 		String os_name = System.getProperty("os.name");
@@ -1006,68 +1017,67 @@ public class CommonUtility {
 		logger.info("java_home = " + java_home);
 		String app = "";
 		if (os_name.toLowerCase().startsWith("win")) {
-			app =java_home.replace("runtime", "SQLucky.exe");
-			logger.info("win app = " + app); 
+			app = java_home.replace("runtime", "SQLucky.exe");
+			logger.info("win app = " + app);
 		} else if (os_name.toLowerCase().startsWith("mac")) {
 			app = java_home.replace("runtime/Contents/Home", "MacOS/SQLucky");
-			logger.info("mac app = " + app); 
+			logger.info("mac app = " + app);
 		} else if (os_name.toLowerCase().startsWith("linux")) {
-		    app = java_home.replace("lib/runtime", "bin/SQLucky");
-			logger.info(" linux app = " + app); 
+			app = java_home.replace("lib/runtime", "bin/SQLucky");
+			logger.info(" linux app = " + app);
 		}
-		
+
 		return app;
 	}
-	
+
 	public static String getFirstJdkModulePath() {
-		String  modulePath = System.getProperty("jdk.module.path");
+		String modulePath = System.getProperty("jdk.module.path");
 		String strSplit = ":";
-		if(CommonUtility.isWinOS()) {
+		if (CommonUtility.isWinOS()) {
 			strSplit = ";";
 		}
-		String[] ls  = modulePath.split( strSplit );
+		String[] ls = modulePath.split(strSplit);
 		return ls[0];
 	}
-	
+
 	// 运行时判断是不是开发环境
 	public static boolean isDev() {
-		String  modulePath = System.getProperty("jdk.module.path");
+		String modulePath = System.getProperty("jdk.module.path");
 		String strSplit = ":";
-		if(CommonUtility.isWinOS()) {
+		if (CommonUtility.isWinOS()) {
 			strSplit = ";";
 		}
-		String[] ls  = modulePath.split( strSplit );
-		if(ls.length > 1) {
+		String[] ls = modulePath.split(strSplit);
+		if (ls.length > 1) {
 			return true;
 		}
 		return false;
 	}
+
 	// 获取运行时app的模块路径
-	public static String sqluckyAppModsPath() {  
+	public static String sqluckyAppModsPath() {
 		// 判断是否是在开发时
-		if(isDev() == false) {
+		if (isDev() == false) {
 			String jdk_module_path = System.getProperty("jdk.module.path");
 			return jdk_module_path;
 		}
-		
+
 		String modsdir = getFirstJdkModulePath();
-		
+
 		return modsdir;
 	}
 
 	// 判断是否登过, 没有就跳出登入窗口
 	public static boolean isLogin(String title) {
 		// 登入校验
-		if( ConfigVal.SQLUCKY_LOGIN_STATUS.get() == false) {
-			Platform.runLater(()->{
-				AppComponent app =  ComponentGetter.appComponent;
+		if (ConfigVal.SQLUCKY_LOGIN_STATUS.get() == false) {
+			Platform.runLater(() -> {
+				AppComponent app = ComponentGetter.appComponent;
 				app.showSingInWindow(title);
 			});
-			
+
 			return false;
 		}
 		return true;
 	}
 }
-
-

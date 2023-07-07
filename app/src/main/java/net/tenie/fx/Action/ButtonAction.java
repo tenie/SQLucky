@@ -14,6 +14,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
+import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -30,7 +31,6 @@ import net.tenie.fx.Action.sqlExecute.SqlExecuteOption;
 import net.tenie.fx.component.InfoTree.TreeObjAction;
 import net.tenie.fx.component.InfoTree.TreeItem.TreeObjCache;
 import net.tenie.fx.dao.DeleteDao;
-import net.tenie.fx.dao.InsertDao;
 
 /**
  * 查询slq后, 面板上的操作按钮要执行的逻辑

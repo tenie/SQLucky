@@ -26,346 +26,334 @@ import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.window.ConnectionEditor;
 
 public class DBInfoTreeContextMenu {
-	
-	// 
+
+	//
 //	public static List<MenuItem> otherDBMenuItem = new ArrayList<>();
 //	public static List<Menu> otherDBMenu = new ArrayList<>();
-	
-    private ContextMenu contextMenu;
-    private MenuItem tableAddNewCol;
-    private MenuItem tableShow;
-    private MenuItem tableDrop;
 
-    private MenuItem link;
-    private MenuItem unlink;
-    private MenuItem Edit;
-    private MenuItem Add;
+	private ContextMenu contextMenu;
+	private MenuItem tableAddNewCol;
+	private MenuItem tableShow;
+	private MenuItem tableDrop;
 
-    private MenuItem delete;
+	private MenuItem link;
+	private MenuItem unlink;
+	private MenuItem Edit;
+	private MenuItem Add;
 
-    private MenuItem refresh;
-    private MenuItem  selectMenu;
-    private MenuItem  copyNameMenu;
-    
-    private TreeItemType nodeType;
+	private MenuItem delete;
 
-    
-    
-    public DBInfoTreeContextMenu() {
+	private MenuItem refresh;
+	private MenuItem selectMenu;
+	private MenuItem copyNameMenu;
 
-        contextMenu = new ContextMenu();
+	private TreeItemType nodeType;
 
-        link = new MenuItem("Open Connection");
-        link.setOnAction(e -> {
-            ConnectionEditor.openDbConn();
-        });
-        link.setGraphic(IconGenerator.svgImageDefActive("link"));
-        link.setDisable(true);
+	public DBInfoTreeContextMenu() {
 
-        unlink = new MenuItem("Close Connection");
-        unlink.setOnAction(e -> {
-            ConnectionEditor.closeDbConn();
-            link.setDisable(false);
-        });
-        unlink.setGraphic(IconGenerator.svgImageDefActive("unlink"));
-        unlink.setDisable(true);
+		contextMenu = new ContextMenu();
 
-        Edit = new MenuItem("Edit Connection");
-        Edit.setOnAction(e -> {
-            ConnectionEditor.editDbConn();
-        });
-        Edit.setGraphic(IconGenerator.svgImageDefActive("edit"));
-        Edit.setDisable(true);
-        Edit.setId("EditConnection");
+		link = new MenuItem("Open Connection");
+		link.setOnAction(e -> {
+			ConnectionEditor.openDbConn();
+		});
+		link.setGraphic(IconGenerator.svgImageDefActive("link"));
+		link.setDisable(true);
 
-        Add = new MenuItem("Add Connection");
-        Add.setOnAction(e -> {
-            ConnectionEditor.ConnectionInfoSetting();
-        });
-        Add.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
+		unlink = new MenuItem("Close Connection");
+		unlink.setOnAction(e -> {
+			ConnectionEditor.closeDbConn();
+			link.setDisable(false);
+		});
+		unlink.setGraphic(IconGenerator.svgImageDefActive("unlink"));
+		unlink.setDisable(true);
 
+		Edit = new MenuItem("Edit Connection");
+		Edit.setOnAction(e -> {
+			ConnectionEditor.editDbConn();
+		});
+		Edit.setGraphic(IconGenerator.svgImageDefActive("edit"));
+		Edit.setDisable(true);
+		Edit.setId("EditConnection");
 
-        delete = new MenuItem("Delete Connection");
-        delete.setOnAction(e -> {
-            ConnectionEditor.deleteDbConn();
-        });
-        delete.setGraphic(IconGenerator.svgImageDefActive("trash"));
-        delete.setDisable(true);
+		Add = new MenuItem("Add Connection");
+		Add.setOnAction(e -> {
+			ConnectionEditor.ConnectionInfoSetting();
+		});
+		Add.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 
+		delete = new MenuItem("Delete Connection");
+		delete.setOnAction(e -> {
+			ConnectionEditor.deleteDbConn();
+		});
+		delete.setGraphic(IconGenerator.svgImageDefActive("trash"));
+		delete.setDisable(true);
 
-        refresh = new MenuItem("Refresh Connection");
+		refresh = new MenuItem("Refresh Connection");
 
-        refresh.setGraphic(IconGenerator.svgImageDefActive("refresh"));
-        refresh.setDisable(true);
+		refresh.setGraphic(IconGenerator.svgImageDefActive("refresh"));
+		refresh.setDisable(true);
 
+		tableAddNewCol = new MenuItem("Table Add New Column");
+		tableAddNewCol.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
+		tableAddNewCol.setDisable(true);
 
-        tableAddNewCol = new MenuItem("Table Add New Column");
-        tableAddNewCol.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
-        tableAddNewCol.setDisable(true);
+		tableShow = new MenuItem("Show Table Field Type");
+		tableShow.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
+		tableShow.setDisable(true);
 
-        tableShow = new MenuItem("Show Table Field Type");
-        tableShow.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
-        tableShow.setDisable(true);
+		tableDrop = new MenuItem("Drop ");
+		tableDrop.setGraphic(IconGenerator.svgImageDefActive("minus-square"));
+		tableDrop.setDisable(true);
 
-        tableDrop = new MenuItem("Drop ");
-        tableDrop.setGraphic(IconGenerator.svgImageDefActive("minus-square"));
-        tableDrop.setDisable(true);
-        
-        // 查询
-        selectMenu = new MenuItem("Select * from ");
-        selectMenu.setGraphic(IconGenerator.svgImageDefActive("search"));
-        selectMenu.setDisable(true);
-        
+		// 查询
+		selectMenu = new MenuItem("Select * from ");
+		selectMenu.setGraphic(IconGenerator.svgImageDefActive("search"));
+		selectMenu.setDisable(true);
 
-        copyNameMenu = new MenuItem("Copy Name");
-        copyNameMenu.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
+		copyNameMenu = new MenuItem("Copy Name");
+		copyNameMenu.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 //        copyNameMenu.setDisable(true);
-        
-        
-       
-        
-        contextMenu.getItems().addAll(
-                link, unlink, Edit, Add, delete, new SeparatorMenuItem(), refresh, new SeparatorMenuItem(),
-                tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu, copyNameMenu);
-        
-      
-        // 菜单显示调用回调函数
-        contextMenu.setOnShowing(v->{
-        	Consumer< String >  consumer = ComponentGetter.appComponent.getDBInfoMenuOnShowing();
-        	if(consumer != null ) {
-            	consumer.accept("");
-        	}
-        });
 
-    }
+		contextMenu.getItems().addAll(link, unlink, Edit, Add, delete, new SeparatorMenuItem(), refresh,
+				new SeparatorMenuItem(), tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu,
+				copyNameMenu);
 
-    public void setLinkDisable(boolean tf) {
-        link.setDisable(tf);
-    }
+		// 菜单显示调用回调函数
+		contextMenu.setOnShowing(v -> {
+			Consumer<String> consumer = ComponentGetter.appComponent.getDBInfoMenuOnShowing();
+			if (consumer != null) {
+				consumer.accept("");
+			}
+		});
 
-    public void setConnectDisable(boolean tf) {
-        unlink.setDisable(tf);
-        Edit.setDisable(tf);
-        delete.setDisable(tf);
-    }
+	}
 
-    // 设置选中 Table 时右键菜单的可以和禁用
-    public void setTableDisable(boolean tf) {
-        tableAddNewCol.setDisable(tf);
-        tableDrop.setDisable(tf);
-        selectMenu.setDisable(tf);
-        if(tf) {
-        	selectMenu.setText("Select");
-        }
-        tableShow.setDisable(tf);
-        
-    }
+	public void setLinkDisable(boolean tf) {
+		link.setDisable(tf);
+	}
 
-    // 设置选中 视图/函数 时右键菜单的可以和禁用
-    public void setViewFuncProcTriDisable(boolean tf) {
-        tableDrop.setDisable(tf);
-    }
-    // 设置select * from 按钮的启用/禁用
-    public void setSelectMenuDisable(boolean tf ,SqluckyConnector sqluckyConn, TreeNodePo treeNPO) {
-    	if(tf == false) {
-    		  // selectMenu 的设置
-            setSelectMenuAction(sqluckyConn, treeNPO);
-    	} 
-       	selectMenu.setDisable(tf);
-    }
-    
-    // 设置复制节点名称
-    public void copuNodeName(String nodeName) {
-    	copyNameMenu.setOnAction(e->{
-    		CommonUtility.setClipboardVal(nodeName);
-    	});
-    }
-    
+	public void setConnectDisable(boolean tf) {
+		unlink.setDisable(tf);
+		Edit.setDisable(tf);
+		delete.setDisable(tf);
+	}
 
-    public void setRefreshDisable(boolean tf) {
-        refresh.setDisable(tf);
-    }
+	// 设置选中 Table 时右键菜单的可以和禁用
+	public void setTableDisable(boolean tf) {
+		tableAddNewCol.setDisable(tf);
+		tableDrop.setDisable(tf);
+		selectMenu.setDisable(tf);
+		if (tf) {
+			selectMenu.setText("Select");
+		}
+		tableShow.setDisable(tf);
 
-    /**
-     * 右键是table类型的node的时候, 设置对应按钮执行的函数
-     * @param treeItem
-     * @param sqluckyConn
-     * @param schema
-     * @param tablename
-     */
-    public void setTableAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector sqluckyConn, String schema, String tablename) {
-        tableAddNewCol.setOnAction(e -> {
-            CommonAction.addNewColumn(sqluckyConn, schema, tablename);
-        });
+	}
 
-        tableDrop.setOnAction(e -> {
-            DBInfoTreeContextMenuAction.dropTable(treeItem, sqluckyConn, schema, tablename);
-        });
+	// 设置选中 视图/函数 时右键菜单的可以和禁用
+	public void setViewFuncProcTriDisable(boolean tf) {
+		tableDrop.setDisable(tf);
+	}
 
-        tableShow.setOnAction(e -> {
-            showTableFieldType(sqluckyConn, schema, tablename);
-        });
-        // selectMenu 的设置
-        setSelectMenuAction(sqluckyConn,   treeItem.getValue());
-      
-    }
-    //右键菜单, 查询按钮设置
-    public void setSelectMenuAction(SqluckyConnector sqluckyConn, TreeNodePo treeNPO) {
-    	var tbpo = treeNPO.getTable();
-    	String tablename = tbpo.getTableName();
-    	String tabSchema = tbpo.getTableSchema();
-    	String sql = "";
-    	if(StrUtils.isNotNullOrEmpty(tabSchema)) {
-    		sql = "SELECT * FROM "+ tabSchema +"." + tablename;
-    	}else {
-    		sql = "SELECT * FROM " + tablename;
-    	}
-        String str = sql;
-    	selectMenu.setText(str);
-        selectMenu.setOnAction(e -> { 
-        	RunSQLHelper.runSQL(sqluckyConn,  str,   false);
-        });
-    }
+	// 设置select * from 按钮的启用/禁用
+	public void setSelectMenuDisable(boolean tf, SqluckyConnector sqluckyConn, TreeNodePo treeNPO) {
+		if (tf == false) {
+			// selectMenu 的设置
+			setSelectMenuAction(sqluckyConn, treeNPO);
+		}
+		selectMenu.setDisable(tf);
+	}
 
+	// 设置复制节点名称
+	public void copuNodeName(String nodeName) {
+		copyNameMenu.setOnAction(e -> {
+			CommonUtility.setClipboardVal(nodeName);
+		});
+	}
 
-    public static void showTableFieldType(SqluckyConnector dbc, String schema, String tablename) {
-        String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
-        try {
-            DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
-            ObservableList<SheetFieldPo> fields = DP.getFields();
+	public void setRefreshDisable(boolean tf) {
+		refresh.setDisable(tf);
+	}
 
-            String fieldValue = "Field Type";
-            for (int i = 0; i < fields.size(); i++) {
-                SheetFieldPo p = fields.get(i);
-                String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
-                if (p.getScale() != null && p.getScale().get() > 0) {
-                    tyNa += ", " + p.getScale().get();
-                }
-                tyNa += ")";
-                StringProperty strp = new SimpleStringProperty(tyNa);
-                p.setValue(strp);
-            }
-            TableDataDetail.showTableDetail(tablename, "Field Name", fieldValue, fields);
+	/**
+	 * 右键是table类型的node的时候, 设置对应按钮执行的函数
+	 * 
+	 * @param treeItem
+	 * @param sqluckyConn
+	 * @param schema
+	 * @param tablename
+	 */
+	public void setTableAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector sqluckyConn, String schema,
+			String tablename) {
+		tableAddNewCol.setOnAction(e -> {
+			CommonAction.addNewColumn(sqluckyConn, schema, tablename);
+		});
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+		tableDrop.setOnAction(e -> {
+			DBInfoTreeContextMenuAction.dropTable(treeItem, sqluckyConn, schema, tablename);
+		});
 
-    }
+		tableShow.setOnAction(e -> {
+			showTableFieldType(sqluckyConn, schema, tablename);
+		});
+		// selectMenu 的设置
+		setSelectMenuAction(sqluckyConn, treeItem.getValue());
 
-    // 设置选中视图时 对应的按钮action
-    public void setViewAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector dbc, String schema, String viewName) {
-        tableDrop.setOnAction(e -> {
-            DBInfoTreeContextMenuAction.dropView(treeItem, dbc, schema, viewName);
-        });
+	}
 
-    }
+	// 右键菜单, 查询按钮设置
+	public void setSelectMenuAction(SqluckyConnector sqluckyConn, TreeNodePo treeNPO) {
+		var tbpo = treeNPO.getTable();
+		String tablename = tbpo.getTableName();
+		String tabSchema = tbpo.getTableSchema();
+		String sql = "";
+		if (StrUtils.isNotNullOrEmpty(tabSchema)) {
+			sql = "SELECT * FROM " + tabSchema + "." + tablename;
+		} else {
+			sql = "SELECT * FROM " + tablename;
+		}
+		String str = sql;
+		selectMenu.setText(str);
+		selectMenu.setOnAction(e -> {
+			RunSQLHelper.runSQL(sqluckyConn, str, false);
+		});
+	}
 
-    // 设置选中函数时 对应的按钮action
-    public void setFuncAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector dbc, String schema, String viewName) {
-        tableDrop.setOnAction(e -> {
-            DBInfoTreeContextMenuAction.dropFunc(treeItem, dbc, schema, viewName);
-        });
+	public static void showTableFieldType(SqluckyConnector dbc, String schema, String tablename) {
+		String sql = "SELECT * FROM " + tablename + " WHERE 1=2";
+		try {
+			DbTableDatePo DP = SelectDao.selectSqlField(dbc.getConn(), sql);
+			ObservableList<SheetFieldPo> fields = DP.getFields();
 
-    }
+			for (int i = 0; i < fields.size(); i++) {
+				SheetFieldPo p = fields.get(i);
+				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
+				if (p.getScale() != null && p.getScale().get() > 0) {
+					tyNa += ", " + p.getScale().get();
+				}
+				tyNa += ")";
+				StringProperty strp = new SimpleStringProperty(tyNa);
+				p.setValue(strp);
+			}
+			TableDataDetail.showTableDetail(tablename, "Field Name", "Field Type", fields);
 
-    public void setProcAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector dbc, String schema, String viewName) {
-        tableDrop.setOnAction(e -> {
-            DBInfoTreeContextMenuAction.dropProc(treeItem, dbc, schema, viewName);
-        });
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 
-    }
+	}
 
-    public void setTriggerAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector dbc, String schema, String viewName) {
-        tableDrop.setOnAction(e -> {
-            DBInfoTreeContextMenuAction.dropTrigger(treeItem, dbc, schema, viewName);
-        });
+	// 设置选中视图时 对应的按钮action
+	public void setViewAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector dbc, String schema, String viewName) {
+		tableDrop.setOnAction(e -> {
+			DBInfoTreeContextMenuAction.dropView(treeItem, dbc, schema, viewName);
+		});
 
-    }
+	}
 
+	// 设置选中函数时 对应的按钮action
+	public void setFuncAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector dbc, String schema, String viewName) {
+		tableDrop.setOnAction(e -> {
+			DBInfoTreeContextMenuAction.dropFunc(treeItem, dbc, schema, viewName);
+		});
 
-    public void setRefreshAction(TreeItem<TreeNodePo> newValue) {
-        refresh.setOnAction(e -> {
-            DBinfoTree.DBinfoTreeView.getSelectionModel().select(newValue);
-            ConnectionEditor.closeDbConn();
-            ConnectionEditor.openDbConn();
-        });
+	}
 
-    }
+	public void setProcAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector dbc, String schema, String viewName) {
+		tableDrop.setOnAction(e -> {
+			DBInfoTreeContextMenuAction.dropProc(treeItem, dbc, schema, viewName);
+		});
 
+	}
 
-    public ContextMenu getContextMenu() {
-        return contextMenu;
-    }
+	public void setTriggerAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector dbc, String schema, String viewName) {
+		tableDrop.setOnAction(e -> {
+			DBInfoTreeContextMenuAction.dropTrigger(treeItem, dbc, schema, viewName);
+		});
 
+	}
 
-    public void setContextMenu(ContextMenu contextMenu) {
-        this.contextMenu = contextMenu;
-    }
+	public void setRefreshAction(TreeItem<TreeNodePo> newValue) {
+		refresh.setOnAction(e -> {
+			DBinfoTree.DBinfoTreeView.getSelectionModel().select(newValue);
+			ConnectionEditor.closeDbConn();
+			ConnectionEditor.openDbConn();
+		});
 
-    public MenuItem getTableAddNewCol() {
-        return tableAddNewCol;
-    }
+	}
 
-    public void setTableAddNewCol(MenuItem tableAddNewCol) {
-        this.tableAddNewCol = tableAddNewCol;
-    }
+	public ContextMenu getContextMenu() {
+		return contextMenu;
+	}
 
-    public MenuItem getTableShow() {
-        return tableShow;
-    }
+	public void setContextMenu(ContextMenu contextMenu) {
+		this.contextMenu = contextMenu;
+	}
 
-    public void setTableShow(MenuItem tableShow) {
-        this.tableShow = tableShow;
-    }
+	public MenuItem getTableAddNewCol() {
+		return tableAddNewCol;
+	}
 
-    public MenuItem getTableDrop() {
-        return tableDrop;
-    }
+	public void setTableAddNewCol(MenuItem tableAddNewCol) {
+		this.tableAddNewCol = tableAddNewCol;
+	}
 
-    public void setTableDrop(MenuItem tableDrop) {
-        this.tableDrop = tableDrop;
-    }
+	public MenuItem getTableShow() {
+		return tableShow;
+	}
 
-    public MenuItem getLink() {
-        return link;
-    }
+	public void setTableShow(MenuItem tableShow) {
+		this.tableShow = tableShow;
+	}
 
-    public void setLink(MenuItem link) {
-        this.link = link;
-    }
+	public MenuItem getTableDrop() {
+		return tableDrop;
+	}
 
-    public MenuItem getUnlink() {
-        return unlink;
-    }
+	public void setTableDrop(MenuItem tableDrop) {
+		this.tableDrop = tableDrop;
+	}
 
-    public void setUnlink(MenuItem unlink) {
-        this.unlink = unlink;
-    }
+	public MenuItem getLink() {
+		return link;
+	}
 
-    public MenuItem getEdit() {
-        return Edit;
-    }
+	public void setLink(MenuItem link) {
+		this.link = link;
+	}
 
-    public void setEdit(MenuItem edit) {
-        Edit = edit;
-    }
+	public MenuItem getUnlink() {
+		return unlink;
+	}
 
-    public MenuItem getDelete() {
-        return delete;
-    }
+	public void setUnlink(MenuItem unlink) {
+		this.unlink = unlink;
+	}
 
-    public void setDelete(MenuItem delete) {
-        this.delete = delete;
-    }
+	public MenuItem getEdit() {
+		return Edit;
+	}
 
-    public MenuItem getRefresh() {
-        return refresh;
-    }
+	public void setEdit(MenuItem edit) {
+		Edit = edit;
+	}
 
-    public void setRefresh(MenuItem refresh) {
-        this.refresh = refresh;
-    }
+	public MenuItem getDelete() {
+		return delete;
+	}
+
+	public void setDelete(MenuItem delete) {
+		this.delete = delete;
+	}
+
+	public MenuItem getRefresh() {
+		return refresh;
+	}
+
+	public void setRefresh(MenuItem refresh) {
+		this.refresh = refresh;
+	}
 
 	public TreeItemType getNodeType() {
 		return nodeType;
@@ -373,9 +361,7 @@ public class DBInfoTreeContextMenu {
 
 	public void setNodeType(TreeItemType nodeType) {
 		this.nodeType = nodeType;
-		
-		 
-	}
 
+	}
 
 }

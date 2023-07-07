@@ -21,37 +21,38 @@ import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
 
-
 /**
  * 
  * @author tenie
  *
  */
-public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTreeNodePo>, TreeCell<DataModelTreeNodePo>> { 
+public class DataModelNodeCellFactory
+		implements Callback<TreeView<DataModelTreeNodePo>, TreeCell<DataModelTreeNodePo>> {
 	private static Logger logger = LogManager.getLogger(DataModelNodeCellFactory.class);
-	private static final DataFormat JAVA_FORMAT = DataFormat.PLAIN_TEXT;// new DataFormat("application/x-java-serialized-object");
+	private static final DataFormat JAVA_FORMAT = DataFormat.PLAIN_TEXT;// new
+																		// DataFormat("application/x-java-serialized-object");
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
 	private TreeCell<DataModelTreeNodePo> dropZone;
 	private TreeItem<DataModelTreeNodePo> draggedItem;
 
 	@Override
 	public TreeCell<DataModelTreeNodePo> call(TreeView<DataModelTreeNodePo> treeView) {
-		Button clean = new Button(); 
+		Button clean = new Button();
 		TreeCell<DataModelTreeNodePo> cell = new TreeCell<DataModelTreeNodePo>() {
-		
+
 			@Override
 			public void updateItem(DataModelTreeNodePo item, boolean empty) {
-				super.updateItem(item, empty);				
-	            if (isEmpty()) {
-	                setGraphic(null);
-	                setText(null);
-	            } else {	                
-	                	Node icon = item.getIcon();
-	                    Label label = new Label(item.getName());
-	                    label.setGraphic(icon);
-	                    setGraphic(label);
-	                    setText(null);
-	            }
+				super.updateItem(item, empty);
+				if (isEmpty()) {
+					setGraphic(null);
+					setText(null);
+				} else {
+					Node icon = item.getIcon();
+					Label label = new Label(item.getName());
+					label.setGraphic(icon);
+					setGraphic(label);
+					setText(null);
+				}
 			}
 		};
 //		clean.setMaxSize(12, 12); 
@@ -61,7 +62,7 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 //  		clean.setOnAction(e->{
 //  			var it = cell.getTreeItem();
 //  		}); 
-  		 
+
 //  		cell.setOnMouseEntered(e->{
 //			if(cell.isSelected()) {
 //				clean.setVisible(true);
@@ -72,7 +73,7 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 //		cell.setOnMouseExited(e->{
 //			clean.setVisible(false);
 //		});
-		
+
 		cell.setOnMouseClicked(e -> {
 //			if (cell.isSelected()) {
 //				clean.setVisible(true);
@@ -83,59 +84,25 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 				// 模型节点双击, 展示所有的表节点
 				if (cell.getTreeItem().getValue().getIsModel()) {
 					DataModelTabTree.modelInfoTreeAddTableTreeNode(cell.getTreeItem());
-				}else {
+				} else {
 					// 查询表的字段信息, 在表格中展示
-					DataModelTabTree.showFields(cell.getTreeItem().getValue().getTableId());	
+					DataModelTabTree.showFields(cell.getTreeItem().getValue().getTableId());
 				}
 			}
-//			if(e.getClickCount() == 2) {
-//				if(cell == null || cell.getTreeItem() == null) return;
-//				DataModelTreeNodePo stb = cell.getTreeItem().getValue();
-//				File file = stb.getFile();
-//				if(! file.exists()) return;
-//				if(file.isFile()) {
-//					if(StrUtils.isNotNullOrEmpty(file.getAbsolutePath() ) ){
-//						String fp = file.getAbsolutePath().toLowerCase();
-//						if(fp.endsWith(".md") 
-//						   || fp.endsWith(".text") 
-//						   || fp.endsWith(".sql") 
-//						   || fp.endsWith(".txt") 
-//					    ) {
-//							String  val = CommonUtility.readFileText(file, "UTF-8");
-//							stb.setFileText(val);
-//							stb.mainTabPaneAddMyTab();
-//							
-//						}else {
-//							CommonUtility.openExplorer(file);
-//						}
-//						
-//					}else {
-//						CommonUtility.openExplorer(file);
-//					}
-//					
-//				}else if(file.isDirectory()) {
-//					if(cell.getTreeItem().getChildren().size() == 0) {
-//						DataModelTabTree.openNoteDir(cell.getTreeItem(), file);
-//						cell.getTreeItem().setExpanded(true);
-//					}
-//					
-//				}
-//				
-//			}
 		});
-		
+
 		cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
 		cell.setOnDragOver((DragEvent event) -> dragOver(event, cell, treeView));
 		cell.setOnDragDropped((DragEvent event) -> drop(event, cell, treeView));
 		cell.setOnDragDone((DragEvent event) -> clearDropLocation());
 		return cell;
 	}
-	
 
 	// 发现拖动 当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个
-	private void dragDetected(MouseEvent event, TreeCell<DataModelTreeNodePo> treeCell, TreeView<DataModelTreeNodePo> treeView) {
-		logger.info("dragDetected"); 
-		
+	private void dragDetected(MouseEvent event, TreeCell<DataModelTreeNodePo> treeCell,
+			TreeView<DataModelTreeNodePo> treeView) {
+		logger.info("dragDetected");
+
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
@@ -149,7 +116,7 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 
 			}
 		}
-			
+
 		Dragboard db = treeCell.startDragAndDrop(TransferMode.ANY);
 
 		ClipboardContent content = new ClipboardContent();
@@ -157,11 +124,12 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 		db.setContent(content);
 		db.setDragView(treeCell.snapshot(null, null));
 		event.consume();
-	
+
 	}
 
-	private void dragOver(DragEvent event, TreeCell<DataModelTreeNodePo> treeCell, TreeView<DataModelTreeNodePo> treeView) {
-  
+	private void dragOver(DragEvent event, TreeCell<DataModelTreeNodePo> treeCell,
+			TreeView<DataModelTreeNodePo> treeView) {
+
 		if (!event.getDragboard().hasContent(JAVA_FORMAT))
 			return;
 		TreeItem<DataModelTreeNodePo> thisItem = treeCell.getTreeItem();
@@ -181,8 +149,7 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 			this.dropZone = treeCell;
 			dropZone.setStyle(DROP_HINT_STYLE);
 		}
-		
-		 
+
 	}
 
 	// 放下后执行
@@ -201,7 +168,6 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 			droppedItemParent.getChildren().remove(draggedItem);
 			int indexInParent = thisItem.getParent().getChildren().indexOf(thisItem);
 			thisItem.getParent().getChildren().add(indexInParent + 1, draggedItem);
-			
 
 		}
 		if (Objects.equals(droppedItemParent, thisItem)) {
@@ -220,7 +186,5 @@ public class DataModelNodeCellFactory implements Callback<TreeView<DataModelTree
 		if (dropZone != null)
 			dropZone.setStyle("");
 	}
-	  
-  
-	    
+
 }

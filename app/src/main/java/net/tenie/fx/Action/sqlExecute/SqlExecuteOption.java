@@ -3,9 +3,11 @@ package net.tenie.fx.Action.sqlExecute;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import org.fxmisc.richtext.CodeArea;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
@@ -132,11 +134,11 @@ public class SqlExecuteOption {
 	/**
 	 * 创建列
 	 */
-	public static FilteredTableColumn<ResultSetRowPo, String> createColumnForSqlData(String colname,
-			int colIdx, boolean iskey, SheetDataValue dvt) {
+	public static FilteredTableColumn<ResultSetRowPo, String> createColumnForSqlData(String colname, int colIdx,
+			boolean iskey, SheetDataValue dvt) {
 		FilteredTableColumn<ResultSetRowPo, String> col = SdkComponent.createColumn(colname, colIdx);
-		Label label = (Label) col.getGraphic();// new Label();
-		if (iskey) {// #F0F0F0 1C92FB ##6EB842 #7CFC00
+		Label label = (Label) col.getGraphic();
+		if (iskey) {
 			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#FF6600"));
 		}
 
@@ -147,8 +149,7 @@ public class SqlExecuteOption {
 	}
 
 	// 设置 列的 右键菜单
-	public static void setDataTableContextMenu(
-			ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList,
+	public static void setDataTableContextMenu(ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList,
 			ObservableList<SheetFieldPo> cols) {
 		int len = cols.size();
 		for (int i = 0; i < len; i++) {
@@ -182,7 +183,7 @@ public class SqlExecuteOption {
 			// 渲染界面
 			if (thread != null && thread.isInterrupted()) {
 				return;
-			} 
+			}
 
 			boolean showtab = true;
 			if (showtab) {
@@ -191,14 +192,13 @@ public class SqlExecuteOption {
 				mtd.show();
 			}
 
-		
 		}
 	}
 
 	/**
 	 * 获取要执行的sql, 去除无效的(如-- 开头的)
 	 */
-	public static List<SqlData> willExecSql( boolean isCurrentLine) {
+	public static List<SqlData> willExecSql(boolean isCurrentLine) {
 		List<SqlData> sds = new ArrayList<>();
 		String str = "";
 		CodeArea code = SqluckyEditor.getCodeArea();
@@ -248,23 +248,22 @@ public class SqlExecuteOption {
 
 		return sds;
 	}
-	
 
 	public static List<SqlData> epurateSql(String str) {
 		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		List<String> sqls = SqluckyEditor.findSQLFromTxt(str);
-		
-		if(sqls.size()> 0) {
-			for (String s : sqls) { 
+
+		if (sqls.size() > 0) {
+			for (String s : sqls) {
 				String trimSql = s.trim();
 				if (trimSql.length() > 1) {
 					SqlData sq = new SqlData(trimSql, 0, 0);
-					sds.add(sq); 
+					sds.add(sq);
 				}
 			}
-		}else {
-			SqlData sq = new SqlData(str, 0,0);
+		} else {
+			SqlData sq = new SqlData(str, 0, 0);
 			sds.add(sq);
 		}
 
@@ -279,5 +278,5 @@ public class SqlExecuteOption {
 		Connection conn = DBConns.get(connboxVal).getConn();
 		return conn;
 	}
-	
+
 }

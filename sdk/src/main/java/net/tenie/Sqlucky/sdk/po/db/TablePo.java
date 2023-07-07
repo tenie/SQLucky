@@ -10,21 +10,18 @@ import java.util.function.Consumer;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 
-import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
 import net.tenie.Sqlucky.sdk.component.MyCellOperateButton;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
 
-
 /**
- *  数据库里表对象的属性字段， 如表名等
- *  table view 共用
+ * 数据库里表对象的属性字段， 如表名等 table view 共用
+ * 
  * @author tenie
  *
  */
@@ -40,48 +37,48 @@ public class TablePo {
 	// 字段
 	private LinkedHashSet<TableFieldPo> fields;
 	// 主键
-	private List<TablePrimaryKeysPo> primaryKeys; 
+	private List<TablePrimaryKeysPo> primaryKeys;
 	// 外键
 	private List<TableForeignKeyPo> foreignKeys;
-	// 索引 
+	// 索引
 	private List<TableIndexPo> indexs;
-	
+
 	private Boolean dbObj = true;
-	
-	
+
 	// 获取TableView ,foreignKey
 	private TableView<ResultSetRowPo> foreignKeyTable;
 	private TableView<ResultSetRowPo> indexTableView;
-	
+
 	private SqluckyConnector sqluckyConnector;
-	
-	public TablePo() {}
-	
-	public TablePo(String name ) {
+
+	public TablePo() {
+	}
+
+	public TablePo(String name) {
 		tableName = name;
 	}
-	 // 用于自动补全创建TablePo， 方便遍历表格实现对表名称输入自动补全， noDbObj表示创建的TablePo 是自定义的自动补全字符串
-	public static TablePo noDbObj(String name ) {
+
+	// 用于自动补全创建TablePo， 方便遍历表格实现对表名称输入自动补全， noDbObj表示创建的TablePo 是自定义的自动补全字符串
+	public static TablePo noDbObj(String name) {
 		TablePo po = new TablePo(name);
 		po.setDbObj(false);
 		return po;
 	}
-	
-	
+
 	// show Index
-	public TableView<ResultSetRowPo> indexTableView(){
-		if(indexTableView == null) {
+	public TableView<ResultSetRowPo> indexTableView() {
+		if (indexTableView == null) {
 			List<String> colName = new ArrayList<>();
 			colName.add("INDEX NAME");
 			colName.add("TABLE NAME");
 			colName.add("INDEX SCHEMA");
-			colName.add("COL NAMES"); 
+			colName.add("COL NAMES");
 			colName.add("Operate Button");
 			List<Map<String, String>> vals = toMapByIndex();
-			
-			//operate btns 
+
+			// operate btns
 			List<MyCellOperateButton> btnvals = new ArrayList<>();
-			var dropIdx = dropIndexBtn() ;
+			var dropIdx = dropIndexBtn();
 			var showIdxDDL = showIndexBtn();
 			btnvals.add(dropIdx);
 			btnvals.add(showIdxDDL);
@@ -89,12 +86,11 @@ public class TablePo {
 //			// 获取TableView
 //		    indexTableView = sheetDaV.getInfoTable();
 		}
-		
-		
+
 		return indexTableView;
 	}
-	
-	// show foreign key 
+
+	// show foreign key
 	public TableView<ResultSetRowPo> foreignKeyTableView() {
 		if (foreignKeyTable == null) {
 			List<String> foreignKeyColnames = new ArrayList<>();
@@ -108,15 +104,15 @@ public class TablePo {
 			foreignKeyColnames.add("Operate Button");
 
 			List<Map<String, String>> foreignKeyVals = toMapByFK();
-			
+
 			// drop button
 			MyCellOperateButton drop = dropFKBtn();
-			MyCellOperateButton export =ShowFKBtn();
+			MyCellOperateButton export = ShowFKBtn();
 			List<MyCellOperateButton> btnvals = new ArrayList<>();
 			btnvals.add(drop);
 			btnvals.add(export);
 //			// 获取TableView
-			foreignKeyTable = TableViewUtil.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals,   btnvals );
+			foreignKeyTable = TableViewUtil.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals, btnvals);
 		}
 		return foreignKeyTable;
 	}
@@ -126,41 +122,42 @@ public class TablePo {
 		String btnName = "Drop";
 //		btn.getStyleClass().add("myAlertBtn");
 		Consumer<ResultSetRowPo> btnCaller = v -> {
-			String schName = v.getValueByFieldName("INDEX SCHEMA").trim(); 
-			String idxName = v.getValueByFieldName("INDEX NAME").trim(); 
-			String tableName = v.getValueByFieldName("TABLE NAME").trim(); 
-			
-			if(StrUtils.isNotNullOrEmpty(idxName)) {
-				if(this.sqluckyConnector != null) {
+			String schName = v.getValueByFieldName("INDEX SCHEMA").trim();
+			String idxName = v.getValueByFieldName("INDEX NAME").trim();
+			String tableName = v.getValueByFieldName("TABLE NAME").trim();
+
+			if (StrUtils.isNotNullOrEmpty(idxName)) {
+				if (this.sqluckyConnector != null) {
 //					String schema = sqluckyConnector.getDefaultSchema();
 					String ddl = this.sqluckyConnector.getExportDDL().exportDropIndex(schName, idxName, tableName);
-					
+
 					boolean tf = MyAlert.myCodeAreaConfirmation("Dorp Index ?  ", ddl);
-					
-					if(tf) {
+
+					if (tf) {
 						try {
 							DBTools.execDDL(sqluckyConnector.getConn(), ddl);
 							v.getResultSet().getDatas().remove(v);
-						} catch (SQLException e) { 
+						} catch (SQLException e) {
 							e.printStackTrace();
 							MyAlert.errorAlert(e.getMessage());
 						}
 					}
-					
+
 				}
 			}
-			
-		}; 
+
+		};
 		MyCellOperateButton drop = new MyCellOperateButton(btnName, btnCaller);
 		return drop;
 	}
+
 	private MyCellOperateButton showIndexBtn() {
 //		Button btn = new Button("Show DDL");
 		String btnName = "Show DDL";
 //		btn.getStyleClass().add("myAlertBtn");
 		Consumer<ResultSetRowPo> btnCaller = v -> {
-			String schName = v.getValueByFieldName("INDEX SCHEMA").trim(); 
-			String idxName = v.getValueByFieldName("INDEX NAME").trim(); 
+			String schName = v.getValueByFieldName("INDEX SCHEMA").trim();
+			String idxName = v.getValueByFieldName("INDEX NAME").trim();
 
 			if (StrUtils.isNotNullOrEmpty(idxName)) {
 				if (this.sqluckyConnector != null) {
@@ -169,8 +166,6 @@ public class TablePo {
 							schema, idxName);
 					ddl = SqlFormatter.format(ddl);
 					MyAlert.showTextArea("Index", ddl);
-//					CommonUtility.setClipboardVal(ddl);
-//					MyAlert.infoAlert("", "Successfully exported to the clipboard");
 
 				}
 			}
@@ -181,50 +176,47 @@ public class TablePo {
 
 		return export;
 	}
-	
-	
-	
+
 	private MyCellOperateButton dropFKBtn() {
 //		Button btn = new Button("Drop"); 
 //		btn.getStyleClass().add("myAlertBtn");
 		String btnName = "Drop";
 		Consumer<ResultSetRowPo> btnCaller = v -> {
-			String fkName = v.getValueByFieldName("FOREIGN KEY NAME").trim(); 
-			String tableName = v.getValueByFieldName("TABLE NAME").trim(); 
-			
-			if(StrUtils.isNotNullOrEmpty(fkName)) {
-				if(this.sqluckyConnector != null) {
+			String fkName = v.getValueByFieldName("FOREIGN KEY NAME").trim();
+			String tableName = v.getValueByFieldName("TABLE NAME").trim();
+
+			if (StrUtils.isNotNullOrEmpty(fkName)) {
+				if (this.sqluckyConnector != null) {
 					String schema = sqluckyConnector.getDefaultSchema();
 					String ddl = this.sqluckyConnector.getExportDDL().exportDropForeignKey(schema, fkName, tableName);
-					
-					boolean tf = MyAlert.myCodeAreaConfirmation("Dorp FOREIGN KEY?  " , ddl);
-					if(tf) {
+
+					boolean tf = MyAlert.myCodeAreaConfirmation("Dorp FOREIGN KEY?  ", ddl);
+					if (tf) {
 						try {
 							DBTools.execDDL(sqluckyConnector.getConn(), ddl);
 							v.getResultSet().getDatas().remove(v);
-						} catch (SQLException e) { 
+						} catch (SQLException e) {
 							e.printStackTrace();
 							MyAlert.errorAlert(e.getMessage());
 						}
 					}
-					
+
 				}
 			}
-			
-		}; 
-		
+
+		};
+
 		MyCellOperateButton drop = new MyCellOperateButton(btnName, btnCaller);
 		return drop;
 	}
-	
-	
+
 	private MyCellOperateButton ShowFKBtn() {
 //		Button btn = new Button("Show DDL");
 //		btn.getStyleClass().add("myAlertBtn");
 		String btnName = "Show DDL";
 		Consumer<ResultSetRowPo> btnCaller = v -> {
-			String fkName = v.getValueByFieldName("FOREIGN KEY NAME").trim(); 
-			String tableName = v.getValueByFieldName("TABLE NAME").trim(); 
+			String fkName = v.getValueByFieldName("FOREIGN KEY NAME").trim();
+			String tableName = v.getValueByFieldName("TABLE NAME").trim();
 
 			if (StrUtils.isNotNullOrEmpty(fkName)) {
 				if (this.sqluckyConnector != null) {
@@ -245,6 +237,7 @@ public class TablePo {
 
 		return export;
 	}
+
 	// 将List中的对象转换为MAP 后返回一个新的list
 	private List<Map<String, String>> toMapByIndex() {
 		List<Map<String, String>> vals = new ArrayList<>();
@@ -266,12 +259,13 @@ public class TablePo {
 		}
 
 		return vals;
-	} 
+	}
+
 	// 将List中的对象转换为MAP 后返回一个新的list
 	private List<Map<String, String>> toMapByFK() {
 		List<Map<String, String>> vals = new ArrayList<>();
 		if (foreignKeys != null) {
-			 
+
 			for (TableForeignKeyPo fkpo : foreignKeys) {
 				String TabName = fkpo.getTabName();
 				String Constname = fkpo.getConstname();
@@ -292,7 +286,7 @@ public class TablePo {
 			}
 		}
 		return vals;
-	} 
+	}
 
 	public String getDdl() {
 		return ddl;
@@ -350,7 +344,6 @@ public class TablePo {
 		this.tableName = tableName;
 	}
 
- 
 	public List<TableForeignKeyPo> getForeignKeys() {
 		return foreignKeys;
 	}

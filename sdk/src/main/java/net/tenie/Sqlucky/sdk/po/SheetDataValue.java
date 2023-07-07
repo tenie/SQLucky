@@ -2,22 +2,19 @@ package net.tenie.Sqlucky.sdk.po;
 
 import java.sql.Connection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
 
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 
-
 /**
- * 一个查询, 对应的一个数据表格, 对应的数据缓存 
+ * 一个查询, 对应的一个数据表格, 对应的数据缓存
+ * 
  * @author tenie
  *
  */
@@ -32,45 +29,36 @@ public class SheetDataValue {
 	private double execTime = 0;
 	// 行数
 	private int rowSize = 0;
-	
+
 	// 展示的数据集
 	private ResultSetPo dataRs;
 	// 列
 	private ObservableList<SheetFieldPo> colss;
-	// 数据添加到表格 更简洁的api   , 数据库查询结果的表格原始数据
+	// 数据添加到表格 更简洁的api , 数据库查询结果的表格原始数据
 	// tableView
 	private FilteredTableView<ResultSetRowPo> dbValTable;
-	
+
 	// 操作数据的按钮, 按钮名称和控件对象方式保存
-	private Map<String, Button> btnMap ;
-	
-	
+	private Map<String, Button> btnMap;
+
 	public void clean() {
-//		menuItems.clear();
-//		menuItems = null;
-		if(dbValTable != null) {
+		if (dbValTable != null) {
 			dbValTable.getItems().clear();
 		}
 		dbValTable = null;
-		
-	 
-		
-		if(colss!=null) {
+
+		if (colss != null) {
 			colss.clear();
 		}
-		colss = null;  
-		
-		 
-		
-		if(btnMap != null) btnMap.clear();
+		colss = null;
+
+		if (btnMap != null)
+			btnMap.clear();
 		btnMap = null;
 	}
 
- 
-
-	public SheetDataValue(FilteredTableView<ResultSetRowPo> table,  String tabName,
-			String sqlStr, String connName, ObservableList<SheetFieldPo> colss,
-			ResultSetPo  dataRs) {
+	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName, String sqlStr, String connName,
+			ObservableList<SheetFieldPo> colss, ResultSetPo dataRs) {
 		this.dbValTable = table;
 		this.tabName = tabName;
 		this.sqlStr = sqlStr;
@@ -79,9 +67,8 @@ public class SheetDataValue {
 		this.dataRs = dataRs;
 	}
 
-	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName,
-			ObservableList<SheetFieldPo> colss, 
-			ResultSetPo  dataRs) {
+	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName, ObservableList<SheetFieldPo> colss,
+			ResultSetPo dataRs) {
 		this.dbValTable = table;
 		this.tabName = tabName;
 		this.colss = colss;
@@ -91,27 +78,23 @@ public class SheetDataValue {
 	public SheetDataValue() {
 
 	}
- 
+
 	public Map<String, Button> getBtnMap() {
 		return btnMap;
 	}
-	
+
 	// 将select sql 执行的结果信息复制给当前对象
 	public void setSelectExecInfo(SelectExecInfo execInfo) {
-		this.setColss(  execInfo.getColss());
-		this.setDataRs(  execInfo.getDataRs());
-		
-		this.setExecTime(  execInfo.getExecTime());
-		this.setRows(  execInfo.getRowSize());
+		this.setColss(execInfo.getColss());
+		this.setDataRs(execInfo.getDataRs());
+
+		this.setExecTime(execInfo.getExecTime());
+		this.setRows(execInfo.getRowSize());
 	}
-
-
 
 	public void setBtnMap(Map<String, Button> btnMap) {
 		this.btnMap = btnMap;
 	}
-
-
 
 	public String getTabName() {
 		return tabName;
@@ -128,8 +111,6 @@ public class SheetDataValue {
 	public void setSqlStr(String sqlStr) {
 		this.sqlStr = sqlStr;
 	}
-
-
 
 	public FilteredTableView<ResultSetRowPo> getTable() {
 		return dbValTable;
@@ -154,8 +135,6 @@ public class SheetDataValue {
 	public void setConnName(String connName) {
 		this.connName = connName;
 	}
-
-
 
 	public double getExecTime() {
 		return execTime;
@@ -189,24 +168,18 @@ public class SheetDataValue {
 		this.dbConnection = dbConnection;
 	}
 
-
-
-	 
 	/**
 	 * 添加按钮
+	 * 
 	 * @param btnName
 	 * @param btn
 	 */
 	public void addBtn(String btnName, Button btn) {
-		if(btnMap == null) {
+		if (btnMap == null) {
 			btnMap = new HashMap<String, Button>();
 		}
 		btnMap.put(btnName, btn);
 	}
-
- 
-
-
 
 	public Connection getConn() {
 		return conn;
@@ -216,25 +189,17 @@ public class SheetDataValue {
 		this.conn = conn;
 	}
 
-
-
 	public ResultSetPo getDataRs() {
 		return dataRs;
 	}
-
-
 
 	public void setDataRs(ResultSetPo dataRs) {
 		this.dataRs = dataRs;
 	}
 
-
-
 	public FilteredTableView<ResultSetRowPo> getDbValTable() {
 		return dbValTable;
 	}
-
-
 
 	public void setDbValTable(FilteredTableView<ResultSetRowPo> dbValTable) {
 		this.dbValTable = dbValTable;
