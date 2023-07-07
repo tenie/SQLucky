@@ -8,6 +8,7 @@ import java.util.Date;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -165,10 +166,16 @@ public class DaoTools {
 
 	// 获取表字段
 	public static ObservableList<SheetFieldPo> tableFields(Connection conn, String tableName) throws SQLException {
-		String sql = "SELECT * FROM " + tableName + " WHERE 1=2";
-		DbTableDatePo DP = SelectDao.selectSqlField(conn, sql);
-		ObservableList<SheetFieldPo> fields = DP.getFields();
-		return fields;
+		try {
+			String sql = "SELECT * FROM " + tableName + " WHERE 1=2";
+			DbTableDatePo DP = SelectDao.selectSqlField(conn, sql);
+			ObservableList<SheetFieldPo> fields = DP.getFields();
+			return fields;
+		} catch (Exception e) {
+			 
+		}
+		
+		return FXCollections.observableArrayList();
 	}
 
 }
