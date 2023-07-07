@@ -38,8 +38,7 @@ public class ExcelToDB {
 	 * @throws Exception
 	 */
 	public static void toTable(SqluckyConnector dbc, String tablename, String excelFile, String saveSqlFile,
-			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count) throws Exception {
-//		String insertSql = InsertPreparedStatementDao.createPreparedStatementSqlForExcel(tablename, fields);
+			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count, boolean onlySaveSql) throws Exception {
 		Connection conn = dbc.getConn();
 		String errorData = "";
 		try {
@@ -91,17 +90,14 @@ public class ExcelToDB {
 						}
 
 					}
-
-//					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals);
-//					rowVals.clear();
 					idx++;
 					if (idx % 100 == 0) {
-						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile);
+						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile, onlySaveSql);
 						rowVals.clear();
 					}
 				}
 				if (rowVals.size() > 0) {
-					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile);
+					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile, onlySaveSql);
 					rowVals.clear();
 				}
 			}
