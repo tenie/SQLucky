@@ -235,7 +235,7 @@ public class InsertDao {
 	 * @throws Exception
 	 */
 	public static String execInsertByExcelField(Connection conn, String tableName, List<ExcelFieldPo> fields,
-			List<List<String>> rowVals, String saveSqlfile) throws Exception {
+			List<List<String>> rowVals, String saveSqlfile ,boolean onlySaveSql) throws Exception {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
@@ -309,15 +309,26 @@ public class InsertDao {
 //					insert += insertValue + " )";
 					insertValue = insert + insertValue + " )";
 					logger.info(insertValue);
-					sm.addBatch(insertValue);
-					inSqls.add(insertValue + ";");
+					if(onlySaveSql ) { 
+						inSqls.add(insertValue + ";");
+					}else {
+						sm.addBatch(insertValue);
+						inSqls.add(insertValue + ";");
+					}
+				
 				}
 			}
-			int[] count = sm.executeBatch();
-			int execCountLen = count.length;
-			logger.info("instert = " + execCountLen);
-			FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
-			msg = "Insert " + execCountLen + " ;\n" + insertLog + "; \n" + valLog;
+			if(onlySaveSql) { 
+				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
+			}else {
+				int[] count = sm.executeBatch();
+				int execCountLen = count.length;
+				logger.info("instert = " + execCountLen);
+				msg = "Insert " + execCountLen + " ;\n" + insertLog + "; \n" + valLog;
+				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
+			}
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(e.getMessage() + " : excel Value = " + valLog + " ;\n sql = " + insertLog);
