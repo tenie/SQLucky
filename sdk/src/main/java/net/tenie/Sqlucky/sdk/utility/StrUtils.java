@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.beans.property.StringProperty;
+
 //import net.tenie.fx.PropertyPo.DbConnectionPo;
 //import net.tenie.fx.PropertyPo.MyRange;
 //import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -358,18 +360,27 @@ public class StrUtils {
 	/**
 	 * check if null or empty string
 	 */
-	public static boolean isNullOrEmpty(Object obj) {
+	public static boolean isNullOrEmpty(String obj) {
 		return (null == obj || EMPTY_STRING.equals(obj));
 	}
 
-	public static boolean isNotNullOrEmpty(Object obj) {
+	public static boolean isNotNullOrEmpty(String obj) {
+		return (!isNullOrEmpty(obj));
+	}
+
+	public static boolean isNullOrEmpty(StringProperty obj) {
+
+		return (null == obj || isNullOrEmpty(obj.getValue()));
+	}
+
+	public static boolean isNotNullOrEmpty(StringProperty obj) {
 		return (!isNullOrEmpty(obj));
 	}
 
 	/**
 	 * 检查是否相等
 	 */
-	public static boolean isEquals(Object obj, String expectValue) {
+	public static boolean isEquals(String obj, String expectValue) {
 		if (isNullOrEmpty(obj) || isNullOrEmpty(expectValue)) {
 			return false;
 		}
@@ -379,7 +390,7 @@ public class StrUtils {
 	/**
 	 * 检查是否相等（忽略大小写）
 	 */
-	public static boolean isEqualsNoCasetive(Object obj, String expectValue) {
+	public static boolean isEqualsNoCasetive(String obj, String expectValue) {
 		if (isNullOrEmpty(obj) || isNullOrEmpty(expectValue)) {
 			return false;
 		}

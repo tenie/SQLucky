@@ -22,6 +22,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -38,7 +39,8 @@ public class TableDataDetail {
 	public static void show() {
 		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tb = mtd.getTableData().getTable();
-		if(tb == null ) return;
+		if (tb == null)
+			return;
 //		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 		ResultSetRowPo selectedItem = tb.getSelectionModel().getSelectedItem();
 
@@ -51,7 +53,7 @@ public class TableDataDetail {
 		if (selectedItem == null) {
 			cells = FXCollections.observableArrayList();
 		} else {
-			cells =  selectedItem.getRowDatas();
+			cells = selectedItem.getRowDatas();
 		}
 
 		String fieldValue = "Value";
@@ -78,7 +80,16 @@ public class TableDataDetail {
 		showTableDetail(tabName, "Field Name", fieldValue, fields);
 	}
 
-	public static void showTableDetail(String tableName ,String colName1, String colName2, ObservableList<SheetFieldPo> fields) {
+	/**
+	 * 表字段明细展示
+	 * 
+	 * @param tableName
+	 * @param colName1
+	 * @param colName2
+	 * @param fields
+	 */
+	public static void showTableDetail(String tableName, String colName1, String colName2,
+			ObservableList<SheetFieldPo> fields) {
 		FlowPane fp = new FlowPane();
 
 		TextField tf1 = new TextField("");
@@ -125,20 +136,19 @@ public class TableDataDetail {
 						tf3.setText(p.getColumnClassName().get());
 					}
 				});
+		// 第一列
 		TableColumn<SheetFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
 		// 给单元格赋值
 		fieldNameCol.setCellValueFactory(cellData -> {
 			return cellData.getValue().getColumnLabel();
 		});
-		
-		
-		
+
 		fieldNameCol.setCellFactory(MyTableCellTextField2ReadOnly.forTableColumn());
-//		fieldNameCol.setEditable(false);
 		fieldNameCol.setPrefWidth(200);
 
 		tv.getColumns().add(fieldNameCol);
 
+		// 第二列
 		TableColumn<SheetFieldPo, String> valueCol = new TableColumn<>(colName2);
 		valueCol.setPrefWidth(200);
 		valueCol.setCellValueFactory(cellData -> {
@@ -183,26 +193,64 @@ public class TableDataDetail {
 		new ModalDialog(subvb, tv, tableName);
 	}
 
+	/**
+	 * 过滤
+	 * 
+	 * @param tableView
+	 * @param observableList
+	 * @param newValue
+	 */
 	public static final void bindTableViewFilter(TableView<SheetFieldPo> tableView,
 			ObservableList<SheetFieldPo> observableList, String newValue) {
 		FilteredList<SheetFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
 		filteredData.setPredicate(entity -> {
-			
+
 			boolean tf1 = false;
 			boolean tf2 = false;
-			if(entity != null ) {
-				if (entity.getColumnLabel() != null &&  entity.getColumnLabel().get() != null) { 
+			if (entity != null) {
+				if (entity.getColumnLabel() != null && entity.getColumnLabel().get() != null) {
 					tf1 = entity.getColumnLabel().get().toUpperCase().contains(newValue.toUpperCase());
 				}
-				if (entity.getValue() != null && entity.getValue().get() != null ) {
+				if (entity.getValue() != null && entity.getValue().get() != null) {
 					tf2 = entity.getValue().get().toUpperCase().contains(newValue.toUpperCase());
 				}
-			} 
+			}
 			return tf1 || tf2;
 		}
 
 		);
 		SortedList<SheetFieldPo> sortedData = new SortedList<>(filteredData);
+		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
+		tableView.setItems(sortedData);
+	}
+
+	/**
+	 * 过滤
+	 * 
+	 * @param tableView
+	 * @param observableList
+	 * @param newValue
+	 */
+	public static final void bindTableViewExcelFieldFilter(TableView<ExcelFieldPo> tableView,
+			ObservableList<ExcelFieldPo> observableList, String newValue) {
+		FilteredList<ExcelFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
+		filteredData.setPredicate(entity -> {
+
+			boolean tf1 = false;
+			boolean tf2 = false;
+			if (entity != null) {
+				if (entity.getColumnLabel() != null && entity.getColumnLabel().get() != null) {
+					tf1 = entity.getColumnLabel().get().toUpperCase().contains(newValue.toUpperCase());
+				}
+				if (entity.getValue() != null && entity.getValue().get() != null) {
+					tf2 = entity.getValue().get().toUpperCase().contains(newValue.toUpperCase());
+				}
+			}
+			return tf1 || tf2;
+		}
+
+		);
+		SortedList<ExcelFieldPo> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 		tableView.setItems(sortedData);
 	}

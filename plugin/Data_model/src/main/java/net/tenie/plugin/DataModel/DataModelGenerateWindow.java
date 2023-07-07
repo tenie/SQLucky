@@ -1,12 +1,12 @@
 package net.tenie.plugin.DataModel;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,11 +32,8 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
-import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.ModelDBType;
-import net.tenie.plugin.DataModel.po.ModelFileType;
 import net.tenie.plugin.DataModel.tools.DataModelDAO;
 import net.tenie.plugin.DataModel.tools.DataModelMySQLDao;
 import net.tenie.plugin.DataModel.tools.DataModelUtility;
@@ -51,6 +48,8 @@ public class DataModelGenerateWindow {
 	// 编辑连接时记录连接状态
 	public static boolean editLinkStatus = false;
 	public static Stage stage;
+
+	static ChoiceBox<String> connNameChoiceBox;
 	private static Logger logger = LogManager.getLogger(DataModelGenerateWindow.class);
 
 	public static Stage CreateWindow(VBox vb) {
@@ -140,8 +139,7 @@ public class DataModelGenerateWindow {
 		ChoiceBox<String> connNameChoiceBox = new ChoiceBox<String>(connNameVals);
 		return connNameChoiceBox;
 	}
-	static ChoiceBox<String> connNameChoiceBox ;
- 
+
 	public static void showWindow() {
 
 		Label lbType = new Label("DB Type");
@@ -158,18 +156,18 @@ public class DataModelGenerateWindow {
 
 		String modelName = "Model name";
 		Label lbModelName = new Label(modelName);
-		TextField   tfModelName = new TextField();
+		TextField tfModelName = new TextField();
 		tfModelName.setPromptText(modelName);
 		tfModelName.setDisable(true);
 		tfModelName.disableProperty().bind(connNameChoiceBox.valueProperty().isNull());
 		TextFieldSetup.setMaxLength(tfModelName, 60);
-		connNameChoiceBox.valueProperty().addListener((obj, ol, ne)->{
-			if(ne != null && !"".equals(ne)) {
-				tfModelName.setText(ne+"_");
+		connNameChoiceBox.valueProperty().addListener((obj, ol, ne) -> {
+			if (ne != null && !"".equals(ne)) {
+				tfModelName.setText(ne + "_");
 				tfModelName.requestFocus();
 			}
 		});
-		
+
 		// 保存按钮
 		var savebtn = saveBtn(tfModelName);
 		savebtn.disableProperty().bind(tfModelName.textProperty().isEmpty());
@@ -191,8 +189,6 @@ public class DataModelGenerateWindow {
 
 	}
 
-	 
-
 	// 通过数据库的链接 生成数据模型
 	public static SqluckyConnector generateModelData(TextField tfModelName) {
 		AppComponent appComponent = ComponentGetter.appComponent;
@@ -200,9 +196,9 @@ public class DataModelGenerateWindow {
 		String selectConnName = connNameChoiceBox.getValue();
 		SqluckyConnector sqluckyConn = sqluckyConnMap.get(selectConnName);
 		String modelNameStr = tfModelName.getText();
-		
+
 		// 载入动画
-		LoadingAnimation.loadingAnimation("Saving....", v->{
+		LoadingAnimation.loadingAnimation("Saving....", v -> {
 			try {
 				// 生成数据
 				var tmpDataModelPoVal = DataModelMySQLDao.generateMySqlModel(sqluckyConn, modelNameStr);
@@ -219,10 +215,10 @@ public class DataModelGenerateWindow {
 				MyAlert.errorAlert(e1.getMessage());
 			}
 		});
-			
+
 		return sqluckyConn;
 	}
-	
+
 	public static Button saveBtn(TextField tfModelName) {
 		Button saveBtn = new Button("Save");
 		saveBtn.getStyleClass().add("myAlertBtn");
@@ -235,10 +231,8 @@ public class DataModelGenerateWindow {
 				MyAlert.errorAlert("Exist model name: " + modelNameStr + ", Please,  Rename !");
 				return;
 			}
-		
-			
+
 			generateModelData(tfModelName);
-			 
 
 		});
 		return saveBtn;

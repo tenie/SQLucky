@@ -9,6 +9,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 数据库表的字段数据结构
+ * 
  * @author tenie
  *
  */
@@ -16,25 +17,42 @@ public class SheetFieldPo {
 
 	public static final String TEXT_TYPE = "TEXT_TYPE";
 	public static final String CHECK_BOX_TYPE = "CHECK_BOX_TYPE";
-	
+
 	// 字段名称, 这个可能会没有
-	private StringProperty columnName; 
+	private StringProperty columnName;
 	// 这个也是字段名称
 	private StringProperty columnLabel;
-	
+
 	private StringProperty columnClassName;
 	private IntegerProperty columnDisplaySize;
 	private IntegerProperty columnType;
 	private StringProperty columnTypeName;
-	private IntegerProperty scale; 
-	private StringProperty value; 
+	private IntegerProperty scale;
+	private StringProperty value;
 	private Double columnWidth;
 	private LongProperty dateValue; // 如果是时间, 保存为long
 
+	// excel数据导入表需要使用下面2个字段
+//	private StringProperty excelRowVal = new SimpleStringProperty(""); // excel 对应列
+//	private SimpleStringProperty excelRowIdx = new SimpleStringProperty(""); // excel 对应列号
+//	private StringProperty fixedValue = new SimpleStringProperty("");; // 不使用excel对应的列, 使用固定值
+
 	// 类型, 在界面上显示的时候, 默认文本类型
-	private String Type = TEXT_TYPE; 
-	
-	
+	private String Type = TEXT_TYPE;
+
+//	public SheetFieldPo() {
+//		excelRowValListener();
+//	}
+//
+//	public void excelRowValListener() {
+//		excelRowVal.addListener((obj, valOld, valNew) -> {
+//			if (StrUtils.isNotNullOrEmpty(valNew)) {
+//				String[] excelInfo = valNew.split(" - ");
+//				excelRowIdx.setValue(excelInfo[0]);
+//			}
+//		});
+//	}
+
 	public String getType() {
 		return Type;
 	}
@@ -64,7 +82,7 @@ public class SheetFieldPo {
 	}
 
 	public StringProperty getColumnName() {
-		if(columnName == null) {
+		if (columnName == null) {
 			return columnLabel;
 		}
 		return columnName;
@@ -106,7 +124,7 @@ public class SheetFieldPo {
 	}
 
 	public StringProperty getColumnLabel() {
-		if( columnLabel == null) {
+		if (columnLabel == null) {
 			return columnName;
 		}
 		return columnLabel;
@@ -171,6 +189,4 @@ public class SheetFieldPo {
 				+ columnWidth + ", dateValue=" + dateValue + ", Type=" + Type + "]";
 	}
 
- 
- 
 }

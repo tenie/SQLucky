@@ -2,7 +2,9 @@ package net.tenie.plugin.DataModel;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.jfoenix.controls.JFXButton;
+
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -13,7 +15,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
@@ -23,6 +27,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.DataModel.po.DataModelTablePo;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
@@ -141,12 +146,20 @@ public class DataModelTabTree {
 			// 查询框
 			TextField textField = new TextField();
 			textField.getStyleClass().add("myTextField");
-			textField.setVisible(false);
+//			textField.setVisible(false);
+			AnchorPane txtAP = UiTools.textFieldAddCleanBtn(textField);
+			txtAP.setVisible(false);
 
 			JFXButton query = new JFXButton();
 			query.setGraphic(ComponentGetter.getIconDefActive("search"));
 			query.setOnAction(e -> {
-				textField.setVisible(!textField.isVisible());
+				txtAP.setVisible(!txtAP.isVisible());
+			});
+			// 导出excel
+			JFXButton exportExcel = new JFXButton();
+			exportExcel.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
+			exportExcel.setOnAction(e -> {
+				SqluckyBottomSheetUtility.exportExcelAction(false);
 			});
 
 			// 字段信息保存按钮
@@ -159,25 +172,18 @@ public class DataModelTabTree {
 			tableHeadOptionNode.add(tabNameLabel2);
 			tableHeadOptionNode.add(commentLabel);
 			tableHeadOptionNode.add(saveBtn);
+			tableHeadOptionNode.add(exportExcel);
 			tableHeadOptionNode.add(query);
-			tableHeadOptionNode.add(textField);
+//			tableHeadOptionNode.add(textField);
+			tableHeadOptionNode.add(txtAP);
 
 			// 查询数据库, 获取字段信息
 //			conn = SqluckyAppDB.getConn();
 			SqluckyConn = SqluckyAppDB.getSqluckyConnector();
-			String sql = "select DEF_KEY as FIELD,"
-							+ " DEF_NAME AS NAME , " 
-							+ "COMMENT, " 
-							+ "TYPE_FULL_NAME, "
-							+ "PRIMARY_KEY, " 
-							+ "NOT_NULL, " 
-							+ "AUTO_INCREMENT, "
-							+ "DEFAULT_VALUE, " 
-							+ "PRIMARY_KEY_NAME, "
-							+ "NOT_NULL_NAME, " 
-							+ "AUTO_INCREMENT_NAME  "
-							+ "from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "
-							+ tableId;
+			String sql = "select DEF_KEY as FIELD," + " DEF_NAME AS NAME , " + "COMMENT, " + "TYPE_FULL_NAME, "
+					+ "PRIMARY_KEY, " + "NOT_NULL, " + "AUTO_INCREMENT, " + "DEFAULT_VALUE, " + "PRIMARY_KEY_NAME, "
+					+ "NOT_NULL_NAME, " + "AUTO_INCREMENT_NAME  " + "from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "
+					+ tableId;
 
 			SheetDataValue sheetDaV = DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn, tableName,
 					tableHeadOptionNode, DataModelOperate.tableInfoColWidth);
