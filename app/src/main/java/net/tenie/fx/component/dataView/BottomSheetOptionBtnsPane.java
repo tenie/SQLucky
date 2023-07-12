@@ -36,6 +36,7 @@ import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
@@ -181,13 +182,30 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		copyBtn.setDisable(disable);
 
 		// excel 导入
-		JFXButton excelImportBtn = new JFXButton();
-		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
-		excelImportBtn.setOnMouseClicked(e -> {
-			ImportExcelWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
-		});
-		excelImportBtn.setTooltip(MyTooltipTool.instance("Import"));
+		MenuButton importFileBtn = new MenuButton();
+		importFileBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
+		importFileBtn.setDisable(disable);
+		
+		MenuItem excelImportBtn = new MenuItem("Import Excel");
+//		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
 		excelImportBtn.setDisable(disable);
+		excelImportBtn.setOnAction(e -> {
+			ImportExcelWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+			
+		}); 
+		
+		MenuItem csvImportBtn = new MenuItem("Import CSV");
+//		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		csvImportBtn.setDisable(disable);
+		csvImportBtn.setOnAction(e -> {
+			ImportCsvWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+//			ImportExcelWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+			
+		}); 
+		
+		importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn);
+		
 
 		// 导出
 		MenuButton exportBtn = new MenuButton();
@@ -335,7 +353,9 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		ls.add(addBtn);
 		ls.add(minusBtn);
 		ls.add(copyBtn);
-		ls.add(excelImportBtn);
+//		ls.add(excelImportBtn);
+		ls.add(importFileBtn);
+		
 		ls.add(exportBtn);
 		ls.add(searchBtn);
 		ls.add(searchField);

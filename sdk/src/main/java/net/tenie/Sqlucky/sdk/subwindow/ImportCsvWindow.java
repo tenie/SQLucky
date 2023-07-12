@@ -36,15 +36,15 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 
 /**
- * excel导入
+ * Csv导入
  * 
  * @author tenie
  *
  */
-public class ImportExcelWindow {
+public class ImportCsvWindow {
 
 	private static Stage stage;
-	private static Logger logger = LogManager.getLogger(ImportExcelWindow.class);
+	private static Logger logger = LogManager.getLogger(ImportCsvWindow.class);
 
 	private static ChoiceBox<String> connNameChoiceBox;
 	private static TextField tfTabName;
@@ -70,7 +70,7 @@ public class ImportExcelWindow {
 	// 组件布局
 	public static void layout(List<Region> list, String tableName) {
 		VBox vb = new VBox();
-		Label title = new Label("Import Excel To DB Table");
+		Label title = new Label("Import CSV To DB Table");
 		title.setPadding(new Insets(15));
 		AppComponent appComponent = ComponentGetter.appComponent;
 		title.setGraphic(appComponent.getIconDefActive("gears"));
@@ -101,7 +101,6 @@ public class ImportExcelWindow {
 			if (node2 != null)
 				grid.add(node2, 1, idxj);
 		}
-
 		stage.requestFocus();
 		stage.show();
 	}
@@ -145,13 +144,13 @@ public class ImportExcelWindow {
 		tfFilePath.setOnMouseClicked(v -> {
 			String fileVal = tfFilePath.getText();
 			if (StrUtils.isNullOrEmpty(fileVal)) {
-				FileOrDirectoryChooser.getExcelFilePathAction(tfFilePath, stage);
+				FileOrDirectoryChooser.getCsvFilePathAction(tfFilePath, stage);
 			}
 
 		});
 
 		HBox fileBox = new HBox();
-		Button selectFile = UiTools.openExcelFileBtn(tfFilePath, stage);
+		Button selectFile = UiTools.openCsvFileBtn(tfFilePath, stage);
 		fileBox.getChildren().addAll(tfFilePath, selectFile);
 
 		List<Region> list = new ArrayList<>();
@@ -167,15 +166,6 @@ public class ImportExcelWindow {
 		layout(list, tableName);
 
 	}
-
-//	// 选取文件按钮
-//	public static Button openFileBtn(TextField tfFilePath) {
-//		Button selectFileBtn = new Button("...");
-//		selectFileBtn.setOnAction(e -> {
-//			FileOrDirectoryChooser.getFilePathAction(tfFilePath, stage);
-//		});
-//		return selectFileBtn;
-//	}
 
 	// 下一步按钮
 	public static Button nextBtn() {
@@ -195,8 +185,7 @@ public class ImportExcelWindow {
 			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
 			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
 			String tableName = tfTabName.getText();
-			ImportExcelNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage);
-//			stage.close();
+			ImportCsvNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage);
 		});
 
 		return btn;

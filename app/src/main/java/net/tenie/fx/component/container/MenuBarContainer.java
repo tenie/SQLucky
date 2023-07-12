@@ -13,6 +13,7 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.KeyBindingCache;
+import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -260,11 +261,22 @@ public class MenuBarContainer {
 		});
 
 		// 导入数据
-		MenuItem importExcel = new MenuItem(StrUtils.MenuItemNameFormat("Import Excel"));
-		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
-		importExcel.setOnAction(value -> {
+		Menu importData = new Menu(StrUtils.MenuItemNameFormat("Import Data"));
+		importData.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		
+		MenuItem importExcelFile = new MenuItem(StrUtils.MenuItemNameFormat("Import Excel"));
+//		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		importExcelFile.setOnAction(value -> {
 			ImportExcelWindow.showWindow("", "");
 		});
+		
+		MenuItem importCsv = new MenuItem(StrUtils.MenuItemNameFormat("Import CSV"));
+//		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		importCsv.setOnAction(value -> {
+			ImportCsvWindow.showWindow("", "");
+		});
+		
+		importData.getItems().addAll(importExcelFile, importCsv);
 
 		MenuItem addDB = new MenuItem(StrUtils.MenuItemNameFormat("Add New DB Connection"));
 		addDB.setOnAction(value -> {
@@ -370,7 +382,7 @@ public class MenuBarContainer {
 
 		});
 
-		mn.getItems().addAll(dataTransfer, importExcel, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn,
+		mn.getItems().addAll(dataTransfer, importData, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn,
 				closeALlConn, deleteConn, new SeparatorMenuItem(), hideLeft, hideBottom, hideLeftBottom,
 				new SeparatorMenuItem(), Theme, new SeparatorMenuItem(), fontSize, keysBind);
 
