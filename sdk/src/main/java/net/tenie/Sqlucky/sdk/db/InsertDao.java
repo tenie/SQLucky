@@ -336,4 +336,114 @@ public class InsertDao {
 		return msg;
 	}
 
+	/**
+	 * 
+	 * @param conn
+	 * @param tableName
+	 * @param fields
+	 * @param fieldsValue 元素不能为null
+	 * @return
+	 * @throws Exception
+	 */
+	public static String execInsertByCsvField(Connection conn, String tableName, List<ExcelFieldPo> fields,
+			List<List<String>> rowVals, String saveSqlfile ,boolean onlySaveSql) throws Exception {
+		String msg = "";
+		String insertLog = "";
+		String valLog = "";
+		try {
+
+			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
+			int size = fields.size();
+			for (int i = 0; i < size; i++) {
+				ExcelFieldPo po = fields.get(i);
+				sql.append(po.getColumnLabel().get());
+				sql.append(" ,");
+
+			}
+			String insert = sql.toString();
+			if (insert.endsWith(",")) {
+				insert = insert.substring(0, insert.length() - 1);
+			}
+
+			insert += " ) VALUES ( ";
+
+			Statement sm = conn.createStatement();
+			insertLog = insert;
+			List<String> inSqls = new ArrayList<>();
+
+			for (List<String> fieldsValue : rowVals) {
+				String insertValue = "";
+				for (int i = 0; i < size; i++) {
+					ExcelFieldPo fieldpo = fields.get(i);
+					String val = fieldsValue.get(i);
+					if (val == null) {
+						val = "";
+					}
+					int javatype = fieldpo.getColumnType().get();
+					String columnTypeName = fieldpo.getColumnTypeName().get();
+					logger.info("javatype = " + javatype + " | " + columnTypeName);
+					valLog += " | " + val;
+					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
+						String tmp = fieldpo.getFixedValue().get();
+						insertValue += tmp;
+					}
+					// 时间类型判断
+					else if (CommonUtility.isDateAndDateTime(javatype)) {
+						// 空字符串 给字段复制null
+						if (StrUtils.isNullOrEmpty(val.trim())) {
+							insertValue += "null";
+						} else {
+							insertValue += val  ;
+
+						}
+
+						// 数字判断
+					} else if (CommonUtility.isNum(javatype)) {
+						val = val.trim();
+						if (StrUtils.isNullOrEmpty(val)) { // 空字符串， 设置null
+							insertValue += "null";
+						} else if (NumberUtils.isParsable(val)) { // 可以转换为数字
+							insertValue += val;
+						} else {
+							// 其他情况，字符串不能转为数字 设置null
+							insertValue += "null";
+						}
+
+					} else {
+						insertValue +=  val  ;
+					}
+					insertValue += " ,";
+
+				}
+				if (insertValue.endsWith(",")) {
+					insertValue = insertValue.substring(0, insertValue.length() - 1);
+					insertValue = insert + insertValue + " )";
+					logger.info(insertValue);
+					if(onlySaveSql ) { 
+						inSqls.add(insertValue + ";");
+					}else {
+						sm.addBatch(insertValue);
+						inSqls.add(insertValue + ";");
+					}
+				
+				}
+			}
+			if(onlySaveSql) { 
+				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
+			}else {
+				int[] count = sm.executeBatch();
+				int execCountLen = count.length;
+				logger.info("instert = " + execCountLen);
+				msg = "Insert " + execCountLen + " ;\n" + insertLog + "; \n" + valLog;
+				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage() + " : excel Value = " + valLog + " ;\n sql = " + insertLog);
+		}
+		return msg;
+	}
+	
 }
