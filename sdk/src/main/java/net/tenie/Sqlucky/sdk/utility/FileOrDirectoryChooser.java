@@ -143,6 +143,14 @@ public final class FileOrDirectoryChooser {
 //		}
 		return fileChooser;
 	}
+	
+	public static FileChooser getCsvFileChooser() {
+		fileChooser.setTitle("");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("csv", "*.csv"));
+		return fileChooser;
+	}
 
 	// new
 	public static FileChooser getFileChooser(String title) {
@@ -223,10 +231,23 @@ public final class FileOrDirectoryChooser {
 		File file = fileChooser.showOpenDialog(stage);
 		return file;
 	}
+	public static File selectCsvFile(Stage stage) {
+		getCsvFileChooser();
+		File file = fileChooser.showOpenDialog(stage);
+		return file;
+	}
 
 	public static void getExcelFilePathAction(TextField tfFilePath, Stage stage) {
 		// 获取文件
 		File file = FileOrDirectoryChooser.selectExcelFile(stage);
+		if (file != null) {
+			tfFilePath.setText(file.getAbsolutePath());
+		}
+	}
+	
+	public static void getCsvFilePathAction(TextField tfFilePath, Stage stage) {
+		// 获取文件
+		File file = FileOrDirectoryChooser.selectCsvFile(stage);
 		if (file != null) {
 			tfFilePath.setText(file.getAbsolutePath());
 		}

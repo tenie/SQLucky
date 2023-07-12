@@ -52,6 +52,14 @@ public class UiTools {
 		});
 		return selectFileBtn;
 	}
+	// 选取文件按钮
+	public static Button openCsvFileBtn(TextField tfFilePath, Stage stage) {
+		Button selectFileBtn = new Button("...");
+		selectFileBtn.setOnAction(e -> {
+			FileOrDirectoryChooser.getCsvFilePathAction(tfFilePath, stage);
+		});
+		return selectFileBtn;
+	}
 
 	// 选取文件按钮
 	public static Button openFileBtn(TextField tfFilePath, Stage stage) {
