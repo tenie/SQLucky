@@ -38,6 +38,7 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
+import net.tenie.Sqlucky.sdk.subwindow.ImportSQLWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -188,7 +189,6 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		importFileBtn.setDisable(disable);
 		
 		MenuItem excelImportBtn = new MenuItem("Import Excel");
-//		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
 		excelImportBtn.setDisable(disable);
 		excelImportBtn.setOnAction(e -> {
 			ImportExcelWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
@@ -196,15 +196,22 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		}); 
 		
 		MenuItem csvImportBtn = new MenuItem("Import CSV");
-//		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
 		csvImportBtn.setDisable(disable);
 		csvImportBtn.setOnAction(e -> {
 			ImportCsvWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
-//			ImportExcelWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
 			
 		}); 
 		
-		importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn);
+		MenuItem sqlImportBtn = new MenuItem("Import Sql File");
+		sqlImportBtn.setDisable(disable);
+		sqlImportBtn.setOnAction(e -> {
+			ImportSQLWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+			
+		}); 
+		
+		
+		
+		importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn, sqlImportBtn);
 		
 
 		// 导出

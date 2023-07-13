@@ -1,6 +1,10 @@
 package net.tenie.Sqlucky.sdk.excel;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -20,6 +24,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -44,7 +49,7 @@ public class CsvToDB {
 	 * @throws Exception
 	 */
 	public static void toTable(SqluckyConnector dbc, String tablename, String csvFile, String saveSqlFile,
-			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count, boolean onlySaveSql) throws Exception {
+			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count, boolean onlySaveSql, String splitSymbol) throws Exception {
 		Connection conn = dbc.getConn();
 		String errorData = "";
 		try {
@@ -62,30 +67,32 @@ public class CsvToDB {
 			// Read the Row
 			int idx = 0;
 			List<List<String>> rowVals = new ArrayList<>();
-			try (Reader reader = Files.newBufferedReader(Paths.get(csvFile))) {
-			    Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(reader);
-			    for (CSVRecord record : records) {
+			File filecsv = new File(csvFile);
+			String charset = FileTools.detectFileCharset(filecsv);
+			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filecsv), charset))) {
+				String str = null;
+				while ((str = reader.readLine()) != null) {
 			    	List<String> cellVals = new ArrayList<>();
 					rowVals.add(cellVals);
-					
-					
-					logger.debug("Record #: " + record.getRecordNumber());
-			        
-			        
-			        for (ExcelFieldPo epo : fields) {
-						// 匹配到excel的列
-						String rowIdxStr = epo.getExcelRowIdx().get();
-						if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
-							Integer rowidx = Integer.valueOf(rowIdxStr);
-							// 下标从0开始, 需要减1
-							String cellStr = record.get(rowidx - 1); 
-							cellVals.add(cellStr);
-						} else { // 使用固定值
-							String fixVal = epo.getFixedValue().get();
-							cellVals.add(fixVal);
-						}
+					String[] record = str.split(splitSymbol);
+					if (record != null) {
+						for (ExcelFieldPo epo : fields) {
+							// 匹配到excel的列
+							String rowIdxStr = epo.getExcelRowIdx().get();
+							if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
+								Integer rowidx = Integer.valueOf(rowIdxStr);
+								// 下标从0开始, 需要减1
+								String cellStr = record[rowidx - 1];
+								cellVals.add(cellStr);
+							} else { // 使用固定值
+								String fixVal = epo.getFixedValue().get();
+								cellVals.add(fixVal);
+							}
 
+						}
 					}
+			        
+			      
 					idx++;
 					if (idx % 100 == 0) {
 						errorData = InsertDao.execInsertByCsvField(conn, tablename, fields, rowVals, saveSqlFile, onlySaveSql);

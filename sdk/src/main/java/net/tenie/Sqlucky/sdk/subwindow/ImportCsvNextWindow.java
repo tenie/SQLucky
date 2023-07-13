@@ -140,12 +140,18 @@ public class ImportCsvNextWindow {
 				headArr[i] = val;
 				selectVal.add(val);
 			}
-			for (var tmp : fields) {
+			for(int j = 0 ; j < fields.size(); j++) {
+//			for (var tmp : fields) {
+				var tmp  = fields.get(j);
 				tmp.setExcelRowInfo(selectVal);
+				tmp.getExcelRowVal().set(selectVal.get(j));
 			}
 
 			return headArr;
 		}
+		
+		// 将cvs 字段赋值给 字段对应的值
+		
 
 		return new String[0];
 	}
@@ -216,7 +222,7 @@ public class ImportCsvNextWindow {
 		String[] headArr = csvHeadArray(csvFile, fields);
 		valueCol.setCellValueFactory(p -> p.getValue().getExcelRowVal());
 		valueCol.setCellFactory(ComboBox2TableCell.forTableColumn(headArr));
-
+		
 		tv.getColumns().add(valueCol);
 
 		// 第三列
@@ -283,14 +289,10 @@ public class ImportCsvNextWindow {
 		Label lb1 = new Label("起始行号");
 		beginIdTF = new TextField();
 		beginIdTF.setPromptText("默认第一行开始");
-//		HBox b1 = new HBox();
-//		b1.getChildren().addAll(lb1, beginIdTF);
 
 		Label lb2 = new Label("导入行数");
 		conuntTF = new TextField();
 		conuntTF.setPromptText("默认全部");
-//		HBox b2 = new HBox();
-//		b2.getChildren().addAll(lb2, conuntTF);
 
 		saveSqlCheckBox = new JFXCheckBox("导入SQL保存到文件");
 		tfFilePath = new TextField();

@@ -1,8 +1,15 @@
 package net.tenie.Sqlucky.sdk.utility;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -25,7 +32,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
  */
 public class FileTools {
 	private static Logger logger = LogManager.getLogger(FileTools.class);
-	
+
 	// 文件类型
 	public static List<String> fileTypes = new ArrayList<>();
 	static {
@@ -90,6 +97,7 @@ public class FileTools {
 		fileTypes.add(".dcu");
 
 	}
+
 	// UTF-8 字符串保存到文件
 	public static void save(File file, String data) throws IOException {
 		FileUtils.writeStringToFile(file, data, "UTF-8");
@@ -338,19 +346,14 @@ public class FileTools {
 		try {
 			encoding = UniversalDetector.detectCharset(sourceFile);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return encoding;
-//		if (encoding != null) {
-//			System.out.println("Detected encoding = " + encoding);
-//		} else {
-//			System.out.println("No encoding detected.");
-//		}
 	}
-	
+
 	/**
 	 * 删除目录, 递归删除
+	 * 
 	 * @param dir
 	 */
 	public static void deleteDir(File dir) {
@@ -368,19 +371,20 @@ public class FileTools {
 			}
 			dir.delete();
 		}
-		if(dir != null  && dir.exists() ) {
+		if (dir != null && dir.exists()) {
 			dir.delete();
 		}
 	}
-	
+
 	/**
 	 * str写入到文件并压缩文件
+	 * 
 	 * @param val
 	 * @param fileName
 	 * @param tmpDir
 	 * @return
 	 */
-	public static String stringZipFile(String val, String fileName, String tmpDir){
+	public static String stringZipFile(String val, String fileName, String tmpDir) {
 		File file = new File(tmpDir, fileName);
 		String strFile = file.getAbsolutePath();
 		String zipFile = strFile + ".zip";
@@ -392,4 +396,70 @@ public class FileTools {
 		}
 		return zipFile;
 	}
+
+	/**
+	 * 读取sql文件 ,并执行
+	 * 
+	 * @param targetFile
+	 * @param splitChar
+	 * @param execSql
+	 * @throws Exception
+	 */
+	public static void readInsertSqlFile(String targetFile, String splitChar, Function<String, String> execSql)
+			throws Exception {
+		File sqlFile = new File(targetFile);
+		if (!sqlFile.exists()) {
+			throw new Exception("目标路径：[ " + targetFile + " ] 有错误...");
+		}
+		BufferedReader reader = null;
+		try {
+			String charset = FileTools.detectFileCharset(sqlFile);
+			// 输入缓冲流
+			reader = new BufferedReader(new InputStreamReader(new FileInputStream(sqlFile), charset));
+			String str = null;
+			// 行数
+			long len = 0;
+			logger.info("开始写入......请等待......");
+			long startTime = System.currentTimeMillis();
+			// 输出缓冲流
+			BufferedWriter writer = null;
+			String sql = "";
+			while ((str = reader.readLine()) != null) {
+				if (str.trim().startsWith("--")) {
+					continue;
+				}
+				int idx = str.indexOf(splitChar);
+				if (idx > -1) {
+					sql += str.subSequence(0, idx);
+					// 执行sql
+					execSql.apply(str);
+					// 清空sql
+					sql = str.substring(idx + 1);
+				} else {
+					sql += str;
+				}
+
+			}
+			logger.info(" 写入完毕，一共 " + len + " 记录，耗时 ：" + (System.currentTimeMillis() - startTime) / 1000 + " s");
+
+		} catch (UnsupportedEncodingException | FileNotFoundException e) {
+			e.printStackTrace();
+		} finally {
+			if (reader != null)
+				reader.close();
+		}
+
+	}
+
+//	public static void main(String[] args) {
+//		String val = "abc;";
+//		int idx = val.indexOf(";");
+//		System.out.println(val.substring(idx));
+//		System.out.println(val.substring(idx+1));
+//		
+//		val = ";abc";
+//		 idx = val.indexOf(";");
+//		System.out.println(val.substring(0,idx));
+//		System.out.println(val);
+//	}
 }
