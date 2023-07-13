@@ -37,7 +37,6 @@ import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 
 /**
  * Sql导入
@@ -51,7 +50,7 @@ public class ImportSQLWindow {
 	private static Logger logger = LogManager.getLogger(ImportSQLWindow.class);
 
 	private static ChoiceBox<String> connNameChoiceBox;
-	private static TextField tfTabName;
+//	private static TextField tfTabName;
 	private static TextField tfFilePath;
 
 	// 按钮面板
@@ -60,8 +59,8 @@ public class ImportSQLWindow {
 		// 保存按钮
 		Button nextbtn = nextBtn();
 
-		nextbtn.disableProperty().bind(connNameChoiceBox.valueProperty().isNull()
-				.or(tfTabName.textProperty().isEmpty().or(tfFilePath.textProperty().isEmpty())));
+		nextbtn.disableProperty()
+				.bind(connNameChoiceBox.valueProperty().isNull().or(tfFilePath.textProperty().isEmpty()));
 
 		Button cancel = cancelBtn();
 
@@ -130,14 +129,14 @@ public class ImportSQLWindow {
 		String str = "DB Connection";
 		Label lbDBconn = new Label(str);
 		connNameChoiceBox = ChoiceBoxDbConnection(connName);
-		String tabNameStr = "Table Name";
-		Label lbModelName = new Label(tabNameStr);
+//		String tabNameStr = "Table Name";
+//		Label lbModelName = new Label(tabNameStr);
 
-		tfTabName = new TextField();
-		tfTabName.setPromptText(tabNameStr);
-		tfTabName.setText(tableName);
+//		tfTabName = new TextField();
+//		tfTabName.setPromptText(tabNameStr);
+//		tfTabName.setText(tableName);
 
-		TextFieldSetup.setMaxLength(tfTabName, 100);
+//		TextFieldSetup.setMaxLength(tfTabName, 100);
 
 		// 选择文件
 		String filePath = "File path";
@@ -161,8 +160,8 @@ public class ImportSQLWindow {
 
 		list.add(lbDBconn);
 		list.add(connNameChoiceBox);
-		list.add(lbModelName);
-		list.add(tfTabName);
+//		list.add(lbModelName);
+//		list.add(tfTabName);
 
 		list.add(lbFilePath);
 		list.add(fileBox);
@@ -184,19 +183,16 @@ public class ImportSQLWindow {
 				return;
 			}
 
-			
-			
 			String connName = connNameChoiceBox.getValue();
 			AppComponent appComponent = ComponentGetter.appComponent;
 			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
 			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
-		
-			
+
 			try {
-				FileTools.readInsertSqlFile(filePath.getAbsolutePath(), ";", sql->{
+				FileTools.readInsertSqlFile(filePath.getAbsolutePath(), ";", sql -> {
 					try {
-						return execSQL(	sqluckyConn.getConn(), sql);
-					} catch (SQLException e) { 
+						return execSQL(sqluckyConn.getConn(), sql);
+					} catch (SQLException e) {
 						e.printStackTrace();
 					}
 					return "";
@@ -204,19 +200,18 @@ public class ImportSQLWindow {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 //			String tableName = tfTabName.getText();
 //			ImportCsvNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage);
 		});
 
 		return btn;
 	}
-	
-	public static String execSQL(Connection conn,  String sql) throws SQLException {
+
+	public static String execSQL(Connection conn, String sql) throws SQLException {
 		int v = DBTools.execDML(conn, sql);
 		return "成功: " + v + "条";
 	}
-	
 
 	public static Button cancelBtn() {
 		Button cancelBtn = new Button("Cancel");
