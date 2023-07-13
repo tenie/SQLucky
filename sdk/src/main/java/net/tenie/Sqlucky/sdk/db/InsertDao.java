@@ -335,6 +335,34 @@ public class InsertDao {
 		}
 		return msg;
 	}
+	
+	
+	
+	public static String stringToDBString(String val) {
+		String rsVal = "";
+		if ((val.startsWith("'") && val.endsWith("'"))) {
+			rsVal = val;
+		} else if (val.startsWith("\"") && val.endsWith("\"")) {
+			rsVal = "'" + val.substring(1, val.lastIndexOf("\"")) + "'";
+		} else {
+			rsVal = "'" + val + "'";
+		}
+
+		return rsVal;
+	}
+	
+	public static String stringToDbNumeral(String val) {
+		String rsVal = "";
+		if ((val.startsWith("'") && val.endsWith("'"))) {
+			rsVal = val.substring(1, val.lastIndexOf("'"));
+		} else if (val.startsWith("\"") && val.endsWith("\"")) {
+			rsVal = val.substring(1, val.lastIndexOf("\""));
+		} else {
+			rsVal = val;
+		}
+
+		return rsVal;
+	}
 
 	/**
 	 * 
@@ -378,11 +406,14 @@ public class InsertDao {
 					String val = fieldsValue.get(i);
 					if (val == null) {
 						val = "";
+					}else {
+						val = val.trim();
 					}
 					int javatype = fieldpo.getColumnType().get();
 					String columnTypeName = fieldpo.getColumnTypeName().get();
 					logger.info("javatype = " + javatype + " | " + columnTypeName);
 					valLog += " | " + val;
+					// 固定值
 					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
 						String tmp = fieldpo.getFixedValue().get();
 						insertValue += tmp;
@@ -393,7 +424,14 @@ public class InsertDao {
 						if (StrUtils.isNullOrEmpty(val.trim())) {
 							insertValue += "null";
 						} else {
-							insertValue += val  ;
+//							if( (val.startsWith("'") && val.endsWith("'")) ) {
+//								insertValue += val  ;
+//							}else if( val.startsWith("\"") && val.endsWith("\"")  ){
+//								insertValue += val.substring(1, val.lastIndexOf("\""))  ;
+//							}else {
+//								insertValue += "'" + val + "'"  ;
+//							}
+							insertValue +=  stringToDBString(val);
 
 						}
 
@@ -403,14 +441,20 @@ public class InsertDao {
 						if (StrUtils.isNullOrEmpty(val)) { // 空字符串， 设置null
 							insertValue += "null";
 						} else if (NumberUtils.isParsable(val)) { // 可以转换为数字
-							insertValue += val;
+//							insertValue += val;
+							insertValue +=  stringToDbNumeral(val);
 						} else {
 							// 其他情况，字符串不能转为数字 设置null
 							insertValue += "null";
 						}
 
-					} else {
-						insertValue +=  val  ;
+					} else {// 字符串
+						if("NULL".equals(val.toUpperCase())) {
+							insertValue +=  "NUll";
+						}else {
+							insertValue +=  stringToDBString(val);
+						}
+//						insertValue +=  val  ;
 					}
 					insertValue += " ,";
 
