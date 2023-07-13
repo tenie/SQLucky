@@ -252,7 +252,13 @@ public final class FileOrDirectoryChooser {
 			tfFilePath.setText(file.getAbsolutePath());
 		}
 	}
-
+	public static void getSqlFilePathAction(TextField tfFilePath, Stage stage) {
+		// 获取文件
+		File file = FileOrDirectoryChooser.showOpenSqlFile("", stage);
+		if (file != null) {
+			tfFilePath.setText(file.getAbsolutePath());
+		}
+	}
 	public static void getAllFilePathAction(TextField tfFilePath, Stage stage) {
 		// 获取文件
 		File file = FileOrDirectoryChooser.showOpenAllFile("", stage);
@@ -260,5 +266,7 @@ public final class FileOrDirectoryChooser {
 			tfFilePath.setText(file.getAbsolutePath());
 		}
 	}
-
+	
+	
+	 
 }

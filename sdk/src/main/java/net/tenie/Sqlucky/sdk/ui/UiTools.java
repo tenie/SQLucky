@@ -60,6 +60,15 @@ public class UiTools {
 		});
 		return selectFileBtn;
 	}
+	
+	// 选取文件按钮
+	public static Button openSqlFileBtn(TextField tfFilePath, Stage stage) {
+		Button selectFileBtn = new Button("...");
+		selectFileBtn.setOnAction(e -> {
+			FileOrDirectoryChooser.getSqlFilePathAction(tfFilePath, stage);
+		});
+		return selectFileBtn;
+	}
 
 	// 选取文件按钮
 	public static Button openFileBtn(TextField tfFilePath, Stage stage) {
