@@ -15,6 +15,7 @@ import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.KeyBindingCache;
 import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
+import net.tenie.Sqlucky.sdk.subwindow.ImportSQLWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -276,7 +277,12 @@ public class MenuBarContainer {
 			ImportCsvWindow.showWindow("", "");
 		});
 		
-		importData.getItems().addAll(importExcelFile, importCsv);
+		MenuItem importSqlFile = new MenuItem(StrUtils.MenuItemNameFormat("Import Sql File"));
+//		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		importSqlFile.setOnAction(value -> {
+			ImportSQLWindow.showWindow("", "");
+		});
+		importData.getItems().addAll(importExcelFile, importCsv, importSqlFile);
 
 		MenuItem addDB = new MenuItem(StrUtils.MenuItemNameFormat("Add New DB Connection"));
 		addDB.setOnAction(value -> {

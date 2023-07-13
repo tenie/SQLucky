@@ -41,8 +41,6 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.CsvToDB;
 import net.tenie.Sqlucky.sdk.excel.CsvUtil;
 import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
-import net.tenie.Sqlucky.sdk.excel.ExcelToDB;
-import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -73,26 +71,27 @@ public class ImportCsvNextWindow {
 	private static ObservableList<ExcelFieldPo> csvFields;
 	private static SqluckyConnector sqluckyConn;
 
-	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String csvFilePath, Stage parentStage ) {
+	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String csvFilePath, Stage parentStage) {
 		sqluckyConn = dbc;
 		csvFile = csvFilePath;
 		tableName = tableNameVal;
 		VBox tbox = tableBox(dbc, tableName, csvFile);
-		if(tbox == null) {
-			MyAlert.errorAlert("没有表<"+ tableNameVal + ">的信息, 请确保表存在!");
+		if (tbox == null) {
+			MyAlert.errorAlert("没有表<" + tableNameVal + ">的信息, 请确保表存在!");
 			return;
 		}
 		layout(tbox, tableName);
 		parentStage.close();
 
 	}
+
 	/*
 	 * 对数据库表字段转换为一个表格, 返回null表示没有找到表的信息
 	 */
 	public static VBox tableBox(SqluckyConnector dbc, String tablename, String CsvFile) {
 		try {
 			ObservableList<SheetFieldPo> fields = DaoTools.tableFields(dbc.getConn(), tablename);
-			if(fields == null || fields.size() == 0 ) {
+			if (fields == null || fields.size() == 0) {
 				return null;
 			}
 			for (int i = 0; i < fields.size(); i++) {
@@ -115,7 +114,7 @@ public class ImportCsvNextWindow {
 			VBox tableBox = tableFiledMapCsvRowBox(tablename, csvFields, csvFile);
 			return tableBox;
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 		return new VBox();
@@ -128,7 +127,7 @@ public class ImportCsvNextWindow {
 	 * @return
 	 */
 	private static String[] csvHeadArray(String csvFile, ObservableList<ExcelFieldPo> fields) {
-		List<ExcelHeadCellInfo> row1 = CsvUtil.readCsvHeadInfo(csvFile);
+		List<ExcelHeadCellInfo> row1 = CsvUtil.readCsvHeadInfo(csvFile, CsvUtil.SPLIT_SINGLE_QUOTATION);
 
 		if (row1 != null) {
 
@@ -140,24 +139,22 @@ public class ImportCsvNextWindow {
 				headArr[i] = val;
 				selectVal.add(val);
 			}
-			for(int j = 0 ; j < fields.size(); j++) {
+			for (int j = 0; j < fields.size(); j++) {
 //			for (var tmp : fields) {
-				var tmp  = fields.get(j);
+				var tmp = fields.get(j);
 				tmp.setExcelRowInfo(selectVal);
 				tmp.getExcelRowVal().set(selectVal.get(j));
 			}
 
 			return headArr;
 		}
-		
+
 		// 将cvs 字段赋值给 字段对应的值
-		
 
 		return new String[0];
 	}
 
-	public static VBox tableFiledMapCsvRowBox(String tableName, ObservableList<ExcelFieldPo> fields,
-			String csvFile) {
+	public static VBox tableFiledMapCsvRowBox(String tableName, ObservableList<ExcelFieldPo> fields, String csvFile) {
 		FlowPane fp = new FlowPane();
 
 		String colName1 = "字段名称";
@@ -222,7 +219,7 @@ public class ImportCsvNextWindow {
 		String[] headArr = csvHeadArray(csvFile, fields);
 		valueCol.setCellValueFactory(p -> p.getValue().getExcelRowVal());
 		valueCol.setCellFactory(ComboBox2TableCell.forTableColumn(headArr));
-		
+
 		tv.getColumns().add(valueCol);
 
 		// 第三列
@@ -300,8 +297,7 @@ public class ImportCsvNextWindow {
 		Button selectFile = UiTools.openFileBtn(tfFilePath, stage);
 		selectFile.disableProperty().bind(saveSqlCheckBox.selectedProperty().not());
 
-		
-	    onlySave = new JFXCheckBox("只保存SQL到文件, 不用插入到数据库");
+		onlySave = new JFXCheckBox("只保存SQL到文件, 不用插入到数据库");
 		onlySave.disableProperty().bind(saveSqlCheckBox.selectedProperty().not());
 		HBox b2 = new HBox();
 		b2.getChildren().addAll(tfFilePath, selectFile);
@@ -313,7 +309,7 @@ public class ImportCsvNextWindow {
 		nds.add(conuntTF);
 		nds.add(saveSqlCheckBox);
 		nds.add(b2);
-		
+
 		nds.add(null);
 		nds.add(onlySave);
 		return nds;
@@ -362,9 +358,9 @@ public class ImportCsvNextWindow {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(e -> {
-			if(saveSqlCheckBox.isSelected()) {
+			if (saveSqlCheckBox.isSelected()) {
 				String filePath = tfFilePath.getText();
-				if(StrUtils.isNullOrEmpty(filePath)) {
+				if (StrUtils.isNullOrEmpty(filePath)) {
 					MyAlert.errorAlert("保存Sql的文件路径不能为空!");
 					tfFilePath.requestFocus();
 					return;
@@ -399,7 +395,7 @@ public class ImportCsvNextWindow {
 			LoadingAnimation.loadingAnimation("Saving....", v -> {
 				try {
 					CsvToDB.toTable(sqluckyConn, tableName, csvFile, tfFilePath.getText(), vals, tmpBeginval,
-							tmpCountval,onlySave.isSelected());
+							tmpCountval, onlySave.isSelected(), CsvUtil.SPLIT_SINGLE_QUOTATION);
 					MyAlert.infoAlert("导入成功!");
 				} catch (Exception e1) {
 					MyAlert.showTextArea("Error", "导入失败 ! \n" + e1.getMessage());
