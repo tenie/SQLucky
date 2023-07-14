@@ -5,21 +5,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -49,11 +40,12 @@ public class CsvToDB {
 	 * @throws Exception
 	 */
 	public static void toTable(SqluckyConnector dbc, String tablename, String csvFile, String saveSqlFile,
-			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count, boolean onlySaveSql, String splitSymbol) throws Exception {
+			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count, boolean onlySaveSql, boolean saveSql,
+			String splitSymbol) throws Exception {
 		Connection conn = dbc.getConn();
 		String errorData = "";
 		try {
-			
+
 			int begin = 0;
 			int end = -1;
 
@@ -69,10 +61,11 @@ public class CsvToDB {
 			List<List<String>> rowVals = new ArrayList<>();
 			File filecsv = new File(csvFile);
 			String charset = FileTools.detectFileCharset(filecsv);
-			try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filecsv), charset))) {
+			try (BufferedReader reader = new BufferedReader(
+					new InputStreamReader(new FileInputStream(filecsv), charset))) {
 				String str = null;
 				while ((str = reader.readLine()) != null) {
-			    	List<String> cellVals = new ArrayList<>();
+					List<String> cellVals = new ArrayList<>();
 					rowVals.add(cellVals);
 					String[] record = str.split(splitSymbol);
 					if (record != null) {
@@ -91,25 +84,25 @@ public class CsvToDB {
 
 						}
 					}
-			        
-			      
+
 					idx++;
 					if (idx % 100 == 0) {
-						errorData = InsertDao.execInsertByCsvField(conn, tablename, fields, rowVals, saveSqlFile, onlySaveSql);
+						errorData = InsertDao.execInsertByCsvField(conn, tablename, fields, rowVals, saveSqlFile,
+								onlySaveSql, saveSql);
 						rowVals.clear();
 					}
-			        
-			        
-			    }
-			    if (rowVals.size() > 0) {
-					errorData = InsertDao.execInsertByCsvField(conn, tablename, fields, rowVals, saveSqlFile, onlySaveSql);
+
+				}
+				if (rowVals.size() > 0) {
+					errorData = InsertDao.execInsertByCsvField(conn, tablename, fields, rowVals, saveSqlFile,
+							onlySaveSql, saveSql);
 					rowVals.clear();
 				}
-			    
+
 			} catch (IOException ex) {
-			    ex.printStackTrace();
-			    throw ex;
-			} 
+				ex.printStackTrace();
+				throw ex;
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();

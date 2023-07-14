@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.excel.CsvUtil;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -49,6 +50,32 @@ public class ImportCsvWindow {
 	private static ChoiceBox<String> connNameChoiceBox;
 	private static TextField tfTabName;
 	private static TextField tfFilePath;
+	private static TextField separatorTF;
+	private static ChoiceBox<String> separatorBox;
+
+	private static ChoiceBox<String> quotationComboBox;
+
+	// 转换分隔符
+	public static String getSperator() {
+		String val = "";
+		// 分隔符
+		String sep = separatorBox.getValue();
+		if ("其他".equals(sep)) {
+			sep = separatorTF.getText();
+		} else if ("TAB".equals(sep)) {
+			sep = "\t";
+		}
+
+		String quot = quotationComboBox.getValue();
+		if ("'".equals(quot)) {
+			val = sep + CsvUtil.SPLIT_SINGLE_QUOTATION;
+		} else if ("\"".equals(quot)) {
+			val = sep + CsvUtil.SPLIT_DOUBLE_QUOTATION;
+		} else {
+			val = sep;
+		}
+		return val;
+	}
 
 	// 按钮面板
 	private static AnchorPane btnPane(String tableName) {
@@ -134,6 +161,7 @@ public class ImportCsvWindow {
 		tfTabName.setText(tableName);
 
 		TextFieldSetup.setMaxLength(tfTabName, 100);
+		connNameChoiceBox.prefWidthProperty().bind(tfTabName.widthProperty());
 
 		// 选择文件
 		String filePath = "File path";
@@ -153,6 +181,40 @@ public class ImportCsvWindow {
 		Button selectFile = UiTools.openCsvFileBtn(tfFilePath, stage);
 		fileBox.getChildren().addAll(tfFilePath, selectFile);
 
+		Label lbSeparator = new Label("分隔符");
+		separatorTF = new TextField();
+		separatorTF.setVisible(false);
+//		separatorTF.setPromptText("分隔符");
+		ObservableList<String> separatorVals = FXCollections.observableArrayList();
+		separatorVals.add(",");
+		separatorVals.add(";");
+		separatorVals.add("TAB");
+		separatorVals.add("其他");
+
+		separatorBox = new ChoiceBox<String>(separatorVals);
+		separatorBox.valueProperty().addListener((obj, oval, nval) -> {
+			if ("其他".equals(nval)) {
+				separatorTF.setVisible(true);
+			} else {
+				separatorTF.setVisible(false);
+				separatorTF.setText("");
+			}
+		});
+		separatorBox.setValue(",");
+		HBox sepHBox = new HBox();
+		sepHBox.getChildren().addAll(separatorBox, separatorTF);
+
+		Label lbQuotation = new Label("使用引号");
+		ObservableList<String> cboxVals = FXCollections.observableArrayList();
+		cboxVals.add("");
+		cboxVals.add("'");
+		cboxVals.add("\"");
+
+		quotationComboBox = new ChoiceBox<String>(cboxVals);
+		quotationComboBox.setValue("");
+
+		quotationComboBox.prefWidthProperty().bind(tfTabName.widthProperty());
+
 		List<Region> list = new ArrayList<>();
 
 		list.add(lbDBconn);
@@ -163,6 +225,10 @@ public class ImportCsvWindow {
 		list.add(lbFilePath);
 		list.add(fileBox);
 
+		list.add(lbSeparator);
+		list.add(sepHBox);
+		list.add(lbQuotation);
+		list.add(quotationComboBox);
 		layout(list, tableName);
 
 	}
@@ -172,6 +238,16 @@ public class ImportCsvWindow {
 		Button btn = new Button("next");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(v -> {
+			// 校验分隔符
+			String sep = separatorBox.getValue();
+			if ("其他".equals(sep)) {
+				sep = separatorTF.getText();
+				if (StrUtils.isNullOrEmpty(sep)) {
+					MyAlert.errorAlert("请输入你的分隔符!");
+					separatorTF.requestFocus();
+					return;
+				}
+			}
 			// 文件是否存在
 			String fileval = tfFilePath.getText();
 			File filePath = new File(fileval);
@@ -185,7 +261,8 @@ public class ImportCsvWindow {
 			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
 			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
 			String tableName = tfTabName.getText();
-			ImportCsvNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage);
+			String splitSymbol = getSperator();
+			ImportCsvNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage, splitSymbol);
 		});
 
 		return btn;
