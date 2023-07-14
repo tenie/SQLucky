@@ -71,35 +71,31 @@ public class ImportExcelNextWindow {
 	private static ObservableList<ExcelFieldPo> excelFields;
 	private static SqluckyConnector sqluckyConn;
 
-	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath,Stage parentStage ) {
+	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath, Stage parentStage) {
 		sqluckyConn = dbc;
 		excelFile = excelFilePath;
 		tableName = tableNameVal;
 		VBox tbox = tableBox(dbc, tableName, excelFile);
-		if(tbox == null) {
-			MyAlert.errorAlert("没有表<"+ tableNameVal + ">的信息, 请确保表存在!");
+		if (tbox == null) {
+			MyAlert.errorAlert("没有表<" + tableNameVal + ">的信息, 请确保表存在!");
 			return;
 		}
 		layout(tbox, tableName);
 		parentStage.close();
 
 	}
+
 	/*
 	 * 对数据库表字段转换为一个表格, 返回null表示没有找到表的信息
 	 */
 	public static VBox tableBox(SqluckyConnector dbc, String tablename, String excelFile) {
 		try {
 			ObservableList<SheetFieldPo> fields = DaoTools.tableFields(dbc.getConn(), tablename);
-			if(fields == null || fields.size() == 0 ) {
+			if (fields == null || fields.size() == 0) {
 				return null;
 			}
 			for (int i = 0; i < fields.size(); i++) {
 				SheetFieldPo p = fields.get(i);
-				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
-				if (p.getScale() != null && p.getScale().get() > 0) {
-					tyNa += ", " + p.getScale().get();
-				}
-				tyNa += ")";
 				StringProperty strp = new SimpleStringProperty("");
 				p.setValue(strp);
 			}
@@ -113,7 +109,7 @@ public class ImportExcelNextWindow {
 			VBox tableBox = tableFiledMapExcelRowBox(tablename, excelFields, excelFile);
 			return tableBox;
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 		return new VBox();
@@ -296,8 +292,7 @@ public class ImportExcelNextWindow {
 		Button selectFile = UiTools.openFileBtn(tfFilePath, stage);
 		selectFile.disableProperty().bind(saveSqlCheckBox.selectedProperty().not());
 
-		
-	    onlySave = new JFXCheckBox("只保存SQL到文件, 不用插入到数据库");
+		onlySave = new JFXCheckBox("只保存SQL到文件, 不用插入到数据库");
 		onlySave.disableProperty().bind(saveSqlCheckBox.selectedProperty().not());
 		HBox b2 = new HBox();
 		b2.getChildren().addAll(tfFilePath, selectFile);
@@ -311,7 +306,7 @@ public class ImportExcelNextWindow {
 		nds.add(conuntTF);
 		nds.add(saveSqlCheckBox);
 		nds.add(b2);
-		
+
 		nds.add(null);
 		nds.add(onlySave);
 		return nds;
@@ -360,9 +355,9 @@ public class ImportExcelNextWindow {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(e -> {
-			if(saveSqlCheckBox.isSelected()) {
+			if (saveSqlCheckBox.isSelected()) {
 				String filePath = tfFilePath.getText();
-				if(StrUtils.isNullOrEmpty(filePath)) {
+				if (StrUtils.isNullOrEmpty(filePath)) {
 					MyAlert.errorAlert("保存Sql的文件路径不能为空!");
 					tfFilePath.requestFocus();
 					return;
@@ -397,7 +392,7 @@ public class ImportExcelNextWindow {
 			LoadingAnimation.loadingAnimation("Saving....", v -> {
 				try {
 					ExcelToDB.toTable(sqluckyConn, tableName, excelFile, tfFilePath.getText(), vals, tmpBeginval,
-							tmpCountval,onlySave.isSelected());
+							tmpCountval, onlySave.isSelected());
 					MyAlert.infoAlert("导入成功!");
 				} catch (Exception e1) {
 					MyAlert.showTextArea("Error", "导入失败 ! \n" + e1.getMessage());
