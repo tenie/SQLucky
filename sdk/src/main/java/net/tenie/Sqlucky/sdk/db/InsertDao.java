@@ -235,7 +235,7 @@ public class InsertDao {
 	 * @throws Exception
 	 */
 	public static String execInsertByExcelField(Connection conn, String tableName, List<ExcelFieldPo> fields,
-			List<List<String>> rowVals, String saveSqlfile ,boolean onlySaveSql) throws Exception {
+			List<List<String>> rowVals, String saveSqlfile, boolean onlySaveSql) throws Exception {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
@@ -309,35 +309,32 @@ public class InsertDao {
 //					insert += insertValue + " )";
 					insertValue = insert + insertValue + " )";
 					logger.info(insertValue);
-					if(onlySaveSql ) { 
+					if (onlySaveSql) {
 						inSqls.add(insertValue + ";");
-					}else {
+					} else {
 						sm.addBatch(insertValue);
 						inSqls.add(insertValue + ";");
 					}
-				
+
 				}
 			}
-			if(onlySaveSql) { 
+			if (onlySaveSql) {
 				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
-			}else {
+			} else {
 				int[] count = sm.executeBatch();
 				int execCountLen = count.length;
 				logger.info("instert = " + execCountLen);
 				msg = "Insert " + execCountLen + " ;\n" + insertLog + "; \n" + valLog;
 				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
 			}
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(e.getMessage() + " : excel Value = " + valLog + " ;\n sql = " + insertLog);
 		}
 		return msg;
 	}
-	
-	
-	
+
 	public static String stringToDBString(String val) {
 		String rsVal = "";
 		if ((val.startsWith("'") && val.endsWith("'"))) {
@@ -350,7 +347,7 @@ public class InsertDao {
 
 		return rsVal;
 	}
-	
+
 	public static String stringToDbNumeral(String val) {
 		String rsVal = "";
 		if ((val.startsWith("'") && val.endsWith("'"))) {
@@ -374,7 +371,7 @@ public class InsertDao {
 	 * @throws Exception
 	 */
 	public static String execInsertByCsvField(Connection conn, String tableName, List<ExcelFieldPo> fields,
-			List<List<String>> rowVals, String saveSqlfile ,boolean onlySaveSql) throws Exception {
+			List<List<String>> rowVals, String saveSqlfile, boolean onlySaveSql, boolean saveSql) throws Exception {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
@@ -406,7 +403,7 @@ public class InsertDao {
 					String val = fieldsValue.get(i);
 					if (val == null) {
 						val = "";
-					}else {
+					} else {
 						val = val.trim();
 					}
 					int javatype = fieldpo.getColumnType().get();
@@ -422,39 +419,32 @@ public class InsertDao {
 					else if (CommonUtility.isDateAndDateTime(javatype)) {
 						// 空字符串 给字段复制null
 						if (StrUtils.isNullOrEmpty(val.trim())) {
-							insertValue += "null";
+							insertValue += "NULL";
 						} else {
-//							if( (val.startsWith("'") && val.endsWith("'")) ) {
-//								insertValue += val  ;
-//							}else if( val.startsWith("\"") && val.endsWith("\"")  ){
-//								insertValue += val.substring(1, val.lastIndexOf("\""))  ;
-//							}else {
-//								insertValue += "'" + val + "'"  ;
-//							}
-							insertValue +=  stringToDBString(val);
-
+							insertValue += stringToDBString(val);
 						}
 
 						// 数字判断
 					} else if (CommonUtility.isNum(javatype)) {
 						val = val.trim();
 						if (StrUtils.isNullOrEmpty(val)) { // 空字符串， 设置null
-							insertValue += "null";
-						} else if (NumberUtils.isParsable(val)) { // 可以转换为数字
-//							insertValue += val;
-							insertValue +=  stringToDbNumeral(val);
+							insertValue += "NULL";
 						} else {
-							// 其他情况，字符串不能转为数字 设置null
-							insertValue += "null";
+							val = stringToDbNumeral(val);
+							if (NumberUtils.isParsable(val)) { // 可以转换为数字
+								insertValue += val;
+							} else {
+								// 其他情况，字符串不能转为数字 设置null
+								insertValue += "NULL";
+							}
 						}
 
 					} else {// 字符串
-						if("NULL".equals(val.toUpperCase())) {
-							insertValue +=  "NUll";
-						}else {
-							insertValue +=  stringToDBString(val);
+						if ("NULL".equals(val.toUpperCase())) {
+							insertValue += "NUll";
+						} else {
+							insertValue += stringToDBString(val);
 						}
-//						insertValue +=  val  ;
 					}
 					insertValue += " ,";
 
@@ -463,31 +453,30 @@ public class InsertDao {
 					insertValue = insertValue.substring(0, insertValue.length() - 1);
 					insertValue = insert + insertValue + " )";
 					logger.info(insertValue);
-					if(onlySaveSql ) { 
+					if (onlySaveSql) {
 						inSqls.add(insertValue + ";");
-					}else {
+					} else {
 						sm.addBatch(insertValue);
 						inSqls.add(insertValue + ";");
 					}
-				
+
 				}
 			}
-			if(onlySaveSql) { 
+			if (saveSql) {
 				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
-			}else {
+			}
+			if (onlySaveSql == false) {
 				int[] count = sm.executeBatch();
 				int execCountLen = count.length;
 				logger.info("instert = " + execCountLen);
 				msg = "Insert " + execCountLen + " ;\n" + insertLog + "; \n" + valLog;
-				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
 			}
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new Exception(e.getMessage() + " : excel Value = " + valLog + " ;\n sql = " + insertLog);
 		}
 		return msg;
 	}
-	
+
 }

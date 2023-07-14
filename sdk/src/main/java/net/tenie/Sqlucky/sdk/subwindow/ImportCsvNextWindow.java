@@ -70,11 +70,14 @@ public class ImportCsvNextWindow {
 	private static String tableName;
 	private static ObservableList<ExcelFieldPo> csvFields;
 	private static SqluckyConnector sqluckyConn;
+	private static String splitSymbol = "";
 
-	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String csvFilePath, Stage parentStage) {
+	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String csvFilePath, Stage parentStage,
+			String sSymbol) {
 		sqluckyConn = dbc;
 		csvFile = csvFilePath;
 		tableName = tableNameVal;
+		splitSymbol = sSymbol;
 		VBox tbox = tableBox(dbc, tableName, csvFile);
 		if (tbox == null) {
 			MyAlert.errorAlert("没有表<" + tableNameVal + ">的信息, 请确保表存在!");
@@ -96,11 +99,6 @@ public class ImportCsvNextWindow {
 			}
 			for (int i = 0; i < fields.size(); i++) {
 				SheetFieldPo p = fields.get(i);
-				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
-				if (p.getScale() != null && p.getScale().get() > 0) {
-					tyNa += ", " + p.getScale().get();
-				}
-				tyNa += ")";
 				StringProperty strp = new SimpleStringProperty("");
 				p.setValue(strp);
 			}
@@ -127,7 +125,7 @@ public class ImportCsvNextWindow {
 	 * @return
 	 */
 	private static String[] csvHeadArray(String csvFile, ObservableList<ExcelFieldPo> fields) {
-		List<ExcelHeadCellInfo> row1 = CsvUtil.readCsvHeadInfo(csvFile, CsvUtil.SPLIT_SINGLE_QUOTATION);
+		List<ExcelHeadCellInfo> row1 = CsvUtil.readCsvHeadInfo(csvFile, splitSymbol);
 
 		if (row1 != null) {
 
@@ -234,6 +232,7 @@ public class ImportCsvNextWindow {
 		tv.getItems().addAll(fields);
 
 		VBox subvb = new VBox();
+		subvb.setPrefHeight(400);
 		FlowPane topfp = new FlowPane();
 		topfp.setPadding(new Insets(8, 5, 8, 8));
 		Label lb = new Label();
@@ -281,8 +280,34 @@ public class ImportCsvNextWindow {
 		return btnPane;
 	}
 
+//	private static TextField separatorTF;
+//	private static ChoiceBox<String> separatorBox;
+//
+//	// 转换分隔符
+//	public static String getSperator() {
+//		String val = "";
+//		// 分隔符
+//		String sep = separatorBox.getValue();
+//		if ("其他".equals(sep)) {
+//			sep = separatorTF.getText();
+//		} else if ("TAB".equals(sep)) {
+//			sep = "\t";
+//		}
+//
+//		String quot = quotationComboBox.getValue();
+//		if ("'".equals(quot)) {
+//			val = sep + CsvUtil.SPLIT_SINGLE_QUOTATION;
+//		} else if ("\"".equals(quot)) {
+//			val = sep + CsvUtil.SPLIT_DOUBLE_QUOTATION;
+//		} else {
+//			val = sep;
+//		}
+//		return val;
+//	}
+
 	// 其他设置
 	public static List<Region> otherSet() {
+
 		Label lb1 = new Label("起始行号");
 		beginIdTF = new TextField();
 		beginIdTF.setPromptText("默认第一行开始");
@@ -303,10 +328,13 @@ public class ImportCsvNextWindow {
 		b2.getChildren().addAll(tfFilePath, selectFile);
 
 		List<Region> nds = new ArrayList<>();
+
 		nds.add(lb1);
 		nds.add(beginIdTF);
+
 		nds.add(lb2);
 		nds.add(conuntTF);
+
 		nds.add(saveSqlCheckBox);
 		nds.add(b2);
 
@@ -318,7 +346,7 @@ public class ImportCsvNextWindow {
 	// 组件布局
 	public static void layout(VBox tbox, String table) {
 		VBox vb = new VBox();
-		vb.maxHeight(600);
+		vb.maxHeight(500);
 		vb.getChildren().add(tbox);
 
 		GridPane grid = new GridPane();
@@ -329,10 +357,10 @@ public class ImportCsvNextWindow {
 		AnchorPane btnsPane = btnPane();
 		vb.getChildren().add(btnsPane);
 
-		Stage stage = CreateWindow(vb, "CSV Row Map " + table + " Field");
+		stage = CreateWindow(vb, "CSV Row Map " + table + " Field");
 		grid.setHgap(10);
 		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 10, 10, 10));
+		grid.setPadding(new Insets(10, 5, 5, 5));
 
 		List<Region> list = otherSet();
 
@@ -358,6 +386,7 @@ public class ImportCsvNextWindow {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(e -> {
+
 			if (saveSqlCheckBox.isSelected()) {
 				String filePath = tfFilePath.getText();
 				if (StrUtils.isNullOrEmpty(filePath)) {
@@ -394,8 +423,9 @@ public class ImportCsvNextWindow {
 			Integer tmpCountval = countval;
 			LoadingAnimation.loadingAnimation("Saving....", v -> {
 				try {
+
 					CsvToDB.toTable(sqluckyConn, tableName, csvFile, tfFilePath.getText(), vals, tmpBeginval,
-							tmpCountval, onlySave.isSelected(), CsvUtil.SPLIT_SINGLE_QUOTATION);
+							tmpCountval, onlySave.isSelected(), saveSqlCheckBox.isSelected(), splitSymbol);
 					MyAlert.infoAlert("导入成功!");
 				} catch (Exception e1) {
 					MyAlert.showTextArea("Error", "导入失败 ! \n" + e1.getMessage());
