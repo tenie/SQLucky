@@ -262,7 +262,8 @@ public class ImportCsvWindow {
 			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
 			String tableName = tfTabName.getText();
 			String splitSymbol = getSperator();
-			ImportCsvNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage, splitSymbol);
+			ImportCsvNextWindow importCsv = new ImportCsvNextWindow();
+			importCsv.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage, splitSymbol);
 		});
 
 		return btn;

@@ -58,21 +58,21 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  */
 public class ImportCsvNextWindow {
 
-	private static Stage stage;
+	private Stage stage;
 	private static Logger logger = LogManager.getLogger(ImportCsvNextWindow.class);
 
-	private static TextField beginIdTF;
-	private static TextField conuntTF;
-	private static TextField tfFilePath;
-	private static JFXCheckBox saveSqlCheckBox;
-	private static JFXCheckBox onlySave;
-	private static String csvFile;
-	private static String tableName;
-	private static ObservableList<ExcelFieldPo> csvFields;
-	private static SqluckyConnector sqluckyConn;
-	private static String splitSymbol = "";
+	private TextField beginIdTF;
+	private TextField conuntTF;
+	private TextField tfFilePath;
+	private JFXCheckBox saveSqlCheckBox;
+	private JFXCheckBox onlySave;
+	private String csvFile;
+	private String tableName;
+	private ObservableList<ExcelFieldPo> csvFields;
+	private SqluckyConnector sqluckyConn;
+	private String splitSymbol = "";
 
-	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String csvFilePath, Stage parentStage,
+	public void showWindow(SqluckyConnector dbc, String tableNameVal, String csvFilePath, Stage parentStage,
 			String sSymbol) {
 		sqluckyConn = dbc;
 		csvFile = csvFilePath;
@@ -91,7 +91,7 @@ public class ImportCsvNextWindow {
 	/*
 	 * 对数据库表字段转换为一个表格, 返回null表示没有找到表的信息
 	 */
-	public static VBox tableBox(SqluckyConnector dbc, String tablename, String CsvFile) {
+	public VBox tableBox(SqluckyConnector dbc, String tablename, String CsvFile) {
 		try {
 			ObservableList<SheetFieldPo> fields = DaoTools.tableFields(dbc.getConn(), tablename);
 			if (fields == null || fields.size() == 0) {
@@ -124,7 +124,7 @@ public class ImportCsvNextWindow {
 	 * @param excelFile
 	 * @return
 	 */
-	private static String[] csvHeadArray(String csvFile, ObservableList<ExcelFieldPo> fields) {
+	private String[] csvHeadArray(String csvFile, ObservableList<ExcelFieldPo> fields) {
 		List<ExcelHeadCellInfo> row1 = CsvUtil.readCsvHeadInfo(csvFile, splitSymbol);
 
 		if (row1 != null) {
@@ -152,7 +152,7 @@ public class ImportCsvNextWindow {
 		return new String[0];
 	}
 
-	public static VBox tableFiledMapCsvRowBox(String tableName, ObservableList<ExcelFieldPo> fields, String csvFile) {
+	public VBox tableFiledMapCsvRowBox(String tableName, ObservableList<ExcelFieldPo> fields, String csvFile) {
 		FlowPane fp = new FlowPane();
 
 		String colName1 = "字段名称";
@@ -267,7 +267,7 @@ public class ImportCsvNextWindow {
 	}
 
 	// 按钮面板
-	private static AnchorPane btnPane() {
+	private AnchorPane btnPane() {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
 		Button nextbtn = saveBtnSetup();
@@ -280,11 +280,11 @@ public class ImportCsvNextWindow {
 		return btnPane;
 	}
 
-//	private static TextField separatorTF;
-//	private static ChoiceBox<String> separatorBox;
+//	private   TextField separatorTF;
+//	private   ChoiceBox<String> separatorBox;
 //
 //	// 转换分隔符
-//	public static String getSperator() {
+//	public   String getSperator() {
 //		String val = "";
 //		// 分隔符
 //		String sep = separatorBox.getValue();
@@ -306,7 +306,7 @@ public class ImportCsvNextWindow {
 //	}
 
 	// 其他设置
-	public static List<Region> otherSet() {
+	public List<Region> otherSet() {
 
 		Label lb1 = new Label("起始行号");
 		beginIdTF = new TextField();
@@ -344,7 +344,7 @@ public class ImportCsvNextWindow {
 	}
 
 	// 组件布局
-	public static void layout(VBox tbox, String table) {
+	public void layout(VBox tbox, String table) {
 		VBox vb = new VBox();
 		vb.maxHeight(500);
 		vb.getChildren().add(tbox);
@@ -382,7 +382,7 @@ public class ImportCsvNextWindow {
 	}
 
 	// 保存按钮
-	public static Button saveBtnSetup() {
+	public Button saveBtnSetup() {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(e -> {
@@ -437,7 +437,7 @@ public class ImportCsvNextWindow {
 		return btn;
 	}
 
-	public static Button cancelBtn() {
+	public Button cancelBtn() {
 		Button cancelBtn = new Button("Cancel");
 		cancelBtn.getStyleClass().add("myAlertBtn");
 		cancelBtn.setOnAction(e -> {
@@ -446,7 +446,7 @@ public class ImportCsvNextWindow {
 		return cancelBtn;
 	}
 
-	public static Stage CreateWindow(VBox vb, String title) {
+	public Stage CreateWindow(VBox vb, String title) {
 		SqluckyStage sqluckyStatge = new SqluckyStage(vb);
 		stage = sqluckyStatge.getStage();
 		Scene scene = sqluckyStatge.getScene();
