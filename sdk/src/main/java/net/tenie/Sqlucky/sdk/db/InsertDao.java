@@ -348,7 +348,7 @@ public class InsertDao {
 		return rsVal;
 	}
 
-	public static String stringToDbNumeral(String val) {
+	public static String trimQuotation(String val) {
 		String rsVal = "";
 		if ((val.startsWith("'") && val.endsWith("'"))) {
 			rsVal = val.substring(1, val.lastIndexOf("'"));
@@ -421,8 +421,20 @@ public class InsertDao {
 						if (StrUtils.isNullOrEmpty(val.trim())) {
 							insertValue += "NULL";
 						} else {
-							insertValue += stringToDBString(val);
+							val = trimQuotation(val);
+							String tmpval = val.toUpperCase();
+							if ("NULL".equals(tmpval)) {
+								insertValue += "NULL";
+							} else {
+								insertValue += stringToDBString(val);
+							}
 						}
+
+//						if (val.toUpperCase().contains("NUll")) {
+//
+//						} else {
+//							insertValue += stringToDBString(val);
+//						}
 
 						// 数字判断
 					} else if (CommonUtility.isNum(javatype)) {
@@ -430,7 +442,7 @@ public class InsertDao {
 						if (StrUtils.isNullOrEmpty(val)) { // 空字符串， 设置null
 							insertValue += "NULL";
 						} else {
-							val = stringToDbNumeral(val);
+							val = trimQuotation(val);
 							if (NumberUtils.isParsable(val)) { // 可以转换为数字
 								insertValue += val;
 							} else {

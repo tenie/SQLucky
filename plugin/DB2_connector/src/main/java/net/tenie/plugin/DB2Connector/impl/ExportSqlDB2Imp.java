@@ -13,6 +13,7 @@ import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.Dbinfo;
+
 /* 
  *  @author tenie 
  *  
@@ -24,8 +25,6 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	public ExportSqlDB2Imp() {
 		fdb2 = new FetchDB2InfoImp();
 	}
-
-	 
 
 	/**
 	 * 导出所有表对象, 属性: 表名, 字段, 主键, ddl
@@ -56,7 +55,6 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		return null;
 	}
 
- 
 	/**
 	 * 函数对象
 	 */
@@ -95,15 +93,15 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	public List<FuncProcTriggerPo> allTriggerObj(Connection conn, String schema) {
 		try {
 			// 名称
-			 List<String> names = fdb2.getTriggers(conn, schema);
-			 List<FuncProcTriggerPo> vals = new ArrayList<>();
-			 for(String name : names) {
-				    FuncProcTriggerPo po = new FuncProcTriggerPo();
-					po.setName(name);
-					po.setSchema(schema);
-					vals.add(po);
-			 }
-			
+			List<String> names = fdb2.getTriggers(conn, schema);
+			List<FuncProcTriggerPo> vals = new ArrayList<>();
+			for (String name : names) {
+				FuncProcTriggerPo po = new FuncProcTriggerPo();
+				po.setName(name);
+				po.setSchema(schema);
+				vals.add(po);
+			}
+
 //			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
 
 			return vals;
@@ -112,7 +110,7 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 所有索引
 	 */
@@ -122,7 +120,7 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 			// 名称
 			List<String> names = fdb2.getIndexs(conn, schema);
 			List<FuncProcTriggerPo> vals = new ArrayList<>();
-			for(String name : names ) {
+			for (String name : names) {
 				FuncProcTriggerPo po = new FuncProcTriggerPo();
 				po.setName(name);
 				po.setSchema(schema);
@@ -135,7 +133,7 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 序列
 	 */
@@ -143,9 +141,9 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	public List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema) {
 		try {
 			// 名称
-			List<String> names =fdb2.getSeq(conn, schema);
+			List<String> names = fdb2.getSeq(conn, schema);
 			List<FuncProcTriggerPo> vals = new ArrayList<>();
-			for(String name : names ) {
+			for (String name : names) {
 				FuncProcTriggerPo po = new FuncProcTriggerPo();
 				po.setName(name);
 				po.setSchema(schema);
@@ -158,22 +156,20 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		}
 		return null;
 	}
-	
+
 	// 目前没有
 	@Override
 	public List<FuncProcTriggerPo> allPrimaryKeyObj(Connection conn, String schema) {
-		String sql = "select * from syscat.references where TYPE  ='P' and OWNER = '"+schema+"' ";
+		String sql = "select * from syscat.references where TYPE  ='P' and OWNER = '" + schema + "' ";
 		return null;
 	}
-
 
 	// 目前没有
 	@Override
 	public List<FuncProcTriggerPo> allForeignKeyObj(Connection conn, String schema) {
-		String sql = "select * from syscat.references where TYPE  ='F' and OWNER = '"+schema+"' ";
+		String sql = "select * from syscat.references where TYPE  ='F' and OWNER = '" + schema + "' ";
 		return null;
 	}
-
 
 	// 表对象ddl语句
 	@Override
@@ -234,7 +230,7 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	// 目前没用
 	@Override
 	public String exportCreatePrimaryKey(Connection conn, String schema, String obj) {
-		
+
 		return "";
 	}
 
@@ -246,27 +242,28 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 
 	@Override
 	public String exportAlterTableAddColumn(Connection conn, String schema, String tableName, String newCol) {
-		String sql = "ALTER TABLE "+schema+"."+tableName+" ADD    " + newCol +";";
+		String sql = "ALTER TABLE " + schema + "." + tableName + " ADD    " + newCol + ";";
 		sql += "CALL SYSPROC.ADMIN_CMD('reorg  TABLE " + schema + "." + tableName + " ') ;";
 		return sql;
-		 
+
 	}
 
 	@Override
 	public String exportAlterTableDropColumn(Connection conn, String schema, String tableName, String col) {
-		String sql = "ALTER TABLE "+schema+"."+tableName+" DROP COLUMN   " + col +";";
+		String sql = "ALTER TABLE " + schema + "." + tableName + " DROP COLUMN   " + col + ";";
 		sql += "CALL SYSPROC.ADMIN_CMD('reorg  TABLE " + schema + "." + tableName + " ') ;";
 		return sql;
 	}
 
-	@Override 
+	@Override
 	public String exportAlterTableModifyColumn(Connection conn, String schema, String tableName, String col) {
 
-		String tmp = col.trim().replaceFirst(" ", "  SET DATA TYPE "); 
-		String sql = "ALTER TABLE "+schema+"."+tableName+"  ALTER  " + tmp +";";
+		String tmp = col.trim().replaceFirst(" ", "  SET DATA TYPE ");
+		String sql = "ALTER TABLE " + schema + "." + tableName + "  ALTER  " + tmp + ";";
+		sql += "\n CALL SYSPROC.ADMIN_CMD('reorg  TABLE " + schema + "." + tableName + " ') ;";
 		return sql;
 	}
-	
+
 	// 目前没用
 	@Override
 	public String exportAlterTableAddPrimaryKey(Connection conn, String schema, String tableName, String key) {
@@ -320,6 +317,7 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		String sql = "DROP TRIGGER " + schema + "." + name.trim();
 		return sql;
 	}
+
 	// 目前没用
 	@Override
 	public String exportDropPrimaryKey(String schema, String name) {
@@ -329,32 +327,32 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 	@Override
 	public String exportDropForeignKey(String schema, String foreignKeyName, String tableName) {
 //		ALTER TABLE 子表  DROP CONSTRAINT 外键名称 ;
-		String sql = "ALTER TABLE "+tableName+" DROP CONSTRAINT " + foreignKeyName;
+		String sql = "ALTER TABLE " + tableName + " DROP CONSTRAINT " + foreignKeyName;
+
+//		sql += "\n CALL SYSPROC.ADMIN_CMD('reorg  TABLE " + schema + "." + tableName + " ') ;";
 		return sql;
 	}
-	
+
 	@Override
 	public String exportCallFuncSql(String funcStr) {
-		String sql = "values "+funcStr;
+		String sql = "values " + funcStr;
 		return sql;
 	}
 
-
-	//TODO 表格索引
+	// TODO 表格索引
 	@Override
 	public List<TableIndexPo> tableIndex(Connection conn, String schema, String tableName) {
-		String sql = "select *  from syscat.indexes where   INDSCHEMA = '"+schema+"'   "
-				    + "	 and TABNAME = '"+tableName+"' "
-					+ "	 and UNIQUERULE <> 'P'";
+		String sql = "select *  from syscat.indexes where   INDSCHEMA = '" + schema + "'   " + "	 and TABNAME = '"
+				+ tableName + "' " + "	 and UNIQUERULE <> 'P'";
 		ResultSet rs = null;
 		Statement sm = null;
 		List<TableIndexPo> ls = new ArrayList<>();
-		
+
 		try {
 			sm = conn.createStatement();
 			rs = sm.executeQuery(sql);
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				TableIndexPo po = new TableIndexPo();
 //				private String indname; // INDNAME 索引名称
 //				private String tabname;  // TABNAME 表名
@@ -368,8 +366,8 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
-			if(rs != null) {
+		} finally {
+			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
@@ -380,23 +378,20 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		return ls;
 	}
 
-
-
 	@Override
 	public List<TableForeignKeyPo> tableForeignKey(Connection conn, String schema, String tableName) {
 
-		String sql = "select *  from syscat.references where   TABSCHEMA = '"+schema+"'   "
-				    + "	 and TABNAME = '"+tableName+"' \n"
-				    + " and TABSCHEMA = '"+schema+"' \n" ;
+		String sql = "select *  from syscat.references where   TABSCHEMA = '" + schema + "'   " + "	 and TABNAME = '"
+				+ tableName + "' \n" + " and TABSCHEMA = '" + schema + "' \n";
 		ResultSet rs = null;
 		Statement sm = null;
 		List<TableForeignKeyPo> ls = new ArrayList<>();
-		
+
 		try {
 			sm = conn.createStatement();
 			rs = sm.executeQuery(sql);
-			
-			while(rs.next()) {
+
+			while (rs.next()) {
 				TableForeignKeyPo po = new TableForeignKeyPo();
 
 //				private String tabName; // TABNAME
@@ -405,7 +400,7 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 //				private String refTabname; // REFTABNAME 引用表名称 (主表)
 //				private String pkColnames; //	PK_COLNAMES	引用表字段名称(就是主表的主键)
 //				private String refKeyname;  // REFKEYNAME 主表的主键名称
-				
+
 				po.setTabName(rs.getString("TABNAME"));
 				po.setConstname(rs.getString("CONSTNAME"));
 				po.setFkColnames(rs.getString("FK_COLNAMES"));
@@ -417,8 +412,8 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
-			if(rs != null) {
+		} finally {
+			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
@@ -427,9 +422,7 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 			}
 		}
 		return ls;
-	
-	}
 
-	
+	}
 
 }

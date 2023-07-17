@@ -78,6 +78,7 @@ public class CommonAction {
 		AppWindowComponentGetter.treeView.refresh();
 
 		Thread t = new Thread() {
+			@Override
 			public void run() {
 				SqluckyConnector po1 = null;
 				try {
@@ -664,6 +665,7 @@ public class CommonAction {
 	// 连接测试
 	public static boolean isAliveTestAlert(SqluckyConnector connpo, Button testBtn) {
 		Thread t = new Thread() {
+			@Override
 			public void run() {
 				connpo.getConn();
 				Platform.runLater(() -> {
@@ -706,6 +708,8 @@ public class CommonAction {
 				shrinkUnfoldTreeViewHelper(subnode, tf);
 			}
 		}
+
+		AppWindowComponentGetter.treeView.refresh();
 	}
 
 	// 保证theme状态
@@ -818,17 +822,17 @@ public class CommonAction {
 		CommonUtility.leftHideOrShowSecondOptionBox(container, filter, btnList);
 
 		// 如果输入框为空就将选中的文本放入输入框
-		String text = ComponentGetter.dbInfoFilter.getText();
-		if (StrUtils.isNullOrEmpty(text)) {
-			// 如果有选中的字符串, 进行查询
-			String str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText();
-			if (str.trim().length() > 0) {
-				ComponentGetter.dbInfoFilter.setText(str.trim());
-				if (!container.getChildren().contains(filter)) {
-					container.getChildren().add(1, filter);
-				}
-			}
-		}
+//		String text = ComponentGetter.dbInfoFilter.getText();
+//		if (StrUtils.isNullOrEmpty(text)) {
+//			// 如果有选中的字符串, 进行查询
+//			String str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText();
+//			if (str.trim().length() > 0) {
+//				ComponentGetter.dbInfoFilter.setText(str.trim());
+//				if (!container.getChildren().contains(filter)) {
+//					container.getChildren().add(1, filter);
+//				}
+//			}
+//		}
 
 	}
 

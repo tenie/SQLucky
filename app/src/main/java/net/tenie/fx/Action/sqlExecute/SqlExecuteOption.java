@@ -189,7 +189,8 @@ public class SqlExecuteOption {
 			if (showtab) {
 				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
 
-				mtd.show();
+//				mtd.show();
+				mtd.showAndDelayRemoveTab();
 			}
 
 		}

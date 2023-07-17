@@ -52,45 +52,44 @@ public class KeyBindingCache {
 
 	/**
 	 * 菜单按钮绑定到po对象上
-	 
-	 * Command (or Cmd) ⌘  Shortcut
-	 * Option (or Alt) ⌥
-	 * Caps Lock ⇪
-	 * Shift ⇧
-	 * Control (or Ctrl) ⌃
+	 * 
+	 * Command (or Cmd) ⌘ Shortcut Option (or Alt) ⌥ Caps Lock ⇪ Shift ⇧ Control (or
+	 * Ctrl) ⌃
+	 * 
 	 * @param e
 	 * @return
-	 
+	 * 
 	 * @param menuItem
 	 */
-	public static String macKeyChange(String keyStr ) {
-		
-		if(CommonUtility.isMacOS()) {
-			if(keyStr.contains("⌘")) {
+	public static String macKeyChange(String keyStr) {
+
+		if (CommonUtility.isMacOS()) {
+			if (keyStr.contains("⌘")) {
 				keyStr = keyStr.replace("⌘", "Shortcut");
 			}
-			if(keyStr.contains("⌥")) {
+			if (keyStr.contains("⌥")) {
 				keyStr = keyStr.replace("⌥", "Alt");
 			}
-			if(keyStr.contains("⌃")) {
+			if (keyStr.contains("⌃")) {
 				keyStr = keyStr.replace("⌃", "Ctrl");
 			}
-			if(keyStr.contains("⇧")) {
+			if (keyStr.contains("⇧")) {
 				keyStr = keyStr.replace("⇧", "Shift");
 			}
-			if(keyStr.contains("⇪")) {
+			if (keyStr.contains("⇪")) {
 				keyStr = keyStr.replace("⇪", "Caps Lock");
 			}
-			
+
 		}
-//		if(keyStr.contains("=")) {
-//			keyStr = keyStr.replace("=", "Equals");
-//		}
-		
-		
+
 		return keyStr;
 	}
-	
+
+	/**
+	 * 快捷键和菜单按钮绑定
+	 * 
+	 * @param menuItem
+	 */
 	public static void menuItemBinding(MenuItem menuItem) {
 		String menuText = menuItem.getText();
 		KeyBindingItemPo po = findByActionName(menuText.trim());
@@ -102,6 +101,11 @@ public class KeyBindingCache {
 		}
 	}
 
+	/**
+	 * 快捷键和菜单按钮绑定, 重载方法使用可变参数
+	 * 
+	 * @param items
+	 */
 	public static void allMenuItemBinding(MenuItem... items) {
 		if (items != null) {
 			for (var item : items) {

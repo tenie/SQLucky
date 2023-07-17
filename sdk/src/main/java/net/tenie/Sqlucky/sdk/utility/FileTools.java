@@ -5,10 +5,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,6 +192,7 @@ public class FileTools {
 		File arrFile[] = dir.listFiles();
 		if (arrFile != null && arrFile.length > 0) {
 			Arrays.sort(arrFile, new Comparator<File>() {
+				@Override
 				public int compare(File f1, File f2) {
 					long diff = f1.lastModified() - f2.lastModified();
 					if (diff > 0)
@@ -451,15 +450,4 @@ public class FileTools {
 
 	}
 
-//	public static void main(String[] args) {
-//		String val = "abc;";
-//		int idx = val.indexOf(";");
-//		System.out.println(val.substring(idx));
-//		System.out.println(val.substring(idx+1));
-//		
-//		val = ";abc";
-//		 idx = val.indexOf(";");
-//		System.out.println(val.substring(0,idx));
-//		System.out.println(val);
-//	}
 }

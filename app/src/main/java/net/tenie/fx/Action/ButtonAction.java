@@ -255,8 +255,11 @@ public class ButtonAction {
 		FilteredTableView<ResultSetRowPo> dataTableView = rv.dataTableView;
 		ObservableList<ResultSetRowPo> alls = dataTableView.getItems();
 		for (ResultSetRowPo ls : alls) {
-			StringProperty tmp = ls.getRowDatas().get(colIdx).getCellData();
-			tmp.setValue(value);
+			// 打开cell的值监听, 这样改变值会被缓存起来, 便于更新
+			ls.cellAddChangeListener(null);
+			ResultSetCellPo cellpo = ls.getRowDatas().get(colIdx);
+			StringProperty tmp = cellpo.getCellData();
+			tmp.set(value);
 		}
 		dataSave();
 	}

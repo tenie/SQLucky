@@ -280,31 +280,6 @@ public class ImportCsvNextWindow {
 		return btnPane;
 	}
 
-//	private   TextField separatorTF;
-//	private   ChoiceBox<String> separatorBox;
-//
-//	// 转换分隔符
-//	public   String getSperator() {
-//		String val = "";
-//		// 分隔符
-//		String sep = separatorBox.getValue();
-//		if ("其他".equals(sep)) {
-//			sep = separatorTF.getText();
-//		} else if ("TAB".equals(sep)) {
-//			sep = "\t";
-//		}
-//
-//		String quot = quotationComboBox.getValue();
-//		if ("'".equals(quot)) {
-//			val = sep + CsvUtil.SPLIT_SINGLE_QUOTATION;
-//		} else if ("\"".equals(quot)) {
-//			val = sep + CsvUtil.SPLIT_DOUBLE_QUOTATION;
-//		} else {
-//			val = sep;
-//		}
-//		return val;
-//	}
-
 	// 其他设置
 	public List<Region> otherSet() {
 
