@@ -22,19 +22,19 @@ import net.tenie.Sqlucky.sdk.utility.myEvent;
 
 /**
  * 查找窗口
+ * 
  * @author tenie
  *
  */
 public class FindReplaceTextPanel {
 	private static String f3Str = "";
 	private static Logger logger = LogManager.getLogger(FindReplaceTextPanel.class);
-	
+
 	// 查询字符串输入框
-	public	static TextField textField;
-	private JFXButton down ;
+	public static TextField textField;
+	private JFXButton down;
 	private JFXButton up;
-	
-	
+
 	public static void findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
 		CodeArea code = SqluckyEditor.getCodeArea();
 		int idx = code.getCaretPosition();
@@ -88,13 +88,13 @@ public class FindReplaceTextPanel {
 		CodeArea code = SqluckyEditor.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text)) {
-			if(StrUtils.isNotNullOrEmpty(f3Str)) {
+			if (StrUtils.isNotNullOrEmpty(f3Str)) {
 				text = f3Str;
 			}
-		}else {
+		} else {
 			f3Str = text;
 		}
-			
+
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 
@@ -103,45 +103,45 @@ public class FindReplaceTextPanel {
 		findString(text, idx, true, true);
 	}
 
-	 
 	/**
 	 * 字符串查找
-	 * @param str 要查找的字符串
-	 * @param forward  是否向前找
+	 * 
+	 * @param str       要查找的字符串
+	 * @param forward   是否向前找
 	 * @param sensitive 是否大小写敏感
 	 */
 	public static void findStringFromCodeArea(String str, boolean forward, boolean sensitive) {
 		if (StrUtils.isNullOrEmpty(str))
 			return;
 		CodeArea code = SqluckyEditor.getCodeArea();
-		int idx = code.getCaretPosition();  // 光标位置 
-		findString(str, idx, sensitive, forward); 
+		int idx = code.getCaretPosition(); // 光标位置
+		findString(str, idx, sensitive, forward);
 //		findStringStop(str, idx, sensitive, forward);
 	}
-	
-	 
+
 	/**
-	 * 找不到就停止查找 
+	 * 找不到就停止查找
+	 * 
 	 * @param str
 	 * @param forward
 	 * @param sensitive
-	 * @return   返回false, 表示找不到
+	 * @return 返回false, 表示找不到
 	 */
 	public static boolean findStringStopFromCodeArea(String str, Integer position, boolean forward, boolean sensitive) {
 		if (StrUtils.isNullOrEmpty(str))
 			return false;
-		
+
 		Integer idx = 0;
 		CodeArea code = SqluckyEditor.getCodeArea();
-		if(position == null) {
-			idx =	code.getCaretPosition();  // 光标位置
-		}else if(position > -1) {
+		if (position == null) {
+			idx = code.getCaretPosition(); // 光标位置
+		} else if (position > -1) {
 			idx = position;
-		}else if(position < 0) { // 从后往前找
-			int areaLength  = code.getLength();
+		} else if (position < 0) { // 从后往前找
+			int areaLength = code.getLength();
 			idx = areaLength;
 		}
-	
+
 		return findStringStop(str, idx, sensitive, forward);
 	}
 
@@ -191,10 +191,11 @@ public class FindReplaceTextPanel {
 
 	/**
 	 * 开始查找字符串
-	 * @param str 要查找的字符串	
+	 * 
+	 * @param str       要查找的字符串
 	 * @param fromIndex 从文本的哪个位置开始找
 	 * @param sensitive 是否大小写敏感
-	 * @param forward 向前还是向后找
+	 * @param forward   向前还是向后找
 	 */
 	public static void findString(String str, int fromIndex, boolean sensitive, boolean forward) {
 		CodeArea code = SqluckyEditor.getCodeArea();
@@ -213,7 +214,7 @@ public class FindReplaceTextPanel {
 					start = text.indexOf(str);
 				}
 			} else {
-				start = text.lastIndexOf(str, (fromIndex -1));
+				start = text.lastIndexOf(str, (fromIndex - 1));
 				int tempIdx = fromIndex - str.length();
 				if (tempIdx == start) {
 					start = text.lastIndexOf(str, tempIdx - 1);
@@ -222,9 +223,9 @@ public class FindReplaceTextPanel {
 					start = text.lastIndexOf(str);
 				}
 //				code.displaceCaret();
-				
+
 			}
-			if (start > -1) { 
+			if (start > -1) {
 				selectRange(code, start, start + length);
 //				if(! forward) {
 //					int tmp = start;
@@ -232,13 +233,14 @@ public class FindReplaceTextPanel {
 //						code.moveTo(tmp);
 //					});
 //				}
-				
+
 			}
-		} 
+		}
 		SqluckyEditor.currentSqlCodeAreaHighLighting(str);
 	}
+
 	// 不循环找, 找不到下一个就不循环
-	public static boolean  findStringStop(String str, int fromIndex, boolean sensitive, boolean forward) {
+	public static boolean findStringStop(String str, int fromIndex, boolean sensitive, boolean forward) {
 		CodeArea code = SqluckyEditor.getCodeArea();
 		// 获取文本
 		String text = code.getText();
@@ -261,13 +263,13 @@ public class FindReplaceTextPanel {
 			if (start > -1) {
 				selectRange(code, start, start + length);
 			}
-		} 
-		if(start > -1) {
+		}
+		if (start > -1) {
 			SqluckyEditor.currentSqlCodeAreaHighLighting(str);
 			return true;
 		}
 		return false;
-		
+
 	}
 
 	public static void delFindReplacePane(SqluckyTab skTab) {
@@ -323,78 +325,65 @@ public class FindReplaceTextPanel {
 		replaceAnchorPane.getChildren().add(replaceAllBtn);
 		return replaceAnchorPane;
 	}
-//  public static  void createFindPane(boolean isReplace, String findText, VBox b ) {
-	public  FindReplaceTextPanel(boolean isReplace, String findText, SqluckyTab skTab ) {
+
+	// 查找替换组件的面板
+	public FindReplaceTextPanel(boolean isReplace, String findText, SqluckyTab skTab) {
 		AnchorPane findAnchorPane = new AnchorPane();
 		CommonUtility.addCssClass(findAnchorPane, "myFindPane");
 		findAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
-		JFXCheckBox cb = new JFXCheckBox("Sensitive");  
+		JFXCheckBox cb = new JFXCheckBox("Sensitive");
 		query.setGraphic(IconGenerator.svgImageDefActive("search"));
 
-	    textField = new TextField();
+		textField = new TextField();
 		query.setOnAction(v -> {
 			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
 		});
-		
-		if(StrUtils.isNullOrEmpty(findText)) {
+
+		if (StrUtils.isNullOrEmpty(findText)) {
 			// 从编辑框中获取选中的文本
 			CodeArea code = SqluckyEditor.getCodeArea();
 			findText = code.getSelectedText();
 		}
-		
+
 		textField.setText(findText);
 		textField.setPrefWidth(250);
 		textField.setPrefHeight(15);
 		textField.getStyleClass().add("myFindTextField");
-		textField.textProperty().addListener((o, oldVal, newVal) -> {
-//			findStringFromCodeArea(newVal, true, !cb.isSelected());
-		});
 		// 回车键出发查找下一个
-		textField.setOnKeyPressed(val->{
-			 if(val.getCode() == KeyCode.ENTER ){ 
-				 myEvent.btnClick(down);
-			 }
+		textField.setOnKeyPressed(val -> {
+			if (val.getCode() == KeyCode.ENTER) {
+				myEvent.btnClick(down);
+			}
 		});
+
 		// "arrow-down"
 		down = new JFXButton();
 		down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
-//		down.setOnAction(v -> {
-//			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
-//		});
-		
+
 		down.setOnMouseClicked(v -> {
 			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
 		});
-		
-		
 
 		up = new JFXButton();
 		up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
-//		up.setOnAction(v -> {
-//			findStringFromCodeArea(textField.getText(), false, !cb.isSelected());
-//		});
 		up.setOnMouseClicked(v -> {
 			findStringFromCodeArea(textField.getText(), false, !cb.isSelected());
 		});
-		
+
 		// 计算查询字符串出现次数
 		JFXButton count = new JFXButton("Count");
-		count.setGraphic(IconGenerator.svgImageDefActive("calculator")); 
-		Label countLabel = new Label(""); 
-		count.setOnAction(e->{
-			String sqlTxt = SqluckyEditor.getCurrentCodeAreaSQLText();
-			int countVal = 0;
-			if(textField.getText().length() == 0) {
+		count.setGraphic(IconGenerator.svgImageDefActive("calculator"));
+		Label countLabel = new Label("");
+		count.setOnAction(e -> {
+			countAction(countLabel, cb);
+		});
+		textField.textProperty().addListener((obj, vOld, vNew) -> {
+			if (StrUtils.isNotNullOrEmpty(vNew)) {
+				countAction(countLabel, cb);
+			} else {
 				countLabel.setText("");
-			}else {
-				if(cb.isSelected()) {
-					countVal = StrUtils.countSubString(sqlTxt, textField.getText());
-				}else {
-					countVal = StrUtils.countSubString(sqlTxt.toLowerCase() , textField.getText().toLowerCase());
-				}
-				countLabel.setText(countVal + "");
-			}			
+			}
 		});
 
 		int x = 0;
@@ -413,14 +402,13 @@ public class FindReplaceTextPanel {
 		x += 35;
 		cb.setLayoutX(x);
 		cb.setLayoutY(3);
-		
+
 		x += 90;
 		count.setLayoutX(x);
 		count.setLayoutY(0);
 		x += 80;
 		countLabel.setLayoutX(x);
 		countLabel.setLayoutY(5);
-		
 
 		findAnchorPane.getChildren().add(query);
 		findAnchorPane.getChildren().add(textField);
@@ -432,23 +420,40 @@ public class FindReplaceTextPanel {
 
 		JFXButton hideBottom = new JFXButton();
 		hideBottom.setGraphic(IconGenerator.svgImageDefActive("window-close"));// fontImgName("caret-square-o-down",
-																					// 16, Color.ROYALBLUE));
+																				// 16, Color.ROYALBLUE));
 		findAnchorPane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
-		
-//		VBox b = SqlcukyEditor.getTabVbox();
+
 		hideBottom.setOnAction(v -> {
 			delFindReplacePane(skTab);
 		});
 		// 加入到 代码编辑框上面
-		VBox b =  skTab.getVbox();
+		VBox b = skTab.getVbox();
 		b.getChildren().add(0, findAnchorPane);
 		if (isReplace) {
 			b.getChildren().add(1, createReplacePane(textField, cb));
 		}
 		Platform.runLater(() -> {
 			textField.requestFocus();
+			countAction(countLabel, cb);
 		});
-//		return findAnchorPane;
+	}
+
+	// 查找的计数action
+	private void countAction(Label countLabel, JFXCheckBox cb) {
+
+		String sqlTxt = SqluckyEditor.getCurrentCodeAreaSQLText();
+		int countVal = 0;
+		if (textField.getText().length() == 0) {
+			countLabel.setText("");
+		} else {
+			if (cb.isSelected()) {
+				countVal = StrUtils.countSubString(sqlTxt, textField.getText());
+			} else {
+				countVal = StrUtils.countSubString(sqlTxt.toLowerCase(), textField.getText().toLowerCase());
+			}
+			countLabel.setText(countVal + "");
+		}
+
 	}
 }

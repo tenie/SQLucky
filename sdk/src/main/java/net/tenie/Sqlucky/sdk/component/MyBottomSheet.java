@@ -12,35 +12,36 @@ import javafx.scene.control.Tab;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+
 /**
  * 
- * @author tenie
- *extends Tab
+ * @author tenie extends Tab
  */
-public class MyBottomSheet  implements SqluckyBottomSheet{
-	public  SqluckyCodeAreaHolder sqlArea;
+public class MyBottomSheet implements SqluckyBottomSheet {
+	public SqluckyCodeAreaHolder sqlArea;
 	private SheetDataValue tableData;
 	private boolean isDDL = false;
 	private Button saveBtn;
 	private Button detailBtn;
 	private int idx;
-	private Tab tab ;
-	 
+	private Tab tab;
+
 	public void clean() {
-		if(sqlArea != null ) {
+		if (sqlArea != null) {
 			this.sqlArea = null;
 		}
-		if(tableData != null ) {
+		if (tableData != null) {
 			this.tableData.clean();
 			tableData = null;
 		}
-		if(saveBtn != null ) {
+		if (saveBtn != null) {
 			this.saveBtn = null;
 		}
-		if(detailBtn != null ) {
+		if (detailBtn != null) {
 			this.detailBtn = null;
 		}
-		if(tab != null ) {
+		if (tab != null) {
 			this.tab.setContent(null);
 			this.tab = null;
 		}
@@ -54,22 +55,22 @@ public class MyBottomSheet  implements SqluckyBottomSheet{
 		tab.setContextMenu(tableViewMenu());
 		tab.setUserData(this);
 	}
-	
 
 	public MyBottomSheet(String tabName) {
-		tab =  new Tab(tabName);
+		tab = new Tab(tabName);
 		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
 		tab.setContextMenu(tableViewMenu());
 		if (tableData == null) {
 			tableData = new SheetDataValue();
 		}
-		
+
 		tab.setUserData(this);
 	}
-	public MyBottomSheet( SheetDataValue data) {
+
+	public MyBottomSheet(SheetDataValue data) {
 		this(data.getTabName());
 		this.tableData = data;
-		
+
 	}
 
 	// 右键菜单
@@ -113,6 +114,7 @@ public class MyBottomSheet  implements SqluckyBottomSheet{
 		return contextMenu;
 	}
 
+	@Override
 	public void show() {
 		Platform.runLater(() -> {
 			var dataTab = ComponentGetter.dataTabPane;
@@ -128,6 +130,40 @@ public class MyBottomSheet  implements SqluckyBottomSheet{
 
 			SdkComponent.showDetailPane();
 			dataTab.getSelectionModel().select(this.tab);
+		});
+	}
+
+	@Override
+	public void showAndDelayRemoveTab() {
+		Platform.runLater(() -> {
+			var dataTab = ComponentGetter.dataTabPane;
+			if (isDDL) {
+				dataTab.getTabs().add(this.tab);
+			} else {
+				if (idx > -1) {
+					dataTab.getTabs().add(idx, this.tab);
+				} else {
+					dataTab.getTabs().add(this.tab);
+				}
+			}
+
+			SdkComponent.showDetailPane();
+			dataTab.getSelectionModel().select(this.tab);
+
+			// 当窗口失去焦点 3秒后关闭(移除)
+			this.tab.setOnSelectionChanged(v -> {
+				System.out.println(this.tab.selectedProperty());
+				if (this.tab.selectedProperty().get() == false) {
+					CommonUtility.delayRunThread(str -> {
+						Platform.runLater(() -> {
+							if (this.tab.selectedProperty().get() == false) {
+								SdkComponent.clearDataTable(this.getTab());
+							}
+						});
+					}, 3000);
+
+				}
+			});
 		});
 	}
 
@@ -156,6 +192,7 @@ public class MyBottomSheet  implements SqluckyBottomSheet{
 		this.isDDL = isDDL;
 	}
 
+	@Override
 	public Button getSaveBtn() {
 		return saveBtn;
 	}
@@ -164,6 +201,7 @@ public class MyBottomSheet  implements SqluckyBottomSheet{
 		this.saveBtn = saveBtn;
 	}
 
+	@Override
 	public Button getDetailBtn() {
 		return detailBtn;
 	}
@@ -172,24 +210,20 @@ public class MyBottomSheet  implements SqluckyBottomSheet{
 		this.detailBtn = detailBtn;
 	}
 
-
 	public int getIdx() {
 		return idx;
 	}
-
 
 	public void setIdx(int idx) {
 		this.idx = idx;
 	}
 
-
 	public Tab getTab() {
 		return tab;
 	}
 
-
 	public void setTab(Tab tab) {
 		this.tab = tab;
 	}
-	
+
 }
