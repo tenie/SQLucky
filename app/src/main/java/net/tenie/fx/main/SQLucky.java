@@ -50,7 +50,6 @@ public class SQLucky extends Application {
 	public static Stage pStage;
 	private AppWindow app;
 	private Scene scene;
-	private Scene tmpscene;
 	private Image img;
 	private String Theme;
 	private static Logger logger = LogManager.getLogger(SQLucky.class);
@@ -69,7 +68,6 @@ public class SQLucky extends Application {
 		if (!CommonUtility.isDev()) {
 			Log4jPrintStream.redirectSystemOut();
 		}
-//		Log4jPrintStream.redirectSystemOut();
 	}
 
 	@Override
@@ -100,7 +98,6 @@ public class SQLucky extends Application {
 
 		scene = app.getAppScene();
 
-//		SettingKeyBinding.Setting(scene);
 		CommonAction.setTheme(Theme);
 		// 加载插件
 		ServiceLoad.callLoad();
@@ -164,10 +161,6 @@ public class SQLucky extends Application {
 					primaryStage.toFront();
 				}
 				primaryStage.toFront();
-//				primaryStage.setMaximized(true);
-//				primaryStage.setResizable(true);
-//				 primaryStage.setX(500); 
-//				 primaryStage.setY(500);
 				Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 				primaryStage.setX(primaryScreenBounds.getMinX());
 				primaryStage.setY(primaryScreenBounds.getMinY());
@@ -202,13 +195,6 @@ public class SQLucky extends Application {
 			Long mm = Runtime.getRuntime().maxMemory() / 1024;
 			mm = mm / 1024;
 			logger.info("Runtime.getRuntime().maxMemory = " + mm);
-//			Platform.runLater(()->{
-//				Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-//				primaryStage.setX(primaryScreenBounds.getMinX());
-//				primaryStage.setY(primaryScreenBounds.getMinY());
-//				primaryStage.setWidth(primaryScreenBounds.getWidth());
-//				primaryStage.setHeight(primaryScreenBounds.getHeight());
-//			});
 
 		} catch (Exception e) {
 			e.printStackTrace();

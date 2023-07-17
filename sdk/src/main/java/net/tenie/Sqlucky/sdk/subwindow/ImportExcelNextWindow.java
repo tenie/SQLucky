@@ -58,20 +58,20 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  */
 public class ImportExcelNextWindow {
 
-	private static Stage stage;
-	private static Logger logger = LogManager.getLogger(ImportExcelNextWindow.class);
+	private Stage stage;
+	private Logger logger = LogManager.getLogger(ImportExcelNextWindow.class);
 
-	private static TextField beginIdTF;
-	private static TextField conuntTF;
-	private static TextField tfFilePath;
-	private static JFXCheckBox saveSqlCheckBox;
-	private static JFXCheckBox onlySave;
-	private static String excelFile;
-	private static String tableName;
-	private static ObservableList<ExcelFieldPo> excelFields;
-	private static SqluckyConnector sqluckyConn;
+	private TextField beginIdTF;
+	private TextField conuntTF;
+	private TextField tfFilePath;
+	private JFXCheckBox saveSqlCheckBox;
+	private JFXCheckBox onlySave;
+	private String excelFile;
+	private String tableName;
+	private ObservableList<ExcelFieldPo> excelFields;
+	private SqluckyConnector sqluckyConn;
 
-	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath, Stage parentStage) {
+	public void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath, Stage parentStage) {
 		sqluckyConn = dbc;
 		excelFile = excelFilePath;
 		tableName = tableNameVal;
@@ -88,7 +88,7 @@ public class ImportExcelNextWindow {
 	/*
 	 * 对数据库表字段转换为一个表格, 返回null表示没有找到表的信息
 	 */
-	public static VBox tableBox(SqluckyConnector dbc, String tablename, String excelFile) {
+	public VBox tableBox(SqluckyConnector dbc, String tablename, String excelFile) {
 		try {
 			ObservableList<SheetFieldPo> fields = DaoTools.tableFields(dbc.getConn(), tablename);
 			if (fields == null || fields.size() == 0) {
@@ -121,7 +121,7 @@ public class ImportExcelNextWindow {
 	 * @param excelFile
 	 * @return
 	 */
-	private static String[] excelHeadArray(String excelFile, ObservableList<ExcelFieldPo> fields) {
+	private String[] excelHeadArray(String excelFile, ObservableList<ExcelFieldPo> fields) {
 		List<ExcelHeadCellInfo> row1 = ExcelUtil.readExcelFileHead(excelFile);
 
 		if (row1 != null) {
@@ -144,8 +144,7 @@ public class ImportExcelNextWindow {
 		return new String[0];
 	}
 
-	public static VBox tableFiledMapExcelRowBox(String tableName, ObservableList<ExcelFieldPo> fields,
-			String excelFile) {
+	public VBox tableFiledMapExcelRowBox(String tableName, ObservableList<ExcelFieldPo> fields, String excelFile) {
 		FlowPane fp = new FlowPane();
 
 		String colName1 = "字段名称";
@@ -259,7 +258,7 @@ public class ImportExcelNextWindow {
 	}
 
 	// 按钮面板
-	private static AnchorPane btnPane() {
+	private AnchorPane btnPane() {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
 		Button nextbtn = saveBtnSetup();
@@ -273,7 +272,7 @@ public class ImportExcelNextWindow {
 	}
 
 	// 其他设置
-	public static List<Region> otherSet() {
+	public List<Region> otherSet() {
 		Label lb1 = new Label("起始行号");
 		beginIdTF = new TextField();
 		beginIdTF.setPromptText("默认第一行开始");
@@ -313,7 +312,7 @@ public class ImportExcelNextWindow {
 	}
 
 	// 组件布局
-	public static void layout(VBox tbox, String table) {
+	public void layout(VBox tbox, String table) {
 		VBox vb = new VBox();
 		vb.maxHeight(600);
 		vb.getChildren().add(tbox);
@@ -351,7 +350,7 @@ public class ImportExcelNextWindow {
 	}
 
 	// 保存按钮
-	public static Button saveBtnSetup() {
+	public Button saveBtnSetup() {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(e -> {
@@ -404,7 +403,7 @@ public class ImportExcelNextWindow {
 		return btn;
 	}
 
-	public static Button cancelBtn() {
+	public Button cancelBtn() {
 		Button cancelBtn = new Button("Cancel");
 		cancelBtn.getStyleClass().add("myAlertBtn");
 		cancelBtn.setOnAction(e -> {
@@ -413,7 +412,7 @@ public class ImportExcelNextWindow {
 		return cancelBtn;
 	}
 
-	public static Stage CreateWindow(VBox vb, String title) {
+	public Stage CreateWindow(VBox vb, String title) {
 		SqluckyStage sqluckyStatge = new SqluckyStage(vb);
 		stage = sqluckyStatge.getStage();
 		Scene scene = sqluckyStatge.getScene();

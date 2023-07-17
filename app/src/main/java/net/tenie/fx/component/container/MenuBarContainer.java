@@ -226,6 +226,7 @@ public class MenuBarContainer {
 				FindReplace, new SeparatorMenuItem(), Format, commentCode, new SeparatorMenuItem(), UpperCase,
 				LowerCase, underscore, Hump, new SeparatorMenuItem(), cursorMenu, enditLine);
 
+		// 给菜单按钮绑定快捷
 		KeyBindingCache.menuItemBinding(runMenu);
 		KeyBindingCache.menuItemBinding(runCurrentMenu);
 		KeyBindingCache.menuItemBinding(codeAutocompletionMenu);
@@ -264,19 +265,19 @@ public class MenuBarContainer {
 		// 导入数据
 		Menu importData = new Menu(StrUtils.MenuItemNameFormat("Import Data"));
 		importData.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
-		
+
 		MenuItem importExcelFile = new MenuItem(StrUtils.MenuItemNameFormat("Import Excel"));
 //		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
 		importExcelFile.setOnAction(value -> {
 			ImportExcelWindow.showWindow("", "");
 		});
-		
+
 		MenuItem importCsv = new MenuItem(StrUtils.MenuItemNameFormat("Import CSV"));
 //		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
 		importCsv.setOnAction(value -> {
 			ImportCsvWindow.showWindow("", "");
 		});
-		
+
 		MenuItem importSqlFile = new MenuItem(StrUtils.MenuItemNameFormat("Import Sql File"));
 //		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
 		importSqlFile.setOnAction(value -> {

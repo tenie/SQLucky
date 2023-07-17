@@ -5,6 +5,7 @@ import java.util.function.Consumer;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.po.RsVal;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.ButtonAction;
 import net.tenie.fx.Action.CommonAction;
@@ -19,7 +20,8 @@ public class DataTableContextMenuAction {
 			Consumer<String> caller = x -> {
 				CommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
 			};
-			ModalDialog.showComfirmExec("Confirm drop!", "Execute Sql: " + rv.sql + " ?", caller);
+//			ModalDialog.showComfirmExec("Confirm drop!", "Execute Sql: " + rv.sql + " ?", caller);
+			MyAlert.myConfirmation("Execute Sql: " + rv.sql + " ?", caller);
 		}
 
 	}

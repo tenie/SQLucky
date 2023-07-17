@@ -195,7 +195,9 @@ public class ImportExcelWindow {
 			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
 			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
 			String tableName = tfTabName.getText();
-			ImportExcelNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage);
+
+			ImportExcelNextWindow importExcelNextWindow = new ImportExcelNextWindow();
+			importExcelNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage);
 //			stage.close();
 		});
 
