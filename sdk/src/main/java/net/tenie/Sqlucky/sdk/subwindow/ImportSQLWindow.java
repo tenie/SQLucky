@@ -183,6 +183,7 @@ public class ImportSQLWindow {
 			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
 			LoadingAnimation.loadingAnimation("Saving....", consumer -> {
 				try {
+					errorMsg = "";
 					FileTools.readInsertSqlFile(filePath.getAbsolutePath(), ";", sql -> {
 						return execSQL(sqluckyConn.getConn(), sql);
 					});
@@ -190,6 +191,7 @@ public class ImportSQLWindow {
 						MyAlert.infoAlert("导入成功!");
 					} else {
 						MyAlert.showTextArea("Error", "失败 ! \n" + errorMsg);
+						errorMsg = "";
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

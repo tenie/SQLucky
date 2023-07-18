@@ -72,13 +72,11 @@ public class ExcelUtil {
 				workbook.createSheet(sheetName);
 				fileOutputStream = new FileOutputStream(file);
 				workbook.write(fileOutputStream);
-//				wb = new HSSFWorkbook(in);
 			} else if (file.getName().endsWith(EXCEL_XLSX)) { // Excel 2007/2010
 				workbook = new XSSFWorkbook();
 				workbook.createSheet(sheetName);
 				fileOutputStream = new FileOutputStream(file);
 				workbook.write(fileOutputStream);
-//				wb = new XSSFWorkbook(in);
 			}
 
 		} finally {
@@ -118,18 +116,6 @@ public class ExcelUtil {
 
 	public static List<ArrayList<String>> readExcel(String filename, Integer beginRowIdx, Integer count)
 			throws IOException {
-//		String suffixStr = filename.substring(filename.lastIndexOf("."), filename.length());
-//		List<ArrayList<String>> rs = new ArrayList<>();
-//		if (".xlsx".equals(suffixStr)) {
-//			InputStream is = new FileInputStream(filename);
-//			XSSFWorkbook workbook = new XSSFWorkbook(is);
-//			rs = new ReadExcel2().readExcel(workbook, beginRowIdx, count);
-//		} else if (".xls".equals(suffixStr)) {
-//			InputStream is = new FileInputStream(filename);
-//			HSSFWorkbook workbook = new HSSFWorkbook(is);
-//			rs = new ReadExcel2().readExcel(workbook, beginRowIdx, count);
-//		}
-
 		Workbook workbook = readFileToWorkbok(new File(filename));
 		List<ArrayList<String>> rs = new ArrayList<>();
 		rs = new ReadExcel2().readExcel(workbook, beginRowIdx, count);
@@ -139,11 +125,6 @@ public class ExcelUtil {
 	public static List<ArrayList<String>> readExcelFile(String filename) {
 		return readExcelFile(filename, null, null);
 	}
-
-	// 获取excel头部(第一行)
-//	public static List<ArrayList<String>> readExcelFileHead(String filename) {
-//		return readExcelFile(filename, null, 1);
-//	}
 
 	// 获取excel头部(第一行)
 	public static List<ExcelHeadCellInfo> readExcelFileHead(String filename) {
