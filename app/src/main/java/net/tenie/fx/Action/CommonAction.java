@@ -607,27 +607,6 @@ public class CommonAction {
 
 	}
 
-//	public static void findReplace(boolean isReplace) {
-//		VBox b = SqlcukyEditor.getTabVbox();
-//		int bsize = b.getChildren().size();
-//		if (bsize > 1) {
-//			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
-//			if (bsize == 2 && isReplace) {
-//				FindReplaceEditor.delFindReplacePane();
-//				findReplace(isReplace);
-//			} else // 如果替换已经存在, 要打开查找, 就先关光再打开查找
-//			if (bsize == 3 && !isReplace) {
-//				FindReplaceEditor.delFindReplacePane();
-//				findReplace(isReplace);
-//			} else {
-//				FindReplaceEditor.delFindReplacePane();
-//			}
-//
-//		} else {
-//			FindReplaceEditor.createFindPane(isReplace);
-//		}
-//	}
-
 	public static void hideLeftBottom() {
 		JFXButton btnLeft = CommonButtons.hideLeft; // AllButtons.btns.get("hideLeft");
 		JFXButton btnBottom = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
@@ -650,12 +629,19 @@ public class CommonAction {
 	}
 
 	public static void hideLeft() {
-		JFXButton btn = CommonButtons.hideLeft; // AllButtons.btns.get("hideLeft");
+		JFXButton btn = CommonButtons.hideLeft;
 		if (ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue()) {
 			ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
 			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
 
 		} else {
+			double dpval = ComponentGetter.treeAreaDetailPane.getDividerPosition();
+			if (dpval < 0.1) {
+				double wi = ComponentGetter.masterDetailPane.getWidth();
+				double tbp = 275.0;
+				double val = tbp / wi;
+				ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
+			}
 			ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
 			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
 
