@@ -111,6 +111,7 @@ public class RunSQLHelper {
 			settingBtn();
 			state.setCallProcedureFields(null);
 			state.setIsCallFunc(false);
+			SdkComponent.rmWaitingPane();
 		}
 
 	}
@@ -212,6 +213,7 @@ public class RunSQLHelper {
 	// 在子线程执行 运行sql 的任务
 	public static Thread createThread(Consumer<RunSqlStatePo> action, RunSqlStatePo state) {
 		return new Thread() {
+			@Override
 			public void run() {
 				logger.info("线程启动了" + this.getName());
 				action.accept(state);
