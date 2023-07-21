@@ -77,7 +77,14 @@ public class ExcelToDB {
 					rowVals.add(cellVals);
 					for (ExcelFieldPo epo : fields) {
 						// 匹配到excel的列
-						String rowIdxStr = epo.getExcelRowIdx().get();
+//						String rowIdxStr = epo.getExcelRowIdx().get();
+						String rowIdxStr = "";
+						String rowVal = epo.getExcelRowVal().get();
+						if (StrUtils.isNotNullOrEmpty(rowVal)) {
+							String[] excelInfo = rowVal.split(" - ");
+							rowIdxStr = excelInfo[0];
+						}
+
 						if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
 							Integer rowidx = Integer.valueOf(rowIdxStr);
 							// 下标从0开始, 需要减1
@@ -92,12 +99,17 @@ public class ExcelToDB {
 					}
 					idx++;
 					if (idx % 100 == 0) {
-						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile, onlySaveSql);
+						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
+								onlySaveSql);
 						rowVals.clear();
 					}
+					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
+							onlySaveSql);
+					rowVals.clear();
 				}
 				if (rowVals.size() > 0) {
-					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile, onlySaveSql);
+					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
+							onlySaveSql);
 					rowVals.clear();
 				}
 			}

@@ -61,9 +61,9 @@ public class ExcelFieldPo extends SheetFieldPo {
 		return excelRowVal;
 	}
 
-	public void setExcelRowVal(StringProperty excelRowVal) {
-		this.excelRowVal = excelRowVal;
-	}
+//	public void setExcelRowVal(StringProperty excelRowVal) {
+//		this.excelRowVal = excelRowVal;
+//	}
 
 	public StringProperty getFixedValue() {
 		return fixedValue;
