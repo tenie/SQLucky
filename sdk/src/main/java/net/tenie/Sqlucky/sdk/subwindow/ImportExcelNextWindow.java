@@ -10,6 +10,7 @@ import org.controlsfx.control.tableview2.cell.ComboBox2TableCell;
 
 import com.jfoenix.controls.JFXCheckBox;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -72,16 +73,23 @@ public class ImportExcelNextWindow {
 	private SqluckyConnector sqluckyConn;
 
 	public void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath, Stage parentStage) {
+
 		sqluckyConn = dbc;
 		excelFile = excelFilePath;
 		tableName = tableNameVal;
-		VBox tbox = tableBox(dbc, tableName, excelFile);
-		if (tbox == null) {
-			MyAlert.errorAlert("没有表<" + tableNameVal + ">的信息, 请确保表存在!");
-			return;
-		}
-		layout(tbox, tableName);
-		parentStage.close();
+		LoadingAnimation.loadingAnimation("Loading....", v -> {
+
+			VBox tbox = tableBox(dbc, tableName, excelFile);
+			if (tbox == null) {
+				MyAlert.errorAlert("没有表<" + tableNameVal + ">的信息, 请确保表存在!");
+				return;
+			}
+			Platform.runLater(() -> {
+				layout(tbox, tableName);
+				parentStage.close();
+			});
+
+		});
 
 	}
 
@@ -134,8 +142,11 @@ public class ImportExcelNextWindow {
 				headArr[i] = val;
 				selectVal.add(val);
 			}
-			for (var tmp : fields) {
+
+			for (int j = 0; (j < selectVal.size()) && (j < fields.size()); j++) {
+				var tmp = fields.get(j);
 				tmp.setExcelRowInfo(selectVal);
+				tmp.getExcelRowVal().set(selectVal.get(j));
 			}
 
 			return headArr;
@@ -145,29 +156,66 @@ public class ImportExcelNextWindow {
 	}
 
 	public VBox tableFiledMapExcelRowBox(String tableName, ObservableList<ExcelFieldPo> fields, String excelFile) {
-		FlowPane fp = new FlowPane();
 
-		String colName1 = "字段名称";
-		String colName2 = "Excel列";
-		String colName3 = "自定义值";
 		Label tf1 = new Label();
-		tf1.setPrefWidth(150);
-
-		Label tf2 = new Label();
-		tf2.setPrefWidth(150);
-		Label tf3 = new Label();
-		tf3.setPrefWidth(150);
-
-		fp.getChildren().add(tf1);
-		fp.getChildren().add(tf2);
-		fp.getChildren().add(tf3);
-		fp.setPadding(new Insets(8, 0, 0, 0));
-		Insets is = new Insets(0, 8, 8, 8);
-		FlowPane.setMargin(tf1, is);
-		FlowPane.setMargin(tf2, is);
-		FlowPane.setMargin(tf3, is);
+		tf1.setPrefWidth(450);
+		tf1.setPadding(new Insets(8, 0, 0, 0));
 
 		// table
+		var tableView = createTableView(fields, tf1);
+		VBox subvb = new VBox();
+
+		var topfp = topPane(tableView, fields);
+		subvb.getChildren().add(topfp);
+
+		subvb.getChildren().add(tableView);
+		VBox.setVgrow(tableView, Priority.ALWAYS);
+		subvb.getChildren().add(tf1);
+
+		return subvb;
+	}
+
+	// 界面顶部的操作按钮
+	private FlowPane topPane(TableView<ExcelFieldPo> tableView, ObservableList<ExcelFieldPo> fields) {
+		FlowPane topfp = new FlowPane();
+		topfp.setPadding(new Insets(5));
+		Label lb = new Label();
+		lb.setGraphic(IconGenerator.svgImageDefActive("search"));
+		TextField filterField = new TextField();
+
+		filterField.getStyleClass().add("myTextField");
+		topfp.getChildren().add(lb);
+		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
+		topfp.getChildren().add(filterField);
+		topfp.setMinHeight(35);
+		topfp.prefHeight(35);
+		filterField.setPrefWidth(200);
+		// 过滤功能
+		filterField.textProperty().addListener((o, oldVal, newVal) -> {
+			if (StrUtils.isNotNullOrEmpty(newVal)) {
+				TableDataDetail.bindTableViewExcelFieldFilter(tableView, fields, newVal);
+			} else {
+				tableView.setItems(fields);
+			}
+
+		});
+
+		// 清空列的值
+		Button cleanBtn = new Button("清空列值");
+//		cleanBtn.setPadding(new Insets(5));
+		cleanBtn.getStyleClass().add("myAlertBtn");
+		cleanBtn.setOnAction(e -> {
+			for (var tmp : fields) {
+				tmp.getExcelRowVal().set("");
+			}
+		});
+
+		topfp.getChildren().add(cleanBtn);
+		FlowPane.setMargin(cleanBtn, new Insets(0, 10, 0, 5));
+		return topfp;
+	}
+
+	private TableView<ExcelFieldPo> createTableView(ObservableList<ExcelFieldPo> fields, Label tf1) {
 		TableView<ExcelFieldPo> tv = new TableView<>();
 		tv.getStyleClass().add("myTableTag");
 		tv.setEditable(true);
@@ -179,16 +227,19 @@ public class ImportExcelNextWindow {
 						ExcelFieldPo p = newItem;
 						if (p == null)
 							return;
-						tf1.setText(p.getColumnLabel().get());
 						String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
 						if (p.getScale() != null && p.getScale().get() > 0) {
 							tyNa += ", " + p.getScale().get();
 						}
 						tyNa += ")";
-						tf2.setText(tyNa);
-						tf3.setText(p.getColumnClassName().get());
+
+						tf1.setText(p.getColumnLabel().get() + "  :  " + tyNa + "  :  " + p.getColumnClassName().get());
 					}
 				});
+
+		String colName1 = "字段名称";
+		String colName2 = "Excel列";
+		String colName3 = "自定义值";
 		// 第一列
 		TableColumn<ExcelFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
 		fieldNameCol.setEditable(false);
@@ -222,39 +273,7 @@ public class ImportExcelNextWindow {
 		tv.getColumns().add(valueCol3);
 
 		tv.getItems().addAll(fields);
-
-		VBox subvb = new VBox();
-		FlowPane topfp = new FlowPane();
-		topfp.setPadding(new Insets(8, 5, 8, 8));
-		Label lb = new Label();
-		lb.setGraphic(IconGenerator.svgImageDefActive("search"));
-		TextField filterField = new TextField();
-
-		filterField.getStyleClass().add("myTextField");
-		topfp.getChildren().add(lb);
-		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
-		topfp.getChildren().add(filterField);
-		topfp.setMinHeight(30);
-		topfp.prefHeight(30);
-		filterField.setPrefWidth(200);
-
-		subvb.getChildren().add(topfp);
-
-		subvb.getChildren().add(tv);
-		VBox.setVgrow(tv, Priority.ALWAYS);
-		subvb.getChildren().add(fp);
-
-		// 过滤功能
-		filterField.textProperty().addListener((o, oldVal, newVal) -> {
-			if (StrUtils.isNotNullOrEmpty(newVal)) {
-				TableDataDetail.bindTableViewExcelFieldFilter(tv, fields, newVal);
-			} else {
-				tv.setItems(fields);
-			}
-
-		});
-
-		return subvb;
+		return tv;
 	}
 
 	// 按钮面板
@@ -276,14 +295,10 @@ public class ImportExcelNextWindow {
 		Label lb1 = new Label("起始行号");
 		beginIdTF = new TextField();
 		beginIdTF.setPromptText("默认第一行开始");
-//		HBox b1 = new HBox();
-//		b1.getChildren().addAll(lb1, beginIdTF);
 
 		Label lb2 = new Label("导入行数");
 		conuntTF = new TextField();
 		conuntTF.setPromptText("默认全部");
-//		HBox b2 = new HBox();
-//		b2.getChildren().addAll(lb2, conuntTF);
 
 		saveSqlCheckBox = new JFXCheckBox("导入SQL保存到文件");
 		tfFilePath = new TextField();
@@ -297,8 +312,6 @@ public class ImportExcelNextWindow {
 		b2.getChildren().addAll(tfFilePath, selectFile);
 
 		List<Region> nds = new ArrayList<>();
-//		nds.add(b1);
-//		nds.add(b2);
 		nds.add(lb1);
 		nds.add(beginIdTF);
 		nds.add(lb2);

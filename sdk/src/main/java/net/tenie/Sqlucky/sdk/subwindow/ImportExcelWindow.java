@@ -168,15 +168,6 @@ public class ImportExcelWindow {
 
 	}
 
-//	// 选取文件按钮
-//	public static Button openFileBtn(TextField tfFilePath) {
-//		Button selectFileBtn = new Button("...");
-//		selectFileBtn.setOnAction(e -> {
-//			FileOrDirectoryChooser.getFilePathAction(tfFilePath, stage);
-//		});
-//		return selectFileBtn;
-//	}
-
 	// 下一步按钮
 	public static Button nextBtn() {
 		Button btn = new Button("next");

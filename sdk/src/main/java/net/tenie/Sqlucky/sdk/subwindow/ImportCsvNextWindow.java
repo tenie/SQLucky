@@ -10,6 +10,7 @@ import org.controlsfx.control.tableview2.cell.ComboBox2TableCell;
 
 import com.jfoenix.controls.JFXCheckBox;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -78,13 +79,20 @@ public class ImportCsvNextWindow {
 		csvFile = csvFilePath;
 		tableName = tableNameVal;
 		splitSymbol = sSymbol;
-		VBox tbox = tableBox(dbc, tableName, csvFile);
-		if (tbox == null) {
-			MyAlert.errorAlert("没有表<" + tableNameVal + ">的信息, 请确保表存在!");
-			return;
-		}
-		layout(tbox, tableName);
-		parentStage.close();
+
+		LoadingAnimation.loadingAnimation("Loading....", v -> {
+
+			VBox tbox = tableBox(dbc, tableName, csvFile);
+			if (tbox == null) {
+				MyAlert.errorAlert("没有表<" + tableNameVal + ">的信息, 请确保表存在!");
+				return;
+			}
+			Platform.runLater(() -> {
+				layout(tbox, tableName);
+				parentStage.close();
+			});
+
+		});
 
 	}
 
@@ -137,8 +145,8 @@ public class ImportCsvNextWindow {
 				headArr[i] = val;
 				selectVal.add(val);
 			}
-			for (int j = 0; j < fields.size(); j++) {
-//			for (var tmp : fields) {
+
+			for (int j = 0; (j < selectVal.size()) && (j < fields.size()); j++) {
 				var tmp = fields.get(j);
 				tmp.setExcelRowInfo(selectVal);
 				tmp.getExcelRowVal().set(selectVal.get(j));
@@ -147,39 +155,35 @@ public class ImportCsvNextWindow {
 			return headArr;
 		}
 
-		// 将cvs 字段赋值给 字段对应的值
-
 		return new String[0];
 	}
 
 	public VBox tableFiledMapCsvRowBox(String tableName, ObservableList<ExcelFieldPo> fields, String csvFile) {
-		FlowPane fp = new FlowPane();
 
-		String colName1 = "字段名称";
-		String colName2 = "Csv列";
-		String colName3 = "自定义值";
 		Label tf1 = new Label();
-		tf1.setPrefWidth(150);
-
-		Label tf2 = new Label();
-		tf2.setPrefWidth(150);
-		Label tf3 = new Label();
-		tf3.setPrefWidth(150);
-
-		fp.getChildren().add(tf1);
-		fp.getChildren().add(tf2);
-		fp.getChildren().add(tf3);
-		fp.setPadding(new Insets(8, 0, 0, 0));
-		Insets is = new Insets(0, 8, 8, 8);
-		FlowPane.setMargin(tf1, is);
-		FlowPane.setMargin(tf2, is);
-		FlowPane.setMargin(tf3, is);
+		tf1.setPrefWidth(500);
+		tf1.setPadding(new Insets(8));
 
 		// table
-		TableView<ExcelFieldPo> tv = new TableView<>();
-		tv.getStyleClass().add("myTableTag");
-		tv.setEditable(true);
-		tv.getSelectionModel().selectedItemProperty().addListener(// 选中某一行
+		var tableView = createTableView(fields, tf1);
+		VBox subvb = new VBox();
+		subvb.setPrefHeight(400);
+
+		FlowPane topfp = topPane(tableView, fields);
+		subvb.getChildren().add(topfp);
+
+		subvb.getChildren().add(tableView);
+		VBox.setVgrow(tableView, Priority.ALWAYS);
+		subvb.getChildren().add(tf1);
+
+		return subvb;
+	}
+
+	private TableView<ExcelFieldPo> createTableView(ObservableList<ExcelFieldPo> fields, Label tf1) {
+		TableView<ExcelFieldPo> tableView = new TableView<>();
+		tableView.getStyleClass().add("myTableTag");
+		tableView.setEditable(true);
+		tableView.getSelectionModel().selectedItemProperty().addListener(// 选中某一行
 				new ChangeListener<ExcelFieldPo>() {
 					@Override
 					public void changed(ObservableValue<? extends ExcelFieldPo> observableValue, ExcelFieldPo oldItem,
@@ -187,16 +191,21 @@ public class ImportCsvNextWindow {
 						ExcelFieldPo p = newItem;
 						if (p == null)
 							return;
-						tf1.setText(p.getColumnLabel().get());
+						String str1 = p.getColumnLabel().get();
 						String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
 						if (p.getScale() != null && p.getScale().get() > 0) {
 							tyNa += ", " + p.getScale().get();
 						}
 						tyNa += ")";
-						tf2.setText(tyNa);
-						tf3.setText(p.getColumnClassName().get());
+
+						str1 += "  : " + tyNa + "  : " + p.getColumnClassName().get();
+						tf1.setText(str1);
 					}
 				});
+
+		String colName1 = "字段名称";
+		String colName2 = "Csv列";
+		String colName3 = "自定义值";
 		// 第一列
 		TableColumn<ExcelFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
 		fieldNameCol.setEditable(false);
@@ -208,7 +217,7 @@ public class ImportCsvNextWindow {
 		fieldNameCol.setCellFactory(MyTableCellTextField2ReadOnly.forTableColumn());
 		fieldNameCol.setPrefWidth(180);
 
-		tv.getColumns().add(fieldNameCol);
+		tableView.getColumns().add(fieldNameCol);
 
 		// 第二列
 		TableColumn<ExcelFieldPo, String> valueCol = new TableColumn<>(colName2);
@@ -218,7 +227,7 @@ public class ImportCsvNextWindow {
 		valueCol.setCellValueFactory(p -> p.getValue().getExcelRowVal());
 		valueCol.setCellFactory(ComboBox2TableCell.forTableColumn(headArr));
 
-		tv.getColumns().add(valueCol);
+		tableView.getColumns().add(valueCol);
 
 		// 第三列
 		TableColumn<ExcelFieldPo, String> valueCol3 = new TableColumn<>(colName3);
@@ -227,14 +236,16 @@ public class ImportCsvNextWindow {
 		valueCol3.setCellValueFactory(p -> p.getValue().getFixedValue());
 		valueCol3.setCellFactory(TextFieldTableCell.forTableColumn());
 
-		tv.getColumns().add(valueCol3);
+		tableView.getColumns().add(valueCol3);
 
-		tv.getItems().addAll(fields);
+		tableView.getItems().addAll(fields);
+		return tableView;
+	}
 
-		VBox subvb = new VBox();
-		subvb.setPrefHeight(400);
+	// 界面顶部的操作按钮
+	private FlowPane topPane(TableView<ExcelFieldPo> tv, ObservableList<ExcelFieldPo> fields) {
 		FlowPane topfp = new FlowPane();
-		topfp.setPadding(new Insets(8, 5, 8, 8));
+		topfp.setPadding(new Insets(5));
 		Label lb = new Label();
 		lb.setGraphic(IconGenerator.svgImageDefActive("search"));
 		TextField filterField = new TextField();
@@ -243,16 +254,9 @@ public class ImportCsvNextWindow {
 		topfp.getChildren().add(lb);
 		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
 		topfp.getChildren().add(filterField);
-		topfp.setMinHeight(30);
-		topfp.prefHeight(30);
+		topfp.setMinHeight(35);
+		topfp.prefHeight(35);
 		filterField.setPrefWidth(200);
-
-		subvb.getChildren().add(topfp);
-
-		subvb.getChildren().add(tv);
-		VBox.setVgrow(tv, Priority.ALWAYS);
-		subvb.getChildren().add(fp);
-
 		// 过滤功能
 		filterField.textProperty().addListener((o, oldVal, newVal) -> {
 			if (StrUtils.isNotNullOrEmpty(newVal)) {
@@ -263,7 +267,20 @@ public class ImportCsvNextWindow {
 
 		});
 
-		return subvb;
+		// 清空列的值
+		Button cleanBtn = new Button("清空列值");
+		cleanBtn.setPadding(new Insets(5));
+		cleanBtn.getStyleClass().add("myAlertBtn");
+		cleanBtn.setOnAction(e -> {
+			for (var tmp : fields) {
+				tmp.getExcelRowVal().set("");
+			}
+		});
+
+		topfp.getChildren().add(cleanBtn);
+
+		FlowPane.setMargin(cleanBtn, new Insets(0, 10, 0, 5));
+		return topfp;
 	}
 
 	// 按钮面板
