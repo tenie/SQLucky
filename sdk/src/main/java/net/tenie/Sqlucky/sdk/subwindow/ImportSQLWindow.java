@@ -51,7 +51,6 @@ public class ImportSQLWindow {
 	private static Logger logger = LogManager.getLogger(ImportSQLWindow.class);
 
 	private static ChoiceBox<String> connNameChoiceBox;
-//	private static TextField tfTabName;
 	private static TextField tfFilePath;
 	private static String errorMsg = "";;
 
@@ -59,7 +58,7 @@ public class ImportSQLWindow {
 	private static AnchorPane btnPane(String tableName) {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
-		Button nextbtn = nextBtn();
+		Button nextbtn = saveBtn();
 
 		nextbtn.disableProperty()
 				.bind(connNameChoiceBox.valueProperty().isNull().or(tfFilePath.textProperty().isEmpty()));
@@ -154,8 +153,6 @@ public class ImportSQLWindow {
 
 		list.add(lbDBconn);
 		list.add(connNameChoiceBox);
-//		list.add(lbModelName);
-//		list.add(tfTabName);
 
 		list.add(lbFilePath);
 		list.add(fileBox);
@@ -165,7 +162,7 @@ public class ImportSQLWindow {
 	}
 
 	// 下一步按钮
-	public static Button nextBtn() {
+	public static Button saveBtn() {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(v -> {
@@ -184,8 +181,9 @@ public class ImportSQLWindow {
 			LoadingAnimation.loadingAnimation("Saving....", consumer -> {
 				try {
 					errorMsg = "";
-					FileTools.readInsertSqlFile(filePath.getAbsolutePath(), ";", sql -> {
-						return execSQL(sqluckyConn.getConn(), sql);
+					String splitChar = ";";
+					FileTools.readInsertSqlFile(filePath.getAbsolutePath(), splitChar, sql -> {
+						return execSQL(sqluckyConn.getConn(), sql, splitChar);
 					});
 					if (StrUtils.isNullOrEmpty(errorMsg)) {
 						MyAlert.infoAlert("导入成功!");
@@ -203,8 +201,12 @@ public class ImportSQLWindow {
 		return btn;
 	}
 
-	public static String execSQL(Connection conn, String sql) {
+	public static String execSQL(Connection conn, String sql, String splitChar) {
 		try {
+			int lIdx = sql.lastIndexOf(splitChar);
+			if (lIdx > 0) {
+				sql = sql.substring(0, lIdx);
+			}
 			DBTools.execDML(conn, sql);
 			return "成功";
 		} catch (SQLException e) {

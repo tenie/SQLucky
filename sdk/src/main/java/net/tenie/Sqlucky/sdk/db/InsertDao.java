@@ -131,6 +131,7 @@ public class InsertDao {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
+		String logString = "";
 		try {
 
 			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
@@ -175,7 +176,8 @@ public class InsertDao {
 					idx++;
 					int javatype = fieldpo.getColumnType().get();
 					String columnTypeName = fieldpo.getColumnTypeName().get();
-					logger.info("javatype = " + javatype + " | " + columnTypeName);
+//					logger.info("javatype = " + javatype + " | " + columnTypeName);
+					logString += "javatype = " + javatype + " | " + columnTypeName;
 					valLog += " | " + val;
 					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
 						String tmp = fieldpo.getFixedValue().get();
@@ -213,6 +215,7 @@ public class InsertDao {
 				logger.info(insertLog);
 				pstmt.addBatch();
 			}
+			logger.info(logString);
 			int[] count = pstmt.executeBatch();
 			int execCountLen = count.length;
 			logger.info("instert = " + execCountLen);
@@ -239,6 +242,7 @@ public class InsertDao {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
+		String logString = "";
 		try {
 
 			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
@@ -270,7 +274,8 @@ public class InsertDao {
 					}
 					int javatype = fieldpo.getColumnType().get();
 					String columnTypeName = fieldpo.getColumnTypeName().get();
-					logger.info("javatype = " + javatype + " | " + columnTypeName);
+//					logger.info("javatype = " + javatype + " | " + columnTypeName);
+					logString += "javatype = " + javatype + " | " + columnTypeName;
 					valLog += " | " + val;
 					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
 						String tmp = fieldpo.getFixedValue().get();
@@ -308,7 +313,7 @@ public class InsertDao {
 					insertValue = insertValue.substring(0, insertValue.length() - 1);
 //					insert += insertValue + " )";
 					insertValue = insert + insertValue + " )";
-					logger.info(insertValue);
+//					logger.info(insertValue);
 					if (onlySaveSql) {
 						inSqls.add(insertValue + ";");
 					} else {
@@ -317,7 +322,10 @@ public class InsertDao {
 					}
 
 				}
+
 			}
+			logger.info(logString);
+
 			if (onlySaveSql) {
 				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
 			} else {
