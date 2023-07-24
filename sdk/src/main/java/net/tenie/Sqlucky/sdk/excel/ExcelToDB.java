@@ -14,7 +14,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * excel 导入到数据库
@@ -75,20 +74,31 @@ public class ExcelToDB {
 					}
 					List<String> cellVals = new ArrayList<>();
 					rowVals.add(cellVals);
+
 					for (ExcelFieldPo epo : fields) {
 						// 匹配到excel的列
 //						String rowIdxStr = epo.getExcelRowIdx().get();
-						String rowIdxStr = "";
-						String rowVal = epo.getExcelRowVal().get();
-						if (StrUtils.isNotNullOrEmpty(rowVal)) {
-							String[] excelInfo = rowVal.split(" - ");
-							rowIdxStr = excelInfo[0];
-						}
+//						String rowIdxStr = "";
+//						String rowVal = epo.getExcelRowVal().get();
+//						if (StrUtils.isNotNullOrEmpty(rowVal)) {
+//							String[] excelInfo = rowVal.split(" - ");
+//							rowIdxStr = excelInfo[0];
+//						}
 
-						if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
-							Integer rowidx = Integer.valueOf(rowIdxStr);
-							// 下标从0开始, 需要减1
-							Cell cell = hssfRow.getCell(rowidx - 1);
+//						if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
+//							Integer rowidx = Integer.valueOf(rowIdxStr);
+//							// 下标从0开始, 需要减1
+//							Cell cell = hssfRow.getCell(rowidx - 1);
+//							String cellStr = cell.toString();
+//							cellVals.add(cellStr);
+//						} else { // 使用固定值
+//							String fixVal = epo.getFixedValue().get();
+//							cellVals.add(fixVal);
+//						}
+
+						Integer rowIdx = epo.getRowIdx();
+						if (rowIdx > -1) {
+							Cell cell = hssfRow.getCell(rowIdx);
 							String cellStr = cell.toString();
 							cellVals.add(cellStr);
 						} else { // 使用固定值
@@ -97,6 +107,7 @@ public class ExcelToDB {
 						}
 
 					}
+
 					idx++;
 					if (idx % 100 == 0) {
 						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
@@ -120,4 +131,5 @@ public class ExcelToDB {
 		}
 
 	}
+
 }

@@ -13,7 +13,10 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -31,6 +34,7 @@ import net.tenie.fx.Action.sqlExecute.SqlExecuteOption;
 import net.tenie.fx.component.InfoTree.TreeObjAction;
 import net.tenie.fx.component.InfoTree.TreeItem.TreeObjCache;
 import net.tenie.fx.dao.DeleteDao;
+import net.tenie.fx.window.DockSideWindow;
 
 /**
  * 查询slq后, 面板上的操作按钮要执行的逻辑
@@ -322,4 +326,24 @@ public class ButtonAction {
 
 	}
 
+	/**
+	 * 将数据表, 独立显示
+	 */
+	public static void dockSide() {
+		Tab tab = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
+//		String tableName = tab.getText();
+		String tableName = CommonUtility.tabText(tab);
+
+		FilteredTableView<ResultSetRowPo> table = SqluckyBottomSheetUtility.dataTableView();
+		table.getColumns().forEach(tabCol -> {
+			tabCol.setContextMenu(null);
+		});
+		DockSideWindow dsw = new DockSideWindow();
+		dsw.showWindow(table, tableName);
+
+		TabPane dataTab = ComponentGetter.dataTabPane;
+		if (dataTab.getTabs().contains(tab)) {
+			dataTab.getTabs().remove(tab);
+		}
+	}
 }
