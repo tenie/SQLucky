@@ -173,7 +173,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		minusBtn.setTooltip(MyTooltipTool.instance("delete data "));
 		minusBtn.setDisable(disable);
 
-//	    	 files-o
+//	    复制一行数据
 		JFXButton copyBtn = new JFXButton();
 		copyBtn.setGraphic(IconGenerator.svgImageDefActive("files-o"));
 		copyBtn.setOnMouseClicked(e -> {
@@ -182,37 +182,46 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		copyBtn.setTooltip(MyTooltipTool.instance("copy selected row data "));
 		copyBtn.setDisable(disable);
 
+		// 独立窗口
+		JFXButton dockSideBtn = new JFXButton();
+		dockSideBtn.setGraphic(IconGenerator.svgImageDefActive("material-filter-none"));
+		dockSideBtn.setOnMouseClicked(e -> {
+			ButtonAction.dockSide();
+		});
+		dockSideBtn.setTooltip(MyTooltipTool.instance("Dock side"));
+		dockSideBtn.setDisable(disable);
+
 		// excel 导入
 		MenuButton importFileBtn = new MenuButton();
 		importFileBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
 		importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
 		importFileBtn.setDisable(disable);
-		
+
 		MenuItem excelImportBtn = new MenuItem("Import Excel");
+		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("EXCEL"));
 		excelImportBtn.setDisable(disable);
 		excelImportBtn.setOnAction(e -> {
 			ImportExcelWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
-			
-		}); 
-		
+
+		});
+
 		MenuItem csvImportBtn = new MenuItem("Import CSV");
+		csvImportBtn.setGraphic(IconGenerator.svgImageDefActive("CSV"));
 		csvImportBtn.setDisable(disable);
 		csvImportBtn.setOnAction(e -> {
 			ImportCsvWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
-			
-		}); 
-		
+
+		});
+
 		MenuItem sqlImportBtn = new MenuItem("Import Sql File");
+		sqlImportBtn.setGraphic(IconGenerator.svgImageDefActive("SQL"));
 		sqlImportBtn.setDisable(disable);
 		sqlImportBtn.setOnAction(e -> {
 			ImportSQLWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
-			
-		}); 
-		
-		
-		
+
+		});
+
 		importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn, sqlImportBtn);
-		
 
 		// 导出
 		MenuButton exportBtn = new MenuButton();
@@ -360,9 +369,9 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		ls.add(addBtn);
 		ls.add(minusBtn);
 		ls.add(copyBtn);
-//		ls.add(excelImportBtn);
+		ls.add(dockSideBtn);
 		ls.add(importFileBtn);
-		
+
 		ls.add(exportBtn);
 		ls.add(searchBtn);
 		ls.add(searchField);
