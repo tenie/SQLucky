@@ -101,6 +101,8 @@ public class SqluckyBottomSheetUtility {
 
 	// 获取当前table view 的保存按钮
 	public static Button dataPaneSaveBtn() {
+		if (ComponentGetter.currentDataTab() == null)
+			return null;
 		return ComponentGetter.currentDataTab().getSaveBtn();
 	}
 

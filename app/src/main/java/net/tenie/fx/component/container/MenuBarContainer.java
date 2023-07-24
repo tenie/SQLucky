@@ -267,19 +267,19 @@ public class MenuBarContainer {
 		importData.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
 
 		MenuItem importExcelFile = new MenuItem(StrUtils.MenuItemNameFormat("Import Excel"));
-//		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		importExcelFile.setGraphic(IconGenerator.svgImageDefActive("EXCEL"));
 		importExcelFile.setOnAction(value -> {
 			ImportExcelWindow.showWindow("", "");
 		});
 
 		MenuItem importCsv = new MenuItem(StrUtils.MenuItemNameFormat("Import CSV"));
-//		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		importCsv.setGraphic(IconGenerator.svgImageDefActive("CSV"));
 		importCsv.setOnAction(value -> {
 			ImportCsvWindow.showWindow("", "");
 		});
 
 		MenuItem importSqlFile = new MenuItem(StrUtils.MenuItemNameFormat("Import Sql File"));
-//		importExcel.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		importSqlFile.setGraphic(IconGenerator.svgImageDefActive("SQL"));
 		importSqlFile.setOnAction(value -> {
 			ImportSQLWindow.showWindow("", "");
 		});

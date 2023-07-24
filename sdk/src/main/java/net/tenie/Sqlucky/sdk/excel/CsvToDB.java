@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.usermodel.Cell;
 
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -70,12 +71,22 @@ public class CsvToDB {
 					String[] record = str.split(splitSymbol);
 					if (record != null) {
 						for (ExcelFieldPo epo : fields) {
-							// 匹配到excel的列
-							String rowIdxStr = epo.getExcelRowIdx().get();
-							if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
-								Integer rowidx = Integer.valueOf(rowIdxStr);
+//							// 匹配到excel的列
+//							String rowIdxStr = epo.getExcelRowIdx().get();
+//							if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
+//								Integer rowidx = Integer.valueOf(rowIdxStr);
+//								// 下标从0开始, 需要减1
+//								String cellStr = record[rowidx - 1];
+//								cellVals.add(cellStr);
+//							} else { // 使用固定值
+//								String fixVal = epo.getFixedValue().get();
+//								cellVals.add(fixVal);
+//							}
+
+							Integer rowIdx = epo.getRowIdx();
+							if (rowIdx > -1) {
 								// 下标从0开始, 需要减1
-								String cellStr = record[rowidx - 1];
+								String cellStr = record[rowIdx];
 								cellVals.add(cellStr);
 							} else { // 使用固定值
 								String fixVal = epo.getFixedValue().get();
