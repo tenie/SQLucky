@@ -11,13 +11,11 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.poi.ss.usermodel.Cell;
 
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * excel 导入到数据库

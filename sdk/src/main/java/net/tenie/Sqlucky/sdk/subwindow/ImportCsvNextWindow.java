@@ -50,6 +50,7 @@ import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 
 /**
  * Csv导入
@@ -303,10 +304,12 @@ public class ImportCsvNextWindow {
 		Label lb1 = new Label("起始行号");
 		beginIdTF = new TextField();
 		beginIdTF.setPromptText("默认第一行开始");
+		TextFieldSetup.numberOnly(beginIdTF);
 
 		Label lb2 = new Label("导入行数");
 		conuntTF = new TextField();
 		conuntTF.setPromptText("默认全部");
+		TextFieldSetup.numberOnly(conuntTF);
 
 		saveSqlCheckBox = new JFXCheckBox("导入SQL保存到文件");
 		tfFilePath = new TextField();

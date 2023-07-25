@@ -160,7 +160,7 @@ public class ButtonFactory {
 		rows.setText(ConfigVal.MaxRows + "");
 
 		TextFieldSetup.setMaxLength(rows, 9);
-		TextFieldSetup.numberOnly(rows);
+		TextFieldSetup.maxRowsNumberOnly(rows);
 
 		// 失去焦点, 如果没有输入值默认1
 		rows.focusedProperty().addListener((observable, oldValue, newValu) -> {
