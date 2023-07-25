@@ -50,6 +50,7 @@ import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 
 /**
  * excel导入
@@ -61,7 +62,7 @@ public class ImportExcelNextWindow {
 
 	private Stage stage;
 	private Logger logger = LogManager.getLogger(ImportExcelNextWindow.class);
-
+	private TextField sheetTF;
 	private TextField beginIdTF;
 	private TextField conuntTF;
 	private TextField tfFilePath;
@@ -292,13 +293,20 @@ public class ImportExcelNextWindow {
 
 	// 其他设置
 	public List<Region> otherSet() {
+		Label lb0 = new Label("第几个sheet");
+		sheetTF = new TextField();
+		sheetTF.setPromptText("默认所有sheet的数据");
+		TextFieldSetup.numberOnly(sheetTF);
+
 		Label lb1 = new Label("起始行号");
 		beginIdTF = new TextField();
 		beginIdTF.setPromptText("默认第一行开始");
+		TextFieldSetup.numberOnly(beginIdTF);
 
 		Label lb2 = new Label("导入行数");
 		conuntTF = new TextField();
 		conuntTF.setPromptText("默认全部");
+		TextFieldSetup.numberOnly(conuntTF);
 
 		saveSqlCheckBox = new JFXCheckBox("导入SQL保存到文件");
 		tfFilePath = new TextField();
@@ -312,6 +320,10 @@ public class ImportExcelNextWindow {
 		b2.getChildren().addAll(tfFilePath, selectFile);
 
 		List<Region> nds = new ArrayList<>();
+
+		nds.add(lb0);
+		nds.add(sheetTF);
+
 		nds.add(lb1);
 		nds.add(beginIdTF);
 		nds.add(lb2);
@@ -403,8 +415,14 @@ public class ImportExcelNextWindow {
 			Integer tmpCountval = countval;
 			LoadingAnimation.loadingAnimation("Saving....", v -> {
 				try {
-					ExcelToDB.toTable(sqluckyConn, tableName, excelFile, tfFilePath.getText(), vals, tmpBeginval,
-							tmpCountval, onlySave.isSelected());
+					Integer sheetNo = null;
+					String sheetNoStr = sheetTF.getText();
+					if (StrUtils.isNotNullOrEmpty(sheetNoStr.trim())) {
+						sheetNo = Integer.valueOf(sheetNoStr);
+					}
+
+					ExcelToDB.toTable(sqluckyConn, tableName, excelFile, tfFilePath.getText(), vals, sheetNo,
+							tmpBeginval, tmpCountval, onlySave.isSelected(), saveSqlCheckBox.isSelected());
 					MyAlert.infoAlert("导入成功!");
 				} catch (Exception e1) {
 					MyAlert.showTextArea("Error", "导入失败 ! \n" + e1.getMessage());

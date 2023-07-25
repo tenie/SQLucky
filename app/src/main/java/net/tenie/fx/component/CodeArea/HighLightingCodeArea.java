@@ -58,19 +58,23 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	private MyAutoComplete myAuto;
 	private SqluckyTab myAreaTab;
 
+	@Override
 	public void hideAutoComplete() {
 		myAuto.hide();
 	}
 
 	// 显示自动补全
+	@Override
 	public void showAutoComplete(double x, double y, String str) {
 		myAuto.showPop(x, y + 7, str);
 	}
 
+	@Override
 	public void nextBookmark(boolean tf) {
 		codeArea.getMylineNumber().nextBookmark(tf);
 	}
 
+	@Override
 	public void setContextMenu(ContextMenu cm) {
 		if (cm != null) {
 			codeArea.setContextMenu(cm);
@@ -104,10 +108,6 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		executor = Executors.newSingleThreadExecutor();
 		codeArea = new MyCodeArea();
 
-		// 文本内容监听事件函数
-//		textChangeListener = (obj, o, n) -> { 
-//			delayHighLighting(caller, 600, 0);
-//		};
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 
@@ -419,6 +419,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		return tf;
 	}
 
+	@Override
 	public StackPane getCodeAreaPane() {
 		if (codeAreaPane == null) {
 			return getCodeAreaPane(null, true);
@@ -427,6 +428,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	@Override
 	public StackPane getCodeAreaPane(String text, boolean editable) {
 		if (codeAreaPane == null) {
 			codeAreaPane = new StackPane(new VirtualizedScrollPane<>(codeArea));
@@ -442,6 +444,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		return codeAreaPane;
 	}
 
+	@Override
 	public void highLighting(String str) {
 		Platform.runLater(() -> {
 			try {
@@ -469,6 +472,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		highLighting(0);
 	}
 
+	@Override
 	public void errorHighLighting(int begin, String str) {
 		Platform.runLater(() -> {
 			try {
@@ -483,6 +487,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		executor.shutdown();
 	}
 
+	@Override
 	public MyCodeArea getCodeArea() {
 		return codeArea;
 	}
@@ -508,6 +513,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 
 	// 改变样式
+	@Override
 	public void changeCodeAreaLineNoThemeHelper() {
 		MyLineNumberNode nbf = null;
 		List<String> lines = null;
@@ -604,6 +610,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	 * @param e
 	 * @param codeArea
 	 */
+	@Override
 	public void codePopup(KeyEvent e) {
 		if (myAuto == null)
 			return;
@@ -617,6 +624,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	 * 自动补全
 	 * 
 	 */
+	@Override
 	public void callPopup() {
 		if (codeArea.isFocused()) {
 			if (CommonUtility.isMacOS()) {
@@ -675,6 +683,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	}
 
 	// 移动光标到行开头
+	@Override
 	public void moveAnchorToLineBegin() {
 		if (codeArea.isFocused()) {
 			int idx = codeArea.getCurrentParagraph(); // 获取当前行号
@@ -696,6 +705,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	@Override
 	public void moveAnchorToLineEnd() {
 		if (codeArea.isFocused()) {
 			int idx = codeArea.getCurrentParagraph(); // 获取当前行号
@@ -719,6 +729,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	@Override
 	public void delAnchorBeforeWord() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -747,6 +758,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	@Override
 	public void delAnchorBeforeChar() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -770,6 +782,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	@Override
 	public void delAnchorAfterWord() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -801,6 +814,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	@Override
 	public void delAnchorAfterChar() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -823,6 +837,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	@Override
 	public void delAnchorBeforeString() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -851,6 +866,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 		}
 	}
 
+	@Override
 	public void delAnchorAfterString() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -884,6 +900,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 	 * 
 	 * @param codeArea
 	 */
+	@Override
 	public void delLineOrSelectTxt() {
 		var selectTxt = codeArea.getSelectedText();
 		if (StrUtils.isNullOrEmpty(selectTxt)) {
@@ -1067,6 +1084,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder {
 			queue.offer(caller); // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
 
 			Thread t = new Thread() {
+				@Override
 				public void run() {
 
 					try {

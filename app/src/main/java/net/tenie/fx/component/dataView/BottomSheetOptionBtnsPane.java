@@ -514,11 +514,6 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			ls.add(selectBtn);
 		}
 		if (table != null) {
-			// operate
-			// drop
-
-			//
-
 			JFXButton showTableDDLBtn = new JFXButton("Table DDL");
 			showTableDDLBtn.setGraphic(IconGenerator.svgImageDefActive("table"));
 
@@ -564,6 +559,38 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 
 		}
 
+		// TODO 导入
+		MenuButton importFileBtn = new MenuButton();
+		importFileBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+		importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
+//		importFileBtn.setDisable(disable);
+
+		MenuItem excelImportBtn = new MenuItem("Import Excel");
+		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("EXCEL"));
+//		excelImportBtn.setDisable(disable);
+		excelImportBtn.setOnAction(e -> {
+			ImportExcelWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+
+		});
+
+		MenuItem csvImportBtn = new MenuItem("Import CSV");
+		csvImportBtn.setGraphic(IconGenerator.svgImageDefActive("CSV"));
+//		csvImportBtn.setDisable(disable);
+		csvImportBtn.setOnAction(e -> {
+			ImportCsvWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+
+		});
+
+		MenuItem sqlImportBtn = new MenuItem("Import Sql File");
+		sqlImportBtn.setGraphic(IconGenerator.svgImageDefActive("SQL"));
+//		sqlImportBtn.setDisable(disable);
+		sqlImportBtn.setOnAction(e -> {
+			ImportSQLWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+
+		});
+
+		importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn, sqlImportBtn);
+		ls.add(importFileBtn);
 		return ls;
 	}
 

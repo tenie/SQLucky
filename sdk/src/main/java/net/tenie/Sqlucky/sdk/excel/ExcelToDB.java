@@ -37,7 +37,8 @@ public class ExcelToDB {
 	 * @throws Exception
 	 */
 	public static void toTable(SqluckyConnector dbc, String tablename, String excelFile, String saveSqlFile,
-			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count, boolean onlySaveSql) throws Exception {
+			List<ExcelFieldPo> fields, Integer sheetNo, Integer beginRowIdx, Integer count, boolean onlySaveSql,
+			boolean saveSql) throws Exception {
 		Connection conn = dbc.getConn();
 		String errorData = "";
 		try {
@@ -48,6 +49,12 @@ public class ExcelToDB {
 				Sheet sheet = workbook.getSheetAt(numSheet);
 				if (sheet == null) {
 					continue;
+				}
+				// 读取指定sheet页
+				if (sheetNo != null && sheetNo > 0) {
+					if (numSheet != (sheetNo - 1)) {
+						continue;
+					}
 				}
 
 				logger.debug("行数: = " + sheet.getLastRowNum());
@@ -114,9 +121,9 @@ public class ExcelToDB {
 								onlySaveSql);
 						rowVals.clear();
 					}
-					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
-							onlySaveSql);
-					rowVals.clear();
+//					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
+//							onlySaveSql);
+//					rowVals.clear();
 				}
 				if (rowVals.size() > 0) {
 					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,

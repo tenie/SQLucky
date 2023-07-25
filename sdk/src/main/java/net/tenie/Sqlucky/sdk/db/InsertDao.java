@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.db;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -238,11 +239,12 @@ public class InsertDao {
 	 * @throws Exception
 	 */
 	public static String execInsertByExcelField(Connection conn, String tableName, List<ExcelFieldPo> fields,
-			List<List<String>> rowVals, String saveSqlfile, boolean onlySaveSql) throws Exception {
+			List<List<String>> rowVals, String saveSqlfileStr, boolean onlySaveSql) throws Exception {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
 		String logString = "";
+		File saveSqlFile = new File(saveSqlfileStr);
 		try {
 
 			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
@@ -327,13 +329,22 @@ public class InsertDao {
 			logger.info(logString);
 
 			if (onlySaveSql) {
-				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
+//				if (StrUtils.isNotNullOrEmpty(saveSqlfileStr) && saveSqlFile.exists()) {
+//					FileUtils.writeLines(saveSqlFile, inSqls, true);
+//				}
+
+				writeSqlFile(saveSqlfileStr, saveSqlFile, inSqls);
 			} else {
 				int[] count = sm.executeBatch();
 				int execCountLen = count.length;
 				logger.info("instert = " + execCountLen);
 				msg = "Insert " + execCountLen + " ;\n" + insertLog + "; \n" + valLog;
-				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
+
+				writeSqlFile(saveSqlfileStr, saveSqlFile, inSqls);
+//				if (StrUtils.isNotNullOrEmpty(saveSqlfileStr) && saveSqlFile.exists()) {
+//					FileUtils.writeLines(saveSqlFile, inSqls, true);
+//				}
+
 			}
 
 		} catch (Exception e) {
@@ -341,6 +352,12 @@ public class InsertDao {
 			throw new Exception(e.getMessage() + " : excel Value = " + valLog + " ;\n sql = " + insertLog);
 		}
 		return msg;
+	}
+
+	private static void writeSqlFile(String saveSqlfileStr, File saveSqlFile, List<String> inSqls) throws IOException {
+		if (StrUtils.isNotNullOrEmpty(saveSqlfileStr) && saveSqlFile.exists()) {
+			FileUtils.writeLines(saveSqlFile, inSqls, true);
+		}
 	}
 
 	public static String stringToDBString(String val) {
