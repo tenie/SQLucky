@@ -13,7 +13,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 
 /**
  * excel 导入到数据库
@@ -37,7 +37,7 @@ public class ExcelToDB {
 	 * @throws Exception
 	 */
 	public static void toTable(SqluckyConnector dbc, String tablename, String excelFile, String saveSqlFile,
-			List<ExcelFieldPo> fields, Integer sheetNo, Integer beginRowIdx, Integer count, boolean onlySaveSql,
+			List<ImportFieldPo> fields, Integer sheetNo, Integer beginRowIdx, Integer count, boolean onlySaveSql,
 			boolean saveSql) throws Exception {
 		Connection conn = dbc.getConn();
 		String errorData = "";
@@ -82,7 +82,7 @@ public class ExcelToDB {
 					List<String> cellVals = new ArrayList<>();
 					rowVals.add(cellVals);
 
-					for (ExcelFieldPo epo : fields) {
+					for (ImportFieldPo epo : fields) {
 						// 匹配到excel的列
 //						String rowIdxStr = epo.getExcelRowIdx().get();
 //						String rowIdxStr = "";

@@ -14,7 +14,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 
 /**
@@ -39,7 +39,7 @@ public class CsvToDB {
 	 * @throws Exception
 	 */
 	public static void toTable(SqluckyConnector dbc, String tablename, String csvFile, String saveSqlFile,
-			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count, boolean onlySaveSql, boolean saveSql,
+			List<ImportFieldPo> fields, Integer beginRowIdx, Integer count, boolean onlySaveSql, boolean saveSql,
 			String splitSymbol) throws Exception {
 		Connection conn = dbc.getConn();
 		String errorData = "";
@@ -68,7 +68,7 @@ public class CsvToDB {
 					rowVals.add(cellVals);
 					String[] record = str.split(splitSymbol);
 					if (record != null) {
-						for (ExcelFieldPo epo : fields) {
+						for (ImportFieldPo epo : fields) {
 //							// 匹配到excel的列
 //							String rowIdxStr = epo.getExcelRowIdx().get();
 //							if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配

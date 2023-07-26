@@ -42,7 +42,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.CsvToDB;
 import net.tenie.Sqlucky.sdk.excel.CsvUtil;
 import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
@@ -70,7 +70,7 @@ public class ImportCsvNextWindow {
 	private JFXCheckBox onlySave;
 	private String csvFile;
 	private String tableName;
-	private ObservableList<ExcelFieldPo> csvFields;
+	private ObservableList<ImportFieldPo> csvFields;
 	private SqluckyConnector sqluckyConn;
 	private String splitSymbol = "";
 
@@ -114,7 +114,7 @@ public class ImportCsvNextWindow {
 
 			csvFields = FXCollections.observableArrayList();
 			for (var fd : fields) {
-				ExcelFieldPo excelpo = new ExcelFieldPo(fd);
+				ImportFieldPo excelpo = new ImportFieldPo(fd);
 				csvFields.add(excelpo);
 			}
 
@@ -133,7 +133,7 @@ public class ImportCsvNextWindow {
 	 * @param excelFile
 	 * @return
 	 */
-	private String[] csvHeadArray(String csvFile, ObservableList<ExcelFieldPo> fields) {
+	private String[] csvHeadArray(String csvFile, ObservableList<ImportFieldPo> fields) {
 		List<ExcelHeadCellInfo> row1 = CsvUtil.readCsvHeadInfo(csvFile, splitSymbol);
 
 		if (row1 != null) {
@@ -159,7 +159,7 @@ public class ImportCsvNextWindow {
 		return new String[0];
 	}
 
-	public VBox tableFiledMapCsvRowBox(String tableName, ObservableList<ExcelFieldPo> fields, String csvFile) {
+	public VBox tableFiledMapCsvRowBox(String tableName, ObservableList<ImportFieldPo> fields, String csvFile) {
 
 		Label tf1 = new Label();
 		tf1.setPrefWidth(500);
@@ -180,16 +180,16 @@ public class ImportCsvNextWindow {
 		return subvb;
 	}
 
-	private TableView<ExcelFieldPo> createTableView(ObservableList<ExcelFieldPo> fields, Label tf1) {
-		TableView<ExcelFieldPo> tableView = new TableView<>();
+	private TableView<ImportFieldPo> createTableView(ObservableList<ImportFieldPo> fields, Label tf1) {
+		TableView<ImportFieldPo> tableView = new TableView<>();
 		tableView.getStyleClass().add("myTableTag");
 		tableView.setEditable(true);
 		tableView.getSelectionModel().selectedItemProperty().addListener(// 选中某一行
-				new ChangeListener<ExcelFieldPo>() {
+				new ChangeListener<ImportFieldPo>() {
 					@Override
-					public void changed(ObservableValue<? extends ExcelFieldPo> observableValue, ExcelFieldPo oldItem,
-							ExcelFieldPo newItem) {
-						ExcelFieldPo p = newItem;
+					public void changed(ObservableValue<? extends ImportFieldPo> observableValue, ImportFieldPo oldItem,
+							ImportFieldPo newItem) {
+						ImportFieldPo p = newItem;
 						if (p == null)
 							return;
 						String str1 = p.getColumnLabel().get();
@@ -208,7 +208,7 @@ public class ImportCsvNextWindow {
 		String colName2 = "Csv列";
 		String colName3 = "自定义值";
 		// 第一列
-		TableColumn<ExcelFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
+		TableColumn<ImportFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
 		fieldNameCol.setEditable(false);
 		// 给单元格赋值
 		fieldNameCol.setCellValueFactory(cellData -> {
@@ -221,7 +221,7 @@ public class ImportCsvNextWindow {
 		tableView.getColumns().add(fieldNameCol);
 
 		// 第二列
-		TableColumn<ExcelFieldPo, String> valueCol = new TableColumn<>(colName2);
+		TableColumn<ImportFieldPo, String> valueCol = new TableColumn<>(colName2);
 		valueCol.setPrefWidth(180);
 
 		String[] headArr = csvHeadArray(csvFile, fields);
@@ -231,7 +231,7 @@ public class ImportCsvNextWindow {
 		tableView.getColumns().add(valueCol);
 
 		// 第三列
-		TableColumn<ExcelFieldPo, String> valueCol3 = new TableColumn<>(colName3);
+		TableColumn<ImportFieldPo, String> valueCol3 = new TableColumn<>(colName3);
 		valueCol3.setPrefWidth(180);
 
 		valueCol3.setCellValueFactory(p -> p.getValue().getFixedValue());
@@ -244,7 +244,7 @@ public class ImportCsvNextWindow {
 	}
 
 	// 界面顶部的操作按钮
-	private FlowPane topPane(TableView<ExcelFieldPo> tv, ObservableList<ExcelFieldPo> fields) {
+	private FlowPane topPane(TableView<ImportFieldPo> tv, ObservableList<ImportFieldPo> fields) {
 		FlowPane topfp = new FlowPane();
 		topfp.setPadding(new Insets(5));
 		Label lb = new Label();
@@ -390,9 +390,9 @@ public class ImportCsvNextWindow {
 					return;
 				}
 			}
-			List<ExcelFieldPo> vals = new ArrayList<>();
+			List<ImportFieldPo> vals = new ArrayList<>();
 			// 提取有被映射的字段
-			for (ExcelFieldPo fieldpo : csvFields) {
+			for (ImportFieldPo fieldpo : csvFields) {
 				fieldpo.getExcelRowVal().getValue();
 				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelRowVal())
 						|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
