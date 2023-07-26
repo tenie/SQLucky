@@ -1,4 +1,4 @@
-package net.tenie.fx.window;
+package net.tenie.Sqlucky.sdk.subwindow;
 
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -21,7 +21,7 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 
 /**
  * 数据表单独窗口
@@ -67,7 +67,7 @@ public class DockSideWindow {
 		// 添加过滤功能
 		filterField.textProperty().addListener((o, oldVal, newVal) -> {
 			if (StrUtils.isNotNullOrEmpty(newVal)) {
-				BottomSheetOptionBtnsPane.tableViewAllDataFilter(tableView, items, newVal);
+				TableViewUtils.tableViewAllDataFilter(tableView, items, newVal);
 			} else {
 				tableView.setItems(items);
 			}

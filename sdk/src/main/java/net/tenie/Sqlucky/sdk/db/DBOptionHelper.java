@@ -1,10 +1,9 @@
-package net.tenie.fx.Po;
+package net.tenie.Sqlucky.sdk.db;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
