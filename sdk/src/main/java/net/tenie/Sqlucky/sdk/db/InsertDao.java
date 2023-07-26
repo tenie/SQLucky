@@ -14,7 +14,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -127,7 +127,7 @@ public class InsertDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String execInsertByExcelField_bak(Connection conn, String tableName, List<ExcelFieldPo> fields,
+	public static String execInsertByExcelField_bak(Connection conn, String tableName, List<ImportFieldPo> fields,
 			List<List<String>> rowVals) throws Exception {
 		String msg = "";
 		String insertLog = "";
@@ -139,7 +139,7 @@ public class InsertDao {
 			StringBuilder values = new StringBuilder("");
 			int size = fields.size();
 			for (int i = 0; i < size; i++) {
-				ExcelFieldPo po = fields.get(i);
+				ImportFieldPo po = fields.get(i);
 				sql.append(po.getColumnLabel().get());
 
 				if (StrUtils.isNotNullOrEmpty(po.getFixedValue().get())) {
@@ -169,7 +169,7 @@ public class InsertDao {
 			for (List<String> fieldsValue : rowVals) {
 				int idx = 0;
 				for (int i = 0; i < size; i++) {
-					ExcelFieldPo fieldpo = fields.get(i);
+					ImportFieldPo fieldpo = fields.get(i);
 					String val = fieldsValue.get(i);
 					if (val == null) {
 						val = "";
@@ -238,7 +238,7 @@ public class InsertDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String execInsertByExcelField(Connection conn, String tableName, List<ExcelFieldPo> fields,
+	public static String execInsertByExcelField(Connection conn, String tableName, List<ImportFieldPo> fields,
 			List<List<String>> rowVals, String saveSqlfileStr, boolean onlySaveSql) throws Exception {
 		String msg = "";
 		String insertLog = "";
@@ -250,7 +250,7 @@ public class InsertDao {
 			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
 			int size = fields.size();
 			for (int i = 0; i < size; i++) {
-				ExcelFieldPo po = fields.get(i);
+				ImportFieldPo po = fields.get(i);
 				sql.append(po.getColumnLabel().get());
 				sql.append(" ,");
 
@@ -269,7 +269,7 @@ public class InsertDao {
 			for (List<String> fieldsValue : rowVals) {
 				String insertValue = "";
 				for (int i = 0; i < size; i++) {
-					ExcelFieldPo fieldpo = fields.get(i);
+					ImportFieldPo fieldpo = fields.get(i);
 					String val = fieldsValue.get(i);
 					if (val == null) {
 						val = "";
@@ -395,17 +395,19 @@ public class InsertDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String execInsertByCsvField(Connection conn, String tableName, List<ExcelFieldPo> fields,
+	public static String execInsertByCsvField(Connection conn, String tableName, List<ImportFieldPo> fields,
 			List<List<String>> rowVals, String saveSqlfile, boolean onlySaveSql, boolean saveSql) throws Exception {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
+
+		List<String> inSqls = new ArrayList<>();
 		try {
 
 			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
 			int size = fields.size();
 			for (int i = 0; i < size; i++) {
-				ExcelFieldPo po = fields.get(i);
+				ImportFieldPo po = fields.get(i);
 				sql.append(po.getColumnLabel().get());
 				sql.append(" ,");
 
@@ -419,12 +421,11 @@ public class InsertDao {
 
 			Statement sm = conn.createStatement();
 			insertLog = insert;
-			List<String> inSqls = new ArrayList<>();
 
 			for (List<String> fieldsValue : rowVals) {
 				String insertValue = "";
 				for (int i = 0; i < size; i++) {
-					ExcelFieldPo fieldpo = fields.get(i);
+					ImportFieldPo fieldpo = fields.get(i);
 					String val = fieldsValue.get(i);
 					if (val == null) {
 						val = "";
@@ -511,6 +512,7 @@ public class InsertDao {
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println(inSqls);
 			throw new Exception(e.getMessage() + " : excel Value = " + valLog + " ;\n sql = " + insertLog);
 		}
 		return msg;

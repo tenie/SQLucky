@@ -3,14 +3,19 @@ package net.tenie.Sqlucky.sdk.db;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -172,10 +177,30 @@ public class DaoTools {
 			ObservableList<SheetFieldPo> fields = DP.getFields();
 			return fields;
 		} catch (Exception e) {
-			 
+			e.printStackTrace();
 		}
-		
+
 		return FXCollections.observableArrayList();
+	}
+
+	// 获取表字段
+	public static List<ImportFieldPo> importFields(Connection conn, String tableName) throws SQLException {
+		ObservableList<SheetFieldPo> fields = tableFields(conn, tableName);
+		if (fields == null || fields.size() == 0) {
+			return null;
+		}
+		for (int i = 0; i < fields.size(); i++) {
+			SheetFieldPo p = fields.get(i);
+			StringProperty strp = new SimpleStringProperty("");
+			p.setValue(strp);
+		}
+
+		List<ImportFieldPo> tmpFields = new ArrayList<>();
+		for (var fd : fields) {
+			ImportFieldPo excelpo = new ImportFieldPo(fd);
+			tmpFields.add(excelpo);
+		}
+		return tmpFields;
 	}
 
 }

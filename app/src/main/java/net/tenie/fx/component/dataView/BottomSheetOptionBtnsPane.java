@@ -380,6 +380,50 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 	}
 
 	/**
+	 * 
+	 * 
+	 * @param mytb
+	 * @param disable
+	 * @return
+	 */
+	public static List<Node> infoOptionBtns(MyBottomSheet mytb, boolean disable) {
+		List<Node> ls = new ArrayList<>();
+
+		// 锁
+		JFXButton lockbtn = SdkComponent.createLockBtn(mytb);
+
+		// 搜索
+		// 查询框
+		TextField searchField = new TextField();
+		searchField.getStyleClass().add("myTextField");
+		searchField.setVisible(false);
+		JFXButton searchBtn = new JFXButton();
+		searchBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
+		searchBtn.setTooltip(MyTooltipTool.instance("Search "));
+		searchBtn.setOnAction(e -> {
+			searchField.setVisible(!searchField.isVisible());
+		});
+		TableView<ResultSetRowPo> tableView = mytb.getTableData().getDbValTable();
+		ObservableList<ResultSetRowPo> items = tableView.getItems();
+
+		// 添加过滤功能
+		searchField.textProperty().addListener((o, oldVal, newVal) -> {
+			if (StrUtils.isNotNullOrEmpty(newVal)) {
+				tableViewAllDataFilter(tableView, items, newVal);
+			} else {
+				tableView.setItems(items);
+			}
+
+		});
+
+		ls.add(lockbtn);
+		ls.add(searchBtn);
+		ls.add(searchField);
+
+		return ls;
+	}
+
+	/**
 	 * 对sql查询结果, 在界面上所有的数据进行模糊查询
 	 * 
 	 * @param tableView
