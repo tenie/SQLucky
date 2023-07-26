@@ -9,8 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -26,6 +24,7 @@ import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.fx.config.DBConns;
 
 public class ProcedureAction {
@@ -81,7 +80,8 @@ public class ProcedureAction {
 			if (staticThread != null && !staticThread.isInterrupted()) {
 				if(hasOut(fields)) {
 					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, true);
-					SqlExecuteOption.rmWaitingPane( isRefresh );
+//					SqlExecuteOption.rmWaitingPane( isRefresh );
+					TableViewUtils.rmWaitingPane( isRefresh );
 					mtd.show();
 				
 				}else {
@@ -115,7 +115,8 @@ public class ProcedureAction {
 //			val.add(CommonUtility.createReadOnlyStringProperty("call procedure "+ sql.subSequence(0, endIdx) + " ... ")); 
 //			val.add(CommonUtility.createReadOnlyStringProperty("" ));
 //			ddlDmlpo.addData(val);
-			SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, thread);
+//			SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, thread);
+			TableViewUtils.showInfo(ddlDmlpo, thread);
 		}
 	}
 

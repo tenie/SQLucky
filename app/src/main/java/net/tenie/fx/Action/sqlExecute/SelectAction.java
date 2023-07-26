@@ -23,6 +23,7 @@ import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.fx.config.DBConns;
 
 /**
@@ -91,7 +92,7 @@ public class SelectAction {
 			// 渲染界面
 			if (thread != null && !thread.isInterrupted()) {
 				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(sheetDaV, tidx, false);
-				SqlExecuteOption.rmWaitingPane(isRefresh);
+				TableViewUtils.rmWaitingPane(isRefresh);
 				mtd.show();
 				// 水平滚顶条位置设置和字段类型
 				CacheDataTableViewShapeChange.setDataTableViewShapeCache(sheetDaV.getTabName(), sheetDaV.getTable(),

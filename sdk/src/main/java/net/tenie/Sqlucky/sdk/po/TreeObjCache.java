@@ -1,4 +1,4 @@
-package net.tenie.fx.component.InfoTree.TreeItem;
+package net.tenie.Sqlucky.sdk.po;
 
 import java.util.HashMap;
 import java.util.List;

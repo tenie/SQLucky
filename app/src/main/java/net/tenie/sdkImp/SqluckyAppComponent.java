@@ -38,6 +38,7 @@ import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
@@ -437,6 +438,12 @@ public class SqluckyAppComponent implements AppComponent {
 		VBox box = tableInfoBox(sqluckyConn, mtb, table);
 		mtb.getTab().setContent(box);
 		return mtb;
+	}
+
+	@Override
+	public void refreshDataTableView(String connName, String sql, String idx, boolean isLock) {
+
+		RunSQLHelper.refresh(DBConns.get(connName), sql, idx, isLock);
 	}
 
 }
