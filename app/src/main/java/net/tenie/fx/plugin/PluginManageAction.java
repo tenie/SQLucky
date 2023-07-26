@@ -28,7 +28,7 @@ import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.fx.main.Restart;
 
@@ -120,7 +120,7 @@ public class PluginManageAction {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 		    // 查询
-			SheetTableData sheetDaV   = TableViewUtil.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
+			SheetTableData sheetDaV   = TableViewUtils.sqlToSheet(sql, conn, "PLUGIN_INFO", null);
 			// 获取表
 			FilteredTableView<ResultSetRowPo>  allPluginTable = sheetDaV.getInfoTable();
 			  window.setSheetDaV(sheetDaV);

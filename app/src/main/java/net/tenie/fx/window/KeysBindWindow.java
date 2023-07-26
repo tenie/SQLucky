@@ -30,7 +30,7 @@ import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
 
 /**
@@ -130,7 +130,7 @@ public class KeysBindWindow {
 
 		try {
 			// 查询
-			SheetTableData sheetDaV = TableViewUtil.sqlToSheet(sql, conn, "KEYS_BINDING", fieldWidthMap, hiddenCol);
+			SheetTableData sheetDaV = TableViewUtils.sqlToSheet(sql, conn, "KEYS_BINDING", fieldWidthMap, hiddenCol);
 			// 获取表
 			allkeysTable = sheetDaV.getInfoTable();
 			this.setSheetDaV(sheetDaV);

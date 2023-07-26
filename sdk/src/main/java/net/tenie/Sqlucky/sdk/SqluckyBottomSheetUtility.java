@@ -31,8 +31,11 @@ public class SqluckyBottomSheetUtility {
 		return dv;
 	}
 
-	public static ResultSetPo getResultSet() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static ResultSetPo getResultSet(SheetDataValue dvt) {
+//		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+		if (dvt == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
 		if (dvt != null) {
 			ResultSetPo spo = dvt.getDataRs();
 			return spo;
@@ -41,8 +44,12 @@ public class SqluckyBottomSheetUtility {
 	}
 
 	// 获取所有数据
-	public static ObservableList<ResultSetRowPo> getTabData() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static ObservableList<ResultSetRowPo> getTabData(SheetDataValue tableData) {
+		SheetDataValue dvt = tableData;
+		if (tableData == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
+//		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
 		if (dvt != null) {
 //			return 
 			ResultSetPo spo = dvt.getDataRs();
@@ -53,8 +60,12 @@ public class SqluckyBottomSheetUtility {
 	}
 
 //	// 获取字段
-	public static ObservableList<SheetFieldPo> getFields() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static ObservableList<SheetFieldPo> getFields(SheetDataValue tableData) {
+//		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+		SheetDataValue dvt = tableData;
+		if (tableData == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
 		if (dvt != null) {
 			return dvt.getColss();
 		}
@@ -62,8 +73,12 @@ public class SqluckyBottomSheetUtility {
 	}
 
 //	// 获取tableName
-	public static String getTableName() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static String getTableName(SheetDataValue tableData) {
+		SheetDataValue dvt = tableData;
+		if (tableData == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
+
 		if (dvt != null) {
 			return dvt.getTabName();
 		}
@@ -71,8 +86,10 @@ public class SqluckyBottomSheetUtility {
 	}
 
 	// 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
-	public static RsVal tableInfo() {
-		SheetDataValue dataObj = SqluckyBottomSheetUtility.myTabValue();
+	public static RsVal tableInfo(SheetDataValue dataObj) {
+		if (dataObj == null) {
+			dataObj = SqluckyBottomSheetUtility.myTabValue();
+		}
 		String connName = "";
 		String tableName = "";
 		Connection conn = null;
@@ -99,12 +116,12 @@ public class SqluckyBottomSheetUtility {
 		return rv;
 	}
 
-	// 获取当前table view 的保存按钮
-	public static Button dataPaneSaveBtn() {
-		if (ComponentGetter.currentDataTab() == null)
-			return null;
-		return ComponentGetter.currentDataTab().getSaveBtn();
-	}
+//	// 获取当前table view 的保存按钮
+//	public static Button dataPaneSaveBtn() {
+//		if (ComponentGetter.currentDataTab() == null)
+//			return null;
+//		return ComponentGetter.currentDataTab().getSaveBtn();
+//	}
 
 	// 获取当前table view 的详细按钮
 	public static Button dataPaneDetailBtn() {
@@ -115,8 +132,10 @@ public class SqluckyBottomSheetUtility {
 		addDataNewLine(rowNo, newDate);
 	}
 
-	public static String getSelectSQL() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static String getSelectSQL(SheetDataValue dvt) {
+		if (dvt == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
 		if (dvt != null) {
 			return dvt.getSqlStr();
 		}
@@ -147,8 +166,12 @@ public class SqluckyBottomSheetUtility {
 		return null;
 	}
 
-	public static ObservableList<ResultSetRowPo> getModifyData() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static ObservableList<ResultSetRowPo> getModifyData(SheetDataValue tableData) {
+		SheetDataValue dvt = tableData;
+		if (tableData == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
+
 		if (dvt != null) {
 			var v = dvt.getDataRs().getUpdateDatas();
 			return v;
@@ -167,17 +190,22 @@ public class SqluckyBottomSheetUtility {
 		return null;
 	}
 
-	public static void rmUpdateData() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static void rmUpdateData(SheetDataValue tableData) {
+		SheetDataValue dvt = tableData;
+		if (tableData == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
 		if (dvt != null) {
 			dvt.getDataRs().getNewDatas().clear();
 			dvt.getDataRs().getUpdateDatas().clear();
 		}
 	}
 
-	public static void rmAppendData() {
-		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
-		SheetDataValue dvt = mtd.getTableData();
+	public static void rmAppendData(SheetDataValue dvt) {
+		if (dvt == null) {
+			SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
+			dvt = mtd.getTableData();
+		}
 		if (dvt != null) {
 			dvt.getDataRs().getNewDatas().clear();
 
@@ -192,62 +220,75 @@ public class SqluckyBottomSheetUtility {
 		}
 	}
 
-	public static ObservableList<ResultSetRowPo> getAppendData() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static ObservableList<ResultSetRowPo> getAppendData(SheetDataValue dvt) {
+		if (dvt == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
 		if (dvt != null) {
 			return dvt.getDataRs().getNewDatas();
 		}
 		return null;
 	}
 
-	public static Connection getDbconn() {
-		return getDbConnection().getConn();
+	public static Connection getDbconn(SheetDataValue tableData) {
+		return getDbConnection(tableData).getConn();
 	}
 
-	public static String getConnName() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static String getConnName(SheetDataValue dvt) {
+		if (dvt == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
 		if (dvt != null) {
 			return dvt.getConnName();
 		}
 		return "";
 	}
 
-	public static SqluckyConnector getDbConnection() {
-		SheetDataValue dvt = SqluckyBottomSheetUtility.myTabValue();
+	public static SqluckyConnector getDbConnection(SheetDataValue tableData) {
+
+		SheetDataValue dvt = tableData;
+		if (tableData == null) {
+			dvt = SqluckyBottomSheetUtility.myTabValue();
+		}
 		return dvt.getDbConnection();
 	}
 
 	// 获取当前的表格
 	@SuppressWarnings("unchecked")
-	public static FilteredTableView<ResultSetRowPo> dataTableView() {
-		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
+	public static FilteredTableView<ResultSetRowPo> dataTableView(SqluckyBottomSheet mtd) {
+		if (mtd == null) {
+			mtd = ComponentGetter.currentDataTab();
+		}
+
 		var table = mtd.getTableData().getTable();
 		return table;
 	}
 
 	// 获取当前表格选择的数据
-	public static ObservableList<ResultSetRowPo> dataTableViewSelectedItems() {
-		ObservableList<ResultSetRowPo> vals = dataTableView().getSelectionModel().getSelectedItems();
+	public static ObservableList<ResultSetRowPo> dataTableViewSelectedItems(SqluckyBottomSheet mtd) {
+		ObservableList<ResultSetRowPo> vals = dataTableView(mtd).getSelectionModel().getSelectedItems();
 		return vals;
 	}
 
-	public static ObservableList<ResultSetRowPo> getValsHelper(boolean isSelected) {
+	public static ObservableList<ResultSetRowPo> getValsHelper(boolean isSelected, SqluckyBottomSheet mtd,
+			SheetDataValue tableData) {
 		ObservableList<ResultSetRowPo> vals = null;
 		if (isSelected) {
-			vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
+			vals = SqluckyBottomSheetUtility.dataTableViewSelectedItems(mtd);
 		} else {
-			vals = SqluckyBottomSheetUtility.getTabData();
+			vals = SqluckyBottomSheetUtility.getTabData(tableData);
 		}
 		return vals;
 	}
 
 	// TODO table view 数据转换为excel导出的数据结构
-	public static ExcelDataPo tableValueToExcelDataPo(boolean isSelect) {
+	public static ExcelDataPo tableValueToExcelDataPo(boolean isSelect, SqluckyBottomSheet mtd,
+			SheetDataValue tableData) {
 
-		String tabName = SqluckyBottomSheetUtility.getTableName();
-		ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields();
+		String tabName = SqluckyBottomSheetUtility.getTableName(tableData);
+		ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields(tableData);
 
-		ObservableList<ResultSetRowPo> rows = getValsHelper(isSelect);// valpo.getDatas();
+		ObservableList<ResultSetRowPo> rows = getValsHelper(isSelect, mtd, tableData);// valpo.getDatas();
 
 		ExcelDataPo po = new ExcelDataPo();
 
@@ -284,7 +325,7 @@ public class SqluckyBottomSheetUtility {
 	 * 
 	 * @param isSelect true 导出选中行的数据, fasle 全部导出
 	 */
-	public static void exportExcelAction(boolean isSelect) {
+	public static void exportExcelAction(boolean isSelect, SqluckyBottomSheet mtd, SheetDataValue tableData) {
 		File ff = CommonUtility.getFilePathHelper("xls");
 		if (ff == null)
 			return;
@@ -293,7 +334,7 @@ public class SqluckyBottomSheetUtility {
 			return;
 		}
 		LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-			ExcelDataPo po = SqluckyBottomSheetUtility.tableValueToExcelDataPo(isSelect);
+			ExcelDataPo po = SqluckyBottomSheetUtility.tableValueToExcelDataPo(isSelect, mtd, tableData);
 			try {
 				ExcelUtil.createExcel(po, ff);
 			} catch (Exception e1) {

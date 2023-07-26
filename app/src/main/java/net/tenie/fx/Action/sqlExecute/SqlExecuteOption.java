@@ -5,11 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.controlsfx.control.tableview2.FilteredTableColumn;
-import org.controlsfx.control.tableview2.FilteredTableView;
 import org.fxmisc.richtext.CodeArea;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ContextMenu;
@@ -17,16 +15,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
@@ -40,16 +34,16 @@ import net.tenie.fx.component.dataView.DataTableContextMenu;
 import net.tenie.fx.config.DBConns;
 
 public class SqlExecuteOption {
-	public static void rmWaitingPane(boolean holdSheet) {
-		SdkComponent.rmWaitingPane();
-		Platform.runLater(() -> {
-			if (holdSheet == false) { // 非刷新的， 删除多余的页
-				TabPane dataTab = ComponentGetter.dataTabPane;
-				SdkComponent.deleteEmptyTab(dataTab);
-			}
-		});
-
-	}
+//	public static void rmWaitingPane(boolean holdSheet) {
+//		SdkComponent.rmWaitingPane();
+//		Platform.runLater(() -> {
+//			if (holdSheet == false) { // 非刷新的， 删除多余的页
+//				TabPane dataTab = ComponentGetter.dataTabPane;
+//				SdkComponent.deleteEmptyTab(dataTab);
+//			}
+//		});
+//
+//	}
 
 	public static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
 		Tab v = SdkComponent.addWaitingPane(tabIdx);
@@ -163,38 +157,38 @@ public class SqlExecuteOption {
 	}
 
 	// 展示信息窗口,
-	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo, Thread thread) {
-		// 有数据才展示
-		if (ddlDmlpo.getResultSet().getDatas().size() > 0) {
-			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
-			// 表内容可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(true));
-			DataViewContainer.setTabRowWith(table, ddlDmlpo.getResultSet().getDatas().size());
-			// table 添加列和数据
-			ObservableList<SheetFieldPo> colss = ddlDmlpo.getFields();
-			ObservableList<ResultSetRowPo> alldata = ddlDmlpo.getResultSet().getDatas();
-			SheetDataValue dvt = new SheetDataValue(table, ConfigVal.EXEC_INFO_TITLE, colss, ddlDmlpo.getResultSet());
-
-			var cols = SdkComponent.createTableColForInfo(colss);
-			table.getColumns().addAll(cols);
-			table.setItems(alldata);
-
-			SqlExecuteOption.rmWaitingPane(true);
-			// 渲染界面
-			if (thread != null && thread.isInterrupted()) {
-				return;
-			}
-
-			boolean showtab = true;
-			if (showtab) {
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
-
-//				mtd.show();
-				mtd.showAndDelayRemoveTab();
-			}
-
-		}
-	}
+//	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo, Thread thread) {
+//		// 有数据才展示
+//		if (ddlDmlpo.getResultSet().getDatas().size() > 0) {
+//			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
+//			// 表内容可以被修改
+//			table.editableProperty().bind(new SimpleBooleanProperty(true));
+//			DataViewContainer.setTabRowWith(table, ddlDmlpo.getResultSet().getDatas().size());
+//			// table 添加列和数据
+//			ObservableList<SheetFieldPo> colss = ddlDmlpo.getFields();
+//			ObservableList<ResultSetRowPo> alldata = ddlDmlpo.getResultSet().getDatas();
+//			SheetDataValue dvt = new SheetDataValue(table, ConfigVal.EXEC_INFO_TITLE, colss, ddlDmlpo.getResultSet());
+//
+//			var cols = SdkComponent.createTableColForInfo(colss);
+//			table.getColumns().addAll(cols);
+//			table.setItems(alldata);
+//
+//			TableViewUtils.rmWaitingPane(true);
+//			// 渲染界面
+//			if (thread != null && thread.isInterrupted()) {
+//				return;
+//			}
+//
+//			boolean showtab = true;
+//			if (showtab) {
+//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
+//
+////				mtd.show();
+//				mtd.showAndDelayRemoveTab();
+//			}
+//
+//		}
+//	}
 
 	/**
 	 * 获取要执行的sql, 去除无效的(如-- 开头的)

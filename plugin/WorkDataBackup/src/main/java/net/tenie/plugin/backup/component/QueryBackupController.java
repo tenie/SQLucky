@@ -35,7 +35,7 @@ import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.plugin.backup.po.DownloadBackupPo;
 import net.tenie.plugin.backup.po.SqluckyBackup;
@@ -203,7 +203,7 @@ public class QueryBackupController implements Initializable {
 		// 对象集合转换为map集合
 		List<Map<String, String>> vals = toMap(ls);
 
-		var sheetDaV = TableViewUtil.dataToSheet(colName, vals, hiddenCol);
+		var sheetDaV = TableViewUtils.dataToSheet(colName, vals, hiddenCol);
 		// 获取表
 		FilteredTableView<ResultSetRowPo> table = sheetDaV.getInfoTable();
 		// 表不可编辑

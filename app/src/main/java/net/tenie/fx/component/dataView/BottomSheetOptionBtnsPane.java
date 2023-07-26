@@ -1,17 +1,12 @@
 package net.tenie.fx.component.dataView;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 import com.jfoenix.controls.JFXButton;
 
-import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
@@ -23,18 +18,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
-import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
@@ -423,38 +414,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		return ls;
 	}
 
-	/**
-	 * 对sql查询结果, 在界面上所有的数据进行模糊查询
-	 * 
-	 * @param tableView
-	 * @param observableList
-	 * @param newValue
-	 */
-	public static final void tableViewAllDataFilter(TableView<ResultSetRowPo> tableView,
-			ObservableList<ResultSetRowPo> observableList, String newValue) {
-		FilteredList<ResultSetRowPo> filteredData = new FilteredList<>(observableList, p -> true);
-		filteredData.setPredicate(entity -> {
-			String upperCaseVal = newValue.toUpperCase();
-
-			ObservableList<ResultSetCellPo> rowDatas = entity.getRowDatas();
-			for (var cell : rowDatas) {
-				String cellVal = cell.getCellData().get();
-				if (cellVal != null) {
-					if (cellVal.toUpperCase().contains(upperCaseVal)) {
-						return true;
-					}
-				} else {
-					System.out.println(cell);
-				}
-
-			}
-
-			return false;
-		});
-		SortedList<ResultSetRowPo> sortedData = new SortedList<>(filteredData);
-		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
-		tableView.setItems(sortedData);
-	}
+	
 
 	/**
 	 * 数据库对象（如表，视图）的ddl语句， 操作按钮
@@ -638,48 +598,5 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 		return ls;
 	}
 
-	// 刷新查询结果
-	public static void refreshData(boolean isLock) {
-		String sql = SqluckyBottomSheetUtility.getSelectSQL();
-		Connection conn = SqluckyBottomSheetUtility.getDbconn();
-		String connName = SqluckyBottomSheetUtility.getConnName();
-		if (conn != null) {
-			// TODO 关闭当前tab
-			var dataTab = ComponentGetter.dataTabPane;
-			int selidx = dataTab.getSelectionModel().getSelectedIndex();
-			SdkComponent.clearDataTable(selidx);
-			RunSQLHelper.refresh(DBConns.get(connName), sql, selidx + "", isLock);
-		}
-	}
 
-	// 添加一行数据
-	public static void addData(JFXButton saveBtn) {
-		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
-		var tbv = mtd.getTableData().getTable();
-
-		tbv.scrollTo(0);
-		ResultSetPo rspo = SqluckyBottomSheetUtility.getResultSet();
-		ResultSetRowPo rowpo = rspo.manualAppendNewRow(0);
-
-		ObservableList<SheetFieldPo> fs = rspo.getFields();
-		for (int i = 0; i < fs.size(); i++) {
-			SheetFieldPo fieldpo = fs.get(i);
-			SimpleStringProperty sp = new SimpleStringProperty("");
-//			SimpleStringProperty sp = new SimpleStringProperty("<null>");
-			rowpo.addCell(sp, null, fieldpo);
-		}
-		Platform.runLater(() -> {
-			ObservableList<ResultSetCellPo> vals = rowpo.getRowDatas();
-			for (ResultSetCellPo val : vals) {
-				var cel = val.getCellData();
-				cel.set("<null>");
-			}
-		});
-
-		// 使用 ResultSetPo对象的createAppendNewRow（）函数， 不需要手动给表添加行了
-//		tbv.getItems().add(0, rowpo);
-
-		// 点亮保存按钮
-		saveBtn.setDisable(false);
-	}
 }

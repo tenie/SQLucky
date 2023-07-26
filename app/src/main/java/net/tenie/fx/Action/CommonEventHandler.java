@@ -11,8 +11,6 @@ import javafx.stage.WindowEvent;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
@@ -108,83 +106,83 @@ public class CommonEventHandler {
 		};
 	}
 
-	public static EventHandler<ActionEvent> InsertSQLClipboard(boolean isSelected, boolean isFile) {
-		return new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-				File tmpFile = null;
-				if (isFile) {
-					tmpFile = CommonUtility.getFilePathHelper("sql");
-				}
-				final File ff = tmpFile;
-				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-					Thread t = new Thread() {
-						public void run() {
-							String tableName = SqluckyBottomSheetUtility.getTableName();
-							final ObservableList<ResultSetRowPo> fvals = SqluckyBottomSheetUtility
-									.getValsHelper(isSelected);
+//	public static EventHandler<ActionEvent> InsertSQLClipboard(boolean isSelected, boolean isFile) {
+//		return new EventHandler<ActionEvent>() {
+//			public void handle(ActionEvent e) {
+//				File tmpFile = null;
+//				if (isFile) {
+//					tmpFile = CommonUtility.getFilePathHelper("sql");
+//				}
+//				final File ff = tmpFile;
+//				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
+//					Thread t = new Thread() {
+//						public void run() {
+//							String tableName = SqluckyBottomSheetUtility.getTableName();
+//							final ObservableList<ResultSetRowPo> fvals = SqluckyBottomSheetUtility
+//									.getValsHelper(isSelected);
+//
+//							String sql = GenerateSQLString.insertSQLHelper(fvals, tableName);
+//							if (StrUtils.isNotNullOrEmpty(sql)) {
+//								if (isFile) {
+//									if (ff != null) {
+//										try {
+//											FileTools.save(ff, sql);
+//										} catch (IOException e) {
+//											e.printStackTrace();
+//										}
+//									}
+//								} else {
+//									CommonUtility.setClipboardVal(sql);
+//								}
+//
+//							}
+//						}
+//					};
+//					t.start();
+//				});
+//
+//			}
+//
+//		};
+//	}
 
-							String sql = GenerateSQLString.insertSQLHelper(fvals, tableName);
-							if (StrUtils.isNotNullOrEmpty(sql)) {
-								if (isFile) {
-									if (ff != null) {
-										try {
-											FileTools.save(ff, sql);
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
-									}
-								} else {
-									CommonUtility.setClipboardVal(sql);
-								}
-
-							}
-						}
-					};
-					t.start();
-				});
-
-			}
-
-		};
-	}
-
-	public static EventHandler<ActionEvent> csvStrClipboard(boolean isSelected, boolean isFile) {
-		return new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-
-				File tmpFile = null;
-				if (isFile) {
-					tmpFile = CommonUtility.getFilePathHelper("csv");
-				}
-				final File ff = tmpFile;
-
-				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-					Thread t = new Thread() {
-						public void run() {
-							ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
-							String sql = GenerateSQLString.csvStrHelper(vals);
-							if (StrUtils.isNotNullOrEmpty(sql)) {
-								if (isFile) {
-									if (ff != null) {
-										try {
-											FileTools.save(ff, sql);
-										} catch (IOException e) {
-											e.printStackTrace();
-										}
-									}
-								} else {
-									CommonUtility.setClipboardVal(sql);
-								}
-							}
-						}
-					};
-					t.start();
-				});
-
-			}
-
-		};
-	}
+//	public static EventHandler<ActionEvent> csvStrClipboard(boolean isSelected, boolean isFile) {
+//		return new EventHandler<ActionEvent>() {
+//			public void handle(ActionEvent e) {
+//
+//				File tmpFile = null;
+//				if (isFile) {
+//					tmpFile = CommonUtility.getFilePathHelper("csv");
+//				}
+//				final File ff = tmpFile;
+//
+//				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
+//					Thread t = new Thread() {
+//						public void run() {
+//							ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
+//							String sql = GenerateSQLString.csvStrHelper(vals);
+//							if (StrUtils.isNotNullOrEmpty(sql)) {
+//								if (isFile) {
+//									if (ff != null) {
+//										try {
+//											FileTools.save(ff, sql);
+//										} catch (IOException e) {
+//											e.printStackTrace();
+//										}
+//									}
+//								} else {
+//									CommonUtility.setClipboardVal(sql);
+//								}
+//							}
+//						}
+//					};
+//					t.start();
+//				});
+//
+//			}
+//
+//		};
+//	}
 
 	/**
 	 * 将table中的数据以普通文本方式导出
@@ -253,67 +251,67 @@ public class CommonEventHandler {
 		};
 	}
 
-	// 导出表的字段, 使用逗号分割
-	public static EventHandler<ActionEvent> commaSplitTableFields() {
-		return new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-					ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
-					Thread t = new Thread() {
-						public void run() {
-							int size = fs.size();
-							StringBuilder fieldsName = new StringBuilder("");
-							for (int i = 0; i < size; i++) {
-								SheetFieldPo po = fs.get(i);
-								String name = po.getColumnName().get();
-								fieldsName.append(name);
-								fieldsName.append(", \n");
-
-							}
-							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
-								String rsStr = fieldsName.toString().trim();
-								CommonUtility.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
-							}
-						}
-					};
-					t.start();
-
-				});
-
-			}
-
-		};
-	}
+//	// 导出表的字段, 使用逗号分割
+//	public static EventHandler<ActionEvent> commaSplitTableFields() {
+//		return new EventHandler<ActionEvent>() {
+//			public void handle(ActionEvent e) {
+//				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
+//					ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
+//					Thread t = new Thread() {
+//						public void run() {
+//							int size = fs.size();
+//							StringBuilder fieldsName = new StringBuilder("");
+//							for (int i = 0; i < size; i++) {
+//								SheetFieldPo po = fs.get(i);
+//								String name = po.getColumnName().get();
+//								fieldsName.append(name);
+//								fieldsName.append(", \n");
+//
+//							}
+//							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
+//								String rsStr = fieldsName.toString().trim();
+//								CommonUtility.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
+//							}
+//						}
+//					};
+//					t.start();
+//
+//				});
+//
+//			}
+//
+//		};
+//	}
 
 	// 导出表的字段包含类型, 使用逗号分割
-	public static EventHandler<ActionEvent> commaSplitTableFiledsIncludeType() {
-		return new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-					ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
-					Thread t = new Thread() {
-						public void run() {
-							int size = fs.size();
-							StringBuilder fieldsName = new StringBuilder("");
-							for (int i = 0; i < size; i++) {
-								SheetFieldPo po = fs.get(i);
-								String name = po.getColumnName().get();
-								fieldsName.append(name);
-								fieldsName.append(", --");
-								fieldsName.append(po.getColumnTypeName().get());
-								fieldsName.append("\n");
-
-							}
-							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
-								CommonUtility.setClipboardVal(fieldsName.toString());
-							}
-						}
-					};
-					t.start();
-				});
-			}
-
-		};
-	}
+//	public static EventHandler<ActionEvent> commaSplitTableFiledsIncludeType() {
+//		return new EventHandler<ActionEvent>() {
+//			public void handle(ActionEvent e) {
+//				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
+//					ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
+//					Thread t = new Thread() {
+//						public void run() {
+//							int size = fs.size();
+//							StringBuilder fieldsName = new StringBuilder("");
+//							for (int i = 0; i < size; i++) {
+//								SheetFieldPo po = fs.get(i);
+//								String name = po.getColumnName().get();
+//								fieldsName.append(name);
+//								fieldsName.append(", --");
+//								fieldsName.append(po.getColumnTypeName().get());
+//								fieldsName.append("\n");
+//
+//							}
+//							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
+//								CommonUtility.setClipboardVal(fieldsName.toString());
+//							}
+//						}
+//					};
+//					t.start();
+//				});
+//			}
+//
+//		};
+//	}
 
 }

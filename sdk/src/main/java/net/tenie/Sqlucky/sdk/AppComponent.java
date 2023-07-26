@@ -20,6 +20,8 @@ import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
 public interface AppComponent {
 
+	void refreshDataTableView(String connName, String sql, String idx, boolean isLock);
+
 	void addTitledPane(TitledPane tp);
 
 	void addIconBySvg(String name, String svg);
