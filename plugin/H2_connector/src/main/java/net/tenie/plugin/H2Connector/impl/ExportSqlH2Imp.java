@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
@@ -15,7 +16,6 @@ import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
-import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 

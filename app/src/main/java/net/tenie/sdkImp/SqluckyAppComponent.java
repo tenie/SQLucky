@@ -167,7 +167,26 @@ public class SqluckyAppComponent implements AppComponent {
 		String rows = data.getRows() == 0 ? "0" : data.getRows() + "";
 
 		VBox vbox = new VBox();
-		var btnLs = BottomSheetOptionBtnsPane.sqlDataOptionBtns(rs, disable);
+		List<Node> btnLs = BottomSheetOptionBtnsPane.sqlDataOptionBtns(rs, disable);
+		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs, time, rows, data.getConnName());
+		// 添加按钮面板和 数据表格
+		vbox.getChildren().add(dtBtnPane);
+		vbox.getChildren().add(data.getTable());
+		VBox.setVgrow(data.getTable(), Priority.ALWAYS);
+
+		rs.getTab().setContent(vbox);
+
+		return rs;
+	}
+
+	// 执行ddl 或查询报错的 页面
+	public SqluckyBottomSheet infoSheet(SheetDataValue data, int idx, boolean disable) {
+		MyBottomSheet rs = new MyBottomSheet(data, idx, disable);
+		String time = data.getExecTime() == 0 ? "0" : data.getExecTime() + "";
+		String rows = data.getRows() == 0 ? "0" : data.getRows() + "";
+
+		VBox vbox = new VBox();
+		List<Node> btnLs = BottomSheetOptionBtnsPane.infoOptionBtns(rs, disable);
 		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs, time, rows, data.getConnName());
 		// 添加按钮面板和 数据表格
 		vbox.getChildren().add(dtBtnPane);
@@ -182,6 +201,7 @@ public class SqluckyAppComponent implements AppComponent {
 	/**
 	 * 
 	 */
+	@Override
 	public SqluckyBottomSheet tableViewSheet(SheetDataValue data, List<Node> btnLs) {
 		var rs = new MyBottomSheet(data);
 
@@ -347,6 +367,7 @@ public class SqluckyAppComponent implements AppComponent {
 		return dbConnNames;
 	}
 
+	@Override
 	public List<String> getAllActiveConnectorName() {
 		List<String> dbConnNames = new ArrayList<>();
 		TreeView<TreeNodePo> tv = DBinfoTree.DBinfoTreeView;

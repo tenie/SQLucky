@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.utility;
+package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -17,6 +17,7 @@ import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 获取表的连接
@@ -27,12 +28,12 @@ import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 public class Dbinfo {
 	private static Logger logger = LogManager.getLogger(Dbinfo.class);
 
-	private Connection conn = null; 
+	private Connection conn = null;
 
 	private String driver, url, us, ps;
 //	private String sqliteDriver;
-    
-	//加载 jar
+
+	// 加载 jar
 	static {
 //		URL u = new URL("jar:file:/path/to/pgjdbc2.jar!/");
 ////		String classname = "org.postgresql.Driver";
@@ -41,7 +42,7 @@ public class Dbinfo {
 //		DriverManager.registerDriver(new DriverShim(d));
 //		DriverManager.getConnection("jdbc:postgresql://host/db", "user", "pw");
 	}
-	
+
 //	public Dbinfo(String driver, String url, String us, String ps) {
 //		this.driver = driver;
 //		this.url = url;
@@ -49,21 +50,19 @@ public class Dbinfo {
 //		this.ps = ps;
 //		this.sqliteDriver = "";
 //	}
-	public Dbinfo( String url, String us, String ps) {
+	public Dbinfo(String url, String us, String ps) {
 		this.url = url;
 		this.us = us;
 		this.ps = ps;
 //		this.sqliteDriver = "";
 	}
-	
+
 	public Dbinfo() {
 		this.driver = "";
 		this.url = "";
 		this.us = "";
-		this.ps = ""; 
+		this.ps = "";
 	}
-	
-	
 
 	// 获取连接
 	public Connection getconn() {
@@ -78,35 +77,31 @@ public class Dbinfo {
 //					conn = DriverManager.getConnection(url, us, ps);
 //				} 
 				conn = DriverManager.getConnection(url, us, ps);
-			 
-			} catch (Exception e) { 
+
+			} catch (Exception e) {
 				logger.error(e.getMessage());
 				e.printStackTrace();
 			}
 		}
 		return conn;
 	}
-	
-	
-	public  Connection getconn(String jdbcurl) {
+
+	public Connection getconn(String jdbcurl) {
 		if (conn == null) {
 			try {
-				conn = DriverManager.getConnection(jdbcurl);  
-			} catch (Exception e) { 
+				conn = DriverManager.getConnection(jdbcurl);
+			} catch (Exception e) {
 				logger.error(e.getMessage());
 				e.printStackTrace();
 			}
 		}
 		return conn;
 	}
-	
-	public  static Connection getConnByJdbc(String jdbcurl) {
+
+	public static Connection getConnByJdbc(String jdbcurl) {
 		var dbinfo = new Dbinfo();
 		return dbinfo.getconn(jdbcurl);
 	}
-	
-	
-	
 
 	public void close() {
 		if (conn != null) {
@@ -276,6 +271,7 @@ public class Dbinfo {
 	public static List<TablePo> fetchAllViewName(Connection conn, String schemaOrCatalog) throws Exception {
 		return fetchAllTableViewName(conn, schemaOrCatalog, false);
 	}
+
 	public static List<TablePo> fetchAllViewName(Connection conn) throws Exception {
 		return fetchAllTableViewName(conn, false);
 	}
@@ -283,10 +279,11 @@ public class Dbinfo {
 	public static List<TablePo> fetchAllTableName(Connection conn, String schemaOrCatalog) throws Exception {
 		return fetchAllTableViewName(conn, schemaOrCatalog, true);
 	}
+
 	public static List<TablePo> fetchAllTableName(Connection conn) throws Exception {
 		return fetchAllTableViewName(conn, true);
 	}
-	
+
 	public static String getSchema(Connection conn) {
 		String val = null;
 		try {
@@ -294,9 +291,10 @@ public class Dbinfo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return val;
 	}
+
 	public static String getCatalog(Connection conn) {
 		String val = null;
 		try {
@@ -316,8 +314,8 @@ public class Dbinfo {
 		List<TablePo> tbls = new ArrayList<TablePo>();
 		try {
 			DatabaseMetaData dbMetaData = conn.getMetaData();
-			String catalog = getCatalog(conn);//conn.getCatalog();
-			String schema = getSchema(conn); //conn.getSchema();
+			String catalog = getCatalog(conn);// conn.getCatalog();
+			String schema = getSchema(conn); // conn.getSchema();
 			if (StrUtils.isNotNullOrEmpty(schemaOrCatalog)) {
 				if (catalog == null) {
 					schema = schemaOrCatalog;
@@ -328,7 +326,7 @@ public class Dbinfo {
 			tablesResultSet = dbMetaData.getTables(catalog, schema, null, null);
 			while (tablesResultSet.next()) {
 				String tableType = tablesResultSet.getString("TABLE_TYPE");
-				if(tableType == null ) {
+				if (tableType == null) {
 					tableType = "";
 				}
 				if (istable) {
@@ -358,15 +356,13 @@ public class Dbinfo {
 		} finally {
 			if (tablesResultSet != null)
 				tablesResultSet.close();
-//			if (rs != null)
-//				rs.close();
 			if (sm != null)
 				sm.close();
 		}
 		return tbls;
 	}
-	public static List<TablePo> fetchAllTableViewName(Connection conn, boolean istable)
-			throws Exception {
+
+	public static List<TablePo> fetchAllTableViewName(Connection conn, boolean istable) throws Exception {
 		ResultSet tablesResultSet = null;
 //		ResultSet rs = null;
 		Statement sm = null;
@@ -374,11 +370,10 @@ public class Dbinfo {
 		try {
 			DatabaseMetaData dbMetaData = conn.getMetaData();
 
-
 			tablesResultSet = dbMetaData.getTables(null, null, null, null);
 			while (tablesResultSet.next()) {
 				String tableType = tablesResultSet.getString("TABLE_TYPE");
-				if(tableType == null ) {
+				if (tableType == null) {
 					tableType = "";
 				}
 				if (istable) {
@@ -426,7 +421,7 @@ public class Dbinfo {
 		TablePo po = new TablePo();
 		try {
 			DatabaseMetaData dbMetaData = conn.getMetaData();
-			String catalog = getCatalog(conn);//conn.getCatalog();
+			String catalog = getCatalog(conn);// conn.getCatalog();
 			String schema = getSchema(conn); // conn.getSchema();
 			if (StrUtils.isNotNullOrEmpty(schemaOrCatalog)) {
 				if (catalog == null) {
@@ -739,7 +734,7 @@ public class Dbinfo {
 //			}
 //		}
 //	}
-	
+
 	public static String getDBInfo(Connection connection) {
 		// 2.获取元数据
 		DatabaseMetaData metaData;
@@ -753,14 +748,19 @@ public class Dbinfo {
 //	  infoStr.append(metaData.supportsTransactions());//是否支持事务
 
 			infoStr.append("Database Name: " + metaData.getDatabaseProductName() + " ");
-			infoStr.append("Database Version: " +metaData.getDatabaseProductVersion() );
-			 
-			
+			infoStr.append("Database Version: " + metaData.getDatabaseProductVersion());
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		return infoStr.toString();
+	}
+
+	public static Connection createConnection(String jdbcUrl, String user, String pw) {
+		Dbinfo dbinfo = new Dbinfo(jdbcUrl, user, pw);
+		Connection connection = dbinfo.getconn();
+		return connection;
 	}
 
 }

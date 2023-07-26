@@ -12,7 +12,6 @@ import java.util.Map;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 

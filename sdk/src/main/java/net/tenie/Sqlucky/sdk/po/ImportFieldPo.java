@@ -15,7 +15,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class ExcelFieldPo extends SheetFieldPo {
+public class ImportFieldPo extends SheetFieldPo {
 
 	// excel数据导入表需要使用下面2个字段
 	private StringProperty excelRowVal = new SimpleStringProperty(""); // excel 对应列
@@ -26,7 +26,7 @@ public class ExcelFieldPo extends SheetFieldPo {
 	// 可选的值
 	private List<String> excelRowInfo;
 
-	public ExcelFieldPo(SheetFieldPo sheetField) {
+	public ImportFieldPo(SheetFieldPo sheetField) {
 		try {
 			BeanUtils.copyProperties(this, sheetField);
 		} catch (IllegalAccessException e) {

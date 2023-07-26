@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.utility;
+package net.tenie.Sqlucky.sdk.db;
 
 import java.io.File;
 import java.sql.CallableStatement;
@@ -11,16 +11,17 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.db.ResultSetPo;
-import net.tenie.Sqlucky.sdk.db.SelectInfoTableDao;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 
@@ -30,20 +31,20 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 public class DBTools {
 
 	private static Logger logger = LogManager.getLogger(DBTools.class);
-	
+
 	public static String dbFilePath() {
 		String dir = "/.sqlucky/";
-		if(CommonUtility.isDev()) {
+		if (CommonUtility.isDev()) {
 			dir = "/.sqlucky_dev/";
 		}
 		String path = FileUtils.getUserDirectoryPath() + dir;
 		File file = new File(path);
-		if(file.exists() == false) {
+		if (file.exists() == false) {
 			file.mkdir();
 		}
 		return path;
 	}
-	
+
 	public static DbTableDatePo deleteSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		int i = execDML(conn, sql);
@@ -146,14 +147,14 @@ public class DBTools {
 				pstmt.close();
 		}
 	}
-	
-	public static void execDDLNoErr(Connection conn, String sql)  {
+
+	public static void execDDLNoErr(Connection conn, String sql) {
 		try {
 			execDDL(conn, sql);
-		} catch (Exception e) { 
+		} catch (Exception e) {
 		}
 	}
-	
+
 	// 返回第一个字段的字符串值
 	public static String selectOne(Connection conn, String sql) {
 		ResultSet rs = null;
@@ -176,7 +177,7 @@ public class DBTools {
 
 		return str;
 	}
-	
+
 	public static Long selectOneLongVal(Connection conn, String sql) {
 		ResultSet rs = null;
 		Long val = null;
@@ -198,11 +199,11 @@ public class DBTools {
 
 		return val;
 	}
-	
+
 	public static DbTableDatePo execSql(Connection conn, String sql, String sqltype, String content)
 			throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
-		var fp = 	dpo.addField(sqltype + " Info");
+		var fp = dpo.addField(sqltype + " Info");
 		var row = dpo.addRow();
 		Statement sm = null;
 		try {
@@ -236,7 +237,7 @@ public class DBTools {
 				sm.close();
 		}
 	}
-	
+
 	// 执行插入返回id
 	public static int execInsertReturnId(Connection conn, String sql) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -260,11 +261,12 @@ public class DBTools {
 		}
 		return id;
 	}
-	public static int execInsertReturnId( PreparedStatement pstmt) throws SQLException {
-		 
+
+	public static int execInsertReturnId(PreparedStatement pstmt) throws SQLException {
+
 		ResultSet rs = null;
 		int id = -1;
-		try {  
+		try {
 			pstmt.execute();
 			rs = pstmt.getGeneratedKeys();
 			if (rs.next()) {
@@ -279,7 +281,6 @@ public class DBTools {
 		}
 		return id;
 	}
-	
 
 	/**
 	 * 批量执行
@@ -307,12 +308,12 @@ public class DBTools {
 				ps.close();
 		}
 	}
-	
+
 	// 执行
-	public static void execListSQL(List<String> sqls, Connection tarConn , boolean isThrow) throws Exception {
+	public static void execListSQL(List<String> sqls, Connection tarConn, boolean isThrow) throws Exception {
 		// 执行sql
 		for (String sql : sqls) {
-			try { 
+			try {
 				PreparedStatement pstmt = null;
 				try {
 					pstmt = tarConn.prepareStatement(sql);
@@ -323,15 +324,14 @@ public class DBTools {
 				} finally {
 					if (pstmt != null)
 						pstmt.close();
-				} 
+				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
-				if(isThrow ) throw e1;
+				if (isThrow)
+					throw e1;
 			}
 		}
 	}
-	
-	
 
 	// 调用过程
 	public static void CallProcedure(Connection conn, String sql) {
@@ -348,16 +348,17 @@ public class DBTools {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		} 
+		}
 	}
+
 //	调用函数
 	public static void CallFunction(Connection conn, String sql) {
 		CallableStatement call = null;
 		try {
 			logger.debug("CallProcedure = " + sql);
 			call = conn.prepareCall(sql);
-			ResultSet	rs = call.executeQuery(); 
-			
+			ResultSet rs = call.executeQuery();
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -366,9 +367,8 @@ public class DBTools {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		} 
+		}
 	}
-	
 
 // drop table 
 	public static void dropTable(Connection conn, String tabName) throws SQLException {
@@ -430,7 +430,7 @@ public class DBTools {
 		}
 		return rs;
 	}
- 
+
 	// 简单的sql 转为ResultSet
 	public static ResultSet sqlToResultSet(Connection conn, String sql) {
 		PreparedStatement pstate = null;
@@ -440,23 +440,21 @@ public class DBTools {
 			rs = pstate.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} 
-		
+		}
+
 		return rs;
 	}
-	
+
 	// 简单的sql 查询, 用于更新之前表的数据
-	public static  ResultSetPo simpleSelect(Connection conn, String sql, 
-			ObservableList<SheetFieldPo> fields, 
-			SqluckyConnector dpo    ) throws SQLException {
+	public static ResultSetPo simpleSelect(Connection conn, String sql, ObservableList<SheetFieldPo> fields,
+			SqluckyConnector dpo) throws SQLException {
 		ResultSet rs = sqlToResultSet(conn, sql);
 		ResultSetPo setPo = null;
-		if(rs!=null) {
-		   setPo = SelectInfoTableDao.selectTableData(rs, fields, dpo);
+		if (rs != null) {
+			setPo = SelectInfoTableDao.selectTableData(rs, fields, dpo);
 		}
-		
+
 		return setPo;
 	}
- 
 
 }

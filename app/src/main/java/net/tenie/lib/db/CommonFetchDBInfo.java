@@ -7,10 +7,10 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.fx.Action.SettingKeyBinding;
 /*   
  * @author tenie 

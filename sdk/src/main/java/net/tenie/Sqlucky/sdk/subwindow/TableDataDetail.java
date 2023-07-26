@@ -22,7 +22,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -231,9 +231,9 @@ public class TableDataDetail {
 	 * @param observableList
 	 * @param newValue
 	 */
-	public static final void bindTableViewExcelFieldFilter(TableView<ExcelFieldPo> tableView,
-			ObservableList<ExcelFieldPo> observableList, String newValue) {
-		FilteredList<ExcelFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
+	public static final void bindTableViewExcelFieldFilter(TableView<ImportFieldPo> tableView,
+			ObservableList<ImportFieldPo> observableList, String newValue) {
+		FilteredList<ImportFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
 		filteredData.setPredicate(entity -> {
 
 			boolean tf1 = false;
@@ -250,7 +250,7 @@ public class TableDataDetail {
 		}
 
 		);
-		SortedList<ExcelFieldPo> sortedData = new SortedList<>(filteredData);
+		SortedList<ImportFieldPo> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 		tableView.setItems(sortedData);
 	}
