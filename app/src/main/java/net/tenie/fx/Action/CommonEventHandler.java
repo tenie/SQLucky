@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -28,6 +29,7 @@ public class CommonEventHandler {
 	// 添加按钮点击事件
 	public static EventHandler<Event> addConnEvent() {
 		return new EventHandler<Event>() {
+			@Override
 			public void handle(Event e) {
 				ConnectionEditor.ConnectionInfoSetting();
 			}
@@ -37,6 +39,7 @@ public class CommonEventHandler {
 	// 断开所有连接按钮点击事件
 	public static EventHandler<Event> closeAllConnEvent() {
 		return new EventHandler<Event>() {
+			@Override
 			public void handle(Event e) {
 				ConnectionEditor.closeAllDbConn();
 			}
@@ -46,6 +49,7 @@ public class CommonEventHandler {
 	// 删除连接按钮点击事件
 	public static EventHandler<Event> deleteConnEvent() {
 		return new EventHandler<Event>() {
+			@Override
 			public void handle(Event e) {
 				ConnectionEditor.deleteDbConn();
 			}
@@ -55,6 +59,7 @@ public class CommonEventHandler {
 	// 添加code area 面板
 	public static EventHandler<Event> addCodeTab() {
 		return new EventHandler<Event>() {
+			@Override
 			public void handle(Event e) {
 				MyAreaTab.addCodeEmptyTabMethod();
 			}
@@ -64,6 +69,7 @@ public class CommonEventHandler {
 	// hide left
 	public static EventHandler<Event> hideLift() {
 		return new EventHandler<Event>() {
+			@Override
 			public void handle(Event e) {
 				CommonAction.hideLeft();
 			}
@@ -73,6 +79,7 @@ public class CommonEventHandler {
 	//
 	public static EventHandler<Event> hideBottom() {
 		return new EventHandler<Event>() {
+			@Override
 			public void handle(Event e) {
 				SdkComponent.hideBottom();
 			}
@@ -82,6 +89,7 @@ public class CommonEventHandler {
 	// save file
 	public static EventHandler<Event> saveSQl() {
 		return new EventHandler<Event>() {
+			@Override
 			public void handle(Event e) {
 				CommonAction.saveSqlAction();
 			}
@@ -91,6 +99,7 @@ public class CommonEventHandler {
 	// main page close event
 	public static EventHandler<WindowEvent> mainCloseEvent() {
 		return new EventHandler<WindowEvent>() {
+			@Override
 			public void handle(WindowEvent e) {
 				CommonAction.mainPageClose();
 			}
@@ -100,6 +109,7 @@ public class CommonEventHandler {
 	// ...
 	public static EventHandler<Event> demo() {
 		return new EventHandler<Event>() {
+			@Override
 			public void handle(Event e) {
 
 			}
@@ -191,42 +201,45 @@ public class CommonEventHandler {
 	 * @param isFile
 	 * @return
 	 */
-	public static EventHandler<ActionEvent> txtStrClipboard(boolean isSelected, boolean isFile) {
+//	public static EventHandler<ActionEvent> txtStrClipboard(boolean isSelected, boolean isFile) {
+//		return new EventHandler<ActionEvent>() {
+//			public void handle(ActionEvent e) {
+//				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
+//				final File ff = CommonUtility.getFileHelper(isFile);
+//				Thread t = new Thread() {
+//					public void run() {
+//						String sql = GenerateSQLString.txtStrHelper(vals);
+//						if (StrUtils.isNotNullOrEmpty(sql)) {
+//							if (isFile) {
+//								if (ff != null) {
+//									try {
+//										FileTools.save(ff, sql);
+//									} catch (IOException e) {
+//										e.printStackTrace();
+//									}
+//								}
+//							} else {
+//								CommonUtility.setClipboardVal(sql);
+//							}
+//						}
+//					}
+//				};
+//				t.start();
+//
+//			}
+//
+//		};
+//	}
+
+	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName,
+			SqluckyBottomSheet mtd) {
 		return new EventHandler<ActionEvent>() {
+			@Override
 			public void handle(ActionEvent e) {
-				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
+				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected, mtd);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {
-					public void run() {
-						String sql = GenerateSQLString.txtStrHelper(vals);
-						if (StrUtils.isNotNullOrEmpty(sql)) {
-							if (isFile) {
-								if (ff != null) {
-									try {
-										FileTools.save(ff, sql);
-									} catch (IOException e) {
-										e.printStackTrace();
-									}
-								}
-							} else {
-								CommonUtility.setClipboardVal(sql);
-							}
-						}
-					}
-				};
-				t.start();
-
-			}
-
-		};
-	}
-
-	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName) {
-		return new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
-				final File ff = CommonUtility.getFileHelper(isFile);
-				Thread t = new Thread() {
+					@Override
 					public void run() {
 						String sql = GenerateSQLString.columnStrHelper(vals, colName);
 						if (StrUtils.isNotNullOrEmpty(sql)) {

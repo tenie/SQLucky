@@ -15,7 +15,6 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -86,7 +85,7 @@ public class SdkComponent {
 	}
 
 	// 数据展示tableView StringProperty FilteredTableView<ResultSetRowPo>
-	public static FilteredTableView<ResultSetRowPo> creatFilteredTableView() {
+	public static FilteredTableView<ResultSetRowPo> creatFilteredTableView(MyBottomSheet myBottomSheet) {
 		FilteredTableView<ResultSetRowPo> table = new FilteredTableView<>();
 
 		table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
@@ -134,7 +133,7 @@ public class SdkComponent {
 						this.setText((rowIndex + 1) + "");
 						this.setOnMouseClicked(e -> {
 							if (e.getClickCount() == 2) {
-								TableDataDetail.show();
+								TableDataDetail.show(myBottomSheet);
 							}
 						});
 					}
@@ -225,11 +224,12 @@ public class SdkComponent {
 	 * @param fieldWidthMap
 	 * @return
 	 */
-	public static SheetDataValue sqlToSheet(String sql, SqluckyConnector sqluckyConn, String tableName,
+	public static MyBottomSheet sqlToSheet(String sql, SqluckyConnector sqluckyConn, String tableName,
 			Map<String, Double> fieldWidthMap, List<String> editableColName) {
 
 		try {
-			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
+			MyBottomSheet myBottomSheet = new MyBottomSheet();
+			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
 			// 查询的 的语句可以被修改
 //			table.editableProperty().bind(new SimpleBooleanProperty(false));
 			table.setEditable(true);
@@ -243,7 +243,8 @@ public class SdkComponent {
 			}
 
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			SheetDataValue sheetDaV = new SheetDataValue();
+
+			SheetDataValue sheetDaV = myBottomSheet.getTableData();// new SheetDataValue();
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTable(table);
 			sheetDaV.setTabName(tableName);
@@ -286,7 +287,7 @@ public class SdkComponent {
 				}
 			});
 
-			return sheetDaV;
+			return myBottomSheet;
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -352,6 +353,7 @@ public class SdkComponent {
 		// 判断是否已经到达最大tab显示页面
 		// 删除旧的 tab
 		List<Tab> ls = new ArrayList<>();
+		List<MyBottomSheet> ls2 = new ArrayList<>();
 		for (int i = 0; i < dataTab.getTabs().size(); i++) {
 			Tab tab = dataTab.getTabs().get(i);
 			MyBottomSheet nd = (MyBottomSheet) tab.getUserData();
@@ -362,17 +364,32 @@ public class SdkComponent {
 				logger.info("lock  ");
 			} else {
 				ls.add(tab);
+				ls2.add(nd);
 			}
 		}
+
 		if (ls.size() > 0) {
 			Platform.runLater(() -> {
 				ls.forEach(nd -> {
+					nd.setUserData(null);
+					nd.setContent(null);
 					dataTab.getTabs().remove(nd);
-
 				});
 //				System.gc();
-				MyOption.gc(SdkComponent.class, "deleteEmptyTab");
+				ls.clear();
+//				MyOption.gc(SdkComponent.class, "deleteEmptyTab");
+
 			});
+		}
+
+		if (ls2.size() > 0) {
+			Platform.runLater(() -> {
+				ls2.forEach(nd -> {
+					nd.clean();
+				});
+				ls2.clear();
+			});
+
 		}
 
 	}
@@ -492,14 +509,18 @@ public class SdkComponent {
 	// 关闭 数据页, 清理缓存
 	public static void clearDataTable(Tab tb) {
 		TabPane tabPane = ComponentGetter.dataTabPane;
+		if (!tabPane.getTabs().contains(tb)) {
+			return;
+		}
 		long begintime = System.currentTimeMillis();
 		tb.setContent(null);
+		tb.setUserData(null);
 		tabPane.getTabs().remove(tb);
 		long endtime = System.currentTimeMillis();
 		long costTime = (endtime - begintime);
-//		System.gc();
 		MyOption.gc(SdkComponent.class, "clearDataTable");
 		logger.info("关闭使用时间 = " + costTime);
+
 //		CommonUtility.delayRunThread(v->{
 //			Platform.runLater(()->{
 //				if(tabPane.getTabs().size() == 0) {
@@ -518,8 +539,6 @@ public class SdkComponent {
 			@Override
 			public void handle(Event e) {
 				SdkComponent.clearDataTable(tb.getTab());
-//				tb.getTableData().clean();
-
 				tb.clean();
 
 			}
@@ -528,46 +547,46 @@ public class SdkComponent {
 
 	// 创建一个表
 	// 数据展示tableView StringProperty
-	public static FilteredTableView<ObservableList<StringProperty>> creatFilteredTableView2() {
-		FilteredTableView<ObservableList<StringProperty>> table = new FilteredTableView<ObservableList<StringProperty>>();
-
-		table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
-		table.setPlaceholder(new Label());
-		// 可以选中多行
-		table.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
-				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
-
-		String tableIdx = createTabId();
-		table.setId(tableIdx);
-		table.getStyleClass().add("myTableTag");
-
-		FilteredTableColumn<ObservableList<StringProperty>, Number> tc = new FilteredTableColumn<>();
-		// 点击 行号, 显示一个 当前行的明细窗口
-		tc.setCellFactory(col -> {
-			TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>() {
-				@Override
-				public void updateItem(Number item, boolean empty) {
-					super.updateItem(item, empty);
-					this.setText(null);
-					this.setGraphic(null);
-					if (!empty) {
-						int rowIndex = this.getIndex();
-						this.setText((rowIndex + 1) + "");
-						this.setOnMouseClicked(e -> {
-							if (e.getClickCount() == 2) {
-								TableDataDetail.show();
-							}
-						});
-					}
-				}
-			};
-			return cell;
-		});
-
-		table.setRowHeader(tc);
-		// 启用 隐藏列的控制按钮
-		table.tableMenuButtonVisibleProperty().setValue(true);
-
-		return table;
-	}
+//	public static FilteredTableView<ObservableList<StringProperty>> creatFilteredTableView2() {
+//		FilteredTableView<ObservableList<StringProperty>> table = new FilteredTableView<ObservableList<StringProperty>>();
+//
+//		table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
+//		table.setPlaceholder(new Label());
+//		// 可以选中多行
+//		table.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
+//				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
+//
+//		String tableIdx = createTabId();
+//		table.setId(tableIdx);
+//		table.getStyleClass().add("myTableTag");
+//
+//		FilteredTableColumn<ObservableList<StringProperty>, Number> tc = new FilteredTableColumn<>();
+//		// 点击 行号, 显示一个 当前行的明细窗口
+//		tc.setCellFactory(col -> {
+//			TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>() {
+//				@Override
+//				public void updateItem(Number item, boolean empty) {
+//					super.updateItem(item, empty);
+//					this.setText(null);
+//					this.setGraphic(null);
+//					if (!empty) {
+//						int rowIndex = this.getIndex();
+//						this.setText((rowIndex + 1) + "");
+//						this.setOnMouseClicked(e -> {
+//							if (e.getClickCount() == 2) {
+//								TableDataDetail.show();
+//							}
+//						});
+//					}
+//				}
+//			};
+//			return cell;
+//		});
+//
+//		table.setRowHeader(tc);
+//		// 启用 隐藏列的控制按钮
+//		table.tableMenuButtonVisibleProperty().setValue(true);
+//
+//		return table;
+//	}
 }

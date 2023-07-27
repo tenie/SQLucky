@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
 
+import com.jfoenix.controls.JFXButton;
+
 import javafx.collections.ObservableList;
 import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
@@ -41,6 +43,15 @@ public class SheetDataValue {
 	// 操作数据的按钮, 按钮名称和控件对象方式保存
 	private Map<String, Button> btnMap;
 
+	JFXButton saveBtn = new JFXButton();
+	JFXButton detailBtn = new JFXButton();;
+	JFXButton tableSQLBtn = new JFXButton();
+	JFXButton refreshBtn = new JFXButton();
+	JFXButton addBtn = new JFXButton();
+	JFXButton minusBtn = new JFXButton();
+	JFXButton copyBtn = new JFXButton();
+	JFXButton dockSideBtn = new JFXButton();
+
 	public void clean() {
 		if (dbValTable != null) {
 			dbValTable.getItems().clear();
@@ -55,6 +66,26 @@ public class SheetDataValue {
 		if (btnMap != null)
 			btnMap.clear();
 		btnMap = null;
+
+		if (dataRs != null) {
+			dataRs.clean();
+			dataRs = null;
+		}
+		if (dbConnection != null) {
+			dbConnection = null;
+		}
+		if (conn != null) {
+			conn = null;
+		}
+
+		saveBtn = null;
+		detailBtn = null;
+		tableSQLBtn = null;
+		refreshBtn = null;
+		addBtn = null;
+		minusBtn = null;
+		copyBtn = null;
+		dockSideBtn = null;
 	}
 
 	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName, String sqlStr, String connName,
@@ -65,6 +96,7 @@ public class SheetDataValue {
 		this.connName = connName;
 		this.colss = colss;
 		this.dataRs = dataRs;
+		this.dataRs.setSheetDataValue(this);
 	}
 
 	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName, ObservableList<SheetFieldPo> colss,
@@ -73,6 +105,7 @@ public class SheetDataValue {
 		this.tabName = tabName;
 		this.colss = colss;
 		this.dataRs = dataRs;
+		this.dataRs.setSheetDataValue(this);
 	}
 
 	public SheetDataValue() {
@@ -203,6 +236,78 @@ public class SheetDataValue {
 
 	public void setDbValTable(FilteredTableView<ResultSetRowPo> dbValTable) {
 		this.dbValTable = dbValTable;
+	}
+
+	public int getRowSize() {
+		return rowSize;
+	}
+
+	public void setRowSize(int rowSize) {
+		this.rowSize = rowSize;
+	}
+
+	public JFXButton getSaveBtn() {
+		return saveBtn;
+	}
+
+	public void setSaveBtn(JFXButton saveBtn) {
+		this.saveBtn = saveBtn;
+	}
+
+	public JFXButton getDetailBtn() {
+		return detailBtn;
+	}
+
+	public void setDetailBtn(JFXButton detailBtn) {
+		this.detailBtn = detailBtn;
+	}
+
+	public JFXButton getTableSQLBtn() {
+		return tableSQLBtn;
+	}
+
+	public void setTableSQLBtn(JFXButton tableSQLBtn) {
+		this.tableSQLBtn = tableSQLBtn;
+	}
+
+	public JFXButton getRefreshBtn() {
+		return refreshBtn;
+	}
+
+	public void setRefreshBtn(JFXButton refreshBtn) {
+		this.refreshBtn = refreshBtn;
+	}
+
+	public JFXButton getAddBtn() {
+		return addBtn;
+	}
+
+	public void setAddBtn(JFXButton addBtn) {
+		this.addBtn = addBtn;
+	}
+
+	public JFXButton getMinusBtn() {
+		return minusBtn;
+	}
+
+	public void setMinusBtn(JFXButton minusBtn) {
+		this.minusBtn = minusBtn;
+	}
+
+	public JFXButton getCopyBtn() {
+		return copyBtn;
+	}
+
+	public void setCopyBtn(JFXButton copyBtn) {
+		this.copyBtn = copyBtn;
+	}
+
+	public JFXButton getDockSideBtn() {
+		return dockSideBtn;
+	}
+
+	public void setDockSideBtn(JFXButton dockSideBtn) {
+		this.dockSideBtn = dockSideBtn;
 	}
 
 }

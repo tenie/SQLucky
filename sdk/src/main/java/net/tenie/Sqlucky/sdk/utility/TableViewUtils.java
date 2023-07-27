@@ -22,11 +22,11 @@ import javafx.collections.transformation.SortedList;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyCellOperateButton;
 import net.tenie.Sqlucky.sdk.component.MyTableCellButton;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField3;
@@ -41,7 +41,6 @@ import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
-import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 
 /**
  * 公用组件
@@ -223,48 +222,48 @@ public class TableViewUtils {
 
 	// 创建一个表
 	// 数据展示tableView StringProperty
-	public static FilteredTableView<ObservableList<StringProperty>> creatFilteredTableView2() {
-		FilteredTableView<ObservableList<StringProperty>> table = new FilteredTableView<ObservableList<StringProperty>>();
-
-		table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
-		table.setPlaceholder(new Label());
-		// 可以选中多行
-		table.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
-				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
-
-		String tableIdx = createTabId();
-		table.setId(tableIdx);
-		table.getStyleClass().add("myTableTag");
-
-		FilteredTableColumn<ObservableList<StringProperty>, Number> tc = new FilteredTableColumn<>();
-		// 点击 行号, 显示一个 当前行的明细窗口
-		tc.setCellFactory(col -> {
-			TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>() {
-				@Override
-				public void updateItem(Number item, boolean empty) {
-					super.updateItem(item, empty);
-					this.setText(null);
-					this.setGraphic(null);
-					if (!empty) {
-						int rowIndex = this.getIndex();
-						this.setText((rowIndex + 1) + "");
-						this.setOnMouseClicked(e -> {
-							if (e.getClickCount() == 2) {
-								TableDataDetail.show();
-							}
-						});
-					}
-				}
-			};
-			return cell;
-		});
-
-		table.setRowHeader(tc);
-		// 启用 隐藏列的控制按钮
-		table.tableMenuButtonVisibleProperty().setValue(true);
-
-		return table;
-	}
+//	public static FilteredTableView<ObservableList<StringProperty>> creatFilteredTableView2() {
+//		FilteredTableView<ObservableList<StringProperty>> table = new FilteredTableView<ObservableList<StringProperty>>();
+//
+//		table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
+//		table.setPlaceholder(new Label());
+//		// 可以选中多行
+//		table.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
+//				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
+//
+//		String tableIdx = createTabId();
+//		table.setId(tableIdx);
+//		table.getStyleClass().add("myTableTag");
+//
+//		FilteredTableColumn<ObservableList<StringProperty>, Number> tc = new FilteredTableColumn<>();
+//		// 点击 行号, 显示一个 当前行的明细窗口
+//		tc.setCellFactory(col -> {
+//			TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>() {
+//				@Override
+//				public void updateItem(Number item, boolean empty) {
+//					super.updateItem(item, empty);
+//					this.setText(null);
+//					this.setGraphic(null);
+//					if (!empty) {
+//						int rowIndex = this.getIndex();
+//						this.setText((rowIndex + 1) + "");
+//						this.setOnMouseClicked(e -> {
+//							if (e.getClickCount() == 2) {
+//								TableDataDetail.show();
+//							}
+//						});
+//					}
+//				}
+//			};
+//			return cell;
+//		});
+//
+//		table.setRowHeader(tc);
+//		// 启用 隐藏列的控制按钮
+//		table.tableMenuButtonVisibleProperty().setValue(true);
+//
+//		return table;
+//	}
 
 	// 提供数据生成表格
 	public static SheetTableData dataToSheet(List<String> fieldNameLs, List<Map<String, String>> vals,
@@ -395,7 +394,8 @@ public class TableViewUtils {
 	public static void showInfo(DbTableDatePo ddlDmlpo, Thread thread) {
 		// 有数据才展示
 		if (ddlDmlpo.getResultSet().getDatas().size() > 0) {
-			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
+			MyBottomSheet myBottomSheet = new MyBottomSheet();
+			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
 			// 表内容可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getResultSet().getDatas().size());
@@ -416,9 +416,9 @@ public class TableViewUtils {
 
 			boolean showtab = true;
 			if (showtab) {
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(myBottomSheet, dvt, -1, true);
 
-//					mtd.show();
+//				mtd.show();
 				mtd.showAndDelayRemoveTab();
 			}
 

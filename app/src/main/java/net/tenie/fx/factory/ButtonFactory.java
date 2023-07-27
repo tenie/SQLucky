@@ -6,7 +6,6 @@ import com.jfoenix.controls.JFXComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
@@ -239,15 +238,6 @@ public class ButtonFactory {
 		CommonButtons.addcodeArea = addcodeArea;
 
 		return pn;
-	}
-
-	// 锁住<锁按钮>
-	public static void lockLockBtn(SqluckyBottomSheet mytb, JFXButton btn) {
-		boolean islock = mytb.getTableData().isLock();
-		if (!islock) {
-			mytb.getTableData().setLock(true);
-			btn.setGraphic(IconGenerator.svgImageDefActive("lock"));
-		}
 	}
 
 }

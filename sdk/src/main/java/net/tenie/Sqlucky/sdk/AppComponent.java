@@ -9,6 +9,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -19,6 +20,12 @@ import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 
 public interface AppComponent {
+	public void runSQL(SqluckyConnector sqlConn, String sqlv, boolean isCreateFunc);
+
+	/*
+	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab
+	 */
+	public void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv);
 
 	void refreshDataTableView(String connName, String sql, String idx, boolean isLock);
 
@@ -61,10 +68,11 @@ public interface AppComponent {
 	// 执行dml sql语句
 	public boolean execDML(String sql);
 
-	// 创建数据tableview
-	public SqluckyBottomSheet sqlDataSheet(SheetDataValue data, int idx, boolean disable);
+	// TODO 创建数据tableview
+	public SqluckyBottomSheet sqlDataSheet(MyBottomSheet rs, SheetDataValue data, int idx, boolean disable);
 
-	public SqluckyBottomSheet tableViewSheet(SheetDataValue data, List<Node> nodeLs);
+//	public SqluckyBottomSheet tableViewSheet(SheetDataValue data, List<Node> nodeLs);
+	public SqluckyBottomSheet tableViewSheet(MyBottomSheet myBottomSheet, List<Node> btnLs);
 
 	// 表, 视图 等 数据库对象的ddl语句
 	public SqluckyBottomSheet ddlSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc,
