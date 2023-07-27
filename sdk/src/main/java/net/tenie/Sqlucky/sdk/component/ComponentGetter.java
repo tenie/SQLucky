@@ -13,7 +13,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
@@ -124,14 +123,14 @@ public final class ComponentGetter {
 //	}
 
 	// 获取当前数据表的Tab
-	public static MyBottomSheet currentDataTab() {
-		Tab tab = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-		if (tab == null) {
-			return null;
-		}
-		MyBottomSheet mtb = (MyBottomSheet) tab.getUserData();
-//		SqluckyBottomSheet sheet = (SqluckyBottomSheet) tab;
-		return mtb;
-	}
+//	public static MyBottomSheet currentDataTab() {
+//		Tab tab = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
+//		if (tab == null) {
+//			return null;
+//		}
+//		MyBottomSheet mtb = (MyBottomSheet) tab.getUserData();
+////		SqluckyBottomSheet sheet = (SqluckyBottomSheet) tab;
+//		return mtb;
+//	}
 
 }

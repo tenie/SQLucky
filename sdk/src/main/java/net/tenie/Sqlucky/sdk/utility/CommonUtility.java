@@ -47,13 +47,19 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
+import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.RsVal;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
+import net.tenie.Sqlucky.sdk.po.TreeObjCache;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 
 /**
@@ -136,6 +142,7 @@ public class CommonUtility {
 			queue.offer(caller); // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
 
 			Thread t = new Thread() {
+				@Override
 				public void run() {
 
 					try {
@@ -159,6 +166,7 @@ public class CommonUtility {
 
 	public static void runThread(Function<Object, Object> fun) {
 		Thread t = new Thread() {
+			@Override
 			public void run() {
 				fun.apply(null);
 			}
@@ -168,6 +176,7 @@ public class CommonUtility {
 
 	public static void runThread(Consumer<String> caller) {
 		Thread t = new Thread() {
+			@Override
 			public void run() {
 				caller.accept("");
 			}
@@ -336,6 +345,7 @@ public class CommonUtility {
 
 		// 子线程中睡眠和减计数
 		Thread t = new Thread() {
+			@Override
 			public void run() {
 				try {
 					// 在子线程里 睡眠
@@ -714,6 +724,7 @@ public class CommonUtility {
 		for (Consumer<String> caller : initTasks) {
 			try {
 				Thread t = new Thread() {
+					@Override
 					public void run() {
 						try {
 							caller.accept("");
@@ -740,6 +751,7 @@ public class CommonUtility {
 	public static void InitFinishCall(Consumer<String> caller) {
 		try {
 			Thread t = new Thread() {
+				@Override
 				public void run() {
 					while (CommonUtility.getTaskCount() > 0) {
 						try {
@@ -1079,5 +1091,48 @@ public class CommonUtility {
 			return false;
 		}
 		return true;
+	}
+
+	// 获取tree 节点中的 table 的sql
+	public static void findTable(SheetDataValue dataObj) {
+		RsVal rv = SqluckyBottomSheetUtility.tableInfo(dataObj);
+		SqluckyConnector dbcp = rv.dbconnPo;
+		if (dbcp == null) {
+			return;
+		}
+		String tbn = rv.tableName;
+		String key = "";
+		int idx = tbn.indexOf(".");
+		if (idx > 0) {
+			key = dbcp.getConnName() + "_" + tbn.substring(0, idx);
+			tbn = tbn.substring(idx + 1); // 去除schema , 得到表名
+		} else {
+			key = dbcp.getConnName() + "_" + dbcp.getDefaultSchema();
+		}
+
+		// 从表格缓存中查找表
+		List<TablePo> tbs = TreeObjCache.tableCache.get(key.toUpperCase());
+
+		TablePo tbrs = null;
+		for (TablePo po : tbs) {
+			if (po.getTableName().toUpperCase().equals(tbn)) {
+				tbrs = po;
+				break;
+			}
+		}
+		// 从试图缓存中查找
+		if (tbrs == null) {
+			tbs = TreeObjCache.viewCache.get(key.toUpperCase());
+			for (TablePo po : tbs) {
+				if (po.getTableName().toUpperCase().equals(tbn)) {
+					tbrs = po;
+					break;
+				}
+			}
+		}
+
+		if (tbrs != null)
+			TreeObjAction.showTableSql(dbcp, tbrs);
+
 	}
 }

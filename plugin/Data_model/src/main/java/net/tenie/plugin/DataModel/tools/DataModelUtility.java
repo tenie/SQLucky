@@ -24,6 +24,7 @@ import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.PoDao;
@@ -59,20 +60,22 @@ public class DataModelUtility {
 	 * @param fieldWidthMap
 	 * @throws Exception
 	 */
-	public static SheetDataValue dataModelQueryFieldsShow(String sql, SqluckyConnector sqluckyConn, String tableName,
+	public static MyBottomSheet dataModelQueryFieldsShow(String sql, SqluckyConnector sqluckyConn, String tableName,
 			List<Node> optionNodes, Map<String, Double> fieldWidthMap) throws Exception {
 		SheetDataValue sheetDaV = null;
+		MyBottomSheet myBottomSheet = null;
 		try {
 
 			// 允许下面2个字段可以修改
 			List<String> editableColName = new ArrayList<>();
 			editableColName.add("NAME");
 			editableColName.add("COMMENT");
-			sheetDaV = SdkComponent.sqlToSheet(sql, sqluckyConn, tableName, fieldWidthMap, editableColName);
+			myBottomSheet = SdkComponent.sqlToSheet(sql, sqluckyConn, tableName, fieldWidthMap, editableColName);
+//			sheetDaV
 			// 如果查询到数据才展示
 			if (sheetDaV.getTable().getItems().size() > 0) {
 				// 渲染界面
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(sheetDaV, optionNodes);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(myBottomSheet, optionNodes);
 				mtd.show();
 
 			}
@@ -81,7 +84,7 @@ public class DataModelUtility {
 			e.printStackTrace();
 			throw e;
 		}
-		return sheetDaV;
+		return myBottomSheet;
 	}
 
 	public static void modelFileImport(String encode) {
@@ -409,7 +412,8 @@ public class DataModelUtility {
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo, Thread thread) {
 		// 有数据才展示
 		if (ddlDmlpo.getResultSet().getDatas().size() > 0) {
-			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView();
+			MyBottomSheet myBottomSheet = new MyBottomSheet();
+			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
 			// 表内容可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getResultSet().getDatas().size());
@@ -430,7 +434,7 @@ public class DataModelUtility {
 
 			boolean showtab = true;
 			if (showtab) {
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, -1, true);
+				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(myBottomSheet, dvt, -1, true);
 				mtd.show();
 			}
 

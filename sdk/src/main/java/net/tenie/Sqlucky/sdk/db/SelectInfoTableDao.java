@@ -4,25 +4,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 只读的表查询
+ * 
  * @author tenie
  *
  */
@@ -30,17 +25,15 @@ public class SelectInfoTableDao {
 
 	private static Logger logger = LogManager.getLogger(SelectInfoTableDao.class);
 
-	
-	public static ResultSetPo selectTableData(ResultSet rs, 
-			ObservableList<SheetFieldPo> fields, 
-			SqluckyConnector dpo  ) throws SQLException {
+	public static ResultSetPo selectTableData(ResultSet rs, ObservableList<SheetFieldPo> fields, SqluckyConnector dpo)
+			throws SQLException {
 		ResultSetPo setPo = new ResultSetPo(fields);
 		// 数据
-		execRs(rs, fields, dpo, setPo );
-		
+		execRs(rs, fields, dpo, setPo);
+
 		return setPo;
 	}
-	
+
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
 	public static void selectSql(String sql, SheetTableData std) throws SQLException {
 		SqluckyConnector dpo = std.getDbConnection();
@@ -68,7 +61,7 @@ public class SelectInfoTableDao {
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = SelectDao.resultSetMetaData(rs);
 			ResultSetPo setPo = selectTableData(rs, fields, dpo);
-			
+
 			std.setColss(fields);
 			std.setInfoTableVals(setPo);
 			std.setRows(setPo.size());
@@ -80,9 +73,9 @@ public class SelectInfoTableDao {
 				rs.close();
 		}
 	}
- 
-	public static void execRs(  ResultSet rs, ObservableList<SheetFieldPo> fpo,
-			SqluckyConnector sqluckyConn,ResultSetPo setPo ) throws SQLException {
+
+	public static void execRs(ResultSet rs, ObservableList<SheetFieldPo> fpo, SqluckyConnector sqluckyConn,
+			ResultSetPo setPo) throws SQLException {
 		int rowNo = 0;
 		int columnnums = fpo.size();
 
@@ -100,7 +93,7 @@ public class SelectInfoTableDao {
 				} else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						Object objtmp = rs.getObject(i + 1);
-						var dateStr= sqluckyConn.DateTimeToString(objtmp, dbtype);
+						var dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
 						val = new SimpleStringProperty(dateStr);
 //						if (dpo != null) {
 //							var v = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);
@@ -125,53 +118,50 @@ public class SelectInfoTableDao {
 
 	}
 
-
- 
-
 	// 数据单元格添加监听
 	// 字段修改事件
-	public static void addStringPropertyChangeListener(
-			StringProperty val,
-			int rowNo,
-			int idx,
-			ObservableList<ResultSetCellPo> rowDatas,
-			int dbtype,
-			ResultSetPo setPo ) {
-		ChangeListener<String> cl = new ChangeListener<String>() {
-			@Override
-			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				logger.info("add String Property Change Listener ：newValue：" + newValue + " | oldValue =" + oldValue);
-//				logger.info("key ==" + tabId + "-" + rowNo);
-				logger.info("observable = " + observable);
-				// 如果类似是数字的, 新值不是数字, 还原
-				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
-					Platform.runLater(() -> val.setValue(oldValue));
-					return;
-				}
-
-				if (CommonUtility.isDateTime(dbtype) && "".equals(newValue)) {
-					Platform.runLater(() -> val.setValue("<null>"));
-				}
-				if (SqluckyBottomSheetUtility.dataPaneSaveBtn() != null) {
-					SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
-				}
-				
-
-//				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();
-//				if (!SqluckyBottomSheetUtility.exist( rowNo)) {
-//					for (int i = 0; i < rowDatas.size(); i++) {
-//						if (i == idx) {
-//							oldDate.add(new SimpleStringProperty(oldValue));
-//						} else {
-//							oldDate.add(rowDatas.get(i).getCellData());
-//						}
-//					}
-//					SqluckyBottomSheetUtility.addData( rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
-//				} else {
-//					SqluckyBottomSheetUtility.addData( rowNo, vals);
+//	public static void addStringPropertyChangeListener(
+//			StringProperty val,
+//			int rowNo,
+//			int idx,
+//			ObservableList<ResultSetCellPo> rowDatas,
+//			int dbtype,
+//			ResultSetPo setPo ) {
+//		ChangeListener<String> cl = new ChangeListener<String>() {
+//			@Override
+//			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+//				logger.info("add String Property Change Listener ：newValue：" + newValue + " | oldValue =" + oldValue);
+////				logger.info("key ==" + tabId + "-" + rowNo);
+//				logger.info("observable = " + observable);
+//				// 如果类似是数字的, 新值不是数字, 还原
+//				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
+//					Platform.runLater(() -> val.setValue(oldValue));
+//					return;
 //				}
-			}
-		};
-		val.addListener(cl);
-	}
+//
+//				if (CommonUtility.isDateTime(dbtype) && "".equals(newValue)) {
+//					Platform.runLater(() -> val.setValue("<null>"));
+//				}
+//				if (SqluckyBottomSheetUtility.dataPaneSaveBtn() != null) {
+//					SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
+//				}
+//				
+//
+////				ObservableList<StringProperty> oldDate = FXCollections.observableArrayList();
+////				if (!SqluckyBottomSheetUtility.exist( rowNo)) {
+////					for (int i = 0; i < rowDatas.size(); i++) {
+////						if (i == idx) {
+////							oldDate.add(new SimpleStringProperty(oldValue));
+////						} else {
+////							oldDate.add(rowDatas.get(i).getCellData());
+////						}
+////					}
+////					SqluckyBottomSheetUtility.addData( rowNo, vals, oldDate); // 数据修改缓存, 用于之后更新
+////				} else {
+////					SqluckyBottomSheetUtility.addData( rowNo, vals);
+////				}
+//			}
+//		};
+//		val.addListener(cl);
+//	}
 }

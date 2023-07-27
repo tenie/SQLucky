@@ -17,6 +17,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
@@ -143,15 +144,15 @@ public class SqlExecuteOption {
 	}
 
 	// 设置 列的 右键菜单
-	public static void setDataTableContextMenu(ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList,
-			ObservableList<SheetFieldPo> cols) {
+	public static void setDataTableContextMenu(MyBottomSheet myBottomSheet,
+			ObservableList<FilteredTableColumn<ResultSetRowPo, String>> colList, ObservableList<SheetFieldPo> cols) {
 		int len = cols.size();
 		for (int i = 0; i < len; i++) {
 			FilteredTableColumn<ResultSetRowPo, String> col = colList.get(i);
 			String colname = cols.get(i).getColumnLabel().get();
 			int type = cols.get(i).getColumnType().get();
 			// 右点菜单
-			ContextMenu cm = DataTableContextMenu.DataTableColumnContextMenu(colname, type, col, i);
+			ContextMenu cm = DataTableContextMenu.DataTableColumnContextMenu(myBottomSheet, colname, type, col, i);
 			col.setContextMenu(cm);
 		}
 	}
