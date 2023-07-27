@@ -1,6 +1,5 @@
 package net.tenie.Sqlucky.sdk;
 
-import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 
 /**
@@ -10,6 +9,8 @@ import net.tenie.Sqlucky.sdk.po.SheetDataValue;
  *
  */
 public interface SqluckyBottomSheet {
+	public void show(int idx, boolean disable);
+
 	public void show();
 
 //	当窗口失去焦点 3秒后关闭(移除)
@@ -17,8 +18,8 @@ public interface SqluckyBottomSheet {
 
 	public SheetDataValue getTableData();
 
-	public Button getSaveBtn();
-
-	public Button getDetailBtn();
+//	public Button getSaveBtn();
+//
+//	public Button getDetailBtn();
 
 }

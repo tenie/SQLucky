@@ -34,9 +34,14 @@ public class ResultSetRowPo {
 			resultSet.getFields().clear();
 			resultSet = null;
 		}
-		rowDatas.forEach(v -> {
-			v.clean();
-		});
+		if (rowDatas != null) {
+			rowDatas.forEach(v -> {
+				v.clean();
+			});
+			rowDatas.clear();
+			rowDatas = null;
+		}
+
 		hasModify = null;
 	}
 

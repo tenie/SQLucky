@@ -21,7 +21,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuButton;
@@ -30,6 +29,9 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
@@ -70,18 +72,10 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 	public SqluckyCodeAreaHolder sqlArea;
 	private SheetDataValue tableData;
 	private boolean isDDL = false;
-//	private Button saveBtn;
-//	private Button detailBtn;
-	JFXButton saveBtn;
-	JFXButton detailBtn;
-	JFXButton tableSQLBtn;
-	JFXButton refreshBtn;
-	JFXButton addBtn;
-	JFXButton minusBtn;
-	JFXButton copyBtn;
-	JFXButton dockSideBtn;
+
 	private int idx;
 	private Tab tab;
+	private ContextMenu contextMenu;
 
 	public void clean() {
 		if (sqlArea != null) {
@@ -91,23 +85,78 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 			this.tableData.clean();
 			tableData = null;
 		}
-		if (saveBtn != null) {
-			this.saveBtn = null;
-		}
-		if (detailBtn != null) {
-			this.detailBtn = null;
-		}
 		if (tab != null) {
 			this.tab.setContent(null);
 			this.tab = null;
 		}
+		if (contextMenu != null) {
+			contextMenu = null;
+		}
 	}
 
+	public MyBottomSheet() {
+		tableData = new SheetDataValue();
+	}
+
+//	public MyBottomSheet(SheetDataValue sheetDataValue, int idx, boolean disable) {
+//		tableData = sheetDataValue;
+//		tab = new Tab(tableData.getTabName());
+//		this.idx = idx;
+//		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
+//		tab.setContextMenu(tableViewMenu());
+//		tab.setUserData(this);
+//	}
+
+	public void init(SheetDataValue sheetDataValue, int idx, boolean disable) {
+		tableData = sheetDataValue;
+		tab = new Tab(tableData.getTabName());
+		this.idx = idx;
+		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
+		tab.setContextMenu(tableViewMenu());
+		tab.setUserData(this); // 再关闭tab时 获取 MyBottomSheet, 来clean
+	}
+
+	public void init(int idx, boolean disable) {
+		tab = new Tab(tableData.getTabName());
+		this.idx = idx;
+		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
+		tab.setContextMenu(tableViewMenu());
+		tab.setUserData(this); // 再关闭tab时 获取 MyBottomSheet, 来clean
+		String time = tableData.getExecTime() == 0 ? "0" : tableData.getExecTime() + "";
+		String rows = tableData.getRows() == 0 ? "0" : tableData.getRows() + "";
+
+		VBox vbox = new VBox();
+		List<Node> btnLs = sqlDataOptionBtns(disable);
+		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs, time, rows, tableData.getConnName());
+		// 添加按钮面板和 数据表格
+		vbox.getChildren().add(dtBtnPane);
+		vbox.getChildren().add(tableData.getTable());
+		VBox.setVgrow(tableData.getTable(), Priority.ALWAYS);
+
+		this.getTab().setContent(vbox);
+	}
+
+	public MyBottomSheet(String tabName) {
+		tab = new Tab(tabName);
+		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
+		tab.setContextMenu(tableViewMenu());
+		if (tableData == null) {
+			tableData = new SheetDataValue();
+		}
+//
+		tab.setUserData(this);
+	}
+//
+//	public MyBottomSheet(SheetDataValue data) {
+//		this(data.getTabName());
+//		this.tableData = data;
+//
+//	}
+
 	public void dataSave() {
-//		Button saveBtn = SqluckyBottomSheetUtility.dataPaneSaveBtn();
 		String tabName = SqluckyBottomSheetUtility.getTableName(tableData);
 		Connection conn = SqluckyBottomSheetUtility.getDbconn(tableData);
-		SqluckyConnector dpo = SqluckyBottomSheetUtility.getDbConnection(tableData);
+		SqluckyConnector dpo = tableData.getDbConnection();// SqluckyBottomSheetUtility.getDbConnection(tableData);
 		if (tabName != null && tabName.length() > 0) {
 			// 字段
 			ObservableList<SheetFieldPo> fpos = SqluckyBottomSheetUtility.getFields(tableData);
@@ -184,7 +233,7 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 			SqluckyBottomSheetUtility.rmAppendData(tableData);
 
 			// 保存按钮禁用
-			saveBtn.setDisable(btnDisable);
+			tableData.getSaveBtn().setDisable(btnDisable);
 			TableViewUtils.showInfo(ddlDmlpo, null);
 
 		}
@@ -276,7 +325,7 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 //		tbv.getItems().add(0, rowpo);
 
 		// 点亮保存按钮
-		saveBtn.setDisable(false);
+		tableData.getSaveBtn().setDisable(false);
 	}
 
 	public void deleteData() {
@@ -377,7 +426,7 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 
 			// 保存按钮亮起
 //			SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
-			saveBtn.setDisable(false);
+			tableData.getSaveBtn().setDisable(false);
 		} catch (Exception e2) {
 			MyAlert.errorAlert(e2.getMessage());
 		}
@@ -407,6 +456,7 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 
 	public EventHandler<ActionEvent> InsertSQLClipboard(boolean isSelected, boolean isFile, SqluckyBottomSheet mtd) {
 		return new EventHandler<ActionEvent>() {
+			@Override
 			public void handle(ActionEvent e) {
 				File tmpFile = null;
 				if (isFile) {
@@ -415,10 +465,11 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 				final File ff = tmpFile;
 				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
 					Thread t = new Thread() {
+						@Override
 						public void run() {
 							String tableName = SqluckyBottomSheetUtility.getTableName(tableData);
 							final ObservableList<ResultSetRowPo> fvals = SqluckyBottomSheetUtility
-									.getValsHelper(isSelected, mtd, tableData);
+									.getValsHelper(isSelected, mtd);
 
 							String sql = GenerateSQLString.insertSQLHelper(fvals, tableName);
 							if (StrUtils.isNotNullOrEmpty(sql)) {
@@ -448,6 +499,7 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 	public static EventHandler<ActionEvent> csvStrClipboard(boolean isSelected, boolean isFile, SqluckyBottomSheet mtd,
 			SheetDataValue tableData) {
 		return new EventHandler<ActionEvent>() {
+			@Override
 			public void handle(ActionEvent e) {
 
 				File tmpFile = null;
@@ -458,9 +510,10 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 
 				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
 					Thread t = new Thread() {
+						@Override
 						public void run() {
 							ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected,
-									mtd, tableData);
+									mtd);
 							String sql = GenerateSQLString.csvStrHelper(vals);
 							if (StrUtils.isNotNullOrEmpty(sql)) {
 								if (isFile) {
@@ -488,10 +541,12 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 	// 导出表的字段, 使用逗号分割
 	public static EventHandler<ActionEvent> commaSplitTableFields(SheetDataValue tableData) {
 		return new EventHandler<ActionEvent>() {
+			@Override
 			public void handle(ActionEvent e) {
 				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
 					ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields(tableData);
 					Thread t = new Thread() {
+						@Override
 						public void run() {
 							int size = fs.size();
 							StringBuilder fieldsName = new StringBuilder("");
@@ -520,10 +575,12 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 	// 导出表的字段包含类型, 使用逗号分割
 	public static EventHandler<ActionEvent> commaSplitTableFiledsIncludeType(SheetDataValue tableData) {
 		return new EventHandler<ActionEvent>() {
+			@Override
 			public void handle(ActionEvent e) {
 				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
 					ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields(tableData);
 					Thread t = new Thread() {
+						@Override
 						public void run() {
 							int size = fs.size();
 							StringBuilder fieldsName = new StringBuilder("");
@@ -550,7 +607,8 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 
 	public List<Node> sqlDataOptionBtns(boolean disable) {
 		List<Node> ls = new ArrayList<>();
-		saveBtn = new JFXButton();
+		JFXButton saveBtn = tableData.getSaveBtn(); // new JFXButton();
+
 		saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
 		saveBtn.setOnMouseClicked(e -> {
 			dataSave();
@@ -558,15 +616,17 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 		saveBtn.setTooltip(MyTooltipTool.instance("Save data"));
 		saveBtn.setDisable(true);
 
-		detailBtn = new JFXButton();
+//		detailBtn = new JFXButton();
+		JFXButton detailBtn = tableData.getDetailBtn(); // new JFXButton();
 		detailBtn.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
 		detailBtn.setOnMouseClicked(e -> {
-			TableDataDetail.show();
+			TableDataDetail.show(this);
 		});
 		detailBtn.setTooltip(MyTooltipTool.instance("current line detail "));
 		detailBtn.setDisable(disable);
 
-		tableSQLBtn = new JFXButton();
+//		tableSQLBtn = new JFXButton();
+		JFXButton tableSQLBtn = tableData.getTableSQLBtn(); // new JFXButton();
 		tableSQLBtn.setGraphic(IconGenerator.svgImageDefActive("table"));
 		tableSQLBtn.setOnMouseClicked(e -> {
 			findTable();
@@ -575,16 +635,18 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 		tableSQLBtn.setDisable(disable);
 
 		// refresh
-		refreshBtn = new JFXButton();
+//		refreshBtn = new JFXButton();
+		JFXButton refreshBtn = tableData.getRefreshBtn(); // new JFXButton();
 		refreshBtn.setGraphic(IconGenerator.svgImageDefActive("refresh"));
 		refreshBtn.setOnMouseClicked(e -> {
-			refreshData(ComponentGetter.currentDataTab().getTableData().isLock());
+			refreshData(tableData.isLock());
 		});
 		refreshBtn.setTooltip(MyTooltipTool.instance("refresh table "));
 		refreshBtn.setDisable(disable);
 
 		// 添加一行数据
-		addBtn = new JFXButton();
+//		addBtn = new JFXButton();
+		JFXButton addBtn = tableData.getAddBtn(); // new JFXButton();
 		addBtn.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
 
 		addBtn.setOnMouseClicked(e -> {
@@ -593,7 +655,8 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 		addBtn.setTooltip(MyTooltipTool.instance("add new data "));
 		addBtn.setDisable(disable);
 
-		minusBtn = new JFXButton();
+//		minusBtn = new JFXButton();
+		JFXButton minusBtn = tableData.getMinusBtn();
 		minusBtn.setGraphic(IconGenerator.svgImage("minus-square", "#EC7774"));
 
 		minusBtn.setOnMouseClicked(e -> {
@@ -603,7 +666,8 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 		minusBtn.setDisable(disable);
 
 //	    复制一行数据
-		copyBtn = new JFXButton();
+//		copyBtn = new JFXButton();
+		JFXButton copyBtn = tableData.getCopyBtn();
 		copyBtn.setGraphic(IconGenerator.svgImageDefActive("files-o"));
 		copyBtn.setOnMouseClicked(e -> {
 			copyData();
@@ -612,7 +676,8 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 		copyBtn.setDisable(disable);
 
 		// 独立窗口
-		dockSideBtn = new JFXButton();
+//		dockSideBtn = new JFXButton();
+		JFXButton dockSideBtn = tableData.getDockSideBtn();
 		dockSideBtn.setGraphic(IconGenerator.svgImageDefActive("material-filter-none"));
 		dockSideBtn.setOnMouseClicked(e -> {
 			dockSide();
@@ -808,32 +873,6 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 		return ls;
 	}
 
-	public MyBottomSheet(SheetDataValue data, int idx, boolean disable) {
-		tab = new Tab(data.getTabName());
-		this.tableData = data;
-		this.idx = idx;
-		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
-		tab.setContextMenu(tableViewMenu());
-		tab.setUserData(this);
-	}
-
-	public MyBottomSheet(String tabName) {
-		tab = new Tab(tabName);
-		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
-		tab.setContextMenu(tableViewMenu());
-		if (tableData == null) {
-			tableData = new SheetDataValue();
-		}
-
-		tab.setUserData(this);
-	}
-
-	public MyBottomSheet(SheetDataValue data) {
-		this(data.getTabName());
-		this.tableData = data;
-
-	}
-
 	// 右键菜单
 	public ContextMenu tableViewMenu() {
 		ContextMenu contextMenu = new ContextMenu();
@@ -873,6 +912,30 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 
 		contextMenu.getItems().addAll(closeAll, closeOther);
 		return contextMenu;
+	}
+
+	@Override
+	public void show(int idx, boolean disable) {
+
+		init(idx, disable);
+
+//		return rs;
+		show();
+//		Platform.runLater(() -> {
+//			var dataTab = ComponentGetter.dataTabPane;
+//			if (isDDL) {
+//				dataTab.getTabs().add(this.tab);
+//			} else {
+//				if (idx > -1) {
+//					dataTab.getTabs().add(idx, this.tab);
+//				} else {
+//					dataTab.getTabs().add(this.tab);
+//				}
+//			}
+//
+//			SdkComponent.showDetailPane();
+//			dataTab.getSelectionModel().select(this.tab);
+//		});
 	}
 
 	@Override
@@ -919,6 +982,8 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 						Platform.runLater(() -> {
 							if (this.tab.selectedProperty().get() == false) {
 								SdkComponent.clearDataTable(this.getTab());
+								this.tab.setOnSelectionChanged(null);
+								this.clean();
 							}
 						});
 					}, 3000);
@@ -953,24 +1018,6 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 		this.isDDL = isDDL;
 	}
 
-	@Override
-	public Button getSaveBtn() {
-		return saveBtn;
-	}
-
-	public void setSaveBtn(JFXButton saveBtn) {
-		this.saveBtn = saveBtn;
-	}
-
-	@Override
-	public Button getDetailBtn() {
-		return detailBtn;
-	}
-
-	public void setDetailBtn(JFXButton detailBtn) {
-		this.detailBtn = detailBtn;
-	}
-
 	public int getIdx() {
 		return idx;
 	}
@@ -986,5 +1033,111 @@ public class MyBottomSheet implements SqluckyBottomSheet {
 	public void setTab(Tab tab) {
 		this.tab = tab;
 	}
+
+	public ContextMenu getContextMenu() {
+		if (contextMenu == null) {
+//			DataTableColumnContextMenu(null, idx, null, idx)
+		}
+		return contextMenu;
+	}
+
+//	public ContextMenu DataTableColumnContextMenu(String colname, int type,
+//			FilteredTableColumn<ResultSetRowPo, String> col, int colIdx) {
+//
+//		// 过滤框
+//		PopupFilter<ResultSetRowPo, String> popupFilter;
+//		if (CommonUtility.isNum(type)) {
+//			// 过滤框
+//			popupFilter = new MyPopupNumberFilter<>(col);
+//			col.setOnFilterAction(e -> popupFilter.showPopup());
+//			popupFilter.getStyleClass().add("mypopup");
+//
+//		} else {
+//			// 过滤框
+//			popupFilter = new PopupStringFilter<>(col);
+//			col.setOnFilterAction(e -> popupFilter.showPopup());
+//			popupFilter.getStyleClass().add("mypopup");
+//		}
+//
+//		// 右点菜单
+//		ContextMenu cm = new ContextMenu();
+//		MenuItem miActive = new MenuItem("Copy Column Name");
+////		miActive.getStyleClass().add("myMenuItem");
+//		miActive.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
+//		miActive.setOnAction(e -> { // 粘贴板赋值
+//			CommonUtility.setClipboardVal(colname);
+//		});
+//
+//		Menu copyColData = new Menu("Copy Column Data");
+//		copyColData.setGraphic(IconGenerator.svgImageDefActive("columns"));
+//
+//		MenuItem selectCopyColData = new MenuItem("Copy Select Column Data");
+//		selectCopyColData.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
+//		selectCopyColData.setOnAction(columnDataClipboard(true, false, colname));
+//
+//		MenuItem AllCopyColData = new MenuItem("Copy All Column Data");
+//		AllCopyColData.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
+//		AllCopyColData.setOnAction(columnDataClipboard(false, false, colname));
+//		copyColData.getItems().addAll(selectCopyColData, AllCopyColData);
+//
+//		MenuItem filter = new MenuItem("Filter");
+//		filter.setGraphic(IconGenerator.svgImageDefActive("filter"));
+//		filter.setOnAction(e -> {
+//			popupFilter.showPopup();
+//		});
+//
+//		// drop column
+//		MenuItem dropCol = new MenuItem("Drop Column: " + colname);
+////		dropCol.getStyleClass().add("myMenuItem");
+//		dropCol.setGraphic(IconGenerator.svgImageDefActive("eraser"));
+//		dropCol.setOnAction(e -> {
+//			DataTableContextMenuAction.dropColumn(colname);
+//		});
+//
+//		MenuItem alterColumn = new MenuItem("Alter Column Date Type");
+//		alterColumn.setGraphic(IconGenerator.svgImageDefActive("exchange"));
+//		alterColumn.setOnAction(e -> {
+//			DataTableContextMenuAction.alterColumn(colname);
+//		});
+//
+//		MenuItem addColumn = new MenuItem("Add New Column");
+//		addColumn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
+//		addColumn.setOnAction(e -> {
+//			CommonAction.addNewColumn();
+//		});
+//
+//		Menu updateMenu = new Menu("Update Column Data");
+//		updateMenu.setGraphic(IconGenerator.svgImageDefActive("edit"));
+//		MenuItem updateTableColumn = new MenuItem("Update: Table is  Column Value");
+//		updateTableColumn.setGraphic(IconGenerator.svgImageDefActive("table"));
+//		updateTableColumn.setOnAction(e -> {
+//			DataTableContextMenuAction.updateTableColumn(colname);
+//		});
+//
+//		MenuItem updateCurrentPageColumn = new MenuItem("Update: Current All Data is  Column Value");
+//		updateCurrentPageColumn.setGraphic(IconGenerator.svgImageDefActive("file-text-o"));
+//		updateCurrentPageColumn.setOnAction(e -> {
+//			DataTableContextMenuAction.updateCurrentColumn(colname, colIdx);
+//		});
+//
+//		MenuItem updateSelectColumn = new MenuItem("Update: Selected Data is Column Value");
+//		updateSelectColumn.setGraphic(IconGenerator.svgImageDefActive("indent"));
+//		updateSelectColumn.setOnAction(e -> {
+//			DataTableContextMenuAction.updateSelectColumn(colname, colIdx);
+//		});
+//
+//		updateMenu.getItems().addAll(updateTableColumn, updateCurrentPageColumn, updateSelectColumn);
+//
+//		cm.getItems().addAll(filter, miActive, copyColData, dropCol, alterColumn, addColumn, updateMenu);
+//		cm.setOnShowing(e -> {
+//			ObservableList<ResultSetRowPo> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
+//			if (alls.size() == 0) {
+//				updateSelectColumn.setDisable(true);
+//			} else {
+//				updateSelectColumn.setDisable(false);
+//			}
+//		});
+//		return cm;
+//	}
 
 }

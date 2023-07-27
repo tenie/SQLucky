@@ -17,14 +17,12 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
@@ -32,6 +30,7 @@ import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -45,7 +44,6 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.MyAreaTab;
@@ -160,20 +158,20 @@ public class CommonAction {
 	}
 
 	// ctrl + S 按钮触发, 保存数据或sql文本
-	public static void ctrlAndSAction() {
-		boolean showStatus = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-		// 如果现在数据表格中的<保存按钮>是亮的(面板还要显示着), 就保存数据库数据
-		if (showStatus) {
-			Button btn = SqluckyBottomSheetUtility.dataPaneSaveBtn();
-			if (btn != null && !btn.isDisable()) {
-				ButtonAction.dataSave();
-				return;
-			}
-		}
-		// 保存sql文本到硬盘
-		saveSqlAction();
-
-	}
+//	public static void ctrlAndSAction() {
+//		boolean showStatus = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
+//		// 如果现在数据表格中的<保存按钮>是亮的(面板还要显示着), 就保存数据库数据
+//		if (showStatus) {
+//			Button btn = SqluckyBottomSheetUtility.dataPaneSaveBtn();
+//			if (btn != null && !btn.isDisable()) {
+//				ButtonAction.dataSave();
+//				return;
+//			}
+//		}
+//		// 保存sql文本到硬盘
+//		saveSqlAction();
+//
+//	}
 
 	// 保存sql文本到硬盘
 	public static void saveSqlAction() {
@@ -598,14 +596,14 @@ public class CommonAction {
 	}
 
 	// 查看表明细(一行数据) 快捷键
-	public static void shortcutShowDataDatil() {
-		Button btn = SqluckyBottomSheetUtility.dataPaneDetailBtn();
-		if (btn != null) {
-			MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
-			Event.fireEvent(btn, me);
-		}
-
-	}
+//	public static void shortcutShowDataDatil() {
+//		Button btn = SqluckyBottomSheetUtility.dataPaneDetailBtn();
+//		if (btn != null) {
+//			MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
+//			Event.fireEvent(btn, me);
+//		}
+//
+//	}
 
 	public static void hideLeftBottom() {
 		JFXButton btnLeft = CommonButtons.hideLeft; // AllButtons.btns.get("hideLeft");
@@ -857,18 +855,18 @@ public class CommonAction {
 
 	}
 
-	public static RsVal exportSQL(int ty, String colname) {
-		RsVal rv = SqluckyBottomSheetUtility.tableInfo();
+	public static RsVal exportSQL(MyBottomSheet myBottomSheet, int ty, String colname) {
+		RsVal rv = SqluckyBottomSheetUtility.tableInfo(myBottomSheet.getTableData());
 		return exportSQL(ty, colname, rv);
 	}
 
 	// 添加新字段
-	public static void addNewColumn() {
-		RsVal rv = SqluckyBottomSheetUtility.tableInfo();
+	public static void addNewColumn(MyBottomSheet myBottomSheet) {
+		RsVal rv = SqluckyBottomSheetUtility.tableInfo(myBottomSheet.getTableData());
 		Consumer<String> caller = x -> {
 			if (StrUtils.isNullOrEmpty(x.trim()))
 				return;
-			RsVal rv2 = exportSQL(ADD_COLUMN, x);
+			RsVal rv2 = exportSQL(myBottomSheet, ADD_COLUMN, x);
 			CommonAction.execExportSql(rv2.sql, rv2.conn, rv.dbconnPo);
 		};
 		ModalDialog.showExecWindow(rv.tableName + " add column : input words like 'MY_COL CHAR(10)'", "", caller);

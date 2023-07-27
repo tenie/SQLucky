@@ -31,7 +31,6 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
-import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
 
 /**
  * 快捷键绑定
@@ -70,7 +69,7 @@ public class KeysBindWindow {
 		searchText.textProperty().addListener((o, oldVal, newVal) -> {
 
 			if (StrUtils.isNotNullOrEmpty(newVal)) {
-				BottomSheetOptionBtnsPane.tableViewAllDataFilter(allkeysTable, items, newVal);
+				TableViewUtils.tableViewAllDataFilter(allkeysTable, items, newVal);
 			} else {
 				allkeysTable.setItems(items);
 			}

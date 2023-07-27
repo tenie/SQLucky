@@ -10,7 +10,6 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.control.Button;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -138,8 +137,13 @@ public class ResultSetCellPo {
 					if (CommonUtility.isDateTime(dbtype) && "".equals(newValue)) {
 						Platform.runLater(() -> cell.getCellData().setValue("<null>"));
 					}
-					if (SqluckyBottomSheetUtility.dataPaneSaveBtn() != null) {
-						SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
+
+//					if (SqluckyBottomSheetUtility.dataPaneSaveBtn() != null) {
+//						SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
+//					}
+					if (cell.currentRow.getResultSet().getSheetDataValue() != null
+							&& cell.currentRow.getResultSet().getSheetDataValue().getSaveBtn() != null) {
+						cell.currentRow.getResultSet().getSheetDataValue().getSaveBtn().setDisable(false);
 					}
 					if (cell.getHasModify() == false) {
 						cell.setHasModify(true);

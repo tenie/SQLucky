@@ -1,20 +1,15 @@
 package net.tenie.fx.Action;
 
-import java.util.List;
-
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.RsVal;
-import net.tenie.Sqlucky.sdk.po.TreeObjCache;
-import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TreeObjAction;
 
 /**
  * 查询slq后, 面板上的操作按钮要执行的逻辑
@@ -230,8 +225,8 @@ public class ButtonAction {
 	}
 
 	// 更新查询结果中所有数据对应列的值
-	public static void updateAllColumn(int colIdx, String value) {
-		RsVal rv = SqluckyBottomSheetUtility.tableInfo();
+	public static void updateAllColumn(MyBottomSheet myBottomSheet, int colIdx, String value) {
+		RsVal rv = SqluckyBottomSheetUtility.tableInfo(myBottomSheet.getTableData());
 		value = needTrimChar(value);
 		if ("null".equals(value)) {
 			value = "<null>";
@@ -245,66 +240,24 @@ public class ButtonAction {
 			StringProperty tmp = cellpo.getCellData();
 			tmp.set(value);
 		}
-		dataSave();
+		myBottomSheet.dataSave();
 	}
 
 	// 更新查询结果中选中的数据 对应列的值
-	public static void updateSelectedDataColumn(int colIdx, String value) {
+	public static void updateSelectedDataColumn(MyBottomSheet myBottomSheet, int colIdx, String value) {
 		value = needTrimChar(value);
 		if ("null".equals(value)) {
 			value = "<null>";
 		}
 
-		ObservableList<ResultSetRowPo> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems();
+		ObservableList<ResultSetRowPo> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems(myBottomSheet);
 		for (ResultSetRowPo ls : alls) {
 			StringProperty tmp = ls.getRowDatas().get(colIdx).getCellData();
 			tmp.setValue(value);
 		}
-		dataSave();
+		myBottomSheet.dataSave();
 	}
 
-	// 获取tree 节点中的 table 的sql
-	public static void findTable() {
-		RsVal rv = SqluckyBottomSheetUtility.tableInfo();
-		SqluckyConnector dbcp = rv.dbconnPo;
-		if (dbcp == null) {
-			return;
-		}
-		String tbn = rv.tableName;
-		String key = "";
-		int idx = tbn.indexOf(".");
-		if (idx > 0) {
-			key = dbcp.getConnName() + "_" + tbn.substring(0, idx);
-			tbn = tbn.substring(idx + 1); // 去除schema , 得到表名
-		} else {
-			key = dbcp.getConnName() + "_" + dbcp.getDefaultSchema();
-		}
-
-		// 从表格缓存中查找表
-		List<TablePo> tbs = TreeObjCache.tableCache.get(key.toUpperCase());
-
-		TablePo tbrs = null;
-		for (TablePo po : tbs) {
-			if (po.getTableName().toUpperCase().equals(tbn)) {
-				tbrs = po;
-				break;
-			}
-		}
-		// 从试图缓存中查找
-		if (tbrs == null) {
-			tbs = TreeObjCache.viewCache.get(key.toUpperCase());
-			for (TablePo po : tbs) {
-				if (po.getTableName().toUpperCase().equals(tbn)) {
-					tbrs = po;
-					break;
-				}
-			}
-		}
-
-		if (tbrs != null)
-			TreeObjAction.showTableSql(dbcp, tbrs);
-
-	}
 //
 //	/**
 //	 * 将数据表, 独立显示
