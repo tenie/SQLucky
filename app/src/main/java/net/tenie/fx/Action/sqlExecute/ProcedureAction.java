@@ -31,17 +31,28 @@ public class ProcedureAction {
 	private static Logger logger = LogManager.getLogger(ProcedureAction.class);
 	private static Thread staticThread = null;
 
+	/**
+	 * 存储过程执行,
+	 * 
+	 * @param sql
+	 * @param dpo
+	 * @param fields
+	 * @param tidx
+	 * @param isLock
+	 * @param thread
+	 * @param isRefresh
+	 * @throws Exception
+	 */
 	public static void procedureAction(String sql, SqluckyConnector dpo, List<ProcedureFieldPo> fields, int tidx,
 			boolean isLock, Thread thread, boolean isRefresh) throws Exception {
 		staticThread = thread;
 		String msg = "";
 		Connection conn = dpo.getConn();
 		try {
-			MyBottomSheet myBottomSheet = new MyBottomSheet();
-			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
-			// 获取表名
+			// 获取表名, 存储过程拿来做为表名
 			String tableName = sql;
-//			ParseSQL.tabName(sql);
+			MyBottomSheet myBottomSheet = new MyBottomSheet(tableName);
+			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
 
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 
@@ -82,7 +93,7 @@ public class ProcedureAction {
 //					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, true);
 //					SqlExecuteOption.rmWaitingPane( isRefresh );
 					TableViewUtils.rmWaitingPane(isRefresh);
-					myBottomSheet.show(tidx, true);
+					myBottomSheet.showSelectData(tidx, isRefresh);
 
 				} else {
 					msg = "ok. ";

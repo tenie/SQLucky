@@ -24,8 +24,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
@@ -198,11 +198,15 @@ public class DataModelOperate {
 			// 导出excel
 			JFXButton exportExcel = new JFXButton();
 			exportExcel.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
-			exportExcel.setOnAction(e -> {
-				SqluckyBottomSheetUtility.exportExcelAction(false, null, null);
-			});
+
 			btns.add(exportExcel);
-			DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn, queryStr, btns, queryFieldColWidth);
+			MyBottomSheet myBottomSheet = DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn, queryStr, btns,
+					queryFieldColWidth);
+			exportExcel.setOnAction(e -> {
+				if (myBottomSheet != null) {
+					myBottomSheet.exportExcelAction(false);
+				}
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

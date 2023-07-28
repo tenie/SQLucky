@@ -1,13 +1,11 @@
 package net.tenie.Sqlucky.sdk.db;
 
 import java.util.Date;
-import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 
 /**
@@ -106,13 +104,13 @@ public class ResultSetRowPo {
 	}
 
 	// cell 添加事件, 当单元格被修改做一些处理, 对cell的修改前需要调用这个方法手动添加监听,这样修改值才会被缓存便于更新
-	public void cellAddChangeListener(List<Button> btns) {
+	public void cellAddChangeListener() { // List<Button> btns
 		// 手动添加 不用给cell添加监听
 		if (isNewAdd)
 			return;
 		if (rowDatas != null && rowDatas.size() > 0) {
 			for (ResultSetCellPo cell : rowDatas) {
-				ResultSetCellPo.addStringPropertyChangeListener(cell, btns);
+				ResultSetCellPo.addStringPropertyChangeListener(cell); // , btns
 			}
 		}
 

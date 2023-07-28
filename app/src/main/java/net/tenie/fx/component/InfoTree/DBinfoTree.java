@@ -22,8 +22,8 @@ import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
@@ -301,9 +301,10 @@ public class DBinfoTree {
 					}
 				}
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, true);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
-						sqlStr, true, false);
-				mtd.show();
+//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
+//						sqlStr, true, false);
+//				mtd.show();
+				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, true, false);
 
 			} // 过程
 			else if (parentItem.getValue().getType() != null
@@ -325,9 +326,10 @@ public class DBinfoTree {
 					fpt.setProcedure(true);
 				}
 //				new DataViewTab().showProcedurePanel(item.getValue().getName(), sqlStr, true);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ProcedureSheet(sqluckyconn,
-						item.getValue().getName(), sqlStr, true);
-				mtd.show();
+//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ProcedureSheet(sqluckyconn,
+//						item.getValue().getName(), sqlStr, true);
+//				mtd.show();
+				MyBottomSheet.showProcedureSheet(sqluckyconn, item.getValue().getName(), sqlStr, true);
 
 			} // trigger
 			else if (parentItem.getValue().getType() != null
@@ -344,9 +346,10 @@ public class DBinfoTree {
 					}
 				}
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
-						sqlStr, false, false);
-				mtd.show();
+//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
+//						sqlStr, false, false);
+//				mtd.show();
+				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
 
 			} // index
 			else if (parentItem.getValue().getType() != null
@@ -363,9 +366,10 @@ public class DBinfoTree {
 					}
 				}
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
-						sqlStr, false, false);
-				mtd.show();
+//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
+//						sqlStr, false, false);
+//				mtd.show();
+				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
 
 			} // Sequence
 			else if (parentItem.getValue().getType() != null
@@ -382,10 +386,10 @@ public class DBinfoTree {
 					}
 				}
 //				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
-						sqlStr, false, false);
-				mtd.show();
-
+//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
+//						sqlStr, false, false);
+//				mtd.show();
+				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
 			}
 
 		}

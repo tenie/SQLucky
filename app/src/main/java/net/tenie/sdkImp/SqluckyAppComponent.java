@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import com.jfoenix.controls.JFXButton;
-
-import javafx.scene.Node;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
@@ -17,27 +14,18 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
+import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
-import net.tenie.Sqlucky.sdk.component.BottomSheetOptionBtnsPane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
-import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
-import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Po.TreeNodePo;
@@ -53,6 +41,11 @@ import net.tenie.lib.db.h2.AppDao;
 
 public class SqluckyAppComponent implements AppComponent {
 	private Consumer<String> dbInfoMenuOnShowingCaller;
+
+	@Override
+	public SqluckyCodeAreaHolder createCodeArea() {
+		return new HighLightingCodeArea(null, null);
+	}
 
 	/**
 	 * 根据自己提供的SqluckyConnector, 来执行sql
@@ -181,25 +174,25 @@ public class SqluckyAppComponent implements AppComponent {
 	}
 
 	// 创建sql查询结果数据tableview
-	@Override
-	public SqluckyBottomSheet sqlDataSheet(MyBottomSheet rs, SheetDataValue data, int idx, boolean disable) {
-//		MyBottomSheet rs = new MyBottomSheet(data, idx, disable);
-		rs.init(data, idx, disable);
-		String time = data.getExecTime() == 0 ? "0" : data.getExecTime() + "";
-		String rows = data.getRows() == 0 ? "0" : data.getRows() + "";
-
-		VBox vbox = new VBox();
-		List<Node> btnLs = rs.sqlDataOptionBtns(disable);
-		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs, time, rows, data.getConnName());
-		// 添加按钮面板和 数据表格
-		vbox.getChildren().add(dtBtnPane);
-		vbox.getChildren().add(data.getTable());
-		VBox.setVgrow(data.getTable(), Priority.ALWAYS);
-
-		rs.getTab().setContent(vbox);
-
-		return rs;
-	}
+//	@Override
+//	public SqluckyBottomSheet sqlDataSheet(MyBottomSheet rs, SheetDataValue data, int idx, boolean disable) {
+////		MyBottomSheet rs = new MyBottomSheet(data, idx, disable);
+//		rs.init(data, idx, disable);
+//		String time = data.getExecTime() == 0 ? "0" : data.getExecTime() + "";
+//		String rows = data.getRows() == 0 ? "0" : data.getRows() + "";
+//
+//		VBox vbox = new VBox();
+//		List<Node> btnLs = rs.sqlDataOptionBtns(disable);
+//		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs, time, rows, data.getConnName());
+//		// 添加按钮面板和 数据表格
+//		vbox.getChildren().add(dtBtnPane);
+//		vbox.getChildren().add(data.getTable());
+//		VBox.setVgrow(data.getTable(), Priority.ALWAYS);
+//
+//		rs.getTab().setContent(vbox);
+//
+//		return rs;
+//	}
 
 	// 执行ddl 或查询报错的 页面
 //	public SqluckyBottomSheet infoSheet(SheetDataValue data, int idx, boolean disable) {
@@ -223,23 +216,23 @@ public class SqluckyAppComponent implements AppComponent {
 	/**
 	 * 
 	 */
-	@Override
-	public SqluckyBottomSheet tableViewSheet(MyBottomSheet myBottomSheet, List<Node> btnLs) {
-//		var rs = new MyBottomSheet(data);
-		var data = myBottomSheet.getTableData();
-		VBox vbox = new VBox();
-		JFXButton LockBtn = SdkComponent.createLockBtn(myBottomSheet);
-		btnLs.add(0, LockBtn);
-		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs, "");
-		// 添加按钮面板和 数据表格
-		vbox.getChildren().add(dtBtnPane);
-		vbox.getChildren().add(data.getTable());
-		VBox.setVgrow(data.getTable(), Priority.ALWAYS);
-
-		myBottomSheet.getTab().setContent(vbox);
-
-		return myBottomSheet;
-	}
+//	@Override
+//	public SqluckyBottomSheet tableViewSheet(MyBottomSheet myBottomSheet, List<Node> btnLs) {
+////		var rs = new MyBottomSheet(data);
+//		var data = myBottomSheet.getTableData();
+//		VBox vbox = new VBox();
+//		JFXButton LockBtn = SdkComponent.createLockBtn(myBottomSheet);
+//		btnLs.add(0, LockBtn);
+//		AnchorPane dtBtnPane = new BottomSheetOptionBtnsPane(btnLs, "");
+//		// 添加按钮面板和 数据表格
+//		vbox.getChildren().add(dtBtnPane);
+//		vbox.getChildren().add(data.getTable());
+//		VBox.setVgrow(data.getTable(), Priority.ALWAYS);
+//
+//		myBottomSheet.getTab().setContent(vbox);
+//
+//		return myBottomSheet;
+//	}
 
 	/**
 	 * 表, 视图 等 数据库对象的ddl语句
@@ -251,72 +244,72 @@ public class SqluckyAppComponent implements AppComponent {
 	 * @param isSelect    是否显示 查询按钮, 如table view 可以select数据的, true显示select按钮
 	 * @return
 	 */
-	@Override
-	public SqluckyBottomSheet ddlSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc,
-			boolean isSelect) {
-		var mtb = new MyBottomSheet(name);
-		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
-		mtb.setSqlArea(sqlArea);
-		VBox box = DDLBox(sqluckyConn, mtb, ddl, isRunFunc, false, name, isSelect);
-		mtb.getTab().setContent(box);
-		return mtb;
-	}
+//	@Override
+//	public SqluckyBottomSheet ddlSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc,
+//			boolean isSelect) {
+//		var mtb = new MyBottomSheet(name);
+//		mtb.setDDL(true);
+//		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
+//		mtb.setSqlArea(sqlArea);
+//		VBox box = DDLBox(sqluckyConn, mtb, ddl, isRunFunc, false, name, isSelect);
+//		mtb.getTab().setContent(box);
+//		return mtb;
+//	}
 
-	@Override
-	public SqluckyBottomSheet ProcedureSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc) {
-		var mtb = new MyBottomSheet(name);
-		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
-		mtb.setSqlArea(sqlArea);
-		VBox box = DDLBox(sqluckyConn, mtb, ddl, isRunFunc, true, name, false);
-		mtb.getTab().setContent(box);
-		return mtb;
-	}
+//	@Override
+//	public SqluckyBottomSheet ProcedureSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc) {
+//		var mtb = new MyBottomSheet(name);
+//		mtb.setDDL(true);
+//		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
+//		mtb.setSqlArea(sqlArea);
+//		VBox box = DDLBox(sqluckyConn, mtb, ddl, isRunFunc, true, name, false);
+//		mtb.getTab().setContent(box);
+//		return mtb;
+//	}
 
-	@Override
-	public SqluckyBottomSheet EmptySheet(SqluckyConnector sqluckyConn, String name, String message) {
-		var mtb = new MyBottomSheet(name);
-		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
-		mtb.setSqlArea(sqlArea);
-		VBox box = DDLBox(sqluckyConn, mtb, message, false, false, name, false);
-		mtb.getTab().setContent(box);
-		return mtb;
-	}
-
-	// 数据tab中的组件
-	public static VBox DDLBox(SqluckyConnector sqluckyConn, MyBottomSheet mtb, String ddl, boolean isRunFunc,
-			boolean isProc, String name, boolean isSelect) {
-		VBox vb = new VBox();
-
-		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);
-		// 表格上面的按钮
-		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(sqluckyConn, mtb, ddl, isRunFunc, isProc, name,
-				isSelect, vb, sp, null);
-		AnchorPane fp = new BottomSheetOptionBtnsPane(btnLs, sqluckyConn.getConnName());
-		// isProc, name);
-		vb.getChildren().add(fp);
-		vb.getChildren().add(sp);
-		VBox.setVgrow(sp, Priority.ALWAYS);
-		return vb;
-	}
+//	@Override
+//	public SqluckyBottomSheet EmptySheet(SqluckyConnector sqluckyConn, String name, String message) {
+//		var mtb = new MyBottomSheet(name);
+//		mtb.setDDL(true);
+//		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
+//		mtb.setSqlArea(sqlArea);
+//		VBox box = DDLBox(sqluckyConn, mtb, message, false, false, name, false);
+//		mtb.getTab().setContent(box);
+//		return mtb;
+//	}
 
 	// 数据tab中的组件
-	public static VBox tableInfoBox(SqluckyConnector sqluckyConn, MyBottomSheet mtb, TablePo table) {
-		VBox vb = new VBox();
-		String ddl = table.getDdl();
-		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);
-		// 表格上面的按钮
-		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(sqluckyConn, mtb, ddl, false, false,
-				table.getTableName(), true, vb, sp, table);
-		AnchorPane fp = new BottomSheetOptionBtnsPane(btnLs, sqluckyConn.getConnName());
-		// isProc, name);
-		vb.getChildren().add(fp);
-		vb.getChildren().add(sp);
-		VBox.setVgrow(sp, Priority.ALWAYS);
-		return vb;
-	}
+//	public static VBox DDLBox(SqluckyConnector sqluckyConn, MyBottomSheet mtb, String ddl, boolean isRunFunc,
+//			boolean isProc, String name, boolean isSelect) {
+//		VBox vb = new VBox();
+//
+//		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);
+//		// 表格上面的按钮
+//		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(sqluckyConn, mtb, ddl, isRunFunc, isProc, name,
+//				isSelect, vb, sp, null);
+//		AnchorPane fp = new BottomSheetOptionBtnsPane(btnLs, sqluckyConn.getConnName());
+//		// isProc, name);
+//		vb.getChildren().add(fp);
+//		vb.getChildren().add(sp);
+//		VBox.setVgrow(sp, Priority.ALWAYS);
+//		return vb;
+//	}
+
+//	// 数据tab中的组件
+//	public static VBox tableInfoBox(SqluckyConnector sqluckyConn, MyBottomSheet mtb, TablePo table) {
+//		VBox vb = new VBox();
+//		String ddl = table.getDdl();
+//		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);
+//		// 表格上面的按钮
+//		List<Node> btnLs = BottomSheetOptionBtnsPane.DDLOptionBtns(sqluckyConn, mtb, ddl, false, false,
+//				table.getTableName(), true, vb, sp, table);
+//		AnchorPane fp = new BottomSheetOptionBtnsPane(btnLs, sqluckyConn.getConnName());
+//		// isProc, name);
+//		vb.getChildren().add(fp);
+//		vb.getChildren().add(sp);
+//		VBox.setVgrow(sp, Priority.ALWAYS);
+//		return vb;
+//	}
 
 	// 注册db节点的右键菜单
 	@Override
@@ -447,19 +440,19 @@ public class SqluckyAppComponent implements AppComponent {
 	public void mergeScriptTreeData(List<DocumentPo> docs) {
 		ConnectionDao.scriptTreeMerge(docs);
 	}
-
-	// 双击treeview 表格节点, 显示表信息
-	@Override
-	public SqluckyBottomSheet tableInfoSheet(SqluckyConnector sqluckyConn, TablePo table) {
-		String name = table.getTableName();
-		var mtb = new MyBottomSheet(name);
-		mtb.setDDL(true);
-		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
-		mtb.setSqlArea(sqlArea);
-		VBox box = tableInfoBox(sqluckyConn, mtb, table);
-		mtb.getTab().setContent(box);
-		return mtb;
-	}
+//
+//	// 双击treeview 表格节点, 显示表信息
+//	@Override
+//	public SqluckyBottomSheet tableInfoSheet(SqluckyConnector sqluckyConn, TablePo table) {
+//		String name = table.getTableName();
+//		var mtb = new MyBottomSheet(name);
+//		mtb.setDDL(true);
+//		HighLightingCodeArea sqlArea = new HighLightingCodeArea(null, null);
+//		mtb.setSqlArea(sqlArea);
+//		VBox box = tableInfoBox(sqluckyConn, mtb, table);
+//		mtb.getTab().setContent(box);
+//		return mtb;
+//	}
 
 	@Override
 	public void refreshDataTableView(String connName, String sql, String idx, boolean isLock) {

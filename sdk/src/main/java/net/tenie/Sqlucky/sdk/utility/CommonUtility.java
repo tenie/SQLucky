@@ -47,7 +47,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
@@ -1095,7 +1094,8 @@ public class CommonUtility {
 
 	// 获取tree 节点中的 table 的sql
 	public static void findTable(SheetDataValue dataObj) {
-		RsVal rv = SqluckyBottomSheetUtility.tableInfo(dataObj);
+		RsVal rv = new RsVal(dataObj);
+//		SqluckyBottomSheetUtility.tableInfo(dataObj);
 		SqluckyConnector dbcp = rv.dbconnPo;
 		if (dbcp == null) {
 			return;

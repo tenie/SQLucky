@@ -19,13 +19,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
@@ -57,7 +55,7 @@ public class SdkComponent {
 	 * @param mytb
 	 * @return
 	 */
-	public static JFXButton createLockBtn(SqluckyBottomSheet mytb) {
+	public static JFXButton createLockBtn(MyBottomSheet mytb) {
 		// 锁
 		JFXButton lockbtn = new JFXButton();
 		if (mytb.getTableData().isLock()) {
@@ -228,8 +226,10 @@ public class SdkComponent {
 			Map<String, Double> fieldWidthMap, List<String> editableColName) {
 
 		try {
-			MyBottomSheet myBottomSheet = new MyBottomSheet();
-			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
+			MyBottomSheet myBottomSheet = new MyBottomSheet(tableName);
+			SheetDataValue sheetDaV = myBottomSheet.getTableData();// new SheetDataValue();
+			FilteredTableView<ResultSetRowPo> table = sheetDaV.getTable();
+//			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
 			// 查询的 的语句可以被修改
 //			table.editableProperty().bind(new SimpleBooleanProperty(false));
 			table.setEditable(true);
@@ -244,9 +244,8 @@ public class SdkComponent {
 
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 
-			SheetDataValue sheetDaV = myBottomSheet.getTableData();// new SheetDataValue();
 			sheetDaV.setSqlStr(sql);
-			sheetDaV.setTable(table);
+//			sheetDaV.setTable(table);
 			sheetDaV.setTabName(tableName);
 			sheetDaV.setLock(false);
 			sheetDaV.setConn(sqluckyConn.getConn());
@@ -277,13 +276,13 @@ public class SdkComponent {
 			table.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 				//
 				if (newValue != null) {
-					List<Button> btns = null;
-					if (sheetDaV.getBtnMap() != null) {
-						var btnNodes = sheetDaV.getBtnMap().values();
-						btns = new ArrayList<>();
-						btns.addAll(btnNodes);
-					}
-					newValue.cellAddChangeListener(btns);
+//					List<Button> btns = null;
+//					if (sheetDaV.getBtnMap() != null) {
+//						var btnNodes = sheetDaV.getBtnMap().values();
+//						btns = new ArrayList<>();
+//						btns.addAll(btnNodes);
+//					}
+					newValue.cellAddChangeListener();// btns
 				}
 			});
 
