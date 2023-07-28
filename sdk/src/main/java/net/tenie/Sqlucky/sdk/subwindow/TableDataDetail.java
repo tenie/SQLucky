@@ -17,7 +17,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -35,7 +35,7 @@ public class TableDataDetail {
 	/**
 	 * 双击当前行, 子窗口显示行的数据
 	 */
-	public static void show(SqluckyBottomSheet mtd) {
+	public static void show(MyBottomSheet mtd) {
 //		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tb = mtd.getTableData().getTable();
 		if (tb == null)

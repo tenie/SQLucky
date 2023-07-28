@@ -17,7 +17,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
@@ -67,21 +66,13 @@ public class DataModelTabTree {
 		DataModelTabTreeContextMenu contextMenu = new DataModelTabTreeContextMenu(this);
 		DataModelTreeView.setContextMenu(contextMenu.getContextMenu());
 		// 选中监听事件
-//		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
 		DataModelTreeView.getSelectionModel().select(treeRoot);
-
-//		DataModelTreeView = treeView;
 
 		// 显示设置, 双击事件也在这里设置
 		DataModelTreeView.setCellFactory(new DataModelNodeCellFactory());
 
 		optionPanel = new DataModelOperate();
 		btnsBox = optionPanel.getOptionVbox();
-
-//		vbox.getStyleClass().add("myTreeView-vbox");
-//		vbox.getChildren().addAll( filterHbox, treeView);
-//		vbox.getStyleClass().add("myModalDialog");
-//		VBox.setVgrow(treeView, Priority.ALWAYS);
 
 		// 恢复上次的数据
 		DataModelUtility.recoverModelInfoNode(treeRoot);
@@ -158,9 +149,6 @@ public class DataModelTabTree {
 			// 导出excel
 			JFXButton exportExcel = new JFXButton();
 			exportExcel.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
-			exportExcel.setOnAction(e -> {
-				SqluckyBottomSheetUtility.exportExcelAction(false, null, null);
-			});
 
 			// 字段信息保存按钮
 			JFXButton saveBtn = new JFXButton();
@@ -189,7 +177,10 @@ public class DataModelTabTree {
 			MyBottomSheet myBottomSheet = DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn, tableName,
 					tableHeadOptionNode, DataModelOperate.tableInfoColWidth);
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();
-			sheetDaV.addBtn("save", saveBtn);
+//			saveBtn = sheetDaV.getSaveBtn();
+//			tableHeadOptionNode.add(saveBtn); 
+//			saveBtn
+//			sheetDaV.addBtn("save", saveBtn);
 			// 保存按钮处理
 			ResultSetPo resultSetPo = sheetDaV.getDataRs();
 			saveBtn.setOnAction(e -> {
@@ -200,6 +191,9 @@ public class DataModelTabTree {
 					SqluckyAppDB.closeConn(connObj);
 				}
 
+			});
+			exportExcel.setOnAction(e -> {
+				myBottomSheet.exportExcelAction(false);
 			});
 
 			// tableView 处理

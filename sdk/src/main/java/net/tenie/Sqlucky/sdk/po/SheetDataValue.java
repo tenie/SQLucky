@@ -1,15 +1,12 @@
 package net.tenie.Sqlucky.sdk.po;
 
 import java.sql.Connection;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import com.jfoenix.controls.JFXButton;
 
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -22,7 +19,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
  */
 public class SheetDataValue {
 	private String tabName;
-	private String sqlStr;
+	private String sqlStr; // 执行是的sql
 	private String connName;
 	private boolean isLock = false;
 	private SqluckyConnector dbConnection;
@@ -41,16 +38,16 @@ public class SheetDataValue {
 	private FilteredTableView<ResultSetRowPo> dbValTable;
 
 	// 操作数据的按钮, 按钮名称和控件对象方式保存
-	private Map<String, Button> btnMap;
+//	private Map<String, Button> btnMap;
 
-	JFXButton saveBtn = new JFXButton();
-	JFXButton detailBtn = new JFXButton();;
-	JFXButton tableSQLBtn = new JFXButton();
-	JFXButton refreshBtn = new JFXButton();
-	JFXButton addBtn = new JFXButton();
-	JFXButton minusBtn = new JFXButton();
-	JFXButton copyBtn = new JFXButton();
-	JFXButton dockSideBtn = new JFXButton();
+	private JFXButton saveBtn = new JFXButton();
+//	JFXButton detailBtn = new JFXButton();;
+//	JFXButton tableSQLBtn = new JFXButton();
+//	JFXButton refreshBtn = new JFXButton();
+//	JFXButton addBtn = new JFXButton();
+//	JFXButton minusBtn = new JFXButton();
+//	JFXButton copyBtn = new JFXButton();
+//	JFXButton dockSideBtn = new JFXButton();
 
 	public void clean() {
 		if (dbValTable != null) {
@@ -62,10 +59,6 @@ public class SheetDataValue {
 			colss.clear();
 		}
 		colss = null;
-
-		if (btnMap != null)
-			btnMap.clear();
-		btnMap = null;
 
 		if (dataRs != null) {
 			dataRs.clean();
@@ -79,41 +72,37 @@ public class SheetDataValue {
 		}
 
 		saveBtn = null;
-		detailBtn = null;
-		tableSQLBtn = null;
-		refreshBtn = null;
-		addBtn = null;
-		minusBtn = null;
-		copyBtn = null;
-		dockSideBtn = null;
+//		detailBtn = null;
+//		tableSQLBtn = null;
+//		refreshBtn = null;
+//		addBtn = null;
+//		minusBtn = null;
+//		copyBtn = null;
+//		dockSideBtn = null;
 	}
 
-	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName, String sqlStr, String connName,
+//	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName, String sqlStr, String connName,
+//			ObservableList<SheetFieldPo> colss, ResultSetPo dataRs) {
+//		this.dbValTable = table;
+//		this.tabName = tabName;
+//		this.sqlStr = sqlStr;
+//		this.connName = connName;
+//		this.colss = colss;
+//		this.dataRs = dataRs;
+//		this.dataRs.setSheetDataValue(this);
+//	}
+
+//	public SheetDataValue() {
+//
+//	}
+
+	public void setSheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName,
 			ObservableList<SheetFieldPo> colss, ResultSetPo dataRs) {
 		this.dbValTable = table;
 		this.tabName = tabName;
-		this.sqlStr = sqlStr;
-		this.connName = connName;
 		this.colss = colss;
 		this.dataRs = dataRs;
 		this.dataRs.setSheetDataValue(this);
-	}
-
-	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName, ObservableList<SheetFieldPo> colss,
-			ResultSetPo dataRs) {
-		this.dbValTable = table;
-		this.tabName = tabName;
-		this.colss = colss;
-		this.dataRs = dataRs;
-		this.dataRs.setSheetDataValue(this);
-	}
-
-	public SheetDataValue() {
-
-	}
-
-	public Map<String, Button> getBtnMap() {
-		return btnMap;
 	}
 
 	// 将select sql 执行的结果信息复制给当前对象
@@ -123,10 +112,6 @@ public class SheetDataValue {
 
 		this.setExecTime(execInfo.getExecTime());
 		this.setRows(execInfo.getRowSize());
-	}
-
-	public void setBtnMap(Map<String, Button> btnMap) {
-		this.btnMap = btnMap;
 	}
 
 	public String getTabName() {
@@ -201,19 +186,6 @@ public class SheetDataValue {
 		this.dbConnection = dbConnection;
 	}
 
-	/**
-	 * 添加按钮
-	 * 
-	 * @param btnName
-	 * @param btn
-	 */
-	public void addBtn(String btnName, Button btn) {
-		if (btnMap == null) {
-			btnMap = new HashMap<String, Button>();
-		}
-		btnMap.put(btnName, btn);
-	}
-
 	public Connection getConn() {
 		return conn;
 	}
@@ -228,6 +200,7 @@ public class SheetDataValue {
 
 	public void setDataRs(ResultSetPo dataRs) {
 		this.dataRs = dataRs;
+		this.dataRs.setSheetDataValue(this);
 	}
 
 	public FilteredTableView<ResultSetRowPo> getDbValTable() {
@@ -252,62 +225,6 @@ public class SheetDataValue {
 
 	public void setSaveBtn(JFXButton saveBtn) {
 		this.saveBtn = saveBtn;
-	}
-
-	public JFXButton getDetailBtn() {
-		return detailBtn;
-	}
-
-	public void setDetailBtn(JFXButton detailBtn) {
-		this.detailBtn = detailBtn;
-	}
-
-	public JFXButton getTableSQLBtn() {
-		return tableSQLBtn;
-	}
-
-	public void setTableSQLBtn(JFXButton tableSQLBtn) {
-		this.tableSQLBtn = tableSQLBtn;
-	}
-
-	public JFXButton getRefreshBtn() {
-		return refreshBtn;
-	}
-
-	public void setRefreshBtn(JFXButton refreshBtn) {
-		this.refreshBtn = refreshBtn;
-	}
-
-	public JFXButton getAddBtn() {
-		return addBtn;
-	}
-
-	public void setAddBtn(JFXButton addBtn) {
-		this.addBtn = addBtn;
-	}
-
-	public JFXButton getMinusBtn() {
-		return minusBtn;
-	}
-
-	public void setMinusBtn(JFXButton minusBtn) {
-		this.minusBtn = minusBtn;
-	}
-
-	public JFXButton getCopyBtn() {
-		return copyBtn;
-	}
-
-	public void setCopyBtn(JFXButton copyBtn) {
-		this.copyBtn = copyBtn;
-	}
-
-	public JFXButton getDockSideBtn() {
-		return dockSideBtn;
-	}
-
-	public void setDockSideBtn(JFXButton dockSideBtn) {
-		this.dockSideBtn = dockSideBtn;
 	}
 
 }
