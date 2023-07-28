@@ -4,7 +4,6 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -226,7 +225,7 @@ public class ButtonAction {
 
 	// 更新查询结果中所有数据对应列的值
 	public static void updateAllColumn(MyBottomSheet myBottomSheet, int colIdx, String value) {
-		RsVal rv = SqluckyBottomSheetUtility.tableInfo(myBottomSheet.getTableData());
+		RsVal rv = myBottomSheet.tableInfo();
 		value = needTrimChar(value);
 		if ("null".equals(value)) {
 			value = "<null>";
@@ -235,7 +234,7 @@ public class ButtonAction {
 		ObservableList<ResultSetRowPo> alls = dataTableView.getItems();
 		for (ResultSetRowPo ls : alls) {
 			// 打开cell的值监听, 这样改变值会被缓存起来, 便于更新
-			ls.cellAddChangeListener(null);
+			ls.cellAddChangeListener();// null
 			ResultSetCellPo cellpo = ls.getRowDatas().get(colIdx);
 			StringProperty tmp = cellpo.getCellData();
 			tmp.set(value);
@@ -250,7 +249,8 @@ public class ButtonAction {
 			value = "<null>";
 		}
 
-		ObservableList<ResultSetRowPo> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems(myBottomSheet);
+		ObservableList<ResultSetRowPo> alls = myBottomSheet.getTableData().getTable().getSelectionModel()
+				.getSelectedItems(); //// SqluckyBottomSheetUtility.dataTableViewSelectedItems(myBottomSheet);
 		for (ResultSetRowPo ls : alls) {
 			StringProperty tmp = ls.getRowDatas().get(colIdx).getCellData();
 			tmp.setValue(value);

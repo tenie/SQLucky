@@ -18,7 +18,7 @@ public class ResultSetPo {
 	// 所有行的数据
 	private ObservableList<ResultSetRowPo> datas;
 
-	// 新增数据
+	// 新增数据, 界面上添加的数据
 	private ObservableList<ResultSetRowPo> newDatas;
 	// 待更新的数据
 	private ObservableList<ResultSetRowPo> updateDatas;

@@ -13,8 +13,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyPopupNumberFilter;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -124,7 +122,8 @@ public class DataTableContextMenu {
 
 		cm.getItems().addAll(filter, miActive, copyColData, dropCol, alterColumn, addColumn, updateMenu);
 		cm.setOnShowing(e -> {
-			ObservableList<ResultSetRowPo> alls = SqluckyBottomSheetUtility.dataTableViewSelectedItems(myBottomSheet);
+			ObservableList<ResultSetRowPo> alls = myBottomSheet.getTableData().getTable().getSelectionModel()
+					.getSelectedItems(); // SqluckyBottomSheetUtility.dataTableViewSelectedItems(myBottomSheet);
 			if (alls.size() == 0) {
 				updateSelectColumn.setDisable(true);
 			} else {
@@ -134,13 +133,12 @@ public class DataTableContextMenu {
 		return cm;
 	}
 
-	public static EventHandler<ActionEvent> columnDataClipboard(SqluckyBottomSheet myBottomSheet, boolean isSelected,
+	public static EventHandler<ActionEvent> columnDataClipboard(MyBottomSheet myBottomSheet, boolean isSelected,
 			boolean isFile, String colName) {
 		return new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected,
-						myBottomSheet);
+				ObservableList<ResultSetRowPo> vals = myBottomSheet.getValsHelper(isSelected);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {
 					@Override

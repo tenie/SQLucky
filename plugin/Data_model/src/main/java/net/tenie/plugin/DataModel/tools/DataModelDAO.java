@@ -8,7 +8,6 @@ import java.util.List;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.PoDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
@@ -192,8 +191,7 @@ public class DataModelDAO {
 	public static void saveTableInfo(MyBottomSheet myBottomSheet, JFXButton saveBtn, ResultSetPo resultSetPo,
 			Long TABLE_ID, Connection conn) {
 		// 待保存数据
-		ObservableList<ResultSetRowPo> modifyData = SqluckyBottomSheetUtility
-				.getModifyData(myBottomSheet.getTableData());
+		ObservableList<ResultSetRowPo> modifyData = myBottomSheet.getModifyData();
 		// 执行sql 后的信息 (主要是错误后显示到界面上)
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		boolean btnDisable = true;
@@ -240,7 +238,7 @@ public class DataModelDAO {
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("failed"), fds.get(2));
 				}
 			}
-			SqluckyBottomSheetUtility.rmUpdateData(myBottomSheet.getTableData());
+			myBottomSheet.rmUpdateData();
 		}
 
 		// 插入操作
@@ -274,7 +272,7 @@ public class DataModelDAO {
 //			}
 //		}
 		// 删除缓存数据
-		SqluckyBottomSheetUtility.rmAppendData(myBottomSheet.getTableData());
+		myBottomSheet.rmAppendData();
 
 		// 保存按钮禁用
 		saveBtn.setDisable(btnDisable);

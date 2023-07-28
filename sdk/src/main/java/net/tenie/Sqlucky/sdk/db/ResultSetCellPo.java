@@ -1,7 +1,5 @@
 package net.tenie.Sqlucky.sdk.db;
 
-import java.util.List;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,7 +7,6 @@ import javafx.application.Platform;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.scene.control.Button;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -119,7 +116,7 @@ public class ResultSetCellPo {
 
 	// 数据单元格添加监听
 	// 字段修改事件
-	public static void addStringPropertyChangeListener(ResultSetCellPo cell, List<Button> btns) {
+	public static void addStringPropertyChangeListener(ResultSetCellPo cell) { // , List<Button> btns
 		if (cell.hasListener == false) {
 
 			ChangeListener<String> cl = new ChangeListener<String>() {
@@ -138,22 +135,21 @@ public class ResultSetCellPo {
 						Platform.runLater(() -> cell.getCellData().setValue("<null>"));
 					}
 
-//					if (SqluckyBottomSheetUtility.dataPaneSaveBtn() != null) {
-//						SqluckyBottomSheetUtility.dataPaneSaveBtn().setDisable(false);
-//					}
-					if (cell.currentRow.getResultSet().getSheetDataValue() != null
-							&& cell.currentRow.getResultSet().getSheetDataValue().getSaveBtn() != null) {
-						cell.currentRow.getResultSet().getSheetDataValue().getSaveBtn().setDisable(false);
-					}
 					if (cell.getHasModify() == false) {
 						cell.setHasModify(true);
 						cell.getCurrentRow().setHasModify(true);
 						// 保存按钮启用
-						if (btns != null && btns.size() > 0) {
-							btns.forEach(btn -> {
-								btn.setDisable(false);
-							});
+						if (cell.currentRow.getResultSet().getSheetDataValue() != null
+								&& cell.currentRow.getResultSet().getSheetDataValue().getSaveBtn() != null) {
+							cell.currentRow.getResultSet().getSheetDataValue().getSaveBtn().setDisable(false);
 						}
+
+					
+//						if (btns != null && btns.size() > 0) {
+//							btns.forEach(btn -> {
+//								btn.setDisable(false);
+//							});
+//						}
 					}
 
 					// cell 发生改变, 对旧值进行缓存(现在已经没用用了, 但不能洁身)

@@ -23,7 +23,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
@@ -394,16 +393,17 @@ public class TableViewUtils {
 	public static void showInfo(DbTableDatePo ddlDmlpo, Thread thread) {
 		// 有数据才展示
 		if (ddlDmlpo.getResultSet().getDatas().size() > 0) {
-			MyBottomSheet myBottomSheet = new MyBottomSheet();
-			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
+			String tableName = ConfigVal.EXEC_INFO_TITLE;
+			MyBottomSheet myBottomSheet = new MyBottomSheet(tableName);
+			SheetDataValue sheetDaV = myBottomSheet.getTableData();
+			FilteredTableView<ResultSetRowPo> table = sheetDaV.getTable();
 			// 表内容可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 			DataViewContainer.setTabRowWith(table, ddlDmlpo.getResultSet().getDatas().size());
 			// table 添加列和数据
 			ObservableList<SheetFieldPo> colss = ddlDmlpo.getFields();
 			ObservableList<ResultSetRowPo> alldata = ddlDmlpo.getResultSet().getDatas();
-			SheetDataValue dvt = new SheetDataValue(table, ConfigVal.EXEC_INFO_TITLE, colss, ddlDmlpo.getResultSet());
-
+			sheetDaV.setSheetDataValue(table, tableName, colss, ddlDmlpo.getResultSet());
 			var cols = SdkComponent.createTableColForInfo(colss);
 			table.getColumns().addAll(cols);
 			table.setItems(alldata);
@@ -416,10 +416,7 @@ public class TableViewUtils {
 
 			boolean showtab = true;
 			if (showtab) {
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(myBottomSheet, dvt, -1, true);
-
-//				mtd.show();
-				mtd.showAndDelayRemoveTab();
+				myBottomSheet.showInfoDelayRemoveTab(-1, true);
 			}
 
 		}

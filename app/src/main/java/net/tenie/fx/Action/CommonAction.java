@@ -25,7 +25,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -856,13 +855,13 @@ public class CommonAction {
 	}
 
 	public static RsVal exportSQL(MyBottomSheet myBottomSheet, int ty, String colname) {
-		RsVal rv = SqluckyBottomSheetUtility.tableInfo(myBottomSheet.getTableData());
+		RsVal rv = myBottomSheet.tableInfo();
 		return exportSQL(ty, colname, rv);
 	}
 
 	// 添加新字段
 	public static void addNewColumn(MyBottomSheet myBottomSheet) {
-		RsVal rv = SqluckyBottomSheetUtility.tableInfo(myBottomSheet.getTableData());
+		RsVal rv = myBottomSheet.tableInfo();
 		Consumer<String> caller = x -> {
 			if (StrUtils.isNullOrEmpty(x.trim()))
 				return;

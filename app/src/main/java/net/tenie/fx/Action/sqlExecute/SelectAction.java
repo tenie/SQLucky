@@ -9,12 +9,9 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
-import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
@@ -40,23 +37,25 @@ public class SelectAction {
 	public static void selectAction(String sql, SqluckyConnector sqluckyConn, int tidx, boolean isLock, Thread thread,
 			boolean isRefresh) throws Exception {
 		try {
-			Connection conn = sqluckyConn.getConn();
-			MyBottomSheet myBottomSheet = new MyBottomSheet();
-
-			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
-
 			// 获取表名
 			String tableName = ParseSQL.tabName(sql);
+			Connection conn = sqluckyConn.getConn();
+			MyBottomSheet myBottomSheet = new MyBottomSheet(tableName);
+
+			SheetDataValue sheetDaV = myBottomSheet.getTableData();
+
+//			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
+			FilteredTableView<ResultSetRowPo> table = sheetDaV.getTable();
+
 			if (StrUtils.isNullOrEmpty(tableName)) {
 				tableName = "Table Name Not Finded";
 			}
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-			SheetDataValue sheetDaV = myBottomSheet.getTableData();
 //			SheetDataValue sheetDaV = new SheetDataValue();
 			sheetDaV.setDbConnection(sqluckyConn);
 			String connectName = DBConns.getCurrentConnectName();
 			sheetDaV.setSqlStr(sql);
-			sheetDaV.setTable(table);
+//			sheetDaV.setTable(table);
 			sheetDaV.setTabName(tableName);
 			sheetDaV.setConnName(connectName);
 			sheetDaV.setLock(isLock);
@@ -87,7 +86,7 @@ public class SelectAction {
 			table.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 				//
 				if (newValue != null) {
-					newValue.cellAddChangeListener(null);
+					newValue.cellAddChangeListener(); // null
 				}
 			});
 
@@ -95,11 +94,12 @@ public class SelectAction {
 			CacheDataTableViewShapeChange.colReorder(sheetDaV.getTabName(), colss, table);
 			// 渲染界面
 			if (thread != null && !thread.isInterrupted()) {
-				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(myBottomSheet, sheetDaV, tidx,
-						false);
+//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(myBottomSheet, sheetDaV, tidx,
+//						false);
 				TableViewUtils.rmWaitingPane(isRefresh);
+				myBottomSheet.showSelectData(tidx, false);
 //				myBottomSheet.show(tidx, false);
-				mtd.show();
+//				mtd.show();
 				// 水平滚顶条位置设置和字段类型
 				CacheDataTableViewShapeChange.setDataTableViewShapeCache(sheetDaV.getTabName(), sheetDaV.getTable(),
 						colss);

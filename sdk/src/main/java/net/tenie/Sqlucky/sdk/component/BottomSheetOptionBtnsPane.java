@@ -16,7 +16,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
@@ -506,6 +505,7 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 			});
 
 			ls.add(selectBtn);
+
 		}
 		if (table != null) {
 			JFXButton showTableDDLBtn = new JFXButton("Table DDL");
@@ -550,46 +550,46 @@ public class BottomSheetOptionBtnsPane extends AnchorPane {
 				showIndexBtn.setDisable(false);
 			});
 			ls.add(showFKBtn);
+			// TODO 导入
+			MenuButton importFileBtn = new MenuButton();
+			importFileBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+			importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
+//			importFileBtn.setDisable(disable);
+
+			MenuItem excelImportBtn = new MenuItem("Import Excel");
+			excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("EXCEL"));
+//			excelImportBtn.setDisable(disable);
+			excelImportBtn.setOnAction(e -> {
+				ImportExcelWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+
+			});
+
+			MenuItem csvImportBtn = new MenuItem("Import CSV");
+			csvImportBtn.setGraphic(IconGenerator.svgImageDefActive("CSV"));
+//			csvImportBtn.setDisable(disable);
+			csvImportBtn.setOnAction(e -> {
+				ImportCsvWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+
+			});
+
+			MenuItem sqlImportBtn = new MenuItem("Import Sql File");
+			sqlImportBtn.setGraphic(IconGenerator.svgImageDefActive("SQL"));
+//			sqlImportBtn.setDisable(disable);
+			sqlImportBtn.setOnAction(e -> {
+				ImportSQLWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
+
+			});
+
+			importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn, sqlImportBtn);
+			ls.add(importFileBtn);
 
 		}
 
-		// TODO 导入
-		MenuButton importFileBtn = new MenuButton();
-		importFileBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
-		importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
-//		importFileBtn.setDisable(disable);
-
-		MenuItem excelImportBtn = new MenuItem("Import Excel");
-		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("EXCEL"));
-//		excelImportBtn.setDisable(disable);
-		excelImportBtn.setOnAction(e -> {
-			ImportExcelWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
-
-		});
-
-		MenuItem csvImportBtn = new MenuItem("Import CSV");
-		csvImportBtn.setGraphic(IconGenerator.svgImageDefActive("CSV"));
-//		csvImportBtn.setDisable(disable);
-		csvImportBtn.setOnAction(e -> {
-			ImportCsvWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
-
-		});
-
-		MenuItem sqlImportBtn = new MenuItem("Import Sql File");
-		sqlImportBtn.setGraphic(IconGenerator.svgImageDefActive("SQL"));
-//		sqlImportBtn.setDisable(disable);
-		sqlImportBtn.setOnAction(e -> {
-			ImportSQLWindow.showWindow(mytb.getTableData().getTabName(), mytb.getTableData().getConnName());
-
-		});
-
-		importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn, sqlImportBtn);
-		ls.add(importFileBtn);
 		return ls;
 	}
 
 	// 锁住<锁按钮>
-	public static void lockLockBtn(SqluckyBottomSheet mytb, JFXButton btn) {
+	public static void lockLockBtn(MyBottomSheet mytb, JFXButton btn) {
 		boolean islock = mytb.getTableData().isLock();
 		if (!islock) {
 			mytb.getTableData().setLock(true);

@@ -8,8 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
@@ -232,11 +231,11 @@ public class CommonEventHandler {
 //	}
 
 	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName,
-			SqluckyBottomSheet mtd) {
+			MyBottomSheet mtd) {
 		return new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected, mtd);
+				ObservableList<ResultSetRowPo> vals = mtd.getValsHelper(isSelected);
 				final File ff = CommonUtility.getFileHelper(isFile);
 				Thread t = new Thread() {
 					@Override
