@@ -407,8 +407,9 @@ public class MyBottomSheet {
 		DockSideWindow dsw = new DockSideWindow();
 		VBox vb = (VBox) tab.getContent();
 		tableData.getLockBtn().setDisable(true);
-		dsw.showWindow(vb, tableName);
-//		dsw.showWindow(table, tableName);
+		tableData.getHideBottom().setDisable(true);
+
+		dsw.showWindow(this, vb, tableName);
 
 		TabPane dataTab = ComponentGetter.dataTabPane;
 		if (dataTab.getTabs().contains(tab)) {
@@ -1073,19 +1074,14 @@ public class MyBottomSheet {
 	// 查询数据表格的操作按钮pane
 	public AnchorPane operatePane(List<Node> btnLs) {
 		AnchorPane pane = new AnchorPane();
+		// 按钮摆放的容器
+		HBox btnHbox = new HBox();
 
 		CommonUtility.addCssClass(pane, "data-table-btn-anchor-pane");
 		pane.prefHeight(25);
 
 		// 隐藏按钮
-		JFXButton hideBottom = new JFXButton();
-		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
-		hideBottom.setOnMouseClicked(e -> {
-			SdkComponent.hideBottom();
-		});
-
-		// 按钮摆放的容器
-		HBox btnHbox = new HBox();
+		JFXButton hideBottom = tableData.getHideBottom();
 		// 锁
 		JFXButton lockbtn = tableData.getLockBtn();
 		btnHbox.getChildren().add(lockbtn);
