@@ -16,6 +16,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
@@ -32,6 +33,7 @@ import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 public class DockSideWindow {
 
 	private Stage stage;
+	private MyBottomSheet myBottomSheet;
 
 	public void showWindow(TableView<ResultSetRowPo> tableView, String tableName) {
 
@@ -45,12 +47,9 @@ public class DockSideWindow {
 
 	}
 
-	public void showWindow(VBox DataPaneVbox, String tableName) {
-
+	public void showWindow(MyBottomSheet myBottomSheet, VBox DataPaneVbox, String tableName) {
+		this.myBottomSheet = myBottomSheet;
 		VBox subvb = new VBox();
-
-//		var topfp = topPane(tableView);
-//		subvb.getChildren().add(topfp);
 		subvb.getChildren().add(DataPaneVbox);
 		VBox.setVgrow(DataPaneVbox, Priority.ALWAYS);
 		layout(subvb, tableName);
@@ -153,7 +152,7 @@ public class DockSideWindow {
 		CommonUtility.loadCss(scene);
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setScene(scene);
-
+		stage.setOnCloseRequest(e -> myBottomSheet.clean());
 		return stage;
 	}
 
