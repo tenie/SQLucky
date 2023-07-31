@@ -401,11 +401,13 @@ FlowPane TextField {
 
 /* tree 过滤清空按钮 #373A3C*/
 .myCleanBtn {
+	-fx-border-color: transparent;
 	-fx-background-color: transparent;
 	-fx-background-radius: 10px;
 	-fx-padding: 1;
 }
 
 .myCleanBtn:hover {
+	-fx-border-color: transparent;
 	-fx-background-color: transparent;
 }

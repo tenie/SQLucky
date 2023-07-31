@@ -7,6 +7,7 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.collections.ObservableList;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -43,6 +44,7 @@ public class SheetDataValue {
 
 	private JFXButton saveBtn = new JFXButton();
 	private JFXButton lockBtn = new JFXButton();
+	private JFXButton hideBottom = new JFXButton();
 //	JFXButton detailBtn = new JFXButton();;
 //	JFXButton tableSQLBtn = new JFXButton();
 //	JFXButton refreshBtn = new JFXButton();
@@ -75,6 +77,7 @@ public class SheetDataValue {
 
 		saveBtn = null;
 		lockBtn = null;
+		hideBottom = null;
 //		detailBtn = null;
 //		tableSQLBtn = null;
 //		refreshBtn = null;
@@ -231,10 +234,19 @@ public class SheetDataValue {
 	}
 
 	public JFXButton getLockBtn() {
-
-//		System.out.println(lockBtn.getGraphic());
 		initLockBtn();
 		return lockBtn;
+	}
+
+	public JFXButton getHideBottom() {
+		if (hideBottom.getGraphic() == null) {
+			hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
+			hideBottom.setOnMouseClicked(e -> {
+				SdkComponent.hideBottom();
+			});
+		}
+
+		return hideBottom;
 	}
 
 	/**
