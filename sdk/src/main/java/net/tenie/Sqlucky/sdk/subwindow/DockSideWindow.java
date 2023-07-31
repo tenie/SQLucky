@@ -45,6 +45,18 @@ public class DockSideWindow {
 
 	}
 
+	public void showWindow(VBox DataPaneVbox, String tableName) {
+
+		VBox subvb = new VBox();
+
+//		var topfp = topPane(tableView);
+//		subvb.getChildren().add(topfp);
+		subvb.getChildren().add(DataPaneVbox);
+		VBox.setVgrow(DataPaneVbox, Priority.ALWAYS);
+		layout(subvb, tableName);
+
+	}
+
 	// 界面顶部的操作按钮
 	private FlowPane topPane(TableView<ResultSetRowPo> tableView) {
 		FlowPane topfp = new FlowPane();

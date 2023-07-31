@@ -10,6 +10,7 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 
 /**
  * 一个查询, 对应的一个数据表格, 对应的数据缓存
@@ -41,6 +42,7 @@ public class SheetDataValue {
 //	private Map<String, Button> btnMap;
 
 	private JFXButton saveBtn = new JFXButton();
+	private JFXButton lockBtn = new JFXButton();
 //	JFXButton detailBtn = new JFXButton();;
 //	JFXButton tableSQLBtn = new JFXButton();
 //	JFXButton refreshBtn = new JFXButton();
@@ -72,6 +74,7 @@ public class SheetDataValue {
 		}
 
 		saveBtn = null;
+		lockBtn = null;
 //		detailBtn = null;
 //		tableSQLBtn = null;
 //		refreshBtn = null;
@@ -227,4 +230,38 @@ public class SheetDataValue {
 		this.saveBtn = saveBtn;
 	}
 
+	public JFXButton getLockBtn() {
+
+//		System.out.println(lockBtn.getGraphic());
+		initLockBtn();
+		return lockBtn;
+	}
+
+	/**
+	 * 锁btn
+	 * 
+	 * @param mytb
+	 * @return
+	 */
+	private void initLockBtn() {
+		if (lockBtn.getGraphic() == null) {
+			// 锁
+			if (this.isLock()) {
+				lockBtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
+			} else {
+				lockBtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
+			}
+			lockBtn.setOnMouseClicked(e -> {
+				if (this.isLock()) {
+					lockBtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
+					this.setLock(false);
+				} else {
+					lockBtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
+					this.setLock(true);
+				}
+
+			});
+		}
+
+	}
 }

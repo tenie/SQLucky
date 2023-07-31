@@ -53,14 +53,10 @@ public class TreeObjAction {
 		}
 
 		if (type.equals(CommonConst.TYPE_TABLE)) {
-//			SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableInfoSheet(sqluckyConn, table);
-//			mtd.show();
 			MyBottomSheet.showTableInfoSheet(sqluckyConn, table);
 		} else if (type.equals(CommonConst.TYPE_VIEW)) {
-//			SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyConn, tableName, createTableSql,
-//					false, true);
-//			mtd.show();
-			MyBottomSheet.showDdlSheet(sqluckyConn, tableName, createTableSql, false, true);
+			MyBottomSheet.showViewDDLSheet(sqluckyConn, table);
+
 		}
 
 	}
