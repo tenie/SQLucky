@@ -177,7 +177,7 @@ public class DataModelTabTree {
 			MyBottomSheet myBottomSheet = DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn, tableName,
 					tableHeadOptionNode, DataModelOperate.tableInfoColWidth);
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();
-//			saveBtn = sheetDaV.getSaveBtn();
+			sheetDaV.setSaveBtn(saveBtn);
 //			tableHeadOptionNode.add(saveBtn); 
 //			saveBtn
 //			sheetDaV.addBtn("save", saveBtn);
