@@ -8,13 +8,11 @@ import java.util.List;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheetUtility;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.PoDao;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
-import net.tenie.Sqlucky.sdk.db.UpdateDao;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
@@ -26,6 +24,7 @@ import net.tenie.plugin.DataModel.po.DataModelTablePo;
 public class DataModelDAO {
 	/**
 	 * 查询所有的模型
+	 * 
 	 * @return
 	 */
 	public static List<DataModelInfoPo> selectDMInfo() {
@@ -36,14 +35,16 @@ public class DataModelDAO {
 			rs = PoDao.select(conn, po);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
-		
+
 		return rs;
 	}
+
 	/**
 	 * 查询指定模型
+	 * 
 	 * @return
 	 */
 	public static DataModelInfoPo selectDMInfo(Long mid) {
@@ -51,73 +52,75 @@ public class DataModelDAO {
 		po.setId(mid);
 		var conn = SqluckyAppDB.getConn();
 		List<DataModelInfoPo> rs = new ArrayList<>();
-		
+
 		DataModelInfoPo val = null;
 		try {
 			rs = PoDao.select(conn, po);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
-		if(rs != null && rs.size() >0 ) {
+		if (rs != null && rs.size() > 0) {
 			val = rs.get(0);
 		}
 
 		return val;
 	}
+
 	/**
 	 * 根据名称找模型, 找不到返回null
+	 * 
 	 * @param name
 	 * @return
 	 */
-	public static DataModelInfoPo selectDMInfoByName(String  name) {
+	public static DataModelInfoPo selectDMInfoByName(String name) {
 		DataModelInfoPo po = new DataModelInfoPo();
 		po.setName(name);
 		var conn = SqluckyAppDB.getConn();
 		List<DataModelInfoPo> rs = new ArrayList<>();
-		
+
 		DataModelInfoPo val = null;
 		try {
 			rs = PoDao.select(conn, po);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
-		if(rs != null && rs.size() >0 ) {
+		if (rs != null && rs.size() > 0) {
 			val = rs.get(0);
 		}
 
 		return val;
 	}
-	
 
-	
 	/**
 	 * 通过模型id , 修改模型名称
+	 * 
 	 * @param mid
 	 * @param nn
 	 */
 	public static void updateModelName(Long mid, String nn) {
 		DataModelInfoPo po = new DataModelInfoPo();
 		po.setId(mid);
-		
+
 		DataModelInfoPo valpo = new DataModelInfoPo();
 		valpo.setName(nn);
 		var conn = SqluckyAppDB.getConn();
-		 
+
 		try {
 			PoDao.update(conn, po, valpo);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
 	}
-	
+
 	/**
 	 * 根据模型ID， 找出所有表
+	 * 
 	 * @return
 	 */
 	public static List<DataModelTablePo> selectDMTable(Long dmId) {
@@ -129,40 +132,39 @@ public class DataModelDAO {
 			rs = PoDao.select(conn, po);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
-		
 
 		return rs;
 	}
-	
+
 	/**
 	 * 根据表ID， 找表数据
+	 * 
 	 * @return
 	 */
 	public static DataModelTablePo selectTableById(Long tableId) {
 		DataModelTablePo po = new DataModelTablePo();
 		po.setItemId(tableId);
-		
+
 		DataModelTablePo val = null;
 		var conn = SqluckyAppDB.getConn();
 		List<DataModelTablePo> rs = new ArrayList<>();
 		try {
 			rs = PoDao.select(conn, po);
-			if(rs != null && rs.size() > 0 ) {
+			if (rs != null && rs.size() > 0) {
 				val = rs.get(0);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
-		
 
 		return val;
 	}
-	
+
 	/**
 	 * 根据表id , 找出表所有的字段
 	 */
@@ -171,25 +173,25 @@ public class DataModelDAO {
 		DataModelTableFieldsPo po = new DataModelTableFieldsPo();
 		po.setTableId(tableId);
 		var conn = SqluckyAppDB.getConn();
-		
+
 		try {
 			rs = PoDao.select(conn, po);
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
-		
+
 		return rs;
 	}
-	
+
 	/*
 	 * 对数据库表的信息修改(name, comment) 进行保存
 	 */
-	public static void saveTableInfo(JFXButton saveBtn, ResultSetPo resultSetPo, 
-			Long TABLE_ID,    Connection conn ) {
+	public static void saveTableInfo(MyBottomSheet myBottomSheet, JFXButton saveBtn, ResultSetPo resultSetPo,
+			Long TABLE_ID, Connection conn) {
 		// 待保存数据
-		 ObservableList<ResultSetRowPo> modifyData = SqluckyBottomSheetUtility.getModifyData();
+		ObservableList<ResultSetRowPo> modifyData = myBottomSheet.getModifyData();
 		// 执行sql 后的信息 (主要是错误后显示到界面上)
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		boolean btnDisable = true;
@@ -202,21 +204,23 @@ public class DataModelDAO {
 					String commentVal = val.getValueByFieldName("COMMENT");
 					// 数据库表的字段
 					String FIELD = val.getValueByFieldName("FIELD");
-					
+
 					DataModelTableFieldsPo condpo = new DataModelTableFieldsPo();
 					condpo.setTableId(TABLE_ID);
 					condpo.setDefKey(FIELD);
-					
+
 					DataModelTableFieldsPo valpo = new DataModelTableFieldsPo();
 					valpo.setDefName(nameVal);
 					valpo.setComment(commentVal);
 					int i = PoDao.update(conn, condpo, valpo);
 					String msg = "update : " + i + "Line. " + FIELD;
-					
-					if(StrUtils.isNotNullOrEmpty(msg)) {
+
+					if (StrUtils.isNotNullOrEmpty(msg)) {
 						var fds = ddlDmlpo.getFields();
 						var row = ddlDmlpo.addRow();
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fds.get(0));
+						ddlDmlpo.addData(row,
+								CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+								fds.get(0));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
 						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fds.get(2));
 					}
@@ -224,16 +228,17 @@ public class DataModelDAO {
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					btnDisable = false;
-					String 	msg = "failed : " + e1.getMessage();
-					msg += "\n"+msg;
+					String msg = "failed : " + e1.getMessage();
+					msg += "\n" + msg;
 					var fds = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL( new Date()) ), fds.get(0));
+					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+							fds.get(0));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
 					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("failed"), fds.get(2));
 				}
 			}
-			SqluckyBottomSheetUtility.rmUpdateData();
+			myBottomSheet.rmUpdateData();
 		}
 
 		// 插入操作
@@ -267,14 +272,11 @@ public class DataModelDAO {
 //			}
 //		}
 		// 删除缓存数据
-		SqluckyBottomSheetUtility.rmAppendData();
+		myBottomSheet.rmAppendData();
 
 		// 保存按钮禁用
 		saveBtn.setDisable(btnDisable);
 		DataModelUtility.showExecuteSQLInfo(ddlDmlpo, null);
 	}
-	
-	
-	
-	
+
 }

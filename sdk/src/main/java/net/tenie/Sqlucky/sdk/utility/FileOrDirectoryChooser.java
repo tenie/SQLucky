@@ -20,7 +20,6 @@ public final class FileOrDirectoryChooser {
 
 	// 获取打开文件的目录
 	public static File getOpenfileDir() {
-//		return  FileUtils.getUserDirectory();
 		if (StrUtils.isNullOrEmpty(ConfigVal.openfileDir)) {
 			return FileUtils.getUserDirectory();
 		} else {
@@ -99,16 +98,6 @@ public final class FileOrDirectoryChooser {
 		File dir = getOpenfileDir();
 
 		directoryChooser.setInitialDirectory(dir);
-//		directoryChooser.getExtensionFilters().clear();
-//		fileChooser.getExtensionFilters().addAll(
-//				new FileChooser.ExtensionFilter("sql", "*.sql"),
-//				new FileChooser.ExtensionFilter("txt", "*.txt"), 
-//				new FileChooser.ExtensionFilter("csv", "*.csv"),
-//				new FileChooser.ExtensionFilter("All", "*.*")); 
-//		if(filename !=null ) {
-//			fileChooser.setInitialFileName(filename);
-//			 
-//		}
 		return directoryChooser;
 	}
 
@@ -119,7 +108,6 @@ public final class FileOrDirectoryChooser {
 
 	public static FileChooser getFileChooser(String title, String filename, File dir) {
 		fileChooser.setTitle(title);
-//		File dir =  new File(openPath);
 
 		fileChooser.setInitialDirectory(dir);
 		fileChooser.getExtensionFilters().clear();
@@ -136,11 +124,16 @@ public final class FileOrDirectoryChooser {
 		fileChooser.setTitle("");
 		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		fileChooser.getExtensionFilters().clear();
-		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("xls", "*.xls"),
-				new FileChooser.ExtensionFilter("xlsx", "*.xlsx"));
-//		if (filename != null) {
-//			fileChooser.setInitialFileName(filename);
-//		}
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("xlsx, xls", "*.xlsx", "*.xls"),
+				new FileChooser.ExtensionFilter("xls", "*.xls"), new FileChooser.ExtensionFilter("xlsx", "*.xlsx"));
+		return fileChooser;
+	}
+
+	public static FileChooser getCsvFileChooser() {
+		fileChooser.setTitle("");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("csv", "*.csv"));
 		return fileChooser;
 	}
 
@@ -224,9 +217,31 @@ public final class FileOrDirectoryChooser {
 		return file;
 	}
 
+	public static File selectCsvFile(Stage stage) {
+		getCsvFileChooser();
+		File file = fileChooser.showOpenDialog(stage);
+		return file;
+	}
+
 	public static void getExcelFilePathAction(TextField tfFilePath, Stage stage) {
 		// 获取文件
 		File file = FileOrDirectoryChooser.selectExcelFile(stage);
+		if (file != null) {
+			tfFilePath.setText(file.getAbsolutePath());
+		}
+	}
+
+	public static void getCsvFilePathAction(TextField tfFilePath, Stage stage) {
+		// 获取文件
+		File file = FileOrDirectoryChooser.selectCsvFile(stage);
+		if (file != null) {
+			tfFilePath.setText(file.getAbsolutePath());
+		}
+	}
+
+	public static void getSqlFilePathAction(TextField tfFilePath, Stage stage) {
+		// 获取文件
+		File file = FileOrDirectoryChooser.showOpenSqlFile("", stage);
 		if (file != null) {
 			tfFilePath.setText(file.getAbsolutePath());
 		}

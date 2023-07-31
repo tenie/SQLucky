@@ -30,8 +30,7 @@ import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
-import net.tenie.fx.component.dataView.BottomSheetOptionBtnsPane;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 
 /**
  * 快捷键绑定
@@ -70,7 +69,7 @@ public class KeysBindWindow {
 		searchText.textProperty().addListener((o, oldVal, newVal) -> {
 
 			if (StrUtils.isNotNullOrEmpty(newVal)) {
-				BottomSheetOptionBtnsPane.tableViewAllDataFilter(allkeysTable, items, newVal);
+				TableViewUtils.tableViewAllDataFilter(allkeysTable, items, newVal);
 			} else {
 				allkeysTable.setItems(items);
 			}
@@ -130,7 +129,7 @@ public class KeysBindWindow {
 
 		try {
 			// 查询
-			SheetTableData sheetDaV = TableViewUtil.sqlToSheet(sql, conn, "KEYS_BINDING", fieldWidthMap, hiddenCol);
+			SheetTableData sheetDaV = TableViewUtils.sqlToSheet(sql, conn, "KEYS_BINDING", fieldWidthMap, hiddenCol);
 			// 获取表
 			allkeysTable = sheetDaV.getInfoTable();
 			this.setSheetDaV(sheetDaV);

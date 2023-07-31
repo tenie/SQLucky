@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,8 +32,8 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 public class SelectDao {
 
 	private static Logger logger = LogManager.getLogger(SelectDao.class);
-	
-	public static ObservableList<SheetFieldPo> resultSetMetaData(ResultSet rs ) throws SQLException {
+
+	public static ObservableList<SheetFieldPo> resultSetMetaData(ResultSet rs) throws SQLException {
 		// 获取元数据
 		ResultSetMetaData mdata = rs.getMetaData();
 		// 获取元数据列数
@@ -50,62 +49,61 @@ public class SelectDao {
 			po.setColumnLabel(mdata.getColumnLabel(i));
 			po.setColumnType(mdata.getColumnType(i));
 			po.setColumnTypeName(mdata.getColumnTypeName(i));
-			String  schemaName = mdata.getSchemaName(i);
-			System.out.println(schemaName);
+			String schemaName = mdata.getSchemaName(i);
+//			System.out.println(schemaName);
 			fields.add(po);
 
 		}
 		return fields;
 	}
-	
+
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static SelectExecInfo selectSql2( String sql, int limit,SqluckyConnector sqluckyConn
-			) throws SQLException {
+	public static SelectExecInfo selectSql2(String sql, int limit, SqluckyConnector sqluckyConn) throws SQLException {
 		Connection conn = sqluckyConn.getConn();
 		SelectExecInfo execInfo = new SelectExecInfo();
-		
+
 		// DB对象
 		PreparedStatement pstate = null;
 		ResultSet rs = null;
 		try {
 			pstate = conn.prepareStatement(sql);
 			// 计时
-			long startTime=System.currentTimeMillis();   //获取开始时间   
-		
+			long startTime = System.currentTimeMillis(); // 获取开始时间
+
 			// 处理结果集
 			rs = pstate.executeQuery();
-			long endTime=System.currentTimeMillis(); //获取结束时间
-			long usetime = endTime-startTime;
+			long endTime = System.currentTimeMillis(); // 获取结束时间
+			long usetime = endTime - startTime;
 			double vt = usetime / 1000.0;
-			logger.info("查询时间： "+usetime+"ms");
-			execInfo.setExecTime(vt); 
+			logger.info("查询时间： " + usetime + "ms");
+			execInfo.setExecTime(vt);
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = resultSetMetaData(rs);
 			ResultSetPo setPo = new ResultSetPo(fields);
-			 
+
 			// 数据
 			if (limit > 0) {
 				execRs(limit, rs, sqluckyConn, setPo);
 			} else {
-				execRs(rs,  sqluckyConn, setPo);
+				execRs(rs, sqluckyConn, setPo);
 			}
 			int rowSize = setPo.getDatas().size();
-			
+
 			execInfo.setDataRs(setPo);
 			execInfo.setColss(fields);
-			execInfo.setRowSize(rowSize); 
+			execInfo.setRowSize(rowSize);
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			logger.debug("finally : selectSql()");
 			if (rs != null)
 				rs.close();
-		} 
-		
+		}
+
 		return execInfo;
 	}
-	
-	public static ResultSetPo selectSqlToRS( String sql , SqluckyConnector sqlConn) throws SQLException {
+
+	public static ResultSetPo selectSqlToRS(String sql, SqluckyConnector sqlConn) throws SQLException {
 		Connection conn = sqlConn.getConn();
 		ResultSetPo setPo = null;
 		// DB对象
@@ -117,144 +115,139 @@ public class SelectDao {
 			rs = pstate.executeQuery();
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = resultSetMetaData(rs);
-		    setPo = new ResultSetPo(fields);
-			
+			setPo = new ResultSetPo(fields);
+
 			// 数据
-		    execDBRs(rs,  sqlConn, setPo);
-			
+			execDBRs(rs, sqlConn, setPo);
+
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			logger.debug("finally: selectSql() return ResultSetPo");
 			if (rs != null)
 				rs.close();
-		} 
+		}
 		return setPo;
 	}
-	
-	
-	
-	
-	public static List<String> callProcedure(Connection conn , String proName, List<ProcedureFieldPo> pfp ) throws SQLException {
+
+	public static List<String> callProcedure(Connection conn, String proName, List<ProcedureFieldPo> pfp)
+			throws SQLException {
 		// DB对象
 		CallableStatement call = null;
 		ResultSet rs = null;
 		List<String> val = new ArrayList<>();
 		try {
-			if(pfp.size() > 0) {
-				String callsql = "{call " + proName+ "(";
-				for(int i = 0 ; i < pfp.size(); i++) {
+			if (pfp.size() > 0) {
+				String callsql = "{call " + proName + "(";
+				for (int i = 0; i < pfp.size(); i++) {
 					callsql += "? ,";
 				}
-				
+
 				callsql = callsql.substring(0, callsql.lastIndexOf(","));
-				callsql += " ) }"; 
+				callsql += " ) }";
 				call = conn.prepareCall(callsql);
-				
-				for(int i = 0 ; i < pfp.size(); i++) {
+
+				for (int i = 0; i < pfp.size(); i++) {
 					ProcedureFieldPo po = pfp.get(i);
 					if (po.isIn()) {
-						call.setObject( i+1, po.getValue());
+						call.setObject(i + 1, po.getValue());
 					}
-					if(po.isOut()) { 
-						call.registerOutParameter( i+1, CommonConst.PROCEDURE_TYPE.get(po.getTypeName()));
+					if (po.isOut()) {
+						call.registerOutParameter(i + 1, CommonConst.PROCEDURE_TYPE.get(po.getTypeName()));
 					}
 				}
 				// 处理结果集
-			    call.execute();  
-			    for(int i = 0 ; i < pfp.size(); i++) {
-			    	ProcedureFieldPo po = pfp.get(i);
-			    	if(po.isOut()) { 
-			    		 Object objRtn =   call.getObject( i+1 );
-			    		 val.add(objRtn.toString());
-			    	}
-			    	
-				}
-				
-			}  
-			 
+				call.execute();
+				for (int i = 0; i < pfp.size(); i++) {
+					ProcedureFieldPo po = pfp.get(i);
+					if (po.isOut()) {
+						Object objRtn = call.getObject(i + 1);
+						val.add(objRtn.toString());
+					}
 
-		
-		return val;	 
+				}
+
+			}
+
+			return val;
 		} catch (SQLException e) {
 			throw e;
 		} finally {
 			if (rs != null)
 				rs.close();
-		} 
-	}	
+		}
+	}
 
-	
-	//TODO 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static void callProcedure(Connection conn, String proName ,String tableid , SheetDataValue dvt ,List<ProcedureFieldPo> pfp  ) throws SQLException {
+	// TODO 获取查询的结果, 返回字段名称的数据和 值的数据
+	public static void callProcedure(Connection conn, String proName, String tableid, SheetDataValue dvt,
+			List<ProcedureFieldPo> pfp) throws SQLException {
 		// DB对象
 		CallableStatement call = null;
-		ResultSet rs = null; 
+		ResultSet rs = null;
 		ObservableList<SheetFieldPo> fields = FXCollections.observableArrayList();
-		ObservableList<ObservableList<StringProperty>>  val = FXCollections.observableArrayList();
+		ObservableList<ObservableList<StringProperty>> val = FXCollections.observableArrayList();
 		ObservableList<StringProperty> rowval = FXCollections.observableArrayList();
 		try {
-			
-			if(pfp.size() > 0) {
-				String callsql = "{call " + proName+ "(";
-				for(int i = 0 ; i < pfp.size(); i++) {
+
+			if (pfp.size() > 0) {
+				String callsql = "{call " + proName + "(";
+				for (int i = 0; i < pfp.size(); i++) {
 					callsql += "? ,";
 				}
-				
+
 				callsql = callsql.substring(0, callsql.lastIndexOf(","));
-				callsql += " ) }"; 
-				
+				callsql += " ) }";
+
 				call = conn.prepareCall(callsql);
-				
-				for(int i = 0 ; i < pfp.size(); i++) {
+
+				for (int i = 0; i < pfp.size(); i++) {
 					ProcedureFieldPo po = pfp.get(i);
 					if (po.isIn()) {
-						call.setObject( i+1, po.getValue());
+						call.setObject(i + 1, po.getValue());
 					}
-					if(po.isOut()) { 
-						call.registerOutParameter( i+1, CommonConst.PROCEDURE_TYPE.get(po.getTypeName()));
+					if (po.isOut()) {
+						call.registerOutParameter(i + 1, CommonConst.PROCEDURE_TYPE.get(po.getTypeName()));
 					}
 				}
-				
+
 				// 计时
-				long startTime=System.currentTimeMillis();   //获取开始时间 
+				long startTime = System.currentTimeMillis(); // 获取开始时间
 				// 数据库调用
-				call.execute(); 
-				long endTime=System.currentTimeMillis(); //获取结束时间
-				long usetime = endTime-startTime;
-				double vt = usetime / 1000.0; 
-				logger.info("查询时间： "+usetime+"ms");
-				dvt.setExecTime(vt);  
+				call.execute();
+				long endTime = System.currentTimeMillis(); // 获取结束时间
+				long usetime = endTime - startTime;
+				double vt = usetime / 1000.0;
+				logger.info("查询时间： " + usetime + "ms");
+				dvt.setExecTime(vt);
 
 				// 处理结果集
-				for(int i = 0 ; i < pfp.size(); i++) {
-			    	ProcedureFieldPo po = pfp.get(i);
-			    	if(po.isOut()) {
-			    		 Object objRtn =   call.getObject( i+1 );
-			    		 rowval.add(CommonUtility.createReadOnlyStringProperty(objRtn.toString()));
-			    		 
-			    		// 字段信息
-			    		 SheetFieldPo sfpo  = new SheetFieldPo();
-			    		 sfpo.setScale(0);
-			    		 sfpo.setColumnName( po.getName());
-			    		 sfpo.setColumnClassName("");
-			    		 sfpo.setColumnDisplaySize(0);
-			    		 sfpo.setColumnLabel( po.getName());
-			    		 sfpo.setColumnType(po.getType());
-			    		 sfpo.setColumnTypeName(po.getTypeName());
-						 fields.add(sfpo);
-			    	}
-			    	
+				for (int i = 0; i < pfp.size(); i++) {
+					ProcedureFieldPo po = pfp.get(i);
+					if (po.isOut()) {
+						Object objRtn = call.getObject(i + 1);
+						rowval.add(CommonUtility.createReadOnlyStringProperty(objRtn.toString()));
+
+						// 字段信息
+						SheetFieldPo sfpo = new SheetFieldPo();
+						sfpo.setScale(0);
+						sfpo.setColumnName(po.getName());
+						sfpo.setColumnClassName("");
+						sfpo.setColumnDisplaySize(0);
+						sfpo.setColumnLabel(po.getName());
+						sfpo.setColumnType(po.getType());
+						sfpo.setColumnTypeName(po.getTypeName());
+						fields.add(sfpo);
+					}
+
 				}
-				
-			}   
-			
-		
+
+			}
+
 			// 数据
 //			 val = simpleExecRs(rs, fields); 
-			 if(rowval.size() > 0) {
-				 val.add(rowval);
-			 }
+			if (rowval.size() > 0) {
+				val.add(rowval);
+			}
 //			 dvt.set
 			dvt.setColss(fields);
 //			dvt.setRawData(val);
@@ -264,25 +257,23 @@ public class SelectDao {
 		} finally {
 			if (rs != null)
 				rs.close();
-		} 
+		}
 	}
-	
-	
-	
-	public static DbTableDatePo selectSqlField(Connection conn, String sql ) throws SQLException {
+
+	public static DbTableDatePo selectSqlField(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();
 		// DB对象
 		PreparedStatement pstate = null;
 		ResultSet rs = null;
 		try {
-			pstate = conn.prepareStatement(sql);  
+			pstate = conn.prepareStatement(sql);
 			// 处理结果集
-			rs = pstate.executeQuery(); 
+			rs = pstate.executeQuery();
 			// 获取元数据
 			ResultSetMetaData mdata = rs.getMetaData();
 			// 获取元数据列数
 			Integer columnnums = Integer.valueOf(mdata.getColumnCount());
- 
+
 			for (int i = 1; i <= columnnums; i++) {
 				SheetFieldPo po = new SheetFieldPo();
 				po.setScale(mdata.getScale(i));
@@ -291,10 +282,10 @@ public class SelectDao {
 				po.setColumnDisplaySize(mdata.getColumnDisplaySize(i));
 				po.setColumnLabel(mdata.getColumnLabel(i));
 				po.setColumnType(mdata.getColumnType(i));
-				po.setColumnTypeName(mdata.getColumnTypeName(i)); 
+				po.setColumnTypeName(mdata.getColumnTypeName(i));
 				dpo.addField(po);
-				
-			} 
+
+			}
 		} catch (SQLException e) {
 			throw e;
 		} finally {
@@ -303,42 +294,41 @@ public class SelectDao {
 		}
 		return dpo;
 	}
-	
 
-	private static void execRs(int limit, ResultSet rs, 
-			  SqluckyConnector sqluckyConn, ResultSetPo setPo ) throws SQLException {
+	private static void execRs(int limit, ResultSet rs, SqluckyConnector sqluckyConn, ResultSetPo setPo)
+			throws SQLException {
 		int idx = 1;
 		ObservableList<SheetFieldPo> fpo = setPo.getFields();
 		int columnnums = fpo.size();
 		while (rs.next()) {
 			ResultSetRowPo rowpo = new ResultSetRowPo(setPo);
-			
+
 			for (int i = 0; i < columnnums; i++) {
 				SheetFieldPo fieldpo = fpo.get(i);
 				String clabel = fieldpo.getColumnLabel().get();
-				
+
 				String cclaz = fieldpo.getColumnClassName().get();
 //				System.out.println("field name = " + clabel + " | class name = " + cclaz );
-				
+
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
 //				Date valDate = null;
 				Object obj = null;
 				try {
-				    obj = rs.getObject(i + 1);
+					obj = rs.getObject(i + 1);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				if(obj == null) {
+
+				if (obj == null) {
 					val = new SimpleStringProperty("<null>");
-				}else {
+				} else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						Object objtmp = rs.getObject(i + 1);
 						var dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
-						if(dateStr != null) {
+						if (dateStr != null) {
 							val = new SimpleStringProperty(dateStr);
-						}else {
+						} else {
 							val = new SimpleStringProperty("<null>");
 						}
 //						if (sqluckyConn != null) {
@@ -352,71 +342,68 @@ public class SelectDao {
 //							val = new SimpleStringProperty(v);
 //						}
 
-					}else{
-						String temp = rs.getString(i+1);
-						val = new SimpleStringProperty(temp); 
+					} else {
+						String temp = rs.getString(i + 1);
+						val = new SimpleStringProperty(temp);
 					}
 				}
 				rowpo.addCell(val, obj, fieldpo);
 			}
 
-			setPo.addRow(rowpo); 
+			setPo.addRow(rowpo);
 			// CELL 监听
 //			rowpo.cellAddChangeListener();
 			if (idx == limit) {
 				break;
 			}
-				
+
 			idx++;
 		}
 	}
 
-	
-	
-	private static void  execRs(ResultSet rs, 
-			SqluckyConnector dpo, ResultSetPo setPo )
-			throws SQLException {
-		  execRs(Integer.MAX_VALUE, rs, dpo, setPo);
+	private static void execRs(ResultSet rs, SqluckyConnector dpo, ResultSetPo setPo) throws SQLException {
+		execRs(Integer.MAX_VALUE, rs, dpo, setPo);
 	}
-	
+
 	/**
 	 * 从数据库返回集中获取数据后转换为对象
+	 * 
 	 * @param rs
 	 * @param sqlConn
 	 * @param setPo
 	 * @throws SQLException
 	 */
-	public static void execDBRs(ResultSet rs, SqluckyConnector sqluckyConn, ResultSetPo setPo ) throws SQLException {
+	public static void execDBRs(ResultSet rs, SqluckyConnector sqluckyConn, ResultSetPo setPo) throws SQLException {
 		ObservableList<SheetFieldPo> fpo = setPo.getFields();
 		int columnnums = fpo.size();
 		while (rs.next()) {
 			ResultSetRowPo rowpo = new ResultSetRowPo(setPo);
-			
+
 			for (int i = 0; i < columnnums; i++) {
 				SheetFieldPo fieldpo = fpo.get(i);
 				int dbtype = fieldpo.getColumnType().get();
 				StringProperty val;
 				Object obj = rs.getObject(i + 1);
-				if(obj == null) {
+				if (obj == null) {
 					val = new SimpleStringProperty("<null>");
-				}else {
+				} else {
 					if (CommonUtility.isDateAndDateTime(dbtype)) {
 						var dateStr = sqluckyConn.DateTimeToString(obj, dbtype);
 						val = new SimpleStringProperty(dateStr);
 					} else {
-						String temp = rs.getString(i+1);
-						val = new SimpleStringProperty(temp); 
+						String temp = rs.getString(i + 1);
+						val = new SimpleStringProperty(temp);
 					}
 				}
 				rowpo.addCell(val, obj, fieldpo);
 			}
-			setPo.addRow(rowpo); 
+			setPo.addRow(rowpo);
 		}
-		
+
 	}
-	
+
 	// 执行sql只返回第一个字段的list
-	public static  String selectOne(Connection conn, String sql) {
+	public static String selectOne(Connection conn, String sql) {
 		ResultSet rs = null;
 		String str = "";
 		try {

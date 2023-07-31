@@ -10,6 +10,7 @@ import org.controlsfx.control.tableview2.cell.ComboBox2TableCell;
 
 import com.jfoenix.controls.JFXCheckBox;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -41,7 +42,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
 import net.tenie.Sqlucky.sdk.excel.ExcelToDB;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
@@ -49,6 +50,7 @@ import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 
 /**
  * excel导入
@@ -58,62 +60,65 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  */
 public class ImportExcelNextWindow {
 
-	private static Stage stage;
-	private static Logger logger = LogManager.getLogger(ImportExcelNextWindow.class);
+	private Stage stage;
+	private Logger logger = LogManager.getLogger(ImportExcelNextWindow.class);
+	private TextField sheetTF;
+	private TextField beginIdTF;
+	private TextField conuntTF;
+	private TextField tfFilePath;
+	private JFXCheckBox saveSqlCheckBox;
+	private JFXCheckBox onlySave;
+	private String excelFile;
+	private String tableName;
+	private ObservableList<ImportFieldPo> excelFields;
+	private SqluckyConnector sqluckyConn;
 
-	private static TextField beginIdTF;
-	private static TextField conuntTF;
-	private static TextField tfFilePath;
-	private static JFXCheckBox saveSqlCheckBox;
-	private static JFXCheckBox onlySave;
-	private static String excelFile;
-	private static String tableName;
-	private static ObservableList<ExcelFieldPo> excelFields;
-	private static SqluckyConnector sqluckyConn;
+	public void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath, Stage parentStage) {
 
-	public static void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath,Stage parentStage ) {
 		sqluckyConn = dbc;
 		excelFile = excelFilePath;
 		tableName = tableNameVal;
-		VBox tbox = tableBox(dbc, tableName, excelFile);
-		if(tbox == null) {
-			MyAlert.errorAlert("没有表<"+ tableNameVal + ">的信息, 请确保表存在!");
-			return;
-		}
-		layout(tbox, tableName);
-		parentStage.close();
+		LoadingAnimation.loadingAnimation("Loading....", v -> {
+
+			VBox tbox = tableBox(dbc, tableName, excelFile);
+			if (tbox == null) {
+				MyAlert.errorAlert("没有表<" + tableNameVal + ">的信息, 请确保表存在!");
+				return;
+			}
+			Platform.runLater(() -> {
+				layout(tbox, tableName);
+				parentStage.close();
+			});
+
+		});
 
 	}
+
 	/*
 	 * 对数据库表字段转换为一个表格, 返回null表示没有找到表的信息
 	 */
-	public static VBox tableBox(SqluckyConnector dbc, String tablename, String excelFile) {
+	public VBox tableBox(SqluckyConnector dbc, String tablename, String excelFile) {
 		try {
 			ObservableList<SheetFieldPo> fields = DaoTools.tableFields(dbc.getConn(), tablename);
-			if(fields == null || fields.size() == 0 ) {
+			if (fields == null || fields.size() == 0) {
 				return null;
 			}
 			for (int i = 0; i < fields.size(); i++) {
 				SheetFieldPo p = fields.get(i);
-				String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
-				if (p.getScale() != null && p.getScale().get() > 0) {
-					tyNa += ", " + p.getScale().get();
-				}
-				tyNa += ")";
 				StringProperty strp = new SimpleStringProperty("");
 				p.setValue(strp);
 			}
 
 			excelFields = FXCollections.observableArrayList();
 			for (var fd : fields) {
-				ExcelFieldPo excelpo = new ExcelFieldPo(fd);
+				ImportFieldPo excelpo = new ImportFieldPo(fd);
 				excelFields.add(excelpo);
 			}
 
 			VBox tableBox = tableFiledMapExcelRowBox(tablename, excelFields, excelFile);
 			return tableBox;
 		} catch (SQLException e) {
-			
+
 			e.printStackTrace();
 		}
 		return new VBox();
@@ -125,7 +130,7 @@ public class ImportExcelNextWindow {
 	 * @param excelFile
 	 * @return
 	 */
-	private static String[] excelHeadArray(String excelFile, ObservableList<ExcelFieldPo> fields) {
+	private String[] excelHeadArray(String excelFile, ObservableList<ImportFieldPo> fields) {
 		List<ExcelHeadCellInfo> row1 = ExcelUtil.readExcelFileHead(excelFile);
 
 		if (row1 != null) {
@@ -138,8 +143,11 @@ public class ImportExcelNextWindow {
 				headArr[i] = val;
 				selectVal.add(val);
 			}
-			for (var tmp : fields) {
+
+			for (int j = 0; (j < selectVal.size()) && (j < fields.size()); j++) {
+				var tmp = fields.get(j);
 				tmp.setExcelRowInfo(selectVal);
+				tmp.getExcelRowVal().set(selectVal.get(j));
 			}
 
 			return headArr;
@@ -148,54 +156,93 @@ public class ImportExcelNextWindow {
 		return new String[0];
 	}
 
-	public static VBox tableFiledMapExcelRowBox(String tableName, ObservableList<ExcelFieldPo> fields,
-			String excelFile) {
-		FlowPane fp = new FlowPane();
+	public VBox tableFiledMapExcelRowBox(String tableName, ObservableList<ImportFieldPo> fields, String excelFile) {
 
-		String colName1 = "字段名称";
-		String colName2 = "Excel列";
-		String colName3 = "自定义值";
 		Label tf1 = new Label();
-		tf1.setPrefWidth(150);
-
-		Label tf2 = new Label();
-		tf2.setPrefWidth(150);
-		Label tf3 = new Label();
-		tf3.setPrefWidth(150);
-
-		fp.getChildren().add(tf1);
-		fp.getChildren().add(tf2);
-		fp.getChildren().add(tf3);
-		fp.setPadding(new Insets(8, 0, 0, 0));
-		Insets is = new Insets(0, 8, 8, 8);
-		FlowPane.setMargin(tf1, is);
-		FlowPane.setMargin(tf2, is);
-		FlowPane.setMargin(tf3, is);
+		tf1.setPrefWidth(450);
+		tf1.setPadding(new Insets(8, 0, 0, 0));
 
 		// table
-		TableView<ExcelFieldPo> tv = new TableView<>();
+		var tableView = createTableView(fields, tf1);
+		VBox subvb = new VBox();
+
+		var topfp = topPane(tableView, fields);
+		subvb.getChildren().add(topfp);
+
+		subvb.getChildren().add(tableView);
+		VBox.setVgrow(tableView, Priority.ALWAYS);
+		subvb.getChildren().add(tf1);
+
+		return subvb;
+	}
+
+	// 界面顶部的操作按钮
+	private FlowPane topPane(TableView<ImportFieldPo> tableView, ObservableList<ImportFieldPo> fields) {
+		FlowPane topfp = new FlowPane();
+		topfp.setPadding(new Insets(5));
+		Label lb = new Label();
+		lb.setGraphic(IconGenerator.svgImageDefActive("search"));
+		TextField filterField = new TextField();
+
+		filterField.getStyleClass().add("myTextField");
+		topfp.getChildren().add(lb);
+		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
+		topfp.getChildren().add(filterField);
+		topfp.setMinHeight(35);
+		topfp.prefHeight(35);
+		filterField.setPrefWidth(200);
+		// 过滤功能
+		filterField.textProperty().addListener((o, oldVal, newVal) -> {
+			if (StrUtils.isNotNullOrEmpty(newVal)) {
+				TableDataDetail.bindTableViewExcelFieldFilter(tableView, fields, newVal);
+			} else {
+				tableView.setItems(fields);
+			}
+
+		});
+
+		// 清空列的值
+		Button cleanBtn = new Button("清空列值");
+//		cleanBtn.setPadding(new Insets(5));
+		cleanBtn.getStyleClass().add("myAlertBtn");
+		cleanBtn.setOnAction(e -> {
+			for (var tmp : fields) {
+				tmp.getExcelRowVal().set("");
+			}
+		});
+
+		topfp.getChildren().add(cleanBtn);
+		FlowPane.setMargin(cleanBtn, new Insets(0, 10, 0, 5));
+		return topfp;
+	}
+
+	private TableView<ImportFieldPo> createTableView(ObservableList<ImportFieldPo> fields, Label tf1) {
+		TableView<ImportFieldPo> tv = new TableView<>();
 		tv.getStyleClass().add("myTableTag");
 		tv.setEditable(true);
 		tv.getSelectionModel().selectedItemProperty().addListener(// 选中某一行
-				new ChangeListener<ExcelFieldPo>() {
+				new ChangeListener<ImportFieldPo>() {
 					@Override
-					public void changed(ObservableValue<? extends ExcelFieldPo> observableValue, ExcelFieldPo oldItem,
-							ExcelFieldPo newItem) {
-						ExcelFieldPo p = newItem;
+					public void changed(ObservableValue<? extends ImportFieldPo> observableValue, ImportFieldPo oldItem,
+							ImportFieldPo newItem) {
+						ImportFieldPo p = newItem;
 						if (p == null)
 							return;
-						tf1.setText(p.getColumnLabel().get());
 						String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
 						if (p.getScale() != null && p.getScale().get() > 0) {
 							tyNa += ", " + p.getScale().get();
 						}
 						tyNa += ")";
-						tf2.setText(tyNa);
-						tf3.setText(p.getColumnClassName().get());
+
+						tf1.setText(p.getColumnLabel().get() + "  :  " + tyNa + "  :  " + p.getColumnClassName().get());
 					}
 				});
+
+		String colName1 = "字段名称";
+		String colName2 = "Excel列";
+		String colName3 = "自定义值";
 		// 第一列
-		TableColumn<ExcelFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
+		TableColumn<ImportFieldPo, String> fieldNameCol = new TableColumn<>(colName1); // "Field Name"
 		fieldNameCol.setEditable(false);
 		// 给单元格赋值
 		fieldNameCol.setCellValueFactory(cellData -> {
@@ -208,7 +255,7 @@ public class ImportExcelNextWindow {
 		tv.getColumns().add(fieldNameCol);
 
 		// 第二列
-		TableColumn<ExcelFieldPo, String> valueCol = new TableColumn<>(colName2);
+		TableColumn<ImportFieldPo, String> valueCol = new TableColumn<>(colName2);
 		valueCol.setPrefWidth(180);
 
 		String[] headArr = excelHeadArray(excelFile, fields);
@@ -218,7 +265,7 @@ public class ImportExcelNextWindow {
 		tv.getColumns().add(valueCol);
 
 		// 第三列
-		TableColumn<ExcelFieldPo, String> valueCol3 = new TableColumn<>(colName3);
+		TableColumn<ImportFieldPo, String> valueCol3 = new TableColumn<>(colName3);
 		valueCol3.setPrefWidth(180);
 
 		valueCol3.setCellValueFactory(p -> p.getValue().getFixedValue());
@@ -227,43 +274,11 @@ public class ImportExcelNextWindow {
 		tv.getColumns().add(valueCol3);
 
 		tv.getItems().addAll(fields);
-
-		VBox subvb = new VBox();
-		FlowPane topfp = new FlowPane();
-		topfp.setPadding(new Insets(8, 5, 8, 8));
-		Label lb = new Label();
-		lb.setGraphic(IconGenerator.svgImageDefActive("search"));
-		TextField filterField = new TextField();
-
-		filterField.getStyleClass().add("myTextField");
-		topfp.getChildren().add(lb);
-		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
-		topfp.getChildren().add(filterField);
-		topfp.setMinHeight(30);
-		topfp.prefHeight(30);
-		filterField.setPrefWidth(200);
-
-		subvb.getChildren().add(topfp);
-
-		subvb.getChildren().add(tv);
-		VBox.setVgrow(tv, Priority.ALWAYS);
-		subvb.getChildren().add(fp);
-
-		// 过滤功能
-		filterField.textProperty().addListener((o, oldVal, newVal) -> {
-			if (StrUtils.isNotNullOrEmpty(newVal)) {
-				TableDataDetail.bindTableViewExcelFieldFilter(tv, fields, newVal);
-			} else {
-				tv.setItems(fields);
-			}
-
-		});
-
-		return subvb;
+		return tv;
 	}
 
 	// 按钮面板
-	private static AnchorPane btnPane() {
+	private AnchorPane btnPane() {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
 		Button nextbtn = saveBtnSetup();
@@ -277,18 +292,21 @@ public class ImportExcelNextWindow {
 	}
 
 	// 其他设置
-	public static List<Region> otherSet() {
+	public List<Region> otherSet() {
+		Label lb0 = new Label("第几个sheet");
+		sheetTF = new TextField();
+		sheetTF.setPromptText("默认所有sheet的数据");
+		TextFieldSetup.numberOnly(sheetTF);
+
 		Label lb1 = new Label("起始行号");
 		beginIdTF = new TextField();
 		beginIdTF.setPromptText("默认第一行开始");
-//		HBox b1 = new HBox();
-//		b1.getChildren().addAll(lb1, beginIdTF);
+		TextFieldSetup.numberOnly(beginIdTF);
 
 		Label lb2 = new Label("导入行数");
 		conuntTF = new TextField();
 		conuntTF.setPromptText("默认全部");
-//		HBox b2 = new HBox();
-//		b2.getChildren().addAll(lb2, conuntTF);
+		TextFieldSetup.numberOnly(conuntTF);
 
 		saveSqlCheckBox = new JFXCheckBox("导入SQL保存到文件");
 		tfFilePath = new TextField();
@@ -296,29 +314,30 @@ public class ImportExcelNextWindow {
 		Button selectFile = UiTools.openFileBtn(tfFilePath, stage);
 		selectFile.disableProperty().bind(saveSqlCheckBox.selectedProperty().not());
 
-		
-	    onlySave = new JFXCheckBox("只保存SQL到文件, 不用插入到数据库");
+		onlySave = new JFXCheckBox("只保存SQL到文件, 不用插入到数据库");
 		onlySave.disableProperty().bind(saveSqlCheckBox.selectedProperty().not());
 		HBox b2 = new HBox();
 		b2.getChildren().addAll(tfFilePath, selectFile);
 
 		List<Region> nds = new ArrayList<>();
-//		nds.add(b1);
-//		nds.add(b2);
+
+		nds.add(lb0);
+		nds.add(sheetTF);
+
 		nds.add(lb1);
 		nds.add(beginIdTF);
 		nds.add(lb2);
 		nds.add(conuntTF);
 		nds.add(saveSqlCheckBox);
 		nds.add(b2);
-		
+
 		nds.add(null);
 		nds.add(onlySave);
 		return nds;
 	}
 
 	// 组件布局
-	public static void layout(VBox tbox, String table) {
+	public void layout(VBox tbox, String table) {
 		VBox vb = new VBox();
 		vb.maxHeight(600);
 		vb.getChildren().add(tbox);
@@ -356,21 +375,21 @@ public class ImportExcelNextWindow {
 	}
 
 	// 保存按钮
-	public static Button saveBtnSetup() {
+	public Button saveBtnSetup() {
 		Button btn = new Button("Save");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(e -> {
-			if(saveSqlCheckBox.isSelected()) {
+			if (saveSqlCheckBox.isSelected()) {
 				String filePath = tfFilePath.getText();
-				if(StrUtils.isNullOrEmpty(filePath)) {
+				if (StrUtils.isNullOrEmpty(filePath)) {
 					MyAlert.errorAlert("保存Sql的文件路径不能为空!");
 					tfFilePath.requestFocus();
 					return;
 				}
 			}
-			List<ExcelFieldPo> vals = new ArrayList<>();
+			List<ImportFieldPo> vals = new ArrayList<>();
 			// 提取有被映射的字段
-			for (ExcelFieldPo fieldpo : excelFields) {
+			for (ImportFieldPo fieldpo : excelFields) {
 				fieldpo.getExcelRowVal().getValue();
 				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelRowVal())
 						|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
@@ -396,8 +415,14 @@ public class ImportExcelNextWindow {
 			Integer tmpCountval = countval;
 			LoadingAnimation.loadingAnimation("Saving....", v -> {
 				try {
-					ExcelToDB.toTable(sqluckyConn, tableName, excelFile, tfFilePath.getText(), vals, tmpBeginval,
-							tmpCountval,onlySave.isSelected());
+					Integer sheetNo = null;
+					String sheetNoStr = sheetTF.getText();
+					if (StrUtils.isNotNullOrEmpty(sheetNoStr.trim())) {
+						sheetNo = Integer.valueOf(sheetNoStr);
+					}
+
+					ExcelToDB.toTable(sqluckyConn, tableName, excelFile, tfFilePath.getText(), vals, sheetNo,
+							tmpBeginval, tmpCountval, onlySave.isSelected(), saveSqlCheckBox.isSelected());
 					MyAlert.infoAlert("导入成功!");
 				} catch (Exception e1) {
 					MyAlert.showTextArea("Error", "导入失败 ! \n" + e1.getMessage());
@@ -409,7 +434,7 @@ public class ImportExcelNextWindow {
 		return btn;
 	}
 
-	public static Button cancelBtn() {
+	public Button cancelBtn() {
 		Button cancelBtn = new Button("Cancel");
 		cancelBtn.getStyleClass().add("myAlertBtn");
 		cancelBtn.setOnAction(e -> {
@@ -418,7 +443,7 @@ public class ImportExcelNextWindow {
 		return cancelBtn;
 	}
 
-	public static Stage CreateWindow(VBox vb, String title) {
+	public Stage CreateWindow(VBox vb, String title) {
 		SqluckyStage sqluckyStatge = new SqluckyStage(vb);
 		stage = sqluckyStatge.getStage();
 		Scene scene = sqluckyStatge.getScene();

@@ -33,6 +33,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.fx.Action.sqlExecute.ProcedureAction;
 import net.tenie.fx.Action.sqlExecute.RunSqlStatePo;
 import net.tenie.fx.Action.sqlExecute.SelectAction;
@@ -111,6 +112,7 @@ public class RunSQLHelper {
 			settingBtn();
 			state.setCallProcedureFields(null);
 			state.setIsCallFunc(false);
+			SdkComponent.rmWaitingPane();
 		}
 
 	}
@@ -176,7 +178,7 @@ public class RunSQLHelper {
 					final String msgVal = msg;
 					Platform.runLater(() -> {
 						MyAlert.showNotifiaction(msgVal);
-						SqlExecuteOption.rmWaitingPane(true);
+						TableViewUtils.rmWaitingPane(true);
 					});
 				} else {
 					// 显示字段是只读的
@@ -194,7 +196,7 @@ public class RunSQLHelper {
 
 		}
 		// 如果 ddlDmlpo 中有 msg的信息 就会显示到界面上
-		SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, thread);
+		TableViewUtils.showInfo(ddlDmlpo, thread);
 		// 如果是执行的界面上的sql, 那么对错误的sql渲染为红色
 		if (StrUtils.isNullOrEmpty(state.getSqlStr())) {
 			Platform.runLater(() -> {
@@ -212,6 +214,7 @@ public class RunSQLHelper {
 	// 在子线程执行 运行sql 的任务
 	public static Thread createThread(Consumer<RunSqlStatePo> action, RunSqlStatePo state) {
 		return new Thread() {
+			@Override
 			public void run() {
 				logger.info("线程启动了" + this.getName());
 				action.accept(state);

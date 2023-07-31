@@ -15,17 +15,18 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class ExcelFieldPo extends SheetFieldPo {
+public class ImportFieldPo extends SheetFieldPo {
 
 	// excel数据导入表需要使用下面2个字段
 	private StringProperty excelRowVal = new SimpleStringProperty(""); // excel 对应列
-	private SimpleStringProperty excelRowIdx = new SimpleStringProperty(""); // excel 对应列号
 	private StringProperty fixedValue = new SimpleStringProperty("");; // 不使用excel对应的列, 使用固定值
+
+	private Integer rowIdx = null; // 对应列的下标, 默认null , 如果excelRowVal的值为空就赋值为-1
 
 	// 可选的值
 	private List<String> excelRowInfo;
 
-	public ExcelFieldPo(SheetFieldPo sheetField) {
+	public ImportFieldPo(SheetFieldPo sheetField) {
 		try {
 			BeanUtils.copyProperties(this, sheetField);
 		} catch (IllegalAccessException e) {
@@ -42,18 +43,19 @@ public class ExcelFieldPo extends SheetFieldPo {
 				// 如果是手动修改了下拉选的值
 				if (excelRowInfo != null) {
 					if (excelRowInfo.contains(valNew)) {
-						String[] excelInfo = valNew.split(" - ");
-						excelRowIdx.setValue(excelInfo[0]);
+//						String[] excelInfo = valNew.split(" - ");
+//						excelRowIdx.setValue(excelInfo[0]);
 					} else {
-						excelRowIdx.setValue("");
+//						excelRowIdx.setValue("");
 						excelRowVal.set(valOld);
 
 					}
 				}
 
-			} else {
-				excelRowIdx.setValue("");
 			}
+//			else {
+//				excelRowIdx.setValue("");
+//			}
 		});
 	}
 
@@ -61,9 +63,9 @@ public class ExcelFieldPo extends SheetFieldPo {
 		return excelRowVal;
 	}
 
-	public void setExcelRowVal(StringProperty excelRowVal) {
-		this.excelRowVal = excelRowVal;
-	}
+//	public void setExcelRowVal(StringProperty excelRowVal) {
+//		this.excelRowVal = excelRowVal;
+//	}
 
 	public StringProperty getFixedValue() {
 		return fixedValue;
@@ -71,14 +73,6 @@ public class ExcelFieldPo extends SheetFieldPo {
 
 	public void setFixedValue(StringProperty fixedValue) {
 		this.fixedValue = fixedValue;
-	}
-
-	public SimpleStringProperty getExcelRowIdx() {
-		return excelRowIdx;
-	}
-
-	public void setExcelRowIdx(SimpleStringProperty excelRowIdx) {
-		this.excelRowIdx = excelRowIdx;
 	}
 
 	public List<String> getExcelRowInfo() {
@@ -91,18 +85,32 @@ public class ExcelFieldPo extends SheetFieldPo {
 
 	@Override
 	public String toString() {
-		return super.toString() + "ExcelFieldPo [excelRowVal=" + excelRowVal + ", excelRowIdx=" + excelRowIdx
-				+ ", fixedValue=" + fixedValue + "]";
+		return super.toString() + "ExcelFieldPo [excelRowVal=" + excelRowVal + ", fixedValue=" + fixedValue + "]";
 	}
 
-	public static void main(String[] args) {
-		SheetFieldPo sheetField = new SheetFieldPo();
-		sheetField.setColumnLabel("1111");
-		sheetField.setColumnName("222");
-		System.out.println(sheetField);
+	public Integer getRowIdx() {
+		if (rowIdx == null) {
+			// 匹配到excel的列
+			String rowIdxStr = "";
+			String rowVal = this.getExcelRowVal().get();
+			if (StrUtils.isNotNullOrEmpty(rowVal)) {
+				String[] excelInfo = rowVal.split(" - ");
+				rowIdxStr = excelInfo[0];
+			}
 
-		ExcelFieldPo po = new ExcelFieldPo(sheetField);
-		System.out.println(po);
+			if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
+				Integer rowidx = Integer.valueOf(rowIdxStr);
+				rowIdx = rowidx - 1; // 下标从0开始, 需要减1
+			} else {
+				rowIdx = -1;
+			}
+
+		}
+		return rowIdx;
+	}
+
+	public void setRowIdx(Integer rowIdx) {
+		this.rowIdx = rowIdx;
 	}
 
 }

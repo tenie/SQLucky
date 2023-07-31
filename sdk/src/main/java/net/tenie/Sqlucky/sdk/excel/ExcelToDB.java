@@ -13,8 +13,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 
 /**
  * excel 导入到数据库
@@ -38,7 +37,8 @@ public class ExcelToDB {
 	 * @throws Exception
 	 */
 	public static void toTable(SqluckyConnector dbc, String tablename, String excelFile, String saveSqlFile,
-			List<ExcelFieldPo> fields, Integer beginRowIdx, Integer count, boolean onlySaveSql) throws Exception {
+			List<ImportFieldPo> fields, Integer sheetNo, Integer beginRowIdx, Integer count, boolean onlySaveSql,
+			boolean saveSql) throws Exception {
 		Connection conn = dbc.getConn();
 		String errorData = "";
 		try {
@@ -49,6 +49,12 @@ public class ExcelToDB {
 				Sheet sheet = workbook.getSheetAt(numSheet);
 				if (sheet == null) {
 					continue;
+				}
+				// 读取指定sheet页
+				if (sheetNo != null && sheetNo > 0) {
+					if (numSheet != (sheetNo - 1)) {
+						continue;
+					}
 				}
 
 				logger.debug("行数: = " + sheet.getLastRowNum());
@@ -75,13 +81,31 @@ public class ExcelToDB {
 					}
 					List<String> cellVals = new ArrayList<>();
 					rowVals.add(cellVals);
-					for (ExcelFieldPo epo : fields) {
+
+					for (ImportFieldPo epo : fields) {
 						// 匹配到excel的列
-						String rowIdxStr = epo.getExcelRowIdx().get();
-						if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
-							Integer rowidx = Integer.valueOf(rowIdxStr);
-							// 下标从0开始, 需要减1
-							Cell cell = hssfRow.getCell(rowidx - 1);
+//						String rowIdxStr = epo.getExcelRowIdx().get();
+//						String rowIdxStr = "";
+//						String rowVal = epo.getExcelRowVal().get();
+//						if (StrUtils.isNotNullOrEmpty(rowVal)) {
+//							String[] excelInfo = rowVal.split(" - ");
+//							rowIdxStr = excelInfo[0];
+//						}
+
+//						if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
+//							Integer rowidx = Integer.valueOf(rowIdxStr);
+//							// 下标从0开始, 需要减1
+//							Cell cell = hssfRow.getCell(rowidx - 1);
+//							String cellStr = cell.toString();
+//							cellVals.add(cellStr);
+//						} else { // 使用固定值
+//							String fixVal = epo.getFixedValue().get();
+//							cellVals.add(fixVal);
+//						}
+
+						Integer rowIdx = epo.getRowIdx();
+						if (rowIdx > -1) {
+							Cell cell = hssfRow.getCell(rowIdx);
 							String cellStr = cell.toString();
 							cellVals.add(cellStr);
 						} else { // 使用固定值
@@ -90,14 +114,20 @@ public class ExcelToDB {
 						}
 
 					}
+
 					idx++;
 					if (idx % 100 == 0) {
-						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile, onlySaveSql);
+						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
+								onlySaveSql);
 						rowVals.clear();
 					}
+//					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
+//							onlySaveSql);
+//					rowVals.clear();
 				}
 				if (rowVals.size() > 0) {
-					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile, onlySaveSql);
+					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
+							onlySaveSql);
 					rowVals.clear();
 				}
 			}
@@ -108,4 +138,5 @@ public class ExcelToDB {
 		}
 
 	}
+
 }
