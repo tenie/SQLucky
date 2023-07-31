@@ -30,9 +30,9 @@ public class ReadExcel2 {
 	 * 通过Workbook 读 excel
 	 * 
 	 */
-	public static List<ArrayList<String>> readExcel(Workbook workbook, Integer beginRowIdx, Integer count) throws IOException {
+	public static List<ArrayList<String>> readExcel(Workbook workbook, Integer beginRowIdx, Integer count)
+			throws IOException {
 
- 
 		List<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
 		// Read the Sheet
 		for (int numSheet = 0; numSheet < workbook.getNumberOfSheets(); numSheet++) {
@@ -75,10 +75,9 @@ public class ReadExcel2 {
 			}
 		}
 		return list;
-	
+
 	}
 
-	
 	/**
 	 * Read the Excel 2010
 	 * 
@@ -201,9 +200,9 @@ public class ReadExcel2 {
 		}
 
 		logger.debug("行数: = " + hssfSheet.getLastRowNum());
-		System.out.println("行数: = " + hssfSheet.getLastRowNum());
+//		System.out.println("行数: = " + hssfSheet.getLastRowNum());
 		logger.debug("\n第一行idx: = " + hssfSheet.getFirstRowNum());
-		System.out.println("\n第一行idx: = " + hssfSheet.getFirstRowNum());
+//		System.out.println("\n第一行idx: = " + hssfSheet.getFirstRowNum());
 
 		HSSFRow hssfRow = hssfSheet.getRow(hssfSheet.getFirstRowNum());
 		if (hssfRow != null) {
@@ -274,25 +273,4 @@ public class ReadExcel2 {
 		return innerlist;
 	}
 
-//	@SuppressWarnings("static-access")
-//	private String getValue(XSSFCell xssfRow) {
-//		if (xssfRow.getCellType() == xssfRow.CELL_TYPE_BOOLEAN) {
-//			return String.valueOf(xssfRow.getBooleanCellValue());
-//		} else if (xssfRow.getCellType() == xssfRow.CELL_TYPE_NUMERIC) {
-//			return String.valueOf(xssfRow.getNumericCellValue());
-//		} else {
-//			return String.valueOf(xssfRow.getStringCellValue());
-//		}
-//	}
-//
-//	@SuppressWarnings("static-access")
-//	private String getValue(HSSFCell hssfCell) {
-//		if (hssfCell.getCellType() == hssfCell.CELL_TYPE_BOOLEAN) {
-//			return String.valueOf(hssfCell.getBooleanCellValue());
-//		} else if (hssfCell.getCellType() == hssfCell.CELL_TYPE_NUMERIC) {
-//			return String.valueOf(hssfCell.getNumericCellValue());
-//		} else {
-//			return String.valueOf(hssfCell.getStringCellValue());
-//		}
-//	}
 }

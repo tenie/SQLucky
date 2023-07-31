@@ -17,12 +17,11 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyBottomSheet;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -36,8 +35,8 @@ public class TableDataDetail {
 	/**
 	 * 双击当前行, 子窗口显示行的数据
 	 */
-	public static void show() {
-		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
+	public static void show(MyBottomSheet mtd) {
+//		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tb = mtd.getTableData().getTable();
 		if (tb == null)
 			return;
@@ -231,9 +230,9 @@ public class TableDataDetail {
 	 * @param observableList
 	 * @param newValue
 	 */
-	public static final void bindTableViewExcelFieldFilter(TableView<ExcelFieldPo> tableView,
-			ObservableList<ExcelFieldPo> observableList, String newValue) {
-		FilteredList<ExcelFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
+	public static final void bindTableViewExcelFieldFilter(TableView<ImportFieldPo> tableView,
+			ObservableList<ImportFieldPo> observableList, String newValue) {
+		FilteredList<ImportFieldPo> filteredData = new FilteredList<>(observableList, p -> true);
 		filteredData.setPredicate(entity -> {
 
 			boolean tf1 = false;
@@ -250,7 +249,7 @@ public class TableDataDetail {
 		}
 
 		);
-		SortedList<ExcelFieldPo> sortedData = new SortedList<>(filteredData);
+		SortedList<ImportFieldPo> sortedData = new SortedList<>(filteredData);
 		sortedData.comparatorProperty().bind(tableView.comparatorProperty());
 		tableView.setItems(sortedData);
 	}

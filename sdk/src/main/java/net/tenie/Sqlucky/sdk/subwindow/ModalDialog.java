@@ -369,6 +369,7 @@ public class ModalDialog {
 
 	public static void showComfirmExec(String title, String containTxt, Consumer<String> caller) {
 		VBox vb = new VBox();
+
 		TextField tf1 = new TextField("");
 		tf1.setEditable(false);
 		tf1.setPrefWidth(500);
@@ -376,10 +377,18 @@ public class ModalDialog {
 		tf1.setText(containTxt);
 		tf1.setPrefHeight(40);
 		tf1.setFocusTraversable(false);
+//		
+
+//		MyTextArea myTextArea = new MyTextArea();
+//		StackPane codeAreaPane = myTextArea.getCodeAreaPane(containTxt, false);
+//		codeAreaPane.setStyle("-fx-background-color: transparent;");
 		Label tit = new Label(title);
 
 		vb.getChildren().add(tit);
+
 		vb.getChildren().add(tf1);
+//		vb.getChildren().add(codeAreaPane);
+//		VBox.getVgrow(codeAreaPane, Priority.ALWAYS);
 		vb.setPrefWidth(500);
 		vb.setPadding(new Insets(20));
 		vb.setPrefHeight(100);

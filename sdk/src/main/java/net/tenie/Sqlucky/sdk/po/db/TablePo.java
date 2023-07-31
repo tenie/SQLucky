@@ -12,12 +12,12 @@ import com.github.vertical_blank.sqlformatter.SqlFormatter;
 
 import javafx.scene.control.TableView;
 import net.tenie.Sqlucky.sdk.component.MyCellOperateButton;
+import net.tenie.Sqlucky.sdk.db.DBTools;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.DBTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TableViewUtil;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 
 /**
  * 数据库里表对象的属性字段， 如表名等 table view 共用
@@ -82,7 +82,7 @@ public class TablePo {
 			var showIdxDDL = showIndexBtn();
 			btnvals.add(dropIdx);
 			btnvals.add(showIdxDDL);
-			indexTableView = TableViewUtil.dbTableIndexFkTableView(colName, vals, btnvals);
+			indexTableView = TableViewUtils.dbTableIndexFkTableView(colName, vals, btnvals);
 //			// 获取TableView
 //		    indexTableView = sheetDaV.getInfoTable();
 		}
@@ -112,7 +112,7 @@ public class TablePo {
 			btnvals.add(drop);
 			btnvals.add(export);
 //			// 获取TableView
-			foreignKeyTable = TableViewUtil.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals, btnvals);
+			foreignKeyTable = TableViewUtils.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals, btnvals);
 		}
 		return foreignKeyTable;
 	}

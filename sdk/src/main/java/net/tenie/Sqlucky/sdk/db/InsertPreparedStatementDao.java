@@ -9,7 +9,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 
@@ -45,7 +45,7 @@ public class InsertPreparedStatementDao {
 
 	}
 
-	public static String createPreparedStatementSqlForExcel(String tableName, List<ExcelFieldPo> fpos) {
+	public static String createPreparedStatementSqlForExcel(String tableName, List<ImportFieldPo> fpos) {
 
 		StringBuilder sql = new StringBuilder("INSERT INTO " + tableName + " (");
 		StringBuilder values = new StringBuilder("");

@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.util.List;
 
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.Sqlucky.sdk.utility.Dbinfo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /* 

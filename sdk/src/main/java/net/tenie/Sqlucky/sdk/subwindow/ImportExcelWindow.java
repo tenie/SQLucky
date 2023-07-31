@@ -102,6 +102,7 @@ public class ImportExcelWindow {
 				grid.add(node2, 1, idxj);
 		}
 
+		stage.requestFocus();
 		stage.show();
 	}
 
@@ -167,15 +168,6 @@ public class ImportExcelWindow {
 
 	}
 
-//	// 选取文件按钮
-//	public static Button openFileBtn(TextField tfFilePath) {
-//		Button selectFileBtn = new Button("...");
-//		selectFileBtn.setOnAction(e -> {
-//			FileOrDirectoryChooser.getFilePathAction(tfFilePath, stage);
-//		});
-//		return selectFileBtn;
-//	}
-
 	// 下一步按钮
 	public static Button nextBtn() {
 		Button btn = new Button("next");
@@ -194,7 +186,9 @@ public class ImportExcelWindow {
 			Map<String, SqluckyConnector> sqluckyConnMap = appComponent.getAllConnector();
 			SqluckyConnector sqluckyConn = sqluckyConnMap.get(connName);
 			String tableName = tfTabName.getText();
-			ImportExcelNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage);
+
+			ImportExcelNextWindow importExcelNextWindow = new ImportExcelNextWindow();
+			importExcelNextWindow.showWindow(sqluckyConn, tableName, tfFilePath.getText(), stage);
 //			stage.close();
 		});
 
@@ -234,7 +228,7 @@ public class ImportExcelWindow {
 		});
 
 		CommonUtility.loadCss(scene);
-		stage.initModality(Modality.WINDOW_MODAL);
+		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 
 		stage.setMaximized(false);

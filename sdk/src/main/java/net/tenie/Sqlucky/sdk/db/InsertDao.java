@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.db;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -13,7 +14,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.Sqlucky.sdk.po.ExcelFieldPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -126,18 +127,19 @@ public class InsertDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String execInsertByExcelField_bak(Connection conn, String tableName, List<ExcelFieldPo> fields,
+	public static String execInsertByExcelField_bak(Connection conn, String tableName, List<ImportFieldPo> fields,
 			List<List<String>> rowVals) throws Exception {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
+		String logString = "";
 		try {
 
 			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
 			StringBuilder values = new StringBuilder("");
 			int size = fields.size();
 			for (int i = 0; i < size; i++) {
-				ExcelFieldPo po = fields.get(i);
+				ImportFieldPo po = fields.get(i);
 				sql.append(po.getColumnLabel().get());
 
 				if (StrUtils.isNotNullOrEmpty(po.getFixedValue().get())) {
@@ -167,7 +169,7 @@ public class InsertDao {
 			for (List<String> fieldsValue : rowVals) {
 				int idx = 0;
 				for (int i = 0; i < size; i++) {
-					ExcelFieldPo fieldpo = fields.get(i);
+					ImportFieldPo fieldpo = fields.get(i);
 					String val = fieldsValue.get(i);
 					if (val == null) {
 						val = "";
@@ -175,7 +177,8 @@ public class InsertDao {
 					idx++;
 					int javatype = fieldpo.getColumnType().get();
 					String columnTypeName = fieldpo.getColumnTypeName().get();
-					logger.info("javatype = " + javatype + " | " + columnTypeName);
+//					logger.info("javatype = " + javatype + " | " + columnTypeName);
+					logString += "javatype = " + javatype + " | " + columnTypeName;
 					valLog += " | " + val;
 					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
 						String tmp = fieldpo.getFixedValue().get();
@@ -213,6 +216,7 @@ public class InsertDao {
 				logger.info(insertLog);
 				pstmt.addBatch();
 			}
+			logger.info(logString);
 			int[] count = pstmt.executeBatch();
 			int execCountLen = count.length;
 			logger.info("instert = " + execCountLen);
@@ -234,17 +238,19 @@ public class InsertDao {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String execInsertByExcelField(Connection conn, String tableName, List<ExcelFieldPo> fields,
-			List<List<String>> rowVals, String saveSqlfile ,boolean onlySaveSql) throws Exception {
+	public static String execInsertByExcelField(Connection conn, String tableName, List<ImportFieldPo> fields,
+			List<List<String>> rowVals, String saveSqlfileStr, boolean onlySaveSql) throws Exception {
 		String msg = "";
 		String insertLog = "";
 		String valLog = "";
+		String logString = "";
+		File saveSqlFile = new File(saveSqlfileStr);
 		try {
 
 			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
 			int size = fields.size();
 			for (int i = 0; i < size; i++) {
-				ExcelFieldPo po = fields.get(i);
+				ImportFieldPo po = fields.get(i);
 				sql.append(po.getColumnLabel().get());
 				sql.append(" ,");
 
@@ -263,14 +269,15 @@ public class InsertDao {
 			for (List<String> fieldsValue : rowVals) {
 				String insertValue = "";
 				for (int i = 0; i < size; i++) {
-					ExcelFieldPo fieldpo = fields.get(i);
+					ImportFieldPo fieldpo = fields.get(i);
 					String val = fieldsValue.get(i);
 					if (val == null) {
 						val = "";
 					}
 					int javatype = fieldpo.getColumnType().get();
 					String columnTypeName = fieldpo.getColumnTypeName().get();
-					logger.info("javatype = " + javatype + " | " + columnTypeName);
+//					logger.info("javatype = " + javatype + " | " + columnTypeName);
+					logString += "javatype = " + javatype + " | " + columnTypeName;
 					valLog += " | " + val;
 					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
 						String tmp = fieldpo.getFixedValue().get();
@@ -308,29 +315,204 @@ public class InsertDao {
 					insertValue = insertValue.substring(0, insertValue.length() - 1);
 //					insert += insertValue + " )";
 					insertValue = insert + insertValue + " )";
-					logger.info(insertValue);
-					if(onlySaveSql ) { 
+//					logger.info(insertValue);
+					if (onlySaveSql) {
 						inSqls.add(insertValue + ";");
-					}else {
+					} else {
 						sm.addBatch(insertValue);
 						inSqls.add(insertValue + ";");
 					}
-				
+
 				}
+
 			}
-			if(onlySaveSql) { 
-				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
-			}else {
+			logger.info(logString);
+
+			if (onlySaveSql) {
+//				if (StrUtils.isNotNullOrEmpty(saveSqlfileStr) && saveSqlFile.exists()) {
+//					FileUtils.writeLines(saveSqlFile, inSqls, true);
+//				}
+
+				writeSqlFile(saveSqlfileStr, saveSqlFile, inSqls);
+			} else {
 				int[] count = sm.executeBatch();
 				int execCountLen = count.length;
 				logger.info("instert = " + execCountLen);
 				msg = "Insert " + execCountLen + " ;\n" + insertLog + "; \n" + valLog;
-				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
+
+				writeSqlFile(saveSqlfileStr, saveSqlFile, inSqls);
+//				if (StrUtils.isNotNullOrEmpty(saveSqlfileStr) && saveSqlFile.exists()) {
+//					FileUtils.writeLines(saveSqlFile, inSqls, true);
+//				}
+
 			}
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw new Exception(e.getMessage() + " : excel Value = " + valLog + " ;\n sql = " + insertLog);
+		}
+		return msg;
+	}
+
+	private static void writeSqlFile(String saveSqlfileStr, File saveSqlFile, List<String> inSqls) throws IOException {
+		if (StrUtils.isNotNullOrEmpty(saveSqlfileStr) && saveSqlFile.exists()) {
+			FileUtils.writeLines(saveSqlFile, inSqls, true);
+		}
+	}
+
+	public static String stringToDBString(String val) {
+		String rsVal = "";
+		if ((val.startsWith("'") && val.endsWith("'"))) {
+			rsVal = val;
+		} else if (val.startsWith("\"") && val.endsWith("\"")) {
+			rsVal = "'" + val.substring(1, val.lastIndexOf("\"")) + "'";
+		} else {
+			rsVal = "'" + val + "'";
+		}
+
+		return rsVal;
+	}
+
+	public static String trimQuotation(String val) {
+		String rsVal = "";
+		if ((val.startsWith("'") && val.endsWith("'"))) {
+			rsVal = val.substring(1, val.lastIndexOf("'"));
+		} else if (val.startsWith("\"") && val.endsWith("\"")) {
+			rsVal = val.substring(1, val.lastIndexOf("\""));
+		} else {
+			rsVal = val;
+		}
+
+		return rsVal;
+	}
+
+	/**
+	 * 
+	 * @param conn
+	 * @param tableName
+	 * @param fields
+	 * @param fieldsValue 元素不能为null
+	 * @return
+	 * @throws Exception
+	 */
+	public static String execInsertByCsvField(Connection conn, String tableName, List<ImportFieldPo> fields,
+			List<List<String>> rowVals, String saveSqlfile, boolean onlySaveSql, boolean saveSql) throws Exception {
+		String msg = "";
+		String insertLog = "";
+		String valLog = "";
+
+		List<String> inSqls = new ArrayList<>();
+		try {
+
+			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
+			int size = fields.size();
+			for (int i = 0; i < size; i++) {
+				ImportFieldPo po = fields.get(i);
+				sql.append(po.getColumnLabel().get());
+				sql.append(" ,");
+
+			}
+			String insert = sql.toString();
+			if (insert.endsWith(",")) {
+				insert = insert.substring(0, insert.length() - 1);
+			}
+
+			insert += " ) VALUES ( ";
+
+			Statement sm = conn.createStatement();
+			insertLog = insert;
+
+			for (List<String> fieldsValue : rowVals) {
+				String insertValue = "";
+				for (int i = 0; i < size; i++) {
+					ImportFieldPo fieldpo = fields.get(i);
+					String val = fieldsValue.get(i);
+					if (val == null) {
+						val = "";
+					} else {
+						val = val.trim();
+					}
+					int javatype = fieldpo.getColumnType().get();
+					String columnTypeName = fieldpo.getColumnTypeName().get();
+					logger.info("javatype = " + javatype + " | " + columnTypeName);
+					valLog += " | " + val;
+					// 固定值
+					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
+						String tmp = fieldpo.getFixedValue().get();
+						insertValue += tmp;
+					}
+					// 时间类型判断
+					else if (CommonUtility.isDateAndDateTime(javatype)) {
+						// 空字符串 给字段复制null
+						if (StrUtils.isNullOrEmpty(val.trim())) {
+							insertValue += "NULL";
+						} else {
+							val = trimQuotation(val);
+							String tmpval = val.toUpperCase();
+							if ("NULL".equals(tmpval)) {
+								insertValue += "NULL";
+							} else {
+								insertValue += stringToDBString(val);
+							}
+						}
+
+//						if (val.toUpperCase().contains("NUll")) {
+//
+//						} else {
+//							insertValue += stringToDBString(val);
+//						}
+
+						// 数字判断
+					} else if (CommonUtility.isNum(javatype)) {
+						val = val.trim();
+						if (StrUtils.isNullOrEmpty(val)) { // 空字符串， 设置null
+							insertValue += "NULL";
+						} else {
+							val = trimQuotation(val);
+							if (NumberUtils.isParsable(val)) { // 可以转换为数字
+								insertValue += val;
+							} else {
+								// 其他情况，字符串不能转为数字 设置null
+								insertValue += "NULL";
+							}
+						}
+
+					} else {// 字符串
+						if ("NULL".equals(val.toUpperCase())) {
+							insertValue += "NUll";
+						} else {
+							insertValue += stringToDBString(val);
+						}
+					}
+					insertValue += " ,";
+
+				}
+				if (insertValue.endsWith(",")) {
+					insertValue = insertValue.substring(0, insertValue.length() - 1);
+					insertValue = insert + insertValue + " )";
+					logger.info(insertValue);
+					if (onlySaveSql) {
+						inSqls.add(insertValue + ";");
+					} else {
+						sm.addBatch(insertValue);
+						inSqls.add(insertValue + ";");
+					}
+
+				}
+			}
+			if (saveSql) {
+				FileUtils.writeLines(new File(saveSqlfile), inSqls, true);
+			}
+			if (onlySaveSql == false) {
+				int[] count = sm.executeBatch();
+				int execCountLen = count.length;
+				logger.info("instert = " + execCountLen);
+				msg = "Insert " + execCountLen + " ;\n" + insertLog + "; \n" + valLog;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println(inSqls);
 			throw new Exception(e.getMessage() + " : excel Value = " + valLog + " ;\n sql = " + insertLog);
 		}
 		return msg;

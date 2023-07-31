@@ -24,6 +24,7 @@ open module SQLucky.sdk {
 
 	// non-mods
 	requires org.apache.commons.io;
+	requires org.apache.commons.csv;
 	requires org.fxmisc.richtext;
 	requires reactfx;
 	requires flowless;
