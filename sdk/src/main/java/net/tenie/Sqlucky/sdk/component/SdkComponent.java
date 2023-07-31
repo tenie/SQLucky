@@ -55,27 +55,27 @@ public class SdkComponent {
 	 * @param mytb
 	 * @return
 	 */
-	public static JFXButton createLockBtn(MyBottomSheet mytb) {
-		// 锁
-		JFXButton lockbtn = new JFXButton();
-		if (mytb.getTableData().isLock()) {
-			lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
-		} else {
-			lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
-		}
-		lockbtn.setOnMouseClicked(e -> {
-			if (mytb.getTableData().isLock()) {
-				lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
-				mytb.getTableData().setLock(false);
-			} else {
-				lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
-				mytb.getTableData().setLock(true);
-			}
-
-		});
-
-		return lockbtn;
-	}
+//	public static JFXButton createLockBtn(MyBottomSheet mytb) {
+//		// 锁
+//		JFXButton lockbtn = new JFXButton();
+//		if (mytb.getTableData().isLock()) {
+//			lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
+//		} else {
+//			lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
+//		}
+//		lockbtn.setOnMouseClicked(e -> {
+//			if (mytb.getTableData().isLock()) {
+//				lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
+//				mytb.getTableData().setLock(false);
+//			} else {
+//				lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
+//				mytb.getTableData().setLock(true);
+//			}
+//
+//		});
+//
+//		return lockbtn;
+//	}
 
 	public static String createTabId() {
 		int tableIdx = ConfigVal.tableIdx++;
