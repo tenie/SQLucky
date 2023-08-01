@@ -145,7 +145,7 @@ public class MenuBarContainer {
 		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format"));
 		Format.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		Format.setOnAction(value -> {
-			CommonAction.formatSqlText();
+			CommonUtility.formatSqlText();
 		});
 
 		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Line Comment"));

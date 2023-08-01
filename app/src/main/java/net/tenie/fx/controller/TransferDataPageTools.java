@@ -2,7 +2,7 @@ package net.tenie.fx.controller;
 
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import net.tenie.fx.config.DBConns;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 
 public class TransferDataPageTools {
 	

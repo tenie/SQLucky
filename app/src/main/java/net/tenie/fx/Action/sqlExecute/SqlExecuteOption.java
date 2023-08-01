@@ -20,6 +20,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
@@ -32,7 +33,6 @@ import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.dataView.DataTableContextMenu;
-import net.tenie.fx.config.DBConns;
 
 public class SqlExecuteOption {
 //	public static void rmWaitingPane(boolean holdSheet) {
@@ -47,6 +47,9 @@ public class SqlExecuteOption {
 //	}
 
 	public static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
+		Platform.runLater(() -> {
+			SdkComponent.showDetailPane();
+		});
 		Tab v = SdkComponent.addWaitingPane(tabIdx);
 		Platform.runLater(() -> {
 			if (holdSheet == false) { // 非刷新的， 删除多余的页

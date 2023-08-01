@@ -36,6 +36,7 @@ import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTextArea;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.DBTools;
 import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
 import net.tenie.Sqlucky.sdk.db.InsertPreparedStatementDao;
@@ -52,7 +53,6 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
-import net.tenie.fx.config.DBConns;
 
 public class TransferDataController implements Initializable {
 	private static Logger logger = LogManager.getLogger(TransferDataController.class);

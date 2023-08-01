@@ -1,4 +1,4 @@
-package net.tenie.fx.component.CodeArea;
+package net.tenie.Sqlucky.sdk.component.codeArea;
 
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
@@ -9,7 +9,6 @@ import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 
 public class HighLightingSqlCodeAreaContextMenu extends ContextMenu {
 
@@ -44,22 +43,22 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu {
 		MenuItem sqlFormat = new MenuItem("Format  SQL");
 		sqlFormat.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		sqlFormat.setOnAction(e -> {
-			CommonAction.formatSqlText();
+			CommonUtility.formatSqlText();
 		});
 
 		MenuItem formatAll = new MenuItem("Format All SQL");
 		formatAll.setOnAction(e -> {
-			CommonAction.formatSqlText();
+			CommonUtility.formatSqlText();
 		});
 
 		MenuItem sqlUnformat = new MenuItem("Unformat SQL");
 		sqlUnformat.setOnAction(e -> {
-			CommonAction.pressSqlText();
+			CommonUtility.pressSqlText();
 		});
 
 		MenuItem unformatAll = new MenuItem("Unformat All SQL");
 		unformatAll.setOnAction(e -> {
-			CommonAction.pressSqlText();
+			CommonUtility.pressSqlText();
 		});
 
 		MenuItem find = new MenuItem("Find");

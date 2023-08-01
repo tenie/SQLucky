@@ -24,6 +24,7 @@ import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -39,7 +40,6 @@ import net.tenie.fx.Action.sqlExecute.RunSqlStatePo;
 import net.tenie.fx.Action.sqlExecute.SelectAction;
 import net.tenie.fx.Action.sqlExecute.SqlExecuteOption;
 import net.tenie.fx.Po.SqlData;
-import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.DmlDdlDao;
 
 /**
@@ -272,7 +272,7 @@ public class RunSQLHelper {
 		RUN_STATUS.put(statusKey, -1);
 
 		settingBtn();
-		SdkComponent.showDetailPane();
+//		SdkComponent.showDetailPane();
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setTidx(tabIdxv);
 		state.setIsRefresh(true);
@@ -314,7 +314,7 @@ public class RunSQLHelper {
 		}
 
 		settingBtn();
-		SdkComponent.showDetailPane();
+//		SdkComponent.showDetailPane();
 
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsCallFunc(true);
@@ -341,7 +341,7 @@ public class RunSQLHelper {
 		}
 
 		settingBtn();
-		SdkComponent.showDetailPane();
+//		SdkComponent.showDetailPane();
 
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setTidx(tabIdxv);
@@ -376,7 +376,7 @@ public class RunSQLHelper {
 		}
 
 		settingBtn();
-		SdkComponent.showDetailPane();
+//		SdkComponent.showDetailPane();
 
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsCreateFunc(isCreateFunc);
@@ -402,7 +402,7 @@ public class RunSQLHelper {
 		}
 
 		settingBtn();
-		SdkComponent.showDetailPane();
+//		SdkComponent.showDetailPane();
 
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsRefresh(true);

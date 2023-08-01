@@ -12,7 +12,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 
-import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
@@ -24,14 +23,13 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -48,7 +46,6 @@ import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
-import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.main.Restart;
 import net.tenie.lib.db.h2.AppDao;
@@ -130,31 +127,31 @@ public class CommonAction {
 		nd.getStyleClass().remove(css);
 	}
 
-	// 键盘ESC按下后: 查找表的输入框清空, 选中的文本取消选中, 查找替换面板关闭
-	public static void pressBtnESC() {
-		ComponentGetter.dbInfoFilter.setText("");
-
-		// 代码编辑内容, 取消选中, 高亮恢复复原
-		SqluckyEditor.deselect();
-		SqluckyEditor.applyHighlighting();
-
-		// 隐藏查找, 替换窗口
-		hideFindReplaceWindow();
-
-		// 提示窗口
-		SqluckyEditor.currentMyTab().getSqlCodeArea().hideAutoComplete();
-	}
-
-	// 隐藏查找, 替换窗口
-	public static void hideFindReplaceWindow() {
-		VBox b = SqluckyEditor.getTabVbox();
-		var sltb = SqluckyEditor.currentMyTab();
-		int bsize = b.getChildren().size();
-		if (bsize > 1) {
-			FindReplaceTextPanel.delFindReplacePane(sltb);
-		}
-
-	}
+//	// 键盘ESC按下后: 查找表的输入框清空, 选中的文本取消选中, 查找替换面板关闭
+//	public static void pressBtnESC() {
+//		ComponentGetter.dbInfoFilter.setText("");
+//
+//		// 代码编辑内容, 取消选中, 高亮恢复复原
+//		SqluckyEditor.deselect();
+//		SqluckyEditor.applyHighlighting();
+//
+//		// 隐藏查找, 替换窗口
+//		hideFindReplaceWindow();
+//
+//		// 提示窗口
+//		SqluckyEditor.currentMyTab().getSqlCodeArea().hideAutoComplete();
+//	}
+//
+//	// 隐藏查找, 替换窗口
+//	public static void hideFindReplaceWindow() {
+//		VBox b = SqluckyEditor.getTabVbox();
+//		var sltb = SqluckyEditor.currentMyTab();
+//		int bsize = b.getChildren().size();
+//		if (bsize > 1) {
+//			FindReplaceTextPanel.delFindReplacePane(sltb);
+//		}
+//
+//	}
 
 	// ctrl + S 按钮触发, 保存数据或sql文本
 //	public static void ctrlAndSAction() {
@@ -302,47 +299,47 @@ public class CommonAction {
 		stp.setExpanded(true);
 	}
 
-	// 代码格式化
-	public static void formatSqlText() {
-		CodeArea code = SqluckyEditor.getCodeArea();
-		String txt = code.getSelectedText();
-		if (StrUtils.isNotNullOrEmpty(txt)) {
-			IndexRange i = code.getSelection();
-			int start = i.getStart();
-			int end = i.getEnd();
-
-			String rs = SqlFormatter.format(txt);
-			code.deleteText(start, end);
-			code.insertText(start, rs);
-		} else {
-			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
-			String rs = SqlFormatter.format(txt);
-			code.clear();
-			code.appendText(rs);
-		}
-		SqluckyEditor.currentSqlCodeAreaHighLighting();
-	}
-
-	// sql 压缩
-	public static void pressSqlText() {
-		CodeArea code = SqluckyEditor.getCodeArea();
-		String txt = code.getSelectedText();
-		if (StrUtils.isNotNullOrEmpty(txt)) {
-			IndexRange i = code.getSelection();
-			int start = i.getStart();
-			int end = i.getEnd();
-
-			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
-			code.deleteText(start, end);
-			code.insertText(start, rs);
-		} else {
-			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
-			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
-			code.clear();
-			code.appendText(rs);
-		}
-		SqluckyEditor.currentSqlCodeAreaHighLighting();
-	}
+//	// 代码格式化
+//	public static void formatSqlText() {
+//		CodeArea code = SqluckyEditor.getCodeArea();
+//		String txt = code.getSelectedText();
+//		if (StrUtils.isNotNullOrEmpty(txt)) {
+//			IndexRange i = code.getSelection();
+//			int start = i.getStart();
+//			int end = i.getEnd();
+//
+//			String rs = SqlFormatter.format(txt);
+//			code.deleteText(start, end);
+//			code.insertText(start, rs);
+//		} else {
+//			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
+//			String rs = SqlFormatter.format(txt);
+//			code.clear();
+//			code.appendText(rs);
+//		}
+//		SqluckyEditor.currentSqlCodeAreaHighLighting();
+//	}
+//
+//	// sql 压缩
+//	public static void pressSqlText() {
+//		CodeArea code = SqluckyEditor.getCodeArea();
+//		String txt = code.getSelectedText();
+//		if (StrUtils.isNotNullOrEmpty(txt)) {
+//			IndexRange i = code.getSelection();
+//			int start = i.getStart();
+//			int end = i.getEnd();
+//
+//			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
+//			code.deleteText(start, end);
+//			code.insertText(start, rs);
+//		} else {
+//			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
+//			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
+//			code.clear();
+//			code.appendText(rs);
+//		}
+//		SqluckyEditor.currentSqlCodeAreaHighLighting();
+//	}
 
 	// 代码大写
 	public static void UpperCaseSQLTextSelectText() {

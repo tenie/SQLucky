@@ -74,7 +74,7 @@ import net.tenie.Sqlucky.sdk.utility.TreeObjAction;
  * @author tenie
  */
 public class MyBottomSheet {
-	public SqluckyCodeAreaHolder sqlArea;
+	private SqluckyCodeAreaHolder sqlArea;
 	private SheetDataValue tableData;
 	private boolean isDDL = false;
 

@@ -11,6 +11,12 @@ import net.tenie.Sqlucky.sdk.po.KeyBindingItemPo;
 import net.tenie.Sqlucky.sdk.po.db.KeysBindingPO;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 
+/**
+ * 菜单按钮会缓存起来, 使用按钮的快捷键设置来设置全局的快捷键设置
+ * 
+ * @author tenie
+ *
+ */
 public class KeyBindingCache {
 	static List<KeyBindingItemPo> items = new ArrayList<>();
 
