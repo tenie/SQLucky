@@ -32,6 +32,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -48,7 +49,6 @@ import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
-import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
 

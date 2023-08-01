@@ -1,4 +1,4 @@
-package net.tenie.fx.config;
+package net.tenie.Sqlucky.sdk.db;
 
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -10,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 
 /**

@@ -134,7 +134,7 @@ public class DockSideWindow {
 
 		vb.getStyleClass().add("connectionEditor");
 
-		vb.setPrefWidth(800);
+		vb.setPrefWidth(1000);
 		AnchorPane bottomPane = new AnchorPane();
 		bottomPane.setPadding(new Insets(10));
 

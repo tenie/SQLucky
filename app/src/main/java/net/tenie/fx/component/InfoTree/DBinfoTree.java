@@ -25,6 +25,7 @@ import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
@@ -40,7 +41,6 @@ import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.InfoTree.TreeItem.MyTreeItem;
-import net.tenie.fx.config.DBConns;
 import net.tenie.fx.dao.ConnectionDao;
 
 /**

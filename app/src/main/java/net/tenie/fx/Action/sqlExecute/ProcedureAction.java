@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -24,7 +25,6 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
-import net.tenie.fx.config.DBConns;
 
 public class ProcedureAction {
 

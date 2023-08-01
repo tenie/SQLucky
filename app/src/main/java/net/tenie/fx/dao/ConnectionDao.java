@@ -14,6 +14,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.DBTools;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -27,7 +28,6 @@ import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
-import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.DbVendor;
 
 public class ConnectionDao {

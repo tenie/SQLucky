@@ -10,15 +10,14 @@ import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtility;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabs;
 
 /**
@@ -70,7 +69,7 @@ public class ButtonFactory {
 		JFXButton formatSQL = new JFXButton();
 		formatSQL.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		formatSQL.setOnMouseClicked(v -> {
-			CommonAction.formatSqlText();
+			CommonUtility.formatSqlText();
 		});
 		formatSQL.setTooltip(MyTooltipTool.instance("Format"));
 
