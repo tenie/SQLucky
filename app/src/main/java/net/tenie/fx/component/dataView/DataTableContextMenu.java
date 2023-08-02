@@ -17,7 +17,7 @@ import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyPopupNumberFilter;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -38,7 +38,7 @@ public class DataTableContextMenu {
 
 		// 过滤框
 		PopupFilter<ResultSetRowPo, String> popupFilter;
-		if (CommonUtility.isNum(type)) {
+		if (CommonUtils.isNum(type)) {
 			// 过滤框
 			popupFilter = new MyPopupNumberFilter<>(col);
 			col.setOnFilterAction(e -> popupFilter.showPopup());
@@ -57,7 +57,7 @@ public class DataTableContextMenu {
 //		miActive.getStyleClass().add("myMenuItem");
 		miActive.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 		miActive.setOnAction(e -> { // 粘贴板赋值
-			CommonUtility.setClipboardVal(colname);
+			CommonUtils.setClipboardVal(colname);
 		});
 
 		Menu copyColData = new Menu("Copy Column Data");
@@ -139,7 +139,7 @@ public class DataTableContextMenu {
 			@Override
 			public void handle(ActionEvent e) {
 				ObservableList<ResultSetRowPo> vals = myBottomSheet.getValsHelper(isSelected);
-				final File ff = CommonUtility.getFileHelper(isFile);
+				final File ff = CommonUtils.getFileHelper(isFile);
 				Thread t = new Thread() {
 					@Override
 					public void run() {
@@ -154,7 +154,7 @@ public class DataTableContextMenu {
 									}
 								}
 							} else {
-								CommonUtility.setClipboardVal(sql);
+								CommonUtils.setClipboardVal(sql);
 							}
 						}
 					}

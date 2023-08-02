@@ -29,7 +29,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
@@ -73,7 +73,7 @@ public class DataModelImportWindow {
 			stage.close();
 		});
 
-		CommonUtility.loadCss(scene);
+		CommonUtils.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 

@@ -11,7 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Font;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 public class LoadingAnimation {
 	private static Label lb  ;
@@ -30,7 +30,7 @@ public class LoadingAnimation {
 			root.getChildren().get(0).setDisable(true);
 			lb = new Label(loadingString);
 			Animation = IconGenerator.svgImageUnactive("icomoon-spinner3",  fontSize);
-			CommonUtility.rotateTransition(Animation);
+			CommonUtils.rotateTransition(Animation);
 			lb.setGraphic(Animation);
 			lb.setFont(new Font(fontSize));
 			StackPane.setAlignment(lb, Pos.CENTER);
@@ -95,7 +95,7 @@ public class LoadingAnimation {
 		 StackPane root = ComponentGetter.primarySceneRoot;
 			addLoading(root, loadingString , 30);
 //			后台执行
-			CommonUtility.runThread(v -> {
+			CommonUtils.runThread(v -> {
 				consumer.accept("");
 				rmLoading(root);
 			});
@@ -107,7 +107,7 @@ public class LoadingAnimation {
 		StackPane root = ComponentGetter.currentStackPane;
 		addLoading(root, loadingString , 30);
 //		后台执行
-		CommonUtility.runThread(v -> {
+		CommonUtils.runThread(v -> {
 			consumer.accept("");
 			rmLoading(root);
 		});

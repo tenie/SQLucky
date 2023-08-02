@@ -20,7 +20,7 @@ import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 public class DataTransferWindow {
 	Stage stage;
@@ -42,7 +42,7 @@ public class DataTransferWindow {
 			stage.show();
 		}
 		
-		CommonUtility.loadCss(scene);
+		CommonUtils.loadCss(scene);
 	}
 	
 	// 根据给定的fxml 创建 模态框
@@ -57,7 +57,7 @@ public class DataTransferWindow {
 			URL url = getClass().getResource(fxml);
 			Parent root = FXMLLoader.load(url);
 		    scene = new Scene(root);
-		    CommonUtility.loadCss(scene); 
+		    CommonUtils.loadCss(scene); 
 			stage.setScene(scene);
 			stage.show();
 			

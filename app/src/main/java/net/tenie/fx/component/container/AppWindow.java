@@ -19,7 +19,7 @@ import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.component.AppWindowComponentGetter;
 
 /*   @author tenie */
@@ -37,7 +37,7 @@ public class AppWindow {
 
 	public AppWindow() {
 		mainWindow = new VBox();
-		CommonUtility.addCssClass(mainWindow, "main-background");
+		CommonUtils.addCssClass(mainWindow, "main-background");
 		ComponentGetter.mainWindow = mainWindow;
 
 		mainMenuBar = new MenuBarContainer();
@@ -89,13 +89,13 @@ public class AppWindow {
 			mainWindow.getChildren().addAll(headAnchorPane, masterDetailPane);
 			VBox.setMargin(masterDetailPane, new Insets(3, 3, 3, 3));
 //TODO			mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
-			CommonUtility.fadeTransition(operate.getContainer(), 2000);
-			CommonUtility.fadeTransition(dataView.getContainer(), 2000);
-			CommonUtility.fadeTransition(mainMenuBar.getMainMenuBar(), 2000);
-			CommonUtility.fadeTransition(masterDetailPane, 2000);
+			CommonUtils.fadeTransition(operate.getContainer(), 2000);
+			CommonUtils.fadeTransition(dataView.getContainer(), 2000);
+			CommonUtils.fadeTransition(mainMenuBar.getMainMenuBar(), 2000);
+			CommonUtils.fadeTransition(masterDetailPane, 2000);
 		});
 
-		CommonUtility.fadeTransition(mainWindow, 1000);
+		CommonUtils.fadeTransition(mainWindow, 1000);
 	}
 
 	static {

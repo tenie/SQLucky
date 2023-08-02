@@ -17,7 +17,7 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -102,7 +102,7 @@ public class DaoTools {
 					String type = cellVal.getField().getColumnClassName().get();
 					int fieldType = cellVal.getField().getColumnType().get();
 					// 时间的情况
-					if (CommonUtility.isDateAndDateTime(fieldType)) {
+					if (CommonUtils.isDateAndDateTime(fieldType)) {
 						Date dv = StrUtils.StrToDate_L(strVal);
 						pstmt.setObject(idx, dv);
 						logmsg += idx + " : " + dv + "\n";

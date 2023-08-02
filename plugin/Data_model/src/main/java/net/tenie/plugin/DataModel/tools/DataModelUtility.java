@@ -37,7 +37,7 @@ import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.DataModel.DataModelTabTree;
@@ -98,7 +98,7 @@ public class DataModelUtility {
 			// 载入动画
 			LoadingAnimation.addLoading(sceneRoot, "Saving....");
 //			后台执行 数据导入
-			CommonUtility.runThread(v -> {
+			CommonUtils.runThread(v -> {
 				try {
 					// 读取
 					DataModelInfoPo DataModelPoVal = readJosnModel(encode, f);
@@ -304,7 +304,7 @@ public class DataModelUtility {
 			}
 
 		};
-		CommonUtility.addInitTask(cr);
+		CommonUtils.addInitTask(cr);
 
 	}
 

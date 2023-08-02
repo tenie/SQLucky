@@ -20,7 +20,7 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -34,7 +34,7 @@ public class DBTools {
 
 	public static String dbFilePath() {
 		String dir = "/.sqlucky/";
-		if (CommonUtility.isDev()) {
+		if (CommonUtils.isDev()) {
 			dir = "/.sqlucky_dev/";
 		}
 		String path = FileUtils.getUserDirectoryPath() + dir;

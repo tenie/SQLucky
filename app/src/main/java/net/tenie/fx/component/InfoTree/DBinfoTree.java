@@ -24,7 +24,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
-import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
@@ -32,7 +31,8 @@ import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TreeObjAction;
 import net.tenie.fx.Action.CommonAction;
@@ -133,7 +133,7 @@ public class DBinfoTree {
 				});
 			}
 		};
-		CommonUtility.addInitTask(cr);
+		CommonUtils.addInitTask(cr);
 	}
 
 	// 清空root, 然后插入新节点
@@ -247,7 +247,7 @@ public class DBinfoTree {
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
 				CommonAction.openConn(item);
-				CodeArea codeArea = SqluckyEditor.getCodeArea();
+				CodeArea codeArea = SqluckyEditorUtils.getCodeArea();
 				if (codeArea != null) {
 					codeArea.requestFocus();
 					codeArea.setShowCaret(CaretVisibility.ON);
@@ -574,13 +574,13 @@ public class DBinfoTree {
 		TitledPane dbTitledPane = new TitledPane();
 		dbTitledPane.setText("DB Connection");
 		dbTitledPane.setUserData(new SqlcukyTitledPaneInfoPo("Sqlucky DB Connection", treeBtnPane));
-		CommonUtility.addCssClass(dbTitledPane, "titledPane-color");
+		CommonUtils.addCssClass(dbTitledPane, "titledPane-color");
 		dbTitledPane.setContent(DBinfoTreeView);
 
 		// 图标切换
-		CommonUtility.addInitTask(v -> {
+		CommonUtils.addInitTask(v -> {
 			Platform.runLater(() -> {
-				CommonUtility.setLeftPaneIcon(dbTitledPane, ComponentGetter.iconInfo, ComponentGetter.uaIconInfo);
+				CommonUtils.setLeftPaneIcon(dbTitledPane, ComponentGetter.iconInfo, ComponentGetter.uaIconInfo);
 			});
 
 		});

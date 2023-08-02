@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DraggingTabPaneSupport;
 
 /*   
@@ -40,7 +40,7 @@ public class DataViewContainer {
 			var list = c.getList();
 			if(list.size() == 0) {
 //				SdkComponent.hideBottomPane(); 
-				CommonUtility.delayRunThread(v -> {
+				CommonUtils.delayRunThread(v -> {
 					Platform.runLater(() -> {
 						if (dataView.getTabs().size() == 0) {
 							SdkComponent.hideBottomPane();

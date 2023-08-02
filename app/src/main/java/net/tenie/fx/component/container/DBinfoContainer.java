@@ -9,7 +9,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
@@ -61,9 +61,9 @@ public class DBinfoContainer {
 		
 		ComponentGetter.infoAccordion = ad;
 		
-		CommonUtility.fadeTransition(dbInfoTreeBtnPane, 1000); 
-		CommonUtility.fadeTransition(ad, 1000);  
-		CommonUtility.fadeTransition(dbInfoTreeView, 1000); 
+		CommonUtils.fadeTransition(dbInfoTreeBtnPane, 1000); 
+		CommonUtils.fadeTransition(ad, 1000);  
+		CommonUtils.fadeTransition(dbInfoTreeView, 1000); 
 		
 		
 	}

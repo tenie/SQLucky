@@ -16,7 +16,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.Action.CommonAction;
 
 public class DialogTools {
@@ -122,7 +122,7 @@ public class DialogTools {
 		stage.setMaximized(false);
 		stage.setResizable(false);
 		stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
-		CommonUtility.loadCss(scene);
+		CommonUtils.loadCss(scene);
 		
 		stage.setOnCloseRequest(v -> {
 

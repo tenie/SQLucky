@@ -48,7 +48,7 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 
@@ -464,7 +464,7 @@ public class ImportCsvNextWindow {
 		});
 
 		stage.setTitle(title);
-		CommonUtility.loadCss(scene);
+		CommonUtils.loadCss(scene);
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setScene(scene);
 

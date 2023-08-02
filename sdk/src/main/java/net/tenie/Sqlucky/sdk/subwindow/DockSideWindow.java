@@ -3,7 +3,6 @@ package net.tenie.Sqlucky.sdk.subwindow;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -11,7 +10,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
@@ -20,7 +18,7 @@ import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 
@@ -88,43 +86,12 @@ public class DockSideWindow {
 		return topfp;
 	}
 
-	// 按钮面板
-	private AnchorPane btnPane() {
-		AnchorPane btnPane = new AnchorPane();
-
-		Button cancel = cancelBtn();
-
-		btnPane.getChildren().add(cancel);
-		AnchorPane.setRightAnchor(cancel, 10.0);
-		return btnPane;
-	}
-
 	// 组件布局
 	public void layout(VBox tbox, String tableName) {
-
-		GridPane grid = new GridPane();
-		tbox.getChildren().add(grid);
 		tbox.setPadding(new Insets(5));
-
-		// 按钮
-		AnchorPane btnsPane = btnPane();
-		tbox.getChildren().add(btnsPane);
-
 		Stage stage = CreateWindow(tbox, tableName);
-		grid.setHgap(10);
-		grid.setVgap(10);
-		grid.setPadding(new Insets(20, 10, 10, 10));
 
 		stage.show();
-	}
-
-	public Button cancelBtn() {
-		Button cancelBtn = new Button("Close");
-		cancelBtn.getStyleClass().add("myAlertBtn");
-		cancelBtn.setOnAction(e -> {
-			stage.close();
-		});
-		return cancelBtn;
 	}
 
 	public Stage CreateWindow(VBox vb, String title) {
@@ -149,7 +116,7 @@ public class DockSideWindow {
 		});
 
 		stage.setTitle(title);
-		CommonUtility.loadCss(scene);
+		CommonUtils.loadCss(scene);
 		stage.initModality(Modality.WINDOW_MODAL);
 		stage.setScene(scene);
 		stage.setOnCloseRequest(e -> myBottomSheet.clean());

@@ -13,7 +13,7 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /**
  * 只读的表查询
@@ -91,7 +91,7 @@ public class SelectInfoTableDao {
 				if (obj == null) {
 					val = new SimpleStringProperty("<null>");
 				} else {
-					if (CommonUtility.isDateAndDateTime(dbtype)) {
+					if (CommonUtils.isDateAndDateTime(dbtype)) {
 						Object objtmp = rs.getObject(i + 1);
 						var dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
 						val = new SimpleStringProperty(dateStr);

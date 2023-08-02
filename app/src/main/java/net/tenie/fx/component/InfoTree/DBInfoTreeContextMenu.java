@@ -18,7 +18,7 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
@@ -168,7 +168,7 @@ public class DBInfoTreeContextMenu {
 	// 设置复制节点名称
 	public void copuNodeName(String nodeName) {
 		copyNameMenu.setOnAction(e -> {
-			CommonUtility.setClipboardVal(nodeName);
+			CommonUtils.setClipboardVal(nodeName);
 		});
 	}
 

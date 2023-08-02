@@ -34,7 +34,7 @@ import lombok.extern.slf4j.Slf4j;
  * @Copyright:
  */
 @Slf4j
-public class XmlUtil {
+public class XmlUtils {
 
     public static XmlMapper xmlMapper = new XmlMapper();
     ObjectMapper om = new ObjectMapper();

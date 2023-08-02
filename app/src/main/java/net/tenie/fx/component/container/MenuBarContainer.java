@@ -10,7 +10,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
-import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.KeyBindingCache;
 import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
@@ -18,7 +17,8 @@ import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportSQLWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
@@ -117,7 +117,7 @@ public class MenuBarContainer {
 
 		MenuItem codeAutocompletionMenu = new MenuItem(StrUtils.MenuItemNameFormat("Code Autocompletion"));
 		codeAutocompletionMenu.setOnAction(value -> {
-			SqluckyEditor.currentMyTab().getSqlCodeArea().callPopup();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().callPopup();
 		});
 
 		MenuItem nce = new MenuItem(StrUtils.MenuItemNameFormat("Add New Edit Page"));
@@ -134,18 +134,18 @@ public class MenuBarContainer {
 		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
 		Find.setGraphic(IconGenerator.svgImageDefActive("search"));
 		Find.setOnAction(value -> {
-			CommonUtility.findReplace(false);
+			CommonUtils.findReplace(false);
 		});
 
 		MenuItem FindReplace = new MenuItem(StrUtils.MenuItemNameFormat("Replace"));
 		FindReplace.setOnAction(value -> {
-			CommonUtility.findReplace(true);
+			CommonUtils.findReplace(true);
 		});
 
 		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format"));
 		Format.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		Format.setOnAction(value -> {
-			CommonUtility.formatSqlText();
+			CommonUtils.formatSqlText();
 		});
 
 		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Line Comment"));
@@ -179,13 +179,13 @@ public class MenuBarContainer {
 		MenuItem mvB = new MenuItem(StrUtils.MenuItemNameFormat("Move to begin of line"));
 		mvB.setGraphic(IconGenerator.svgImageDefActive("step-backward"));
 		mvB.setOnAction(e -> {
-			SqluckyEditor.currentMyTab().getSqlCodeArea().moveAnchorToLineBegin();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().moveAnchorToLineBegin();
 		});
 
 		MenuItem mvE = new MenuItem(StrUtils.MenuItemNameFormat("Move to end of line"));
 		mvE.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
 		mvE.setOnAction(e -> {
-			SqluckyEditor.currentMyTab().getSqlCodeArea().moveAnchorToLineEnd();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().moveAnchorToLineEnd();
 		});
 
 		cursorMenu.getItems().addAll(mvB, mvE);
@@ -193,32 +193,32 @@ public class MenuBarContainer {
 		Menu enditLine = new Menu("Edit Line");
 		MenuItem delWord = new MenuItem(StrUtils.MenuItemNameFormat("Delete the word before the cursor")); // (ctrl+shift+W)
 		delWord.setOnAction(e -> {
-			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorBeforeWord();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().delAnchorBeforeWord();
 		});
 
 		MenuItem delChar = new MenuItem(StrUtils.MenuItemNameFormat("Delete the character before the cursor")); // (ctrl+shift+H)
 		delChar.setOnAction(e -> {
-			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorBeforeChar();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().delAnchorBeforeChar();
 		});
 
 		MenuItem delAllChar = new MenuItem(StrUtils.MenuItemNameFormat("Delete all characters before the cursor"));// (ctrl+shift+U)
 		delAllChar.setOnAction(e -> {
-			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorBeforeString();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().delAnchorBeforeString();
 		});
 
 		MenuItem delWordBackward = new MenuItem(StrUtils.MenuItemNameFormat("Delete the word after the cursor"));// (alt+shift+D)
 		delWordBackward.setOnAction(e -> {
-			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorAfterWord();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().delAnchorAfterWord();
 		});
 
 		MenuItem delCharBackward = new MenuItem(StrUtils.MenuItemNameFormat("Delete the character after the cursor"));// (ctrl+shift+D)
 		delCharBackward.setOnAction(e -> {
-			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorAfterChar();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().delAnchorAfterChar();
 		});
 		MenuItem delAllCharBackward = new MenuItem(
 				StrUtils.MenuItemNameFormat("Delete all characters after the cursor"));
 		delAllCharBackward.setOnAction(e -> {
-			SqluckyEditor.currentMyTab().getSqlCodeArea().delAnchorAfterString();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().delAnchorAfterString();
 		});
 		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
 
@@ -417,7 +417,7 @@ public class MenuBarContainer {
 		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));
 		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("windows-clipboard-variant-edit"));
 		SignUpMenuItem.setOnAction(value -> {
-			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/");
+			CommonUtils.OpenURLInBrowser("https://app.sqlucky.com/");
 		});
 
 		MenuItem checkForUpdates = new MenuItem(StrUtils.MenuItemNameFormat("Check For Updates"));

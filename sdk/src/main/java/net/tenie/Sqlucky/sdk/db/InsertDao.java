@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*
@@ -76,7 +76,7 @@ public class InsertDao {
 				int javatype = cellPo.getField().getColumnType().get();
 				String columnTypeName = cellPo.getField().getColumnTypeName().get();
 				logger.info("javatype = " + javatype + " | " + columnTypeName);
-				if (CommonUtility.isDateAndDateTime(javatype)) {
+				if (CommonUtils.isDateAndDateTime(javatype)) {
 					if (StrUtils.isNullOrEmpty(val.trim())) {
 						pstmt.setObject(idx, null);
 						insertLog += " | null";
@@ -92,7 +92,7 @@ public class InsertDao {
 //					pstmt.setTimestamp(idx, ts);
 
 					// 是数字又是空字符串，设置为null
-				} else if (CommonUtility.isNum(javatype)) {
+				} else if (CommonUtils.isNum(javatype)) {
 					val = val.trim();
 					if (StrUtils.isNullOrEmpty(val)) { // 空字符串， 设置null
 						pstmt.setObject(idx, null);
@@ -187,7 +187,7 @@ public class InsertDao {
 						idx--;
 					}
 					// 时间类型判断
-					else if (CommonUtility.isDateAndDateTime(javatype)) {
+					else if (CommonUtils.isDateAndDateTime(javatype)) {
 						// 空字符串 给字段复制null
 						if (StrUtils.isNullOrEmpty(val.trim())) {
 							pstmt.setObject(idx, null);
@@ -198,7 +198,7 @@ public class InsertDao {
 						}
 
 						// 数字判断
-					} else if (CommonUtility.isNum(javatype)) {
+					} else if (CommonUtils.isNum(javatype)) {
 						val = val.trim();
 						if (StrUtils.isNullOrEmpty(val)) { // 空字符串， 设置null
 							pstmt.setObject(idx, null);
@@ -284,7 +284,7 @@ public class InsertDao {
 						insertValue += tmp;
 					}
 					// 时间类型判断
-					else if (CommonUtility.isDateAndDateTime(javatype)) {
+					else if (CommonUtils.isDateAndDateTime(javatype)) {
 						// 空字符串 给字段复制null
 						if (StrUtils.isNullOrEmpty(val.trim())) {
 							insertValue += "null";
@@ -294,7 +294,7 @@ public class InsertDao {
 						}
 
 						// 数字判断
-					} else if (CommonUtility.isNum(javatype)) {
+					} else if (CommonUtils.isNum(javatype)) {
 						val = val.trim();
 						if (StrUtils.isNullOrEmpty(val)) { // 空字符串， 设置null
 							insertValue += "null";
@@ -442,7 +442,7 @@ public class InsertDao {
 						insertValue += tmp;
 					}
 					// 时间类型判断
-					else if (CommonUtility.isDateAndDateTime(javatype)) {
+					else if (CommonUtils.isDateAndDateTime(javatype)) {
 						// 空字符串 给字段复制null
 						if (StrUtils.isNullOrEmpty(val.trim())) {
 							insertValue += "NULL";
@@ -463,7 +463,7 @@ public class InsertDao {
 //						}
 
 						// 数字判断
-					} else if (CommonUtility.isNum(javatype)) {
+					} else if (CommonUtils.isNum(javatype)) {
 						val = val.trim();
 						if (StrUtils.isNullOrEmpty(val)) { // 空字符串， 设置null
 							insertValue += "NULL";

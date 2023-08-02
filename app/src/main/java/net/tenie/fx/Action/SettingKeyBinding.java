@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /*   @author tenie */
 public final class SettingKeyBinding {
@@ -229,7 +229,7 @@ public final class SettingKeyBinding {
 	public static void sceneEventFilter(Scene scene, Consumer<String> call) {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
 			String val = "";
-			boolean isMacOs = CommonUtility.isMacOS();
+			boolean isMacOs = CommonUtils.isMacOS();
 			
 			if(isMacOs) {
 				val = macOsSetup(e);

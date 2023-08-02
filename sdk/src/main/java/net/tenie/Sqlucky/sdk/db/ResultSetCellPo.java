@@ -8,7 +8,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -126,12 +126,12 @@ public class ResultSetCellPo {
 					int dbtype = cell.getField().getColumnType().get();
 
 					// 如果类似是数字的, 新值不是数字, 还原
-					if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
+					if (CommonUtils.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
 						Platform.runLater(() -> cell.getCellData().setValue(oldValue));
 						return;
 					}
 
-					if (CommonUtility.isDateTime(dbtype) && "".equals(newValue)) {
+					if (CommonUtils.isDateTime(dbtype) && "".equals(newValue)) {
 						Platform.runLater(() -> cell.getCellData().setValue("<null>"));
 					}
 

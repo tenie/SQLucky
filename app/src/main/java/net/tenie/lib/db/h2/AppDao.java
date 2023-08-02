@@ -31,7 +31,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -190,7 +190,7 @@ public class AppDao {
 			String sql = readSqlFile("/db/app.sql");
 			execSqlFileString(conn, sql.trim());
 			sql = readSqlFile("/db/keysBinding.sql");
-			if (CommonUtility.isMacOS()) {
+			if (CommonUtils.isMacOS()) {
 				sql = macKeyChange(sql);
 			}
 			execSqlFileString(conn, sql);

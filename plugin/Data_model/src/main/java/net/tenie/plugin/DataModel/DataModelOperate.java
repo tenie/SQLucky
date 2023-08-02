@@ -31,7 +31,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
@@ -81,13 +81,13 @@ public class DataModelOperate {
 	public DataModelOperate() {
 		// search
 		queryBtn.setGraphic(ComponentGetter.getIconDefActive("windows-magnify-browse"));
-		queryBtn.setTooltip(CommonUtility.instanceTooltip("Search table & field info "));
+		queryBtn.setTooltip(CommonUtils.instanceTooltip("Search table & field info "));
 		queryBtn.setOnMouseClicked(e -> {
-			CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, filterHbox, txt);
+			CommonUtils.leftHideOrShowSecondOptionBox(optionVbox, filterHbox, txt);
 
 		});
 		queryExecBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
-		queryExecBtn.setTooltip(CommonUtility.instanceTooltip("Search table & field info "));
+		queryExecBtn.setTooltip(CommonUtils.instanceTooltip("Search table & field info "));
 		queryExecBtn.setOnMouseClicked(e -> {
 			String txtVal = txt.getText();
 			if (StrUtils.isNotNullOrEmpty(txtVal)) {
@@ -156,7 +156,7 @@ public class DataModelOperate {
 
 		// 删除
 		delBtn.setGraphic(ComponentGetter.getIconDefActive("trash"));
-		delBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
+		delBtn.setTooltip(CommonUtils.instanceTooltip("Import Data Model Json File "));
 		delBtn.setOnAction(e -> {
 			DataModelUtility.delAction();
 		});

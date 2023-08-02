@@ -23,7 +23,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
 
 /**
  * 
@@ -71,7 +70,8 @@ public final class ComponentGetter {
 	// 链接信息 treeView root
 //	public static TreeItem<TreeNodePo> dbInfoTreeRoot;
 	// 脚本treeView root
-	public static TreeItem<SqluckyTab> scriptTreeRoot;
+	public static TreeItem<MyEditorSheet> scriptTreeRoot;
+//	public static TreeItem<SqluckyTab> scriptTreeRoot;
 
 	public static NotificationPane notificationPane;
 	public static Menu pluginMenu;

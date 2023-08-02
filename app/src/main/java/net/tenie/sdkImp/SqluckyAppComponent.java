@@ -1,5 +1,6 @@
 package net.tenie.sdkImp;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +17,11 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingEditor;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -29,10 +31,12 @@ import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
+import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.dao.DmlDdlDao;
@@ -42,9 +46,15 @@ import net.tenie.lib.db.h2.AppDao;
 public class SqluckyAppComponent implements AppComponent {
 	private Consumer<String> dbInfoMenuOnShowingCaller;
 
+	// 设置文件打开时候目录path, 便于二次打开可以直达该目录
 	@Override
-	public SqluckyCodeAreaHolder createCodeArea() {
-		return new HighLightingCodeArea(null, null);
+	public void setOpenfileDir(String val) {
+		CommonAction.setOpenfileDir(val);
+	}
+
+	@Override
+	public SqluckyEditor createCodeArea() {
+		return new HighLightingEditor(null, null);
 	}
 
 	/**
@@ -460,4 +470,25 @@ public class SqluckyAppComponent implements AppComponent {
 		RunSQLHelper.refresh(DBConns.get(connName), sql, idx, isLock);
 	}
 
+	// 创建一个DocumentPo对象, 并保存在数据库
+	@Override
+	public DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph) {
+		return AppDao.scriptArchive(title, txt, filename, encode, paragraph);
+	}
+
+	@Override
+	public void updateScriptArchive(Connection conn, DocumentPo po) {
+		AppDao.updateScriptArchive(conn, po);
+	}
+
+	// 给脚本treeView 添加子节点
+	@Override
+	public void scriptTreeAddItem(MyEditorSheet sheet) {
+		ScriptTabTree.treeRootAddItem(sheet);
+	}
+
+	@Override
+	public void scriptTreeRefresh() {
+		ScriptTabTree.ScriptTreeView.refresh();
+	}
 }

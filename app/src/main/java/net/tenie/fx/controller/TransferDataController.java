@@ -48,7 +48,7 @@ import net.tenie.Sqlucky.sdk.po.component.SqluckyTextField;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CodeRunTimeCalculate;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Po.TreeNodePo;
@@ -335,10 +335,10 @@ public class TransferDataController implements Initializable {
 
 	// 设置 图标 css
 	private void setGraphicAndCss() {
-		CommonUtility.addCssClass(monBtn, "transfer-btn");
-		CommonUtility.addCssClass(amountTxt, "myTextField");
-		CommonUtility.addCssClass(upSelBtn, "transfer-btn");
-		CommonUtility.addCssClass(downSelBtn, "transfer-btn");
+		CommonUtils.addCssClass(monBtn, "transfer-btn");
+		CommonUtils.addCssClass(amountTxt, "myTextField");
+		CommonUtils.addCssClass(upSelBtn, "transfer-btn");
+		CommonUtils.addCssClass(downSelBtn, "transfer-btn");
 
 		title.setGraphic(IconGenerator.svgImageDefActive("gears"));
 		queryLabel.setGraphic(IconGenerator.svgImageDefActive("search"));

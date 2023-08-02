@@ -23,12 +23,12 @@ import net.tenie.Sqlucky.sdk.AutoComplete;
 import net.tenie.Sqlucky.sdk.SqluckyCodeArea;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -135,7 +135,7 @@ public class MyAutoComplete implements AutoComplete {
 				codeAreaReplaceString(selectVal, it.getValue());
 				pop.hide();
 			} else if (KeyCode.ESCAPE.equals(e.getCode())) {
-				CommonUtility.pressBtnESC();
+				CommonUtils.pressBtnESC();
 			}
 		});
 
@@ -188,7 +188,7 @@ public class MyAutoComplete implements AutoComplete {
 				var fs = getCacheTableFields();
 				tmpls.addAll(fs);
 			} else {
-				SqluckyConnector po = CommonUtility.getDbConnectionPoByComboBoxDbConnName();
+				SqluckyConnector po = CommonUtils.getDbConnectionPoByComboBoxDbConnName();
 				if (po != null) {
 					Map<String, DbSchemaPo> map = po.getSchemas();
 					DbSchemaPo spo = map.get(po.getDefaultSchema());
@@ -239,7 +239,7 @@ public class MyAutoComplete implements AutoComplete {
 
 	@Override
 	public Integer getMyTabId() {
-		SqluckyTab tb = SqluckyEditor.currentMyTab();
+		SqluckyTab tb = SqluckyEditorUtils.currentMyTab();
 		if (tb != null) {
 			var scpo = tb.getDocumentPo();
 			if (scpo != null) {
@@ -256,7 +256,7 @@ public class MyAutoComplete implements AutoComplete {
 		Consumer<String> caller = x -> {
 			var fs = tabpo.getFields();
 			if (fs == null || fs.size() == 0) {
-				SqluckyConnector dpov = CommonUtility.getDbConnectionPoByComboBoxDbConnName();
+				SqluckyConnector dpov = CommonUtils.getDbConnectionPoByComboBoxDbConnName();
 				if (dpov != null) {
 					Connection connv = dpov.getConn();
 					try {
@@ -287,7 +287,7 @@ public class MyAutoComplete implements AutoComplete {
 
 		// 是db对象的时候 才缓存
 		if (tabpo.getDbObj()) {
-			CommonUtility.runThread(caller);
+			CommonUtils.runThread(caller);
 		}
 
 	}
@@ -295,7 +295,7 @@ public class MyAutoComplete implements AutoComplete {
 	// 缓存页面单词
 	@Override
 	public void cacheTextWord() {
-		var mtb = SqluckyEditor.currentMyTab();
+		var mtb = SqluckyEditorUtils.currentMyTab();
 		String text = mtb.getSqlCodeArea().getCodeArea().getText();
 		Consumer<String> caller = x -> {
 			Integer id = getMyTabId();
@@ -316,7 +316,7 @@ public class MyAutoComplete implements AutoComplete {
 			}
 		};
 		if (StrUtils.isNotNullOrEmpty(text)) {
-			CommonUtility.runThread(caller);
+			CommonUtils.runThread(caller);
 		}
 
 	}
@@ -346,7 +346,7 @@ public class MyAutoComplete implements AutoComplete {
 		cacheTablePo(tabpo);
 
 		int len = selectVal.length();
-		var codeArea = SqluckyEditor.getCodeArea();
+		var codeArea = SqluckyEditorUtils.getCodeArea();
 		int anc = codeArea.getAnchor();
 
 		int start = 0;

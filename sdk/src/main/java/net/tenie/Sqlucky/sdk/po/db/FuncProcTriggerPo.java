@@ -2,7 +2,7 @@ package net.tenie.Sqlucky.sdk.po.db;
 
 import java.util.List;
 
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
  
 
 /*   @author tenie */
@@ -84,7 +84,7 @@ public class FuncProcTriggerPo {
 
 	public List<ProcedureFieldPo> getFields() {
 		if(isProcedure && ddl !=null && ddl.length() > 0) {
-			String args = CommonUtility.firstParenthesisInsideString(ddl);
+			String args = CommonUtils.firstParenthesisInsideString(ddl);
 		}
 		return fields;
 	}

@@ -5,7 +5,7 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.plugin.note.component.NoteTabTree;
 
 public class NoteDelegateImpl implements SqluckyPluginDelegate {
@@ -29,7 +29,7 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 		NotePane.setUserData(new SqlcukyTitledPaneInfoPo(pluginName, tree.getOptionBox()));
 
 		NotePane.setText("Note");
-		CommonUtility.addCssClass(NotePane, "titledPane-color");
+		CommonUtils.addCssClass(NotePane, "titledPane-color");
 		NotePane.setContent(tree.noteStackPane);
 
 		appComponent.addTitledPane(NotePane);
@@ -41,7 +41,7 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 		var icon = ComponentGetter.getIconDefActive("icomoon-pencil");
 		var uaicon = ComponentGetter.getIconUnActive("icomoon-pencil");
 
-		CommonUtility.setLeftPaneIcon(NotePane, icon, uaicon);
+		CommonUtils.setLeftPaneIcon(NotePane, icon, uaicon);
 	}
 
 	@Override

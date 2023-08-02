@@ -22,7 +22,7 @@ import net.tenie.Sqlucky.sdk.po.SelectExecInfo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /**
  * 
@@ -225,7 +225,7 @@ public class SelectDao {
 					ProcedureFieldPo po = pfp.get(i);
 					if (po.isOut()) {
 						Object objRtn = call.getObject(i + 1);
-						rowval.add(CommonUtility.createReadOnlyStringProperty(objRtn.toString()));
+						rowval.add(CommonUtils.createReadOnlyStringProperty(objRtn.toString()));
 
 						// 字段信息
 						SheetFieldPo sfpo = new SheetFieldPo();
@@ -323,7 +323,7 @@ public class SelectDao {
 				if (obj == null) {
 					val = new SimpleStringProperty("<null>");
 				} else {
-					if (CommonUtility.isDateAndDateTime(dbtype)) {
+					if (CommonUtils.isDateAndDateTime(dbtype)) {
 						Object objtmp = rs.getObject(i + 1);
 						var dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
 						if (dateStr != null) {
@@ -387,7 +387,7 @@ public class SelectDao {
 				if (obj == null) {
 					val = new SimpleStringProperty("<null>");
 				} else {
-					if (CommonUtility.isDateAndDateTime(dbtype)) {
+					if (CommonUtils.isDateAndDateTime(dbtype)) {
 						var dateStr = sqluckyConn.DateTimeToString(obj, dbtype);
 						val = new SimpleStringProperty(dateStr);
 					} else {

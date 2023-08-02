@@ -36,7 +36,7 @@ public class GenerateSQLString {
 			}
 			if (isNull) {
 				values.append("null");
-			} else if (CommonUtility.isString(type) || CommonUtility.isDateTime(type)) {
+			} else if (CommonUtils.isString(type) || CommonUtils.isDateTime(type)) {
 				values.append("'" + temp + "'");
 			} else {
 				values.append(temp);
@@ -67,7 +67,7 @@ public class GenerateSQLString {
 			String temp = data.get(i).get(); 
 			if ( "<null>".equals(temp)) {
 				continue;
-			} else if (CommonUtility.isString(type) || CommonUtility.isDateTime(type)) {
+			} else if (CommonUtils.isString(type) || CommonUtils.isDateTime(type)) {
 				values.append("'" + temp + "'");
 			} else {
 				values.append(temp);
@@ -115,7 +115,7 @@ public class GenerateSQLString {
 			String temp = cellpo.getCellData().get(); // data.get(i).get();
 			if (StrUtils.isNullOrEmpty(temp) || "<null>".equals(temp)) {
 				values.append("null");
-			} else if (CommonUtility.isString(type) || CommonUtility.isDateTime(type)) {
+			} else if (CommonUtils.isString(type) || CommonUtils.isDateTime(type)) {
 				values.append("'" + temp + "'");
 			} else {
 				values.append(temp);
@@ -160,7 +160,7 @@ public class GenerateSQLString {
 			String temp = cellpo.getCellData().get();
 			if (StrUtils.isNullOrEmpty(temp) || "<null>".equals(temp)) {
 				values.append("null");
-			} else if (CommonUtility.isString(type) || CommonUtility.isDateTime(type)) {
+			} else if (CommonUtils.isString(type) || CommonUtils.isDateTime(type)) {
 				values.append("'" );
 				values.append(temp);
 				values.append("'");

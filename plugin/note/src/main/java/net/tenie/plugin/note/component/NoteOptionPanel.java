@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.plugin.note.utility.NoteUtility;
@@ -59,25 +59,25 @@ public class NoteOptionPanel {
 		initSearchPanel();
 
 		openFolderBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-		openFolderBtn.setTooltip(CommonUtility.instanceTooltip("Import note folder "));
+		openFolderBtn.setTooltip(CommonUtils.instanceTooltip("Import note folder "));
 		openFolderBtn.setOnMouseClicked(e -> {
 			NoteTabTree.filePath = NoteUtility.openFolder(NoteTabTree.rootNode);
 		});
 
 		newFile.setGraphic(ComponentGetter.getIconDefActive("file-o"));
-		newFile.setTooltip(CommonUtility.instanceTooltip("New  file "));
+		newFile.setTooltip(CommonUtils.instanceTooltip("New  file "));
 		newFile.setOnMouseClicked(e -> {
 			NoteUtility.newFile(NoteTabTree.noteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
 		});
 
 		DeleteFile.setGraphic(ComponentGetter.getIconDefActive("trash"));
-		DeleteFile.setTooltip(CommonUtility.instanceTooltip("Delete  file "));
+		DeleteFile.setTooltip(CommonUtils.instanceTooltip("Delete  file "));
 		DeleteFile.setOnMouseClicked(e -> {
 			NoteUtility.deleteFile(NoteTabTree.noteTabTreeView);
 		});
 
 		showInFolder.setGraphic(ComponentGetter.getIconDefActive("sign-in"));
-		showInFolder.setTooltip(CommonUtility.instanceTooltip("Show In System folder"));
+		showInFolder.setTooltip(CommonUtils.instanceTooltip("Show In System folder"));
 		showInFolder.setOnMouseClicked(e -> {
 			NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
 		});
@@ -209,7 +209,7 @@ public class NoteOptionPanel {
 		currentShowGridPane = grid;
 		NoteUtility.isFile = true;
 		NoteUtility.isText = false;
-		CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, searchVbox, txt);
+		CommonUtils.leftHideOrShowSecondOptionBox(optionVbox, searchVbox, txt);
 	}
 
 	// 文件内容搜索展示
@@ -240,7 +240,7 @@ public class NoteOptionPanel {
 		currentShowGridPane = grid2;
 		NoteUtility.isFile = false;
 		NoteUtility.isText = true;
-		CommonUtility.leftHideOrShowSecondOptionBox(optionVbox, searchVbox2, txt);
+		CommonUtils.leftHideOrShowSecondOptionBox(optionVbox, searchVbox2, txt);
 
 	}
 

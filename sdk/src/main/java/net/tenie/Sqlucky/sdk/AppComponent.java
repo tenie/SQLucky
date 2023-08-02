@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -8,6 +9,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -16,9 +18,12 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 
 public interface AppComponent {
+	// 设置文件打开时候目录path, 便于二次打开可以直达该目录
+	public void setOpenfileDir(String val);
+
 	public void runSQL(SqluckyConnector sqlConn, String sqlv, boolean isCreateFunc);
 
-	public SqluckyCodeAreaHolder createCodeArea();
+	public SqluckyEditor createCodeArea();
 
 	/*
 	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab
@@ -107,4 +112,15 @@ public interface AppComponent {
 	public void recreateScriptTreeData(List<DocumentPo> docs);
 
 	public void mergeScriptTreeData(List<DocumentPo> docs);
+
+	// 创建一个DocumentPo对象, 并保存在数据库
+	public DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph);
+
+	public void updateScriptArchive(Connection conn, DocumentPo po);
+
+	// 给脚本treeView 添加子节点
+	public void scriptTreeAddItem(MyEditorSheet sheet);
+
+	// 刷新树
+	public void scriptTreeRefresh();
 }

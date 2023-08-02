@@ -4,7 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
-import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
@@ -21,7 +21,7 @@ import org.fxmisc.flowless.VirtualizedScrollPane;
  * @author tenie
  *
  */
-public class MyTextArea implements SqluckyCodeAreaHolder {
+public class MyTextArea implements SqluckyEditor {
 	private static Logger logger = LogManager.getLogger(MyTextArea.class);
 	private StackPane codeAreaPane;
 	private MyCodeArea codeArea;

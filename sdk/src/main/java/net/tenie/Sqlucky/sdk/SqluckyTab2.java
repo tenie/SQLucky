@@ -14,8 +14,8 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
  * @author tenie
  *
  */
-public interface SqluckyTab {
-	public SqluckyCodeAreaHolder getSqlCodeArea();
+public interface SqluckyTab2 {
+	public SqluckyEditor getSqlCodeArea();
 
 	public DocumentPo getDocumentPo();
 

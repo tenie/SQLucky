@@ -25,7 +25,7 @@ import net.tenie.Sqlucky.sdk.po.PluginInfoPO;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
@@ -184,7 +184,7 @@ public class PluginManageAction {
  
 	// 同步服务器的插件信息
 	public static void queryServerPluginInfo(SheetTableData sheetDaV , FilteredTableView<ResultSetRowPo> allPluginTable) {
-		if( CommonUtility.isLogin("Please Login First") == false) {
+		if( CommonUtils.isLogin("Please Login First") == false) {
 			return ;
 		}
 		LoadingAnimation.loadingAnimation("Loading...", v->{
@@ -239,12 +239,12 @@ public class PluginManageAction {
 	}
 	
 	public static void downloadPlugin(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo>  allPluginTable) {
-		if( CommonUtility.isLogin("Please Login First") == false) {
+		if( CommonUtils.isLogin("Please Login First") == false) {
 			return ;
 		}
 		LoadingAnimation.addLoading("Download ...");
 		
-		CommonUtility.runThread(v->{
+		CommonUtils.runThread(v->{
 			try {
 				int currentSelectIndex = allPluginTable.getSelectionModel().getSelectedIndex();
 				
@@ -255,7 +255,7 @@ public class PluginManageAction {
 				vals.put("PLUGIN_NAME", pluginName);
 				
 				
-				String modelPath = CommonUtility.sqluckyAppModsPath();
+				String modelPath = CommonUtils.sqluckyAppModsPath();
 //				modelPath += "/test.jar";
 				String fileName = HttpUtil.downloadPluginByPostToDir(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, vals);
 				

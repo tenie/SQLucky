@@ -4,7 +4,7 @@ import java.io.File;
 
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyAreaTab;
@@ -17,7 +17,7 @@ public class ScriptTreeAction {
 		String fn = tb.getDocumentPo().getFileFullName();
 		if(StrUtils.isNotNullOrEmpty(fn)) {
 			File file = new File(fn); 
-			CommonUtility.openExplorer(file.getParentFile());
+			CommonUtils.openExplorer(file.getParentFile());
 		}
 	}
 	

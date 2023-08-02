@@ -30,7 +30,7 @@ import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 
@@ -107,16 +107,16 @@ public class CheckUpdateWindow {
 	public  void downloadNewPatch(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo>  allPluginTable) {
 		LoadingAnimation.addLoading("Download ...");
 		
-		CommonUtility.runThread(v->{
+		CommonUtils.runThread(v->{
 			try {
 //				int currentSelectIndex = allPluginTable.getSelectionModel().getSelectedIndex();
 				
 				Map<String, String> vals = new HashMap<>();
-				if(CommonUtility.isWinOS()) {
+				if(CommonUtils.isWinOS()) {
 					vals.put("OS", "win");	
-				}else if(CommonUtility.isLinuxOS()) {
+				}else if(CommonUtils.isLinuxOS()) {
 					vals.put("OS", "linux");	
-				}else if(CommonUtility.isMacOS()) {
+				}else if(CommonUtils.isMacOS()) {
 					vals.put("OS", "mac");	
 				} 
 				vals.put("CLIENT_VERSION", ConfigVal.version); 
@@ -151,7 +151,7 @@ public class CheckUpdateWindow {
 		Button btn = new Button("Download"); 
 		btn.setDisable(true);
 		btn.setOnAction(v->{
-			CommonUtility.OpenURLInBrowser("https://github.com/tenie/SQLucky/releases");
+			CommonUtils.OpenURLInBrowser("https://github.com/tenie/SQLucky/releases");
 		});
 		list.add(null);
 		list.add(btn);
@@ -160,12 +160,12 @@ public class CheckUpdateWindow {
 		Label title = new Label(sign);
 		title.setPadding(new Insets(15));
 		Node nd = IconGenerator.svgImage("icomoon-spinner9", 30 , "#7CFC00"); 
-		CommonUtility.rotateTransition(nd);
+		CommonUtils.rotateTransition(nd);
 		title.setGraphic(nd);
 		vb.getChildren().add(title);
 		
 		//服务器检测版本
-		CommonUtility.runThread(str->{
+		CommonUtils.runThread(str->{
 			String msg = "检测失败";
 			try {
 				String version = newAppVersionCode();//HttpUtil.get(ConfigVal.getSqluckyServer()+"/sqlucky/version");

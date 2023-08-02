@@ -35,7 +35,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.DeleteDao;
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
@@ -60,7 +60,7 @@ import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
@@ -74,7 +74,7 @@ import net.tenie.Sqlucky.sdk.utility.TreeObjAction;
  * @author tenie
  */
 public class MyBottomSheet {
-	private SqluckyCodeAreaHolder sqlArea;
+	private SqluckyEditor sqlArea;
 	private SheetDataValue tableData;
 	private boolean isDDL = false;
 
@@ -133,10 +133,10 @@ public class MyBottomSheet {
 							var fds = ddlDmlpo.getFields();
 							var row = ddlDmlpo.addRow();
 							ddlDmlpo.addData(row,
-									CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+									CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 									fds.get(0));
-							ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
-							ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fds.get(2));
+							ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fds.get(1));
+							ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("success"), fds.get(2));
 						}
 
 					} catch (Exception e1) {
@@ -147,10 +147,10 @@ public class MyBottomSheet {
 						var fds = ddlDmlpo.getFields();
 						var row = ddlDmlpo.addRow();
 						ddlDmlpo.addData(row,
-								CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+								CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 								fds.get(0));
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fds.get(1));
-						ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("failed"), fds.get(2));
+						ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fds.get(1));
+						ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("failed"), fds.get(2));
 					}
 				}
 				rmUpdateData();
@@ -164,7 +164,7 @@ public class MyBottomSheet {
 					String msg = InsertDao.execInsert(conn, tabName, cells);
 					var fds = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 							fds.get(0));
 					ddlDmlpo.addData(row, new SimpleStringProperty(msg), fds.get(1));
 					ddlDmlpo.addData(row, new SimpleStringProperty("success"), fds.get(2));
@@ -174,7 +174,7 @@ public class MyBottomSheet {
 					for (int i = 0; i < cells.size(); i++) {
 						var cellpo = cells.get(i);
 						StringProperty sp = cellpo.getCellData();
-						CommonUtility.prohibitChangeListener(sp, sp.get());
+						CommonUtils.prohibitChangeListener(sp, sp.get());
 					}
 
 				} catch (Exception e1) {
@@ -182,7 +182,7 @@ public class MyBottomSheet {
 					btnDisable = false;
 					var fs = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 							fs.get(0));
 					ddlDmlpo.addData(row, new SimpleStringProperty(e1.getMessage()), fs.get(1));
 					ddlDmlpo.addData(row, new SimpleStringProperty("failed"), fs.get(2));
@@ -326,20 +326,20 @@ public class MyBottomSheet {
 					rs.getDatas().remove(sps);
 					var fs = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 							fs.get(0));
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fs.get(1));
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("success"), fs.get(2));
+					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fs.get(1));
+					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("success"), fs.get(2));
 
 				}
 
 			} catch (Exception e1) {
 				var fs = ddlDmlpo.getFields();
 				var row = ddlDmlpo.addRow();
-				ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+				ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 						fs.get(0));
-				ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(e1.getMessage()), fs.get(1));
-				ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("fail."), fs.get(2));
+				ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(e1.getMessage()), fs.get(1));
+				ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("fail."), fs.get(2));
 			} finally {
 				if (showDBExecInfo) {
 					TableViewUtils.showInfo(ddlDmlpo, null);
@@ -378,7 +378,7 @@ public class MyBottomSheet {
 					StringProperty newsp = new SimpleStringProperty(cellPo.getCellData().get());
 					appendRow.addCell(newsp, cellPo.getDbOriginalValue(), cellPo.getField());
 					int dataType = fs.get(j).getColumnType().get();
-					CommonUtility.newStringPropertyChangeListener(newsp, dataType);
+					CommonUtils.newStringPropertyChangeListener(newsp, dataType);
 					item.add(newsp);
 				}
 
@@ -397,7 +397,7 @@ public class MyBottomSheet {
 	 * 将数据表, 独立显示
 	 */
 	public void dockSide() {
-		String tableName = CommonUtility.tabText(tab);
+		String tableName = CommonUtils.tabText(tab);
 
 		FilteredTableView<ResultSetRowPo> table = tableData.getTable();
 		table.getColumns().forEach(tabCol -> {
@@ -421,7 +421,7 @@ public class MyBottomSheet {
 
 		File tmpFile = null;
 		if (isFile) {
-			tmpFile = CommonUtility.getFilePathHelper("sql");
+			tmpFile = CommonUtils.getFilePathHelper("sql");
 		}
 		final File ff = tmpFile;
 		LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
@@ -442,7 +442,7 @@ public class MyBottomSheet {
 								}
 							}
 						} else {
-							CommonUtility.setClipboardVal(sql);
+							CommonUtils.setClipboardVal(sql);
 						}
 
 					}
@@ -456,7 +456,7 @@ public class MyBottomSheet {
 	public void csvStrClipboard(boolean isSelected, boolean isFile) {
 		File tmpFile = null;
 		if (isFile) {
-			tmpFile = CommonUtility.getFilePathHelper("csv");
+			tmpFile = CommonUtils.getFilePathHelper("csv");
 		}
 		final File ff = tmpFile;
 
@@ -476,7 +476,7 @@ public class MyBottomSheet {
 								}
 							}
 						} else {
-							CommonUtility.setClipboardVal(sql);
+							CommonUtils.setClipboardVal(sql);
 						}
 					}
 				}
@@ -522,7 +522,7 @@ public class MyBottomSheet {
 							}
 							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
 								String rsStr = fieldsName.toString().trim();
-								CommonUtility.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
+								CommonUtils.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
 							}
 						}
 					};
@@ -557,7 +557,7 @@ public class MyBottomSheet {
 
 							}
 							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
-								CommonUtility.setClipboardVal(fieldsName.toString());
+								CommonUtils.setClipboardVal(fieldsName.toString());
 							}
 						}
 					};
@@ -918,7 +918,7 @@ public class MyBottomSheet {
 			// TODO 锁按钮锁着就不关闭
 			if (tableData.isLock() == false) {
 				if (this.tab != null && this.tab.selectedProperty().get() == false) {
-					CommonUtility.delayRunThread(str -> {
+					CommonUtils.delayRunThread(str -> {
 						Platform.runLater(() -> {
 							if (this.tab != null && this.tab.selectedProperty().get() == false) {
 								SdkComponent.clearDataTable(this.getTab());
@@ -952,7 +952,7 @@ public class MyBottomSheet {
 		String name = table.getTableName();
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
-		SqluckyCodeAreaHolder sqlArea = ComponentGetter.appComponent.createCodeArea();
+		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
 		mtb.setSqlArea(sqlArea);
 		VBox vb = new VBox();
 		String ddl = table.getDdl();
@@ -985,7 +985,7 @@ public class MyBottomSheet {
 			boolean isSelect) {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
-		SqluckyCodeAreaHolder sqlArea = ComponentGetter.appComponent.createCodeArea();
+		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
 		mtb.setSqlArea(sqlArea);
 		VBox box = DDLBox(sqluckyConn, mtb, ddl);
 		mtb.getTab().setContent(box);
@@ -999,7 +999,7 @@ public class MyBottomSheet {
 		String name = table.getTableName();
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
-		SqluckyCodeAreaHolder sqlArea = ComponentGetter.appComponent.createCodeArea();
+		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
 		mtb.setSqlArea(sqlArea);
 		VBox vb = new VBox();
 		String ddl = table.getDdl();
@@ -1029,7 +1029,7 @@ public class MyBottomSheet {
 			boolean isRunFunc) {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
-		SqluckyCodeAreaHolder sqlArea = ComponentGetter.appComponent.createCodeArea();
+		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
 		mtb.setSqlArea(sqlArea);
 		VBox box = DDLBox(sqluckyConn, mtb, ddl);
 		mtb.getTab().setContent(box);
@@ -1077,7 +1077,7 @@ public class MyBottomSheet {
 		// 按钮摆放的容器
 		HBox btnHbox = new HBox();
 
-		CommonUtility.addCssClass(pane, "data-table-btn-anchor-pane");
+		CommonUtils.addCssClass(pane, "data-table-btn-anchor-pane");
 		pane.prefHeight(25);
 
 		// 隐藏按钮
@@ -1322,7 +1322,7 @@ public class MyBottomSheet {
 	 * @param tableData 可以输入null , null时从当前tabpane中查找对象
 	 */
 	public void exportExcelAction(boolean isSelect) {
-		File ff = CommonUtility.getFilePathHelper("xls");
+		File ff = CommonUtils.getFilePathHelper("xls");
 		if (ff == null)
 			return;
 		if (ff.exists()) {
@@ -1349,11 +1349,11 @@ public class MyBottomSheet {
 		this.tableData = tableData;
 	}
 
-	public SqluckyCodeAreaHolder getSqlArea() {
+	public SqluckyEditor getSqlArea() {
 		return sqlArea;
 	}
 
-	public void setSqlArea(SqluckyCodeAreaHolder sqlArea) {
+	public void setSqlArea(SqluckyEditor sqlArea) {
 		this.sqlArea = sqlArea;
 	}
 

@@ -7,7 +7,7 @@ import java.util.List;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /*   @author tenie */
 public class ConfigVal {
@@ -102,7 +102,7 @@ public class ConfigVal {
 		if (SQLUCKY_URL_CUSTOM != null && !"".equals(SQLUCKY_URL_CUSTOM)) {
 			return SQLUCKY_URL_CUSTOM;
 		}
-		if (CommonUtility.isDev()) {
+		if (CommonUtils.isDev()) {
 			tmp = SQLUCKY_URL_DEV;
 		} else {
 			tmp = SQLUCKY_URL;

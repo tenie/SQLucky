@@ -8,17 +8,18 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.config.MainTabs;
 
 /**
  * 
@@ -69,7 +70,7 @@ public class ButtonFactory {
 		JFXButton formatSQL = new JFXButton();
 		formatSQL.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		formatSQL.setOnMouseClicked(v -> {
-			CommonUtility.formatSqlText();
+			CommonUtils.formatSqlText();
 		});
 		formatSQL.setTooltip(MyTooltipTool.instance("Format"));
 
@@ -78,7 +79,7 @@ public class ButtonFactory {
 		findSQlTxt.setGraphic(IconGenerator.svgImageDefActive("search"));
 		findSQlTxt.setId("runFunPro");
 		findSQlTxt.setTooltip(MyTooltipTool.instance("Find"));
-		findSQlTxt.setOnMouseClicked(e -> CommonUtility.findReplace(false));
+		findSQlTxt.setOnMouseClicked(e -> CommonUtils.findReplace(false));
 
 		runbtn.setOnMouseClicked(e -> {
 			RunSQLHelper.runSQLMethod();
@@ -137,7 +138,9 @@ public class ButtonFactory {
 				runFunPro.setDisable(true);
 			}
 			// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
-			MainTabs.setBoxIdx(CommonUtility.tabText(MainTabs.getActTab()), newValue.toString());
+//			MainTabs.setBoxIdx(CommonUtils.tabText(MainTabs.getActTab()), newValue.toString());
+			MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
+			sheet.setTabConnIdx(newValue.toString());
 		});
 		connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
 		ComponentGetter.connComboBox = connsComboBox;

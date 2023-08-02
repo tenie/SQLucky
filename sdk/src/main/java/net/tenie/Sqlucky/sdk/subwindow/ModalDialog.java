@@ -45,7 +45,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /**
  * 
@@ -161,7 +161,7 @@ public class ModalDialog {
 			final Stage stage = new Stage();
 			Scene scene = new Scene(node);
 
-			CommonUtility.loadCss(scene);
+			CommonUtils.loadCss(scene);
 			Image img = ComponentGetter.LogoIcons; // new
 													// Image(ModalDialog.class.getResourceAsStream(ConfigVal.appIcon));
 			stage.getIcons().add(img);
@@ -187,7 +187,7 @@ public class ModalDialog {
 			final Stage stage = new Stage();
 			Scene scene = new Scene(node);
 
-			CommonUtility.loadCss(scene);
+			CommonUtils.loadCss(scene);
 			Image img = ComponentGetter.LogoIcons;
 			stage.getIcons().add(img);
 
@@ -249,7 +249,7 @@ public class ModalDialog {
 		});
 
 //		scene.getStylesheets().addAll(ConfigVal.cssList);
-		CommonUtility.loadCss(scene);
+		CommonUtils.loadCss(scene);
 
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
@@ -519,7 +519,7 @@ public class ModalDialog {
 		final Stage stage = new Stage();
 
 		JFXButton okbtn = new JFXButton("OK");
-		CommonUtility.addCssClass(okbtn, "myAlertBtn");
+		CommonUtils.addCssClass(okbtn, "myAlertBtn");
 		okbtn.setOnAction(value -> {
 			stage.close();
 		});

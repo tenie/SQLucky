@@ -389,7 +389,7 @@ public class FileTools {
 		String zipFile = strFile + ".zip";
 		try {
 			FileTools.save(file, val);
-			ZipUtil.zipFile(strFile, zipFile);
+			ZipUtils.zipFile(strFile, zipFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

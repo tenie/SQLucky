@@ -5,8 +5,8 @@ import javafx.geometry.Side;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 
 /*   @author tenie */
 public class OperateContainer {
@@ -34,8 +34,8 @@ public class OperateContainer {
 		HBox.setHgrow(treeAreaDetailPane, Priority.ALWAYS);
 		ComponentGetter.treeAreaDetailPane = treeAreaDetailPane;
 		
-		CommonUtility.fadeTransition(codeCtr.getContainer(), 1000); 
-		CommonUtility.fadeTransition(dbinfoCtr.getContainer(), 1000); 
+		CommonUtils.fadeTransition(codeCtr.getContainer(), 1000); 
+		CommonUtils.fadeTransition(dbinfoCtr.getContainer(), 1000); 
 	}
 
 	public HBox getContainer() {
