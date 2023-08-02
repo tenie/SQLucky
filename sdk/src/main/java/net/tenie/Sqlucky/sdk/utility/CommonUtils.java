@@ -54,7 +54,6 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
-import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
@@ -71,8 +70,8 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
  * @author tenie
  *
  */
-public class CommonUtility {
-	private static Logger logger = LogManager.getLogger(CommonUtility.class);
+public class CommonUtils {
+	private static Logger logger = LogManager.getLogger(CommonUtils.class);
 	private static ArrayBlockingQueue<Consumer<String>> queue = new ArrayBlockingQueue<>(1);
 
 	public static String themeColor() {
@@ -277,7 +276,7 @@ public class CommonUtility {
 		ChangeListener<String> cl = new ChangeListener<String>() {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if (CommonUtility.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
+				if (CommonUtils.isNum(dbtype) && !StrUtils.isNumeric(newValue) && !"<null>".equals(newValue)) {
 					logger.info("newStringPropertyChangeListener() : newValue= " + newValue + "set fail");
 					Platform.runLater(() -> val.setValue(oldValue));
 					return;
@@ -628,7 +627,7 @@ public class CommonUtility {
 	public static List<ProcedureFieldPo> getProcedureFields(String ddl) {
 		List<ProcedureFieldPo> rs = new ArrayList<>();
 		ddl = StrUtils.multiLineCommentToSpace(ddl);
-		ddl = SqluckyEditor.trimCommentToSpace(ddl, "--");
+		ddl = SqluckyEditorUtils.trimCommentToSpace(ddl, "--");
 		// 给ddl分词, 找到过程名称后面的参数列表
 		ddl = StrUtils.pressString(ddl).toUpperCase();
 		if (procedureIsNoParameter(ddl)) { // 没有参数直接返回
@@ -715,7 +714,7 @@ public class CommonUtility {
 	public static void addInitTask(Consumer<String> v) {
 		initTasks.add(v);
 		addTaskCount();
-		logger.debug("addTaskCount == getTaskCount()  = " + CommonUtility.getTaskCount());
+		logger.debug("addTaskCount == getTaskCount()  = " + CommonUtils.getTaskCount());
 
 	}
 
@@ -734,7 +733,7 @@ public class CommonUtility {
 							caller.accept("");
 						} finally {
 							minusTaskCount();
-							logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtility.getTaskCount());
+							logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtils.getTaskCount());
 						}
 					}
 				};
@@ -757,10 +756,10 @@ public class CommonUtility {
 			Thread t = new Thread() {
 				@Override
 				public void run() {
-					while (CommonUtility.getTaskCount() > 0) {
+					while (CommonUtils.getTaskCount() > 0) {
 						try {
 							Thread.sleep(500);
-							logger.debug("getTaskCount()  = " + CommonUtility.getTaskCount());
+							logger.debug("getTaskCount()  = " + CommonUtils.getTaskCount());
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -942,7 +941,7 @@ public class CommonUtility {
 		// 图标切换
 		final StackPane Node = (StackPane) NotePane.lookup(".arrow-button");
 		Node.getChildren().clear();
-		CommonUtility.leftPaneChangeIcon(NotePane, Node, icon, uaicon);
+		CommonUtils.leftPaneChangeIcon(NotePane, Node, icon, uaicon);
 		// 监听展开状态
 		NotePane.expandedProperty().addListener((obs, ov, nv) -> {
 			Node.getChildren().clear();
@@ -973,7 +972,7 @@ public class CommonUtility {
 		title.setOnMouseExited(e -> {
 			Node.getChildren().clear();
 			NotePane.getStyleClass().remove("myTitleTxtActiveColor");
-			CommonUtility.leftPaneChangeIcon(NotePane, Node, icon, uaicon);
+			CommonUtils.leftPaneChangeIcon(NotePane, Node, icon, uaicon);
 		});
 
 	}
@@ -982,7 +981,7 @@ public class CommonUtility {
 	public static void findReplace(boolean isReplace, String findStr, SqluckyTab skTab) {
 		VBox b = null;
 		if (skTab == null) {
-			skTab = SqluckyEditor.currentMyTab();
+			skTab = SqluckyEditorUtils.currentMyTab();
 			b = skTab.getVbox();
 		} else {
 			b = skTab.getVbox();
@@ -1049,7 +1048,7 @@ public class CommonUtility {
 	public static String getFirstJdkModulePath() {
 		String modulePath = System.getProperty("jdk.module.path");
 		String strSplit = ":";
-		if (CommonUtility.isWinOS()) {
+		if (CommonUtils.isWinOS()) {
 			strSplit = ";";
 		}
 		String[] ls = modulePath.split(strSplit);
@@ -1060,7 +1059,7 @@ public class CommonUtility {
 	public static boolean isDev() {
 		String modulePath = System.getProperty("jdk.module.path");
 		String strSplit = ":";
-		if (CommonUtility.isWinOS()) {
+		if (CommonUtils.isWinOS()) {
 			strSplit = ";";
 		}
 		String[] ls = modulePath.split(strSplit);
@@ -1143,7 +1142,7 @@ public class CommonUtility {
 
 	// 代码格式化
 	public static void formatSqlText() {
-		CodeArea code = SqluckyEditor.getCodeArea();
+		CodeArea code = SqluckyEditorUtils.getCodeArea();
 		String txt = code.getSelectedText();
 		if (StrUtils.isNotNullOrEmpty(txt)) {
 			IndexRange i = code.getSelection();
@@ -1154,17 +1153,17 @@ public class CommonUtility {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
+			txt = SqluckyEditorUtils.getCurrentCodeAreaSQLText();
 			String rs = SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
 		}
-		SqluckyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
 	}
 
 	// sql 压缩
 	public static void pressSqlText() {
-		CodeArea code = SqluckyEditor.getCodeArea();
+		CodeArea code = SqluckyEditorUtils.getCodeArea();
 		String txt = code.getSelectedText();
 		if (StrUtils.isNotNullOrEmpty(txt)) {
 			IndexRange i = code.getSelection();
@@ -1175,12 +1174,12 @@ public class CommonUtility {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
+			txt = SqluckyEditorUtils.getCurrentCodeAreaSQLText();
 			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
 		}
-		SqluckyEditor.currentSqlCodeAreaHighLighting();
+		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
 	}
 
 	// 键盘ESC按下后: 查找表的输入框清空, 选中的文本取消选中, 查找替换面板关闭
@@ -1188,20 +1187,20 @@ public class CommonUtility {
 		ComponentGetter.dbInfoFilter.setText("");
 
 		// 代码编辑内容, 取消选中, 高亮恢复复原
-		SqluckyEditor.deselect();
-		SqluckyEditor.applyHighlighting();
+		SqluckyEditorUtils.deselect();
+		SqluckyEditorUtils.applyHighlighting();
 
 		// 隐藏查找, 替换窗口
 		hideFindReplaceWindow();
 
 		// 提示窗口
-		SqluckyEditor.currentMyTab().getSqlCodeArea().hideAutoComplete();
+		SqluckyEditorUtils.currentMyTab().getSqlCodeArea().hideAutoComplete();
 	}
 
 	// 隐藏查找, 替换窗口
 	public static void hideFindReplaceWindow() {
-		VBox b = SqluckyEditor.getTabVbox();
-		var sltb = SqluckyEditor.currentMyTab();
+		VBox b = SqluckyEditorUtils.getTabVbox();
+		var sltb = SqluckyEditorUtils.currentMyTab();
 		int bsize = b.getChildren().size();
 		if (bsize > 1) {
 			FindReplaceTextPanel.delFindReplacePane(sltb);

@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.XmlUtil;
+import net.tenie.Sqlucky.sdk.utility.XmlUtils;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.DataModelTableFieldsPo;
 import net.tenie.plugin.DataModel.po.DataModelTablePo;
@@ -18,18 +18,18 @@ public class OptionPdmFile {
 	static public DataModelInfoPo read(String FilePath) throws IOException {
 //		  String xmlFileToString = XmlUtil.xmlFileToString(FilePath);
  		  String xmlFileToString = FileUtils.readFileToString(new File(FilePath) , "UTF-8");
-		  xmlPdmModel model = XmlUtil.xmlToBean(xmlFileToString, xmlPdmModel.class);
+		  xmlPdmModel model = XmlUtils.xmlToBean(xmlFileToString, xmlPdmModel.class);
 		  DataModelInfoPo po =  pdmConversion(model);
 		  return po;
 	}
 	
 	static public DataModelInfoPo read(File file) throws Exception {
 			
-		  String xmlFileToString = XmlUtil.xmlFileToString(file.getAbsolutePath());
+		  String xmlFileToString = XmlUtils.xmlFileToString(file.getAbsolutePath());
 //		  String xmlFileToString = FileUtils.readFileToString(file , "UTF-8");
 //		  xmlFileToString = xmlFileToString.replaceAll("/[\\u0000-\\u0008\\u000b\\u000c\\u000e-\\u001f\\ud800-\\udfff\\ufffe\\uffff]/g", "");
 //		  xmlFileToString = filter_xml_marks(xmlFileToString);
-		  xmlPdmModel model = XmlUtil.xmlToBean(xmlFileToString, xmlPdmModel.class);
+		  xmlPdmModel model = XmlUtils.xmlToBean(xmlFileToString, xmlPdmModel.class);
 		  DataModelInfoPo po =  pdmConversion(model);
 		  return po;
 	}
@@ -135,7 +135,7 @@ public class OptionPdmFile {
 //        //读取一个XML文件成XML字符串格式。
 ////        String xmlFileToString = XmlUtil.xmlFileToString(file.getAbsolutePath());
     	  String xmlFileToString = FileUtils.readFileToString(new File("D:\\workDir\\data\\InfoDMS&GMS_DB2.pdm") , "UTF-8");
-        xmlPdmModel model = XmlUtil.xmlToBean(xmlFileToString, xmlPdmModel.class);
+        xmlPdmModel model = XmlUtils.xmlToBean(xmlFileToString, xmlPdmModel.class);
 //        
 ////       System.out.println(model);
        System.out.println(model.getoRootObject().getcChildren().size());

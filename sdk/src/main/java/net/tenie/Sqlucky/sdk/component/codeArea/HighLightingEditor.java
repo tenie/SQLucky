@@ -31,15 +31,15 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
-import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyLineNumberNode;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -48,33 +48,33 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
-	private static Logger logger = LogManager.getLogger(HighLightingCodeArea.class);
+public class HighLightingEditor implements SqluckyEditor {
+	private static Logger logger = LogManager.getLogger(HighLightingEditor.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
 	private StackPane codeAreaPane;
 	private MyCodeArea codeArea;
 	private ExecutorService executor;
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
-	private SqluckyTab myAreaTab;
+	private MyEditorSheet myAreaTab;
 
-//	// @Override
+	@Override
 	public void hideAutoComplete() {
 		myAuto.hide();
 	}
 
 	// 显示自动补全
-//	@Override
+	@Override
 	public void showAutoComplete(double x, double y, String str) {
 		myAuto.showPop(x, y + 7, str);
 	}
 
-//	@Override
+	@Override
 	public void nextBookmark(boolean tf) {
 		codeArea.getMylineNumber().nextBookmark(tf);
 	}
 
-//	@Override
+	@Override
 	public void setContextMenu(ContextMenu cm) {
 		if (cm != null) {
 			codeArea.setContextMenu(cm);
@@ -101,8 +101,8 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 
 //    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
 
-	public HighLightingCodeArea(MyAutoComplete myAuto, SqluckyTab tb) {
-		this.myAreaTab = tb;
+	public HighLightingEditor(MyAutoComplete myAuto, MyEditorSheet sheet) {
+		this.myAreaTab = sheet;
 		this.myAuto = myAuto;
 		highLightingHelper = new CodeAreaHighLightingHelper();
 		executor = Executors.newSingleThreadExecutor();
@@ -111,7 +111,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 
-		if (myAuto == null && tb == null) {
+		if (myAuto == null && sheet == null) {
 			codeArea.setEditable(false);
 			return;
 
@@ -153,7 +153,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 						}
 					});
 				};
-				CommonUtility.runThread(caller);
+				CommonUtils.runThread(caller);
 
 			} else if (e.getCode() == KeyCode.A) {
 				codeAreaCtrlShiftA(e);
@@ -321,7 +321,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 					String val = charMap.get(key);
 					int endIdx = str.lastIndexOf(key);
 					int is = start + endIdx + 1;
-					int end = CommonUtility.findBeginParenthesisRange(codeArea.getText(), is, key, val);
+					int end = CommonUtils.findBeginParenthesisRange(codeArea.getText(), is, key, val);
 					if (end != 0 && end > is) {
 						codeArea.selectRange(is, end);
 					}
@@ -337,7 +337,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 						String val = charMapPre.get(key);
 						int endIdx = str.lastIndexOf(key);
 						int end = start + endIdx;
-						int is = CodeAreaUtility.findEndParenthesisRange(codeArea.getText(), end, key, val);
+						int is = HighLightingEditorUtils.findEndParenthesisRange(codeArea.getText(), end, key, val);
 						if (end > is) {
 							codeArea.selectRange(is, end);
 						}
@@ -352,7 +352,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 					if (trimStr.endsWith(v)) {
 						int endIdx = str.lastIndexOf(v);
 						int end = start + endIdx;
-						IndexRange ir = CodeAreaUtility.findStringRange(codeArea.getText(), end, v);
+						IndexRange ir = HighLightingEditorUtils.findStringRange(codeArea.getText(), end, v);
 						if ((ir.getStart() + ir.getEnd()) > 0) {
 							int st = ir.getStart();
 							int en = ir.getEnd();
@@ -378,7 +378,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 				if (trimStr.toUpperCase().endsWith("SELECT")) {
 					int endIdx = str.toUpperCase().lastIndexOf("SELECT");
 					int is = start + endIdx + 6;
-					int end = CodeAreaUtility.findBeginStringRange(codeArea.getText(), is, "SELECT", "FROM");
+					int end = HighLightingEditorUtils.findBeginStringRange(codeArea.getText(), is, "SELECT", "FROM");
 					if (end != 0 && end > is) {
 						codeArea.selectRange(is - 6, end + 4);
 					}
@@ -386,7 +386,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 				} else if (trimStr.toUpperCase().endsWith("FROM")) {
 					int endIdx = str.toUpperCase().lastIndexOf("FROM");
 					int end = start + endIdx;
-					int is = CodeAreaUtility.findEndStringRange(codeArea.getText(), end, "FROM", "SELECT");
+					int is = HighLightingEditorUtils.findEndStringRange(codeArea.getText(), end, "FROM", "SELECT");
 					if (end > is) {
 						codeArea.selectRange(is - 6, end + 5);
 					}
@@ -399,7 +399,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 				if (trimStr.toUpperCase().endsWith("CASE")) {
 					int endIdx = str.toUpperCase().lastIndexOf("CASE");
 					int is = start + endIdx + 4;
-					int end = CodeAreaUtility.findBeginStringRange(codeArea.getText(), is, "CASE", "END");
+					int end = HighLightingEditorUtils.findBeginStringRange(codeArea.getText(), is, "CASE", "END");
 					if (end != 0 && end > is) {
 						codeArea.selectRange(is - 4, end + 3);
 					}
@@ -407,7 +407,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 				} else if (trimStr.toUpperCase().endsWith("END")) {
 					int endIdx = str.toUpperCase().lastIndexOf("END");
 					int end = start + endIdx;
-					int is = CodeAreaUtility.findEndStringRange(codeArea.getText(), end, "END", "CASE");
+					int is = HighLightingEditorUtils.findEndStringRange(codeArea.getText(), end, "END", "CASE");
 					if (end > is) {
 						codeArea.selectRange(is - 4, end + 4);
 					}
@@ -419,7 +419,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		return tf;
 	}
 
-//	@Override
+	@Override
 	public StackPane getCodeAreaPane() {
 		if (codeAreaPane == null) {
 			return getCodeAreaPane(null, true);
@@ -428,7 +428,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		}
 	}
 
-//	@Override
+	@Override
 	public StackPane getCodeAreaPane(String text, boolean editable) {
 		if (codeAreaPane == null) {
 			codeAreaPane = new StackPane(new VirtualizedScrollPane<>(codeArea));
@@ -444,7 +444,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		return codeAreaPane;
 	}
 
-//	@Override
+	@Override
 	public void highLighting(String str) {
 		Platform.runLater(() -> {
 			try {
@@ -467,12 +467,12 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 
 	}
 
-	// @Override
+	@Override
 	public void highLighting() {
 		highLighting(0);
 	}
 
-	// @Override
+	@Override
 	public void errorHighLighting(int begin, String str) {
 		Platform.runLater(() -> {
 			try {
@@ -487,7 +487,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		executor.shutdown();
 	}
 
-	// @Override
+	@Override
 	public MyCodeArea getCodeArea() {
 		return codeArea;
 	}
@@ -513,7 +513,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 	}
 
 	// 改变样式
-	// @Override
+	@Override
 	public void changeCodeAreaLineNoThemeHelper() {
 		MyLineNumberNode nbf = null;
 		List<String> lines = null;
@@ -561,7 +561,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 					String val = charMap.get(key);
 					int endIdx = str.lastIndexOf(key);
 					int is = start + endIdx + 1;
-					end = CommonUtility.findBeginParenthesisRange(codeArea.getText(), is, key, val);
+					end = CommonUtils.findBeginParenthesisRange(codeArea.getText(), is, key, val);
 					if (end != 0 && end > is) {
 
 						setStyleSpans(codeArea, is - 1, 1);
@@ -580,7 +580,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 						String val = charMapPre.get(key);
 						int endIdx = str.lastIndexOf(key);
 						end = start + endIdx;
-						int is = CodeAreaUtility.findEndParenthesisRange(codeArea.getText(), end, key, val);
+						int is = HighLightingEditorUtils.findEndParenthesisRange(codeArea.getText(), end, key, val);
 						if (end > is) {
 							setStyleSpans(codeArea, is - 1, 1);
 							setStyleSpans(codeArea, end, 1);
@@ -610,7 +610,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 	 * @param e
 	 * @param codeArea
 	 */
-	// @Override
+	@Override
 	public void codePopup(KeyEvent e) {
 		if (myAuto == null)
 			return;
@@ -624,10 +624,10 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 	 * 自动补全
 	 * 
 	 */
-	// @Override
+	@Override
 	public void callPopup() {
 		if (codeArea.isFocused()) {
-			if (CommonUtility.isMacOS()) {
+			if (CommonUtils.isMacOS()) {
 				Platform.runLater(() -> {
 					int ar = codeArea.getAnchor();
 					String str = codeArea.getText(ar - 1, ar);
@@ -635,7 +635,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 						codeArea.deleteText(ar - 1, ar);
 					}
 				});
-			} else if (CommonUtility.isLinuxOS()) {
+			} else if (CommonUtils.isLinuxOS()) {
 				Platform.runLater(() -> {
 					int ar = codeArea.getAnchor();
 					String str = codeArea.getText(ar - 1, ar);
@@ -683,7 +683,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 	}
 
 	// 移动光标到行开头
-	// @Override
+	@Override
 	public void moveAnchorToLineBegin() {
 		if (codeArea.isFocused()) {
 			int idx = codeArea.getCurrentParagraph(); // 获取当前行号
@@ -705,7 +705,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		}
 	}
 
-	// @Override
+	@Override
 	public void moveAnchorToLineEnd() {
 		if (codeArea.isFocused()) {
 			int idx = codeArea.getCurrentParagraph(); // 获取当前行号
@@ -729,7 +729,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		}
 	}
 
-	// @Override
+	@Override
 	public void delAnchorBeforeWord() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -739,7 +739,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 			a[0] = txt.lastIndexOf(" ");
 			a[1] = txt.lastIndexOf("\t");
 			a[2] = txt.lastIndexOf("\n") + 1;
-			int max = CommonUtility.getMax(a);
+			int max = CommonUtils.getMax(a);
 			codeArea.deleteText(max, anchor);
 		}
 
@@ -758,7 +758,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		}
 	}
 
-	// @Override
+	@Override
 	public void delAnchorBeforeChar() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -782,7 +782,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		}
 	}
 
-	// @Override
+	@Override
 	public void delAnchorAfterWord() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -796,7 +796,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 			a[1] = val == -1 ? txtLen : val + 1;
 			val = txt.indexOf("\n", anchor);
 			a[2] = val == -1 ? txtLen : val;
-			int min = CommonUtility.getMin(a);
+			int min = CommonUtils.getMin(a);
 			codeArea.deleteText(anchor, min);
 		}
 	}
@@ -814,7 +814,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		}
 	}
 
-	// @Override
+	@Override
 	public void delAnchorAfterChar() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -837,7 +837,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		}
 	}
 
-	// @Override
+	@Override
 	public void delAnchorBeforeString() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -866,7 +866,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 		}
 	}
 
-	// @Override
+	@Override
 	public void delAnchorAfterString() {
 		if (codeArea.isFocused()) {
 			int anchor = codeArea.getAnchor(); // 光标位置
@@ -900,7 +900,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 	 * 
 	 * @param codeArea
 	 */
-	// @Override
+	@Override
 	public void delLineOrSelectTxt() {
 		var selectTxt = codeArea.getSelectedText();
 		if (StrUtils.isNullOrEmpty(selectTxt)) {
@@ -998,7 +998,7 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 	 */
 	public void codeAreaCtrlV(KeyEvent e) {
 		if (e.isShortcutDown()) {
-			String val = CommonUtility.getClipboardVal();
+			String val = CommonUtils.getClipboardVal();
 			logger.info("黏贴值==" + val);
 			if (val.length() > 0) {
 				String seltxt = codeArea.getSelectedText();
@@ -1064,9 +1064,9 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 			logger.info("文本缩进 : " + e.getCode());
 			e.consume();
 			if (e.isShiftDown()) {
-				CodeAreaUtility.minus4Space();
+				HighLightingEditorUtils.minus4Space();
 			} else {
-				CodeAreaUtility.add4Space();
+				HighLightingEditorUtils.add4Space();
 			}
 		}
 	}
@@ -1084,7 +1084,6 @@ public class HighLightingCodeArea implements SqluckyCodeAreaHolder { //
 			queue.offer(caller); // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
 
 			Thread t = new Thread() {
-				// @Override
 				@Override
 				public void run() {
 
@@ -1118,25 +1117,21 @@ class InputMethodRequestsObject implements InputMethodRequests {
 		this.area = area;
 	}
 
-	// @Override
 	@Override
 	public String getSelectedText() {
 		return "";
 	}
 
-	// @Override
 	@Override
 	public int getLocationOffset(int x, int y) {
 		return 0;
 	}
 
-	// @Override
 	@Override
 	public void cancelLatestCommittedText() {
 
 	}
 
-	// @Override
 	@Override
 	public Point2D getTextLocation(int offset) {
 		logger.info("输入法软件展示");

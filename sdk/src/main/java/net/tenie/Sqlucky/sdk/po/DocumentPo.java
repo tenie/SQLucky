@@ -2,11 +2,14 @@ package net.tenie.Sqlucky.sdk.po;
 
 import java.io.File;
 import java.io.Serializable;
+
 import com.alibaba.fastjson.JSONObject;
+
 import javafx.scene.layout.Region;
 
 /**
  * 脚本po
+ * 
  * @author tenie
  *
  */
@@ -14,21 +17,21 @@ public class DocumentPo implements Serializable {
 
 	public static int IS_SQL = 1;
 	public static int IS_TEXT = 2;
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-	private String title;          // 文件名
+	private String title; // 文件名, 界面tab的显示名称
 	private String text;
-	private String fileFullName;       //文件全路径名称
+	private String fileFullName; // 文件全路径名称
 	private String encode;
 	private Integer paragraph;
 	private File file;
 	private Region icon;
 	private int type;
-	private Integer openStatus;  // 是否在文本编辑区域中打开, 1: 打开; 0: 没打开
-	private Integer isActivate;  // 是否激活, 在编辑区域打开的状态, 只有openStatus 为1时才有意义
-	
+	private Integer openStatus; // 是否在文本编辑区域中打开, 1: 打开; 0: 没打开
+	private Integer isActivate; // 是否激活, 在编辑区域打开的状态, 只有openStatus 为1时才有意义
+
 	public DocumentPo() {
 		this.id = null;
 		this.title = "";
@@ -42,41 +45,51 @@ public class DocumentPo implements Serializable {
 		this.openStatus = 0;
 		this.isActivate = 0;
 	}
-	
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public String getEncode() {
 		return encode;
 	}
+
 	public void setEncode(String encode) {
 		this.encode = encode;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	 
+
 	public String getText() {
 		return text;
 	}
+
 	public void setText(String text) {
 		this.text = text;
 	}
+
 	public String getFileFullName() {
 		return fileFullName;
 	}
+
 	public void setFileFullName(String fileName) {
 		this.fileFullName = fileName;
 	}
+
 	public Integer getParagraph() {
 		return paragraph;
 	}
+
 	public void setParagraph(Integer paragraph) {
 		this.paragraph = paragraph;
 	}
@@ -140,7 +153,6 @@ public class DocumentPo implements Serializable {
 		return serialVersionUID;
 	}
 
-	
 	public Integer getOpenStatus() {
 		return openStatus;
 	}
@@ -149,7 +161,6 @@ public class DocumentPo implements Serializable {
 		this.openStatus = openStatus;
 	}
 
-	 
 	public Integer getIsActivate() {
 		return isActivate;
 	}
@@ -164,9 +175,10 @@ public class DocumentPo implements Serializable {
 				+ ", encode=" + encode + ", paragraph=" + paragraph + ", file=" + file + ", icon=" + icon + ", type="
 				+ type + ", openStatus=" + openStatus + ", isActivate=" + isActivate + "]";
 	}
-	
+
 	/**
 	 * 对象转换为json 字符串
+	 * 
 	 * @return
 	 */
 	public String toJsone() {
@@ -176,15 +188,16 @@ public class DocumentPo implements Serializable {
 
 		return jsonObject.toJSONString();
 	}
+
 	/**
 	 * 将json字符串转换对象
+	 * 
 	 * @param json
 	 * @return
 	 */
-	public static DocumentPo toPo(String json) { 
-		DocumentPo val = JSONObject.parseObject(json, DocumentPo.class); 
+	public static DocumentPo toPo(String json) {
+		DocumentPo val = JSONObject.parseObject(json, DocumentPo.class);
 		return val;
 	}
-
 
 }

@@ -4,27 +4,27 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
-import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
-public class HighLightingSqlCodeAreaContextMenu extends ContextMenu {
+public class HighLightingEditorContextMenu extends ContextMenu {
 
-	public HighLightingSqlCodeAreaContextMenu(SqluckyCodeAreaHolder codeArea) {
+	public HighLightingEditorContextMenu(SqluckyEditor codeArea) {
 		super();
 		this.setPrefWidth(200);
 		MenuItem copy = new MenuItem("Copy");
 		copy.setGraphic(IconGenerator.svgImageDefActive("files-o"));
 		copy.setOnAction(e -> {
-			SqluckyEditor.copySelectionText();
+			SqluckyEditorUtils.copySelectionText();
 		});
 
 		MenuItem Paste = new MenuItem("Paste");
 		Paste.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 		Paste.setOnAction(e -> {
-			SqluckyEditor.pasteTextToCodeArea();
+			SqluckyEditorUtils.pasteTextToCodeArea();
 		});
 
 		MenuItem del = new MenuItem("Delete");
@@ -36,40 +36,40 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu {
 
 		MenuItem cut = new MenuItem("Cut");
 		cut.setOnAction(e -> {
-			SqluckyEditor.cutSelectionText();
+			SqluckyEditorUtils.cutSelectionText();
 		});
 		cut.setGraphic(IconGenerator.svgImageDefActive("scissors"));
 
 		MenuItem sqlFormat = new MenuItem("Format  SQL");
 		sqlFormat.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		sqlFormat.setOnAction(e -> {
-			CommonUtility.formatSqlText();
+			CommonUtils.formatSqlText();
 		});
 
 		MenuItem formatAll = new MenuItem("Format All SQL");
 		formatAll.setOnAction(e -> {
-			CommonUtility.formatSqlText();
+			CommonUtils.formatSqlText();
 		});
 
 		MenuItem sqlUnformat = new MenuItem("Unformat SQL");
 		sqlUnformat.setOnAction(e -> {
-			CommonUtility.pressSqlText();
+			CommonUtils.pressSqlText();
 		});
 
 		MenuItem unformatAll = new MenuItem("Unformat All SQL");
 		unformatAll.setOnAction(e -> {
-			CommonUtility.pressSqlText();
+			CommonUtils.pressSqlText();
 		});
 
 		MenuItem find = new MenuItem("Find");
 		find.setGraphic(IconGenerator.svgImageDefActive("search"));
 		find.setOnAction(e -> {
-			CommonUtility.findReplace(false);
+			CommonUtils.findReplace(false);
 		});
 
 		MenuItem replace = new MenuItem("Replace");
 		replace.setOnAction(e -> {
-			CommonUtility.findReplace(true);
+			CommonUtils.findReplace(true);
 		});
 
 //		cursor
@@ -124,7 +124,7 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu {
 
 		// 菜单显示的时刻
 		this.setOnShowing(e -> {
-			String str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText();
+			String str = SqluckyEditorUtils.getCurrentCodeAreaSQLSelectedText();
 			if (StrUtils.isNotNullOrEmpty(str)) {
 				copy.setDisable(false);
 //				del.setDisable(false);
@@ -143,7 +143,7 @@ public class HighLightingSqlCodeAreaContextMenu extends ContextMenu {
 				unformatAll.setDisable(false);
 			}
 
-			boolean hasVal = CommonUtility.clipboardHasString();
+			boolean hasVal = CommonUtils.clipboardHasString();
 			if (hasVal) {
 				Paste.setDisable(false);
 			} else {

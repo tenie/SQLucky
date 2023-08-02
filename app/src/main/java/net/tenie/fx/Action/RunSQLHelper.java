@@ -23,16 +23,16 @@ import javafx.scene.control.Label;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
-import net.tenie.Sqlucky.sdk.component.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
+import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.fx.Action.sqlExecute.ProcedureAction;
@@ -88,7 +88,7 @@ public class RunSQLHelper {
 					SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
 					allsqls.add(sq);
 				} else {
-					String str = SqluckyEditor.getCurrentCodeAreaSQLText();
+					String str = SqluckyEditorUtils.getCurrentCodeAreaSQLText();
 					SqlData sq = new SqlData(str, 0, str.length());
 					allsqls.add(sq);
 				}
@@ -184,12 +184,12 @@ public class RunSQLHelper {
 					// 显示字段是只读的
 					ObservableList<SheetFieldPo> fls = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 							fls.get(0));
-					ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fls.get(1));
+					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fls.get(1));
 					int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
 					ddlDmlpo.addData(row,
-							CommonUtility.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... "),
+							CommonUtils.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... "),
 							fls.get(2));
 				}
 			}
@@ -203,7 +203,7 @@ public class RunSQLHelper {
 				if (errObj.size() > 0) {
 					for (SqlData sd : errObj) {
 						int bg = sd.begin;
-						SqluckyEditor.ErrorHighlighting(bg, sd.sql);
+						SqluckyEditorUtils.ErrorHighlighting(bg, sd.sql);
 					}
 				}
 			});
@@ -267,7 +267,7 @@ public class RunSQLHelper {
 
 	// 刷新
 	public static Long refresh(SqluckyConnector sqlConn, String sqlv, String tabIdxv, boolean isLockv) {
-		Long statusKey = CommonUtility.dateTime();
+		Long statusKey = CommonUtils.dateTime();
 
 		RUN_STATUS.put(statusKey, -1);
 

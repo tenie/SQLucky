@@ -9,7 +9,7 @@ import net.tenie.Sqlucky.sdk.db.PoDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.KeyBindingItemPo;
 import net.tenie.Sqlucky.sdk.po.db.KeysBindingPO;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /**
  * 菜单按钮会缓存起来, 使用按钮的快捷键设置来设置全局的快捷键设置
@@ -69,7 +69,7 @@ public class KeyBindingCache {
 	 */
 	public static String macKeyChange(String keyStr) {
 
-		if (CommonUtility.isMacOS()) {
+		if (CommonUtils.isMacOS()) {
 			if (keyStr.contains("⌘")) {
 				keyStr = keyStr.replace("⌘", "Shortcut");
 			}

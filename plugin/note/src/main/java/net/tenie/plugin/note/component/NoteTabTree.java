@@ -21,7 +21,7 @@ import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.note.impl.NoteDelegateImpl;
 import net.tenie.plugin.note.utility.NoteUtility;
@@ -84,7 +84,7 @@ public class NoteTabTree {
 				NoteUtility.openNoteDir(rootNode, file);
 			}
 		};
-		CommonUtility.addInitTask(cr);
+		CommonUtils.addInitTask(cr);
 
 	}
 

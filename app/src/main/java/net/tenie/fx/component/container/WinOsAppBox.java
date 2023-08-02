@@ -18,7 +18,7 @@ import javafx.stage.WindowEvent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.factory.ButtonFactory;
 
 public class WinOsAppBox extends Application {
@@ -168,7 +168,7 @@ public class WinOsAppBox extends Application {
 				var nextWidthTmp = nextWidth;
 				var nextHeightTmp = nextHeight;
 
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					// 最后统一改变窗口的x、y坐标和宽度、高度，可以防止刷新频繁出现的屏闪情况
 					stage.setX(nextX);
 					stage.setY(nextY);
@@ -190,7 +190,7 @@ public class WinOsAppBox extends Application {
 				}
 				var nextWidthTmp = nextWidth;
 				var nextHeightTmp = nextHeight;
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					stage.setX(nextX + x);
 					stage.setY(nextY);
 
@@ -212,7 +212,7 @@ public class WinOsAppBox extends Application {
 				var nextWidthTmp = nextWidth;
 				var nextHeightTmp = nextHeight;
 
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					stage.setX(nextX);
 					stage.setY(nextY + y);
 					stage.setWidth(nextWidthTmp);
@@ -229,7 +229,7 @@ public class WinOsAppBox extends Application {
 
 				var nextWidthTmp = nextWidth;
 				var nextHeightTmp = nextHeight;
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					stage.setX(nextX + x);
 					stage.setWidth(nextWidthTmp);
 
@@ -244,7 +244,7 @@ public class WinOsAppBox extends Application {
 					return;
 				}
 				var nextWidthTmp = nextWidth;
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					stage.setX(nextX + x);
 					stage.setWidth(nextWidthTmp);
 				}, 150);
@@ -258,7 +258,7 @@ public class WinOsAppBox extends Application {
 					return;
 				}
 				var nextHeightTmp = nextHeight;
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					stage.setY(nextY + y);
 					stage.setHeight(nextHeightTmp);
 

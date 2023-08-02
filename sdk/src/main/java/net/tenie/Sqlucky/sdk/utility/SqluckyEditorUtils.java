@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component;
+package net.tenie.Sqlucky.sdk.utility;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,17 +19,16 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.MyRange;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 
  * @author tenie
  *
  */
-public class SqluckyEditor {
-	private static Logger logger = LogManager.getLogger(SqluckyEditor.class);
+public class SqluckyEditorUtils {
+	private static Logger logger = LogManager.getLogger(SqluckyEditorUtils.class);
 
 	// 当前文本框中文本重新高亮
 	public static void applyHighlighting() {
@@ -38,13 +37,13 @@ public class SqluckyEditor {
 
 	// 获取当前选中的区间
 	public static IndexRange getSelection() {
-		var codeArea = SqluckyEditor.getCodeArea();
+		var codeArea = SqluckyEditorUtils.getCodeArea();
 		return codeArea.getSelection();
 	}
 
 	// 设置选中
 	public static void selectRange(IndexRange ir) {
-		var codeArea = SqluckyEditor.getCodeArea();
+		var codeArea = SqluckyEditorUtils.getCodeArea();
 		codeArea.selectRange(ir.getStart(), ir.getEnd());
 	}
 
@@ -105,7 +104,7 @@ public class SqluckyEditor {
 
 	// TODO 获取选中行的所有字符,
 	public static String getSelectLineText() {
-		CodeArea code = SqluckyEditor.getCodeArea();
+		CodeArea code = SqluckyEditorUtils.getCodeArea();
 		var pgs = code.getParagraphs();
 		String tmp = "";
 		for (int i = 0; i < pgs.size(); i++) {
@@ -120,22 +119,22 @@ public class SqluckyEditor {
 	// 复制当前选中的文本
 	public static void copySelectionText() {
 		String txt = getCurrentCodeAreaSQLSelectedText();
-		CommonUtility.setClipboardVal(txt);
+		CommonUtils.setClipboardVal(txt);
 	}
 
 	public static void pasteTextToCodeArea() {
-		String val = CommonUtility.getClipboardVal();
+		String val = CommonUtils.getClipboardVal();
 		if (StrUtils.isNotNullOrEmpty(val)) {
-			var codeArea = SqluckyEditor.getCodeArea();
+			var codeArea = SqluckyEditorUtils.getCodeArea();
 			int i = codeArea.getAnchor();
 			codeArea.insertText(i, val);
-			SqluckyEditor.currentMyTab().getSqlCodeArea().highLighting();
+			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().highLighting();
 		}
 	}
 
 	// 删除选中文本
 	public static void deleteSelectionText() {
-		var codeArea = SqluckyEditor.getCodeArea();
+		var codeArea = SqluckyEditorUtils.getCodeArea();
 		IndexRange ir = codeArea.getSelection();
 		codeArea.deleteText(ir);
 	}
@@ -228,7 +227,7 @@ public class SqluckyEditor {
 	private static void changeFindReplacePaneBtnColor(Tab tb) {
 		VBox vbx = (VBox) tb.getContent();
 		if (vbx != null && vbx.getChildren().size() > 1) {
-			String color = CommonUtility.themeColor();
+			String color = CommonUtils.themeColor();
 			for (int i = 0; i < vbx.getChildren().size() - 1; i++) {
 				Node nd = vbx.getChildren().get(i);
 				if (nd instanceof AnchorPane) {

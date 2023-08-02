@@ -24,7 +24,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
@@ -65,7 +65,7 @@ public class SQLucky extends Application {
 	}
 
 	static {
-		if (!CommonUtility.isDev()) {
+		if (!CommonUtils.isDev()) {
 			Log4jPrintStream.redirectSystemOut();
 		}
 	}
@@ -129,13 +129,13 @@ public class SQLucky extends Application {
 			primaryStage.centerOnScreen(); // 居中
 //			primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
 //		    primaryStage.setIconified(true); //最小化窗口，任务栏可见图标
-			if (CommonUtility.isLinuxOS()) {
+			if (CommonUtils.isLinuxOS()) {
 				MyPreloaderGif.hiden();
 			} else {
 				MyPreloaderMp4.hiden();
 			}
 			// windows 系统, 使用自己的关闭窗口
-			if (!CommonUtility.isMacOS()) {
+			if (!CommonUtils.isMacOS()) {
 				AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
 				winos.setWindow(primaryStage, app.getHeadAnchorPane());
 			}
@@ -153,7 +153,7 @@ public class SQLucky extends Application {
 
 			// 在stage show之后 需要初始化的内容, 如: 外观, 事件
 			Platform.runLater(() -> {
-				if (CommonUtility.isLinuxOS()) {
+				if (CommonUtils.isLinuxOS()) {
 //					primaryStage.setAlwaysOnTop(true);
 					primaryStage.toFront();
 				}
@@ -191,7 +191,7 @@ public class SQLucky extends Application {
 
 			};
 			// 执行页面初始化好只会要执行的任务
-			CommonUtility.executeInitTask(cr);
+			CommonUtils.executeInitTask(cr);
 			Long mm = Runtime.getRuntime().maxMemory() / 1024;
 			mm = mm / 1024;
 			logger.info("Runtime.getRuntime().maxMemory = " + mm);
@@ -236,7 +236,7 @@ public class SQLucky extends Application {
 //		var val =System.getProperty("jdk.module.main");
 //		logger.debug("jdk.module.path ==  "+ Arrays.toString(val.split(":")));
 
-		if (CommonUtility.isLinuxOS()) {
+		if (CommonUtils.isLinuxOS()) {
 			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
 		} else {
 			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderMp4.class, args);

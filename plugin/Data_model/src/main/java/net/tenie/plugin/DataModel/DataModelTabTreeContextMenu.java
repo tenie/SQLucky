@@ -7,7 +7,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
 import net.tenie.plugin.DataModel.tools.DataModelUtility;
 
@@ -56,7 +56,7 @@ public class DataModelTabTreeContextMenu {
 		query.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
 		query.setOnAction(e -> {
 			var panel = mdTree.getOptionPanel();
-			CommonUtility.leftHideOrShowSecondOptionBox(panel.getOptionVbox(),
+			CommonUtils.leftHideOrShowSecondOptionBox(panel.getOptionVbox(),
 					panel.getFilterHbox(), panel.getTxt());
 		});
 		open = new MenuItem("Open Model");
@@ -103,7 +103,7 @@ public class DataModelTabTreeContextMenu {
 			TreeItem<DataModelTreeNodePo> item = DataModelTabTree.currentSelectItem();
 			if(item !=null && item.getValue() !=null) {
 				String name = item.getValue().getName();
-				CommonUtility.setClipboardVal(name);
+				CommonUtils.setClipboardVal(name);
 			}
 			
 		});

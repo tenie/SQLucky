@@ -4,7 +4,7 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.MyAreaTab;
 
@@ -24,19 +24,19 @@ public class ScriptTreeButtonPanel {
 	// 构造
 	public ScriptTreeButtonPanel() {
 		showInFolder.setGraphic(ComponentGetter.getIconDefActive("sign-in")   );
-		showInFolder.setTooltip(CommonUtility.instanceTooltip("Show In System folder"));
+		showInFolder.setTooltip(CommonUtils.instanceTooltip("Show In System folder"));
 		showInFolder.setOnMouseClicked(e->{
 			ScriptTreeAction.showInFloder() ;
 		});
 		
 		newFile.setGraphic(ComponentGetter.getIconDefActive("file-o"));
-		newFile.setTooltip(CommonUtility.instanceTooltip("New file"));
+		newFile.setTooltip(CommonUtils.instanceTooltip("New file"));
 		newFile.setOnMouseClicked(e->{
 			MyAreaTab.addCodeEmptyTabMethod();
 		});
 		
 		importBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-		importBtn.setTooltip(CommonUtility.instanceTooltip("Open note folder "));
+		importBtn.setTooltip(CommonUtils.instanceTooltip("Open note folder "));
 		importBtn.setOnMouseClicked(e->{
 			CommonAction.openSqlFile();
 		});
@@ -44,7 +44,7 @@ public class ScriptTreeButtonPanel {
 //		saveBtn.setText("Import");
 //		saveBtn.getStyleClass().add("myTxtBtnBorder");
 		saveBtn.setGraphic(ComponentGetter.getIconDefActive("save"));
-		saveBtn.setTooltip(CommonUtility.instanceTooltip("Save file"));
+		saveBtn.setTooltip(CommonUtils.instanceTooltip("Save file"));
 		saveBtn.setOnMouseClicked(e->{
 			ScriptTreeAction.saveAction();
 		});

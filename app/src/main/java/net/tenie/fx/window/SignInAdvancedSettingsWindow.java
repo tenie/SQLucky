@@ -25,7 +25,7 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
 
 /**
@@ -67,7 +67,7 @@ public class SignInAdvancedSettingsWindow {
 			
 		});
 
-		CommonUtility.loadCss(scene);
+		CommonUtils.loadCss(scene);
 		stageWindow.initModality(Modality.APPLICATION_MODAL);
 //		stageWindow.initModality(Modality.WINDOW_MODAL);
 		stageWindow.setScene(scene);

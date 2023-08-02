@@ -22,7 +22,7 @@ import javafx.stage.WindowEvent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.main.MyPreloader;
 
 public class AppWindowReStyleByWinOS {
@@ -335,7 +335,7 @@ public class AppWindowReStyleByWinOS {
 				var nextWidthTmp = nextWidth;
 				var nextHeightTmp = nextHeight;
 
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					// 最后统一改变窗口的x、y坐标和宽度、高度，可以防止刷新频繁出现的屏闪情况
 					setXYWH(stage, nextX, nextY, nextWidthTmp, nextHeightTmp);
 				}, 150);
@@ -354,7 +354,7 @@ public class AppWindowReStyleByWinOS {
 				}
 				var nextWidthTmp = nextWidth;
 				var nextHeightTmp = nextHeight;
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					setXYWH(stage, nextX + x, nextY, nextWidthTmp, nextHeightTmp);
 				}, 150);
 
@@ -372,7 +372,7 @@ public class AppWindowReStyleByWinOS {
 				var nextWidthTmp = nextWidth;
 				var nextHeightTmp = nextHeight;
 
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					setXYWH(stage,nextX , nextY + y, nextWidthTmp, nextHeightTmp);
 				}, 150);
 
@@ -386,7 +386,7 @@ public class AppWindowReStyleByWinOS {
 
 				var nextWidthTmp = nextWidth;
 				var nextHeightTmp = nextHeight;
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					setXYWH(stage, nextX + x , nextY + y, nextWidthTmp, nextHeightTmp);
 				}, 150);
 			}
@@ -397,7 +397,7 @@ public class AppWindowReStyleByWinOS {
 					return;
 				}
 				var nextWidthTmp = nextWidth;
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					setXYWH(stage, nextX + x , null, nextWidthTmp, null);
 				}, 150);
 
@@ -410,7 +410,7 @@ public class AppWindowReStyleByWinOS {
 					return;
 				}
 				var nextHeightTmp = nextHeight;
-				CommonUtility.delayRunThread(s -> {
+				CommonUtils.delayRunThread(s -> {
 					setXYWH(stage,  null, nextY + y, null, nextHeightTmp);
 				}, 150);
 			}

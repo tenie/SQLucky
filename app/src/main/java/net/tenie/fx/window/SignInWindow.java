@@ -27,7 +27,7 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
 
@@ -288,7 +288,7 @@ public class SignInWindow {
 		String btnName = "Sign Up";
 		Button btn = new Button(btnName); 
 		btn.setOnAction(v->{
-			CommonUtility.OpenURLInBrowser("https://app.sqlucky.com/");
+			CommonUtils.OpenURLInBrowser("https://app.sqlucky.com/");
 		});
 		return btn;
 	}

@@ -20,7 +20,7 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.plugin.backup.po.BackupInfoPO;
 import net.tenie.plugin.backup.po.DownloadBackupPo;
@@ -86,7 +86,7 @@ public class WorkDataBackupController implements Initializable {
 
 		uploadPage();
 		downloadPage();
-		CommonUtility.isLogin("Use Backup must Login");
+		CommonUtils.isLogin("Use Backup must Login");
 	}
 
 	public void uploadPage() {
@@ -108,7 +108,7 @@ public class WorkDataBackupController implements Initializable {
 		// 备份按钮
 		bakBtn.setOnAction(e -> {
 			// 登入校验
-			if (CommonUtility.isLogin("Use Backup must Login") == false) {
+			if (CommonUtils.isLogin("Use Backup must Login") == false) {
 				return;
 			}
 
@@ -158,7 +158,7 @@ public class WorkDataBackupController implements Initializable {
 		// 获取服务器上的备份名称
 		syncBtn.setOnAction(e -> {
 			// 登入校验
-			if (CommonUtility.isLogin("Use Backup must Login") == false) {
+			if (CommonUtils.isLogin("Use Backup must Login") == false) {
 				return;
 			}
 			// 开始之前先禁用选中框

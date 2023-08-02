@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ObjFormater {
-	private static Logger logger = LogManager.getLogger(CommonUtility.class);
+	private static Logger logger = LogManager.getLogger(CommonUtils.class);
 	private static SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private static SimpleDateFormat sdfshort = new SimpleDateFormat("yyyy-MM-dd");
 	private static DecimalFormat def = new DecimalFormat("0.####");

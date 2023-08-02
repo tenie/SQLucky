@@ -35,6 +35,7 @@ import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.MyOption;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
+import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -472,7 +473,7 @@ public class SdkComponent {
 					try {
 						Thread.sleep(900);
 						Platform.runLater(() -> {
-							SqluckyEditor.getCodeArea().requestFocus();
+							SqluckyEditorUtils.getCodeArea().requestFocus();
 
 						});
 					} catch (InterruptedException e) {

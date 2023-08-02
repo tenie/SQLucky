@@ -19,7 +19,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
     
@@ -57,7 +57,7 @@ public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
         MenuItem copyVal = new MenuItem("Copy Value");
         copyVal.setOnAction(e->{
         	String val =  this.getText();
-        	CommonUtility.setClipboardVal(val);
+        	CommonUtils.setClipboardVal(val);
         });
         
         cm.getItems().addAll(copyVal, setNull);

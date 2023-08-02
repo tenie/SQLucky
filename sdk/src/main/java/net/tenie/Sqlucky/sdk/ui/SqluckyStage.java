@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 public class SqluckyStage {
 	private Stage	stage; // = new Stage();
@@ -14,7 +14,7 @@ public class SqluckyStage {
 	
 	public static void initStageCss(Stage	stage) {
 		 var sc = stage.getScene();
-		 CommonUtility.loadCss(sc);
+		 CommonUtils.loadCss(sc);
 		 // 图标
 		 stage.getIcons().add(ComponentGetter.LogoIcons);
 		 
@@ -30,7 +30,7 @@ public class SqluckyStage {
 		 stage.setScene(scene);
 		 
 		 //css
-		 CommonUtility.loadCss(scene);
+		 CommonUtils.loadCss(scene);
 		 // 图标
 		 stage.getIcons().add(ComponentGetter.LogoIcons);
 		 

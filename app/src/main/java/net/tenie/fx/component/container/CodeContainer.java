@@ -9,7 +9,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DraggingTabPaneSupport;
 import net.tenie.fx.factory.ButtonFactory;
 
@@ -47,8 +47,8 @@ public class CodeContainer {
 		support1.addSupport(mainTabPane);
 		
 		
-		CommonUtility.fadeTransition(operateBtnPane, 1000); 
-		CommonUtility.fadeTransition(mainTabPane, 1000); 
+		CommonUtils.fadeTransition(operateBtnPane, 1000); 
+		CommonUtils.fadeTransition(mainTabPane, 1000); 
 		
 	}
 

@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.XmlUtil;
+import net.tenie.Sqlucky.sdk.utility.XmlUtils;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.DataModelTableFieldsPo;
 import net.tenie.plugin.DataModel.po.DataModelTablePo;

@@ -20,7 +20,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-public class ZipUtil {
+public class ZipUtils {
 	public static void main(String[] args) throws IOException {
 		// 单文件
 //		String sourceFile = "D:\\log_json.txt"; 

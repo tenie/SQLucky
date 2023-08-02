@@ -34,7 +34,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -249,7 +249,7 @@ public class ImportSQLWindow {
 			stage.close();
 		});
 
-		CommonUtility.loadCss(scene);
+		CommonUtils.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
 

@@ -21,7 +21,7 @@ import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
@@ -112,12 +112,12 @@ public class ProcedureAction {
 			DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 			ObservableList<SheetFieldPo> fieldpols = ddlDmlpo.getFields();
 			var row = ddlDmlpo.addRow();
-			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+			ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 					fieldpols.get(0));
-			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(msg), fieldpols.get(1));
+			ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fieldpols.get(1));
 
 			int endIdx = sql.length() > 100 ? 100 : sql.length();
-			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty(
+			ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(
 					"call procedure " + sql.subSequence(0, endIdx) + " ... "), fieldpols.get(2));
 //			ddlDmlpo.addData(row, CommonUtility.createReadOnlyStringProperty("" ),  fieldpols.get(3));
 

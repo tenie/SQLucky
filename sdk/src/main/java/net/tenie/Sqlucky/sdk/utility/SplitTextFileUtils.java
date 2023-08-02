@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
 /***
  * 分割大文件 （ SQL 文件太大（insert），第三方工具无法一次性读取，进行分割 生成 一个一个文件 ）
  */
-public class SplitTextFileUtil {
-	private static Logger logger = LogManager.getLogger(SplitTextFileUtil.class);
+public class SplitTextFileUtils {
+	private static Logger logger = LogManager.getLogger(SplitTextFileUtils.class);
 	// 使用示例
 	public static void main(String[] args) {
 

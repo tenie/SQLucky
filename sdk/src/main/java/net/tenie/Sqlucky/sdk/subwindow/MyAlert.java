@@ -29,7 +29,7 @@ import net.tenie.Sqlucky.sdk.component.MyTextArea;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 public class MyAlert {
 	/**
@@ -393,7 +393,7 @@ public class MyAlert {
 			JFXButton copyText = new JFXButton("Copy");
 			copyText.getStyleClass().add("myAlertBtn");
 			copyText.setOnAction(value -> {
-				CommonUtility.setClipboardVal(text);
+				CommonUtils.setClipboardVal(text);
 //					stage.close();
 			});
 

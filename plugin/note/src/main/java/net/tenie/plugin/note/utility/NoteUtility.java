@@ -26,7 +26,7 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -51,16 +51,16 @@ public class NoteUtility {
 				if (charset != null) {
 					boolean isExist = stb.existTabShow();
 					if (!isExist) {
-						String val = CommonUtility.readFileText(file, charset);
+						String val = CommonUtils.readFileText(file, charset);
 						stb.setFileText(val);
 						stb.showMyTab();
 					}
 				} else {
-					CommonUtility.openExplorer(file);
+					CommonUtils.openExplorer(file);
 				}
 
 			} else {
-				CommonUtility.openExplorer(file);
+				CommonUtils.openExplorer(file);
 			}
 
 		} else if (file.isDirectory()) {
@@ -82,7 +82,7 @@ public class NoteUtility {
 				String fn = tb.getDocumentPo().getFileFullName();
 				if (StrUtils.isNotNullOrEmpty(fn)) {
 					File file = new File(fn);
-					CommonUtility.openExplorer(file.getParentFile());
+					CommonUtils.openExplorer(file.getParentFile());
 				}
 			}
 		} catch (Exception e1) {
@@ -250,7 +250,7 @@ public class NoteUtility {
 				}
 			};
 
-			CommonUtility.runThread(caller);
+			CommonUtils.runThread(caller);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -303,7 +303,7 @@ public class NoteUtility {
 		LoadingAnimation.addLoading(windowSceneRoot, "Search....", 14);
 
 		String searchStr = queryStr;
-		CommonUtility.runThread(v -> {
+		CommonUtils.runThread(v -> {
 			try {
 
 				File selectfile = NoteUtility.currentTreeItemFile();
@@ -441,7 +441,7 @@ public class NoteUtility {
 		if (currentSktb.isShowing()) {
 			FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
 			if (fpanel == null) {
-				CommonUtility.findReplace(false, txt, currentSktb);
+				CommonUtils.findReplace(false, txt, currentSktb);
 				fpanel = currentSktb.getFindReplacePanel();
 				isfind = fpanel.findStringStopFromCodeArea(txt, startIdx, !isUp, false);
 			} else {
@@ -482,7 +482,7 @@ public class NoteUtility {
 				}
 				FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
 				if (fpanel == null) {
-					CommonUtility.findReplace(false, txt, currentSktb);
+					CommonUtils.findReplace(false, txt, currentSktb);
 					fpanel = currentSktb.getFindReplacePanel();
 					fpanel.findStringStopFromCodeArea(txt, startIdx2, !isUp, false);
 				} else {

@@ -21,7 +21,7 @@ import javafx.scene.control.TableColumn;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.DataTableViewShapePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
@@ -31,7 +31,7 @@ public class CacheDataTableViewShapeChange {
 	static private Map<String, List<String>> colOrder = new HashMap<>();
 
 	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ResultSetRowPo> table , ObservableList<SheetFieldPo> colss) {
-		CommonUtility.threadAwait(1);
+		CommonUtils.threadAwait(1);
 		Platform.runLater(() -> { 
 			// 列移动缓存
 			CacheDataTableViewShapeChange.setTableHeader(table, tableName );			

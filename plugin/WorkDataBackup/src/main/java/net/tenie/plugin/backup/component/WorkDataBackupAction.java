@@ -21,12 +21,12 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DesUtil;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.ZipUtil;
+import net.tenie.Sqlucky.sdk.utility.ZipUtils;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.plugin.backup.po.BackupInfoPO;
 
@@ -116,7 +116,7 @@ public class WorkDataBackupAction {
 
 			diskPath = new File(saveDir, backupName + ".zip");
 
-			ZipUtil.ZipDirectory(saveBakDir, diskPath.getAbsolutePath());
+			ZipUtils.ZipDirectory(saveBakDir, diskPath.getAbsolutePath());
 
 			// 上传 zip
 			var map = postParam(backupName, type, usePrivateKey);
@@ -289,7 +289,7 @@ public class WorkDataBackupAction {
 		String saveDir = localSaveDir();
 		File uzipDir = new File(saveDir, "unzipdir");
 		try {
-			ZipUtil.UnzipFile(bakZipFile.getAbsolutePath(), uzipDir.getAbsolutePath());
+			ZipUtils.UnzipFile(bakZipFile.getAbsolutePath(), uzipDir.getAbsolutePath());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -359,7 +359,7 @@ public class WorkDataBackupAction {
 			Map<String, File> allFile, boolean dbInfo, boolean script) {
 		try {
 			// 登入校验
-			if (CommonUtility.isLogin("Use Backup must Login") == false) {
+			if (CommonUtils.isLogin("Use Backup must Login") == false) {
 				return;
 			}
 			// 密钥检查
@@ -434,7 +434,7 @@ public class WorkDataBackupAction {
 			Map<String, File> allFile, boolean dbInfo, boolean script) {
 		try {
 			// 登入校验
-			if (CommonUtility.isLogin("Use Backup must Login") == false) {
+			if (CommonUtils.isLogin("Use Backup must Login") == false) {
 				return;
 			}
 			// 密钥检查

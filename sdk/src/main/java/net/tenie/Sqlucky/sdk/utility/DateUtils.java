@@ -80,9 +80,9 @@ public class DateUtils {
 	 // 日期类型或时间类型转换为字符串
 		public static String DateOrDateTimeToString(int type, Date dv) {
 			String val = "";
-			if(CommonUtility.isDate(type)) {
+			if(CommonUtils.isDate(type)) {
 				val = dateToStr(dv, ConfigVal.dateFormateS); 
-			}else if(CommonUtility.isDateTime(type)) {
+			}else if(CommonUtils.isDateTime(type)) {
 				val = dateToStr(dv, ConfigVal.dateFormateL); 
 			}
 			

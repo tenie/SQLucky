@@ -17,23 +17,20 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyCodeAreaHolder;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.component.MyTextArea;
-import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingCodeArea;
-import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingSqlCodeAreaContextMenu;
+import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingEditor;
+import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingEditorContextMenu;
 import net.tenie.Sqlucky.sdk.component.codeArea.MyAutoComplete;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.Action.CommonAction;
-//import net.tenie.fx.component.CodeArea.HighLightingCodeArea;
-//import net.tenie.fx.component.CodeArea.HighLightingSqlCodeAreaContextMenu;
-//import net.tenie.fx.component.CodeArea.MyAutoComplete;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 //import net.tenie.fx.config.DBConns;
 import net.tenie.fx.config.MainTabInfo;
@@ -48,7 +45,7 @@ import net.tenie.lib.db.h2.AppDao;
 public class MyAreaTab extends Tab implements SqluckyTab {
 	private boolean isInit = false;
 	private DocumentPo docPo;
-	private SqluckyCodeAreaHolder sqlCodeArea;
+	private SqluckyEditor sqlCodeArea;
 	// 放查找面板, 文本area 的容器
 	private VBox vbox;
 	// 查找面板
@@ -65,7 +62,7 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	public void setTitleName() {
 		String TabName = docPo.getTitle();
 		// 名称
-		CommonUtility.setTabName(this, TabName);
+		CommonUtils.setTabName(this, TabName);
 	}
 
 	// 延迟初始化tab
@@ -137,9 +134,9 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 		// 添加到缓存
 		MainTabs.add(this);
 		MyAutoComplete myAuto = new MyAutoComplete();
-		sqlCodeArea = new HighLightingCodeArea(myAuto, this);
+		sqlCodeArea = new HighLightingEditor(myAuto, this);
 //		右键菜单
-		HighLightingSqlCodeAreaContextMenu cm = new HighLightingSqlCodeAreaContextMenu(sqlCodeArea);
+		HighLightingEditorContextMenu cm = new HighLightingEditorContextMenu(sqlCodeArea);
 		sqlCodeArea.setContextMenu(cm);
 
 		StackPane pane = sqlCodeArea.getCodeAreaPane();
@@ -238,7 +235,7 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	}
 
 	public String getTabTitle() {
-		String title = CommonUtility.tabText(this);
+		String title = CommonUtils.tabText(this);
 		return title;
 	}
 
@@ -503,22 +500,22 @@ public class MyAreaTab extends Tab implements SqluckyTab {
 	}
 
 	@Override
-	public SqluckyCodeAreaHolder getSqlCodeArea() {
+	public SqluckyEditor getSqlCodeArea() {
 		return sqlCodeArea;
 	}
 
-	public void setSqlCodeArea(HighLightingCodeArea sqlCodeArea) {
+	public void setSqlCodeArea(HighLightingEditor sqlCodeArea) {
 		this.sqlCodeArea = sqlCodeArea;
 	}
 
 	@Override
 	public String getTitle() {
-		return CommonUtility.tabText(this);
+		return CommonUtils.tabText(this);
 	}
 
 	@Override
 	public void setTitle(String val) {
-		CommonUtility.setTabName(this, val);
+		CommonUtils.setTabName(this, val);
 	}
 
 	@Override

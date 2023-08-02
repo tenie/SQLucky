@@ -19,7 +19,7 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtility;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
