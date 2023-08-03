@@ -9,13 +9,13 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.window.ConnectionEditor;
 
 /**
@@ -60,7 +60,9 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-				MyAreaTab.addCodeEmptyTabMethod();
+//				MyAreaTab.addCodeEmptyTabMethod();
+
+				MyEditorSheetHelper.addEmptyHighLightingEditor();
 			}
 		};
 	}
@@ -90,7 +92,8 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-				CommonAction.saveSqlAction();
+//				CommonAction.saveSqlAction();
+				MyEditorSheetHelper.saveSqlAction();
 			}
 		};
 	}

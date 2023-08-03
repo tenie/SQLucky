@@ -24,6 +24,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
@@ -32,7 +33,6 @@ import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TreeObjAction;
 import net.tenie.fx.Action.CommonAction;
@@ -247,7 +247,7 @@ public class DBinfoTree {
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
 				CommonAction.openConn(item);
-				CodeArea codeArea = SqluckyEditorUtils.getCodeArea();
+				CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
 				if (codeArea != null) {
 					codeArea.requestFocus();
 					codeArea.setShowCaret(CaretVisibility.ON);

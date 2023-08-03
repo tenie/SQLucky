@@ -18,7 +18,6 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingEditor;
@@ -34,7 +33,6 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.config.DbVendor;
@@ -54,7 +52,7 @@ public class SqluckyAppComponent implements AppComponent {
 
 	@Override
 	public SqluckyEditor createCodeArea() {
-		return new HighLightingEditor(null, null);
+		return new HighLightingEditor(null);
 	}
 
 	/**
@@ -90,15 +88,15 @@ public class SqluckyAppComponent implements AppComponent {
 		IconGenerator.addSvgStr(name, svg);
 	}
 
-	@Override
-	public SqluckyTab sqluckyTab() {
-		return new MyAreaTab(false);
-	}
+//	@Override
+//	public SqluckyTab sqluckyTab() {
+//		return new MyAreaTab(false);
+//	}
 
-	@Override
-	public SqluckyTab sqluckyTab(DocumentPo po) {
-		return new MyAreaTab(po, false);
-	}
+//	@Override
+//	public SqluckyTab sqluckyTab(DocumentPo po) {
+//		return new MyAreaTab(po, false);
+//	}
 
 	/**
 	 * 获取图标
@@ -154,9 +152,9 @@ public class SqluckyAppComponent implements AppComponent {
 	}
 
 	@Override
-	public void tabPaneRemoveSqluckyTab(SqluckyTab stb) {
+	public void tabPaneRemoveSqluckyTab(MyEditorSheet stb) {
 		var myTabPane = ComponentGetter.mainTabPane;
-		Tab tb = (Tab) stb;
+		Tab tb = stb.getTab();
 		if (myTabPane.getTabs().contains(tb)) {
 			myTabPane.getTabs().remove(tb);
 		}

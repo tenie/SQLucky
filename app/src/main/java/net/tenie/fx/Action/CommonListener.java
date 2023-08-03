@@ -5,13 +5,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.config.MainTabs;
 import net.tenie.fx.window.ConnectionEditor;
 
 /**
@@ -72,7 +71,8 @@ public class CommonListener {
 			@Override
 			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
 				// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
-				MainTabs.setBoxIdx(CommonUtils.tabText(MainTabs.getActTab()), newValue.toString());
+//				MainTabs.setBoxIdx(CommonUtils.tabText(MainTabs.getActTab()), newValue.toString());
+				MyEditorSheetHelper.getActivationEditorSheet().setTabConnIdx(newValue.toString());
 			}
 		};
 	}
@@ -86,11 +86,11 @@ public class CommonListener {
 					SqluckyConnector cnnpo = DBConns.get(newValue.getText());
 					if (cnnpo != null && !cnnpo.isAlive()) {
 						// 清除查找字符串
-						IndexRange ir = SqluckyEditorUtils.getSelection();
+						IndexRange ir = MyEditorSheetHelper.getSelection();
 						CommonUtils.pressBtnESC();
 						CommonAction.shrinkTreeView();
 						ConnectionEditor.openConn(cnnpo.getConnName());
-						SqluckyEditorUtils.selectRange(ir);
+						MyEditorSheetHelper.selectRange(ir);
 					}
 				}
 

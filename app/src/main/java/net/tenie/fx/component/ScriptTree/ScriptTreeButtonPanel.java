@@ -4,14 +4,14 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.Action.CommonAction;
-import net.tenie.fx.component.MyAreaTab;
 
 public class ScriptTreeButtonPanel {
 
 	private HBox optionHbox = new HBox();
-	
+
 	private JFXButton importBtn = new JFXButton();
 
 	private JFXButton saveBtn = new JFXButton();
@@ -20,36 +20,36 @@ public class ScriptTreeButtonPanel {
 	private JFXButton refresh = new JFXButton();
 
 	private JFXButton showInFolder = new JFXButton();
-	
+
 	// 构造
 	public ScriptTreeButtonPanel() {
-		showInFolder.setGraphic(ComponentGetter.getIconDefActive("sign-in")   );
+		showInFolder.setGraphic(ComponentGetter.getIconDefActive("sign-in"));
 		showInFolder.setTooltip(CommonUtils.instanceTooltip("Show In System folder"));
-		showInFolder.setOnMouseClicked(e->{
-			ScriptTreeAction.showInFloder() ;
+		showInFolder.setOnMouseClicked(e -> {
+			ScriptTreeAction.showInFloder();
 		});
-		
+
 		newFile.setGraphic(ComponentGetter.getIconDefActive("file-o"));
 		newFile.setTooltip(CommonUtils.instanceTooltip("New file"));
-		newFile.setOnMouseClicked(e->{
-			MyAreaTab.addCodeEmptyTabMethod();
+		newFile.setOnMouseClicked(e -> {
+//			MyAreaTab.addCodeEmptyTabMethod();
+			MyEditorSheetHelper.addEmptyHighLightingEditor();
 		});
-		
+
 		importBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
 		importBtn.setTooltip(CommonUtils.instanceTooltip("Open note folder "));
-		importBtn.setOnMouseClicked(e->{
+		importBtn.setOnMouseClicked(e -> {
 			CommonAction.openSqlFile();
 		});
-		
+
 //		saveBtn.setText("Import");
 //		saveBtn.getStyleClass().add("myTxtBtnBorder");
 		saveBtn.setGraphic(ComponentGetter.getIconDefActive("save"));
 		saveBtn.setTooltip(CommonUtils.instanceTooltip("Save file"));
-		saveBtn.setOnMouseClicked(e->{
+		saveBtn.setOnMouseClicked(e -> {
 			ScriptTreeAction.saveAction();
 		});
-		
-		
+
 		optionHbox.getChildren().addAll(importBtn, newFile, saveBtn, showInFolder);
 	}
 
@@ -68,64 +68,48 @@ public class ScriptTreeButtonPanel {
 		return optionHbox;
 	}
 
-
 	public void setOptionHbox(HBox optionHbox) {
 		this.optionHbox = optionHbox;
 	}
-
 
 	public JFXButton getImportBtn() {
 		return importBtn;
 	}
 
-
 	public void setImportBtn(JFXButton importBtn) {
 		this.importBtn = importBtn;
 	}
-
- 
-
 
 	public JFXButton getNewFile() {
 		return newFile;
 	}
 
-
 	public void setNewFile(JFXButton newFile) {
 		this.newFile = newFile;
 	}
-
 
 	public JFXButton getDeleteFile() {
 		return DeleteFile;
 	}
 
-
 	public void setDeleteFile(JFXButton deleteFile) {
 		DeleteFile = deleteFile;
 	}
-
 
 	public JFXButton getRefresh() {
 		return refresh;
 	}
 
-
 	public void setRefresh(JFXButton refresh) {
 		this.refresh = refresh;
 	}
-
 
 	public JFXButton getShowInFolder() {
 		return showInFolder;
 	}
 
-
 	public void setShowInFolder(JFXButton showInFolder) {
 		this.showInFolder = showInFolder;
 	}
-		
-	
-	 
-	
+
 }

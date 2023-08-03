@@ -22,6 +22,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -32,7 +33,6 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
-import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.fx.Action.sqlExecute.ProcedureAction;
@@ -88,7 +88,7 @@ public class RunSQLHelper {
 					SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
 					allsqls.add(sq);
 				} else {
-					String str = SqluckyEditorUtils.getCurrentCodeAreaSQLText();
+					String str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 					SqlData sq = new SqlData(str, 0, str.length());
 					allsqls.add(sq);
 				}
@@ -203,7 +203,7 @@ public class RunSQLHelper {
 				if (errObj.size() > 0) {
 					for (SqlData sd : errObj) {
 						int bg = sd.begin;
-						SqluckyEditorUtils.ErrorHighlighting(bg, sd.sql);
+						MyEditorSheetHelper.ErrorHighlighting(bg, sd.sql);
 					}
 				}
 			});

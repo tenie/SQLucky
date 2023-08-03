@@ -32,6 +32,8 @@ public class DocumentPo implements Serializable {
 	private Integer openStatus; // 是否在文本编辑区域中打开, 1: 打开; 0: 没打开
 	private Integer isActivate; // 是否激活, 在编辑区域打开的状态, 只有openStatus 为1时才有意义
 
+	private Boolean saveToDB; // 对文本内容需要保存到数据库的标记
+
 	public DocumentPo() {
 		this.id = null;
 		this.title = "";
@@ -44,6 +46,30 @@ public class DocumentPo implements Serializable {
 		this.type = IS_SQL;
 		this.openStatus = 0;
 		this.isActivate = 0;
+		this.saveToDB = true;
+	}
+
+	public DocumentPo(boolean needSaveToDB) {
+		this.id = null;
+		this.title = "";
+		this.text = "";
+		this.fileFullName = "";
+		this.encode = "UTF-8";
+		this.paragraph = 0;
+		this.file = null;
+		this.icon = null;
+		this.type = IS_SQL;
+		this.openStatus = 0;
+		this.isActivate = 0;
+		this.saveToDB = needSaveToDB;
+	}
+
+	public Boolean getSaveToDB() {
+		return saveToDB;
+	}
+
+	public void setSaveToDB(Boolean saveToDB) {
+		this.saveToDB = saveToDB;
 	}
 
 	public Integer getId() {

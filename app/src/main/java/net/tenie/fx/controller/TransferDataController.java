@@ -35,7 +35,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.MyTextArea;
+import net.tenie.Sqlucky.sdk.component.MyTextEditor;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.DBTools;
 import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
@@ -400,7 +400,7 @@ public class TransferDataController implements Initializable {
 		setGraphicAndCss();
 		tipsLabel.setText("Tips: 同步过程, 函数, 可能依赖序列或互相依赖");
 
-		var sqlCodeArea = new MyTextArea();
+		var sqlCodeArea = new MyTextEditor();
 		spCode = sqlCodeArea.getCodeAreaPane();
 		CodeArea = sqlCodeArea.getCodeArea();
 		setAction();

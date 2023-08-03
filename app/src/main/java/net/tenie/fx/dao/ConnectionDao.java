@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.DBTools;
@@ -63,7 +63,6 @@ public class ConnectionDao {
 		}
 
 	}
-	
 
 	public static void updateDataOrder(Connection conn, int id, int order) {
 		String sql = " UPDATE CONNECTION_INFO  set  ORDER_TAG = " + order + "  where ID = " + id;
@@ -217,67 +216,71 @@ public class ConnectionDao {
 
 	/**
 	 * 删除 CONNECTION_INFO 表数据
+	 * 
 	 * @param conn
 	 */
-	public static  void deleteConnectionInfo(Connection conn) {
+	public static void deleteConnectionInfo(Connection conn) {
 		try {
 			DBTools.execDelTab(conn, "CONNECTION_INFO");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
+
 	/**
 	 * 删除 SCRIPT_ARCHIVE 表数据
+	 * 
 	 * @param conn
 	 */
-	public static  void deleteScript(Connection conn) {
+	public static void deleteScript(Connection conn) {
 		try {
 			DBTools.execDelTab(conn, "SCRIPT_ARCHIVE");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	// 根据名称查找旧数据, 如果查询的名称已经存在就添加后缀查找, 直到名称为唯一的返回
 	public static String queryConnectionInfoName(Connection conn, String qname) {
-		String val = DBTools.selectOne(conn, "Select CONN_NAME from CONNECTION_INFO WHERE CONN_NAME = '"+qname+"'");
-		if("".equals(val)) {
+		String val = DBTools.selectOne(conn, "Select CONN_NAME from CONNECTION_INFO WHERE CONN_NAME = '" + qname + "'");
+		if ("".equals(val)) {
 			return qname;
-		}else {
-			val = queryConnectionInfoName(conn, qname+"*");
+		} else {
+			val = queryConnectionInfoName(conn, qname + "*");
 		}
-		return val; 
+		return val;
 	}
-	
+
 	// 从新创建dbinfoTree的数据, 删除旧数据
 	public static void DBInfoTreeReCreate(List<DBConnectorInfoPo> dbciPo) {
-		if(dbciPo == null || dbciPo.size() == 0) return;
+		if (dbciPo == null || dbciPo.size() == 0)
+			return;
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 删除表里的旧数据
 			deleteConnectionInfo(conn);
 			// 处理数据DBConnectorInfoPo 转为SqluckyConnector
-			List<SqluckyConnector>  ls = recoverConnObj(dbciPo);
+			List<SqluckyConnector> ls = recoverConnObj(dbciPo);
 			// 将新数据插入到表里
-			for(SqluckyConnector item : ls) {
+			for (SqluckyConnector item : ls) {
 				createOrUpdate(conn, item);
 			}
 			// 页面数据清空, 再加载新数据
 			DBinfoTree.cleanRootRecoverNodeFromList(ls);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
 	}
-	
+
 	// 将DBConnectorInfoPo 的连接名称和数据库中已有的连接名称重复就重命名
 	public static void renameOverlapDBinfoName(List<DBConnectorInfoPo> dbciPo) {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
-			if(dbciPo != null && dbciPo.size() > 0) {
-				for(var po : dbciPo) {
+			if (dbciPo != null && dbciPo.size() > 0) {
+				for (var po : dbciPo) {
 					String name = po.getConnName();
 					String val = queryConnectionInfoName(conn, name);
 					po.setConnName(val);
@@ -286,91 +289,93 @@ public class ConnectionDao {
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
-		
-	} 
-	
+
+	}
+
 	// 将新的数据库连接数据和旧数据合并起来
 	public static void DBInfoTreeMerge(List<DBConnectorInfoPo> dbciPo) {
-		if(dbciPo == null || dbciPo.size() == 0) return;
+		if (dbciPo == null || dbciPo.size() == 0)
+			return;
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 判断链接名称是否重复, 重复添加后缀
 			renameOverlapDBinfoName(dbciPo);
-			
+
 			// 处理数据DBConnectorInfoPo 转为SqluckyConnector
-			List<SqluckyConnector>  ls = recoverConnObj(dbciPo);
+			List<SqluckyConnector> ls = recoverConnObj(dbciPo);
 			// 将新数据插入到表里
-			for(SqluckyConnector item : ls) {
+			for (SqluckyConnector item : ls) {
 				createOrUpdate(conn, item);
 			}
 			// 从数据库从新读取数据
 			List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
 			// 页面数据清空, 再加载新数据
 			DBinfoTree.cleanRootRecoverNodeFromList(datas);
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
 	}
+
 	// 从新创建scriptTree的数据, 删除旧数据
 	public static void scriptTreeReCreate(List<DocumentPo> docPo) {
-		if(docPo == null || docPo.size() == 0) return;
+		if (docPo == null || docPo.size() == 0)
+			return;
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 删除表里的旧数据
 			deleteScript(conn);
 			// 清空并还原
-			ScriptTabTree.cleanOldAndRecover(docPo); 
-			
+			ScriptTabTree.cleanOldAndRecover(docPo);
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
 	}
-	
+
 	// 将新sript数据和旧数据合并起来
 	public static void scriptTreeMerge(List<DocumentPo> docPo) {
-		if(docPo == null || docPo.size() == 0) return;
-		
+		if (docPo == null || docPo.size() == 0)
+			return;
+
 		List<DocumentPo> tmpDocs = new ArrayList<>();
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 相同内容跳过
-			TreeItem<SqluckyTab>  root = ScriptTabTree.rootNode;
-			ObservableList<TreeItem<SqluckyTab>> ls = root.getChildren();
-			for(TreeItem<SqluckyTab> item : ls) {
+			TreeItem<MyEditorSheet> root = ScriptTabTree.rootNode;
+			ObservableList<TreeItem<MyEditorSheet>> ls = root.getChildren();
+			for (TreeItem<MyEditorSheet> item : ls) {
 				DocumentPo treeDoc = item.getValue().getDocumentPo();
 				var treetitle = treeDoc.getTitle();
 				var treetext = treeDoc.getText();
-				for(var doc : docPo) {
+				for (var doc : docPo) {
 					String title = doc.getTitle();
 					String text = doc.getText();
-					if(treetitle.equals(title) && treetext.equals(text) ) {
-						logger.debug(treetitle+" : 找到相同的");
+					if (treetitle.equals(title) && treetext.equals(text)) {
+						logger.debug(treetitle + " : 找到相同的");
 						tmpDocs.add(doc);
 						break;
 					}
-					
+
 				}
 			}
-			
-			
+
 			// 合并还原
-			if(tmpDocs.size() > 0 ) {
-				for(var tmpdoc : tmpDocs) {
+			if (tmpDocs.size() > 0) {
+				for (var tmpdoc : tmpDocs) {
 					docPo.remove(tmpdoc);
 				}
-				ScriptTabTree.recoverFromDocumentPos(docPo); 
+				ScriptTabTree.recoverFromDocumentPos(docPo);
 				ConfigVal.pageSize += tmpDocs.size();
 			}
-			
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
 	}
