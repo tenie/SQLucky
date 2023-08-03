@@ -14,10 +14,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
 
@@ -37,7 +35,7 @@ public class FindReplaceTextPanel {
 	private JFXButton up;
 
 	public static void findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		int idx = code.getCaretPosition();
 		String selTex = code.getSelectedText();
 		String findStr = findtf.getText();
@@ -48,7 +46,7 @@ public class FindReplaceTextPanel {
 	}
 
 	public static void replaceString(String str, String strNew, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
@@ -86,7 +84,7 @@ public class FindReplaceTextPanel {
 
 	// F3 字符串查找
 	public static void findSelectedString() {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text)) {
 			if (StrUtils.isNotNullOrEmpty(f3Str)) {
@@ -114,7 +112,7 @@ public class FindReplaceTextPanel {
 	public static void findStringFromCodeArea(String str, boolean forward, boolean sensitive) {
 		if (StrUtils.isNullOrEmpty(str))
 			return;
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		int idx = code.getCaretPosition(); // 光标位置
 		findString(str, idx, sensitive, forward);
 //		findStringStop(str, idx, sensitive, forward);
@@ -133,7 +131,7 @@ public class FindReplaceTextPanel {
 			return false;
 
 		Integer idx = 0;
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		if (position == null) {
 			idx = code.getCaretPosition(); // 光标位置
 		} else if (position > -1) {
@@ -147,7 +145,7 @@ public class FindReplaceTextPanel {
 	}
 
 	public static String codeStr(boolean sensitive) {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			text = text.toUpperCase();
@@ -160,7 +158,7 @@ public class FindReplaceTextPanel {
 	}
 
 	public static void replaceStringAll(String str, String strNew, boolean sensitive) {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
@@ -199,7 +197,7 @@ public class FindReplaceTextPanel {
 	 * @param forward   向前还是向后找
 	 */
 	public static void findString(String str, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		// 获取文本
 		String text = code.getText();
 		if (sensitive) {
@@ -237,12 +235,12 @@ public class FindReplaceTextPanel {
 
 			}
 		}
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting(str);
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting(str);
 	}
 
 	// 不循环找, 找不到下一个就不循环
 	public static boolean findStringStop(String str, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		// 获取文本
 		String text = code.getText();
 		if (sensitive) {
@@ -266,18 +264,19 @@ public class FindReplaceTextPanel {
 			}
 		}
 		if (start > -1) {
-			SqluckyEditorUtils.currentSqlCodeAreaHighLighting(str);
+			MyEditorSheetHelper.currentSqlCodeAreaHighLighting(str);
 			return true;
 		}
 		return false;
 
 	}
 
-	public static void delFindReplacePane(SqluckyTab skTab) {
-		VBox x = SqluckyEditorUtils.getTabVbox();
+	// 删除查找面板
+	public static void delFindReplacePane(MyEditorSheet sheet) {
+		VBox x = MyEditorSheetHelper.getTabVbox();
 		while (x.getChildren().size() > 1) {
 			x.getChildren().remove(0);
-			skTab.cleanFindReplacePanel();
+			sheet.cleanFindReplacePanel();
 		}
 	}
 
@@ -328,7 +327,7 @@ public class FindReplaceTextPanel {
 	}
 
 	// 查找替换组件的面板
-	public FindReplaceTextPanel(boolean isReplace, String findText, SqluckyTab skTab) {
+	public FindReplaceTextPanel(boolean isReplace, String findText, MyEditorSheet sheet) {
 		AnchorPane findAnchorPane = new AnchorPane();
 		CommonUtils.addCssClass(findAnchorPane, "myFindPane");
 		findAnchorPane.prefHeight(30);
@@ -343,7 +342,7 @@ public class FindReplaceTextPanel {
 
 		if (StrUtils.isNullOrEmpty(findText)) {
 			// 从编辑框中获取选中的文本
-			CodeArea code = SqluckyEditorUtils.getCodeArea();
+			CodeArea code = MyEditorSheetHelper.getCodeArea();
 			findText = code.getSelectedText();
 		}
 
@@ -426,10 +425,10 @@ public class FindReplaceTextPanel {
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 
 		hideBottom.setOnAction(v -> {
-			delFindReplacePane(skTab);
+			delFindReplacePane(sheet);
 		});
 		// 加入到 代码编辑框上面
-		VBox b = skTab.getVbox();
+		VBox b = sheet.getVbox();
 		b.getChildren().add(0, findAnchorPane);
 		if (isReplace) {
 			b.getChildren().add(1, createReplacePane(textField, cb));
@@ -443,7 +442,7 @@ public class FindReplaceTextPanel {
 	// 查找的计数action
 	private void countAction(Label countLabel, JFXCheckBox cb) {
 
-		String sqlTxt = SqluckyEditorUtils.getCurrentCodeAreaSQLText();
+		String sqlTxt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 		int countVal = 0;
 		if (textField.getText().length() == 0) {
 			countLabel.setText("");
@@ -457,4 +456,5 @@ public class FindReplaceTextPanel {
 		}
 
 	}
+
 }

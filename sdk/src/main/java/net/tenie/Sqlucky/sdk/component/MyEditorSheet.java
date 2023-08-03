@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.component;
 
+import java.io.File;
 import java.sql.Connection;
 
 import org.fxmisc.richtext.CodeArea;
@@ -11,9 +12,11 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingEditorUtils;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -23,29 +26,99 @@ public class MyEditorSheet {
 	private Tab tab = new Tab();
 	private SqluckyEditor sqluckyEditor; // 编辑器(比如高亮的文本编辑器)
 	private DocumentPo documentPo; // 文本内容
-	private boolean needSaveDocument = true; // 对文本内容需要保存的标记
 
-	private String tabConnIdx; // 与数据库链接的绑定, (切换tab的时候, 可以连着一起切换数据库链接)
-
+	private String tabConnIdx = ""; // 与数据库链接的绑定, (切换tab的时候, 可以连着一起切换数据库链接)
+	private boolean isInit = false; // 是否初始化
 	private boolean isModify = false;
+	// 放查找面板, 文本area 的容器
+	private VBox vbox;
+	// 查找面板
+	private FindReplaceTextPanel findReplacePanel;
 
-	public MyEditorSheet(DocumentPo valDocumentPo) {
+	public MyEditorSheet(DocumentPo valDocumentPo, SqluckyEditor sqluckyEditor) {
 		documentPo = valDocumentPo;
 		setTabProperty();
+		delayInit(sqluckyEditor);
+//	
+//		if (sqluckyEditor == null) {
+//			setDefaultEditor();
+//		} else {
+//			this.setSqluckyEditor(sqluckyEditor);
+//		}
 	}
 
-	public MyEditorSheet(DocumentPo valDocumentPo, boolean valNeedSaveDocument) {
-		documentPo = valDocumentPo;
-		needSaveDocument = valNeedSaveDocument;
-		setTabProperty();
-	}
+//	public MyEditorSheet(DocumentPo valDocumentPo, boolean valNeedSaveDocument) {
+//		documentPo = valDocumentPo;
+//		needSaveDocument = valNeedSaveDocument;
+//		setTabProperty();
+//		setDefaultEditor();
+//	}
 
-	public MyEditorSheet(String TabName) {
+	public MyEditorSheet(String TabName, SqluckyEditor sqluckyEditor) {
 		documentPo = ComponentGetter.appComponent.scriptArchive(TabName, "", "", "UTF-8", 0);
 //		docPo = AppDao.scriptArchive(TabName, "", "", "UTF-8", 0);
 		documentPo.setOpenStatus(1);
 		setTabProperty();
+		delayInit(sqluckyEditor);
+//		if (sqluckyEditor == null) {
+//			setDefaultEditor();
+//		} else {
+//			setSqluckyEditor(sqluckyEditor);
+//		}
+
+//		
 //		createMyTab();
+	}
+
+	// 延迟初始化tab
+	public void delayInit(SqluckyEditor sqluckyEditor) {
+		// 选择title的时候初始化tab内容
+		tab.selectedProperty().addListener(l -> {
+			boolean isSel = tab.isSelected();
+			if (isSel && isInit == false) {
+				if (sqluckyEditor == null) {
+					if (documentPo.getType() == DocumentPo.IS_SQL) {
+						setDefaultEditor();
+					} else if (documentPo.getType() == DocumentPo.IS_TEXT) {
+						createTextMyTab();
+					}
+				} else {
+					setSqluckyEditor(sqluckyEditor);
+				}
+
+				isInit = true;
+			}
+		});
+	}
+
+	// 设置editor的时候 设置文本
+	public void setSqluckyEditor(SqluckyEditor sqluckyEditor) {
+		this.sqluckyEditor = sqluckyEditor;
+
+		StackPane pane = sqluckyEditor.getCodeAreaPane();
+		vbox = new VBox();
+		vbox.getChildren().add(pane);
+		VBox.setVgrow(pane, Priority.ALWAYS);
+		tab.setContent(vbox);
+		documentPo.setOpenStatus(1);
+		initTabSQLText(documentPo.getText());
+	}
+
+	// 默认的SqluckyEditor
+	public void setDefaultEditor() {
+		SqluckyEditor sqlEditor = HighLightingEditorUtils.sqlEditor();
+		this.setSqluckyEditor(sqlEditor);
+	}
+
+	// 创建一个纯文本的编辑器
+	private void createTextMyTab() {
+		SqluckyEditor sqlEditor = new MyTextEditor();
+		this.setSqluckyEditor(sqlEditor);
+	}
+
+	public void cleanFindReplacePanel() {
+		findReplacePanel = null;
+
 	}
 
 	// tab的属性设置, 名称, 右键菜单,
@@ -81,19 +154,6 @@ public class MyEditorSheet {
 
 	public SqluckyEditor getSqluckyEditor() {
 		return sqluckyEditor;
-	}
-
-	// 设置editor的时候 设置文本
-	public void setSqluckyEditor(SqluckyEditor sqluckyEditor) {
-		this.sqluckyEditor = sqluckyEditor;
-
-		StackPane pane = sqluckyEditor.getCodeAreaPane();
-		VBox vbox = new VBox();
-		vbox.getChildren().add(pane);
-		VBox.setVgrow(pane, Priority.ALWAYS);
-		tab.setContent(vbox);
-		documentPo.setOpenStatus(1);
-		initTabSQLText(documentPo.getText());
 	}
 
 	public void showMyTab() {
@@ -144,12 +204,10 @@ public class MyEditorSheet {
 		}
 
 		documentPo.setTitle(title);
-		if (needSaveDocument) {
-//			AppDao.updateScriptArchive(conn, documentPo);
+		if (documentPo.getSaveToDB()) {
 			ComponentGetter.appComponent.updateScriptArchive(conn, documentPo);
 
 		}
-//		ScriptTabTree.ScriptTreeView.refresh();
 		ComponentGetter.appComponent.scriptTreeRefresh();
 	}
 
@@ -320,4 +378,59 @@ public class MyEditorSheet {
 		this.tabConnIdx = tabConnIdx;
 	}
 
+	public VBox getVbox() {
+		return vbox;
+	}
+
+	public void setVbox(VBox vbox) {
+		this.vbox = vbox;
+	}
+
+	public FindReplaceTextPanel getFindReplacePanel() {
+		return findReplacePanel;
+	}
+
+	public void setFindReplacePanel(FindReplaceTextPanel findReplacePanel) {
+		this.findReplacePanel = findReplacePanel;
+	}
+
+	public File getFile() {
+		if (documentPo == null)
+			return null;
+		return documentPo.getFile();
+	}
+
+	// 存在 就显示出来
+	public boolean existTabShow() {
+		var myTabPane = ComponentGetter.mainTabPane;
+		if (myTabPane.getTabs().contains(tab)) {
+			myTabPane.getSelectionModel().select(tab);
+			return true;
+		}
+		return false;
+	}
+
+	public void setFileText(String text) {
+		documentPo.setText(text);
+	}
+
+	public void setFile(File file) {
+		documentPo.setFile(file);
+	}
+
+	public void setIcon(Region icon) {
+		documentPo.setIcon(icon);
+	}
+
+	public boolean isShowing() {
+		var myTabPane = ComponentGetter.mainTabPane;
+		if (myTabPane.getTabs().contains(tab)) {
+			int idxThis = myTabPane.getTabs().indexOf(tab);
+			int currentSelect = myTabPane.getSelectionModel().getSelectedIndex();
+			if (idxThis == currentSelect) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

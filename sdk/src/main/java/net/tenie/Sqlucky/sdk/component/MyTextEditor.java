@@ -21,13 +21,13 @@ import org.fxmisc.flowless.VirtualizedScrollPane;
  * @author tenie
  *
  */
-public class MyTextArea implements SqluckyEditor {
-	private static Logger logger = LogManager.getLogger(MyTextArea.class);
+public class MyTextEditor implements SqluckyEditor {
+	private static Logger logger = LogManager.getLogger(MyTextEditor.class);
 	private StackPane codeAreaPane;
 	private MyCodeArea codeArea;
 	private CodeAreaHighLightingHelper highLightingHelper ;
 
-	public MyTextArea() {
+	public MyTextEditor() {
 		codeArea = new MyCodeArea();
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();

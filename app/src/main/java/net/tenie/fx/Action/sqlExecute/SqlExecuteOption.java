@@ -18,6 +18,7 @@ import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
@@ -26,7 +27,6 @@ import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Po.SqlData;
 import net.tenie.fx.Po.TreeNodePo;
@@ -200,26 +200,26 @@ public class SqlExecuteOption {
 	public static List<SqlData> willExecSql(boolean isCurrentLine) {
 		List<SqlData> sds = new ArrayList<>();
 		String str = "";
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		// 如果是执行当前行
 		if (isCurrentLine) {
 			try {
-				str = SqluckyEditorUtils.getCurrentLineText();
+				str = MyEditorSheetHelper.getCurrentLineText();
 			} finally {
 				isCurrentLine = false;
 			}
 		} else {
-			str = SqluckyEditorUtils.getCurrentCodeAreaSQLSelectedText();
+			str = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
 		}
 
 		int start = 0;
 		if (str != null && str.length() > 0) {
 			start = code.getSelection().getStart();
 		} else {
-			str = SqluckyEditorUtils.getCurrentCodeAreaSQLText();
+			str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 		}
 		// 去除注释, 包注释字符串转换为空白字符串
-		str = SqluckyEditorUtils.trimCommentToSpace(str, "--");
+		str = MyEditorSheetHelper.trimCommentToSpace(str, "--");
 //		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		sds = epurateSql(str, start);
 		return sds;
@@ -229,7 +229,7 @@ public class SqlExecuteOption {
 	private static List<SqlData> epurateSql(String str, int start) {
 		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = SqluckyEditorUtils.findSQLFromTxt(str);
+		List<String> sqls = MyEditorSheetHelper.findSQLFromTxt(str);
 
 		if (sqls.size() > 0) {
 			for (String s : sqls) {
@@ -251,7 +251,7 @@ public class SqlExecuteOption {
 	public static List<SqlData> epurateSql(String str) {
 		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = SqluckyEditorUtils.findSQLFromTxt(str);
+		List<String> sqls = MyEditorSheetHelper.findSQLFromTxt(str);
 
 		if (sqls.size() > 0) {
 			for (String s : sqls) {

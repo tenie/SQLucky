@@ -25,7 +25,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyTextArea;
+import net.tenie.Sqlucky.sdk.component.MyTextEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -197,7 +197,7 @@ public class MyAlert {
 		// 内容设置
 		Label question = new Label(promptInfo);
 		// code
-		MyTextArea myTextArea = new MyTextArea();
+		MyTextEditor myTextArea = new MyTextEditor();
 		StackPane codeAreaPane = myTextArea.getCodeAreaPane(code, false);
 		codeAreaPane.setStyle("-fx-background-color: transparent;");
 
@@ -249,7 +249,7 @@ public class MyAlert {
 	public static void myConfirmation(String promptInfo, Stage stage, List<Node> btns, boolean isWait) {
 //		Label space = new Label("");
 //		Label tit = new Label(promptInfo);
-		MyTextArea myTextArea = new MyTextArea();
+		MyTextEditor myTextArea = new MyTextEditor();
 		StackPane codeAreaPane = myTextArea.getCodeAreaPane(promptInfo, false);
 		codeAreaPane.setStyle("-fx-background-color: transparent;");
 
@@ -375,7 +375,7 @@ public class MyAlert {
 		Platform.runLater(() -> {
 			Label titleLabel = new Label(title);
 			titleLabel.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
-			MyTextArea myTextArea = new MyTextArea();
+			MyTextEditor myTextArea = new MyTextEditor();
 			StackPane codeAreaPane = myTextArea.getCodeAreaPane(text, false);
 			codeAreaPane.setStyle("-fx-background-color: transparent;");
 

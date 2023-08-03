@@ -35,6 +35,7 @@ import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.MyLineNumberNode;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -56,7 +57,7 @@ public class HighLightingEditor implements SqluckyEditor {
 	private ExecutorService executor;
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
-	private MyEditorSheet myAreaTab;
+//	private MyEditorSheet myAreaTab;
 
 	@Override
 	public void hideAutoComplete() {
@@ -83,12 +84,13 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	// 文本修改后title设置保存提示
 	Consumer<Integer> caller = x -> {
-		if (myAreaTab != null) {
+		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
+		if (sheet != null) {
 			Platform.runLater(() -> {
-				String title = myAreaTab.getTitle(); // CommonUtility.tabText(tb);
+				String title = sheet.getTitle(); // CommonUtility.tabText(tb);
 				if (!title.endsWith("*")) {
-					myAreaTab.setTitle(title + "*");
-					myAreaTab.setModify(true);
+					sheet.setTitle(title + "*");
+					sheet.setModify(true);
 				}
 				this.highLighting(x);
 			});
@@ -101,8 +103,8 @@ public class HighLightingEditor implements SqluckyEditor {
 
 //    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
 
-	public HighLightingEditor(MyAutoComplete myAuto, MyEditorSheet sheet) {
-		this.myAreaTab = sheet;
+	public HighLightingEditor(MyAutoComplete myAuto) {
+//		this.myAreaTab = sheet;
 		this.myAuto = myAuto;
 		highLightingHelper = new CodeAreaHighLightingHelper();
 		executor = Executors.newSingleThreadExecutor();
@@ -111,7 +113,8 @@ public class HighLightingEditor implements SqluckyEditor {
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 
-		if (myAuto == null && sheet == null) {
+		// 自动补全对象不是null,就可以编辑文本
+		if (myAuto == null) {
 			codeArea.setEditable(false);
 			return;
 

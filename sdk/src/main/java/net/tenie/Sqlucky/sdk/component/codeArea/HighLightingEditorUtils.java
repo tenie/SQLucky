@@ -5,10 +5,21 @@ import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 
 import javafx.scene.control.IndexRange;
-import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 
 public class HighLightingEditorUtils {
 	private static Logger logger = LogManager.getLogger(HighLightingEditorUtils.class);
+
+	// 创建默认的带有提示功能的 高亮sql编辑器
+	public static SqluckyEditor sqlEditor() {
+		MyAutoComplete myAuto = new MyAutoComplete();
+		SqluckyEditor sqlCodeAreaEditor = new HighLightingEditor(myAuto);
+//		右键菜单
+		HighLightingEditorContextMenu cm = new HighLightingEditorContextMenu(sqlCodeAreaEditor);
+		sqlCodeAreaEditor.setContextMenu(cm);
+		return sqlCodeAreaEditor;
+	}
 
 	// 根据括号) 向前寻找配对的括号( 所在的位置.
 	public static int findEndParenthesisRange(String text, int start, String pb, String pe) {
@@ -62,7 +73,7 @@ public class HighLightingEditorUtils {
 
 	// 减少前置tab符号
 	public static void minus4Space() {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();
@@ -119,7 +130,7 @@ public class HighLightingEditorUtils {
 		code.insertText(start, valStr);
 
 		code.selectRange(start, start + valStr.length());
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
 
 	// 添加tab符号
@@ -128,7 +139,7 @@ public class HighLightingEditorUtils {
 		String replaceStr1 = "\n    ";
 		String replaceStr2 = "    ";
 
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();

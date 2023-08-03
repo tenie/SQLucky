@@ -20,15 +20,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Popup;
 import net.tenie.Sqlucky.sdk.AutoComplete;
-import net.tenie.Sqlucky.sdk.SqluckyCodeArea;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
@@ -152,7 +152,7 @@ public class MyAutoComplete implements AutoComplete {
 
 	// 按backspace按键的时候, 隐藏提示窗口的策略
 	@Override
-	public void backSpaceHide(SqluckyCodeArea sqluckyCodeArea) {
+	public void backSpaceHide(MyCodeArea sqluckyCodeArea) {
 		if (isShow()) {
 			CodeArea codeArea = sqluckyCodeArea.getCodeArea();
 			int acr = codeArea.getAnchor();
@@ -239,11 +239,12 @@ public class MyAutoComplete implements AutoComplete {
 
 	@Override
 	public Integer getMyTabId() {
-		SqluckyTab tb = SqluckyEditorUtils.currentMyTab();
-		if (tb != null) {
-			var scpo = tb.getDocumentPo();
+//		SqluckyTab tb = SqluckyEditorUtils.currentMyTab();
+		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
+		if (sheet != null) {
+			var scpo = sheet.getDocumentPo();
 			if (scpo != null) {
-				Integer id = tb.getDocumentPo().getId();
+				Integer id = sheet.getDocumentPo().getId();
 				return id;
 			}
 		}
@@ -295,8 +296,10 @@ public class MyAutoComplete implements AutoComplete {
 	// 缓存页面单词
 	@Override
 	public void cacheTextWord() {
-		var mtb = SqluckyEditorUtils.currentMyTab();
-		String text = mtb.getSqlCodeArea().getCodeArea().getText();
+//		var mtb = SqluckyEditorUtils.currentMyTab();
+//		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
+//		String text = mtb.getSqlCodeArea().getCodeArea().getText();
+		String text = MyEditorSheetHelper.getActivationEditorText();
 		Consumer<String> caller = x -> {
 			Integer id = getMyTabId();
 			if (id != null) {
@@ -346,7 +349,7 @@ public class MyAutoComplete implements AutoComplete {
 		cacheTablePo(tabpo);
 
 		int len = selectVal.length();
-		var codeArea = SqluckyEditorUtils.getCodeArea();
+		var codeArea = MyEditorSheetHelper.getCodeArea();
 		int anc = codeArea.getAnchor();
 
 		int start = 0;

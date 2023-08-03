@@ -51,9 +51,10 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
@@ -627,7 +628,7 @@ public class CommonUtils {
 	public static List<ProcedureFieldPo> getProcedureFields(String ddl) {
 		List<ProcedureFieldPo> rs = new ArrayList<>();
 		ddl = StrUtils.multiLineCommentToSpace(ddl);
-		ddl = SqluckyEditorUtils.trimCommentToSpace(ddl, "--");
+		ddl = MyEditorSheetHelper.trimCommentToSpace(ddl, "--");
 		// 给ddl分词, 找到过程名称后面的参数列表
 		ddl = StrUtils.pressString(ddl).toUpperCase();
 		if (procedureIsNoParameter(ddl)) { // 没有参数直接返回
@@ -978,10 +979,11 @@ public class CommonUtils {
 	}
 
 	// 查找替换
-	public static void findReplace(boolean isReplace, String findStr, SqluckyTab skTab) {
+	public static void findReplace(boolean isReplace, String findStr, MyEditorSheet skTab) {
 		VBox b = null;
 		if (skTab == null) {
-			skTab = SqluckyEditorUtils.currentMyTab();
+//			skTab = SqluckyEditorUtils.currentMyTab();
+			skTab = MyEditorSheetHelper.getActivationEditorSheet();
 			b = skTab.getVbox();
 		} else {
 			b = skTab.getVbox();
@@ -1142,7 +1144,7 @@ public class CommonUtils {
 
 	// 代码格式化
 	public static void formatSqlText() {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String txt = code.getSelectedText();
 		if (StrUtils.isNotNullOrEmpty(txt)) {
 			IndexRange i = code.getSelection();
@@ -1153,17 +1155,17 @@ public class CommonUtils {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqluckyEditorUtils.getCurrentCodeAreaSQLText();
+			txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 			String rs = SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
 		}
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
 
 	// sql 压缩
 	public static void pressSqlText() {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String txt = code.getSelectedText();
 		if (StrUtils.isNotNullOrEmpty(txt)) {
 			IndexRange i = code.getSelection();
@@ -1174,12 +1176,12 @@ public class CommonUtils {
 			code.deleteText(start, end);
 			code.insertText(start, rs);
 		} else {
-			txt = SqluckyEditorUtils.getCurrentCodeAreaSQLText();
+			txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
 			code.clear();
 			code.appendText(rs);
 		}
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
 
 	// 键盘ESC按下后: 查找表的输入框清空, 选中的文本取消选中, 查找替换面板关闭
@@ -1187,23 +1189,25 @@ public class CommonUtils {
 		ComponentGetter.dbInfoFilter.setText("");
 
 		// 代码编辑内容, 取消选中, 高亮恢复复原
-		SqluckyEditorUtils.deselect();
-		SqluckyEditorUtils.applyHighlighting();
+		MyEditorSheetHelper.deselect();
+		MyEditorSheetHelper.applyHighlighting();
 
 		// 隐藏查找, 替换窗口
 		hideFindReplaceWindow();
 
 		// 提示窗口
-		SqluckyEditorUtils.currentMyTab().getSqlCodeArea().hideAutoComplete();
+//		SqluckyEditorUtils.currentMyTab().getSqlCodeArea().hideAutoComplete();
+		MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().hideAutoComplete();
 	}
 
 	// 隐藏查找, 替换窗口
 	public static void hideFindReplaceWindow() {
-		VBox b = SqluckyEditorUtils.getTabVbox();
-		var sltb = SqluckyEditorUtils.currentMyTab();
+		VBox b = MyEditorSheetHelper.getTabVbox();
+//		var sltb = SqluckyEditorUtils.currentMyTab();
+		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
 		int bsize = b.getChildren().size();
 		if (bsize > 1) {
-			FindReplaceTextPanel.delFindReplacePane(sltb);
+			FindReplaceTextPanel.delFindReplacePane(sheet);
 		}
 
 	}

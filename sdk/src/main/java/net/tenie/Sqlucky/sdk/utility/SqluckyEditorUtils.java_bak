@@ -18,8 +18,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
+//import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.po.MyRange;
 
 /**
@@ -49,10 +51,11 @@ public class SqluckyEditorUtils {
 
 	// 获取当前在前台的文本框
 	public static CodeArea getCodeArea() {
-		var mtb = currentMyTab();
-		if (mtb == null)
+//		var mtb = currentMyTab();
+		var sheet = MyEditorSheetHelper.getActivationEditorSheet();
+		if (sheet == null)
 			return null;
-		return mtb.getSqlCodeArea().getCodeArea();
+		return sheet.getSqluckyEditor().getCodeArea();
 	}
 
 	// 当前文本框中, 取消选中的文本
@@ -128,7 +131,8 @@ public class SqluckyEditorUtils {
 			var codeArea = SqluckyEditorUtils.getCodeArea();
 			int i = codeArea.getAnchor();
 			codeArea.insertText(i, val);
-			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().highLighting();
+//			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().highLighting();
+			MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().highLighting();
 		}
 	}
 
@@ -151,29 +155,35 @@ public class SqluckyEditorUtils {
 		return myTabPane.getSelectionModel().getSelectedItem();
 	}
 
-	public static SqluckyTab currentMyTab() {
-		var myTabPane = ComponentGetter.mainTabPane;
-		Tab currentTab = myTabPane.getSelectionModel().getSelectedItem();
-		SqluckyTab rs = (SqluckyTab) currentTab;
-		return rs;
-	}
+//	public static SqluckyTab currentMyTab() {
+//		var myTabPane = ComponentGetter.mainTabPane;
+//		Tab currentTab = myTabPane.getSelectionModel().getSelectedItem();
+//		SqluckyTab rs = (SqluckyTab) currentTab;
+//		return rs;
+//	}
 
 	public static void currentSqlCodeAreaHighLighting() {
-		SqluckyTab mtb = currentMyTab();
-		var area = mtb.getSqlCodeArea();
-		area.highLighting();
+//		SqluckyTab mtb = currentMyTab();
+
+//		var area = sheet.getSqlCodeArea();
+//		area.highLighting();
+
+		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
+		sheet.getSqluckyEditor().highLighting();
 	}
 
 	public static void ErrorHighlighting(int begin, String str) {
-		SqluckyTab mtb = currentMyTab();
-		var area = mtb.getSqlCodeArea();
-		area.errorHighLighting(begin, str);
+//		SqluckyTab mtb = currentMyTab();
+//		var area = mtb.getSqlCodeArea();
+//		area.errorHighLighting(begin, str);
+		MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().errorHighLighting(begin, str);
 	}
 
 	public static void currentSqlCodeAreaHighLighting(String str) {
-		SqluckyTab mtb = currentMyTab();
-		var area = mtb.getSqlCodeArea();
-		area.highLighting(str);
+//		SqluckyTab mtb = currentMyTab();
+//		var area = mtb.getSqlCodeArea();
+//		area.highLighting(str);
+		MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().highLighting(str);
 	}
 
 	// 获取tab的内容 VBox
@@ -194,18 +204,18 @@ public class SqluckyEditorUtils {
 	}
 
 	// 获取所有的CodeArea
-	public static List<SqluckyTab> getAllgetMyTabs() {
-		List<SqluckyTab> cas = new ArrayList<>();
-		TabPane myTabPane = ComponentGetter.mainTabPane;
-		if (myTabPane.getTabs().size() > 1) {
-			ObservableList<Tab> tabs = myTabPane.getTabs();
-			for (Tab tb : tabs) {
-				SqluckyTab mtb = (SqluckyTab) tb;
-				cas.add(mtb);
-			}
-		}
-		return cas;
-	}
+//	public static List<SqluckyTab> getAllgetMyTabs() {
+//		List<SqluckyTab> cas = new ArrayList<>();
+//		TabPane myTabPane = ComponentGetter.mainTabPane;
+//		if (myTabPane.getTabs().size() > 1) {
+//			ObservableList<Tab> tabs = myTabPane.getTabs();
+//			for (Tab tb : tabs) {
+//				SqluckyTab mtb = (SqluckyTab) tb;
+//				cas.add(mtb);
+//			}
+//		}
+//		return cas;
+//	}
 
 	// 改变样式
 	public static void changeThemeAllCodeArea() {
@@ -213,10 +223,10 @@ public class SqluckyEditorUtils {
 		if (myTabPane != null && myTabPane.getTabs().size() > 0) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for (Tab tb : tabs) {
-				SqluckyTab mtb = (SqluckyTab) tb;
+				MyEditorSheet mtb = (MyEditorSheet) tb.getUserData();
 				// 修改代码编辑区域的样式
-				if (mtb.getSqlCodeArea() != null)
-					mtb.getSqlCodeArea().changeCodeAreaLineNoThemeHelper();
+				if (mtb.getSqluckyEditor() != null)
+					mtb.getSqluckyEditor().changeCodeAreaLineNoThemeHelper();
 				// 修改查找替换的样式如果有的话
 				changeFindReplacePaneBtnColor(tb);
 			}

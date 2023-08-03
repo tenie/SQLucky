@@ -22,10 +22,11 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Pane;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -38,11 +39,9 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
-import net.tenie.Sqlucky.sdk.utility.SqluckyEditorUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.AppWindowComponentGetter;
-import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.dao.ConnectionDao;
@@ -190,7 +189,7 @@ public class CommonAction {
 			for (int i = 0; i < alltabs.size(); i++) {
 				Tab tab = alltabs.get(i);
 				// TODO close save
-				MyAreaTab mtab = (MyAreaTab) tab;
+				MyEditorSheet mtab = (MyEditorSheet) tab.getUserData();
 				mtab.saveScriptPo(H2conn);
 				var spo = mtab.getDocumentPo();
 
@@ -286,7 +285,7 @@ public class CommonAction {
 	// 代码大写
 	public static void UpperCaseSQLTextSelectText() {
 
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -297,13 +296,13 @@ public class CommonAction {
 		code.deleteText(start, end);
 
 		code.insertText(start, text.toUpperCase());
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
 
 	// 代码小写
 	public static void LowerCaseSQLTextSelectText() {
 
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -314,13 +313,13 @@ public class CommonAction {
 		code.deleteText(start, end);
 
 		code.insertText(start, text.toLowerCase());
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
 
 	// 驼峰命名转下划线
 	public static void CamelCaseUnderline() {
 
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -332,13 +331,13 @@ public class CommonAction {
 
 		text = StrUtils.CamelCaseUnderline(text);
 		code.insertText(start, text);
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
 
 	// 下划线 轉 驼峰命名
 	public static void underlineCaseCamel() {
 
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String text = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text))
 			return;
@@ -350,11 +349,11 @@ public class CommonAction {
 		// 插入 注释过的文本
 		text = StrUtils.underlineCaseCamel(text);
 		code.insertText(start, text);
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
 
 	public static void selectTextAddString() {
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();
@@ -407,13 +406,13 @@ public class CommonAction {
 			// 插入 注释过的文本
 			code.insertText(start, valStr);
 		}
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
 
 	// 代码添加注释-- 或去除注释
 	public static void addAnnotationSQLTextSelectText() {
 
-		CodeArea code = SqluckyEditorUtils.getCodeArea();
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		IndexRange i = code.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 		int end = i.getEnd();
@@ -459,7 +458,7 @@ public class CommonAction {
 			// 插入 注释过的文本
 			code.insertText(start, valStr);
 		}
-		SqluckyEditorUtils.currentSqlCodeAreaHighLighting();
+		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
 
 	// TODO 打开sql文件
@@ -485,11 +484,13 @@ public class CommonAction {
 			scpo.setFileFullName(f.getAbsolutePath());
 			scpo.setText(val);
 			scpo.setTitle(tabName);
-			SqluckyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
+			MyEditorSheet mt = ScriptTabTree.findMyTabByScriptPo(scpo);
+
 			if (mt != null) { // 如果已经存在就不用重新打开
 				mt.showMyTab();
 			} else {
-				MyAreaTab.createTabFromSqlFile(scpo);
+//				MyEditorSheet.createTabFromSqlFile(scpo);
+				MyEditorSheetHelper.createTabFromSqlFile(scpo);
 			}
 
 		} catch (IOException e) {
@@ -520,11 +521,13 @@ public class CommonAction {
 			scpo.setFileFullName(f.getAbsolutePath());
 			scpo.setText(val);
 			scpo.setTitle(tabName);
-			SqluckyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
+//			SqluckyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
+
+			MyEditorSheet mt = ScriptTabTree.findMyTabByScriptPo(scpo);
 			if (mt != null) { // 如果已经存在就不用重新打开
 				mt.showMyTab();
 			} else {
-				MyAreaTab.createTabFromSqlFile(scpo);
+				MyEditorSheetHelper.createTabFromSqlFile(scpo);
 			}
 
 		} catch (IOException e) {
@@ -647,7 +650,7 @@ public class CommonAction {
 		saveThemeStatus(val);
 		// 根据新状态加载新样式
 		CommonUtils.loadCss(ComponentGetter.primaryscene);
-		SqluckyEditorUtils.changeThemeAllCodeArea();
+		MyEditorSheetHelper.changeThemeAllCodeArea();
 //		changeSvgColor(); // 修改按钮颜色
 	}
 
@@ -713,7 +716,7 @@ public class CommonAction {
 		Consumer<String> cancel = x -> {
 			saveThemeStatus(val);
 			CommonUtils.loadCss(ComponentGetter.primaryscene);
-			SqluckyEditorUtils.changeThemeAllCodeArea();
+			MyEditorSheetHelper.changeThemeAllCodeArea();
 		};
 		MyAlert.myConfirmation("Change Theme Restart Application Will Better, ok ? ", ok, cancel);
 	}

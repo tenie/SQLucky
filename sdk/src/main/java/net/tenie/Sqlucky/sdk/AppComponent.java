@@ -37,11 +37,11 @@ public interface AppComponent {
 	void addIconBySvg(String name, String svg);
 
 	// 创建 SqluckyTab
-	SqluckyTab sqluckyTab();
+//	SqluckyTab sqluckyTab();
 
-	SqluckyTab sqluckyTab(DocumentPo po);
+//	SqluckyTab sqluckyTab(DocumentPo po);
 
-	void tabPaneRemoveSqluckyTab(SqluckyTab stb);
+	void tabPaneRemoveSqluckyTab(MyEditorSheet stb);
 
 	public Region getIconUnactive(String name);
 

@@ -16,7 +16,7 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.plugin.note.utility.NoteUtility;
 
@@ -25,27 +25,27 @@ import net.tenie.plugin.note.utility.NoteUtility;
  * @author tenie
  *
  */
-public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, TreeCell<SqluckyTab>> {
+public class NoteTabNodeCellFactory implements Callback<TreeView<MyEditorSheet>, TreeCell<MyEditorSheet>> {
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
-	private TreeCell<SqluckyTab> dropZone;
-	private TreeItem<SqluckyTab> draggedItem;
+	private TreeCell<MyEditorSheet> dropZone;
+	private TreeItem<MyEditorSheet> draggedItem;
 	private NoteOptionPanel optPane;
 	private Button showInFolder;
 
-	TreeView<SqluckyTab> treeView;
+	TreeView<MyEditorSheet> treeView;
 
-	public NoteTabNodeCellFactory(NoteOptionPanel optPane, TreeView<SqluckyTab> treeView) {
+	public NoteTabNodeCellFactory(NoteOptionPanel optPane, TreeView<MyEditorSheet> treeView) {
 		this.optPane = optPane;
 		showInFolder = optPane.getShowInFolder();
 		this.treeView = treeView;
 	}
 
 	@Override
-	public TreeCell<SqluckyTab> call(TreeView<SqluckyTab> treeView) {
-		TreeCell<SqluckyTab> cell = new TreeCell<SqluckyTab>() {
+	public TreeCell<MyEditorSheet> call(TreeView<MyEditorSheet> treeView) {
+		TreeCell<MyEditorSheet> cell = new TreeCell<MyEditorSheet>() {
 
 			@Override
-			public void updateItem(SqluckyTab item, boolean empty) {
+			public void updateItem(MyEditorSheet item, boolean empty) {
 				super.updateItem(item, empty);
 				// 给cell 内容添加 button
 				// If the cell is empty we don't show anything.
@@ -58,8 +58,9 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 					// A custom HBox that will contain your check box, label and
 					// button.
 					AnchorPane pn = new AnchorPane();
+
 					DocumentPo po = item.getDocumentPo();
-					Region icon = item.getIcon();
+					Region icon = po.getIcon();
 
 					Label label = new Label(po.getTitle());
 					label.setGraphic(icon);
@@ -98,7 +99,7 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 	}
 
 	// 发现拖动 当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个
-	private void dragDetected(MouseEvent event, TreeCell<SqluckyTab> treeCell, TreeView<SqluckyTab> treeView) {
+	private void dragDetected(MouseEvent event, TreeCell<MyEditorSheet> treeCell, TreeView<MyEditorSheet> treeView) {
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
@@ -116,11 +117,11 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 
 	}
 
-	private void dragOver(DragEvent event, TreeCell<SqluckyTab> treeCell, TreeView<SqluckyTab> treeView) {
+	private void dragOver(DragEvent event, TreeCell<MyEditorSheet> treeCell, TreeView<MyEditorSheet> treeView) {
 
 		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT))
 			return;
-		TreeItem<SqluckyTab> thisItem = treeCell.getTreeItem();
+		TreeItem<MyEditorSheet> thisItem = treeCell.getTreeItem();
 
 		// can't drop on itself
 		if (draggedItem == null || thisItem == null || thisItem == draggedItem)
@@ -141,14 +142,14 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<SqluckyTab>, Tr
 	}
 
 	// 放下后执行
-	private void drop(DragEvent event, TreeCell<SqluckyTab> treeCell, TreeView<SqluckyTab> treeView) {
+	private void drop(DragEvent event, TreeCell<MyEditorSheet> treeCell, TreeView<MyEditorSheet> treeView) {
 		Dragboard db = event.getDragboard();
 		boolean success = false;
 		if (!db.hasContent(DataFormat.PLAIN_TEXT))
 			return;
 
-		TreeItem<SqluckyTab> thisItem = treeCell.getTreeItem();
-		TreeItem<SqluckyTab> droppedItemParent = draggedItem.getParent();
+		TreeItem<MyEditorSheet> thisItem = treeCell.getTreeItem();
+		TreeItem<MyEditorSheet> droppedItemParent = draggedItem.getParent();
 
 //		// 只能同一个父节点下换位置, 否则不动
 		if (Objects.equals(droppedItemParent, thisItem.getParent())) {

@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
@@ -29,7 +30,6 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
-import net.tenie.fx.component.MyAreaTab;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.AppWindowReStyleByWinOS;
@@ -172,7 +172,8 @@ public class SQLucky extends Application {
 				Node tabHeader = mainTabPane.lookup(".tab-header-area");
 				tabHeader.setOnMouseClicked(mouseEvent -> {
 					if (mouseEvent.getClickCount() == 2) {
-						MyAreaTab.addCodeEmptyTabMethod();
+//						MyAreaTab.addCodeEmptyTabMethod();
+						MyEditorSheetHelper.addEmptyHighLightingEditor();
 					}
 				});
 

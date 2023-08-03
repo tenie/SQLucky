@@ -2,10 +2,9 @@ package net.tenie.Sqlucky.sdk.component;
 
 import org.fxmisc.richtext.CodeArea;
 
-import net.tenie.Sqlucky.sdk.SqluckyCodeArea;
 import net.tenie.Sqlucky.sdk.SqluckyLineNumberNode;
 
-public class MyCodeArea extends CodeArea implements SqluckyCodeArea {
+public class MyCodeArea extends CodeArea {
 	private SqluckyLineNumberNode mylineNumber;
 
 	public SqluckyLineNumberNode getMylineNumber() {
@@ -16,9 +15,9 @@ public class MyCodeArea extends CodeArea implements SqluckyCodeArea {
 		this.mylineNumber = mylineNumber;
 	}
 
-	@Override
-	public CodeArea getCodeArea() { 
+//	@Override
+	public CodeArea getCodeArea() {
 		return this;
 	}
-	 
+
 }

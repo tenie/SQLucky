@@ -12,8 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.AppComponent;
-import net.tenie.Sqlucky.sdk.SqluckyTab;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBTools;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -181,8 +181,8 @@ public class WorkDataBackupAction {
 
 	// 备份脚本
 	public static int backupScript(String tmpDir, String pKey, String backuptype, boolean isvip) {
-		TreeItem<SqluckyTab> root = ComponentGetter.scriptTreeRoot;
-		ObservableList<TreeItem<SqluckyTab>> ls = root.getChildren();
+		TreeItem<MyEditorSheet> root = ComponentGetter.scriptTreeRoot;
+		ObservableList<TreeItem<MyEditorSheet>> ls = root.getChildren();
 		List<String> vals = new ArrayList<>();
 		var conn = SqluckyAppDB.getConn();
 		int i = 0;
@@ -190,7 +190,7 @@ public class WorkDataBackupAction {
 
 			for (i = 0; i < ls.size(); i++) {
 				var item = ls.get(i);
-				SqluckyTab stab = item.getValue();
+				MyEditorSheet stab = item.getValue();
 				stab.syncScriptPo(conn);
 				DocumentPo tmp = item.getValue().getDocumentPo();
 				String jsonStr = tmp.toJsone();
