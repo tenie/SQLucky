@@ -30,6 +30,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
+import net.tenie.fx.Action.SettingKeyBinding;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.AppWindowReStyleByWinOS;
@@ -196,7 +197,7 @@ public class SQLucky extends Application {
 			Long mm = Runtime.getRuntime().maxMemory() / 1024;
 			mm = mm / 1024;
 			logger.info("Runtime.getRuntime().maxMemory = " + mm);
-
+			SettingKeyBinding.setEscKeyBinding(scene);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

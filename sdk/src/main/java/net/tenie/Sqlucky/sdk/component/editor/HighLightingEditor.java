@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.codeArea;
+package net.tenie.Sqlucky.sdk.component.editor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +36,6 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
-import net.tenie.Sqlucky.sdk.component.MyLineNumberNode;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;

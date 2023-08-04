@@ -36,7 +36,6 @@ public class TableDataDetail {
 	 * 双击当前行, 子窗口显示行的数据
 	 */
 	public static void show(MyBottomSheet mtd) {
-//		SqluckyBottomSheet mtd = ComponentGetter.currentDataTab();
 		var tb = mtd.getTableData().getTable();
 		if (tb == null)
 			return;

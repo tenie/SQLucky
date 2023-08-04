@@ -117,8 +117,6 @@ public class MyBottomSheet {
 		Connection conn = tableData.getDbConnection().getConn();
 		SqluckyConnector dpo = tableData.getDbConnection();
 		if (tabName != null && tabName.length() > 0) {
-			// 字段
-//			ObservableList<SheetFieldPo> fpos = tableData.getColss();
 			// 待保存数据
 			ObservableList<ResultSetRowPo> modifyData = tableData.getDataRs().getUpdateDatas();
 			// 执行sql 后的信息 (主要是错误后显示到界面上)
@@ -147,8 +145,7 @@ public class MyBottomSheet {
 						var fds = ddlDmlpo.getFields();
 						var row = ddlDmlpo.addRow();
 						ddlDmlpo.addData(row,
-								CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
-								fds.get(0));
+								CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())), fds.get(0));
 						ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fds.get(1));
 						ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("failed"), fds.get(2));
 					}
@@ -358,7 +355,7 @@ public class MyBottomSheet {
 		// 获取字段属性信息
 		ObservableList<SheetFieldPo> fs = tableData.getColss();
 		// 选中的行数据
-		ObservableList<ResultSetRowPo> selectedRows = tableData.getTable().getSelectionModel().getSelectedItems(); // SqluckyBottomSheetUtility.dataTableViewSelectedItems(this);
+		ObservableList<ResultSetRowPo> selectedRows = tableData.getTable().getSelectionModel().getSelectedItems();
 		if (selectedRows == null || selectedRows.size() == 0) {
 			return;
 		}
@@ -484,22 +481,6 @@ public class MyBottomSheet {
 			t.start();
 		});
 	}
-
-//	public EventHandler<ActionEvent> InsertSQLClipboard2(boolean isSelected, boolean isFile, MyBottomSheet mtd) {
-//		return new EventHandler<ActionEvent>() {
-//			@Override
-//			public void handle(ActionEvent e) {
-//			}
-//		};
-//	}
-
-//	public EventHandler<ActionEvent> csvStrClipboard2(boolean isSelected, boolean isFile) {
-//		return new EventHandler<ActionEvent>() {
-//			@Override
-//			public void handle(ActionEvent e) {
-//			}
-//		};
-//	}
 
 	// 导出表的字段, 使用逗号分割
 	public static EventHandler<ActionEvent> commaSplitTableFields(SheetDataValue tableData) {
@@ -738,9 +719,6 @@ public class MyBottomSheet {
 			});
 
 			excel.getItems().addAll(excelSelected, excelAll);
-//		excel.setOnShowing(e->{
-//			
-//		});
 
 			// 导出 txt
 //		Menu txt = new Menu("Export TXT Format ");
@@ -835,14 +813,14 @@ public class MyBottomSheet {
 	// 右键菜单
 	public ContextMenu tableViewMenu() {
 		ContextMenu contextMenu = new ContextMenu();
-		MenuItem closeAll = new MenuItem("Close ALl");
+		MenuItem closeAll = new MenuItem("Close All");
 		closeAll.setOnAction(e -> {
 			List<Tab> ls = new ArrayList<>();
-			for (Tab tab : ComponentGetter.dataTabPane.getTabs()) {
-				ls.add(tab);
+			for (Tab tmptab : ComponentGetter.dataTabPane.getTabs()) {
+				ls.add(tmptab);
 			}
-			ls.forEach(tab -> {
-				SdkComponent.clearDataTable(tab);
+			ls.forEach(tmptab -> {
+				SdkComponent.clearDataTable(tmptab);
 			});
 			ComponentGetter.dataTabPane.getTabs().clear();
 		});
@@ -852,10 +830,10 @@ public class MyBottomSheet {
 			int size = ComponentGetter.dataTabPane.getTabs().size();
 			if (size > 1) {
 				List<Tab> ls = new ArrayList<>();
-				for (Tab tab : ComponentGetter.dataTabPane.getTabs()) {
+				for (Tab tmptab : ComponentGetter.dataTabPane.getTabs()) {
 
-					if (!Objects.equals(tab, this)) {
-						ls.add(tab);
+					if (!Objects.equals(tmptab, tab)) {
+						ls.add(tmptab);
 					}
 				}
 				ls.forEach(tab -> {

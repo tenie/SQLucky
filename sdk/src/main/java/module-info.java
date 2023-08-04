@@ -58,7 +58,7 @@ open module SQLucky.sdk {
 	exports net.tenie.Sqlucky.sdk.po.db;
 	exports net.tenie.Sqlucky.sdk.po.component;
 
-	exports net.tenie.Sqlucky.sdk.component.codeArea;
+	exports net.tenie.Sqlucky.sdk.component.editor;
 	exports net.tenie.Sqlucky.sdk.db;
 	exports net.tenie.Sqlucky.sdk.ui;
 	exports net.tenie.Sqlucky.sdk.excel;

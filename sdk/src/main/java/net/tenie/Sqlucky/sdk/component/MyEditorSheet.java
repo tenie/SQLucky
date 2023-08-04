@@ -11,12 +11,13 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingEditorUtils;
+import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -33,41 +34,33 @@ public class MyEditorSheet {
 	// 放查找面板, 文本area 的容器
 	private VBox vbox;
 	// 查找面板
+	private AnchorPane findAnchorPane;
+	// 替换面板
+	private AnchorPane replaceAnchorPane;
 	private FindReplaceTextPanel findReplacePanel;
 
 	public MyEditorSheet(DocumentPo valDocumentPo, SqluckyEditor sqluckyEditor) {
-		documentPo = valDocumentPo;
+		if (valDocumentPo.getSaveToDB()) {
+			if (valDocumentPo.getId() == null) {
+				documentPo = ComponentGetter.appComponent.scriptArchive(valDocumentPo.getTitle(),
+						valDocumentPo.getText(), valDocumentPo.getFileFullName(), valDocumentPo.getEncode(),
+						valDocumentPo.getParagraph());
+			} else {
+				documentPo = valDocumentPo;
+			}
+		} else {
+			documentPo = valDocumentPo;
+		}
+
 		setTabProperty();
 		delayInit(sqluckyEditor);
-//	
-//		if (sqluckyEditor == null) {
-//			setDefaultEditor();
-//		} else {
-//			this.setSqluckyEditor(sqluckyEditor);
-//		}
 	}
-
-//	public MyEditorSheet(DocumentPo valDocumentPo, boolean valNeedSaveDocument) {
-//		documentPo = valDocumentPo;
-//		needSaveDocument = valNeedSaveDocument;
-//		setTabProperty();
-//		setDefaultEditor();
-//	}
 
 	public MyEditorSheet(String TabName, SqluckyEditor sqluckyEditor) {
 		documentPo = ComponentGetter.appComponent.scriptArchive(TabName, "", "", "UTF-8", 0);
-//		docPo = AppDao.scriptArchive(TabName, "", "", "UTF-8", 0);
 		documentPo.setOpenStatus(1);
 		setTabProperty();
 		delayInit(sqluckyEditor);
-//		if (sqluckyEditor == null) {
-//			setDefaultEditor();
-//		} else {
-//			setSqluckyEditor(sqluckyEditor);
-//		}
-
-//		
-//		createMyTab();
 	}
 
 	// 延迟初始化tab
@@ -116,9 +109,32 @@ public class MyEditorSheet {
 		this.setSqluckyEditor(sqlEditor);
 	}
 
-	public void cleanFindReplacePanel() {
-		findReplacePanel = null;
+	// 删除查找替换面板
+	public void delFindReplacePane() {
+		if (findAnchorPane != null) {
+			if (vbox.getChildren().contains(findAnchorPane)) {
+				vbox.getChildren().remove(findAnchorPane);
+			}
+			findAnchorPane = null;
 
+		}
+		if (replaceAnchorPane != null) {
+			if (vbox.getChildren().contains(replaceAnchorPane)) {
+				vbox.getChildren().remove(replaceAnchorPane);
+			}
+			replaceAnchorPane = null;
+		}
+		if (findReplacePanel != null) {
+			findReplacePanel = null;
+		}
+	}
+
+	// 判断查找面板是否显示中
+	public boolean findPaneIsShowing() {
+		if (findAnchorPane != null) {
+			return true;
+		}
+		return false;
 	}
 
 	// tab的属性设置, 名称, 右键菜单,
@@ -133,16 +149,7 @@ public class MyEditorSheet {
 		// 选中事件
 		tab.setOnSelectionChanged(value -> {
 			DBConns.changeChoiceBox(this.getTabConnIdx());
-//			MainTabInfo ti = MainTabs.get(this);
-
-//			if (ti != null) {
-//				DBConns.changeChoiceBox(ti.getTabConnIdx());
-
-//			}
-
 		});
-		// 设置sql 文本
-//		initTabSQLText(documentPo.getText());
 	}
 
 	// 设置title name
@@ -156,13 +163,26 @@ public class MyEditorSheet {
 		return sqluckyEditor;
 	}
 
-	public void showMyTab() {
+	public void showEditor() {
 		Platform.runLater(() -> {
 			var myTabPane = ComponentGetter.mainTabPane;
 			if (myTabPane.getTabs().contains(tab) == false) {
 				myTabPane.getTabs().add(tab);// 在指定位置添加Tab
 			}
 			myTabPane.getSelectionModel().select(tab);
+		});
+
+	}
+
+	public void showEditor(int idx) {
+		Platform.runLater(() -> {
+			var myTabPane = ComponentGetter.mainTabPane;
+			if (myTabPane.getTabs().contains(tab) == false) {
+				myTabPane.getTabs().add(idx, tab); // 在指定位置添加Tab
+			}
+
+			myTabPane.getSelectionModel().select(idx);
+
 		});
 
 	}
@@ -252,7 +272,7 @@ public class MyEditorSheet {
 
 	// 删除 TabPane中的所有 MyTab
 	private void closeAll() {
-//		CommonAction.archiveAllScript();
+		MyEditorSheetHelper.archiveAllScript();
 	}
 
 	// 右键菜单
@@ -398,6 +418,24 @@ public class MyEditorSheet {
 		if (documentPo == null)
 			return null;
 		return documentPo.getFile();
+	}
+
+	public AnchorPane getFindAnchorPane() {
+		return findAnchorPane;
+	}
+
+	public void setFindAnchorPane(AnchorPane findAnchorPane) {
+		this.findAnchorPane = findAnchorPane;
+		vbox.getChildren().add(0, findAnchorPane);
+	}
+
+	public AnchorPane getReplaceAnchorPane() {
+		return replaceAnchorPane;
+	}
+
+	public void setReplaceAnchorPane(AnchorPane replaceAnchorPane) {
+		this.replaceAnchorPane = replaceAnchorPane;
+		vbox.getChildren().add(1, replaceAnchorPane);
 	}
 
 	// 存在 就显示出来

@@ -15,14 +15,14 @@ public class UiTools {
 	 */
 	public static AnchorPane textFieldAddCleanBtn(TextField txt) {
 		AnchorPane filterPane = new AnchorPane();
-		filterPane.setPrefHeight(30);
-		filterPane.setMinHeight(30);
+		filterPane.setPrefHeight(25);
+		filterPane.setMinHeight(25);
 
 		Button clean = new Button();
 
 		AnchorPane.setRightAnchor(clean, 9.9);
-		AnchorPane.setTopAnchor(clean, 5.0);
-		clean.setMaxSize(12, 12);
+		AnchorPane.setTopAnchor(clean, 3.0);
+		clean.setMaxSize(10, 10);
 
 		clean.setGraphic(IconGenerator.svgImageUnactive("times-circle", 14));
 		clean.getStyleClass().add("myCleanBtn");
@@ -52,6 +52,7 @@ public class UiTools {
 		});
 		return selectFileBtn;
 	}
+
 	// 选取文件按钮
 	public static Button openCsvFileBtn(TextField tfFilePath, Stage stage) {
 		Button selectFileBtn = new Button("...");
@@ -60,7 +61,7 @@ public class UiTools {
 		});
 		return selectFileBtn;
 	}
-	
+
 	// 选取文件按钮
 	public static Button openSqlFileBtn(TextField tfFilePath, Stage stage) {
 		Button selectFileBtn = new Button("...");

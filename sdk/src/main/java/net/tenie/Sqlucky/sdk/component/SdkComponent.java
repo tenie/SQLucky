@@ -227,11 +227,9 @@ public class SdkComponent {
 
 		try {
 			MyBottomSheet myBottomSheet = new MyBottomSheet(tableName);
-			SheetDataValue sheetDaV = myBottomSheet.getTableData();// new SheetDataValue();
+			SheetDataValue sheetDaV = myBottomSheet.getTableData();
 			FilteredTableView<ResultSetRowPo> table = sheetDaV.getTable();
-//			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
 			// 查询的 的语句可以被修改
-//			table.editableProperty().bind(new SimpleBooleanProperty(false));
 			table.setEditable(true);
 
 			// 获取表名
@@ -241,11 +239,9 @@ public class SdkComponent {
 					tableName = "Table Name Not Finded";
 				}
 			}
-
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 
 			sheetDaV.setSqlStr(sql);
-//			sheetDaV.setTable(table);
 			sheetDaV.setTabName(tableName);
 			sheetDaV.setLock(false);
 			sheetDaV.setConn(sqluckyConn.getConn());

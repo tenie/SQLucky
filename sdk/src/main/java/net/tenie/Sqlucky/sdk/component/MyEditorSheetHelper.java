@@ -19,7 +19,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.component.codeArea.HighLightingEditorUtils;
+import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -43,13 +43,6 @@ public class MyEditorSheetHelper {
 
 	}
 
-	// 给主界面添加tab, 并选中
-	public static void mainTabPaneAddAndSelect(Tab nTab, int idx) {
-		var myTabPane = ComponentGetter.mainTabPane;
-		myTabPane.getTabs().add(idx, nTab); // 在指定位置添加Tab
-		myTabPane.getSelectionModel().select(idx);
-	}
-
 	// 添加空文本的codeTab
 	public static MyEditorSheet addEmptyHighLightingEditor() {
 		var myTabPane = ComponentGetter.mainTabPane;
@@ -59,13 +52,9 @@ public class MyEditorSheetHelper {
 		}
 		ConfigVal.pageSize++;
 		String labe = "Untitled_" + ConfigVal.pageSize + "*";
-//		MyAreaTab2 nwTab = new MyAreaTab2(labe);
-		SqluckyEditor sqlEditor = HighLightingEditorUtils.sqlEditor();
-		MyEditorSheet sheet = new MyEditorSheet(labe, sqlEditor);
-		// 设置 高亮编辑器
-//		createHighLightingEditor(sheet);
-		mainTabPaneAddAndSelect(sheet.getTab(), size);
-//		ScriptTabTree.treeRootAddItem(nwTab);
+
+		MyEditorSheet sheet = new MyEditorSheet(labe, null);
+		sheet.showEditor(size);
 		ComponentGetter.appComponent.scriptTreeAddItem(sheet);
 		return sheet;
 	}
@@ -74,7 +63,6 @@ public class MyEditorSheetHelper {
 	public static MyEditorSheet createHighLightingEditor(DocumentPo po) {
 		SqluckyEditor sqlEditor = HighLightingEditorUtils.sqlEditor();
 		MyEditorSheet myEditorSheet = new MyEditorSheet(po, sqlEditor);
-//		createHighLightingEditor(myEditorSheet);
 		return myEditorSheet;
 	}
 
@@ -88,11 +76,8 @@ public class MyEditorSheetHelper {
 		int size = myTabPane.getTabs().size();
 		ConfigVal.pageSize++;
 
-		SqluckyEditor sqlEditor = HighLightingEditorUtils.sqlEditor();
-		MyEditorSheet sheet = new MyEditorSheet(scpo, sqlEditor);
-
-		// 设置 高亮编辑器
-		mainTabPaneAddAndSelect(sheet.getTab(), size);
+		MyEditorSheet sheet = new MyEditorSheet(scpo, null);
+		sheet.showEditor(size);
 		ComponentGetter.appComponent.scriptTreeAddItem(sheet);
 		return sheet;
 	}

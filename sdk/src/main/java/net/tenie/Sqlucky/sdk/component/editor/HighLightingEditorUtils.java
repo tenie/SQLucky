@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.codeArea;
+package net.tenie.Sqlucky.sdk.component.editor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

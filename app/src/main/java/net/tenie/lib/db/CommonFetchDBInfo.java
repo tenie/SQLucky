@@ -11,8 +11,9 @@ import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.fx.Action.SettingKeyBinding;
+
 /*   
+ * 
  * @author tenie 
  * */
 public class CommonFetchDBInfo {

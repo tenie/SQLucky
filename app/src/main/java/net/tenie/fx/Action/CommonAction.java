@@ -192,7 +192,6 @@ public class CommonAction {
 				MyEditorSheet mtab = (MyEditorSheet) tab.getUserData();
 				mtab.saveScriptPo(H2conn);
 				var spo = mtab.getDocumentPo();
-
 				// 将打开状态设置为1, 之后根据这个状态来恢复
 				if (spo != null && spo.getId() != null) {
 					String sql = mtab.getAreaText();
@@ -234,6 +233,8 @@ public class CommonAction {
 				}
 			}
 
+		} catch (Exception e) {
+			e.printStackTrace();
 		} finally {
 			SqluckyAppDB.closeConn(H2conn);
 		}
@@ -484,12 +485,11 @@ public class CommonAction {
 			scpo.setFileFullName(f.getAbsolutePath());
 			scpo.setText(val);
 			scpo.setTitle(tabName);
-			MyEditorSheet mt = ScriptTabTree.findMyTabByScriptPo(scpo);
+			MyEditorSheet sheet = ScriptTabTree.findMyTabByScriptPo(scpo);
 
-			if (mt != null) { // 如果已经存在就不用重新打开
-				mt.showMyTab();
+			if (sheet != null) { // 如果已经存在就不用重新打开
+				sheet.showEditor();
 			} else {
-//				MyEditorSheet.createTabFromSqlFile(scpo);
 				MyEditorSheetHelper.createTabFromSqlFile(scpo);
 			}
 
@@ -521,11 +521,10 @@ public class CommonAction {
 			scpo.setFileFullName(f.getAbsolutePath());
 			scpo.setText(val);
 			scpo.setTitle(tabName);
-//			SqluckyTab mt = ScriptTabTree.findMyTabByScriptPo(scpo);
 
-			MyEditorSheet mt = ScriptTabTree.findMyTabByScriptPo(scpo);
-			if (mt != null) { // 如果已经存在就不用重新打开
-				mt.showMyTab();
+			MyEditorSheet sheet = ScriptTabTree.findMyTabByScriptPo(scpo);
+			if (sheet != null) { // 如果已经存在就不用重新打开
+				sheet.showEditor();
 			} else {
 				MyEditorSheetHelper.createTabFromSqlFile(scpo);
 			}

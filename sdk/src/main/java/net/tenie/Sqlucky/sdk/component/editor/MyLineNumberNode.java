@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component;
+package net.tenie.Sqlucky.sdk.component.editor;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -20,6 +20,7 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;
 import net.tenie.Sqlucky.sdk.SqluckyLineNumberNode;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 

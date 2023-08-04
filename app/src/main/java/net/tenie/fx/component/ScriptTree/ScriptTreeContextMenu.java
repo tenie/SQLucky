@@ -29,7 +29,7 @@ public class ScriptTreeContextMenu {
 
 		MenuItem Open = new MenuItem("Open");
 		Open.setOnAction(e -> {
-			ScriptTabTree.openMyTab();
+			ScriptTabTree.openEditor();
 		});
 
 		MenuItem New = new MenuItem("New");
