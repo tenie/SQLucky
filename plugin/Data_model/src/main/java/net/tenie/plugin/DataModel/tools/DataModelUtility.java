@@ -74,8 +74,6 @@ public class DataModelUtility {
 			// 如果查询到数据才展示
 			if (sheetDaV.getTable().getItems().size() > 0) {
 				// 渲染界面
-//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.tableViewSheet(myBottomSheet, optionNodes);
-//				mtd.show();
 				myBottomSheet.showCustomBtn(optionNodes);
 
 			}

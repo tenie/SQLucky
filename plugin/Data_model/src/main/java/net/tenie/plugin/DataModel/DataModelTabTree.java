@@ -19,6 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
@@ -116,7 +117,7 @@ public class DataModelTabTree {
 		SqluckyConnector SqluckyConn = null;
 		try {
 			SdkComponent.addWaitingPane(-1);
-
+//			MyBottomSheet myBottomSheet = null;
 			// 操作区, 控件
 			DataModelTablePo tbpo = DataModelDAO.selectTableById(tableId);
 			if (tbpo != null) {
@@ -137,7 +138,6 @@ public class DataModelTabTree {
 			// 查询框
 			TextField textField = new TextField();
 			textField.getStyleClass().add("myTextField");
-//			textField.setVisible(false);
 			AnchorPane txtAP = UiTools.textFieldAddCleanBtn(textField);
 			txtAP.setVisible(false);
 
@@ -155,14 +155,24 @@ public class DataModelTabTree {
 			saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
 			saveBtn.setDisable(true);
 
+			// 独立窗口
+			JFXButton dockSideBtn = new JFXButton();
+			dockSideBtn.setGraphic(IconGenerator.svgImageDefActive("material-filter-none"));
+
+			dockSideBtn.setTooltip(MyTooltipTool.instance("Dock side"));
+//			dockSideBtn.setDisable(disable);
+
 			List<Node> tableHeadOptionNode = new ArrayList<>();
 			tableHeadOptionNode.add(tabNameLabel);
 			tableHeadOptionNode.add(tabNameLabel2);
 			tableHeadOptionNode.add(commentLabel);
 			tableHeadOptionNode.add(saveBtn);
+
 			tableHeadOptionNode.add(exportExcel);
+
+			tableHeadOptionNode.add(dockSideBtn);
+
 			tableHeadOptionNode.add(query);
-//			tableHeadOptionNode.add(textField);
 			tableHeadOptionNode.add(txtAP);
 
 			// 查询数据库, 获取字段信息
@@ -178,9 +188,11 @@ public class DataModelTabTree {
 					tableHeadOptionNode, DataModelOperate.tableInfoColWidth);
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();
 			sheetDaV.setSaveBtn(saveBtn);
-//			tableHeadOptionNode.add(saveBtn); 
-//			saveBtn
-//			sheetDaV.addBtn("save", saveBtn);
+			dockSideBtn.setOnMouseClicked(e -> {
+				myBottomSheet.dockSide();
+
+			});
+
 			// 保存按钮处理
 			ResultSetPo resultSetPo = sheetDaV.getDataRs();
 			saveBtn.setOnAction(e -> {

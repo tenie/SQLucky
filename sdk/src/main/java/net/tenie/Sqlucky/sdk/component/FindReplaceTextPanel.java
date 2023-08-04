@@ -13,8 +13,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
@@ -115,7 +115,6 @@ public class FindReplaceTextPanel {
 		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		int idx = code.getCaretPosition(); // 光标位置
 		findString(str, idx, sensitive, forward);
-//		findStringStop(str, idx, sensitive, forward);
 	}
 
 	/**
@@ -221,18 +220,10 @@ public class FindReplaceTextPanel {
 				if (start < 0) {
 					start = text.lastIndexOf(str);
 				}
-//				code.displaceCaret();
 
 			}
 			if (start > -1) {
 				selectRange(code, start, start + length);
-//				if(! forward) {
-//					int tmp = start;
-//					Platform.runLater(()->{
-//						code.moveTo(tmp);
-//					});
-//				}
-
 			}
 		}
 		MyEditorSheetHelper.currentSqlCodeAreaHighLighting(str);
@@ -271,47 +262,43 @@ public class FindReplaceTextPanel {
 
 	}
 
-	// 删除查找面板
-	public static void delFindReplacePane(MyEditorSheet sheet) {
-		VBox x = MyEditorSheetHelper.getTabVbox();
-		while (x.getChildren().size() > 1) {
-			x.getChildren().remove(0);
-			sheet.cleanFindReplacePanel();
-		}
-	}
-
 	public static AnchorPane createReplacePane(TextField findtf, JFXCheckBox cb) {
 		AnchorPane replaceAnchorPane = new AnchorPane();
 		CommonUtils.addCssClass(replaceAnchorPane, "myFindPane");
 		replaceAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
 		query.setGraphic(IconGenerator.svgImageDefActive("refresh"));
-		TextField tf = new TextField();
-		tf.setPrefWidth(250);
-		tf.setPrefHeight(15);
-		tf.getStyleClass().add("myFindTextField");
+		TextField replaceTextField = new TextField();
+		replaceTextField.setPrefWidth(250);
+		replaceTextField.setPrefHeight(15);
+		replaceTextField.getStyleClass().add("myFindTextField");
 
 		// "arrow-down"
 		JFXButton replaceBtn = new JFXButton();
 		replaceBtn.getStyleClass().add("myReplaceBtn");
 		replaceBtn.setText("Replace");
 		replaceBtn.setOnAction(v -> {
-			findStrReplaceStr(findtf, tf, !cb.isSelected());
+			findStrReplaceStr(findtf, replaceTextField, !cb.isSelected());
 		});
 
 		JFXButton replaceAllBtn = new JFXButton();
 		replaceAllBtn.getStyleClass().add("myReplaceBtn");
 		replaceAllBtn.setText("Replace All");
 		replaceAllBtn.setOnAction(v -> {
-			findStrReplaceStrAll(findtf, tf, !cb.isSelected());
+			findStrReplaceStrAll(findtf, replaceTextField, !cb.isSelected());
 		});
+
+		AnchorPane replaceFieldPane = UiTools.textFieldAddCleanBtn(replaceTextField);
 
 		int x = 0;
 		query.setLayoutX(x);
 		query.setLayoutY(0);
 		x += 35;
-		tf.setLayoutX(x);
-		tf.setLayoutY(0);
+//		replaceTextField.setLayoutX(x);
+//		replaceTextField.setLayoutY(0);
+		replaceFieldPane.setLayoutX(x);
+		replaceFieldPane.setLayoutY(0);
+
 		x += 255;
 		replaceBtn.setLayoutX(x);
 		replaceBtn.setLayoutY(0);
@@ -320,7 +307,9 @@ public class FindReplaceTextPanel {
 		replaceAllBtn.setLayoutY(0);
 
 		replaceAnchorPane.getChildren().add(query);
-		replaceAnchorPane.getChildren().add(tf);
+//		replaceAnchorPane.getChildren().add(replaceTextField);
+		replaceAnchorPane.getChildren().add(replaceFieldPane);
+
 		replaceAnchorPane.getChildren().add(replaceBtn);
 		replaceAnchorPane.getChildren().add(replaceAllBtn);
 		return replaceAnchorPane;
@@ -386,12 +375,16 @@ public class FindReplaceTextPanel {
 			}
 		});
 
+		AnchorPane textFieldPane = UiTools.textFieldAddCleanBtn(textField);
 		int x = 0;
 		query.setLayoutX(x);
 		query.setLayoutY(0);
 		x += 35;
-		textField.setLayoutX(x);
-		textField.setLayoutY(0);
+//		textField.setLayoutX(x);
+//		textField.setLayoutY(0);
+
+		textFieldPane.setLayoutX(x);
+		textFieldPane.setLayoutY(0);
 		x += 250;
 		down.setLayoutX(x);
 		down.setLayoutY(0);
@@ -411,7 +404,8 @@ public class FindReplaceTextPanel {
 		countLabel.setLayoutY(5);
 
 		findAnchorPane.getChildren().add(query);
-		findAnchorPane.getChildren().add(textField);
+//		findAnchorPane.getChildren().add(textField);
+		findAnchorPane.getChildren().add(textFieldPane);
 		findAnchorPane.getChildren().add(down);
 		findAnchorPane.getChildren().add(up);
 		findAnchorPane.getChildren().add(cb);
@@ -425,13 +419,13 @@ public class FindReplaceTextPanel {
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 
 		hideBottom.setOnAction(v -> {
-			delFindReplacePane(sheet);
+			sheet.delFindReplacePane();
 		});
 		// 加入到 代码编辑框上面
-		VBox b = sheet.getVbox();
-		b.getChildren().add(0, findAnchorPane);
+		sheet.setFindAnchorPane(findAnchorPane);
 		if (isReplace) {
-			b.getChildren().add(1, createReplacePane(textField, cb));
+			AnchorPane replaceAnchorPane = createReplacePane(textField, cb);
+			sheet.setReplaceAnchorPane(replaceAnchorPane);
 		}
 		Platform.runLater(() -> {
 			textField.requestFocus();

@@ -41,19 +41,19 @@ public class NoteUtility {
 	public static boolean isText = false;
 
 	public static void doubleClickItem(TreeItem<MyEditorSheet> item) {
-		MyEditorSheet stb = item.getValue();
-		File file = stb.getFile();
+		MyEditorSheet sheet = item.getValue();
+		File file = sheet.getFile();
 		if (!file.exists())
 			return;
 		if (file.isFile()) {
 			if (StrUtils.isNotNullOrEmpty(file.getAbsolutePath())) {
 				String charset = FileTools.detectFileCharset(file);
 				if (charset != null) {
-					boolean isExist = stb.existTabShow();
+					boolean isExist = sheet.existTabShow();
 					if (!isExist) {
 						String val = CommonUtils.readFileText(file, charset);
-						stb.setFileText(val);
-						stb.showMyTab();
+						sheet.setFileText(val);
+						sheet.showEditor();
 					}
 				} else {
 					CommonUtils.openExplorer(file);

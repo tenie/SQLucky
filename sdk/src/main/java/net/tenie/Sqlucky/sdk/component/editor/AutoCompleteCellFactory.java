@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.codeArea;
+package net.tenie.Sqlucky.sdk.component.editor;
 
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeView;

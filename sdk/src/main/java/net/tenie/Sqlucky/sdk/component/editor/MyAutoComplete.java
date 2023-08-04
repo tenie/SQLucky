@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.codeArea;
+package net.tenie.Sqlucky.sdk.component.editor;
 
 import java.sql.Connection;
 import java.util.ArrayList;

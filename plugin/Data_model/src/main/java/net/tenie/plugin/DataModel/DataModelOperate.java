@@ -18,6 +18,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
@@ -26,13 +27,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
 import net.tenie.plugin.DataModel.po.DataModelInfoPo;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
@@ -134,12 +139,6 @@ public class DataModelOperate {
 		MenuButton menuButton = new MenuButton();
 		menuButton.setGraphic(IconGenerator.svgImageDefActive("my-import"));
 
-//		addBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-//		addBtn.setTooltip(CommonUtility.instanceTooltip("Import Data Model Json File "));
-//		addBtn.setOnAction(e->{
-////			DataModelUtility.modelFileImport("UTF-8");
-//			DataModelImportWindow.createModelImportWindow();
-//		});
 		importFile.setText("Import File Model");
 		importFile.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
 		importFile.setOnAction(e -> {
@@ -162,11 +161,7 @@ public class DataModelOperate {
 		});
 
 		btnHbox.getChildren().addAll(queryBtn, menuButton, delBtn);
-
 		filterHbox.getChildren().addAll(queryExecBtn, txtAP);
-//		HBox.setHgrow(txtAP, Priority.ALWAYS);
-
-		//
 		optionVbox.getChildren().addAll(btnHbox);
 	}
 
@@ -198,14 +193,53 @@ public class DataModelOperate {
 			// 导出excel
 			JFXButton exportExcel = new JFXButton();
 			exportExcel.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
+			// 独立窗口
+			JFXButton dockSideBtn = new JFXButton();
+			dockSideBtn.setGraphic(IconGenerator.svgImageDefActive("material-filter-none"));
+			dockSideBtn.setTooltip(MyTooltipTool.instance("Dock side"));
 
+			// 查询框
+			TextField textField = new TextField();
+			textField.getStyleClass().add("myTextField");
+			AnchorPane txtAP = UiTools.textFieldAddCleanBtn(textField);
+			txtAP.setVisible(false);
+
+			JFXButton query = new JFXButton();
+			query.setGraphic(ComponentGetter.getIconDefActive("search"));
+			query.setOnAction(e -> {
+				txtAP.setVisible(!txtAP.isVisible());
+			});
+
+			btns.add(dockSideBtn);
 			btns.add(exportExcel);
+			btns.add(query);
+			btns.add(txtAP);
+
 			MyBottomSheet myBottomSheet = DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn, queryStr, btns,
 					queryFieldColWidth);
 			exportExcel.setOnAction(e -> {
 				if (myBottomSheet != null) {
 					myBottomSheet.exportExcelAction(false);
 				}
+			});
+
+			dockSideBtn.setOnMouseClicked(e -> {
+				myBottomSheet.dockSide();
+
+			});
+			// 添加过滤功能
+
+			// tableView 处理
+			SheetDataValue sheetDaV = myBottomSheet.getTableData();
+			TableView<ResultSetRowPo> tableView = sheetDaV.getTable();
+			ObservableList<ResultSetRowPo> items = tableView.getItems();
+			textField.textProperty().addListener((o, oldVal, newVal) -> {
+				if (StrUtils.isNotNullOrEmpty(newVal)) {
+					TableViewUtils.tableViewAllDataFilter(tableView, items, newVal);
+				} else {
+					tableView.setItems(items);
+				}
+
 			});
 		} catch (Exception e) {
 			e.printStackTrace();

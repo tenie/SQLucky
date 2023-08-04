@@ -114,9 +114,9 @@ public class NoteTabTree {
 
 	public static void openMyTab() {
 		TreeItem<MyEditorSheet> item = noteTabTreeView.getSelectionModel().getSelectedItem();
-		var mytab = item.getValue();
-		if (mytab != null && mytab.getDocumentPo() != null) {
-			mytab.showMyTab();
+		var sheet = item.getValue();
+		if (sheet != null && sheet.getDocumentPo() != null) {
+			sheet.showEditor();
 		}
 	}
 

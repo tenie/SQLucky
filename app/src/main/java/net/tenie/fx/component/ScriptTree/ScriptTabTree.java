@@ -269,15 +269,15 @@ public class ScriptTabTree {
 	// tree view 双击事件
 	public void treeViewDoubleClick(MouseEvent mouseEvent) {
 		if (mouseEvent.getClickCount() == 2) {
-			openMyTab();
+			openEditor();
 		}
 	}
 
-	public static void openMyTab() {
+	public static void openEditor() {
 		TreeItem<MyEditorSheet> item = ScriptTreeView.getSelectionModel().getSelectedItem();
-		var mytab = item.getValue();
-		if (mytab != null && mytab.getDocumentPo() != null) {
-			mytab.showMyTab();
+		MyEditorSheet sheet = item.getValue();
+		if (sheet != null && sheet.getDocumentPo() != null) {
+			sheet.showEditor();
 		}
 	}
 

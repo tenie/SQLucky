@@ -29,7 +29,6 @@ public class ResultSetRowPo {
 
 	public void clean() {
 		if (resultSet != null) {
-			resultSet.getFields().clear();
 			resultSet = null;
 		}
 		if (rowDatas != null) {

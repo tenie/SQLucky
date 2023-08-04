@@ -7,12 +7,22 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /*   @author tenie */
 public final class SettingKeyBinding {
 	private static Logger logger = LogManager.getLogger(SettingKeyBinding.class);
+
+	// 对esc按钮添加绑定
+	public static void setEscKeyBinding(Scene scene) {
+
+		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+		scene.getAccelerators().put(escbtn, () -> {
+			CommonUtils.pressBtnESC();
+		});
+	}
 
 	public static String codeNameToSymbol(String codeName) {
 		if ("Slash".equals(codeName)) {
@@ -106,12 +116,10 @@ public final class SettingKeyBinding {
 	}
 
 	/**
-	 * Command (or Cmd) ⌘ 
-	 * Option (or Alt) ⌥
-	 * Shift ⇧
-	 * Control (or Ctrl) ⌃
+	 * Command (or Cmd) ⌘ Option (or Alt) ⌥ Shift ⇧ Control (or Ctrl) ⌃
 	 * 
 	 * Caps Lock ⇪
+	 * 
 	 * @param e
 	 * @return
 	 */
@@ -122,29 +130,28 @@ public final class SettingKeyBinding {
 		if (KeyCode.UNDEFINED == e.getCode()) {
 			val = "";
 		} else if (e.isShortcutDown() && e.isControlDown() && e.isAltDown() && e.isShiftDown()) {
-			if (e.getCode() == KeyCode.COMMAND || e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
+			if (e.getCode() == KeyCode.COMMAND || e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT
+					|| e.getCode() == KeyCode.SHIFT) {
 
 			} else {
-				val = "⌘ + ⌃ + ⌥ + ⇧ + " + codeName; // ⌘  
+				val = "⌘ + ⌃ + ⌥ + ⇧ + " + codeName; // ⌘
 			}
 
-		} 
-		else if (e.isShortcutDown() && e.isAltDown() && e.isShiftDown()) {
+		} else if (e.isShortcutDown() && e.isAltDown() && e.isShiftDown()) {
 			if (e.getCode() == KeyCode.COMMAND || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
 
 			} else {
-				val = "⌘ + ⌥ + ⇧ + " + codeName; // ⌘  
+				val = "⌘ + ⌥ + ⇧ + " + codeName; // ⌘
 			}
 
-		}else if (e.isShortcutDown() && e.isControlDown() && e.isAltDown()) {
+		} else if (e.isShortcutDown() && e.isControlDown() && e.isAltDown()) {
 			if (e.getCode() == KeyCode.COMMAND || e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT) {
 
 			} else {
-				val = "⌘ + ⌥ + ⌃ + " + codeName; // ⌘  
+				val = "⌘ + ⌥ + ⌃ + " + codeName; // ⌘
 			}
 
-		}
-		else if (e.isShortcutDown() && e.isAltDown()) {
+		} else if (e.isShortcutDown() && e.isAltDown()) {
 			if (e.getCode() == KeyCode.COMMAND || e.getCode() == KeyCode.ALT) {
 
 			} else {
@@ -158,15 +165,14 @@ public final class SettingKeyBinding {
 				val = "⌘ + ⇧ + " + codeName;
 			}
 
-		}  else if (e.isShortcutDown() && e.isControlDown()) {
+		} else if (e.isShortcutDown() && e.isControlDown()) {
 			if (e.getCode() == KeyCode.COMMAND || e.getCode() == KeyCode.CONTROL) {
 
 			} else {
 				val = "⌘ + ⌃ + " + codeName;
 			}
 
-		} 
-		else if (e.isControlDown() && e.isAltDown() && e.isShiftDown()) {
+		} else if (e.isControlDown() && e.isAltDown() && e.isShiftDown()) {
 			if (e.getCode() == KeyCode.CONTROL || e.getCode() == KeyCode.ALT || e.getCode() == KeyCode.SHIFT) {
 
 			} else {
@@ -194,7 +200,7 @@ public final class SettingKeyBinding {
 				val = "⌥ + ⇧ + " + codeName;
 			}
 
-		}else if (e.isShortcutDown()) {
+		} else if (e.isShortcutDown()) {
 			if (e.getCode() == KeyCode.COMMAND) {
 
 			} else {
@@ -230,10 +236,10 @@ public final class SettingKeyBinding {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
 			String val = "";
 			boolean isMacOs = CommonUtils.isMacOS();
-			
-			if(isMacOs) {
+
+			if (isMacOs) {
 				val = macOsSetup(e);
-			}else {
+			} else {
 				val = windowsSetup(e);
 			}
 
@@ -242,7 +248,5 @@ public final class SettingKeyBinding {
 		});
 
 	}
-
-
 
 }

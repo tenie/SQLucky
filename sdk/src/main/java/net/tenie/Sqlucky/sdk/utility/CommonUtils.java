@@ -46,7 +46,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -979,38 +978,17 @@ public class CommonUtils {
 	}
 
 	// 查找替换
-	public static void findReplace(boolean isReplace, String findStr, MyEditorSheet skTab) {
-		VBox b = null;
-		if (skTab == null) {
-//			skTab = SqluckyEditorUtils.currentMyTab();
-			skTab = MyEditorSheetHelper.getActivationEditorSheet();
-			b = skTab.getVbox();
-		} else {
-			b = skTab.getVbox();
+	public static void findReplace(boolean isReplace, String findStr, MyEditorSheet sheet) {
+		if (sheet == null) {
+			sheet = MyEditorSheetHelper.getActivationEditorSheet();
 		}
-//		VBox b = SqlcukyEditor.getTabVbox();
-		int bsize = b.getChildren().size();
-		if (bsize > 1) {
+		if (sheet.findPaneIsShowing()) {
 			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
-			if (bsize == 2 && isReplace) {
-				FindReplaceTextPanel.delFindReplacePane(skTab);
-				findReplace(isReplace, findStr, skTab);
-			} else // 如果替换已经存在, 要打开查找, 就先关光再打开查找
-			if (bsize == 3 && !isReplace) {
-				FindReplaceTextPanel.delFindReplacePane(skTab);
-				findReplace(isReplace, findStr, skTab);
-			} else {
-				FindReplaceTextPanel.delFindReplacePane(skTab);
-			}
-			// 如果是指定查询, 需要清除之前的查询界面, 新建一个
-			if (StrUtils.isNotNullOrEmpty(findStr)) {
-				FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, skTab);
-				skTab.setFindReplacePanel(findPanel);
-			}
-
+			sheet.delFindReplacePane();
+			findReplace(isReplace, findStr, sheet);
 		} else {
-			FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, skTab);
-			skTab.setFindReplacePanel(findPanel);
+			FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, sheet);
+			sheet.setFindReplacePanel(findPanel);
 		}
 	}
 
@@ -1202,13 +1180,15 @@ public class CommonUtils {
 
 	// 隐藏查找, 替换窗口
 	public static void hideFindReplaceWindow() {
-		VBox b = MyEditorSheetHelper.getTabVbox();
+//		VBox b = MyEditorSheetHelper.getTabVbox();
 //		var sltb = SqluckyEditorUtils.currentMyTab();
 		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
-		int bsize = b.getChildren().size();
-		if (bsize > 1) {
-			FindReplaceTextPanel.delFindReplacePane(sheet);
-		}
+		sheet.delFindReplacePane();
+//		int bsize = b.getChildren().size();
+//		if (bsize > 1) {
+////			FindReplaceTextPanel.delFindReplacePane(sheet);
+//			sheet.delFindReplacePane();
+//		}
 
 	}
 
