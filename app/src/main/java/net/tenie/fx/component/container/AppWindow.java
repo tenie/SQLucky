@@ -8,6 +8,7 @@ import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -20,7 +21,8 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.fx.Po.TreeNodePo;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
 
 /*   @author tenie */
 public class AppWindow {
@@ -28,12 +30,18 @@ public class AppWindow {
 	private MenuBarContainer mainMenuBar;
 	private MasterDetailPane masterDetailPane;
 	private OperateContainer operate;
-	private DataViewContainer dataView;
+	public static DataViewContainer dataView;
 	private Scene appScene;
 	private StackPane root;
-
 	// 窗口的顶部(主菜单的位置)
 	private AnchorPane headAnchorPane;
+
+	// 全局组件
+//	public static DataViewContainer dataView;
+	public static TreeView<TreeNodePo> treeView;
+	public static DBinfoTree dbInfoTree;
+	public static AnchorPane dbInfoTreeFilter;
+	public static volatile AppWindow app;
 
 	public AppWindow() {
 		mainWindow = new VBox();
@@ -54,7 +62,7 @@ public class AppWindow {
 		VBox.setVgrow(masterDetailPane, Priority.ALWAYS);
 
 		ComponentGetter.masterDetailPane = masterDetailPane;
-		AppWindowComponentGetter.dataView = dataView;
+//		AppWindowComponentGetter.dataView = dataView;
 		// 设置tree 面板的显示比例
 		masterDetailPane.widthProperty().addListener((ob, ov, nv) -> {
 			if (nv.doubleValue() > 1) {

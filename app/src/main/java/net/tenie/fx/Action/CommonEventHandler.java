@@ -60,8 +60,6 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-//				MyAreaTab.addCodeEmptyTabMethod();
-
 				MyEditorSheetHelper.addEmptyHighLightingEditor();
 			}
 		};
@@ -92,7 +90,6 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-//				CommonAction.saveSqlAction();
 				MyEditorSheetHelper.saveSqlAction();
 			}
 		};
@@ -107,131 +104,6 @@ public class CommonEventHandler {
 			}
 		};
 	}
-
-	// ...
-	public static EventHandler<Event> demo() {
-		return new EventHandler<Event>() {
-			@Override
-			public void handle(Event e) {
-
-			}
-		};
-	}
-
-//	public static EventHandler<ActionEvent> InsertSQLClipboard(boolean isSelected, boolean isFile) {
-//		return new EventHandler<ActionEvent>() {
-//			public void handle(ActionEvent e) {
-//				File tmpFile = null;
-//				if (isFile) {
-//					tmpFile = CommonUtility.getFilePathHelper("sql");
-//				}
-//				final File ff = tmpFile;
-//				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-//					Thread t = new Thread() {
-//						public void run() {
-//							String tableName = SqluckyBottomSheetUtility.getTableName();
-//							final ObservableList<ResultSetRowPo> fvals = SqluckyBottomSheetUtility
-//									.getValsHelper(isSelected);
-//
-//							String sql = GenerateSQLString.insertSQLHelper(fvals, tableName);
-//							if (StrUtils.isNotNullOrEmpty(sql)) {
-//								if (isFile) {
-//									if (ff != null) {
-//										try {
-//											FileTools.save(ff, sql);
-//										} catch (IOException e) {
-//											e.printStackTrace();
-//										}
-//									}
-//								} else {
-//									CommonUtility.setClipboardVal(sql);
-//								}
-//
-//							}
-//						}
-//					};
-//					t.start();
-//				});
-//
-//			}
-//
-//		};
-//	}
-
-//	public static EventHandler<ActionEvent> csvStrClipboard(boolean isSelected, boolean isFile) {
-//		return new EventHandler<ActionEvent>() {
-//			public void handle(ActionEvent e) {
-//
-//				File tmpFile = null;
-//				if (isFile) {
-//					tmpFile = CommonUtility.getFilePathHelper("csv");
-//				}
-//				final File ff = tmpFile;
-//
-//				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-//					Thread t = new Thread() {
-//						public void run() {
-//							ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
-//							String sql = GenerateSQLString.csvStrHelper(vals);
-//							if (StrUtils.isNotNullOrEmpty(sql)) {
-//								if (isFile) {
-//									if (ff != null) {
-//										try {
-//											FileTools.save(ff, sql);
-//										} catch (IOException e) {
-//											e.printStackTrace();
-//										}
-//									}
-//								} else {
-//									CommonUtility.setClipboardVal(sql);
-//								}
-//							}
-//						}
-//					};
-//					t.start();
-//				});
-//
-//			}
-//
-//		};
-//	}
-
-	/**
-	 * 将table中的数据以普通文本方式导出
-	 * 
-	 * @param isSelected
-	 * @param isFile
-	 * @return
-	 */
-//	public static EventHandler<ActionEvent> txtStrClipboard(boolean isSelected, boolean isFile) {
-//		return new EventHandler<ActionEvent>() {
-//			public void handle(ActionEvent e) {
-//				ObservableList<ResultSetRowPo> vals = SqluckyBottomSheetUtility.getValsHelper(isSelected);
-//				final File ff = CommonUtility.getFileHelper(isFile);
-//				Thread t = new Thread() {
-//					public void run() {
-//						String sql = GenerateSQLString.txtStrHelper(vals);
-//						if (StrUtils.isNotNullOrEmpty(sql)) {
-//							if (isFile) {
-//								if (ff != null) {
-//									try {
-//										FileTools.save(ff, sql);
-//									} catch (IOException e) {
-//										e.printStackTrace();
-//									}
-//								}
-//							} else {
-//								CommonUtility.setClipboardVal(sql);
-//							}
-//						}
-//					}
-//				};
-//				t.start();
-//
-//			}
-//
-//		};
-//	}
 
 	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName,
 			MyBottomSheet mtd) {
@@ -260,73 +132,8 @@ public class CommonEventHandler {
 					}
 				};
 				t.start();
-
 			}
-
 		};
 	}
-
-//	// 导出表的字段, 使用逗号分割
-//	public static EventHandler<ActionEvent> commaSplitTableFields() {
-//		return new EventHandler<ActionEvent>() {
-//			public void handle(ActionEvent e) {
-//				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-//					ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
-//					Thread t = new Thread() {
-//						public void run() {
-//							int size = fs.size();
-//							StringBuilder fieldsName = new StringBuilder("");
-//							for (int i = 0; i < size; i++) {
-//								SheetFieldPo po = fs.get(i);
-//								String name = po.getColumnName().get();
-//								fieldsName.append(name);
-//								fieldsName.append(", \n");
-//
-//							}
-//							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
-//								String rsStr = fieldsName.toString().trim();
-//								CommonUtility.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
-//							}
-//						}
-//					};
-//					t.start();
-//
-//				});
-//
-//			}
-//
-//		};
-//	}
-
-	// 导出表的字段包含类型, 使用逗号分割
-//	public static EventHandler<ActionEvent> commaSplitTableFiledsIncludeType() {
-//		return new EventHandler<ActionEvent>() {
-//			public void handle(ActionEvent e) {
-//				LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-//					ObservableList<SheetFieldPo> fs = SqluckyBottomSheetUtility.getFields();
-//					Thread t = new Thread() {
-//						public void run() {
-//							int size = fs.size();
-//							StringBuilder fieldsName = new StringBuilder("");
-//							for (int i = 0; i < size; i++) {
-//								SheetFieldPo po = fs.get(i);
-//								String name = po.getColumnName().get();
-//								fieldsName.append(name);
-//								fieldsName.append(", --");
-//								fieldsName.append(po.getColumnTypeName().get());
-//								fieldsName.append("\n");
-//
-//							}
-//							if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
-//								CommonUtility.setClipboardVal(fieldsName.toString());
-//							}
-//						}
-//					};
-//					t.start();
-//				});
-//			}
-//
-//		};
-//	}
 
 }

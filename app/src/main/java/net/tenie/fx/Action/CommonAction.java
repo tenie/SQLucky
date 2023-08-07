@@ -41,9 +41,9 @@ import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
+import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.main.Restart;
 import net.tenie.lib.db.h2.AppDao;
@@ -67,7 +67,7 @@ public class CommonAction {
 		Node nd = IconGenerator.svgImage("spinner", "red");
 		CommonUtils.rotateTransition(nd);
 		item.getValue().setIcon(nd);
-		AppWindowComponentGetter.treeView.refresh();
+		AppWindow.treeView.refresh();
 
 		Thread t = new Thread() {
 			@Override
@@ -96,7 +96,7 @@ public class CommonAction {
 							MyAlert.errorAlert(
 									" Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
 							item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
-							AppWindowComponentGetter.treeView.refresh();
+							AppWindow.treeView.refresh();
 
 						});
 
@@ -107,7 +107,7 @@ public class CommonAction {
 					Platform.runLater(() -> {
 						MyAlert.errorAlert(" Error !");
 						item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
-						AppWindowComponentGetter.treeView.refresh();
+						AppWindow.treeView.refresh();
 					});
 
 				} finally {
@@ -612,13 +612,13 @@ public class CommonAction {
 
 	// 收缩treeview
 	public static void shrinkTreeView() {
-		TreeItem<TreeNodePo> root = AppWindowComponentGetter.treeView.getRoot();
+		TreeItem<TreeNodePo> root = AppWindow.treeView.getRoot();
 		shrinkUnfoldTreeViewHelper(root, false);
 	}
 
 	// 展开treeview
 	public static void unfoldTreeView() {
-		TreeItem<TreeNodePo> root = AppWindowComponentGetter.treeView.getRoot();
+		TreeItem<TreeNodePo> root = AppWindow.treeView.getRoot();
 		root.setExpanded(true);
 		shrinkUnfoldTreeViewHelper(root, true);
 	}
@@ -633,7 +633,7 @@ public class CommonAction {
 			}
 		}
 
-		AppWindowComponentGetter.treeView.refresh();
+		AppWindow.treeView.refresh();
 	}
 
 	// 保证theme状态

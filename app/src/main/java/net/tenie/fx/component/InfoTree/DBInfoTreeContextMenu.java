@@ -26,11 +26,6 @@ import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.window.ConnectionEditor;
 
 public class DBInfoTreeContextMenu {
-
-	//
-//	public static List<MenuItem> otherDBMenuItem = new ArrayList<>();
-//	public static List<Menu> otherDBMenu = new ArrayList<>();
-
 	private ContextMenu contextMenu;
 	private MenuItem tableAddNewCol;
 	private MenuItem tableShow;

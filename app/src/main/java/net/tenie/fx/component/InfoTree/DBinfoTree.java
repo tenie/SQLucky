@@ -37,10 +37,10 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TreeObjAction;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
 import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 import net.tenie.fx.component.InfoTree.TreeItem.MyTreeItem;
+import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.dao.ConnectionDao;
 
 /**
@@ -229,7 +229,7 @@ public class DBinfoTree {
 
 	// 给root节点加元素（db连接节点）
 	public static void treeRootAddItem(TreeItem<TreeNodePo> item) {
-		TreeView<TreeNodePo> treeView = AppWindowComponentGetter.treeView;
+		TreeView<TreeNodePo> treeView = AppWindow.treeView;
 		TreeItem<TreeNodePo> rootNode = treeView.getRoot();
 		rootNode.getChildren().add(item);
 		treeView.getSelectionModel().select(item); // 选择新加的节点
@@ -511,7 +511,7 @@ public class DBinfoTree {
 	// 根据链接名称,获取链接Node
 	public static TreeItem<TreeNodePo> getConnNode(String dbName) {
 //			TreeItem<TreeNodePo> conn =
-		TreeItem<TreeNodePo> root = AppWindowComponentGetter.treeView.getRoot();
+		TreeItem<TreeNodePo> root = AppWindow.treeView.getRoot();
 		// 遍历tree root 找到对于的数据库节点
 		for (TreeItem<TreeNodePo> connNode : root.getChildren()) {
 			if (connNode.getValue().getName().equals(dbName)) {

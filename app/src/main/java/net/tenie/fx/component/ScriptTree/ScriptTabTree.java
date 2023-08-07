@@ -320,10 +320,10 @@ public class ScriptTabTree {
 
 		ObservableList<TreeItem<MyEditorSheet>> myTabItemList = rootNode.getChildren();
 		TreeItem<MyEditorSheet> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
-		MyEditorSheet tb = ctt.getValue();
+		MyEditorSheet sheet = ctt.getValue();
 
-		String title = tb.getTitle();// CommonUtility.tabText(tb);
-		String sql = tb.getAreaText(); // SqlEditor.getTabSQLText(tb);
+		String title = sheet.getTitle();// CommonUtility.tabText(tb);
+		String sql = sheet.getAreaText(); // SqlEditor.getTabSQLText(tb);
 		if (title.endsWith("*") && sql != null && sql.trim().length() > 0) {
 			// 是否保存
 			final Stage stage = new Stage();
@@ -332,15 +332,18 @@ public class ScriptTabTree {
 			JFXButton okbtn = new JFXButton("Yes(Y)");
 			okbtn.getStyleClass().add("myAlertBtn");
 			okbtn.setOnAction(value -> {
-				MyEditorSheetHelper.saveSqlAction(tb);
-				removeNode(myTabItemList, ctt, tb);
+//				文件保存到磁盘
+				MyEditorSheetHelper.saveSqlAction(sheet);
+				removeNode(myTabItemList, ctt, sheet);
+				sheet.destroySheet();
 				stage.close();
 			});
 
 			// 2 不保存
 			JFXButton Nobtn = new JFXButton("No(N)");
 			Nobtn.setOnAction(value -> {
-				removeNode(myTabItemList, ctt, tb);
+				removeNode(myTabItemList, ctt, sheet);
+				sheet.destroySheet();
 				stage.close();
 			});
 			// 取消
@@ -357,7 +360,7 @@ public class ScriptTabTree {
 
 			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns, false);
 		} else {
-			removeNode(myTabItemList, ctt, tb);
+			removeNode(myTabItemList, ctt, sheet);
 		}
 
 	}
@@ -375,6 +378,7 @@ public class ScriptTabTree {
 
 			var scpo = tb.getDocumentPo();
 			AppDao.deleteScriptArchive(conn, scpo);
+
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
