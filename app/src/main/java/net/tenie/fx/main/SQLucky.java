@@ -222,18 +222,20 @@ public class SQLucky extends Application {
 								try {
 									AppDao.transferOldDbData(file);
 									succeed = true;
+									// 成功后归档原数据库
+									String ftmpName = file.getName();
+									String archiveName = ftmpName.replace("_sqlite", "_archive");
+									File renameFile = new File(file.getParent(), archiveName);
+									file.renameTo(renameFile);
 								} catch (Exception e) {
 									e.printStackTrace();
 									MyAlert.errorAlert("迁移出错了!");
 								}
 
 								if (succeed) {
-									MyAlert.infoAlert("完成迁移, 需要重启APP!");
-									String ftmpName = file.getName();
-
-									String archiveName = ftmpName.replace("_sqlite", "_archive");
-									File renameFile = new File(file.getParent(), archiveName);
-									file.renameTo(renameFile);
+									Platform.runLater(()->{
+										MyAlert.myConfirmation("完成迁移, 重启APP, 加载迁移数据, ok ? ", x->Restart.reboot(), System.out::println);
+									});
 								}
 							});
 
