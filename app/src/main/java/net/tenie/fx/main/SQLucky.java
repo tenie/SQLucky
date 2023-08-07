@@ -1,10 +1,12 @@
 package net.tenie.fx.main;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,6 +26,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -53,6 +56,8 @@ public class SQLucky extends Application {
 	private Scene scene;
 	private Image img;
 	private String Theme;
+	private boolean tableExists = true;
+//	public static volatile boolean beginInit = false;
 	private static Logger logger = LogManager.getLogger(SQLucky.class);
 
 	private static boolean preloaderStatus = false;
@@ -73,11 +78,14 @@ public class SQLucky extends Application {
 
 	@Override
 	public void init() throws Exception {
+//		while (beginInit == false) {
+//			Thread.sleep(1000);
+//		}
 		logger.info(ConfigVal.textLogo);
 		Connection conn = SqluckyAppDB.getConn();
 
 		// 数据库迁移
-		AppDao.testDbTableExists(conn);
+		tableExists = AppDao.testDbTableExists(conn);
 
 		// 界面主题色， 没有设置过，默认黑色
 		Theme = AppDao.readConfig(conn, "THEME");
@@ -198,6 +206,42 @@ public class SQLucky extends Application {
 			mm = mm / 1024;
 			logger.info("Runtime.getRuntime().maxMemory = " + mm);
 			SettingKeyBinding.setEscKeyBinding(scene);
+
+			// 数据迁移
+			if (tableExists == false) {
+				// 如果发现有新的数据库, 插入
+				Optional<File> oldFile = AppDao.appOldDbFiles();
+				if (oldFile.isPresent()) {
+					Platform.runLater(() -> {
+						boolean tf = MyAlert.myConfirmationShowAndWait("发现旧版本数据, 是否迁移");
+						if (tf) {
+							// 数据库迁移
+							LoadingAnimation.primarySceneRootLoadingAnimation("Migrating", v -> {
+								boolean succeed = false;
+								File file = oldFile.get();
+								try {
+									AppDao.transferOldDbData(file);
+									succeed = true;
+								} catch (Exception e) {
+									e.printStackTrace();
+									MyAlert.errorAlert("迁移出错了!");
+								}
+
+								if (succeed) {
+									MyAlert.infoAlert("完成迁移, 需要重启APP!");
+									String ftmpName = file.getName();
+
+									String archiveName = ftmpName.replace("_sqlite", "_archive");
+									File renameFile = new File(file.getParent(), archiveName);
+									file.renameTo(renameFile);
+								}
+							});
+
+						}
+					});
+				}
+
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

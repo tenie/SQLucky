@@ -456,12 +456,6 @@ public class InsertDao {
 							}
 						}
 
-//						if (val.toUpperCase().contains("NUll")) {
-//
-//						} else {
-//							insertValue += stringToDBString(val);
-//						}
-
 						// 数字判断
 					} else if (CommonUtils.isNum(javatype)) {
 						val = val.trim();

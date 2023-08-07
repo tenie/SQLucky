@@ -29,13 +29,13 @@ public class MyPreloaderMp4 extends Preloader {
 	public static void hiden() {
 		if (loading != null) {
 			Thread th = new Thread() {
+				@Override
 				public void run() {
 					var tf = getFinish();
 					while (!tf) {
 						tf = getFinish();
 						try {
 							Thread.sleep(100);
-//								System.out.println("getFinish() = " + getFinish());
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
 						}
@@ -61,6 +61,7 @@ public class MyPreloaderMp4 extends Preloader {
 
 	private void stopTime() {
 		Thread th = new Thread() {
+			@Override
 			public void run() {
 				try {
 					Thread.sleep(3000);

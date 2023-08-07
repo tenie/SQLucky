@@ -1,6 +1,7 @@
 package net.tenie.fx.component.InfoTree.TreeItem;
 
 import java.util.Set;
+
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
@@ -8,7 +9,8 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.fx.component.container.AppWindow;
+
 /**
  * 
  * @author tenie
@@ -83,8 +85,8 @@ public class ConnItemContainer {
 			String scheName = schemaNode.getChildren().get(i).getValue().getName();
 			if (itemName.equals(scheName)) {
 				var nd = schemaNode.getChildren().get(i).getValue().getConnItem().getTableNode();
-				Platform.runLater(()->{
-					AppWindowComponentGetter.treeView.getSelectionModel().select(nd);
+				Platform.runLater(() -> {
+					AppWindow.treeView.getSelectionModel().select(nd);
 				});
 				break;
 			}
@@ -117,11 +119,11 @@ public class ConnItemContainer {
 
 	// 获取所有的schema, 并构建node
 	public static TreeItem<TreeNodePo> CreateSchemaNode(SqluckyConnector connpo) {
-		//判断是不是mysql
-		String nodeName = connpo.dbRootNodeName(); 
+		// 判断是不是mysql
+		String nodeName = connpo.dbRootNodeName();
 		// 创建一个schema node , 将数据库数据放入
-		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(
-				new TreeNodePo( nodeName, TreeItemType.SCHEMA_ROOT, IconGenerator.svgImage("th-list", "#FFD700"), connpo));
+		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(new TreeNodePo(nodeName, TreeItemType.SCHEMA_ROOT,
+				IconGenerator.svgImage("th-list", "#FFD700"), connpo));
 		// 获取schema 数据
 		Set<String> set = connpo.settingSchema();
 		for (String sche : set) {

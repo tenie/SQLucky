@@ -15,7 +15,7 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.AppWindowComponentGetter;
+import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.window.ConnectionEditor;
 
 public class DBinfoTreeButtonFactory {
@@ -27,7 +27,7 @@ public class DBinfoTreeButtonFactory {
 		// 查询过滤
 		DBinfoTreeFilter dbf = new DBinfoTreeFilter();
 		AnchorPane filter = dbf.createFilterPane(treeView);
-		AppWindowComponentGetter.dbInfoTreeFilter = filter;
+		AppWindow.dbInfoTreeFilter = filter;
 
 		HBox pn = new HBox();
 		// 页面初始化: 添加组件

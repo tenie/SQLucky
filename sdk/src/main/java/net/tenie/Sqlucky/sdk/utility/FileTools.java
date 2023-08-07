@@ -96,6 +96,35 @@ public class FileTools {
 
 	}
 
+	public static boolean deleteFile(String fileName) {
+		File file = new File(fileName);
+		// 如果文件路径所对应的文件存在，并且是一个文件，则直接删除
+		if (file.exists() && file.isFile()) {
+			if (file.delete()) {
+				logger.info("" + fileName + "");
+				return true;
+			} else {
+				logger.info("" + fileName + "失败！");
+				return false;
+			}
+		} else {
+			logger.info("" + fileName + "不存在！");
+			return false;
+		}
+	}
+
+//	// 读取文件内容, 返回文本字符串
+//	public static String getText(String fileStr) throws IOException {
+//		BufferedReader in = new BufferedReader(new FileReader(fileStr));
+//		StringBuilder rs = new StringBuilder();
+//		String str = "";
+//		while ((str = in.readLine()) != null) {
+//			rs.append(str + "\n");
+//		}
+//		in.close();
+//		return rs.toString();
+//	}
+
 	// UTF-8 字符串保存到文件
 	public static void save(File file, String data) throws IOException {
 		FileUtils.writeStringToFile(file, data, "UTF-8");

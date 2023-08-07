@@ -39,6 +39,34 @@ public class MyEditorSheet {
 	private AnchorPane replaceAnchorPane;
 	private FindReplaceTextPanel findReplacePanel;
 
+	public void clean() {
+		if (tab != null) {
+			tab.setUserData(null);
+			tab.setContent(null);
+			tab = null;
+		}
+		if (vbox != null) {
+			vbox.getChildren().clear();
+			vbox = null;
+		}
+		if (findAnchorPane != null) {
+			findAnchorPane.getChildren().clear();
+			findAnchorPane = null;
+		}
+		if (replaceAnchorPane != null) {
+			replaceAnchorPane.getChildren().clear();
+			replaceAnchorPane = null;
+		}
+
+		if (findReplacePanel != null) {
+			findReplacePanel = null;
+		}
+		if (documentPo != null) {
+			documentPo = null;
+		}
+
+	}
+
 	public MyEditorSheet(DocumentPo valDocumentPo, SqluckyEditor sqluckyEditor) {
 		if (valDocumentPo.getSaveToDB()) {
 			if (valDocumentPo.getId() == null) {
@@ -52,23 +80,25 @@ public class MyEditorSheet {
 			documentPo = valDocumentPo;
 		}
 
-		setTabProperty();
 		delayInit(sqluckyEditor);
 	}
 
 	public MyEditorSheet(String TabName, SqluckyEditor sqluckyEditor) {
 		documentPo = ComponentGetter.appComponent.scriptArchive(TabName, "", "", "UTF-8", 0);
 		documentPo.setOpenStatus(1);
-		setTabProperty();
+//		setTabProperty();
 		delayInit(sqluckyEditor);
 	}
 
-	// 延迟初始化tab
+	// 延迟初始化sheet, 如果 SqluckyEditor为空创建默认的SqluckyEditor对象
 	public void delayInit(SqluckyEditor sqluckyEditor) {
+		// Tab 其他属性设置
+		setTabProperty();
 		// 选择title的时候初始化tab内容
 		tab.selectedProperty().addListener(l -> {
 			boolean isSel = tab.isSelected();
 			if (isSel && isInit == false) {
+
 				if (sqluckyEditor == null) {
 					if (documentPo.getType() == DocumentPo.IS_SQL) {
 						setDefaultEditor();
@@ -80,6 +110,7 @@ public class MyEditorSheet {
 				}
 
 				isInit = true;
+
 			}
 		});
 	}
@@ -270,9 +301,21 @@ public class MyEditorSheet {
 		return 0;
 	}
 
-	// 删除 TabPane中的所有 MyTab
+	// 删除 TabPane中的所有 MyTab, 不删除treeView中的节点
 	private void closeAll() {
 		MyEditorSheetHelper.archiveAllScript();
+
+	}
+
+	// 销毁, 从界面上移除tab,并清空属性的引用
+	public void destroySheet() {
+		var myTabPane = ComponentGetter.mainTabPane;
+		var tabs = myTabPane.getTabs();
+		if (tabs.contains(tab)) {
+			tabs.remove(tab);
+		}
+		this.clean();
+
 	}
 
 	// 右键菜单

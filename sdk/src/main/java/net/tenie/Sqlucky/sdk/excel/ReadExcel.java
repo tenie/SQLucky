@@ -22,9 +22,9 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
-public class ReadExcel2 {
+public class ReadExcel {
 
-	private static Logger logger = LogManager.getLogger(ReadExcel2.class);
+	private static Logger logger = LogManager.getLogger(ReadExcel.class);
 
 	/**
 	 * 通过Workbook 读 excel

@@ -101,10 +101,10 @@ public class ExcelUtil {
 		try {
 			if (".xls".equals(suffixStr)) {
 				System.out.println("===== 开始执行 xls 方法=====");
-				rs = new ReadExcel2().readXls(filename, beginRowIdx, count);
+				rs = new ReadExcel().readXls(filename, beginRowIdx, count);
 			} else if (".xlsx".equals(suffixStr)) {
 				System.out.println("===== 开始执行 xlsx 方法=====");
-				rs = new ReadExcel2().readXlsx(filename, beginRowIdx, count);
+				rs = new ReadExcel().readXlsx(filename, beginRowIdx, count);
 			} else {
 				System.out.println("===== 没有执行 xls 方法=====");
 			}
@@ -118,7 +118,7 @@ public class ExcelUtil {
 			throws IOException {
 		Workbook workbook = readFileToWorkbok(new File(filename));
 		List<ArrayList<String>> rs = new ArrayList<>();
-		rs = new ReadExcel2().readExcel(workbook, beginRowIdx, count);
+		rs = new ReadExcel().readExcel(workbook, beginRowIdx, count);
 		return rs;
 	}
 
@@ -134,10 +134,10 @@ public class ExcelUtil {
 		try {
 			if (".xls".equals(suffixStr)) {
 				System.out.println("===== 开始执行 xls 方法=====");
-				rs = new ReadExcel2().readXlsHeadInfo(filename);
+				rs = new ReadExcel().readXlsHeadInfo(filename);
 			} else if (".xlsx".equals(suffixStr)) {
 				System.out.println("===== 开始执行 xlsx 方法=====");
-				rs = new ReadExcel2().readXlsxHeadInfo(filename);
+				rs = new ReadExcel().readXlsxHeadInfo(filename);
 			} else {
 				System.out.println("===== 没有执行 xls 方法=====");
 			}

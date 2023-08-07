@@ -25,9 +25,9 @@ import net.tenie.Sqlucky.sdk.po.RsData;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.AppWindowComponentGetter;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
+import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.config.DbVendor;
 
 public class ConnectionDao {
@@ -47,7 +47,7 @@ public class ConnectionDao {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			logger.info("refreshConnOrder");
-			TreeView<TreeNodePo> treeView = AppWindowComponentGetter.treeView;
+			TreeView<TreeNodePo> treeView = AppWindow.treeView;
 			TreeItem<TreeNodePo> root = treeView.getRoot();
 			ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
 			int size = ls.size();

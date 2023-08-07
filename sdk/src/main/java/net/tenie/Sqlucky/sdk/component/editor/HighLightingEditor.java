@@ -9,8 +9,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
@@ -53,10 +51,9 @@ public class HighLightingEditor implements SqluckyEditor {
 	private static final String sampleCode = String.join("\n", new String[] { "" });
 	private StackPane codeAreaPane;
 	private MyCodeArea codeArea;
-	private ExecutorService executor;
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
-//	private MyEditorSheet myAreaTab;
+	private MyEditorSheet sheet;
 
 	@Override
 	public void hideAutoComplete() {
@@ -82,11 +79,13 @@ public class HighLightingEditor implements SqluckyEditor {
 	}
 
 	// 文本修改后title设置保存提示
-	Consumer<Integer> caller = x -> {
-		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
+	public void textChangeAfterAction(Integer x) {
+		if (sheet == null) {
+			sheet = MyEditorSheetHelper.getActivationEditorSheet();
+		}
 		if (sheet != null) {
 			Platform.runLater(() -> {
-				String title = sheet.getTitle(); // CommonUtility.tabText(tb);
+				String title = sheet.getTitle();
 				if (!title.endsWith("*")) {
 					sheet.setTitle(title + "*");
 					sheet.setModify(true);
@@ -98,15 +97,14 @@ public class HighLightingEditor implements SqluckyEditor {
 				myAuto.cacheTextWord();
 			}
 		}
-	};
+
+	}
 
 //    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
 
 	public HighLightingEditor(MyAutoComplete myAuto) {
-//		this.myAreaTab = sheet;
 		this.myAuto = myAuto;
 		highLightingHelper = new CodeAreaHighLightingHelper();
-		executor = Executors.newSingleThreadExecutor();
 		codeArea = new MyCodeArea();
 
 		// 行号主题色
@@ -225,7 +223,7 @@ public class HighLightingEditor implements SqluckyEditor {
 //					delayHighLighting(caller, 600, 0);
 //				}
 
-				delayHighLighting(caller, 600, 0);
+				delayHighLighting(this::textChangeAfterAction, 600, 0);
 			}
 
 		});
@@ -485,9 +483,9 @@ public class HighLightingEditor implements SqluckyEditor {
 		});
 	}
 
-	public void stop() {
-		executor.shutdown();
-	}
+//	public void stop() {
+//		executor.shutdown();
+//	}
 
 	@Override
 	public MyCodeArea getCodeArea() {

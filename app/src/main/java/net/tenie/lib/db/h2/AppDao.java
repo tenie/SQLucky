@@ -13,26 +13,21 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBTools;
-import net.tenie.Sqlucky.sdk.db.InsertDao;
-import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
-import net.tenie.Sqlucky.sdk.db.ResultSetPo;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.controller.TransferDataUtils;
 
 /**
  * 
@@ -385,18 +380,30 @@ public class AppDao {
 		return vals;
 	}
 
-	public static void testDbTableExists(Connection conn) {
+	public static boolean testDbTableExists(Connection conn) {
 		// 第一次启动
 		if (!tabExist(conn, "KEYS_BINDING")) {
 			AppDao.createTab(conn);
-			// 数据库迁移
-			transferOldDbData(conn);
+			return false;
+
 		} else {// 之后的启动, 更新脚本
 //			UpdateScript.execUpdate(conn);
 
 		}
-
+		return true;
 	}
+
+//	public static void testDbTableExists() {
+//		Connection conn = SqluckyAppDB.getConn();
+//		try {
+//			testDbTableExists(conn);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			SqluckyAppDB.closeConn(conn);
+//			SQLucky.beginInit = true;
+//		}
+//	}
 
 	// 检查表是否存在
 	public static boolean tabExist(Connection conn, String tablename) {
@@ -413,17 +420,19 @@ public class AppDao {
 
 	}
 
-	// 旧的数据 转移 到新的 表里
-	private static void transferOldDbData(Connection conn) {
-		String path = appOldDbFiles();
-		if (StrUtils.isNotNullOrEmpty(path)) {
+	public static void printLog(String val) {
+		logger.debug(val);
+	}
 
-			SqluckyConnector sqluckyConn = SqluckyAppDB.getSqluckyConnector(ConfigVal.USER, ConfigVal.PASSWD,
-					"jdbc:sqlite:" + path);
-//					SqluckySqliteConnector.createTmpConnector(
-//							ConfigVal.USER,
-//							ConfigVal.PASSWD, 
-//							"jdbc:sqlite:" + path );
+	// 旧的数据 转移 到新的 表里
+	public static void transferOldDbData(File path) throws Exception {
+
+		SqluckyConnector sqluckyConn = null;
+		Connection conn = null;
+		try {
+			conn = SqluckyAppDB.getConn();
+			sqluckyConn = SqluckyAppDB.getSqluckyConnector(ConfigVal.USER, ConfigVal.PASSWD,
+					"jdbc:sqlite:" + path.getAbsolutePath());
 			List<String> tableNames = new ArrayList<>();
 			tableNames.add("CONNECTION_INFO");
 //			tableNames.add("SQL_TEXT_SAVE");
@@ -435,31 +444,49 @@ public class AppDao {
 			tableNames.add("DATA_MODEL_TABLE_FIELDS");
 			tableNames.add("PLUGIN_INFO");
 			tableNames.add("SQLUCKY_USER");
-
 			for (int i = 0; i < tableNames.size(); i++) {
 				String tableName = tableNames.get(i);
-				String sql = "select   *   from  " + tableName;
-				SheetDataValue dvt = new SheetDataValue();
-				dvt.setDbConnection(sqluckyConn);
-				dvt.setSqlStr(sql);
-				dvt.setTabName(tableName);
-				try {
-					ResultSetPo rspo = SelectDao.selectSqlToRS(sql, sqluckyConn);
-					ObservableList<ResultSetRowPo> datas = rspo.getDatas();
-					if (datas != null) {
-						for (ResultSetRowPo resultSetRow : datas) {
-							ObservableList<ResultSetCellPo> cells = resultSetRow.getRowDatas();
-							InsertDao.execInsert(conn, tableName, cells);
-						}
-					}
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				TransferDataUtils.cleanData(conn, "", tableName, AppDao::printLog);
+				TransferDataUtils.dbTableDataMigration(sqluckyConn.getConn(), conn, tableName, "", "", 100, true,
+						AppDao::printLog);
 
 			}
-			sqluckyConn.closeConn();
 
+			// 完成
+
+//			for (int i = 0; i < tableNames.size(); i++) {
+//				String tableName = tableNames.get(i);
+//				String sql = "select   *   from  " + tableName;
+//				SheetDataValue dvt = new SheetDataValue();
+//				dvt.setDbConnection(sqluckyConn);
+//				dvt.setSqlStr(sql);
+//				dvt.setTabName(tableName);
+//				try {
+//					ResultSetPo rspo = SelectDao.selectSqlToRS(sql, sqluckyConn);
+//					ObservableList<ResultSetRowPo> datas = rspo.getDatas();
+//					if (datas != null) {
+//						for (ResultSetRowPo resultSetRow : datas) {
+//							ObservableList<ResultSetCellPo> cells = resultSetRow.getRowDatas();
+//							InsertDao.execInsert(conn, tableName, cells);
+//						}
+//					}
+//
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//
+//			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+
+		} finally {
+			if (sqluckyConn != null)
+				sqluckyConn.closeConn();
+			if (conn != null) {
+				SqluckyAppDB.closeConn(conn);
+			}
 		}
 	}
 
@@ -490,13 +517,16 @@ public class AppDao {
 	}
 
 	// 获取目录下的旧db文件, 从旧文件中找一个最新的
-	private static String appOldDbFiles() {
+	public static Optional<File> appOldDbFiles() {
 		String rs = "";
+		File rsFile = null;
 		String path = DBTools.dbFilePath();
 		File dir = new File(path);
 
 		File[] files = dir.listFiles(name -> {
-			return name.getName().startsWith(ConfigVal.H2_DB_NAME) && name.getName().endsWith("_sqlite.db");
+			String fnm = name.getName();
+			return fnm.startsWith(ConfigVal.H2_DB_NAME) && fnm.endsWith("_sqlite.db")
+					&& (!fnm.startsWith(ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION));
 		});
 		if (files != null && files.length > 0) {
 			long lastModifiedTime = 0;
@@ -506,13 +536,26 @@ public class AppDao {
 					long ltmp = fl.lastModified();
 					if (ltmp > lastModifiedTime) {
 						lastModifiedTime = ltmp;
-						rs = path + flName;// .substring(0, flName.indexOf("_sqlite.db"));
+						rs = flName;
+						rsFile = new File(path, flName);
 					}
 //					System.out.println(rs);
 				}
 			}
+
+			if (StrUtils.isNotNullOrEmpty(rs)) {
+				for (var ftmp : files) {
+					String ftmpName = ftmp.getName();
+					if (!ftmpName.equals(rs)) {
+						String archiveName = ftmpName.replace("_sqlite", "_archive");
+						File renameFile = new File(path, archiveName);
+						ftmp.renameTo(renameFile);
+					}
+				}
+			}
 		}
-		return rs;
+		Optional<File> rsOF = Optional.ofNullable(rsFile);
+		return rsOF;
 	}
 
 	// 执行更新脚本
