@@ -91,10 +91,6 @@ public class MyAutoComplete implements AutoComplete {
 		keyWords.add(TablePo.noDbObj("TIME (CURRENT TIMESTAMP)  "));
 		keyWords.add(TablePo.noDbObj("DATE('2000-01-01 00.00.59')  "));
 		keyWords.add(TablePo.noDbObj("SYSPROC.ADMIN_CMD ( ' REORG TABLE DB2INST1.MY_TABLE' );  "));
-//		
-//		
-		//
-//		
 
 		keyWords.add(TablePo.noDbObj("ROUND(3.14555,4)   -- ==  3.14560  \n"));
 		keyWords.add(TablePo.noDbObj("CAST( ROUND(3.14555,4) as numeric(20,4) ) -- == 3.1456 \n"));
@@ -120,18 +116,15 @@ public class MyAutoComplete implements AutoComplete {
 		treeView.setOnMouseClicked(e -> {
 			var it = treeView.getSelectionModel().getSelectedItem();
 			String selectVal = it.getValue().getTableName();
-//			System.out.println(selectVal);
 			codeAreaReplaceString(selectVal, it.getValue());
 			pop.hide();
 		});
 
 		// 回车的时候
 		treeView.setOnKeyPressed(e -> {
-//			System.out.println(e.getCode());
 			if (KeyCode.ENTER.equals(e.getCode())) {
 				var it = treeView.getSelectionModel().getSelectedItem();
 				String selectVal = it.getValue().getTableName();
-//				System.out.println(selectVal);
 				codeAreaReplaceString(selectVal, it.getValue());
 				pop.hide();
 			} else if (KeyCode.ESCAPE.equals(e.getCode())) {
@@ -239,7 +232,6 @@ public class MyAutoComplete implements AutoComplete {
 
 	@Override
 	public Integer getMyTabId() {
-//		SqluckyTab tb = SqluckyEditorUtils.currentMyTab();
 		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
 		if (sheet != null) {
 			var scpo = sheet.getDocumentPo();
@@ -296,9 +288,6 @@ public class MyAutoComplete implements AutoComplete {
 	// 缓存页面单词
 	@Override
 	public void cacheTextWord() {
-//		var mtb = SqluckyEditorUtils.currentMyTab();
-//		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
-//		String text = mtb.getSqlCodeArea().getCodeArea().getText();
 		String text = MyEditorSheetHelper.getActivationEditorText();
 		Consumer<String> caller = x -> {
 			Integer id = getMyTabId();
