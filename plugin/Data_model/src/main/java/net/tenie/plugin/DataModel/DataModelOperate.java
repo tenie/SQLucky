@@ -7,12 +7,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jfoenix.controls.JFXButton;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -50,13 +55,14 @@ import net.tenie.plugin.DataModel.tools.DataModelUtility;
  *
  */
 public class DataModelOperate {
+
+	private static Logger logger = LogManager.getLogger(DataModelOperate.class);
 	private VBox optionVbox = new VBox();
 	private HBox filterHbox = new HBox();
 	private HBox btnHbox = new HBox();
 	private TextField txt = new TextField();
 	private JFXButton queryBtn = new JFXButton();
 	private JFXButton queryExecBtn = new JFXButton();
-//	private JFXButton addBtn = new JFXButton();
 	private MenuItem importFile = new MenuItem();
 	private MenuItem Generate = new MenuItem();
 
@@ -94,23 +100,10 @@ public class DataModelOperate {
 		queryExecBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
 		queryExecBtn.setTooltip(CommonUtils.instanceTooltip("Search table & field info "));
 		queryExecBtn.setOnMouseClicked(e -> {
-			String txtVal = txt.getText();
-			if (StrUtils.isNotNullOrEmpty(txtVal)) {
-				SdkComponent.addWaitingPane(-1);
-				try {
-					exeQueryTable(txtVal);
-					// 查询字段
-					exeQueryTableFields(txtVal);
-				} finally {
-					SdkComponent.rmWaitingPane();
-				}
-
-			} else {
-				txt.requestFocus();
-			}
-
+			queryAction();
 		});
 		// 查询文本输入框
+		txt.setPrefWidth(230);
 		txt.getStyleClass().add("myTextField");
 		// 文本输入监听
 		txt.textProperty().addListener((o, oldStr, newStr) -> {
@@ -119,12 +112,16 @@ public class DataModelOperate {
 				for (var md : DataModelTabTree.treeRoot.getChildren()) {
 					// 通过名称从缓存中获取表集合
 					var tbs = rootMap.get(md.getValue().getName());
-//					System.out.println("tbs = " + tbs.size());
 					// 情况表集合
 					md.getChildren().clear();
 					// 恢复之前缓存的所有表
 					md.getChildren().addAll(tbs);
+					// 展开模型treeItem
+					md.setExpanded(true);
 				}
+			} else {
+				delayQuery(v -> queryAction(), 800, txt.getText());
+
 			}
 		});
 		// 回车后触发查询按钮
@@ -163,6 +160,59 @@ public class DataModelOperate {
 		btnHbox.getChildren().addAll(queryBtn, menuButton, delBtn);
 		filterHbox.getChildren().addAll(queryExecBtn, txtAP);
 		optionVbox.getChildren().addAll(btnHbox);
+	}
+
+	// 获取输入框内容, 进行查询
+	private void queryAction() {
+		String txtVal = txt.getText();
+		Platform.runLater(() -> {
+			if (StrUtils.isNotNullOrEmpty(txtVal)) {
+				SdkComponent.addWaitingPane(-1);
+				try {
+					exeQueryTable(txtVal);
+					// 查询字段
+					exeQueryTableFields(txtVal);
+				} finally {
+					SdkComponent.rmWaitingPane();
+				}
+
+			} else {
+				txt.requestFocus();
+			}
+
+		});
+	}
+
+	private ArrayBlockingQueue<Consumer<String>> queue = new ArrayBlockingQueue<>(1);
+
+	// 延迟执行函数
+	public void delayQuery(Consumer<String> caller, int milliseconds, String val) {
+		if (queue.isEmpty()) {
+			queue.offer(caller); // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
+
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+
+					try {
+						Thread.sleep(milliseconds);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					var cl = queue.poll(); // 从队列取出一个元素
+					if (cl != null) {
+						cl.accept(val);
+					}
+				}
+			};
+			t.start();
+
+		} else {
+			logger.debug("delay  Query Thread");
+			return;
+
+		}
+
 	}
 
 	// 通过字符串， 查询字段表
@@ -248,6 +298,7 @@ public class DataModelOperate {
 		}
 	}
 
+	// 查询表
 	private void exeQueryTable(String queryStr) {
 		if (rootMap.isEmpty()) {
 			for (var md : DataModelTabTree.treeRoot.getChildren()) {
@@ -275,7 +326,6 @@ public class DataModelOperate {
 
 			// 通过名称从缓存中获取表集合
 			var tbs = rootMap.get(md.getValue().getName());
-//			System.out.println("tbs = " + tbs.size());
 			// 情况表集合
 			md.getChildren().clear();
 			// 恢复之前缓存的所有表
@@ -331,6 +381,9 @@ public class DataModelOperate {
 					model.getChildren().clear();
 					// 加入新的表集合
 					model.getChildren().addAll(filterTable);
+				} else { // 没找到
+					// 清空原来的表集合
+					model.getChildren().clear();
 				}
 				if (model.getChildren().size() > 0) {
 					model.setExpanded(exists);
@@ -363,12 +416,6 @@ public class DataModelOperate {
 			String val = FileUtils.readFileToString(f, encode);
 			if (val != null && !"".equals(val)) {
 				DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
-//				System.out.println(DataModelPoVal);
-//				System.out.println("======================");
-//				System.out.println(DataModelPoVal.getEntities().get(0)); 
-//				AddModelFile.insertDataModel(DataModelPoVal);
-//				PoDao.insert(null, null);
-
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

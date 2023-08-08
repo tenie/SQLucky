@@ -58,7 +58,7 @@ public class DBinfoTreeFilter {
 			txt.requestFocus();
 		});
 
-		txt.setPrefWidth(200);
+		txt.setPrefWidth(230);
 		txt.setPrefHeight(25);
 		txt.setMaxHeight(25);
 		txt.getStyleClass().add("myTextField");
