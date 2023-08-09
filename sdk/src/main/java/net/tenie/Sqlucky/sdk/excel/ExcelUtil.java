@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.openxml4j.opc.PackageAccess;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -42,7 +45,13 @@ public class ExcelUtil {
 		if (file.getName().endsWith(EXCEL_XLS)) { // Excel&nbsp;2003
 			wb = new HSSFWorkbook(in);
 		} else if (file.getName().endsWith(EXCEL_XLSX)) { // Excel 2007/2010
-			wb = new XSSFWorkbook(in);
+//			wb = new XSSFWorkbook(in);
+			try {
+				wb = new XSSFWorkbook(OPCPackage.open(file, PackageAccess.READ));
+			} catch (InvalidFormatException | IOException e) {
+				e.printStackTrace();
+			}
+
 		}
 		return wb;
 	}

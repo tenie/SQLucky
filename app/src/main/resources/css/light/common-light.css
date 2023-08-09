@@ -135,6 +135,15 @@ MenuButton {
 	-fx-background-color: transparent;
 }
 
+
+.window-close-btn:hover {
+	-fx-background-color: red;
+}
+/* */
+.window-other-btn:hover {
+	-fx-background-color: #e5e5e5;
+	-fx-text-fill: #c7c5c7; 
+} 
 /* 顶部 菜单按钮 */
 .menu:hover {
 	-fx-background-color: #F4F4F4;

@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
 
 /**
- 
+ * 
  * @author tenie
  *
  */
@@ -22,7 +22,7 @@ public class DeleteDao {
 		String msg = "";
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		try { 
+		try {
 			String condition = DaoTools.conditionStr(mval);
 
 			// 校验 更新sql 会更1条以上, 如果查到一天以上给予提示确认!
@@ -37,7 +37,7 @@ public class DeleteDao {
 				int val = rs.getInt(1);
 				logger.info("select count = " + val);
 				if (val > 1) {
-					tf = ModalDialog.Confirmation("Finded " + val + " line data , Are you sure continue delete  ?");
+					tf = DialogTools.Confirmation("Finded " + val + " line data , Are you sure continue delete  ?");
 				} else if (val == 0) {
 					tf = false; // 没有更新数据
 				}
@@ -56,7 +56,7 @@ public class DeleteDao {
 			// 更新
 			int i = pstmt.executeUpdate();
 			logger.info("executeDelete = " + i);
-			msg = "Ok, Delete " + i + " ;\n" +sql + " ;\n"+valStr;
+			msg = "Ok, Delete " + i + " ;\n" + sql + " ;\n" + valStr;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw e;
@@ -69,11 +69,12 @@ public class DeleteDao {
 
 		return msg;
 	}
-	public static void dropColumn(Connection conn , String table, String col) throws Exception {
+
+	public static void dropColumn(Connection conn, String table, String col) throws Exception {
 		PreparedStatement pstmt = null;
 		try {
 
-			String sql = "ALTER TABLE "+table+" DROP COLUMN   " + col;
+			String sql = "ALTER TABLE " + table + " DROP COLUMN   " + col;
 			pstmt = conn.prepareStatement(sql);
 			pstmt.execute();
 		} catch (SQLException e) {
@@ -84,7 +85,7 @@ public class DeleteDao {
 				pstmt.close();
 		}
 	}
-	
+
 	public static void execUpdate2(Connection conn) throws Exception {
 		PreparedStatement pstmt = null;
 		try {

@@ -145,7 +145,7 @@ GridPane {
 	-fx-fill: white;
 }
 
-.myAlert   Button {
+.myAlert  Button {
 	-fx-background-color: #365880;
 	-fx-text-fill: white;
 	-fx-border-color: #4C708C;
@@ -267,6 +267,14 @@ FlowPane TextField {
 .button:hover {
 	-fx-background-color: #323232;
 }
+.window-close-btn:hover {
+	-fx-background-color: red;
+}
+.window-other-btn:hover {
+	-fx-background-color: #5e5e5e;
+	-fx-text-fill: #c7c5c7; 
+}
+
 
 /* 右键菜单  */
 .context-menu {

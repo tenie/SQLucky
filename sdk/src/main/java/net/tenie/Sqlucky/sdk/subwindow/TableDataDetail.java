@@ -17,6 +17,7 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
@@ -25,6 +26,7 @@ import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   
@@ -41,7 +43,11 @@ public class TableDataDetail {
 			return;
 //		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 		ResultSetRowPo selectedItem = tb.getSelectionModel().getSelectedItem();
-
+		Stage stage = selectedItem.getShowRowDataStage();
+		if (stage != null) {
+			stage.requestFocus();
+			return;
+		}
 		SheetDataValue dvt = mtd.getTableData();
 		String tabName = dvt.getTabName();
 		ObservableList<SheetFieldPo> fields = dvt.getColss();
@@ -75,7 +81,11 @@ public class TableDataDetail {
 				p.setValue(strp);
 			}
 		}
-		showTableDetail(tabName, "Field Name", fieldValue, fields);
+		stage = showTableDetail(tabName, "Field Name", fieldValue, fields);
+		stage.setOnCloseRequest(e -> {
+			selectedItem.setShowRowDataStage(null);
+		});
+		selectedItem.setShowRowDataStage(stage);
 	}
 
 	/**
@@ -86,7 +96,7 @@ public class TableDataDetail {
 	 * @param colName2
 	 * @param fields
 	 */
-	public static void showTableDetail(String tableName, String colName1, String colName2,
+	public static Stage showTableDetail(String tableName, String colName1, String colName2,
 			ObservableList<SheetFieldPo> fields) {
 		FlowPane fp = new FlowPane();
 
@@ -188,7 +198,13 @@ public class TableDataDetail {
 
 		});
 
-		new ModalDialog(subvb, tv, tableName);
+//		new ModalDialog(subvb, tv, tableName);
+		SqluckyStage sqlstage = new SqluckyStage(subvb, tableName);
+		Stage stage = sqlstage.getStage();
+		stage.show();
+		tv.getSelectionModel().select(0);
+//		stage.setTitle(tableName);
+		return stage;
 	}
 
 	/**
