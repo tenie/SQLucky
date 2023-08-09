@@ -13,10 +13,10 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.KeyBindingCache;
+import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
 import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportSQLWindow;
-import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -415,7 +415,7 @@ public class MenuBarContainer {
 		MenuItem about = new MenuItem(StrUtils.MenuItemNameFormat("About"));
 		about.setGraphic(IconGenerator.svgImageDefActive("info-circle"));
 		about.setOnAction(value -> {
-			ModalDialog.showAbout();
+			DialogTools.showAbout();
 		});
 
 		MenuItem SignInMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign In"));

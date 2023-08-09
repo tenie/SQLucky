@@ -11,7 +11,8 @@ import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.RsVal;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
-import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
+//import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
@@ -41,7 +42,7 @@ public class DataTableContextMenuAction {
 			RsVal rv = CommonAction.exportSQL(myBottomSheet, CommonAction.ALTER_COLUMN, str);
 			CommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
 		};
-		ModalDialog.showExecWindow("Alter " + colname + " Date Type: input words like 'CHAR(10) ", "", caller);
+		DialogTools.showExecWindow("Alter " + colname + " Date Type: input words like 'CHAR(10) ", "", caller);
 
 	}
 
@@ -55,7 +56,7 @@ public class DataTableContextMenuAction {
 			String strsql = sql + x;
 			CommonAction.execExportSql(strsql, rv.conn, rv.dbconnPo);
 		};
-		ModalDialog.showExecWindow("Execute : " + sql + " ? : input your value", "", caller);
+		DialogTools.showExecWindow("Execute : " + sql + " ? : input your value", "", caller);
 
 	}
 
@@ -67,7 +68,7 @@ public class DataTableContextMenuAction {
 				return;
 			updateAllColumn(myBottomSheet, colIdx, x);
 		};
-		ModalDialog.showExecWindow(
+		DialogTools.showExecWindow(
 				"Execute : Update Current " + rv.tableName + " Column :" + colname + " data ? : input your value", "",
 				caller);
 	}
@@ -80,7 +81,7 @@ public class DataTableContextMenuAction {
 				return;
 			updateSelectedDataColumn(myBottomSheet, colIdx, x);
 		};
-		ModalDialog.showExecWindow(
+		DialogTools.showExecWindow(
 				"Execute : Update Selected " + rv.tableName + " Column :" + colname + " data ? : input your value", "",
 				caller);
 

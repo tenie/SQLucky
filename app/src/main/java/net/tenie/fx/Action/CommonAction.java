@@ -33,7 +33,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.RsVal;
-import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
@@ -810,7 +810,7 @@ public class CommonAction {
 			RsVal rv2 = exportSQL(myBottomSheet, ADD_COLUMN, x);
 			CommonAction.execExportSql(rv2.sql, rv2.conn, rv.dbconnPo);
 		};
-		ModalDialog.showExecWindow(rv.tableName + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
+		DialogTools.showExecWindow(rv.tableName + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
 
 	}
 
@@ -825,7 +825,7 @@ public class CommonAction {
 			String sql = dbc.getExportDDL().exportAlterTableAddColumn(conn, schema, tablename, colname);
 			CommonAction.execExportSql(sql, conn, dbc);
 		};
-		ModalDialog.showExecWindow(tablename + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
+		DialogTools.showExecWindow(tablename + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
 
 	}
 

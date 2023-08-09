@@ -187,6 +187,7 @@ GridPane {
 	-fx-fill: white;
 }
 
+
 /*箭头颜色(菜单按钮的进入子菜单有一个箭头图标)*/
 .arrow {
 	-fx-background-color: #ffffff;
@@ -312,6 +313,13 @@ FlowPane TextField {
 	-fx-background-color: #323232;
 }
 
+.window-close-btn:hover {
+	-fx-background-color: red;
+}
+.window-other-btn:hover {
+	-fx-background-color: #5e5e5e;
+	-fx-text-fill: #c7c5c7; 
+}
 /* 右键菜单  */
 .context-menu {
 	-fx-background-color: #292929;

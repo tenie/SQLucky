@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 
 /**
@@ -26,6 +27,8 @@ public class ResultSetRowPo {
 
 	// 当前行所在的位置(可以理解为下标)
 	private int rowIndex = -1;
+// 显示行数据的时候, 将子窗口缓存, 避免反复创建
+	private Stage showRowDataStage;
 
 	public void clean() {
 		if (resultSet != null) {
@@ -40,6 +43,7 @@ public class ResultSetRowPo {
 		}
 
 		hasModify = null;
+		showRowDataStage = null;
 	}
 
 	protected ResultSetRowPo(ResultSetPo rs) {
@@ -170,6 +174,14 @@ public class ResultSetRowPo {
 
 	public void setIsNewAdd(Boolean isNewAdd) {
 		this.isNewAdd = isNewAdd;
+	}
+
+	public Stage getShowRowDataStage() {
+		return showRowDataStage;
+	}
+
+	public void setShowRowDataStage(Stage showRowDataStage) {
+		this.showRowDataStage = showRowDataStage;
 	}
 
 	@Override

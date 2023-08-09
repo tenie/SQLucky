@@ -550,9 +550,8 @@ public class HighLightingEditor implements SqluckyEditor {
 		String str = codeArea.getText(start, end);// codeArea.getSelectedText();
 		String trimStr = str.trim();
 		int strSz = trimStr.length();
-//			logger.info("单击选中 |"+ trimStr+"|" );
 		if (strSz > 0) {
-			logger.info("鼠标单击找到括号对, 标记一下 |" + trimStr + "|");
+//			logger.info("鼠标单击找到括号对, 标记一下 |" + trimStr + "|");
 
 			Set<String> keys = charMap.keySet();
 

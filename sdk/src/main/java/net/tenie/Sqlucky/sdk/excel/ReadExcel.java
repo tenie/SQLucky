@@ -13,6 +13,11 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.openxml4j.exceptions.InvalidOperationException;
+import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.openxml4j.opc.PackageAccess;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -234,10 +239,58 @@ public class ReadExcel {
 	 * Read the Excel 2010
 	 * 
 	 */
+
 	public static List<ExcelHeadCellInfo> readXlsxHeadInfo(String path) throws IOException {
+
+//		InputStream is = new FileInputStream(path);
+//		XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
+		List<ExcelHeadCellInfo> innerlist = new ArrayList<>();
+		try (Workbook wb = new XSSFWorkbook(OPCPackage.open(path, PackageAccess.READ))) {
+			// Read the Sheet
+			Sheet xssfSheet = wb.getSheetAt(0);
+			if (xssfSheet == null) {
+				return null;
+			}
+			// 读取行数
+			int lastRowNum = xssfSheet.getLastRowNum();
+			logger.debug("lastRowNum =" + lastRowNum);
+
+			Row xssfRow = xssfSheet.getRow(xssfSheet.getFirstRowNum());
+			if (xssfRow != null) {
+				for (int j = 0; j < xssfRow.getLastCellNum(); j++) {
+					Cell cell = xssfRow.getCell(j);
+					if (cell != null) {
+
+						String cellStr = cell.toString();
+						CellAddress address = cell.getAddress();
+
+						ExcelHeadCellInfo headInfo = new ExcelHeadCellInfo();
+						headInfo.setCellAddress(address.toString());
+						headInfo.setCellIdx(j);
+						headInfo.setCellVal(cellStr);
+
+						innerlist.add(headInfo);
+
+					} else {
+						innerlist.add(new ExcelHeadCellInfo());
+					}
+				}
+
+			}
+		} catch (InvalidOperationException | InvalidFormatException e) {
+			e.printStackTrace();
+		}
+
+		return innerlist;
+	}
+
+	public static List<ExcelHeadCellInfo> readXlsxHeadInfo2(String path) throws IOException {
 
 		InputStream is = new FileInputStream(path);
 		XSSFWorkbook xssfWorkbook = new XSSFWorkbook(is);
+//		  try (Workbook wb = new XSSFWorkbook(OPCPackage.open(FILE, PackageAccess.READ))) {
+//			  
+//		  }
 		List<ExcelHeadCellInfo> innerlist = new ArrayList<>();
 		// Read the Sheet
 		XSSFSheet xssfSheet = xssfWorkbook.getSheetAt(0);

@@ -33,7 +33,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
+import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
@@ -370,7 +370,7 @@ public class DataModelUtility {
 			}
 
 		};
-		ModalDialog.showExecWindow("New name ", "", caller);
+		DialogTools.showExecWindow("New name ", "", caller);
 	}
 
 	public static void closeModel() {
