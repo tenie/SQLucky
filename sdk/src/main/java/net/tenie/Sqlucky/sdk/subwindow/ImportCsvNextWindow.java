@@ -73,6 +73,8 @@ public class ImportCsvNextWindow {
 	private ObservableList<ImportFieldPo> csvFields;
 	private SqluckyConnector sqluckyConn;
 	private String splitSymbol = "";
+	// 过滤输入框
+	TextField filterField = new TextField();
 
 	public void showWindow(SqluckyConnector dbc, String tableNameVal, String csvFilePath, Stage parentStage,
 			String sSymbol) {
@@ -249,12 +251,9 @@ public class ImportCsvNextWindow {
 		topfp.setPadding(new Insets(5));
 		Label lb = new Label();
 		lb.setGraphic(IconGenerator.svgImageDefActive("search"));
-		TextField filterField = new TextField();
 
 		filterField.getStyleClass().add("myTextField");
-		topfp.getChildren().add(lb);
 		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
-		topfp.getChildren().add(filterField);
 		topfp.setMinHeight(35);
 		topfp.prefHeight(35);
 		filterField.setPrefWidth(200);
@@ -268,6 +267,8 @@ public class ImportCsvNextWindow {
 
 		});
 
+		var textFieldPane = UiTools.textFieldAddCleanBtn(filterField);
+
 		// 清空列的值
 		Button cleanBtn = new Button("清空列值");
 		cleanBtn.setPadding(new Insets(5));
@@ -278,6 +279,8 @@ public class ImportCsvNextWindow {
 			}
 		});
 
+		topfp.getChildren().add(lb);
+		topfp.getChildren().add(textFieldPane);
 		topfp.getChildren().add(cleanBtn);
 
 		FlowPane.setMargin(cleanBtn, new Insets(0, 10, 0, 5));
@@ -455,13 +458,15 @@ public class ImportCsvNextWindow {
 
 		vb.getChildren().add(bottomPane);
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+//		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {
-			stage.close();
+//			stage.close();
+			filterField.clear();
 		});
-		scene.getAccelerators().put(spacebtn, () -> {
-			stage.close();
-		});
+
+//		scene.getAccelerators().put(spacebtn, () -> {
+//			stage.close();
+//		});
 
 		stage.setTitle(title);
 		CommonUtils.loadCss(scene);

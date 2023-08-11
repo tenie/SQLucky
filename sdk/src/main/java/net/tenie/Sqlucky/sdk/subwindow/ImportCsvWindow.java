@@ -293,13 +293,13 @@ public class ImportCsvWindow {
 
 		vb.getChildren().add(bottomPane);
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+//		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {
 			stage.close();
 		});
-		scene.getAccelerators().put(spacebtn, () -> {
-			stage.close();
-		});
+//		scene.getAccelerators().put(spacebtn, () -> {
+//			stage.close();
+//		});
 
 		CommonUtils.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);

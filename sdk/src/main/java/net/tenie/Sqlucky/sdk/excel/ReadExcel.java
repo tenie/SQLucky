@@ -238,6 +238,7 @@ public class ReadExcel {
 	/**
 	 * Read the Excel 2010
 	 * 
+	 * 
 	 */
 
 	public static List<ExcelHeadCellInfo> readXlsxHeadInfo(String path) throws IOException {
@@ -252,9 +253,9 @@ public class ReadExcel {
 				return null;
 			}
 			// 读取行数
-			int lastRowNum = xssfSheet.getLastRowNum();
-			logger.debug("lastRowNum =" + lastRowNum);
-
+//			int lastRowNum = xssfSheet.getLastRowNum();
+//			logger.debug("lastRowNum =" + lastRowNum);
+			// 第一行
 			Row xssfRow = xssfSheet.getRow(xssfSheet.getFirstRowNum());
 			if (xssfRow != null) {
 				for (int j = 0; j < xssfRow.getLastCellNum(); j++) {
@@ -308,6 +309,43 @@ public class ReadExcel {
 				if (cell != null) {
 
 					String cellStr = cell.toString();
+					CellAddress address = cell.getAddress();
+
+					ExcelHeadCellInfo headInfo = new ExcelHeadCellInfo();
+					headInfo.setCellAddress(address.toString());
+					headInfo.setCellIdx(j);
+					headInfo.setCellVal(cellStr);
+
+					innerlist.add(headInfo);
+
+				} else {
+					innerlist.add(new ExcelHeadCellInfo());
+				}
+			}
+
+		}
+		return innerlist;
+	}
+
+	public static List<ExcelHeadCellInfo> readHeadInfo(Workbook workbook) throws IOException {
+		List<ExcelHeadCellInfo> innerlist = new ArrayList<>();
+		// Read the Sheet
+		Sheet sheet = workbook.getSheetAt(0);
+		if (sheet == null) {
+			return null;
+		}
+		// 读取行数
+		int lastRowNum = sheet.getLastRowNum();
+		logger.debug("lastRowNum =" + lastRowNum);
+
+		Row row = sheet.getRow(sheet.getFirstRowNum());
+		if (row != null) {
+			for (int j = 0; j < row.getLastCellNum(); j++) {
+				Cell cell = row.getCell(j);
+				if (cell != null) {
+
+					String cellStr = cell.toString();
+//					String cellStr = cell.getStringCellValue();
 					CellAddress address = cell.getAddress();
 
 					ExcelHeadCellInfo headInfo = new ExcelHeadCellInfo();

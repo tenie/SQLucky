@@ -1,11 +1,13 @@
 package net.tenie.Sqlucky.sdk.subwindow;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.controlsfx.control.tableview2.cell.ComboBox2TableCell;
 
 import com.jfoenix.controls.JFXCheckBox;
@@ -42,6 +44,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
 import net.tenie.Sqlucky.sdk.excel.ExcelToDB;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
+import net.tenie.Sqlucky.sdk.excel.ReadExcel;
 import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -72,6 +75,9 @@ public class ImportExcelNextWindow {
 	private String tableName;
 	private ObservableList<ImportFieldPo> excelFields;
 	private SqluckyConnector sqluckyConn;
+	private Workbook workbook;
+	// 过滤输入框
+	TextField filterField = new TextField();
 
 	public void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath, Stage parentStage) {
 
@@ -131,26 +137,34 @@ public class ImportExcelNextWindow {
 	 * @return
 	 */
 	private String[] excelHeadArray(String excelFile, ObservableList<ImportFieldPo> fields) {
-		List<ExcelHeadCellInfo> row1 = ExcelUtil.readExcelFileHead(excelFile);
 
-		if (row1 != null) {
+		try {
+			workbook = ExcelUtil.readFileToWorkbok(excelFile);
+			if (workbook == null)
+				return new String[0];
+			List<ExcelHeadCellInfo> row1 = ReadExcel.readHeadInfo(workbook);
 
-			String[] headArr = new String[row1.size()];
-			List<String> selectVal = new ArrayList<>();
-			for (int i = 0; i < row1.size(); i++) {
-				ExcelHeadCellInfo cell = row1.get(i);
-				String val = (cell.getCellIdx() + 1) + " - " + cell.getCellAddress() + " - " + cell.getCellVal();
-				headArr[i] = val;
-				selectVal.add(val);
+			if (row1 != null) {
+
+				String[] headArr = new String[row1.size()];
+				List<String> selectVal = new ArrayList<>();
+				for (int i = 0; i < row1.size(); i++) {
+					ExcelHeadCellInfo cell = row1.get(i);
+					String val = (cell.getCellIdx() + 1) + " - " + cell.getCellAddress() + " - " + cell.getCellVal();
+					headArr[i] = val;
+					selectVal.add(val);
+				}
+
+				for (int j = 0; (j < selectVal.size()) && (j < fields.size()); j++) {
+					var tmp = fields.get(j);
+					tmp.setExcelRowInfo(selectVal);
+					tmp.getExcelRowVal().set(selectVal.get(j));
+				}
+
+				return headArr;
 			}
-
-			for (int j = 0; (j < selectVal.size()) && (j < fields.size()); j++) {
-				var tmp = fields.get(j);
-				tmp.setExcelRowInfo(selectVal);
-				tmp.getExcelRowVal().set(selectVal.get(j));
-			}
-
-			return headArr;
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 
 		return new String[0];
@@ -182,12 +196,9 @@ public class ImportExcelNextWindow {
 		topfp.setPadding(new Insets(5));
 		Label lb = new Label();
 		lb.setGraphic(IconGenerator.svgImageDefActive("search"));
-		TextField filterField = new TextField();
 
 		filterField.getStyleClass().add("myTextField");
-		topfp.getChildren().add(lb);
 		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
-		topfp.getChildren().add(filterField);
 		topfp.setMinHeight(35);
 		topfp.prefHeight(35);
 		filterField.setPrefWidth(200);
@@ -200,6 +211,7 @@ public class ImportExcelNextWindow {
 			}
 
 		});
+		var textFieldPane = UiTools.textFieldAddCleanBtn(filterField);
 
 		// 清空列的值
 		Button cleanBtn = new Button("清空列值");
@@ -211,6 +223,8 @@ public class ImportExcelNextWindow {
 			}
 		});
 
+		topfp.getChildren().add(lb);
+		topfp.getChildren().add(textFieldPane); // filterField
 		topfp.getChildren().add(cleanBtn);
 		FlowPane.setMargin(cleanBtn, new Insets(0, 10, 0, 5));
 		return topfp;
@@ -421,8 +435,10 @@ public class ImportExcelNextWindow {
 						sheetNo = Integer.valueOf(sheetNoStr);
 					}
 
-					ExcelToDB.toTable(sqluckyConn, tableName, excelFile, tfFilePath.getText(), vals, sheetNo,
-							tmpBeginval, tmpCountval, onlySave.isSelected(), saveSqlCheckBox.isSelected());
+					ExcelToDB.toTable(sqluckyConn, tableName, workbook,
+//							excelFile,
+							tfFilePath.getText(), vals, sheetNo, tmpBeginval, tmpCountval, onlySave.isSelected(),
+							saveSqlCheckBox.isSelected());
 					MyAlert.infoAlert("导入成功!");
 				} catch (Exception e1) {
 					MyAlert.showTextArea("Error", "导入失败 ! \n" + e1.getMessage());
@@ -457,13 +473,14 @@ public class ImportExcelNextWindow {
 
 		vb.getChildren().add(bottomPane);
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+//		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {
-			stage.close();
+			filterField.clear();
+//			stage.close();
 		});
-		scene.getAccelerators().put(spacebtn, () -> {
-			stage.close();
-		});
+//		scene.getAccelerators().put(spacebtn, () -> {
+//			stage.close();
+//		});
 
 		stage.setTitle(title);
 		CommonUtils.loadCss(scene);
@@ -472,6 +489,17 @@ public class ImportExcelNextWindow {
 
 		stage.setMaximized(false);
 		stage.setResizable(false);
+		stage.setOnCloseRequest(e -> {
+			if (workbook != null) {
+				try {
+					workbook.close();
+					workbook = null;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+
+		});
 		return stage;
 	}
 
