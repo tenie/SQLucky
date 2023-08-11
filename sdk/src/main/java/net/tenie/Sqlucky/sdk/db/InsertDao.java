@@ -178,7 +178,7 @@ public class InsertDao {
 					int javatype = fieldpo.getColumnType().get();
 					String columnTypeName = fieldpo.getColumnTypeName().get();
 //					logger.info("javatype = " + javatype + " | " + columnTypeName);
-					logString += "javatype = " + javatype + " | " + columnTypeName;
+//					logString += "javatype = " + javatype + " | " + columnTypeName;
 					valLog += " | " + val;
 					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
 						String tmp = fieldpo.getFixedValue().get();
@@ -245,6 +245,8 @@ public class InsertDao {
 		String valLog = "";
 		String logString = "";
 		File saveSqlFile = new File(saveSqlfileStr);
+
+		List<String> inSqls = new ArrayList<>();
 		try {
 
 			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
@@ -264,7 +266,7 @@ public class InsertDao {
 
 			Statement sm = conn.createStatement();
 			insertLog = insert;
-			List<String> inSqls = new ArrayList<>();
+			inSqls = new ArrayList<>();
 
 			for (List<String> fieldsValue : rowVals) {
 				String insertValue = "";
@@ -275,10 +277,11 @@ public class InsertDao {
 						val = "";
 					}
 					int javatype = fieldpo.getColumnType().get();
-					String columnTypeName = fieldpo.getColumnTypeName().get();
+//					String columnTypeName = fieldpo.getColumnTypeName().get();
 //					logger.info("javatype = " + javatype + " | " + columnTypeName);
-					logString += "javatype = " + javatype + " | " + columnTypeName;
+//					logString += "javatype = " + javatype + " | " + columnTypeName;
 					valLog += " | " + val;
+					// 先判断是不是固定值, 比如使用了序列, 默认值之类的, 因为输入的固定值可以直接作为sql一部分不需要多余操作
 					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
 						String tmp = fieldpo.getFixedValue().get();
 						insertValue += tmp;
@@ -305,8 +308,9 @@ public class InsertDao {
 							insertValue += "null";
 						}
 
-					} else {
-						insertValue += "'" + val + "'";
+					} else {// 字符串
+						String tmpVal = transferredSingleQuotation(val);
+						insertValue += "'" + tmpVal + "'";
 					}
 					insertValue += " ,";
 
@@ -349,7 +353,9 @@ public class InsertDao {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new Exception(e.getMessage() + " : excel Value = " + valLog + " ;\n sql = " + insertLog);
+
+			writeSqlFile(saveSqlfileStr, saveSqlFile, inSqls);
+			throw new Exception(e.getMessage() + inSqls);
 		}
 		return msg;
 	}
@@ -360,6 +366,41 @@ public class InsertDao {
 		}
 	}
 
+	/**
+	 * 将文本字符串中的单引号转换成可以在sql中使用的字符串('转义为'')
+	 * 
+	 * @param val
+	 * @return
+	 */
+	public static String transferredSingleQuotation(String val) {
+		String str = val;
+		if (val.indexOf("'") > -1) {
+			str = val.replaceAll("'", "''");
+		}
+		return str;
+	}
+
+	// sql 字符串中的单引号转移为 ''
+	public static String sqlStrTransferredSingleQuotation(String val) {
+		String str = val;
+		int lastIndex = str.lastIndexOf("'");
+		str = str.substring(1, lastIndex);
+
+		if (str.indexOf("'") > -1) {
+			str = str.replaceAll("'", "''");
+		}
+		str = "'" + str + "'";
+		return str;
+	}
+
+	public static void main(String[] args) {
+		String val = sqlStrTransferredSingleQuotation("'1234'5'67'");
+		System.out.println(val);
+		val = transferredSingleQuotation("123'4'56");
+		System.out.println(val);
+	}
+
+	// 将字符串值转为可以拼接到sql中的字符串
 	public static String stringToDBString(String val) {
 		String rsVal = "";
 		if ((val.startsWith("'") && val.endsWith("'"))) {
@@ -433,8 +474,8 @@ public class InsertDao {
 						val = val.trim();
 					}
 					int javatype = fieldpo.getColumnType().get();
-					String columnTypeName = fieldpo.getColumnTypeName().get();
-					logger.info("javatype = " + javatype + " | " + columnTypeName);
+//					String columnTypeName = fieldpo.getColumnTypeName().get();
+//					logger.info("javatype = " + javatype + " | " + columnTypeName);
 					valLog += " | " + val;
 					// 固定值
 					if (StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue().get())) {
@@ -447,7 +488,7 @@ public class InsertDao {
 						if (StrUtils.isNullOrEmpty(val.trim())) {
 							insertValue += "NULL";
 						} else {
-							val = trimQuotation(val);
+							val = trimQuotation(val); // 去除引号
 							String tmpval = val.toUpperCase();
 							if ("NULL".equals(tmpval)) {
 								insertValue += "NULL";
@@ -475,7 +516,9 @@ public class InsertDao {
 						if ("NULL".equals(val.toUpperCase())) {
 							insertValue += "NUll";
 						} else {
-							insertValue += stringToDBString(val);
+							String valtmp = stringToDBString(val);
+							valtmp = sqlStrTransferredSingleQuotation(valtmp);
+							insertValue += valtmp; // stringToDBString(val);
 						}
 					}
 					insertValue += " ,";

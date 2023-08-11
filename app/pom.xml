@@ -143,10 +143,10 @@
 			<artifactId>SQLucky-Connector-Postgresql</artifactId>
 		</dependency>
 		
-		<!-- <dependency>
+		  <dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Plugin-Code-Generation</artifactId>
-		</dependency> -->
+		</dependency> 
 		
 		<dependency>
 			<groupId>org.apache.commons</groupId>

@@ -325,7 +325,7 @@ public class SelectDao {
 				} else {
 					if (CommonUtils.isDateAndDateTime(dbtype)) {
 						Object objtmp = rs.getObject(i + 1);
-						var dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
+						String dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
 						if (dateStr != null) {
 							val = new SimpleStringProperty(dateStr);
 						} else {
