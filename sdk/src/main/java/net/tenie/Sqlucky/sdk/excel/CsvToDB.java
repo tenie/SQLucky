@@ -81,7 +81,7 @@ public class CsvToDB {
 //								cellVals.add(fixVal);
 //							}
 
-							Integer rowIdx = epo.getRowIdx();
+							Integer rowIdx = epo.getFieldIdx();
 							if (rowIdx > -1) {
 								// 下标从0开始, 需要减1
 								String cellStr = record[rowIdx];
