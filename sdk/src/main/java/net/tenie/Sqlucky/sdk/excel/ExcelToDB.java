@@ -87,7 +87,7 @@ public class ExcelToDB {
 					rowVals.add(cellVals);
 
 					for (ImportFieldPo epo : fields) {
-						Integer rowIdx = epo.getRowIdx();
+						Integer rowIdx = epo.getFieldIdx();
 						if (rowIdx > -1) {
 							Cell cell = hssfRow.getCell(rowIdx);
 							CellType ct = cell.getCellType();
@@ -249,7 +249,7 @@ public class ExcelToDB {
 
 						for (ImportFieldPo epo : fields) {
 
-							Integer rowIdx = epo.getRowIdx();
+							Integer rowIdx = epo.getFieldIdx();
 							if (rowIdx > -1) {
 								Cell cell = hssfRow.getCell(rowIdx);
 								CellType ct = cell.getCellType();

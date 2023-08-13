@@ -151,8 +151,8 @@ public class ImportCsvNextWindow {
 
 			for (int j = 0; (j < selectVal.size()) && (j < fields.size()); j++) {
 				var tmp = fields.get(j);
-				tmp.setExcelRowInfo(selectVal);
-				tmp.getExcelRowVal().set(selectVal.get(j));
+				tmp.setExcelFieldInfo(selectVal);
+				tmp.getExcelFieldVal().set(selectVal.get(j));
 			}
 
 			return headArr;
@@ -227,7 +227,7 @@ public class ImportCsvNextWindow {
 		valueCol.setPrefWidth(180);
 
 		String[] headArr = csvHeadArray(csvFile, fields);
-		valueCol.setCellValueFactory(p -> p.getValue().getExcelRowVal());
+		valueCol.setCellValueFactory(p -> p.getValue().getExcelFieldVal());
 		valueCol.setCellFactory(ComboBox2TableCell.forTableColumn(headArr));
 
 		tableView.getColumns().add(valueCol);
@@ -275,7 +275,7 @@ public class ImportCsvNextWindow {
 		cleanBtn.getStyleClass().add("myAlertBtn");
 		cleanBtn.setOnAction(e -> {
 			for (var tmp : fields) {
-				tmp.getExcelRowVal().set("");
+				tmp.getExcelFieldVal().set("");
 			}
 		});
 
@@ -396,13 +396,19 @@ public class ImportCsvNextWindow {
 			List<ImportFieldPo> vals = new ArrayList<>();
 			// 提取有被映射的字段
 			for (ImportFieldPo fieldpo : csvFields) {
-				fieldpo.getExcelRowVal().getValue();
-				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelRowVal())
+				fieldpo.getExcelFieldVal().getValue();
+				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelFieldVal())
 						|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
 					vals.add(fieldpo);
 				}
-
 			}
+			//
+			if (vals.size() == 0) {
+				MyAlert.errorAlert("字段还没有做关联!");
+				return;
+			}
+			// 保存映射
+
 			String beginInt = beginIdTF.getText();
 			String countInt = conuntTF.getText();
 			Integer beginval = null;
@@ -433,6 +439,12 @@ public class ImportCsvNextWindow {
 
 		});
 		return btn;
+	}
+
+	public void saveFieldMap(String tableName, List<ImportFieldPo> vals) {
+//
+//		List<ImportFieldPo> vals = new ArrayList<>();
+
 	}
 
 	public Button cancelBtn() {

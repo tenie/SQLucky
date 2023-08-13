@@ -157,8 +157,8 @@ public class ImportExcelNextWindow {
 
 				for (int j = 0; (j < selectVal.size()) && (j < fields.size()); j++) {
 					var tmp = fields.get(j);
-					tmp.setExcelRowInfo(selectVal);
-					tmp.getExcelRowVal().set(selectVal.get(j));
+					tmp.setExcelFieldInfo(selectVal);
+					tmp.getExcelFieldVal().set(selectVal.get(j));
 				}
 
 				return headArr;
@@ -219,7 +219,7 @@ public class ImportExcelNextWindow {
 		cleanBtn.getStyleClass().add("myAlertBtn");
 		cleanBtn.setOnAction(e -> {
 			for (var tmp : fields) {
-				tmp.getExcelRowVal().set("");
+				tmp.getExcelFieldVal().set("");
 			}
 		});
 
@@ -273,7 +273,7 @@ public class ImportExcelNextWindow {
 		valueCol.setPrefWidth(180);
 
 		String[] headArr = excelHeadArray(excelFile, fields);
-		valueCol.setCellValueFactory(p -> p.getValue().getExcelRowVal());
+		valueCol.setCellValueFactory(p -> p.getValue().getExcelFieldVal());
 		valueCol.setCellFactory(ComboBox2TableCell.forTableColumn(headArr));
 
 		tv.getColumns().add(valueCol);
@@ -404,8 +404,8 @@ public class ImportExcelNextWindow {
 			List<ImportFieldPo> vals = new ArrayList<>();
 			// 提取有被映射的字段
 			for (ImportFieldPo fieldpo : excelFields) {
-				fieldpo.getExcelRowVal().getValue();
-				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelRowVal())
+				fieldpo.getExcelFieldVal().getValue();
+				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelFieldVal())
 						|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
 					vals.add(fieldpo);
 				}
