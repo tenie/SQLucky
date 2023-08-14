@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.subwindow;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +41,15 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.DaoTools;
+import net.tenie.Sqlucky.sdk.db.PoDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
 import net.tenie.Sqlucky.sdk.excel.ExcelToDB;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.excel.ReadExcel;
+import net.tenie.Sqlucky.sdk.po.ImportFieldMapDetailPo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldMapPo;
 import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -76,6 +81,7 @@ public class ImportExcelNextWindow {
 	private ObservableList<ImportFieldPo> excelFields;
 	private SqluckyConnector sqluckyConn;
 	private Workbook workbook;
+	List<String> selectVal = new ArrayList<>();
 	// 过滤输入框
 	TextField filterField = new TextField();
 
@@ -147,7 +153,7 @@ public class ImportExcelNextWindow {
 			if (row1 != null) {
 
 				String[] headArr = new String[row1.size()];
-				List<String> selectVal = new ArrayList<>();
+//				List<String> selectVal = new ArrayList<>();
 				for (int i = 0; i < row1.size(); i++) {
 					ExcelHeadCellInfo cell = row1.get(i);
 					String val = (cell.getCellIdx() + 1) + " - " + cell.getCellAddress() + " - " + cell.getCellVal();
@@ -223,9 +229,48 @@ public class ImportExcelNextWindow {
 			}
 		});
 
+		Button autoBtn = new Button("自动匹配");
+//		cleanBtn.setPadding(new Insets(5));
+		autoBtn.getStyleClass().add("myAlertBtn");
+		autoBtn.setOnAction(e -> {
+			ImportFieldMapPo tmp = new ImportFieldMapPo();
+			tmp.setTableName(tableName);
+			Connection conn = SqluckyAppDB.getConn();
+			try {
+				List<ImportFieldMapPo> ls = PoDao.select(conn, tmp);
+				if (ls != null && ls.size() > 0) {
+					ImportFieldMapPo mpo = ls.get(0);
+					ImportFieldMapDetailPo dpo = new ImportFieldMapDetailPo();
+					dpo.setTableId(mpo.getId());
+					List<ImportFieldMapDetailPo> dls = PoDao.select(conn, dpo);
+					if (dls != null && dls.size() > 0) {
+						for (ImportFieldMapDetailPo mdpo : dls) {
+							String fname = mdpo.getTableFiledName();
+							int idx = mdpo.getExcelFiledIdx();
+							for (var tmp1 : fields) {
+								if (tmp1.getColumnLabel().get().equals(fname)) {
+									String selectValtmp = selectVal.get(idx);
+									tmp1.getExcelFieldVal().set(selectValtmp);
+
+								}
+//								tmp.getExcelFieldVal().set("");
+							}
+						}
+
+					}
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			} finally {
+				SqluckyAppDB.closeConn(conn);
+			}
+
+		});
+
 		topfp.getChildren().add(lb);
 		topfp.getChildren().add(textFieldPane); // filterField
 		topfp.getChildren().add(cleanBtn);
+		topfp.getChildren().add(autoBtn);
 		FlowPane.setMargin(cleanBtn, new Insets(0, 10, 0, 5));
 		return topfp;
 	}
@@ -308,8 +353,8 @@ public class ImportExcelNextWindow {
 	// 其他设置
 	public List<Region> otherSet() {
 		Label lb0 = new Label("第几个sheet");
-		sheetTF = new TextField();
-		sheetTF.setPromptText("默认所有sheet的数据");
+		sheetTF = new TextField("1");
+		sheetTF.setPromptText("为空表示所有sheet的数据");
 		TextFieldSetup.numberOnly(sheetTF);
 
 		Label lb1 = new Label("起始行号");
@@ -411,6 +456,15 @@ public class ImportExcelNextWindow {
 				}
 
 			}
+			//
+			if (vals.size() == 0) {
+				MyAlert.errorAlert("字段还没有做关联!");
+				return;
+			} else {
+				// 保存映射
+				ImportFieldMapPo.save(tableName, "Excel", vals);
+			}
+
 			String beginInt = beginIdTF.getText();
 			String countInt = conuntTF.getText();
 			Integer beginval = null;

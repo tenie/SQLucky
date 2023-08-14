@@ -380,17 +380,18 @@ public class AppDao {
 		return vals;
 	}
 
-	public static boolean testDbTableExists(Connection conn) {
+	// 判断表是否存在
+	public static void testDbTableExists(Connection conn) {
 		// 第一次启动
-		if (!tabExist(conn, "KEYS_BINDING")) {
+		if (!tabExist(conn, "IMPORT_FIELD_MAP_DETAIL")) {
 			AppDao.createTab(conn);
-			return false;
+//			return false;
 
 		} else {// 之后的启动, 更新脚本
 //			UpdateScript.execUpdate(conn);
 
 		}
-		return true;
+//		return true;
 	}
 
 //	public static void testDbTableExists() {
@@ -514,6 +515,15 @@ public class AppDao {
 			}
 		}
 		return rs;
+	}
+
+	// 检查是否需要迁移数据, 如果最新版本的数据库已经存在, 就不需要迁移
+	public static boolean checkTransferDB() {
+		File dbFile = new File(SqluckyAppDB.getSqliteFilePath());
+		if (dbFile.exists()) {
+			return false;
+		}
+		return true;
 	}
 
 	// 获取目录下的旧db文件, 从旧文件中找一个最新的

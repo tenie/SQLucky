@@ -56,8 +56,9 @@ public class SQLucky extends Application {
 	private Scene scene;
 	private Image img;
 	private String Theme;
-	private boolean tableExists = true;
+//	private boolean tableExists = true;
 //	public static volatile boolean beginInit = false;
+	private boolean transferDB = false;
 	private static Logger logger = LogManager.getLogger(SQLucky.class);
 
 	private static boolean preloaderStatus = false;
@@ -82,10 +83,12 @@ public class SQLucky extends Application {
 //			Thread.sleep(1000);
 //		}
 		logger.info(ConfigVal.textLogo);
+		transferDB = AppDao.checkTransferDB();
+
 		Connection conn = SqluckyAppDB.getConn();
 
 		// 数据库迁移
-		tableExists = AppDao.testDbTableExists(conn);
+		AppDao.testDbTableExists(conn);
 
 		// 界面主题色， 没有设置过，默认黑色
 		Theme = AppDao.readConfig(conn, "THEME");
@@ -208,7 +211,7 @@ public class SQLucky extends Application {
 			SettingKeyBinding.setEscKeyBinding(scene);
 
 			// 数据迁移
-			if (tableExists == false) {
+			if (transferDB) {
 				// 如果发现有新的数据库, 插入
 				Optional<File> oldFile = AppDao.appOldDbFiles();
 				if (oldFile.isPresent()) {
@@ -233,8 +236,9 @@ public class SQLucky extends Application {
 								}
 
 								if (succeed) {
-									Platform.runLater(()->{
-										MyAlert.myConfirmation("完成迁移, 重启APP, 加载迁移数据, ok ? ", x->Restart.reboot(), System.out::println);
+									Platform.runLater(() -> {
+										MyAlert.myConfirmation("完成迁移, 重启APP, 加载迁移数据, ok ? ", x -> Restart.reboot(),
+												System.out::println);
 									});
 								}
 							});

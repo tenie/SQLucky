@@ -126,7 +126,7 @@ public class SqluckyAppDB {
 		return ConfigVal.H2_DB_FILE_NAME;
 	}
 
-	private static String getSqliteFilePath() {
+	public static String getSqliteFilePath() {
 		String path = DBTools.dbFilePath();
 		ConfigVal.H2_DB_FILE_NAME = path + ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION + "_sqlite.db";
 		ConfigVal.H2_DB_FULL_FILE_NAME = ConfigVal.H2_DB_FILE_NAME;
