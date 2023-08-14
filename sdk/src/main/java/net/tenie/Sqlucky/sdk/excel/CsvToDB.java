@@ -69,18 +69,6 @@ public class CsvToDB {
 					String[] record = str.split(splitSymbol);
 					if (record != null) {
 						for (ImportFieldPo epo : fields) {
-//							// 匹配到excel的列
-//							String rowIdxStr = epo.getExcelRowIdx().get();
-//							if (StrUtils.isNotNullOrEmpty(rowIdxStr)) { // 空表示没有匹配
-//								Integer rowidx = Integer.valueOf(rowIdxStr);
-//								// 下标从0开始, 需要减1
-//								String cellStr = record[rowidx - 1];
-//								cellVals.add(cellStr);
-//							} else { // 使用固定值
-//								String fixVal = epo.getFixedValue().get();
-//								cellVals.add(fixVal);
-//							}
-
 							Integer rowIdx = epo.getFieldIdx();
 							if (rowIdx > -1) {
 								// 下标从0开始, 需要减1

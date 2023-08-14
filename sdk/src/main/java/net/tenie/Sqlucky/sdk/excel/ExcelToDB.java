@@ -90,6 +90,10 @@ public class ExcelToDB {
 						Integer rowIdx = epo.getFieldIdx();
 						if (rowIdx > -1) {
 							Cell cell = hssfRow.getCell(rowIdx);
+							if (cell == null) {
+								cellVals.add("");
+								continue;
+							}
 							CellType ct = cell.getCellType();
 							if (ct.equals(CellType.NUMERIC)) {
 								int javaType = epo.getColumnType().get();
