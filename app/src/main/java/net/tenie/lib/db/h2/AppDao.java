@@ -27,7 +27,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.controller.TransferDataUtils;
+import net.tenie.Sqlucky.sdk.utility.TransferDataUtils;
 
 /**
  * 
@@ -385,13 +385,10 @@ public class AppDao {
 		// 第一次启动
 		if (!tabExist(conn, "IMPORT_FIELD_MAP_DETAIL")) {
 			AppDao.createTab(conn);
-//			return false;
 
 		} else {// 之后的启动, 更新脚本
 //			UpdateScript.execUpdate(conn);
-
 		}
-//		return true;
 	}
 
 //	public static void testDbTableExists() {
@@ -453,31 +450,6 @@ public class AppDao {
 
 			}
 
-			// 完成
-
-//			for (int i = 0; i < tableNames.size(); i++) {
-//				String tableName = tableNames.get(i);
-//				String sql = "select   *   from  " + tableName;
-//				SheetDataValue dvt = new SheetDataValue();
-//				dvt.setDbConnection(sqluckyConn);
-//				dvt.setSqlStr(sql);
-//				dvt.setTabName(tableName);
-//				try {
-//					ResultSetPo rspo = SelectDao.selectSqlToRS(sql, sqluckyConn);
-//					ObservableList<ResultSetRowPo> datas = rspo.getDatas();
-//					if (datas != null) {
-//						for (ResultSetRowPo resultSetRow : datas) {
-//							ObservableList<ResultSetCellPo> cells = resultSetRow.getRowDatas();
-//							InsertDao.execInsert(conn, tableName, cells);
-//						}
-//					}
-//
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//
-//			}
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw e;
@@ -510,7 +482,6 @@ public class AppDao {
 						lastModifiedTime = ltmp;
 						rs = path + flName.substring(0, flName.indexOf(".mv.db"));
 					}
-//					System.out.println(rs);
 				}
 			}
 		}
@@ -549,7 +520,6 @@ public class AppDao {
 						rs = flName;
 						rsFile = new File(path, flName);
 					}
-//					System.out.println(rs);
 				}
 			}
 
