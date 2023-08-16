@@ -482,6 +482,7 @@ public class SdkComponent {
 	}
 
 	public static void clearDataTable(int tbIdx) {
+		if(tbIdx < 0 ) return;
 		TabPane tabPane = ComponentGetter.dataTabPane;
 		var tb = tabPane.getTabs().get(tbIdx);
 		long begintime = System.currentTimeMillis();
