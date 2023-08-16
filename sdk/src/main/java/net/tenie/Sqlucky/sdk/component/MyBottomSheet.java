@@ -3,6 +3,7 @@ package net.tenie.Sqlucky.sdk.component;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -36,17 +37,21 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.DeleteDao;
 import net.tenie.Sqlucky.sdk.db.InsertDao;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.UpdateDao;
 import net.tenie.Sqlucky.sdk.excel.ExcelDataPo;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.RsVal;
+import net.tenie.Sqlucky.sdk.po.SelectExecInfo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TreeObjCache;
@@ -77,6 +82,7 @@ public class MyBottomSheet {
 	private SqluckyEditor sqlArea;
 	private SheetDataValue tableData;
 	private boolean isDDL = false;
+	private boolean isDockSide = false; // 判断是否已经独立窗口了
 
 	private int idx = -1;
 	private Tab tab;
@@ -259,11 +265,22 @@ public class MyBottomSheet {
 		Connection conn = tableData.getDbConnection().getConn();
 		String connName = tableData.getConnName();
 		if (conn != null) {
-			// TODO 关闭当前tab
-			var dataTab = ComponentGetter.dataTabPane;
-			int selidx = dataTab.getSelectionModel().getSelectedIndex();
-			SdkComponent.clearDataTable(selidx);
-			ComponentGetter.appComponent.refreshDataTableView(connName, sql, selidx + "", isLock);
+			if(isDockSide) {
+				SelectExecInfo execInfo;
+				try {
+					execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, DBConns.get(connName));
+					ObservableList<ResultSetRowPo> allRawData = execInfo.getDataRs().getDatas();
+					tableData.getTable().setItems(allRawData);
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}else {
+				// TODO 关闭当前tab
+				var dataTab = ComponentGetter.dataTabPane;
+				int selidx = dataTab.getSelectionModel().getSelectedIndex();
+				SdkComponent.clearDataTable(selidx);
+				ComponentGetter.appComponent.refreshDataTableView(connName, sql, selidx + "", isLock);
+			}
 		}
 	}
 
@@ -406,6 +423,7 @@ public class MyBottomSheet {
 		tableData.getLockBtn().setDisable(true);
 		tableData.getHideBottom().setDisable(true);
 
+		isDockSide = true;
 		dsw.showWindow(this, vb, tableName);
 
 		TabPane dataTab = ComponentGetter.dataTabPane;

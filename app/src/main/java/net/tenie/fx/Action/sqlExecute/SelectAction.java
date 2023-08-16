@@ -1,6 +1,7 @@
 package net.tenie.fx.Action.sqlExecute;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -108,6 +109,14 @@ public class SelectAction {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	
+	
+	public static void selectAction2(String sql, SqluckyConnector sqluckyConn) throws SQLException {
+
+			SelectExecInfo execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, sqluckyConn);
+			ObservableList<ResultSetRowPo> allRawData = execInfo.getDataRs().getDatas();
+			 
 	}
 
 }
