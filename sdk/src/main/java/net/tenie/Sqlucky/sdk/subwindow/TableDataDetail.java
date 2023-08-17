@@ -9,11 +9,15 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.geometry.Insets;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -27,6 +31,7 @@ import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
+import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /*   
@@ -177,7 +182,10 @@ public class TableDataDetail {
 		filterField.getStyleClass().add("myTextField");
 		topfp.getChildren().add(lb);
 		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
-		topfp.getChildren().add(filterField);
+		
+		AnchorPane filterFieldPane = UiTools.textFieldAddCleanBtn(filterField);
+//		topfp.getChildren().add(filterField);
+		topfp.getChildren().add(filterFieldPane);
 		topfp.setMinHeight(30);
 		topfp.prefHeight(30);
 		filterField.setPrefWidth(200);
@@ -198,12 +206,18 @@ public class TableDataDetail {
 
 		});
 
-//		new ModalDialog(subvb, tv, tableName);
+		
 		SqluckyStage sqlstage = new SqluckyStage(subvb, tableName);
+		
+		Scene scene = sqlstage.getScene();
+		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+		scene.getAccelerators().put(escbtn, () -> {
+			filterField.clear();
+		});
+		
 		Stage stage = sqlstage.getStage();
 		stage.show();
 		tv.getSelectionModel().select(0);
-//		stage.setTitle(tableName);
 		return stage;
 	}
 

@@ -123,4 +123,7 @@ public interface AppComponent {
 
 	// 刷新树
 	public void scriptTreeRefresh();
+	
+	// DBinfo 查询按钮
+	public void DBinfoTreeFilterHide();
 }

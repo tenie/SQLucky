@@ -56,7 +56,7 @@ public class DataModelTabTreeContextMenu {
 		query.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
 		query.setOnAction(e -> {
 			var panel = mdTree.getOptionPanel();
-			CommonUtils.leftHideOrShowSecondOptionBox(panel.getOptionVbox(),
+			CommonUtils.leftHideOrShowSecondOperateBox(panel.getOptionVbox(),
 					panel.getFilterHbox(), panel.getTxt());
 		});
 		open = new MenuItem("Open Model");

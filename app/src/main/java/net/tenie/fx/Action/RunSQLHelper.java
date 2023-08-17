@@ -75,7 +75,7 @@ public class RunSQLHelper {
 
 	@SuppressWarnings("restriction")
 	private static void runMain(RunSqlStatePo state) {
-		tmpSqlConn = state.getSqlConn();
+//		tmpSqlConn = state.getSqlConn();
 		// 等待加载动画
 		SqlExecuteOption.addWaitingPane(state.getTidx(), state.getIsRefresh());
 		List<SqlData> allsqls = new ArrayList<>();

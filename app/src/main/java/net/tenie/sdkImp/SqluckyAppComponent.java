@@ -34,6 +34,7 @@ import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
+import net.tenie.fx.component.InfoTree.DBinfoTreeButtonFactory;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
@@ -321,5 +322,11 @@ public class SqluckyAppComponent implements AppComponent {
 	@Override
 	public void scriptTreeRefresh() {
 		ScriptTabTree.ScriptTreeView.refresh();
+	}
+	
+	// DBinfo 查询按钮
+	@Override
+	public void DBinfoTreeFilterHide() {
+		DBinfoTreeButtonFactory.queryBtnHide();
 	}
 }
