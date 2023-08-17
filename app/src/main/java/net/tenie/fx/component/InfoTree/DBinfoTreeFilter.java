@@ -71,7 +71,7 @@ public class DBinfoTreeFilter {
 
 		Button clean = new Button();
 
-		AnchorPane.setLeftAnchor(clean, 210.0);
+		AnchorPane.setLeftAnchor(clean, 220.0);
 		AnchorPane.setTopAnchor(clean, 5.0);
 		clean.setMaxSize(12, 12);
 

@@ -209,7 +209,7 @@ public class NoteOptionPanel {
 		currentShowGridPane = grid;
 		NoteUtility.isFile = true;
 		NoteUtility.isText = false;
-		CommonUtils.leftHideOrShowSecondOptionBox(optionVbox, searchVbox, txt);
+		CommonUtils.leftHideOrShowSecondOperateBox(optionVbox, searchVbox, txt);
 	}
 
 	// 文件内容搜索展示
@@ -240,7 +240,7 @@ public class NoteOptionPanel {
 		currentShowGridPane = grid2;
 		NoteUtility.isFile = false;
 		NoteUtility.isText = true;
-		CommonUtils.leftHideOrShowSecondOptionBox(optionVbox, searchVbox2, txt);
+		CommonUtils.leftHideOrShowSecondOperateBox(optionVbox, searchVbox2, txt);
 
 	}
 

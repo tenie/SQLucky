@@ -3,7 +3,6 @@ package net.tenie.fx.Action;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
@@ -21,7 +20,6 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
-import javafx.scene.layout.Pane;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
@@ -739,26 +737,6 @@ public class CommonAction {
 			return dpov;
 		}
 		return null;
-	}
-
-	// 数据库表名的查询输入框
-	public static void dbInfoTreeQuery(Pane container, Node filter, List<Node> btnList) {
-
-		CommonUtils.leftHideOrShowSecondOptionBox(container, filter, btnList);
-
-		// 如果输入框为空就将选中的文本放入输入框
-//		String text = ComponentGetter.dbInfoFilter.getText();
-//		if (StrUtils.isNullOrEmpty(text)) {
-//			// 如果有选中的字符串, 进行查询
-//			String str = SqluckyEditor.getCurrentCodeAreaSQLSelectedText();
-//			if (str.trim().length() > 0) {
-//				ComponentGetter.dbInfoFilter.setText(str.trim());
-//				if (!container.getChildren().contains(filter)) {
-//					container.getChildren().add(1, filter);
-//				}
-//			}
-//		}
-
 	}
 
 	public static final int DROP_COLUMN = 1;

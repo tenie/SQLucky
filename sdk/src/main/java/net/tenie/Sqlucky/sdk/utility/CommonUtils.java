@@ -896,7 +896,7 @@ public class CommonUtils {
 	}
 
 	// 左侧添加隐藏操作按钮/查询框
-	public static void leftHideOrShowSecondOptionBox(Pane container, Node box, List<Node> btnList) {
+	public static void leftHideOrShowSecondOperateBox(Pane container, Node box, List<Node> btnList) {
 		if (container.getChildren().contains(box)) {
 			container.getChildren().remove(box);
 			for (var btn : btnList) {
@@ -912,7 +912,7 @@ public class CommonUtils {
 	}
 
 	// 左侧添加隐藏操作按钮/查询框
-	public static void leftHideOrShowSecondOptionBox(Pane container, Node box, TextField txt) {
+	public static void leftHideOrShowSecondOperateBox(Pane container, Node box, TextField txt) {
 		if (container.getChildren().contains(box)) {
 			container.getChildren().remove(box);
 
@@ -1176,6 +1176,9 @@ public class CommonUtils {
 		// 提示窗口
 //		SqluckyEditorUtils.currentMyTab().getSqlCodeArea().hideAutoComplete();
 		MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().hideAutoComplete();
+		// dbinfo TreeView 查询表隐藏
+		ComponentGetter.appComponent.DBinfoTreeFilterHide();
+		
 	}
 
 	// 隐藏查找, 替换窗口

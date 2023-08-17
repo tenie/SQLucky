@@ -1,6 +1,5 @@
 package net.tenie.fx.component.InfoTree;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.jfoenix.controls.JFXButton;
@@ -12,22 +11,17 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.window.ConnectionEditor;
 
 public class DBinfoTreeButtonFactory {
 
 	public static VBox createTreeViewbtn(TreeView<TreeNodePo> treeView) {
-		List<Node> btns = new ArrayList<>();
-		VBox optionVbox = new VBox();
-
-		// 查询过滤
-		DBinfoTreeFilter dbf = new DBinfoTreeFilter();
-		AnchorPane filter = dbf.createFilterPane(treeView);
-		AppWindow.dbInfoTreeFilter = filter;
+		List<Node> btns =  DBinfoTree.operateBtns;
+		VBox operateVbox =   DBinfoTree.operateVbox;
 
 		HBox pn = new HBox();
 		// 页面初始化: 添加组件
@@ -73,7 +67,7 @@ public class DBinfoTreeButtonFactory {
 		JFXButton queryTab = new JFXButton();
 		queryTab.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
 		queryTab.setOnMouseClicked(e -> {
-			CommonAction.dbInfoTreeQuery(optionVbox, filter, btns);
+			queryBtnAction();
 		});
 
 		// 收缩树 zero-fitscreen-24
@@ -111,8 +105,29 @@ public class DBinfoTreeButtonFactory {
 		pn.getChildren().add(deleteConn);
 //			pn.getChildren().add(script);
 
-		optionVbox.getChildren().add(pn);
-		return optionVbox;
+		operateVbox.getChildren().add(pn);
+		return operateVbox;
 	}
+	
+	public static void queryBtnAction() {
+		AnchorPane filter  = DBinfoTree.dbInfoTreeFilterPane;
+		List<Node> btns =  DBinfoTree.operateBtns;// new ArrayList<>();
+		VBox operateVbox =   DBinfoTree.operateVbox; // new VBox();
+		CommonUtils.leftHideOrShowSecondOperateBox(operateVbox, filter, btns);
+	}
+	
+	public static void queryBtnHide() {
+		AnchorPane filter  = DBinfoTree.dbInfoTreeFilterPane;
+		List<Node> btns =  DBinfoTree.operateBtns;// new ArrayList<>();
+		VBox operateVbox =   DBinfoTree.operateVbox; // new VBox();
+		
+		if (operateVbox.getChildren().contains(filter)) {
+			operateVbox.getChildren().remove(filter);
+			for (var btn : btns) {
+				btn.setDisable(false);
+			}
+		}  
+	}
+	
 
 }

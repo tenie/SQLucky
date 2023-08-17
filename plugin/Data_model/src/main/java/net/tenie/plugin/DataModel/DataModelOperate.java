@@ -94,7 +94,7 @@ public class DataModelOperate {
 		queryBtn.setGraphic(ComponentGetter.getIconDefActive("windows-magnify-browse"));
 		queryBtn.setTooltip(CommonUtils.instanceTooltip("Search table & field info "));
 		queryBtn.setOnMouseClicked(e -> {
-			CommonUtils.leftHideOrShowSecondOptionBox(optionVbox, filterHbox, txt);
+			CommonUtils.leftHideOrShowSecondOperateBox(optionVbox, filterHbox, txt);
 
 		});
 		queryExecBtn.setGraphic(ComponentGetter.getIconDefActive("search"));

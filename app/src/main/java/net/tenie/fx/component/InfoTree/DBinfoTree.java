@@ -14,14 +14,17 @@ import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
@@ -59,8 +62,25 @@ public class DBinfoTree {
 	// 缓存 激活的ConnItemContainer
 	List<ConnItemContainer> connItemParent = new ArrayList<>();
 
+	// 操作按钮的的面板
+	public static VBox operateVbox  ;
+
+	public static DBinfoTreeFilter dbInfoTreeFilter; 
+	public static AnchorPane dbInfoTreeFilterPane;
+	// 操作按钮集合
+	public static List<Node> operateBtns ;
+	
 	public DBinfoTree() {
+		
 		createConnsTreeView();
+		
+		operateVbox = new VBox();
+		// 查询过滤
+		dbInfoTreeFilter = new DBinfoTreeFilter();
+		dbInfoTreeFilterPane = dbInfoTreeFilter.createFilterPane(this.DBinfoTreeView);
+		 
+		AppWindow.dbInfoTreeFilter = dbInfoTreeFilterPane;
+		operateBtns = new ArrayList<>();
 	}
 
 	// db节点view
