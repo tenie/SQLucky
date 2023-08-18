@@ -4,7 +4,9 @@ import java.util.List;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -113,7 +115,11 @@ public class DBinfoTreeButtonFactory {
 		AnchorPane filter  = DBinfoTree.dbInfoTreeFilterPane;
 		List<Node> btns =  DBinfoTree.operateBtns;// new ArrayList<>();
 		VBox operateVbox =   DBinfoTree.operateVbox; // new VBox();
-		CommonUtils.leftHideOrShowSecondOperateBox(operateVbox, filter, btns);
+		TextField	filterTextField =DBinfoTree.filterTextField;
+		filterTextField.clear();
+		Platform.runLater(()->{
+			CommonUtils.leftHideOrShowSecondOperateBox(operateVbox, filter, btns);
+		});
 	}
 	
 	public static void queryBtnHide() {

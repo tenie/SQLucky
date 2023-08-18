@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -70,6 +71,8 @@ public class DBinfoTree {
 	// 操作按钮集合
 	public static List<Node> operateBtns ;
 	
+	public static TextField filterTextField;
+	
 	public DBinfoTree() {
 		
 		createConnsTreeView();
@@ -79,6 +82,7 @@ public class DBinfoTree {
 		dbInfoTreeFilter = new DBinfoTreeFilter();
 		dbInfoTreeFilterPane = dbInfoTreeFilter.createFilterPane(this.DBinfoTreeView);
 		 
+		filterTextField = 	dbInfoTreeFilter.getTxt();
 		AppWindow.dbInfoTreeFilter = dbInfoTreeFilterPane;
 		operateBtns = new ArrayList<>();
 	}

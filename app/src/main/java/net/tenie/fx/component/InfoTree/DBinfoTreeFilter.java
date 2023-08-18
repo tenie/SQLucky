@@ -255,4 +255,12 @@ public class DBinfoTreeFilter {
 		return rs;
 	}
 
+	public TextField getTxt() {
+		return txt;
+	}
+
+	public void setTxt(TextField txt) {
+		this.txt = txt;
+	}
+
 }

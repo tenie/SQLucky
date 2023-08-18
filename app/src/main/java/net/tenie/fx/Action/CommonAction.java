@@ -600,6 +600,7 @@ public class CommonAction {
 						MyAlert.errorAlert(" Connect fail !");
 
 					}
+					testBtn.setGraphic(null);
 
 				});
 			}
