@@ -14,10 +14,10 @@ import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -40,6 +40,8 @@ import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
+import net.tenie.Sqlucky.sdk.ui.UiTools;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.CommonAction;
@@ -134,6 +136,9 @@ public class ConnectionEditor {
 		connectionName.setText(connNameVal);
 		connectionName.lengthProperty().addListener(CommonListener.textFieldLimit(connectionName, 100));
 
+		AnchorPane connectionNameFieldPane = UiTools.textFieldAddCleanBtn(connectionName);
+		
+		
 		ChoiceBox<String> dbDriver = new ChoiceBox<String>(FXCollections.observableArrayList(DbVendor.getAll()));
 		dbDriver.setTooltip(MyTooltipTool.instance("Select DB Type"));
 		dbDriver.setPrefWidth(250);
@@ -155,34 +160,53 @@ public class ConnectionEditor {
 
 		jdbcUrl.setPromptText("jdbc:db://ip:port/xxxx");
 		jdbcUrl.disableProperty().bind(isUseJdbcUrl.selectedProperty().not());
+		jdbcUrl.setPrefWidth(250);
+		jdbcUrl.setMinWidth(250);
+		AnchorPane jdbcUrlFieldPane = UiTools.textFieldAddCleanBtn(jdbcUrl);
+		
 
 		TextField host = new TextField();
 		host.setPromptText(hostStr);
 		host.setText(hostVal);
 		host.lengthProperty().addListener(CommonListener.textFieldLimit(host, 100));
 		host.disableProperty().bind(isUseJdbcUrl.selectedProperty());
-
+		host.setPrefWidth(250);
+		host.setMinWidth(250);
+		AnchorPane hostFieldPane = UiTools.textFieldAddCleanBtn(host);
+		
 		TextField port = new TextField();
 		port.setPromptText(portStr);
 		port.setText(portVal);
 		port.lengthProperty().addListener(CommonListener.textFieldLimit(port, 5));
 		port.textProperty().addListener(CommonListener.textFieldNumChange(port));
-
+		port.setPrefWidth(250);
+		port.setMinWidth(250);
+		AnchorPane portFieldPane = UiTools.textFieldAddCleanBtn(port);
+		
 		TextField user = new TextField();
 		user.setPromptText(userStr);
 		user.setText(userVal);
 		user.lengthProperty().addListener(CommonListener.textFieldLimit(user, 100));
+		user.setPrefWidth(250);
+		user.setMinWidth(250);
+		AnchorPane userFieldPane = UiTools.textFieldAddCleanBtn(user);
 
 		PasswordField password = new PasswordField();
 		password.setPromptText(passwordStr);
 		password.setText(passwordVal);
 		password.lengthProperty().addListener(CommonListener.textFieldLimit(password, 50));
+		password.setPrefWidth(250);
+		password.setMinWidth(250);
+		AnchorPane passwordFieldPane = UiTools.textFieldAddCleanBtn(password);
 
 		TextField defaultSchema = new TextField();
 		defaultSchema.setPromptText(defaultSchemaStr);
 		defaultSchema.setText(defaultSchemaVal);
 		defaultSchema.lengthProperty().addListener(CommonListener.textFieldLimit(defaultSchema, 50));
-
+		defaultSchema.setPrefWidth(250);
+		defaultSchema.setMinWidth(250);
+		AnchorPane defaultSchemaFieldPane = UiTools.textFieldAddCleanBtn(defaultSchema);
+		
 		// 获取db file
 		Button h2FilePath = new Button("...");
 		h2FilePath.setVisible(false);
@@ -317,9 +341,12 @@ public class ConnectionEditor {
 		Button testBtn = createTestBtn(assembleSqlCon);// new Button("Test");
 		Button saveBtn = createSaveBtn(assembleSqlCon, connectionName, dp); // new Button("Save");
 
-		layoutAndShow(lbconnNameStr, connectionName, lbdbDriverStr, dbDriver, isUseJdbcUrl, jdbcUrl, lbhostStr, host,
-				h2FilePath, lbportStr, port, lbdefaultSchemaStr, defaultSchema, lbuserStr, user, lbpasswordStr,
-				password, autoConnect, autoConnectCB, testBtn, saveBtn);
+		layoutAndShow(lbconnNameStr,
+//				connectionName,
+				connectionNameFieldPane,
+				lbdbDriverStr, dbDriver, isUseJdbcUrl, jdbcUrlFieldPane, lbhostStr, hostFieldPane,
+				h2FilePath, lbportStr, portFieldPane, lbdefaultSchemaStr, defaultSchemaFieldPane, lbuserStr, userFieldPane, lbpasswordStr,
+				passwordFieldPane, autoConnect, autoConnectCB, testBtn, saveBtn);
 
 	}
 
@@ -486,12 +513,17 @@ public class ConnectionEditor {
 	public static Button createTestBtn(Function<String, SqluckyConnector> assembleSqlCon) {
 		Button testBtn = new Button("Test");
 		testBtn.setOnMouseClicked(e -> {
-			testBtn.setStyle("-fx-background-color: red ");
+//			testBtn.setStyle("-fx-background-color: red ");
+			Node nd = IconGenerator.svgImage("spinner", "red");
+			testBtn.setGraphic(nd);
+			CommonUtils.rotateTransition(nd);
 			logger.info("Test connection~~");
 			SqluckyConnector connpo = assembleSqlCon.apply("");
 			if (connpo != null) {
 				CommonAction.isAliveTestAlert(connpo, testBtn);
+				
 			}
+			
 		});
 		return testBtn;
 	}
@@ -532,11 +564,11 @@ public class ConnectionEditor {
 	}
 
 	// 组件布局
-	public static void layoutAndShow(Control lbconnNameStr, Control connectionName, Control lbdbDriverStr,
-			Control dbDriver, Control isUseJU, Control jdbcUrl, Control lbhostStr, Control host, Control h2FilePath,
-			Control lbportStr, Control port, Control lbdefaultSchemaStr, Control defaultSchema, Control lbuserStr,
-			Control user, Control lbpasswordStr, Control password, Control autoConnect, Control autoConnectCB,
-			Control testBtn, Control saveBtn
+	public static void layoutAndShow(Node lbconnNameStr, Node connectionName, Node lbdbDriverStr,
+			Node dbDriver, Node isUseJU, Node jdbcUrl, Node lbhostStr, Node host, Node h2FilePath,
+			Node lbportStr, Node port, Node lbdefaultSchemaStr, Node defaultSchema, Node lbuserStr,
+			Node user, Node lbpasswordStr, Node password, Node autoConnect, Node autoConnectCB,
+			Node testBtn, Node saveBtn
 
 	) {
 		VBox vb = new VBox();
