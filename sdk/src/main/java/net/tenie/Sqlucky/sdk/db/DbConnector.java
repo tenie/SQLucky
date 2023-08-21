@@ -9,16 +9,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public abstract class DbConnector implements SqluckyConnector { 
 
@@ -27,6 +27,7 @@ public abstract class DbConnector implements SqluckyConnector {
 	protected TreeItem connTreeItem;
 	protected SqluckyDbRegister dbRegister;
 	
+	@Override
 	public SqluckyDbRegister getDbRegister() {
 		return dbRegister;
 	}
@@ -39,16 +40,20 @@ public abstract class DbConnector implements SqluckyConnector {
  
 	
 	//保存 树节点上显示的链接节点
+	@Override
 	public void setDbInfoTreeNode(TreeItem item) {
 		this.connTreeItem = item;
 	}
+	@Override
 	public TreeItem getDbInfoTreeNode() {
 		return this.connTreeItem;
 	}
 	
+	@Override
 	public void setDBConnectorInfoPo(DBConnectorInfoPo po) {
 		this.connPo = po;
 	}
+	@Override
 	public DBConnectorInfoPo getDBConnectorInfoPo() {
 		return this.connPo;
 	}
@@ -68,11 +73,21 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 	
 	// 判断是否连接着
+	@Override
 	public boolean isAlive() {
 		boolean tf = false; 
 		if(finishInitNode( )) {
 			if (this.connPo.getConn() != null) {
-				tf = true;
+				boolean isClosed = true;
+				try {
+					isClosed = this.connPo.getConn().isClosed();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				if(! isClosed) {
+					tf = true;
+				}
+				
 			}
 		} 
 		return tf;
@@ -94,6 +109,7 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 
 	// 获取sehema 列表
+	@Override
 	public Set<String> settingSchema() {
 		getConn(); // 先获取一下连接， 防止界面使用缓存数据
 		Map<String, DbSchemaPo> map = getSchemas();
@@ -106,9 +122,11 @@ public abstract class DbConnector implements SqluckyConnector {
 		return infoStr;
 	}
 	
+	@Override
 	public abstract Connection getConn();
 
 	// 关闭连接
+	@Override
 	public void closeConn() {
 		try {
 			if (this.connPo.getConn() != null) {
@@ -122,6 +140,7 @@ public abstract class DbConnector implements SqluckyConnector {
 
 	}
 
+	@Override
 	public String getDbVendor() {
 		return this.connPo.getDbVendor();
 	}
@@ -130,6 +149,7 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo.setDbVendor(dbVendor);
 	}
 
+	@Override
 	public String getUser() {
 		return this.connPo.getUser();
 	}
@@ -138,14 +158,17 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo.setUser(user);
 	}
 
+	@Override
 	public Integer getId() {
 		return this.connPo.getId();
 	}
 
+	@Override
 	public void setId(Integer id) {
 		this.connPo.setId(id);
 	}
 
+	@Override
 	public String getPassWord() {
 		return this.connPo.getPassWord();
 	}
@@ -154,10 +177,12 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo.setPassWord(passWord);
 	}
 
+	@Override
 	public String getComment() {
 		return this.connPo.getComment();
 	}
 
+	@Override
 	public void setComment(String comment) {
 //		this.comment = comment;
 		this.connPo.setComment(comment);
@@ -186,6 +211,7 @@ public abstract class DbConnector implements SqluckyConnector {
 	}
 	
 
+	@Override
 	public String getDriver() {
 		return this.connPo.getDriver();
 	}
@@ -194,19 +220,23 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo.setDriver(driver);
 	}
 
+	@Override
 	public String getConnName() {
 		return this.connPo.getConnName();
 	}
 
+	@Override
 	public String getHostOrFile() {
 		return this.connPo.getHostOrFile();
 	}
 
+	@Override
 	public String getPort() {
 		return this.connPo.getPort();
 	}
 
 
+	@Override
 	public String getDefaultSchema() {
 		return this.connPo.getDefaultSchema();
 	}
@@ -215,11 +245,13 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo.setSchemas(schemas);// = schemas;
 	}
 
+	@Override
 	public ExportDBObjects getExportDDL() {
 		return this.connPo.getExportDDL();
 	}
 
 
+	@Override
 	public String getDbName() {
 		return this.connPo.getDbName();
 	}
@@ -239,10 +271,12 @@ public abstract class DbConnector implements SqluckyConnector {
 		this.connPo = connPo;
 	}
 	
+	@Override
 	public boolean isJdbcUrlUse() {
 		return this.connPo.isJdbcUrlUse();
 	}
 	
+	@Override
 	public boolean getAutoConnect() {
 		return this.connPo.isAutoConnect();
 	}
