@@ -16,6 +16,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
@@ -235,6 +236,7 @@ public class DBInfoTreeContextMenu {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			MyAlert.errorAlert(e.getMessage());
 		}
 
 	}

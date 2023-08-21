@@ -75,6 +75,12 @@ public class RunSQLHelper {
 
 	@SuppressWarnings("restriction")
 	private static void runMain(RunSqlStatePo state) {
+		if(!  state.getSqlConn().isAlive()) {
+			MyAlert.errorAlert("连接中断, 请重新连接!");
+			return;
+		}
+		
+		
 //		tmpSqlConn = state.getSqlConn();
 		// 等待加载动画
 		SqlExecuteOption.addWaitingPane(state.getTidx(), state.getIsRefresh());
@@ -124,6 +130,7 @@ public class RunSQLHelper {
 		String sqlstr;
 		String sql;
 		Connection conn = dpo.getConn();
+	
 		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		List<SqlData> errObj = new ArrayList<>();

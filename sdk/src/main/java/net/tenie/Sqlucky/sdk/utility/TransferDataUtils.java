@@ -210,18 +210,6 @@ public class TransferDataUtils {
 			ResultSetMetaData mdata = rs.getMetaData();
 			// 获取元数据列数
 			Integer columnnums = Integer.valueOf(mdata.getColumnCount());
-//			// 迭代元数据
-//			for (int i = 1; i <= columnnums; i++) {
-//				SheetFieldPo po = new SheetFieldPo();
-//				po.setScale(mdata.getScale(i));
-//				po.setColumnName(mdata.getColumnName(i));
-//				po.setColumnClassName(mdata.getColumnClassName(i));
-//				po.setColumnDisplaySize(mdata.getColumnDisplaySize(i));
-//				po.setColumnLabel(mdata.getColumnLabel(i));
-//				po.setColumnType(mdata.getColumnType(i));
-//				po.setColumnTypeName(mdata.getColumnTypeName(i));
-//				fields.add(po);
-//			}
 
 			TransferDataUtils.jdbcResultSetExecMigrationBySqlByInsert(toConn, rs, columnnums, insert, isThrow);
 
@@ -259,10 +247,10 @@ public class TransferDataUtils {
 			pstmt = toConn.prepareStatement(insertSql);
 			int idx = 0;
 
-//			int columnnums = fpo.size();
 			// 循环查询结果
 			while (rs.next()) {
 				idx++;
+//				logger.info("\n===========idx = " + idx + "==============");
 				for (int i = 0; i < columnnums; i++) {
 					Object obj = null;
 					try {
@@ -272,7 +260,9 @@ public class TransferDataUtils {
 					}
 
 					pstmt.setObject(i + 1, obj);
+//					logger.info("obj = "+ obj.toString());
 				}
+//				pstmt.execute();
 				pstmt.addBatch();
 				if (idx % execLine == 0) {
 					int[] count = pstmt.executeBatch();
@@ -289,6 +279,7 @@ public class TransferDataUtils {
 				int execCountLen = count.length;
 				logger.info("instert = " + execCountLen);
 			}
+			logger.info("\n===========idx = " + idx + "==============");
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			logger.debug(e1.getMessage());
@@ -357,6 +348,8 @@ public class TransferDataUtils {
 				int execCountLen = count.length;
 				logger.info("instert = " + execCountLen);
 			}
+			
+			logger.info("============= idx : " + idx + "===============" );
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			logger.debug(e1.getMessage());
