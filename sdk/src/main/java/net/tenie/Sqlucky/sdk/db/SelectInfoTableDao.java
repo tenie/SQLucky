@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 
 /**
  * 只读的表查询
@@ -93,7 +94,12 @@ public class SelectInfoTableDao {
 				} else {
 					if (CommonUtils.isDateAndDateTime(dbtype)) {
 						Object objtmp = rs.getObject(i + 1);
-						var dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
+						String dateStr = "";
+						if (sqluckyConn == null) {
+							dateStr = DateUtils.DbDateTimeToString(objtmp, dbtype);
+						} else {
+							dateStr = sqluckyConn.DateTimeToString(objtmp, dbtype);
+						}
 						val = new SimpleStringProperty(dateStr);
 //						if (dpo != null) {
 //							var v = dpo.DateToStringStringProperty(rs.getObject(i + 1), dbtype);

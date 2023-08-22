@@ -43,6 +43,7 @@ public class ImportFieldMapPo {
 	private ImportFieldMapPo(String tableName, String type) {
 		this.tableName = tableName;
 		this.type = type;
+		this.createdTime = new Date();
 	}
 
 	public static void save(String tableName, String type, List<ImportFieldPo> vals) {

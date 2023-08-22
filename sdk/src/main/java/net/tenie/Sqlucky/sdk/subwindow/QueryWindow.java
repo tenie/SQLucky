@@ -40,8 +40,8 @@ public class QueryWindow {
 		topfp.setPadding(new Insets(5));
 		topfp.setMinHeight(35);
 		topfp.prefHeight(35);
-		
-		for(var tmpNode : nodes) {
+
+		for (var tmpNode : nodes) {
 			topfp.getChildren().add(tmpNode);
 		}
 
@@ -63,7 +63,7 @@ public class QueryWindow {
 
 		vb.getStyleClass().add("connectionEditor");
 
-		vb.setPrefWidth(1000);
+		vb.setPrefWidth(600);
 		AnchorPane bottomPane = new AnchorPane();
 		bottomPane.setPadding(new Insets(10));
 
@@ -83,6 +83,14 @@ public class QueryWindow {
 		stage.setScene(scene);
 		stage.requestFocus();
 		return stage;
+	}
+
+	public Stage getStage() {
+		return stage;
+	}
+
+	public void setStage(Stage stage) {
+		this.stage = stage;
 	}
 
 }
