@@ -138,10 +138,10 @@ public class ButtonFactory {
 				runFunPro.setDisable(true);
 			}
 			// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
-//			MainTabs.setBoxIdx(CommonUtils.tabText(MainTabs.getActTab()), newValue.toString());
 			MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
-			sheet.setTabConnIdx(newValue.toString());
+			sheet.setTabConnIdx(newValue.intValue());
 		});
+		// 下拉选, 未连接的连接先打开数据库连接
 		connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
 		ComponentGetter.connComboBox = connsComboBox;
 

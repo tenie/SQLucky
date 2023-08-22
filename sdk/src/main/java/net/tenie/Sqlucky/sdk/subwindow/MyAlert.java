@@ -247,15 +247,11 @@ public class MyAlert {
 	}
 
 	public static void myConfirmation(String promptInfo, Stage stage, List<Node> btns, boolean isWait) {
-//		Label space = new Label("");
-//		Label tit = new Label(promptInfo);
 		MyTextEditor myTextArea = new MyTextEditor();
 		StackPane codeAreaPane = myTextArea.getCodeAreaPane(promptInfo, false);
 		codeAreaPane.setStyle("-fx-background-color: transparent;");
 
 		List<Node> nds = new ArrayList<>();
-//		nds.add(space);
-//		nds.add(tit);
 		nds.add(codeAreaPane);
 
 		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.INFO, nds, btns);

@@ -65,6 +65,20 @@ public class TableViewUtils {
 	 * @param fieldWidthMap
 	 * @return
 	 */
+	public static SheetTableData sqlToSheet(String sql, Connection conn, String tableName) {
+		return sqlToSheet(sql, conn, tableName, null, null);
+	}
+
+
+	/**
+	 * sql 查询结果生成表格
+	 * 
+	 * @param sql
+	 * @param conn
+	 * @param tableName
+	 * @param fieldWidthMap
+	 * @return
+	 */
 	public static SheetTableData sqlToSheet(String sql, Connection conn, String tableName,
 			Map<String, Double> fieldWidthMap) {
 

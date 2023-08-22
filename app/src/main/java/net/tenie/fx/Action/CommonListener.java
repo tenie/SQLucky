@@ -65,17 +65,17 @@ public class CommonListener {
 	}
 
 // ChoiceBox change 
-	@SuppressWarnings("rawtypes")
-	public static ChangeListener choiceBoxChange() {
-		return new ChangeListener() {
-			@Override
-			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-				// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
-//				MainTabs.setBoxIdx(CommonUtils.tabText(MainTabs.getActTab()), newValue.toString());
-				MyEditorSheetHelper.getActivationEditorSheet().setTabConnIdx(newValue.toString());
-			}
-		};
-	}
+//	@SuppressWarnings("rawtypes")
+//	public static ChangeListener choiceBoxChange() {
+//		return new ChangeListener() {
+//			@Override
+//			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+//				// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接 // MainTabs.setBoxIdx(CommonUtils.tabText(MainTabs.getActTab()), newValue.toString());
+//
+////				MyEditorSheetHelper.getActivationEditorSheet().setTabConnIdx(newValue.toString());
+//			}
+//		};
+//	}
 
 	// 选择框选择连接时, 如果未连接, 进行连接
 	public static ChangeListener<Label> choiceBoxChange2() {
