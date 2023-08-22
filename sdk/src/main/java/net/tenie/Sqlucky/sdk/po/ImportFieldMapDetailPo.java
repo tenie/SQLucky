@@ -25,6 +25,7 @@ public class ImportFieldMapDetailPo {
 		this.excelFiledIdx = fieldpo.getFieldIdx();
 		this.fixedValue = fieldpo.getFixedValue().get();
 		this.tableId = tableId;
+		this.createdTime = new Date();
 	}
 
 	public Integer getExcelFiledIdx() {
@@ -73,6 +74,13 @@ public class ImportFieldMapDetailPo {
 
 	public void setUpdatedTime(Date updatedTime) {
 		this.updatedTime = updatedTime;
+	}
+
+	@Override
+	public String toString() {
+		return "ImportFieldMapDetailPo [tableId=" + tableId + ", tableFiledName=" + tableFiledName + ", excelFiledIdx="
+				+ excelFiledIdx + ", fixedValue=" + fixedValue + ", createdTime=" + createdTime + ", updatedTime="
+				+ updatedTime + "]";
 	}
 
 }

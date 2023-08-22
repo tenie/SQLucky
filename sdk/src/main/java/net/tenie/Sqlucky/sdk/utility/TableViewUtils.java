@@ -69,7 +69,6 @@ public class TableViewUtils {
 		return sqlToSheet(sql, conn, tableName, null, null);
 	}
 
-
 	/**
 	 * sql 查询结果生成表格
 	 * 
@@ -100,7 +99,7 @@ public class TableViewUtils {
 		try {
 			FilteredTableView<ResultSetRowPo> table = TableViewUtils.creatInfoTableView();
 			// 查询的 的语句可以被修改
-			table.editableProperty().bind(new SimpleBooleanProperty(true));
+//			table.editableProperty().bind(new SimpleBooleanProperty(true));
 
 			// 获取表名
 			if (tableName == null || "".equals(tableName)) {

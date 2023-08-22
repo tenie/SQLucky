@@ -2,9 +2,6 @@ package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -14,69 +11,68 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javafx.scene.control.TreeItem;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 
-public abstract class DbConnector implements SqluckyConnector { 
+public abstract class DbConnector implements SqluckyConnector {
 
-	private static Logger logger = LogManager.getLogger(DbConnector.class); 
+	private static Logger logger = LogManager.getLogger(DbConnector.class);
 	protected DBConnectorInfoPo connPo;
 	protected TreeItem connTreeItem;
 	protected SqluckyDbRegister dbRegister;
-	
+
 	@Override
 	public SqluckyDbRegister getDbRegister() {
 		return dbRegister;
 	}
-	
-	public DbConnector(DBConnectorInfoPo c , SqluckyDbRegister dbRegister) {
+
+	public DbConnector(DBConnectorInfoPo c, SqluckyDbRegister dbRegister) {
 		super();
 		this.connPo = c;
 		this.dbRegister = dbRegister;
 	}
- 
-	
-	//保存 树节点上显示的链接节点
+
+	// 保存 树节点上显示的链接节点
 	@Override
 	public void setDbInfoTreeNode(TreeItem item) {
 		this.connTreeItem = item;
 	}
+
 	@Override
 	public TreeItem getDbInfoTreeNode() {
 		return this.connTreeItem;
 	}
-	
+
 	@Override
 	public void setDBConnectorInfoPo(DBConnectorInfoPo po) {
 		this.connPo = po;
 	}
+
 	@Override
 	public DBConnectorInfoPo getDBConnectorInfoPo() {
 		return this.connPo;
 	}
-	
-	
 
-	//正在连接中, 原子操作
+	// 正在连接中, 原子操作
 	private AtomicBoolean finishInitNodeStatus = new AtomicBoolean(true);
-	
-	//是不是正在连接
-	public synchronized  Boolean finishInitNode() {
+
+	// 是不是正在连接
+	public synchronized Boolean finishInitNode() {
 		return finishInitNodeStatus.get();
 	}
+
 	@Override
 	public synchronized void setInitConnectionNodeStatus(Boolean tf) {
-		finishInitNodeStatus.set( ! tf);
+		finishInitNodeStatus.set(!tf);
 	}
-	
+
 	// 判断是否连接着
 	@Override
 	public boolean isAlive() {
-		boolean tf = false; 
-		if(finishInitNode( )) {
+		boolean tf = false;
+		if (finishInitNode()) {
 			if (this.connPo.getConn() != null) {
 				boolean isClosed = true;
 				try {
@@ -84,15 +80,14 @@ public abstract class DbConnector implements SqluckyConnector {
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				if(! isClosed) {
+				if (!isClosed) {
 					tf = true;
 				}
-				
+
 			}
-		} 
+		}
 		return tf;
-	} 
-		
+	}
 
 	// 刷新Schema中的tabs
 	public List<TablePo> flushTabs(String schemasName) {
@@ -121,7 +116,7 @@ public abstract class DbConnector implements SqluckyConnector {
 		String infoStr = Dbinfo.getDBInfo(conn);
 		return infoStr;
 	}
-	
+
 	@Override
 	public abstract Connection getConn();
 
@@ -187,29 +182,11 @@ public abstract class DbConnector implements SqluckyConnector {
 //		this.comment = comment;
 		this.connPo.setComment(comment);
 	}
-	
+
 	@Override
-	public String DateTimeToString(Object obj, int sqlFiledtype ) {
-		
-		String val = null; 
-		if(obj instanceof LocalDateTime) {
-			LocalDateTime ldt = (LocalDateTime) obj; 
-			Date dv = Date.from( ldt.atZone( ZoneId.systemDefault()).toInstant());
-			val = DateUtils.DateOrDateTimeToString(sqlFiledtype, dv);
-		}
-		else if(obj instanceof Date) {
-			Date dv = (Date) obj;
-			val = DateUtils.DateOrDateTimeToString(sqlFiledtype, dv);
-		}else if(obj instanceof String) {
-			val = (String) obj;
-		}else if( obj instanceof Long) {
-			Date date = new Date((long) obj);
-			val = DateUtils.dateToStr(date, ConfigVal.dateFormateL); 
-		}
-	
-		return val;
+	public String DateTimeToString(Object obj, int sqlFiledtype) {
+		return DateUtils.DbDateTimeToString(obj, sqlFiledtype);
 	}
-	
 
 	@Override
 	public String getDriver() {
@@ -235,12 +212,11 @@ public abstract class DbConnector implements SqluckyConnector {
 		return this.connPo.getPort();
 	}
 
-
 	@Override
 	public String getDefaultSchema() {
 		return this.connPo.getDefaultSchema();
 	}
-	
+
 	public void setSchemas(Map<String, DbSchemaPo> schemas) {
 		this.connPo.setSchemas(schemas);// = schemas;
 	}
@@ -249,7 +225,6 @@ public abstract class DbConnector implements SqluckyConnector {
 	public ExportDBObjects getExportDDL() {
 		return this.connPo.getExportDDL();
 	}
-
 
 	@Override
 	public String getDbName() {
@@ -261,24 +236,22 @@ public abstract class DbConnector implements SqluckyConnector {
 		return this.connPo.toString();
 	}
 
-
 	public DBConnectorInfoPo getConnPo() {
 		return connPo;
 	}
 
-
 	public void setConnPo(DBConnectorInfoPo connPo) {
 		this.connPo = connPo;
 	}
-	
+
 	@Override
 	public boolean isJdbcUrlUse() {
 		return this.connPo.isJdbcUrlUse();
 	}
-	
+
 	@Override
 	public boolean getAutoConnect() {
 		return this.connPo.isAutoConnect();
 	}
-	
+
 }
