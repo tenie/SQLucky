@@ -441,12 +441,6 @@ public class ImportCsvNextWindow {
 		return btn;
 	}
 
-	public void saveFieldMap(String tableName, List<ImportFieldPo> vals) {
-//
-//		List<ImportFieldPo> vals = new ArrayList<>();
-
-	}
-
 	public Button cancelBtn() {
 		Button cancelBtn = new Button("Cancel");
 		cancelBtn.getStyleClass().add("myAlertBtn");
@@ -470,15 +464,10 @@ public class ImportCsvNextWindow {
 
 		vb.getChildren().add(bottomPane);
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-//		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {
-//			stage.close();
 			filterField.clear();
 		});
 
-//		scene.getAccelerators().put(spacebtn, () -> {
-//			stage.close();
-//		});
 
 		stage.setTitle(title);
 		CommonUtils.loadCss(scene);

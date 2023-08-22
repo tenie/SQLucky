@@ -28,7 +28,7 @@ public class MyEditorSheet {
 	private SqluckyEditor sqluckyEditor; // 编辑器(比如高亮的文本编辑器)
 	private DocumentPo documentPo; // 文本内容
 
-	private String tabConnIdx = ""; // 与数据库链接的绑定, (切换tab的时候, 可以连着一起切换数据库链接)
+	private Integer tabConnIdx ; // 与数据库链接的绑定, (切换tab的时候, 可以连着一起切换数据库链接)
 	private boolean isInit = false; // 是否初始化
 	private boolean isModify = false;
 	// 放查找面板, 文本area 的容器
@@ -179,7 +179,16 @@ public class MyEditorSheet {
 		tab.setOnCloseRequest(tabCloseReq());
 		// 选中事件
 		tab.setOnSelectionChanged(value -> {
-			DBConns.changeChoiceBox(this.getTabConnIdx());
+			boolean isSe = tab.isSelected();
+			if(isSe) {
+				Integer tmpIdx = this.getTabConnIdx() ;
+				if(tmpIdx !=null) {
+					DBConns.changeChoiceBox(this.getTabConnIdx());
+				}else {
+					tmpIdx = DBConns.choiceBoxIndex();
+					this.setTabConnIdx(tmpIdx) ;
+				}
+			}
 		});
 	}
 
@@ -433,11 +442,11 @@ public class MyEditorSheet {
 		CommonUtils.setTabName(this.tab, val);
 	}
 
-	public String getTabConnIdx() {
+	public Integer getTabConnIdx() {
 		return tabConnIdx;
 	}
 
-	public void setTabConnIdx(String tabConnIdx) {
+	public void setTabConnIdx(Integer tabConnIdx) {
 		this.tabConnIdx = tabConnIdx;
 	}
 

@@ -1,7 +1,6 @@
 package net.tenie.Sqlucky.sdk.subwindow;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,14 +40,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField2ReadOnly;
 import net.tenie.Sqlucky.sdk.db.DaoTools;
-import net.tenie.Sqlucky.sdk.db.PoDao;
-import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
 import net.tenie.Sqlucky.sdk.excel.ExcelToDB;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.excel.ReadExcel;
-import net.tenie.Sqlucky.sdk.po.ImportFieldMapDetailPo;
 import net.tenie.Sqlucky.sdk.po.ImportFieldMapPo;
 import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -153,7 +149,6 @@ public class ImportExcelNextWindow {
 			if (row1 != null) {
 
 				String[] headArr = new String[row1.size()];
-//				List<String> selectVal = new ArrayList<>();
 				for (int i = 0; i < row1.size(); i++) {
 					ExcelHeadCellInfo cell = row1.get(i);
 					String val = (cell.getCellIdx() + 1) + " - " + cell.getCellAddress() + " - " + cell.getCellVal();
@@ -229,43 +224,8 @@ public class ImportExcelNextWindow {
 			}
 		});
 
-		Button autoBtn = new Button("自动匹配");
-//		cleanBtn.setPadding(new Insets(5));
-		autoBtn.getStyleClass().add("myAlertBtn");
-		autoBtn.setOnAction(e -> {
-			ImportFieldMapPo tmp = new ImportFieldMapPo();
-			tmp.setTableName(tableName);
-			Connection conn = SqluckyAppDB.getConn();
-			try {
-				List<ImportFieldMapPo> ls = PoDao.select(conn, tmp);
-				if (ls != null && ls.size() > 0) {
-					ImportFieldMapPo mpo = ls.get(0);
-					ImportFieldMapDetailPo dpo = new ImportFieldMapDetailPo();
-					dpo.setTableId(mpo.getId());
-					List<ImportFieldMapDetailPo> dls = PoDao.select(conn, dpo);
-					if (dls != null && dls.size() > 0) {
-						for (ImportFieldMapDetailPo mdpo : dls) {
-							String fname = mdpo.getTableFiledName();
-							int idx = mdpo.getExcelFiledIdx();
-							for (var tmp1 : fields) {
-								if (tmp1.getColumnLabel().get().equals(fname)) {
-									String selectValtmp = selectVal.get(idx);
-									tmp1.getExcelFieldVal().set(selectValtmp);
+		Button autoBtn = historyBtn(fields); // new Button("自动匹配");
 
-								}
-//								tmp.getExcelFieldVal().set("");
-							}
-						}
-
-					}
-				}
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			} finally {
-				SqluckyAppDB.closeConn(conn);
-			}
-
-		});
 
 		topfp.getChildren().add(lb);
 		topfp.getChildren().add(textFieldPane); // filterField
@@ -433,6 +393,50 @@ public class ImportExcelNextWindow {
 		stage.show();
 	}
 
+	// 历史匹配记录
+	public Button historyBtn( ObservableList<ImportFieldPo> fields) {
+		Button	autoBtn = new Button("自动匹配");
+		autoBtn.getStyleClass().add("myAlertBtn");
+		autoBtn.setOnAction(e -> {
+			QueryHistoryImportFieldMap qfm = new QueryHistoryImportFieldMap("Excel");
+			qfm.show();
+		});
+//		autoBtn.setOnAction(e -> {
+//			ImportFieldMapPo tmp = new ImportFieldMapPo();
+//			tmp.setTableName(tableName);
+//			Connection conn = SqluckyAppDB.getConn();
+//			try {
+//				List<ImportFieldMapPo> ls = PoDao.select(conn, tmp);
+//				if (ls != null && ls.size() > 0) {
+//					ImportFieldMapPo mpo = ls.get(0);
+//					ImportFieldMapDetailPo dpo = new ImportFieldMapDetailPo();
+//					dpo.setTableId(mpo.getId());
+//					List<ImportFieldMapDetailPo> dls = PoDao.select(conn, dpo);
+//					if (dls != null && dls.size() > 0) {
+//						for (ImportFieldMapDetailPo mdpo : dls) {
+//							String fname = mdpo.getTableFiledName();
+//							int idx = mdpo.getExcelFiledIdx();
+//							for (var tmp1 : fields) {
+//								if (tmp1.getColumnLabel().get().equals(fname)) {
+//									String selectValtmp = selectVal.get(idx);
+//									tmp1.getExcelFieldVal().set(selectValtmp);
+//
+//								}
+//							}
+//						}
+//
+//					}
+//				}
+//			} catch (Exception e2) {
+//				e2.printStackTrace();
+//			} finally {
+//				SqluckyAppDB.closeConn(conn);
+//			}
+//
+//		});
+		return autoBtn;
+	}
+	
 	// 保存按钮
 	public Button saveBtnSetup() {
 		Button btn = new Button("Save");
@@ -527,14 +531,9 @@ public class ImportExcelNextWindow {
 
 		vb.getChildren().add(bottomPane);
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-//		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {
 			filterField.clear();
-//			stage.close();
 		});
-//		scene.getAccelerators().put(spacebtn, () -> {
-//			stage.close();
-//		});
 
 		stage.setTitle(title);
 		CommonUtils.loadCss(scene);

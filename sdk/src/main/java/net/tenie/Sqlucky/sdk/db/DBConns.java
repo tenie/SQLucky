@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -100,11 +101,21 @@ public final class DBConns {
 
 	
 	// 选择连接框的选项修改选项
-	public static void changeChoiceBox(String idx) {
-		if (cb != null && idx.length() > 0) {
-			cb.getSelectionModel().select(Integer.valueOf(idx));
+	public static void changeChoiceBox(Integer idx) {
+		if (cb != null && idx != null && idx > 0) {
+			cb.getSelectionModel().select(idx);
 
 		}
+	}
+	
+	// 选择连接框的选项修改选项
+	public static Integer choiceBoxIndex() {
+		Integer idx = null;
+		if (cb != null ) {
+			idx = cb.getSelectionModel().selectedIndexProperty().get();
+
+		}
+		return idx;
 	}
 
 	public static void add(String name, SqluckyConnector o) {

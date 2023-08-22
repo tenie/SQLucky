@@ -105,6 +105,9 @@ public class DBinfoTree {
 		// 双击
 		DBinfoTreeView.setOnMouseClicked(e -> {
 			treeViewDoubleClick(e);
+			if (e.getClickCount() == 1) {
+				AppWindow.treeView.refresh();
+			}
 		});
 		// 右键菜单
 		menu = new DBInfoTreeContextMenu();

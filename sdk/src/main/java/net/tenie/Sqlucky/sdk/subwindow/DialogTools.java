@@ -37,7 +37,7 @@ public class DialogTools {
 	private static Logger logger = LogManager.getLogger(DialogTools.class);
 
 	public static Node setVboxShape(Stage stage, Node title, List<Node> nds, List<Node> btns) {
-		return setVboxShape(500, 80, stage, title, nds, btns);
+		return setVboxShape(750, 110, stage, title, nds, btns);
 	}
 
 	// TODO 设置子窗口的外形
@@ -45,9 +45,12 @@ public class DialogTools {
 			List<Node> btns) {
 
 		VBox subWindow = new VBox();
-		if (width > 0 && height > 0) {
+		if (width > 0  ) {
 			subWindow.setPrefWidth(width);
 			subWindow.setPrefHeight(height);
+		}
+		
+		if(height > 0) {
 			subWindow.maxHeight(height);
 			subWindow.maxWidth(width);
 		}
@@ -57,12 +60,11 @@ public class DialogTools {
 			subWindow.getChildren().add(nd);
 			VBox.setMargin(nd, new Insets(0, 0, 5, 0));
 		}
-		VBox.setVgrow(nds.get(0), Priority.ALWAYS);
+//		VBox.setVgrow(nds.get(0), Priority.ALWAYS);
 
 		// 最后的按钮
 		AnchorPane foot = new AnchorPane();
-		JFXButton cancelbtn = new JFXButton("Cancel");
-
+		
 		if (btns != null) {
 			double i = 0.0;
 			for (Node bn : btns) {
@@ -72,18 +74,18 @@ public class DialogTools {
 			}
 
 		} else {
+			JFXButton cancelbtn = new JFXButton("Cancel");
+			cancelbtn.getStyleClass().add("myAlertBtn");
 			foot.getChildren().add(cancelbtn);
 			AnchorPane.setRightAnchor(cancelbtn, 0.0);
+			cancelbtn.setOnAction(e -> {
+				stage.close();
+			});
 		}
 
 		VBox.setMargin(foot, new Insets(0, 0, 5, 0));
-
 		subWindow.getChildren().add(foot);
-
-		cancelbtn.setOnAction(e -> {
-			stage.close();
-		});
-
+		VBox.setVgrow(foot, Priority.ALWAYS);
 		subWindow.setPadding(new Insets(0, 5, 5, 5));
 		Node subw = windowShell(stage, subWindow, title, "myAlert");
 
@@ -191,7 +193,7 @@ public class DialogTools {
 
 	// TODO
 	public static void showExecWindow(String title, String containTxt, Consumer<String> caller) {
-		VBox vb = new VBox();
+//		VBox vb = new VBox();
 		TextField tf1 = new TextField("");
 		tf1.getStyleClass().add("myFindTextField");
 		tf1.setEditable(true);
@@ -202,38 +204,51 @@ public class DialogTools {
 		tf1.setFocusTraversable(false);
 
 		Label tit = new Label(title);
-		vb.getChildren().add(tit);
-		vb.getChildren().add(tf1);
-		vb.setPrefWidth(500);
+//		vb.getChildren().add(tit);
+//		vb.getChildren().add(tf1);
+//		vb.setPrefWidth(500);
 //		vb.setPadding(new Insets(0,20,20,20));
-		vb.setPrefHeight(100);
-		vb.maxHeight(100);
-		vb.maxWidth(500);
+//		vb.setPrefHeight(100);
+//		vb.maxHeight(100);
+//		vb.maxWidth(500);
 //		ModalDialog.ModalDialogAppCallConsumer(vb, title, caller); 
-		vb.getStyleClass().add("myAlert");
-		final Stage stage = new Stage();
-		Scene scene = new Scene(vb);
+//		vb.getStyleClass().add("myAlert");
+		Stage stage = new Stage();
+		
 		JFXButton btn = new JFXButton("Cancel");
+		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(value -> {
 			stage.close();
 		});
 
 		JFXButton okbtn = new JFXButton("OK");
+		okbtn.getStyleClass().add("myAlertOkBtn");
 		okbtn.setOnAction(value -> {
 			String val = tf1.getText();
 			caller.accept(val);
 			stage.close();
 		});
 
-		AnchorPane pn = new AnchorPane();
-		pn.getChildren().addAll(okbtn, btn);
-		AnchorPane.setRightAnchor(btn, 0.0);
-		AnchorPane.setRightAnchor(okbtn, 60.0);
-		vb.getChildren().add(pn);
-
-//		setVboxShape(vb, stage);
-
-		stage.initModality(Modality.APPLICATION_MODAL);
+//		AnchorPane pn = new AnchorPane();
+//		pn.getChildren().addAll(okbtn, btn);
+//		AnchorPane.setRightAnchor(btn, 0.0);
+//		AnchorPane.setRightAnchor(okbtn, 60.0);
+//		vb.getChildren().add(pn);
+		
+		List<Node> nds = new ArrayList<>();
+		nds.add(tit);
+		nds.add(tf1);
+//		nds.add(pn);
+//		nds.add(text2);
+		
+		List<Node> btns = new ArrayList<>();
+		btns.add(btn);
+		btns.add(okbtn);
+		
+		
+		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.INFO, nds, btns);
+		Scene scene = new Scene((Parent) vb);
+//		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle(title);
 		stage.setScene(scene);
 		DialogTools.setSceneAndShow(scene, stage, false);

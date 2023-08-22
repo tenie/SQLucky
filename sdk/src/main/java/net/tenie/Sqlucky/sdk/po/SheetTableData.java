@@ -1,13 +1,10 @@
 package net.tenie.Sqlucky.sdk.po;
 
 import java.sql.Connection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.controlsfx.control.tableview2.FilteredTableView;
 
-import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
@@ -31,23 +28,8 @@ public class SheetTableData {
 	private double execTime = 0;
 	// 行数
 	private int rows = 0;
-
-	// table id + row num 组成key ,保存对于行的数据
-//	private Map<String, ObservableList<StringProperty>> newLineDate;
-	// table id + row num 组成key ,保存对于行的原始数据
-//	private Map<String, ObservableList<StringProperty>> oldval ;
-	// 待insert的 数据
-//	private Map<String, ObservableList<StringProperty>> appendData ;
-
-	// 列的右键菜单 menuItem
-//	private List<MenuItem> menuItems = new ArrayList<>();
-
 	// 列
 	private ObservableList<SheetFieldPo> colss;
-	// 数据添加到表格 更简洁的api   , 数据库查询结果的表格原始数据
-	private ObservableList<ObservableList<StringProperty>> rawData;
-	// tab中的表格
-	private FilteredTableView<ObservableList<StringProperty>> dbValTable;
 	
 	// 一般的信息展示表个数据
 	private ResultSetPo infoTableVals; 
@@ -58,64 +40,23 @@ public class SheetTableData {
 	
 	
 	public void clean() {
-//		menuItems.clear();
-//		menuItems = null;
-		if(dbValTable != null) {
-			dbValTable.getItems().clear();
-		}
-		dbValTable = null;
-		
-		if(rawData!=null) {
-			rawData.forEach(v -> {
-				v.clear();
-			});
-			rawData.clear();
-		}		
-		rawData = null;
-		
 		if(colss!=null) {
 			colss.clear();
 		}
 		colss = null;  
 		
-//		if(appendData != null) appendData.clear();
-//		appendData = null;
-//		
-//		if(oldval != null) oldval.clear();
-//		oldval = null;
-//		
-//		if(newLineDate != null) newLineDate.clear();
-//		newLineDate = null;
-//		
+		if(infoTable != null) {
+			infoTable = null;
+		}
+		
+		if(infoTableVals != null) {
+			infoTableVals.clean();
+		}
+		
 		if(btnLs != null) btnLs.clear();
 		btnLs = null;
 	}
 
- 
-
-	public SheetTableData(FilteredTableView<ObservableList<StringProperty>> table,  String tabName,
-			String sqlStr, String connName, ObservableList<SheetFieldPo> colss,
-			ObservableList<ObservableList<StringProperty>> rawData) {
-		this.dbValTable = table;
-		this.tabName = tabName;
-		this.sqlStr = sqlStr;
-		this.connName = connName;
-		this.colss = colss;
-		this.rawData = rawData;
-	}
-
-	public SheetTableData(FilteredTableView<ObservableList<StringProperty>> table, String tabName,
-			ObservableList<SheetFieldPo> colss, ObservableList<ObservableList<StringProperty>> rawData) {
-		this.dbValTable = table;
-		this.tabName = tabName;
-		this.colss = colss;
-		this.rawData = rawData;
-	}
-
-	public SheetTableData() {
-
-	}
- 
 	public String getTabName() {
 		return tabName;
 	}
@@ -130,30 +71,6 @@ public class SheetTableData {
 
 	public void setSqlStr(String sqlStr) {
 		this.sqlStr = sqlStr;
-	}
-
-//	public ObservableList<SqlFieldPo> getTabCol() {
-//		return tabCol;
-//	}
-
-//	public void setTabCol(ObservableList<SqlFieldPo> tabCol) {
-//		this.tabCol = tabCol;
-//	}
-
-	public ObservableList<ObservableList<StringProperty>> getRawData() {
-		return rawData;
-	}
-
-	public void setRawData(ObservableList<ObservableList<StringProperty>> rawData) {
-		this.rawData = rawData;
-	}
-
-	public FilteredTableView<ObservableList<StringProperty>> getTable() {
-		return dbValTable;
-	}
-
-	public void setTable(FilteredTableView<ObservableList<StringProperty>> table) {
-		this.dbValTable = table;
 	}
 
 	public ObservableList<SheetFieldPo> getColss() {
@@ -172,39 +89,6 @@ public class SheetTableData {
 		this.connName = connName;
 	}
 
-//	public Map<String, ObservableList<StringProperty>> getNewLineDate() {
-//		if(newLineDate == null) {
-//			newLineDate = new HashMap<>();
-//		}
-//		return newLineDate;
-//	}
-//
-//	public void setNewLineDate(Map<String, ObservableList<StringProperty>> newLineDate) {
-//		this.newLineDate = newLineDate;
-//	}
-//
-//	public Map<String, ObservableList<StringProperty>> getOldval() {
-//		if(oldval == null) {
-//			oldval = new HashMap<>();
-//		}
-//		return oldval;
-//	}
-//
-//	public void setOldval(Map<String, ObservableList<StringProperty>> oldval) {
-//		this.oldval = oldval;
-//	}
-//
-//	public Map<String, ObservableList<StringProperty>> getAppendData() {
-//		if(appendData == null) {
-//			appendData = new HashMap<>();
-//		}
-//		return appendData;
-//	}
-//
-//	public void setAppendData(Map<String, ObservableList<StringProperty>> appendData) {
-//		this.appendData = appendData;
-//	}
-
 	public double getExecTime() {
 		return execTime;
 	}
@@ -220,14 +104,6 @@ public class SheetTableData {
 	public void setRows(int rows) {
 		this.rows = rows;
 	}
-
-//	public List<MenuItem> getMenuItems() {
-//		return menuItems;
-//	}
-//
-//	public void setMenuItems(List<MenuItem> menuItems) {
-//		this.menuItems = menuItems;
-//	}
 
 	public boolean isLock() {
 		return isLock;
@@ -279,20 +155,6 @@ public class SheetTableData {
 	public void setInfoTable(FilteredTableView<ResultSetRowPo> table2) {
 		this.infoTable = table2;
 	}
-
-
-
-	public FilteredTableView<ObservableList<StringProperty>> getDbValTable() {
-		return dbValTable;
-	}
-
-
-
-	public void setDbValTable(FilteredTableView<ObservableList<StringProperty>> dbValTable) {
-		this.dbValTable = dbValTable;
-	}
-
-
 
 	public ResultSetPo getInfoTableVals() {
 		return infoTableVals;
