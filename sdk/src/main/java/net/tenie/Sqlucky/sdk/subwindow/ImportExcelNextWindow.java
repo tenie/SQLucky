@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -46,7 +45,6 @@ import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
 import net.tenie.Sqlucky.sdk.excel.ExcelToDB;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.excel.ReadExcel;
-import net.tenie.Sqlucky.sdk.po.ImportFieldMapDetailPo;
 import net.tenie.Sqlucky.sdk.po.ImportFieldMapPo;
 import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -82,6 +80,8 @@ public class ImportExcelNextWindow {
 	List<String> selectVal = new ArrayList<>();
 	// 过滤输入框
 	TextField filterField = new TextField();
+
+	QueryHistoryImportFieldMap qfm ;
 
 	public void showWindow(SqluckyConnector dbc, String tableNameVal, String excelFilePath, Stage parentStage) {
 
@@ -217,14 +217,7 @@ public class ImportExcelNextWindow {
 		var textFieldPane = UiTools.textFieldAddCleanBtn(filterField);
 
 		// 清空列的值
-		Button cleanBtn = new Button("清空列值");
-//		cleanBtn.setPadding(new Insets(5));
-		cleanBtn.getStyleClass().add("myAlertBtn");
-		cleanBtn.setOnAction(e -> {
-			for (var tmp : fields) {
-				tmp.getExcelFieldVal().set("");
-			}
-		});
+		Button cleanBtn = cleanBtn(fields);// new Button("清空列值");
 
 		Button autoBtn = historyBtn(fields); // new Button("自动匹配");
 		Button saveFiedBtn = saveFiedMapBtn();
@@ -422,46 +415,37 @@ public class ImportExcelNextWindow {
 	}
 
 	public Button saveFiedMapBtn() {
-		Button saveMapBtn = new Button("保存字段映射");
+		Button saveMapBtn = new Button("保存字段匹配");
 		saveMapBtn.getStyleClass().add("myAlertBtn");
 		saveMapBtn.setOnAction(e -> {
 			saveFieldMap();
 		});
 		return saveMapBtn;
 	}
-
+	
+	public Button cleanBtn(ObservableList<ImportFieldPo> fields) {
+		// 清空列的值
+		Button cleanBtn = new Button("清空列值");
+		cleanBtn.getStyleClass().add("myAlertBtn");
+		cleanBtn.setOnAction(e -> {
+			for (var tmp : fields) {
+				tmp.getExcelFieldVal().set("");
+				tmp.getFixedValue().set("");
+			}
+		});
+		return cleanBtn;
+	}
+	
 	// 历史匹配记录
 	public Button historyBtn(ObservableList<ImportFieldPo> fields) {
-		Button autoBtn = new Button("自动匹配");
+		Button autoBtn = new Button("历史匹配");
 		autoBtn.getStyleClass().add("myAlertBtn");
 		autoBtn.setOnAction(e -> {
-			QueryHistoryImportFieldMap qfm = new QueryHistoryImportFieldMap("Excel");
+			if(qfm == null) {
+				qfm = new QueryHistoryImportFieldMap("Excel");
+			}
 			qfm.show();
-			List<ImportFieldMapDetailPo> dpo = qfm.getFieldMapDatails();
-			if (dpo == null) {
-				return;
-			} else {
-				for (var tmp : fields) {
-					tmp.getExcelFieldVal().set("");
-				}
-			}
-
-			for (var dmpo : dpo) {
-				Optional<ImportFieldPo> opt = fields.stream()
-						.filter(p -> p.getColumnLabel().get().equals(dmpo.getTableFiledName())).findFirst();
-				if (opt.isPresent()) {
-					ImportFieldPo tmp = opt.get();
-					if (dmpo.getExcelFiledIdx() != null) {
-						var val = selectVal.get(dmpo.getExcelFiledIdx());
-						tmp.getExcelFieldVal().set(val);
-					} else {
-						tmp.getFixedValue().set(dmpo.getFixedValue());
-					}
-
-				}
-			}
-
-			System.out.println(dpo);
+			qfm.mapNewVal(fields, selectVal);
 		});
 		return autoBtn;
 	}
@@ -483,25 +467,6 @@ public class ImportExcelNextWindow {
 			if (vals == null || vals.size() == 0) {
 				return;
 			}
-//			List<ImportFieldPo> vals = new ArrayList<>();
-
-//			// 提取有被映射的字段
-//			for (ImportFieldPo fieldpo : excelFields) {
-//				fieldpo.getExcelFieldVal().getValue();
-//				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelFieldVal())
-//						|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
-//					vals.add(fieldpo);
-//				}
-//
-//			}
-//			//
-//			if (vals.size() == 0) {
-//				MyAlert.errorAlert("字段还没有做关联!");
-//				return;
-//			} else {
-//				// 保存映射
-//				ImportFieldMapPo.save(tableName, "Excel", vals);
-//			}
 
 			String beginInt = beginIdTF.getText();
 			String countInt = conuntTF.getText();
