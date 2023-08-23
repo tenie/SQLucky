@@ -42,6 +42,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.excel.CsvToDB;
 import net.tenie.Sqlucky.sdk.excel.CsvUtil;
 import net.tenie.Sqlucky.sdk.excel.ExcelHeadCellInfo;
+import net.tenie.Sqlucky.sdk.po.ImportFieldMapPo;
 import net.tenie.Sqlucky.sdk.po.ImportFieldPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -74,8 +75,12 @@ public class ImportCsvNextWindow {
 	private SqluckyConnector sqluckyConn;
 	private String splitSymbol = "";
 	// 过滤输入框
-	TextField filterField = new TextField();
-
+	private TextField filterField = new TextField();
+ 
+	private List<String> selectVal = new ArrayList<>();
+	private QueryHistoryImportFieldMap qfm ;
+	
+	
 	public void showWindow(SqluckyConnector dbc, String tableNameVal, String csvFilePath, Stage parentStage,
 			String sSymbol) {
 		sqluckyConn = dbc;
@@ -90,6 +95,8 @@ public class ImportCsvNextWindow {
 				MyAlert.errorAlert("没有表<" + tableNameVal + ">的信息, 请确保表存在!");
 				return;
 			}
+			
+
 			Platform.runLater(() -> {
 				layout(tbox, tableName);
 				parentStage.close();
@@ -120,6 +127,7 @@ public class ImportCsvNextWindow {
 				csvFields.add(excelpo);
 			}
 
+			
 			VBox tableBox = tableFiledMapCsvRowBox(tablename, csvFields, csvFile);
 			return tableBox;
 		} catch (SQLException e) {
@@ -141,7 +149,7 @@ public class ImportCsvNextWindow {
 		if (row1 != null) {
 
 			String[] headArr = new String[row1.size()];
-			List<String> selectVal = new ArrayList<>();
+//			List<String> selectVal = new ArrayList<>();
 			for (int i = 0; i < row1.size(); i++) {
 				ExcelHeadCellInfo cell = row1.get(i);
 				String val = (cell.getCellIdx() + 1) + " - " + cell.getCellVal();
@@ -270,20 +278,25 @@ public class ImportCsvNextWindow {
 		var textFieldPane = UiTools.textFieldAddCleanBtn(filterField);
 
 		// 清空列的值
-		Button cleanBtn = new Button("清空列值");
-		cleanBtn.setPadding(new Insets(5));
-		cleanBtn.getStyleClass().add("myAlertBtn");
-		cleanBtn.setOnAction(e -> {
-			for (var tmp : fields) {
-				tmp.getExcelFieldVal().set("");
-			}
-		});
+		Button cleanBtn =  cleanBtn(fields); //new Button("清空列值");
+//		cleanBtn.setPadding(new Insets(5));
+//		cleanBtn.getStyleClass().add("myAlertBtn");
+//		cleanBtn.setOnAction(e -> {
+//			for (var tmp : fields) {
+//				tmp.getExcelFieldVal().set("");
+//			}
+//		});
 
+		Button autoBtn = historyBtn(fields); // new Button("自动匹配");
+		Button saveFiedBtn = saveFiedMapBtn();
 		topfp.getChildren().add(lb);
 		topfp.getChildren().add(textFieldPane);
 		topfp.getChildren().add(cleanBtn);
+		topfp.getChildren().add(autoBtn);
+		topfp.getChildren().add(saveFiedBtn);
 
 		FlowPane.setMargin(cleanBtn, new Insets(0, 10, 0, 5));
+		FlowPane.setMargin(autoBtn, new Insets(0, 10, 0, 5));
 		return topfp;
 	}
 
@@ -378,7 +391,42 @@ public class ImportCsvNextWindow {
 
 		stage.show();
 	}
-
+	public Button cleanBtn(ObservableList<ImportFieldPo> fields) {
+		// 清空列的值
+		Button cleanBtn = new Button("清空列值");
+		cleanBtn.getStyleClass().add("myAlertBtn");
+		cleanBtn.setOnAction(e -> {
+			for (var tmp : fields) {
+				tmp.getExcelFieldVal().set("");
+				tmp.getFixedValue().set("");
+			}
+		});
+		return cleanBtn;
+	}
+	
+ 
+	// 历史匹配记录
+	public Button historyBtn(ObservableList<ImportFieldPo> fields) {
+		Button autoBtn = new Button("历史匹配");
+		autoBtn.getStyleClass().add("myAlertBtn");
+		autoBtn.setOnAction(e -> {
+			if (qfm == null) {
+				qfm = new QueryHistoryImportFieldMap("CSV");
+			}
+			qfm.show();
+			qfm.mapNewVal(fields, selectVal);
+		});
+		return autoBtn;
+	}
+	
+	public Button saveFiedMapBtn() {
+		Button saveMapBtn = new Button("保存字段匹配");
+		saveMapBtn.getStyleClass().add("myAlertBtn");
+		saveMapBtn.setOnAction(e -> {
+			saveFieldMap();
+		});
+		return saveMapBtn;
+	}
 	// 保存按钮
 	public Button saveBtnSetup() {
 		Button btn = new Button("Save");
@@ -393,22 +441,26 @@ public class ImportCsvNextWindow {
 					return;
 				}
 			}
-			List<ImportFieldPo> vals = new ArrayList<>();
-			// 提取有被映射的字段
-			for (ImportFieldPo fieldpo : csvFields) {
-				fieldpo.getExcelFieldVal().getValue();
-				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelFieldVal())
-						|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
-					vals.add(fieldpo);
-				}
-			}
-			//
-			if (vals.size() == 0) {
-				MyAlert.errorAlert("字段还没有做关联!");
+//			List<ImportFieldPo> vals = new ArrayList<>();
+//			// 提取有被映射的字段
+//			for (ImportFieldPo fieldpo : csvFields) {
+//				fieldpo.getExcelFieldVal().getValue();
+//				if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelFieldVal())
+//						|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
+//					vals.add(fieldpo);
+//				}
+//			}
+//			//
+//			if (vals.size() == 0) {
+//				MyAlert.errorAlert("字段还没有做关联!");
+//				return;
+//			}
+			// 保存映射
+			List<ImportFieldPo> vals = saveFieldMap();
+			if (vals == null || vals.size() == 0) {
 				return;
 			}
-			// 保存映射
-
+			
 			String beginInt = beginIdTF.getText();
 			String countInt = conuntTF.getText();
 			Integer beginval = null;
@@ -439,6 +491,28 @@ public class ImportCsvNextWindow {
 
 		});
 		return btn;
+	}
+	// 保存映射
+	public List<ImportFieldPo> saveFieldMap() {
+		List<ImportFieldPo> vals = new ArrayList<>();
+		// 提取有被映射的字段
+		for (ImportFieldPo fieldpo : csvFields) {
+			fieldpo.getExcelFieldVal().getValue();
+			if (StrUtils.isNotNullOrEmpty(fieldpo.getExcelFieldVal())
+					|| StrUtils.isNotNullOrEmpty(fieldpo.getFixedValue())) {
+				vals.add(fieldpo);
+			}
+
+		}
+		//
+		if (vals.size() == 0) {
+			MyAlert.errorAlert("字段还没有做关联!");
+			return null;
+		} else {
+			// 保存映射
+			ImportFieldMapPo.save(tableName, "CSV", vals);
+		}
+		return vals;
 	}
 
 	public Button cancelBtn() {

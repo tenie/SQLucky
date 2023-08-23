@@ -79,23 +79,28 @@ public class ImportFieldPo extends SheetFieldPo {
 	}
 
 	public Integer getFieldIdx() {
-		if (fieldIdx == null) {
-			// 匹配到excel的列
-			String fieldIdxStr = "";
-			String fieldVal = this.getExcelFieldVal().get();
-			if (StrUtils.isNotNullOrEmpty(fieldVal)) {
-				String[] excelInfo = fieldVal.split(" - ");
-				fieldIdxStr = excelInfo[0];
-			}
+		if(StrUtils.isNotNullOrEmpty(this.getExcelFieldVal().get())) {
+			if (fieldIdx == null) {
+				// 匹配到excel的列
+				String fieldIdxStr = "";
+				String fieldVal = this.getExcelFieldVal().get();
+				if (StrUtils.isNotNullOrEmpty(fieldVal)) {
+					String[] excelInfo = fieldVal.split(" - ");
+					fieldIdxStr = excelInfo[0];
+				}
 
-			if (StrUtils.isNotNullOrEmpty(fieldIdxStr)) { // 空表示没有匹配
-				Integer fieldidx = Integer.valueOf(fieldIdxStr);
-				fieldIdx = fieldidx - 1; // 下标从0开始, 需要减1
-			} else {
-				fieldIdx = -1;
-			}
+				if (StrUtils.isNotNullOrEmpty(fieldIdxStr)) { // 空表示没有匹配
+					Integer fieldidx = Integer.valueOf(fieldIdxStr);
+					fieldIdx = fieldidx - 1; // 下标从0开始, 需要减1
+				} else {
+					fieldIdx = -1;
+				}
 
+			}
+		}else {
+			fieldIdx = -1;
 		}
+		
 		return fieldIdx;
 	}
 
