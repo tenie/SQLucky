@@ -12,6 +12,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 
@@ -70,11 +71,24 @@ public final class DBConns {
 		if (cb == null) {
 			return;
 		}
-		
+		// 获取当前选中的连接名称, 给重新赋值后需要再次选中之前的名称
+		String selectStr = "";
+		if( box.getSelectionModel()!=null &&  box.getSelectionModel().getSelectedItem()!=null) {
+			  selectStr = box.getSelectionModel().getSelectedItem().getText();
+		}
 		ObservableList<Label> list= getChoiceBoxItems();
-
 		cb.setItems(list);
-
+		
+		if(StrUtils.isNotNullOrEmpty(selectStr)) {
+			for(Label lb : list) {
+				if( lb.getText().equals(selectStr) ) {
+					cb.getSelectionModel().select(lb);
+					break;
+				}
+			}
+		}
+	
+		
 	}
 	
 	public static ObservableList<Label> getChoiceBoxItems(){

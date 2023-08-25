@@ -14,7 +14,6 @@ import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -54,7 +53,7 @@ public class SelectAction {
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 //			SheetDataValue sheetDaV = new SheetDataValue();
 			sheetDaV.setDbConnection(sqluckyConn);
-			String connectName = DBConns.getCurrentConnectName();
+			String connectName = sqluckyConn.getConnName(); //DBConns.getCurrentConnectName();
 			sheetDaV.setSqlStr(sql);
 //			sheetDaV.setTable(table);
 			sheetDaV.setTabName(tableName);
