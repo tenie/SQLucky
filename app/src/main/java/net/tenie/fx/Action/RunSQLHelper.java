@@ -58,6 +58,8 @@ public class RunSQLHelper {
 	private static JFXButton runLinebtn;
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
+	
+	public  static boolean isRunning = false;
 
 	ExecutorService service = Executors.newFixedThreadPool(1);
 	private static SqluckyConnector tmpSqlConn;
@@ -75,61 +77,73 @@ public class RunSQLHelper {
 
 	@SuppressWarnings("restriction")
 	private static void runMain(RunSqlStatePo state) {
-		if(!  state.getSqlConn().isAlive()) {
-			MyAlert.errorAlert("连接中断, 请重新连接!");
+		if (isRunning) {
+			MyAlert.errorAlert("有查询在进行中, 请稍等!");
 			return;
 		}
-		
-		
-//		tmpSqlConn = state.getSqlConn();
-		// 等待加载动画
-		SqlExecuteOption.addWaitingPane(state.getTidx(), state.getIsRefresh());
-		List<SqlData> allsqls = new ArrayList<>();
 		try {
-			// 获取sql 语句
-			String sqlstr = state.getSqlStr();
-			// 执行创建存储过程函数, 触发器等
-			if (state.getIsCreateFunc()) {
-				if (StrUtils.isNotNullOrEmpty(sqlstr)) {
-					SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
-					allsqls.add(sq);
-				} else {
-					String str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-					SqlData sq = new SqlData(str, 0, str.length());
-					allsqls.add(sq);
-				}
-				// 执行传入的sql, 非界面上的sql
-			} else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
-				allsqls = SqlExecuteOption.epurateSql(sqlstr);
-			} else {
-				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
-				allsqls = SqlExecuteOption.willExecSql(state.getIsCurrentLine());
+			isRunning = true;
+			if (!state.getSqlConn().isAlive()) {
+				MyAlert.errorAlert("连接中断, 请重新连接!");
+				return;
 			}
-			// 执行sql
-			var rsVal = execSqlList(allsqls, state.getSqlConn(), state);
+			// 等待加载动画
+			SqlExecuteOption.addWaitingPane(state.getTidx(), state.getIsRefresh());
+			List<SqlData> allsqls = new ArrayList<>();
+//			if (isRunning) {
+//				MyAlert.errorAlert("有查询在进行中, 请稍等!");
+//				return;
+//			} else {
 
-			// 执行sql的状态保存
-			if (state.getStatusKey() != null)
-				RUN_STATUS.put(state.getStatusKey(), rsVal);
+				// 获取sql 语句
+				String sqlstr = state.getSqlStr();
+				// 执行创建存储过程函数, 触发器等
+				if (state.getIsCreateFunc()) {
+					if (StrUtils.isNotNullOrEmpty(sqlstr)) {
+						SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
+						allsqls.add(sq);
+					} else {
+						String str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
+						SqlData sq = new SqlData(str, 0, str.length());
+						allsqls.add(sq);
+					}
+					// 执行传入的sql, 非界面上的sql
+				} else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
+					allsqls = SqlExecuteOption.epurateSql(sqlstr);
+				} else {
+					// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
+					allsqls = SqlExecuteOption.willExecSql(state.getIsCurrentLine());
+				}
+				// 执行sql
+				var rsVal = execSqlList(allsqls, state.getSqlConn(), state);
 
+				// 执行sql的状态保存
+				if (state.getStatusKey() != null) {
+					RUN_STATUS.put(state.getStatusKey(), rsVal);
+
+				}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			settingBtn();
-			state.setCallProcedureFields(null);
-			state.setIsCallFunc(false);
-			SdkComponent.rmWaitingPane();
+			if(isRunning) {
+				settingBtn();
+				state.setCallProcedureFields(null);
+				state.setIsCallFunc(false);
+				SdkComponent.rmWaitingPane();
+			}
+			
+			isRunning = false;
 		}
 
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static Integer execSqlList(List<SqlData> allsqls, SqluckyConnector dpo, RunSqlStatePo state)
+	private static Integer execSqlList(List<SqlData> allsqls, SqluckyConnector sqluckyConn, RunSqlStatePo state)
 			throws SQLException {
 		Integer rsVal = 1;
 		String sqlstr;
 		String sql;
-		Connection conn = dpo.getConn();
+		Connection conn = sqluckyConn.getConn();
 	
 		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
@@ -142,10 +156,10 @@ public class RunSQLHelper {
 			String msg = "";
 			try {
 				if (state.getIsCallFunc()) { // 调用存储过程
-					ProcedureAction.procedureAction(sql, dpo, state.getCallProcedureFields(), state.getTidx(),
+					ProcedureAction.procedureAction(sql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(),
 							state.getIsLock(), thread, state.getIsRefresh());
 				} else if (type == ParseSQL.SELECT) { // 调用查询
-					SelectAction.selectAction(sql, dpo, state.getTidx(), state.getIsLock(), thread,
+					SelectAction.selectAction(sql, sqluckyConn, state.getTidx(), state.getIsLock(), thread,
 							state.getIsRefresh());
 				} else {
 					if (type == ParseSQL.UPDATE) {
@@ -174,7 +188,7 @@ public class RunSQLHelper {
 				}
 			} catch (Exception e) {
 				msg = "failed : " + e.getMessage();
-				msg += "\n" + dpo.translateErrMsg(msg);
+				msg += "\n" + sqluckyConn.translateErrMsg(msg);
 				SqlData sd = allsqls.get(i);
 				errObj.add(sd);
 				rsVal = 0;

@@ -332,6 +332,7 @@ public class TransferDataUtils {
 
 					pstmt.setObject(i + 1, obj);
 				}
+//				pstmt.execute();
 				pstmt.addBatch();
 				if (idx % execLine == 0) {
 					int[] count = pstmt.executeBatch();
