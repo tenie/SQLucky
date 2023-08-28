@@ -116,7 +116,7 @@ public class JsonTools {
 //	    String str = "{\"age\":\"24\",\"name\":\"cool_summer_moon\"}";
 	    JSONObject  jsonObject = JSONObject.parseObject(str);
 	    //json对象转Map
-	    Map<String,Object> map = (Map<String,Object>)jsonObject;
+	    Map<String,Object> map = jsonObject;
 	    System.out.println("map对象是：" + map);
 //	    Object object = map.get("age");
 //	    System.out.println("age的值是"+object);
@@ -128,22 +128,6 @@ public class JsonTools {
 	    JSONObject json = new JSONObject(map);
 	    return json.toString(); 
 	}
-	
-//	public static void main(String[] args) {
-////		readJosnModel("C:\\Users\\tenie\\Downloads\\infodms.chnr.json");
-//		String str = "[{\"id\":1,\"userId\":1,\"backupName\":\"lll\",\"filePath\":\"C:\\\\Users\\\\tenie\\\\ssfblog/upload\\\\1\\\\1\\\\lll\",\"type\":1,\"createdAt\":\"2023-02-24T03:31:15.103+00:00\",\"updatedAt\":null},{\"id\":2,\"userId\":1,\"backupName\":\"lll\",\"filePath\":\"C:\\\\Users\\\\tenie\\\\ssfblog/upload\\\\2\\\\1\\\\lll\",\"type\":2,\"createdAt\":\"2023-02-24T03:31:15.283+00:00\",\"updatedAt\":null},{\"id\":3,\"userId\":1,\"backupName\":\"bbb\",\"filePath\":\"C:\\\\Users\\\\tenie\\\\ssfblog/upload\\\\1\\\\1\\\\bbb\",\"type\":1,\"createdAt\":\"2023-02-24T07:42:51.543+00:00\",\"updatedAt\":null}]\r\n"
-//				+ "";
-//		List<Map> ls = jsonToList(str, Map.class);
-//		System.out.println(ls);
-//		System.out.println("==========");
-//		String  json = listToJson(ls);
-//		System.out.println(json);
-//
-//	}
-//	public static void main(String[] args) {
-//		getTable("C:\\Users\\tenie\\Downloads\\infodms.chnr.json");
-//	}
-	
 	
 	public static void main(String[] args) {
 		String str = "{\r\n"
