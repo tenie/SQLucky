@@ -200,7 +200,7 @@ public class SqlExecuteOption {
 	public static List<SqlData> willExecSql(boolean isCurrentLine) {
 		List<SqlData> sds = new ArrayList<>();
 		String str = "";
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
+		CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
 		// 如果是执行当前行
 		if (isCurrentLine) {
 			try {
@@ -214,7 +214,7 @@ public class SqlExecuteOption {
 
 		int start = 0;
 		if (str != null && str.length() > 0) {
-			start = code.getSelection().getStart();
+			start = codeArea.getSelection().getStart();
 		} else {
 			str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 		}

@@ -3,7 +3,6 @@ package net.tenie.Sqlucky.sdk.po.db;
 /**
  * 索引, 
  * db2 通过 下面sql 查询
-	select *    from syscat.indexes where   INDSCHEMA = 'INFODMS'     and UNIQUERULE <> 'P'
  * @author tenie
  * 
  * 
