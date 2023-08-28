@@ -1,4 +1,4 @@
-package net.tenie.fx.Po;
+package net.tenie.Sqlucky.sdk.po.component;
 
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;

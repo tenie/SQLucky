@@ -16,6 +16,7 @@ import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SelectExecInfo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
@@ -74,12 +75,12 @@ public class SelectAction {
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 
 			// 根据表名获取tablepo对象
-			List<String> keys = SqlExecuteOption.findPrimaryKeys(conn, tableName);
+			List<String> keys = SqluckyAppDB.findPrimaryKeys(conn, tableName);
 			// table 添加列和数据
 			// 表格添加列
-			var tableColumns = SqlExecuteOption.createTableColForSqlData(colss, keys, sheetDaV);
+			var tableColumns = SqluckyAppDB.createTableColForSqlData(colss, keys, sheetDaV);
 			// 设置 列的 右键菜单
-			SqlExecuteOption.setDataTableContextMenu(myBottomSheet, tableColumns, colss);
+			SqluckyAppDB.setDataTableContextMenu(myBottomSheet, tableColumns, colss);
 			table.getColumns().addAll(tableColumns);
 			table.setItems(allRawData);
 			// 表格选中事件, 对表格中的字段添加修改监听

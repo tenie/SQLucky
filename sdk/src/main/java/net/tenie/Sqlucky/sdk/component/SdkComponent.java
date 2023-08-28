@@ -319,6 +319,24 @@ public class SdkComponent {
 		});
 		return waitTb;
 	}
+	
+
+
+	public static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
+		Platform.runLater(() -> {
+			SdkComponent.showDetailPane();
+		});
+		Tab v = SdkComponent.addWaitingPane(tabIdx);
+		Platform.runLater(() -> {
+			if (holdSheet == false) { // 非刷新的， 删除多余的页
+				TabPane dataTab = ComponentGetter.dataTabPane;
+				SdkComponent.deleteEmptyTab(dataTab);
+			}
+		});
+
+		return v;
+	}
+
 
 	// 移除 等待加载动画 页面
 	public static void rmWaitingPane() {

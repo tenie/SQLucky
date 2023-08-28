@@ -9,8 +9,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
+import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.DBinfoTreeButtonFactory;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
@@ -47,6 +47,9 @@ public class DBinfoContainer {
 		VBox.setVgrow(ad, Priority.ALWAYS);
 
 		AppWindow.treeView = dbInfoTreeView;
+
+		ComponentGetter.treeView = dbInfoTreeView;
+		
 		AppWindow.dbInfoTree = dbInfoTree;
 		ComponentGetter.leftNodeContainer = container;
 

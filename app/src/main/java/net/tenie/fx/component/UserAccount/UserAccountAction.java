@@ -1,18 +1,14 @@
 package net.tenie.fx.component.UserAccount;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.hc.client5.http.fluent.Form;
-import org.apache.hc.client5.http.fluent.Request;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.utility.JsonTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
-import net.tenie.lib.db.h2.AppDao;
 
 public class UserAccountAction {
 	
@@ -41,10 +37,10 @@ public class UserAccountAction {
 	 */
 	public static void saveUser(String email, String password) {
 		Connection conn = SqluckyAppDB.getConn();
-		AppDao.saveConfig(conn, "SQLUCKY_REMEMBER", ConfigVal.SQLUCKY_VIP.get() ?  "1" : "0");
-		AppDao.saveConfig(conn, "SQLUCKY_EMAIL", email);
-		AppDao.saveConfig(conn, "SQLUCKY_PASSWORD", password); 
-		AppDao.saveConfig(conn, "SQLUCKY_VIP", ConfigVal.SQLUCKY_VIP.get() ?  "1" : "0");
+		SqluckyAppDB.saveConfig(conn, "SQLUCKY_REMEMBER", ConfigVal.SQLUCKY_VIP.get() ?  "1" : "0");
+		SqluckyAppDB.saveConfig(conn, "SQLUCKY_EMAIL", email);
+		SqluckyAppDB.saveConfig(conn, "SQLUCKY_PASSWORD", password); 
+		SqluckyAppDB.saveConfig(conn, "SQLUCKY_VIP", ConfigVal.SQLUCKY_VIP.get() ?  "1" : "0");
 		SqluckyAppDB.closeConn(conn);
 //		try {
 //			String delSql = "DELETE FROM SQLUCKY_USER";
@@ -60,10 +56,10 @@ public class UserAccountAction {
 	
 	public static void delUser() {
 		 Connection conn = SqluckyAppDB.getConn();
-		 AppDao.deleteConfigKey(conn, "SQLUCKY_REMEMBER");
-		 AppDao.deleteConfigKey(conn, "SQLUCKY_EMAIL");
-		 AppDao.deleteConfigKey(conn, "SQLUCKY_PASSWORD");
-		 AppDao.deleteConfigKey(conn, "SQLUCKY_VIP");
+		 SqluckyAppDB.deleteConfigKey(conn, "SQLUCKY_REMEMBER");
+		 SqluckyAppDB.deleteConfigKey(conn, "SQLUCKY_EMAIL");
+		 SqluckyAppDB.deleteConfigKey(conn, "SQLUCKY_PASSWORD");
+		 SqluckyAppDB.deleteConfigKey(conn, "SQLUCKY_VIP");
 		 SqluckyAppDB.closeConn(conn);
 	}
 	
@@ -71,9 +67,9 @@ public class UserAccountAction {
 	public static void rememberUser(boolean tf) {
 		 Connection conn = SqluckyAppDB.getConn();
 		 if(tf) {
-			 AppDao.saveConfig(conn, "SQLUCKY_REMEMBER", "1");
+			 SqluckyAppDB.saveConfig(conn, "SQLUCKY_REMEMBER", "1");
 		 }else {
-			 AppDao.deleteConfigKey(conn, "SQLUCKY_REMEMBER");
+			 SqluckyAppDB.deleteConfigKey(conn, "SQLUCKY_REMEMBER");
 		 }
 		
 		 SqluckyAppDB.closeConn(conn);
@@ -116,11 +112,11 @@ public class UserAccountAction {
 	public static void appLanuchInitAccount() {
 		// 账号恢复
 		Connection conn = SqluckyAppDB.getConn();
-		String remember = AppDao.readConfig(conn, "SQLUCKY_REMEMBER");
+		String remember = SqluckyAppDB.readConfig(conn, "SQLUCKY_REMEMBER");
 		if (StrUtils.isNotNullOrEmpty(remember) && "1".equals(remember)) {
-			String sky_email = AppDao.readConfig(conn, "SQLUCKY_EMAIL");
-			String sky_pw = AppDao.readConfig(conn, "SQLUCKY_PASSWORD");
-			String sky_vip = AppDao.readConfig(conn, "SQLUCKY_VIP");
+			String sky_email = SqluckyAppDB.readConfig(conn, "SQLUCKY_EMAIL");
+			String sky_pw = SqluckyAppDB.readConfig(conn, "SQLUCKY_PASSWORD");
+			String sky_vip = SqluckyAppDB.readConfig(conn, "SQLUCKY_VIP");
 			
 			ConfigVal.SQLUCKY_EMAIL.set(sky_email);
 			ConfigVal.SQLUCKY_PASSWORD.set(sky_pw);
@@ -128,11 +124,11 @@ public class UserAccountAction {
 			ConfigVal.SQLUCKY_VIP.set("1".equals(sky_vip) ?  true: false);
 		}
 		// 读取 自定义的 服务器地址
-		String hostUrl = AppDao.readConfig(conn, "SQLUCKY_URL_CUSTOM");
+		String hostUrl = SqluckyAppDB.readConfig(conn, "SQLUCKY_URL_CUSTOM");
 		if (StrUtils.isNotNullOrEmpty(hostUrl) ) {
 			ConfigVal.SQLUCKY_URL_CUSTOM =  hostUrl;
 		}
-		String remSet = AppDao.readConfig(conn, "SQLUCKY_REMEMBER_SETTINGS");
+		String remSet = SqluckyAppDB.readConfig(conn, "SQLUCKY_REMEMBER_SETTINGS");
 		if (StrUtils.isNotNullOrEmpty(remSet)  && "1".equals(remSet) ) {
 			ConfigVal.SQLUCKY_REMEMBER_SETTINGS.set(true);
 		}
@@ -143,8 +139,8 @@ public class UserAccountAction {
 	// 保存自定义的url 地址
 	public static void saveHostValAccount(String hostVal) {
 		Connection conn = SqluckyAppDB.getConn();
-		AppDao.saveConfig(conn, "SQLUCKY_URL_CUSTOM", hostVal);
-		AppDao.saveConfig(conn, "SQLUCKY_REMEMBER_SETTINGS", "1");
+		SqluckyAppDB.saveConfig(conn, "SQLUCKY_URL_CUSTOM", hostVal);
+		SqluckyAppDB.saveConfig(conn, "SQLUCKY_REMEMBER_SETTINGS", "1");
 		
 		SqluckyAppDB.closeConn(conn);
 	}
@@ -153,8 +149,8 @@ public class UserAccountAction {
 		Connection conn = SqluckyAppDB.getConn();
 //		ConfigVal.SQLUCKY_URL_CUSTOM = "";
 		ConfigVal.SQLUCKY_REMEMBER_SETTINGS.set(false);
-		AppDao.deleteConfigKey(conn, "SQLUCKY_URL_CUSTOM");
-		AppDao.deleteConfigKey(conn, "SQLUCKY_REMEMBER_SETTINGS");
+		SqluckyAppDB.deleteConfigKey(conn, "SQLUCKY_URL_CUSTOM");
+		SqluckyAppDB.deleteConfigKey(conn, "SQLUCKY_REMEMBER_SETTINGS");
 		SqluckyAppDB.closeConn(conn);
 	}
 }

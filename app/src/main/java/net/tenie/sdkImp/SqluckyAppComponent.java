@@ -29,10 +29,10 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
+import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.DBinfoTreeButtonFactory;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
@@ -116,7 +116,7 @@ public class SqluckyAppComponent implements AppComponent {
 			strb.append(name);
 			strb.append("-");
 			strb.append(key);
-			AppDao.saveConfig(conn, strb.toString(), value);
+			SqluckyAppDB.saveConfig(conn, strb.toString(), value);
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -134,7 +134,7 @@ public class SqluckyAppComponent implements AppComponent {
 			strb.append(name);
 			strb.append("-");
 			strb.append(key);
-			val = AppDao.readConfig(conn, strb.toString());
+			val = SqluckyAppDB.readConfig(conn, strb.toString());
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -297,9 +297,14 @@ public class SqluckyAppComponent implements AppComponent {
 	}
 
 	@Override
-	public void refreshDataTableView(String connName, String sql, String idx, boolean isLock) {
+	public Long refreshDataTableView(String connName, String sql, String idx, boolean isLock) {
 
-		RunSQLHelper.refresh(DBConns.get(connName), sql, idx, isLock);
+		return RunSQLHelper.refresh(DBConns.get(connName), sql, idx, isLock);
+	}
+	@Override
+	public Long refreshDataTableView(SqluckyConnector dbconnPo, String sql, String idx, boolean isLock) {
+
+		return RunSQLHelper.refresh(dbconnPo, sql, idx, isLock);
 	}
 
 	// 创建一个DocumentPo对象, 并保存在数据库

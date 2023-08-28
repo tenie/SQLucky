@@ -1,11 +1,10 @@
-package net.tenie.fx.component.InfoTree.TreeItem;
+package net.tenie.Sqlucky.sdk.po.component;
 
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
-import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.db.DBOptionHelper;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
