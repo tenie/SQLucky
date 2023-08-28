@@ -84,6 +84,7 @@ public class RunSQLHelper {
 		}
 		try {
 			isRunning = true;
+			settingBtn();
 			if (!state.getSqlConn().isAlive()) {
 				MyAlert.errorAlert("连接中断, 请重新连接!");
 				return;
@@ -91,48 +92,44 @@ public class RunSQLHelper {
 			// 等待加载动画
 			SdkComponent.addWaitingPane(state.getTidx(), state.getIsRefresh());
 			List<SqlData> allsqls = new ArrayList<>();
-//			if (isRunning) {
-//				MyAlert.errorAlert("有查询在进行中, 请稍等!");
-//				return;
-//			} else {
 
-				// 获取sql 语句
-				String sqlstr = state.getSqlStr();
-				// 执行创建存储过程函数, 触发器等
-				if (state.getIsCreateFunc()) {
-					if (StrUtils.isNotNullOrEmpty(sqlstr)) {
-						SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
-						allsqls.add(sq);
-					} else {
-						String str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-						SqlData sq = new SqlData(str, 0, str.length());
-						allsqls.add(sq);
-					}
-					// 执行传入的sql, 非界面上的sql
-				} else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
-					allsqls = SqluckyAppDB.epurateSql(sqlstr);
+			// 获取sql 语句
+			String sqlstr = state.getSqlStr();
+			// 执行创建存储过程函数, 触发器等
+			if (state.getIsCreateFunc()) {
+				if (StrUtils.isNotNullOrEmpty(sqlstr)) {
+					SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
+					allsqls.add(sq);
 				} else {
-					// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
-					allsqls = SqluckyAppDB.willExecSql(state.getIsCurrentLine());
+					String str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
+					SqlData sq = new SqlData(str, 0, str.length());
+					allsqls.add(sq);
 				}
-				// 执行sql
-				var rsVal = execSqlList(allsqls, state.getSqlConn(), state);
+				// 执行传入的sql, 非界面上的sql
+			} else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
+				allsqls = SqluckyAppDB.epurateSql(sqlstr);
+			} else {
+				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
+				allsqls = SqluckyAppDB.willExecSql(state.getIsCurrentLine());
+			}
+			// 执行sql
+			var rsVal = execSqlList(allsqls, state.getSqlConn(), state);
 
-				// 执行sql的状态保存
-				if (state.getStatusKey() != null) {
-					RUN_STATUS.put(state.getStatusKey(), rsVal);
+			// 执行sql的状态保存
+			if (state.getStatusKey() != null) {
+				RUN_STATUS.put(state.getStatusKey(), rsVal);
 
-				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if(isRunning) {
+			if (isRunning) {
 				settingBtn();
 				state.setCallProcedureFields(null);
 				state.setIsCallFunc(false);
 				SdkComponent.rmWaitingPane();
 			}
-			
+
 			isRunning = false;
 		}
 
@@ -293,8 +290,6 @@ public class RunSQLHelper {
 
 		RUN_STATUS.put(statusKey, -1);
 
-		settingBtn();
-//		SdkComponent.showDetailPane();
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setTidx(tabIdxv);
 		state.setIsRefresh(true);
@@ -335,9 +330,6 @@ public class RunSQLHelper {
 			return;
 		}
 
-		settingBtn();
-//		SdkComponent.showDetailPane();
-
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsCallFunc(true);
 		state.setCallProcedureFields(fields);
@@ -361,9 +353,6 @@ public class RunSQLHelper {
 			e.printStackTrace();
 			return;
 		}
-
-		settingBtn();
-//		SdkComponent.showDetailPane();
 
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setTidx(tabIdxv);
@@ -397,9 +386,6 @@ public class RunSQLHelper {
 			return;
 		}
 
-		settingBtn();
-//		SdkComponent.showDetailPane();
-
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsCreateFunc(isCreateFunc);
 
@@ -422,8 +408,6 @@ public class RunSQLHelper {
 			e.printStackTrace();
 			return;
 		}
-
-		settingBtn();
 
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsRefresh(true);
