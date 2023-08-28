@@ -19,24 +19,29 @@ import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
 import net.tenie.fx.Action.SettingKeyBinding;
+import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.AppWindowReStyleByWinOS;
+import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.lib.db.h2.AppDao;
 import net.tenie.sdkImp.SqluckyAppComponent;
@@ -110,7 +115,7 @@ public class SQLucky extends Application {
 
 		scene = app.getAppScene();
 
-		CommonAction.setTheme(Theme);
+		AppCommonAction.setTheme(Theme);
 		// 加载插件
 		ServiceLoad.callLoad();
 		logger.info("完成初始化");
@@ -255,6 +260,66 @@ public class SQLucky extends Application {
 		}
 
 	}
+	// 保存app状态
+		public static void saveApplicationStatusInfo() {
+			Connection H2conn = SqluckyAppDB.getConn();
+			try {
+				ConnectionDao.refreshConnOrder();
+				TabPane mainTabPane = ComponentGetter.mainTabPane;
+				int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();
+				var alltabs = mainTabPane.getTabs();
+				for (int i = 0; i < alltabs.size(); i++) {
+					Tab tab = alltabs.get(i);
+					// TODO close save
+					MyEditorSheet mtab = (MyEditorSheet) tab.getUserData();
+					mtab.saveScriptPo(H2conn);
+					var spo = mtab.getDocumentPo();
+					// 将打开状态设置为1, 之后根据这个状态来恢复
+					if (spo != null && spo.getId() != null) {
+						String sql = mtab.getAreaText();
+						if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
+							spo.setOpenStatus(1);
+							// 当前激活的编辑页面
+							if (activateTabPane == i) {
+								spo.setIsActivate(1);
+							} else {
+								spo.setIsActivate(0);
+							}
+						} else {
+							spo.setOpenStatus(0);
+							spo.setIsActivate(0);
+						}
+					}
+				}
+
+				// 删除 script tree view 中的空内容tab
+				var childs = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
+				int idx = 1;
+				for (int i = 0; i < childs.size(); i++) {
+					var tv = childs.get(i);
+					var mytab = tv.getValue();
+					var scpo = mytab.getDocumentPo();
+					var sqltxt = scpo.getText();
+					if (sqltxt == null || sqltxt.trim().length() == 0) {
+						AppDao.deleteScriptArchive(H2conn, scpo);
+					} else {
+						String fp = scpo.getFileFullName();
+						if (StrUtils.isNullOrEmpty(fp)) {
+							scpo.setTitle("Untitled_" + idx + "*");
+							idx++;
+						}
+						AppDao.updateScriptArchive(H2conn, scpo);
+
+					}
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				SqluckyAppDB.closeConn(H2conn);
+			}
+
+		}
 
 	public static void main(String[] args) throws IOException {
 		logger.debug("main.args ==  " + Arrays.toString(args));

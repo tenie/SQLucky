@@ -3,6 +3,7 @@ package net.tenie.fx.component.container;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
@@ -18,9 +19,10 @@ import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportSQLWindow;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
+import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.plugin.PluginManageWindow;
 import net.tenie.fx.window.CheckUpdateWindow;
@@ -65,7 +67,7 @@ public class MenuBarContainer {
 		MenuItem open = new MenuItem(StrUtils.MenuItemNameFormat("Open"));
 		open.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
 		open.setOnAction(value -> {
-			CommonAction.openSqlFile();
+			AppCommonAction.openSqlFile();
 		});
 		KeyBindingCache.menuItemBinding(open);
 
@@ -93,7 +95,7 @@ public class MenuBarContainer {
 		MenuItem exit = new MenuItem(StrUtils.MenuItemNameFormat("Exit"));
 		exit.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 		exit.setOnAction((ActionEvent t) -> {
-			CommonAction.mainPageClose();
+			CommonEventHandler.mainPageClose();
 		});
 		KeyBindingCache.menuItemBinding(exit);
 
@@ -107,7 +109,9 @@ public class MenuBarContainer {
 		MenuItem runMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL"));
 		runMenu.setGraphic(IconGenerator.svgImageDefActive("play"));
 		runMenu.setOnAction(value -> {
-			RunSQLHelper.runSQLMethod();
+			MyEditorSheetHelper.selectCurrentLine();
+			Platform.runLater(()->RunSQLHelper.runSQLMethod());
+			
 		});
 		MenuItem runCurrentMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL Current Line"));
 		runCurrentMenu.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
@@ -130,7 +134,7 @@ public class MenuBarContainer {
 
 		MenuItem cce = new MenuItem(StrUtils.MenuItemNameFormat("Close Data Table"));
 		cce.setOnAction(value -> {
-			CommonAction.closeDataTable();
+			AppCommonAction.closeDataTable();
 		});
 
 		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
@@ -152,29 +156,29 @@ public class MenuBarContainer {
 
 		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Line Comment"));
 		commentCode.setOnAction(value -> {
-			CommonAction.addAnnotationSQLTextSelectText();
+			AppCommonAction.addAnnotationSQLTextSelectText();
 		});
 
 		// 大写
 		MenuItem UpperCase = new MenuItem(StrUtils.MenuItemNameFormat("Upper Case"));
 		UpperCase.setOnAction(value -> {
-			CommonAction.UpperCaseSQLTextSelectText();
+			AppCommonAction.UpperCaseSQLTextSelectText();
 		});
 
 		MenuItem LowerCase = new MenuItem(StrUtils.MenuItemNameFormat("Lower Case"));
 		LowerCase.setOnAction(value -> {
-			CommonAction.LowerCaseSQLTextSelectText();
+			AppCommonAction.LowerCaseSQLTextSelectText();
 		});
 
 		// Underscore to hump
 		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underscore To Hump"));
 		underscore.setOnAction(value -> {
-			CommonAction.underlineCaseCamel();
+			AppCommonAction.underlineCaseCamel();
 		});
 
 		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underscore"));
 		Hump.setOnAction(value -> {
-			CommonAction.CamelCaseUnderline();
+			AppCommonAction.CamelCaseUnderline();
 		});
 
 		Menu cursorMenu = new Menu("Cursor");
@@ -333,7 +337,7 @@ public class MenuBarContainer {
 
 		MenuItem hideLeft = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show DB Info Panel"));
 		hideLeft.setOnAction(value -> {
-			CommonAction.hideLeft();
+			AppCommonAction.hideLeft();
 		});
 
 		MenuItem hideBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show Data View Panel"));
@@ -344,7 +348,7 @@ public class MenuBarContainer {
 		MenuItem hideLeftBottom = new MenuItem(StrUtils.MenuItemNameFormat("Hide/Show All Panels"));
 		hideLeftBottom.setGraphic(IconGenerator.svgImageDefActive("arrows-alt"));
 		hideLeftBottom.setOnAction(value -> {
-			CommonAction.hideLeftBottom();
+			AppCommonAction.hideLeftBottom();
 		});
 
 		// 主题变化
@@ -354,20 +358,20 @@ public class MenuBarContainer {
 		MenuItem themeDark = new MenuItem(StrUtils.MenuItemNameFormat("Dark"));
 		themeDark.setGraphic(IconGenerator.svgImageDefActive("moon"));
 		themeDark.setOnAction(value -> {
-			CommonAction.setThemeRestart(CommonConst.THEME_DARK);
+			AppCommonAction.setThemeRestart(CommonConst.THEME_DARK);
 
 		});
 
 		MenuItem themeLight = new MenuItem(StrUtils.MenuItemNameFormat("Light"));
 		themeLight.setGraphic(IconGenerator.svgImageDefActive("sun"));
 		themeLight.setOnAction(value -> {
-			CommonAction.setThemeRestart(CommonConst.THEME_LIGHT);
+			AppCommonAction.setThemeRestart(CommonConst.THEME_LIGHT);
 		});
 
 		MenuItem themeYellow = new MenuItem(StrUtils.MenuItemNameFormat("Yellow"));
 		themeYellow.setGraphic(IconGenerator.svgImageDefActive("adjust"));
 		themeYellow.setOnAction(value -> {
-			CommonAction.setThemeRestart(CommonConst.THEME_YELLOW);
+			AppCommonAction.setThemeRestart(CommonConst.THEME_YELLOW);
 		});
 
 		Theme.getItems().addAll(themeDark, themeLight, themeYellow);
@@ -379,13 +383,13 @@ public class MenuBarContainer {
 		MenuItem fontSizePlus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size +"));
 		fontSizePlus.setGraphic(IconGenerator.svgImageDefActive("plus-circle"));
 		fontSizePlus.setOnAction(value -> {
-			CommonAction.changeFontSize(true);
+			AppCommonAction.changeFontSize(true);
 		});
 
 		MenuItem fontSizeMinus = new MenuItem(StrUtils.MenuItemNameFormat("Font Size -"));
 		fontSizeMinus.setGraphic(IconGenerator.svgImageDefActive("minus-circle"));
 		fontSizeMinus.setOnAction(value -> {
-			CommonAction.changeFontSize(false);
+			AppCommonAction.changeFontSize(false);
 		});
 
 		fontSize.getItems().addAll(fontSizePlus, fontSizeMinus);

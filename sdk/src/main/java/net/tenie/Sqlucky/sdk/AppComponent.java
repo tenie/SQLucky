@@ -18,6 +18,11 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 
 public interface AppComponent {
+	// 保存app 状态(关闭app时)
+	void saveApplicationStatusInfo();
+	// 重启app
+	void reboot();
+	public   MyEditorSheet findMyTabByScriptPo(DocumentPo scpo);
 	// 设置文件打开时候目录path, 便于二次打开可以直达该目录
 	public void setOpenfileDir(String val);
 

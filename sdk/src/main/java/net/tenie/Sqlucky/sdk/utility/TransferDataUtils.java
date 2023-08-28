@@ -262,23 +262,23 @@ public class TransferDataUtils {
 					pstmt.setObject(i + 1, obj);
 //					logger.info("obj = "+ obj.toString());
 				}
-				pstmt.execute();
-//				pstmt.addBatch();
-//				if (idx % execLine == 0) {
-//					int[] count = pstmt.executeBatch();
-//					toConn.commit();
-//					int execCountLen = count.length;
-//					logger.info("instert = " + execCountLen);
-//				}
+//				pstmt.execute();
+				pstmt.addBatch();
+				if (idx % execLine == 0) {
+					int[] count = pstmt.executeBatch();
+					toConn.commit();
+					int execCountLen = count.length;
+					logger.info("instert = " + execCountLen);
+				}
 
 			}
 
-//			if (idx % execLine > 0) {
-//				int[] count = pstmt.executeBatch();
-//				toConn.commit();
-//				int execCountLen = count.length;
-//				logger.info("instert = " + execCountLen);
-//			}
+			if (idx % execLine > 0) {
+				int[] count = pstmt.executeBatch();
+				toConn.commit();
+				int execCountLen = count.length;
+				logger.info("instert = " + execCountLen);
+			}
 			logger.info("\n===========idx = " + idx + "==============");
 		} catch (Exception e1) {
 			e1.printStackTrace();
@@ -332,23 +332,23 @@ public class TransferDataUtils {
 
 					pstmt.setObject(i + 1, obj);
 				}
-				pstmt.execute();
-//				pstmt.addBatch();
-//				if (idx % execLine == 0) {
-//					int[] count = pstmt.executeBatch();
-//					toConn.commit();
-//					int execCountLen = count.length;
-//					logger.info("instert = " + execCountLen);
-//				}
+//				pstmt.execute();
+				pstmt.addBatch();
+				if (idx % execLine == 0) {
+					int[] count = pstmt.executeBatch();
+					toConn.commit();
+					int execCountLen = count.length;
+					logger.info("instert = " + execCountLen);
+				}
 
 			}
 
-//			if (idx % execLine > 0) {
-//				int[] count = pstmt.executeBatch();
-//				toConn.commit();
-//				int execCountLen = count.length;
-//				logger.info("instert = " + execCountLen);
-//			}
+			if (idx % execLine > 0) {
+				int[] count = pstmt.executeBatch();
+				toConn.commit();
+				int execCountLen = count.length;
+				logger.info("instert = " + execCountLen);
+			}
 			
 			logger.info("============= idx : " + idx + "===============" );
 		} catch (Exception e1) {

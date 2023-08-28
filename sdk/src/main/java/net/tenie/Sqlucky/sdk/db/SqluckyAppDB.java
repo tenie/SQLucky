@@ -378,7 +378,7 @@ public class SqluckyAppDB {
 	/**
 	 * 获取要执行的sql, 去除无效的(如-- 开头的)
 	 */
-	public static List<SqlData> willExecSql(boolean isCurrentLine) {
+	public static List<SqlData> willExecSql2(boolean isCurrentLine) {
 		List<SqlData> sds = new ArrayList<>();
 		String str = "";
 		CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
@@ -405,6 +405,39 @@ public class SqluckyAppDB {
 		sds = epurateSql(str, start);
 		return sds;
 	}
+	
+	/**
+	 * 获取要执行的sql, 去除无效的(如-- 开头的)
+	 * 获取当前行, 或选中的数据
+	 */
+	public static List<SqlData> willExecSql(boolean isAll) {
+		List<SqlData> sds = new ArrayList<>();
+		String str = "";
+		int start = 0;
+		CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
+		if(isAll) { //所有文本
+			str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
+		}else {
+			// 获取选中的文本
+			str = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
+		}
+		
+		
+		if(StrUtils.isNullOrEmpty(str)) {
+			// 光标所在当前行文本
+			str = MyEditorSheetHelper.getCurrentLineText();
+		} 
+		if (str != null && str.length() > 0) {
+			start = codeArea.getSelection().getStart();
+		} 
+		
+		// 去除注释, 包注释字符串转换为空白字符串
+		str = MyEditorSheetHelper.trimCommentToSpace(str, "--");
+//		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
+		sds = epurateSql(str, start);
+		return sds;
+	}
+	
 
 	// 将sql 字符串根据;分割成多个字符串 并计算其他信息
 	private static List<SqlData> epurateSql(String str, int start) {

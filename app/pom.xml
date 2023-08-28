@@ -34,10 +34,27 @@
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
 </dependency> 
-<dependency>
+<!-- <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi-ooxml</artifactId>
-</dependency>
+</dependency> -->
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			 <exclusions>  
+                <exclusion> <!-- we prefer our explicit version, though it should be the same -->  
+                    <groupId>org.apache.poi</groupId>  
+                    <artifactId>poi-ooxml-lite</artifactId>  
+                </exclusion>  
+            </exclusions>  
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-full</artifactId>
+			   <version>5.2.3</version>
+		</dependency>
  
 <dependency>
 	  <groupId>org.apache.xmlbeans</groupId>

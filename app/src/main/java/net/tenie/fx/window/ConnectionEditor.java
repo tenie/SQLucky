@@ -42,10 +42,10 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.container.AppWindow;
@@ -64,12 +64,10 @@ public class ConnectionEditor {
 	private static Stage stage;
 
 	public static Stage CreateModalWindow(VBox vb) {
-//		stage = new Stage();
 		vb.getStyleClass().add("connectionEditor");
 		vb.setPrefWidth(450);
 		vb.maxWidth(450);
 
-//		Scene scene = new Scene(vb);
 		SqluckyStage sqluckyStage = new SqluckyStage(vb);
 		Scene scene = sqluckyStage.getScene();
 		stage = sqluckyStage.getStage();
@@ -86,12 +84,9 @@ public class ConnectionEditor {
 		scene.getAccelerators().put(spacebtn, () -> {
 			stage.close();
 		});
-
-//		CommonUtility.loadCss(scene);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
-
-//		stage.getIcons().add(ComponentGetter.LogoIcons);
+ 
 		stage.setMaximized(false);
 		stage.setResizable(false);
 		stage.setOnHidden(e -> {
@@ -99,7 +94,7 @@ public class ConnectionEditor {
 			if (editLinkStatus) {
 				Platform.runLater(() -> {
 					var item = DBinfoTree.getTrewViewCurrentItem();
-					CommonAction.openConn(item);
+					DBinfoTree.openConn(item);
 				});
 			}
 		});
@@ -500,14 +495,14 @@ public class ConnectionEditor {
 	public static void openDbConn() {
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
-			CommonAction.openConn(val);
+			DBinfoTree.openConn(val);
 		}
 	}
 
 	// 打开连接
 	public static void openConn(String name) {
 		TreeItem<TreeNodePo> item = DBinfoTree.getTreeItemByName(name);
-		CommonAction.openConn(item);
+		DBinfoTree.openConn(item);
 	}
 
 	public static Button createTestBtn(Function<String, SqluckyConnector> assembleSqlCon) {
@@ -520,7 +515,7 @@ public class ConnectionEditor {
 			logger.info("Test connection~~");
 			SqluckyConnector connpo = assembleSqlCon.apply("");
 			if (connpo != null) {
-				CommonAction.isAliveTestAlert(connpo, testBtn);
+				AppCommonAction.isAliveTestAlert(connpo, testBtn);
 				
 			}
 			

@@ -371,6 +371,17 @@ public class MyEditorSheetHelper {
 
 		return rs;
 	}
+	
+	//选中光标所在行的数据
+	public static void selectCurrentLine() {
+		CodeArea code = getCodeArea();
+		String st = code.getSelectedText();
+		if (StrUtils.isNullOrEmpty(st)) {
+			code.selectLine();
+		}  
+
+	}
+	
 
 	// 获取选中行的所有字符,
 	public static String getSelectLineText() {

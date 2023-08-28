@@ -6,7 +6,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
-import net.tenie.fx.Action.CommonAction;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 
 /**
  * 
@@ -24,7 +24,6 @@ public class ScriptTreeContextMenu {
 		close = new MenuItem("Close");
 		close.setOnAction(e -> {
 			ScriptTabTree.closeAction(rootNode);
-			// closeAction(rootNode);
 		});
 
 		MenuItem Open = new MenuItem("Open");
@@ -49,7 +48,7 @@ public class ScriptTreeContextMenu {
 
 		MenuItem Import = new MenuItem("Import...");
 		Import.setOnAction(e -> {
-			CommonAction.openSqlFile();
+			AppCommonAction.openSqlFile();
 		});
 
 		MenuItem folder = new MenuItem("Show In Folder");

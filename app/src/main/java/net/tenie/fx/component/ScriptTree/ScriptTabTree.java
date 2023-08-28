@@ -30,9 +30,9 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.po.component.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.main.SQLucky;
 import net.tenie.lib.db.h2.AppDao;
 
@@ -154,7 +154,7 @@ public class ScriptTabTree {
 						} else if (StrUtils.isNotNullOrEmpty(SQLucky.sysOpenFile)) { // 系统打开文件触发启动APP时, 新开一个 脚本文件
 							logger.info("系统打开文件触发启动APP时, 新开一个 脚本文件 ");
 							File sif = new File(SQLucky.sysOpenFile);
-							CommonAction.openSqlFile(sif);
+							AppCommonAction.openSqlFile(sif);
 						} else if (activateTmpMyTab != null) {// 恢复选中上次选中页面
 							logger.info(" 恢复选中上次选中页面");
 							ComponentGetter.mainTabPane.getSelectionModel().select(activateTmpMyTab);

@@ -20,9 +20,9 @@ import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.window.ConnectionEditor;
 
@@ -183,7 +183,7 @@ public class DBInfoTreeContextMenu {
 	public void setTableAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector sqluckyConn, String schema,
 			String tablename) {
 		tableAddNewCol.setOnAction(e -> {
-			CommonAction.addNewColumn(sqluckyConn, schema, tablename);
+			AppCommonAction.addNewColumn(sqluckyConn, schema, tablename);
 		});
 
 		tableDrop.setOnAction(e -> {

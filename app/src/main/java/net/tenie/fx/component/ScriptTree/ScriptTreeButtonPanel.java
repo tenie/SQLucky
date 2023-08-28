@@ -5,8 +5,8 @@ import com.jfoenix.controls.JFXButton;
 import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.fx.Action.CommonAction;
 
 public class ScriptTreeButtonPanel {
 
@@ -39,7 +39,7 @@ public class ScriptTreeButtonPanel {
 		importBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
 		importBtn.setTooltip(CommonUtils.instanceTooltip("Open note folder "));
 		importBtn.setOnMouseClicked(e -> {
-			CommonAction.openSqlFile();
+			AppCommonAction.openSqlFile();
 		});
 
 //		saveBtn.setText("Import");

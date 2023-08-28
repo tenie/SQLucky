@@ -32,6 +32,7 @@ import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.SqlData;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
@@ -348,7 +349,7 @@ public class RunSQLHelper {
 	public static void runSQLMethod(String sqlv, String tabIdxv, boolean isCreateFunc, Boolean isCurrentLine) {
 		if (checkDBconn())
 			return;
-		SqluckyConnector sqlConn = CommonAction.getDbConnectionPoByComboBoxDbConnName();
+		SqluckyConnector sqlConn = AppCommonAction.getDbConnectionPoByComboBoxDbConnName();
 		Connection connv = sqlConn.getConn();
 		try {
 			if (connv == null) {
@@ -423,7 +424,6 @@ public class RunSQLHelper {
 		}
 
 		settingBtn();
-//		SdkComponent.showDetailPane();
 
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsRefresh(true);

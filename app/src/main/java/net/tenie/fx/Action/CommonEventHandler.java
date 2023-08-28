@@ -12,10 +12,12 @@ import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.fx.main.SQLucky;
 import net.tenie.fx.window.ConnectionEditor;
 
 /**
@@ -70,7 +72,7 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-				CommonAction.hideLeft();
+				AppCommonAction.hideLeft();
 			}
 		};
 	}
@@ -100,9 +102,18 @@ public class CommonEventHandler {
 		return new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent e) {
-				CommonAction.mainPageClose();
+				mainPageClose();
 			}
 		};
+	}
+	// 主窗口关闭事件处理逻辑
+	public static void mainPageClose() {
+		try {
+			SQLucky.saveApplicationStatusInfo();
+		} finally {
+			System.exit(0);
+		}
+
 	}
 
 	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName,

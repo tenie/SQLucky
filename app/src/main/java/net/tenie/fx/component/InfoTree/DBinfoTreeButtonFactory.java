@@ -14,8 +14,8 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.window.ConnectionEditor;
 
@@ -76,7 +76,7 @@ public class DBinfoTreeButtonFactory {
 		JFXButton shrink = new JFXButton();
 		shrink.setGraphic(IconGenerator.svgImageDefActive("zero-fitscreen-24"));
 		shrink.setOnMouseClicked(e -> {
-			CommonAction.shrinkTreeView();
+			AppCommonAction.shrinkTreeView();
 		});
 		btns.add(shrink);
 

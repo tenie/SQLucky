@@ -7,7 +7,7 @@ import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.fx.Action.CommonAction;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
 
 public class DBInfoTreeContextMenuAction {
@@ -24,7 +24,7 @@ public class DBInfoTreeContextMenuAction {
 		Connection conn = dbc.getConn();
 		String sql = dbc.getExportDDL().exportDropTable(schema, tablename);
 		Consumer<String> caller = x -> {
-			Long key = CommonAction.execExportSql(sql, conn, dbc);
+			Long key = AppCommonAction.execExportSql(sql, conn, dbc);
 			rmTreeNode(key, treeItem, DBInfoTreeContextMenuAction::successFunc);
 
 		};
@@ -37,7 +37,7 @@ public class DBInfoTreeContextMenuAction {
 		Connection conn = dbc.getConn();
 		String sql = dbc.getExportDDL().exportDropView(schema, viewName);
 		Consumer<String> caller = x -> {
-			var key = CommonAction.execExportSql(sql, conn, dbc);
+			var key = AppCommonAction.execExportSql(sql, conn, dbc);
 			rmTreeNode(key, treeItem, DBInfoTreeContextMenuAction::successFunc);
 		};
 		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller);
@@ -49,7 +49,7 @@ public class DBInfoTreeContextMenuAction {
 		Connection conn = dbc.getConn();
 		String sql = dbc.getExportDDL().exportDropFunction(schema, funcName);
 		Consumer<String> caller = x -> {
-			var key = CommonAction.execExportSql(sql, conn, dbc);
+			var key = AppCommonAction.execExportSql(sql, conn, dbc);
 			rmTreeNode(key, treeItem, DBInfoTreeContextMenuAction::successFunc);
 		};
 		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller);
@@ -61,7 +61,7 @@ public class DBInfoTreeContextMenuAction {
 		Connection conn = dbc.getConn();
 		String sql = dbc.getExportDDL().exportDropProcedure(schema, funcName);
 		Consumer<String> caller = x -> {
-			var key = CommonAction.execExportSql(sql, conn, dbc);
+			var key = AppCommonAction.execExportSql(sql, conn, dbc);
 			rmTreeNode(key, treeItem, DBInfoTreeContextMenuAction::successFunc);
 		};
 		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller);
@@ -74,7 +74,7 @@ public class DBInfoTreeContextMenuAction {
 		Connection conn = dbc.getConn();
 		String sql = dbc.getExportDDL().exportDropTrigger(schema, funcName);
 		Consumer<String> caller = x -> {
-			var key = CommonAction.execExportSql(sql, conn, dbc);
+			var key = AppCommonAction.execExportSql(sql, conn, dbc);
 			rmTreeNode(key, treeItem, DBInfoTreeContextMenuAction::successFunc);
 		};
 		MyAlert.myConfirmation("Execute : '" + sql + "' ?", caller);
@@ -90,6 +90,7 @@ public class DBInfoTreeContextMenuAction {
 	 */
 	public static void rmTreeNode(Long key, TreeItem<TreeNodePo> treeItem, Consumer<TreeItem<TreeNodePo>> successFunc) {
 		Thread td = new Thread() {
+			@Override
 			public void run() {
 				Integer status = RunSQLHelper.runStatus(key);
 				while (status != null) {

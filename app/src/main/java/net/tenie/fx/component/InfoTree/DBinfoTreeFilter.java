@@ -16,8 +16,8 @@ import net.tenie.Sqlucky.sdk.po.component.ConnItemDbObjects;
 import net.tenie.Sqlucky.sdk.po.component.MyTreeItem;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 
 /**
  * 
@@ -133,7 +133,7 @@ public class DBinfoTreeFilter {
 
 				if (filtList.size() > 0) {
 					// 展开treeview
-					CommonAction.unfoldTreeView();
+					AppCommonAction.unfoldTreeView();
 				}
 
 			}

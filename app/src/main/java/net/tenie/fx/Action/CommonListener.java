@@ -9,6 +9,7 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.window.ConnectionEditor;
@@ -64,18 +65,6 @@ public class CommonListener {
 		};
 	}
 
-// ChoiceBox change 
-//	@SuppressWarnings("rawtypes")
-//	public static ChangeListener choiceBoxChange() {
-//		return new ChangeListener() {
-//			@Override
-//			public void changed(ObservableValue observable, Object oldValue, Object newValue) {
-//				// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接 // MainTabs.setBoxIdx(CommonUtils.tabText(MainTabs.getActTab()), newValue.toString());
-//
-////				MyEditorSheetHelper.getActivationEditorSheet().setTabConnIdx(newValue.toString());
-//			}
-//		};
-//	}
 
 	// 选择框选择连接时, 如果未连接, 进行连接
 	public static ChangeListener<Label> choiceBoxChange2() {
@@ -88,7 +77,7 @@ public class CommonListener {
 						// 清除查找字符串
 						IndexRange ir = MyEditorSheetHelper.getSelection();
 						CommonUtils.pressBtnESC();
-						CommonAction.shrinkTreeView();
+						AppCommonAction.shrinkTreeView();
 						ConnectionEditor.openConn(cnnpo.getConnName());
 						MyEditorSheetHelper.selectRange(ir);
 					}

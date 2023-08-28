@@ -31,7 +31,7 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.fx.Action.CommonAction;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.InfoTree.DBinfoTreeButtonFactory;
@@ -39,16 +39,34 @@ import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.dao.DmlDdlDao;
+import net.tenie.fx.main.Restart;
 import net.tenie.fx.window.SignInWindow;
 import net.tenie.lib.db.h2.AppDao;
 
 public class SqluckyAppComponent implements AppComponent {
 	private Consumer<String> dbInfoMenuOnShowingCaller;
+	
+	public void saveApplicationStatusInfo() {
+		
+	}
+	
+	
+	// 重启app
+	@Override
+	public void reboot(){
+		Restart.reboot();
+	}
+	@Override
+	public   MyEditorSheet findMyTabByScriptPo(DocumentPo scpo) {
+		MyEditorSheet sheet = ScriptTabTree.findMyTabByScriptPo(scpo);
+		return sheet;
+	}
+	
 
 	// 设置文件打开时候目录path, 便于二次打开可以直达该目录
 	@Override
 	public void setOpenfileDir(String val) {
-		CommonAction.setOpenfileDir(val);
+		AppCommonAction.setOpenfileDir(val);
 	}
 
 	@Override

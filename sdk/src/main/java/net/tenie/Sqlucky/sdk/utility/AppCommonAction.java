@@ -1,8 +1,9 @@
-package net.tenie.fx.Action;
+package net.tenie.Sqlucky.sdk.utility;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.function.Consumer;
 
 import org.apache.commons.io.FileUtils;
@@ -18,8 +19,8 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
@@ -27,6 +28,7 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
+import net.tenie.Sqlucky.sdk.db.DBTools;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -36,27 +38,18 @@ import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
-import net.tenie.Sqlucky.sdk.utility.FileTools;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.component.ScriptTree.ScriptTabTree;
-import net.tenie.fx.component.container.AppWindow;
-import net.tenie.fx.dao.ConnectionDao;
-import net.tenie.fx.main.Restart;
-import net.tenie.lib.db.h2.AppDao;
 
 /**
  * @author tenie
  * 
  */
-public class CommonAction {
-	private static Logger logger = LogManager.getLogger(CommonAction.class);
+public class AppCommonAction {
+	private static Logger logger = LogManager.getLogger(AppCommonAction.class);
 
 	public static void openConn(TreeItem<TreeNodePo> item) {
 		// 判断 节点是否已经有子节点
 		if (item.getChildren().size() == 0) {
-			CommonAction.backRunOpenConn(item);
+			AppCommonAction.backRunOpenConn(item);
 		}
 	}
 
@@ -65,7 +58,7 @@ public class CommonAction {
 		Node nd = IconGenerator.svgImage("spinner", "red");
 		CommonUtils.rotateTransition(nd);
 		item.getValue().setIcon(nd);
-		AppWindow.treeView.refresh();
+		ComponentGetter.treeView.refresh();
 
 		Thread t = new Thread() {
 			@Override
@@ -94,7 +87,7 @@ public class CommonAction {
 							MyAlert.errorAlert(
 									" Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
 							item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
-							AppWindow.treeView.refresh();
+							ComponentGetter.treeView.refresh();
 
 						});
 
@@ -105,7 +98,7 @@ public class CommonAction {
 					Platform.runLater(() -> {
 						MyAlert.errorAlert(" Error !");
 						item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
-						AppWindow.treeView.refresh();
+						ComponentGetter.treeView.refresh();
 					});
 
 				} finally {
@@ -118,168 +111,36 @@ public class CommonAction {
 		t.start();
 	}
 
-	// 控件移除样式
-	public static void rmCssClass(Node nd, String css) {
-		nd.getStyleClass().remove(css);
-	}
-
-//	// 键盘ESC按下后: 查找表的输入框清空, 选中的文本取消选中, 查找替换面板关闭
-//	public static void pressBtnESC() {
-//		ComponentGetter.dbInfoFilter.setText("");
-//
-//		// 代码编辑内容, 取消选中, 高亮恢复复原
-//		SqluckyEditor.deselect();
-//		SqluckyEditor.applyHighlighting();
-//
-//		// 隐藏查找, 替换窗口
-//		hideFindReplaceWindow();
-//
-//		// 提示窗口
-//		SqluckyEditor.currentMyTab().getSqlCodeArea().hideAutoComplete();
-//	}
-//
-//	// 隐藏查找, 替换窗口
-//	public static void hideFindReplaceWindow() {
-//		VBox b = SqluckyEditor.getTabVbox();
-//		var sltb = SqluckyEditor.currentMyTab();
-//		int bsize = b.getChildren().size();
-//		if (bsize > 1) {
-//			FindReplaceTextPanel.delFindReplacePane(sltb);
-//		}
-//
-//	}
-
-	// ctrl + S 按钮触发, 保存数据或sql文本
-//	public static void ctrlAndSAction() {
-//		boolean showStatus = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-//		// 如果现在数据表格中的<保存按钮>是亮的(面板还要显示着), 就保存数据库数据
-//		if (showStatus) {
-//			Button btn = SqluckyBottomSheetUtility.dataPaneSaveBtn();
-//			if (btn != null && !btn.isDisable()) {
-//				ButtonAction.dataSave();
-//				return;
-//			}
-//		}
-//		// 保存sql文本到硬盘
-//		saveSqlAction();
-//
-//	}
-
-	// 主窗口关闭事件处理逻辑
-	public static void mainPageClose() {
+//	更新节点的
+	public static void refreshConnOrder() {
+		Connection conn = SqluckyAppDB.getConn();
 		try {
-			saveApplicationStatusInfo();
+			logger.info("refreshConnOrder");
+			TreeView<TreeNodePo> treeView = ComponentGetter.treeView;
+			TreeItem<TreeNodePo> root = treeView.getRoot();
+			ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
+			int size = ls.size();
+			for (int i = 0; i < size; i++) {
+				TreeItem<TreeNodePo> nopo = ls.get(i);
+				String name = nopo.getValue().getName();
+				SqluckyConnector po = DBConns.get(name);
+				int id = po.getId();
+				updateDataOrder(conn, id, i);
+			}
 		} finally {
-//			SqluckyAppDB.closeConn();
-			System.exit(0);
+			SqluckyAppDB.closeConn(conn);
 		}
 
 	}
 
-	// 保存app状态
-	public static void saveApplicationStatusInfo() {
-		Connection H2conn = SqluckyAppDB.getConn();
+	public static void updateDataOrder(Connection conn, int id, int order) {
+		String sql = " UPDATE CONNECTION_INFO  set  ORDER_TAG = " + order + "  where ID = " + id;
 		try {
-			ConnectionDao.refreshConnOrder();
-			TabPane mainTabPane = ComponentGetter.mainTabPane;
-			int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();
-			var alltabs = mainTabPane.getTabs();
-			for (int i = 0; i < alltabs.size(); i++) {
-				Tab tab = alltabs.get(i);
-				// TODO close save
-				MyEditorSheet mtab = (MyEditorSheet) tab.getUserData();
-				mtab.saveScriptPo(H2conn);
-				var spo = mtab.getDocumentPo();
-				// 将打开状态设置为1, 之后根据这个状态来恢复
-				if (spo != null && spo.getId() != null) {
-					String sql = mtab.getAreaText();
-					if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
-						spo.setOpenStatus(1);
-						// 当前激活的编辑页面
-						if (activateTabPane == i) {
-							spo.setIsActivate(1);
-						} else {
-							spo.setIsActivate(0);
-						}
-					} else {
-						spo.setOpenStatus(0);
-						spo.setIsActivate(0);
-					}
-				}
-			}
-			// 保存选择的pane 下标
-//			AppDao.saveConfig(H2conn, "SELECT_PANE", activateTabPane + "");
-
-			// 删除 script tree view 中的空内容tab
-			var childs = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
-			int idx = 1;
-			for (int i = 0; i < childs.size(); i++) {
-				var tv = childs.get(i);
-				var mytab = tv.getValue();
-				var scpo = mytab.getDocumentPo();
-				var sqltxt = scpo.getText();
-				if (sqltxt == null || sqltxt.trim().length() == 0) {
-					AppDao.deleteScriptArchive(H2conn, scpo);
-				} else {
-					String fp = scpo.getFileFullName();
-					if (StrUtils.isNullOrEmpty(fp)) {
-						scpo.setTitle("Untitled_" + idx + "*");
-						idx++;
-					}
-					AppDao.updateScriptArchive(H2conn, scpo);
-
-				}
-			}
-
-		} catch (Exception e) {
+			DBTools.execDML(conn, sql);
+		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			SqluckyAppDB.closeConn(H2conn);
 		}
-
 	}
-
-//	// 代码格式化
-//	public static void formatSqlText() {
-//		CodeArea code = SqluckyEditor.getCodeArea();
-//		String txt = code.getSelectedText();
-//		if (StrUtils.isNotNullOrEmpty(txt)) {
-//			IndexRange i = code.getSelection();
-//			int start = i.getStart();
-//			int end = i.getEnd();
-//
-//			String rs = SqlFormatter.format(txt);
-//			code.deleteText(start, end);
-//			code.insertText(start, rs);
-//		} else {
-//			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
-//			String rs = SqlFormatter.format(txt);
-//			code.clear();
-//			code.appendText(rs);
-//		}
-//		SqluckyEditor.currentSqlCodeAreaHighLighting();
-//	}
-//
-//	// sql 压缩
-//	public static void pressSqlText() {
-//		CodeArea code = SqluckyEditor.getCodeArea();
-//		String txt = code.getSelectedText();
-//		if (StrUtils.isNotNullOrEmpty(txt)) {
-//			IndexRange i = code.getSelection();
-//			int start = i.getStart();
-//			int end = i.getEnd();
-//
-//			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
-//			code.deleteText(start, end);
-//			code.insertText(start, rs);
-//		} else {
-//			txt = SqluckyEditor.getCurrentCodeAreaSQLText();
-//			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
-//			code.clear();
-//			code.appendText(rs);
-//		}
-//		SqluckyEditor.currentSqlCodeAreaHighLighting();
-//	}
 
 	// 代码大写
 	public static void UpperCaseSQLTextSelectText() {
@@ -459,110 +320,8 @@ public class CommonAction {
 		}
 		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 	}
+ 
 
-	// TODO 打开sql文件
-	public static void openSqlFile() {
-		try {
-			File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
-			if (f == null)
-				return;
-			String charset = FileTools.detectFileCharset(f);
-			if (charset == null) {
-				new RuntimeException("Open failed!");
-			}
-			String val = FileUtils.readFileToString(f, charset);
-			String tabName = "";
-//			ComponentGetter.fileEncode.put( f.getPath(), encode);
-			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
-//				id = ConfigVal.SAVE_TAG + f.getPath();
-				tabName = FileTools.fileName(f.getPath());
-				setOpenfileDir(f.getPath());
-			}
-			DocumentPo scpo = new DocumentPo();
-			scpo.setEncode(charset);
-			scpo.setFileFullName(f.getAbsolutePath());
-			scpo.setText(val);
-			scpo.setTitle(tabName);
-			MyEditorSheet sheet = ScriptTabTree.findMyTabByScriptPo(scpo);
-
-			if (sheet != null) { // 如果已经存在就不用重新打开
-				sheet.showEditor();
-			} else {
-				MyEditorSheetHelper.createTabFromSqlFile(scpo);
-			}
-
-		} catch (IOException e) {
-			MyAlert.errorAlert(e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	// 打开系统中的一个sql文件, 并在主界面显示
-	public static void openSqlFile(File f) {
-		try {
-			if (f == null)
-				return;
-			String charset = FileTools.detectFileCharset(f);
-			if (charset == null) {
-				new RuntimeException("Open failed!");
-			}
-			String val = FileUtils.readFileToString(f, charset);
-			String tabName = "";
-//			ComponentGetter.fileEncode.put( f.getPath(), encode);
-			if (StrUtils.isNotNullOrEmpty(f.getPath())) {
-//				id = ConfigVal.SAVE_TAG + f.getPath();
-				tabName = FileTools.fileName(f.getPath());
-				setOpenfileDir(f.getPath());
-			}
-			DocumentPo scpo = new DocumentPo();
-			scpo.setEncode(charset);
-			scpo.setFileFullName(f.getAbsolutePath());
-			scpo.setText(val);
-			scpo.setTitle(tabName);
-
-			MyEditorSheet sheet = ScriptTabTree.findMyTabByScriptPo(scpo);
-			if (sheet != null) { // 如果已经存在就不用重新打开
-				sheet.showEditor();
-			} else {
-				MyEditorSheetHelper.createTabFromSqlFile(scpo);
-			}
-
-		} catch (IOException e) {
-			MyAlert.errorAlert(e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	// 查看表明细(一行数据) 快捷键
-//	public static void shortcutShowDataDatil() {
-//		Button btn = SqluckyBottomSheetUtility.dataPaneDetailBtn();
-//		if (btn != null) {
-//			MouseEvent me = myEvent.mouseEvent(MouseEvent.MOUSE_CLICKED, btn);
-//			Event.fireEvent(btn, me);
-//		}
-//
-//	}
-
-	public static void hideLeftBottom() {
-		JFXButton btnLeft = CommonButtons.hideLeft; // AllButtons.btns.get("hideLeft");
-		JFXButton btnBottom = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
-		boolean leftp = ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue();
-		boolean bootp = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-		if (leftp || bootp) {
-			ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
-			btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
-
-			ComponentGetter.masterDetailPane.setShowDetailNode(false);
-			btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
-		} else {
-			ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
-			btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
-
-			ComponentGetter.masterDetailPane.setShowDetailNode(true);
-			btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
-		}
-
-	}
 
 	public static void hideLeft() {
 		JFXButton btn = CommonButtons.hideLeft;
@@ -582,6 +341,26 @@ public class CommonAction {
 			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
 
 		}
+	}
+	public static void hideLeftBottom() {
+		JFXButton btnLeft = CommonButtons.hideLeft; // AllButtons.btns.get("hideLeft");
+		JFXButton btnBottom = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
+		boolean leftp = ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue();
+		boolean bootp = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
+		if (leftp || bootp) {
+			ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
+			btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
+
+			ComponentGetter.masterDetailPane.setShowDetailNode(false);
+			btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+		} else {
+			ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
+			btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
+
+			ComponentGetter.masterDetailPane.setShowDetailNode(true);
+			btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
+		}
+
 	}
 
 	// 连接测试
@@ -611,13 +390,13 @@ public class CommonAction {
 
 	// 收缩treeview
 	public static void shrinkTreeView() {
-		TreeItem<TreeNodePo> root = AppWindow.treeView.getRoot();
+		TreeItem<TreeNodePo> root = ComponentGetter.treeView.getRoot();
 		shrinkUnfoldTreeViewHelper(root, false);
 	}
 
 	// 展开treeview
 	public static void unfoldTreeView() {
-		TreeItem<TreeNodePo> root = AppWindow.treeView.getRoot();
+		TreeItem<TreeNodePo> root = ComponentGetter.treeView.getRoot();
 		root.setExpanded(true);
 		shrinkUnfoldTreeViewHelper(root, true);
 	}
@@ -632,7 +411,7 @@ public class CommonAction {
 			}
 		}
 
-		AppWindow.treeView.refresh();
+		ComponentGetter.treeView.refresh();
 	}
 
 	// 保证theme状态
@@ -652,12 +431,7 @@ public class CommonAction {
 //		changeSvgColor(); // 修改按钮颜色
 	}
 
-	// 设置整体样式
-	public static void setThemeRestart(String val) {
-		// 询问是否重启app, 如果不重启再重新加载样式
-		CommonAction.changeThemeRestartApp(val);
-	}
-
+ 
 	// 设置文件打开时候目录path, 便于二次打开可以直达该目录
 	public static void setOpenfileDir(String val) {
 		Connection conn = SqluckyAppDB.getConn();
@@ -666,6 +440,85 @@ public class CommonAction {
 		ConfigVal.openfileDir = val;
 	}
 
+	 
+		// TODO 打开sql文件
+		public static void openSqlFile() {
+			try {
+				File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
+				if (f == null)
+					return;
+				String charset = FileTools.detectFileCharset(f);
+				if (charset == null) {
+					new RuntimeException("Open failed!");
+				}
+				String val = FileUtils.readFileToString(f, charset);
+				String tabName = "";
+//				ComponentGetter.fileEncode.put( f.getPath(), encode);
+				if (StrUtils.isNotNullOrEmpty(f.getPath())) {
+//					id = ConfigVal.SAVE_TAG + f.getPath();
+					tabName = FileTools.fileName(f.getPath());
+					setOpenfileDir(f.getPath());
+				}
+				DocumentPo scpo = new DocumentPo();
+				scpo.setEncode(charset);
+				scpo.setFileFullName(f.getAbsolutePath());
+				scpo.setText(val);
+				scpo.setTitle(tabName);
+//				MyEditorSheet sheet = ScriptTabTree.findMyTabByScriptPo(scpo);
+				MyEditorSheet sheet =  ComponentGetter.appComponent.findMyTabByScriptPo(scpo);
+
+				if (sheet != null) { // 如果已经存在就不用重新打开
+					sheet.showEditor();
+				} else {
+					MyEditorSheetHelper.createTabFromSqlFile(scpo);
+				}
+
+			} catch (IOException e) {
+				MyAlert.errorAlert(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+		
+
+
+		// 打开系统中的一个sql文件, 并在主界面显示
+		public static void openSqlFile(File f) {
+			try {
+				if (f == null)
+					return;
+				String charset = FileTools.detectFileCharset(f);
+				if (charset == null) {
+					new RuntimeException("Open failed!");
+				}
+				String val = FileUtils.readFileToString(f, charset);
+				String tabName = "";
+//				ComponentGetter.fileEncode.put( f.getPath(), encode);
+				if (StrUtils.isNotNullOrEmpty(f.getPath())) {
+//					id = ConfigVal.SAVE_TAG + f.getPath();
+					tabName = FileTools.fileName(f.getPath());
+					AppCommonAction.setOpenfileDir(f.getPath());
+				}
+				DocumentPo scpo = new DocumentPo();
+				scpo.setEncode(charset);
+				scpo.setFileFullName(f.getAbsolutePath());
+				scpo.setText(val);
+				scpo.setTitle(tabName);
+
+//				MyEditorSheet sheet = ScriptTabTree.findMyTabByScriptPo(scpo);
+//				MyEditorSheet sheet = ScriptTabTree.findMyTabByScriptPo(scpo);
+				MyEditorSheet sheet =  ComponentGetter.appComponent.findMyTabByScriptPo(scpo);
+				if (sheet != null) { // 如果已经存在就不用重新打开
+					sheet.showEditor();
+				} else {
+					MyEditorSheetHelper.createTabFromSqlFile(scpo);
+				}
+
+			} catch (IOException e) {
+				MyAlert.errorAlert(e.getMessage());
+				e.printStackTrace();
+			}
+		}
+	
 	// 改变字体大小
 	public static void changeFontSize(boolean isPlus) {
 		// 获取当前的 size
@@ -696,28 +549,8 @@ public class CommonAction {
 
 	}
 
-	// 重启应用
-	public static void restartApp() {
-		Consumer<String> caller = x -> {
-			saveApplicationStatusInfo();
-			Restart.reboot();
-		};
-		MyAlert.myConfirmation("Restart Application ? ", caller);
-	}
-
-	public static void changeThemeRestartApp(String val) {
-		Consumer<String> ok = x -> {
-			saveThemeStatus(val);
-			saveApplicationStatusInfo();
-			Restart.reboot();
-		};
-		Consumer<String> cancel = x -> {
-			saveThemeStatus(val);
-			CommonUtils.loadCss(ComponentGetter.primaryscene);
-			MyEditorSheetHelper.changeThemeAllCodeArea();
-		};
-		MyAlert.myConfirmation("Change Theme Restart Application Will Better, ok ? ", ok, cancel);
-	}
+ 
+ 
 
 	// 获取当前连接下拉选中的连接名称
 	public static String getComboBoxDbConnName() {
@@ -732,7 +565,7 @@ public class CommonAction {
 
 	// 获取当前连接下拉选值的对应连接对象
 	public static SqluckyConnector getDbConnectionPoByComboBoxDbConnName() {
-		var name = CommonAction.getComboBoxDbConnName();
+		var name = AppCommonAction.getComboBoxDbConnName();
 		if (StrUtils.isNotNullOrEmpty(name)) {
 			SqluckyConnector dpov = DBConns.get(name);
 			return dpov;
@@ -744,12 +577,7 @@ public class CommonAction {
 	public static final int ALTER_COLUMN = 2;
 	public static final int ADD_COLUMN = 3;
 
-	// 执行导出的sql
-	public static Long execExportSql(String sql, Connection conn, SqluckyConnector dbconnPo) {
-		Long key = RunSQLHelper.refresh(dbconnPo, sql, "", false);
-		return key;
-	}
-
+ 
 	// 导出SQL
 	public static RsVal exportSQL(int ty, String colname, RsVal rv) {
 		try {
@@ -787,12 +615,17 @@ public class CommonAction {
 			if (StrUtils.isNullOrEmpty(x.trim()))
 				return;
 			RsVal rv2 = exportSQL(myBottomSheet, ADD_COLUMN, x);
-			CommonAction.execExportSql(rv2.sql, rv2.conn, rv.dbconnPo);
+			AppCommonAction.execExportSql(rv2.sql, rv2.conn, rv.dbconnPo);
 		};
 		DialogTools.showExecWindow(rv.tableName + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
 
 	}
 
+	// 执行导出的sql
+	public static Long execExportSql(String sql, Connection conn, SqluckyConnector dbconnPo) {
+		Long key = ComponentGetter.appComponent.refreshDataTableView(dbconnPo, sql, "", false); 
+		return key;
+	}
 	// 添加新字段
 	public static void addNewColumn(SqluckyConnector dbc, String schema, String tablename) {
 
@@ -802,7 +635,7 @@ public class CommonAction {
 				return;
 			String colname = x.trim();
 			String sql = dbc.getExportDDL().exportAlterTableAddColumn(conn, schema, tablename, colname);
-			CommonAction.execExportSql(sql, conn, dbc);
+			AppCommonAction.execExportSql(sql, conn, dbc);
 		};
 		DialogTools.showExecWindow(tablename + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
 
@@ -830,8 +663,37 @@ public class CommonAction {
 		}
 
 	}
-
-	public static void demo() {
+	 
+	// 重启应用
+	public static void restartApp() {
+		Consumer<String> caller = x -> {
+			ComponentGetter.appComponent.saveApplicationStatusInfo();
+			ComponentGetter.appComponent.reboot();
+//			Restart.reboot();
+		};
+		MyAlert.myConfirmation("Restart Application ? ", caller);
 	}
+ 
+	// 设置整体样式
+		public static void setThemeRestart(String val) {
+			// 询问是否重启app, 如果不重启再重新加载样式
+			AppCommonAction.changeThemeRestartApp(val);
+		}
 
+
+
+		public static void changeThemeRestartApp(String val) {
+			Consumer<String> ok = x -> {
+				AppCommonAction.saveThemeStatus(val);
+				ComponentGetter.appComponent.saveApplicationStatusInfo();
+				ComponentGetter.appComponent.reboot();
+				//				Restart.reboot();
+			};
+			Consumer<String> cancel = x -> {
+				AppCommonAction.saveThemeStatus(val);
+				CommonUtils.loadCss(ComponentGetter.primaryscene);
+				MyEditorSheetHelper.changeThemeAllCodeArea();
+			};
+			MyAlert.myConfirmation("Change Theme Restart Application Will Better, ok ? ", ok, cancel);
+		}
 }

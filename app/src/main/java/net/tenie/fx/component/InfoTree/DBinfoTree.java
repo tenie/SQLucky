@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.Caret.CaretVisibility;
 import org.fxmisc.richtext.CodeArea;
 
@@ -39,11 +41,11 @@ import net.tenie.Sqlucky.sdk.po.component.MyTreeItem;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TreeObjAction;
-import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.dao.ConnectionDao;
 
@@ -54,7 +56,7 @@ import net.tenie.fx.dao.ConnectionDao;
  *
  */
 public class DBinfoTree {
-
+	private static Logger logger = LogManager.getLogger(DBinfoTree.class);
 	public static TreeView<TreeNodePo> DBinfoTreeView;
 	public static TreeItem<TreeNodePo> rootNode;
 
@@ -152,7 +154,7 @@ public class DBinfoTree {
 							if (scp != null) {
 								boolean autoConn = scp.getAutoConnect();
 								if (autoConn) {
-									CommonAction.openConn(treeItem);
+									DBinfoTree.openConn(treeItem);
 								}
 							}
 						});
@@ -190,7 +192,7 @@ public class DBinfoTree {
 						if (scp != null) {
 							boolean autoConn = scp.getAutoConnect();
 							if (autoConn) {
-								CommonAction.openConn(treeItem);
+								DBinfoTree.openConn(treeItem);
 							}
 						}
 					});
@@ -273,7 +275,7 @@ public class DBinfoTree {
 				return;
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
-				CommonAction.openConn(item);
+				DBinfoTree.openConn(item);
 				CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
 				if (codeArea != null) {
 					codeArea.requestFocus();
@@ -614,4 +616,68 @@ public class DBinfoTree {
 
 		return dbTitledPane;
 	}
+	
+	
+	public static void openConn(TreeItem<TreeNodePo> item) {
+		// 判断 节点是否已经有子节点
+		if (item.getChildren().size() == 0) {
+
+			Node nd = IconGenerator.svgImage("spinner", "red");
+			CommonUtils.rotateTransition(nd);
+			item.getValue().setIcon(nd);
+			AppWindow.treeView.refresh();
+
+			Thread t = new Thread() {
+				@Override
+				public void run() {
+					SqluckyConnector po1 = null;
+					try {
+						logger.info("backRunOpenConn()");
+						String connName = item.getValue().getName();
+						SqluckyConnector po = DBConns.get(connName);
+						po1 = po;
+						po1.setInitConnectionNodeStatus(true);
+
+						var conntmp = po1.getConn();
+//						if (po.isAlive()) {
+						if (conntmp != null) {
+							ConnItemContainer connItemContainer = new ConnItemContainer(po, item);
+							TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
+							Platform.runLater(() -> {
+								item.getChildren().add(s);
+								item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00"));
+								connItemContainer.selectTable(po.getDefaultSchema());
+								DBConns.flushChoiceBox(connName);
+							});
+						} else {
+							Platform.runLater(() -> {
+								MyAlert.errorAlert(
+										" Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
+								item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
+								AppWindow.treeView.refresh();
+
+							});
+
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+						logger.debug(e.getMessage());
+						Platform.runLater(() -> {
+							MyAlert.errorAlert(" Error !");
+							item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
+							AppWindow.treeView.refresh();
+						});
+
+					} finally {
+						DBConns.flushChoiceBoxGraphic();
+						po1.setInitConnectionNodeStatus(false);
+					}
+
+				}
+			};
+			t.start();
+		
+		}
+	}
+
 }
