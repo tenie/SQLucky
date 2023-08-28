@@ -16,6 +16,7 @@ import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
@@ -84,7 +85,7 @@ public class ProcedureAction {
 			// 表格添加列
 			var ls = SdkComponent.createTableColForInfo(colss);
 			// 设置 列的 右键菜单
-			SqlExecuteOption.setDataTableContextMenu(myBottomSheet, ls, colss);
+			SqluckyAppDB.setDataTableContextMenu(myBottomSheet, ls, colss);
 			table.getColumns().addAll(ls);
 			table.setItems(allRawData);
 			// 渲染界面

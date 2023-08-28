@@ -18,10 +18,10 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.fx.Po.TreeNodePo;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 
 /*   @author tenie */
@@ -47,6 +47,7 @@ public class AppWindow {
 		mainWindow = new VBox();
 		CommonUtils.addCssClass(mainWindow, "main-background");
 		ComponentGetter.mainWindow = mainWindow;
+		
 
 		mainMenuBar = new MenuBarContainer();
 		masterDetailPane = new MasterDetailPane(Side.BOTTOM);
@@ -104,6 +105,7 @@ public class AppWindow {
 		});
 
 		CommonUtils.fadeTransition(mainWindow, 1000);
+		ComponentGetter.treeView = treeView;
 	}
 
 	static {

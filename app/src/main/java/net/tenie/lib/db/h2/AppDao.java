@@ -307,29 +307,10 @@ public class AppDao {
 
 	}
 
-	public static String readConfig(Connection conn, String name) {
-		String sql = "select   VAL   from   APP_CONFIG   where name = '" + name + "' ";
-		String vals = DBTools.selectOne(conn, sql);
-		return vals;
-	}
 
-	public static void deleteConfigKey(Connection conn, String key) {
-		try {
-			DBTools.execDDL(conn, "DELETE from APP_CONFIG where name = '" + key + "' ");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	 
 
-	public static void saveConfig(Connection conn, String key, String val) {
-		deleteConfigKey(conn, key);
-		String sql = "insert into APP_CONFIG (NAME, VAL) values ( '" + key + "' , '" + val + "' )";
-		try {
-			DBTools.execDML(conn, sql);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
+	 
 
 	public static void delScriptPo(Integer id) {
 		String sql = "delete   from   SCRIPT_ARCHIVE  where id = " + id;
@@ -540,7 +521,7 @@ public class AppDao {
 
 	// 执行更新脚本
 	public static void updateAppSql(Connection conn) {
-		String UPDATE_SQL = AppDao.readConfig(conn, "UPDATE_SQL");
+		String UPDATE_SQL = SqluckyAppDB.readConfig(conn, "UPDATE_SQL");
 		if (UPDATE_SQL != null && UPDATE_SQL.length() > 0) {
 			String[] sql = UPDATE_SQL.split(";");
 			for (String s : sql) {
@@ -553,7 +534,7 @@ public class AppDao {
 					e.printStackTrace();
 				}
 			}
-			AppDao.saveConfig(conn, "UPDATE_SQL", "");
+			SqluckyAppDB.saveConfig(conn, "UPDATE_SQL", "");
 		}
 
 		List<String> ls = updateSQL();

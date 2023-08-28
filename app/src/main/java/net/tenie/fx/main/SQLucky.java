@@ -91,13 +91,13 @@ public class SQLucky extends Application {
 		AppDao.testDbTableExists(conn);
 
 		// 界面主题色， 没有设置过，默认黑色
-		Theme = AppDao.readConfig(conn, "THEME");
+		Theme = SqluckyAppDB.readConfig(conn, "THEME");
 		if (StrUtils.isNullOrEmpty(Theme)) {
-			AppDao.saveConfig(conn, "THEME", "DARK");
+			SqluckyAppDB.saveConfig(conn, "THEME", "DARK");
 			Theme = "DARK";
 		}
 
-		ConfigVal.openfileDir = AppDao.readConfig(conn, "OPEN_FILE_DIR");
+		ConfigVal.openfileDir = SqluckyAppDB.readConfig(conn, "OPEN_FILE_DIR");
 		SqluckyAppDB.closeConn(conn);
 		ConfigVal.THEME = Theme;
 		SqluckyAppComponent sqluckyComponent = new SqluckyAppComponent();

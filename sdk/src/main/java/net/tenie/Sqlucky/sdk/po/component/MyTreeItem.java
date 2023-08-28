@@ -1,4 +1,4 @@
-package net.tenie.fx.component.InfoTree.TreeItem;
+package net.tenie.Sqlucky.sdk.po.component;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

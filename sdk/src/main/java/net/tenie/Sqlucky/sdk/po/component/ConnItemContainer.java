@@ -1,15 +1,14 @@
-package net.tenie.fx.component.InfoTree.TreeItem;
+package net.tenie.Sqlucky.sdk.po.component;
 
 import java.util.Set;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.fx.Po.TreeNodePo;
-import net.tenie.fx.component.container.AppWindow;
 
 /**
  * 
@@ -86,7 +85,8 @@ public class ConnItemContainer {
 			if (itemName.equals(scheName)) {
 				var nd = schemaNode.getChildren().get(i).getValue().getConnItem().getTableNode();
 				Platform.runLater(() -> {
-					AppWindow.treeView.getSelectionModel().select(nd);
+//					AppWindow.treeView.getSelectionModel().select(nd);
+					ComponentGetter.treeView.getSelectionModel().select(nd);
 				});
 				break;
 			}

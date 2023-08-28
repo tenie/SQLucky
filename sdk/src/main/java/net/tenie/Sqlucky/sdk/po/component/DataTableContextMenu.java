@@ -1,4 +1,4 @@
-package net.tenie.fx.component.dataView;
+package net.tenie.Sqlucky.sdk.po.component;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +16,12 @@ import javafx.scene.control.MenuItem;
 import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyPopupNumberFilter;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.ui.AppCommonAction;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 
 public class DataTableContextMenu {
 
@@ -95,7 +95,8 @@ public class DataTableContextMenu {
 		MenuItem addColumn = new MenuItem("Add New Column");
 		addColumn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 		addColumn.setOnAction(e -> {
-			CommonAction.addNewColumn(myBottomSheet);
+//			CommonAction.addNewColumn(myBottomSheet);
+			AppCommonAction.addNewColumn(myBottomSheet);
 		});
 
 		Menu updateMenu = new Menu("Update Column Data");

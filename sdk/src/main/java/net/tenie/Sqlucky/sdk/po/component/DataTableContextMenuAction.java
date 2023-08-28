@@ -1,4 +1,4 @@
-package net.tenie.fx.component.dataView;
+package net.tenie.Sqlucky.sdk.po.component;
 
 import java.util.function.Consumer;
 
@@ -14,18 +14,18 @@ import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
 //import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonAction;
 
 public class DataTableContextMenuAction {
 
 	// 删除字段
 	public static void dropColumn(MyBottomSheet myBottomSheet, String colname) {
-		RsVal rv = CommonAction.exportSQL(myBottomSheet, CommonAction.DROP_COLUMN, colname);
+		RsVal rv = AppCommonAction.exportSQL(myBottomSheet, AppCommonAction.DROP_COLUMN, colname);
 		if (StrUtils.isNotNullOrEmpty(rv.sql)) {
 			// 要被执行的函数
 			Consumer<String> caller = x -> {
-				CommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
+				AppCommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
 			};
 //			ModalDialog.showComfirmExec("Confirm drop!", "Execute Sql: " + rv.sql + " ?", caller);
 			MyAlert.myConfirmation("Execute Sql: " + rv.sql + " ?", caller);
@@ -39,8 +39,8 @@ public class DataTableContextMenuAction {
 			if (StrUtils.isNullOrEmpty(x.trim()))
 				return;
 			String str = colname + " " + x;
-			RsVal rv = CommonAction.exportSQL(myBottomSheet, CommonAction.ALTER_COLUMN, str);
-			CommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
+			RsVal rv = AppCommonAction.exportSQL(myBottomSheet, AppCommonAction.ALTER_COLUMN, str);
+			AppCommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
 		};
 		DialogTools.showExecWindow("Alter " + colname + " Date Type: input words like 'CHAR(10) ", "", caller);
 
@@ -54,7 +54,7 @@ public class DataTableContextMenuAction {
 			if (StrUtils.isNullOrEmpty(x.trim()))
 				return;
 			String strsql = sql + x;
-			CommonAction.execExportSql(strsql, rv.conn, rv.dbconnPo);
+			AppCommonAction.execExportSql(strsql, rv.conn, rv.dbconnPo);
 		};
 		DialogTools.showExecWindow("Execute : " + sql + " ? : input your value", "", caller);
 

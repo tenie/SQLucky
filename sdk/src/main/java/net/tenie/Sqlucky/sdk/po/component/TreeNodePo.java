@@ -1,4 +1,4 @@
-package net.tenie.fx.Po;
+package net.tenie.Sqlucky.sdk.po.component;
 
 import java.io.Serializable;
 
@@ -8,8 +8,6 @@ import net.tenie.Sqlucky.sdk.po.DBNodeInfoPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.fx.component.InfoTree.TreeItem.ConnItemContainer;
-import net.tenie.fx.component.InfoTree.TreeItem.ConnItemDbObjects;
 
 /**
  * treeView 节点保存的数据对象

@@ -5,10 +5,10 @@ import java.util.function.Consumer;
 
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.fx.Action.CommonAction;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.Po.TreeNodePo;
 
 public class DBInfoTreeContextMenuAction {
 

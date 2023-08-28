@@ -25,10 +25,12 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.DBConns;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.SqlData;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
@@ -38,8 +40,6 @@ import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.fx.Action.sqlExecute.ProcedureAction;
 import net.tenie.fx.Action.sqlExecute.RunSqlStatePo;
 import net.tenie.fx.Action.sqlExecute.SelectAction;
-import net.tenie.fx.Action.sqlExecute.SqlExecuteOption;
-import net.tenie.fx.Po.SqlData;
 import net.tenie.fx.dao.DmlDdlDao;
 
 /**
@@ -88,7 +88,7 @@ public class RunSQLHelper {
 				return;
 			}
 			// 等待加载动画
-			SqlExecuteOption.addWaitingPane(state.getTidx(), state.getIsRefresh());
+			SdkComponent.addWaitingPane(state.getTidx(), state.getIsRefresh());
 			List<SqlData> allsqls = new ArrayList<>();
 //			if (isRunning) {
 //				MyAlert.errorAlert("有查询在进行中, 请稍等!");
@@ -109,10 +109,10 @@ public class RunSQLHelper {
 					}
 					// 执行传入的sql, 非界面上的sql
 				} else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
-					allsqls = SqlExecuteOption.epurateSql(sqlstr);
+					allsqls = SqluckyAppDB.epurateSql(sqlstr);
 				} else {
 					// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
-					allsqls = SqlExecuteOption.willExecSql(state.getIsCurrentLine());
+					allsqls = SqluckyAppDB.willExecSql(state.getIsCurrentLine());
 				}
 				// 执行sql
 				var rsVal = execSqlList(allsqls, state.getSqlConn(), state);

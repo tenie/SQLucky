@@ -17,12 +17,14 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
+import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 
 /**
  * 
@@ -41,6 +43,7 @@ public final class ComponentGetter {
 	public static MasterDetailPane treeAreaDetailPane;
 
 	public static VBox mainWindow;
+	public static TreeView<TreeNodePo> treeView;
 //	public static FlowPane treeBtnPane;
 
 	// 主界面 Stage

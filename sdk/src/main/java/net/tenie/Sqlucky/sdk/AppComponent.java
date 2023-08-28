@@ -30,8 +30,8 @@ public interface AppComponent {
 	 */
 	public void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv);
 
-	void refreshDataTableView(String connName, String sql, String idx, boolean isLock);
-
+	Long refreshDataTableView(String connName, String sql, String idx, boolean isLock);
+	Long refreshDataTableView(SqluckyConnector dbconnPo, String sql, String idx, boolean isLock);
 	void addTitledPane(TitledPane tp);
 
 	void addIconBySvg(String name, String svg);
