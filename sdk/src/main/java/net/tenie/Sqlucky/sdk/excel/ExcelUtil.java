@@ -156,10 +156,4 @@ public class ExcelUtil {
 		return rs;
 	}
 
-	public static void main(String[] args) {
-//		List<ArrayList<String>> ls = readExcelFile("C:\\Users\\tenie\\TT_FORD_RO_LABOUR.xls", null, null);
-		List<ExcelHeadCellInfo> ls = readExcelFileHead("C:\\Users\\tenie\\TT_FORD_RO_LABOUR.xls");
-		System.out.println(ls);
-	}
-
 }

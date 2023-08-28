@@ -306,29 +306,7 @@ public class ExcelToDB {
 			}
 		};
 		t.start();
-//		try {
-//			t.join();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 		return t;
 	}
 
-	public static void main(String[] args) {
-		int line = 231200;
-		int limit = 10000;
-		int add = 10000;
-		int begin = 2;
-		int end = 0;
-		while (limit < line) {
-			if (limit != 10000) {
-				begin = limit - add;
-			}
-			end = limit;
-			limit += add;
-			System.out.println(begin + " | " + end);
-
-		}
-		System.out.println(limit + " | " + end);
-	}
 }

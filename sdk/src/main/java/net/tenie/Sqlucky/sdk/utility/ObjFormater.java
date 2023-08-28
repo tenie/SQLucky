@@ -1,6 +1,5 @@
 package net.tenie.Sqlucky.sdk.utility;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -24,7 +23,7 @@ public class ObjFormater {
 	}
 
 	public static String decimalFormat(float val) {
-		return def.format((double) val);
+		return def.format(val);
 	}
 
 	public static String decimalFormat(String val) {
@@ -39,14 +38,4 @@ public class ObjFormater {
 		return str != null && str.length() != 0 ? sdfshort.parse(str) : null;
 	}
 
-	public static void main(String[] args) {
-		float f = 123.45F;
-		System.out.println(def2d.format((double) f));
-		System.out.println(def.format((double) f));
-		BigDecimal bd = new BigDecimal((double) f);
-		System.out.println(bd.floatValue());
-		System.out.println(bd.doubleValue());
-		float ff = 2907.06F;
-		System.out.println(decimalFormat(ff));
-	}
 }

@@ -3,6 +3,7 @@ package net.tenie.fx.main;
 import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -64,14 +65,5 @@ public class Restart {
 		
 		System.exit(0);
 	}
-	
-//	public static void main(String[] args) {
-//		String ops = System.getProperty("os.name");
-//		String userDir = System.getProperty("user.dir");
-//		String val =System.getProperty("sun.java.command");
-//		System.out.println(ops);
-//		System.out.println(userDir);
-//		System.out.println(val);
-//	}
 	
 }

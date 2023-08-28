@@ -164,7 +164,7 @@ public class DesUtil {
 		return cipher.doFinal(data);
 	}
 
-	public static void main(String[] args) {
+	public static void test(String[] args) {
 		String data = "我是需要被加密的数据";
 		// 这里的key长度必须大于8位
 		String key = "12345678";

@@ -100,9 +100,4 @@ public class CsvUtil {
 		return innerlist;
 	}
 
-	public static void main(String[] args) throws IOException {
-		List<ExcelHeadCellInfo> ls = readCsvHeadInfo2("C:\\Users\\tenie\\app_ver.csv");
-		System.out.println(ls);
-		System.out.println(ls.size());
-	}
 }
