@@ -393,13 +393,6 @@ public class InsertDao {
 		return str;
 	}
 
-	public static void main(String[] args) {
-		String val = sqlStrTransferredSingleQuotation("'1234'5'67'");
-		System.out.println(val);
-		val = transferredSingleQuotation("123'4'56");
-		System.out.println(val);
-	}
-
 	// 将字符串值转为可以拼接到sql中的字符串
 	public static String stringToDBString(String val) {
 		String rsVal = "";

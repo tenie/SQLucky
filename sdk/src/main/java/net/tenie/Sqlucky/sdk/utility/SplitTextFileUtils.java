@@ -1,6 +1,12 @@
 package net.tenie.Sqlucky.sdk.utility;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,12 +17,12 @@ import org.apache.logging.log4j.Logger;
 public class SplitTextFileUtils {
 	private static Logger logger = LogManager.getLogger(SplitTextFileUtils.class);
 	// 使用示例
-	public static void main(String[] args) {
+	public static void test(String[] args) {
 
 		// 目标文件
-		String targetFile = "C:\\Users\\tenie\\insertSQL.sql";
+		String targetFile = "C:\\insertSQL.sql";
 		// 存放的目录
-		String saveDir = "D:\\testdir\\splitDir";
+		String saveDir = "D:\\splitDir";
 		// 自定义的生成文件前缀名
 		String saveFileName = "insert";
 		// 生成文件格式的后缀

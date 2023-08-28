@@ -2,7 +2,6 @@ package net.tenie.Sqlucky.sdk.utility;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
@@ -12,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +19,7 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class ZipUtils {
-	public static void main(String[] args) throws IOException {
+	public static void test(String[] args) throws IOException {
 		// 单文件
 //		String sourceFile = "D:\\log_json.txt"; 
 //		zipFile(sourceFile, "D:\\compressed.zip");

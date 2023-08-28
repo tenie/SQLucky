@@ -88,11 +88,6 @@ public class DateUtils {
 		return val;
 	}
 
-	public static void main(String[] args) {
-		localDateTimeToStr(LocalDateTime.now());
-		strToLocalDateTime("2021-08-19 15:11:30");
-	}
-
 	/*
 	 * 数据库时间类型字段转换为字符串
 	 */

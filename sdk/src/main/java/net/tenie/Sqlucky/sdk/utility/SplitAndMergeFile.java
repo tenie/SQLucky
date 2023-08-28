@@ -149,7 +149,7 @@ public class SplitAndMergeFile {
 	}
 
 
-	public static void main(String[] args) {
+	public static void test(String[] args) {
 		
 		SplitAndMergeFile splitAndMergeFile=new SplitAndMergeFile();
 		

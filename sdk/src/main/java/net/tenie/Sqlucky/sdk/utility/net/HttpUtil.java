@@ -5,23 +5,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.hc.client5.http.entity.mime.FileBody;
 import org.apache.hc.client5.http.entity.mime.MultipartEntityBuilder;
 import org.apache.hc.client5.http.entity.mime.StringBody;
-import org.apache.hc.client5.http.fluent.Content;
 import org.apache.hc.client5.http.fluent.Request;
 import org.apache.hc.client5.http.fluent.Response;
-import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.ContentType;
-import org.apache.hc.core5.http.Header;
 import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.HttpResponse;
 import org.apache.hc.core5.http.NameValuePair;
 import org.apache.hc.core5.http.io.entity.EntityUtils;
 import org.apache.hc.core5.http.message.BasicNameValuePair;
@@ -179,25 +173,4 @@ public class HttpUtil {
 	 * @param args
 	 * @throws Exception 
 	 */
-	public static void main(String[] args) throws Exception {
-//    	demo1();
-//    	demo2();
-//		demo_post();
-//		String val = post("http://127.0.0.1:8088/sqlucky/queryAllBackup");
-//		String val = post1_test();
-//		System.out.println("val = " + val);
-		String path = FileUtils.getUserDirectoryPath();
-		path += "/.sqlucky/NEWPATH/";
-		File patchDir = new File(path);
-		if(patchDir.exists()) {
-			patchDir.deleteOnExit();
-		}else {
-			patchDir.mkdir();
-		}
-		var fileName = path + "FOO.TXT";
-	 var val =	FileUtils.readFileToByteArray(new File("D:\\workDir\\.gitignore") );
-		
-	    Files.write(Paths.get(fileName), val);
-		
-	}
 }

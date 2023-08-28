@@ -85,10 +85,6 @@ public class StrUtils {
 
 		return rsset;
 	}
-//	public static void main(String[] args) {
-//		String  str = " sss bbb ccc 11asda dsad.ads";
-//		splitWordByStr(str);
-//	}
 
 	// 驼峰命名转下划线
 	public static String CamelCaseUnderline(String str) {
