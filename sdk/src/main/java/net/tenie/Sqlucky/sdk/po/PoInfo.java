@@ -27,7 +27,6 @@ public class PoInfo {
 				if(tmpc.equals(lc)) {
 					continue;
 				}
-//				System.out.println(this.parseColName(methods[i]));
 				
 				this.mthName.addLast(methods[i].getName().substring(3));
 				this.colName.addLast(this.parseColName(methods[i]));
@@ -50,11 +49,11 @@ public class PoInfo {
 	}
 
 	public String getColName(int idx) {
-		return (String) this.colName.get(idx);
+		return this.colName.get(idx);
 	}
 
 	public Class getColType(int idx) {
-		return (Class) this.colType.get(idx);
+		return this.colType.get(idx);
 	}
 
 	public int getColSize() {
@@ -62,7 +61,7 @@ public class PoInfo {
 	}
 
 	public String getMethodName(int idx) {
-		return (String) this.mthName.get(idx);
+		return this.mthName.get(idx);
 	}
 
 	public Object getColVal(Object bean, int idx) throws Exception {
@@ -71,7 +70,7 @@ public class PoInfo {
 		var ms = this.cls.getMethods();
 		for(Method mth : ms) {
 			var mName = mth.getName();
-			if(mName.toLowerCase().contains( lowCN)) {
+			if(mName.toLowerCase().endsWith( lowCN)) {
 				if(mName.startsWith("set")) {
 					continue;
 				}else {
@@ -92,7 +91,7 @@ public class PoInfo {
 	}
 
 	public void setColVal(Object bean, int idx, Object val) throws Exception {
-		Method mth = this.cls.getMethod("set" + (String) this.mthName.get(idx), (Class) this.colType.get(idx));
+		Method mth = this.cls.getMethod("set" + this.mthName.get(idx), this.colType.get(idx));
 		mth.invoke(bean, val);
 	}
 

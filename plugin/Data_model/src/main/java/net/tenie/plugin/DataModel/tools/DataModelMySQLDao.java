@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import net.tenie.Sqlucky.sdk.db.PoDao;
@@ -91,8 +90,12 @@ public class DataModelMySQLDao {
 				tableFieldsPo.setTypeFullName(rs.getString("COLUMN_TYPE"));
 				tableFieldsPo.setPrimaryKeyName(rs.getString("COLUMN_KEY")); 
 				tableFieldsPo.setPrimaryKey(rs.getString("COLUMN_KEY"));
-				
-				tableFieldsPo.setNotNull("NO".equals(rs.getString("IS_NULLABLE"))? "√" : "" );
+				String isNullable =   rs.getString("IS_NULLABLE");
+				if(isNullable !=null && "NO".equals(isNullable)) {
+					tableFieldsPo.setNotNull("YES");
+				}else {
+					tableFieldsPo.setNotNull("NO");
+				}
 				tableFieldsPo.setAutoIncrement(rs.getString("EXTRA"));
 				PoDao.insert(conn, tableFieldsPo);
 				fields.add(tableFieldsPo);

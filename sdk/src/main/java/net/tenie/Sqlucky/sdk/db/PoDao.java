@@ -19,6 +19,8 @@ import net.tenie.Sqlucky.sdk.po.PoInfo;
 public class PoDao {
 	private static Logger logger = LogManager.getLogger(PoDao.class);
 
+	
+
 	public static void insert(Connection conn, Object bean) throws Exception {
 		if (bean != null ) {
 			PreparedStatement ps = null;
@@ -27,7 +29,6 @@ public class PoDao {
 			try {
 				PoInfo binfo = PoDaoUtil.getDataBeanInfo(bean);
 				String sql = PoDaoUtil.getInsertSql(binfo, bean);
-//				System.out.println(sql);
 				ps = conn.prepareStatement(sql);
 				int size = binfo.getColSize();
 				Object obj = null;

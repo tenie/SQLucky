@@ -48,7 +48,7 @@ public class ConfigVal {
 	// 代码显示个数计数
 	public static int pageSize = -1;
 	// sql 查询获取最大行
-	public static int MaxRows = 100;
+	public static int MaxRows = 1000;
 
 	// sql txt area tag
 	public static String SQL_AREA_TAG = "code";

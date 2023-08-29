@@ -1,11 +1,40 @@
 package net.tenie.plugin.DataModel.po;
 
 import java.util.Date;
+
+import net.tenie.Sqlucky.sdk.db.PoDaoUtil;
+import net.tenie.Sqlucky.sdk.po.PoInfo;
 /**
  * @author tenie
  *
  */
 public class DataModelTableFieldsPo {
+	public static void main(String[] args) throws Exception {
+		DataModelTableFieldsPo tableFieldsPo = new DataModelTableFieldsPo();
+		tableFieldsPo.setTableId(1L);
+		tableFieldsPo.setModelId(2L);
+		tableFieldsPo.setRowNo(2 );
+		tableFieldsPo.setDefKey("3"  );
+		tableFieldsPo.setDefName("4"  );
+		tableFieldsPo.setComment("5"  );
+		
+		tableFieldsPo.setDefaultValue("6"  );
+		tableFieldsPo.setTypeFullName("7"  );
+		tableFieldsPo.setPrimaryKeyName("8"  );
+		tableFieldsPo.setPrimaryKey("9"  );
+		String isNullable =   "NO";
+		if(isNullable !=null && "NO".equals(isNullable)) {
+			tableFieldsPo.setNotNull("YES");
+		}else {
+			tableFieldsPo.setNotNull("NO");
+		}
+		tableFieldsPo.setAutoIncrement("a");
+		System.out.println(tableFieldsPo);
+		PoInfo binfo = PoDaoUtil.getDataBeanInfo(tableFieldsPo);
+		String sql = PoDaoUtil.getInsertSql(binfo, tableFieldsPo);
+		System.out.println("======");
+		System.out.println(sql);
+	}
 
 	private Long itemId; 	// 自增长 id
 	private Long tableId;	// table的自增长id
@@ -186,14 +215,16 @@ public class DataModelTableFieldsPo {
 	}
 	@Override
 	public String toString() {
-		return "DataModelTableFieldsPo [itemId=" + itemId + ", tableId=" + tableId + ", id=" + id + ", rowNo=" + rowNo
-				+ ", defKey=" + defKey + ", defName=" + defName + ", comment=" + comment + ", domain=" + domain
-				+ ", type=" + type + ", len=" + len + ", scale=" + scale + ", primaryKey=" + primaryKey + ", notNull="
-				+ notNull + ", autoIncrement=" + autoIncrement + ", defaultValue=" + defaultValue + ", hideInGraph="
-				+ hideInGraph + ", typeFullName=" + typeFullName + ", primaryKeyName=" + primaryKeyName
+		return "DataModelTableFieldsPo [itemId=" + itemId + ", tableId=" + tableId + ", modelId=" + modelId + ", id="
+				+ id + ", rowNo=" + rowNo + ", defKey=" + defKey + ", defName=" + defName + ", comment=" + comment
+				+ ", domain=" + domain + ", type=" + type + ", len=" + len + ", scale=" + scale + ", defaultValue="
+				+ defaultValue + ", typeFullName=" + typeFullName + ", primaryKeyName=" + primaryKeyName
 				+ ", notNullName=" + notNullName + ", autoIncrementName=" + autoIncrementName + ", refDict=" + refDict
-				+ ", createdTime=" + createdTime + ", updatedTime=" + updatedTime + "]";
+				+ ", createdTime=" + createdTime + ", updatedTime=" + updatedTime + ", primaryKey=" + primaryKey
+				+ ", notNull=" + notNull + ", autoIncrement=" + autoIncrement + ", hideInGraph=" + hideInGraph + "]";
 	}
+ 
+ 
 	 
 	
 }

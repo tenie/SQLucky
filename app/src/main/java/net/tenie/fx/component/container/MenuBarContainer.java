@@ -121,7 +121,6 @@ public class MenuBarContainer {
 
 		MenuItem codeAutocompletionMenu = new MenuItem(StrUtils.MenuItemNameFormat("Code Autocompletion"));
 		codeAutocompletionMenu.setOnAction(value -> {
-//			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().callPopup();
 			MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().callPopup();
 		});
 

@@ -19,7 +19,6 @@ import org.apache.logging.log4j.Logger;
 import net.tenie.Sqlucky.sdk.po.DynaPo;
 import net.tenie.Sqlucky.sdk.po.PoInfo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.ObjFormater;
 
 public class PoDaoUtil {
