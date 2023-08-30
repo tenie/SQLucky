@@ -112,12 +112,15 @@ public class DataModelOperate {
 				for (var md : DataModelTabTree.treeRoot.getChildren()) {
 					// 通过名称从缓存中获取表集合
 					var tbs = rootMap.get(md.getValue().getName());
-					// 情况表集合
-					md.getChildren().clear();
-					// 恢复之前缓存的所有表
-					md.getChildren().addAll(tbs);
-					// 展开模型treeItem
-					md.setExpanded(true);
+					if(tbs != null) {
+						// 情况表集合
+						md.getChildren().clear();
+						// 恢复之前缓存的所有表
+						md.getChildren().addAll(tbs);
+						// 展开模型treeItem
+						md.setExpanded(true);
+					}
+					
 				}
 			} else {
 				delayQuery(v -> queryAction(), 800, txt.getText());
