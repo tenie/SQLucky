@@ -171,7 +171,10 @@ public class HighLightingEditor implements SqluckyEditor {
 			} else if (e.getCode() == KeyCode.H) {
 				codeAreaCtrlShiftH(e);
 			} else if (e.getCode() == KeyCode.ENTER) {
-				addNewLine(e);
+				if( !(e.isControlDown()|| e.isAltDown() || e.isShiftDown() || e.isShortcutDown())) {
+					addNewLine(e);
+				}
+				
 			} else if (e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE) {
 //				codeAreaBackspaceDelete(e, cl);
 			} else if (e.getCode() == KeyCode.V) { // 黏贴的时候, 防止页面跳到自己黏贴

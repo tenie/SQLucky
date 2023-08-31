@@ -120,7 +120,7 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyEditorSheet
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
-		if (draggedItem.getParent() == null) {
+		if (draggedItem == null  || draggedItem.getParent() == null) {
 			return;
 		}
 

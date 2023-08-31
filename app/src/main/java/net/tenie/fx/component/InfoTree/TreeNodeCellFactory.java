@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -122,6 +123,9 @@ public class TreeNodeCellFactory implements Callback<TreeView<TreeNodePo>, TreeC
 		
 		draggedItem = treeCell.getTreeItem();
 
+		if(draggedItem == null) {
+			return;
+		}
 		// root can't be dragged
 		if (draggedItem.getParent() == null) {
 			ComponentGetter.dragTreeItemName = "";

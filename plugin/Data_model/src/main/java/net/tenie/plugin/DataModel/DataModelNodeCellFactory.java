@@ -104,6 +104,9 @@ public class DataModelNodeCellFactory
 		logger.info("dragDetected");
 
 		draggedItem = treeCell.getTreeItem();
+		if(draggedItem == null) {
+			return;
+		}
 
 		// root can't be dragged
 		if (draggedItem != null && draggedItem.getParent() == null) {
