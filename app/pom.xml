@@ -4,57 +4,73 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>net.tenie</groupId>
-		<artifactId>SQLucky-pom</artifactId>
-		<version>3.0.0</version>
+		  <groupId>net.tenie</groupId>
+		  <artifactId>SQLucky-pom</artifactId>
+		  <version>3.0.0</version> 
 	</parent>
-	<artifactId>SQLucky</artifactId>
+	<artifactId>SQLucky</artifactId> 
 	<packaging>jar</packaging>
+
 	<name>SQLucky</name>
+
+	<properties>
+		<maven.test.skip>true</maven.test.skip>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- <maven.compiler.release>20</maven.compiler.release>  -->
+		<!-- 这里的模块化的jar , 会被压缩成一个模块文件在二进制包中(runtimed的lib目录下的modules, 不能有空格 ,javafx.media javafx.swing, java.rmi, ,java.security.jgss-->
+		<jvm.modules>jdk.unsupported.desktop,java.net.http,jdk.xml.dom,jdk.jsobject,jdk.unsupported,java.instrument,java.base,java.security.jgss,java.logging,java.xml.crypto,java.desktop,java.transaction.xa,java.compiler,java.logging,java.management,java.scripting,java.xml,java.sql,java.sql.rowset</jvm.modules>
+		
+		<!-- javafx模块: -->
+		<!-- javafx.base,javafx.graphics,javafx.controls,javafx.fxml,javafx.media, -->
+		<!-- javafx.web, -->
+		
+		<!-- org.codehaus.stax2,org.apache.xmlbeans,org.apache.poi.poi,org.apache.poi.ooxml.schemas,
+		org.apache.poi.ooxml,org.apache.logging.log4j,-->
+		<!-- 生成安装包用 -->
+		<app.name>SQLucky</app.name>
+		<app.version>3.0.0</app.version>
+		<app.vendor>Tenie.net</app.vendor>
+		<project.description>SQLucky</project.description>
+		<!--  非模块化的jar , 存放在模块路径,  这里的jar会被单独复制到app的mods中 -->
+		<non.modules.path_bak>${project.build.directory}/dependency</non.modules.path_bak>
+		
+		<non.modules.path>${project.build.directory}/non-mods</non.modules.path>
+		<!-- java 启动参数 
+		-->
+		<sqlcuky.launch.options> --add-exports javafx.graphics/com.sun.javafx.scene.traversal=org.controlsfx.controls --add-exports javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls --add-opens javafx.controls/javafx.scene.control=SQLucky --add-opens java.base/java.lang.reflect=com.jfoenix --add-exports javafx.graphics/com.sun.javafx.application=SQLucky --add-opens java.base/java.lang=com.jfoenix --add-exports org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser=SQLucky --add-exports org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser.aggregate=SQLucky </sqlcuky.launch.options>
+	</properties>
 
 	<organization>
 		<name>https://github.com/tenie/SQLucky</name>
 	</organization>
-	
 
-	
-<dependencies>
-
-<!-- <dependency>
-      <groupId>com.github.hervegirod</groupId>
-      <artifactId>fxsvgimage</artifactId>
-      <version>1.1</version>
-</dependency> -->
-<!-- <dependency>
-    <groupId>org.apache.xmlgraphics</groupId>
-    <artifactId>batik-transcoder</artifactId>
-    <version>1.13</version>
-</dependency> -->
+	<dependencies>
+	 
 <dependency>
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
 </dependency> 
-<!-- <dependency>
-    <groupId>org.apache.poi</groupId>
-    <artifactId>poi-ooxml</artifactId>
-</dependency> -->
+<!-- <dependency> -->
+    <!-- <groupId>org.apache.poi</groupId> -->
+    <!-- <artifactId>poi-ooxml</artifactId> -->
+<!-- </dependency> -->
+ 
+<dependency>
+	<groupId>org.apache.poi</groupId>
+	<artifactId>poi-ooxml</artifactId>
+	 <exclusions>  
+		<exclusion> <!-- we prefer our explicit version, though it should be the same -->  
+			<groupId>org.apache.poi</groupId>  
+			<artifactId>poi-ooxml-lite</artifactId>  
+		</exclusion>  
+	</exclusions>  
+</dependency>
 
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			 <exclusions>  
-                <exclusion> <!-- we prefer our explicit version, though it should be the same -->  
-                    <groupId>org.apache.poi</groupId>  
-                    <artifactId>poi-ooxml-lite</artifactId>  
-                </exclusion>  
-            </exclusions>  
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml-full</artifactId>
-			   <version>5.2.3</version>
-		</dependency>
+<dependency>
+	<groupId>org.apache.poi</groupId>
+	<artifactId>poi-ooxml-full</artifactId>
+    <version>5.2.3</version>
+</dependency>
  
 <dependency>
 	  <groupId>org.apache.xmlbeans</groupId>
@@ -78,42 +94,61 @@
 <dependency>
 	 <groupId>com.zaxxer</groupId>
  	  <artifactId>SparseBitSet</artifactId>
-</dependency>	
-
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
 </dependency>
+ 
+
 	
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-annotations</artifactId>
-</dependency>
+ 
 
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-core</artifactId>
-</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+			
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+		</dependency>
 
-<dependency>
-    <groupId>com.fasterxml.jackson.core</groupId>
-    <artifactId>jackson-databind</artifactId>
-</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+		</dependency>
 
-<dependency>
-    <groupId>com.fasterxml.jackson.dataformat</groupId>
-    <artifactId>jackson-dataformat-xml</artifactId>
-</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
 
-<dependency>
-    <groupId>org.dom4j</groupId>
-    <artifactId>dom4j</artifactId>
-</dependency>
-	
-<!-- <dependency>
-    <groupId>org.apache.ant</groupId>
-    <artifactId>ant</artifactId>
-</dependency> -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.dataformat</groupId>
+			<artifactId>jackson-dataformat-xml</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.generator</groupId>
+			<artifactId>mybatis-generator-core</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.jcraft</groupId>
+			<artifactId>jsch</artifactId>
+		</dependency>
+		<!-- <dependency> -->
+			<!-- <groupId>commons-beanutils</groupId> -->
+			<!-- <artifactId>commons-beanutils</artifactId> -->
+		<!-- </dependency> -->
+		
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-SDK</artifactId>
@@ -128,7 +163,7 @@
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Plugin-WorkDataBackup</artifactId>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Plugin-Data-model</artifactId>
@@ -154,44 +189,10 @@
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Connector-Mariadb</artifactId>
 		</dependency>
-		
 		<dependency>
 			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Connector-Postgresql</artifactId>
 		</dependency>
-		
-		  <dependency>
-			<groupId>net.tenie</groupId>
-			<artifactId>SQLucky-Plugin-Code-Generation</artifactId>
-		</dependency> 
-		
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.mybatis.generator</groupId>
-			<artifactId>mybatis-generator-core</artifactId>
-		</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents.client5</groupId>
-				<artifactId>httpclient5</artifactId>
-			 
-			</dependency>
-			
-			<dependency>
-				<groupId>org.apache.httpcomponents.client5</groupId>
-				<artifactId>httpclient5-fluent</artifactId> 
-			</dependency>
-		<dependency>
-			<groupId>com.jcraft</groupId>
-			<artifactId>jsch</artifactId>
-		</dependency>
-<!-- 		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
-			<version>1.9.4</version>
-		</dependency> -->
 
 		<dependency>
 			<groupId>org.openjfx</groupId>
@@ -205,22 +206,19 @@
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-graphics</artifactId>
 		</dependency>
-		
-	<dependency>
-		<groupId>org.openjfx</groupId>
-		<artifactId>javafx-swing</artifactId>
-	</dependency> 
-
+		<dependency>
+			<groupId>org.openjfx</groupId>
+			<artifactId>javafx-swing</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.openjfx</groupId>
 			<artifactId>javafx-media</artifactId>
 		</dependency>
 		
-		<!-- <dependency>
-		    <groupId>org.openjfx</groupId>
-		    <artifactId>javafx-web</artifactId> 
-		</dependency> -->
-			
+		<!-- <dependency> -->
+		    <!-- <groupId>org.openjfx</groupId> -->
+		    <!-- <artifactId>javafx-web</artifactId>  -->
+		<!-- </dependency> -->
 
 		<!-- 控件库 -->
 		<dependency>
@@ -236,15 +234,16 @@
 			<groupId>org.controlsfx</groupId>
 			<artifactId>controlsfx</artifactId>
 		</dependency>
-		<!-- 文件字符集 -->
-		<dependency>
-			<groupId>com.github.albfernandez</groupId>
-			<artifactId>juniversalchardet</artifactId> 
-		</dependency>
+
 		<!-- sql 格式化 -->
 		<dependency>
 			<groupId>com.github.vertical-blank</groupId>
 			<artifactId>sql-formatter</artifactId>
+		</dependency>
+		<!-- 文件字符集 -->
+		<dependency>
+			<groupId>com.github.albfernandez</groupId>
+			<artifactId>juniversalchardet</artifactId> 
 		</dependency>
 
 		<!-- io 操作文件 -->
@@ -258,11 +257,6 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-		</dependency>
-	
 		<!-- 数据库 JDBC -->
 		<dependency>
 			<groupId>com.ibm.db2</groupId>
@@ -292,11 +286,14 @@
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
-		</dependency>
-
+		</dependency> 
 		<dependency>
 			<groupId>org.mybatis</groupId>
 			<artifactId>mybatis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
 		</dependency>
 
 		<dependency>
@@ -314,22 +311,65 @@
 			<artifactId>log4j-slf4j-impl</artifactId>
 		</dependency>
 
-
-
 	</dependencies>
 
 	<build>
-		<plugins>
-			<!-- 编译插件, 指定编译版本, 和编译时参数 -->
+	
+	  <resources>
+        <resource>
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.properties</include>
+                <include>**/*.xml</include>
+                <include>**/*.fxml</include>
+                <include>**/*.css</include>
+                <include>**/*.icns</include>
+                <include>**/*.png</include>
+                <include>**/*.ico</include>
+                <include>**/*.jpg</include>
+                <include>**/*.conf</include>
+                <include>**/*.sql</include>
+                <include>${imageType}</include>
+				<!-- <include>**/*.mp4</include>
+				<include>**/*.gif</include> -->
+            </includes> 
+            <filtering>false</filtering>
+        </resource> 
+        
+         <resource> <!-- 配置文件 -->
+                <directory>${project.basedir}/config</directory>
+                <filtering>true</filtering>
+                <targetPath>${project.build.directory}/packaging</targetPath>
+         </resource>
+    </resources>
+    
+		<plugins> 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                           <!--  <excludeGroupIds>org.openjfx</excludeGroupIds> -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- 编译插件, 指定编译版本, 和编译时参数 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.8.1</version>
 				<configuration>
-					<!-- 指定编译版本 -->
-					<release>${maven.compiler.release}</release>
-					<!-- 编译时参数 -->
-					<compilerArgs>
+					<release>${maven.compiler.release}</release> <!-- 指定编译版本 -->
+
+					<compilerArgs>  <!-- 编译时参数 --> 
 						<arg>--add-exports</arg>
 						<arg>javafx.graphics/com.sun.javafx.application=SQLucky</arg>
 						<arg>--add-exports</arg>
@@ -339,72 +379,322 @@
 						<arg>--add-exports</arg>
 						<arg>org.controlsfx.controls/impl.org.controlsfx.i18n=SQLucky</arg>
 					</compilerArgs>
+
 				</configuration>
 			</plugin>
+			 
+			
+			<!-- 安装依赖 -->
+			<!-- <plugin> -->
+				<!-- <groupId>org.apache.maven.plugins</groupId> -->
+				<!-- <artifactId>maven-install-plugin</artifactId> -->
+				<!-- <executions> -->
+					<!-- <execution> -->
+						<!-- <id>db2</id> -->
+						<!-- <phase>clean</phase> -->
+						<!-- <goals> -->
+							<!-- <goal>install-file</goal> -->
+						<!-- </goals> -->
+						<!-- <configuration> -->
+							<!-- <groupId>com.ibm.db2.jcc</groupId> -->
+							<!-- <artifactId>db2jcc4</artifactId> -->
+							<!-- <version>10.1</version> -->
+							<!-- <packaging>jar</packaging> -->
+							<!-- <file>${basedir}/lib/db2jcc4-10.1.jar</file> -->
+							<!-- <createChecksum>true</createChecksum> -->
+							<!-- <generatePom>true</generatePom> -->
+						<!-- </configuration> -->
+					<!-- </execution> -->
+					<!-- <execution> -->
+						<!-- <id>mysql</id> -->
+						<!-- <phase>clean</phase> -->
+						<!-- <goals> -->
+							<!-- <goal>install-file</goal> -->
+						<!-- </goals> -->
+						<!-- <configuration> -->
+							<!-- <groupId>mysql</groupId> -->
+							<!-- <artifactId>mysql-connector-java</artifactId> -->
+							<!-- <version>5.1.35</version> -->
+							<!-- <packaging>jar</packaging> -->
+							<!-- <file>${basedir}/lib/mysql-connector-java-5.1.35.jar</file> -->
+							<!-- <createChecksum>true</createChecksum> -->
+							<!-- <generatePom>true</generatePom> -->
+						<!-- </configuration> -->
+			
+					<!-- </execution> -->
+				<!-- </executions> -->
+			<!-- </plugin> -->
+			
+			<!-- 将自己的包放入到依赖目录  verify-->
 			<plugin>
-				<!-- javafx 插件, 启用应用 -->
-				<groupId>org.openjfx</groupId>
-				<artifactId>javafx-maven-plugin</artifactId>
-				<version>0.0.5</version>
-				<configuration>
-					<release>${maven.compiler.release}</release>
-					<jlinkImageName>SQLucky</jlinkImageName>
-					<launcher>launcher</launcher>
-					<mainClass>SQLucky/net.tenie.fx.main.SQLucky</mainClass>
-					<runtimePathOption>MODULEPATH </runtimePathOption>
-					<options>
-						<option>-Dhttps.protocols=TLSv1.2</option> 
-						<option>--add-modules=javafx.controls,javafx.fxml</option>
-						<option>--add-opens</option>
-						<option>javafx.graphics/javafx.scene.text=ALL-UNNAMED</option>
-						<option>--add-exports</option>
-						<option>javafx.graphics/com.sun.javafx.text=ALL-UNNAMED</option>
-						<option>--add-opens</option>
-						<option>javafx.graphics/com.sun.javafx.text=ALL-UNNAMED</option>
-						<option>--add-exports</option>
-						<option>javafx.graphics/com.sun.javafx.scene.text=ALL-UNNAMED</option>
-						<option>--add-exports</option>
-						<option>javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED</option>
-						<option>--add-exports</option>
-						<option>javafx.graphics/com.sun.javafx.geom=ALL-UNNAMED</option>
-						<option>--add-exports</option>
-						<option>javafx.graphics/com.sun.javafx.application=ALL-UNNAMED</option>
+				<artifactId>maven-antrun-plugin</artifactId>
+				 <version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>copy mods/non-mods jar</id>
+						<phase>package</phase>
+						<configuration>
+							<target> 
+								<echo message=" path:${project.build.directory}/mods"/>
+								<!--  普通jar 复制到 目录non-mods-->
+								<copy todir="${project.build.directory}/non-mods">
+									<fileset dir="${project.build.directory}">
+										<include name="${project.artifactId}-${project.version}.jar" />
+									</fileset>
+								</copy>
+								<!--  模块jar 复制到 目录mods-->
+								<copy todir="${project.build.directory}/mods">
+									<fileset dir="${project.build.directory}/dependency">
+										 <!-- <include name="javafx-*.jar" />    -->
+										
+									</fileset>
+								</copy>	
+								
+								<!-- 从target/dependency 复制到 target/non-mods;  别忘了添加依赖-->
+								<copy todir="${project.build.directory}/non-mods">
+									<fileset dir="${project.build.directory}/dependency">
+										 
+										<include name="javafx-*.jar" /> 
+										  <include name="jfoenix*.jar" /> 
+										<include name="controlsfx*.jar" />
+										<include name="jackson*.jar" />  
+										<include name="lombok*.jar" />  
+										
+										<include name="stax2*.jar" /> 
+										
+										<include name="woodstox-*.jar" /> 
+										<include name="poi-*.jar" /> 
+										
+										<include name="log4j-api*.jar" />
+										<include name="xmlbeans-*.jar" />  
+										<include name="checker-*.jar" />  
+										
+										
+										<include name="SparseBitSet-*.jar" />  
+										
+										
+										<include name="curvesapi-*.jar" />
+										
+										 <include name="commons*.jar" />
+										<include name="jsch*.jar" />
+										<include name=" mybatis-generator*.jar" />
+										
+										
+										<include name="flowless*.jar" />
+										<include name="log4j-core*.jar" />
+										<include name="log4j-slf4j-impl*.jar" />
+										<include name="SQLucky-*.jar" />
+										<include name="jcc*.jar" /> 
+										<include name="mysql*.jar" />
+										<include name="mariadb*.jar" />
+										<include name="h2*.jar" />
+										<include name="sqlite-jdbc*.jar" /> 
+										<include name="mybatis*.jar" /> 
+										<include name="protobuf*.jar" /> 
 
-						<option>--add-exports</option>
-						<option>javafx.graphics/com.sun.javafx.scene.traversal=org.controlsfx.controls</option>
-						<option>--add-exports</option>
-						<option>javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls</option>
+										<include name="fastjson*.jar" /> 
+										<include name="juniversalchardet*.jar" /> 
+										
+										
+										<include name="postgresql*.jar" />
+										<include name="reactfx*.jar" /> 
+										
+										<include name="richtextfx*.jar" />
+										<include name="slf4j-api*.jar" />
+										<include name="sql-formatter*.jar" />
+										<include name="httpcore5*.jar" />
+										<include name="httpclient5*.jar" />
+										
+										<include name="dom4j*.jar" /> 
 
-						<option>--add-exports</option>
-						<option>javafx.graphics/com.sun.javafx.application=SQLucky</option>
-						<option>--add-opens</option>
-						<option>java.base/java.lang=com.jfoenix</option>
-						<option>--add-opens</option>
-						<option>java.base/java.lang.reflect=com.jfoenix</option>
-						<option>--add-opens</option>
-						<option>java.base/java.lang=ALL-UNNAMED</option>
-						<option>--add-opens</option>
-						<option>javafx.controls/javafx.scene.control=SQLucky</option>
-					</options>
-					
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>1.18.26</version>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
+										
+										
+										<include name="undofx*.jar" />
+										<include name="wellbehavedfx-*.jar" />
+										
+									</fileset>
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
+					<execution>
+						<id>${project.build.directory}/packaging</id>
+						<phase>verify</phase>
+						<configuration>
+							<target> 
+								<echo message="  path: ${project.build.directory}/jvm-image/conf"/>
+								<!--  普通jar 复制到 目录non-mods-->
+								<copy todir="${project.build.directory}/jvm-image/conf">
+									<fileset dir="${project.build.directory}/packaging">
+										<include name="*.conf" />
+									</fileset>
+								</copy> 
+								 
+							</target>
+						</configuration> 
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
-
-
-
+			
+			
+			<!-- <plugin>   -->
+	            <!-- <artifactId>maven-assembly-plugin</artifactId> -->
+			       <!-- <version>2.4.1</version> -->
+			  	   <!-- <configuration> -->
+			           <!-- <finalName>mySqluckylib</finalName> -->
+			           <!-- <appendAssemblyId>false</appendAssemblyId> -->
+			           <!-- <encoding>utf-8</encoding> -->
+			           <!-- <descriptors> -->
+			               <!-- <descriptor>src/src.xml</descriptor> -->
+			           <!-- </descriptors> -->
+			           <!-- <descriptorRefs> -->
+			               <!-- <descriptorRef>jar-with-dependencies</descriptorRef> -->
+			           <!-- </descriptorRefs> -->
+			       <!-- </configuration> -->
+			       <!-- <executions> -->
+			           <!-- <execution> -->
+			               <!-- <id>make-assembly</id> -->
+			               <!-- <phase>package</phase> -->
+			               <!-- <goals> -->
+			                   <!-- <goal>single</goal> -->
+			               <!-- </goals> -->
+			           <!-- </execution> -->
+			       <!-- </executions> -->
+	        <!-- </plugin>   -->
+			
+			
+			 <!-- 把所有以来打包到一个jar中的插件 -->
+			 <!-- <plugin> -->
+                <!-- <groupId>org.apache.maven.plugins</groupId> -->
+                <!-- <artifactId>maven-shade-plugin</artifactId> -->
+                <!-- <version>3.2.4</version> -->
+                <!-- <executions> -->
+                    <!-- <execution> -->
+                        <!-- <phase>package</phase> -->
+                        <!-- <goals> -->
+                            <!-- <goal>shade</goal> -->
+                        <!-- </goals> -->
+                        <!-- <configuration> -->
+                            <!--
+                            设置将依赖整合到一个自定义名称的 JAR 包。
+                            如果不设置此项，依赖将整合到 Maven 无插件时的默认 JAR 包，并生成一个前缀为 original- 的无依赖 JAR 包
+                             -->
+                            <!-- <shadedArtifactAttached>true</shadedArtifactAttached> -->
+                            <!-- 设置生成的 JAR 包后缀名 -->
+                            <!-- <shadedClassifierName>shaded-with-dependencies</shadedClassifierName> -->
+                            <!-- 设置程序运行入口 -->
+                            <!-- <transformers> -->
+                                <!-- <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> -->
+                                    <!-- <mainClass>包名.类名</mainClass> -->
+                                <!-- </transformer> -->
+                            <!-- </transformers> -->
+                            <!-- 设置 JAR 包输出目录 -->
+                            <!-- <outputDirectory>${project.build.directory}/maven-shade-plugin</outputDirectory> -->
+							<!-- <artifactSet> -->
+										<!-- 排除一些依赖 -->
+								<!-- <excludes> -->
+									<!-- <exclude>net.tenie:*</exclude> -->
+									<!-- <exclude>org.openjfx:*</exclude> -->
+								<!-- </excludes> -->
+							<!-- </artifactSet> -->
+                        <!-- </configuration> -->
+                    <!-- </execution> -->
+                <!-- </executions> -->
+            <!-- </plugin> -->
+			
+			<plugin>
+				<!-- https://github.com/wiverson/jtoolprovider-plugin -->
+				<groupId>io.github.wiverson</groupId>
+				<artifactId>jtoolprovider-plugin</artifactId>
+				<version>1.0.34</version>
+				<executions>
+					<!-- 先生成一个jvm 镜像  	 -->
+					<execution>
+						<id>jlink</id>
+						<phase>package</phase>
+						<goals>
+							<goal>java-tool</goal>
+						</goals>
+						<configuration>
+							<toolName>jlink</toolName>
+							<removeDirectories>${project.build.directory}/jvm-image/</removeDirectories>
+							<modulePath>${local.modules.path}</modulePath>
+							<addModules>${jvm.modules}</addModules>
+							<output>${project.build.directory}/jvm-image</output>
+							<args>
+								<arg>--strip-native-commands</arg>
+								<arg>--strip-debug</arg>
+								<arg>--no-man-pages</arg>
+								<arg>--no-header-files</arg>
+							</args>
+						</configuration>
+					</execution>
+					
+					<execution>
+						<!-- 根据jlink的镜像 生成native 包, 使用配置文件*jpackage.txt生成可执行文件 -->
+						<id>jpackage</id>
+						<phase>install</phase>
+						<goals>
+							<goal>java-tool</goal>
+						</goals>
+						<configuration>
+							<toolName>jpackage</toolName> <!-- jpackage 的参数(在下面文件里) -->
+							<removeDirectories>${project.build.directory}/sqlucky</removeDirectories>
+							<args>@${project.build.directory}/packaging/${platform}-jpackage.txt</args>
+						</configuration>
+					</execution>
+					 
+				</executions>
+			</plugin>
+			
 		</plugins>
 	</build>
-<!-- 	<repositories>
-		 <repository>
-	      <id>jitpack.io</id>
-	      <url>https://jitpack.io</url>
-	    </repository>
-	</repositories> -->
+	<profiles> 
+        <profile>
+            <id>unix-active</id>
+            <activation>
+                <os>
+                    <family>unix</family>
+                </os>
+            </activation>
+            <properties>
+                <platform>linux</platform>
+                <local.modules.path>${env.JAVA_HOME}/jmods:${project.build.directory}/dependency</local.modules.path>
+                <imageType>**/*.gif</imageType>
+            </properties>
+        </profile>
+        <profile>
+            <id>windows-active</id>
+            <activation>
+                <os>
+                    <family>windows</family>
+                </os>
+            </activation>
+            <properties>
+                <platform>win</platform>
+                <local.modules.path>D:/mydir/jdk/jdk-20.0.1/jmods;${project.build.directory}/dependency</local.modules.path>
+                <imageType>**/*.mp4</imageType>
+            </properties> 
+        </profile>
+        <profile>
+            <id>mac-active</id>
+            <activation>
+                <os>
+                    <family>mac</family>
+                </os>
+            </activation>
+            <properties>
+                <platform>mac</platform> 
+                <local.modules.path>${env.JAVA_HOME}/jmods:${project.build.directory}/dependency</local.modules.path>
+                <imageType>**/*.mp4</imageType>
+            </properties>
+        </profile>
+    </profiles>
 </project>

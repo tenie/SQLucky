@@ -303,7 +303,7 @@ public class DataModelOperate {
 
 	// 查询表
 	private void exeQueryTable(String queryStr) {
-		if (rootMap.isEmpty()) {
+		 
 			for (var md : DataModelTabTree.treeRoot.getChildren()) {
 				// 模型下面没有节点跳过
 				if (md.getChildren().size() == 0)
@@ -311,15 +311,15 @@ public class DataModelOperate {
 
 				// 模型名称
 				var modelName = md.getValue().getName();
-
-				// 模型的孩子（表）， 添加到缓存集合中
-				ObservableList<TreeItem<DataModelTreeNodePo>> tmps = FXCollections.observableArrayList();
-				tmps.addAll(md.getChildren());
-				rootMap.put(modelName, tmps);
-
+				if(! rootMap.containsKey(modelName)) {
+					// 模型的孩子（表）， 添加到缓存集合中
+					ObservableList<TreeItem<DataModelTreeNodePo>> tmps = FXCollections.observableArrayList();
+					tmps.addAll(md.getChildren());
+					rootMap.put(modelName, tmps);
+				}
 			}
 
-		}
+		 
 
 		// 为空，还原
 		for (var md : DataModelTabTree.treeRoot.getChildren()) {

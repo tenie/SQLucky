@@ -48,11 +48,15 @@ public class TableDataDetail {
 			return;
 //		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 		ResultSetRowPo selectedItem = tb.getSelectionModel().getSelectedItem();
-		Stage stage = selectedItem.getShowRowDataStage();
-		if (stage != null) {
-			stage.requestFocus();
-			return;
+		Stage stage ;
+		if(selectedItem != null ) {
+			stage = selectedItem.getShowRowDataStage();
+			if (stage != null) {
+				stage.requestFocus();
+				return;
+			}
 		}
+		
 		SheetDataValue dvt = mtd.getTableData();
 		String tabName = dvt.getTabName();
 		ObservableList<SheetFieldPo> fields = dvt.getColss();

@@ -90,8 +90,10 @@ public class ParseSQL {
 		}
 		val = findOtherSqlTabName(temp, key);
 
+		
 		return val;
 	}
+	
 
 	private static String findOtherSqlTabName(String sql, String key) {
 		String val = "";
@@ -108,6 +110,14 @@ public class ParseSQL {
 			}
 		}
 
+		// 去除 `` 
+		if(StrUtils.isNotNullOrEmpty(val) ) {
+			val = val.trim();
+			if(val.startsWith("`") && val.endsWith("`")) {
+				val = val.substring(1, val.lastIndexOf("`"));
+			}
+			
+		}
 		return val;
 	}
 
@@ -131,6 +141,15 @@ public class ParseSQL {
 				}
 				break;
 			}
+		}
+		
+		// 去除 `` 
+		if(StrUtils.isNotNullOrEmpty(val) ) {
+			val = val.trim();
+			if(val.startsWith("`") && val.endsWith("`")) {
+				val = val.substring(1, val.lastIndexOf("`"));
+			}
+			
 		}
 		return val;
 	}
