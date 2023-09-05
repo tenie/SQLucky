@@ -90,8 +90,10 @@ public class ParseSQL {
 		}
 		val = findOtherSqlTabName(temp, key);
 
+		
 		return val;
 	}
+	
 
 	private static String findOtherSqlTabName(String sql, String key) {
 		String val = "";
@@ -108,6 +110,14 @@ public class ParseSQL {
 			}
 		}
 
+		// 去除 `` 
+		if(StrUtils.isNotNullOrEmpty(val) ) {
+			val = val.trim();
+			if(val.startsWith("`") && val.endsWith("`")) {
+				val = val.substring(1, val.lastIndexOf("`"));
+			}
+			
+		}
 		return val;
 	}
 
@@ -132,23 +142,16 @@ public class ParseSQL {
 				break;
 			}
 		}
+		
+		// 去除 `` 
+		if(StrUtils.isNotNullOrEmpty(val) ) {
+			val = val.trim();
+			if(val.startsWith("`") && val.endsWith("`")) {
+				val = val.substring(1, val.lastIndexOf("`"));
+			}
+			
+		}
 		return val;
 	}
-
-//	public static List<String> test_select_table(String sql) throws JSQLParserException {
-//		Statement statement = CCJSqlParserUtil.parse(sql);
-//		Select selectStatement = (Select) statement;
-//		TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-//		return tablesNamesFinder.getTableList(selectStatement);
-//	}
-//
-//	public static String tabName(Statement selectStatement) {
-//		TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-//		List<String> val = tablesNamesFinder.getTableList(selectStatement);
-//		if (val != null && val.size() > 0) {
-//			return val.get(0);
-//		}
-//		return "";
-//	}
 
 }
