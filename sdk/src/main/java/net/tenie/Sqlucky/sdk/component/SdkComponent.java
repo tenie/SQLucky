@@ -24,6 +24,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
@@ -291,24 +292,56 @@ public class SdkComponent {
 	}
 
 	// 查询时等待画面
-	public static Tab maskTab(String waittbName) {
-		Tab waitTb = new Tab(waittbName);
-		MaskerPane masker = new MaskerPane();
-		waitTb.setContent(masker);
-		return waitTb;
-	}
+//	public static Tab maskTab(String waittbName) {
+//		Tab waitTb = new Tab(waittbName);
+//		MaskerPane masker = new MaskerPane();
+//		VBox vbox = new VBox();
+//		vbox.getChildren().add(masker);
+//		vbox.getChildren().add(waitTabLabel);
+//		waitTb.setContent(vbox);
+//		return waitTb;
+//	}
 
-	public static Tab waitTb;
+	private static Tab waitTab;
+	private static VBox vbox = new VBox();
+	private static Label waitTabLabel = new Label("");
 	private static final String WAITTB_NAME = "Loading...";
 	static {
-		waitTb = maskTab(WAITTB_NAME);
+//		waitTab = maskTab(WAITTB_NAME);
+		waitTab = new Tab(WAITTB_NAME);
+		MaskerPane masker = new MaskerPane();
+		vbox.getChildren().add(masker);
+		waitTab.setContent(vbox);
+		
+		
+	}
+	
+	public static Tab getWaitTab(String info) {
+		if(StrUtils.isNotNullOrEmpty(info)) {
+			waitTabLabel.setText(info);
+			if(! vbox.getChildren().contains(waitTabLabel)) {
+				vbox.getChildren().add(waitTabLabel);
+			}
+		
+		}else {
+			if(vbox.getChildren().contains(waitTabLabel)) {
+				vbox.getChildren().remove(waitTabLabel);
+			}
+		}
+		
+		return waitTab;
+	}
+	public static Tab getWaitTab() {
+		return waitTab;
 	}
 
 	// 查询等待
 	// 等待加载动画 页面, 删除不要的页面, 保留 锁定的页面, -1表示最后添加
-	public static Tab addWaitingPane(int tabIdx) {
+	public static Tab addWaitingPane(int tabIdx, String info) {
+		Tab waitTb = getWaitTab(info);
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTabPane;
+			 
 			if (tabIdx > -1) {
 				dataTab.getTabs().add(tabIdx, waitTb);
 			} else {
@@ -322,11 +355,11 @@ public class SdkComponent {
 	
 
 
-	public static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
+	public static Tab addWaitingPane(int tabIdx, boolean holdSheet, String info) {
 		Platform.runLater(() -> {
 			SdkComponent.showDetailPane();
 		});
-		Tab v = SdkComponent.addWaitingPane(tabIdx);
+		Tab v = SdkComponent.addWaitingPane(tabIdx, info);
 		Platform.runLater(() -> {
 			if (holdSheet == false) { // 非刷新的， 删除多余的页
 				TabPane dataTab = ComponentGetter.dataTabPane;
@@ -340,6 +373,7 @@ public class SdkComponent {
 
 	// 移除 等待加载动画 页面
 	public static void rmWaitingPane() {
+		Tab waitTb = getWaitTab() ;
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTabPane;
 			if (dataTab.getTabs().contains(waitTb)) {

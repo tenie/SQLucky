@@ -89,8 +89,7 @@ public class RunSQLHelper {
 				MyAlert.errorAlert("连接中断, 请重新连接!");
 				return;
 			}
-			// 等待加载动画
-			SdkComponent.addWaitingPane(state.getTidx(), state.getIsRefresh());
+			
 			List<SqlData> allsqls = new ArrayList<>();
 
 			// 获取sql 语句
@@ -112,6 +111,12 @@ public class RunSQLHelper {
 				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
 				allsqls = SqluckyAppDB.willExecSql(state.getIsCurrentLine());
 			}
+			String waitShowSqlStr  = "";
+			for(int k = 0; k < allsqls.size(); k++) {
+				waitShowSqlStr +=	allsqls.get(k).sql + "\n";
+			}
+			// 等待加载动画
+			SdkComponent.addWaitingPane(state.getTidx(), state.getIsRefresh() , waitShowSqlStr);
 			// 执行sql
 			var rsVal = execSqlList(allsqls, state.getSqlConn(), state);
 
@@ -197,7 +202,7 @@ public class RunSQLHelper {
 					final String msgVal = msg;
 					Platform.runLater(() -> {
 						MyAlert.showNotifiaction(msgVal);
-						TableViewUtils.rmWaitingPane(true);
+//						TableViewUtils.rmWaitingPane(true);
 					});
 				} else {
 					// 显示字段是只读的

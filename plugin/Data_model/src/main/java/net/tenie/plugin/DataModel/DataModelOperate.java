@@ -170,7 +170,7 @@ public class DataModelOperate {
 		String txtVal = txt.getText();
 		Platform.runLater(() -> {
 			if (StrUtils.isNotNullOrEmpty(txtVal)) {
-				SdkComponent.addWaitingPane(-1);
+				SdkComponent.addWaitingPane(-1, "");
 				try {
 					exeQueryTable(txtVal);
 					// 查询字段
