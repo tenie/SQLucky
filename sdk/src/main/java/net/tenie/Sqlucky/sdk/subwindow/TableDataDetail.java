@@ -46,7 +46,6 @@ public class TableDataDetail {
 		var tb = mtd.getTableData().getTable();
 		if (tb == null)
 			return;
-//		int currentRowNo = tb.getSelectionModel().getSelectedIndex();
 		ResultSetRowPo selectedItem = tb.getSelectionModel().getSelectedItem();
 		Stage stage ;
 		if(selectedItem != null ) {
@@ -68,8 +67,9 @@ public class TableDataDetail {
 		} else {
 			cells = selectedItem.getRowDatas();
 		}
-
+		
 		String fieldValue = "Value";
+		// 如果是选择的行, 就显示选择的一行数据
 		if (cells.size() > 0) {
 			for (int i = 0; i < fields.size(); i++) {
 				SheetFieldPo po = fields.get(i);
@@ -77,7 +77,7 @@ public class TableDataDetail {
 				StringProperty val = cv.getCellData();
 				po.setValue(val);
 			}
-		} else {
+		} else { // 没有选择行, 显示表字段的字段名称和字段数据类型
 			fieldValue = "Field Type";
 			for (int i = 0; i < fields.size(); i++) {
 				SheetFieldPo p = fields.get(i);
@@ -91,10 +91,13 @@ public class TableDataDetail {
 			}
 		}
 		stage = showTableDetail(tabName, "Field Name", fieldValue, fields);
-		stage.setOnCloseRequest(e -> {
-			selectedItem.setShowRowDataStage(null);
-		});
-		selectedItem.setShowRowDataStage(stage);
+		if(selectedItem !=null) {
+			stage.setOnCloseRequest(e -> {
+				selectedItem.setShowRowDataStage(null);
+			});
+			selectedItem.setShowRowDataStage(stage);
+		}
+	
 	}
 
 	/**
@@ -188,7 +191,6 @@ public class TableDataDetail {
 		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
 		
 		AnchorPane filterFieldPane = UiTools.textFieldAddCleanBtn(filterField);
-//		topfp.getChildren().add(filterField);
 		topfp.getChildren().add(filterFieldPane);
 		topfp.setMinHeight(30);
 		topfp.prefHeight(30);

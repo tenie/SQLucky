@@ -154,20 +154,4 @@ public class ParseSQL {
 		return val;
 	}
 
-//	public static List<String> test_select_table(String sql) throws JSQLParserException {
-//		Statement statement = CCJSqlParserUtil.parse(sql);
-//		Select selectStatement = (Select) statement;
-//		TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-//		return tablesNamesFinder.getTableList(selectStatement);
-//	}
-//
-//	public static String tabName(Statement selectStatement) {
-//		TablesNamesFinder tablesNamesFinder = new TablesNamesFinder();
-//		List<String> val = tablesNamesFinder.getTableList(selectStatement);
-//		if (val != null && val.size() > 0) {
-//			return val.get(0);
-//		}
-//		return "";
-//	}
-
 }
