@@ -19,11 +19,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableCell;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -304,33 +306,36 @@ public class SdkComponent {
 
 	private static Tab waitTab;
 	private static VBox vbox = new VBox();
+	private static HBox hbox = new HBox();
 	private static Label waitTabLabel = new Label("");
 	private static final String WAITTB_NAME = "Loading...";
 	static {
-//		waitTab = maskTab(WAITTB_NAME);
 		waitTab = new Tab(WAITTB_NAME);
 		MaskerPane masker = new MaskerPane();
 		vbox.getChildren().add(masker);
 		waitTab.setContent(vbox);
-		
-		
+		waitTabLabel.getStyleClass().add("loading_label");
+		hbox.setAlignment(Pos.CENTER);
+		hbox.getChildren().add(waitTabLabel); 
 	}
 	
 	public static Tab getWaitTab(String info) {
 		if(StrUtils.isNotNullOrEmpty(info)) {
 			waitTabLabel.setText(info);
-			if(! vbox.getChildren().contains(waitTabLabel)) {
-				vbox.getChildren().add(waitTabLabel);
+			if(! vbox.getChildren().contains(hbox)) {
+				vbox.getChildren().add(hbox);
 			}
 		
 		}else {
-			if(vbox.getChildren().contains(waitTabLabel)) {
-				vbox.getChildren().remove(waitTabLabel);
+			if(vbox.getChildren().contains(hbox)) {
+				vbox.getChildren().remove(hbox);
 			}
 		}
 		
 		return waitTab;
 	}
+	
+	
 	public static Tab getWaitTab() {
 		return waitTab;
 	}
