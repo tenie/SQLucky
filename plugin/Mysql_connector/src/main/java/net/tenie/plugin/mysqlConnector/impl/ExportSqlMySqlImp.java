@@ -139,8 +139,9 @@ public class ExportSqlMySqlImp implements ExportDBObjects {
 	@Override
 	public List<FuncProcTriggerPo> allTriggerObj(Connection conn, String schema) {
 		try {
-			// 函数名称
-			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
+			String sql = "SELECT * FROM information_schema.TRIGGERS where TRIGGER_SCHEMA = '" +schema + "'";
+			// 函数名称 
+			List<FuncProcTriggerPo> vals = fetchAllTriggers(conn, schema, sql);
 			if (vals != null && vals.size() > 0) {
 				vals.forEach(v -> {
 					String ddl = exportCreateTrigger(conn, schema, v.getName());
@@ -155,6 +156,40 @@ public class ExportSqlMySqlImp implements ExportDBObjects {
 		return null;
 	}
 
+	
+	
+	public static List<FuncProcTriggerPo> fetchAllTriggers(Connection conn, String schemaOrCatalog, String sql)
+			throws Exception {
+		List<FuncProcTriggerPo> ls = new ArrayList<FuncProcTriggerPo>();
+		ResultSet rs = null;
+		try {
+			rs = conn.createStatement().executeQuery(sql);
+			while (rs.next()) {
+				String name = rs.getString("TRIGGER_NAME");
+//				String remarks = rs.getString("comment");
+				String ddl = rs.getString("ACTION_STATEMENT");
+				
+				FuncProcTriggerPo po = new FuncProcTriggerPo();
+				po.setName(name);
+				po.setRemarks("");
+				po.setDdl(ddl);
+				po.setSchema(schemaOrCatalog);
+				ls.add(po);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+
+		return ls;
+	}
+	
 	// 表对象ddl语句
 	@Override
 	public String exportCreateTable(Connection conn, String schema, String tab) {

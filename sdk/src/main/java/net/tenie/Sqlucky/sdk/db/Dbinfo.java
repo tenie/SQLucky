@@ -540,7 +540,8 @@ public class Dbinfo {
 		return ls;
 	}
 
-	// triggers
+	// triggers, 并不是所有的数据库支持这种方式
+	@Deprecated
 	public static List<FuncProcTriggerPo> fetchAllTriggers(Connection conn, String schemaOrCatalog) throws Exception {
 		ResultSet proRs = null;
 		Statement sm = null;

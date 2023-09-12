@@ -249,7 +249,8 @@ public class HighLightingEditor implements SqluckyEditor {
 				int start = ComponentGetter.codeAreaAnchor; // codeArea.getAnchor();
 				logger.debug("ComponentGetter.codeAreaAnchor = " + start);
 				codeArea.insertText(start, " " + val);
-				codeArea.selectRange(start + 1, start + 1 + val.length());
+//				codeArea.selectRange(start + 1, start + 1 + val.length());
+				codeArea.requestFocus();
 			}
 
 		});
