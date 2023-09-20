@@ -7,7 +7,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import lombok.extern.slf4j.Slf4j;
+//import lombok.extern.slf4j.Slf4j;
 
 /**
  * @ClassName: XMLUtil
@@ -33,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date: 2020年1月8日 上午10:47:31
  * @Copyright:
  */
-@Slf4j
+//@Slf4j
 public class XmlUtils {
 
     public static XmlMapper xmlMapper = new XmlMapper();
