@@ -46,7 +46,7 @@ public class DataModelTabTree {
 
 	public static TreeView<DataModelTreeNodePo> DataModelTreeView;
 	public static TreeItem<DataModelTreeNodePo> treeRoot;
-	private DataModelOperate optionPanel;
+	public	static DataModelOperate optionPanel;
 	private Pane btnsBox;
 	String filePath = "";
 
@@ -88,6 +88,8 @@ public class DataModelTabTree {
 	 * @param mdTreeNode
 	 */
 	public static void modelInfoTreeAddTableTreeNode(TreeItem<DataModelTreeNodePo> mdTreeNode) {
+		var queryField = optionPanel.getTxt();
+		queryField.clear();
 		List<TreeItem<DataModelTreeNodePo>> nodels = new ArrayList<>();
 
 		DataModelTreeNodePo dmpo = mdTreeNode.getValue();
@@ -101,6 +103,7 @@ public class DataModelTabTree {
 		}
 		if (nodels.size() > 0) {
 			Platform.runLater(() -> {
+				mdTreeNode.getChildren().clear();
 				mdTreeNode.getChildren().addAll(nodels);
 				DataModelTreeView.getSelectionModel().select(mdTreeNode.getChildren().get(0)); // 选中节点
 				
