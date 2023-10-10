@@ -84,7 +84,7 @@ public class DataModelOperate {
 	}
 
 	// 存放模型名称 对于的所有表的集合
-	Map<String, ObservableList<TreeItem<DataModelTreeNodePo>>> rootMap = new HashMap<>();
+	static public Map<String, ObservableList<TreeItem<DataModelTreeNodePo>>> rootMap = new HashMap<>();
 
 	/**
 	 * 构造函数
@@ -303,37 +303,46 @@ public class DataModelOperate {
 
 	// 查询表
 	private void exeQueryTable(String queryStr) {
-		 
-			for (var md : DataModelTabTree.treeRoot.getChildren()) {
-				// 模型下面没有节点跳过
-				if (md.getChildren().size() == 0)
-					continue;
-
-				// 模型名称
-				var modelName = md.getValue().getName();
-				if(! rootMap.containsKey(modelName)) {
-					// 模型的孩子（表）， 添加到缓存集合中
-					ObservableList<TreeItem<DataModelTreeNodePo>> tmps = FXCollections.observableArrayList();
-					tmps.addAll(md.getChildren());
-					rootMap.put(modelName, tmps);
-				}
-			}
-
-		 
+		 //
+//			for (TreeItem<DataModelTreeNodePo> md : DataModelTabTree.treeRoot.getChildren()) {
+//				// 模型下面没有节点跳过
+//				if (md.getChildren().size() == 0)
+//					continue;
+//
+//				// 模型名称
+//				var modelName = md.getValue().getName();
+//				if(! rootMap.containsKey(modelName)) {
+//					// 模型的孩子（表）， 添加到缓存集合中
+//					ObservableList<TreeItem<DataModelTreeNodePo>> tmps = FXCollections.observableArrayList();
+//					tmps.addAll(md.getChildren());
+//					rootMap.put(modelName, tmps);
+//				}
+//			}
 
 		// 为空，还原
 		for (var md : DataModelTabTree.treeRoot.getChildren()) {
 			// 模型下面没有节点跳过
-			if (md.getChildren().size() == 0)
-				continue;
+//			if (md.getChildren().size() == 0)
+//				continue;
 
+			if(! rootMap.containsKey(md.getValue().getName())) {
+				continue;
+			}
 			// 通过名称从缓存中获取表集合
 			var tbs = rootMap.get(md.getValue().getName());
-			// 情况表集合
-			md.getChildren().clear();
-			// 恢复之前缓存的所有表
-			md.getChildren().addAll(tbs);
+			
+			int tmpSize = tbs.size();
+			int mdSize = md.getChildren().size();
+			if(tmpSize != mdSize) {
+				// 情况表集合
+				md.getChildren().clear();
+				// 恢复之前缓存的所有表
+				md.getChildren().addAll(tbs);
+			}
+		
 		}
+
+	
 		// 如果输入的字符串有值， 进行查询
 		if (StrUtils.isNotNullOrEmpty(queryStr)) {
 			queryTable(queryStr, DataModelTabTree.treeRoot.getChildren());

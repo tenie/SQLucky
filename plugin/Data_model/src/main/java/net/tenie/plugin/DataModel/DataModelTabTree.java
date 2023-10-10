@@ -2,10 +2,12 @@ package net.tenie.plugin.DataModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -101,8 +103,23 @@ public class DataModelTabTree {
 			Platform.runLater(() -> {
 				mdTreeNode.getChildren().addAll(nodels);
 				DataModelTreeView.getSelectionModel().select(mdTreeNode.getChildren().get(0)); // 选中节点
+				
+				// 将模型的子节点数据集放入缓存(搜索会用到)
+				Map<String, ObservableList<TreeItem<DataModelTreeNodePo>>> rootMap = DataModelOperate.rootMap;
+				// 模型名称
+				var modelName = mdTreeNode.getValue().getName();
+				 
+				// 模型的孩子（表）， 添加到缓存集合中
+				ObservableList<TreeItem<DataModelTreeNodePo>> tmps = FXCollections.observableArrayList();
+				tmps.addAll(mdTreeNode.getChildren());
+				rootMap.put(modelName, tmps);
+			
 			});
-		}
+			
+		} 
+
+		
+		 
 
 	}
 

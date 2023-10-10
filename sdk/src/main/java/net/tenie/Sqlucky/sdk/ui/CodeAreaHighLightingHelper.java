@@ -7,11 +7,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
+
 import javafx.application.Platform;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 /**
  * 
@@ -29,7 +30,7 @@ public class CodeAreaHighLightingHelper {
 	}
 	
 	public CodeAreaHighLightingHelper() {  
-	  keywords = new ArrayList<>(Arrays.asList(  "SELECT", "FROM", "UPDATE", "WHERE", "CASE", "CHAR", "OR",
+	  keywords = new ArrayList<>(Arrays.asList( "EXPLAIN","LIMIT", "SELECT", "FROM", "UPDATE", "WHERE", "CASE", "CHAR", "OR",
 			"LEFT", "RIGHT", "DOUBLE", "INNER", "JOIN", "EXISTS", "FLOAT", "ALTER", "TABLE", "DATA", "TYPE", "INT",
 			"VARCHAR", "LONG", "SET", "SHORT", "TIMESTAMP", "GROUP", "BY", "ON", "AS", "DECIMAL", "PRIMARY", "NULL",
 			"CHARACTER", "CONSTRAINT", "CREATE", "SEQUENCE", "WITH", "ELSE", "NUMERIC", "COLUMN", "ADD", "FETCH", "UNION",
