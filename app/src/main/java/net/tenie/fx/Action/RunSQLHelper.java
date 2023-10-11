@@ -89,7 +89,8 @@ public class RunSQLHelper {
 				MyAlert.errorAlert("连接中断, 请重新连接!");
 				return;
 			}
-			
+			// 等待加载动画
+			SdkComponent.addWaitingPane(state.getTidx(), state.getIsRefresh());
 			List<SqlData> allsqls = new ArrayList<>();
 
 			// 获取sql 语句
@@ -115,8 +116,7 @@ public class RunSQLHelper {
 			for(int k = 0; k < allsqls.size(); k++) {
 				waitShowSqlStr +=	allsqls.get(k).sql + "\n";
 			}
-			// 等待加载动画
-			SdkComponent.addWaitingPane(state.getTidx(), state.getIsRefresh() , waitShowSqlStr);
+		
 			// 执行sql
 			var rsVal = execSqlList(allsqls, state.getSqlConn(), state);
 
@@ -157,6 +157,8 @@ public class RunSQLHelper {
 			sql = StrUtils.trimComment(sqlstr, "--");
 			int type = ParseSQL.parseType(sql);
 			String msg = "";
+			
+			SdkComponent.setWaitTabLabelText(sql);
 			try {
 				if (state.getIsCallFunc()) { // 调用存储过程
 					ProcedureAction.procedureAction(sql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(),

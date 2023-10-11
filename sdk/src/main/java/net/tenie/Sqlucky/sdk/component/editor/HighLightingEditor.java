@@ -54,6 +54,7 @@ public class HighLightingEditor implements SqluckyEditor {
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
 	private MyEditorSheet sheet;
+	private final int HIGH_LIGHT_MAX_STRING_LENGTH =1000_000;
 
 	@Override
 	public void hideAutoComplete() {
@@ -450,41 +451,50 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	@Override
 	public void highLighting(String str) {
-		Platform.runLater(() -> {
-			try {
-				highLightingHelper.applyFindWordHighlighting(codeArea, str);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		if( codeArea.getText().length() < HIGH_LIGHT_MAX_STRING_LENGTH) {
+			Platform.runLater(() -> {
+				try {
+					highLightingHelper.applyFindWordHighlighting(codeArea, str);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+		}
+	
 
 	}
 
 	public void highLighting(int begin) {
-		Platform.runLater(() -> {
-			try {
-				highLightingHelper.applyHighlighting(codeArea, begin);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		if( codeArea.getText().length() < HIGH_LIGHT_MAX_STRING_LENGTH) {
+			Platform.runLater(() -> {
+				try {
+					highLightingHelper.applyHighlighting(codeArea, begin);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+		}
 
 	}
 
 	@Override
 	public void highLighting() {
 		highLighting(0);
+		
 	}
 
 	@Override
 	public void errorHighLighting(int begin, String str) {
-		Platform.runLater(() -> {
-			try {
-				highLightingHelper.applyErrorHighlighting(codeArea, begin, str);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		if( codeArea.getText().length() < HIGH_LIGHT_MAX_STRING_LENGTH) {
+			Platform.runLater(() -> {
+				try {
+					highLightingHelper.applyErrorHighlighting(codeArea, begin, str);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			});
+		}
+		
 	}
 
 //	public void stop() {
@@ -1002,7 +1012,7 @@ public class HighLightingEditor implements SqluckyEditor {
 	public void codeAreaCtrlV(KeyEvent e) {
 		if (e.isShortcutDown()) {
 			String val = CommonUtils.getClipboardVal();
-			logger.info("黏贴值==" + val);
+//			logger.info("黏贴值==" + val);
 			if (val.length() > 0) {
 				String seltxt = codeArea.getSelectedText();
 				if (seltxt.length() > 0) {

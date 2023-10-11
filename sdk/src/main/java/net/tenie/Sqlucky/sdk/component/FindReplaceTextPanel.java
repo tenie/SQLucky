@@ -33,6 +33,10 @@ public class FindReplaceTextPanel {
 	public static TextField textField;
 	private JFXButton down;
 	private JFXButton up;
+	
+	private JFXCheckBox sensitiveCheckBox ;
+	private JFXButton countBtn ;
+	private Label countLabel;
 
 	public static void findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
 		CodeArea code = MyEditorSheetHelper.getCodeArea();
@@ -98,7 +102,7 @@ public class FindReplaceTextPanel {
 		int start = i.getStart();
 
 		int idx = start + text.length();
-		logger.info(idx);
+//		logger.info(idx);
 		findString(text, idx, true, true);
 	}
 
@@ -143,14 +147,14 @@ public class FindReplaceTextPanel {
 		return findStringStop(str, idx, sensitive, forward);
 	}
 
-	public static String codeStr(boolean sensitive) {
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
-		String text = code.getText();
-		if (sensitive) {
-			text = text.toUpperCase();
-		}
-		return text;
-	}
+//	public static String codeStr(boolean sensitive) {
+//		CodeArea code = MyEditorSheetHelper.getCodeArea();
+//		String text = code.getText();
+//		if (sensitive) {
+//			text = text.toUpperCase();
+//		}
+//		return text;
+//	}
 
 	public static void findStrReplaceStrAll(TextField findtf, TextField tf, boolean sensitive) {
 		replaceStringAll(findtf.getText(), tf.getText(), sensitive);
@@ -163,22 +167,25 @@ public class FindReplaceTextPanel {
 			str = str.toUpperCase();
 			text = text.toUpperCase();
 		}
-		int start = -1;
-		int length = str.length();
-		while (text.indexOf(str) > -1) {
-			start = text.indexOf(str);
-			if (start > -1) {
-				// 开始替换
-				// 将原文本删除
-				code.deleteText(start, start + length);
-				// 插入 注释过的文本
-				code.insertText(start, strNew);
-			}
-			text = codeStr(sensitive);
-
-		}
+		String tmp = text.replaceAll(str, strNew);
+		code.clear();
+		code.appendText(tmp);
+//		int start = -1;
+//		int length = str.length();
+//		while (text.indexOf(str) > -1) {
+//			start = text.indexOf(str);
+//			if (start > -1) {
+//				// 开始替换
+//				// 将原文本删除
+//				code.deleteText(start, start + length);
+//				// 插入 注释过的文本
+//				code.insertText(start, strNew);
+//			}
+//			text = codeStr(sensitive);
+//
+//		}
 		// 选中
-		selectRange(code, start, start + strNew.length());
+//		selectRange(code, start, start + strNew.length());
 
 	}
 
@@ -262,7 +269,7 @@ public class FindReplaceTextPanel {
 
 	}
 
-	public static AnchorPane createReplacePane(TextField findtf, JFXCheckBox cb) {
+	public   AnchorPane createReplacePane(TextField findtf, JFXCheckBox cb) {
 		AnchorPane replaceAnchorPane = new AnchorPane();
 		CommonUtils.addCssClass(replaceAnchorPane, "myFindPane");
 		replaceAnchorPane.prefHeight(30);
@@ -279,6 +286,7 @@ public class FindReplaceTextPanel {
 		replaceBtn.setText("Replace");
 		replaceBtn.setOnAction(v -> {
 			findStrReplaceStr(findtf, replaceTextField, !cb.isSelected());
+			countAction();
 		});
 
 		JFXButton replaceAllBtn = new JFXButton();
@@ -286,6 +294,7 @@ public class FindReplaceTextPanel {
 		replaceAllBtn.setText("Replace All");
 		replaceAllBtn.setOnAction(v -> {
 			findStrReplaceStrAll(findtf, replaceTextField, !cb.isSelected());
+			countAction();
 		});
 
 		AnchorPane replaceFieldPane = UiTools.textFieldAddCleanBtn(replaceTextField);
@@ -321,12 +330,12 @@ public class FindReplaceTextPanel {
 		CommonUtils.addCssClass(findAnchorPane, "myFindPane");
 		findAnchorPane.prefHeight(30);
 		JFXButton query = new JFXButton();
-		JFXCheckBox cb = new JFXCheckBox("Sensitive");
+		sensitiveCheckBox = new JFXCheckBox("Sensitive");
 		query.setGraphic(IconGenerator.svgImageDefActive("search"));
 
 		textField = new TextField();
 		query.setOnAction(v -> {
-			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
+			findStringFromCodeArea(textField.getText(), true, !sensitiveCheckBox.isSelected());
 		});
 
 		if (StrUtils.isNullOrEmpty(findText)) {
@@ -351,25 +360,25 @@ public class FindReplaceTextPanel {
 		down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
 
 		down.setOnMouseClicked(v -> {
-			findStringFromCodeArea(textField.getText(), true, !cb.isSelected());
+			findStringFromCodeArea(textField.getText(), true, !sensitiveCheckBox.isSelected());
 		});
 
 		up = new JFXButton();
 		up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
 		up.setOnMouseClicked(v -> {
-			findStringFromCodeArea(textField.getText(), false, !cb.isSelected());
+			findStringFromCodeArea(textField.getText(), false, !sensitiveCheckBox.isSelected());
 		});
 
-		// 计算查询字符串出现次数
-		JFXButton count = new JFXButton("Count");
-		count.setGraphic(IconGenerator.svgImageDefActive("calculator"));
-		Label countLabel = new Label("");
-		count.setOnAction(e -> {
-			countAction(countLabel, cb);
+		// 计算查询字符串出现次数 	JFXCheckBox cb = new JFXCheckBox("Sensitive");
+		countBtn = new JFXButton("Count");
+		countBtn.setGraphic(IconGenerator.svgImageDefActive("calculator"));
+		countLabel = new Label("");
+		countBtn.setOnAction(e -> {
+			countAction();
 		});
 		textField.textProperty().addListener((obj, vOld, vNew) -> {
 			if (StrUtils.isNotNullOrEmpty(vNew)) {
-				countAction(countLabel, cb);
+				countAction();
 			} else {
 				countLabel.setText("");
 			}
@@ -393,12 +402,12 @@ public class FindReplaceTextPanel {
 		up.setLayoutY(0);
 
 		x += 35;
-		cb.setLayoutX(x);
-		cb.setLayoutY(3);
+		sensitiveCheckBox.setLayoutX(x);
+		sensitiveCheckBox.setLayoutY(3);
 
 		x += 90;
-		count.setLayoutX(x);
-		count.setLayoutY(0);
+		countBtn.setLayoutX(x);
+		countBtn.setLayoutY(0);
 		x += 80;
 		countLabel.setLayoutX(x);
 		countLabel.setLayoutY(5);
@@ -408,8 +417,8 @@ public class FindReplaceTextPanel {
 		findAnchorPane.getChildren().add(textFieldPane);
 		findAnchorPane.getChildren().add(down);
 		findAnchorPane.getChildren().add(up);
-		findAnchorPane.getChildren().add(cb);
-		findAnchorPane.getChildren().add(count);
+		findAnchorPane.getChildren().add(sensitiveCheckBox);
+		findAnchorPane.getChildren().add(countBtn);
 		findAnchorPane.getChildren().add(countLabel);
 
 		JFXButton hideBottom = new JFXButton();
@@ -424,24 +433,24 @@ public class FindReplaceTextPanel {
 		// 加入到 代码编辑框上面
 		sheet.setFindAnchorPane(findAnchorPane);
 		if (isReplace) {
-			AnchorPane replaceAnchorPane = createReplacePane(textField, cb);
+			AnchorPane replaceAnchorPane = createReplacePane(textField, sensitiveCheckBox);
 			sheet.setReplaceAnchorPane(replaceAnchorPane);
 		}
 		Platform.runLater(() -> {
 			textField.requestFocus();
-			countAction(countLabel, cb);
+			countAction();
 		});
 	}
 
 	// 查找的计数action
-	private void countAction(Label countLabel, JFXCheckBox cb) {
+	private void countAction() {
 
 		String sqlTxt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 		int countVal = 0;
 		if (textField.getText().length() == 0) {
 			countLabel.setText("");
 		} else {
-			if (cb.isSelected()) {
+			if (sensitiveCheckBox.isSelected()) {
 				countVal = StrUtils.countSubString(sqlTxt, textField.getText());
 			} else {
 				countVal = StrUtils.countSubString(sqlTxt.toLowerCase(), textField.getText().toLowerCase());
@@ -451,4 +460,18 @@ public class FindReplaceTextPanel {
 
 	}
 
+	public JFXCheckBox getSensitiveCheckBox() {
+		return sensitiveCheckBox;
+	}
+
+	 
+
+	public JFXButton getCountBtn() {
+		return countBtn;
+	}
+
+	 
+
+	
+	
 }

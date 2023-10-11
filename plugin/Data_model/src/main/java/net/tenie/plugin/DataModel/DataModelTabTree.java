@@ -136,7 +136,7 @@ public class DataModelTabTree {
 	public static void showFields(Long tableId) {
 		SqluckyConnector SqluckyConn = null;
 		try {
-			SdkComponent.addWaitingPane(-1, "");
+			SdkComponent.addWaitingPane(-1);
 //			MyBottomSheet myBottomSheet = null;
 			// 操作区, 控件
 			DataModelTablePo tbpo = DataModelDAO.selectTableById(tableId);

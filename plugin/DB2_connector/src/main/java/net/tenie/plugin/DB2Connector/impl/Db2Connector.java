@@ -86,7 +86,6 @@ public class Db2Connector extends DbConnector {
 			while (rs.next()) {
 				DbSchemaPo po = new DbSchemaPo();
 				String schema = rs.getString(1);
-//				logger.info("fetchSchemasInfo(); schema=" + schema);
 				po.setSchemaName(schema);
 				pos.put(schema, po);
 			}

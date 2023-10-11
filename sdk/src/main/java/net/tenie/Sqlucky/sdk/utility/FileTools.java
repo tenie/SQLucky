@@ -143,7 +143,7 @@ public class FileTools {
 	public static void save(String fileName, String data, String encodeing) throws IOException {
 
 		logger.info(fileName);
-		logger.info(data);
+//		logger.info(data);
 		logger.info(encodeing);
 		FileUtils.writeStringToFile(new File(fileName), data, encodeing);
 	}

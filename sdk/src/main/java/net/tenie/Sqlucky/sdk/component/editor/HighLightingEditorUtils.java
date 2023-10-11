@@ -157,14 +157,14 @@ public class HighLightingEditorUtils {
 		}
 		// 获取文本
 		String txt = code.getText(start, end);
-		logger.info("txt = " + txt);
+//		logger.info("txt = " + txt);
 		String temp = "";
 		for (int t = 0; t < start; t++) {
 			temp += " ";
 		}
 		txt = txt.replaceAll("\n", replaceStr1);
 		txt = temp + replaceStr1 + txt;
-		logger.info(txt);
+//		logger.info(txt);
 		int k = txt.indexOf('\n', 0);
 		int count = 0;
 		while (k >= 0) {

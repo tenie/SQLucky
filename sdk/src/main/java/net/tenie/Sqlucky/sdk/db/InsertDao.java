@@ -75,7 +75,7 @@ public class InsertDao {
 				String type = cellPo.getField().getColumnClassName().get();
 				int javatype = cellPo.getField().getColumnType().get();
 				String columnTypeName = cellPo.getField().getColumnTypeName().get();
-				logger.info("javatype = " + javatype + " | " + columnTypeName);
+//				logger.info("javatype = " + javatype + " | " + columnTypeName);
 				if (CommonUtils.isDateAndDateTime(javatype)) {
 					if (StrUtils.isNullOrEmpty(val.trim())) {
 						pstmt.setObject(idx, null);

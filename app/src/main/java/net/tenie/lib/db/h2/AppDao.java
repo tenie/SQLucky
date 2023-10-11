@@ -332,7 +332,7 @@ public class AppDao {
 		ResultSet rs = null;
 		try {
 			sm = conn.createStatement();
-			logger.info("执行   " + sql);
+//			logger.info("执行   " + sql);
 			rs = sm.executeQuery(sql);
 			while (rs.next()) {
 				DocumentPo po = new DocumentPo();

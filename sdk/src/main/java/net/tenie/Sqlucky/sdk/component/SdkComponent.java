@@ -242,7 +242,7 @@ public class SdkComponent {
 					tableName = "Table Name Not Finded";
 				}
 			}
-			logger.info("tableName= " + tableName + "\n sql = " + sql);
+			logger.info("tableName= " + tableName ); //+ "\n sql = " + sql
 
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTabName(tableName);
@@ -317,24 +317,27 @@ public class SdkComponent {
 		waitTabLabel.getStyleClass().add("loading_label");
 		hbox.setAlignment(Pos.CENTER);
 		hbox.getChildren().add(waitTabLabel); 
+		
 	}
 	
-	public static Tab getWaitTab(String info) {
-		if(StrUtils.isNotNullOrEmpty(info)) {
-			waitTabLabel.setText(info);
-			if(! vbox.getChildren().contains(hbox)) {
-				vbox.getChildren().add(hbox);
-			}
-		
-		}else {
-			if(vbox.getChildren().contains(hbox)) {
-				vbox.getChildren().remove(hbox);
-			}
-		}
-		
-		return waitTab;
-	}
+ 
 	
+	public static void setWaitTabLabelText(String info) { 
+		Platform.runLater(() -> {
+			if(StrUtils.isNotNullOrEmpty(info)) {
+				waitTabLabel.setText(info);
+				if(! vbox.getChildren().contains(hbox)) {
+					vbox.getChildren().add(hbox);
+				}
+			
+			}else {
+				if(vbox.getChildren().contains(hbox)) {
+					vbox.getChildren().remove(hbox);
+				}
+			}
+		});
+		
+	}
 	
 	public static Tab getWaitTab() {
 		return waitTab;
@@ -342,8 +345,8 @@ public class SdkComponent {
 
 	// 查询等待
 	// 等待加载动画 页面, 删除不要的页面, 保留 锁定的页面, -1表示最后添加
-	public static Tab addWaitingPane(int tabIdx, String info) {
-		Tab waitTb = getWaitTab(info);
+	public static Tab addWaitingPane(int tabIdx) {
+		Tab waitTb = getWaitTab();
 		Platform.runLater(() -> {
 			TabPane dataTab = ComponentGetter.dataTabPane;
 			 
@@ -360,11 +363,11 @@ public class SdkComponent {
 	
 
 
-	public static Tab addWaitingPane(int tabIdx, boolean holdSheet, String info) {
+	public static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
 		Platform.runLater(() -> {
 			SdkComponent.showDetailPane();
 		});
-		Tab v = SdkComponent.addWaitingPane(tabIdx, info);
+		Tab v = SdkComponent.addWaitingPane(tabIdx);
 		Platform.runLater(() -> {
 			if (holdSheet == false) { // 非刷新的， 删除多余的页
 				TabPane dataTab = ComponentGetter.dataTabPane;
