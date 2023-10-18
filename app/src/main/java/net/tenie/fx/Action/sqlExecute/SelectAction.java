@@ -69,7 +69,7 @@ public class SelectAction {
 			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
 
 			// 缓存
-			sheetDaV.setTable(table);
+//			sheetDaV.setTable(table);
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 

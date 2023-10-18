@@ -61,15 +61,24 @@ public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
         });
         
         cm.getItems().addAll(copyVal, setNull);
-        setContextMenu(cm);
+        this.setContextMenu(cm);
     }
+    
+    
     public MyTableCellTextField2(StringConverter<T> converter) {
         super(converter); 
-        initMenu(converter);
+//        initMenu(converter);
         
         // 在表格cell中, 显示不下就以省略号结尾
         this.setTextOverrun(OverrunStyle.ELLIPSIS);
-       
+        // 当鼠标点击的时候添加右键菜单
+        this.setOnMouseClicked(e->{
+        	var cmenu =  this.getContextMenu();
+        	if(cmenu == null) {
+        		  initMenu(converter);
+        	}
+        });
+        
         graphicProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
