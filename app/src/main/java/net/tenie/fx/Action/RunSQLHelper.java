@@ -114,7 +114,9 @@ public class RunSQLHelper {
 			}
 			String waitShowSqlStr  = "";
 			for(int k = 0; k < allsqls.size(); k++) {
-				waitShowSqlStr +=	allsqls.get(k).sql + "\n";
+//				var sqltmp = allsqls.get(k);
+//				sqltmp.sql()
+				waitShowSqlStr +=	allsqls.get(k).sql() + "\n";
 			}
 		
 			// 执行sql
@@ -153,7 +155,7 @@ public class RunSQLHelper {
 		List<SqlData> errObj = new ArrayList<>();
 
 		for (int i = 0; i < sqllenght; i++) {
-			sqlstr = allsqls.get(i).sql;
+			sqlstr = allsqls.get(i).sql();
 			sql = StrUtils.trimComment(sqlstr, "--");
 			int type = ParseSQL.parseType(sql);
 			String msg = "";
@@ -228,8 +230,8 @@ public class RunSQLHelper {
 			Platform.runLater(() -> {
 				if (errObj.size() > 0) {
 					for (SqlData sd : errObj) {
-						int bg = sd.begin;
-						MyEditorSheetHelper.ErrorHighlighting(bg, sd.sql);
+						int bg = sd.begin();
+						MyEditorSheetHelper.ErrorHighlighting(bg, sd.sql());
 					}
 				}
 			});
