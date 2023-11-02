@@ -50,19 +50,19 @@ public class DynaPo implements Serializable {
 	}
 
 	public void add(Object key, int val) {
-		this.add(key, (Object) (new Integer(val)));
+		this.add(key, (new Integer(val)));
 	}
 
 	public void add(Object key, long val) {
-		this.add(key, (Object) (new Long(val)));
+		this.add(key, (new Long(val)));
 	}
 
 	public void add(Object key, float val) {
-		this.add(key, (Object) (new Float(val)));
+		this.add(key, (new Float(val)));
 	}
 
 	public void add(Object key, double val) {
-		this.add(key, (Object) (new Double(val)));
+		this.add(key, (new Double(val)));
 	}
 
 	public void add(Object key, Object[] val) {
@@ -105,6 +105,7 @@ public class DynaPo implements Serializable {
 		return this.name;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer sbuf = new StringBuffer();
 		sbuf.append("DynaBean:" + this.name + "\n");
@@ -142,12 +143,12 @@ public class DynaPo implements Serializable {
 		if (obj == null) {
 			return "";
 		} else if (!(obj instanceof Integer) && !(obj instanceof Long)) {
-			if (obj instanceof Float) {
-				return "<![CDATA[" + ObjFormater.decimalFormat((Float) obj) + "]]>";
-			} else if (obj instanceof Double) {
-				return "<![CDATA[" + ObjFormater.decimalFormat((Double) obj) + "]]>";
-			} else if (obj instanceof Date) {
-				return "<![CDATA[" + ObjFormater.dateFormat((Date) obj) + "]]>";
+			if (obj instanceof Float floatVal) {
+				return "<![CDATA[" + ObjFormater.decimalFormat( floatVal ) + "]]>";
+			} else if (obj instanceof Double doubleVal) {
+				return "<![CDATA[" + ObjFormater.decimalFormat( doubleVal ) + "]]>";
+			} else if (obj instanceof Date dateVal) {
+				return "<![CDATA[" + ObjFormater.dateFormat( dateVal ) + "]]>";
 			} else {
 				return obj instanceof String ? "<![CDATA[" + obj + "]]>" : obj.toString();
 			}

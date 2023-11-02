@@ -9,7 +9,6 @@ import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.application.Platform;
-import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -56,11 +55,12 @@ public class CacheDataTableViewShapeChange {
 			ScrollBar horizontalBar = null;
 			// 获取到 ScrollBar的 父节点, 然后遍历子节点, 获取第三个元素就是 水平ScrollBar了
 			Node nodes = table.lookup(".virtual-flow");
-			if (nodes instanceof Parent) {
-				javafx.scene.Parent p = (Parent) nodes;
+			if (nodes instanceof Parent p) {
 				ObservableList<Node> ls = p.getChildrenUnmodifiable();
-				if (ls.size() > 3 && ls.get(3) instanceof javafx.scene.control.ScrollBar) {
-					horizontalBar = (javafx.scene.control.ScrollBar) ls.get(3);
+				if (ls.size() > 3) {
+					if (ls.get(3) instanceof javafx.scene.control.ScrollBar scrollBar) {
+						horizontalBar = scrollBar;
+					}
 				}
 
 			}
@@ -74,7 +74,6 @@ public class CacheDataTableViewShapeChange {
 				}
 				// 水平滚动条位置值变化监听, 保存新值
 				horizontalBar.valueProperty().addListener((obs, oldValue, newValue) -> {
-//					System.out.println("addListener ===" +oldValue +" | " + newValue );
 					CacheDataTableViewShapeChange.saveHorizontal(tableName, newValue.doubleValue());
 				});
 

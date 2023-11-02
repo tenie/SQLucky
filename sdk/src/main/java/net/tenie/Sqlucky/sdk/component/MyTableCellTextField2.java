@@ -181,9 +181,8 @@ public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
     		// 如果是手动添加的行, 那么对应的单元格变色
         	TableRow<S> tr = getTableRow();
         	S v = tr.getItem();
-        	if(v instanceof ResultSetRowPo) {
-        		Boolean isNewAdd = ((ResultSetRowPo) v).getIsNewAdd();
-        		if(isNewAdd) {
+        	if(v instanceof ResultSetRowPo isNewAdd) {
+        		if(isNewAdd.getIsNewAdd()) {
         			setCellColorForNewOrChange();
         		}
         	}

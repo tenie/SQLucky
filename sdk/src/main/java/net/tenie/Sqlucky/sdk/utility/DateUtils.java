@@ -94,17 +94,15 @@ public class DateUtils {
 	public static String DbDateTimeToString(Object obj, int sqlFiledtype) {
 
 		String val = null;
-		if (obj instanceof LocalDateTime) {
-			LocalDateTime ldt = (LocalDateTime) obj;
+		if (obj instanceof LocalDateTime ldt) {
 			Date dv = Date.from(ldt.atZone(ZoneId.systemDefault()).toInstant());
 			val = DateUtils.DateOrDateTimeToString(sqlFiledtype, dv);
-		} else if (obj instanceof Date) {
-			Date dv = (Date) obj;
+		} else if (obj instanceof Date dv) {
 			val = DateUtils.DateOrDateTimeToString(sqlFiledtype, dv);
-		} else if (obj instanceof String) {
-			val = (String) obj;
-		} else if (obj instanceof Long) {
-			Date date = new Date((long) obj);
+		} else if (obj instanceof String stringVal) {
+			val = stringVal;
+		} else if (obj instanceof Long longVal) {
+			Date date = new Date( longVal );
 			val = DateUtils.dateToStr(date, ConfigVal.dateFormateL);
 		}
 

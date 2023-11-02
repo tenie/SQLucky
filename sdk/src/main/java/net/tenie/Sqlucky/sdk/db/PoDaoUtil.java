@@ -204,8 +204,8 @@ public class PoDaoUtil {
 				if (Date.class.equals(val)) {
 					Object obj = rs.getObject(key);
 					
-					if(obj != null && obj instanceof LocalDateTime) {
-						LocalDateTime ldt = (LocalDateTime) obj; 
+					if(obj != null && obj instanceof LocalDateTime ldt) {
+//						LocalDateTime ldt = (LocalDateTime) obj; 
 						Date dv = Date.from( ldt.atZone( ZoneId.systemDefault()).toInstant());
 						bean.add(key, dv);
 					}else {
@@ -428,8 +428,8 @@ public class PoDaoUtil {
 			item = params.get(i);
 			if (item instanceof Date) {
 				ps.setTimestamp(idx++, toSqlDate((Date) item));
-			} else if (item instanceof Collection) {
-				Object[] vals = ((Collection) item).toArray();
+			} else if (item instanceof Collection cln) {
+				Object[] vals = cln.toArray();
 				for (int j = 0; j < vals.length; j++)
 					ps.setObject(idx++, vals[j]);
 			} else {

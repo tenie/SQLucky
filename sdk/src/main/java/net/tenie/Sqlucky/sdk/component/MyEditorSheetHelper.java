@@ -420,12 +420,12 @@ public class MyEditorSheetHelper {
 			String color = CommonUtils.themeColor();
 			for (int i = 0; i < vbx.getChildren().size() - 1; i++) {
 				Node nd = vbx.getChildren().get(i);
-				if (nd instanceof AnchorPane) {
-					AnchorPane ap = (AnchorPane) nd;
+				if (nd instanceof AnchorPane ap) {
+//					AnchorPane ap = (AnchorPane) nd;
 					var apchs = ap.getChildren();
 					for (Node apnd : apchs) {
-						if (apnd instanceof JFXButton) {
-							JFXButton btn = (JFXButton) apnd;
+						if (apnd instanceof JFXButton btn) {
+//							JFXButton btn = (JFXButton) apnd;
 							if (btn.getGraphic() != null)
 								btn.getGraphic().setStyle("-fx-background-color: " + color + ";");
 						}

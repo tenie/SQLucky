@@ -269,8 +269,8 @@ public class MyAlert {
 		KeyCodeCombination kcN = new KeyCodeCombination(KeyCode.N);
 		KeyCodeCombination kcC = new KeyCodeCombination(KeyCode.C);
 		for (var nd : btns) {
-			if (nd instanceof Button) {
-				Button tmp = (Button) nd;
+			if (nd instanceof Button tmp) {
+//				Button tmp = (Button) nd;
 				if (tmp.getText().contains("(Y)")) {
 					scene.getAccelerators().put(kcY, () -> {
 						tmp.fire();
