@@ -432,7 +432,7 @@ public class SqluckyAppDB {
 		} 
 		
 		// 去除注释, 包注释字符串转换为空白字符串
-		str = MyEditorSheetHelper.trimCommentToSpace(str, "--");
+//		str = MyEditorSheetHelper.trimCommentToSpace(str, "--");
 //		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		sds = epurateSql(str, start);
 		return sds;

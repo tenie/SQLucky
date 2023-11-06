@@ -298,6 +298,7 @@ public class StrUtils {
 
 	// 去除注释
 	public static String trimComment(String sql, String symbol) {
+		if(!sql.contains(symbol)) return sql;
 		String str = sql.replaceAll(symbol, "\n" + symbol);
 		if (str.contains("\r")) {
 			str = str.replace("\r", "");

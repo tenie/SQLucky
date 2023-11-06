@@ -23,7 +23,7 @@ public class ParseSQL {
 
 	public static int parseType(String sql) {
 		// 去除注释
-		String temp = StrUtils.trimComment(sql, "--");
+		String temp = StrUtils.trimComment(sql, "--"); 
 		// 去除开头的非 字母部分, 如 ( 
 		for(int i = 0; i < temp.length(); i++) {
 			if( Character.isAlphabetic( temp.charAt(i) )){

@@ -50,7 +50,7 @@ public class CodeAreaHighLightingHelper {
 	       String BRACKET_PATTERN = "\\[|\\]";
 	       String SEMICOLON_PATTERN = "\\;";
 	        // 字符串
-	       String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
+	       String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'|`([^`\\\\]|\\\\.)*`";
 	        // 注释
 	       String COMMENT_PATTERN = "//[^\n]*" +"|"+"--[^\n]*"+ "|" + "/\\*(.|\\R)*?\\*/";
 	       String patternString =  

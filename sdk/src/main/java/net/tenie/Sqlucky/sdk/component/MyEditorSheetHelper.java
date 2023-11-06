@@ -248,13 +248,43 @@ public class MyEditorSheetHelper {
 	public static void applyHighlighting() {
 		currentSqlCodeAreaHighLighting();
 	}
-
+	
+	public record matherString(Matcher matcherObj, String newString, List<String> replaceStr ) {}
+	// 正则匹配字符串
+	public static matherString getStringMatcher(String valStr) {
+		String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'|`([^`\\\\]|\\\\.)*`";
+		Pattern patn = Pattern.compile(STRING_PATTERN);
+		Matcher matr = patn.matcher(valStr);
+		List<String> tmpStrLs = new ArrayList<>();
+		while (matr.find()) {
+			String cutstr = valStr.substring(matr.start(), matr.end());
+//			System.out.println("cutstr=" + cutstr);
+			tmpStrLs.add(cutstr);
+			
+		}
+		String str2 = matr.replaceAll(" __P_h__ ");
+		var rs = new matherString(matr, str2, tmpStrLs);
+		return rs;
+	}
+	
+	public static String recoverStringMatcher(matherString msval, String strVal) {
+		List<String> ls = msval.replaceStr();
+		for(String str : ls) {
+			strVal = strVal.replaceFirst(" __P_h__ ", str);
+		}
+		return strVal;
+	}
+	
 	// 将注释部分转换为空格字符,保持字符串的长度
 	public static String trimCommentToSpace(String sql, String symbol) {
 		if (!sql.contains(symbol))
 			return sql;
+		
+		// 对包含在字符串中的 symbol 字符串不做处理, 用正则把字符串使用占位符替换掉
+		matherString msVal = getStringMatcher(sql);
+		String sqlNew = msVal.newString();
 		// 在symbol前插入换行符, 之后就是对行的处理
-		String str = sql.replaceAll(symbol, "\n" + symbol);
+		String str = sqlNew.replaceAll(symbol, "\n" + symbol);
 		if (str.contains("\r")) {
 			str = str.replace("\r", "");
 		}
@@ -277,9 +307,12 @@ public class MyEditorSheetHelper {
 				}
 			}
 		}
-		if ("".equals(nstr)) {
+		if ("".equals(nstr)) { 
 			nstr = sql;
+		}else {
+			nstr = recoverStringMatcher(msVal, nstr);
 		}
+		
 		return nstr;
 	}
 
