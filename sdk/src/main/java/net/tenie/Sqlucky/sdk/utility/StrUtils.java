@@ -33,14 +33,6 @@ public class StrUtils {
 	public final static String BLANK_SPRING_STRING = " ";
 	public static final char CHAR_TILDE = '~';
 
-	public static void testStrsToInts() {
-		List<String> ls = new ArrayList<>();
-		ls.add("10");
-		ls.add("5");
-		ls.add("15");
-		List<Integer> rs = StrUtils.StrListToIntList(ls);
-		System.out.println(rs);
-	}
 
 	// 字符串list 排序
 	public static List<Integer> StrListToIntList(List<String> ls) {
