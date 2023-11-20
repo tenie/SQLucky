@@ -47,11 +47,16 @@ public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
     private void initMenu(StringConverter<T> converter) {
     	// 右键菜单
         ContextMenu cm = new ContextMenu();
-        // 设置null
-        MenuItem setNull = new MenuItem("Set Null ");
-        setNull.setOnAction(e->{
-        	commitEdit(converter.fromString("<null>"));
-        });
+        TableColumn<S, T> column = getTableColumn();
+       if( column.isEditable() ) {
+    	   // 设置null
+           MenuItem setNull = new MenuItem("Set Null ");
+           setNull.setOnAction(e->{
+           	commitEdit(converter.fromString("<null>"));
+           });
+           cm.getItems().add( setNull);
+       }
+      
 		
         // 复制值
         MenuItem copyVal = new MenuItem("Copy Value");
@@ -60,7 +65,7 @@ public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
         	CommonUtils.setClipboardVal(val);
         });
         
-        cm.getItems().addAll(copyVal, setNull);
+        cm.getItems().add(copyVal);
         this.setContextMenu(cm);
     }
     
