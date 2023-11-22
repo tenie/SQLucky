@@ -50,12 +50,32 @@ public class TablePo {
 	private TableView<ResultSetRowPo> indexTableView;
 
 	private SqluckyConnector sqluckyConnector;
+	List<String> colName = new ArrayList<>();
 
+	List<String> foreignKeyColnames = new ArrayList<>();
+	
+	private void init() {
+		colName.add("INDEX NAME");
+		colName.add("TABLE NAME");
+		colName.add("INDEX SCHEMA");
+		colName.add("COL NAMES");
+		colName.add("Operate Button");
+
+		foreignKeyColnames.add("TABLE NAME");
+		foreignKeyColnames.add("FOREIGN KEY NAME");
+		foreignKeyColnames.add("PK COLNAMES");
+		foreignKeyColnames.add("REF TABLE NAME");
+		foreignKeyColnames.add("REF KEY NAME");
+		foreignKeyColnames.add("PK COLNAMES");
+		foreignKeyColnames.add("Operate Button");
+	}
 	public TablePo() {
+		init() ;
 	}
 
 	public TablePo(String name) {
 		tableName = name;
+		init() ;
 	}
 
 	// 用于自动补全创建TablePo， 方便遍历表格实现对表名称输入自动补全， noDbObj表示创建的TablePo 是自定义的自动补全字符串
@@ -67,42 +87,27 @@ public class TablePo {
 
 	// show Index
 	public TableView<ResultSetRowPo> indexTableView() {
-		if (indexTableView == null) {
-			List<String> colName = new ArrayList<>();
-			colName.add("INDEX NAME");
-			colName.add("TABLE NAME");
-			colName.add("INDEX SCHEMA");
-			colName.add("COL NAMES");
-			colName.add("Operate Button");
-			List<Map<String, String>> vals = toMapByIndex();
-
+//		if (indexTableView == null) {
+			
+			List<Map<String, String>> vals = toMapByIndex(); 
 			// operate btns
 			List<MyCellOperateButton> btnvals = new ArrayList<>();
 			var dropIdx = dropIndexBtn();
 			var showIdxDDL = showIndexBtn();
 			btnvals.add(dropIdx);
 			btnvals.add(showIdxDDL);
-			indexTableView = TableViewUtils.dbTableIndexFkTableView(colName, vals, btnvals);
+			indexTableView = TableViewUtils.dbTableIndexFkTableView(colName, vals, btnvals, indexTableView);
 //			// 获取TableView
 //		    indexTableView = sheetDaV.getInfoTable();
-		}
+//		}
 
 		return indexTableView;
 	}
 
 	// show foreign key
 	public TableView<ResultSetRowPo> foreignKeyTableView() {
-		if (foreignKeyTable == null) {
-			List<String> foreignKeyColnames = new ArrayList<>();
-
-			foreignKeyColnames.add("TABLE NAME");
-			foreignKeyColnames.add("FOREIGN KEY NAME");
-			foreignKeyColnames.add("PK COLNAMES");
-			foreignKeyColnames.add("REF TABLE NAME");
-			foreignKeyColnames.add("REF KEY NAME");
-			foreignKeyColnames.add("PK COLNAMES");
-			foreignKeyColnames.add("Operate Button");
-
+//		if (foreignKeyTable == null) {
+			
 			List<Map<String, String>> foreignKeyVals = toMapByFK();
 
 			// drop button
@@ -112,8 +117,8 @@ public class TablePo {
 			btnvals.add(drop);
 			btnvals.add(export);
 //			// 获取TableView
-			foreignKeyTable = TableViewUtils.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals, btnvals);
-		}
+			foreignKeyTable = TableViewUtils.dbTableIndexFkTableView(foreignKeyColnames, foreignKeyVals, btnvals, foreignKeyTable);
+//		}
 		return foreignKeyTable;
 	}
 

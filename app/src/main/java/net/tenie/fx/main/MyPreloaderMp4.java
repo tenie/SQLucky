@@ -80,6 +80,7 @@ public class MyPreloaderMp4 extends Preloader {
 	public void start(Stage primaryStage) throws Exception {
 		double w = 550.0;
 		double h = 319.0;
+		URL valUrl2 = MyPreloaderMp4.class.getResource("/");
 		URL valUrl = MyPreloaderMp4.class.getResource("/image/sqlucky_hd2.mp4");
 		String filePath = valUrl.toExternalForm(); // MyPreloaderMp4.class.getResource("/image/sqlucky_hd2.mp4").toExternalForm();
 

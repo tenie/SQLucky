@@ -361,11 +361,19 @@ public class TableViewUtils {
 
 	// Show db Table index foregin key TableView
 	public static TableView<ResultSetRowPo> dbTableIndexFkTableView(List<String> fieldNameLs,
-			List<Map<String, String>> vals, List<MyCellOperateButton> btnvals) {
+			List<Map<String, String>> vals, List<MyCellOperateButton> btnvals,
+			TableView<ResultSetRowPo> tableView ) {
 		try {
-			FilteredTableView<ResultSetRowPo> tableView = TableViewUtils.creatInfoTableView();
-			// 查询的 的语句可以被修改
-			tableView.editableProperty().bind(new SimpleBooleanProperty(true));
+//			FilteredTableView<ResultSetRowPo> tableView = TableViewUtils.creatInfoTableView();
+			if(tableView == null) {
+				tableView = TableViewUtils.creatInfoTableView();
+				// 查询的 的语句可以被修改
+				tableView.editableProperty().bind(new SimpleBooleanProperty(true));
+			}else {
+				tableView.getColumns().clear();
+				tableView.getItems().clear();
+			}
+			
 
 			ObservableList<SheetFieldPo> fields = createSheetFieldPo(fieldNameLs);
 			ResultSetPo setPo = fetchCellVal(vals, fields);
@@ -380,6 +388,7 @@ public class TableViewUtils {
 			MyTableCellButton btncell = new MyTableCellButton(btnvals);
 			column.setCellFactory(btncell.callback());
 			// 设置 列的
+		
 			tableView.getColumns().addAll(tableColumns);
 			tableView.setItems(allRawData);
 

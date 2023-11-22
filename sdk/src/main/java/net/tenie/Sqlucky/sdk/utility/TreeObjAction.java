@@ -25,7 +25,7 @@ public class TreeObjAction {
 		String type = table.getTableType();
 		String createTableSql = table.getDdl();
 		// 如果建表语句是空的, 那么导出建表语句
-		if (StrUtils.isNullOrEmpty(createTableSql)) {
+//		if (StrUtils.isNullOrEmpty(createTableSql)) {
 			if (type.equals(CommonConst.TYPE_TABLE)) {
 				table.setSqluckyConnector(sqluckyConn);
 				//
@@ -50,7 +50,7 @@ public class TreeObjAction {
 
 			}
 
-		}
+//		}
 
 		if (type.equals(CommonConst.TYPE_TABLE)) {
 			MyBottomSheet.showTableInfoSheet(sqluckyConn, table);

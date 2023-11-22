@@ -25,11 +25,11 @@
 	<properties>
 		<sqlucky.version>3.0.0</sqlucky.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.release>17</maven.compiler.release>
-		<javafx.version>20.0.1</javafx.version>
+		<maven.compiler.release>21</maven.compiler.release>
+		<javafx.version>21.0.1</javafx.version>
 		<jfoenix.version>9.0.10</jfoenix.version>
 		<richtextfx.version>0.10.6</richtextfx.version>
-		<controlsfx.version>11.1.0</controlsfx.version>
+		<controlsfx.version>11.2.0</controlsfx.version>
 		<sql.formatter.version>1.0.4</sql.formatter.version>
 		<commons.io.version>2.8.0</commons.io.version>
 		<slf4j.api.version>1.7.30</slf4j.api.version>

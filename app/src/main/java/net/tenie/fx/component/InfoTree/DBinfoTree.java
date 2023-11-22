@@ -106,9 +106,12 @@ public class DBinfoTree {
 			DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
 		// 双击
 		DBinfoTreeView.setOnMouseClicked(e -> {
-			treeViewDoubleClick(e);
+			// 单击
 			if (e.getClickCount() == 1) {
 				AppWindow.treeView.refresh();
+			}else {
+				// 双击
+				treeViewDoubleClick(e);
 			}
 		});
 		// 右键菜单

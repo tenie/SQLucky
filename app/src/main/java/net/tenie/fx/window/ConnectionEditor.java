@@ -485,6 +485,7 @@ public class ConnectionEditor {
 	public static void closeDbConn() {
 		logger.info("closeConnEvent()");
 		TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+		if(val == null ) return;
 		val = getConnNodeRoot(val);
 		closeDbConnHelper(val);
 		DBConns.flushChoiceBoxGraphic();
@@ -495,6 +496,7 @@ public class ConnectionEditor {
 	public static void openDbConn() {
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+			if(val == null ) return;
 			DBinfoTree.openConn(val);
 		}
 	}
