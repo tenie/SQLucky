@@ -7,6 +7,7 @@ scenicView.properties
 *.factorypath
 *target/
 *.settings/
+*.vscode/
 *.project
 .idea/
 .sts4-cache/
