@@ -1,4 +1,4 @@
-open module SQLucky {
+open module SQLucky.app {
 	requires java.desktop;
 //	requires java.naming;
 //	requires java.security.jgss;

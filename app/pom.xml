@@ -8,9 +8,9 @@
 		<artifactId>SQLucky-pom</artifactId>
 		<version>3.0.0</version>
 	</parent>
-	<artifactId>SQLucky</artifactId>
+	<artifactId>SQLucky-App</artifactId>
 	<packaging>jar</packaging>
-	<name>SQLucky</name>
+	<name>SQLucky-App</name>
 
 	<organization>
 		<name>https://github.com/tenie/SQLucky</name>
@@ -331,13 +331,13 @@
 					<!-- 编译时参数 -->
 					<compilerArgs>
 						<arg>--add-exports</arg>
-						<arg>javafx.graphics/com.sun.javafx.application=SQLucky</arg>
+						<arg>javafx.graphics/com.sun.javafx.application=SQLucky.app</arg>
 						<arg>--add-exports</arg>
-						<arg>org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser=SQLucky</arg>
+						<arg>org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser=SQLucky.app</arg>
 						<arg>--add-exports</arg>
-						<arg>org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser.aggregate=SQLucky</arg>
+						<arg>org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser.aggregate=SQLucky.app</arg>
 						<arg>--add-exports</arg>
-						<arg>org.controlsfx.controls/impl.org.controlsfx.i18n=SQLucky</arg>
+						<arg>org.controlsfx.controls/impl.org.controlsfx.i18n=SQLucky.app</arg>
 					</compilerArgs>
 				</configuration>
 			</plugin>

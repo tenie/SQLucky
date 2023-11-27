@@ -64,8 +64,9 @@ public class MyPreloaderGif extends Preloader {
        loading.setMaxWidth(Region.USE_PREF_SIZE);
        loading.setMaxHeight(Region.USE_PREF_SIZE);
        loading.setStyle("-fx-background-color: #000000;");  
-//       Image i = new Image( MyPreloaderGif.class.getResourceAsStream("/image/sqlucky.gif")); 
-       Image i = new Image( MyPreloaderGif.class.getResourceAsStream("/image/sqlucky_img.jpg")); 
+//       Image i = new Image( MyPreloaderGif.class.getResourceAsStream("/image/sqlucky.gif"));
+       var jpg = MyPreloaderGif.class.getResourceAsStream("/image/sqlucky_img.jpg");
+       Image i = new Image( jpg); 
        ImageView  mediaView =  new ImageView(i);
        mediaView.setFitWidth(w);
        mediaView.setFitHeight( h); 
