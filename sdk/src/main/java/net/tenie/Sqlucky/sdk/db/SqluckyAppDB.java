@@ -441,6 +441,8 @@ public class SqluckyAppDB {
 
 	// 将sql 字符串根据;分割成多个字符串 并计算其他信息
 	private static List<SqlData> epurateSql(String str, int start) {
+
+		str = StrUtils.trimComment(str, "--");
 		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
 		List<String> sqls = MyEditorSheetHelper.findSQLFromTxt(str);

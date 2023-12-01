@@ -287,6 +287,15 @@ public class StrUtils {
 
 		return rs;
 	}
+	
+	// 生成一定长度的空白字符串
+	public static String createBlank(int len) {
+		StringBuilder strb = new StringBuilder("");
+		for(int i= 0; i< len ; i++) {
+			strb.append(" ");
+		}
+		return strb.toString();
+	}
 
 	// 去除注释
 	public static String trimComment(String sql, String symbol) {
@@ -303,6 +312,8 @@ public class StrUtils {
 				String temp = sa[i];
 				if (!beginWith(temp, symbol)) {
 					nstr += temp + "\n";
+				}else {
+					nstr += createBlank(temp.length());
 				}
 			}
 		}

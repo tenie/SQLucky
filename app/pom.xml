@@ -376,7 +376,7 @@
 						<option>javafx.graphics/com.sun.javafx.scene=org.controlsfx.controls</option>
 
 						<option>--add-exports</option>
-						<option>javafx.graphics/com.sun.javafx.application=SQLucky</option>
+						<option>javafx.graphics/com.sun.javafx.application=SQLucky.app</option>
 						<option>--add-opens</option>
 						<option>java.base/java.lang=com.jfoenix</option>
 						<option>--add-opens</option>
@@ -384,7 +384,7 @@
 						<option>--add-opens</option>
 						<option>java.base/java.lang=ALL-UNNAMED</option>
 						<option>--add-opens</option>
-						<option>javafx.controls/javafx.scene.control=SQLucky</option>
+						<option>javafx.controls/javafx.scene.control=SQLucky.app</option>
 					</options>
 					
 					<annotationProcessorPaths>

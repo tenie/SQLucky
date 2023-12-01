@@ -156,8 +156,7 @@ public class RunSQLHelper {
 
 		for (int i = 0; i < sqllenght; i++) {
 			sqlstr = allsqls.get(i).sql();
-//			sql = sqlstr;
-			sql = StrUtils.trimComment(sqlstr, "--");
+			sql = sqlstr;
 			int type = ParseSQL.parseType(sql);
 			String msg = "";
 			
