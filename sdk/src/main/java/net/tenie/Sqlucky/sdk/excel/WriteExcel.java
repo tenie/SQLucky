@@ -104,41 +104,4 @@ public class WriteExcel {
 	}
 	
 
-	public static void main2(String[] args) {
-		try {
-//			createBlankXlsFile(new File("D:/textXls2.xls"));
-
-			ArrayList<String> data1 = new ArrayList<String>();
-			data1.add("BankName?");
-			data1.add("aaa?");
-			data1.add("bbb?");
-			data1.add("ccc?");
-
-			ArrayList<String> data2 = new ArrayList<String>();
-			data2.add("111?");
-			data2.add("2222?");
-			data2.add("333?");
-			data2.add("44444555555?");
-			ArrayList<String> data3 = new ArrayList<String>();
-			data3.add("333?");
-			data3.add("333?");
-			data3.add("333?");
-			data3.add("333?");
-
-			List<List<String>> list = new ArrayList<>();
-			list.add(data2);
-			list.add(data3);
-
-			ExcelDataPo po = new ExcelDataPo();
-			po.setSheetName("数据1");
-			po.setHeaderFields(data1);
-			po.setDatas(list);
-
-			ExcelUtil.createExcel(po, new File("D:/workbook2.xls"));
-
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
 }	

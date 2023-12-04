@@ -1325,10 +1325,16 @@ public class MyBottomSheet {
 			MyAlert.errorAlert("File Name Exist. Need A New File Name, Please!");
 			return;
 		}
+		String filePath =  ff.getAbsolutePath();
+		if( ! filePath.endsWith(".xls") && ! filePath.endsWith(".xlsx") ) {
+			filePath +=".xls";
+		}
+		
+		File excleFile = new File(filePath);
 		LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
 			ExcelDataPo po = tableValueToExcelDataPo(isSelect);
 			try {
-				ExcelUtil.createExcel(po, ff);
+				ExcelUtil.createExcel(po, excleFile);
 			} catch (Exception e1) {
 				e1.printStackTrace();
 				MyAlert.errorAlert("Error");

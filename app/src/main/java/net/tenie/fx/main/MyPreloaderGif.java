@@ -66,7 +66,7 @@ public class MyPreloaderGif extends Preloader {
        loading.setStyle("-fx-background-color: #000000;");  
 //     Image i = new Image( MyPreloaderGif.class.getResourceAsStream("/image/sqlucky.gif"));
 //     var jpg = MyPreloaderGif.class.getResourceAsStream("/image/sqlucky_img.jpg");
-       var jpgUrl = MyPreloaderGif.class.getResource("/image/sqlucky_img.jpg");
+       var jpgUrl = SQLucky.class.getResource("/image/sqlucky_img.jpg");
        var  jpg  = jpgUrl.openStream();
        
        Image i = new Image( jpg); 

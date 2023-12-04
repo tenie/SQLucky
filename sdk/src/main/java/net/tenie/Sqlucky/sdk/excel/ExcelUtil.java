@@ -15,8 +15,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelUtil {
-	private static final String EXCEL_XLS = "xls";
-	private static final String EXCEL_XLSX = "xlsx";
+	private static final String EXCEL_XLS = ".xls";
+	private static final String EXCEL_XLSX = ".xlsx";
 
 	public static void createExcel(ExcelDataPo dataPo, File finalXlsxFile) {
 		var sheetName = dataPo.getSheetName();
@@ -94,7 +94,7 @@ public class ExcelUtil {
 				fileOutputStream.close();
 			}
 
-			workbook.close();
+//			workbook.close();
 
 		}
 		return workbook;
