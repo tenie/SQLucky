@@ -12,6 +12,7 @@
 -    [Ubuntu amd64 (deb安装包)](https://github.com/tenie/SQLucky/releases/download/3.1.0-Beta/sqlucky_3.1.0_ubunntu-amd64.deb)
 -    [Windows amd64 (msi安装包)](https://github.com/tenie/SQLucky/releases/download/3.1.0-Beta/SQLucky-3.1.0-window-amd64.msi)
 -    [Windows amd64 (zip压缩包)](https://github.com/tenie/SQLucky/releases/download/3.1.0-Beta/SQLucky-window-amd64.zip)
+-    [Mac amd64 (dmg安装包)](https://github.com/tenie/SQLucky/releases/download/3.1.0-Beta/SQLucky-3.1.0-Mac-x64.dmg)
    
 ---
 
