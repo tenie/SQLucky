@@ -23,7 +23,7 @@
 
 
 	<properties>
-		<sqlucky.version>3.0.0</sqlucky.version>
+		<sqlucky.version>3.1.0</sqlucky.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.release>21</maven.compiler.release>
 		<javafx.version>20.0.2</javafx.version>
