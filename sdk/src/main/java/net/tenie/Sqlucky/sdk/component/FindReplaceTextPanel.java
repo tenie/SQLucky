@@ -37,8 +37,8 @@ public class FindReplaceTextPanel {
 	private JFXCheckBox sensitiveCheckBox ;
 	private JFXButton countBtn ;
 	private Label countLabel;
-
-	public static void findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
+	// 替换字符串一次
+	public static boolean findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
 		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		int idx = code.getCaretPosition();
 		String selTex = code.getSelectedText();
@@ -46,10 +46,12 @@ public class FindReplaceTextPanel {
 		if (StrUtils.isNotNullOrEmpty(selTex) && selTex.equals(findStr)) {
 			idx = code.getSelection().getStart();
 		}
-		replaceString(findtf.getText(), tf.getText(), idx, sensitive, true);
+		return replaceString(findtf.getText(), tf.getText(), idx, sensitive, true);
 	}
 
-	public static void replaceString(String str, String strNew, int fromIndex, boolean sensitive, boolean forward) {
+	public static boolean replaceString(String str, String strNew, int fromIndex, boolean sensitive, boolean forward) {
+		// 替换成功与否
+		boolean tf = false;
 		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		String text = code.getText();
 		if (sensitive) {
@@ -82,8 +84,10 @@ public class FindReplaceTextPanel {
 				code.insertText(start, strNew);
 				// 选中
 				selectRange(code, start, start + strNew.length());
+				tf = true;
 			}
 		}
+		return tf;
 	}
 
 	// F3 字符串查找
@@ -155,10 +159,12 @@ public class FindReplaceTextPanel {
 //		}
 //		return text;
 //	}
-
+/**
 	public static void findStrReplaceStrAll(TextField findtf, TextField tf, boolean sensitive) {
 		replaceStringAll(findtf.getText(), tf.getText(), sensitive);
 	}
+
+
 
 	public static void replaceStringAll(String str, String strNew, boolean sensitive) {
 		CodeArea code = MyEditorSheetHelper.getCodeArea();
@@ -188,7 +194,7 @@ public class FindReplaceTextPanel {
 //		selectRange(code, start, start + strNew.length());
 
 	}
-
+ */
 	static void selectRange(CodeArea code, int anchor, int caretPosition) {
 		code.selectRange(anchor, caretPosition);
 		code.requestFollowCaret();
@@ -293,7 +299,11 @@ public class FindReplaceTextPanel {
 		replaceAllBtn.getStyleClass().add("myReplaceBtn");
 		replaceAllBtn.setText("Replace All");
 		replaceAllBtn.setOnAction(v -> {
-			findStrReplaceStrAll(findtf, replaceTextField, !cb.isSelected());
+//			findStrReplaceStrAll(findtf, replaceTextField, !cb.isSelected());
+			boolean tf = findStrReplaceStr(findtf, replaceTextField, !cb.isSelected());
+			while(tf) {
+				tf = findStrReplaceStr(findtf, replaceTextField, !cb.isSelected());
+			}
 			countAction();
 		});
 
