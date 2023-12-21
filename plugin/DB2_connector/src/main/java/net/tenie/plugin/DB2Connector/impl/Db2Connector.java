@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -21,7 +20,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class Db2Connector extends DbConnector {
+public class Db2Connector extends SqluckyConnector {
  
 	
 	public Db2Connector(DBConnectorInfoPo connPo, SqluckyDbRegister dbRegister) {
@@ -147,8 +146,9 @@ public class Db2Connector extends DbConnector {
 
 	@Override
 	public Connection getConn() {
+		 
 //		getConnPo().getConn()
-		if (getConnPo().getConn() == null) {
+		if (getCacheConn() == null) {
 //			logger.info(this.connPo.getDriver());
 //			logger.info(getJdbcUrl());
 //			logger.info(this.connPo.getUser());

@@ -2,14 +2,10 @@ package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -20,7 +16,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class SqluckySqliteConnector extends DbConnector {
+public class SqluckySqliteConnector extends SqluckyConnector {
 
 	public SqluckySqliteConnector(DBConnectorInfoPo connPo,  SqluckyDbRegister dbReg) {
 		

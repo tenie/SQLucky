@@ -34,6 +34,7 @@ public class DBConnectorInfoPo {
 	private boolean jdbcUrlUse = false;
 	private boolean autoConnect = false;
 	private Map<String, DbSchemaPo> schemas; 
+	private Date lastConnectTime = null;
 	
 	public DBConnectorInfoPo(BDConnJsonObj obj) {
 		init(
@@ -304,8 +305,13 @@ public class DBConnectorInfoPo {
 		this.autoConnect = autoConnect;
 	}
 
+	public Date getLastConnectTime() {
+		return lastConnectTime;
+	}
 
-
+	public void setLastConnectTime(Date lastConnectTime) {
+		this.lastConnectTime = lastConnectTime;
+	}
 
 	@Override
 	public String toString() {
@@ -334,5 +340,7 @@ public class DBConnectorInfoPo {
 		DBConnectorInfoPo valpo = new DBConnectorInfoPo(val);
 		return valpo;
 	}
+	
+	
 }
 

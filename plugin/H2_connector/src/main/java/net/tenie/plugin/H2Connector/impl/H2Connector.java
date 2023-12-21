@@ -6,8 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-
-import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -21,7 +19,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class H2Connector extends DbConnector {
+public class H2Connector extends SqluckyConnector {
  
 	
 	public H2Connector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {

@@ -10,7 +10,6 @@ import java.util.Map;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -24,7 +23,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class PostgresqlConnector extends DbConnector {
+public class PostgresqlConnector extends SqluckyConnector {
  
 	
 	public PostgresqlConnector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {

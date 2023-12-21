@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -21,7 +20,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class MariadbConnector extends DbConnector {
+public class MariadbConnector extends SqluckyConnector {
  
 	
 	public MariadbConnector(DBConnectorInfoPo connPo , SqluckyDbRegister dbRe) {

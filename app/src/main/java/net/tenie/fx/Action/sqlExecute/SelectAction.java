@@ -39,7 +39,6 @@ public class SelectAction {
 		try {
 			// 获取表名
 			String tableName = ParseSQL.tabName(sql);
-			Connection conn = sqluckyConn.getConn();
 			MyBottomSheet myBottomSheet = new MyBottomSheet(tableName);
 
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();
@@ -73,7 +72,8 @@ public class SelectAction {
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 
-			// 根据表名获取tablepo对象
+			// 根据表名获取tablepo对象 
+			Connection conn = sqluckyConn.getConn();
 			List<String> keys = SqluckyAppDB.findPrimaryKeys(conn, tableName);
 			// table 添加列和数据
 			// 表格添加列

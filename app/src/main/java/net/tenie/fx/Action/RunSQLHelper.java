@@ -148,7 +148,6 @@ public class RunSQLHelper {
 		Integer rsVal = 1;
 		String sqlstr;
 		String sql;
-		Connection conn = sqluckyConn.getConn();
 	
 		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
@@ -168,7 +167,8 @@ public class RunSQLHelper {
 				} else if (type == ParseSQL.SELECT) { // 调用查询
 					SelectAction.selectAction(sql, sqluckyConn, state.getTidx(), state.getIsLock(), thread,
 							state.getIsRefresh());
-				} else {
+				} else { 
+					Connection conn = sqluckyConn.getConn();
 					if (type == ParseSQL.UPDATE) {
 						msg = DmlDdlDao.updateSql2(conn, sql);
 						logger.info("add update sql: " + sql);

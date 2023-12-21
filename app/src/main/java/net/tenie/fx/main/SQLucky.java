@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -53,6 +54,7 @@ import net.tenie.sdkImp.SqluckyAppComponent;
  *
  */
 public class SQLucky extends Application {
+	public Date lastfocusedTime ;
 	public static String sysOpenFile = "";
 	public static List<String> argsList = new ArrayList<>();
 	public static String userDir = "";
@@ -115,6 +117,7 @@ public class SQLucky extends Application {
 
 		scene = app.getAppScene();
 
+		
 		AppCommonAction.setTheme(Theme);
 		// 加载插件
 		ServiceLoad.callLoad();
@@ -165,7 +168,12 @@ public class SQLucky extends Application {
 //			}
 			primaryStage.getIcons().add(img);
 			primaryStage.setTitle("SQLucky");
-
+			primaryStage.focusedProperty().addListener((ob, ol, nw)->{
+				System.out.println("primaryStage.focusedProperty" + nw);
+				if(nw) {
+					lastfocusedTime = new Date();
+				}
+			});
 			primaryStage.show();
 
 			// 在stage show之后 需要初始化的内容, 如: 外观, 事件

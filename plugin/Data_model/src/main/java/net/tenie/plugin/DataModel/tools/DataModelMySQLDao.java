@@ -22,7 +22,7 @@ import net.tenie.plugin.DataModel.po.DataModelTablePo;
 public class DataModelMySQLDao {
 	
 	public static  DataModelInfoPo generateMySqlModel(SqluckyConnector sqluckyConn, String modelName) {
-		Connection dbconn =  sqluckyConn.getConn();
+		
 		var conn = SqluckyAppDB.getConn();
 //		String connName = sqluckyConn.getConnName();
 		DataModelInfoPo modelPo = new DataModelInfoPo();
@@ -33,16 +33,17 @@ public class DataModelMySQLDao {
 			Long modelID = PoDao.insertReturnID(conn, modelPo);
 			modelPo.setId(modelID);
 			String schema = sqluckyConn.getDefaultSchema();
+			Connection dbconn =  sqluckyConn.getConn();
 			List<TablePo> tbs = sqluckyConn.getExportDDL().allTableObj(dbconn, sqluckyConn.getDefaultSchema());
 			
+			sqluckyConn.setConnectionLastUseTime();
 			
 			for(var tb : tbs) {
 				String tableName = tb.getTableName();
 				DataModelTablePo mtbpo = queryTableInfo(conn, dbconn, modelID, tableName, schema);
-				
 				entities.add(mtbpo);
 			}
-			
+			sqluckyConn.setConnectionLastUseTime();
 			
 		} catch (Exception e) {
 			e.printStackTrace();

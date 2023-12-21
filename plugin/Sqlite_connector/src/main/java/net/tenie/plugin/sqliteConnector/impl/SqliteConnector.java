@@ -3,7 +3,6 @@ package net.tenie.plugin.sqliteConnector.impl;
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
-import net.tenie.Sqlucky.sdk.db.DbConnector;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
@@ -17,7 +16,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class SqliteConnector extends DbConnector {
+public class SqliteConnector extends SqluckyConnector {
  
 	
 	public SqliteConnector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {
