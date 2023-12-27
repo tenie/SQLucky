@@ -120,8 +120,8 @@ public class ButtonFactory {
 		lbcnn.setLabelFor(connsComboBox);
 		connsComboBox.setPrefHeight(25);
 		connsComboBox.setMinHeight(25);
-		connsComboBox.setMaxWidth(150);
-		connsComboBox.setMinWidth(150);
+		connsComboBox.setMaxWidth(200);
+		connsComboBox.setMinWidth(200);
 		connsComboBox.getStyleClass().add("myComboBox");
 		connsComboBox.getStyleClass().add("my-tag");
 
@@ -222,15 +222,15 @@ public class ButtonFactory {
 		lbcnn.setLayoutX(y);
 		pn.getChildren().add(connsComboBox);
 		connsComboBox.setLayoutY(0);
-		y += fix + 65;
+		y += fix + 70;
 		connsComboBox.setLayoutX(y);
 		pn.getChildren().add(lb);
 		lb.setLayoutY(5);
-		y += fix + 140;
+		y += fix + 190;
 		lb.setLayoutX(y);
 		pn.getChildren().add(rows);
 		rows.setLayoutY(0);
-		y += fix + 35;
+		y += fix + 40;
 		rows.setLayoutX(y);
 
 		CommonButtons.runbtn = runbtn;
