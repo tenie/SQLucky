@@ -103,7 +103,7 @@ public class ConnectionEditor {
 
 	public static void ConnectionInfoSetting(boolean isEdit, String connNameVal, String userVal, String passwordVal,
 			String hostVal, String portVal, String dbDriverVal, String defaultSchemaVal, String dbName,
-			SqluckyConnector dp) {
+			SqluckyConnector sqluckyConnector) {
 
 		String connNameStr = "Connection Name";
 		String userStr = "User";
@@ -122,8 +122,12 @@ public class ConnectionEditor {
 
 		Label autoConnect = new Label("Auto Connect");
 		JFXCheckBox autoConnectCB = new JFXCheckBox();
-		autoConnectCB.setSelected(dp == null ? false : dp.getAutoConnect());
+		autoConnectCB.setSelected(sqluckyConnector == null ? false : sqluckyConnector.getAutoConnect());
 
+		// schemas 显示
+		Label showSchemas = new Label("Show Schemas");
+		JFXCheckBox checkBoxShowSchemas = new JFXCheckBox();
+			
 		TextField connectionName = new TextField();
 		connectionName.setPrefWidth(250);
 		connectionName.setMinWidth(250);
@@ -143,9 +147,9 @@ public class ConnectionEditor {
 		JFXCheckBox isUseJdbcUrl = new JFXCheckBox("Use JDBC URL");
 
 		TextField jdbcUrl = new TextField();
-		if (dp != null && dp.isJdbcUrlUse()) {
+		if (sqluckyConnector != null && sqluckyConnector.isJdbcUrlUse()) {
 			Platform.runLater(() -> {
-				String jdbcUrlVal = dp.getJdbcUrl();
+				String jdbcUrlVal = sqluckyConnector.getDBConnectorInfoPo().getDefaultjdbcUrl();
 				isUseJdbcUrl.setSelected(true);
 				jdbcUrl.setText(jdbcUrlVal);
 
@@ -322,26 +326,31 @@ public class ConnectionEditor {
 			// TODO 连接信息保存 DbVendor
 			DBConnectorInfoPo connPo = new DBConnectorInfoPo(connName, DbVendor.getDriver(dbDriver.getValue()),
 					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
-					defaultSchema.getText(), defaultSchema.getText(), jdbcUrl.getText(), autoConnectCB.isSelected());
+					defaultSchema.getText(), defaultSchema.getText(), jdbcUrl.getText(), 
+					autoConnectCB.isSelected(),
+					checkBoxShowSchemas.isSelected()
+					);
 //			SqluckyDbRegister reg = DbVendor.register(dbDriver.getValue());
 			SqluckyConnector sqluckyConnnector = dbRegister.createConnector(connPo);
-			if (dp != null) {
-				dp.closeConn();
-				sqluckyConnnector.setId(dp.getId());
+			if (sqluckyConnector != null) {
+				sqluckyConnector.closeConn();
+				sqluckyConnnector.setId(sqluckyConnector.getId());
 			}
 			return sqluckyConnnector;
 
 		};
 //TODO
 		Button testBtn = createTestBtn(assembleSqlCon);// new Button("Test");
-		Button saveBtn = createSaveBtn(assembleSqlCon, connectionName, dp); // new Button("Save");
+		Button saveBtn = createSaveBtn(assembleSqlCon, connectionName, sqluckyConnector); // new Button("Save");
 
 		layoutAndShow(lbconnNameStr,
 //				connectionName,
 				connectionNameFieldPane,
 				lbdbDriverStr, dbDriver, isUseJdbcUrl, jdbcUrlFieldPane, lbhostStr, hostFieldPane,
 				h2FilePath, lbportStr, portFieldPane, lbdefaultSchemaStr, defaultSchemaFieldPane, lbuserStr, userFieldPane, lbpasswordStr,
-				passwordFieldPane, autoConnect, autoConnectCB, testBtn, saveBtn);
+				passwordFieldPane, autoConnect, autoConnectCB,
+				showSchemas, checkBoxShowSchemas,
+				testBtn, saveBtn);
 
 	}
 
@@ -461,9 +470,9 @@ public class ConnectionEditor {
 		logger.info(str);
 		SqluckyConnector dp = DBConns.get(str);
 		if (dp != null) {
-			if (dp.isAlive()) {
+//			if (dp.isAlive()) {
 				return true;
-			}
+//			}
 		}
 		return false;
 	}
@@ -565,6 +574,7 @@ public class ConnectionEditor {
 			Node dbDriver, Node isUseJU, Node jdbcUrl, Node lbhostStr, Node host, Node h2FilePath,
 			Node lbportStr, Node port, Node lbdefaultSchemaStr, Node defaultSchema, Node lbuserStr,
 			Node user, Node lbpasswordStr, Node password, Node autoConnect, Node autoConnectCB,
+			Node showSchemas, Node checkBoxShowSchemas,
 			Node testBtn, Node saveBtn
 
 	) {
@@ -613,6 +623,10 @@ public class ConnectionEditor {
 
 		grid.add(autoConnect, 0, i++);
 		grid.add(autoConnectCB, 1, j++);
+
+
+		grid.add(showSchemas, 0, i++);
+		grid.add(checkBoxShowSchemas, 1, j++);
 
 		grid.add(testBtn, 0, i);
 		grid.add(saveBtn, 1, i);

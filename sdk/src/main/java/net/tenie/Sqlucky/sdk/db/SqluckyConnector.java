@@ -16,22 +16,24 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.DateUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+
 //DbConnector
 public abstract class SqluckyConnector {
 
 	private static Logger logger = LogManager.getLogger(SqluckyConnector.class);
-	
-	protected DBConnectorInfoPo connPo;
-	protected TreeItem connTreeItem;
-	protected SqluckyDbRegister dbRegister;
- 
+
+	private DBConnectorInfoPo dbConnectorInfoPo;
+	private TreeItem connTreeItem;
+	private SqluckyDbRegister dbRegister;
+
 	public SqluckyDbRegister getDbRegister() {
 		return dbRegister;
 	}
 
 	public SqluckyConnector(DBConnectorInfoPo c, SqluckyDbRegister dbRegister) {
 //		super();
-		this.connPo = c;
+		this.dbConnectorInfoPo = c;
 		this.dbRegister = dbRegister;
 	}
 
@@ -39,17 +41,17 @@ public abstract class SqluckyConnector {
 	public void setDbInfoTreeNode(TreeItem item) {
 		this.connTreeItem = item;
 	}
- 
+
 	public TreeItem getDbInfoTreeNode() {
 		return this.connTreeItem;
 	}
 
 	public void setDBConnectorInfoPo(DBConnectorInfoPo po) {
-		this.connPo = po;
+		this.dbConnectorInfoPo = po;
 	}
 
 	public DBConnectorInfoPo getDBConnectorInfoPo() {
-		return this.connPo;
+		return this.dbConnectorInfoPo;
 	}
 
 	// 正在连接中, 原子操作
@@ -68,10 +70,14 @@ public abstract class SqluckyConnector {
 	public boolean isAlive() {
 		boolean tf = false;
 		if (finishInitNode()) {
-			if (this.connPo.getConn() != null) {
+			if (this.dbConnectorInfoPo.getDefaultjdbcUrl() != null) {
 				boolean isClosed = true;
 				try {
-					isClosed = this.connPo.getConn().isClosed();
+					Connection conn = this.dbConnectorInfoPo.getConn(getDefaultSchema());
+					if (conn != null) {
+						isClosed = conn.isClosed();
+					}
+
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -110,13 +116,12 @@ public abstract class SqluckyConnector {
 		return infoStr;
 	}
 
-
 	// 关闭连接
 	public void closeConn() {
 		try {
-			if (this.connPo.getConn() != null) {
-				this.connPo.getConn().close();
-				this.connPo.setConn(null);
+			if (this.dbConnectorInfoPo.getConn() != null) {
+				this.dbConnectorInfoPo.getConn().close();
+				this.dbConnectorInfoPo.setConn(null);
 			}
 
 		} catch (SQLException e) {
@@ -126,43 +131,43 @@ public abstract class SqluckyConnector {
 	}
 
 	public String getDbVendor() {
-		return this.connPo.getDbVendor();
+		return this.dbConnectorInfoPo.getDbVendor();
 	}
 
 	public void setDbVendor(String dbVendor) {
-		this.connPo.setDbVendor(dbVendor);
+		this.dbConnectorInfoPo.setDbVendor(dbVendor);
 	}
 
 	public String getUser() {
-		return this.connPo.getUser();
+		return this.dbConnectorInfoPo.getUser();
 	}
 
 	public void setUser(String user) {
-		this.connPo.setUser(user);
+		this.dbConnectorInfoPo.setUser(user);
 	}
 
 	public Integer getId() {
-		return this.connPo.getId();
+		return this.dbConnectorInfoPo.getId();
 	}
 
 	public void setId(Integer id) {
-		this.connPo.setId(id);
+		this.dbConnectorInfoPo.setId(id);
 	}
 
 	public String getPassWord() {
-		return this.connPo.getPassWord();
+		return this.dbConnectorInfoPo.getPassWord();
 	}
 
 	public void setPassWord(String passWord) {
-		this.connPo.setPassWord(passWord);
+		this.dbConnectorInfoPo.setPassWord(passWord);
 	}
 
 	public String getComment() {
-		return this.connPo.getComment();
+		return this.dbConnectorInfoPo.getComment();
 	}
 
 	public void setComment(String comment) {
-		this.connPo.setComment(comment);
+		this.dbConnectorInfoPo.setComment(comment);
 	}
 
 	// 自定义需要展示的时间格式, 转换成字符串
@@ -171,103 +176,163 @@ public abstract class SqluckyConnector {
 	}
 
 	public String getDriver() {
-		return this.connPo.getDriver();
+		return this.dbConnectorInfoPo.getDriver();
 	}
 
 	public void setDriver(String driver) {
-		this.connPo.setDriver(driver);
+		this.dbConnectorInfoPo.setDriver(driver);
 	}
 
 	public String getConnName() {
-		return this.connPo.getConnName();
+		return this.dbConnectorInfoPo.getConnName();
 	}
 
 	public String getHostOrFile() {
-		return this.connPo.getHostOrFile();
+		return this.dbConnectorInfoPo.getHostOrFile();
 	}
 
 	public String getPort() {
-		return this.connPo.getPort();
+		return this.dbConnectorInfoPo.getPort();
 	}
 
 	public String getDefaultSchema() {
-		return this.connPo.getDefaultSchema();
+		return this.dbConnectorInfoPo.getDefaultSchema();
 	}
 
 	public void setSchemas(Map<String, DbSchemaPo> schemas) {
-		this.connPo.setSchemas(schemas);// = schemas;
+		this.dbConnectorInfoPo.setSchemas(schemas);// = schemas;
 	}
 
 	public ExportDBObjects getExportDDL() {
-		return this.connPo.getExportDDL();
+		return this.dbConnectorInfoPo.getExportDDL();
 	}
 
 	public String getDbName() {
-		return this.connPo.getDbName();
+		return this.dbConnectorInfoPo.getDbName();
 	}
 
 	@Override
 	public String toString() {
-		return this.connPo.toString();
+		return this.dbConnectorInfoPo.toString();
 	}
 
 	public DBConnectorInfoPo getConnPo() {
-		return connPo;
-	}
-
-	public void setConnPo(DBConnectorInfoPo connPo) {
-		this.connPo = connPo;
+		return dbConnectorInfoPo;
 	}
 
 	public boolean isJdbcUrlUse() {
-		return this.connPo.isJdbcUrlUse();
+		return this.dbConnectorInfoPo.isJdbcUrlUse();
 	}
 
 	public boolean getAutoConnect() {
-		return this.connPo.isAutoConnect();
+		return this.dbConnectorInfoPo.isAutoConnect();
 	}
+
+	public boolean getShowSchemas() {
+		return this.dbConnectorInfoPo.isShowSchemas();
+	}
+
 	public abstract String dbRootNodeName();
+
 	public abstract String translateErrMsg(String errString);
+
 	public abstract Map<String, DbSchemaPo> getSchemas();
-	public abstract Connection getConn();
-	public abstract SqluckyConnector copyObj( String schema);
+
+//	public abstract Connection getConn();
+
+	/**
+	 * 实例化一个 SqluckyConnector
+	 * 
+	 * @param dbinfo
+	 * @return
+	 */
+	public abstract SqluckyConnector instance(DBConnectorInfoPo dbinfo);
+
 	public abstract String getRealDefaultSchema();
-	public abstract String getJdbcUrl();
-	
+
+//	public abstract String getJdbcUrl();
+
+	public abstract String templateJdbcUrlString(String hostFile, String port, String schema);
+
+	/**
+	 * 根据现有的 SqluckyConnector 实例化一个新的实例返回
+	 * 
+	 * @param schema
+	 * @return
+	 */
+	public SqluckyConnector copyObj(String schema) {
+		DBConnectorInfoPo val = new DBConnectorInfoPo(getConnName() + "Copy", getDriver(), getHostOrFile(), getPort(),
+				getUser(), getPassWord(), getDbVendor(), schema, getDbName(),
+				getDBConnectorInfoPo().getDefaultjdbcUrl(), getAutoConnect(), getShowSchemas());
+		SqluckyConnector dbc = instance(val);
+
+		return dbc;
+	}
+
 	/**
 	 * 设置最后一次使用时间, 避免超时被另一个线程释放掉
 	 */
 	public void setConnectionLastUseTime() {
-		if( connPo.getConn() == null) {
+		if (dbConnectorInfoPo.getConn() == null) {
 			Date time = new Date();
-			connPo.setLastConnectTime(time);
+			dbConnectorInfoPo.setLastConnectTime(time);
 		}
 	}
+
 	/**
 	 * 获取缓存的连接
+	 * 
 	 * @return
 	 */
-	public  Connection getCacheConn() {
-		Date lastTime = connPo.getLastConnectTime();
+	public Connection getCacheConn() {
+		Date lastTime = dbConnectorInfoPo.getLastConnectTime();
 		Date time = new Date();
 
-		connPo.setLastConnectTime(time);
-		if ( lastTime == null || connPo.getConn() == null ) {
+		dbConnectorInfoPo.setLastConnectTime(time);
+		if (lastTime == null || dbConnectorInfoPo.getConn() == null) {
 			return null;
 		}
-		long interval = time.getTime() - lastTime.getTime() ;
-		if( interval > 600_000L ) {
+		long interval = time.getTime() - lastTime.getTime();
+		if (interval > 600_000L) {
 			logger.info("链接超时600秒, 需要重新链接");
 			closeConn();
 			return null;
 		}
-		return connPo.getConn();
+		return dbConnectorInfoPo.getConn();
 	}
-	
-//	public static void main(String[] args) throws InterruptedException {
-//		Date time = new Date();
-//		Thread.sleep(2000);
-//		Date time2= new Date();
-//		System.out.println(time2.getTime() - time.getTime()) ;
-//	}
+
+//	@Override
+	public String getJdbcUrl(String hostFile, String port, String schema) {
+		String jdbcUrlstr = getDBConnectorInfoPo().getJdbcUrl();
+		if (StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
+			return jdbcUrlstr;
+		} else {
+			jdbcUrlstr = templateJdbcUrlString(hostFile, port, schema);// "jdbc:db2://" +
+																		// getHostOrFile() + ":"
+																		// + getPort() + "/" +
+																		// getDefaultSchema();
+			getDBConnectorInfoPo().setJdbcUrl(jdbcUrlstr);
+		}
+		return jdbcUrlstr;
+	}
+
+//	@Override
+	public Connection getConn() {
+		String tmpSchema = dbConnectorInfoPo.getTmpSchema();
+		String defaultSchema = dbConnectorInfoPo.getDefaultSchema();
+		String useSchema;
+		if (StrUtils.isNotNullOrEmpty(tmpSchema)) {
+			useSchema = tmpSchema;
+		} else {
+			useSchema = defaultSchema;
+		}
+		if (getCacheConn() == null) {
+			System.out.println("useSchema = " + useSchema);
+			String jdbcUrl = getJdbcUrl(getHostOrFile(), getPort(), useSchema);
+			Dbinfo dbinfo = new Dbinfo(jdbcUrl, getUser(), getPassWord());
+			var conn = dbinfo.getconn();
+			getConnPo().setConn(conn);
+		}
+		return getConnPo().getConn();
+	}
 }

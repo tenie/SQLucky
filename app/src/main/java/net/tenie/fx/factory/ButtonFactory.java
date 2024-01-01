@@ -13,6 +13,7 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -27,7 +28,7 @@ import net.tenie.fx.Action.RunSQLHelper;
  *
  */
 public class ButtonFactory {
-	public static TextField rows;
+	public static TextField tfMaxRows;
 
 	// 代码区
 	// codeArea 代码区域 按钮初始化
@@ -115,13 +116,14 @@ public class ButtonFactory {
 		CommonButtons.hideBottom = hideBottom;
 
 		// 选择sql在哪个连接上执行
-		Label lbcnn = new Label("DB Connection: ");
+		Label lbDBConnection = new Label("DB Connection: ");
 		JFXComboBox<Label> connsComboBox = new JFXComboBox<Label>();
-		lbcnn.setLabelFor(connsComboBox);
+		ComponentGetter.connComboBox = connsComboBox;
+		lbDBConnection.setLabelFor(connsComboBox);
 		connsComboBox.setPrefHeight(25);
 		connsComboBox.setMinHeight(25);
-		connsComboBox.setMaxWidth(200);
-		connsComboBox.setMinWidth(200);
+		connsComboBox.setMaxWidth(150);
+		connsComboBox.setMinWidth(150);
 		connsComboBox.getStyleClass().add("myComboBox");
 		connsComboBox.getStyleClass().add("my-tag");
 
@@ -141,38 +143,68 @@ public class ButtonFactory {
 			MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
 			sheet.setTabConnIdx(newValue.intValue());
 		});
-		// 下拉选, 未连接的连接先打开数据库连接
-		connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
-		ComponentGetter.connComboBox = connsComboBox;
+		
+
+		// schemas
+		Label lbSchemas = new Label("Schemas: ");
+		JFXComboBox<String> cbSchemas = new JFXComboBox<String>(); 
+		// 数据库连接下拉选，值改变事件, 未连接的连接先打开数据库连接， 修改schema 列表
+		connsComboBox.getSelectionModel().
+					selectedItemProperty().addListener(CommonListener.choiceBoxChange2(cbSchemas,lbSchemas ));
+		// 默认隐藏， 只要设置为可见的才会动态显示
+		cbSchemas.setVisible(false);
+		lbSchemas.setVisible(false);
+		
+		cbSchemas.setPrefHeight(25);
+		cbSchemas.setMinHeight(25);
+		cbSchemas.setMaxWidth(120);
+		cbSchemas.setMinWidth(120);
+		
+		// schemas 改变保存在临时TmpSchema中， 
+		cbSchemas.getSelectionModel().
+				selectedItemProperty().addListener((a , b , c)->{
+					if(c != null) {
+						String connName = connsComboBox.getValue().getText();
+//						System.out.println(connName);
+						SqluckyConnector sqluckyConnector = DBConns.get(connName);
+						String tmpSchema = sqluckyConnector.getDBConnectorInfoPo().getTmpSchema();
+//						System.out.println(" cbSchemas.getSelectionModel()= " + c + " | " + tmpSchema);
+						if(! tmpSchema.equals(c)) {
+							 sqluckyConnector.getDBConnectorInfoPo().setTmpSchema(c);
+						}
+					}
+				});
+		
+		
 
 		// sql 执行读取行数
-		Label lb = new Label("Max Rows: ");
-		rows = new TextField();
-		ComponentGetter.maxRowsTextField = rows;
-		lb.setLabelFor(rows);
-		rows.setPrefHeight(25);
-		rows.setMinHeight(25);
+		Label lbMaxRows = new Label("Max Rows: ");
+		tfMaxRows = new TextField();
+		ComponentGetter.maxRowsTextField = tfMaxRows;
+		lbMaxRows.setLabelFor(tfMaxRows);
+		tfMaxRows.setPrefHeight(25);
+		tfMaxRows.setMinHeight(25);
 
 //			rows.setLabelFloat(true);
 //			rows.setPromptText("Max Rows");
-		rows.getStyleClass().add("myTextField");
-		rows.setMaxWidth(90);
-		rows.setTooltip(MyTooltipTool.instance("Load query data rows, suggest <10000 "));
-		rows.setText(ConfigVal.MaxRows + "");
+		tfMaxRows.getStyleClass().add("myTextField");
+		tfMaxRows.setMaxWidth(50);
+		tfMaxRows.setTooltip(MyTooltipTool.instance("Load query data rows, suggest <10000 "));
+		tfMaxRows.setText(ConfigVal.MaxRows + "");
 
-		TextFieldSetup.setMaxLength(rows, 9);
-		TextFieldSetup.maxRowsNumberOnly(rows);
+		TextFieldSetup.setMaxLength(tfMaxRows, 9);
+		TextFieldSetup.maxRowsNumberOnly(tfMaxRows);
 
 		// 失去焦点, 如果没有输入值默认1
-		rows.focusedProperty().addListener((observable, oldValue, newValu) -> {
+		tfMaxRows.focusedProperty().addListener((observable, oldValue, newValu) -> {
 			if (newValu == false) {
-				if (StrUtils.isNullOrEmpty(rows.getText())) {
-					rows.setText("1");
+				if (StrUtils.isNullOrEmpty(tfMaxRows.getText())) {
+					tfMaxRows.setText("1");
 				}
 			}
 		});
 
-		int y = 0;
+		int x = 0;
 		int fix = 30;
 		pn.getChildren().add(runbtn);
 		runbtn.setLayoutX(0);
@@ -181,57 +213,71 @@ public class ButtonFactory {
 		// runLinebtn
 		pn.getChildren().add(runLinebtn);
 		runLinebtn.setLayoutY(0);
-		y += fix;
-		runLinebtn.setLayoutX(y);
+		x += fix;
+		runLinebtn.setLayoutX(x);
 
 		pn.getChildren().add(stopbtn);
 		stopbtn.setLayoutY(0);
-		y += fix;
-		stopbtn.setLayoutX(y);
+		x += fix;
+		stopbtn.setLayoutX(x);
 
 		pn.getChildren().add(addcodeArea);
 		addcodeArea.setLayoutY(0);
-		y += fix;
-		addcodeArea.setLayoutX(y);
+		x += fix;
+		addcodeArea.setLayoutX(x);
 
 		pn.getChildren().add(saveSQL);
 		saveSQL.setLayoutY(0);
-		y += fix;
-		saveSQL.setLayoutX(y);
+		x += fix;
+		saveSQL.setLayoutX(x);
 
 		pn.getChildren().add(formatSQL);
 		formatSQL.setLayoutY(0);
-		y += fix;
-		formatSQL.setLayoutX(y);
+		x += fix;
+		formatSQL.setLayoutX(x);
 
 		// runFunPro
 		pn.getChildren().add(runFunPro);
 		runFunPro.setLayoutY(0);
-		y += fix;
-		runFunPro.setLayoutX(y);
+		x += fix;
+		runFunPro.setLayoutX(x);
 
 		// findSQlTxt
 		pn.getChildren().add(findSQlTxt);
 		findSQlTxt.setLayoutY(0);
-		y += fix;
-		findSQlTxt.setLayoutX(y);
+		x += fix;
+		findSQlTxt.setLayoutX(x);
 
-		pn.getChildren().add(lbcnn);
-		lbcnn.setLayoutY(5);
-		y += fix + 100;
-		lbcnn.setLayoutX(y);
+		
+		
+		pn.getChildren().add(lbMaxRows);
+		lbMaxRows.setLayoutY(5);
+		x += fix + 15;
+		lbMaxRows.setLayoutX(x);
+		pn.getChildren().add(tfMaxRows);
+		tfMaxRows.setLayoutY(0);
+		x += fix + 35;
+		tfMaxRows.setLayoutX(x);
+		
+		pn.getChildren().add(lbDBConnection);
+		lbDBConnection.setLayoutY(5);
+		x += fix + 30;
+		lbDBConnection.setLayoutX(x);
 		pn.getChildren().add(connsComboBox);
 		connsComboBox.setLayoutY(0);
-		y += fix + 70;
-		connsComboBox.setLayoutX(y);
-		pn.getChildren().add(lb);
-		lb.setLayoutY(5);
-		y += fix + 190;
-		lb.setLayoutX(y);
-		pn.getChildren().add(rows);
-		rows.setLayoutY(0);
-		y += fix + 40;
-		rows.setLayoutX(y);
+		x += fix + 65;
+		connsComboBox.setLayoutX(x);
+		
+		// Schemas
+		
+		pn.getChildren().add(lbSchemas);
+		lbSchemas.setLayoutY(5);
+		x += fix + 125;
+		lbSchemas.setLayoutX(x);
+		pn.getChildren().add(cbSchemas);
+		cbSchemas.setLayoutY(0);
+		x += fix + 30;
+		cbSchemas.setLayoutX(x);
 
 		CommonButtons.runbtn = runbtn;
 		CommonButtons.stopbtn = stopbtn;

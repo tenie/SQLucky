@@ -6,10 +6,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-
 
 /**
  * 
@@ -18,41 +17,28 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  */
 public class SqluckySqliteConnector extends SqluckyConnector {
 
-	public SqluckySqliteConnector(DBConnectorInfoPo connPo,  SqluckyDbRegister dbReg) {
-		
+	public SqluckySqliteConnector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {
+
 		super(connPo, dbReg);
 		ExportDefaultImp ex = new ExportDefaultImp();
-		getConnPo().setExportDDL( ex);
-	} 
-	 
-	public static SqluckySqliteConnector  createTmpConnector(String user, String password, String jdbcUrl) {
-		DBConnectorInfoPo connPo = new DBConnectorInfoPo(
-				"CONN_NAME",  
-				"",
-				"", 
-				"", 
-				user, 
-				password, 
-				"VENDOR",  
-				"SCHEMA",  
-				"DB_NAME",  
-				jdbcUrl,
-				false
-		);
+		getConnPo().setExportDDL(ex);
+	}
+
+	public static SqluckySqliteConnector createTmpConnector(String user, String password, String jdbcUrl) {
+		DBConnectorInfoPo connPo = new DBConnectorInfoPo("CONN_NAME", "", "", "", user, password, "VENDOR", "SCHEMA",
+				"DB_NAME", jdbcUrl, false, false);
 		SqluckySqliteRegister dbReg = new SqluckySqliteRegister();
 		SqluckySqliteConnector val = (SqluckySqliteConnector) dbReg.createConnector(connPo);
 //		SqluckySqliteConnector val = new SqluckySqliteConnector(connPo);
 		return val;
-	} 
- 
-	
+	}
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
 		var schemas = getConnPo().getSchemas();
 		try {
-			if (schemas == null || schemas.isEmpty()) { 
-				schemas = fetchSchemasInfo();		
+			if (schemas == null || schemas.isEmpty()) {
+				schemas = fetchSchemasInfo();
 				getConnPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
@@ -61,19 +47,17 @@ public class SqluckySqliteConnector extends SqluckyConnector {
 		return schemas;
 	}
 
-
 	@Override
-	public String dbRootNodeName() { 
+	public String dbRootNodeName() {
 		return "Schemas";
 	}
 
-
 	@Override
-	public String translateErrMsg(String errString) { 
+	public String translateErrMsg(String errString) {
 		return errString;
 	}
-	
-	public  Map<String, DbSchemaPo> fetchSchemasInfo() {
+
+	public Map<String, DbSchemaPo> fetchSchemasInfo() {
 		ResultSet rs = null;
 		Map<String, DbSchemaPo> pos = new HashMap<String, DbSchemaPo>();
 		Connection conn = getConn();
@@ -82,7 +66,7 @@ public class SqluckySqliteConnector extends SqluckyConnector {
 			rs = dmd.getSchemas(); // 默认 db2
 			while (rs.next()) {
 				DbSchemaPo po = new DbSchemaPo();
-				String schema = rs.getString(1); 
+				String schema = rs.getString(1);
 				po.setSchemaName(schema);
 				pos.put(schema, po);
 			}
@@ -101,63 +85,49 @@ public class SqluckySqliteConnector extends SqluckyConnector {
 		return pos;
 	}
 
-
 	@Override
-	public SqluckyConnector copyObj( String schema) {
-		DBConnectorInfoPo val = new DBConnectorInfoPo(  
-				getConnName()+"Copy",
-				getDriver(),
-				getHostOrFile(),
-				getPort(),
-				getUser(),
-				getPassWord(),
-				getDbVendor(),
-				schema,
-				getDbName(),
-				getJdbcUrl(),
-				getAutoConnect()
-				);
-//		var dbc = new SqluckySqliteConnector(val);
+	public SqluckyConnector instance(DBConnectorInfoPo val) {
 		SqluckySqliteRegister dbReg = new SqluckySqliteRegister();
-		SqluckySqliteConnector dbc = (SqluckySqliteConnector) dbReg.createConnector(connPo);
-		
+		SqluckySqliteConnector dbc = (SqluckySqliteConnector) dbReg.createConnector(getDBConnectorInfoPo());
+
 		return dbc;
 	}
-
 
 	@Override
 	public String getRealDefaultSchema() {
 		return getDefaultSchema();
 	}
 
-
 	@Override
-	public String getJdbcUrl() {
-		String jdbcUrlstr = connPo.getJdbcUrl();
-		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
-			return jdbcUrlstr;
-		}else {
-			
-			jdbcUrlstr  = "jdbc:sqlite:" + getHostOrFile(); 
-			connPo.setJdbcUrl(jdbcUrlstr);
-		}
-		
-		return  jdbcUrlstr;
+	public String templateJdbcUrlString(String hostFile, String port, String schema) {
+
+		String jdbcUrlstr = "jdbc:sqlite:" + hostFile;
+//		String jdbcUrlstr  = "jdbc:db2://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+		return jdbcUrlstr;
 	}
 
+//	@Override
+//	public String getJdbcUrl() {
+//		String jdbcUrlstr = getDBConnectorInfoPo().getJdbcUrl();
+//		if (StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
+//			return jdbcUrlstr;
+//		} else {
+//
+//			jdbcUrlstr = "jdbc:sqlite:" + getHostOrFile();
+//			getDBConnectorInfoPo().setJdbcUrl(jdbcUrlstr);
+//		}
+//
+//		return jdbcUrlstr;
+//	}
 
-	@Override
-	public Connection getConn() {
-		if (getConnPo().getConn() == null) {
-				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
-				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
-		}
-		return getConnPo().getConn();
-	}
-
- 
-
- 
+//	@Override
+//	public Connection getConn() {
+//		if (getConnPo().getConn() == null) {
+//			Dbinfo dbinfo = new Dbinfo(getJdbcUrl(), getUser(), getPassWord());
+//			var conn = dbinfo.getconn();
+//			getConnPo().setConn(conn);
+//		}
+//		return getConnPo().getConn();
+//	}
 
 }

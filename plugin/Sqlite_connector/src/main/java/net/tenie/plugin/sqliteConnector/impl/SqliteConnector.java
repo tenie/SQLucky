@@ -1,14 +1,12 @@
 package net.tenie.plugin.sqliteConnector.impl;
 
-import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
-import net.tenie.Sqlucky.sdk.db.Dbinfo;
+
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
 /**
@@ -95,22 +93,8 @@ public class SqliteConnector extends SqluckyConnector {
 
 
 	@Override
-	public SqluckyConnector copyObj( String schema) {
-		DBConnectorInfoPo val = new DBConnectorInfoPo(  
-				getConnName()+"Copy",
-				getDriver(),
-				getHostOrFile(),
-				getPort(),
-				getUser(),
-				getPassWord(),
-				getDbVendor(),
-				schema,
-				getDbName(),
-				getJdbcUrl(),
-				getAutoConnect()
-				);
+	public SqluckyConnector  instance(DBConnectorInfoPo val) {
 		var dbc = new SqliteConnector(val, getDbRegister());
-		
 		return dbc;
 	}
 
@@ -120,47 +104,44 @@ public class SqliteConnector extends SqluckyConnector {
 		return getDefaultSchema();
 	}
 
+//
+//	@Override
+//	public String getJdbcUrl() {
+//		String jdbcUrlstr = getDBConnectorInfoPo().getJdbcUrl();
+//		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
+//			return jdbcUrlstr;
+//		}else { 
+//			jdbcUrlstr  = "jdbc:sqlite:" + getHostOrFile(); 
+//			getDBConnectorInfoPo().setJdbcUrl(jdbcUrlstr);
+//		}
+//		return  jdbcUrlstr;
+//	}
+
+//	@Override
+//	public Connection getConn() { 
+//		if (getConnPo().getConn() == null) {
+//			var hasUser = StrUtils.isNotNullOrEmpty(getUser());
+//			var hasPw = StrUtils.isNotNullOrEmpty(getPassWord());
+//			if(hasUser && hasPw) {
+//				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
+//				var conn = dbinfo.getconn();
+//				getConnPo().setConn(conn);
+//			}else {
+//				var conn = Dbinfo.getConnByJdbc( getJdbcUrl());
+//				getConnPo().setConn(conn);		 
+//			}
+//				
+//		}
+//
+//		return getConnPo().getConn();
+//
+//	}
 
 	@Override
-	public String getJdbcUrl() {
-		String jdbcUrlstr = connPo.getJdbcUrl();
-		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
-			return jdbcUrlstr;
-		}else { 
-			jdbcUrlstr  = "jdbc:sqlite:" + getHostOrFile(); 
-			connPo.setJdbcUrl(jdbcUrlstr);
-		}
-		return  jdbcUrlstr;
-	}
-
-	/**
-	 * if (getConnPo().getConn() == null) {
-				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
-				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
-		}
-
-		return getConnPo().getConn();
-	 */
-
-	@Override
-	public Connection getConn() { 
-		if (getConnPo().getConn() == null) {
-			var hasUser = StrUtils.isNotNullOrEmpty(getUser());
-			var hasPw = StrUtils.isNotNullOrEmpty(getPassWord());
-			if(hasUser && hasPw) {
-				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
-				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
-			}else {
-				var conn = Dbinfo.getConnByJdbc( getJdbcUrl());
-				getConnPo().setConn(conn);		 
-			}
-				
-		}
-
-		return getConnPo().getConn();
-
+	public String templateJdbcUrlString(String hostFile, String port, String schema) {
+		String jdbcUrlstr  = "jdbc:sqlite:" + hostFile; 
+//		String jdbcUrlstr  = "jdbc:db2://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+		return jdbcUrlstr;
 	}
 
 }

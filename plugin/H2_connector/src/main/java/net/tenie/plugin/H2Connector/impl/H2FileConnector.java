@@ -4,16 +4,13 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
@@ -89,25 +86,9 @@ public class H2FileConnector extends SqluckyConnector {
 		return pos;
 	}
 
-
 	@Override
-	public SqluckyConnector copyObj( String schema) {
-		DBConnectorInfoPo val = new DBConnectorInfoPo(  
-				getConnName()+"Copy",
-				getDriver(),
-				getHostOrFile(),
-				getPort(),
-				getUser(),
-				getPassWord(),
-				getDbVendor(),
-				schema,
-				getDbName(),
-				getJdbcUrl(),
-				getAutoConnect()
-				
-				);
+	public SqluckyConnector instance(DBConnectorInfoPo val ) {
 		var dbc = new H2FileConnector(val, getDbRegister());
-		
 		return dbc;
 	}
 
@@ -119,33 +100,13 @@ public class H2FileConnector extends SqluckyConnector {
 
 
 	@Override
-	public String getJdbcUrl() {		
-//		return connPo.getJdbcUrl();
-//		if (getJdbcUrl() == null || getJdbcUrl().length() == 0) {
-//			if (this.isH2()) {
-//				jdbcUrl = "jdbc:h2:" + host;
-//				defaultSchema = "PUBLIC";
-//			}else if (this.isSqlite()) {
-//				jdbcUrl = "jdbc:sqlite:" + host;
-//				defaultSchema = SQLITE_DATABASE;
-//			} else if (this.isPostgresql()) {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + dbName;
-//			} else {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + defaultSchema;
-//				if (otherParameter != null && otherParameter.length() > 0) {
-//					jdbcUrl += "?" + getOtherParameter();
-//				}
-//			}
-		 
-
-//		}
-//		jdbc:h2:tcp://localhost:9092/~/config/ssfblog_db
-		String jdbcUrlstr = connPo.getJdbcUrl();
+	public String getJdbcUrl(String hostFile, String port, String schema) {		
+		String jdbcUrlstr = getDBConnectorInfoPo().getJdbcUrl();
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
 			
-			String fp = connPo.getHostOrFile();
+			String fp = getDBConnectorInfoPo().getHostOrFile();
 			if(fp.endsWith(".mv.db"))
 				fp= fp.substring(0, fp.lastIndexOf(".mv.db"));
 			if(fp.endsWith(".trace.db"))
@@ -154,26 +115,28 @@ public class H2FileConnector extends SqluckyConnector {
 				fp= fp.substring(0, fp.lastIndexOf(".db")); 
 			
 			jdbcUrlstr = "jdbc:h2:" +fp;
-			connPo.setJdbcUrl(jdbcUrlstr);
+			getDBConnectorInfoPo().setJdbcUrl(jdbcUrlstr);
 		}
-		
-		 
 		return  jdbcUrlstr;
 	}
 
 
+//	@Override
+//	public Connection getConn() {
+//		if (getConnPo().getConn() == null) {
+//				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
+//				var conn = dbinfo.getconn();
+//				getConnPo().setConn(conn);
+//		}
+//		return getConnPo().getConn();
+//	}
+
 	@Override
-	public Connection getConn() {
-		if (getConnPo().getConn() == null) {
-				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
-				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
-		}
-
-		return getConnPo().getConn();
-
+	public String templateJdbcUrlString(String hostFile, String port, String schema) {
+		String	jdbcUrlstr = "jdbc:h2:tcp//" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+		
+		return jdbcUrlstr;
 	}
-
 
 	 
 }

@@ -78,7 +78,7 @@ public class ConfigVal {
 	public static String H2_DB_FULL_FILE_NAME = "";
 
 	public static String H2_DB_NAME = "h2db";
-	public static int H2_DB_VERSION = 5;
+	public static int H2_DB_VERSION = 6;
 
 	public static String USER = "sa";
 	public static String PASSWD = "xyz123qweasd";

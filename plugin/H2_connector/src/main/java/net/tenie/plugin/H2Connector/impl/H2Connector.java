@@ -6,12 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import net.tenie.Sqlucky.sdk.db.Dbinfo;
+
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
 /**
@@ -95,23 +94,8 @@ public class H2Connector extends SqluckyConnector {
 
 
 	@Override
-	public SqluckyConnector copyObj( String schema) {
-		DBConnectorInfoPo val = new DBConnectorInfoPo(  
-				getConnName()+"Copy",
-				getDriver(),
-				getHostOrFile(),
-				getPort(),
-				getUser(),
-				getPassWord(),
-				getDbVendor(),
-				schema,
-				getDbName(),
-				getJdbcUrl(),
-				getAutoConnect()
-				
-				);
+	public SqluckyConnector instance(DBConnectorInfoPo val ) {
 		var dbc = new H2Connector(val, getDbRegister());
-		
 		return dbc;
 	}
 
@@ -122,63 +106,35 @@ public class H2Connector extends SqluckyConnector {
 	}
 
 
-	@Override
-	public String getJdbcUrl() {		
-//		return connPo.getJdbcUrl();
-//		if (getJdbcUrl() == null || getJdbcUrl().length() == 0) {
-//			if (this.isH2()) {
-//				jdbcUrl = "jdbc:h2:" + host;
-//				defaultSchema = "PUBLIC";
-//			}else if (this.isSqlite()) {
-//				jdbcUrl = "jdbc:sqlite:" + host;
-//				defaultSchema = SQLITE_DATABASE;
-//			} else if (this.isPostgresql()) {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + dbName;
-//			} else {
-//				jdbcUrl = "jdbc:" + dbVendor + "://" + host + ":" + port + "/" + defaultSchema;
-//				if (otherParameter != null && otherParameter.length() > 0) {
-//					jdbcUrl += "?" + getOtherParameter();
-//				}
-//			}
-		 
-
+//	@Override
+//	public String getJdbcUrl() {		
+//		String jdbcUrlstr = getDBConnectorInfoPo().getJdbcUrl();
+//		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
+//			return jdbcUrlstr;
+//		}else {
+//			jdbcUrlstr = "jdbc:h2:tcp//" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+//			getDBConnectorInfoPo().setJdbcUrl(jdbcUrlstr);
 //		}
-//		jdbc:h2:tcp://localhost:9092/~/config/ssfblog_db
-		String jdbcUrlstr = connPo.getJdbcUrl();
-		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
-			return jdbcUrlstr;
-		}else {
-			jdbcUrlstr = "jdbc:h2:tcp//" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
-			connPo.setJdbcUrl(jdbcUrlstr);
-		}
-		
-		 
-		return  jdbcUrlstr;
-	}
+//		return  jdbcUrlstr;
+//	}
 
+
+//	@Override
+//	public Connection getConn() {
+//		if (getConnPo().getConn() == null) {
+//				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
+//				var conn = dbinfo.getconn();
+//				getConnPo().setConn(conn);
+//		}
+//		return getConnPo().getConn();
+//	}
 
 	@Override
-	public Connection getConn() {
-//		getConnPo().getConn()
-		if (getConnPo().getConn() == null) {
-//			logger.info(this.connPo.getDriver());
-//			logger.info(getJdbcUrl());
-//			logger.info(this.connPo.getUser());
-//			logger.info(passWord);
-//			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
-//				conn = dbinfo.getconn();
-//			}else {
-				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
-				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
-//			}			
-		}
-
-		return getConnPo().getConn();
-
+	public String templateJdbcUrlString(String hostFile, String port, String schema) {
+		String	jdbcUrlstr = "jdbc:h2:tcp//" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+		
+		return jdbcUrlstr;
 	}
-
 
 	 
 }

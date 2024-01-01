@@ -85,10 +85,10 @@ public class RunSQLHelper {
 		try {
 			isRunning = true;
 			settingBtn();
-			if (!state.getSqlConn().isAlive()) {
-				MyAlert.errorAlert("连接中断, 请重新连接!");
-				return;
-			}
+//			if (!state.getSqlConn().isAlive()) {
+//				MyAlert.errorAlert("连接中断, 请重新连接!");
+//				return;
+//			}
 			// 等待加载动画
 			SdkComponent.addWaitingPane(state.getTidx(), state.getIsRefresh());
 			List<SqlData> allsqls = new ArrayList<>();
@@ -286,7 +286,7 @@ public class RunSQLHelper {
 		}
 		String val = conns.getValue().getText();
 		SqluckyConnector po = DBConns.get(val);
-		if (po == null || !po.isAlive()) {
+		if (po == null) { //  || !po.isAlive()
 			warn = true;
 			MyAlert.notification("Error", "Please ,  connect DB !", MyAlert.NotificationType.Error);
 		}

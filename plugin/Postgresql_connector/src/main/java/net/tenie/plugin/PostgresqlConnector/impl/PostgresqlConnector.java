@@ -4,18 +4,13 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.Dbinfo;
+
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
 /**
@@ -109,22 +104,8 @@ public class PostgresqlConnector extends SqluckyConnector {
 
 
 	@Override
-	public SqluckyConnector copyObj( String schema) {
-		DBConnectorInfoPo val = new DBConnectorInfoPo(  
-				getConnName()+"Copy",
-				getDriver(),
-				getHostOrFile(),
-				getPort(),
-				getUser(),
-				getPassWord(),
-				getDbVendor(),
-				schema,
-				getDbName(),
-				getJdbcUrl(),
-				getAutoConnect()
-				);
+	public SqluckyConnector  instance(DBConnectorInfoPo val) {
 		var dbc = new PostgresqlConnector(val, getDbRegister());
-		
 		return dbc;
 	}
 
@@ -135,27 +116,35 @@ public class PostgresqlConnector extends SqluckyConnector {
 	}
 
 
-	@Override
-	public String getJdbcUrl() {
-		String jdbcUrlstr = connPo.getJdbcUrl();
-		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
-			return jdbcUrlstr;
-		}else {
-			jdbcUrlstr  = "jdbc:postgresql://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
-			connPo.setJdbcUrl(jdbcUrlstr);
-		}
-		return  jdbcUrlstr;
-	}
+//	@Override
+//	public String getJdbcUrl() {
+//		String jdbcUrlstr = getDBConnectorInfoPo().getJdbcUrl();
+//		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
+//			return jdbcUrlstr;
+//		}else {
+//			jdbcUrlstr  = "jdbc:postgresql://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+//			getDBConnectorInfoPo().setJdbcUrl(jdbcUrlstr);
+//		}
+//		return  jdbcUrlstr;
+//	}
+
+
+//	@Override
+//	public Connection getConn() {
+//		if (getConnPo().getConn() == null) {
+//			Dbinfo dbinfo = new Dbinfo(getJdbcUrl(), getUser(), getPassWord());
+//			var conn = dbinfo.getconn();
+//			getConnPo().setConn(conn);
+//		}
+//
+//		return getConnPo().getConn();
+//	}
 
 
 	@Override
-	public Connection getConn() {
-		if (getConnPo().getConn() == null) {
-			Dbinfo dbinfo = new Dbinfo(getJdbcUrl(), getUser(), getPassWord());
-			var conn = dbinfo.getconn();
-			getConnPo().setConn(conn);
-		}
-
-		return getConnPo().getConn();
+	public String templateJdbcUrlString(String hostFile, String port, String schema) {
+		String	jdbcUrlstr  = "jdbc:postgresql://" + hostFile + ":" + port + "/" + schema;
+//		String jdbcUrlstr  = "jdbc:db2://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+		return jdbcUrlstr;
 	}
 }
