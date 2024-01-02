@@ -401,16 +401,4 @@ public class ExportSqlH2Imp implements ExportDBObjects {
 		return null;
 	}
 
-	@Override
-	public String tableSchema(Connection conn, String table) {
-		String schema = "";
-//		String sql = "SELECT TABSCHEMA \r\n"
-//				+ "FROM SYSCAT.TABLES\r\n"
-//				+ "WHERE TABNAME = '"+table+"'";
-////				+ "TABSCHEMA = '<schema_name>'";
-//		
-//		schema = FetchDBInfoCommonTools.selectOne(conn, sql);
-//		
-		return schema;
-	}
 }

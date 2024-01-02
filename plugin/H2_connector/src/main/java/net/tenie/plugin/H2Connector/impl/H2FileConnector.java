@@ -133,7 +133,7 @@ public class H2FileConnector extends SqluckyConnector {
 
 	@Override
 	public String templateJdbcUrlString(String hostFile, String port, String schema) {
-		String	jdbcUrlstr = "jdbc:h2:tcp//" + hostFile + ":" +port + "/" + schema;
+		String	jdbcUrlstr = "jdbc:h2:tcp//" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
 		
 		return jdbcUrlstr;
 	}

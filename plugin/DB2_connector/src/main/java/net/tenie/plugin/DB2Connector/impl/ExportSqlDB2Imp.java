@@ -13,7 +13,6 @@ import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
 
 /* 
  *  @author tenie 
@@ -424,19 +423,6 @@ public class ExportSqlDB2Imp implements ExportDBObjects {
 		}
 		return ls;
 
-	}
-
-	@Override
-	public String tableSchema(Connection conn, String table) {
-		String schema = "";
-		String sql = "SELECT TABSCHEMA \r\n"
-				+ "FROM SYSCAT.TABLES\r\n"
-				+ "WHERE TABNAME = '"+table+"'";
-//				+ "TABSCHEMA = '<schema_name>'";
-		
-		schema = FetchDBInfoCommonTools.selectOne(conn, sql);
-		
-		return schema;
 	}
 
 }

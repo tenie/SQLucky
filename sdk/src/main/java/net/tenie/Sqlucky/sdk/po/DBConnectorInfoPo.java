@@ -255,10 +255,9 @@ public class DBConnectorInfoPo {
 		} else {
 			useSchema = defaultSchema;
 		}
-		Connection conn = schemaConnMap.get(useSchema);
-//		schemaConnMap.get(useSchema);
-//		return schemaConnMap.get(useSchema);
-		return conn;
+//		Connection conn = schemaConnMap.get(useSchema);
+		return schemaConnMap.get(useSchema);
+//		return conn;
 	}
 
 	public Connection getConn(String schema) {
@@ -269,25 +268,9 @@ public class DBConnectorInfoPo {
 //		return schemaConnMap.get(schema);
 //	}
 
-	public void setConn(Connection conn, String schema) {
-		schemaConnMap.put(schema, conn);
-	}
-	// 删除conn缓存
-	public void rmConn(String schema) {
-		if(StrUtils.isNullOrEmpty(schema)) {
-			String tmpSchema = this.getTmpSchema();
-			String defaultSchema = this.getDefaultSchema();
-			String useSchema;
-			if (StrUtils.isNotNullOrEmpty(tmpSchema)) {
-				useSchema = tmpSchema;
-			} else {
-				useSchema = defaultSchema;
-			}
-		}else {
-			schemaConnMap.remove(schema);
-		}
-		
-
+	public void setConn(Connection conn) {
+//		this.conn = conn;
+		schemaConnMap.put(getDefaultSchema(), conn);
 	}
 
 	public ExportDBObjects getExportDDL() {

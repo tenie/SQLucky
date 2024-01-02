@@ -118,7 +118,7 @@ public class Db2Connector extends SqluckyConnector {
 	
 	@Override
 	public  String templateJdbcUrlString(String hostFile, String port, String schema) {
-		String jdbcUrlstr  = "jdbc:db2://" + hostFile + ":" + port + "/" + schema;
+		String jdbcUrlstr  = "jdbc:db2://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
 		return jdbcUrlstr;
 	}
 
