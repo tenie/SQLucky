@@ -1,127 +1,94 @@
 package net.tenie.Sqlucky.sdk.po;
 
-public class BDConnJsonObj {
+public class BDConnJsonObj{
 	private String connName;
 	private String driver;
-	private String hostOrFile;
-	private String port;
-	private String user;
+	private String hostOrFile; 
+	private String port; 
+	private String user; 
 	private String passWord;
 	private String dbVendor;
 	private String defaultSchema;
-	private String dbName;
-	private String jdbcurlStr;
+	private String dbName ; 
+	private String jdbcurlStr; 
 	private Boolean autoConnect;
-
-	private Boolean showSchemas;
-	private String comment; // 可以为空,
+	private String  comment; // 可以为空,
 //	private Integer id;      // 数据库表CONNECTION_INFO 保存的id
-
+	
 	public String getDriver() {
 		return driver;
 	}
-
 	public void setDriver(String driver) {
 		this.driver = driver;
 	}
-
+	 
 	public String getHostOrFile() {
 		return hostOrFile;
 	}
-
 	public void setHostOrFile(String hostOrFile) {
 		this.hostOrFile = hostOrFile;
 	}
-
 	public String getPort() {
 		return port;
 	}
-
 	public void setPort(String port) {
 		this.port = port;
 	}
-
 	public String getUser() {
 		return user;
 	}
-
 	public void setUser(String user) {
 		this.user = user;
 	}
-
 	public String getPassWord() {
 		return passWord;
 	}
-
 	public void setPassWord(String passWord) {
 		this.passWord = passWord;
 	}
-
 	public String getDbVendor() {
 		return dbVendor;
 	}
-
 	public void setDbVendor(String dbVendor) {
 		this.dbVendor = dbVendor;
 	}
-
 	public String getDefaultSchema() {
 		return defaultSchema;
 	}
-
 	public void setDefaultSchema(String defaultSchema) {
 		this.defaultSchema = defaultSchema;
 	}
-
 	public String getDbName() {
 		return dbName;
 	}
-
 	public void setDbName(String dbName) {
 		this.dbName = dbName;
 	}
-
 	public String getJdbcurlStr() {
 		return jdbcurlStr;
 	}
-
 	public void setJdbcurlStr(String jdbcurlStr) {
 		this.jdbcurlStr = jdbcurlStr;
 	}
-
 	public String getConnName() {
 		return connName;
 	}
-
 	public void setConnName(String connName) {
 		this.connName = connName;
 	}
-
 	public Boolean getAutoConnect() {
 		return autoConnect;
 	}
-
 	public void setAutoConnect(Boolean autoConnect) {
 		this.autoConnect = autoConnect;
 	}
-
 	public String getComment() {
 		return comment;
 	}
-
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-
-	public Boolean getShowSchemas() {
-		return showSchemas;
-	}
-
-	public void setShowSchemas(Boolean showSchemas) {
-		this.showSchemas = showSchemas;
-	}
-
-	// public Integer getId() {
+//	public Integer getId() {
 //		return id;
 //	}
 //	public void setId(Integer id) {
@@ -132,7 +99,9 @@ public class BDConnJsonObj {
 		return "BDConnJsonObj [connName=" + connName + ", driver=" + driver + ", hostOrFile=" + hostOrFile + ", port="
 				+ port + ", user=" + user + ", passWord=" + passWord + ", dbVendor=" + dbVendor + ", defaultSchema="
 				+ defaultSchema + ", dbName=" + dbName + ", jdbcurlStr=" + jdbcurlStr + ", autoConnect=" + autoConnect
-				+ ", comment=" + comment + "]";
+				+ ", comment=" + comment +  "]";
 	}
-
+	 
+	
+	
 }

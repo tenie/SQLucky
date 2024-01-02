@@ -7,10 +7,12 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
 /**
@@ -103,8 +105,22 @@ public class Db2Connector extends SqluckyConnector {
 
 
 	@Override
-	public SqluckyConnector instance( DBConnectorInfoPo val ) {
+	public SqluckyConnector copyObj( String schema) {
+		DBConnectorInfoPo val = new DBConnectorInfoPo(  
+				getConnName()+"Copy",
+				getDriver(),
+				getHostOrFile(),
+				getPort(),
+				getUser(),
+				getPassWord(),
+				getDbVendor(),
+				schema,
+				getDbName(),
+				getJdbcUrl(),
+				getAutoConnect()
+				);
 		var dbc = new Db2Connector(val , getDbRegister());
+		
 		return dbc;
 	}
 
@@ -115,14 +131,39 @@ public class Db2Connector extends SqluckyConnector {
 	}
 
 
-	
 	@Override
-	public  String templateJdbcUrlString(String hostFile, String port, String schema) {
-		String jdbcUrlstr  = "jdbc:db2://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
-		return jdbcUrlstr;
+	public String getJdbcUrl() {
+		String jdbcUrlstr = connPo.getJdbcUrl();
+		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
+			return jdbcUrlstr;
+		}else {
+			jdbcUrlstr  = "jdbc:db2://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+			connPo.setJdbcUrl(jdbcUrlstr);
+		}
+		return  jdbcUrlstr;
 	}
 
 
+	@Override
+	public Connection getConn() {
+		 
+//		getConnPo().getConn()
+		if (getCacheConn() == null) {
+//			logger.info(this.connPo.getDriver());
+//			logger.info(getJdbcUrl());
+//			logger.info(this.connPo.getUser());
+//			logger.info(passWord);
+//			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
+//				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
+//				conn = dbinfo.getconn();
+//			}else {
+				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
+				var conn = dbinfo.getconn();
+				getConnPo().setConn(conn);
+//			}			
+		}
 
-	
+		return getConnPo().getConn();
+
+	}
 }

@@ -68,7 +68,16 @@ public class Dbinfo {
 	public Connection getconn() {
 		if (conn == null) {
 			try {
+//				if(StrUtils.isNotNullOrEmpty(sqliteDriver)) {
+//					conn = DriverManager.getConnection(sqliteDriver);
+//				}else if( StrUtils.isNullOrEmpty(driver) )  {
+//					conn = DriverManager.getConnection(url, us, ps);
+//				}else {
+//					Class.forName(driver).newInstance();
+//					conn = DriverManager.getConnection(url, us, ps);
+//				} 
 				conn = DriverManager.getConnection(url, us, ps);
+
 			} catch (Exception e) {
 				logger.error(e.getMessage());
 				e.printStackTrace();

@@ -1,13 +1,7 @@
 package net.tenie.fx.Action;
 
-import java.util.Set;
-
-import com.jfoenix.controls.JFXComboBox;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -73,61 +67,19 @@ public class CommonListener {
 
 
 	// 选择框选择连接时, 如果未连接, 进行连接
-	public static ChangeListener<Label> choiceBoxChange2(JFXComboBox<String> cbSchemas, Label lbSchemas) {
+	public static ChangeListener<Label> choiceBoxChange2() {
 		return new ChangeListener<Label>() {
 			@Override
 			public void changed(ObservableValue<? extends Label> observable, Label oldValue, Label newValue) {
 				if (newValue != null) {
 					SqluckyConnector cnnpo = DBConns.get(newValue.getText());
-					if (cnnpo != null ) { // && !cnnpo.isAlive()
+					if (cnnpo != null && !cnnpo.isAlive()) {
 						// 清除查找字符串
 						IndexRange ir = MyEditorSheetHelper.getSelection();
 						CommonUtils.pressBtnESC();
 						AppCommonAction.shrinkTreeView();
 						ConnectionEditor.openConn(cnnpo.getConnName());
 						MyEditorSheetHelper.selectRange(ir);
-					}
-					// 切换 schemas 列表和值
-					if(cnnpo != null &&
-							cnnpo.getDBConnectorInfoPo() != null 
-							&& cnnpo.getDBConnectorInfoPo().getSchemas() != null) {
-						if( cnnpo.getDBConnectorInfoPo().isShowSchemas()) {
-							cbSchemas.setVisible(true);
-							lbSchemas.setVisible(true);
-							Set<String > items = cnnpo.getDBConnectorInfoPo().getSchemas().keySet();
-							if(items != null && items.size() > 0) {
-								// 默认 schema
-								String defaultSchema =  cnnpo.getDBConnectorInfoPo().getDefaultSchema();
-								// 临时schema
-								String tmpSchema =  cnnpo.getDBConnectorInfoPo().getTmpSchema();
-								String equalsSchema = defaultSchema;
-								if(tmpSchema != null && tmpSchema.length() > 0) {
-									 equalsSchema = tmpSchema;
-								}
-								
-								ObservableList itemList = FXCollections.observableArrayList();
-								itemList.addAll(items);
-								cbSchemas.setItems(itemList);
-								for(int i=0; i< itemList.size(); i++) {
-									// 如何临时schema匹配下拉选就设置为临时schema
-									if(equalsSchema.equals(itemList.get(i))) {
-//										System.out.println("==connsComboBox =" + equalsSchema + "|"  + cbSchemas.getSelectionModel());
-										cbSchemas.getSelectionModel().select(i);
-//										cnnpo.getDBConnectorInfoPo().setTmpSchema(equalsSchema);
-										break;
-									}
-								}
-								
-							}
-						}else {
-							// 隐藏
-							cbSchemas.setVisible(false);
-							lbSchemas.setVisible(false);
-						}
-						
-						
-					}else {
-						cbSchemas.getItems().clear();
 					}
 				}
 

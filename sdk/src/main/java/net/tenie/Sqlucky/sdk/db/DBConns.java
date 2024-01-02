@@ -40,27 +40,24 @@ public final class DBConns {
 			});
 		}
 	}
-
 	public static void flushChoiceBox() {
-		if (cb != null)
-			flushChoiceBox(cb);
+		flushChoiceBox(cb);
 	}
 
 	// 选中combox的元素
 	public static void flushChoiceBox(String name) {
-		flushChoiceBox();
+		flushChoiceBox() ;
 		selectComboBoxItem(name);
-
+		
 	}
-
 	// 选中combox的元素
-	public static void selectComboBoxItem(String name) {
+	public static void selectComboBoxItem( String name) {
 		ObservableList<Label> ls = cb.getItems();
-		for (Label lb : ls) {
-			if (lb.getText().equals(name)) {
-				Platform.runLater(() -> {
+		for(Label lb : ls) {
+			if(lb.getText().equals(name)) {
+				Platform.runLater(()->{
 					cb.getSelectionModel().select(lb);
-				});
+				}); 
 				break;
 			}
 		}
@@ -76,24 +73,25 @@ public final class DBConns {
 		}
 		// 获取当前选中的连接名称, 给重新赋值后需要再次选中之前的名称
 		String selectStr = "";
-		if (box.getSelectionModel() != null && box.getSelectionModel().getSelectedItem() != null) {
-			selectStr = box.getSelectionModel().getSelectedItem().getText();
+		if( box.getSelectionModel()!=null &&  box.getSelectionModel().getSelectedItem()!=null) {
+			  selectStr = box.getSelectionModel().getSelectedItem().getText();
 		}
-		ObservableList<Label> list = getChoiceBoxItems();
+		ObservableList<Label> list= getChoiceBoxItems();
 		cb.setItems(list);
-
-		if (StrUtils.isNotNullOrEmpty(selectStr)) {
-			for (Label lb : list) {
-				if (lb.getText().equals(selectStr)) {
+		
+		if(StrUtils.isNotNullOrEmpty(selectStr)) {
+			for(Label lb : list) {
+				if( lb.getText().equals(selectStr) ) {
 					cb.getSelectionModel().select(lb);
 					break;
 				}
 			}
 		}
-
+	
+		
 	}
-
-	public static ObservableList<Label> getChoiceBoxItems() {
+	
+	public static ObservableList<Label> getChoiceBoxItems(){
 		ObservableList<Label> list = FXCollections.observableArrayList();
 		ObservableList<Label> aliveList = FXCollections.observableArrayList();
 		aliveList.add(new Label(""));
@@ -108,12 +106,14 @@ public final class DBConns {
 				lb.setGraphic(IconGenerator.svgImageUnactive("unlink"));
 				list.add(lb);
 			}
-
+			
+			
 		}
 		aliveList.addAll(list);
 		return aliveList;
 	}
 
+	
 	// 选择连接框的选项修改选项
 	public static void changeChoiceBox(Integer idx) {
 		if (cb != null && idx != null && idx > 0) {
@@ -121,11 +121,11 @@ public final class DBConns {
 
 		}
 	}
-
+	
 	// 选择连接框的选项修改选项
 	public static Integer choiceBoxIndex() {
 		Integer idx = null;
-		if (cb != null) {
+		if (cb != null ) {
 			idx = cb.getSelectionModel().selectedIndexProperty().get();
 
 		}
@@ -137,14 +137,14 @@ public final class DBConns {
 		dbs.put(name, o);
 		flushChoiceBox(cb);
 	}
-
+	
 	public static void addAll(List<SqluckyConnector> ls) {
-		for (var sc : ls) {
+		for(var sc: ls) {
 			var name = sc.getConnName();
 			set.add(name);
 			dbs.put(name, sc);
 		}
-		Platform.runLater(() -> {
+		Platform.runLater(()->{
 			flushChoiceBox(cb);
 		});
 	}
@@ -163,7 +163,7 @@ public final class DBConns {
 		dbs.remove(name);
 		flushChoiceBox(cb);
 	}
-
+	
 	public static SqluckyConnector get(String name) {
 		return dbs.get(name);
 	}
@@ -179,24 +179,23 @@ public final class DBConns {
 	public static boolean isEmpty() {
 		return dbs.isEmpty();
 	}
-
+	
 	// 当前选中的数据库连接名称
 	public static String getCurrentConnectName() {
 		Label lb = ComponentGetter.connComboBox.getValue();
 		String str = "";
-		if (lb != null) {
-			str = lb.getText();
+		if( lb != null) {
+		   str = lb.getText(); 
 		}
 		return str;
 	}
-
 	public static SqluckyConnector getCurrentConnectPO() {
 		String connName = getCurrentConnectName();
 		return DBConns.get(connName);
 	}
-
 	public static Map<String, SqluckyConnector> getDbs() {
 		return dbs;
 	}
+	
 
 }
