@@ -121,7 +121,7 @@ public abstract class SqluckyConnector {
 		try {
 			if (this.dbConnectorInfoPo.getConn() != null) {
 				this.dbConnectorInfoPo.getConn().close();
-				this.dbConnectorInfoPo.setConn(null);
+				this.dbConnectorInfoPo.rmConn( null);
 			}
 
 		} catch (SQLException e) {
@@ -304,6 +304,14 @@ public abstract class SqluckyConnector {
 //	@Override
 	public String getJdbcUrl(String hostFile, String port, String schema) {
 		String jdbcUrlstr = getDBConnectorInfoPo().getJdbcUrl();
+		boolean val = getDBConnectorInfoPo().isJdbcUrlUse();
+		System.out.println(val);
+		if(val) {
+			jdbcUrlstr =  getDBConnectorInfoPo().getDefaultjdbcUrl();
+			String defaultSchema = getDBConnectorInfoPo().getDefaultSchema();
+			jdbcUrlstr = jdbcUrlstr.replace("/"+defaultSchema, "/"+schema);
+			return jdbcUrlstr;
+		}
 		if (StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		} else {
@@ -326,12 +334,13 @@ public abstract class SqluckyConnector {
 		} else {
 			useSchema = defaultSchema;
 		}
-		if (getCacheConn() == null) {
+		var caConn = getCacheConn();
+		if (caConn == null) {
 			System.out.println("useSchema = " + useSchema);
 			String jdbcUrl = getJdbcUrl(getHostOrFile(), getPort(), useSchema);
 			Dbinfo dbinfo = new Dbinfo(jdbcUrl, getUser(), getPassWord());
 			var conn = dbinfo.getconn();
-			getConnPo().setConn(conn);
+			getConnPo().setConn(conn, useSchema);
 		}
 		return getConnPo().getConn();
 	}

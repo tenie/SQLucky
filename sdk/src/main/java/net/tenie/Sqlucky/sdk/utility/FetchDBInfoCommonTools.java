@@ -26,7 +26,7 @@ public class FetchDBInfoCommonTools {
 	private static Logger logger = LogManager.getLogger(FetchDBInfoCommonTools.class);
 
 	// 执行sql只返回第一个字段的list
-	private List<String> execSQL(Connection conn, String sql) {
+	public List<String> execSQL(Connection conn, String sql) {
 		ResultSet rs = null;
 		List<String> ls = new ArrayList<String>();
 		try {
@@ -50,7 +50,7 @@ public class FetchDBInfoCommonTools {
 	}
 
 	// 执行sql只返回第2个字段的list
-	private List<myEntry<String, String>> execSQL2(Connection conn, String sql) {
+	public List<myEntry<String, String>> execSQL2(Connection conn, String sql) {
 
 		ResultSet rs = null;
 		List<myEntry<String, String>> ls = new ArrayList<myEntry<String, String>>();
@@ -78,7 +78,7 @@ public class FetchDBInfoCommonTools {
 	}
 
 	// 执行sql只返回第一个字段的list
-	private String selectOne(Connection conn, String sql) {
+	public static String selectOne(Connection conn, String sql) {
 		ResultSet rs = null;
 		String str = "";
 		try {

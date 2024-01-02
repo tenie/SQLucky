@@ -556,4 +556,17 @@ public class ExportSqlMariadbImp implements ExportDBObjects {
 		return null;
 	}
 
+	@Override
+	public String tableSchema(Connection conn, String table) {
+		String schema = "";
+		String sql = "select TABLE_SCHEMA from information_schema.tables where TABLE_NAME = '"+table+"'";
+//		String sql = "SELECT TABSCHEMA \r\n"
+//				+ "FROM SYSCAT.TABLES\r\n"
+//				+ "WHERE TABNAME = '"+table+"'";
+////				+ "TABSCHEMA = '<schema_name>'";
+//		
+		schema = FetchDBInfoCommonTools.selectOne(conn, sql);
+//		
+		return schema;
+	}
 }

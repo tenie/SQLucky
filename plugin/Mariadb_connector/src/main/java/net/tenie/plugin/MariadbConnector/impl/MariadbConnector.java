@@ -132,7 +132,7 @@ public class MariadbConnector extends SqluckyConnector {
 
 	@Override
 	public String templateJdbcUrlString(String hostFile, String port, String schema) {
-		String	jdbcUrlstr  = "jdbc:mariadb://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+		String	jdbcUrlstr  = "jdbc:mariadb://" + hostFile + ":" + port + "/" + schema;
 		
 		return jdbcUrlstr;
 	}
