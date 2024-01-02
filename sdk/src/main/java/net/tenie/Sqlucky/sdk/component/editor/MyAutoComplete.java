@@ -186,10 +186,17 @@ public class MyAutoComplete implements AutoComplete {
 					Map<String, DbSchemaPo> map = po.getSchemas();
 					DbSchemaPo spo = map.get(po.getDefaultSchema());
 					if (spo != null) {
+						
 						tmpls.addAll(keyWords);
 						tmpls.addAll(spo.getTabs());
-						tmpls.addAll(spo.getViews());
+						tmpls.addAll(spo.getViews()); 
 						tmpls.addAll(getCacheTableFields());
+						 List<TablePo> otherSchema = otherSchemaTable(po, tmpFilterStr);
+						 if(otherSchema != null && otherSchema.size()> 0) {
+							 tmpls.addAll(otherSchema);
+						 }
+						
+						
 					}
 				} else {
 					tmpls.addAll(keyWords);
@@ -201,7 +208,7 @@ public class MyAutoComplete implements AutoComplete {
 		boolean tf = false;
 		if (tmpls != null && tmpls.size() > 0) {
 			rootNode.getChildren().clear();
-			for (var tb : tmpls) {
+			for (var tb : tmpls) {;
 				if (tb.getTableName().toUpperCase().contains(tmpFilterStr)) {
 					TreeItem<TablePo> item = new TreeItem<>(tb);
 					rootNode.getChildren().add(item);
@@ -229,7 +236,20 @@ public class MyAutoComplete implements AutoComplete {
 
 		}
 	}
-
+	
+	public  List<TablePo> otherSchemaTable(SqluckyConnector po, String tmpFilterStr  ) { 
+		 List<TablePo> otherSchema = null;
+		 List< String> shcemaNames = po.getExportDDL().tableSchema(po.getConn(), tmpFilterStr);
+		 if(shcemaNames  != null && shcemaNames.size() > 0) {
+			 otherSchema = new ArrayList<>();
+			 for(var shcemaName : shcemaNames) {
+				 otherSchema.add(TablePo.noDbObj(shcemaName.trim()+"."+tmpFilterStr));
+			 }
+		 }
+		
+		 return otherSchema;
+	}
+	
 	@Override
 	public Integer getMyTabId() {
 		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();

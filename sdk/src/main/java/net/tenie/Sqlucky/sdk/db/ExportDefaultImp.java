@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.db;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
@@ -363,5 +364,11 @@ public class ExportDefaultImp implements ExportDBObjects {
 	}
 
 
+
+	@Override
+	public List<String>  tableSchema(Connection conn, String table) {
+		List<String> schemas =  new ArrayList<>();// FetchDBInfoCommonTools.selectOneIndex(conn, sql);
+		return schemas;
+	}
 	
 }

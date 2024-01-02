@@ -108,10 +108,11 @@ public class DBinfoTree {
 		DBinfoTreeView.setOnMouseClicked(e -> {
 			// 单击
 			if (e.getClickCount() == 1) {
-				AppWindow.treeView.refresh();
+//				AppWindow.treeView.refresh();
 			}else {
 				// 双击
 				treeViewDoubleClick(e);
+				AppWindow.treeView.refresh();
 			}
 		});
 		// 右键菜单

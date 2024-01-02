@@ -13,6 +13,8 @@ import net.tenie.Sqlucky.sdk.po.db.TablePo;
  *  
  */
 public interface ExportDBObjects {
+	//查询表的schema
+	 List<String> tableSchema(Connection conn, String table); 
 	// 所有表
 	List<TablePo> allTableObj(Connection conn, String schema); 
 	// 所有试图

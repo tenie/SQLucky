@@ -367,6 +367,13 @@ public class ExportSqlPostgresqlImp implements ExportDBObjects {
 	}
 
 
-	
+	@Override
+	public 	List<String> tableSchema(Connection conn, String table) {
+		String schema = "";
+		String sql = "select schemaname from pg_tables where tablename='"+table+"'";
+//		schema = FetchDBInfoCommonTools.selectOne(conn, sql);
+		List<String> schemas = FetchDBInfoCommonTools.selectOneIndex(conn, sql);
+		return schemas;
+	}
 
 }

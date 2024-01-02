@@ -353,4 +353,10 @@ public class ExportSqlSqliteImp implements ExportDBObjects {
 		return null;
 	}
 
+	@Override
+	public List<String> tableSchema(Connection conn, String table) {
+		String schema = "";
+		List<String> schemas = new ArrayList<>();
+		return schemas;
+	}
 }

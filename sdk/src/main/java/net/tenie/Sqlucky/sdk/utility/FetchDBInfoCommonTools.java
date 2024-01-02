@@ -26,7 +26,7 @@ public class FetchDBInfoCommonTools {
 	private static Logger logger = LogManager.getLogger(FetchDBInfoCommonTools.class);
 
 	// 执行sql只返回第一个字段的list
-	private List<String> execSQL(Connection conn, String sql) {
+	public static List<String> execSQL(Connection conn, String sql) {
 		ResultSet rs = null;
 		List<String> ls = new ArrayList<String>();
 		try {
@@ -50,7 +50,7 @@ public class FetchDBInfoCommonTools {
 	}
 
 	// 执行sql只返回第2个字段的list
-	private List<myEntry<String, String>> execSQL2(Connection conn, String sql) {
+	public static List<myEntry<String, String>> execSQL2(Connection conn, String sql) {
 
 		ResultSet rs = null;
 		List<myEntry<String, String>> ls = new ArrayList<myEntry<String, String>>();
@@ -78,7 +78,7 @@ public class FetchDBInfoCommonTools {
 	}
 
 	// 执行sql只返回第一个字段的list
-	private String selectOne(Connection conn, String sql) {
+	public  static String selectOne(Connection conn, String sql) {
 		ResultSet rs = null;
 		String str = "";
 		try {
@@ -99,12 +99,37 @@ public class FetchDBInfoCommonTools {
 
 		return str;
 	}
+	
+	// 执行sql只返回第一个字段的list
+	public  static List<String> selectOneIndex(Connection conn, String sql) {
+		ResultSet rs = null;
+		List<String> ls = new ArrayList<>();
+		try {
+			rs = conn.createStatement().executeQuery(sql);
+			while (rs.next()) {
+				String str = rs.getString(1);
+				ls.add(str);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+
+		return ls;
+	}
+
 
 	/**
 	 * 获取所有表, 并包含字段信息
 	 */
 
-	public List<TablePo> getTables(Connection db2conn, String schema) {
+	public static List<TablePo> getTables(Connection db2conn, String schema) {
 		List<TablePo> ls = null;
 		try {
 			ls = Dbinfo.fetchAllTableName(db2conn, schema);
@@ -119,7 +144,7 @@ public class FetchDBInfoCommonTools {
 		return ls;
 	}
 
-	private String getTypeLength(TableFieldPo po) {
+	public static String getTypeLength(TableFieldPo po) {
 		// type长度
 		Integer length = +po.getLength();
 		Integer scale = +po.getScale();
@@ -140,13 +165,13 @@ public class FetchDBInfoCommonTools {
 	}
 
 	// 建表语句生成
-	public String createTab(Connection conn, TablePo tab) throws SQLException {
+	public static String createTab(Connection conn, TablePo tab) throws SQLException {
 		String sql = createTab(tab);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String createTab(String schema, TablePo tab) {
+	public static String createTab(String schema, TablePo tab) {
 		Set<TableFieldPo> fls = tab.getFields();
 		String tableName = tab.getTableName();
  
@@ -192,7 +217,7 @@ public class FetchDBInfoCommonTools {
 		 
 		return sql;
 	} 
-	public String createTab(TablePo tab) {
+	public  static String createTab(TablePo tab) {
 		Set<TableFieldPo> fls = tab.getFields();
 		String tableName = tab.getTableName();  
 		String sql = "CREATE TABLE " + tableName + " ( \n";
@@ -233,7 +258,7 @@ public class FetchDBInfoCommonTools {
 
 		return sql + seq;
 	}
-	public String createTab_ft(TablePo tab) {
+	public static String createTab_ft(TablePo tab) {
 		Set<TableFieldPo> fls = tab.getFields();
 		String tableName = tab.getTableName();
 
@@ -290,13 +315,13 @@ public class FetchDBInfoCommonTools {
 
 	// 添加字段
 
-	public String alterTabAddColumn(Connection conn, TableFieldPo po) throws SQLException {
+	public static String alterTabAddColumn(Connection conn, TableFieldPo po) throws SQLException {
 		String sql = alterTabAddColumn(conn, po);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String alterTabAddColumn(TableFieldPo po) {
+	public static String alterTabAddColumn(TableFieldPo po) {
 		// default
 		String notnull = "N".equals(po.getIsNullable()) ? "not null " : " ";
 		String defVal = StrUtils.isNullOrEmpty(po.getDefaultVal()) ? ""
@@ -312,26 +337,26 @@ public class FetchDBInfoCommonTools {
 
 	// 删除字段
 
-	public String alterTabDropColumn(Connection conn, TableFieldPo po) throws SQLException {
+	public static String alterTabDropColumn(Connection conn, TableFieldPo po) throws SQLException {
 		String Sql = alterTabDropColumn(po);
 		DBTools.execDDL(conn, Sql);
 		return Sql;
 	}
 
-	public String alterTabDropColumn(TableFieldPo po) {
+	public  static String alterTabDropColumn(TableFieldPo po) {
 		String sql = "alter table " + po.getTableName() + " drop column " + po.getFieldName() + " ;";
 		return sql;
 	}
 
 	// 修改字段
 
-	public String alterTabModifyColumn(Connection conn, TableFieldPo po) throws SQLException {
+	public static String alterTabModifyColumn(Connection conn, TableFieldPo po) throws SQLException {
 		String Sql = alterTabModifyColumn(po);
 		DBTools.execDDL(conn, Sql);
 		return Sql;
 	}
 
-	public String alterTabModifyColumn(TableFieldPo po) {
+	public static String alterTabModifyColumn(TableFieldPo po) {
 		// type长度
 		String typeLength = getTypeLength(po);
 		String sql = "ALTER TABLE " + po.getTableName() + " ALTER COLUMN " + po.getFieldName() + "  set data type "
@@ -341,13 +366,13 @@ public class FetchDBInfoCommonTools {
 	}
 	// 添加组件
 
-	public String alterTabAddPriMaryKey(String schema, String table, String kn, String fields) {
+	public static String alterTabAddPriMaryKey(String schema, String table, String kn, String fields) {
 		String Sql = "alter table " + schema + "." + table + "aaa add constraint " + kn + " primary key(" + fields
 				+ ")";
 		return Sql;
 	}
 
-	public String alterTabAddPriMaryKey(Connection conn, String schema, String table, String kn, String fields)
+	public  static String alterTabAddPriMaryKey(Connection conn, String schema, String table, String kn, String fields)
 			throws SQLException {
 		String Sql = alterTabAddPriMaryKey(schema, table, kn, fields);
 		DBTools.execDDL(conn, Sql);
@@ -358,7 +383,7 @@ public class FetchDBInfoCommonTools {
 	 * 找到目标数据库中没有的表
 	 */
 
-	public List<TablePo> findNewTab(List<TablePo> source, List<TablePo> tag) {
+	public static List<TablePo> findNewTab(List<TablePo> source, List<TablePo> tag) {
 		List<TablePo> tabNames = new ArrayList<TablePo>();
 		for (TablePo soTab : source) {
 			if (!tag.contains(soTab)) {
@@ -384,7 +409,7 @@ public class FetchDBInfoCommonTools {
 	 * 字段判断, 两组表, 返回有差异的字段集合, 返回的虽然是字段, 但TableFieldPo带有表信息
 	 */
 
-	public List<TableFieldPo> findNewField(List<TablePo> source, List<TablePo> tag) {
+	public static List<TableFieldPo> findNewField(List<TablePo> source, List<TablePo> tag) {
 		List<TableFieldPo> newFiled = new ArrayList<TableFieldPo>();
 
 		int tidx = -1;
@@ -431,7 +456,7 @@ public class FetchDBInfoCommonTools {
 	 * 批处理插入数据 INSERT
 	 */
 
-	public void moveData(Connection soconn, Connection tagconn, TablePo soTab) {
+	public static void moveData(Connection soconn, Connection tagconn, TablePo soTab) {
 
 		String fields = " ";
 		String fieldName = "";
@@ -499,7 +524,7 @@ public class FetchDBInfoCommonTools {
 		}
 	}
 
-	public Integer statisticRow(Connection tagconn, TablePo soTab) {
+	public static Integer statisticRow(Connection tagconn, TablePo soTab) {
 		ResultSet rs = null;
 		Integer retI = -1;
 		try {
@@ -522,7 +547,7 @@ public class FetchDBInfoCommonTools {
 		return retI;
 	}
 
-	public List<String> exportAllSeqs(Connection tagconn, String schema) {
+	public static List<String> exportAllSeqs(Connection tagconn, String schema) {
 		String select = "  SELECT  \n" + "    CONCAT(  \n" + "    CONCAT(  \n" + "    CONCAT(  \n" + "    CONCAT( \n"
 				+ "    CONCAT(  \n" + "    CONCAT(      \n" + "    CONCAT(   \n" + "    CONCAT( \n" + "    CONCAT( \n"
 				+ "    CONCAT(  \n" + "    CONCAT( \n" + "        'CREATE OR REPLACE SEQUENCE ' \n"
@@ -535,7 +560,7 @@ public class FetchDBInfoCommonTools {
 		return execSQL(tagconn, select);
 	}
 
-	public String exportSeq(Connection tagconn, String schema, String seq) {
+	public static String exportSeq(Connection tagconn, String schema, String seq) {
 		String select = "  SELECT  \n" + "    CONCAT(  \n" + "    CONCAT(  \n" + "    CONCAT(  \n" + "    CONCAT( \n"
 				+ "    CONCAT(  \n" + "    CONCAT(      \n" + "    CONCAT(   \n" + "    CONCAT( \n" + "    CONCAT( \n"
 				+ "    CONCAT(  \n" + "    CONCAT( \n" + "        'CREATE OR REPLACE SEQUENCE ' \n"
@@ -550,133 +575,133 @@ public class FetchDBInfoCommonTools {
 		return selectOne(tagconn, select);
 	}
 
-	public List<String> exportAllTriggers(Connection tagconn, String schema) {
+	public static List<String> exportAllTriggers(Connection tagconn, String schema) {
 		String select = "select TEXT  \n" + "FROM  SYSIBM.SYSTRIGGERS    \n" + "WHERE					   \n"
 				+ "    SCHEMA = '" + schema + "'";
 		return execSQL(tagconn, select);
 	}
 
-	public String exportTrigger(Connection tagconn, String schema, String tri) {
+	public static String exportTrigger(Connection tagconn, String schema, String tri) {
 		String select = "select TEXT  \n" + "FROM  SYSIBM.SYSTRIGGERS    \n" + "WHERE					   \n"
 				+ "    SCHEMA = '" + schema + "' " + "    and NAME = '" + tri + "' ";
 		return selectOne(tagconn, select);
 	}
 
-	public List<String> exportAllProcedures(Connection tagconn, String schema) {
+	public static List<String> exportAllProcedures(Connection tagconn, String schema) {
 		String select = "select TEXT  \n" + "FROM    SYSCAT.ROUTINES  \n" + "WHERE					   \n"
 				+ "     OWNER = '" + schema + "' \n" + "     and ROUTINETYPE = 'P' ";
 		return execSQL(tagconn, select);
 	}
 
-	public String exportProcedure(Connection tagconn, String schema, String name) {
+	public static String exportProcedure(Connection tagconn, String schema, String name) {
 		String select = "select TEXT  \n" + "FROM    SYSCAT.ROUTINES  \n" + "WHERE					   \n"
 				+ "     OWNER = '" + schema + "' " + "     and ROUTINETYPE = 'P' " + "     and ROUTINENAME = '" + name
 				+ "' ";
 		return selectOne(tagconn, select);
 	}
 
-	public List<String> exportAllFunctions(Connection tagconn, String schema) {
+	public static List<String> exportAllFunctions(Connection tagconn, String schema) {
 		String select = "select TEXT  \n" + "FROM    SYSCAT.ROUTINES  \n" + "WHERE					   \n"
 				+ "     OWNER = '" + schema + "' \n" + "     and ROUTINETYPE = 'F' ";
 		return execSQL(tagconn, select);
 	}
 
-	public String exportFunction(Connection tagconn, String schema, String name) {
+	public static String exportFunction(Connection tagconn, String schema, String name) {
 		String select = "select TEXT  \n" + "FROM    SYSCAT.ROUTINES  \n" + "WHERE					   \n"
 				+ "     OWNER = '" + schema + "' " + "     and ROUTINETYPE = 'F' " + "     and ROUTINENAME = '" + name
 				+ "' ";
 		return selectOne(tagconn, select);
 	}
 
-	public String dropTab(Connection conn, String schema, String tab) throws java.sql.SQLException {
+	public static String dropTab(Connection conn, String schema, String tab) throws java.sql.SQLException {
 		String sql = dropTab(schema, tab);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String dropTab(String tab, String schema) {
+	public static String dropTab(String tab, String schema) {
 		String sql = "DROP TABLE " + schema + "." + tab.trim();
 		return sql;
 	}
 
-	public String dropView(String view, String schema) {
+	public static String dropView(String view, String schema) {
 		String sql = "DROP VIEW " + schema + "." + view.trim();
 		return sql;
 	}
 
-	public String dropView(Connection conn, String schema, String view) throws java.sql.SQLException {
+	public static String dropView(Connection conn, String schema, String view) throws java.sql.SQLException {
 		String sql = dropView(schema, view);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String dropSeq(Connection conn, String schema, String Seq) throws java.sql.SQLException {
+	public  static String dropSeq(Connection conn, String schema, String Seq) throws java.sql.SQLException {
 		String sql = dropSeq(schema, Seq);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String dropSeq(String Seq, String schema) {
+	public static String dropSeq(String Seq, String schema) {
 		String sql = "DROP sequence " + schema + "." + Seq.trim() + " RESTRICT";
 		return sql;
 	}
 
-	public String dropTirgger(Connection conn, String schema, String Tirgger) throws java.sql.SQLException {
+	public static String dropTirgger(Connection conn, String schema, String Tirgger) throws java.sql.SQLException {
 		String sql = dropTirgger(schema, Tirgger);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String dropTirgger(String schema, String Tirgger) {
+	public static  String dropTirgger(String schema, String Tirgger) {
 		String sql = "DROP TRIGGER " + schema + "." + Tirgger.trim();
 		return sql;
 	}
 
-	public String dropProcedure(Connection conn, String schema, String procedure) throws java.sql.SQLException {
+	public static  String dropProcedure(Connection conn, String schema, String procedure) throws java.sql.SQLException {
 		String sql = dropProcedure(schema, procedure);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String dropProcedure(String schema, String procedure) {
+	public static  String dropProcedure(String schema, String procedure) {
 		String sql = "DROP  PROCEDURE " + schema + "." + procedure.trim();
 		return sql;
 	}
 
-	public String dropFunction(String schema, String fun) {
+	public static  String dropFunction(String schema, String fun) {
 		String sql = "DROP  FUNCTION " + schema + "." + fun.trim();
 		return sql;
 	}
 
-	public String dropFunction(Connection conn, String schema, String fun) throws java.sql.SQLException {
+	public static  String dropFunction(Connection conn, String schema, String fun) throws java.sql.SQLException {
 		String sql = dropFunction(schema, fun);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String dropIndex(Connection conn, String schema, String name) throws java.sql.SQLException {
+	public static  String dropIndex(Connection conn, String schema, String name) throws java.sql.SQLException {
 		String sql = dropIndex(schema, name);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String dropIndex(String schema, String name) {
+	public static  String dropIndex(String schema, String name) {
 		String sql = "DROP INDEX " + schema + "." + name.trim();
 		return sql;
 	}
 
-	public String dropForeignKey(String schema, String table, String name) {
+	public static  String dropForeignKey(String schema, String table, String name) {
 		String sql = "ALTER TABLE " + schema + "." + table.trim() + " DROP CONSTRAINT  " + name;
 		return sql;
 	}
 
-	public String dropForeignKey(Connection conn, String schema, String table, String name) throws SQLException {
+	public static String dropForeignKey(Connection conn, String schema, String table, String name) throws SQLException {
 		String sql = dropForeignKey(schema, table, name);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public String execDropForeignKey(Connection conn, String schema, String name) throws SQLException {
+	public  static String execDropForeignKey(Connection conn, String schema, String name) throws SQLException {
 		String sql = "select TABNAME " + "  from syscat.references where TABSCHEMA = '" + schema + "' and CONSTNAME = '"
 				+ name + "' ";
 		String tab = selectOne(conn, sql);
@@ -684,25 +709,25 @@ public class FetchDBInfoCommonTools {
 		return sql;
 	}
 
-	public String dropPrimaryKey(String schema, String table) {
+	public static  String dropPrimaryKey(String schema, String table) {
 		String sql = "ALTER TABLE " + schema + "." + table.trim() + " DROP PRIMARY KEY ";
 		return sql;
 	}
 
-	public String dropPrimaryKey(Connection conn, String schema, String table) throws SQLException {
+	public  static String dropPrimaryKey(Connection conn, String schema, String table) throws SQLException {
 		String sql = dropPrimaryKey(schema, table);
 		DBTools.execDDL(conn, sql);
 		return sql;
 	}
 
-	public List<String> getSeq(Connection conn, String schema) {
+	public static  List<String> getSeq(Connection conn, String schema) {
 		String select = "SELECT SEQNAME  FROM    \n" + " SYSIBM.SYSSEQUENCES \n" + " WHERE \n" + "     SEQSCHEMA = '"
 				+ schema + "'  \n";
 		List<String> ls = execSQL(conn, select);
 		return ls;
 	}
 
-	public List<String> getTriggers(Connection conn, String schema) {
+	public static  List<String> getTriggers(Connection conn, String schema) {
 		String select = "select NAME  \n" 
 				+ "FROM  SYSIBM.SYSTRIGGERS    \n" 
 				+ "WHERE					   \n"
@@ -711,14 +736,14 @@ public class FetchDBInfoCommonTools {
 		return ls;
 	}
 
-	public List<String> getProcedure(Connection conn, String schema) {
+	public  static List<String> getProcedure(Connection conn, String schema) {
 		String select = "select ROUTINENAME  \n" + "FROM   SYSCAT.ROUTINES    \n" + "WHERE					   \n"
 				+ "    OWNER = '" + schema + "'" + "    and ROUTINETYPE = 'P' ";
 		List<String> ls = execSQL(conn, select);
 		return ls;
 	}
 
-	public List<String> getFunctions(Connection conn, String schema) {
+	public  static  List<String> getFunctions(Connection conn, String schema) {
 		String select = "select ROUTINENAME  \n" + "FROM   SYSCAT.ROUTINES     \n" + "WHERE					   \n"
 				+ "    OWNER = '" + schema + "'" + "    and ROUTINETYPE = 'F' ";
 		List<String> ls = execSQL(conn, select);
@@ -726,7 +751,7 @@ public class FetchDBInfoCommonTools {
 	}
 
 	// 根据类型导出index
-	public List<String> getIndexs(Connection conn, String schema, String type) {
+	public  static  List<String> getIndexs(Connection conn, String schema, String type) {
 		String sql = "select INDNAME   " + " from syscat.indexes" + " where  INDSCHEMA = '" + schema + "' "
 				+ "    and UNIQUERULE ='" + type + "'"; // db2类型有 P(主键建表时候指定的), U (类似主键,保证数据唯一性) D 普通索引
 		List<String> ls = execSQL(conn, sql);
@@ -734,21 +759,21 @@ public class FetchDBInfoCommonTools {
 	}
 
 	// 导出非主键的索引
-	public List<String> getIndexs(Connection conn, String schema) {
+	public  static  List<String> getIndexs(Connection conn, String schema) {
 		String sql = "select INDNAME   " + " from syscat.indexes" + " where  INDSCHEMA = '" + schema + "' "
 				+ "    and UNIQUERULE <> 'P'"; // db2类型有 P(主键建表时候指定的), U (类似主键,保证数据唯一性) D 普通索引
 		List<String> ls = execSQL(conn, sql);
 		return ls;
 	}
 
-	public List<String> exportAllIndexs(Connection conn, String schema) {
+	public  static  List<String> exportAllIndexs(Connection conn, String schema) {
 		String sql = "select UNIQUERULE, INDNAME, TABNAME, COLNAMES , INDEXTYPE, REVERSE_SCANS "
 				+ " from syscat.indexes" + " where  INDSCHEMA = '" + schema + "' " + "    and UNIQUERULE <> 'P'";
 		return createIndexSQL(conn, sql);
 
 	}
 
-	public String exportIndex(Connection conn, String schema, String name) {
+	public  static  String exportIndex(Connection conn, String schema, String name) {
 		String sql = "select UNIQUERULE, INDNAME, TABNAME, COLNAMES , INDEXTYPE, REVERSE_SCANS "
 				+ " from syscat.indexes" + " where  INDSCHEMA = '" + schema + "' " + "    and UNIQUERULE <> 'P'"
 				+ "    and  INDNAME = '" + name + "'";
@@ -760,7 +785,7 @@ public class FetchDBInfoCommonTools {
 		return createSql;
 	}
 
-	private List<String> createIndexSQL(Connection conn, String sql) {
+	public  static List<String> createIndexSQL(Connection conn, String sql) {
 		List<String> ls = new ArrayList<String>();
 		try {
 			List<RsData> rs = DBTools.selectSql(conn, sql);
@@ -786,33 +811,33 @@ public class FetchDBInfoCommonTools {
 
 	}
 
-	public List<String> getViews(Connection conn, String schema) {
+	public  static  List<String> getViews(Connection conn, String schema) {
 		String sql = "select VIEWNAME  from SYSCAT.Views where VIEWSCHEMA = '" + schema + "'";
 		List<String> ls = execSQL(conn, sql);
 		return ls;
 	}
 
-	public List<String> exportAllViews(Connection conn, String schema) {
+	public  static  List<String> exportAllViews(Connection conn, String schema) {
 		String sql = "select TEXT  from SYSCAT.Views where VIEWSCHEMA = '" + schema + "'";
 		List<String> ls = execSQL(conn, sql);
 		return ls;
 	}
 
-	public String exportView(Connection conn, String schema, String viewname) {
+	public  static  String exportView(Connection conn, String schema, String viewname) {
 		String sql = "select TEXT  from SYSCAT.Views where VIEWSCHEMA = '" + schema + "' " + " and VIEWNAME = '"
 				+ viewname + "'";
 		String ls = selectOne(conn, sql);
 		return ls;
 	}
 
-	public List<myEntry<String, String>> getForeignKeys(Connection conn, String schema) {
+	public  static  List<myEntry<String, String>> getForeignKeys(Connection conn, String schema) {
 		String sql = "select TABNAME, CONSTNAME   from syscat.references where TABSCHEMA = '" + schema + "' ";
 		List<myEntry<String, String>> ls = execSQL2(conn, sql);
 //		setForeignKey(ls);
 		return ls;
 	}
 
-	private List<String> exportFk(Connection conn, String schema, String sql) {
+	public  static  List<String> exportFk(Connection conn, String schema, String sql) {
 		List<String> ls = new ArrayList<String>();
 		List<RsData> rs;
 		try {
@@ -854,14 +879,14 @@ public class FetchDBInfoCommonTools {
 		return ls;
 	}
 
-	public List<String> exportAllForeignKeys(Connection conn, String schema) {
+	public  static  List<String> exportAllForeignKeys(Connection conn, String schema) {
 		String sql = "select TABNAME, CONSTNAME, FK_COLNAMES, PK_COLNAMES, REFTABNAME, DELETERULE, UPDATERULE"
 				+ "  from syscat.references where TABSCHEMA = '" + schema + "' ";
 
 		return exportFk(conn, schema, sql);
 	}
 
-	public String exportForeignKey(Connection conn, String schema, String name) {
+	public  static  String exportForeignKey(Connection conn, String schema, String name) {
 		String sql = "select TABNAME, CONSTNAME, FK_COLNAMES, PK_COLNAMES, REFTABNAME, DELETERULE, UPDATERULE, FK_COLNAMES,PK_COLNAMES"
 				+ "  from syscat.references where TABSCHEMA = '" + schema + "' and CONSTNAME = '" + name + "' ";
 		String str = "";
