@@ -97,8 +97,6 @@ public class JsonTools {
 	/**
 	 * 
 	 * @param <T>
-	 * @param json
-	 * @param clazz
 	 * @return
 	 */
 	public static  <T> String listToJson(List<T> ls){ 

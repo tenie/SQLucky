@@ -325,8 +325,10 @@ public class RunSQLHelper {
 
 	// 调用函数/存储过程
 	public static void callProcedure(String sqlv, SqluckyConnector sqlConn, List<ProcedureFieldPo> fields) {
-		if (checkDBconn())
+		if (checkDBconn()){
 			return;
+		}
+
 		Connection connv = sqlConn.getConn();
 		try {
 			if (connv == null) {
@@ -348,8 +350,10 @@ public class RunSQLHelper {
 	}
 
 	public static void runSQLMethod(String sqlv, String tabIdxv, boolean isCreateFunc, Boolean isCurrentLine) {
-		if (checkDBconn())
+		if (checkDBconn()){
 			return;
+		}
+
 		SqluckyConnector sqlConn = AppCommonAction.getDbConnectionPoByComboBoxDbConnName();
 		Connection connv = sqlConn.getConn();
 		try {
