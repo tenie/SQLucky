@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import net.tenie.Sqlucky.sdk.config.CommonConst;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import com.jfoenix.controls.JFXButton;
@@ -235,7 +236,7 @@ public class MyBottomSheet {
 		}
 
 		// 从表格缓存中查找表
-		List<TablePo> tbs = TreeObjCache.tableCache.get(key.toUpperCase());
+		List<TablePo> tbs = TreeObjCache.getTable(key.toUpperCase());
 
 		TablePo tbrs = null;
 		for (TablePo po : tbs) {
@@ -246,7 +247,7 @@ public class MyBottomSheet {
 		}
 		// 从试图缓存中查找
 		if (tbrs == null) {
-			tbs = TreeObjCache.viewCache.get(key.toUpperCase());
+			tbs = TreeObjCache.getView(key.toUpperCase());
 			for (TablePo po : tbs) {
 				if (po.getTableName().toUpperCase().equals(tbn)) {
 					tbrs = po;
@@ -254,8 +255,40 @@ public class MyBottomSheet {
 				}
 			}
 		}
-		if (tbrs != null)
-			TreeObjAction.showTableSql(dbcp, tbrs);
+		if (tbrs != null) {
+            TreeObjAction.showTableSql(dbcp, tbrs);
+        }else{
+
+				int idx2 = rv.tableName.indexOf(".");
+				if(idx2 > 0){
+					String[] vales = rv.tableName.split("\\.");
+					TablePo po = null;
+					String tableDll = dbcp.getExportDDL().exportCreateTable(dbcp.getConn(), vales[0], vales[1]);
+					if (StrUtils.isNotNullOrEmpty(tableDll)){
+						po = new TablePo();
+						po.setTableName(vales[1]);
+						po.setTableRemarks("");
+						po.setTableSchema( vales[0]);
+						po.setTableType(CommonConst.TYPE_TABLE);
+						po.setDdl(tableDll);
+					}else {
+						String viewDDL = dbcp.getExportDDL().exportCreateView(dbcp.getConn(), vales[0], vales[1]);
+						if (StrUtils.isNotNullOrEmpty(viewDDL)){
+							po = new TablePo();
+							po.setTableName(vales[1]);
+							po.setTableRemarks("");
+							po.setTableSchema( vales[0]);
+							po.setTableType(CommonConst.TYPE_TABLE);
+							po.setDdl(viewDDL);
+						}
+					}
+					if (po != null ){
+						TreeObjAction.showTableSql(dbcp, po);
+					}
+
+
+				}
+		}
 
 	}
 

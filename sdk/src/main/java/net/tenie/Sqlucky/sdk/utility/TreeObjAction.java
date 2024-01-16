@@ -18,7 +18,6 @@ public class TreeObjAction {
 	 * 
 	 * @param sqluckyConn
 	 * @param table
-	 * @param tableName
 	 */
 	public static void showTableSql(SqluckyConnector sqluckyConn, TablePo table) {
 		String tableName = table.getTableName();

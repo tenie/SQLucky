@@ -5,17 +5,14 @@ import java.awt.EventQueue;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -1074,50 +1071,6 @@ public class CommonUtils {
 			return false;
 		}
 		return true;
-	}
-
-	// 获取tree 节点中的 table 的sql
-	public static void findTable(SheetDataValue dataObj) {
-		RsVal rv = new RsVal(dataObj);
-//		SqluckyBottomSheetUtility.tableInfo(dataObj);
-		SqluckyConnector dbcp = rv.dbconnPo;
-		if (dbcp == null) {
-			return;
-		}
-		String tbn = rv.tableName;
-		String key = "";
-		int idx = tbn.indexOf(".");
-		if (idx > 0) {
-			key = dbcp.getConnName() + "_" + tbn.substring(0, idx);
-			tbn = tbn.substring(idx + 1); // 去除schema , 得到表名
-		} else {
-			key = dbcp.getConnName() + "_" + dbcp.getDefaultSchema();
-		}
-
-		// 从表格缓存中查找表
-		List<TablePo> tbs = TreeObjCache.tableCache.get(key.toUpperCase());
-
-		TablePo tbrs = null;
-		for (TablePo po : tbs) {
-			if (po.getTableName().toUpperCase().equals(tbn)) {
-				tbrs = po;
-				break;
-			}
-		}
-		// 从试图缓存中查找
-		if (tbrs == null) {
-			tbs = TreeObjCache.viewCache.get(key.toUpperCase());
-			for (TablePo po : tbs) {
-				if (po.getTableName().toUpperCase().equals(tbn)) {
-					tbrs = po;
-					break;
-				}
-			}
-		}
-
-		if (tbrs != null)
-			TreeObjAction.showTableSql(dbcp, tbrs);
-
 	}
 
 	// 代码格式化

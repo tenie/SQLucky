@@ -354,10 +354,12 @@ public class Dbinfo {
 			}
 
 		} finally {
-			if (tablesResultSet != null)
-				tablesResultSet.close();
-			if (sm != null)
-				sm.close();
+			if (tablesResultSet != null) {
+                tablesResultSet.close();
+            }
+			if (sm != null) {
+                sm.close();
+            }
 		}
 		return tbls;
 	}
@@ -403,12 +405,14 @@ public class Dbinfo {
 			}
 
 		} finally {
-			if (tablesResultSet != null)
-				tablesResultSet.close();
+			if (tablesResultSet != null) {
+                tablesResultSet.close();
+            }
 //			if (rs != null)
 //				rs.close();
-			if (sm != null)
-				sm.close();
+			if (sm != null) {
+                sm.close();
+            }
 		}
 		return tbls;
 	}
@@ -450,12 +454,14 @@ public class Dbinfo {
 			}
 
 		} finally {
-			if (tablesResultSet != null)
-				tablesResultSet.close();
+			if (tablesResultSet != null) {
+                tablesResultSet.close();
+            }
 //			if (rs != null)
-//				rs.close();
-			if (sm != null)
-				sm.close();
+////				rs.close();
+			if (sm != null) {
+                sm.close();
+            }
 		}
 		return po;
 	}

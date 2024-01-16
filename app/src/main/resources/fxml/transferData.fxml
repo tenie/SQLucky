@@ -16,104 +16,104 @@
 <?import javafx.scene.layout.VBox?>
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="601.0" styleClass="myModalDialog" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.fx.controller.TransferDataController">
-   <children>
-      <Pane prefHeight="38.0" prefWidth="601.0" styleClass="myModalDialog">
-         <children>
-            <Label fx:id="title" layoutX="17.0" layoutY="3.0" text="数据库同步" />
-         </children>
-      </Pane>
-      <GridPane>
-        <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="54.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="184.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="541.0" minWidth="10.0" prefWidth="53.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="541.0" minWidth="10.0" prefWidth="306.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <Label text="Source" />
-            <Label text="Target" GridPane.columnIndex="2" />
-            <JFXComboBox fx:id="soDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" />
-            <JFXComboBox fx:id="soSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <JFXComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" />
-            <JFXComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-         </children>
-         <VBox.margin>
-            <Insets left="10.0" />
-         </VBox.margin>
-      </GridPane>
-      <GridPane prefHeight="146.0" prefWidth="591.0">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.0" minWidth="10.0" prefWidth="174.0" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="417.0" minWidth="10.0" prefWidth="417.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="37.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="42.0" minHeight="5.0" prefHeight="23.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="40.0" minHeight="7.0" prefHeight="26.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="51.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
-        </rowConstraints>
-         <children>
-            <JFXCheckBox fx:id="isIgnore" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="忽略错误继续执行" />
-            <JFXCheckBox fx:id="isDel" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="对象存在删除" GridPane.columnIndex="1" />
-            <JFXCheckBox fx:id="tabStruct" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步表结构" GridPane.rowIndex="1" />
-            <JFXCheckBox fx:id="chIndex" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步索引" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <JFXCheckBox fx:id="chView" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步视图" GridPane.rowIndex="2" />
-            <JFXCheckBox fx:id="chFun" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步函数" GridPane.rowIndex="3" />
-            <JFXCheckBox fx:id="chTri" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步触发器" GridPane.rowIndex="4" />
-            <JFXCheckBox fx:id="chSeq" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步序列" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <JFXCheckBox fx:id="chPro" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步过程" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <FlowPane prefHeight="26.0" prefWidth="417.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-               <children>
-                  <JFXCheckBox fx:id="tabData" mnemonicParsing="false" prefHeight="18.0" prefWidth="181.0" text="同步表数据, 每次最大行数:" />
-                  <TextField fx:id="amountTxt" prefHeight="23.0" prefWidth="54.0" styleClass="myFindTextField">
-                     <FlowPane.margin>
-                        <Insets />
-                     </FlowPane.margin>
-                  </TextField>
-               </children>
-            </FlowPane>
-         </children>
-         <VBox.margin>
-            <Insets bottom="10.0" left="10.0" />
-         </VBox.margin>
-      </GridPane>
-      <AnchorPane prefHeight="21.0" prefWidth="601.0">
-         <children>
-            <Label fx:id="tipsLabel" layoutX="15.0" layoutY="2.0" />
-         </children>
-      </AnchorPane>
-      <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
-         <children>
-            <AnchorPane fx:id="optionPane" prefHeight="27.0" prefWidth="601.0">
-               <children>
-                  <Label fx:id="queryLabel" layoutX="15.0" layoutY="6.0" text="查询" />
-                  <AnchorPane fx:id="tpane" layoutX="66.0" layoutY="2.0" prefHeight="25.0" prefWidth="200.0" />
-               </children>
-            </AnchorPane>
-            <AnchorPane prefHeight="35.0" prefWidth="601.0">
-               <children>
-                  <JFXButton fx:id="upSelBtn" layoutX="14.0" layoutY="6.0" text="Select All Up" />
-                  <JFXButton fx:id="downSelBtn" layoutX="102.0" layoutY="6.0" text="Select All Down" />
-                  <JFXButton fx:id="execBtn" layoutX="219.0" layoutY="6.0" mnemonicParsing="false" styleClass="transfer-btn" text="Run" />
-                  <JFXButton fx:id="stopBtn" layoutX="274.0" layoutY="6.0" mnemonicParsing="false" styleClass="transfer-btn" text="Stop" />
-                  <JFXButton fx:id="monBtn" layoutX="350.0" layoutY="6.0" text="Monitor" />
-                  <JFXButton fx:id="hideBtn" layoutX="455.0" layoutY="6.0" prefHeight="23.0" prefWidth="117.0" styleClass="transfer-btn" text="Hide Window" />
-               </children>
-            </AnchorPane>
-            <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" VBox.vgrow="ALWAYS" />
-         </children>
-      </VBox>
-   </children>
-   <opaqueInsets>
-      <Insets />
-   </opaqueInsets>
-   <padding>
-      <Insets top="10.0" />
-   </padding>
+    <children>
+        <Pane prefHeight="38.0" prefWidth="601.0" styleClass="myModalDialog">
+            <children>
+                <Label fx:id="title" layoutX="17.0" layoutY="3.0" text="数据库同步" />
+            </children>
+        </Pane>
+        <GridPane>
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="54.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="184.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="541.0" minWidth="10.0" prefWidth="53.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="541.0" minWidth="10.0" prefWidth="306.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label text="Source" />
+                <Label text="Target" GridPane.columnIndex="2" />
+                <JFXComboBox fx:id="soDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" />
+                <JFXComboBox fx:id="soSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <JFXComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" />
+                <JFXComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+            </children>
+            <VBox.margin>
+                <Insets left="10.0" />
+            </VBox.margin>
+        </GridPane>
+        <GridPane prefHeight="146.0" prefWidth="591.0">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="291.0" minWidth="10.0" prefWidth="174.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="417.0" minWidth="10.0" prefWidth="417.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints maxHeight="39.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="37.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="42.0" minHeight="5.0" prefHeight="23.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="40.0" minHeight="7.0" prefHeight="26.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="51.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <JFXCheckBox fx:id="isIgnore" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="忽略错误继续执行" />
+                <JFXCheckBox fx:id="isDel" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="对象存在删除" GridPane.columnIndex="1" />
+                <JFXCheckBox fx:id="tabStruct" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步表结构" GridPane.rowIndex="1" />
+                <JFXCheckBox fx:id="chIndex" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步索引" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                <JFXCheckBox fx:id="chView" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步视图" GridPane.rowIndex="2" />
+                <JFXCheckBox fx:id="chFun" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步函数" GridPane.rowIndex="3" />
+                <JFXCheckBox fx:id="chTri" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步触发器" GridPane.rowIndex="4" />
+                <JFXCheckBox fx:id="chSeq" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步序列" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <JFXCheckBox fx:id="chPro" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="同步过程" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <FlowPane prefHeight="26.0" prefWidth="417.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <children>
+                        <JFXCheckBox fx:id="tabData" mnemonicParsing="false" prefHeight="18.0" prefWidth="181.0" text="同步表数据, 每次最大行数:" />
+                        <TextField fx:id="amountTxt" prefHeight="23.0" prefWidth="54.0" styleClass="myFindTextField">
+                            <FlowPane.margin>
+                                <Insets />
+                            </FlowPane.margin>
+                        </TextField>
+                    </children>
+                </FlowPane>
+            </children>
+            <VBox.margin>
+                <Insets bottom="10.0" left="10.0" />
+            </VBox.margin>
+        </GridPane>
+        <AnchorPane prefHeight="21.0" prefWidth="601.0">
+            <children>
+                <Label fx:id="tipsLabel" layoutX="15.0" layoutY="2.0" />
+            </children>
+        </AnchorPane>
+        <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+            <children>
+                <FlowPane prefHeight="27.0" prefWidth="601.0">
+                    <children>
+                        <Label fx:id="queryLabel" text="查询" />
+                        <AnchorPane fx:id="tpane" prefHeight="25.0" prefWidth="200.0" />
+                        <JFXButton fx:id="upSelBtn" text="Select All Up" />
+                        <JFXButton fx:id="downSelBtn" text="Select All Down" />
+                    </children>
+                </FlowPane>
+                <FlowPane prefHeight="29.0" prefWidth="601.0">
+                    <children>
+                        <JFXButton fx:id="execBtn" mnemonicParsing="false" styleClass="transfer-btn" text="Run" />
+                        <JFXButton fx:id="stopBtn" mnemonicParsing="false" styleClass="transfer-btn" text="Stop" />
+                        <JFXButton fx:id="monBtn" text="Monitor" />
+                        <JFXButton fx:id="hideBtn"  styleClass="transfer-btn" text="Hide Window" />
+                    </children>
+                </FlowPane>
+                <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" VBox.vgrow="ALWAYS" />
+            </children>
+        </VBox>
+    </children>
+    <opaqueInsets>
+        <Insets />
+    </opaqueInsets>
+    <padding>
+        <Insets top="10.0" />
+    </padding>
 </VBox>
