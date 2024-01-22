@@ -34,27 +34,24 @@ public class SelectAction {
 
 	private static Logger logger = LogManager.getLogger(SelectAction.class);
 
-	public static void selectAction(String sql, SqluckyConnector sqluckyConn, int tidx, boolean isLock, Thread thread,
-			boolean isRefresh) throws Exception {
+	public static void selectAction(String sql, SqluckyConnector sqluckyConn, int tidx, boolean isLock) throws Exception {
+		MyBottomSheet myBottomSheet  = null;
 		try {
 			// 获取表名
 			String tableName = ParseSQL.tabName(sql);
-			MyBottomSheet myBottomSheet = new MyBottomSheet(tableName);
+			myBottomSheet = new MyBottomSheet(tableName);
 
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();
 
-//			FilteredTableView<ResultSetRowPo> table = SdkComponent.creatFilteredTableView(myBottomSheet);
 			FilteredTableView<ResultSetRowPo> table = sheetDaV.getTable();
 
 			if (StrUtils.isNullOrEmpty(tableName)) {
 				tableName = "Table Name Not Finded";
 			}
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
-//			SheetDataValue sheetDaV = new SheetDataValue();
 			sheetDaV.setDbConnection(sqluckyConn);
-			String connectName = sqluckyConn.getConnName(); //DBConns.getCurrentConnectName();
+			String connectName = sqluckyConn.getConnName();
 			sheetDaV.setSqlStr(sql);
-//			sheetDaV.setTable(table);
 			sheetDaV.setTabName(tableName);
 			sheetDaV.setConnName(connectName);
 			sheetDaV.setLock(isLock);
@@ -93,7 +90,8 @@ public class SelectAction {
 			// 列顺序重排
 			CacheDataTableViewShapeChange.colReorder(sheetDaV.getTabName(), colss, table);
 			// 渲染界面
-			if (thread != null && !thread.isInterrupted()) {
+			if (! Thread.currentThread().isInterrupted()) {
+//			if (thread != null && !thread.isInterrupted()) {
 //				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(myBottomSheet, sheetDaV, tidx,
 //						false);
 //				TableViewUtils.rmWaitingPane(isRefresh);
@@ -103,17 +101,14 @@ public class SelectAction {
 						colss);
 			}
 		} catch (Exception e) {
+			if(myBottomSheet!= null){
+				myBottomSheet.clean();
+			}
 			e.printStackTrace();
 			throw e;
 		}
 	}
 	
-	
-	public static void selectAction2(String sql, SqluckyConnector sqluckyConn) throws SQLException {
 
-			SelectExecInfo execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, sqluckyConn);
-			ObservableList<ResultSetRowPo> allRawData = execInfo.getDataRs().getDatas();
-			 
-	}
 
 }

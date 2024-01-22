@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -58,7 +59,7 @@ public class SelectDao {
 	}
 
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static SelectExecInfo selectSql2(String sql, int limit, SqluckyConnector sqluckyConn) throws SQLException {
+	public static SelectExecInfo selectSql2(String sql, int limit, SqluckyConnector sqluckyConn) throws Exception {
 		Connection conn = sqluckyConn.getConn();
 		SelectExecInfo execInfo = new SelectExecInfo();
 
@@ -67,6 +68,8 @@ public class SelectDao {
 		ResultSet rs = null;
 		try {
 			pstate = conn.prepareStatement(sql);
+
+			ComponentGetter.setCurrentSqlStatement(pstate);
 			// 计时
 			long startTime = System.currentTimeMillis(); // 获取开始时间
 
@@ -77,6 +80,9 @@ public class SelectDao {
 			double vt = usetime / 1000.0;
 			logger.info("查询时间： " + usetime + "ms");
 			execInfo.setExecTime(vt);
+			if( Thread.currentThread().isInterrupted() ){
+				throw new  InterruptedException();
+			}
 //			// 获取元数据
 			ObservableList<SheetFieldPo> fields = resultSetMetaData(rs);
 			ResultSetPo setPo = new ResultSetPo(fields);
@@ -92,12 +98,13 @@ public class SelectDao {
 			execInfo.setDataRs(setPo);
 			execInfo.setColss(fields);
 			execInfo.setRowSize(rowSize);
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			throw e;
 		} finally {
 			logger.debug("finally : selectSql()");
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 
 		return execInfo;
@@ -124,8 +131,9 @@ public class SelectDao {
 			throw e;
 		} finally {
 			logger.debug("finally: selectSql() return ResultSetPo");
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 		return setPo;
 	}
@@ -173,8 +181,9 @@ public class SelectDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 	}
 
@@ -188,7 +197,6 @@ public class SelectDao {
 		ObservableList<ObservableList<StringProperty>> val = FXCollections.observableArrayList();
 		ObservableList<StringProperty> rowval = FXCollections.observableArrayList();
 		try {
-
 			if (pfp.size() > 0) {
 				String callsql = "{call " + proName + "(";
 				for (int i = 0; i < pfp.size(); i++) {
@@ -199,7 +207,7 @@ public class SelectDao {
 				callsql += " ) }";
 
 				call = conn.prepareCall(callsql);
-
+				ComponentGetter.setCurrentSqlStatement(call);
 				for (int i = 0; i < pfp.size(); i++) {
 					ProcedureFieldPo po = pfp.get(i);
 					if (po.isIn()) {
@@ -255,8 +263,9 @@ public class SelectDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 	}
 
@@ -289,18 +298,22 @@ public class SelectDao {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 		return dpo;
 	}
 
 	private static void execRs(int limit, ResultSet rs, SqluckyConnector sqluckyConn, ResultSetPo setPo)
-			throws SQLException {
+			throws SQLException , InterruptedException{
 		int idx = 1;
 		ObservableList<SheetFieldPo> fpo = setPo.getFields();
 		int columnnums = fpo.size();
 		while (rs.next()) {
+			if( Thread.currentThread().isInterrupted() ){
+				throw new  InterruptedException();
+			}
 			ResultSetRowPo rowpo = new ResultSetRowPo(setPo);
 
 			for (int i = 0; i < columnnums; i++) {
@@ -361,7 +374,7 @@ public class SelectDao {
 		}
 	}
 
-	private static void execRs(ResultSet rs, SqluckyConnector dpo, ResultSetPo setPo) throws SQLException {
+	private static void execRs(ResultSet rs, SqluckyConnector dpo, ResultSetPo setPo) throws Exception {
 		execRs(Integer.MAX_VALUE, rs, dpo, setPo);
 	}
 
@@ -369,7 +382,6 @@ public class SelectDao {
 	 * 从数据库返回集中获取数据后转换为对象
 	 * 
 	 * @param rs
-	 * @param sqlConn
 	 * @param setPo
 	 * @throws SQLException
 	 */
@@ -414,12 +426,14 @@ public class SelectDao {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
+			if (rs != null){
 				try {
 					rs.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
+			}
+
 		}
 
 		return str;

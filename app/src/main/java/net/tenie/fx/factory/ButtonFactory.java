@@ -27,7 +27,7 @@ import net.tenie.fx.Action.RunSQLHelper;
  *
  */
 public class ButtonFactory {
-	public static TextField rows;
+	public static TextField rowsTextField;
 
 	// 代码区
 	// codeArea 代码区域 按钮初始化
@@ -147,32 +147,32 @@ public class ButtonFactory {
 
 		// sql 执行读取行数
 		Label lb = new Label("Max Rows: ");
-		rows = new TextField();
-		ComponentGetter.maxRowsTextField = rows;
-		lb.setLabelFor(rows);
-		rows.setPrefHeight(25);
-		rows.setMinHeight(25);
+		rowsTextField = new TextField();
+		ComponentGetter.maxRowsTextField = rowsTextField;
+		lb.setLabelFor(rowsTextField);
+		rowsTextField.setPrefHeight(25);
+		rowsTextField.setMinHeight(25);
 
 //			rows.setLabelFloat(true);
 //			rows.setPromptText("Max Rows");
-		rows.getStyleClass().add("myTextField");
-		rows.setMaxWidth(90);
-		rows.setTooltip(MyTooltipTool.instance("Load query data rows, suggest <10000 "));
-		rows.setText(ConfigVal.MaxRows + "");
+		rowsTextField.getStyleClass().add("myTextField");
+		rowsTextField.setMaxWidth(90);
+		rowsTextField.setTooltip(MyTooltipTool.instance("Load query data rows, suggest <10000 "));
+		rowsTextField.setText(ConfigVal.MaxRows + "");
 
-		TextFieldSetup.setMaxLength(rows, 9);
-		TextFieldSetup.maxRowsNumberOnly(rows);
+		TextFieldSetup.setMaxLength(rowsTextField, 9);
+		TextFieldSetup.maxRowsNumberOnly(rowsTextField);
 
 		// 失去焦点, 如果没有输入值默认1
-		rows.focusedProperty().addListener((observable, oldValue, newValu) -> {
+		rowsTextField.focusedProperty().addListener((observable, oldValue, newValu) -> {
 			if (newValu == false) {
-				if (StrUtils.isNullOrEmpty(rows.getText())) {
-					rows.setText("1");
+				if (StrUtils.isNullOrEmpty(rowsTextField.getText())) {
+					rowsTextField.setText("1");
 				}
 			}
 		});
 
-		int y = 0;
+		int xAxis = 0;
 		int fix = 30;
 		pn.getChildren().add(runbtn);
 		runbtn.setLayoutX(0);
@@ -181,57 +181,57 @@ public class ButtonFactory {
 		// runLinebtn
 		pn.getChildren().add(runLinebtn);
 		runLinebtn.setLayoutY(0);
-		y += fix;
-		runLinebtn.setLayoutX(y);
+		xAxis += fix;
+		runLinebtn.setLayoutX(xAxis);
 
 		pn.getChildren().add(stopbtn);
 		stopbtn.setLayoutY(0);
-		y += fix;
-		stopbtn.setLayoutX(y);
+		xAxis += fix;
+		stopbtn.setLayoutX(xAxis);
 
 		pn.getChildren().add(addcodeArea);
 		addcodeArea.setLayoutY(0);
-		y += fix;
-		addcodeArea.setLayoutX(y);
+		xAxis += fix;
+		addcodeArea.setLayoutX(xAxis);
 
 		pn.getChildren().add(saveSQL);
 		saveSQL.setLayoutY(0);
-		y += fix;
-		saveSQL.setLayoutX(y);
+		xAxis += fix;
+		saveSQL.setLayoutX(xAxis);
 
 		pn.getChildren().add(formatSQL);
 		formatSQL.setLayoutY(0);
-		y += fix;
-		formatSQL.setLayoutX(y);
+		xAxis += fix;
+		formatSQL.setLayoutX(xAxis);
 
 		// runFunPro
 		pn.getChildren().add(runFunPro);
 		runFunPro.setLayoutY(0);
-		y += fix;
-		runFunPro.setLayoutX(y);
+		xAxis += fix;
+		runFunPro.setLayoutX(xAxis);
 
 		// findSQlTxt
 		pn.getChildren().add(findSQlTxt);
 		findSQlTxt.setLayoutY(0);
-		y += fix;
-		findSQlTxt.setLayoutX(y);
+		xAxis += fix;
+		findSQlTxt.setLayoutX(xAxis);
 
 		pn.getChildren().add(lbcnn);
 		lbcnn.setLayoutY(5);
-		y += fix + 100;
-		lbcnn.setLayoutX(y);
+		xAxis += fix + 60;
+		lbcnn.setLayoutX(xAxis);
 		pn.getChildren().add(connsComboBox);
 		connsComboBox.setLayoutY(0);
-		y += fix + 70;
-		connsComboBox.setLayoutX(y);
+		xAxis += fix + 85;
+		connsComboBox.setLayoutX(xAxis);
 		pn.getChildren().add(lb);
 		lb.setLayoutY(5);
-		y += fix + 190;
-		lb.setLayoutX(y);
-		pn.getChildren().add(rows);
-		rows.setLayoutY(0);
-		y += fix + 40;
-		rows.setLayoutX(y);
+		xAxis += fix + 190;
+		lb.setLayoutX(xAxis);
+		pn.getChildren().add(rowsTextField);
+		rowsTextField.setLayoutY(0);
+		xAxis += fix + 45;
+		rowsTextField.setLayoutX(xAxis);
 
 		CommonButtons.runbtn = runbtn;
 		CommonButtons.stopbtn = stopbtn;

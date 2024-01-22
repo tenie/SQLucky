@@ -198,7 +198,7 @@ public class MyBottomSheet {
 
 			// 保存按钮禁用
 			tableData.getSaveBtn().setDisable(btnDisable);
-			TableViewUtils.showInfo(ddlDmlpo, null);
+			TableViewUtils.showInfo(ddlDmlpo);
 
 		}
 
@@ -304,8 +304,9 @@ public class MyBottomSheet {
 					execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, DBConns.get(connName));
 					ObservableList<ResultSetRowPo> allRawData = execInfo.getDataRs().getDatas();
 					tableData.getTable().setItems(allRawData);
-				} catch (SQLException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
+
 				}
 			}else {
 				// TODO 关闭当前tab
@@ -389,7 +390,7 @@ public class MyBottomSheet {
 				ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("fail."), fs.get(2));
 			} finally {
 				if (showDBExecInfo) {
-					TableViewUtils.showInfo(ddlDmlpo, null);
+					TableViewUtils.showInfo(ddlDmlpo);
 				}
 			}
 		};
@@ -1144,12 +1145,7 @@ public class MyBottomSheet {
 
 	/**
 	 * 数据库 表 ddl语句,操作按钮
-	 * 
-	 * @param mytb
-	 * @param ddl
-	 * @param isRunFunc
-	 * @param isProc
-	 * @param name
+	 *
 	 * @return
 	 */
 	public List<Node> tableDDLOptionBtns(SqluckyConnector sqluckyConn, VBox vb, StackPane sp, TablePo table) {
@@ -1347,13 +1343,12 @@ public class MyBottomSheet {
 	 * 表格数据导出到excel
 	 * 
 	 * @param isSelect  true 导出选中行的数据, fasle 全部导出
-	 * @param mtd       可以输入null , null时从当前tabpane中查找对象
-	 * @param tableData 可以输入null , null时从当前tabpane中查找对象
 	 */
 	public void exportExcelAction(boolean isSelect) {
 		File ff = CommonUtils.getFilePathHelper("xls");
-		if (ff == null)
-			return;
+		if (ff == null) {
+            return;
+        }
 		if (ff.exists()) {
 			MyAlert.errorAlert("File Name Exist. Need A New File Name, Please!");
 			return;
@@ -1418,8 +1413,6 @@ public class MyBottomSheet {
 
 	/**
 	 * 数据库对象 的ddl语句， 操作按钮 , 除了表格和视图对象, 暂时先不使用
-	 * 
-	 * @param mytb
 	 * @param ddl
 	 * @param isRunFunc
 	 * @param isProc

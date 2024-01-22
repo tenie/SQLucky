@@ -1,8 +1,10 @@
 package net.tenie.fx.Action.sqlExecute;
 
 import java.sql.Connection;
+import java.sql.Statement;
 import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,7 +32,7 @@ import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 public class ProcedureAction {
 
 	private static Logger logger = LogManager.getLogger(ProcedureAction.class);
-	private static Thread staticThread = null;
+//	private static Thread staticThread = null;
 
 	/**
 	 * 存储过程执行,
@@ -40,13 +42,11 @@ public class ProcedureAction {
 	 * @param fields
 	 * @param tidx
 	 * @param isLock
-	 * @param thread
-	 * @param isRefresh
 	 * @throws Exception
 	 */
 	public static void procedureAction(String sql, SqluckyConnector dpo, List<ProcedureFieldPo> fields, int tidx,
-			boolean isLock, Thread thread, boolean isRefresh) throws Exception {
-		staticThread = thread;
+			boolean isLock) throws Exception {
+//		staticThread = thread;
 		String msg = "";
 		Connection conn = dpo.getConn();
 		try {
@@ -57,8 +57,8 @@ public class ProcedureAction {
 
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 
-			SheetDataValue dvt = myBottomSheet.getTableData();// new SheetDataValue();
-			// TODO callProcedure
+			SheetDataValue dvt = myBottomSheet.getTableData();
+			// 执行sql
 			SelectDao.callProcedure(conn, sql, table.getId(), dvt, fields);
 
 			DataViewContainer.setTabRowWith(table, dvt.getDataRs().getDatas().size());
@@ -89,12 +89,14 @@ public class ProcedureAction {
 			table.getColumns().addAll(ls);
 			table.setItems(allRawData);
 			// 渲染界面
-			if (staticThread != null && !staticThread.isInterrupted()) {
+
+//			if (staticThread != null && !staticThread.isInterrupted()) {
+			if (! Thread.currentThread().isInterrupted()) {
 				if (hasOut(fields)) {
 //					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, true);
 //					SqlExecuteOption.rmWaitingPane( isRefresh );
-					TableViewUtils.rmWaitingPane(isRefresh);
-					myBottomSheet.showSelectData(tidx, isRefresh);
+					TableViewUtils.rmWaitingPane(false);
+					myBottomSheet.showSelectData(tidx, false);
 
 				} else {
 					msg = "ok. ";
@@ -130,7 +132,7 @@ public class ProcedureAction {
 //			val.add(CommonUtility.createReadOnlyStringProperty("" ));
 //			ddlDmlpo.addData(val);
 //			SqlExecuteOption.showExecuteSQLInfo(ddlDmlpo, thread);
-			TableViewUtils.showInfo(ddlDmlpo, thread);
+			TableViewUtils.showInfo(ddlDmlpo);
 		}
 	}
 

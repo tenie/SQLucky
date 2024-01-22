@@ -62,7 +62,6 @@ public class TableViewUtils {
 	 * @param sql
 	 * @param conn
 	 * @param tableName
-	 * @param fieldWidthMap
 	 * @return
 	 */
 	public static SheetTableData sqlToSheet(String sql, Connection conn, String tableName) {
@@ -223,8 +222,9 @@ public class TableViewUtils {
 			width = cusWidth;
 		} else {
 			width = (colname.length() * 10.0) + 15;
-			if (width < 90)
-				width = 100.0;
+			if (width < 90) {
+                width = 100.0;
+            }
 		}
 
 		col.setMinWidth(width);
@@ -412,7 +412,7 @@ public class TableViewUtils {
 	}
 
 	// 展示信息窗口,
-	public static void showInfo(DbTableDatePo ddlDmlpo, Thread thread) {
+	public static void showInfo(DbTableDatePo ddlDmlpo) {
 		// 有数据才展示
 		if (ddlDmlpo.getResultSet().getDatas().size() > 0) {
 			String tableName = ConfigVal.EXEC_INFO_TITLE;
@@ -432,9 +432,9 @@ public class TableViewUtils {
 
 			rmWaitingPane(true);
 			// 渲染界面
-			if (thread != null && thread.isInterrupted()) {
-				return;
-			}
+//			if (! Thread.currentThread().isInterrupted()) {
+//				return;
+//			}
 
 			boolean showtab = true;
 			if (showtab) {

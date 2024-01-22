@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,8 +25,12 @@ public class DmlDdlDao {
 	}
 
 	public static String deleteSql2(Connection conn, String sql) throws SQLException {
-		int i = execDML(conn, sql);
+//		int i = execDML(conn, sql);
+		Statement sm = conn.createStatement();
+		ComponentGetter.setCurrentSqlStatement(sm);
+		int i = execDML(conn, sm , sql);
 		return "ok, delete:" + i;
+
 	}
 
 	public static DbTableDatePo updateSql(Connection conn, String sql) throws SQLException {
@@ -38,7 +43,9 @@ public class DmlDdlDao {
 	}
 
 	public static String updateSql2(Connection conn, String sql) throws SQLException {
-		int i = execDML(conn, sql);
+		Statement sm = conn.createStatement();
+		ComponentGetter.setCurrentSqlStatement(sm);
+		int i = execDML(conn, sm , sql);
 		return "ok, Update: " + i;
 	}
 
@@ -52,7 +59,10 @@ public class DmlDdlDao {
 	}
 
 	public static String insertSql2(Connection conn, String sql) throws SQLException {
-		int i = execDML(conn, sql);
+//		int i = execDML(conn, sql);
+		Statement sm = conn.createStatement();
+		ComponentGetter.setCurrentSqlStatement(sm);
+		int i = execDML(conn, sm , sql);
 		return "ok, Insert: " + i;
 	}
 
@@ -66,8 +76,12 @@ public class DmlDdlDao {
 	}
 
 	public static String dropSql2(Connection conn, String sql) throws SQLException {
-		execDDL(conn, sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		ComponentGetter.setCurrentSqlStatement(pstmt);
+		execDDL(conn, pstmt, sql);
+
 		return "ok";
+
 	}
 
 	public static DbTableDatePo alterSql(Connection conn, String sql) throws SQLException {
@@ -80,7 +94,10 @@ public class DmlDdlDao {
 	}
 
 	public static String alterSql2(Connection conn, String sql) throws SQLException {
-		execDDL(conn, sql);
+//		execDDL(conn, sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		ComponentGetter.setCurrentSqlStatement(pstmt);
+		execDDL(conn, pstmt, sql);
 		return "ok";
 	}
 
@@ -94,7 +111,12 @@ public class DmlDdlDao {
 	}
 
 	public static String createSql2(Connection conn, String sql) throws SQLException {
-		execDDL(conn, sql);
+//		execDDL(conn, sql);
+
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		ComponentGetter.setCurrentSqlStatement(pstmt);
+		execDDL(conn, pstmt, sql);
+
 		return "ok";
 	}
 
@@ -108,7 +130,10 @@ public class DmlDdlDao {
 	}
 
 	public static String otherSql2(Connection conn, String sql) throws SQLException {
-		execDDL(conn, sql);
+//		execDDL(conn, sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql);
+		ComponentGetter.setCurrentSqlStatement(pstmt);
+		execDDL(conn, pstmt, sql);
 		return "ok";
 	}
 	
@@ -129,11 +154,30 @@ public class DmlDdlDao {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (sm != null)
-				sm.close();
+			if (sm != null) {
+                sm.close();
+            }
 		}
 		return i;
 	}
+
+
+	public static int execDML(Connection conn,  Statement sm , String delSQl) throws SQLException {
+		int i = 0;
+		try {
+			logger.info("执行   " + delSQl);
+			i = sm.executeUpdate(delSQl);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (sm != null) {
+				sm.close();
+			}
+		}
+		return i;
+	}
+
 
 	public static void execDDL(Connection conn, String sql) throws SQLException {
 		PreparedStatement pstmt = null;
@@ -145,8 +189,26 @@ public class DmlDdlDao {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
 		}
 	}
+
+	public static void execDDL(Connection conn, PreparedStatement pstmt, String sql) throws SQLException {
+//		PreparedStatement pstmt = null;
+		try {
+			logger.info("执行   " + sql);
+//			pstmt = conn.prepareStatement(sql);
+			pstmt.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			if (pstmt != null) {
+                pstmt.close();
+            }
+		}
+	}
+
 }

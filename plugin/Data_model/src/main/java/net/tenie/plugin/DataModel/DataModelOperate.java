@@ -212,8 +212,6 @@ public class DataModelOperate {
 
 		} else {
 			logger.debug("delay  Query Thread");
-			return;
-
 		}
 
 	}
@@ -222,16 +220,15 @@ public class DataModelOperate {
 	private void exeQueryTableFields(String queryStr) {
 		Long modelId = 0L;
 		String modelIds = "0";
-		var allmodels = DataModelTabTree.treeRoot.getChildren();
-		for (Iterator iterator = allmodels.iterator(); iterator.hasNext();) {
-			TreeItem<DataModelTreeNodePo> treeItem = (TreeItem<DataModelTreeNodePo>) iterator.next();
-			// 模型激活状态有子节点才获取模型的ID
-			if (treeItem.getChildren().size() > 0) {
-				DataModelTreeNodePo modelepo = treeItem.getValue();
-				modelId = modelepo.getModelId();
-				modelIds += "," + modelId;
-			}
-		}
+		ObservableList<TreeItem<DataModelTreeNodePo>> allmodels = DataModelTabTree.treeRoot.getChildren();
+        for (TreeItem<DataModelTreeNodePo> treeItem : allmodels) {
+            // 模型激活状态有子节点才获取模型的ID
+            if (!treeItem.getChildren().isEmpty()) {
+                DataModelTreeNodePo modelepo = treeItem.getValue();
+                modelId = modelepo.getModelId();
+                modelIds += "," + modelId;
+            }
+        }
 
 		queryStr = queryStr.toUpperCase();
 
@@ -242,7 +239,7 @@ public class DataModelOperate {
 				+ "%' or a.COMMENT like '%" + queryStr + "%' )";
 		try {
 			// TODO
-			List<Node> btns = new ArrayList();
+			List<Node> btns = new ArrayList<>();
 			// 导出excel
 			JFXButton exportExcel = new JFXButton();
 			exportExcel.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
@@ -358,7 +355,7 @@ public class DataModelOperate {
 		// 遍历所有模型treeItem
 		for (TreeItem<DataModelTreeNodePo> model : allModels) {
 			// treeItem 有子节点才继续
-			if (model.getChildren().size() > 0) {
+			if (!model.getChildren().isEmpty()) {
 				// 新表集合， 存放查找到的表
 				ObservableList<TreeItem<DataModelTreeNodePo>> filterTable = FXCollections.observableArrayList();
 				var allTables = model.getChildren();
@@ -397,29 +394,30 @@ public class DataModelOperate {
 					// 清空原来的表集合
 					model.getChildren().clear();
 				}
-				if (model.getChildren().size() > 0) {
+				if (!model.getChildren().isEmpty()) {
 					model.setExpanded(exists);
 				}
 			}
 		}
 		// 展开模型treeItem
-		if (DataModelTabTree.treeRoot.getChildren().size() > 0)
-			DataModelTabTree.treeRoot.getChildren().get(0).setExpanded(exists);
+		if (DataModelTabTree.treeRoot.getChildren().size() > 0) {
+            DataModelTabTree.treeRoot.getChildren().get(0).setExpanded(exists);
+        }
 	}
 
 	// 查询字符串 ObservableList<TreeItem<TreeNodePo>> rs =
 	// FXCollections.observableArrayList();
-	private static ObservableList<TreeItem<DataModelTreeNodePo>> filter(
-			ObservableList<TreeItem<DataModelTreeNodePo>> val, String str) {
-		ObservableList<TreeItem<DataModelTreeNodePo>> rs = FXCollections.observableArrayList();
-		String temp = str.toUpperCase();
-		val.forEach(v -> {
-			if (v.getValue().getName().toUpperCase().contains(temp)) {
-				rs.add(v);
-			}
-		});
-		return rs;
-	}
+//	private static ObservableList<TreeItem<DataModelTreeNodePo>> filter(
+//			ObservableList<TreeItem<DataModelTreeNodePo>> val, String str) {
+//		ObservableList<TreeItem<DataModelTreeNodePo>> rs = FXCollections.observableArrayList();
+//		String temp = str.toUpperCase();
+//		val.forEach(v -> {
+//			if (v.getValue().getName().toUpperCase().contains(temp)) {
+//				rs.add(v);
+//			}
+//		});
+//		return rs;
+//	}
 
 	public static DataModelInfoPo readJosnModel(String fileName, String encode) {
 		DataModelInfoPo DataModelPoVal = null;

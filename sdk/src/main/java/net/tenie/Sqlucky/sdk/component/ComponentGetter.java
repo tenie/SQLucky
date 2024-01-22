@@ -26,6 +26,8 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 
+import java.sql.Statement;
+
 /**
  * 
  * @author tenie
@@ -111,6 +113,8 @@ public final class ComponentGetter {
 	public static Region iconRight;
 	public static Region iconLeft;
 
+
+	public static Statement sqlStatement;
 	public static Region getIconUnActive(String name) {
 		var rs = appComponent.getIconUnactive(name);
 		return rs;
@@ -120,7 +124,9 @@ public final class ComponentGetter {
 		var rs = appComponent.getIconDefActive(name);
 		return rs;
 	}
-
+	public  static void setCurrentSqlStatement(Statement stm){
+		ComponentGetter.sqlStatement = stm;
+	}
 //	public static SqluckyBottomSheet currentDataTab() {
 //		SqluckyBottomSheet tab = (MyTabData) ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
 //		return tab;

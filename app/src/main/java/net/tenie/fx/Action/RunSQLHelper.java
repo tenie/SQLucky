@@ -7,8 +7,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
@@ -53,8 +51,9 @@ public class RunSQLHelper {
 	// 执行状态, 失败赋值为0， 成功为1
 	public static Map<Long, Integer> RUN_STATUS = new HashMap<>();
 
-	private static Logger logger = LogManager.getLogger(RunSQLHelper.class);
+	private static final Logger logger = LogManager.getLogger(RunSQLHelper.class);
 	private static Thread thread;
+
 	private static JFXButton runbtn;
 	private static JFXButton runLinebtn;
 	private static JFXButton stopbtn;
@@ -62,8 +61,9 @@ public class RunSQLHelper {
 	
 	public  static boolean isRunning = false;
 
-	ExecutorService service = Executors.newFixedThreadPool(1);
+//	ExecutorService service = Executors.newFixedThreadPool(1);
 	private static SqluckyConnector tmpSqlConn;
+
 
 	// 获取执行状态，成功或失败
 	public static Integer runStatus(Long key) {
@@ -112,15 +112,16 @@ public class RunSQLHelper {
 				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
 				allsqls = SqluckyAppDB.willExecSql(state.getIsCurrentLine());
 			}
-			String waitShowSqlStr  = "";
-			for(int k = 0; k < allsqls.size(); k++) {
+//			String waitShowSqlStr = "";
+//			for (int k = 0; k < allsqls.size(); k++) {
 //				var sqltmp = allsqls.get(k);
 //				sqltmp.sql()
-				waitShowSqlStr +=	allsqls.get(k).sql() + "\n";
-			}
-		
-			// 执行sql
-			var rsVal = execSqlList(allsqls, state.getSqlConn(), state);
+//				waitShowSqlStr += allsqls.get(k).sql() + "\n";
+//			}
+
+			// 执行sql SqluckyConnector
+			tmpSqlConn = state.getSqlConn();
+			var rsVal = execSqlList(allsqls, tmpSqlConn, state);
 
 			// 执行sql的状态保存
 			if (state.getStatusKey() != null) {
@@ -129,6 +130,9 @@ public class RunSQLHelper {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			if( ! thread.isInterrupted()){
+				thread.interrupt();
+			}
 		} finally {
 			if (isRunning) {
 				settingBtn();
@@ -136,6 +140,8 @@ public class RunSQLHelper {
 				state.setIsCallFunc(false);
 				SdkComponent.rmWaitingPane();
 			}
+			tmpSqlConn = null;
+			ComponentGetter.sqlStatement = null;
 
 			isRunning = false;
 		}
@@ -143,9 +149,8 @@ public class RunSQLHelper {
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static Integer execSqlList(List<SqlData> allsqls, SqluckyConnector sqluckyConn, RunSqlStatePo state)
-			throws SQLException {
-		Integer rsVal = 1;
+	private static Integer execSqlList(List<SqlData> allsqls, SqluckyConnector sqluckyConn, RunSqlStatePo state) {
+		int rsVal = 1;
 		String sqlstr;
 		String sql;
 	
@@ -162,11 +167,9 @@ public class RunSQLHelper {
 			SdkComponent.setWaitTabLabelText(sql);
 			try {
 				if (state.getIsCallFunc()) { // 调用存储过程
-					ProcedureAction.procedureAction(sql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(),
-							state.getIsLock(), thread, state.getIsRefresh());
+					ProcedureAction.procedureAction(sql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
 				} else if (type == ParseSQL.SELECT) { // 调用查询
-					SelectAction.selectAction(sql, sqluckyConn, state.getTidx(), state.getIsLock(), thread,
-							state.getIsRefresh());
+					SelectAction.selectAction(sql, sqluckyConn, state.getTidx(), state.getIsLock() );
 				} else { 
 					Connection conn = sqluckyConn.getConn();
 					if (type == ParseSQL.UPDATE) {
@@ -215,7 +218,7 @@ public class RunSQLHelper {
 					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 							fls.get(0));
 					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fls.get(1));
-					int endIdx = sqlstr.length() > 100 ? 100 : sqlstr.length();
+					int endIdx = sqlstr.length() > 400 ? 400 : sqlstr.length();
 					ddlDmlpo.addData(row,
 							CommonUtils.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... "),
 							fls.get(2));
@@ -223,8 +226,8 @@ public class RunSQLHelper {
 			}
 
 		}
-		// 如果 ddlDmlpo 中有 msg的信息 就会显示到界面上
-		TableViewUtils.showInfo(ddlDmlpo, thread);
+		// 如果 ddlDmlpo 中有 msg的信息 就会显示到界面上 if (! Thread.currentThread().isInterrupted()) {
+		TableViewUtils.showInfo(ddlDmlpo);
 		// 如果是执行的界面上的sql, 那么对错误的sql渲染为红色
 		if (StrUtils.isNullOrEmpty(state.getSqlStr())) {
 			Platform.runLater(() -> {
@@ -269,14 +272,14 @@ public class RunSQLHelper {
 		ComponentGetter.connComboBox.setDisable(runbtn.disabledProperty().getValue());
 	}
 
-	public static void settingBtn(JFXButton run, boolean runt, JFXButton stop, boolean stopt, JFXButton btn) {
-		run.setDisable(runt);
-		btn.setDisable(runt);
-		stop.setDisable(stopt);
-	}
+//	public static void settingBtn(JFXButton run, boolean runt, JFXButton stop, boolean stopt, JFXButton btn) {
+//		run.setDisable(runt);
+//		btn.setDisable(runt);
+//		stop.setDisable(stopt);
+//	}
 
 	// 检查db连接状态
-	private static boolean checkDBconn() {
+	private static boolean checkDBConn() {
 		ComboBox<Label> conns = ComponentGetter.connComboBox;
 		boolean warn = false;
 		if (conns.getValue() == null || StrUtils.isNullOrEmpty(conns.getValue().getText())) {
@@ -325,7 +328,7 @@ public class RunSQLHelper {
 
 	// 调用函数/存储过程
 	public static void callProcedure(String sqlv, SqluckyConnector sqlConn, List<ProcedureFieldPo> fields) {
-		if (checkDBconn()){
+		if (checkDBConn()){
 			return;
 		}
 
@@ -350,7 +353,7 @@ public class RunSQLHelper {
 	}
 
 	public static void runSQLMethod(String sqlv, String tabIdxv, boolean isCreateFunc, Boolean isCurrentLine) {
-		if (checkDBconn()){
+		if (checkDBConn()){
 			return;
 		}
 
@@ -433,8 +436,19 @@ public class RunSQLHelper {
 		if (thread != null && !stopbtn.disabledProperty().getValue()) {
 			thread.interrupt();
 			logger.info("线程是否被中断：" + thread.isInterrupted());
-			tmpSqlConn.closeConn();
-			tmpSqlConn.getConn();
+			if (ComponentGetter.sqlStatement != null) {
+				try {
+					ComponentGetter.sqlStatement.cancel();
+				} catch (SQLException e) {
+					e.printStackTrace();
+					throw new RuntimeException(e);
+				}
+			}
+			if (tmpSqlConn != null) {
+				tmpSqlConn.closeConn();
+				tmpSqlConn.getConn();
+			}
+
 		}
 	}
 
