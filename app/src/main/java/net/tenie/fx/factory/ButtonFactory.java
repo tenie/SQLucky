@@ -222,7 +222,7 @@ public class ButtonFactory {
 		lbcnn.setLayoutX(xAxis);
 		pn.getChildren().add(connsComboBox);
 		connsComboBox.setLayoutY(0);
-		xAxis += fix + 85;
+		xAxis += fix + 102;
 		connsComboBox.setLayoutX(xAxis);
 		pn.getChildren().add(lb);
 		lb.setLayoutY(5);
@@ -230,7 +230,7 @@ public class ButtonFactory {
 		lb.setLayoutX(xAxis);
 		pn.getChildren().add(rowsTextField);
 		rowsTextField.setLayoutY(0);
-		xAxis += fix + 45;
+		xAxis += fix + 65;
 		rowsTextField.setLayoutX(xAxis);
 
 		CommonButtons.runbtn = runbtn;
