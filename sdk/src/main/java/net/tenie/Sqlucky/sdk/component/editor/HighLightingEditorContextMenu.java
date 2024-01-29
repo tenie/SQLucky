@@ -10,6 +10,8 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
+import static net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper.selectCurrentLine;
+
 public class HighLightingEditorContextMenu extends ContextMenu {
 
 	public HighLightingEditorContextMenu(SqluckyEditor codeArea) {
@@ -86,7 +88,13 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 			codeArea.moveAnchorToLineEnd();
 		});
 
-		cursorMenu.getItems().addAll(mvB, mvE);
+		MenuItem selectLine = new MenuItem("Select Line"); // (ctrl+shift+E)
+		selectLine.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
+		selectLine.setOnAction(e -> {
+			MyEditorSheetHelper.selectCurrentLine();
+		});
+
+		cursorMenu.getItems().addAll(mvB, mvE, selectLine);
 
 		Menu enditLine = new Menu("Edit Line");
 		MenuItem delWord = new MenuItem("Delete the word before the cursor"); // (ctrl+shift+W)

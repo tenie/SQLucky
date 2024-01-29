@@ -12,11 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -31,6 +27,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.plugin.DataModel.po.DataModelTablePo;
 import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
@@ -128,6 +125,16 @@ public class DataModelTabTree {
 
 	static String tableName = "";
 
+	private static void LabelcontextMenu(Label lb){
+		ContextMenu contextMenu = new ContextMenu();
+		MenuItem copyText = new MenuItem("Copy Text");
+		copyText.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
+		copyText.setOnAction(e -> {
+			CommonUtils.setClipboardVal(lb.getText());
+		});
+		contextMenu.getItems().add(copyText);
+		lb.setContextMenu(contextMenu);
+	}
 	/**
 	 * 界面上展示, 字段数据的表格
 	 * 
@@ -147,10 +154,13 @@ public class DataModelTabTree {
 			String tableComment = tbpo.getComment();
 			Label tabNameLabel = new Label(table + "   ");
 			tabNameLabel.setGraphic(IconGenerator.svgImageUnactive("table"));
+			LabelcontextMenu(tabNameLabel);
 			Label tabNameLabel2 = new Label(tableName + "   ");
 			tabNameLabel2.setGraphic(IconGenerator.svgImageUnactive("table"));
+			LabelcontextMenu(tabNameLabel2);
 			Label commentLabel = new Label(tableComment + "   ");
 			commentLabel.setGraphic(IconGenerator.svgImageUnactive("table"));
+			LabelcontextMenu(commentLabel);
 
 			if (StrUtils.isNullOrEmpty(tableName)) {
 				tableName = table;
