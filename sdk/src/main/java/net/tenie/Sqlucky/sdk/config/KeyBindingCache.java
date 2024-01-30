@@ -61,11 +61,8 @@ public class KeyBindingCache {
 	 * 
 	 * Command (or Cmd) ⌘ Shortcut Option (or Alt) ⌥ Caps Lock ⇪ Shift ⇧ Control (or
 	 * Ctrl) ⌃
-	 * 
-	 * @param e
+	 *
 	 * @return
-	 * 
-	 * @param menuItem
 	 */
 	public static String macKeyChange(String keyStr) {
 

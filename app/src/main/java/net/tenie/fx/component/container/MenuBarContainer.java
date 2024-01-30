@@ -184,18 +184,22 @@ public class MenuBarContainer {
 		MenuItem mvB = new MenuItem(StrUtils.MenuItemNameFormat("Move to begin of line"));
 		mvB.setGraphic(IconGenerator.svgImageDefActive("step-backward"));
 		mvB.setOnAction(e -> {
-//			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().moveAnchorToLineBegin();
 			MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().moveAnchorToLineBegin();
 		});
 
 		MenuItem mvE = new MenuItem(StrUtils.MenuItemNameFormat("Move to end of line"));
 		mvE.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
 		mvE.setOnAction(e -> {
-//			SqluckyEditorUtils.currentMyTab().getSqlCodeArea().moveAnchorToLineEnd();
 			MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().moveAnchorToLineEnd();
 		});
+		MenuItem selectLine = new MenuItem("Select Line Text");
+		selectLine.setOnAction(e -> {
+			MyEditorSheetHelper.selectCurrentLineTrimText();
 
-		cursorMenu.getItems().addAll(mvB, mvE);
+		});
+		KeyBindingCache.menuItemBinding(selectLine);
+
+		cursorMenu.getItems().addAll(mvB, mvE, selectLine);
 
 		Menu enditLine = new Menu("Edit Line");
 		MenuItem delWord = new MenuItem(StrUtils.MenuItemNameFormat("Delete the word before the cursor")); // (ctrl+shift+W)

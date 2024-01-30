@@ -73,3 +73,6 @@ insert into KEYS_BINDING (ACTION_NAME, BINDING)
 values("Delete the character after the cursor", "Ctrl + Shift + D");
 insert into KEYS_BINDING (ACTION_NAME, BINDING) 
 values("Delete all characters after the cursor", "Ctrl + Shift + K");
+
+insert into KEYS_BINDING (ACTION_NAME, BINDING)
+values("Select Line Text", "Ctrl + G");

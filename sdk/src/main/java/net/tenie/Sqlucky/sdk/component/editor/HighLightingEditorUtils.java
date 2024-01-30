@@ -204,7 +204,7 @@ public class HighLightingEditorUtils {
 	// 根据括号) 向前寻找配对的括号( 所在的位置.
 	public static int findEndStringRange(String text, int start, String pb, String pe) {
 		String startStr = text.substring(0, start).toUpperCase();
-		;
+
 		int end = 0;
 		int strSz = startStr.length();
 		if (strSz == 0)

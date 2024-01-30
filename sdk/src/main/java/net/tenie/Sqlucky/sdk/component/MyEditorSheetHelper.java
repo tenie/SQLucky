@@ -29,7 +29,12 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import org.fxmisc.richtext.model.Paragraph;
 
+/**
+ * 段落 code.getParagraphs();
+ * 鼠标光标位置 code.getAnchor();
+ */
 public class MyEditorSheetHelper {
 
 	// 将Tab 放入界面
@@ -198,8 +203,12 @@ public class MyEditorSheetHelper {
 	// area中的所有文本
 	public static String getCurrentCodeAreaSQLText() {
 		CodeArea code = getCodeArea();
-		String sqlText = code.getText();
-		return sqlText;
+        String sqlText = null;
+        if (code != null) {
+            sqlText = code.getText();
+			return sqlText;
+        }
+		return "";
 	}
 
 	// 选中的文本
@@ -404,13 +413,62 @@ public class MyEditorSheetHelper {
 
 		return rs;
 	}
-	
+
+
+	/**
+	 * 选中行上的有效字符串, 行首行尾的空白符不要
+	 */
+	public static void selectCurrentLineTrimText(){
+		var code = MyEditorSheetHelper.getCodeArea();
+		if(code != null){
+
+			// 行的坐标
+			int paragraphIdx = code.getCurrentParagraph();
+			// 通过行坐标获取行对象
+			Paragraph pgh = code.getParagraph(paragraphIdx);
+			// 获取行文本
+			String curText = pgh.getText();
+			// 移动光标到行首
+			code.moveTo(paragraphIdx, 0);
+			int anchorIdx = code.getAnchor(); // 获取光标的坐标值
+			// 对空白的行首做计数, 后面不用选中空白的字符串
+			if(!curText.isEmpty()){
+				int count = 0;
+				// 替换windows回车符为空
+				curText = curText.replace("\r", "");
+				// 空格制表符临时字符串
+				String blankString = " \t\n";
+				// 遍历字符串
+				for(int i = 0 ; i < curText.length(); i++){
+					String tmp = curText.substring(i, i + 1);
+					// 判断子字符是不是空白符, 是的话计数加1, 不是就退出循环
+					if(blankString.contains(tmp)){
+						count++;
+					}else{
+						break;
+					}
+
+				}
+				// 对字符串去除空格, 获取其长度
+				String trimCurText = curText.trim();
+				// 选中的开始坐标是, 光标在首行时的坐标加上空白字符的计数值
+				int bengin = anchorIdx + count;
+				// 选中结束的坐标是, 开始坐标 + 取出空格后字符串的长度
+				int end  = bengin + trimCurText.length();
+				// 执行字符串选中操作
+				code.selectRange(bengin, end);
+
+			}
+		}
+	}
+
 	//选中光标所在行的数据
 	public static void selectCurrentLine() {
 		CodeArea code = getCodeArea();
 		String st = code.getSelectedText();
 		if (StrUtils.isNullOrEmpty(st)) {
 			code.selectLine();
+
 		}  
 
 	}
