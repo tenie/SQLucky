@@ -45,27 +45,29 @@ public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
      * 初始化右键菜单
      */
     private void initMenu(StringConverter<T> converter) {
-    	// 右键菜单
+        // 右键菜单
         ContextMenu cm = new ContextMenu();
-        TableColumn<S, T> column = getTableColumn();
-       if( column.isEditable() ) {
-    	   // 设置null
-           MenuItem setNull = new MenuItem("Set Null ");
-           setNull.setOnAction(e->{
-           	commitEdit(converter.fromString("<null>"));
-           });
-           cm.getItems().add( setNull);
-       }
-      
-		
         // 复制值
         MenuItem copyVal = new MenuItem("Copy Value");
-        copyVal.setOnAction(e->{
-        	String val =  this.getText();
-        	CommonUtils.setClipboardVal(val);
+        copyVal.setOnAction(e -> {
+            String val = this.getText();
+            CommonUtils.setClipboardVal(val);
         });
-        
+
         cm.getItems().add(copyVal);
+
+        // 判断是否列是否能编辑, 可以编辑就添加设置为null的选项
+        TableColumn<S, T> column = getTableColumn();
+        if (column.isEditable()) {
+            // 设置null
+            MenuItem setNull = new MenuItem("Set Null ");
+            setNull.setOnAction(e -> {
+                commitEdit(converter.fromString("<null>"));
+            });
+            cm.getItems().add(setNull);
+        }
+
+
         this.setContextMenu(cm);
     }
     

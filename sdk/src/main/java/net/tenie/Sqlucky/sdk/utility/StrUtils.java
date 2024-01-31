@@ -83,10 +83,15 @@ public class StrUtils {
 		StringBuilder rs = new StringBuilder();
 
 		rs.append(str.charAt(0));
+		String blankStr = " \t_";
 		for (int i = 1; i < str.length(); i++) {
 			char strChar = str.charAt(i);
-			if (strChar >= 'A' && strChar <= 'Z') {
-				rs.append("_");
+			char frontChar =  str.charAt(i-1);
+			if (strChar >= 'A' && strChar <= 'Z' ) {
+				if (! (frontChar >= 'A' && frontChar <= 'Z')
+						&& ! blankStr.contains(frontChar+"")) {
+					rs.append("_");
+				}
 				rs.append(strChar);
 			} else {
 				rs.append(strChar);
