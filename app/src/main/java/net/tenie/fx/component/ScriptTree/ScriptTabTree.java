@@ -330,7 +330,7 @@ public class ScriptTabTree {
 
 			// 1 保存
 			JFXButton okbtn = new JFXButton("Yes(Y)");
-			okbtn.getStyleClass().add("myAlertBtn");
+			okbtn.getStyleClass().add("myAlertOkBtn");
 			okbtn.setOnAction(value -> {
 //				文件保存到磁盘
 				MyEditorSheetHelper.saveSqlAction(sheet);
@@ -341,7 +341,7 @@ public class ScriptTabTree {
 
 			// 2 不保存
 			JFXButton Nobtn = new JFXButton("No(N)");
-			Nobtn.getStyleClass().add("myAlertOtherBtn");
+			Nobtn.getStyleClass().add("myAlertBtn");
 
 			Nobtn.setOnAction(value -> {
 				removeNode(myTabItemList, ctt, sheet);
@@ -350,7 +350,7 @@ public class ScriptTabTree {
 			});
 			// 取消
 			JFXButton cancelbtn = new JFXButton("Cancel(C)");
-			cancelbtn.getStyleClass().add("myAlertOtherBtn");
+			cancelbtn.getStyleClass().add("myAlertBtn");
 			cancelbtn.setOnAction(value -> {
 				stage.close();
 			});

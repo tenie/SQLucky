@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -22,9 +23,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -64,15 +62,19 @@ public class DialogTools {
 
 		// 最后的按钮
 		AnchorPane foot = new AnchorPane();
-		
+		HBox fp = new HBox();
+//		fp.setPadding(new Insets(0, 5, 5, 5));
+		fp.setSpacing(10);
 		if (btns != null) {
-			double i = 0.0;
+//			double i = 0.0;
 			for (Node bn : btns) {
-				foot.getChildren().add(bn);
-				AnchorPane.setRightAnchor(bn, i);
-				i += 100;
+				fp.getChildren().add(bn);
+//				foot.getChildren().add(bn);
+//				AnchorPane.setRightAnchor(bn, i);
+//				i += 100;
 			}
-
+			foot.getChildren().add(fp);
+			AnchorPane.setRightAnchor(fp, 0.0);
 		} else {
 			JFXButton cancelbtn = new JFXButton("Cancel");
 			cancelbtn.getStyleClass().add("myAlertBtn");
