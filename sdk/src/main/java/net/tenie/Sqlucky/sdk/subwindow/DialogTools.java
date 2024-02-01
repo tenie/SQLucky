@@ -70,7 +70,7 @@ public class DialogTools {
 			for (Node bn : btns) {
 				foot.getChildren().add(bn);
 				AnchorPane.setRightAnchor(bn, i);
-				i += 80;
+				i += 100;
 			}
 
 		} else {

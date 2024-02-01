@@ -104,6 +104,10 @@
 .myAlertBtn {
 	-fx-background-color: #1E90FF;
 }
+.myAlertOtherBtn {
+	-fx-border-color: #1E90FF;
+	-fx-border-radius: 3px;
+}
 
 .myAlertOkBtn {
 	-fx-background-color: #80FF80;

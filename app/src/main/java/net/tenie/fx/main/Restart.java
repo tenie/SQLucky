@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 
+import SQLucky.app;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,8 +46,8 @@ public class Restart {
 	// 开发环境时候从其
 	private static void runDev( ) throws IOException {
 		String[] args = {};
-		if(SQLucky.argsList != null && SQLucky.argsList.size() > 0) {
-			 args =(String[]) SQLucky.argsList.toArray();
+		if(app.argsList != null && app.argsList.size() > 0) {
+			 args =(String[]) app.argsList.toArray();
 		} 
 		StringBuilder cmd = new StringBuilder();
 		cmd.append(System.getProperty("java.home") 
@@ -56,7 +57,7 @@ public class Restart {
 			cmd.append(jvmArg + " "); 
 		} 
 		cmd.append("-cp ").append(ManagementFactory.getRuntimeMXBean().getClassPath()).append(" ");
-		cmd.append(SQLucky.class.getName()).append(" ");
+		cmd.append(app.class.getName()).append(" ");
 		for (String arg : args) {
 			cmd.append(arg).append(" "); 
 		}

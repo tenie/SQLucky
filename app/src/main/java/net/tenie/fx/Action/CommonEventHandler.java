@@ -3,6 +3,7 @@ package net.tenie.fx.Action;
 import java.io.File;
 import java.io.IOException;
 
+import SQLucky.app;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -17,7 +18,6 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.GenerateSQLString;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.main.SQLucky;
 import net.tenie.fx.window.ConnectionEditor;
 
 /**
@@ -109,7 +109,7 @@ public class CommonEventHandler {
 	// 主窗口关闭事件处理逻辑
 	public static void mainPageClose() {
 		try {
-			SQLucky.saveApplicationStatusInfo();
+			app.saveApplicationStatusInfo();
 		} finally {
 			System.exit(0);
 		}

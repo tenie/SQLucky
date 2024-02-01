@@ -168,7 +168,10 @@ GridPane {
 .myAlertBtn {
 	-fx-background-color: #955302;
 }
-
+.myAlertOtherBtn {
+	-fx-border-color: #955302;
+	-fx-border-radius: 3px;
+}
 .myAlert Button {
 	-fx-background-color: #FDA232;
 	-fx-text-fill: white;

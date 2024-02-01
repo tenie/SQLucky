@@ -350,7 +350,7 @@
 					<release>${maven.compiler.release}</release>
 					<jlinkImageName>SQLucky</jlinkImageName>
 					<launcher>launcher</launcher>
-					<mainClass>SQLucky/net.tenie.fx.main.SQLucky</mainClass>
+					<mainClass>SQLucky.app/SQLucky.app</mainClass>
 					<runtimePathOption>MODULEPATH </runtimePathOption>
 					<options>
 						<option>-Dhttps.protocols=TLSv1.2</option> 

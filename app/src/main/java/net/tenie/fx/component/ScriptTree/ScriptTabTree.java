@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import SQLucky.app;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,7 +34,6 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.main.SQLucky;
 import net.tenie.lib.db.h2.AppDao;
 
 /**
@@ -122,10 +122,10 @@ public class ScriptTabTree {
 					}
 
 					// 在操作系统中通过鼠标双击打开的文件, 如果再在以前打开过就直接选中
-					if (StrUtils.isNotNullOrEmpty(SQLucky.sysOpenFile)) {
+					if (StrUtils.isNotNullOrEmpty(app.sysOpenFile)) {
 						var filePath = po.getFileFullName();
 						if (StrUtils.isNotNullOrEmpty(filePath)) {
-							if (SQLucky.sysOpenFile.equals(filePath)) {
+							if (app.sysOpenFile.equals(filePath)) {
 								sysOpenFileTB = myEditorSheet.getTab();
 								logger.info("**** filePath = " + filePath);
 							}
@@ -151,9 +151,9 @@ public class ScriptTabTree {
 						if (tmpSysOpenFileTB != null) {
 							logger.info("系统打开文件触发启动APP时, 恢复历史中的文件 ");
 							ComponentGetter.mainTabPane.getSelectionModel().select(tmpSysOpenFileTB);
-						} else if (StrUtils.isNotNullOrEmpty(SQLucky.sysOpenFile)) { // 系统打开文件触发启动APP时, 新开一个 脚本文件
+						} else if (StrUtils.isNotNullOrEmpty(app.sysOpenFile)) { // 系统打开文件触发启动APP时, 新开一个 脚本文件
 							logger.info("系统打开文件触发启动APP时, 新开一个 脚本文件 ");
-							File sif = new File(SQLucky.sysOpenFile);
+							File sif = new File(app.sysOpenFile);
 							AppCommonAction.openSqlFile(sif);
 						} else if (activateTmpMyTab != null) {// 恢复选中上次选中页面
 							logger.info(" 恢复选中上次选中页面");
@@ -341,6 +341,8 @@ public class ScriptTabTree {
 
 			// 2 不保存
 			JFXButton Nobtn = new JFXButton("No(N)");
+			Nobtn.getStyleClass().add("myAlertOtherBtn");
+
 			Nobtn.setOnAction(value -> {
 				removeNode(myTabItemList, ctt, sheet);
 				sheet.destroySheet();
@@ -348,6 +350,7 @@ public class ScriptTabTree {
 			});
 			// 取消
 			JFXButton cancelbtn = new JFXButton("Cancel(C)");
+			cancelbtn.getStyleClass().add("myAlertOtherBtn");
 			cancelbtn.setOnAction(value -> {
 				stage.close();
 			});
