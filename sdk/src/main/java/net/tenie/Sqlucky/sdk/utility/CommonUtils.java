@@ -11,6 +11,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 import org.apache.commons.io.FileUtils;
@@ -1169,4 +1170,34 @@ public class CommonUtils {
 		return null;
 	}
 
+	public static String dbTypeToJavaType(SheetFieldPo field) {
+		int type =  field.getColumnType().get();
+		String val = "";
+		if (CommonUtils.isDateAndDateTime(type)) {
+			val = "Date";
+		} else if (type == java.sql.Types.BIGINT) {
+			val = "Long";
+		} else if (type == java.sql.Types.BIT) {
+			val = "Boolean";
+		} else if (type == java.sql.Types.DECIMAL || type == java.sql.Types.NUMERIC) {
+
+			if (field.getScale() != null && field.getScale().get() > 0) {
+				val = "Double";
+			}else {
+				val = "Long";
+			}
+
+		} else if (type == java.sql.Types.DOUBLE || type == java.sql.Types.FLOAT || type == java.sql.Types.REAL) {
+			val = "Double";
+		} else if (type == java.sql.Types.TINYINT || type == java.sql.Types.SMALLINT
+				|| type == java.sql.Types.INTEGER) {
+			val = "Integer";
+		} else {
+			//  CHAR、 VARCHAR 和 LONGVARCHAR
+			val = "String";
+		}
+
+
+		return val;
+	}
 }

@@ -34,15 +34,13 @@ public class ExcelToDB {
 	 * 
 	 * @param dbc         数据库链接
 	 * @param tablename   数据库表
-	 * @param excelFile   excel文件路径
-	 * @param fields      excel要插入的字段
 	 * @param beginRowIdx 从excel第几行开始插入
 	 * @param count       定义插入的行数
 	 * @throws Exception
 	 */
 	public static void toTable(SqluckyConnector dbc, String tablename, Workbook workbook,
 //			String excelFile, 
-			String saveSqlFile, List<ImportFieldPo> fields, Integer sheetNo, Integer beginRowIdx, Integer count,
+			String saveSqlFile, List<ImportFieldPo> importFieldList, Integer sheetNo, Integer beginRowIdx, Integer count,
 			boolean onlySaveSql, boolean saveSql) throws Exception {
 		Connection conn = dbc.getConn();
 		String errorData = "";
@@ -86,7 +84,7 @@ public class ExcelToDB {
 					List<String> cellVals = new ArrayList<>();
 					rowVals.add(cellVals);
 
-					for (ImportFieldPo epo : fields) {
+					for (ImportFieldPo epo : importFieldList) {
 						Integer rowIdx = epo.getFieldIdx();
 						if (rowIdx > -1) {
 							Cell cell = hssfRow.getCell(rowIdx);
@@ -124,7 +122,7 @@ public class ExcelToDB {
 
 					idx++;
 					if (idx % 100 == 0) {
-						errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
+						errorData = InsertDao.execInsertByExcelField(conn, tablename, importFieldList, rowVals, saveSqlFile,
 								onlySaveSql);
 						rowVals.clear();
 					}
@@ -133,7 +131,7 @@ public class ExcelToDB {
 //					rowVals.clear();
 				}
 				if (rowVals.size() > 0) {
-					errorData = InsertDao.execInsertByExcelField(conn, tablename, fields, rowVals, saveSqlFile,
+					errorData = InsertDao.execInsertByExcelField(conn, tablename, importFieldList, rowVals, saveSqlFile,
 							onlySaveSql);
 					rowVals.clear();
 				}

@@ -463,8 +463,8 @@ public class ImportExcelNextWindow {
 					return;
 				}
 			}
-			List<ImportFieldPo> vals = saveFieldMap();
-			if (vals == null || vals.size() == 0) {
+			List<ImportFieldPo> importFieldPoList = saveFieldMap();
+			if (importFieldPoList == null || importFieldPoList.size() == 0) {
 				return;
 			}
 
@@ -482,10 +482,13 @@ public class ImportExcelNextWindow {
 			}
 			btn.setDisable(true);
 
+			// 表格的开始行号
 			Integer tmpBeginval = beginval;
+			// 导入行数
 			Integer tmpCountval = countval;
 			LoadingAnimation.loadingAnimation("Saving....", v -> {
 				try {
+					// 表格sheet的第几页
 					Integer sheetNo = null;
 					String sheetNoStr = sheetTF.getText();
 					if (StrUtils.isNotNullOrEmpty(sheetNoStr.trim())) {
@@ -493,8 +496,7 @@ public class ImportExcelNextWindow {
 					}
 
 					ExcelToDB.toTable(sqluckyConn, tableName, workbook,
-//							excelFile,
-							tfFilePath.getText(), vals, sheetNo, tmpBeginval, tmpCountval, onlySave.isSelected(),
+							tfFilePath.getText(), importFieldPoList, sheetNo, tmpBeginval, tmpCountval, onlySave.isSelected(),
 							saveSqlCheckBox.isSelected());
 					MyAlert.infoAlert("导入成功!");
 				} catch (Exception e1) {

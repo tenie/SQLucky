@@ -31,8 +31,6 @@ public class InsertDao {
 	 * 
 	 * @param conn      数据库连接
 	 * @param tableName 表
-	 * @param data      列的数据
-	 * @param fpos      列的数据字段类型
 	 * @return
 	 * @throws Exception
 	 */
@@ -123,7 +121,6 @@ public class InsertDao {
 	 * @param conn
 	 * @param tableName
 	 * @param fields
-	 * @param fieldsValue 元素不能为null
 	 * @return
 	 * @throws Exception
 	 */
@@ -234,11 +231,10 @@ public class InsertDao {
 	 * @param conn
 	 * @param tableName
 	 * @param fields
-	 * @param fieldsValue 元素不能为null
 	 * @return
 	 * @throws Exception
 	 */
-	public static String execInsertByExcelField(Connection conn, String tableName, List<ImportFieldPo> fields,
+	public static String execInsertByExcelField(Connection conn, String tableName, List<ImportFieldPo> importFieldPoList,
 			List<List<String>> rowVals, String saveSqlfileStr, boolean onlySaveSql) throws Exception {
 		String msg = "";
 		String insertLog = "";
@@ -250,9 +246,9 @@ public class InsertDao {
 		try {
 
 			StringBuilder sql = new StringBuilder("insert into " + tableName + " (");
-			int size = fields.size();
+			int size = importFieldPoList.size();
 			for (int i = 0; i < size; i++) {
-				ImportFieldPo po = fields.get(i);
+				ImportFieldPo po = importFieldPoList.get(i);
 				sql.append(po.getColumnLabel().get());
 				sql.append(" ,");
 
@@ -271,7 +267,7 @@ public class InsertDao {
 			for (List<String> fieldsValue : rowVals) {
 				String insertValue = "";
 				for (int i = 0; i < size; i++) {
-					ImportFieldPo fieldpo = fields.get(i);
+					ImportFieldPo fieldpo = importFieldPoList.get(i);
 					String val = fieldsValue.get(i);
 					if (val == null) {
 						val = "";
@@ -425,7 +421,6 @@ public class InsertDao {
 	 * @param conn
 	 * @param tableName
 	 * @param fields
-	 * @param fieldsValue 元素不能为null
 	 * @return
 	 * @throws Exception
 	 */
