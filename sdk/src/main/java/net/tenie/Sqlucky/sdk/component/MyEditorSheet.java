@@ -3,6 +3,7 @@ package net.tenie.Sqlucky.sdk.component;
 import java.io.File;
 import java.sql.Connection;
 
+import javafx.scene.layout.*;
 import org.fxmisc.richtext.CodeArea;
 
 import javafx.application.Platform;
@@ -11,11 +12,6 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
 import net.tenie.Sqlucky.sdk.db.DBConns;
@@ -36,7 +32,7 @@ public class MyEditorSheet {
 	// 查找面板
 	private AnchorPane findAnchorPane;
 	// 替换面板
-	private AnchorPane replaceAnchorPane;
+	private HBox replaceAnchorPane;
 	private FindReplaceTextPanel findReplacePanel;
 
 	public void clean() {
@@ -481,11 +477,11 @@ public class MyEditorSheet {
 		vbox.getChildren().add(0, findAnchorPane);
 	}
 
-	public AnchorPane getReplaceAnchorPane() {
+	public HBox getReplaceAnchorPane() {
 		return replaceAnchorPane;
 	}
 
-	public void setReplaceAnchorPane(AnchorPane replaceAnchorPane) {
+	public void setReplaceAnchorPane(HBox replaceAnchorPane) {
 		this.replaceAnchorPane = replaceAnchorPane;
 		vbox.getChildren().add(1, replaceAnchorPane);
 	}

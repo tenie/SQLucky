@@ -3,9 +3,11 @@ package net.tenie.fx.factory;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
@@ -153,8 +155,6 @@ public class ButtonFactory {
 		rowsTextField.setPrefHeight(25);
 		rowsTextField.setMinHeight(25);
 
-//			rows.setLabelFloat(true);
-//			rows.setPromptText("Max Rows");
 		rowsTextField.getStyleClass().add("myTextField");
 		rowsTextField.setMaxWidth(90);
 		rowsTextField.setTooltip(MyTooltipTool.instance("Load query data rows, suggest <10000 "));
@@ -172,73 +172,41 @@ public class ButtonFactory {
 			}
 		});
 
-		int xAxis = 0;
-		int fix = 30;
-		pn.getChildren().add(runbtn);
-		runbtn.setLayoutX(0);
-		runbtn.setLayoutY(0);
-
+		HBox operateBox = new HBox();
+		operateBox.getChildren().add(runbtn);
 		// runLinebtn
-		pn.getChildren().add(runLinebtn);
-		runLinebtn.setLayoutY(0);
-		xAxis += fix;
-		runLinebtn.setLayoutX(xAxis);
+		operateBox.getChildren().add(runLinebtn);
 
-		pn.getChildren().add(stopbtn);
-		stopbtn.setLayoutY(0);
-		xAxis += fix;
-		stopbtn.setLayoutX(xAxis);
+		operateBox.getChildren().add(stopbtn);
 
-		pn.getChildren().add(addcodeArea);
-		addcodeArea.setLayoutY(0);
-		xAxis += fix;
-		addcodeArea.setLayoutX(xAxis);
+		operateBox.getChildren().add(addcodeArea);
 
-		pn.getChildren().add(saveSQL);
-		saveSQL.setLayoutY(0);
-		xAxis += fix;
-		saveSQL.setLayoutX(xAxis);
+		operateBox.getChildren().add(saveSQL);
 
-		pn.getChildren().add(formatSQL);
-		formatSQL.setLayoutY(0);
-		xAxis += fix;
-		formatSQL.setLayoutX(xAxis);
+		operateBox.getChildren().add(formatSQL);
 
 		// runFunPro
-		pn.getChildren().add(runFunPro);
-		runFunPro.setLayoutY(0);
-		xAxis += fix;
-		runFunPro.setLayoutX(xAxis);
+		operateBox.getChildren().add(runFunPro);
 
 		// findSQlTxt
-		pn.getChildren().add(findSQlTxt);
-		findSQlTxt.setLayoutY(0);
-		xAxis += fix;
-		findSQlTxt.setLayoutX(xAxis);
+		operateBox.getChildren().add(findSQlTxt);
 
-		pn.getChildren().add(lbcnn);
-		lbcnn.setLayoutY(5);
-		xAxis += fix + 60;
-		lbcnn.setLayoutX(xAxis);
-		pn.getChildren().add(connsComboBox);
-		connsComboBox.setLayoutY(0);
-		xAxis += fix + 102;
-		connsComboBox.setLayoutX(xAxis);
-		pn.getChildren().add(lb);
-		lb.setLayoutY(5);
-		xAxis += fix + 190;
-		lb.setLayoutX(xAxis);
-		pn.getChildren().add(rowsTextField);
-		rowsTextField.setLayoutY(0);
-		xAxis += fix + 65;
-		rowsTextField.setLayoutX(xAxis);
+		HBox.setMargin(lbcnn, new Insets(5, 2,0,20));
+		operateBox.getChildren().add(lbcnn);
+
+		operateBox.getChildren().add(connsComboBox);
+
+		HBox.setMargin(lb, new Insets(5, 2,0,20));
+		operateBox.getChildren().add(lb);
+
+		operateBox.getChildren().add(rowsTextField);
 
 		CommonButtons.runbtn = runbtn;
 		CommonButtons.stopbtn = stopbtn;
 		CommonButtons.runFunPro = runFunPro;
 		CommonButtons.runLinebtn = runLinebtn;
 		CommonButtons.addcodeArea = addcodeArea;
-
+		pn.getChildren().add(operateBox);
 		return pn;
 	}
 

@@ -1,5 +1,8 @@
 package net.tenie.Sqlucky.sdk.component;
 
+import javafx.geometry.Insets;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
@@ -275,10 +278,10 @@ public class FindReplaceTextPanel {
 
 	}
 
-	public   AnchorPane createReplacePane(TextField findtf, JFXCheckBox cb) {
-		AnchorPane replaceAnchorPane = new AnchorPane();
-		CommonUtils.addCssClass(replaceAnchorPane, "myFindPane");
-		replaceAnchorPane.prefHeight(30);
+	public   HBox createReplacePane(TextField findtf, JFXCheckBox cb) {
+		HBox replaceBox = new HBox();
+		CommonUtils.addCssClass(replaceBox, "myFindPane");
+		replaceBox.prefHeight(30);
 		JFXButton query = new JFXButton();
 		query.setGraphic(IconGenerator.svgImageDefActive("refresh"));
 		TextField replaceTextField = new TextField();
@@ -288,7 +291,7 @@ public class FindReplaceTextPanel {
 
 		// "arrow-down"
 		JFXButton replaceBtn = new JFXButton();
-		replaceBtn.getStyleClass().add("myReplaceBtn");
+		replaceBtn.getStyleClass().add("myAlertBtn");
 		replaceBtn.setText("Replace");
 		replaceBtn.setOnAction(v -> {
 			findStrReplaceStr(findtf, replaceTextField, !cb.isSelected());
@@ -296,10 +299,9 @@ public class FindReplaceTextPanel {
 		});
 
 		JFXButton replaceAllBtn = new JFXButton();
-		replaceAllBtn.getStyleClass().add("myReplaceBtn");
+		replaceAllBtn.getStyleClass().add("myAlertBtn");
 		replaceAllBtn.setText("Replace All");
 		replaceAllBtn.setOnAction(v -> {
-//			findStrReplaceStrAll(findtf, replaceTextField, !cb.isSelected());
 			boolean tf = findStrReplaceStr(findtf, replaceTextField, !cb.isSelected());
 			while(tf) {
 				tf = findStrReplaceStr(findtf, replaceTextField, !cb.isSelected());
@@ -309,31 +311,15 @@ public class FindReplaceTextPanel {
 
 		AnchorPane replaceFieldPane = UiTools.textFieldAddCleanBtn(replaceTextField);
 
-		int x = 0;
-		query.setLayoutX(x);
-		query.setLayoutY(0);
-		x += 35;
-//		replaceTextField.setLayoutX(x);
-//		replaceTextField.setLayoutY(0);
-		replaceFieldPane.setLayoutX(x);
-		replaceFieldPane.setLayoutY(0);
+		replaceBox.getChildren().add(query);
+		replaceBox.getChildren().add(replaceFieldPane);
 
-		x += 255;
-		replaceBtn.setLayoutX(x);
-		replaceBtn.setLayoutY(0);
-		x += 70;
-		replaceAllBtn.setLayoutX(x);
-		replaceAllBtn.setLayoutY(0);
-
-		replaceAnchorPane.getChildren().add(query);
-//		replaceAnchorPane.getChildren().add(replaceTextField);
-		replaceAnchorPane.getChildren().add(replaceFieldPane);
-
-		replaceAnchorPane.getChildren().add(replaceBtn);
-		replaceAnchorPane.getChildren().add(replaceAllBtn);
-		return replaceAnchorPane;
+		replaceBox.getChildren().add(replaceBtn);
+		replaceBox.getChildren().add(replaceAllBtn);
+		HBox.setMargin(replaceBtn, new Insets(0, 0, 0, 3));
+		HBox.setMargin(replaceAllBtn, new Insets(0, 0, 0, 3));
+		return replaceBox;
 	}
-
 	// 查找替换组件的面板
 	public FindReplaceTextPanel(boolean isReplace, String findText, MyEditorSheet sheet) {
 		AnchorPane findAnchorPane = new AnchorPane();
@@ -395,45 +381,16 @@ public class FindReplaceTextPanel {
 		});
 
 		AnchorPane textFieldPane = UiTools.textFieldAddCleanBtn(textField);
-		int x = 0;
-		query.setLayoutX(x);
-		query.setLayoutY(0);
-		x += 35;
-//		textField.setLayoutX(x);
-//		textField.setLayoutY(0);
 
-		textFieldPane.setLayoutX(x);
-		textFieldPane.setLayoutY(0);
-		x += 250;
-		down.setLayoutX(x);
-		down.setLayoutY(0);
-		x += 35;
-		up.setLayoutX(x);
-		up.setLayoutY(0);
+		HBox findBox = new HBox();
+		findBox.getChildren().addAll(query,textFieldPane,down, up, sensitiveCheckBox, countBtn, countLabel);
+		HBox.setMargin(countLabel, new Insets(5, 3, 0, 3));
+		HBox.setMargin(sensitiveCheckBox, new Insets(5, 0, 0, 3));
+		findAnchorPane.getChildren().add(findBox);
 
-		x += 35;
-		sensitiveCheckBox.setLayoutX(x);
-		sensitiveCheckBox.setLayoutY(3);
-
-		x += 90;
-		countBtn.setLayoutX(x);
-		countBtn.setLayoutY(0);
-		x += 80;
-		countLabel.setLayoutX(x);
-		countLabel.setLayoutY(5);
-
-		findAnchorPane.getChildren().add(query);
-//		findAnchorPane.getChildren().add(textField);
-		findAnchorPane.getChildren().add(textFieldPane);
-		findAnchorPane.getChildren().add(down);
-		findAnchorPane.getChildren().add(up);
-		findAnchorPane.getChildren().add(sensitiveCheckBox);
-		findAnchorPane.getChildren().add(countBtn);
-		findAnchorPane.getChildren().add(countLabel);
 
 		JFXButton hideBottom = new JFXButton();
-		hideBottom.setGraphic(IconGenerator.svgImageDefActive("window-close"));// fontImgName("caret-square-o-down",
-																				// 16, Color.ROYALBLUE));
+		hideBottom.setGraphic(IconGenerator.svgImageDefActive("window-close"));
 		findAnchorPane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 
@@ -443,7 +400,7 @@ public class FindReplaceTextPanel {
 		// 加入到 代码编辑框上面
 		sheet.setFindAnchorPane(findAnchorPane);
 		if (isReplace) {
-			AnchorPane replaceAnchorPane = createReplacePane(textField, sensitiveCheckBox);
+			HBox replaceAnchorPane = createReplacePane(textField, sensitiveCheckBox);
 			sheet.setReplaceAnchorPane(replaceAnchorPane);
 		}
 		Platform.runLater(() -> {
@@ -451,6 +408,124 @@ public class FindReplaceTextPanel {
 			countAction();
 		});
 	}
+
+//	// 查找替换组件的面板
+//	public FindReplaceTextPanel(boolean isReplace, String findText, MyEditorSheet sheet) {
+//		AnchorPane findAnchorPane = new AnchorPane();
+//		CommonUtils.addCssClass(findAnchorPane, "myFindPane");
+//		findAnchorPane.prefHeight(30);
+//		JFXButton query = new JFXButton();
+//		sensitiveCheckBox = new JFXCheckBox("Sensitive");
+//		query.setGraphic(IconGenerator.svgImageDefActive("search"));
+//
+//		textField = new TextField();
+//		query.setOnAction(v -> {
+//			findStringFromCodeArea(textField.getText(), true, !sensitiveCheckBox.isSelected());
+//		});
+//
+//		if (StrUtils.isNullOrEmpty(findText)) {
+//			// 从编辑框中获取选中的文本
+//			CodeArea code = MyEditorSheetHelper.getCodeArea();
+//			findText = code.getSelectedText();
+//		}
+//
+//		textField.setText(findText);
+//		textField.setPrefWidth(250);
+//		textField.setPrefHeight(15);
+//		textField.getStyleClass().add("myFindTextField");
+//		// 回车键出发查找下一个
+//		textField.setOnKeyPressed(val -> {
+//			if (val.getCode() == KeyCode.ENTER) {
+//				myEvent.btnClick(down);
+//			}
+//		});
+//
+//		// "arrow-down"
+//		down = new JFXButton();
+//		down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
+//
+//		down.setOnMouseClicked(v -> {
+//			findStringFromCodeArea(textField.getText(), true, !sensitiveCheckBox.isSelected());
+//		});
+//
+//		up = new JFXButton();
+//		up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
+//		up.setOnMouseClicked(v -> {
+//			findStringFromCodeArea(textField.getText(), false, !sensitiveCheckBox.isSelected());
+//		});
+//
+//		// 计算查询字符串出现次数 	JFXCheckBox cb = new JFXCheckBox("Sensitive");
+//		countBtn = new JFXButton("Count");
+//		countBtn.setGraphic(IconGenerator.svgImageDefActive("calculator"));
+//		countLabel = new Label("");
+//		countBtn.setOnAction(e -> {
+//			countAction();
+//		});
+//		textField.textProperty().addListener((obj, vOld, vNew) -> {
+//			if (StrUtils.isNotNullOrEmpty(vNew)) {
+//				countAction();
+//			} else {
+//				countLabel.setText("");
+//			}
+//		});
+//
+//		AnchorPane textFieldPane = UiTools.textFieldAddCleanBtn(textField);
+//		int x = 0;
+//		query.setLayoutX(x);
+//		query.setLayoutY(0);
+//		x += 35;
+////		textField.setLayoutX(x);
+////		textField.setLayoutY(0);
+//
+//		textFieldPane.setLayoutX(x);
+//		textFieldPane.setLayoutY(0);
+//		x += 250;
+//		down.setLayoutX(x);
+//		down.setLayoutY(0);
+//		x += 35;
+//		up.setLayoutX(x);
+//		up.setLayoutY(0);
+//
+//		x += 35;
+//		sensitiveCheckBox.setLayoutX(x);
+//		sensitiveCheckBox.setLayoutY(3);
+//
+//		x += 90;
+//		countBtn.setLayoutX(x);
+//		countBtn.setLayoutY(0);
+//		x += 80;
+//		countLabel.setLayoutX(x);
+//		countLabel.setLayoutY(5);
+//
+//		findAnchorPane.getChildren().add(query);
+////		findAnchorPane.getChildren().add(textField);
+//		findAnchorPane.getChildren().add(textFieldPane);
+//		findAnchorPane.getChildren().add(down);
+//		findAnchorPane.getChildren().add(up);
+//		findAnchorPane.getChildren().add(sensitiveCheckBox);
+//		findAnchorPane.getChildren().add(countBtn);
+//		findAnchorPane.getChildren().add(countLabel);
+//
+//		JFXButton hideBottom = new JFXButton();
+//		hideBottom.setGraphic(IconGenerator.svgImageDefActive("window-close"));// fontImgName("caret-square-o-down",
+//																				// 16, Color.ROYALBLUE));
+//		findAnchorPane.getChildren().add(hideBottom);
+//		AnchorPane.setRightAnchor(hideBottom, 0.0);
+//
+//		hideBottom.setOnAction(v -> {
+//			sheet.delFindReplacePane();
+//		});
+//		// 加入到 代码编辑框上面
+//		sheet.setFindAnchorPane(findAnchorPane);
+//		if (isReplace) {
+//			AnchorPane replaceAnchorPane = createReplacePane(textField, sensitiveCheckBox);
+//			sheet.setReplaceAnchorPane(replaceAnchorPane);
+//		}
+//		Platform.runLater(() -> {
+//			textField.requestFocus();
+//			countAction();
+//		});
+//	}
 
 	// 查找的计数action
 	private void countAction() {
