@@ -42,7 +42,8 @@ public class PluginManageWindow {
 	private JFXButton delete = new JFXButton("Delete");
 	// 同步服务器插件
 	private JFXButton sync = new JFXButton(" 同步服务器插件");
-	
+
+	private JFXButton upload = new JFXButton("上传插件");
 	// 所有插件表
 	SheetTableData sheetDaV = null;
 	FilteredTableView<ResultSetRowPo> allPluginTable = null;
@@ -67,7 +68,12 @@ public class PluginManageWindow {
 		sync.setOnAction(e->{
 			PluginManageAction.queryServerPluginInfo(sheetDaV , allPluginTable);
 		});
-		SearchPane.getChildren().addAll(searchBtn, searchText , sync);
+		upload.getStyleClass().add("myAlertBtn");
+		upload.setOnAction(e->{
+			PluginManageAction.queryServerPluginInfo(sheetDaV , allPluginTable);
+		});
+
+		SearchPane.getChildren().addAll(searchBtn, searchText , sync, upload);
 		SearchPane.setMinHeight(35);
 		SearchPane.setPrefHeight(35);
 		SearchPane.getStyleClass().add("topPadding5");

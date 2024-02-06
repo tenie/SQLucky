@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -7,37 +8,153 @@
 
 <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="244.0" prefWidth="382.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.plugin.backup.component.WorkDataBackupController">
   <tabs>
-    <Tab text="上传备份">
+    <Tab styleClass="myModalDialog" text="上传备份">
          <content>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="myModalDialog">
+            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="myModalDialog">
                <children>
-                  <Button fx:id="bakBtn" layoutX="320.0" layoutY="178.0" mnemonicParsing="false" styleClass="myAlertBtn" text="备份" />
-                  <CheckBox fx:id="pkCB" layoutX="15.0" layoutY="123.0" text="使用端到端加密传输, 密钥需要自己保存!" />
-                  <Label layoutX="14.0" layoutY="151.0" text="端到端加密密钥" />
-                  <TextField fx:id="privateKey" layoutX="112.0" layoutY="149.0" styleClass="myFindTextField" />
-                  <Label layoutX="15.0" layoutY="20.0" text="备份名称" />
-                  <TextField fx:id="bakName" layoutX="69.0" layoutY="16.0" styleClass="myFindTextField" />
-                  <CheckBox fx:id="dbCB" layoutX="14.0" layoutY="48.0" text="备份数据库连接配置" />
-                  <CheckBox fx:id="scriptCB" layoutX="15.0" layoutY="73.0" text="备份脚本文件" />
-                  <CheckBox fx:id="modelCB" layoutX="15.0" layoutY="98.0" text="备份数据模型" />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="备份名称">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" top="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="bakName" styleClass="myFindTextField">
+                           <HBox.margin>
+                              <Insets top="5.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="dbCB" text="备份数据库连接配置">
+                           <HBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="scriptCB" text="备份脚本文件">
+                           <HBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="modelCB" text="备份数据模型">
+                           <HBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="pkCB" text="使用端到端加密传输, 密钥需要自己保存!">
+                           <HBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="端到端加密密钥">
+                           <HBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="privateKey" styleClass="myFindTextField">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="bakBtn" mnemonicParsing="false" styleClass="myAlertBtn" text="备份">
+                           <HBox.margin>
+                              <Insets bottom="5.0" left="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
-            </Pane>
+            </VBox>
          </content></Tab>
     <Tab styleClass="myModalDialog" text="现有备份">
          <content>
-            <Pane prefHeight="200.0" prefWidth="200.0" styleClass="myModalDialog">
+            <VBox prefHeight="200.0" prefWidth="100.0" styleClass="myModalDialog">
                <children>
-                  <Button fx:id="syncBtn" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" styleClass="myAlertBtn" text="下载备份文件" />
-                  <Label layoutX="13.0" layoutY="139.0" text="密钥" />
-                  <TextField fx:id="recoverPK" layoutX="45.0" layoutY="135.0" styleClass="myFindTextField" />
-                  <Button fx:id="downloadOverlapBtn" layoutX="14.0" layoutY="178.0" mnemonicParsing="false" styleClass="myAlertBtn" text="覆盖本地数据" />
-                  <Button fx:id="downloadMergeBtn" layoutX="114.0" layoutY="178.0" mnemonicParsing="false" styleClass="myAlertBtn" text="和本地数据合并" />
-                  <TextField fx:id="selBakName" disable="true" layoutX="109.0" layoutY="14.0" styleClass="myFindTextField" />
-                  <Button fx:id="downloadBtn" layoutX="229.0" layoutY="178.0" mnemonicParsing="false" styleClass="myAlertBtn" text="仅下载备份文件" />
-                  <CheckBox fx:id="bakdbCB" layoutX="13.0" layoutY="50.0" text="使用数据库连接配置" />
-                  <CheckBox fx:id="bakscriptCB" layoutX="14.0" layoutY="80.0" text="使用脚本文件" />
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="syncBtn" mnemonicParsing="false" styleClass="myAlertBtn" text="下载备份文件">
+                           <HBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <TextField fx:id="selBakName" disable="true" styleClass="myFindTextField">
+                           <HBox.margin>
+                              <Insets left="5.0" top="5.0" />
+                           </HBox.margin>
+                        </TextField>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="bakdbCB" text="使用数据库连接配置">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <CheckBox fx:id="bakscriptCB" text="使用脚本文件">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </CheckBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label text="密钥">
+                           <HBox.margin>
+                              <Insets left="5.0" right="5.0" top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField fx:id="recoverPK" styleClass="myFindTextField" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Button fx:id="downloadOverlapBtn" mnemonicParsing="false" styleClass="myAlertBtn" text="覆盖本地数据">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="downloadMergeBtn" mnemonicParsing="false" styleClass="myAlertBtn" text="和本地数据合并">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button fx:id="downloadBtn" mnemonicParsing="false" styleClass="myAlertBtn" text="仅下载备份文件">
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
                </children>
-            </Pane>
+            </VBox>
          </content></Tab>
   </tabs>
 </TabPane>

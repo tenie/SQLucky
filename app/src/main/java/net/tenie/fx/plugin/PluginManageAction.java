@@ -1,6 +1,7 @@
 package net.tenie.fx.plugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -8,6 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.utility.*;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import com.jfoenix.controls.JFXButton;
 
@@ -25,10 +29,6 @@ import net.tenie.Sqlucky.sdk.po.PluginInfoPO;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.JsonTools;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.fx.main.Restart;
 
@@ -180,7 +180,16 @@ public class PluginManageAction {
 			SqluckyAppDB.closeConn(conn);
 		}
 	}
-	
+	// 上传文件
+	public static void uploadPluginFile(String pName) throws IOException {
+		File jarFile = FileOrDirectoryChooser.showOpen("Select Plugin Jar File", "jar", ComponentGetter.primaryStage);
+		Map<String, String> map = new HashMap<>();
+		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
+		map.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
+		map.put("PLUGIN_NAME", pName);
+
+		HttpUtil.postFile(ConfigVal.getSqluckyServer()+"/sqlucky/queryAllPlugin", jarFile.getAbsolutePath(), map);
+	}
  
 	// 同步服务器的插件信息
 	public static void queryServerPluginInfo(SheetTableData sheetDaV , FilteredTableView<ResultSetRowPo> allPluginTable) {
