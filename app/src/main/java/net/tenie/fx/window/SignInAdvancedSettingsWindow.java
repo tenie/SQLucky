@@ -3,6 +3,7 @@ package net.tenie.fx.window;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -15,10 +16,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
@@ -203,8 +200,14 @@ public class SignInAdvancedSettingsWindow {
 			if(node1 !=null ) grid.add(node1, 0, idxi);
 			if(node2 !=null ) grid.add(node2, 1, idxj);
 		}
-		
-	 
+		// 设置 GridPane 列宽
+		ColumnConstraints c1 = new ColumnConstraints();
+		ColumnConstraints c2= new ColumnConstraints();
+		c1.setMinWidth(80.0);
+		c2.setMinWidth(160.0);
+		grid.getColumnConstraints().addAll(c1, c2);
+
+
 		stage.show();
 	}
 	

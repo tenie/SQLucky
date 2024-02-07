@@ -36,7 +36,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /**
- * 
+ * 注册
  * @author tenie
  *
  */

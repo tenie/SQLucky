@@ -181,14 +181,17 @@ public class PluginManageAction {
 		}
 	}
 	// 上传文件
-	public static void uploadPluginFile(String pName) throws IOException {
-		File jarFile = FileOrDirectoryChooser.showOpen("Select Plugin Jar File", "jar", ComponentGetter.primaryStage);
+	public static void uploadPluginFile(String pName, String pDescribe, String pVersion, String  jarFile) throws IOException {
+//		File jarFile = FileOrDirectoryChooser.showOpen("Select Plugin Jar File", "jar", ComponentGetter.primaryStage);
 		Map<String, String> map = new HashMap<>();
 		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
 		map.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
-		map.put("PLUGIN_NAME", pName);
 
-		HttpUtil.postFile(ConfigVal.getSqluckyServer()+"/sqlucky/queryAllPlugin", jarFile.getAbsolutePath(), map);
+		map.put("name", pName);
+		map.put("describe", pDescribe);
+		map.put("version", pVersion);
+
+		HttpUtil.postFile(ConfigVal.getSqluckyServer()+"/sqlucky/queryAllPlugin", jarFile, map);
 	}
  
 	// 同步服务器的插件信息

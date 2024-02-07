@@ -71,7 +71,9 @@ public class PluginManageWindow {
 		});
 		upload.getStyleClass().add("myAlertBtn");
 		upload.setOnAction(e->{
-			PluginManageAction.queryServerPluginInfo(sheetDaV , allPluginTable);
+//			PluginManageAction.queryServerPluginInfo(sheetDaV , allPluginTable);
+			PluginUploadWindow uploadWindow =new PluginUploadWindow();
+			uploadWindow.show();
 		});
 
 		SearchPane.getChildren().addAll(searchBtn, searchText , sync, upload);

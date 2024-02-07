@@ -3,6 +3,8 @@ package net.tenie.fx.window;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
+
+import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.jfoenix.controls.JFXCheckBox;
@@ -15,10 +17,6 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
@@ -100,10 +98,12 @@ public class SignInWindow {
 		Label lbPassword = new Label(passwordStr);   
 		
 		tfemail = new TextField();
+		tfemail.minWidth(150.0);
 		tfemail.setPromptText(email);
 		TextFieldSetup.setMaxLength(tfemail, 100);
 		
 		password = new PasswordField();
+		password.minWidth(150.0);
 		password.setPromptText(passwordStr);
 		TextFieldSetup.setMaxLength(password, 50);
 		 
@@ -309,7 +309,8 @@ public class SignInWindow {
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 10, 10, 10));
-		
+		grid.setMinWidth(300.0);
+
 		
 		int i = 0;
 		int j = 0;
@@ -322,7 +323,12 @@ public class SignInWindow {
 			if(node1 !=null ) grid.add(node1, 0, idxi);
 			if(node2 !=null ) grid.add(node2, 1, idxj);
 		}
-		
+		ColumnConstraints c1 = new ColumnConstraints();
+		ColumnConstraints c2= new ColumnConstraints();
+		c1.setMinWidth(100.0);
+		c2.setMinWidth(160.0);
+	    grid.getColumnConstraints().addAll(c1, c2);
+
 		stage.show();
 	}
 	
