@@ -53,6 +53,7 @@ public class PluginManageWindow {
 	public PluginManageWindow() {
 		searchBtn.setGraphic(IconGenerator.svgImageDefActive("search"));
 		searchText.getStyleClass().add("myTextField");
+		searchText.setMinWidth(150.0);
 		// 回车后触发查询按钮
 		searchText.setOnKeyPressed(val->{
 			 if(val.getCode() == KeyCode.ENTER ){ 

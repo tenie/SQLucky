@@ -168,8 +168,9 @@ public class DataModelTabTree {
 			// 查询框
 			TextField textField = new TextField();
 			textField.getStyleClass().add("myTextField");
+			textField.setMinWidth(150.0);
 			AnchorPane txtAP = UiTools.textFieldAddCleanBtn(textField);
-			txtAP.setVisible(false);
+//			txtAP.setVisible(false);
 
 			JFXButton query = new JFXButton();
 			query.setGraphic(ComponentGetter.getIconDefActive("search"));
@@ -178,6 +179,7 @@ public class DataModelTabTree {
 			});
 			// 导出excel
 			JFXButton exportExcel = new JFXButton();
+			exportExcel.setTooltip(MyTooltipTool.instance("Export Excel"));
 			exportExcel.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
 
 			// 字段信息保存按钮

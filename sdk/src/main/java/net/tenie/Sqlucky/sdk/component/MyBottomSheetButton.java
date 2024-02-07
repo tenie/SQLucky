@@ -261,9 +261,9 @@ public class MyBottomSheetButton {
         // 查询框
         TextField searchField = new TextField();
         searchField.getStyleClass().add("myTextField");
-
+        searchField.setMinWidth(150.0);
         AnchorPane txtAP = UiTools.textFieldAddCleanBtn(searchField);
-        txtAP.setVisible(false);
+//        txtAP.setVisible(false);
 
         JFXButton searchBtn = new JFXButton();
         searchBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
