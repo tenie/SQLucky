@@ -32,18 +32,7 @@ public class DBTools {
 
 	private static Logger logger = LogManager.getLogger(DBTools.class);
 
-	public static String dbFilePath() {
-		String dir = "/.sqlucky/";
-		if (CommonUtils.isDev()) {
-			dir = "/.sqlucky_dev/";
-		}
-		String path = FileUtils.getUserDirectoryPath() + dir;
-		File file = new File(path);
-		if (file.exists() == false) {
-			file.mkdir();
-		}
-		return path;
-	}
+
 
 	public static DbTableDatePo deleteSql(Connection conn, String sql) throws SQLException {
 		DbTableDatePo dpo = new DbTableDatePo();

@@ -128,6 +128,13 @@ public final class FileOrDirectoryChooser {
 				new FileChooser.ExtensionFilter("xls", "*.xls"), new FileChooser.ExtensionFilter("xlsx", "*.xlsx"));
 		return fileChooser;
 	}
+	public static FileChooser getJarFileChooser() {
+		fileChooser.setTitle("");
+		fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("jar", "*.jar"));
+		return fileChooser;
+	}
 
 	public static FileChooser getCsvFileChooser() {
 		fileChooser.setTitle("");
@@ -211,21 +218,21 @@ public final class FileOrDirectoryChooser {
 	}
 
 	// 指定文件类型
-	public static File selectExcelFile(Stage stage) {
-		getExcelFileChooser();
-		File file = fileChooser.showOpenDialog(stage);
-		return file;
-	}
 
-	public static File selectCsvFile(Stage stage) {
-		getCsvFileChooser();
-		File file = fileChooser.showOpenDialog(stage);
-		return file;
-	}
+
 
 	public static void getExcelFilePathAction(TextField tfFilePath, Stage stage) {
 		// 获取文件
-		File file = FileOrDirectoryChooser.selectExcelFile(stage);
+		getExcelFileChooser();
+		File file = fileChooser.showOpenDialog(stage);
+		if (file != null) {
+			tfFilePath.setText(file.getAbsolutePath());
+		}
+	}
+	public static void getJarFilePathAction(TextField tfFilePath, Stage stage) {
+		// 获取文件
+		getJarFileChooser();
+		File file = fileChooser.showOpenDialog(stage);
 		if (file != null) {
 			tfFilePath.setText(file.getAbsolutePath());
 		}
@@ -233,7 +240,8 @@ public final class FileOrDirectoryChooser {
 
 	public static void getCsvFilePathAction(TextField tfFilePath, Stage stage) {
 		// 获取文件
-		File file = FileOrDirectoryChooser.selectCsvFile(stage);
+		getCsvFileChooser();
+		File file = fileChooser.showOpenDialog(stage);
 		if (file != null) {
 			tfFilePath.setText(file.getAbsolutePath());
 		}

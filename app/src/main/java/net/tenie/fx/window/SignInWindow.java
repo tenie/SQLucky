@@ -56,8 +56,8 @@ public class SignInWindow {
 		vb.getStyleClass().add("connectionEditor");
 //		Scene scene = new Scene(vb);
 		
-		vb.setPrefWidth(400);
-		vb.maxWidth(400);
+		vb.setPrefWidth(500);
+		vb.maxWidth(500);
 		AnchorPane bottomPane = new AnchorPane();
 		bottomPane.setPadding(new Insets(10));
 
@@ -98,12 +98,12 @@ public class SignInWindow {
 		Label lbPassword = new Label(passwordStr);   
 		
 		tfemail = new TextField();
-		tfemail.minWidth(150.0);
+		tfemail.minWidth(180.0);
 		tfemail.setPromptText(email);
 		TextFieldSetup.setMaxLength(tfemail, 100);
 		
 		password = new PasswordField();
-		password.minWidth(150.0);
+		password.minWidth(180.0);
 		password.setPromptText(passwordStr);
 		TextFieldSetup.setMaxLength(password, 50);
 		 
@@ -213,17 +213,20 @@ public class SignInWindow {
 	    		boolean seccuss = UserAccountAction.singIn(emailVal, passwordVal, tf );
 		    	
 		    	if(seccuss) {
-		    		MyAlert.infoAlert("登入成功"); 
-		    		ConfigVal.SQLUCKY_EMAIL.set(emailVal);
-		    		ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
-		    		ConfigVal.SQLUCKY_REMEMBER.set(tf);
-		    		ConfigVal.SQLUCKY_LOGIN_STATUS.set(true);
-		    		Platform.runLater(()->{
-		    			signInBtn.setText(signedIn);
-			    		signInBtn.setDisable(true);
-		    		});
-		    		
-//		    		stageWindow.close();
+					Platform.runLater(()->{
+
+						ConfigVal.SQLUCKY_EMAIL.set(emailVal);
+						ConfigVal.SQLUCKY_PASSWORD.set(passwordVal);
+						ConfigVal.SQLUCKY_REMEMBER.set(tf);
+						ConfigVal.SQLUCKY_LOGIN_STATUS.set(true);
+						Platform.runLater(()->{
+							signInBtn.setText(signedIn);
+							signInBtn.setDisable(true);
+						});
+						MyAlert.alertWait("登入成功");
+						stageWindow.close();
+					});
+
 		    	}else {
 		    		MyAlert.errorAlert( "失败");
 		    		ConfigVal.SQLUCKY_EMAIL.set("");
@@ -326,7 +329,7 @@ public class SignInWindow {
 		ColumnConstraints c1 = new ColumnConstraints();
 		ColumnConstraints c2= new ColumnConstraints();
 		c1.setMinWidth(100.0);
-		c2.setMinWidth(160.0);
+		c2.setMinWidth(220.0);
 	    grid.getColumnConstraints().addAll(c1, c2);
 
 		stage.show();

@@ -1,5 +1,6 @@
 package net.tenie.fx.plugin;
 
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.controlsfx.control.tableview2.FilteredTableView;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
@@ -71,9 +72,13 @@ public class PluginManageWindow {
 		});
 		upload.getStyleClass().add("myAlertBtn");
 		upload.setOnAction(e->{
-//			PluginManageAction.queryServerPluginInfo(sheetDaV , allPluginTable);
-			PluginUploadWindow uploadWindow =new PluginUploadWindow();
-			uploadWindow.show();
+			if( CommonUtils.isLogin("Please Login First") == false) {
+				return ;
+			}else {
+				PluginUploadWindow uploadWindow =new PluginUploadWindow();
+				uploadWindow.show();
+			}
+
 		});
 
 		SearchPane.getChildren().addAll(searchBtn, searchText , sync, upload);

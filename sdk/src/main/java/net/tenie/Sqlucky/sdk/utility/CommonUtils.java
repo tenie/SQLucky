@@ -12,8 +12,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
-import net.tenie.Sqlucky.sdk.po.db.TablePrimaryKeysPo;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -56,11 +54,7 @@ import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.RsVal;
-import net.tenie.Sqlucky.sdk.po.SheetDataValue;
-import net.tenie.Sqlucky.sdk.po.TreeObjCache;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
-import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 
 /**
@@ -1047,17 +1041,26 @@ public class CommonUtils {
 		return false;
 	}
 
-	// 获取运行时app的模块路径
-	public static String sqluckyAppModsPath() {
-		// 判断是否是在开发时
-		if (isDev() == false) {
-			String jdk_module_path = System.getProperty("jdk.module.path");
-			return jdk_module_path;
+	public static String sqluckyWorkDirPath() {
+		String dir = "/.sqlucky/";
+		if (CommonUtils.isDev()) {
+			dir = "/.sqlucky_dev/";
 		}
-
-		String modsdir = getFirstJdkModulePath();
-
-		return modsdir;
+		String path = FileUtils.getUserDirectoryPath() + dir;
+		File file = new File(path);
+		if (file.exists() == false) {
+			file.mkdir();
+		}
+		return path;
+	}
+	// 获取运行时app的模块路径
+	public static String sqluckyAppPluginModsPath() {
+		String path  = sqluckyWorkDirPath() + "plugins";
+		File file = new File(path);
+		if (! file.exists()){
+			file.mkdir();
+		}
+		return path;
 	}
 
 	// 判断是否登过, 没有就跳出登入窗口

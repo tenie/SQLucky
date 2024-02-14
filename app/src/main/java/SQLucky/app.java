@@ -337,32 +337,6 @@ public class app extends Application {
             sysOpenFile = args[0];
         }
 
-//		String dir = CommonUtility.sqluckyAppModsPath();
-//		File file = new File(dir , "text");
-//		System.out.println(file.getAbsolutePath());
-//		file.createNewFile();
-
-//		String  v = System.getProperty("jdk.module.path");
-//		logger.debug("jdk.module.path = "+ v);
-//		try {
-//			String str = UnlimitedCryptoPoliciesCheck.getInfo();
-//			logger.debug("UnlimitedCryptoPoliciesCheck ==  "+ str);
-//			System.setProperty("https.protocols", "TLSv1.2");
-//		} catch (NoSuchAlgorithmException e) {
-//			e.printStackTrace();
-//		}
-
-//		Properties  ps = System.getProperties();
-//		ps.forEach((o1, o2)->{
-//			System.out.println(o1 + " | "+ o2);
-//
-//		});
-
-//		var val =System.getProperty("jdk.module.path");
-//		var val =System.getProperty("jdk.module.upgrade.path");
-//		var val =System.getProperty("jdk.module.main");
-//		logger.debug("jdk.module.path ==  "+ Arrays.toString(val.split(":")));
-
         if (CommonUtils.isLinuxOS()) {
             LauncherImpl.launchApplication(app.class, MyPreloaderGif.class, args);
         } else {

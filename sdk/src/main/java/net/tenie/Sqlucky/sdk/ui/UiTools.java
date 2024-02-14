@@ -52,6 +52,13 @@ public class UiTools {
 		});
 		return selectFileBtn;
 	}
+	public static Button openJarFileBtn(TextField tfFilePath, Stage stage) {
+		Button selectFileBtn = new Button("...");
+		selectFileBtn.setOnAction(e -> {
+			FileOrDirectoryChooser.getJarFilePathAction(tfFilePath, stage);
+		});
+		return selectFileBtn;
+	}
 
 	// 选取文件按钮
 	public static Button openCsvFileBtn(TextField tfFilePath, Stage stage) {

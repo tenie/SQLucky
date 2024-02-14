@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.utility.net;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class HttpUtil {
 		var nvps = mapToPairs(Param);
 		String content = Request.post(url)
 		        .bodyForm(nvps)
-		        .execute().returnContent().asString();
+		        .execute().returnContent().asString(StandardCharsets.UTF_8);
 		return content;
 	}
 	  
@@ -55,7 +56,7 @@ public class HttpUtil {
 
 		if (Param != null) {
 			Param.forEach((key, val) -> {
-				StringBody valBody = new StringBody(val, ContentType.TEXT_PLAIN);
+				StringBody valBody = new StringBody(val, ContentType.APPLICATION_JSON);
 				meb.addPart(key, valBody);
 			});
 		}
@@ -88,9 +89,9 @@ public class HttpUtil {
 		var nvps = mapToPairs(Param);
 		String name = "";
 		 try {
-			 Response re =	Request.post(url).bodyForm(nvps).execute();
+			 Response re =	Request.post(url).bodyForm(nvps, StandardCharsets.UTF_8).execute();
 			 name = re.handleResponse(response -> {
-				 		String sqluckyPluginName = response.getHeader("SQLUCKY_PLUGIN").getValue();
+				 		String sqluckyPluginName = Param.get("PLUGIN_FILE_NAME"); //response.getHeader("SQLUCKY_PLUGIN").getValue();
 				 		HttpEntity entity = response.getEntity(); 
 			            
 			            byte[] data =  EntityUtils.toByteArray(entity);
@@ -114,7 +115,7 @@ public class HttpUtil {
 			var nvps = mapToPairs(Param);
 			String name = "";
 			 try {
-				 Response re =	Request.post(url).bodyForm(nvps).execute();
+				 Response re =	Request.post(url).bodyForm(nvps, StandardCharsets.UTF_8).execute();
 				 name = re.handleResponse(response -> {
 					 		String sqluckyPluginName = response.getHeader("SQLUCKY_PATH").getValue();
 					 		HttpEntity entity = response.getEntity(); 
@@ -139,7 +140,7 @@ public class HttpUtil {
 	public static void downloadByPost(String url, String filepath, Map<String, String> Param) {
 		var nvps = mapToPairs(Param);
 		 try {
-			Request.post(url).bodyForm(nvps).execute().saveContent(new File(filepath));
+			Request.post(url).bodyForm(nvps, StandardCharsets.UTF_8).execute().saveContent(new File(filepath));
 			
 		} catch (IOException e) {
 			e.printStackTrace();

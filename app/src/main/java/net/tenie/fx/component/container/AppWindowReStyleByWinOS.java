@@ -123,8 +123,8 @@ public class AppWindowReStyleByWinOS {
 		mediaView.setFitWidth(22.0);
 		mediaView.setFitHeight(22.0);
 		operateBtnPane.getChildren().add(0, mediaView);
-		AnchorPane.setTopAnchor(mediaView, 5.0);
-		AnchorPane.setLeftAnchor(mediaView, 8.0);
+		AnchorPane.setTopAnchor(mediaView, 10.0);
+		AnchorPane.setLeftAnchor(mediaView, 10.0);
 	}
 
 	// 顶部按钮面板, 添加 最小化, 重置大小, 关闭按钮
@@ -174,13 +174,13 @@ public class AppWindowReStyleByWinOS {
 		operateBtnPane.getChildren().add(windowResize);
 		operateBtnPane.getChildren().add(close);
 
-		AnchorPane.setTopAnchor(hidden, 2.0);
-		AnchorPane.setTopAnchor(windowResize, 2.0);
-		AnchorPane.setTopAnchor(close, 2.0);
+		AnchorPane.setTopAnchor(hidden, 5.0);
+		AnchorPane.setTopAnchor(windowResize, 5.0);
+		AnchorPane.setTopAnchor(close, 5.0);
 
-		AnchorPane.setRightAnchor(hidden, 60.0);
-		AnchorPane.setRightAnchor(windowResize, 30.0);
-		AnchorPane.setRightAnchor(close, 2.0);
+		AnchorPane.setRightAnchor(hidden, 75.0);
+		AnchorPane.setRightAnchor(windowResize, 40.0);
+		AnchorPane.setRightAnchor(close, 5.0);
 	}
 
 	// 最大化和还原的切换

@@ -15,7 +15,6 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.DBTools;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -47,7 +46,7 @@ public class WorkDataBackupAction {
 	}
 
 	public static String localSaveDir() {
-		return DBTools.dbFilePath();
+		return CommonUtils.sqluckyWorkDirPath();
 	}
 
 	// 检查密钥最小长度

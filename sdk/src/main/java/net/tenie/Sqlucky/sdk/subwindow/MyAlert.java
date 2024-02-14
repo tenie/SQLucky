@@ -34,8 +34,6 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 public class MyAlert {
 	/**
 	 * 不会阻塞当前线程的 alert
-	 * 
-	 * @param title
 	 * @param containTxt 要展示的内容
 	 */
 	public static void infoAlert(String containTxt) {
@@ -47,8 +45,7 @@ public class MyAlert {
 
 	/**
 	 * 会阻塞当前线程的alert, 关闭alert窗口才会执行之后的代码
-	 * 
-	 * @param title
+	 *
 	 * @param containTxt
 	 */
 	public static void alertWait(String containTxt) {

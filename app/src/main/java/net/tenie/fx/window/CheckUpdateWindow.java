@@ -24,7 +24,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.DBTools;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.SheetTableData;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -121,7 +120,7 @@ public class CheckUpdateWindow {
 				} 
 				vals.put("CLIENT_VERSION", ConfigVal.version); 
 				
-				String dir = DBTools.dbFilePath() + "newPatch";
+				String dir = CommonUtils.sqluckyWorkDirPath() + "newPatch";
 				File patchDir = new File(dir);
 				if(patchDir.exists()) {
 					patchDir.deleteOnExit();

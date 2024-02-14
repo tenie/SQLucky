@@ -447,7 +447,7 @@ public class AppDao {
 	// 获取目录下的旧db文件, 从旧文件中找一个最新的
 	private static String oldDbFiles() {
 		String rs = "";
-		String path = DBTools.dbFilePath();
+		String path = CommonUtils.sqluckyWorkDirPath();
 		File dir = new File(path);
 
 		File[] files = dir.listFiles(name -> {
@@ -482,7 +482,7 @@ public class AppDao {
 	public static Optional<File> appOldDbFiles() {
 		String rs = "";
 		File rsFile = null;
-		String path = DBTools.dbFilePath();
+		String path = CommonUtils.sqluckyWorkDirPath();
 		File dir = new File(path);
 
 		File[] files = dir.listFiles(name -> {

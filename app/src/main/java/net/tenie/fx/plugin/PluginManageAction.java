@@ -105,7 +105,9 @@ public class PluginManageAction {
 			+ " VERSION ,"
 			+ " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
 			+ " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
-			+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" "
+			+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" ,"
+			+ " FILE_NAME as \"File Name\" ,"
+			+ " PLUGIN_CODE "
 			+ " from PLUGIN_INFO";
 	
 	/**
@@ -181,8 +183,7 @@ public class PluginManageAction {
 		}
 	}
 	// 上传文件
-	public static void uploadPluginFile(String pName, String pDescribe, String pVersion, String  jarFile) throws IOException {
-//		File jarFile = FileOrDirectoryChooser.showOpen("Select Plugin Jar File", "jar", ComponentGetter.primaryStage);
+	public static void uploadPluginFile(String pName, String pDescribe, String pVersion, String  jarFile, String pPackage) throws IOException {
 		Map<String, String> map = new HashMap<>();
 		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
 		map.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
@@ -190,8 +191,9 @@ public class PluginManageAction {
 		map.put("name", pName);
 		map.put("describe", pDescribe);
 		map.put("version", pVersion);
+		map.put("package", pPackage);
 
-		HttpUtil.postFile(ConfigVal.getSqluckyServer()+"/sqlucky/queryAllPlugin", jarFile, map);
+		HttpUtil.postFile(ConfigVal.getSqluckyServer()+"/sqlucky/pluginUpload", jarFile, map);
 	}
  
 	// 同步服务器的插件信息
@@ -214,22 +216,16 @@ public class PluginManageAction {
 				 List<Object> localVals = PoDao.selectFieldVal(conn, new  PluginInfoPO(), "PLUGIN_CODE");
 				 int count = 0;
 				 for(PluginInfoPO info : ls) {
-					 	String tmpPluginCode = info.getPluginCode();
-					 	if(localVals.contains(tmpPluginCode)) {
-					 		continue;
-					 	}
-					 	PluginInfoPO ppo = new PluginInfoPO();
-						ppo.setPluginCode(info.getPluginCode());
-						ppo.setPluginName(info.getPluginName());
-						ppo.setPluginCode(info.getPluginCode());
-						ppo.setPluginDescribe(info.getPluginDescribe());
-						ppo.setVersion(info.getVersion());
-						ppo.setDownloadStatus(0);
-						ppo.setReloadStatus(0);
-						
-						ppo.setCreatedTime(new Date());
-						PoDao.insert(conn, ppo);
-						count++;
+					 String tmpPluginCode = info.getPluginCode();
+					 if (localVals.contains(tmpPluginCode)) {
+						 continue;
+					 }
+					 info.setDownloadStatus(0);
+					 info.setReloadStatus(0);
+					 info.setCreatedTime(new Date());
+					 info.setId(null);
+					 PoDao.insert(conn, info);
+					 count++;
 				 }
 				 
 				 MyAlert.infoAlert( "同步到新插件" + count + "个");
@@ -260,16 +256,20 @@ public class PluginManageAction {
 			try {
 				int currentSelectIndex = allPluginTable.getSelectionModel().getSelectedIndex();
 				
-				String pluginName = getSelectPluginName(allPluginTable);
-				Map<String, String> vals = new HashMap<>();
-				vals.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());	
-				vals.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
-				vals.put("PLUGIN_NAME", pluginName);
+				String pluginName = getSelectPluginName(allPluginTable , "Name");
+				String pluginFileName=  getSelectPluginName(allPluginTable , "File Name");
+
+				String PLUGIN_CODE=  getSelectPluginName(allPluginTable , "PLUGIN_CODE");
+				Map<String, String> params = new HashMap<>();
+				params.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
+				params.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
+				params.put("PLUGIN_NAME", pluginName);
+				params.put("PLUGIN_CODE", PLUGIN_CODE);
+				params.put("PLUGIN_FILE_NAME", pluginFileName);
+
 				
-				
-				String modelPath = CommonUtils.sqluckyAppModsPath();
-//				modelPath += "/test.jar";
-				String fileName = HttpUtil.downloadPluginByPostToDir(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, vals);
+				String modelPath = CommonUtils.sqluckyAppPluginModsPath();
+				String fileName = HttpUtil.downloadPluginByPostToDir(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, params);
 				
 				File pluginFile = new File(fileName);
 				if(pluginFile.exists()) {
@@ -308,11 +308,9 @@ public class PluginManageAction {
 	
 	
 	
-	public static String getSelectPluginName(FilteredTableView<ResultSetRowPo>  allPluginTable) {
+	public static String getSelectPluginName(FilteredTableView<ResultSetRowPo>  allPluginTable, String keyName) {
 		ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
-		String name = selectRow.getValueByFieldName("Name");
-		return name;
+		String keyVal = selectRow.getValueByFieldName(keyName);
+		return keyVal;
 	}
-	
- 
 }

@@ -9,6 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.fxmisc.richtext.CodeArea;
@@ -143,14 +144,14 @@ public class SqluckyAppDB {
 	}
 
 	private static String getH2FilePath() {
-		String path = DBTools.dbFilePath();
+		String path = CommonUtils.sqluckyWorkDirPath();
 		ConfigVal.H2_DB_FILE_NAME = path + ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION;
 		ConfigVal.H2_DB_FULL_FILE_NAME = ConfigVal.H2_DB_FILE_NAME + ".mv.db";
 		return ConfigVal.H2_DB_FILE_NAME;
 	}
 
 	public static String getSqliteFilePath() {
-		String path = DBTools.dbFilePath();
+		String path = CommonUtils.sqluckyWorkDirPath();
 		ConfigVal.H2_DB_FILE_NAME = path + ConfigVal.H2_DB_NAME + ConfigVal.H2_DB_VERSION + "_sqlite.db";
 		ConfigVal.H2_DB_FULL_FILE_NAME = ConfigVal.H2_DB_FILE_NAME;
 		// 如果db文件还不存在, 就说明时新的版本

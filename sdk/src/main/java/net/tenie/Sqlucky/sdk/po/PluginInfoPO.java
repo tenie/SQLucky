@@ -8,6 +8,7 @@ public class PluginInfoPO  {
 	private Date createdTime;
 	private Date updatedTime;
 	private String pluginCode;
+	private String 	fileName;
 	private String pluginDescribe;
 	private String pluginName;
 	private Integer downloadStatus;
@@ -93,6 +94,14 @@ public class PluginInfoPO  {
 
 	public void setVersion(String version) {
 		this.version = version;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 	@Override
