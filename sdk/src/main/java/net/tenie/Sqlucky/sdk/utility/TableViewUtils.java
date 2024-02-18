@@ -25,7 +25,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyCellOperateButton;
 import net.tenie.Sqlucky.sdk.component.MyTableCellButton;
 import net.tenie.Sqlucky.sdk.component.MyTableCellTextField3;

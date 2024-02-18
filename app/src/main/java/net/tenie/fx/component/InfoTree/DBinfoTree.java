@@ -29,7 +29,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -358,11 +358,7 @@ public class DBinfoTree {
 				if (!fpt.isProcedure()) {
 					fpt.setProcedure(true);
 				}
-//				new DataViewTab().showProcedurePanel(item.getValue().getName(), sqlStr, true);
-//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ProcedureSheet(sqluckyconn,
-//						item.getValue().getName(), sqlStr, true);
-//				mtd.show();
-				MyBottomSheet.showProcedureSheet(sqluckyconn, item.getValue().getName(), sqlStr, true);
+				MyBottomSheet.showProcedureSheet(sqluckyconn, item.getValue().getName(), sqlStr);
 
 			} // trigger
 			else if (parentItem.getValue().getType() != null
@@ -378,10 +374,6 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
-//				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
-//						sqlStr, false, false);
-//				mtd.show();
 				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
 
 			} // index
@@ -398,10 +390,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
-//				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
-//						sqlStr, false, false);
-//				mtd.show();
+
 				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
 
 			} // Sequence
@@ -418,10 +407,7 @@ public class DBinfoTree {
 						fpt.setDdl(sqlStr);
 					}
 				}
-//				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, false);
-//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
-//						sqlStr, false, false);
-//				mtd.show();
+
 				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
 			}
 

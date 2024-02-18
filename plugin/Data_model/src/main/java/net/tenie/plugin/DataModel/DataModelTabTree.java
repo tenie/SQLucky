@@ -15,10 +15,9 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
-import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
-import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.component.*;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheetAction;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -221,7 +220,7 @@ public class DataModelTabTree {
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();
 			sheetDaV.setSaveBtn(saveBtn);
 			dockSideBtn.setOnMouseClicked(e -> {
-				myBottomSheet.dockSide();
+				MyBottomSheetAction.dockSide(myBottomSheet);
 
 			});
 
@@ -237,7 +236,7 @@ public class DataModelTabTree {
 
 			});
 			exportExcel.setOnAction(e -> {
-				myBottomSheet.exportExcelAction(false);
+				MyBottomSheetAction.exportExcelAction(myBottomSheet,false);
 			});
 
 			// tableView 处理

@@ -22,7 +22,7 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 public class SheetDataValue {
 	private String tabName;
 	private String sqlStr; // 执行是的sql
-	private String connName;
+//	private String connName;
 	private boolean isLock = false;
 	private SqluckyConnector dbConnection;
 	private Connection conn;
@@ -153,12 +153,10 @@ public class SheetDataValue {
 	}
 
 	public String getConnName() {
-		return connName;
+		return dbConnection.getConnName();
 	}
 
-	public void setConnName(String connName) {
-		this.connName = connName;
-	}
+
 
 	public double getExecTime() {
 		return execTime;

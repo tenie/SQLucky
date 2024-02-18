@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.MaskerPane;
@@ -220,7 +221,6 @@ public class SdkComponent {
 	 * sql 查询结果生成表格
 	 * 
 	 * @param sql
-	 * @param conn
 	 * @param tableName
 	 * @param fieldWidthMap
 	 * @return
@@ -242,7 +242,7 @@ public class SdkComponent {
 					tableName = "Table Name Not Finded";
 				}
 			}
-			logger.info("tableName= " + tableName ); //+ "\n sql = " + sql
+			logger.info("tableName= " + tableName );
 
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTabName(tableName);
@@ -273,15 +273,8 @@ public class SdkComponent {
 			table.setItems(allRawData);
 			// 表格选中事件, 对表格中的字段添加修改监听
 			table.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-				//
 				if (newValue != null) {
-//					List<Button> btns = null;
-//					if (sheetDaV.getBtnMap() != null) {
-//						var btnNodes = sheetDaV.getBtnMap().values();
-//						btns = new ArrayList<>();
-//						btns.addAll(btnNodes);
-//					}
-					newValue.cellAddChangeListener();// btns
+					newValue.cellAddChangeListener();
 				}
 			});
 
@@ -292,17 +285,6 @@ public class SdkComponent {
 		}
 		return null;
 	}
-
-	// 查询时等待画面
-//	public static Tab maskTab(String waittbName) {
-//		Tab waitTb = new Tab(waittbName);
-//		MaskerPane masker = new MaskerPane();
-//		VBox vbox = new VBox();
-//		vbox.getChildren().add(masker);
-//		vbox.getChildren().add(waitTabLabel);
-//		waitTb.setContent(vbox);
-//		return waitTb;
-//	}
 
 	private static Tab waitTab;
 	private static VBox vbox = new VBox();
@@ -365,7 +347,7 @@ public class SdkComponent {
 
 	public static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
 		Platform.runLater(() -> {
-			SdkComponent.showDetailPane();
+			SdkComponent.showBottomSheetPane();
 		});
 		Tab v = SdkComponent.addWaitingPane(tabIdx);
 		Platform.runLater(() -> {
@@ -492,7 +474,7 @@ public class SdkComponent {
 	}
 
 	// 底部数据展示面板是否显示
-	public static void showDetailPane() {
+	public static void showBottomSheetPane() {
 		JFXButton btn = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
 		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 		if (showStatus) {

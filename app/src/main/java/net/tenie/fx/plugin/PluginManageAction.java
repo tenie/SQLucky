@@ -67,7 +67,7 @@ public class PluginManageAction {
 			allPluginTable.getSelectionModel().getTableView().refresh();
 			Consumer< String >  ok = x -> Restart.reboot();
 			 
-			MyAlert.myConfirmation("Setting up requires reboot , ok ? ", ok, null);
+			MyAlert.myConfirmation("Enable Or Disable Plugin Need Reboot , ok ? ", ok, null);
 		 
 	}
 	// 删除插件
@@ -182,6 +182,30 @@ public class PluginManageAction {
 			SqluckyAppDB.closeConn(conn);
 		}
 	}
+
+	/**
+	 * 上传权限校验
+	 * @throws IOException
+	 */
+	public static boolean checkUploadAuthority() {
+		Map<String, String> map = new HashMap<>();
+		map.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
+		map.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
+
+
+        String val = null;
+        try {
+            val = HttpUtil.post(ConfigVal.getSqluckyServer()+"/sqlucky/checkUploadAuthority", map);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        if("YES".equals(val)){
+			return true;
+		}
+		return false;
+	}
+
+
 	// 上传文件
 	public static void uploadPluginFile(String pName, String pDescribe, String pVersion, String  jarFile, String pPackage) throws IOException {
 		Map<String, String> map = new HashMap<>();
@@ -195,6 +219,8 @@ public class PluginManageAction {
 
 		HttpUtil.postFile(ConfigVal.getSqluckyServer()+"/sqlucky/pluginUpload", jarFile, map);
 	}
+
+
  
 	// 同步服务器的插件信息
 	public static void queryServerPluginInfo(SheetTableData sheetDaV , FilteredTableView<ResultSetRowPo> allPluginTable) {

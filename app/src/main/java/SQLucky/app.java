@@ -13,6 +13,7 @@ import java.util.function.Consumer;
 import net.tenie.fx.main.MyPreloaderGif;
 import net.tenie.fx.main.MyPreloaderMp4;
 import net.tenie.fx.main.Restart;
+import net.tenie.lib.db.h2.UpdateScript;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -98,8 +99,11 @@ public class app extends Application {
         Connection conn = SqluckyAppDB.getConn();
 
         // 数据库迁移
-        AppDao.testDbTableExists(conn);
-
+        AppDao.testDbTableExists(conn, "SQLUCKY_APPEND_SQL");
+        // 插入更新sql
+        UpdateScript.insertNewSQL();
+        // 执行需要更新的sql
+        UpdateScript.executeAppendSql();
         // 界面主题色， 没有设置过，默认黑色
         Theme = SqluckyAppDB.readConfig(conn, "THEME");
         if (StrUtils.isNullOrEmpty(Theme)) {

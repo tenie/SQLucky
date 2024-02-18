@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.Notifications;
 
@@ -13,7 +14,6 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -113,8 +113,8 @@ public class MyAlert {
 		List<Node> btns = new ArrayList<>();
 		btns.add(btn);
 
-		Node vb = DialogTools.setVboxShape(stage, title, nds, btns);
-		Scene scene = new Scene((Parent) vb);
+		VBox vb = DialogTools.getSceneVbox(stage, title, nds, btns);
+		Scene scene = new Scene(vb);
 		setKeyPress(scene, btns);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
@@ -202,8 +202,8 @@ public class MyAlert {
 		nds.add(codeAreaPane);
 		nds.add(question);
 
-		Node vb = DialogTools.setVboxShape(500, 150, stage, ComponentGetter.INFO, nds, btns);
-		Scene scene = new Scene((Parent) vb);
+		VBox vb = DialogTools.getSceneVbox(500, 150, stage, ComponentGetter.INFO, nds, btns);
+		Scene scene = new Scene( vb);
 		setKeyPress(scene, btns);
 
 		stage.initModality(Modality.APPLICATION_MODAL);
@@ -251,8 +251,8 @@ public class MyAlert {
 		List<Node> nds = new ArrayList<>();
 		nds.add(codeAreaPane);
 
-		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.INFO, nds, btns);
-		Scene scene = new Scene((Parent) vb);
+		VBox vb = DialogTools.getSceneVbox(stage, ComponentGetter.INFO, nds, btns);
+		Scene scene = new Scene( vb);
 		setKeyPress(scene, btns);
 
 		stage.initModality(Modality.APPLICATION_MODAL);
@@ -393,8 +393,8 @@ public class MyAlert {
 			List<Node> btns = new ArrayList<>();
 			btns.add(btn);
 			btns.add(copyText);
-			Node vb = DialogTools.setVboxShape(500, 180, stage, titleLabel, nds, btns);
-			Scene scene = new Scene((Parent) vb);
+			VBox vb = DialogTools.getSceneVbox(500, 180, stage, titleLabel, nds, btns);
+			Scene scene = new Scene(  vb);
 			setKeyPress(scene, btns);
 			stage.initModality(Modality.APPLICATION_MODAL);
 			stage.setScene(scene);

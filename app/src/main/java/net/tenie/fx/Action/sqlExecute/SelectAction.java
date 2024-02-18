@@ -1,7 +1,6 @@
 package net.tenie.fx.Action.sqlExecute;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +11,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
@@ -34,6 +33,7 @@ public class SelectAction {
 
 	private static Logger logger = LogManager.getLogger(SelectAction.class);
 
+
 	public static void selectAction(String sql, SqluckyConnector sqluckyConn, int tidx, boolean isLock) throws Exception {
 		MyBottomSheet myBottomSheet  = null;
 		try {
@@ -50,15 +50,15 @@ public class SelectAction {
 			}
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			sheetDaV.setDbConnection(sqluckyConn);
-			String connectName = sqluckyConn.getConnName();
+//			String connectName = sqluckyConn.getConnName();
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTabName(tableName);
-			sheetDaV.setConnName(connectName);
+//			sheetDaV.setConnName(connectName);
 			sheetDaV.setLock(isLock);
 
 			SelectExecInfo execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, sqluckyConn);
 			sheetDaV.setSelectExecInfo(execInfo);
-
+			// 设置行号显示宽度
 			DataViewContainer.setTabRowWith(table, sheetDaV.getDataRs().getDatas().size());
 
 			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getDataRs().getDatas();
@@ -83,7 +83,7 @@ public class SelectAction {
 			table.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 				//
 				if (newValue != null) {
-					newValue.cellAddChangeListener(); // null
+					newValue.cellAddChangeListener();
 				}
 			});
 

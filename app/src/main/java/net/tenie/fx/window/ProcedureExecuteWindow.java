@@ -124,16 +124,11 @@ public class ProcedureExecuteWindow {
 		btns.add(cancelBtn);
 		btns.add(btn);
 
-		Node vb = DialogTools.setVboxShape(0, 0, stage, ComponentGetter.INFO, nds, btns);
-		Scene scene = new Scene((Parent) vb);
-//		Scene scene = new Scene( b);
+		VBox vb = DialogTools.getSceneVbox(0, 0, stage, ComponentGetter.INFO, nds, btns);
+		Scene scene = new Scene(vb);
 
 		stage.setScene(scene);
-//		ModalDialog.setSceneAndShow(scene, stage);
-//		CommonAction.loadCss(scene);
-//		stage.initStyle(StageStyle.UTILITY); 
 		stage.initModality(Modality.APPLICATION_MODAL);
-//		stage.show();
 		DialogTools.setSceneAndShow(scene, stage, false);
 	}
 

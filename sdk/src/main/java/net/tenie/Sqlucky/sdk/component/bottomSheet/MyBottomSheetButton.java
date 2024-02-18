@@ -1,20 +1,19 @@
-package net.tenie.Sqlucky.sdk.component;
+package net.tenie.Sqlucky.sdk.component.bottomSheet;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.po.SheetDataValue;
-import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportSQLWindow;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
-import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyBottomSheetButton {
-    public List<Node> sqlDataOptionBtns(MyBottomSheet sheet, boolean disable, boolean isCreate) {
+    public static List<Node> sqlDataOptionBtns(MyBottomSheet sheet, boolean disable, boolean isCreate) {
         List<Node> ls = new ArrayList<>();
         // 锁
         JFXButton lockbtn = sheet.getTableData().getLockBtn();
@@ -31,7 +30,9 @@ public class MyBottomSheetButton {
 
             JFXButton saveBtn = sheet.getTableData().getSaveBtn();
             saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
-            saveBtn.setOnMouseClicked(e -> sheet.dataSave());
+            saveBtn.setOnMouseClicked(e -> {
+                MyBottomSheetAction.dataSave(sheet);
+            });
             saveBtn.setTooltip(MyTooltipTool.instance("Save data"));
             saveBtn.setDisable(true);
             // 保存按钮监听 : 保存亮起, 锁住
@@ -57,7 +58,7 @@ public class MyBottomSheetButton {
             JFXButton tableSQLBtn = new JFXButton();
             tableSQLBtn.setGraphic(IconGenerator.svgImageDefActive("table"));
             tableSQLBtn.setOnMouseClicked(e -> {
-                sheet.findTable();
+                MyBottomSheetAction.findTable(sheet);
             });
             tableSQLBtn.setTooltip(MyTooltipTool.instance("Table SQL"));
             tableSQLBtn.setDisable(disable);
@@ -66,7 +67,7 @@ public class MyBottomSheetButton {
             JFXButton refreshBtn = new JFXButton();
             refreshBtn.setGraphic(IconGenerator.svgImageDefActive("refresh"));
             refreshBtn.setOnMouseClicked(e -> {
-                sheet.refreshData(sheet.getTableData().isLock());
+                MyBottomSheetAction.refreshData(sheet);
             });
             refreshBtn.setTooltip(MyTooltipTool.instance("refresh table "));
             refreshBtn.setDisable(disable);
@@ -76,7 +77,7 @@ public class MyBottomSheetButton {
             addBtn.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
 
             addBtn.setOnMouseClicked(e -> {
-                sheet.addData();
+                MyBottomSheetAction.addData(sheet);
             });
             addBtn.setTooltip(MyTooltipTool.instance("add new data "));
             addBtn.setDisable(disable);
@@ -85,7 +86,7 @@ public class MyBottomSheetButton {
             minusBtn.setGraphic(IconGenerator.svgImage("minus-square", "#EC7774"));
 
             minusBtn.setOnMouseClicked(e -> {
-                sheet.deleteData();
+                MyBottomSheetAction.deleteData(sheet);
             });
             minusBtn.setTooltip(MyTooltipTool.instance("delete data "));
             minusBtn.setDisable(disable);
@@ -94,7 +95,7 @@ public class MyBottomSheetButton {
             JFXButton copyBtn = new JFXButton();
             copyBtn.setGraphic(IconGenerator.svgImageDefActive("files-o"));
             copyBtn.setOnMouseClicked(e -> {
-                sheet.copyData();
+                MyBottomSheetAction.copyData(sheet);
             });
             copyBtn.setTooltip(MyTooltipTool.instance("copy selected row data "));
             copyBtn.setDisable(disable);
@@ -103,7 +104,7 @@ public class MyBottomSheetButton {
             JFXButton dockSideBtn = new JFXButton();
             dockSideBtn.setGraphic(IconGenerator.svgImageDefActive("material-filter-none"));
             dockSideBtn.setOnMouseClicked(e -> {
-                sheet.dockSide();
+                MyBottomSheetAction.dockSide(sheet);
             });
             dockSideBtn.setTooltip(MyTooltipTool.instance("Dock side"));
             dockSideBtn.setDisable(disable);
@@ -149,28 +150,28 @@ public class MyBottomSheetButton {
             // 导出sql
             Menu insertSQL = new Menu("Export Insert SQL Format ");
             MenuItem selected = new MenuItem("Selected Data to Clipboard ");
-            selected.setOnAction(e -> sheet.InsertSQLClipboard(true, false, sheet));
+            selected.setOnAction(e -> MyBottomSheetAction.InsertSQLClipboard(sheet, true, false));
             MenuItem selectedfile = new MenuItem("Selected Data to file");
-            selectedfile.setOnAction(e -> sheet.InsertSQLClipboard(true, true, sheet));
+            selectedfile.setOnAction(e -> MyBottomSheetAction.InsertSQLClipboard(sheet,true, true));
 
             MenuItem all = new MenuItem("All Data to Clipboard ");
-            all.setOnAction(e -> sheet.InsertSQLClipboard(false, false, sheet));
+            all.setOnAction(e -> MyBottomSheetAction.InsertSQLClipboard(sheet, false, false));
             MenuItem allfile = new MenuItem("All Data to file");
-            allfile.setOnAction(e -> sheet.InsertSQLClipboard(false, true, sheet));
+            allfile.setOnAction(e -> MyBottomSheetAction.InsertSQLClipboard(sheet,false, true));
 
             insertSQL.getItems().addAll(selected, selectedfile, all, allfile);
 
             // 导出csv
             Menu csv = new Menu("Export CSV Format ");
             MenuItem csvselected = new MenuItem("Selected Data to Clipboard ");
-            csvselected.setOnAction(e -> sheet.csvStrClipboard(true, false));
+            csvselected.setOnAction(e -> MyBottomSheetAction.csvStrClipboard(sheet,true, false));
             MenuItem csvselectedfile = new MenuItem("Selected Data to file");
-            csvselectedfile.setOnAction(e -> sheet.csvStrClipboard(true, true));
+            csvselectedfile.setOnAction(e -> MyBottomSheetAction.csvStrClipboard(sheet,true, true));
 
             MenuItem csvall = new MenuItem("All Data to Clipboard ");
-            csvall.setOnAction(e -> sheet.csvStrClipboard(false, false));
+            csvall.setOnAction(e -> MyBottomSheetAction.csvStrClipboard(sheet,false, false));
             MenuItem csvallfile = new MenuItem("All Data to file");
-            csvallfile.setOnAction(e -> sheet.csvStrClipboard(false, true));
+            csvallfile.setOnAction(e -> MyBottomSheetAction.csvStrClipboard(sheet,false, true));
 
             csv.getItems().addAll(csvselected, csvselectedfile, csvall, csvallfile);
 
@@ -180,13 +181,13 @@ public class MyBottomSheetButton {
             // 导出选中的数据
             MenuItem excelSelected = new MenuItem("Export Selected Data ");
             excelSelected.setOnAction(e -> {
-                sheet.exportExcelAction(true);
+                MyBottomSheetAction.exportExcelAction(sheet,true);
             });
 
             // 导出所有数据
             MenuItem excelAll = new MenuItem("Export All Data  ");
             excelAll.setOnAction(e -> {
-                sheet.exportExcelAction(false);
+                MyBottomSheetAction.exportExcelAction(sheet,false);
             });
 
             excel.getItems().addAll(excelSelected, excelAll);
@@ -208,10 +209,18 @@ public class MyBottomSheetButton {
             // 导出字段
             Menu fieldNames = new Menu("Export Table Field Name ");
             MenuItem CommaSplit = new MenuItem("Comma splitting");
-            CommaSplit.setOnAction(sheet.commaSplitTableFields(sheet.getTableData()));
+            CommaSplit.setOnAction(
+                    event -> {
+                        MyBottomSheetAction.commaSplitTableFields(sheet.getTableData());
+                    }
+           );
 
             MenuItem CommaSplitIncludeType = new MenuItem("Comma splitting Include Field Type");
-            CommaSplitIncludeType.setOnAction(sheet.commaSplitTableFiledsIncludeType(sheet.getTableData()));
+            CommaSplitIncludeType.setOnAction(
+                    event -> {
+                        MyBottomSheetAction.commaSplitTableFiledsIncludeType(sheet.getTableData());
+                    }
+                 );
 
             fieldNames.getItems().addAll(CommaSplit, CommaSplitIncludeType);
 
@@ -219,7 +228,9 @@ public class MyBottomSheetButton {
             // java 代码导出
 
             MenuItem javaCode = new MenuItem("Export Java Bean Field");
-            javaCode.setOnAction(event -> exportJavaCode(sheet));
+            javaCode.setOnAction(event -> {
+                MyBottomSheetAction.exportJavaCode(sheet);
+            });
             exportBtn.getItems().addAll(insertSQL, csv, excel, fieldNames, javaCode);
 
 
@@ -290,23 +301,4 @@ public class MyBottomSheetButton {
         return ls;
     }
 
-    /**
-     数据库字段导出为java bean字段
-     */
-    public void exportJavaCode( MyBottomSheet sheet){
-        SheetDataValue data = sheet.getTableData();
-        ObservableList<SheetFieldPo> SheetFieldPoList =  data.getColss();
-        StringBuilder codeStr = new StringBuilder();
-        for(var field : SheetFieldPoList){
-            String className = CommonUtils.dbTypeToJavaType(field);
-            String fieldName = field.getColumnLabel().get();
-            codeStr.append("private ");
-            codeStr.append(className.substring(className.lastIndexOf(".") + 1));
-            codeStr.append(" ");
-            fieldName = StrUtils.underlineCaseCamel(fieldName);
-            codeStr.append(fieldName);
-            codeStr.append(";\n");
-        }
-        CommonUtils.setClipboardVal(codeStr.toString() );
-    }
 }

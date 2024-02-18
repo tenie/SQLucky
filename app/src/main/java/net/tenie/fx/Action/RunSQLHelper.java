@@ -112,13 +112,6 @@ public class RunSQLHelper {
 				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
 				allsqls = SqluckyAppDB.willExecSql(state.getIsCurrentLine());
 			}
-//			String waitShowSqlStr = "";
-//			for (int k = 0; k < allsqls.size(); k++) {
-//				var sqltmp = allsqls.get(k);
-//				sqltmp.sql()
-//				waitShowSqlStr += allsqls.get(k).sql() + "\n";
-//			}
-
 			// 执行sql SqluckyConnector
 			tmpSqlConn = state.getSqlConn();
 			var rsVal = execSqlList(allsqls, tmpSqlConn, state);

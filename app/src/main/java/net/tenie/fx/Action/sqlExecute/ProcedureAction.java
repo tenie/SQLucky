@@ -1,10 +1,8 @@
 package net.tenie.fx.Action.sqlExecute;
 
 import java.sql.Connection;
-import java.sql.Statement;
 import java.util.Date;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +11,7 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -67,7 +65,7 @@ public class ProcedureAction {
 			dvt.setSqlStr(sql);
 			dvt.setTable(table);
 			dvt.setTabName(tableName);
-			dvt.setConnName(connectName);
+//			dvt.setConnName(connectName);
 //			dvt.setDbconns(conn);
 			dvt.setDbConnection(dpo);
 			dvt.setLock(isLock);

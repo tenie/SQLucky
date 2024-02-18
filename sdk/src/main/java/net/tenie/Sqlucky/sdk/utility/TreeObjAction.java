@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.db.DBOptionHelper;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;

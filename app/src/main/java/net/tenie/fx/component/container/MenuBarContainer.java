@@ -430,12 +430,12 @@ public class MenuBarContainer {
 		SignInMenuItem.setOnAction(value -> {
 			SignInWindow.show("");
 		});
-
-		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));
-		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("windows-clipboard-variant-edit"));
-		SignUpMenuItem.setOnAction(value -> {
-			CommonUtils.OpenURLInBrowser("https://app.sqlucky.com/");
-		});
+// 		注册
+//		MenuItem SignUpMenuItem = new MenuItem(StrUtils.MenuItemNameFormat("Sign Up"));
+//		SignUpMenuItem.setGraphic(IconGenerator.svgImageDefActive("windows-clipboard-variant-edit"));
+//		SignUpMenuItem.setOnAction(value -> {
+//			CommonUtils.OpenURLInBrowser("https://app.sqlucky.com/");
+//		});
 
 		MenuItem checkForUpdates = new MenuItem(StrUtils.MenuItemNameFormat("Check For Updates"));
 		var svg = IconGenerator.sqluckyLogoSVG();
@@ -444,7 +444,8 @@ public class MenuBarContainer {
 			CheckUpdateWindow.show("");
 		});
 
-		mn.getItems().addAll(SignInMenuItem, SignUpMenuItem, checkForUpdates, new SeparatorMenuItem(), about);
+		//SignUpMenuItem,
+		mn.getItems().addAll(SignInMenuItem,  checkForUpdates, new SeparatorMenuItem(), about);
 		return mn;
 	}
 

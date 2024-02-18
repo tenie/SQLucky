@@ -9,7 +9,8 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheetAction;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
@@ -121,7 +122,7 @@ public class CommonEventHandler {
 		return new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				ObservableList<ResultSetRowPo> vals = mtd.getValsHelper(isSelected);
+				ObservableList<ResultSetRowPo> vals = MyBottomSheetAction.getValsHelper(mtd,isSelected);
 				final File ff = CommonUtils.getFileHelper(isFile);
 				Thread t = new Thread() {
 					@Override

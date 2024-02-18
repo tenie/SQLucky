@@ -141,6 +141,7 @@ public class DBTools {
 		try {
 			execDDL(conn, sql);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

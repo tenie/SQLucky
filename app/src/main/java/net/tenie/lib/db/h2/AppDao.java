@@ -362,13 +362,11 @@ public class AppDao {
 	}
 
 	// 判断表是否存在
-	public static void testDbTableExists(Connection conn) {
+	public static void testDbTableExists(Connection conn, String dbTableName) {
 		// 第一次启动
-		if (!tabExist(conn, "IMPORT_FIELD_MAP_DETAIL")) {
+		if (!tabExist(conn, dbTableName)) {
 			AppDao.createTab(conn);
 
-		} else {// 之后的启动, 更新脚本
-//			UpdateScript.execUpdate(conn);
 		}
 	}
 

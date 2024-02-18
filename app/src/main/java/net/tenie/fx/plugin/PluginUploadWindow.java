@@ -1,5 +1,6 @@
 package net.tenie.fx.plugin;
 
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.geometry.Insets;
@@ -112,13 +113,30 @@ public class PluginUploadWindow {
 		    String pVersion =tfPluginVersion.getText();
 			String jarFile = tfFilePath.getText();
 			String pPackage = tfPluginPackage.getText();
+			// 先验证有没有上传权限
+			boolean authority = PluginManageAction.checkUploadAuthority();
+			if(authority == false){
+				Platform.runLater(()->{
+					MyAlert.errorAlert("没有上传权限", true);
+					stage.close();
+				});
+				return;
+			}
             try {
                 PluginManageAction.uploadPluginFile(pName, pDescribe, pVersion, jarFile, pPackage);
             } catch (IOException ex) {
-				MyAlert.infoAlert("上传失败");
+				Platform.runLater(()->{
+					MyAlert.errorAlert("上传失败", true);
+					stage.close();
+				});
+
                 throw new RuntimeException(ex);
             }
-			MyAlert.infoAlert("上传成功");
+			Platform.runLater(()->{
+				MyAlert.alertWait("上传成功");
+				stage.close();
+			});
+
         });
 		textFieldCheckEmpty(List.of(tfPluginName,tfPluginDescribe,tfPluginVersion,  tfFilePath, tfPluginPackage), tf);
 

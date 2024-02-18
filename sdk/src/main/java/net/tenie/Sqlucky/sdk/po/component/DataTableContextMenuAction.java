@@ -2,11 +2,12 @@ package net.tenie.Sqlucky.sdk.po.component;
 
 import java.util.function.Consumer;
 
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheetAction;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.RsVal;
@@ -114,7 +115,7 @@ public class DataTableContextMenuAction {
 			StringProperty tmp = cellpo.getCellData();
 			tmp.set(value);
 		}
-		myBottomSheet.dataSave();
+		MyBottomSheetAction.dataSave(myBottomSheet);
 	}
 
 	// 更新查询结果中选中的数据 对应列的值
@@ -130,7 +131,7 @@ public class DataTableContextMenuAction {
 			StringProperty tmp = ls.getRowDatas().get(colIdx).getCellData();
 			tmp.setValue(value);
 		}
-		myBottomSheet.dataSave();
+		MyBottomSheetAction.dataSave(myBottomSheet);
 	}
 
 }

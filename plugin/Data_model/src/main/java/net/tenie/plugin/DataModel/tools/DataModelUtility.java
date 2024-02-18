@@ -23,7 +23,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.PoDao;
@@ -53,7 +53,6 @@ public class DataModelUtility {
 	 * 数据模型查询字段时， 对展示列宽度做调整
 	 * 
 	 * @param sql
-	 * @param conn
 	 * @param tableName
 	 * @param optionNodes   按钮等组件的集合
 	 * @param fieldWidthMap

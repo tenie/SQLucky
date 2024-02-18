@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 
+import net.tenie.Sqlucky.sdk.component.*;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheetAction;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -30,10 +32,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyBottomSheet;
-import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
-import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
@@ -269,12 +267,13 @@ public class DataModelOperate {
 					queryFieldColWidth);
 			exportExcel.setOnAction(e -> {
 				if (myBottomSheet != null) {
-					myBottomSheet.exportExcelAction(false);
+					MyBottomSheetAction.exportExcelAction(myBottomSheet, false);
+
 				}
 			});
 
 			dockSideBtn.setOnMouseClicked(e -> {
-				myBottomSheet.dockSide();
+				MyBottomSheetAction.dockSide(myBottomSheet);
 
 			});
 			// 添加过滤功能

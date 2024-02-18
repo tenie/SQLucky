@@ -31,25 +31,7 @@ public class Dbinfo {
 	private Connection conn = null;
 
 	private String driver, url, us, ps;
-//	private String sqliteDriver;
 
-	// 加载 jar
-	static {
-//		URL u = new URL("jar:file:/path/to/pgjdbc2.jar!/");
-////		String classname = "org.postgresql.Driver";
-//		URLClassLoader ucl = new URLClassLoader(new URL[] { u });
-//		Driver d = (Driver)Class.forName(driver, true, ucl).newInstance();
-//		DriverManager.registerDriver(new DriverShim(d));
-//		DriverManager.getConnection("jdbc:postgresql://host/db", "user", "pw");
-	}
-
-//	public Dbinfo(String driver, String url, String us, String ps) {
-//		this.driver = driver;
-//		this.url = url;
-//		this.us = us;
-//		this.ps = ps;
-//		this.sqliteDriver = "";
-//	}
 	public Dbinfo(String url, String us, String ps) {
 		this.url = url;
 		this.us = us;
@@ -68,14 +50,7 @@ public class Dbinfo {
 	public Connection getconn() {
 		if (conn == null) {
 			try {
-//				if(StrUtils.isNotNullOrEmpty(sqliteDriver)) {
-//					conn = DriverManager.getConnection(sqliteDriver);
-//				}else if( StrUtils.isNullOrEmpty(driver) )  {
-//					conn = DriverManager.getConnection(url, us, ps);
-//				}else {
-//					Class.forName(driver).newInstance();
-//					conn = DriverManager.getConnection(url, us, ps);
-//				} 
+				DriverManager.setLoginTimeout(5);
 				conn = DriverManager.getConnection(url, us, ps);
 
 			} catch (Exception e) {
@@ -142,47 +117,6 @@ public class Dbinfo {
 				rs.close();
 		}
 	}
-
-	// jdbc方式: 获取schemas
-//	public static Map<String, DbSchemaPo> fetchSchemasInfo(SqluckyConnector dbpo) throws Exception {
-//		return fetchSchemasInfo(dbpo.getConn(), dbpo.getDbVendor());
-//	}
-//
-//	public static Map<String, DbSchemaPo> fetchSchemasInfo(Connection conn) throws Exception {
-//		return fetchSchemasInfo(conn, "");
-//	}
-
-	// jdbc方式: 获取schemas Connection conn ,String DbVendor
-//	public static Map<String, DbSchemaPo> fetchSchemasInfo(Connection conn, String dbVendor) throws Exception {
-//		ResultSet rs = null;
-//		Map<String, DbSchemaPo> pos = new HashMap<String, DbSchemaPo>();
-//		try {
-//			DatabaseMetaData dmd = conn.getMetaData();
-//			if (    DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())
-//				||  DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())
-//					) {
-//				rs = dmd.getCatalogs();
-//			} else {
-//				rs = dmd.getSchemas(); // 默认 db2
-//			}
-//
-//			while (rs.next()) {
-//				DbSchemaPo po = new DbSchemaPo();
-//				String schema = rs.getString(1);
-//				logger.info("fetchSchemasInfo(); schema=" + schema);
-//				po.setSchemaName(schema);
-//				pos.put(schema, po);
-//			}
-//
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			if (rs != null)
-//				rs.close();
-//		}
-//
-//		return pos;
-//	}
 
 	// jdbc方式: 获取表的字段信息
 	public static void fetchTableInfo(Connection conn, TablePo tbpo) throws Exception {
@@ -457,8 +391,7 @@ public class Dbinfo {
 			if (tablesResultSet != null) {
                 tablesResultSet.close();
             }
-//			if (rs != null)
-////				rs.close();
+
 			if (sm != null) {
                 sm.close();
             }
@@ -500,8 +433,7 @@ public class Dbinfo {
 		} finally {
 			if (funRs != null)
 				funRs.close();
-//			if (rs != null)
-//				rs.close();
+
 			if (sm != null)
 				sm.close();
 		}
@@ -692,55 +624,6 @@ public class Dbinfo {
 
 		return commentstr;
 	}
-
-	/**
-	 * 将数据保存到h2数据库中
-	 * 
-	 * @param tbList
-	 */
-//	public static void initializationH2DateBase(TablePo po, String h2Url, String h2User, String h2Password) {
-//		Connection conn = null;
-//		PreparedStatement sm = null;
-//		PreparedStatement sm2 = null;
-//		try {
-//			conn = ConnectionPool.getDirectConn(h2Url, h2User, h2Password);
-//			String tableSQl = "insert into mytables (table_name, table_comment) values ( ?,?)";
-//			String fieldSQl = "insert into mytables_field (table_id, field_name,field_comment,TYPE_NAME,IS_NULLABLE) "
-//					+ "values (?, ?, ?, ?, ?)";
-//			sm = conn.prepareStatement(tableSQl, Statement.RETURN_GENERATED_KEYS); // 插入数据,返回主键id
-//			sm.setString(1, po.getTableName());
-//			sm.setString(2, po.getTableRemarks());
-//			sm.execute();
-//			ResultSet generatedKeys = sm.getGeneratedKeys();
-//			long id = 0;
-//			if (generatedKeys.next()) {
-//				id = generatedKeys.getLong(1);
-//			}
-//			sm.close();
-//			po.setId(id);
-//			// 字段的值插入
-//			Set<TableFieldPo> fieldList = po.getFields();
-//			sm2 = conn.prepareStatement(fieldSQl);
-//			for (TableFieldPo fpo : fieldList) {
-//				sm2.setLong(1, po.getId());
-//				sm2.setString(2, fpo.getFieldName());
-//				sm2.setString(3, fpo.getRemarks());
-//				sm2.setString(4, fpo.getType());
-//				sm2.setString(5, fpo.getIsNullable());
-//				sm2.execute();
-//			}
-//			sm2.close();
-//
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} finally {
-//			try {
-//				conn.close();
-//			} catch (SQLException e) {
-//				e.printStackTrace();
-//			}
-//		}
-//	}
 
 	public static String getDBInfo(Connection connection) {
 		// 2.获取元数据

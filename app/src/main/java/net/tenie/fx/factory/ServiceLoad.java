@@ -7,8 +7,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.sql.Connection;
 import java.util.*;
-
-import SQLucky.app;
 import javafx.application.Platform;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.db.PoDao;

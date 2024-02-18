@@ -21,7 +21,7 @@ public class RsVal {
 	public RsVal(SheetDataValue tableData) {
 //		String connName = tableData.getConnName();
 		String tableName = tableData.getTabName();
-		SqluckyConnector cntor = tableData.getDbConnection();
+		SqluckyConnector sqluckyConnector = tableData.getDbConnection();
 		Connection conn = tableData.getConn();
 
 		ObservableList<ResultSetRowPo> alldata = tableData.getDataRs().getDatas();
@@ -29,7 +29,7 @@ public class RsVal {
 		FilteredTableView<ResultSetRowPo> dataTableView = tableData.getTable();
 
 		this.conn = conn;
-		this.dbconnPo = cntor;
+		this.dbconnPo = sqluckyConnector;
 		this.tableName = tableName;
 		this.alldata = alldata;
 		this.dataTableView = dataTableView;

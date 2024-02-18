@@ -34,47 +34,42 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 public class DialogTools {
 	private static Logger logger = LogManager.getLogger(DialogTools.class);
 
-	public static Node setVboxShape(Stage stage, Node title, List<Node> nds, List<Node> btns) {
-		return setVboxShape(750, 110, stage, title, nds, btns);
+	public static VBox getSceneVbox(Stage stage, Node title, List<Node> nds, List<Node> btns) {
+		return getSceneVbox(750, 110, stage, title, nds, btns);
 	}
 
 	// TODO 设置子窗口的外形
-	public static Node setVboxShape(double width, double height, Stage stage, Node title, List<Node> nds,
-			List<Node> btns) {
-
-		VBox subWindow = new VBox();
+	public static VBox getSceneVbox(double width, double height, Stage stage, Node title, List<Node> nds,
+									List<Node> btns) {
+		VBox windowVbox = getWindowShell(stage,title, "myAlert");
 		if (width > 0  ) {
-			subWindow.setPrefWidth(width);
-			subWindow.setPrefHeight(height);
+			windowVbox.setPrefWidth(width);
+			windowVbox.setPrefHeight(height);
 		}
 		
 		if(height > 0) {
-			subWindow.maxHeight(height);
-			subWindow.maxWidth(width);
+			windowVbox.maxHeight(height);
+			windowVbox.maxWidth(width);
 		}
 
 		// 内容
+		VBox textSubVbox = new VBox();
+		textSubVbox.setPadding(new Insets(0, 5, 5, 5));
+		windowVbox.getChildren().add(textSubVbox);
 		for (Node nd : nds) {
-			subWindow.getChildren().add(nd);
+			textSubVbox.getChildren().add(nd);
 			VBox.setMargin(nd, new Insets(0, 0, 5, 0));
 		}
-//		VBox.setVgrow(nds.get(0), Priority.ALWAYS);
-
 		// 最后的按钮
 		AnchorPane foot = new AnchorPane();
-		HBox fp = new HBox();
-//		fp.setPadding(new Insets(0, 5, 5, 5));
-		fp.setSpacing(10);
+		HBox hBoxBtn = new HBox();
+		hBoxBtn.setSpacing(10);
 		if (btns != null) {
-//			double i = 0.0;
 			for (Node bn : btns) {
-				fp.getChildren().add(bn);
-//				foot.getChildren().add(bn);
-//				AnchorPane.setRightAnchor(bn, i);
-//				i += 100;
+				hBoxBtn.getChildren().add(bn);
 			}
-			foot.getChildren().add(fp);
-			AnchorPane.setRightAnchor(fp, 0.0);
+			foot.getChildren().add(hBoxBtn);
+			AnchorPane.setRightAnchor(hBoxBtn, 0.0);
 		} else {
 			JFXButton cancelbtn = new JFXButton("Cancel");
 			cancelbtn.getStyleClass().add("myAlertBtn");
@@ -86,51 +81,38 @@ public class DialogTools {
 		}
 
 		VBox.setMargin(foot, new Insets(0, 0, 5, 0));
-		subWindow.getChildren().add(foot);
-		VBox.setVgrow(foot, Priority.ALWAYS);
-		subWindow.setPadding(new Insets(0, 5, 5, 5));
-		Node subw = windowShell(stage, subWindow, title, "myAlert");
+		windowVbox.getChildren().add(foot);
+		VBox.setVgrow(textSubVbox, Priority.ALWAYS);
 
-		return subw;
+		return windowVbox;
 	}
 
-	public static void windowShell(Stage stage, Node title) {
-		Scene scene = stage.getScene();
-		scene.getRoot();
-		Node n = windowShell(stage, scene.getRoot(), title, "myAlert");
-		scene.setRoot((Parent) n);
-
-		stage.initModality(Modality.APPLICATION_MODAL);
-//		stage.setScene(scene);
-		setSceneAndShow(scene, stage, false);
-	}
 
 	// 给一个窗口加一个外壳, 包含一个头部的关闭按钮
-	public static Node windowShell(Stage stage, Node subNode, Node title, String css) {
+	public static VBox getWindowShell(Stage stage, Node title, String css) {
 		VBox subWindow = new VBox();
 		subWindow.getStyleClass().add("myShellWindow");
 		subWindow.getStyleClass().add(css);
 
-		AnchorPane pn = new AnchorPane();
-		JFXButton btn = new JFXButton();
-		btn.setGraphic(ComponentGetter.getIconUnActive("window-close"));
-		AnchorPane.setRightAnchor(btn, 0.0);
+		AnchorPane anchorPane = new AnchorPane();
+		JFXButton closeWindowBtn = new JFXButton();
+		closeWindowBtn.setGraphic(ComponentGetter.getIconUnActive("window-close"));
+		AnchorPane.setRightAnchor(closeWindowBtn, 0.0);
 		AnchorPane.setTopAnchor(title, 4.0);
 		AnchorPane.setLeftAnchor(title, 4.0);
-		pn.getChildren().addAll(btn, title);
-		pn.getStyleClass().add("subWindowClose");
+		anchorPane.getChildren().addAll(closeWindowBtn, title);
+		anchorPane.getStyleClass().add("subWindowClose");
+		subWindow.getChildren().add(anchorPane);
 
-		subWindow.getChildren().add(pn);
-		subWindow.getChildren().add(subNode);
-
-		VBox.setMargin(pn, new Insets(0, 0, 5, 0));
-
-		btn.setOnAction(e -> {
+		VBox.setMargin(anchorPane, new Insets(0, 0, 5, 0));
+		closeWindowBtn.setOnAction(e -> {
 			stage.close();
 		});
 
 		return subWindow;
 	}
+
+
 
 	public static void setSceneAndShow(Scene scene, Stage stage, boolean isWait) {
 
@@ -185,8 +167,8 @@ public class DialogTools {
 		List<Node> btns = new ArrayList<>();
 		btns.add(okbtn);
 
-		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.ABOUT, nds, btns);
-		Scene scene = new Scene((Parent) vb);
+		VBox vb = DialogTools.getSceneVbox(stage, ComponentGetter.ABOUT, nds, btns);
+		Scene scene = new Scene( vb);
 
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setScene(scene);
@@ -248,8 +230,8 @@ public class DialogTools {
 		btns.add(okbtn);
 		
 		
-		Node vb = DialogTools.setVboxShape(stage, ComponentGetter.INFO, nds, btns);
-		Scene scene = new Scene((Parent) vb);
+		VBox vb = DialogTools.getSceneVbox(stage, ComponentGetter.INFO, nds, btns);
+		Scene scene = new Scene(vb);
 //		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle(title);
 		stage.setScene(scene);
