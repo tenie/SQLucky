@@ -534,28 +534,6 @@ public class MyBottomSheetAction {
         }
     }
 
-
-    /**
-     数据库字段导出为java bean字段
-     */
-    public static void exportJavaCode( MyBottomSheet sheet){
-        SheetDataValue data = sheet.getTableData();
-        ObservableList<SheetFieldPo> SheetFieldPoList =  data.getColss();
-        StringBuilder codeStr = new StringBuilder();
-        for(var field : SheetFieldPoList){
-            String className = CommonUtils.dbTypeToJavaType(field);
-            String fieldName = field.getColumnLabel().get();
-            codeStr.append("private ");
-            codeStr.append(className.substring(className.lastIndexOf(".") + 1));
-            codeStr.append(" ");
-            fieldName = StrUtils.underlineCaseCamel(fieldName);
-            codeStr.append(fieldName);
-            codeStr.append(";\n");
-        }
-        CommonUtils.setClipboardVal(codeStr.toString() );
-    }
-
-
     // 导出表的字段, 使用逗号分割
     public static void commaSplitTableFields(SheetDataValue tableData) {
 

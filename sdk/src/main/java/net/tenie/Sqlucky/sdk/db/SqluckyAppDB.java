@@ -376,36 +376,36 @@ public class SqluckyAppDB {
 		}
 	}
 
-	/**
-	 * 获取要执行的sql, 去除无效的(如-- 开头的)
-	 */
-	public static List<SqlData> willExecSql2(boolean isCurrentLine) {
-		List<SqlData> sds = new ArrayList<>();
-		String str = "";
-		CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
-		// 如果是执行当前行
-		if (isCurrentLine) {
-			try {
-				str = MyEditorSheetHelper.getCurrentLineText();
-			} finally {
-				isCurrentLine = false;
-			}
-		} else {
-			str = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
-		}
-
-		int start = 0;
-		if (str != null && str.length() > 0) {
-			start = codeArea.getSelection().getStart();
-		} else {
-			str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-		}
-		// 去除注释, 包注释字符串转换为空白字符串
-		str = MyEditorSheetHelper.trimCommentToSpace(str, "--");
-//		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		sds = epurateSql(str, start);
-		return sds;
-	}
+//	/**
+//	 * 获取要执行的sql, 去除无效的(如-- 开头的)
+//	 */
+//	public static List<SqlData> willExecSql2(boolean isCurrentLine) {
+//		List<SqlData> sds = new ArrayList<>();
+//		String str = "";
+//		CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
+//		// 如果是执行当前行
+//		if (isCurrentLine) {
+//			try {
+//				str = MyEditorSheetHelper.getCurrentLineText();
+//			} finally {
+//				isCurrentLine = false;
+//			}
+//		} else {
+//			str = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
+//		}
+//
+//		int start = 0;
+//		if (str != null && str.length() > 0) {
+//			start = codeArea.getSelection().getStart();
+//		} else {
+//			str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
+//		}
+//		// 去除注释, 包注释字符串转换为空白字符串
+//		str = MyEditorSheetHelper.trimCommentToSpace(str, "--");
+////		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
+//		sds = epurateSql(str, start);
+//		return sds;
+//	}
 	
 	/**
 	 * 获取要执行的sql, 去除无效的(如-- 开头的)

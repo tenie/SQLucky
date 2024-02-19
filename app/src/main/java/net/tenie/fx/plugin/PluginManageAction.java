@@ -32,6 +32,8 @@ import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.net.HttpUtil;
 import net.tenie.fx.main.Restart;
 
+import static java.awt.SystemColor.info;
+
 public class PluginManageAction { 
  
 	
@@ -102,7 +104,7 @@ public class PluginManageAction {
 	static String sql = "select" 
 			+ " ID , "
 			+ " PLUGIN_NAME as \"Name\" , "
-			+ " VERSION ,"
+			+ " VERSION as \"Last Version\","
 			+ " case when PLUGIN_DESCRIBE is null then '' else PLUGIN_DESCRIBE end as \"Describe\" ,"
 			+ " case when  DOWNLOAD_STATUS = 1 then '√' else '' end  as \"Download Status\" ,"
 			+ " case when  RELOAD_STATUS = 1 then '√' else '' end  as  \"Load Status\" ,"
@@ -239,22 +241,43 @@ public class PluginManageAction {
 //				System.out.println("content ==" + content);
 				 List<PluginInfoPO> ls=  JsonTools.jsonToList(content, PluginInfoPO.class);
 //				 System.out.println(ls);
-				 List<Object> localVals = PoDao.selectFieldVal(conn, new  PluginInfoPO(), "PLUGIN_CODE");
+				 List<PluginInfoPO> localVals = PoDao.select(conn, new  PluginInfoPO());
+				 Map<String, PluginInfoPO> mapVal = pluginInfoPOMap(localVals);
 				 int count = 0;
-				 for(PluginInfoPO info : ls) {
-					 String tmpPluginCode = info.getPluginCode();
-					 if (localVals.contains(tmpPluginCode)) {
-						 continue;
+				 int countUpdate = 0;
+				 for(PluginInfoPO serverInfo : ls) {
+					 String tmpPluginCode = serverInfo.getPluginCode();
+					 PluginInfoPO localInfoPo =  mapVal.get(tmpPluginCode);
+
+					 // 查看版本号和本地的是否相同, 不同使用服务器的版本号, 并更新为未下载状态
+					 if (localInfoPo !=null ) {
+						 String serverVersion = serverInfo.getVersion();
+						 String localVersion = localInfoPo.getVersion();
+						 if(serverVersion.equals(localVersion)){
+							 continue;
+						 }else {
+							 // 更新版本号
+							 PluginInfoPO updateVersionPo = new PluginInfoPO();
+							 updateVersionPo.setVersion(serverVersion);
+							 updateVersionPo.setDownloadStatus(0);
+							 PoDao.update(conn, localInfoPo, updateVersionPo);
+							 countUpdate++;
+						 }
+
+					 }else {
+						 serverInfo.setDownloadStatus(0);
+						 serverInfo.setReloadStatus(0);
+						 serverInfo.setCreatedTime(new Date());
+						 serverInfo.setId(null);
+						 PoDao.insert(conn, serverInfo);
+						 count++;
 					 }
-					 info.setDownloadStatus(0);
-					 info.setReloadStatus(0);
-					 info.setCreatedTime(new Date());
-					 info.setId(null);
-					 PoDao.insert(conn, info);
-					 count++;
+
+
+
 				 }
 				 
-				 MyAlert.infoAlert( "同步到新插件" + count + "个");
+				 MyAlert.infoAlert( "同步到新插件:" + count + "个, 需要更新的插件:" + countUpdate + "个");
 				 if(count > 0) {
 					 Platform.runLater(()->{
 							PluginManageAction.queryAction("", sheetDaV , allPluginTable);
@@ -270,6 +293,22 @@ public class PluginManageAction {
 		
 		
 		
+	}
+
+	/**
+	 * 将PluginInfoPO转换为 map
+	 * @param list
+	 * @return
+	 */
+	private static Map<String, PluginInfoPO> pluginInfoPOMap( List<PluginInfoPO> list){
+		Map<String, PluginInfoPO> map = new HashMap<>();
+		if(list!=null && !list.isEmpty()){
+			for (var ipo : list){
+				map.put(ipo.getPluginCode(), ipo);
+			}
+		}
+
+		return map;
 	}
 	
 	public static void downloadPlugin(SheetTableData sheetDaV, FilteredTableView<ResultSetRowPo>  allPluginTable) {

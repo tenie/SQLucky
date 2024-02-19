@@ -4,12 +4,14 @@ import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -131,4 +133,9 @@ public interface AppComponent {
 	
 	// DBinfo 查询按钮
 	public void DBinfoTreeFilterHide();
+
+	public void registerBottomSheetExportMenu(Function<MyBottomSheet, MenuItem > func);
+	public List<Function<MyBottomSheet, MenuItem>> getBottomSheetBtns();
+	public List<MenuItem> getBottomSheetBtns(MyBottomSheet sheet);
+
 }

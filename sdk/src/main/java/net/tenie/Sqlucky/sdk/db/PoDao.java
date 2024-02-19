@@ -305,7 +305,16 @@ public class PoDao {
 			clean(ps, rs);
 		}
 	}
-	
+
+	/**
+	 * 查询po , 只返回指定的字段值(fieldName)
+	 * @param conn
+	 * @param condition
+	 * @param fieldName
+	 * @return
+	 * @param <T>
+	 * @throws Exception
+	 */
 	public static <T> List<Object> selectFieldVal(Connection conn, T condition, String fieldName) throws Exception {
 		PreparedStatement ps = null;
 		ResultSet rs = null;

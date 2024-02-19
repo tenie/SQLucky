@@ -224,14 +224,10 @@ public class MyBottomSheetButton {
 
             fieldNames.getItems().addAll(CommaSplit, CommaSplitIncludeType);
 
-
-            // java 代码导出
-
-            MenuItem javaCode = new MenuItem("Export Java Bean Field");
-            javaCode.setOnAction(event -> {
-                MyBottomSheetAction.exportJavaCode(sheet);
-            });
-            exportBtn.getItems().addAll(insertSQL, csv, excel, fieldNames, javaCode);
+            exportBtn.getItems().addAll(insertSQL, csv, excel, fieldNames);
+            // 插件的按钮
+            List<MenuItem> menuItems = ComponentGetter.appComponent.getBottomSheetBtns(sheet);
+            exportBtn.getItems().addAll(menuItems);
 
 
 

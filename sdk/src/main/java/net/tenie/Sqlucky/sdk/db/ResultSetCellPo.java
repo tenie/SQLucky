@@ -116,7 +116,7 @@ public class ResultSetCellPo {
 
 	// 数据单元格添加监听
 	// 字段修改事件
-	public static void addStringPropertyChangeListener(ResultSetCellPo cell) { // , List<Button> btns
+	public static void addStringPropertyChangeListener(ResultSetCellPo cell) {
 		if (cell.hasListener == false) {
 
 			ChangeListener<String> cl = new ChangeListener<String>() {

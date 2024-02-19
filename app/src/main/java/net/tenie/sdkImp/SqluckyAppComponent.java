@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Menu;
@@ -20,6 +21,7 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditor;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
@@ -44,6 +46,8 @@ import net.tenie.fx.window.SignInWindow;
 import net.tenie.lib.db.h2.AppDao;
 
 public class SqluckyAppComponent implements AppComponent {
+	public List<Function<MyBottomSheet, MenuItem > > bottomSheetBtns = new ArrayList<>();
+
 	private Consumer<String> dbInfoMenuOnShowingCaller;
 	
 	public void saveApplicationStatusInfo() {
@@ -351,5 +355,28 @@ public class SqluckyAppComponent implements AppComponent {
 	@Override
 	public void DBinfoTreeFilterHide() {
 		DBinfoTreeButtonFactory.queryBtnHide();
+	}
+
+
+	// 注册 底部按钮
+	@Override
+	public void registerBottomSheetExportMenu(Function<MyBottomSheet, MenuItem > func) {
+		bottomSheetBtns.add(func);
+	}
+
+	@Override
+	public List<Function<MyBottomSheet, MenuItem>> getBottomSheetBtns() {
+		return bottomSheetBtns;
+	}
+
+	@Override
+	public List<MenuItem> getBottomSheetBtns(MyBottomSheet sheet) {
+		List<MenuItem> ls = new ArrayList<>();
+		for(var func :bottomSheetBtns){
+			MenuItem tmp = func.apply(sheet);
+			ls.add(tmp);
+		}
+
+		return ls;
 	}
 }

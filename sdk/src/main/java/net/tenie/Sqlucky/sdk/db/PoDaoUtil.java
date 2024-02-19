@@ -111,6 +111,15 @@ public class PoDaoUtil {
 		}
 		return sbuf.toString();
 	}
+
+	/**
+	 * 生成的sql语句之包含指定的字段(fieldName)
+	 * @param info
+	 * @param condition
+	 * @param fieldName
+	 * @return
+	 * @throws Exception
+	 */
 	public static String getSelectSqlByField(PoInfo info, Object condition, String fieldName) throws Exception {
 		StringBuffer sbuf = new StringBuffer();
 		sbuf.append("select " + fieldName);
