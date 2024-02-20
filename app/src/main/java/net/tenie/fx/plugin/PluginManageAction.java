@@ -278,7 +278,7 @@ public class PluginManageAction {
 				 }
 				 
 				 MyAlert.infoAlert( "同步到新插件:" + count + "个, 需要更新的插件:" + countUpdate + "个");
-				 if(count > 0) {
+				 if(count > 0 || countUpdate > 0) {
 					 Platform.runLater(()->{
 							PluginManageAction.queryAction("", sheetDaV , allPluginTable);
 					 });
@@ -318,13 +318,14 @@ public class PluginManageAction {
 		LoadingAnimation.addLoading("Download ...");
 		
 		CommonUtils.runThread(v->{
+			var conn = SqluckyAppDB.getConn();
 			try {
 				int currentSelectIndex = allPluginTable.getSelectionModel().getSelectedIndex();
-				
-				String pluginName = getSelectPluginName(allPluginTable , "Name");
-				String pluginFileName=  getSelectPluginName(allPluginTable , "File Name");
 
-				String PLUGIN_CODE=  getSelectPluginName(allPluginTable , "PLUGIN_CODE");
+				String pluginName = getSelectPluginName(allPluginTable, "Name");
+				String pluginFileName = getSelectPluginName(allPluginTable, "File Name");
+
+				String PLUGIN_CODE = getSelectPluginName(allPluginTable, "PLUGIN_CODE");
 				Map<String, String> params = new HashMap<>();
 				params.put("EMAIL", ConfigVal.SQLUCKY_EMAIL.get());
 				params.put("PASSWORD", ConfigVal.SQLUCKY_PASSWORD.get());
@@ -332,36 +333,51 @@ public class PluginManageAction {
 				params.put("PLUGIN_CODE", PLUGIN_CODE);
 				params.put("PLUGIN_FILE_NAME", pluginFileName);
 
-				
+
 				String modelPath = CommonUtils.sqluckyAppPluginModsPath();
-				String fileName = HttpUtil.downloadPluginByPostToDir(ConfigVal.getSqluckyServer()+"/sqlucky/pluginDownload",modelPath, params);
-				
+				String fileName = HttpUtil.downloadPluginByPostToDir(ConfigVal.getSqluckyServer() + "/sqlucky/pluginDownload", modelPath, params);
+
 				File pluginFile = new File(fileName);
-				if(pluginFile.exists()) {
+				String loadStatus = "";
+				if (pluginFile.exists()) {
 					// 更新 为以下载
-					ResultSetRowPo  selectRow = allPluginTable.getSelectionModel().getSelectedItem();
+					ResultSetRowPo selectRow = allPluginTable.getSelectionModel().getSelectedItem();
 					String id = selectRow.getValueByFieldName("ID");
+					// '√' else '' end  as  \"Load Status\" ,"
+					loadStatus = selectRow.getValueByFieldName("Load Status");
 					PluginInfoPO ppo = new PluginInfoPO();
 					ppo.setId(Integer.valueOf(id));
 					PluginInfoPO valpo = new PluginInfoPO();
 					valpo.setDownloadStatus(1);
-					var conn = SqluckyAppDB.getConn();
-					try {
-						PoDao.update(conn, ppo, valpo);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}finally {
-						SqluckyAppDB.closeConn(conn);
-					}
-					Platform.runLater(()->{
-						MyAlert.infoAlert("下载成功");
-						PluginManageAction.queryAction("", sheetDaV , allPluginTable);
+
+
+					PoDao.update(conn, ppo, valpo);
+
+
+				}
+
+				if (loadStatus.equals("√")){
+					Platform.runLater(() -> {
+						MyAlert.alertWait("下载成功, 需要重启生效");
+						PluginManageAction.queryAction("", sheetDaV, allPluginTable);
 						allPluginTable.getSelectionModel().select(currentSelectIndex);
 					});
-					
+				}else {
+					Platform.runLater(() -> {
+						MyAlert.infoAlert("下载成功, 需要启用才生效");
+						PluginManageAction.queryAction("", sheetDaV, allPluginTable);
+						allPluginTable.getSelectionModel().select(currentSelectIndex);
+					});
+
 				}
+
+
+			} catch (Exception e) {
+				MyAlert.errorAlert("下载失败");
+				e.printStackTrace();
 			} finally {
 				LoadingAnimation.rmLoading();
+				SqluckyAppDB.closeConn(conn);
 			}
 		
 		});

@@ -85,7 +85,7 @@ public class HttpUtil {
 	}
  
 	// 使用post下载插件文件, 到指定目录
-	public static String downloadPluginByPostToDir(String url, String fileSaveDir, Map<String, String> Param) {
+	public static String downloadPluginByPostToDir(String url, String fileSaveDir, Map<String, String> Param) throws IOException {
 		var nvps = mapToPairs(Param);
 		String name = "";
 		 try {
@@ -105,7 +105,7 @@ public class HttpUtil {
 				 });
 		} catch (IOException e) {
 			e.printStackTrace();
-			
+			throw e;
 		}
 		return name;
 	}

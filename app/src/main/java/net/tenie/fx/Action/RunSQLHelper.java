@@ -55,7 +55,7 @@ public class RunSQLHelper {
 	private static Thread thread;
 
 	private static JFXButton runbtn;
-	private static JFXButton runLinebtn;
+//	private static JFXButton runLinebtn;
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
 	
@@ -252,7 +252,7 @@ public class RunSQLHelper {
 		if (runbtn == null) {
 			runbtn = CommonButtons.runbtn;
 			otherbtn = CommonButtons.runFunPro;
-			runLinebtn = CommonButtons.runLinebtn;
+//			runLinebtn = CommonButtons.runLinebtn;
 		}
 		if (stopbtn == null) {
 			stopbtn = CommonButtons.stopbtn;
@@ -260,7 +260,7 @@ public class RunSQLHelper {
 
 		runbtn.setDisable(stopbtn.disabledProperty().getValue());
 		otherbtn.setDisable(stopbtn.disabledProperty().getValue());
-		runLinebtn.setDisable(stopbtn.disabledProperty().getValue());
+//		runLinebtn.setDisable(stopbtn.disabledProperty().getValue());
 		stopbtn.setDisable(!runbtn.disabledProperty().getValue());
 		ComponentGetter.connComboBox.setDisable(runbtn.disabledProperty().getValue());
 	}
@@ -306,10 +306,10 @@ public class RunSQLHelper {
 		return statusKey;
 	}
 
-	public static void runCurrentLineSQLMethod() {
-		Boolean isCurrentLine = true;
-		runSQLMethod(null, null, false, isCurrentLine);
-	}
+//	public static void runCurrentLineSQLMethod() {
+//		Boolean isCurrentLine = true;
+//		runSQLMethod(null, null, false, isCurrentLine);
+//	}
 
 	public static void runSQLMethod() {
 		runSQLMethod(null, null, false, null);

@@ -113,11 +113,11 @@ public class MenuBarContainer {
 			Platform.runLater(()->RunSQLHelper.runSQLMethod());
 			
 		});
-		MenuItem runCurrentMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL Current Line"));
-		runCurrentMenu.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
-		runCurrentMenu.setOnAction(value -> {
-			RunSQLHelper.runCurrentLineSQLMethod();
-		});
+//		MenuItem runCurrentMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL Current Line"));
+//		runCurrentMenu.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
+//		runCurrentMenu.setOnAction(value -> {
+//			RunSQLHelper.runCurrentLineSQLMethod();
+//		});
 
 		MenuItem codeAutocompletionMenu = new MenuItem(StrUtils.MenuItemNameFormat("Code Autocompletion"));
 		codeAutocompletionMenu.setOnAction(value -> {
@@ -238,14 +238,14 @@ public class MenuBarContainer {
 			MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().delAnchorAfterString();
 		});
 		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
-
-		mn.getItems().addAll(runMenu, runCurrentMenu, codeAutocompletionMenu, nce, cce, new SeparatorMenuItem(), Find,
+//runCurrentMenu ,
+		mn.getItems().addAll(runMenu, codeAutocompletionMenu, nce, cce, new SeparatorMenuItem(), Find,
 				FindReplace, new SeparatorMenuItem(), Format, commentCode, new SeparatorMenuItem(), UpperCase,
 				LowerCase, underscore, Hump, new SeparatorMenuItem(), cursorMenu, enditLine);
 
 		// 给菜单按钮绑定快捷
 		KeyBindingCache.menuItemBinding(runMenu);
-		KeyBindingCache.menuItemBinding(runCurrentMenu);
+//		KeyBindingCache.menuItemBinding(runCurrentMenu);
 		KeyBindingCache.menuItemBinding(codeAutocompletionMenu);
 
 		KeyBindingCache.menuItemBinding(nce);

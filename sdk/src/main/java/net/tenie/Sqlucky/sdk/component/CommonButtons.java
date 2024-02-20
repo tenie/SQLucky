@@ -10,7 +10,7 @@ public final class CommonButtons {
 	public static JFXButton runbtn;
 	public static JFXButton stopbtn;
 	public static JFXButton runFunPro;
-	public static JFXButton runLinebtn;
+//	public static JFXButton runLinebtn;
 	public static JFXButton addcodeArea;
 	
 	public static JFXButton hideLeft;

@@ -42,10 +42,7 @@ public final class FileOrDirectoryChooser {
 	private static FileChooser fileChooser = new FileChooser();
 	private static DirectoryChooser directoryChooser = new DirectoryChooser();
 
-	// default configure
-	private static void configureFileChooser(final FileChooser fileChooser, String title) {
-		configureFileChooser(fileChooser, title, null);
-	}
+
 
 	private static void configureFileChooser(final FileChooser fileChooser, String title, String filename) {
 		fileChooser.setTitle(title);
@@ -55,6 +52,24 @@ public final class FileOrDirectoryChooser {
 		fileChooser.getExtensionFilters().clear();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("sql", "*.sql"),
 				new FileChooser.ExtensionFilter("txt", "*.txt"), new FileChooser.ExtensionFilter("csv", "*.csv"),
+				new FileChooser.ExtensionFilter("All", "*.*"));
+		if (filename != null) {
+			fileChooser.setInitialFileName(filename);
+
+		}
+	}
+
+	private static void configureTextFileChooser(final FileChooser fileChooser, String title, String filename) {
+		fileChooser.setTitle(title);
+		File dir = getOpenfileDir();
+
+		fileChooser.setInitialDirectory(dir);
+		fileChooser.getExtensionFilters().clear();
+		fileChooser.getExtensionFilters().addAll(
+				new FileChooser.ExtensionFilter("txt", "*.txt"),
+				new FileChooser.ExtensionFilter("xml", "*.xml"),
+				new FileChooser.ExtensionFilter("java", "*.java"),
+				new FileChooser.ExtensionFilter("sql", "*.sql"),
 				new FileChooser.ExtensionFilter("All", "*.*"));
 		if (filename != null) {
 			fileChooser.setInitialFileName(filename);
@@ -112,7 +127,8 @@ public final class FileOrDirectoryChooser {
 		fileChooser.setInitialDirectory(dir);
 		fileChooser.getExtensionFilters().clear();
 		fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("txt", "*.txt"),
-				new FileChooser.ExtensionFilter(".md", "*.md"), new FileChooser.ExtensionFilter("sql", "*.sql"),
+				new FileChooser.ExtensionFilter(".md", "*.md"),
+				new FileChooser.ExtensionFilter("sql", "*.sql"),
 				new FileChooser.ExtensionFilter("All", "*.*"));
 		if (filename != null) {
 			fileChooser.setInitialFileName(filename);
@@ -168,7 +184,7 @@ public final class FileOrDirectoryChooser {
 
 	// 获取保存的文件绝对路径名(默认)
 	public static File showSaveDefault(String title, Stage stage) {
-		configureFileChooser(fileChooser, title);
+		configureFileChooser(fileChooser, title, null);
 		File file = fileChooser.showSaveDialog(stage);
 		return file;
 	}
@@ -176,6 +192,12 @@ public final class FileOrDirectoryChooser {
 	public static File showSaveDefault(String title, String fileName, Stage stage) {
 		FileChooser fc = getFileChooserInitFileName(title, fileName);
 		File file = fc.showSaveDialog(stage);
+		return file;
+	}
+
+	public static File showSaveText(String title, String fileName, Stage stage) {
+		configureTextFileChooser(fileChooser, title, fileName);
+		File file = fileChooser.showSaveDialog(stage);
 		return file;
 	}
 
@@ -191,7 +213,8 @@ public final class FileOrDirectoryChooser {
 
 	// 打开sql文件
 	public static File showOpenSqlFile(String title, Stage stage) {
-		configureFileChooser(fileChooser, title);
+//		configureFileChooser(fileChooser, title);
+		configureFileChooser(fileChooser, title, null);
 		File file = fileChooser.showOpenDialog(stage);
 		return file;
 	}

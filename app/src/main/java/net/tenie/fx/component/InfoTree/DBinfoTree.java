@@ -329,14 +329,10 @@ public class DBinfoTree {
 					sqlStr = sqluckyconn.getExportDDL().exportCreateFunction(sqluckyconn.getConn(), fpt.getSchema(),
 							fpt.getName());
 					if (StrUtils.isNotNullOrEmpty(sqlStr)) {
-//						sqlStr = SqlFormatter.format(sqlStr);
 						fpt.setDdl(sqlStr);
 					}
 				}
-//				new DataViewTab().showDdlPanel(item.getValue().getName(), sqlStr, true);
-//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.ddlSheet(sqluckyconn, item.getValue().getName(),
-//						sqlStr, true, false);
-//				mtd.show();
+
 				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, true, false);
 
 			} // 过程

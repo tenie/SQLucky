@@ -41,10 +41,10 @@ public class ButtonFactory {
 		runbtn.setTooltip(MyTooltipTool.instance("Run SQL"));
 		runbtn.setDisable(true);
 
-		JFXButton runLinebtn = new JFXButton();
-		runLinebtn.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
-		runLinebtn.setTooltip(MyTooltipTool.instance("Run SQL Current Line"));
-		runLinebtn.setDisable(true);
+//		JFXButton runLinebtn = new JFXButton();
+//		runLinebtn.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
+//		runLinebtn.setTooltip(MyTooltipTool.instance("Run SQL Current Line"));
+//		runLinebtn.setDisable(true);
 
 		// 执行存储过程
 		JFXButton runFunPro = new JFXButton();
@@ -86,9 +86,9 @@ public class ButtonFactory {
 		runbtn.setOnMouseClicked(e -> {
 			RunSQLHelper.runSQLMethod();
 		});
-		runLinebtn.setOnMouseClicked(e -> {
-			RunSQLHelper.runCurrentLineSQLMethod();
-		});
+//		runLinebtn.setOnMouseClicked(e -> {
+//			RunSQLHelper.runCurrentLineSQLMethod();
+//		});
 
 		runFunPro.setOnMouseClicked(e -> {
 			RunSQLHelper.runCreateFuncSQLMethod();
@@ -132,11 +132,11 @@ public class ButtonFactory {
 		connsComboBox.getSelectionModel().selectedIndexProperty().addListener((obj, ov, newValue) -> {
 			if (newValue != null && newValue.intValue() > 0) {
 				runbtn.setDisable(false);
-				runLinebtn.setDisable(false);
+//				runLinebtn.setDisable(false);
 				runFunPro.setDisable(false);
 			} else {
 				runbtn.setDisable(true);
-				runLinebtn.setDisable(true);
+//				runLinebtn.setDisable(true);
 				runFunPro.setDisable(true);
 			}
 			// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
@@ -175,7 +175,7 @@ public class ButtonFactory {
 		HBox operateBox = new HBox();
 		operateBox.getChildren().add(runbtn);
 		// runLinebtn
-		operateBox.getChildren().add(runLinebtn);
+//		operateBox.getChildren().add(runLinebtn);
 
 		operateBox.getChildren().add(stopbtn);
 
@@ -204,7 +204,7 @@ public class ButtonFactory {
 		CommonButtons.runbtn = runbtn;
 		CommonButtons.stopbtn = stopbtn;
 		CommonButtons.runFunPro = runFunPro;
-		CommonButtons.runLinebtn = runLinebtn;
+//		CommonButtons.runLinebtn = runLinebtn;
 		CommonButtons.addcodeArea = addcodeArea;
 		pn.getChildren().add(operateBox);
 		return pn;
