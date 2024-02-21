@@ -90,9 +90,27 @@ public class CodeAreaHighLightingHelper {
         
         return pattern;
      }
- 
-    
+
+	/**
+	 * 转义正则特殊字符 （$()*+.[]?\^{}
+	 * \\需要第一个替换，否则replace方法替换时会有逻辑bug
+	 */
+	public static String makeQueryStringAllRegExp(String str) {
+		if(StrUtils.isNullOrEmpty(str)){
+			return "";
+		}
+
+		return str.replace("\\", "\\\\").replace("*", "\\*")
+				.replace("+", "\\+").replace("|", "\\|")
+				.replace("{", "\\{").replace("}", "\\}")
+				.replace("(", "\\(").replace(")", "\\)")
+				.replace("^", "\\^").replace("$", "\\$")
+				.replace("[", "\\[").replace("]", "\\]")
+				.replace("?", "\\?").replace(",", "\\,")
+				.replace(".", "\\.").replace("&", "\\&");
+	}
     public  StyleSpans<Collection<String>> findEqualyWord(String str, String text) {
+		str = makeQueryStringAllRegExp(str);
     	String mypatternString = "|(?<FINDWORD>(" + str.toUpperCase() + "))"; 
     	mypatternString = getPatternString(mypatternString); 
     	Pattern pattern = getPattern(mypatternString); 
