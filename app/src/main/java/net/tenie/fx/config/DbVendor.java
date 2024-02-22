@@ -57,11 +57,7 @@ public class DbVendor {
 		keys.clear();
 		data.clear();
 	}
-	/**
-	 * 
-	 * @param Name
-	 * @param driver 可以为空
-	 */
+
 	public static void registerDbConnection( SqluckyDbRegister db) {
 		if(db == null) return;
 		String name = db.getName();
