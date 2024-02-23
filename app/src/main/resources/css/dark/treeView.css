@@ -38,13 +38,13 @@
 
 /*  选中的颜色 */
 .tree-cell:selected {
-	-fx-font-weight: bold;
+/*	-fx-font-weight: bold;*/
 	-fx-background-color: #164b72;
 }
 
 /* 自动补全 窗口*/
 .auto-comolete .tree-cell:selected {
-	-fx-font-weight: bold;
+/*	-fx-font-weight: bold;*/
 	-fx-background-color: #164b72;
 }
 
