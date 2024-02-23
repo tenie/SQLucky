@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import javafx.scene.text.Font;
 import net.tenie.fx.main.MyPreloaderGif;
 import net.tenie.fx.main.MyPreloaderMp4;
 import net.tenie.fx.main.Restart;
@@ -340,6 +341,7 @@ public class app extends Application {
         if (args != null && args.length > 0) {
             sysOpenFile = args[0];
         }
+        Font.loadFont(app.class.getResourceAsStream("/css/MonaspaceXenonVarVF.ttf"), 14);
 
         if (CommonUtils.isLinuxOS()) {
             LauncherImpl.launchApplication(app.class, MyPreloaderGif.class, args);
