@@ -1,251 +1,255 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>net.tenie</groupId>
-		<artifactId>SQLucky-pom</artifactId>
-		<version>3.1.0</version>
-	</parent>
-	<artifactId>SQLucky-SDK</artifactId>
-	<packaging>jar</packaging>
-	<name>SQLucky-SDK</name>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>net.tenie</groupId>
+        <artifactId>SQLucky-pom</artifactId>
+        <version>3.1.0</version>
+    </parent>
+    <artifactId>SQLucky-SDK</artifactId>
+    <packaging>jar</packaging>
+    <name>SQLucky-SDK</name>
 
 
-	<dependencies>
-
+    <dependencies>
 		<dependency>
-			<groupId>commons-beanutils</groupId>
-			<artifactId>commons-beanutils</artifactId>
+			<groupId>com.github.jsqlparser</groupId>
+			<artifactId>jsqlparser</artifactId>
 		</dependency>
 
-	<!-- 	<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-		</dependency> -->
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			 <exclusions>  
-                <exclusion> <!-- we prefer our explicit version, though it should be the same -->  
-                    <groupId>org.apache.poi</groupId>  
-                    <artifactId>poi-ooxml-lite</artifactId>  
-                </exclusion>  
-            </exclusions>  
-		</dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml-full</artifactId>
-			   <version>5.2.3</version>
-		</dependency>
+        <!-- 	<dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+            </dependency> -->
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <exclusions>
+                <exclusion> <!-- we prefer our explicit version, though it should be the same -->
+                    <groupId>org.apache.poi</groupId>
+                    <artifactId>poi-ooxml-lite</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.xmlbeans</groupId>
-			<artifactId>xmlbeans</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml-full</artifactId>
+            <version>5.2.3</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-collections4</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-math3</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>commons-codec</groupId>
-			<artifactId>commons-codec</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
 
-<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-csv</artifactId>
-</dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
 
-
-		<dependency>
-			<groupId>com.zaxxer</groupId>
-			<artifactId>SparseBitSet</artifactId>
-		</dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+        </dependency>
 
 
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.dom4j</groupId>
-			<artifactId>dom4j</artifactId>
-		</dependency>
-
-		<!-- <dependency> <groupId>com.fasterxml.jackson.dataformat</groupId> <artifactId>jackson-dataformat-yaml</artifactId> 
-			<version>2.14.2</version> </dependency> -->
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>SparseBitSet</artifactId>
+        </dependency>
 
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
 
-		<!-- <dependency> <groupId>org.apache.ant</groupId> <artifactId>ant</artifactId> 
-			</dependency> -->
-		<!-- <dependency> <groupId>com.squareup.okhttp3</groupId> <artifactId>okhttp</artifactId> 
-			</dependency> -->
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-controls</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-fxml</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-graphics</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.openjfx</groupId>
-			<artifactId>javafx-swing</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+        </dependency>
+
+        <!-- <dependency> <groupId>com.fasterxml.jackson.dataformat</groupId> <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.14.2</version> </dependency> -->
 
 
-		<dependency>
-			<groupId>org.mybatis</groupId>
-			<artifactId>mybatis</artifactId>
-		</dependency>
+        <!-- <dependency> <groupId>org.apache.ant</groupId> <artifactId>ant</artifactId>
+            </dependency> -->
+        <!-- <dependency> <groupId>com.squareup.okhttp3</groupId> <artifactId>okhttp</artifactId>
+            </dependency> -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-swing</artifactId>
+        </dependency>
 
-		<!-- 控件库 -->
-		<dependency>
-			<groupId>com.jfoenix</groupId>
-			<artifactId>jfoenix</artifactId>
-		</dependency>
 
-		<dependency>
-			<groupId>org.fxmisc.richtext</groupId>
-			<artifactId>richtextfx</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.controlsfx</groupId>
-			<artifactId>controlsfx</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis</artifactId>
+        </dependency>
 
-		<!-- sql 格式化 -->
-		<dependency>
-			<groupId>com.github.vertical-blank</groupId>
-			<artifactId>sql-formatter</artifactId>
-		</dependency>
+        <!-- 控件库 -->
+        <dependency>
+            <groupId>com.jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>com.alibaba</groupId>
-			<artifactId>fastjson</artifactId>
-		</dependency>
-		<!-- 文件字符集 -->
-		<dependency>
-			<groupId>com.github.albfernandez</groupId>
-			<artifactId>juniversalchardet</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.fxmisc.richtext</groupId>
+            <artifactId>richtextfx</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+        </dependency>
 
-		<!-- io 操作文件 -->
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-		</dependency>
+        <!-- sql 格式化 -->
+        <dependency>
+            <groupId>com.github.vertical-blank</groupId>
+            <artifactId>sql-formatter</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+        </dependency>
+        <!-- 文件字符集 -->
+        <dependency>
+            <groupId>com.github.albfernandez</groupId>
+            <artifactId>juniversalchardet</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-core</artifactId>
-		</dependency>
+        <!-- io 操作文件 -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-api</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.logging.log4j</groupId>
-			<artifactId>log4j-slf4j-impl</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+        </dependency>
 
-		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
-		<dependency>
-			<groupId>org.apache.httpcomponents.client5</groupId>
-			<artifactId>httpclient5</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.httpcomponents.client5</groupId>
-			<artifactId>httpclient5-fluent</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.httpcomponents.core5</groupId>
-			<artifactId>httpcore5</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+        </dependency>
 
-	</dependencies>
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents.client5/httpclient5 -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
 
-	<build>
-		<plugins>
-			<!-- 编译插件, 指定编译版本, 和编译时参数 -->
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<!-- 指定编译版本 -->
-					<release>${maven.compiler.release}</release>
-					<!-- 编译时参数 -->
-					<compilerArgs>
-						<arg>--add-exports</arg>
-						<arg>javafx.graphics/com.sun.javafx.application=SQLucky.sdk</arg>
-						<arg>--add-exports</arg>
-						<arg>org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser=SQLucky.sdk</arg>
-						<arg>--add-exports</arg>
-						<arg>org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser.aggregate=SQLucky.sdk</arg>
-						<arg>--add-exports</arg>
-						<arg>org.controlsfx.controls/impl.org.controlsfx.i18n=SQLucky.sdk</arg>
-					</compilerArgs>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5-fluent</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.core5</groupId>
+            <artifactId>httpcore5</artifactId>
+        </dependency>
 
-					<annotationProcessorPaths>
-						<path>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-							<version>1.18.26</version>
-						</path>
-					</annotationProcessorPaths>
-				</configuration>
-			</plugin>
+    </dependencies>
 
-		</plugins>
-	</build>
+    <build>
+        <plugins>
+            <!-- 编译插件, 指定编译版本, 和编译时参数 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <!-- 指定编译版本 -->
+                    <release>${maven.compiler.release}</release>
+                    <!-- 编译时参数 -->
+                    <compilerArgs>
+                        <arg>--add-exports</arg>
+                        <arg>javafx.graphics/com.sun.javafx.application=SQLucky.sdk</arg>
+                        <arg>--add-exports</arg>
+                        <arg>org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser=SQLucky.sdk</arg>
+                        <arg>--add-exports</arg>
+                        <arg>
+                            org.controlsfx.controls/impl.org.controlsfx.tableview2.filter.parser.aggregate=SQLucky.sdk
+                        </arg>
+                        <arg>--add-exports</arg>
+                        <arg>org.controlsfx.controls/impl.org.controlsfx.i18n=SQLucky.sdk</arg>
+                    </compilerArgs>
+
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>1.18.26</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>

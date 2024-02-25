@@ -31,7 +31,7 @@ open module SQLucky.sdk {
 	requires sql.formatter;
 	requires org.slf4j;
 	requires fastjson;
-
+	requires jsqlparser;
 	requires org.dom4j;
 	requires com.fasterxml.jackson.dataformat.xml;
 	requires com.fasterxml.jackson.core;
