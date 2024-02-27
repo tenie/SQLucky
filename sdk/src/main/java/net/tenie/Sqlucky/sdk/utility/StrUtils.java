@@ -700,4 +700,19 @@ public class StrUtils {
 		return s;
 	}
 
+
+	/**
+	 * 首字母大写
+	 */
+	public static String initialUpperCase(String str) {
+		if(str != null){
+			if(str.length() > 1 ){
+				str = str.substring(0, 1).toUpperCase() + str.substring(1);
+			}else{
+				str = str.toLowerCase();
+			}
+		}
+
+		return  str;
+	}
 }

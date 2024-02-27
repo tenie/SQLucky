@@ -33,12 +33,7 @@ import java.util.List;
 public class PluginUploadWindow {
 	private Stage stage;
 	private VBox pluginUploadBox = new VBox();
-
-
 	public PluginUploadWindow() {
-
-
-
 		Label pluginName = new Label("Plugin Name");
 		TextField tfPluginName = new TextField();
 		tfPluginName.getStyleClass().add("myTextField");
