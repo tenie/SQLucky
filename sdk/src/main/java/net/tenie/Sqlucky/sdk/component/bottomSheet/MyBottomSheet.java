@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javafx.geometry.Insets;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
@@ -340,6 +341,7 @@ public class MyBottomSheet {
 		// 锁
 		JFXButton lockbtn = tableData.getLockBtn();
 		btnHbox.getChildren().add(lockbtn);
+		btnHbox.setPadding(new Insets(3,0,3,0));
 		// 将按钮放入容器
 		if (btnLs != null) {
 			for (var nd : btnLs) {

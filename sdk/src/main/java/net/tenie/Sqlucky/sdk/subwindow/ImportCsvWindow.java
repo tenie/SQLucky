@@ -88,9 +88,12 @@ public class ImportCsvWindow {
 
 		Button cancel = cancelBtn();
 
-		btnPane.getChildren().addAll(cancel, nextbtn);
-		AnchorPane.setRightAnchor(nextbtn, 10.0);
-		AnchorPane.setRightAnchor(cancel, 60.0);
+		HBox btnHbox = new HBox();
+		btnHbox.getChildren().addAll(cancel, nextbtn);
+		btnHbox.setSpacing(10);// 横向间距
+
+		btnPane.getChildren().add(btnHbox);
+		AnchorPane.setRightAnchor(btnHbox, 10.0);
 		return btnPane;
 	}
 

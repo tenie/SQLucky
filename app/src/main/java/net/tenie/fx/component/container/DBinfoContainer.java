@@ -22,7 +22,7 @@ import net.tenie.fx.component.ScriptTree.ScriptTabTree;
  */
 public class DBinfoContainer {
 	private VBox container;
-	private Pane dbInfoTreeBtnPane; // 按钮面板
+	private VBox dbInfoTreeBtnPane; // 按钮面板
 	private TreeView<TreeNodePo> dbInfoTreeView;
 	private DBinfoTree dbInfoTree;
 	private ScriptTabTree scriptTabTree; // 脚本

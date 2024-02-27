@@ -103,6 +103,7 @@
 
 .myAlertBtn {
 	-fx-background-color: #1E90FF;
+	-fx-border-radius: 3px;
 }
 .myAlertOtherBtn {
 	-fx-border-color: #1E90FF;
@@ -111,6 +112,7 @@
 
 .myAlertOkBtn {
 	-fx-background-color: #80FF80;
+	-fx-border-radius: 3px;
 }
 /* 按钮中文字的颜色*/
 .myAlertOkBtn .text {

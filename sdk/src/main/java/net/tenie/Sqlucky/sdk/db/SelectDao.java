@@ -50,8 +50,7 @@ public class SelectDao {
 			po.setColumnLabel(mdata.getColumnLabel(i));
 			po.setColumnType(mdata.getColumnType(i));
 			po.setColumnTypeName(mdata.getColumnTypeName(i));
-			String schemaName = mdata.getSchemaName(i);
-//			System.out.println(schemaName);
+//			String schemaName = mdata.getSchemaName(i);
 			fields.add(po);
 
 		}

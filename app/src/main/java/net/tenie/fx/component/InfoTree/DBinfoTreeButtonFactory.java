@@ -5,6 +5,7 @@ import java.util.List;
 import com.jfoenix.controls.JFXButton;
 
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
@@ -25,7 +26,7 @@ public class DBinfoTreeButtonFactory {
 		List<Node> btns =  DBinfoTree.operateBtns;
 		VBox operateVbox =   DBinfoTree.operateVbox;
 
-		HBox pn = new HBox();
+		HBox btnHbox = new HBox();
 		// 页面初始化: 添加组件
 		JFXButton addConnbtn = new JFXButton();
 		addConnbtn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
@@ -95,19 +96,19 @@ public class DBinfoTreeButtonFactory {
 //			});
 //			script.setTooltip(MyTooltipTool.instance("Archive Script "));
 
-		pn.getChildren().add(addConnbtn);
-		pn.getChildren().add(editConn);
-		pn.getChildren().add(queryTab);
-		pn.getChildren().add(shrink);
+		btnHbox.getChildren().add(addConnbtn);
+		btnHbox.getChildren().add(editConn);
+		btnHbox.getChildren().add(queryTab);
+		btnHbox.getChildren().add(shrink);
 
-		pn.getChildren().add(openConn);
-		pn.getChildren().add(closeConn);
-		pn.getChildren().add(closeALlConn);
+		btnHbox.getChildren().add(openConn);
+		btnHbox.getChildren().add(closeConn);
+		btnHbox.getChildren().add(closeALlConn);
 
-		pn.getChildren().add(deleteConn);
+		btnHbox.getChildren().add(deleteConn);
 //			pn.getChildren().add(script);
-
-		operateVbox.getChildren().add(pn);
+		btnHbox.setPadding(new Insets(3,0,3,0));
+		operateVbox.getChildren().add(btnHbox);
 		return operateVbox;
 	}
 	

@@ -35,7 +35,7 @@ public class ButtonFactory {
 	// codeArea 代码区域 按钮初始化
 	@SuppressWarnings("unchecked")
 	public static AnchorPane codeAreabtnInit() {
-		AnchorPane pn = new AnchorPane();
+		AnchorPane btnsAnchorPane = new AnchorPane();
 		JFXButton runbtn = new JFXButton();
 		runbtn.setGraphic(IconGenerator.svgImageDefActive("play"));
 		runbtn.setTooltip(MyTooltipTool.instance("Run SQL"));
@@ -108,8 +108,8 @@ public class ButtonFactory {
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
 		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
 
-		pn.getChildren().add(hideLeft);
-		pn.getChildren().add(hideBottom);
+		btnsAnchorPane.getChildren().add(hideLeft);
+		btnsAnchorPane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 		AnchorPane.setRightAnchor(hideLeft, 30.0);
 
@@ -201,13 +201,15 @@ public class ButtonFactory {
 
 		operateBox.getChildren().add(rowsTextField);
 
+
+		operateBox.setPadding(new Insets(3,0,3,0));
 		CommonButtons.runbtn = runbtn;
 		CommonButtons.stopbtn = stopbtn;
 		CommonButtons.runFunPro = runFunPro;
 //		CommonButtons.runLinebtn = runLinebtn;
 		CommonButtons.addcodeArea = addcodeArea;
-		pn.getChildren().add(operateBox);
-		return pn;
+		btnsAnchorPane.getChildren().add(operateBox);
+		return btnsAnchorPane;
 	}
 
 }

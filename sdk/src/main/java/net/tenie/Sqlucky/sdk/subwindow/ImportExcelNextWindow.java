@@ -296,16 +296,18 @@ public class ImportExcelNextWindow {
 
 	// 按钮面板
 	private AnchorPane btnPane() {
-		AnchorPane btnPane = new AnchorPane();
+		AnchorPane btnAnchorPane = new AnchorPane();
 		// 保存按钮
 		Button nextbtn = saveBtnSetup();
 
 		Button cancel = cancelBtn();
+		HBox btnHbox = new HBox();
+		btnHbox.getChildren().addAll(cancel, nextbtn);
+		btnHbox.setSpacing(10);// 横向间距
 
-		btnPane.getChildren().addAll(cancel, nextbtn);
-		AnchorPane.setRightAnchor(nextbtn, 10.0);
-		AnchorPane.setRightAnchor(cancel, 60.0);
-		return btnPane;
+		btnAnchorPane.getChildren().addAll(btnHbox);
+		AnchorPane.setRightAnchor(btnHbox, 10.0);
+		return btnAnchorPane	;
 	}
 
 	// 其他设置

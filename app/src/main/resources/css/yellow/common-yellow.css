@@ -167,6 +167,7 @@ GridPane {
 /* 子界面按钮颜色 FDA232 */
 .myAlertBtn {
 	-fx-background-color: #955302;
+	-fx-border-radius: 3px;
 }
 .myAlertOtherBtn {
 	-fx-border-color: #955302;
@@ -174,12 +175,14 @@ GridPane {
 }
 .myAlert Button {
 	-fx-background-color: #FDA232;
+	-fx-border-radius: 3px;
 	-fx-text-fill: white;
 	-fx-border-color: #4C708C;
 }
 
 .myAlertOkBtn {
 	-fx-background-color: #80FF80;
+	-fx-border-radius: 3px;
 }
 /* 按钮中文字的颜色*/
 .myAlertOkBtn .text {
@@ -251,6 +254,7 @@ FlowPane TextField {
 .connectionEditor   Button {
 	-fx-background-color: #FDA232;
 	-fx-text-fill: white;
+	-fx-border-radius: 3px;
 }
 
 /* 

@@ -52,7 +52,7 @@ public class ImportExcelWindow {
 
 	// 按钮面板
 	private static AnchorPane btnPane(String tableName) {
-		AnchorPane btnPane = new AnchorPane();
+		AnchorPane btnAnchorPane  = new AnchorPane();
 		// 保存按钮
 		Button nextbtn = nextBtn();
 
@@ -60,11 +60,13 @@ public class ImportExcelWindow {
 				.or(tfTabName.textProperty().isEmpty().or(tfFilePath.textProperty().isEmpty())));
 
 		Button cancel = cancelBtn();
-
-		btnPane.getChildren().addAll(cancel, nextbtn);
-		AnchorPane.setRightAnchor(nextbtn, 10.0);
-		AnchorPane.setRightAnchor(cancel, 60.0);
-		return btnPane;
+		HBox btnHbox = new HBox();
+		btnHbox.getChildren().addAll(cancel, nextbtn);
+		btnHbox.setSpacing(10);// 横向间距
+		btnAnchorPane.getChildren().add(btnHbox);
+		AnchorPane.setRightAnchor(btnHbox, 10.0);
+//		AnchorPane.setRightAnchor(cancel, 60.0);
+		return btnAnchorPane;
 	}
 
 	// 组件布局
@@ -170,7 +172,7 @@ public class ImportExcelWindow {
 
 	// 下一步按钮
 	public static Button nextBtn() {
-		Button btn = new Button("next");
+		Button btn = new Button("Next");
 		btn.getStyleClass().add("myAlertBtn");
 		btn.setOnAction(v -> {
 			// 文件是否存在

@@ -139,8 +139,7 @@ public class ImportCsvNextWindow {
 
 	/**
 	 * csv 文件头信息
-	 * 
-	 * @param excelFile
+	 *
 	 * @return
 	 */
 	private String[] csvHeadArray(String csvFile, ObservableList<ImportFieldPo> fields) {
@@ -305,12 +304,15 @@ public class ImportCsvNextWindow {
 		AnchorPane btnPane = new AnchorPane();
 		// 保存按钮
 		Button nextbtn = saveBtnSetup();
-
 		Button cancel = cancelBtn();
 
-		btnPane.getChildren().addAll(cancel, nextbtn);
-		AnchorPane.setRightAnchor(nextbtn, 10.0);
-		AnchorPane.setRightAnchor(cancel, 60.0);
+		HBox btnHbox = new HBox();
+		btnHbox.getChildren().addAll(cancel, nextbtn);
+		btnHbox.setSpacing(10);// 横向间距
+
+
+		btnPane.getChildren().add(btnHbox);
+		AnchorPane.setRightAnchor(btnHbox, 10.0);
 		return btnPane;
 	}
 

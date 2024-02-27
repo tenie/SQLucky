@@ -130,6 +130,7 @@ GridPane {
 
 .myAlertBtn {
 	-fx-background-color: #365880;
+	-fx-border-radius: 3px;
 }
 
 .myAlertOtherBtn {
@@ -138,6 +139,7 @@ GridPane {
 }
 .myAlertOkBtn {
 	-fx-background-color: #80FF80;
+	-fx-border-radius: 3px;
 }
 /* 按钮中文字的颜色*/
 .myAlertOkBtn .text {
@@ -206,6 +208,7 @@ FlowPane TextField {
 	-fx-background-color: #3C3F41;
 }
 
+
 .connectionEditor  TextField {
 	-fx-text-fill: white;
 	-fx-background-color: #373a3c;
@@ -231,6 +234,7 @@ FlowPane TextField {
 	-fx-background-color: #365880;
 	-fx-text-fill: white;
 	-fx-border-color: #4C708C;
+	-fx-border-radius: 3px;
 }
 
 /*搜索 替换 按钮*/
