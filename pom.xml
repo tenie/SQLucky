@@ -17,7 +17,7 @@
         <module>plugin/Mariadb_connector</module>
         <module>plugin/Postgresql_connector</module>
         <module>plugin/Data_model</module>
-        <module>plugin/Code_generation</module>
+<!--         <module>plugin/Code_generation</module> -->
         <module>app</module>
     </modules>
 
