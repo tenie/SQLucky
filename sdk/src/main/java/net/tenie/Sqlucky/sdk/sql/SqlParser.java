@@ -63,6 +63,7 @@ public class SqlParser {
             System.out.println("before " + stmt.toString());
             PlainSelect select =   (PlainSelect)stmt.getSelectBody();
             Expression where = select.getWhere();
+            if(where == null ) return rs;
             where.accept(new ExpressionVisitorAdapter() {
                 @Override
                 public void visit(Column column) {
