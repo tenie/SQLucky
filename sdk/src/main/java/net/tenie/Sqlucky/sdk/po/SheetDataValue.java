@@ -1,7 +1,17 @@
 package net.tenie.Sqlucky.sdk.po;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
+import net.tenie.Sqlucky.sdk.db.Dbinfo;
+import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.sql.SqlParser;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import com.jfoenix.controls.JFXButton;
@@ -22,6 +32,9 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 public class SheetDataValue {
 	private String tabName;
 	private String sqlStr; // 执行是的sql
+
+	// sql语句中 表的信息对象
+	private List<TablePo> sqlTableInfoList;
 //	private String connName;
 	private boolean isLock = false;
 	private SqluckyConnector dbConnection;
@@ -273,4 +286,180 @@ public class SheetDataValue {
 		}
 
 	}
+
+
+	// 获取sql中所有表的 表信息对象
+	public List<TablePo> getSqlTableInfoList() {
+		if(sqlTableInfoList != null ){
+			return  sqlTableInfoList;
+		}
+		sqlTableInfoList = new ArrayList<>();
+		// 找到sql中的表
+		Set<String> names = SqlParser.selectSqlTableNames(this.sqlStr);
+		if(! names.isEmpty()){
+			for(String tabName : names){
+				TablePo tbpo = new TablePo();
+				if(tabName.contains(".")){
+					String tmpArr[] = tabName.split("\\.");
+					tbpo.setTableSchema(tmpArr[0]);
+					tbpo.setTableName(tmpArr[1]);
+				}
+				String defaultSchema = this.dbConnection.getDefaultSchema();
+				if(StrUtils.isNotNullOrEmpty(defaultSchema)){
+					tbpo.setTableSchema(defaultSchema);
+					tbpo.setTableName(tabName);
+				}
+                try {
+                    Dbinfo.fetchTableInfo( this.dbConnection.getConn(), tbpo);
+					sqlTableInfoList.add(tbpo);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
+		}
+
+		return sqlTableInfoList;
+	}
+
+	/**
+	 *  使用主表表名创建一个新的TablePo实例
+	 * @return
+	 */
+	private TablePo createEmptyTablePo(){
+		TablePo tbpo = new TablePo();
+		if(tabName.contains(".")){
+			String tmpArr[] = tabName.split("\\.");
+			tbpo.setTableSchema(tmpArr[0]);
+			tbpo.setTableName(tmpArr[1]);
+		}
+		String defaultSchema = this.dbConnection.getDefaultSchema();
+		if(StrUtils.isNotNullOrEmpty(defaultSchema)){
+			tbpo.setTableSchema(defaultSchema);
+			tbpo.setTableName(tabName);
+		}
+		return tbpo;
+	}
+	// 获取主表的详细信息
+	public TablePo getSqlTableInfo() {
+		TablePo tablePo = createEmptyTablePo();
+        try {
+			// 给tablePo 赋值
+            Dbinfo.fetchTableInfo( this.dbConnection.getConn(), tablePo);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        return tablePo;
+	}
+
+	public List<SheetFieldPo> getMainTableFields() {
+		List<SheetFieldPo> ls = new ArrayList<>();
+//
+		TablePo tablePo = getSqlTableInfo();
+		LinkedHashSet<TableFieldPo> fieldList = tablePo.getFields();
+		for (var tfp  : fieldList){
+			var javatype = tfp.getDataType();
+			var fieldName = tfp.getColumnName();
+			var remarks = tfp.getRemarks();
+			SheetFieldPo sfpo = new SheetFieldPo();
+			//TODO
+			sfpo.setDbinfoRemark(remarks);
+			// 字段名称
+			sfpo.setDbinfoFieldName(fieldName);
+			// 数据库的类型转换为java的类型(字符串)
+			sfpo.setColumnType(javatype);
+			sfpo.setScale(tfp.getScale());
+			String typeStr = CommonUtils.dbTypeToJavaType(sfpo);
+			sfpo.setJavaType(typeStr);
+			ls.add(sfpo);
+		}
+		return  ls;
+	}
+
+	/**
+	 * where 后面的字段转换为 fieldpo对象
+	 * @param fields
+	 * @return
+	 */
+	public List<SheetFieldPo>  whereFieldInfo(List<String> fields){
+		List<SheetFieldPo> rs = new ArrayList<>();
+		LinkedHashSet<TableFieldPo> allFields = allTableAllFields();
+		for(String tmp : fields){
+			for (TableFieldPo  tfp: allFields){
+				var fn = tfp.getFieldName();
+				if(fn.equals(tmp)){
+					SheetFieldPo sfpo = new SheetFieldPo();
+					String remarkStr = tfp.getRemarks();
+					int javatype = tfp.getDataType();
+					// 备注
+					sfpo.setDbinfoRemark(remarkStr);
+					// 字段名称
+					sfpo.setDbinfoFieldName(tmp);
+					// 字符是不是时间类型
+					boolean isDateType = CommonUtils.isDateAndDateTime(javatype);
+					sfpo.setDbinfoIsDateType(isDateType);
+					rs.add(sfpo);
+					break;
+				}
+			}
+		}
+
+		return rs;
+
+	}
+
+	LinkedHashSet<TableFieldPo> allFields = null;
+	/**
+	 * 所有表的所有字段
+	 * @return
+	 */
+	private LinkedHashSet<TableFieldPo> allTableAllFields(){
+		if(allFields != null ){
+			return  allFields;
+		}
+		allFields = new LinkedHashSet<>();
+		List<TablePo> allTabs = getSqlTableInfoList();
+		for(TablePo tp : allTabs){
+			LinkedHashSet<TableFieldPo> tmpSet = 	tp.getFields();
+			allFields.addAll(tmpSet);
+		}
+		return allFields;
+	}
+
+	private boolean fetchTableFieldInfo = false;
+	// 给列的 备注 赋值(数据库中的备注)
+	public List<SheetFieldPo> getColssInfos(){
+		List<SheetFieldPo>  fls  = this.getColss();
+		if(fetchTableFieldInfo){
+			return fls;
+		}
+
+		List<TablePo> ls = getSqlTableInfoList();
+		// 所有表的字段集中起来
+		LinkedHashSet<TableFieldPo> allFields = allTableAllFields();
+
+
+		for(var sfpo: fls){
+			String colName = sfpo.getColumnLabel().get();
+			for( var tfp : allFields){
+				var fn = tfp.getFieldName();
+				if(fn.equals(colName)){
+					int javatype = tfp.getDataType();
+					String remarkStr = tfp.getRemarks();
+					// 备注
+					sfpo.setDbinfoRemark(remarkStr);
+					// 字段名称
+					sfpo.setDbinfoFieldName(colName);
+					// 字符是不是时间类型
+					boolean isDateType = CommonUtils.isDateAndDateTime(javatype);
+					sfpo.setDbinfoIsDateType(isDateType);
+					break;
+				}
+			}
+		}
+
+		fetchTableFieldInfo = true;
+		return fls;
+	}
+
 }

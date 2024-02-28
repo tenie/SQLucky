@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -192,6 +193,39 @@ public class Dbinfo {
 				fpo.setIsAutoincrement(v23);
 //					String v24 = rs.getString("IS_GENERATEDCOLUMN"); 
 				tbpo.getFields().add(fpo);
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				rs.close();
+		}
+	}
+
+	/**
+	 * 显示列的 , 备注信息从数据库里读取
+	 * @param conn
+	 * @param tbpo
+	 * @param fls
+	 * @throws Exception
+	 */
+	public static void fetchTableFieldInfo(Connection conn, TablePo tbpo, List<SheetFieldPo>  fls) throws Exception {
+		ResultSet rs = null;
+		try {
+			DatabaseMetaData dmd = conn.getMetaData();
+			for(SheetFieldPo po : fls){
+				// 如果remark值为空从数据库读取
+				String  remarkval  = po.getDbinfoRemark();
+				if(StrUtils.isNullOrEmpty(remarkval)){
+					String fieldName = po.getColumnLabel().get();
+					rs = dmd.getColumns(null, tbpo.getTableSchema(), tbpo.getTableName(), fieldName);
+					while (rs.next()) {
+						String remarks = rs.getString("REMARKS");
+						po.setDbinfoRemark(remarks);
+					}
+				}
+
 
 			}
 		} catch (Exception e) {

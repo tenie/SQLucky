@@ -23,6 +23,17 @@ public class SheetFieldPo {
 	// 这个也是字段名称
 	private StringProperty columnLabel;
 
+	// 数据库里备注值
+	private String dbinfoRemark = "";
+	// 字段名称, java的字段类型(驼峰命名)
+	private String dbinfoFieldName;
+	//  字段名称, java的字段类型(驼峰命名), 首字母大写
+	private String dbinfoFieldNameJava;
+	private String dbinfoFieldNameJavaUpper;
+	private boolean dbinfoIsDateType = false;
+	// java 中类型的字符串名称, 如: String  , Double ...
+	private String javaType;
+
 	private StringProperty columnClassName;
 	private IntegerProperty columnDisplaySize;
 	private IntegerProperty columnType;
@@ -181,6 +192,66 @@ public class SheetFieldPo {
 		this.dateValue = dateValue;
 	}
 
+	public String getDbinfoRemark() {
+		return dbinfoRemark;
+	}
+
+	public void setDbinfoRemark(String dbinfoRemark) {
+		if(StrUtils.isNotNullOrEmpty(dbinfoRemark)){
+			dbinfoRemark = dbinfoRemark.trim();
+		}else {
+			dbinfoRemark = "";
+		}
+		this.dbinfoRemark = dbinfoRemark;
+	}
+
+	public String getDbinfoFieldName() {
+		if(StrUtils.isNullOrEmpty(dbinfoFieldName)){
+			if(this.getColumnLabel() != null ){
+				dbinfoFieldName = this.getColumnLabel().get();
+			}else {
+				dbinfoFieldName = "";
+			}
+		}
+		return dbinfoFieldName;
+	}
+
+
+	public String setDbinfoFieldName(String val) {
+		if(StrUtils.isNotNullOrEmpty(val)){
+			val = val.trim();
+		}else{
+			val = "";
+		}
+		dbinfoFieldName = val;
+		dbinfoFieldNameJava = StrUtils.dbFieldStyleToJavaFieldStyle(dbinfoFieldName);
+		dbinfoFieldNameJavaUpper = StrUtils.initialUpperCase(dbinfoFieldNameJava);
+		return dbinfoFieldName;
+	}
+
+
+
+
+	public String getDbinfoFieldNameJava() {
+		return dbinfoFieldNameJava;
+	}
+
+	public String getDbinfoFieldNameJavaUpper() {
+		return dbinfoFieldNameJavaUpper;
+	}
+
+	//	public void setDbinfoTableName(String dbinfoTableName) {
+//		this.dbinfoTableName = dbinfoTableName;
+//	}
+
+	public boolean isDbinfoIsDateType() {
+		return dbinfoIsDateType;
+	}
+
+	public void setDbinfoIsDateType(boolean dbinfoIsDateType) {
+		this.dbinfoIsDateType = dbinfoIsDateType;
+	}
+
 	@Override
 	public String toString() {
 		return "SheetFieldPo [columnName=" + columnName + ", columnLabel=" + columnLabel + ", columnClassName="
@@ -189,4 +260,11 @@ public class SheetFieldPo {
 				+ columnWidth + ", dateValue=" + dateValue + ", Type=" + Type + "]";
 	}
 
+	public String getJavaType() {
+		return javaType;
+	}
+
+	public void setJavaType(String javaType) {
+		this.javaType = javaType;
+	}
 }

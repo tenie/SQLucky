@@ -84,7 +84,7 @@ public class SqlParser {
      * @return
      */
     public static Set<String> selectSqlTableNames(String sqlStr){
-        Set<String> tableNames = null;
+        Set<String> tableNames = new HashSet<>();
         try {
             tableNames = TablesNamesFinder.findTables(sqlStr);
         } catch (JSQLParserException e) {
@@ -95,14 +95,14 @@ public class SqlParser {
 
 
     public static void main(String[] args) {
-        String sql = "SELECT a.col1 , a.col2 AS b, a.col3 AS c FROM table a left join tab2 t on a.id = t.pid WHERE a.col_1 = 10 AND a.col_2 = 20 AND a.col_3 = 30";
-//        List<String > vals = selectSqlWhereColumn(sql);
+        String sql = "SELECT a.col1 , a.col2 AS b, a.col3 AS c FROM ffo.table a left join tab2 t on a.id = t.pid WHERE a.col_1 = 10 AND a.col_2 = 20 AND a.col_3 = 30";
+        List<String > vals = selectSqlWhereColumn(sql);
 
-        List<String > vals = selectQueryColumn(sql, true);
+//        List<String > vals = selectQueryColumn(sql, true);
         System.out.println(vals);
 
 
-        Set<String> tna  = selectSqlTableNames(sql);
-        System.out.println(tna);
+//        Set<String> tna  = selectSqlTableNames(sql);
+//        System.out.println(tna);
     }
 }

@@ -428,33 +428,33 @@ public class MyBottomSheet {
 		});
 		ls.add(showFKBtn);
 		// TODO 导入
-		MenuButton importFileBtn = new MenuButton();
-		importFileBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
-		importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
-
-		MenuItem excelImportBtn = new MenuItem("Import Excel");
-		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("EXCEL"));
-		excelImportBtn.setOnAction(e -> {
-			ImportExcelWindow.showWindow(this.getTableData().getTabName(), this.getTableData().getConnName());
-
-		});
-
-		MenuItem csvImportBtn = new MenuItem("Import CSV");
-		csvImportBtn.setGraphic(IconGenerator.svgImageDefActive("CSV"));
-		csvImportBtn.setOnAction(e -> {
-			ImportCsvWindow.showWindow(this.getTableData().getTabName(), this.getTableData().getConnName());
-
-		});
-
-		MenuItem sqlImportBtn = new MenuItem("Import Sql File");
-		sqlImportBtn.setGraphic(IconGenerator.svgImageDefActive("SQL"));
-		sqlImportBtn.setOnAction(e -> {
-			ImportSQLWindow.showWindow(this.getTableData().getTabName(), this.getTableData().getConnName());
-
-		});
-
-		importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn, sqlImportBtn);
-		ls.add(importFileBtn);
+//		MenuButton importFileBtn = new MenuButton();
+//		importFileBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
+//		importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
+//
+//		MenuItem excelImportBtn = new MenuItem("Import Excel");
+//		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("EXCEL"));
+//		excelImportBtn.setOnAction(e -> {
+//			ImportExcelWindow.showWindow(this.getTableData().getTabName(), this.getTableData().getConnName());
+//
+//		});
+//
+//		MenuItem csvImportBtn = new MenuItem("Import CSV");
+//		csvImportBtn.setGraphic(IconGenerator.svgImageDefActive("CSV"));
+//		csvImportBtn.setOnAction(e -> {
+//			ImportCsvWindow.showWindow(this.getTableData().getTabName(), this.getTableData().getConnName());
+//
+//		});
+//
+//		MenuItem sqlImportBtn = new MenuItem("Import Sql File");
+//		sqlImportBtn.setGraphic(IconGenerator.svgImageDefActive("SQL"));
+//		sqlImportBtn.setOnAction(e -> {
+//			ImportSQLWindow.showWindow(this.getTableData().getTabName(), this.getTableData().getConnName());
+//
+//		});
+//
+//		importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn, sqlImportBtn);
+//		ls.add(importFileBtn);
 
 		return ls;
 	}

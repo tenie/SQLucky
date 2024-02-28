@@ -715,4 +715,9 @@ public class StrUtils {
 
 		return  str;
 	}
+
+	public static String dbFieldStyleToJavaFieldStyle(String str) {
+		str = underlineCaseCamel(str);
+		return str;
+	}
 }

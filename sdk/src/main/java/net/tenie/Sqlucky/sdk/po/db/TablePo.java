@@ -334,6 +334,10 @@ public class TablePo {
 	}
 
 	public LinkedHashSet<TableFieldPo> getFields() {
+		if(fields == null){
+			fields = new LinkedHashSet<>();
+		}
+
 		return fields;
 	}
 
