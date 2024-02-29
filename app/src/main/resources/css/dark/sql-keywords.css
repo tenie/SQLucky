@@ -58,6 +58,15 @@
 	-fx-underline: true;
 }
 
+.annotation {
+	-fx-fill: yellow;
+}
+
+.annotation-error {
+	-fx-fill: yellow;
+	-fx-underline: true;
+}
+
 .comment {
 	-fx-fill: #808080;
 }

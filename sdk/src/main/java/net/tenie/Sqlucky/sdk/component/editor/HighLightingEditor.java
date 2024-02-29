@@ -103,9 +103,14 @@ public class HighLightingEditor implements SqluckyEditor {
 
 //    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
 
-	public HighLightingEditor(MyAutoComplete myAuto) {
+	public HighLightingEditor(MyAutoComplete myAuto, CodeAreaHighLightingHelper helper) {
 		this.myAuto = myAuto;
-		highLightingHelper = new CodeAreaHighLightingHelper();
+		if(helper == null ){
+			highLightingHelper = new CodeAreaHighLightingHelper();
+		}else {
+			highLightingHelper = helper;
+		}
+
 		codeArea = new MyCodeArea();
 
 		// 行号主题色
@@ -621,7 +626,6 @@ public class HighLightingEditor implements SqluckyEditor {
 	 * 自动补全提示
 	 * 
 	 * @param e
-	 * @param codeArea
 	 */
 	@Override
 	public void codePopup(KeyEvent e) {
@@ -684,9 +688,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 移动光标到当前行的行首
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaCtrlShiftA(KeyEvent e) {
 		if (e.isShiftDown() && e.isControlDown()) {
@@ -707,9 +708,7 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 移动光标到当前行的行尾
-	 * 
-	 * @param e
-	 * @param codeArea
+	 *
 	 */
 	public void codeAreaCtrlShiftE(KeyEvent e) {
 		if (e.isShiftDown() && e.isControlDown()) {
@@ -731,9 +730,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 操作当前行的光标之前的单词
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaCtrlShiftW(KeyEvent e) {
 		if (e.isShiftDown() && e.isControlDown()) {
@@ -760,9 +756,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 删除光标前一个字符
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaCtrlShiftH(KeyEvent e) {
 		if (e.isShiftDown() && e.isControlDown()) {
@@ -784,9 +777,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 删除光标后一个单词
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaAltShiftD(KeyEvent e) {
 		if (e.isShiftDown() && e.isAltDown()) {
@@ -816,9 +806,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 删除一个光标后字符
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaCtrlShiftD(KeyEvent e) {
 		if (e.isShiftDown() && e.isControlDown()) {
@@ -839,9 +826,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 删除光标前的字符串
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaCtrlShiftU(KeyEvent e) {
 		if (e.isShiftDown() && e.isControlDown()) {
@@ -868,9 +852,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 删除光标后的字符串
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaCtrlShiftK(KeyEvent e) {
 		if (e.isShiftDown() && e.isControlDown()) {
@@ -897,9 +878,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * ctrl + d
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaCtrlD(KeyEvent e) {
 		if (e.isControlDown()) {
@@ -910,8 +888,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 删除选中的内容或删除光标所在的行
-	 * 
-	 * @param codeArea
 	 */
 	@Override
 	public void delLineOrSelectTxt() {
@@ -990,10 +966,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 触发删除按钮
-	 * 
-	 * @param e
-	 * @param codeArea
-	 * @param cl
 	 */
 	public void codeAreaBackspaceDelete(KeyEvent e, ChangeListener<String> cl) {
 		// 删除选中字符串防止页面滚动, 自己删
@@ -1005,9 +977,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 黏贴的时候, 防止页面跳到自己黏贴
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaCtrlV(KeyEvent e) {
 		if (e.isShortcutDown()) {
@@ -1027,9 +996,6 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	/**
 	 * 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
-	 * 
-	 * @param e
-	 * @param codeArea
 	 */
 	public void codeAreaCtrlZ(KeyEvent e, ChangeListener<String> cl) {
 

@@ -46,7 +46,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  */
 public class MyBottomSheet {
-	private SqluckyEditor sqlArea;
+//	private SqluckyEditor sqlArea;
 	private SheetDataValue tableData;
 	private boolean isDDL = false;
 	private boolean isDockSide = false; // 判断是否已经独立窗口了
@@ -60,9 +60,9 @@ public class MyBottomSheet {
 	AnchorPane buttonAnchorPane ;
 
 	public void clean() {
-		if (sqlArea != null) {
-			this.sqlArea = null;
-		}
+//		if (sqlArea != null) {
+//			this.sqlArea = null;
+//		}
 		if (tableData != null) {
 			this.tableData.clean();
 			tableData = null;
@@ -222,7 +222,7 @@ public class MyBottomSheet {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-		mtb.setSqlArea(sqlArea);
+//		mtb.setSqlArea(sqlArea);
 //		VBox vb = new VBox();
 		String ddl = table.getDdl();
 		StackPane sp = sqlArea.getCodeAreaPane(ddl, false);
@@ -253,8 +253,8 @@ public class MyBottomSheet {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-		mtb.setSqlArea(sqlArea);
-		DDLBox(sqluckyConn, mtb, ddl);
+//		mtb.setSqlArea(sqlArea);
+		DDLBox(sqluckyConn, mtb, ddl, sqlArea);
 		mtb.show();
 		return mtb;
 
@@ -266,7 +266,7 @@ public class MyBottomSheet {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-		mtb.setSqlArea(sqlArea);
+//		mtb.setSqlArea(sqlArea);
 		String ddl = table.getDdl();
 		StackPane sp = sqlArea.getCodeAreaPane(ddl, false);
 		// 表格上面的按钮
@@ -291,15 +291,15 @@ public class MyBottomSheet {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-		mtb.setSqlArea(sqlArea);
-		DDLBox(sqluckyConn, mtb, ddl);
+//		mtb.setSqlArea(sqlArea);
+		DDLBox(sqluckyConn, mtb, ddl, sqlArea);
 		mtb.show();
 		return mtb;
 	}
 
 	// 数据tab中的组件
-	public static void DDLBox(SqluckyConnector sqluckyConn, MyBottomSheet mtb, String ddl) {
-		StackPane sp = mtb.getSqlArea().getCodeAreaPane(ddl, false);
+	public static void DDLBox(SqluckyConnector sqluckyConn, MyBottomSheet mtb, String ddl , SqluckyEditor sqlArea ) {
+		StackPane sp = sqlArea.getCodeAreaPane(ddl, false);
 		// 表格上面的按钮, 暂时先不显示操作按钮
 //		List<Node> btnLs = mtb.DDLOptionBtns(sqluckyConn, ddl, isRunFunc, isProc, name, isSelect, vb, sp, null);
 		mtb.operatePane(null); // 没有操作按钮
@@ -534,13 +534,13 @@ public class MyBottomSheet {
 		this.tableData = tableData;
 	}
 
-	public SqluckyEditor getSqlArea() {
-		return sqlArea;
-	}
-
-	public void setSqlArea(SqluckyEditor sqlArea) {
-		this.sqlArea = sqlArea;
-	}
+//	public SqluckyEditor getSqlArea() {
+//		return sqlArea;
+//	}
+//
+//	public void setSqlArea(SqluckyEditor sqlArea) {
+//		this.sqlArea = sqlArea;
+//	}
 
 	public boolean isDDL() {
 		return isDDL;

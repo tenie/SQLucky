@@ -1,5 +1,7 @@
 package net.tenie.Sqlucky.sdk.component.editor;
 
+import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
+import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelperForJava;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
@@ -14,7 +16,16 @@ public class HighLightingEditorUtils {
 	// 创建默认的带有提示功能的 高亮sql编辑器
 	public static SqluckyEditor sqlEditor() {
 		MyAutoComplete myAuto = new MyAutoComplete();
-		SqluckyEditor sqlCodeAreaEditor = new HighLightingEditor(myAuto);
+		SqluckyEditor sqlCodeAreaEditor = new HighLightingEditor(myAuto, null);
+//		右键菜单
+		HighLightingEditorContextMenu cm = new HighLightingEditorContextMenu(sqlCodeAreaEditor);
+		sqlCodeAreaEditor.setContextMenu(cm);
+		return sqlCodeAreaEditor;
+	}
+
+	public static SqluckyEditor javaEditor() {
+		MyAutoComplete myAuto = new MyAutoComplete();
+		SqluckyEditor sqlCodeAreaEditor = new HighLightingEditor(myAuto, CodeAreaHighLightingHelperForJava.createHelper());
 //		右键菜单
 		HighLightingEditorContextMenu cm = new HighLightingEditorContextMenu(sqlCodeAreaEditor);
 		sqlCodeAreaEditor.setContextMenu(cm);

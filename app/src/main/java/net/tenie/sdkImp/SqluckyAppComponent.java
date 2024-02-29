@@ -75,7 +75,7 @@ public class SqluckyAppComponent implements AppComponent {
 
 	@Override
 	public SqluckyEditor createCodeArea() {
-		return new HighLightingEditor(null);
+		return new HighLightingEditor(null, null);
 	}
 
 	/**

@@ -51,6 +51,8 @@ public class CodeAreaHighLightingHelper {
 	       String SEMICOLON_PATTERN = "\\;";
 	        // 字符串
 	       String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'|`([^`\\\\]|\\\\.)*`";
+		    // 注解
+	    	String ANNOTATION_PATTERN = "@\\w*\\b";
 	        // 注释
 	       String COMMENT_PATTERN = "//[^\n]*" +"|"+"--[^\n]*"+ "|" + "/\\*(.|\\R)*?\\*/";
 	       String patternString =  
@@ -60,6 +62,7 @@ public class CodeAreaHighLightingHelper {
 	                + "|(?<BRACKET>" + BRACKET_PATTERN + ")"
 	                + "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
 	                + "|(?<STRING>" + STRING_PATTERN + ")"
+					+ "|(?<ANNOTATION>" + ANNOTATION_PATTERN + ")"
 	                + "|(?<COMMENT>" + COMMENT_PATTERN + ")"
 	    		    		 ;
 	       if(StrUtils.isNotNullOrEmpty(appendstr)) {
@@ -109,6 +112,31 @@ public class CodeAreaHighLightingHelper {
 				.replace("?", "\\?").replace(",", "\\,")
 				.replace(".", "\\.").replace("&", "\\&");
 	}
+
+	public 	StyleSpansBuilder<Collection<String>>  createStyleSpansBuilder(Matcher matcher, String text){
+		StyleSpansBuilder<Collection<String>> spansBuilder
+				= new StyleSpansBuilder<>();
+		int lastKwEnd = 0;
+		while(matcher.find()) {
+			String styleClass =
+					matcher.group("FINDWORD") != null ? "findword" :
+					matcher.group("KEYWORD") != null ? "keyword" :
+					matcher.group("PAREN") != null ? "paren" :
+					matcher.group("BRACE") != null ? "brace" :
+					matcher.group("BRACKET") != null ? "bracket" :
+					matcher.group("SEMICOLON") != null ? "semicolon" :
+					matcher.group("STRING") != null ? "string" :
+					matcher.group("ANNOTATION") != null ? "annotation" :
+					matcher.group("COMMENT") != null ? "comment" :
+					null; /* never happens */ assert styleClass != null;
+			spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
+			spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
+			lastKwEnd = matcher.end();
+		}
+		spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
+		return spansBuilder;
+	}
+
     public  StyleSpans<Collection<String>> findEqualyWord(String str, String text) {
 		str = makeQueryStringAllRegExp(str);
     	String mypatternString = "|(?<FINDWORD>(" + str.toUpperCase() + "))"; 
@@ -128,6 +156,7 @@ public class CodeAreaHighLightingHelper {
                     matcher.group("BRACKET") != null ? "bracket" :
                     matcher.group("SEMICOLON") != null ? "semicolon" :
                     matcher.group("STRING") != null ? "string" :
+					matcher.group("ANNOTATION") != null ? "annotation" :
                     matcher.group("COMMENT") != null ? "comment" : 
                     null; /* never happens */ assert styleClass != null;
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
@@ -153,6 +182,7 @@ public class CodeAreaHighLightingHelper {
                     matcher.group("BRACKET") != null ? "bracket" :
                     matcher.group("SEMICOLON") != null ? "semicolon" :
                     matcher.group("STRING") != null ? "string" :
+							matcher.group("ANNOTATION") != null ? "annotation" :
                     matcher.group("COMMENT") != null ? "comment" :
                     null; 
             /* never happens */ 
@@ -177,6 +207,7 @@ public class CodeAreaHighLightingHelper {
                     matcher.group("BRACKET") != null ? "bracket" :
                     matcher.group("SEMICOLON") != null ? "semicolon" :
                     matcher.group("STRING") != null ? "string" :
+							matcher.group("ANNOTATION") != null ? "annotation" :
                     matcher.group("COMMENT") != null ? "comment" :
                     null; 
             /* never happens */ 
@@ -253,6 +284,7 @@ public class CodeAreaHighLightingHelper {
                     matcher.group("BRACKET") != null ? "bracket" :
                     matcher.group("SEMICOLON") != null ? "semicolon" :
                     matcher.group("STRING") != null ? "string" :
+							matcher.group("ANNOTATION") != null ? "annotation" :
                     matcher.group("COMMENT") != null ? "comment" :
                     null; /* never happens */ assert styleClass != null;
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);

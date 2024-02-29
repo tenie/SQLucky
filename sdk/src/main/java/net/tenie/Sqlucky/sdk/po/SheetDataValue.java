@@ -371,6 +371,9 @@ public class SheetDataValue {
 			sfpo.setScale(tfp.getScale());
 			String typeStr = CommonUtils.dbTypeToJavaType(sfpo);
 			sfpo.setJavaType(typeStr);
+			if("Date".equals(typeStr)){
+				sfpo.setDbinfoIsDateType(true);
+			}
 			ls.add(sfpo);
 		}
 		return  ls;

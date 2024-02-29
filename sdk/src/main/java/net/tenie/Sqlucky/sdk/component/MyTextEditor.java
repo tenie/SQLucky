@@ -210,5 +210,4 @@ public class MyTextEditor implements SqluckyEditor {
 	public void delAnchorAfterString() {
 	}
 
-	 
 }
