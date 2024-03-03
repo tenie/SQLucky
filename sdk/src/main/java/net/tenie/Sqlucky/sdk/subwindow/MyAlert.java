@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.component.MyNoLineNumberEditor;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.Notifications;
 
@@ -244,7 +245,7 @@ public class MyAlert {
 	}
 
 	public static void myConfirmation(String promptInfo, Stage stage, List<Node> btns, boolean isWait) {
-		MyTextEditor myTextArea = new MyTextEditor();
+		MyNoLineNumberEditor myTextArea = new MyNoLineNumberEditor();
 		StackPane codeAreaPane = myTextArea.getCodeAreaPane(promptInfo, false);
 		codeAreaPane.setStyle("-fx-background-color: transparent;");
 

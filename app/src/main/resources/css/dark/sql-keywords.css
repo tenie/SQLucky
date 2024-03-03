@@ -76,10 +76,15 @@
 	-fx-underline: true;
 }
 
-/* 光标所在行背景背景色 */
+/* codeArea 光标所在行背景背景色 */
 .styled-text-area .paragraph-box:has-caret {
 	-fx-background-color: #323232;
 }
+/* 没有行号的 codeArea 光标所在行的背景色 */
+.styled-text-area-no-line-number .paragraph-box:has-caret {
+	-fx-background-color: #2B2B2B !important;
+}
+
 
 /* 光标 */
 .caret {

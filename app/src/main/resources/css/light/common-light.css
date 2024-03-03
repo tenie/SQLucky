@@ -87,7 +87,7 @@
 .combo-box .input-focused-line {
 	-fx-background-color: transparent;
 }
-
+/*弹出框的title 颜色*/
 .myShellWindow {
 	-fx-border-color: #E2E2E2;
 }
@@ -98,7 +98,7 @@
 }
 
 .myAlert {
-	-fx-background-color: #EAEAEA;
+	-fx-background-color: #ffffff;
 }
 
 .myAlertBtn {
@@ -169,4 +169,9 @@ MenuButton {
 
 .menu-bar {
 	-fx-background-color: #F4F4F4;
+}
+
+/*没有行号的 codeArea 光标所在行的背景色, 白色 */
+.styled-text-area-no-line-number .paragraph-box:has-caret {
+	-fx-background-color: #ffffff ;
 }

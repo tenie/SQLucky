@@ -91,7 +91,7 @@ public class DialogTools {
 	// 给一个窗口加一个外壳, 包含一个头部的关闭按钮
 	public static VBox getWindowShell(Stage stage, Node title, String css) {
 		VBox subWindow = new VBox();
-		subWindow.getStyleClass().add("myShellWindow");
+//		subWindow.getStyleClass().add("myShellWindow");
 		subWindow.getStyleClass().add(css);
 
 		AnchorPane anchorPane = new AnchorPane();

@@ -127,18 +127,20 @@ GridPane {
 	-fx-background-color: #3C3F41;
 }
 
-.myShellWindow {
+/*.myShellWindow {
 	
-}
+}*/
 
 /* 子窗口壳的顶部关闭区域*/
+/*弹出框的title 颜色*/
 .subWindowClose {
 	-fx-background-color: #4B4B4B;
 }
 
 .myAlert {
 	/* -fx-border-color: #4C708C;   #3C3F41*/
-	-fx-background-color: #17181A;
+	-fx-background-color: #2B2B2B;
+
 }
 
 .myAlert  TextField {

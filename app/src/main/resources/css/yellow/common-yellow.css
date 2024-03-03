@@ -84,6 +84,11 @@ Pane  GridPane {
 	-fx-background-color: #323232;
 }
 
+/* 没有行号的 codeArea 光标所在行的背景色 */
+.styled-text-area-no-line-number .paragraph-box:has-caret {
+	-fx-background-color: #000000 ;
+}
+
 /* 光标 */
 .caret {
 	-fx-stroke: #ffffff;
@@ -128,7 +133,7 @@ Pane  GridPane {
 	-fx-padding: 0 1 0 1;
 	-fx-background-color: #323232;
 }
-
+/*弹出框的title 颜色*/
 .subWindowClose {
 	-fx-background-color: #323232;
 }
@@ -158,7 +163,8 @@ GridPane {
 }
 
 .myAlert {
-	-fx-background-color: #3C3F41;
+	-fx-background-color: #000000;
+	-fx-border-color: #4e4e4e;
 }
 
 .myAlert  TextField {

@@ -15,7 +15,6 @@ public class MyCodeArea extends CodeArea {
 		this.mylineNumber = mylineNumber;
 	}
 
-//	@Override
 	public CodeArea getCodeArea() {
 		return this;
 	}
