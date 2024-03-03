@@ -29,7 +29,7 @@ public class DataTableContextMenuAction {
 				AppCommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
 			};
 //			ModalDialog.showComfirmExec("Confirm drop!", "Execute Sql: " + rv.sql + " ?", caller);
-			MyAlert.myConfirmation("Execute Sql: " + rv.sql + " ?", caller);
+			MyAlert.myConfirmation("Execute Sql: \n" + rv.sql + " ?", caller);
 		}
 
 	}

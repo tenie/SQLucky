@@ -35,7 +35,7 @@ public class DialogTools {
 	private static Logger logger = LogManager.getLogger(DialogTools.class);
 
 	public static VBox getSceneVbox(Stage stage, Node title, List<Node> nds, List<Node> btns) {
-		return getSceneVbox(750, 110, stage, title, nds, btns);
+		return getSceneVbox(800, 160, stage, title, nds, btns);
 	}
 
 	// TODO 设置子窗口的外形
