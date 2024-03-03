@@ -1,8 +1,4 @@
-.titledPane-color .title{
-	 -fx-font-size : 13; 
-	 -fx-font-weight: bold; 
-}
- 
+
 .myAlert{
  	-fx-font-size : 12; 
 	-fx-font-weight: bold ;

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.CheckTreeView;
@@ -25,10 +26,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTextEditor;
@@ -67,6 +64,9 @@ public class TransferDataController implements Initializable {
 	private AnchorPane optionPane;
 
 	private static Thread currentThread;
+
+	@FXML
+	private VBox windowVbox;
 	@FXML
 	private Label title;
 	@FXML
@@ -340,6 +340,8 @@ public class TransferDataController implements Initializable {
 		stopBtn.setGraphic(IconGenerator.svgImage("stop", "red"));
 		hideBtn.setGraphic(IconGenerator.svgImageUnactive("circle-o"));
 		monBtn.setGraphic(IconGenerator.svgImageDefActive("laptop"));
+//		CommonUtils.addCssClass(windowVbox, "myAlert");
+
 	}
 
 	// 设置按钮 输入框 的action

@@ -15,32 +15,31 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="601.0" styleClass="myModalDialog" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.fx.controller.TransferDataController">
+<VBox fx:id="windowVbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="629.0" prefWidth="601.0" styleClass="myModalDialog" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.tenie.fx.controller.TransferDataController">
     <children>
         <Pane prefHeight="38.0" prefWidth="601.0" styleClass="myModalDialog">
             <children>
                 <Label fx:id="title" layoutX="17.0" layoutY="3.0" text="数据库同步" />
             </children>
         </Pane>
-        <GridPane>
+        <GridPane alignment="TOP_CENTER">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="54.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="184.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="541.0" minWidth="10.0" prefWidth="53.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="541.0" minWidth="10.0" prefWidth="306.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="197.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="541.0" minWidth="10.0" prefWidth="229.0" />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="37.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="24.0" minHeight="10.0" prefHeight="15.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label text="Source" />
-                <Label text="Target" GridPane.columnIndex="2" />
-                <JFXComboBox fx:id="soDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" />
-                <JFXComboBox fx:id="soSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                <JFXComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" />
-                <JFXComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" text="Source" textAlignment="RIGHT" />
+                <Label text="Target" textAlignment="RIGHT" GridPane.columnIndex="1" />
+                <JFXComboBox fx:id="soDB" prefHeight="23.0" prefWidth="165.0" GridPane.rowIndex="1" />
+                <JFXComboBox fx:id="soSC" prefHeight="23.0" prefWidth="165.0" GridPane.rowIndex="2" />
+                <JFXComboBox fx:id="taDB" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <JFXComboBox fx:id="taSC" prefHeight="23.0" prefWidth="165.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             </children>
             <VBox.margin>
                 <Insets left="10.0" />
@@ -90,21 +89,30 @@
         </AnchorPane>
         <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
             <children>
-                <FlowPane prefHeight="27.0" prefWidth="601.0">
+                <FlowPane hgap="5.0" prefHeight="36.0" prefWidth="601.0">
                     <children>
                         <Label fx:id="queryLabel" text="查询" />
                         <AnchorPane fx:id="tpane" prefHeight="25.0" prefWidth="200.0" />
                         <JFXButton fx:id="upSelBtn" text="Select All Up" />
                         <JFXButton fx:id="downSelBtn" text="Select All Down" />
                     </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+               <padding>
+                  <Insets left="5.0" top="5.0" />
+               </padding>
                 </FlowPane>
-                <FlowPane prefHeight="29.0" prefWidth="601.0">
+                <FlowPane hgap="5.0" prefHeight="36.0" prefWidth="601.0">
                     <children>
                         <JFXButton fx:id="execBtn" mnemonicParsing="false" styleClass="transfer-btn" text="Run" />
                         <JFXButton fx:id="stopBtn" mnemonicParsing="false" styleClass="transfer-btn" text="Stop" />
                         <JFXButton fx:id="monBtn" text="Monitor" />
-                        <JFXButton fx:id="hideBtn"  styleClass="transfer-btn" text="Hide Window" />
+                        <JFXButton fx:id="hideBtn" styleClass="transfer-btn" text="Hide Window" />
                     </children>
+               <padding>
+                  <Insets left="5.0" top="5.0" />
+               </padding>
                 </FlowPane>
                 <HBox fx:id="treePane" prefHeight="212.0" prefWidth="599.0" VBox.vgrow="ALWAYS" />
             </children>

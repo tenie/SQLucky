@@ -40,9 +40,13 @@ Pane  GridPane {
 }
 
 /* title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 */
+/*
 .myTitleTxtActiveColor .title .text {
 	-fx-fill: #0595ff;
+	 -fx-font-family: "Monaspace Argon Var Regular" ;
+      -fx-font-weight: bold  ;
 }
+*/
 
 /* tree view 中文字按钮边框 */
 .myTxtBtnBorder {
@@ -61,12 +65,24 @@ Pane  GridPane {
 	-fx-border-color: #2B2B2B;
 }
 
-/* titledPane 背景色*/
+/* titledPane 背景色
 .titledPane-color .title {
 	-fx-background-color: #2E2E2E;
 	-fx-border-color: #4C4C4C transparent #4C4C4C transparent;
 	-fx-border-width: 1 0 1 0;
 	-fx-text-fill: red;
+}*/
+.titledPane-color {
+	-fx-color: #2B2B2B;
+/*    -fx-font-weight: bold;*/
+    -fx-font-size: 14pt;
+  /*  -fx-font-family: "Monaspace Xenon Var Regular" !important;*/
+
+}
+
+.titledPane-color .title:hover {
+	-fx-color: #2B2B2B;
+	-fx-background-color: #2B2B2B;
 }
 
 /* tabpane 选择tab按钮 .tab-down-button */
@@ -88,6 +104,7 @@ Pane  GridPane {
 
 .transfer-btn {
 	-fx-border-color: #333333;
+	-fx-border-radius: 3px;
 }
 
 CheckBoxTreeItem {
@@ -298,7 +315,7 @@ FlowPane TextField {
 	-fx-border-width: 0 0 1 0;
 	-fx-background-radius: 0;
 	-fx-background-color: #373a3c;
-	-fx-font-size: 12px;
+	-fx-font-size: 12pt;
 	-fx-text-fill: #ffffff;
 	-fx-background-insets: 0;
 	-fx-alignment: center;
