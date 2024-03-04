@@ -1,3 +1,13 @@
+/* @后面跟英文高亮, 注解*/
+.annotation {
+	-fx-fill: #ff9300;
+}
+
+.annotation-error {
+	-fx-fill: #ff9300;
+	-fx-underline: true;
+}
+
 /* 文本颜色 */
 .text {
 	-fx-fill: #bdcddf;
@@ -58,14 +68,6 @@
 	-fx-underline: true;
 }
 
-.annotation {
-	-fx-fill: yellow;
-}
-
-.annotation-error {
-	-fx-fill: yellow;
-	-fx-underline: true;
-}
 
 .comment {
 	-fx-fill: #808080;

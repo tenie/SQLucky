@@ -1,3 +1,13 @@
+/* @后面跟英文高亮, 注解*/
+.annotation {
+	-fx-fill: #ff9300;
+}
+
+.annotation-error {
+	-fx-fill: #ff9300;
+	-fx-underline: true;
+}
+
 .findword {
 	-rtfx-background-color: #FFF59D !important;
 	-fx-fill: #000000;

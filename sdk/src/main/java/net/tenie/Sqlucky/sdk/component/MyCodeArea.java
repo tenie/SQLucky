@@ -6,7 +6,7 @@ import net.tenie.Sqlucky.sdk.SqluckyLineNumberNode;
 
 public class MyCodeArea extends CodeArea {
 	private SqluckyLineNumberNode mylineNumber;
-
+	private String titleName;
 	public SqluckyLineNumberNode getMylineNumber() {
 		return mylineNumber;
 	}
@@ -19,4 +19,11 @@ public class MyCodeArea extends CodeArea {
 		return this;
 	}
 
+	public String getTitleName() {
+		return titleName;
+	}
+
+	public void setTitleName(String titleName) {
+		this.titleName = titleName;
+	}
 }

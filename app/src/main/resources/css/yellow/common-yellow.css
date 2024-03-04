@@ -29,11 +29,7 @@ Pane  GridPane {
 	-fx-background-color: #E2DFDE;
 }
 
-/* 左侧折叠面板的title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 #FDA232 */
-.myTitleTxtActiveColor .title .text {
-	-fx-fill: #FDA232;
-	/*  -fx-font-size: 15px;  */
-}
+
 
 /* tree view 中文字按钮边框 */
 .myTxtBtnBorder {
@@ -50,10 +46,14 @@ Pane  GridPane {
 /* titledPane 背景色*/
 .titledPane-color .title {
 	-fx-background-color: #000000;
+	-fx-fill: #FDA232;
 	-fx-border-color: #323232 transparent #323232 transparent;
-	-fx-border-width: 1 0 1 0;
+/*	-fx-border-width: 1 0 1 0;*/
 }
-
+/* titledPane,文字颜色 左侧折叠面板的title 文字颜色, 文字的颜色不能继承，只能给到最终的对象赋值 #FDA232 */
+.myTitleTxtActiveColor .title .text {
+	-fx-fill: #FDA232;
+}
 /* 查找替换面板 */
 .myFindPane {
 	-fx-background-color: #161616;
@@ -468,4 +468,9 @@ FlowPane TextField {
 
 .myCleanBtn:hover {
 	-fx-background-color: transparent;
+}
+
+/*选中按钮给一个高亮颜色下划线*/
+.activated-btn{
+    -fx-border-color: transparent transparent #FDA232 transparent ;
 }

@@ -17,8 +17,13 @@
 .tab:selected {
     -fx-background-color:  #323232 ; 
     -fx-border-color: transparent transparent #059BCE transparent ;
-    -fx-border-width : 2
+    -fx-border-width : 3
+ /*   -fx-fill: #0595ff;*/
 }
+/* 选择 tab 的文件颜色 */
+/*.tab:selected .tab-label .text{
+    -fx-fill: #059BCE;
+}*/
 
 .tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
     -fx-border-width: 1px 1px 1px 1px;

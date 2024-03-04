@@ -362,7 +362,10 @@ public class SheetDataValue {
 			var fieldName = tfp.getColumnName();
 			var remarks = tfp.getRemarks();
 			SheetFieldPo sfpo = new SheetFieldPo();
-			//TODO
+			//TODO 如果没有remarks 就用字段名称
+			if(StrUtils.isNullOrEmpty(remarks)){
+				remarks = fieldName;
+			}
 			sfpo.setDbinfoRemark(remarks);
 			// 字段名称
 			sfpo.setDbinfoFieldName(fieldName);
