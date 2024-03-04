@@ -41,7 +41,6 @@ public class TextBottomSheet {
      */
     public static MyBottomSheet tabPaneSheet(String titleName, List<String > nodeNamelist , Map<String, String> map){
         var mtb = new MyBottomSheet(titleName);
-        // 表格上面的按钮, 暂时先不显示操作按钮
         mtb.getTableData().setLock(true);  // 在设置操作按钮前, 指定锁按钮的状态
         TabPane tabPane = new TabPane();
         JFXButton saveBtn = saveBtnByTabPane(titleName, tabPane);
@@ -132,7 +131,6 @@ public class TextBottomSheet {
     @Deprecated
     public static MyBottomSheet multiplePaneSheet(String titleName, List<String > nodeNamelist , Map<String, String> map){
         var mtb = new MyBottomSheet(titleName);
-        // 表格上面的按钮, 暂时先不显示操作按钮
         mtb.getTableData().setLock(true);  // 在设置操作按钮前, 指定锁按钮的状态
         List<Node> btns = switchNodeBtns(nodeNamelist,map, mtb);
 
@@ -155,7 +153,6 @@ public class TextBottomSheet {
         var mtb = new MyBottomSheet(titleName);
         SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
         StackPane sp = sqlArea.getCodeAreaPane(text, allowEdit);
-        // 表格上面的按钮, 暂时先不显示操作按钮
         mtb.getTableData().setLock(true);  // 在设置操作按钮前, 指定锁按钮的状态
         mtb.operatePane(List.of(saveBtn(titleName, sqlArea))); // 没有操作按钮
         mtb.tabVBoxAddComponentView(sp);
@@ -174,7 +171,6 @@ public class TextBottomSheet {
         var mtb = new MyBottomSheet(titleName);
         SqluckyEditor sqlArea =  HighLightingEditorUtils.javaEditor();
         StackPane sp = sqlArea.getCodeAreaPane(text, allowEdit);
-        // 表格上面的按钮, 暂时先不显示操作按钮
         mtb.getTableData().setLock(true);  // 在设置操作按钮前, 指定锁按钮的状态
         mtb.operatePane(List.of(saveBtn(titleName, sqlArea))); // 没有操作按钮
         mtb.tabVBoxAddComponentView(sp);
@@ -219,7 +215,6 @@ public class TextBottomSheet {
                     titleName = ca.getTitleName();
                     text =  ca.getText();
                 }
-//                String text = func.apply(""); //sqlArea.getCodeArea().getText();
                 if(StrUtils.isNotNullOrEmpty(text)){
                     File file = FileOrDirectoryChooser.showDirChooser("Save", ComponentGetter.primaryStage); // showSaveDefault
                     if (file != null) {
@@ -235,6 +230,7 @@ public class TextBottomSheet {
 
         return saveBtn;
     }
+
     public static JFXButton  saveBtnByTabPane(String title,TabPane tabPane) {
         JFXButton saveBtn = new JFXButton("Save");
         saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
@@ -250,14 +246,6 @@ public class TextBottomSheet {
                     text =  sqlArea.getCodeArea().getText();
                 }
 
-//                if( bottomVBox.getChildren().size() > 1){
-//                    StackPane codeAreaPane  = (StackPane) bottomVBox.getChildren().get(1);
-//                    VirtualizedScrollPane vsp = (VirtualizedScrollPane) codeAreaPane.getChildren().get(0);
-//                    MyCodeArea ca = (MyCodeArea) vsp.getContent();
-//                    titleName = ca.getTitleName();
-//                    text =  ca.getText();
-//                }
-//                String text = func.apply(""); //sqlArea.getCodeArea().getText();
                 if(StrUtils.isNotNullOrEmpty(text)){
                     File file = FileOrDirectoryChooser.showDirChooser("Save", ComponentGetter.primaryStage); // showSaveDefault
                     if (file != null) {
