@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
+import net.tenie.Sqlucky.sdk.sql.SqlParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -110,7 +111,7 @@ public class RunSQLHelper {
 				allsqls = SqluckyAppDB.epurateSql(sqlstr);
 			} else {
 				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
-				allsqls = SqluckyAppDB.willExecSql(state.getIsCurrentLine());
+				allsqls = SqluckyAppDB.willExecSql( ! state.getIsCurrentLine());
 			}
 			// 执行sql SqluckyConnector
 			tmpSqlConn = state.getSqlConn();
@@ -344,6 +345,39 @@ public class RunSQLHelper {
 		thread = createThread(RunSQLHelper::runMain, state);
 		thread.start();
 	}
+
+	//
+	public static void  runAction(){
+		String selectStr = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
+		// 没有选中文本, 获取当前行sql是否合法, 合法执行当前行
+		if(StrUtils.isNullOrEmpty(selectStr)){
+			String str = MyEditorSheetHelper.getCurrentLineText();
+			System.out.println(str);
+			boolean valid = SqlParser.isValidSql(str);
+			if(valid){
+				MyEditorSheetHelper.selectCurrentLine();
+				Platform.runLater(()->
+						RunSQLHelper.runSQLMethod(null, null, false, true) );
+				return;
+			}
+
+		}else { // 执行选中的sql
+			Platform.runLater(()->
+					RunSQLHelper.runSQLMethod(null, null, false, true)
+			);
+			return;
+		}
+		Platform.runLater(()->RunSQLHelper.runSQLMethod());
+	}
+
+
+	public static void runActionCurrentLine() {
+		MyEditorSheetHelper.selectCurrentLine();
+		Platform.runLater(() -> {
+			RunSQLHelper.runSQLMethod(null, null, false, true);
+		});
+	}
+
 
 	public static void runSQLMethod(String sqlv, String tabIdxv, boolean isCreateFunc, Boolean isCurrentLine) {
 		if (checkDBConn()){

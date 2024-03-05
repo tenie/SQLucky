@@ -289,7 +289,7 @@ public class SheetDataValue {
 
 
 	// 获取sql中所有表的 表信息对象
-	public List<TablePo> getSqlTableInfoList() {
+	public List<TablePo> getSqlAllTableInfoList() {
 		if(sqlTableInfoList != null ){
 			return  sqlTableInfoList;
 		}
@@ -352,9 +352,13 @@ public class SheetDataValue {
         return tablePo;
 	}
 
+	/**
+	 * 获取主表中的表字段信息
+	 * @return
+	 */
 	public List<SheetFieldPo> getMainTableFields() {
 		List<SheetFieldPo> ls = new ArrayList<>();
-//
+		// 获取主表的表信息
 		TablePo tablePo = getSqlTableInfo();
 		LinkedHashSet<TableFieldPo> fieldList = tablePo.getFields();
 		for (var tfp  : fieldList){
@@ -366,6 +370,7 @@ public class SheetDataValue {
 			if(StrUtils.isNullOrEmpty(remarks)){
 				remarks = fieldName;
 			}
+			// 备注
 			sfpo.setDbinfoRemark(remarks);
 			// 字段名称
 			sfpo.setDbinfoFieldName(fieldName);
@@ -401,6 +406,13 @@ public class SheetDataValue {
 					sfpo.setDbinfoRemark(remarkStr);
 					// 字段名称
 					sfpo.setDbinfoFieldName(tmp);
+					// java 中的类型字符串
+					// 数据库的类型转换为java的类型(字符串)
+					sfpo.setColumnType(javatype);
+					sfpo.setScale(tfp.getScale());
+					String typeStr = CommonUtils.dbTypeToJavaType(sfpo);
+					sfpo.setJavaType(typeStr);
+
 					// 字符是不是时间类型
 					boolean isDateType = CommonUtils.isDateAndDateTime(javatype);
 					sfpo.setDbinfoIsDateType(isDateType);
@@ -415,16 +427,15 @@ public class SheetDataValue {
 	}
 
 	LinkedHashSet<TableFieldPo> allFields = null;
-	/**
-	 * 所有表的所有字段
-	 * @return
-	 */
+
+	//  获取sql 中 所有表的字段信息集合
 	private LinkedHashSet<TableFieldPo> allTableAllFields(){
 		if(allFields != null ){
 			return  allFields;
 		}
 		allFields = new LinkedHashSet<>();
-		List<TablePo> allTabs = getSqlTableInfoList();
+		// 获取sql中所有表的所有字段信息
+		List<TablePo> allTabs = getSqlAllTableInfoList();
 		for(TablePo tp : allTabs){
 			LinkedHashSet<TableFieldPo> tmpSet = 	tp.getFields();
 			allFields.addAll(tmpSet);
@@ -432,40 +443,61 @@ public class SheetDataValue {
 		return allFields;
 	}
 
-	private boolean fetchTableFieldInfo = false;
+//	private boolean fetchTableFieldInfo = false;
+
+
 	// 给列的 备注 赋值(数据库中的备注)
+
+	List<SheetFieldPo > colssInfoList ;
+	/**
+	 * 获取字段在数据库中的额外字段信息
+	 * @return
+	 */
+
 	public List<SheetFieldPo> getColssInfos(){
+		// 界面表格上显示的字段列表
 		List<SheetFieldPo>  fls  = this.getColss();
-		if(fetchTableFieldInfo){
-			return fls;
+		if(colssInfoList != null ){
+			return colssInfoList;
+		}else {
+			colssInfoList = new ArrayList<>();
 		}
 
-		List<TablePo> ls = getSqlTableInfoList();
-		// 所有表的字段集中起来
+		//  获取sql 中 所有表的字段信息集合
 		LinkedHashSet<TableFieldPo> allFields = allTableAllFields();
 
-
+		// 遍历 显示字段, 使用使用数据库中的信息, 给显示字段附加额外的信息
 		for(var sfpo: fls){
 			String colName = sfpo.getColumnLabel().get();
+			String remarkStr = colName;
+			String typeStr = "String";
 			for( var tfp : allFields){
 				var fn = tfp.getFieldName();
 				if(fn.equals(colName)){
-					int javatype = tfp.getDataType();
-					String remarkStr = tfp.getRemarks();
-					// 备注
-					sfpo.setDbinfoRemark(remarkStr);
-					// 字段名称
-					sfpo.setDbinfoFieldName(colName);
+					int javatype  = tfp.getDataType();
+					remarkStr = tfp.getRemarks();
+
+					// java 中的类型字符串
+					// 数据库的类型转换为java的类型(字符串)
+					sfpo.setColumnType(javatype);
+					sfpo.setScale(tfp.getScale());
+					typeStr = CommonUtils.dbTypeToJavaType(sfpo);
+
 					// 字符是不是时间类型
 					boolean isDateType = CommonUtils.isDateAndDateTime(javatype);
 					sfpo.setDbinfoIsDateType(isDateType);
 					break;
 				}
 			}
+			// 备注
+			sfpo.setDbinfoRemark(remarkStr);
+			// 字段名称
+			sfpo.setDbinfoFieldName(colName);
+			sfpo.setJavaType(typeStr);
+			colssInfoList .add(sfpo);
 		}
 
-		fetchTableFieldInfo = true;
-		return fls;
+		return colssInfoList;
 	}
 
 }

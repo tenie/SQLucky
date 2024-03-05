@@ -16,6 +16,18 @@ import java.util.*;
 
 public class SqlParser {
 
+    public static boolean isValidSql(String sql){
+        try {
+            Statement   stmt =  CCJSqlParserUtil.parse( sql);
+            System.out.println(stmt);
+            return  true;
+        } catch (JSQLParserException e) {
+            e.printStackTrace();
+        }
+        return false;
+
+    }
+
     /**
      * 获取sql中的查询列名称
      * @param sqlStr
@@ -96,7 +108,8 @@ public class SqlParser {
 
 
     public static void main(String[] args) {
-        String sql = "SELECT a.col1 , a.col2 AS b, a.col3 AS c FROM ffo.table a left join tab2 t on a.id = t.pid WHERE a.col_1 = 10 AND a.col_2 = 20 AND a.col_3 = 30";
+        String sql = "SELECT a.col1 , a.col2 AS b, a.col3 AS c, FROM ffo.table a left join tab2 t on a.id = t.pid WHERE a.col_1 = 10 AND a.col_2 = 20 AND a.col_3 = 30";
+        isValidSql(sql);
         List<String > vals = selectSqlWhereColumn(sql);
 
 //        List<String > vals = selectQueryColumn(sql, true);

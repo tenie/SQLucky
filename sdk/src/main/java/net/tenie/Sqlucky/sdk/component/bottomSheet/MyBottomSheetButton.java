@@ -112,7 +112,7 @@ public class MyBottomSheetButton {
             // excel 导入
             MenuButton importFileBtn = new MenuButton();
             importFileBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
-            importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
+//            importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
             importFileBtn.setDisable(disable);
 
             MenuItem excelImportBtn = new MenuItem("Import Excel");
@@ -144,7 +144,7 @@ public class MyBottomSheetButton {
             // 导出
             MenuButton exportBtn = new MenuButton();
             exportBtn.setGraphic(IconGenerator.svgImageDefActive("share-square-o"));
-            exportBtn.setTooltip(MyTooltipTool.instance("Export data"));
+//            exportBtn.setTooltip(MyTooltipTool.instance("Export data"));
             exportBtn.setDisable(disable);
 
             // 导出sql

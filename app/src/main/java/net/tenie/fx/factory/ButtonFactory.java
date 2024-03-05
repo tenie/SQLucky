@@ -84,7 +84,8 @@ public class ButtonFactory {
 		findSQlTxt.setOnMouseClicked(e -> CommonUtils.findReplace(false));
 
 		runbtn.setOnMouseClicked(e -> {
-			RunSQLHelper.runSQLMethod();
+			RunSQLHelper.runAction();
+//			RunSQLHelper.runSQLMethod();
 		});
 //		runLinebtn.setOnMouseClicked(e -> {
 //			RunSQLHelper.runCurrentLineSQLMethod();
@@ -157,7 +158,7 @@ public class ButtonFactory {
 
 		rowsTextField.getStyleClass().add("myTextField");
 		rowsTextField.setMaxWidth(90);
-		rowsTextField.setTooltip(MyTooltipTool.instance("Load query data rows, suggest <10000 "));
+		rowsTextField.setTooltip(MyTooltipTool.instance("Load query data rows, suggest < 10000 "));
 		rowsTextField.setText(ConfigVal.MaxRows + "");
 
 		TextFieldSetup.setMaxLength(rowsTextField, 9);

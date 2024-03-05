@@ -187,9 +187,10 @@ public class TextBottomSheet {
         saveBtn.setOnAction(event -> {
             try {
                 String text = sqlArea.getCodeArea().getText();
-                File file = FileOrDirectoryChooser.showSaveText("Save", title, ComponentGetter.primaryStage); // showSaveDefault
+                File file = FileOrDirectoryChooser.showDirChooser("Save", ComponentGetter.primaryStage); // showSaveDefault
                 if (file != null) {
-                    FileTools.save(file, text);
+                    File saveFile = new File(file.getAbsolutePath(),title );
+                    FileTools.save(saveFile, text);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

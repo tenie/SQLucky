@@ -414,13 +414,15 @@ public class SqluckyAppDB {
 	public static List<SqlData> willExecSql(boolean isAll) {
 		List<SqlData> sds = new ArrayList<>();
 		String str = "";
+		String selectStr = "";
 		int start = 0;
 		CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
 		if(isAll) { //所有文本
 			str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 		}else {
 			// 获取选中的文本
-			str = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
+			selectStr = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
+			str = selectStr;
 		}
 		
 		
@@ -429,8 +431,12 @@ public class SqluckyAppDB {
 			str = MyEditorSheetHelper.getCurrentLineText();
 		} 
 		if (str != null && str.length() > 0) {
-			start = codeArea.getSelection().getStart();
-		} 
+			if(StrUtils.isNotNullOrEmpty(selectStr)){  // 选中的文本的开始位置
+				start = codeArea.getSelection().getStart();
+			}else { // 没有选中, 就是光标所在行的开始位置
+				start = MyEditorSheetHelper.cursorCurrentLineAtAreaStart(codeArea);
+			}
+		}
 		
 		// 去除注释, 包注释字符串转换为空白字符串
 //		str = MyEditorSheetHelper.trimCommentToSpace(str, "--");

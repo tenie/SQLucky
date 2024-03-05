@@ -406,12 +406,21 @@ public class MyEditorSheetHelper {
 			rs = getSelectLineText();
 		} else {
 			int idx = code.getCurrentParagraph();
-			var val = code.getParagraph(idx);
+			Paragraph val = code.getParagraph(idx);
 			List<String> ls = val.getSegments();
 			rs = ls.get(0);
 		}
 
 		return rs;
+	}
+
+
+	// 光标所在行的首位置, 先获光标所在行, 然后移动到所在行的行首, 然后重新获取光标的位置返回
+	public static int cursorCurrentLineAtAreaStart(CodeArea codeArea ){
+		int paragraphIdx = codeArea.getCurrentParagraph();
+		codeArea.moveTo(paragraphIdx, 0);
+		int start = codeArea.getSelection().getStart();
+		return start;
 	}
 
 
@@ -465,11 +474,11 @@ public class MyEditorSheetHelper {
 	//选中光标所在行的数据
 	public static void selectCurrentLine() {
 		CodeArea code = getCodeArea();
-		String st = code.getSelectedText();
-		if (StrUtils.isNullOrEmpty(st)) {
-			code.selectLine();
-
-		}  
+		code.selectLine();
+//		String st = code.getSelectedText();
+//		if (StrUtils.isNullOrEmpty(st)) {
+//			code.selectLine();
+//		}
 
 	}
 	

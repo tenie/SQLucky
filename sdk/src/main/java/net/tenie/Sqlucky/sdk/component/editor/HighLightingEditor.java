@@ -138,11 +138,6 @@ public class HighLightingEditor implements SqluckyEditor {
 					}
 				}
 			}
-
-			// 文本缩进
-			if (e.getCode() == KeyCode.TAB) {
-				codeAreaTab(e, codeArea);
-			}
 			// 按 "." 跳出补全提示框
 			else if (e.getCode() == KeyCode.PERIOD) {
 				int anchor = codeArea.getAnchor();
@@ -160,34 +155,37 @@ public class HighLightingEditor implements SqluckyEditor {
 					});
 				};
 				CommonUtils.runThread(caller);
+				return;
+			}
 
-			} else if (e.getCode() == KeyCode.A) {
-				codeAreaCtrlShiftA(e);
-			} else if (e.getCode() == KeyCode.E) {
-				codeAreaCtrlShiftE(e);
-			} else if (e.getCode() == KeyCode.W) {
-				codeAreaCtrlShiftW(e);
-			} else if (e.getCode() == KeyCode.U) {
-				codeAreaCtrlShiftU(e);
-			} else if (e.getCode() == KeyCode.K) {
-				codeAreaCtrlShiftK(e);
-			} else if (e.getCode() == KeyCode.D) {
-				codeAreaAltShiftD(e);
-				codeAreaCtrlShiftD(e);
-			} else if (e.getCode() == KeyCode.H) {
-				codeAreaCtrlShiftH(e);
-			} else if (e.getCode() == KeyCode.ENTER) {
-				if( !(e.isControlDown()|| e.isAltDown() || e.isShiftDown() || e.isShortcutDown())) {
-					addNewLine(e);
-				}
-				
-			} else if (e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE) {
+			if (e.getCode() != KeyCode.SHIFT &&
+					e.getCode() != KeyCode.CONTROL &&
+					e.getCode() != KeyCode.ALT) {
+				// 文本缩进
+				if (e.getCode() == KeyCode.TAB) {
+					codeAreaTab(e, codeArea);
+				} else if (e.getCode() == KeyCode.A) {
+					codeAreaCtrlShiftA(e);
+				} else if (e.getCode() == KeyCode.E) {
+					codeAreaCtrlShiftE(e);
+				} else if (e.getCode() == KeyCode.W) {
+					codeAreaCtrlShiftW(e);
+				} else if (e.getCode() == KeyCode.U) {
+					codeAreaCtrlShiftU(e);
+				} else if (e.getCode() == KeyCode.K) {
+					codeAreaCtrlShiftK(e);
+				} else if (e.getCode() == KeyCode.D) {
+					codeAreaAltShiftD(e);
+					codeAreaCtrlShiftD(e);
+				} else if (e.getCode() == KeyCode.H) {
+					codeAreaCtrlShiftH(e);
+				} else if (e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE) {
 //				codeAreaBackspaceDelete(e, cl);
-			} else if (e.getCode() == KeyCode.V) { // 黏贴的时候, 防止页面跳到自己黏贴
-				codeAreaCtrlV(e);
-			} else if (e.getCode() == KeyCode.Z) { // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
+				} else if (e.getCode() == KeyCode.V) { // 黏贴的时候, 防止页面跳到自己黏贴
+					codeAreaCtrlV(e);
+				} else if (e.getCode() == KeyCode.Z) { // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
 //				codeAreaCtrlZ(e, cl);
-			} else {
+				} else {
 //				Consumer<Integer> caller = x -> {
 //					if (myAreaTab != null) {
 //						Platform.runLater(() -> {
@@ -211,7 +209,7 @@ public class HighLightingEditor implements SqluckyEditor {
 //				ecode.isWhitespaceKey();
 //				
 //				if (!e.isShortcutDown() && !e.isAltDown() && !e.isControlDown() && !e.isShiftDown()
-//						&& e.getCode() != KeyCode.CAPS && e.getCode() != KeyCode.CAPS 
+//						&& e.getCode() != KeyCode.CAPS && e.getCode() != KeyCode.CAPS
 //						&& (e.getCode().isLetterKey() || e.getCode().isDigitKey() || e.getCode().isKeypadKey())
 //						) {
 //
@@ -232,9 +230,14 @@ public class HighLightingEditor implements SqluckyEditor {
 //					delayHighLighting(caller, 600, 0);
 //				}
 
-				delayHighLighting(this::textChangeAfterAction, 600, 0);
-			}
+					delayHighLighting(this::textChangeAfterAction, 600, 0);
+				}
+			} else if (e.getCode() == KeyCode.ENTER) {
+				if (!(e.isControlDown() || e.isAltDown() || e.isShiftDown() || e.isShortcutDown())) {
+					addNewLine(e);
+				}
 
+			}
 		});
 		// TODO 输入事件
 //		codeArea.textProperty().addListener(cl);

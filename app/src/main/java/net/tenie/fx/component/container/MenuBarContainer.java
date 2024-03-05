@@ -1,5 +1,6 @@
 package net.tenie.fx.component.container;
 
+import net.tenie.Sqlucky.sdk.sql.SqlParser;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -109,15 +110,13 @@ public class MenuBarContainer {
 		MenuItem runMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL"));
 		runMenu.setGraphic(IconGenerator.svgImageDefActive("play"));
 		runMenu.setOnAction(value -> {
-			MyEditorSheetHelper.selectCurrentLine();
-			Platform.runLater(()->RunSQLHelper.runSQLMethod());
-			
+			RunSQLHelper.runAction();
 		});
-//		MenuItem runCurrentMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL Current Line"));
-//		runCurrentMenu.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
-//		runCurrentMenu.setOnAction(value -> {
-//			RunSQLHelper.runCurrentLineSQLMethod();
-//		});
+		MenuItem runCurrentMenu = new MenuItem(StrUtils.MenuItemNameFormat("Run SQL Current Line"));
+		runCurrentMenu.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
+		runCurrentMenu.setOnAction(value -> {
+			RunSQLHelper.runActionCurrentLine();
+		});
 
 		MenuItem codeAutocompletionMenu = new MenuItem(StrUtils.MenuItemNameFormat("Code Autocompletion"));
 		codeAutocompletionMenu.setOnAction(value -> {
@@ -239,13 +238,13 @@ public class MenuBarContainer {
 		});
 		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
 //runCurrentMenu ,
-		mn.getItems().addAll(runMenu, codeAutocompletionMenu, nce, cce, new SeparatorMenuItem(), Find,
+		mn.getItems().addAll(runMenu,runCurrentMenu , codeAutocompletionMenu, nce, cce, new SeparatorMenuItem(), Find,
 				FindReplace, new SeparatorMenuItem(), Format, commentCode, new SeparatorMenuItem(), UpperCase,
 				LowerCase, underscore, Hump, new SeparatorMenuItem(), cursorMenu, enditLine);
 
 		// 给菜单按钮绑定快捷
 		KeyBindingCache.menuItemBinding(runMenu);
-//		KeyBindingCache.menuItemBinding(runCurrentMenu);
+		KeyBindingCache.menuItemBinding(runCurrentMenu);
 		KeyBindingCache.menuItemBinding(codeAutocompletionMenu);
 
 		KeyBindingCache.menuItemBinding(nce);
