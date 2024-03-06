@@ -117,6 +117,7 @@ public class MyEditorSheet {
 
 		StackPane pane = sqluckyEditor.getCodeAreaPane();
 		vbox = new VBox();
+		vbox.setSpacing(3);
 		vbox.getChildren().add(pane);
 		VBox.setVgrow(pane, Priority.ALWAYS);
 		tab.setContent(vbox);

@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 
+import javafx.geometry.Insets;
+import javafx.scene.layout.Priority;
 import net.tenie.Sqlucky.sdk.component.*;
 import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheetAction;
@@ -101,7 +103,7 @@ public class DataModelOperate {
 			queryAction();
 		});
 		// 查询文本输入框
-		txt.setPrefWidth(230);
+//		txt.setPrefWidth(230);
 		txt.getStyleClass().add("myTextField");
 		// 文本输入监听
 		txt.textProperty().addListener((o, oldStr, newStr) -> {
@@ -160,6 +162,8 @@ public class DataModelOperate {
 
 		btnHbox.getChildren().addAll(queryBtn, menuButton, delBtn);
 		filterHbox.getChildren().addAll(queryExecBtn, txtAP);
+		HBox.setHgrow(txtAP, Priority.ALWAYS);
+		filterHbox.setPadding(new Insets(3,3,5,3));
 		optionVbox.getChildren().addAll(btnHbox);
 	}
 

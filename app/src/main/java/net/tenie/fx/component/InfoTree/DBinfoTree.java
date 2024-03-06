@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import javafx.scene.layout.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.Caret.CaretVisibility;
@@ -24,10 +25,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
@@ -69,7 +66,7 @@ public class DBinfoTree {
 	public static VBox operateVbox  ;
 
 	public static DBinfoTreeFilter dbInfoTreeFilter; 
-	public static AnchorPane dbInfoTreeFilterPane;
+	public static HBox dbInfoTreeFilterPane;
 	// 操作按钮集合
 	public static List<Node> operateBtns ;
 	

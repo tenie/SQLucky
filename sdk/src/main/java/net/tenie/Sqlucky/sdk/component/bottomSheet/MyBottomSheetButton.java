@@ -21,6 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MyBottomSheetButton {
+
+    public static JFXButton createDockBtn(MyBottomSheet sheet){
+        // 独立窗口
+        JFXButton dockSideBtn = new JFXButton();
+        dockSideBtn.setGraphic(IconGenerator.svgImageDefActive("material-filter-none"));
+        dockSideBtn.setOnMouseClicked(e -> {
+            MyBottomSheetAction.dockSide(sheet);
+        });
+        dockSideBtn.setTooltip(MyTooltipTool.instance("Dock side"));
+        return dockSideBtn;
+    }
+
+
     public static List<Node> sqlDataOptionBtns(MyBottomSheet sheet, boolean disable, boolean isCreate) {
         List<Node> ls = new ArrayList<>();
         // 锁
@@ -101,13 +114,13 @@ public class MyBottomSheetButton {
             copyBtn.setDisable(disable);
 
             // 独立窗口
-            JFXButton dockSideBtn = new JFXButton();
-            dockSideBtn.setGraphic(IconGenerator.svgImageDefActive("material-filter-none"));
-            dockSideBtn.setOnMouseClicked(e -> {
-                MyBottomSheetAction.dockSide(sheet);
-            });
-            dockSideBtn.setTooltip(MyTooltipTool.instance("Dock side"));
-            dockSideBtn.setDisable(disable);
+//            JFXButton dockSideBtn = new JFXButton();
+//            dockSideBtn.setGraphic(IconGenerator.svgImageDefActive("material-filter-none"));
+//            dockSideBtn.setOnMouseClicked(e -> {
+//                MyBottomSheetAction.dockSide(sheet);
+//            });
+//            dockSideBtn.setTooltip(MyTooltipTool.instance("Dock side"));
+//            dockSideBtn.setDisable(disable);
 
             // excel 导入
             MenuButton importFileBtn = new MenuButton();
@@ -258,7 +271,7 @@ public class MyBottomSheetButton {
             ls.add(addBtn);
             ls.add(minusBtn);
             ls.add(copyBtn);
-            ls.add(dockSideBtn);
+//            ls.add(dockSideBtn);
             ls.add(importFileBtn);
 
             ls.add(exportBtn);

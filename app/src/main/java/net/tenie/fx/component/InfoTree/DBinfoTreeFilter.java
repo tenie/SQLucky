@@ -4,11 +4,13 @@ import com.jfoenix.controls.JFXButton;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Button;
+import javafx.geometry.Insets;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.component.ConnItemContainer;
@@ -16,6 +18,7 @@ import net.tenie.Sqlucky.sdk.po.component.ConnItemDbObjects;
 import net.tenie.Sqlucky.sdk.po.component.MyTreeItem;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
@@ -46,12 +49,11 @@ public class DBinfoTreeFilter {
 	 * @param treeView
 	 * @return
 	 */
-	public AnchorPane createFilterPane(TreeView<TreeNodePo> treeView) {
+	public HBox createFilterPane(TreeView<TreeNodePo> treeView) {
 		txt = new TextField();
 		ComponentGetter.dbInfoFilter = txt;
-		AnchorPane filterPane = new AnchorPane();
-		filterPane.setPrefHeight(30);
-		filterPane.setMinHeight(30);
+		HBox filterPane = new HBox();
+		filterPane.setPadding(new Insets(3,3,5,3));
 		JFXButton query = new JFXButton();
 		query.setGraphic(IconGenerator.svgImageDefActive("search"));
 		query.setOnAction(e -> {
@@ -62,36 +64,11 @@ public class DBinfoTreeFilter {
 		txt.setPrefHeight(25);
 		txt.setMaxHeight(25);
 		txt.getStyleClass().add("myTextField");
-		int x = 0;
-		query.setLayoutX(x);
-		query.setLayoutY(1);
-		x += 35;
-		txt.setLayoutX(x);
-		txt.setLayoutY(1);
 
-		Button clean = new Button();
+		AnchorPane textFieldPane = UiTools.textFieldAddCleanBtn(txt);
+		HBox.setHgrow(textFieldPane, Priority.ALWAYS);
 
-		AnchorPane.setLeftAnchor(clean, 220.0);
-		AnchorPane.setTopAnchor(clean, 5.0);
-		clean.setMaxSize(12, 12);
-
-		clean.setGraphic(IconGenerator.svgImageUnactive("times-circle", 14));
-		clean.getStyleClass().add("myCleanBtn");
-		clean.setVisible(false); // clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
-
-		clean.setOnAction(e -> {
-			txt.clear();
-		});
-
-		filterPane.setOnMouseEntered(e -> {
-			clean.setVisible(true);
-		});
-		filterPane.setOnMouseExited(e -> {
-			clean.setVisible(false);
-		});
-
-		filterPane.getChildren().addAll(query, txt, clean);
-
+		filterPane.getChildren().addAll(query, textFieldPane);
 		txt.textProperty().addListener((o, oldVal, newVal) -> {
 			ComponentGetter.dbTitledPane.setExpanded(true);
 			// 缓存,

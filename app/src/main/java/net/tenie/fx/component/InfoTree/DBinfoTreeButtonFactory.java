@@ -113,7 +113,7 @@ public class DBinfoTreeButtonFactory {
 	}
 	
 	public static void queryBtnAction() {
-		AnchorPane filter  = DBinfoTree.dbInfoTreeFilterPane;
+		HBox filter  = DBinfoTree.dbInfoTreeFilterPane;
 		List<Node> btns =  DBinfoTree.operateBtns;// new ArrayList<>();
 		VBox operateVbox =   DBinfoTree.operateVbox; // new VBox();
 		TextField	filterTextField =DBinfoTree.filterTextField;
@@ -124,7 +124,7 @@ public class DBinfoTreeButtonFactory {
 	}
 	
 	public static void queryBtnHide() {
-		AnchorPane filter  = DBinfoTree.dbInfoTreeFilterPane;
+		HBox filter  = DBinfoTree.dbInfoTreeFilterPane;
 		List<Node> btns =  DBinfoTree.operateBtns;// new ArrayList<>();
 		VBox operateVbox =   DBinfoTree.operateVbox; // new VBox();
 		

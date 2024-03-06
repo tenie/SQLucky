@@ -340,7 +340,8 @@ public class MyBottomSheet {
 		JFXButton hideBottom = tableData.getHideBottom();
 		// 锁
 		JFXButton lockbtn = tableData.getLockBtn();
-		btnHbox.getChildren().add(lockbtn);
+		JFXButton dockSideBtn =	MyBottomSheetButton.createDockBtn(this);
+		btnHbox.getChildren().addAll(lockbtn, dockSideBtn);
 		btnHbox.setPadding(new Insets(3,0,3,0));
 		// 将按钮放入容器
 		if (btnLs != null) {

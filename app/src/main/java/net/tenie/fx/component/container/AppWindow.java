@@ -1,5 +1,6 @@
 package net.tenie.fx.component.container;
 
+import javafx.scene.layout.*;
 import org.controlsfx.control.MasterDetailPane;
 
 import javafx.application.Platform;
@@ -10,11 +11,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -40,7 +36,7 @@ public class AppWindow {
 //	public static DataViewContainer dataView;
 	public static TreeView<TreeNodePo> treeView;
 	public static DBinfoTree dbInfoTree;
-	public static AnchorPane dbInfoTreeFilter;
+	public static HBox dbInfoTreeFilter;
 	public static volatile AppWindow app;
 
 	public AppWindow() {

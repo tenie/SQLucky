@@ -15,6 +15,8 @@ public class UiTools {
 	 */
 	public static AnchorPane textFieldAddCleanBtn(TextField txt) {
 		AnchorPane filterPane = new AnchorPane();
+		txt.prefWidthProperty().bind(filterPane.widthProperty());
+
 		filterPane.setPrefHeight(25);
 		filterPane.setMinHeight(25);
 
@@ -43,6 +45,12 @@ public class UiTools {
 
 		return filterPane;
 	}
+	public static AnchorPane textFieldAddCleanBtn(TextField txt , Double prefWidth) {
+		AnchorPane ap = textFieldAddCleanBtn(txt);
+		ap.setPrefWidth(prefWidth);
+		return ap;
+	}
+
 
 	// 选取文件按钮
 	public static Button openExcelFileBtn(TextField tfFilePath, Stage stage) {

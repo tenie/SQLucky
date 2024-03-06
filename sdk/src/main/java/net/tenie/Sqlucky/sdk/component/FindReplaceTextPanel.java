@@ -309,8 +309,7 @@ public class FindReplaceTextPanel {
 			countAction();
 		});
 
-		AnchorPane replaceFieldPane = UiTools.textFieldAddCleanBtn(replaceTextField);
-
+		AnchorPane replaceFieldPane = UiTools.textFieldAddCleanBtn(replaceTextField, 250.0);
 		replaceBox.getChildren().add(query);
 		replaceBox.getChildren().add(replaceFieldPane);
 
@@ -324,7 +323,7 @@ public class FindReplaceTextPanel {
 	public FindReplaceTextPanel(boolean isReplace, String findText, MyEditorSheet sheet) {
 		AnchorPane findAnchorPane = new AnchorPane();
 		CommonUtils.addCssClass(findAnchorPane, "myFindPane");
-		findAnchorPane.prefHeight(30);
+//		findAnchorPane.prefHeight(40);
 		JFXButton query = new JFXButton();
 		sensitiveCheckBox = new JFXCheckBox("Sensitive");
 		query.setGraphic(IconGenerator.svgImageDefActive("search"));
@@ -341,8 +340,6 @@ public class FindReplaceTextPanel {
 		}
 
 		textField.setText(findText);
-		textField.setPrefWidth(250);
-		textField.setPrefHeight(15);
 		textField.getStyleClass().add("myFindTextField");
 		// 回车键出发查找下一个
 		textField.setOnKeyPressed(val -> {
@@ -380,7 +377,7 @@ public class FindReplaceTextPanel {
 			}
 		});
 
-		AnchorPane textFieldPane = UiTools.textFieldAddCleanBtn(textField);
+		AnchorPane textFieldPane = UiTools.textFieldAddCleanBtn(textField, 250.0);
 
 		HBox findBox = new HBox();
 		findBox.getChildren().addAll(query,textFieldPane,down, up, sensitiveCheckBox, countBtn, countLabel);
