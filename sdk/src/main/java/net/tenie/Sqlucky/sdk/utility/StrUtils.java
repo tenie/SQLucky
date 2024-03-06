@@ -154,18 +154,30 @@ public class StrUtils {
 	// 下划线 轉 驼峰命名
 	public static String underlineCaseCamel(String str) {
 		StringBuilder rs = new StringBuilder();
-		str = str.toLowerCase();
+//		str = str.toLowerCase();
 		boolean tf = false;
+		char previousChar = ' ';
 		for (int i = 0; i < str.length(); i++) {
 			char strChar = str.charAt(i);
+			if( i > 0){
+				previousChar = str.charAt(i -1);
+			}
 			if (strChar == '_') {
 				tf = true;
 			} else {
+				//  下划线之后的匹配
 				if (tf) {
-					if (strChar >= 'A' && strChar <= 'Z') {
-						strChar += 26;
-					} else if (strChar >= 'a' && strChar <= 'z') {
+					// 如果字符是小写字母转换为大写
+					if (strChar >= 'a' && strChar <= 'z') {
 						strChar -= 32;
+					}
+
+				}else{  // 不是下划线就转为小写
+					if(previousChar >= 'a' && previousChar <= 'z'
+							&&  strChar >= 'A' && strChar <= 'Z' ) {
+						previousChar = strChar;
+					}else if (strChar >= 'A' && strChar <= 'Z') {
+						strChar += 32;
 					}
 				}
 				rs.append(strChar);
