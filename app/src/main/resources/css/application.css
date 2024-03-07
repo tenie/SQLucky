@@ -25,9 +25,8 @@
 	-fx-padding: 5px 0px 5px 0px;
 }
 
-
 .root{
-    -fx-font-family: "Monaspace Xenon Var Regular";
+    -fx-font-family: "Monaspace Argon Var Regular";
     -fx-font-size: 11pt;
    /* -fx-font-family: monospace;*/
    /*   -fx-font-size: 11pt;
@@ -37,6 +36,7 @@
 }
 TitledPane .title .text{
     -fx-font-size: 13pt;
+  /*  -fx-font-weight: bold ;*/
 }
 /*
 Label{

@@ -43,7 +43,6 @@ Pane  GridPane {
 /*
 .myTitleTxtActiveColor .title .text {
 	-fx-fill: #0595ff;
-	 -fx-font-family: "Monaspace Argon Var Regular" ;
       -fx-font-weight: bold  ;
 }
 */
@@ -82,7 +81,6 @@ Pane  GridPane {
 	-fx-color: #2B2B2B;
 /*    -fx-font-weight: bold;*/
     -fx-font-size: 14pt;
-  /*  -fx-font-family: "Monaspace Xenon Var Regular" !important;*/
 
 }
 

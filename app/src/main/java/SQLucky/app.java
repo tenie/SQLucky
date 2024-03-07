@@ -341,7 +341,7 @@ public class app extends Application {
         if (args != null && args.length > 0) {
             sysOpenFile = args[0];
         }
-        Font.loadFont(app.class.getResourceAsStream("/css/MonaspaceXenonVarVF.ttf"), 14);
+        Font.loadFont(app.class.getResourceAsStream("/css/MonaspaceArgonVarVF.ttf"), 14);
 
         if (CommonUtils.isLinuxOS()) {
             LauncherImpl.launchApplication(app.class, MyPreloaderGif.class, args);
