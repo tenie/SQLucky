@@ -28,6 +28,7 @@ public class MyBottomSheetButton {
         dockSideBtn.setGraphic(IconGenerator.svgImageDefActive("material-filter-none"));
         dockSideBtn.setOnMouseClicked(e -> {
             MyBottomSheetAction.dockSide(sheet);
+            dockSideBtn.setDisable(true);
         });
         dockSideBtn.setTooltip(MyTooltipTool.instance("Dock side"));
         return dockSideBtn;

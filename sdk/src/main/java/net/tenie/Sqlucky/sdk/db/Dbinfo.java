@@ -237,7 +237,7 @@ public class Dbinfo {
 	}
 
 	public static List<TablePo> fetchAllViewName(Connection conn, String schemaOrCatalog) throws Exception {
-		return fetchAllTableViewName(conn, schemaOrCatalog, false);
+		return 	fetchAllTableViewName(conn, schemaOrCatalog, false);
 	}
 
 	public static List<TablePo> fetchAllViewName(Connection conn) throws Exception {
