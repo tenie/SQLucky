@@ -80,7 +80,7 @@ public class DialogTools {
 			});
 		}
 
-		VBox.setMargin(foot, new Insets(0, 0, 5, 0));
+		VBox.setMargin(foot, new Insets(5, 5, 5, 5));
 		windowVbox.getChildren().add(foot);
 		VBox.setVgrow(textSubVbox, Priority.ALWAYS);
 

@@ -329,6 +329,7 @@ public class TransferDataController implements Initializable {
 
 	// 设置 图标 css
 	private void setGraphicAndCss() {
+		CommonUtils.addCssClass(windowVbox, "transfer-btn");
 		CommonUtils.addCssClass(monBtn, "transfer-btn");
 		CommonUtils.addCssClass(amountTxt, "myTextField");
 		CommonUtils.addCssClass(upSelBtn, "transfer-btn");

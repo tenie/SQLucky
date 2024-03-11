@@ -110,6 +110,12 @@ Pane  GridPane {
 	-fx-border-color: #333333;
 	-fx-border-radius: 3px;
 }
+/*数据迁移窗口边框*/
+.transfer-window-vbox {
+	-fx-border-color: #000000;
+    -fx-border-radius: 3px;
+    -fx-border-width: 3;
+}
 
 CheckBoxTreeItem {
 	-fx-checked-color: red;
