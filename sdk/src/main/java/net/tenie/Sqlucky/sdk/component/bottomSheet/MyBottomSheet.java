@@ -60,9 +60,6 @@ public class MyBottomSheet {
 	AnchorPane buttonAnchorPane ;
 
 	public void clean() {
-//		if (sqlArea != null) {
-//			this.sqlArea = null;
-//		}
 		if (tableData != null) {
 			this.tableData.clean();
 			tableData = null;

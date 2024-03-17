@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.component;
 
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
@@ -113,6 +114,11 @@ public final class ComponentGetter {
 	public static Region iconRight;
 	public static Region iconLeft;
 
+	// 主编辑器中的sqluckyEditor
+	public static SqluckyEditor focusedSqluckyEditor ;
+
+	// codeArea 所在的SqluckyEditor, 有codeArea的
+	public static SqluckyEditor codeAreaSqluckyEditor ;
 
 	public static Statement sqlStatement;
 	public static Region getIconUnActive(String name) {

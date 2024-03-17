@@ -11,6 +11,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import javafx.scene.control.*;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -31,12 +32,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.IndexRange;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -969,26 +964,43 @@ public class CommonUtils {
 
 	}
 
-	// 查找替换
-	public static void findReplace(boolean isReplace, String findStr, MyEditorSheet sheet) {
-		if (sheet == null) {
-			sheet = MyEditorSheetHelper.getActivationEditorSheet();
+	// 递归判断是否是参数的组件子节点是焦点对象
+	public static boolean isChildFocused(javafx.scene.Parent parent) {
+		for (Node node : parent.getChildrenUnmodifiable()) {
+			if (node.isFocused()) {
+				return true;
+			} else if (node instanceof javafx.scene.Parent) {
+				if (isChildFocused((javafx.scene.Parent) node)) {
+					return true;
+				}
+			}
 		}
-		sheet.getSqluckyEditor().showFindReplaceTextBox(isReplace, findStr);
-//		if (sheet.findPaneIsShowing()) {
-//			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
-//			sheet.delFindReplacePane();
-//			findReplace(isReplace, findStr, sheet);
-//		} else {
-//			FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, sheet);
-//			sheet.setFindReplacePanel(findPanel);
-//		}
+		return false;
 	}
 
 	// 查找替换
-	public static void findReplace(boolean isReplace) {
-		findReplace(isReplace, "", null);
+	public static void findReplace(boolean isReplace, String findStr, MyEditorSheet sheet) {
+		boolean  mainTabPaneisChildFocused= isChildFocused(ComponentGetter.mainTabPane);
+		if(mainTabPaneisChildFocused){
+			if(ComponentGetter.focusedSqluckyEditor != null){
+			 	ComponentGetter.focusedSqluckyEditor.showFindReplaceTextBox(isReplace, findStr);
+			}
+		}else {
+			boolean  dataTabPaneisChildFocused= isChildFocused(ComponentGetter.dataTabPane);
+			if(dataTabPaneisChildFocused){
+				// 数据展示区的文本编辑器显示查找
+				if(ComponentGetter.codeAreaSqluckyEditor != null){
+					ComponentGetter.codeAreaSqluckyEditor.showFindReplaceTextBox(isReplace, findStr);
+				}
+			}
+		}
+
 	}
+
+	// 查找替换
+//	public static void findReplace(boolean isReplace) {
+//		findReplace(isReplace, "", null);
+//	}
 
 	// 在浏览器中打开 URL
 	public static void OpenURLInBrowser(String url) {
@@ -1141,16 +1153,32 @@ public class CommonUtils {
 
 	// 隐藏查找, 替换窗口
 	public static void hideFindReplaceWindow() {
-//		VBox b = MyEditorSheetHelper.getTabVbox();
-//		var sltb = SqluckyEditorUtils.currentMyTab();
-		MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
-		sheet.delFindReplacePane();
-//		int bsize = b.getChildren().size();
-//		if (bsize > 1) {
-////			FindReplaceTextPanel.delFindReplacePane(sheet);
-//			sheet.delFindReplacePane();
+
+//		if(ComponentGetter.focusedSqluckyEditor != null){
+//			ComponentGetter.focusedSqluckyEditor.hiddenFindReplaceBox();
 //		}
 
+		boolean  mainTabPaneisChildFocused= isChildFocused(ComponentGetter.mainTabPane);
+		if(mainTabPaneisChildFocused){
+			if(ComponentGetter.focusedSqluckyEditor != null){
+				ComponentGetter.focusedSqluckyEditor.hiddenFindReplaceBox();
+			}
+		}else {
+			boolean  dataTabPaneisChildFocused= isChildFocused(ComponentGetter.dataTabPane);
+			if(dataTabPaneisChildFocused){
+				// 数据展示区的文本编辑器显示查找
+				if(ComponentGetter.codeAreaSqluckyEditor != null){
+					ComponentGetter.codeAreaSqluckyEditor.hiddenFindReplaceBox();
+				}
+			}
+		}
+
+
+	}
+
+	// 查找替换
+	public static void findReplace(boolean isReplace) {
+		findReplace(isReplace, "", null);
 	}
 
 	// 获取当前连接下拉选中的连接名称

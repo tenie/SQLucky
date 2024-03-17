@@ -194,9 +194,6 @@ public class MyEditorSheetHelper {
 
 	// 对文本进行高亮设置
 	public static void currentSqlCodeAreaHighLighting(String str) {
-//		SqluckyTab mtb = currentMyTab();
-//		var area = mtb.getSqlCodeArea();
-//		area.highLighting(str);
 		MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().highLighting(str);
 	}
 

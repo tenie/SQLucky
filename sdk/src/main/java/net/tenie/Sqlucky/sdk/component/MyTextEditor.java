@@ -3,9 +3,9 @@ package net.tenie.Sqlucky.sdk.component;
 import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.component.editor.FindReplaceTextBox;
 import net.tenie.Sqlucky.sdk.component.editor.MyLineNumberNode;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -14,9 +14,9 @@ import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 import java.util.List;
 import java.util.function.Consumer;
 
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.fxmisc.flowless.VirtualizedScrollPane;
 
 /**
  * 普通文本编辑组件
@@ -214,21 +214,50 @@ public class MyTextEditor implements SqluckyEditor {
 	}
 
 	VBox fdbox ;
-	FindReplaceTextBox FindReplaceTextBox;
+	FindReplaceTextBox FindReplaceText;
+
+
+	@Override
+	public   void  hiddenFindReplaceBox(){
+		codeAreaPane.getChildren().remove(fdbox);
+	}
+
+	// 设置codeArea 的焦点监听, 换成到全局变量, 让查找替换面板可以正确显示
+	@Override
+	public void codeAreaSetFocusedSqluckyEditor() {
+		this.codeArea.focusedProperty().addListener((a,b,c)->{
+			if(c){
+				ComponentGetter.codeAreaSqluckyEditor = this;
+			}
+		});
+	}
+
 	@Override
 	public  void  showFindReplaceTextBox(boolean showReplace, String findText){
 		Consumer<VBox> hiddenBox = v->{
 			codeAreaPane.getChildren().remove(v);
 		};
-		if(FindReplaceTextBox == null){
-			FindReplaceTextBox = new FindReplaceTextBox(showReplace, findText, hiddenBox);
-			fdbox = FindReplaceTextBox.getfindReplaceBox();
+
+		if(StrUtils.isNullOrEmpty(findText)){
+			findText = codeArea.getSelectedText();
+		}
+
+		if(FindReplaceText == null){
+//			fdbox = FindReplaceTextBox.createFindReplaceTextBox(showReplace, findText, hiddenBox);
+
+			FindReplaceText = new FindReplaceTextBox(showReplace, findText, this, hiddenBox);
+			fdbox = FindReplaceText.getfindReplaceBox();
 
 			codeAreaPane.getChildren().add(0,fdbox);
 		}else {
-			codeAreaPane.getChildren().add(0,fdbox);
-			FindReplaceTextBox.showHiddenReplaceBox(showReplace);
+//			codeAreaPane.getChildren().add(0,fdbox);
+			FindReplaceText.showHiddenReplaceBox(showReplace);
+			FindReplaceText.setText(findText);
+			if(! codeAreaPane.getChildren().contains(fdbox)){
+				codeAreaPane.getChildren().add(0,fdbox);
+			}
 		}
 	}
+
 
 }

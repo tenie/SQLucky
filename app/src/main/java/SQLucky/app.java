@@ -270,8 +270,6 @@ public class app extends Application {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-
         }
 
     }

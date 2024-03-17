@@ -176,4 +176,14 @@ public class MyNoLineNumberEditor implements SqluckyEditor {
 
     }
 
+    @Override
+    public void hiddenFindReplaceBox() {
+
+    }
+
+    @Override
+    public void codeAreaSetFocusedSqluckyEditor() {
+
+    }
+
 }

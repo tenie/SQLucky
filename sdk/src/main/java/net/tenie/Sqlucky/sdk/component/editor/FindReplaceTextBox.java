@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component;
+package net.tenie.Sqlucky.sdk.component.editor;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
@@ -11,6 +11,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
@@ -36,27 +38,25 @@ public class FindReplaceTextBox {
 	public static TextField textField;
 	private JFXButton down;
 	private JFXButton up;
-
+	MyCodeArea codeArea;
 	private JFXCheckBox sensitiveCheckBox ;
 	private JFXButton countBtn ;
 	private Label countLabel;
 	// 替换字符串一次
-	public static boolean findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
-		int idx = code.getCaretPosition();
-		String selTex = code.getSelectedText();
+	public boolean findStrReplaceStr(TextField findtf, TextField tf, boolean sensitive) {
+		int idx = codeArea.getCaretPosition();
+		String selTex = codeArea.getSelectedText();
 		String findStr = findtf.getText();
 		if (StrUtils.isNotNullOrEmpty(selTex) && selTex.equals(findStr)) {
-			idx = code.getSelection().getStart();
+			idx = codeArea.getSelection().getStart();
 		}
 		return replaceString(findtf.getText(), tf.getText(), idx, sensitive, true);
 	}
 
-	public static boolean replaceString(String str, String strNew, int fromIndex, boolean sensitive, boolean forward) {
+	public boolean replaceString(String str, String strNew, int fromIndex, boolean sensitive, boolean forward) {
 		// 替换成功与否
 		boolean tf = false;
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
-		String text = code.getText();
+		String text = codeArea.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
 			text = text.toUpperCase();
@@ -82,11 +82,11 @@ public class FindReplaceTextBox {
 			if (start > -1) {
 				// 开始替换
 				// 将原文本删除
-				code.deleteText(start, start + length);
+				codeArea.deleteText(start, start + length);
 				// 插入 注释过的文本
-				code.insertText(start, strNew);
+				codeArea.insertText(start, strNew);
 				// 选中
-				selectRange(code, start, start + strNew.length());
+				selectRange(codeArea, start, start + strNew.length());
 				tf = true;
 			}
 		}
@@ -94,9 +94,8 @@ public class FindReplaceTextBox {
 	}
 
 	// F3 字符串查找
-	public static void findSelectedString() {
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
-		String text = code.getSelectedText();
+	public  void findSelectedString() {
+		String text = codeArea.getSelectedText();
 		if (StrUtils.isNullOrEmpty(text)) {
 			if (StrUtils.isNotNullOrEmpty(f3Str)) {
 				text = f3Str;
@@ -105,12 +104,12 @@ public class FindReplaceTextBox {
 			f3Str = text;
 		}
 
-		IndexRange i = code.getSelection(); // 获取当前选中的区间
+		IndexRange i = codeArea.getSelection(); // 获取当前选中的区间
 		int start = i.getStart();
 
 		int idx = start + text.length();
 //		logger.info(idx);
-		findString(text, idx, true, true);
+		findString( text, idx, true, true);
 	}
 
 	/**
@@ -120,11 +119,10 @@ public class FindReplaceTextBox {
 	 * @param forward   是否向前找
 	 * @param sensitive 是否大小写敏感
 	 */
-	public static void findStringFromCodeArea(String str, boolean forward, boolean sensitive) {
+	public  void findStringFromCodeArea( String str, boolean forward, boolean sensitive) {
 		if (StrUtils.isNullOrEmpty(str))
 			return;
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
-		int idx = code.getCaretPosition(); // 光标位置
+		int idx = codeArea.getCaretPosition(); // 光标位置
 		findString(str, idx, sensitive, forward);
 	}
 
@@ -136,18 +134,17 @@ public class FindReplaceTextBox {
 	 * @param sensitive
 	 * @return 返回false, 表示找不到
 	 */
-	public static boolean findStringStopFromCodeArea(String str, Integer position, boolean forward, boolean sensitive) {
+	public boolean findStringStopFromCodeArea(String str, Integer position, boolean forward, boolean sensitive) {
 		if (StrUtils.isNullOrEmpty(str))
 			return false;
 
 		Integer idx = 0;
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
 		if (position == null) {
-			idx = code.getCaretPosition(); // 光标位置
+			idx = codeArea.getCaretPosition(); // 光标位置
 		} else if (position > -1) {
 			idx = position;
 		} else if (position < 0) { // 从后往前找
-			int areaLength = code.getLength();
+			int areaLength = codeArea.getLength();
 			idx = areaLength;
 		}
 
@@ -167,10 +164,9 @@ public class FindReplaceTextBox {
 	 * @param sensitive 是否大小写敏感
 	 * @param forward   向前还是向后找
 	 */
-	public static void findString(String str, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
+	public  void findString(String str, int fromIndex, boolean sensitive, boolean forward) {
 		// 获取文本
-		String text = code.getText();
+		String text = codeArea.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
 			text = text.toUpperCase();
@@ -195,17 +191,16 @@ public class FindReplaceTextBox {
 
 			}
 			if (start > -1) {
-				selectRange(code, start, start + length);
+				selectRange(codeArea, start, start + length);
 			}
 		}
-		MyEditorSheetHelper.currentSqlCodeAreaHighLighting(str);
+		sqluckyEditor.highLighting(str);
 	}
 
 	// 不循环找, 找不到下一个就不循环
-	public static boolean findStringStop(String str, int fromIndex, boolean sensitive, boolean forward) {
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
+	public boolean findStringStop( String str, int fromIndex, boolean sensitive, boolean forward) {
 		// 获取文本
-		String text = code.getText();
+		String text = codeArea.getText();
 		if (sensitive) {
 			str = str.toUpperCase();
 			text = text.toUpperCase();
@@ -223,11 +218,11 @@ public class FindReplaceTextBox {
 				}
 			}
 			if (start > -1) {
-				selectRange(code, start, start + length);
+				selectRange(codeArea, start, start + length);
 			}
 		}
 		if (start > -1) {
-			MyEditorSheetHelper.currentSqlCodeAreaHighLighting(str);
+			sqluckyEditor.highLighting(str);
 			return true;
 		}
 		return false;
@@ -238,8 +233,8 @@ public class FindReplaceTextBox {
 
 	// 查找的计数action
 	private void countAction() {
+		String sqlTxt = codeArea.getText();
 
-		String sqlTxt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 		int countVal = 0;
 		if (textField.getText().length() == 0) {
 			countLabel.setText("");
@@ -260,12 +255,12 @@ public class FindReplaceTextBox {
 	public VBox getfindReplaceBox(){
 		return findReplaceBox;
 	}
-//	public static VBox createFindReplaceTextBox(boolean isReplace, String findText, Consumer<VBox> hiddenBox){
-//		FindReplaceTextBox box = new FindReplaceTextBox(isReplace, findText, hiddenBox);
-//		return box.getfindReplaceBox();
-//	}
+
+	SqluckyEditor sqluckyEditor;
 	// 查找替换组件的面板
-	public FindReplaceTextBox(boolean isReplace, String findText, Consumer<VBox> hiddenBox) { //, MyEditorSheet sheet
+	public FindReplaceTextBox(boolean isReplace, String findText, SqluckyEditor sqlEd, Consumer<VBox> hiddenBox) { //, MyEditorSheet sheet
+		this.codeArea = sqlEd.getCodeArea();
+		this.sqluckyEditor = sqlEd;
 		AnchorPane findAnchorPane = new AnchorPane();
 		VBox.setMargin(findReplaceBox, new Insets(3, 1, 3, 3));
 		findReplaceBox.setSpacing(3);
@@ -282,8 +277,7 @@ public class FindReplaceTextBox {
 
 		if (StrUtils.isNullOrEmpty(findText)) {
 			// 从编辑框中获取选中的文本
-			CodeArea code = MyEditorSheetHelper.getCodeArea();
-			findText = code.getSelectedText();
+			findText = codeArea.getSelectedText();
 		}
 
 		textField.setText(findText);

@@ -61,4 +61,9 @@ public interface SqluckyEditor {
 
 	public void delAnchorAfterString();
 	public  void  showFindReplaceTextBox(boolean showReplace, String findText);
+
+	public   void  hiddenFindReplaceBox();
+
+	// 设置 codeArea的焦点, 让查找替换, 可以知道在哪个codeArea中出去
+	public void codeAreaSetFocusedSqluckyEditor();
 }

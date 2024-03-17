@@ -392,7 +392,8 @@ public class FindReplaceTextPanel {
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 
 		hideBottom.setOnAction(v -> {
-			sheet.delFindReplacePane();
+//			sheet.delFindReplacePane();
+			sheet.getSqluckyEditor().hiddenFindReplaceBox();
 		});
 		// 加入到 代码编辑框上面
 		sheet.setFindAnchorPane(findAnchorPane);

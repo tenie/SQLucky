@@ -108,6 +108,9 @@ public class MyEditorSheet {
 				isInit = true;
 
 			}
+			if(isSel){
+				ComponentGetter.focusedSqluckyEditor = this.sqluckyEditor;
+			}
 		});
 	}
 
@@ -138,24 +141,24 @@ public class MyEditorSheet {
 	}
 
 	// 删除查找替换面板
-	public void delFindReplacePane() {
-		if (findAnchorPane != null) {
-			if (vbox.getChildren().contains(findAnchorPane)) {
-				vbox.getChildren().remove(findAnchorPane);
-			}
-			findAnchorPane = null;
-
-		}
-		if (replaceAnchorPane != null) {
-			if (vbox.getChildren().contains(replaceAnchorPane)) {
-				vbox.getChildren().remove(replaceAnchorPane);
-			}
-			replaceAnchorPane = null;
-		}
-		if (findReplacePanel != null) {
-			findReplacePanel = null;
-		}
-	}
+//	public void delFindReplacePane() {
+//		if (findAnchorPane != null) {
+//			if (vbox.getChildren().contains(findAnchorPane)) {
+//				vbox.getChildren().remove(findAnchorPane);
+//			}
+//			findAnchorPane = null;
+//
+//		}
+//		if (replaceAnchorPane != null) {
+//			if (vbox.getChildren().contains(replaceAnchorPane)) {
+//				vbox.getChildren().remove(replaceAnchorPane);
+//			}
+//			replaceAnchorPane = null;
+//		}
+//		if (findReplacePanel != null) {
+//			findReplacePanel = null;
+//		}
+//	}
 
 	// 判断查找面板是否显示中
 	public boolean findPaneIsShowing() {

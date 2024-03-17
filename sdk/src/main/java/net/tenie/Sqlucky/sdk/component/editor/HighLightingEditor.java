@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
@@ -16,7 +15,6 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -24,14 +22,11 @@ import org.fxmisc.richtext.model.StyleSpansBuilder;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
-import javafx.geometry.Point2D;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.IndexRange;
-import javafx.scene.input.InputMethodRequests;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -439,8 +434,27 @@ public class HighLightingEditor implements SqluckyEditor {
 			return codeAreaPane;
 		}
 	}
+
+
 	VBox fdbox ;
-	FindReplaceTextBox FindReplaceTextBox;
+	FindReplaceTextBox FindReplaceText;
+
+
+	@Override
+	public   void  hiddenFindReplaceBox(){
+		codeAreaPane.getChildren().remove(fdbox);
+	}
+
+	// 设置codeArea 的焦点监听, 换成到全局变量, 让查找替换面板可以正确显示
+	@Override
+	public void codeAreaSetFocusedSqluckyEditor() {
+		this.codeArea.focusedProperty().addListener((a,b,c)->{
+			if(c){
+				ComponentGetter.codeAreaSqluckyEditor = this;
+			}
+		});
+	}
+
 	@Override
 	public  void  showFindReplaceTextBox(boolean showReplace, String findText){
 		Consumer<VBox> hiddenBox = v->{
@@ -451,17 +465,20 @@ public class HighLightingEditor implements SqluckyEditor {
 			findText = codeArea.getSelectedText();
 		}
 
-		if(FindReplaceTextBox == null){
+		if(FindReplaceText == null){
 //			fdbox = FindReplaceTextBox.createFindReplaceTextBox(showReplace, findText, hiddenBox);
 
-			FindReplaceTextBox = new FindReplaceTextBox(showReplace, findText, hiddenBox);
-			fdbox = FindReplaceTextBox.getfindReplaceBox();
+			FindReplaceText = new FindReplaceTextBox(showReplace, findText,  this, hiddenBox);
+			fdbox = FindReplaceText.getfindReplaceBox();
 
 			codeAreaPane.getChildren().add(0,fdbox);
 		}else {
 //			codeAreaPane.getChildren().add(0,fdbox);
-			FindReplaceTextBox.showHiddenReplaceBox(showReplace);
-			FindReplaceTextBox.setText(findText);
+			FindReplaceText.showHiddenReplaceBox(showReplace);
+			FindReplaceText.setText(findText);
+			if(! codeAreaPane.getChildren().contains(fdbox)){
+				codeAreaPane.getChildren().add(0,fdbox);
+			}
 		}
 	}
 
@@ -1120,39 +1137,4 @@ public class HighLightingEditor implements SqluckyEditor {
 	}
 }
 
-class InputMethodRequestsObject implements InputMethodRequests {
-	private static Logger logger = LogManager.getLogger(InputMethodRequestsObject.class);
-	private CodeArea area;
 
-	public InputMethodRequestsObject(CodeArea area) {
-		this.area = area;
-	}
-
-	@Override
-	public String getSelectedText() {
-		return "";
-	}
-
-	@Override
-	public int getLocationOffset(int x, int y) {
-		return 0;
-	}
-
-	@Override
-	public void cancelLatestCommittedText() {
-
-	}
-
-	@Override
-	public Point2D getTextLocation(int offset) {
-		logger.info("输入法软件展示");
-		// a very rough example, only tested under macOS
-		Optional<Bounds> caretPositionBounds = area.getCaretBounds();
-		if (caretPositionBounds.isPresent()) {
-			Bounds bounds = caretPositionBounds.get();
-			return new Point2D(bounds.getMaxX() - 5, bounds.getMaxY());
-		}
-		throw new NullPointerException();
-	}
-
-}
