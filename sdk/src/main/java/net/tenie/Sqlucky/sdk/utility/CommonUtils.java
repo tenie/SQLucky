@@ -974,14 +974,15 @@ public class CommonUtils {
 		if (sheet == null) {
 			sheet = MyEditorSheetHelper.getActivationEditorSheet();
 		}
-		if (sheet.findPaneIsShowing()) {
-			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
-			sheet.delFindReplacePane();
-			findReplace(isReplace, findStr, sheet);
-		} else {
-			FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, sheet);
-			sheet.setFindReplacePanel(findPanel);
-		}
+		sheet.getSqluckyEditor().showFindReplaceTextBox(isReplace, findStr);
+//		if (sheet.findPaneIsShowing()) {
+//			// 如果查找已经存在, 要打开替换, 就先关光再打开替换查找
+//			sheet.delFindReplacePane();
+//			findReplace(isReplace, findStr, sheet);
+//		} else {
+//			FindReplaceTextPanel findPanel = new FindReplaceTextPanel(isReplace, findStr, sheet);
+//			sheet.setFindReplacePanel(findPanel);
+//		}
 	}
 
 	// 查找替换

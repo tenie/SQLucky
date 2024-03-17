@@ -131,7 +131,7 @@ public class TransferDataController implements Initializable {
 	@FXML
 	private Label tipsLabel;
 
-	private StackPane spCode;
+	private VBox spCode;
 	private MyCodeArea CodeArea;
 
 	private CheckTreeView<String> checkTreeView;

@@ -11,6 +11,9 @@ import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.component.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.flowless.VirtualizedScrollPane;
@@ -30,10 +33,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
@@ -49,7 +48,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 public class HighLightingEditor implements SqluckyEditor {
 	private static Logger logger = LogManager.getLogger(HighLightingEditor.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
-	private StackPane codeAreaPane;
+	private VBox codeAreaPane;
 	private MyCodeArea codeArea;
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
@@ -433,18 +432,46 @@ public class HighLightingEditor implements SqluckyEditor {
 	}
 
 	@Override
-	public StackPane getCodeAreaPane() {
+	public VBox getCodeAreaPane() {
 		if (codeAreaPane == null) {
 			return getCodeAreaPane(null, true);
 		} else {
 			return codeAreaPane;
 		}
 	}
+	VBox fdbox ;
+	FindReplaceTextBox FindReplaceTextBox;
+	@Override
+	public  void  showFindReplaceTextBox(boolean showReplace, String findText){
+		Consumer<VBox> hiddenBox = v->{
+			codeAreaPane.getChildren().remove(v);
+		};
+
+		if(StrUtils.isNullOrEmpty(findText)){
+			findText = codeArea.getSelectedText();
+		}
+
+		if(FindReplaceTextBox == null){
+//			fdbox = FindReplaceTextBox.createFindReplaceTextBox(showReplace, findText, hiddenBox);
+
+			FindReplaceTextBox = new FindReplaceTextBox(showReplace, findText, hiddenBox);
+			fdbox = FindReplaceTextBox.getfindReplaceBox();
+
+			codeAreaPane.getChildren().add(0,fdbox);
+		}else {
+//			codeAreaPane.getChildren().add(0,fdbox);
+			FindReplaceTextBox.showHiddenReplaceBox(showReplace);
+			FindReplaceTextBox.setText(findText);
+		}
+	}
+
 
 	@Override
-	public StackPane getCodeAreaPane(String text, boolean editable) {
+	public VBox getCodeAreaPane(String text, boolean editable) {
 		if (codeAreaPane == null) {
-			codeAreaPane = new StackPane(new VirtualizedScrollPane<>(codeArea));
+//			codeAreaPane = new StackPane(new VirtualizedScrollPane<>(codeArea));
+			codeAreaPane = new VBox(codeArea);
+			VBox.setVgrow(codeArea, Priority.ALWAYS);
 			codeAreaPane.getStyleClass().add("my-tag");
 		}
 
@@ -453,7 +480,9 @@ public class HighLightingEditor implements SqluckyEditor {
 			highLighting();
 		}
 		codeArea.setEditable(editable);
-
+//		Platform.runLater(()->{
+//			showFindReplaceTextBox();
+//		});
 		return codeAreaPane;
 	}
 

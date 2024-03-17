@@ -66,7 +66,7 @@ public class TextBottomSheet {
             }
 
             sqlArea.getCodeArea().setTitleName(key);
-            StackPane sp = sqlArea.getCodeAreaPane(val, true);
+            VBox sp = sqlArea.getCodeAreaPane(val, true);
 
             Tab  tab = new Tab(key);
             VBox tabVBox = new VBox();
@@ -88,7 +88,7 @@ public class TextBottomSheet {
             String val = map.get(key);
             SqluckyEditor sqlArea =  HighLightingEditorUtils.javaEditor();
             sqlArea.getCodeArea().setTitleName(key);
-            StackPane sp = sqlArea.getCodeAreaPane(val, true);
+            VBox sp = sqlArea.getCodeAreaPane(val, true);
             JFXButton tmpBtn = new JFXButton(key);
 
             tmpBtn.setGraphic(IconGenerator.svgImageDefActive("file-o"));
@@ -152,7 +152,7 @@ public class TextBottomSheet {
     public static MyBottomSheet showTextSheet(String titleName, String text, boolean allowEdit) {
         var mtb = new MyBottomSheet(titleName);
         SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-        StackPane sp = sqlArea.getCodeAreaPane(text, allowEdit);
+        VBox sp = sqlArea.getCodeAreaPane(text, allowEdit);
         mtb.getTableData().setLock(true);  // 在设置操作按钮前, 指定锁按钮的状态
         mtb.operatePane(List.of(saveBtn(titleName, sqlArea))); // 没有操作按钮
         mtb.tabVBoxAddComponentView(sp);
@@ -170,7 +170,7 @@ public class TextBottomSheet {
     public static MyBottomSheet showJavaTextSheet(String titleName, String text, boolean allowEdit) {
         var mtb = new MyBottomSheet(titleName);
         SqluckyEditor sqlArea =  HighLightingEditorUtils.javaEditor();
-        StackPane sp = sqlArea.getCodeAreaPane(text, allowEdit);
+        VBox sp = sqlArea.getCodeAreaPane(text, allowEdit);
         mtb.getTableData().setLock(true);  // 在设置操作按钮前, 指定锁按钮的状态
         mtb.operatePane(List.of(saveBtn(titleName, sqlArea))); // 没有操作按钮
         mtb.tabVBoxAddComponentView(sp);

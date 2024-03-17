@@ -196,7 +196,7 @@ public class MyAlert {
 		Label question = new Label(promptInfo);
 		// code
 		MyTextEditor myTextArea = new MyTextEditor();
-		StackPane codeAreaPane = myTextArea.getCodeAreaPane(code, false);
+		VBox codeAreaPane = myTextArea.getCodeAreaPane(code, false);
 		codeAreaPane.setStyle("-fx-background-color: transparent;");
 
 		List<Node> nds = new ArrayList<>();
@@ -246,7 +246,7 @@ public class MyAlert {
 
 	public static void myConfirmation(String promptInfo, Stage stage, List<Node> btns, boolean isWait) {
 		MyNoLineNumberEditor myTextArea = new MyNoLineNumberEditor();
-		StackPane codeAreaPane = myTextArea.getCodeAreaPane(promptInfo, false);
+		VBox codeAreaPane = myTextArea.getCodeAreaPane(promptInfo, false);
 		codeAreaPane.setStyle("-fx-background-color: transparent;");
 
 		List<Node> nds = new ArrayList<>();
@@ -370,7 +370,7 @@ public class MyAlert {
 			Label titleLabel = new Label(title);
 			titleLabel.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
 			MyTextEditor myTextArea = new MyTextEditor();
-			StackPane codeAreaPane = myTextArea.getCodeAreaPane(text, false);
+			VBox codeAreaPane = myTextArea.getCodeAreaPane(text, false);
 			codeAreaPane.setStyle("-fx-background-color: transparent;");
 
 			List<Node> nds = new ArrayList<>();

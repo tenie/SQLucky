@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.editor.MyLineNumberNode;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
@@ -11,6 +12,7 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,13 +20,13 @@ import org.fxmisc.flowless.VirtualizedScrollPane;
 
 /**
  * 普通文本编辑组件
- * 
+ *
  * @author tenie
  *
  */
 public class MyTextEditor implements SqluckyEditor {
 	private static Logger logger = LogManager.getLogger(MyTextEditor.class);
-	private StackPane codeAreaPane;
+	private VBox codeAreaPane;
 	private MyCodeArea codeArea;
 	private CodeAreaHighLightingHelper highLightingHelper ;
 
@@ -33,15 +35,15 @@ public class MyTextEditor implements SqluckyEditor {
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 	}
-	
+
 //	public MyTextArea(String text) {
 //		codeArea = new MyCodeArea();
 //		// 行号主题色
 //		changeCodeAreaLineNoThemeHelper();
 //		setText(text);
 //	}
-	
-	
+
+
 //	public void setText(String text) {
 //		codeArea.appendText(text); 
 //		highLighting();
@@ -67,7 +69,7 @@ public class MyTextEditor implements SqluckyEditor {
 				if(highLightingHelper == null) {
 					highLightingHelper	= new CodeAreaHighLightingHelper();
 				}
-			
+
 				highLightingHelper.applyHighlighting(codeArea, begin);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -125,8 +127,8 @@ public class MyTextEditor implements SqluckyEditor {
 		codeArea.setParagraphGraphicFactory(nbf);
 		codeArea.setMylineNumber(nbf);
 
-	
-		
+
+
 	}
 
 	@Override
@@ -143,8 +145,8 @@ public class MyTextEditor implements SqluckyEditor {
 	}
 
 	@Override
-	public StackPane getCodeAreaPane() {
-		if( codeAreaPane == null) { 
+	public VBox getCodeAreaPane() {
+		if( codeAreaPane == null) {
 			return getCodeAreaPane(null, true);
 		}else {
 			return codeAreaPane;
@@ -155,18 +157,19 @@ public class MyTextEditor implements SqluckyEditor {
 	 * 初始化codeArea 文本和是否可编辑, 返回StackPane容器
 	 */
 	@Override
-	public StackPane getCodeAreaPane(String text, boolean editable) {
-		if( codeAreaPane == null) { 
-			codeAreaPane = new StackPane(new VirtualizedScrollPane<>(codeArea));
+	public VBox getCodeAreaPane(String text, boolean editable) {
+		if( codeAreaPane == null) {
+//			codeAreaPane = new StackPane(new VirtualizedScrollPane<>(codeArea));
+			codeAreaPane = new VBox(codeArea);
 			codeAreaPane.getStyleClass().add("my-tag");
 		}
-		
+
 		if (text != null) {
-			codeArea.appendText(text); 
+			codeArea.appendText(text);
 			highLighting();
 		}
 		codeArea.setEditable(editable);
-		
+
 		return codeAreaPane;
 	}
 
@@ -208,6 +211,24 @@ public class MyTextEditor implements SqluckyEditor {
 
 	@Override
 	public void delAnchorAfterString() {
+	}
+
+	VBox fdbox ;
+	FindReplaceTextBox FindReplaceTextBox;
+	@Override
+	public  void  showFindReplaceTextBox(boolean showReplace, String findText){
+		Consumer<VBox> hiddenBox = v->{
+			codeAreaPane.getChildren().remove(v);
+		};
+		if(FindReplaceTextBox == null){
+			FindReplaceTextBox = new FindReplaceTextBox(showReplace, findText, hiddenBox);
+			fdbox = FindReplaceTextBox.getfindReplaceBox();
+
+			codeAreaPane.getChildren().add(0,fdbox);
+		}else {
+			codeAreaPane.getChildren().add(0,fdbox);
+			FindReplaceTextBox.showHiddenReplaceBox(showReplace);
+		}
 	}
 
 }

@@ -3,6 +3,7 @@ package net.tenie.Sqlucky.sdk;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 
@@ -36,9 +37,9 @@ public interface SqluckyEditor {
 
 	public void nextBookmark(boolean tf);
 
-	public StackPane getCodeAreaPane();
+	public VBox getCodeAreaPane();
 
-	public StackPane getCodeAreaPane(String text, boolean editable);
+	public VBox getCodeAreaPane(String text, boolean editable);
 
 	public void setContextMenu(ContextMenu cm);
 
@@ -59,4 +60,5 @@ public interface SqluckyEditor {
 	public void delAnchorAfterChar();
 
 	public void delAnchorAfterString();
+	public  void  showFindReplaceTextBox(boolean showReplace, String findText);
 }

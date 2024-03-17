@@ -115,7 +115,7 @@ public class MyEditorSheet {
 	public void setSqluckyEditor(SqluckyEditor sqluckyEditor) {
 		this.sqluckyEditor = sqluckyEditor;
 
-		StackPane pane = sqluckyEditor.getCodeAreaPane();
+		VBox pane = sqluckyEditor.getCodeAreaPane();
 		vbox = new VBox();
 		vbox.setSpacing(3);
 		vbox.getChildren().add(pane);
