@@ -108,7 +108,6 @@ public class FindReplaceTextBox {
 		int start = i.getStart();
 
 		int idx = start + text.length();
-//		logger.info(idx);
 		findString( text, idx, true, true);
 	}
 
@@ -249,7 +248,6 @@ public class FindReplaceTextBox {
 
 	}
 
-
 	VBox findReplaceBox = new VBox();
 	HBox replaceBox ;
 	public VBox getfindReplaceBox(){
@@ -326,23 +324,16 @@ public class FindReplaceTextBox {
 		HBox.setMargin(sensitiveCheckBox, new Insets(5, 0, 0, 3));
 		findAnchorPane.getChildren().add(findBox);
 
-
 		JFXButton hideBottom = new JFXButton();
 		hideBottom.setGraphic(IconGenerator.svgImageDefActive("window-close"));
 		findAnchorPane.getChildren().add(hideBottom);
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 
-
 		hideBottom.setOnAction(v -> {
-//			sheet.delFindReplacePane();
-//			findReplaceBox.setVisible(false);
 			hiddenBox.accept(findReplaceBox);
 		});
-		// 加入到 代码编辑框上面
-//		sheet.setFindAnchorPane(findAnchorPane);
 		if (isReplace) {
 			createReplacePane(textField, sensitiveCheckBox);
-
 			findReplaceBox.getChildren().add(replaceBox);
 		}
 		Platform.runLater(() -> {
@@ -399,9 +390,13 @@ public class FindReplaceTextBox {
 		replaceAllBtn.getStyleClass().add("myAlertBtn");
 		replaceAllBtn.setText("Replace All");
 		replaceAllBtn.setOnAction(v -> {
-			boolean tf = findStrReplaceStr(findtf, replaceTextField, !cb.isSelected());
-			while(tf) {
-				tf = findStrReplaceStr(findtf, replaceTextField, !cb.isSelected());
+			if(!findtf.getText().equals(replaceTextField.getText())){
+				String text = codeArea.getText();
+				int end = text.length();
+				text = text.replaceAll(findtf.getText(), replaceTextField.getText());
+				codeArea.deleteText(0, end);
+				codeArea.insertText(0, text);
+				sqluckyEditor.highLighting();
 			}
 			countAction();
 		});
