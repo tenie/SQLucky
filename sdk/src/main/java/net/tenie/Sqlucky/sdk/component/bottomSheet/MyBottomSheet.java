@@ -219,6 +219,7 @@ public class MyBottomSheet {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
+		sqlArea.codeAreaSetFocusedSqluckyEditor();
 //		mtb.setSqlArea(sqlArea);
 //		VBox vb = new VBox();
 		String ddl = table.getDdl();
@@ -263,6 +264,7 @@ public class MyBottomSheet {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
+		sqlArea.codeAreaSetFocusedSqluckyEditor();
 //		mtb.setSqlArea(sqlArea);
 		String ddl = table.getDdl();
 		VBox sp = sqlArea.getCodeAreaPane(ddl, false);

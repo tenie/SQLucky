@@ -190,11 +190,11 @@ public class TableDataDetail {
 		topfp.getChildren().add(lb);
 		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
 		
-		AnchorPane filterFieldPane = UiTools.textFieldAddCleanBtn(filterField);
+		AnchorPane filterFieldPane = UiTools.textFieldAddCleanBtn(filterField, 200.0);
 		topfp.getChildren().add(filterFieldPane);
 		topfp.setMinHeight(30);
 		topfp.prefHeight(30);
-		filterField.setPrefWidth(200);
+//		filterField.setPrefWidth(200);
 
 		subvb.getChildren().add(topfp);
 
