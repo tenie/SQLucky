@@ -23,7 +23,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
-import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.PoDao;

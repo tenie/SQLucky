@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.bottomSheet;
+package net.tenie.Sqlucky.sdk.component.sheet.bottom;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.Objects;
 
 import javafx.geometry.Insets;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -18,13 +17,11 @@ import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.db.ResultSetPo;
@@ -33,9 +30,6 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.RsVal;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
-import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
-import net.tenie.Sqlucky.sdk.subwindow.ImportSQLWindow;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;

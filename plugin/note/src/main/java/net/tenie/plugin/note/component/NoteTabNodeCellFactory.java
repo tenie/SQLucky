@@ -16,7 +16,6 @@ import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.plugin.note.utility.NoteUtility;
 
@@ -25,27 +24,27 @@ import net.tenie.plugin.note.utility.NoteUtility;
  * @author tenie
  *
  */
-public class NoteTabNodeCellFactory implements Callback<TreeView<MyEditorSheet>, TreeCell<MyEditorSheet>> {
+public class NoteTabNodeCellFactory implements Callback<TreeView<MyNoteEditorSheet>, TreeCell<MyNoteEditorSheet>> {
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
-	private TreeCell<MyEditorSheet> dropZone;
-	private TreeItem<MyEditorSheet> draggedItem;
+	private TreeCell<MyNoteEditorSheet> dropZone;
+	private TreeItem<MyNoteEditorSheet> draggedItem;
 	private NoteOptionPanel optPane;
 	private Button showInFolder;
 
-	TreeView<MyEditorSheet> treeView;
+	TreeView<MyNoteEditorSheet> treeView;
 
-	public NoteTabNodeCellFactory(NoteOptionPanel optPane, TreeView<MyEditorSheet> treeView) {
+	public NoteTabNodeCellFactory(NoteOptionPanel optPane, TreeView<MyNoteEditorSheet> treeView) {
 		this.optPane = optPane;
 		showInFolder = optPane.getShowInFolder();
 		this.treeView = treeView;
 	}
 
 	@Override
-	public TreeCell<MyEditorSheet> call(TreeView<MyEditorSheet> treeView) {
-		TreeCell<MyEditorSheet> cell = new TreeCell<MyEditorSheet>() {
+	public TreeCell<MyNoteEditorSheet> call(TreeView<MyNoteEditorSheet> treeView) {
+		TreeCell<MyNoteEditorSheet> cell = new TreeCell<MyNoteEditorSheet>() {
 
 			@Override
-			public void updateItem(MyEditorSheet item, boolean empty) {
+			public void updateItem(MyNoteEditorSheet item, boolean empty) {
 				super.updateItem(item, empty);
 				// 给cell 内容添加 button
 				// If the cell is empty we don't show anything.
@@ -99,7 +98,7 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<MyEditorSheet>,
 	}
 
 	// 发现拖动 当你从一个Node上进行拖动的时候，会检测到拖动操作，将会执行这个
-	private void dragDetected(MouseEvent event, TreeCell<MyEditorSheet> treeCell, TreeView<MyEditorSheet> treeView) {
+	private void dragDetected(MouseEvent event, TreeCell<MyNoteEditorSheet> treeCell, TreeView<MyNoteEditorSheet> treeView) {
 		draggedItem = treeCell.getTreeItem();
 
 		// root can't be dragged
@@ -117,11 +116,11 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<MyEditorSheet>,
 
 	}
 
-	private void dragOver(DragEvent event, TreeCell<MyEditorSheet> treeCell, TreeView<MyEditorSheet> treeView) {
+	private void dragOver(DragEvent event, TreeCell<MyNoteEditorSheet> treeCell, TreeView<MyNoteEditorSheet> treeView) {
 
 		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT))
 			return;
-		TreeItem<MyEditorSheet> thisItem = treeCell.getTreeItem();
+		TreeItem<MyNoteEditorSheet> thisItem = treeCell.getTreeItem();
 
 		// can't drop on itself
 		if (draggedItem == null || thisItem == null || thisItem == draggedItem)
@@ -142,14 +141,14 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<MyEditorSheet>,
 	}
 
 	// 放下后执行
-	private void drop(DragEvent event, TreeCell<MyEditorSheet> treeCell, TreeView<MyEditorSheet> treeView) {
+	private void drop(DragEvent event, TreeCell<MyNoteEditorSheet> treeCell, TreeView<MyNoteEditorSheet> treeView) {
 		Dragboard db = event.getDragboard();
 		boolean success = false;
 		if (!db.hasContent(DataFormat.PLAIN_TEXT))
 			return;
 
-		TreeItem<MyEditorSheet> thisItem = treeCell.getTreeItem();
-		TreeItem<MyEditorSheet> droppedItemParent = draggedItem.getParent();
+		TreeItem<MyNoteEditorSheet> thisItem = treeCell.getTreeItem();
+		TreeItem<MyNoteEditorSheet> droppedItemParent = draggedItem.getParent();
 
 //		// 只能同一个父节点下换位置, 否则不动
 		if (Objects.equals(droppedItemParent, thisItem.getParent())) {

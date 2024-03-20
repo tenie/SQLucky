@@ -22,7 +22,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -31,18 +30,19 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.plugin.note.component.MyNoteEditorSheet;
 import net.tenie.plugin.note.component.NoteOptionPanel;
 import net.tenie.plugin.note.component.NoteTabTree;
 import net.tenie.plugin.note.impl.NoteDelegateImpl;
 
 public class NoteUtility {
 
-	public static TreeItem<MyEditorSheet> rootCache = null;
+	public static TreeItem<MyNoteEditorSheet> rootCache = null;
 	public static boolean isFile = false;
 	public static boolean isText = false;
 
-	public static void doubleClickItem(TreeItem<MyEditorSheet> item) {
-		MyEditorSheet sheet = item.getValue();
+	public static void doubleClickItem(TreeItem<MyNoteEditorSheet> item) {
+		MyNoteEditorSheet sheet = item.getValue();
 		File file = sheet.getFile();
 		if (!file.exists())
 			return;
@@ -54,6 +54,11 @@ public class NoteUtility {
 					if (!isExist) {
 						String val = CommonUtils.readFileText(file, charset);
 						sheet.setFileText(val);
+						if(sheet.getSqluckyEditor()!= null && sheet.getSqluckyEditor().getCodeArea() != null){
+							sheet.getSqluckyEditor().getCodeArea().clear();
+							sheet.getSqluckyEditor().getCodeArea().insertText(0, val);
+						}
+
 						sheet.showEditor();
 					}
 				} else {
@@ -74,10 +79,10 @@ public class NoteUtility {
 	}
 
 	// 在系统的目录里打开
-	public static void showInSystem(TreeView<MyEditorSheet> NoteTabTreeView) {
+	public static void showInSystem(TreeView<MyNoteEditorSheet> NoteTabTreeView) {
 
-		TreeItem<MyEditorSheet> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
-		MyEditorSheet tb = ctt.getValue();
+		TreeItem<MyNoteEditorSheet> ctt = NoteTabTreeView.getSelectionModel().getSelectedItem();
+		MyNoteEditorSheet tb = ctt.getValue();
 		try {
 			if (tb.getDocumentPo() != null) {
 				String fn = tb.getDocumentPo().getFileFullName();
@@ -93,8 +98,8 @@ public class NoteUtility {
 	}
 
 	// 获取选中的treeItem
-	public static TreeItem<MyEditorSheet> currentTreeItem() {
-		TreeItem<MyEditorSheet> ctt = NoteTabTree.noteTabTreeView.getSelectionModel().getSelectedItem();
+	public static TreeItem<MyNoteEditorSheet> currentTreeItem() {
+		TreeItem<MyNoteEditorSheet> ctt = NoteTabTree.noteTabTreeView.getSelectionModel().getSelectedItem();
 		return ctt;
 	}
 
@@ -102,7 +107,7 @@ public class NoteUtility {
 	public static File currentTreeItemFile() {
 		var cit = currentTreeItem();
 		if (cit != null) {
-			MyEditorSheet val = currentTreeItem().getValue();
+			MyNoteEditorSheet val = currentTreeItem().getValue();
 			File file = val.getFile();
 			return file;
 		}
@@ -110,7 +115,7 @@ public class NoteUtility {
 	}
 
 	// 重新载入
-	public static void refreshAction(TreeView<MyEditorSheet> NoteTabTreeView, TreeItem<MyEditorSheet> rootNode,
+	public static void refreshAction(TreeView<MyNoteEditorSheet> NoteTabTreeView, TreeItem<MyNoteEditorSheet> rootNode,
 			String filePath) {
 		var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
 		var ParentNode = itm.getParent();
@@ -133,7 +138,7 @@ public class NoteUtility {
 	}
 
 	// 关闭界面上打开的note目录
-	public static String cleanAction(TreeItem<MyEditorSheet> rootNode) {
+	public static String cleanAction(TreeItem<MyNoteEditorSheet> rootNode) {
 		NoteOptionPanel.txt.clear();
 		rootNode.getChildren().clear();
 		String filePath = "";
@@ -142,7 +147,7 @@ public class NoteUtility {
 	}
 
 	// delete file
-	public static void deleteFile(TreeView<MyEditorSheet> NoteTabTreeView) {
+	public static void deleteFile(TreeView<MyNoteEditorSheet> NoteTabTreeView) {
 		var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
 		File file = itm.getValue().getFile();
 		String fileTyep = "File";
@@ -173,7 +178,7 @@ public class NoteUtility {
 	}
 
 	// 新建一个文件
-	public static void newFile(TreeView<MyEditorSheet> NoteTabTreeView, TreeItem<MyEditorSheet> rootNode,
+	public static void newFile(TreeView<MyNoteEditorSheet> NoteTabTreeView, TreeItem<MyNoteEditorSheet> rootNode,
 			String filePath) {
 		var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
 		var ParentNode = itm.getParent();
@@ -185,7 +190,7 @@ public class NoteUtility {
 		}
 	}
 
-	public static void newFileNode(TreeItem<MyEditorSheet> node, String fpval) {
+	public static void newFileNode(TreeItem<MyNoteEditorSheet> node, String fpval) {
 		FileChooser fc = FileOrDirectoryChooser.getFileChooser("New ", "new ", new File(fpval));
 		File file = fc.showSaveDialog(ComponentGetter.primaryStage);
 		try {
@@ -202,16 +207,12 @@ public class NoteUtility {
 	}
 
 	// 打开目录
-	public static String openFolder(TreeItem<MyEditorSheet> rootNode) {
+	public static String openFolder(TreeItem<MyNoteEditorSheet> rootNode) {
 		String filePath = "";
 		File f = FileOrDirectoryChooser.showDirChooser("Select Directory", ComponentGetter.primaryStage);
 		if (f != null && f.exists()) {
 			filePath = f.getAbsolutePath();
-//			if (rootNode.getChildren().size() >= 0) {
-//				rootNode.getChildren().clear();
-//			}
 			openNoteDir(rootNode, f);
-//			ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path", filePath);
 
 			savePath(filePath);
 		}
@@ -267,7 +268,7 @@ public class NoteUtility {
 	}
 
 	// 打开sql文件
-	public static void openNoteDir(TreeItem<MyEditorSheet> node, File openFile) {
+	public static void openNoteDir(TreeItem<MyNoteEditorSheet> node, File openFile) {
 		if(openFile.isDirectory()){
 			List<File> fileList = new ArrayList<>();
 			File[] files = openFile.listFiles();
@@ -276,17 +277,17 @@ public class NoteUtility {
 			}else {
 				fileList.addAll(List.of(files));
 			}
-			TreeItem<MyEditorSheet> fileRootitem = node;
+			TreeItem<MyNoteEditorSheet> fileRootitem = node;
 			// 如果选择目录导入进来的情况
 			if (node.equals(NoteTabTree.rootNode)) {
 				fileRootitem = createItemNode(openFile);
 				node.getChildren().add(fileRootitem);
 			}
 
-			TreeItem<MyEditorSheet> tmpItem = fileRootitem;
-			List<TreeItem<MyEditorSheet>> ls = new ArrayList<>();
+			TreeItem<MyNoteEditorSheet> tmpItem = fileRootitem;
+			List<TreeItem<MyNoteEditorSheet>> ls = new ArrayList<>();
 			for (var file : fileList) {
-				TreeItem<MyEditorSheet> item = createItemNode(file);
+				TreeItem<MyNoteEditorSheet> item = createItemNode(file);
 				if (item != null) {
 					ls.add(item);
 				}
@@ -300,7 +301,7 @@ public class NoteUtility {
 				});
 			}
 		}else {
-			TreeItem<MyEditorSheet> fileRootitem = node;
+			TreeItem<MyNoteEditorSheet> fileRootitem = node;
 			// 如果选择目录导入进来的情况
 			if (node.equals(NoteTabTree.rootNode)) {
 				fileRootitem = createItemNode(openFile);
@@ -321,7 +322,7 @@ public class NoteUtility {
 	 * @param file
 	 * @return
 	 */
-	public static TreeItem<MyEditorSheet> createItemNode(File file) {
+	public static TreeItem<MyNoteEditorSheet> createItemNode(File file) {
 		if (file.exists()) {
 			DocumentPo fileNode = new DocumentPo(false);
 			fileNode.setFileFullName(file.getAbsolutePath());
@@ -332,7 +333,7 @@ public class NoteUtility {
 				fileNode.setType(DocumentPo.IS_TEXT);
 			}
 
-			MyEditorSheet mtb = new MyEditorSheet(fileNode, null);// ComponentGetter.appComponent.MyEditorSheet(fileNode);
+			MyNoteEditorSheet mtb = new MyNoteEditorSheet(fileNode, null);// ComponentGetter.appComponent.MyNoteEditorSheet(fileNode);
 
 			mtb.setFile(file);
 			Region icon;
@@ -343,7 +344,7 @@ public class NoteUtility {
 			}
 			mtb.setIcon(icon);
 
-			TreeItem<MyEditorSheet> item = new TreeItem<>(mtb);
+			TreeItem<MyNoteEditorSheet> item = new TreeItem<>(mtb);
 			return item;
 		}
 		return null;
@@ -380,8 +381,8 @@ public class NoteUtility {
 					if (file.isDirectory()) {
 						rootCache = NoteTabTree.rootNode;
 
-						MyEditorSheet stab = new MyEditorSheet("", null);// ComponentGetter.appComponent.MyEditorSheet();
-						TreeItem<MyEditorSheet> tmpRoot = new TreeItem<>(stab);
+						MyNoteEditorSheet stab = new MyNoteEditorSheet("", null);// ComponentGetter.appComponent.MyNoteEditorSheet();
+						TreeItem<MyNoteEditorSheet> tmpRoot = new TreeItem<>(stab);
 						Platform.runLater(() -> {
 							NoteTabTree.noteTabTreeView.setRoot(tmpRoot);
 						});
@@ -394,7 +395,7 @@ public class NoteUtility {
 								LoadingAnimation.ChangeLabelText("Search: \n" + tmpfile.getName());
 								String fileName = tmpfile.getName().toLowerCase();
 								if (fileName.contains(searchStr)) {
-									TreeItem<MyEditorSheet> fileRootitem = NoteUtility.createItemNode(tmpfile);
+									TreeItem<MyNoteEditorSheet> fileRootitem = NoteUtility.createItemNode(tmpfile);
 									Platform.runLater(() -> {
 										tmpRoot.getChildren().add(fileRootitem);
 									});
@@ -414,7 +415,7 @@ public class NoteUtility {
 									if (charset != null) {
 										String textStr = FileTools.read(tmpfile, charset);
 										if (textStr.toLowerCase().contains(searchStr)) {
-											TreeItem<MyEditorSheet> fileRootitem = NoteUtility.createItemNode(tmpfile);
+											TreeItem<MyNoteEditorSheet> fileRootitem = NoteUtility.createItemNode(tmpfile);
 
 											Platform.runLater(() -> {
 												tmpRoot.getChildren().add(fileRootitem);
@@ -463,7 +464,7 @@ public class NoteUtility {
 		return getStopTag();
 	}
 
-	public static MyEditorSheet openNextNote(ObservableList<TreeItem<MyEditorSheet>> ls, int next) {
+	public static MyNoteEditorSheet openNextNote(ObservableList<TreeItem<MyNoteEditorSheet>> ls, int next) {
 		if (ls != null && next < ls.size()) {
 			var nextItem = ls.get(next);
 			NoteUtility.doubleClickItem(nextItem);
@@ -477,7 +478,7 @@ public class NoteUtility {
 	 * 上下切换搜索的文件
 	 */
 	public static void downUpBtnChange(boolean isUp, String txt) {
-		TreeItem<MyEditorSheet> currentItem = currentTreeItem();
+		TreeItem<MyNoteEditorSheet> currentItem = currentTreeItem();
 		if (currentItem == null) {
 			var ls = NoteTabTree.noteTabTreeView.getRoot().getChildren();
 			if (ls.size() > 0) {
@@ -494,7 +495,7 @@ public class NoteUtility {
 		}
 
 		// 判断当前节点是否大开着
-		MyEditorSheet currentSktb = currentItem.getValue();
+		MyNoteEditorSheet currentSktb = currentItem.getValue();
 		boolean isfind = false;
 		if (currentSktb.isShowing()) {
 			FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
@@ -524,7 +525,7 @@ public class NoteUtility {
 
 				}
 
-				MyEditorSheet skTab = openNextNote(ls, next);
+				MyNoteEditorSheet skTab = openNextNote(ls, next);
 			}
 
 		} else {

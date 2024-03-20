@@ -3,7 +3,7 @@ package net.tenie.Sqlucky.sdk.po.component;
 import java.io.File;
 import java.io.IOException;
 
-import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheetAction;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetAction;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupStringFilter;
@@ -14,7 +14,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyPopupNumberFilter;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;

@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.bottomSheet;
+package net.tenie.Sqlucky.sdk.component.sheet.bottom;
 
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;

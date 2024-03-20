@@ -21,7 +21,7 @@ import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
-import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditor;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;

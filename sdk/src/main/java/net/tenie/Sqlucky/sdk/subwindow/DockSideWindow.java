@@ -14,7 +14,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;

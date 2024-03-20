@@ -18,13 +18,11 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.plugin.note.impl.NoteDelegateImpl;
 import net.tenie.plugin.note.utility.NoteUtility;
 
 /**
@@ -35,8 +33,8 @@ import net.tenie.plugin.note.utility.NoteUtility;
 public class NoteTabTree {
 
 	public static StackPane noteStackPane = new StackPane();
-	public static TreeView<MyEditorSheet> noteTabTreeView;
-	public static TreeItem<MyEditorSheet> rootNode;
+	public static TreeView<MyNoteEditorSheet> noteTabTreeView;
+	public static TreeItem<MyNoteEditorSheet> rootNode;
 	public static String filePath = "";
 	private static VBox optionBox;
 	private static NoteOptionPanel optPane;
@@ -52,10 +50,10 @@ public class NoteTabTree {
 	}
 
 	// db节点view
-	public TreeView<MyEditorSheet> createScriptTreeView() {
-//		MyEditorSheet sheet = ComponentGetter.appComponent.sqluckyTab();
+	public TreeView<MyNoteEditorSheet> createScriptTreeView() {
+//		MyNoteEditorSheet sheet = ComponentGetter.appComponent.sqluckyTab();
 		rootNode = new TreeItem<>(null);
-		TreeView<MyEditorSheet> treeView = new TreeView<>(rootNode);
+		TreeView<MyNoteEditorSheet> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");
 		treeView.setShowRoot(false);
 		// 展示连接
@@ -75,7 +73,7 @@ public class NoteTabTree {
 	}
 
 //	// 恢复数据中保存的连接数据
-	public void recoverNode(TreeItem<MyEditorSheet> rootNode) {
+	public void recoverNode(TreeItem<MyNoteEditorSheet> rootNode) {
 
 		Consumer<String> cr = v -> {
 			List<String> pathAll = NoteUtility.fetchAllPath();
@@ -96,31 +94,31 @@ public class NoteTabTree {
 	}
 
 	// 所有连接节点
-	public static ObservableList<TreeItem<MyEditorSheet>> allTreeItem() {
-		ObservableList<TreeItem<MyEditorSheet>> val = noteTabTreeView.getRoot().getChildren();
+	public static ObservableList<TreeItem<MyNoteEditorSheet>> allTreeItem() {
+		ObservableList<TreeItem<MyNoteEditorSheet>> val = noteTabTreeView.getRoot().getChildren();
 		return val;
 	}
 
 	// 获取当前选中的节点
-	public static TreeItem<MyEditorSheet> getScriptViewCurrentItem() {
-		TreeItem<MyEditorSheet> ctt = noteTabTreeView.getSelectionModel().getSelectedItem();
+	public static TreeItem<MyNoteEditorSheet> getScriptViewCurrentItem() {
+		TreeItem<MyNoteEditorSheet> ctt = noteTabTreeView.getSelectionModel().getSelectedItem();
 		return ctt;
 	}
 
 	// 给root节点加元素
-	public static void treeRootAddItem(TreeItem<MyEditorSheet> item) {
-		TreeItem<MyEditorSheet> rootNode = noteTabTreeView.getRoot();
+	public static void treeRootAddItem(TreeItem<MyNoteEditorSheet> item) {
+		TreeItem<MyNoteEditorSheet> rootNode = noteTabTreeView.getRoot();
 		rootNode.getChildren().add(item);
 	}
 
 	// 给root节点加元素
-	public static void treeRootAddItem(MyEditorSheet mytab) {
-		TreeItem<MyEditorSheet> item = new TreeItem<MyEditorSheet>(mytab);
+	public static void treeRootAddItem(MyNoteEditorSheet mytab) {
+		TreeItem<MyNoteEditorSheet> item = new TreeItem<MyNoteEditorSheet>(mytab);
 		treeRootAddItem(item);
 	}
 
 	public static void openMyTab() {
-		TreeItem<MyEditorSheet> item = noteTabTreeView.getSelectionModel().getSelectedItem();
+		TreeItem<MyNoteEditorSheet> item = noteTabTreeView.getSelectionModel().getSelectedItem();
 		var sheet = item.getValue();
 		if (sheet != null && sheet.getDocumentPo() != null) {
 			sheet.showEditor();
@@ -128,7 +126,7 @@ public class NoteTabTree {
 	}
 
 	public static List<DocumentPo> allScriptPo() {
-		ObservableList<TreeItem<MyEditorSheet>> ls = allTreeItem();
+		ObservableList<TreeItem<MyNoteEditorSheet>> ls = allTreeItem();
 		List<DocumentPo> list = new ArrayList<>();
 		for (var ti : ls) {
 			var mytb = ti.getValue();
@@ -138,9 +136,9 @@ public class NoteTabTree {
 		return list;
 	}
 
-	public static List<MyEditorSheet> allMyTab() {
-		ObservableList<TreeItem<MyEditorSheet>> ls = allTreeItem();
-		List<MyEditorSheet> list = new ArrayList<>();
+	public static List<MyNoteEditorSheet> allMyTab() {
+		ObservableList<TreeItem<MyNoteEditorSheet>> ls = allTreeItem();
+		List<MyNoteEditorSheet> list = new ArrayList<>();
 		for (var ti : ls) {
 			var mytb = ti.getValue();
 			list.add(mytb);
@@ -148,8 +146,8 @@ public class NoteTabTree {
 		return list;
 	}
 
-	public static MyEditorSheet findMyTabByScriptPo(DocumentPo scpo) {
-		ObservableList<TreeItem<MyEditorSheet>> ls = allTreeItem();
+	public static MyNoteEditorSheet findMyTabByScriptPo(DocumentPo scpo) {
+		ObservableList<TreeItem<MyNoteEditorSheet>> ls = allTreeItem();
 		for (var ti : ls) {
 			var mytb = ti.getValue();
 			var tmp = mytb.getDocumentPo();
@@ -161,8 +159,8 @@ public class NoteTabTree {
 		return null;
 	}
 
-	public static void closeNodeConfirmation(TreeItem<MyEditorSheet> treeitem) {
-		MyEditorSheet stb = treeitem.getValue();
+	public static void closeNodeConfirmation(TreeItem<MyNoteEditorSheet> treeitem) {
+		MyNoteEditorSheet stb = treeitem.getValue();
 		var parentNode = treeitem.getParent();
 		if (stb.isModify()) {
 			// 是否保存
@@ -200,16 +198,16 @@ public class NoteTabTree {
 		}
 	}
 
-	public static void removeItem(TreeItem<MyEditorSheet> nodeItem, TreeItem<MyEditorSheet> subItem) {
-		MyEditorSheet stb = subItem.getValue();
+	public static void removeItem(TreeItem<MyNoteEditorSheet> nodeItem, TreeItem<MyNoteEditorSheet> subItem) {
+		MyNoteEditorSheet stb = subItem.getValue();
 		nodeItem.getChildren().remove(subItem);
 		ComponentGetter.appComponent.tabPaneRemoveSqluckyTab(stb);
 	}
 
 	// 关闭一个脚本 Node cell
-	public static void closeAction(TreeItem<MyEditorSheet> node) {
+	public static void closeAction(TreeItem<MyNoteEditorSheet> node) {
 
-		MyEditorSheet stb = node.getValue();
+		MyNoteEditorSheet stb = node.getValue();
 		File nodeFile = stb.getFile();
 		// 文件: 判断是否需要保存修改
 		if (nodeFile.isFile()) {
@@ -248,12 +246,12 @@ public class NoteTabTree {
 		});
 
 		// 打开目录
-		MenuItem Open = new MenuItem("Import Note Folder");
+		MenuItem Open = new MenuItem("Import Folder");
 		Open.setOnAction(e -> {
 			filePath = NoteUtility.openFolder(rootNode);
 		});
 		// 打开file
-		MenuItem OpenFile = new MenuItem("Import Note File");
+		MenuItem OpenFile = new MenuItem("Import File");
 		OpenFile.setOnAction(e -> {
 			NoteTabTree.filePath = NoteUtility.openFile();
 		});

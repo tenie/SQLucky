@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.bottomSheet;
+package net.tenie.Sqlucky.sdk.component.sheet.bottom;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
@@ -13,11 +13,7 @@ import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
-import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelperForJava;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
@@ -28,7 +24,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 public class TextBottomSheet {
 

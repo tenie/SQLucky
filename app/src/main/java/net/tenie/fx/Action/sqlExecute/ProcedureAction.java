@@ -11,7 +11,7 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
-import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;

@@ -2,12 +2,12 @@ package net.tenie.Sqlucky.sdk.po.component;
 
 import java.util.function.Consumer;
 
-import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheetAction;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetAction;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
-import net.tenie.Sqlucky.sdk.component.bottomSheet.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.RsVal;

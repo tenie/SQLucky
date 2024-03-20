@@ -63,6 +63,6 @@ open module SQLucky.sdk {
 	exports net.tenie.Sqlucky.sdk.ui;
 	exports net.tenie.Sqlucky.sdk.excel;
 	exports org.girod.javafx.svgimage;
-    exports net.tenie.Sqlucky.sdk.component.bottomSheet;
     exports net.tenie.Sqlucky.sdk.sql;
+	exports net.tenie.Sqlucky.sdk.component.sheet.bottom;
 }

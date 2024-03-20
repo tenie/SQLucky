@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.bottomSheet;
+package net.tenie.Sqlucky.sdk.component.sheet.bottom;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;

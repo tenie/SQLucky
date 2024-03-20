@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.component.editor;
 
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelperForJava;
+import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingNoKeyWordHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
@@ -26,6 +27,15 @@ public class HighLightingEditorUtils {
 	public static SqluckyEditor javaEditor() {
 		MyAutoComplete myAuto = new MyAutoComplete();
 		SqluckyEditor sqlCodeAreaEditor = new HighLightingEditor(myAuto, CodeAreaHighLightingHelperForJava.createHelper());
+//		右键菜单
+		HighLightingEditorContextMenu cm = new HighLightingEditorContextMenu(sqlCodeAreaEditor);
+		sqlCodeAreaEditor.setContextMenu(cm);
+		return sqlCodeAreaEditor;
+	}
+
+	public static SqluckyEditor noKeyWordEditor() {
+		MyAutoComplete myAuto = new MyAutoComplete();
+		SqluckyEditor sqlCodeAreaEditor = new HighLightingEditor(myAuto, new CodeAreaHighLightingNoKeyWordHelper());
 //		右键菜单
 		HighLightingEditorContextMenu cm = new HighLightingEditorContextMenu(sqlCodeAreaEditor);
 		sqlCodeAreaEditor.setContextMenu(cm);

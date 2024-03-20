@@ -32,8 +32,8 @@ public class NoteOptionPanel {
 	private VBox searchVbox = new VBox();
 	private VBox searchVbox2 = new VBox();
 
-	private JFXButton openFolderBtn = new JFXButton();
-	private JFXButton openFileBtn = new JFXButton();
+//	private JFXButton openFolderBtn = new JFXButton();
+//	private JFXButton openFileBtn = new JFXButton();
 
 	private JFXButton newFile = new JFXButton();
 	private JFXButton DeleteFile = new JFXButton();
@@ -58,18 +58,32 @@ public class NoteOptionPanel {
 
 		// 搜索面板初始化
 		initSearchPanel();
+		MenuButton openBtn = new MenuButton();
+		openBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
 
-		openFolderBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-		openFolderBtn.setTooltip(CommonUtils.instanceTooltip("Import Note Folder "));
-		openFolderBtn.setOnMouseClicked(e -> {
+		MenuItem openFolderBtn = new MenuItem("Import Folder");
+		openFolderBtn.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
+		openFolderBtn.setOnAction(e -> {
 			NoteTabTree.filePath = NoteUtility.openFolder(NoteTabTree.rootNode);
 		});
-
-		openFileBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-		openFileBtn.setTooltip(CommonUtils.instanceTooltip("Import Note File "));
-		openFileBtn.setOnMouseClicked(e -> {
+		MenuItem openFileBtn = new MenuItem("Import File");
+		openFileBtn.setGraphic(IconGenerator.svgImageDefActive("file-text-o"));
+		openFileBtn.setOnAction(e -> {
 			NoteTabTree.filePath = NoteUtility.openFile();
 		});
+		openBtn.getItems().addAll(openFolderBtn, openFileBtn);
+
+//		openFolderBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
+//		openFolderBtn.setTooltip(CommonUtils.instanceTooltip("Import Note Folder "));
+//		openFolderBtn.setOnMouseClicked(e -> {
+//			NoteTabTree.filePath = NoteUtility.openFolder(NoteTabTree.rootNode);
+//		});
+//
+//		openFileBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
+//		openFileBtn.setTooltip(CommonUtils.instanceTooltip("Import Note File "));
+//		openFileBtn.setOnMouseClicked(e -> {
+//			NoteTabTree.filePath = NoteUtility.openFile();
+//		});
 
 		newFile.setGraphic(ComponentGetter.getIconDefActive("file-o"));
 		newFile.setTooltip(CommonUtils.instanceTooltip("New  File "));
@@ -109,7 +123,7 @@ public class NoteOptionPanel {
 
 		searchBtn.getItems().addAll(showQueryFileName, showQueryFileText);
 
-		btnsBox.getChildren().addAll(openFolderBtn, openFileBtn, newFile, DeleteFile, showInFolder, searchBtn);
+		btnsBox.getChildren().addAll(openBtn, newFile, DeleteFile, showInFolder, searchBtn);
 		optionVbox.getChildren().add(btnsBox);
 	}
 
@@ -249,14 +263,6 @@ public class NoteOptionPanel {
 		NoteUtility.isText = true;
 		CommonUtils.leftHideOrShowSecondOperateBox(optionVbox, searchVbox2, txt);
 
-	}
-
-	public JFXButton getOpenFolderBtn() {
-		return openFolderBtn;
-	}
-
-	public void setOpenFolderBtn(JFXButton openFolderBtn) {
-		this.openFolderBtn = openFolderBtn;
 	}
 
 	public JFXButton getNewFile() {

@@ -43,7 +43,7 @@ public class CodeAreaHighLightingHelper {
 		
 	}
 	
-	private String getPatternString(String appendstr) {
+	protected String getPatternString(String appendstr) {
 		   String KEYWORD_PATTERN = "\\b(" + String.join("|", keywords) + ")\\b";
 	       String PAREN_PATTERN = "\\(|\\)|=|<|>|!";
 	       String BRACE_PATTERN = "\\{|\\}";

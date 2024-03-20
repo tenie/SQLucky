@@ -6,8 +6,9 @@ open module SQLucky.plugin.note {
 	requires SQLucky.sdk;
 	requires org.apache.commons.io;
 	requires com.jfoenix;
+    requires java.sql;
 
-	exports net.tenie.plugin.note.impl;
+    exports net.tenie.plugin.note.impl;
 
 	provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.note.impl.NoteDelegateImpl;
 }

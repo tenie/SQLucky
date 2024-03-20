@@ -259,6 +259,9 @@ public class AppDao {
 	// TODO
 	public static void updateScriptArchive(Connection conn, DocumentPo po) {
 		PreparedStatement sm = null;
+		if(po.getId() == null ) {
+			return;
+		}
 		String sql = "update SCRIPT_ARCHIVE set TITLE_NAME = ?, "
 				+ " SQL_TEXT = ?, FILE_NAME = ? , ENCODE = ?, PARAGRAPH = ? , OPEN_STATUS = ?, IS_ACTIVATE = ? where id = ?";
 		try {

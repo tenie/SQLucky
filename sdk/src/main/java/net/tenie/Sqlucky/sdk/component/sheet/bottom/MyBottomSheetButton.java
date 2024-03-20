@@ -1,4 +1,4 @@
-package net.tenie.Sqlucky.sdk.component.bottomSheet;
+package net.tenie.Sqlucky.sdk.component.sheet.bottom;
 
 import com.jfoenix.controls.JFXButton;
 import javafx.collections.ObservableList;

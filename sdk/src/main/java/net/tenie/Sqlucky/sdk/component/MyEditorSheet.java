@@ -1,23 +1,24 @@
 package net.tenie.Sqlucky.sdk.component;
 
-import java.io.File;
-import java.sql.Connection;
-
-import javafx.scene.layout.*;
-import org.fxmisc.richtext.CodeArea;
-
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
+import javafx.scene.layout.*;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditor;
 import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelperForJava;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import org.fxmisc.richtext.CodeArea;
+
+import java.io.File;
+import java.sql.Connection;
 
 public class MyEditorSheet {
 	private Tab tab = new Tab();
@@ -136,7 +137,9 @@ public class MyEditorSheet {
 
 	// 创建一个纯文本的编辑器
 	private void createTextMyTab() {
-		SqluckyEditor sqlEditor = new MyTextEditor();
+		SqluckyEditor sqlEditor = HighLightingEditorUtils.noKeyWordEditor();
+//		SqluckyEditor sqlEditor = new HighLightingEditor(myAuto, CodeAreaHighLightingHelperForJava.createHelper());
+//		SqluckyEditor sqlEditor = new MyTextEditor();
 		this.setSqluckyEditor(sqlEditor);
 	}
 
@@ -206,7 +209,7 @@ public class MyEditorSheet {
 	public void showEditor() {
 		Platform.runLater(() -> {
 			var myTabPane = ComponentGetter.mainTabPane;
-			if (myTabPane.getTabs().contains(tab) == false) {
+			if (!myTabPane.getTabs().contains(tab)) {
 				myTabPane.getTabs().add(tab);// 在指定位置添加Tab
 			}
 			myTabPane.getSelectionModel().select(tab);
@@ -272,16 +275,19 @@ public class MyEditorSheet {
 	}
 
 	public void saveScriptPo(Connection conn) {
-		String sql = getAreaText();
-		String title = getTitle();
-		if (sql != null) {
-			documentPo.setText(sql);
-		}
-		int p = getParagraph();
-		documentPo.setTitle(title);
-		documentPo.setParagraph(p);
+		if( documentPo.getSaveToDB()){
+			String sql = getAreaText();
+			String title = getTitle();
+			if (sql != null) {
+				documentPo.setText(sql);
+			}
+			int p = getParagraph();
+			documentPo.setTitle(title);
+			documentPo.setParagraph(p);
 //		AppDao.updateScriptArchive(conn, documentPo);
-		ComponentGetter.appComponent.updateScriptArchive(conn, documentPo);
+			ComponentGetter.appComponent.updateScriptArchive(conn, documentPo);
+		}
+
 	}
 
 	// 设置tab 中的 area 中的文本
