@@ -78,11 +78,18 @@ public class NoteTabTree {
 	public void recoverNode(TreeItem<MyEditorSheet> rootNode) {
 
 		Consumer<String> cr = v -> {
-			filePath = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "dir_path");
-			File file = new File(filePath);
-			if (file.exists()) {
-				NoteUtility.openNoteDir(rootNode, file);
+			List<String> pathAll = NoteUtility.fetchAllPath();
+			for(String filePath : pathAll){
+				File file = new File(filePath);
+				if (file.exists()) {
+					if(file.isDirectory()){
+						NoteUtility.openNoteDir(rootNode, file);
+					}else {
+						NoteUtility.openNoteFile(file);
+					}
+				}
 			}
+
 		};
 		CommonUtils.addInitTask(cr);
 
@@ -241,10 +248,16 @@ public class NoteTabTree {
 		});
 
 		// 打开目录
-		MenuItem Open = new MenuItem("Import note Folder");
+		MenuItem Open = new MenuItem("Import Note Folder");
 		Open.setOnAction(e -> {
 			filePath = NoteUtility.openFolder(rootNode);
 		});
+		// 打开file
+		MenuItem OpenFile = new MenuItem("Import Note File");
+		OpenFile.setOnAction(e -> {
+			NoteTabTree.filePath = NoteUtility.openFile();
+		});
+
 
 		MenuItem deleteFile = new MenuItem("Delete File");
 		deleteFile.setOnAction(e -> {
@@ -256,7 +269,7 @@ public class NoteTabTree {
 			NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
 		});
 
-		contextMenu.getItems().addAll(Open,
+		contextMenu.getItems().addAll(Open,OpenFile,
 //				close,
 				new SeparatorMenuItem(), newFile, deleteFile,
 //				Refresh,

@@ -33,6 +33,7 @@ public class NoteOptionPanel {
 	private VBox searchVbox2 = new VBox();
 
 	private JFXButton openFolderBtn = new JFXButton();
+	private JFXButton openFileBtn = new JFXButton();
 
 	private JFXButton newFile = new JFXButton();
 	private JFXButton DeleteFile = new JFXButton();
@@ -59,25 +60,31 @@ public class NoteOptionPanel {
 		initSearchPanel();
 
 		openFolderBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-		openFolderBtn.setTooltip(CommonUtils.instanceTooltip("Import note folder "));
+		openFolderBtn.setTooltip(CommonUtils.instanceTooltip("Import Note Folder "));
 		openFolderBtn.setOnMouseClicked(e -> {
 			NoteTabTree.filePath = NoteUtility.openFolder(NoteTabTree.rootNode);
 		});
 
+		openFileBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
+		openFileBtn.setTooltip(CommonUtils.instanceTooltip("Import Note File "));
+		openFileBtn.setOnMouseClicked(e -> {
+			NoteTabTree.filePath = NoteUtility.openFile();
+		});
+
 		newFile.setGraphic(ComponentGetter.getIconDefActive("file-o"));
-		newFile.setTooltip(CommonUtils.instanceTooltip("New  file "));
+		newFile.setTooltip(CommonUtils.instanceTooltip("New  File "));
 		newFile.setOnMouseClicked(e -> {
 			NoteUtility.newFile(NoteTabTree.noteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
 		});
 
 		DeleteFile.setGraphic(ComponentGetter.getIconDefActive("trash"));
-		DeleteFile.setTooltip(CommonUtils.instanceTooltip("Delete  file "));
+		DeleteFile.setTooltip(CommonUtils.instanceTooltip("Delete  File "));
 		DeleteFile.setOnMouseClicked(e -> {
 			NoteUtility.deleteFile(NoteTabTree.noteTabTreeView);
 		});
 
 		showInFolder.setGraphic(ComponentGetter.getIconDefActive("sign-in"));
-		showInFolder.setTooltip(CommonUtils.instanceTooltip("Show In System folder"));
+		showInFolder.setTooltip(CommonUtils.instanceTooltip("Show In System Folder"));
 		showInFolder.setOnMouseClicked(e -> {
 			NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
 		});
@@ -102,7 +109,7 @@ public class NoteOptionPanel {
 
 		searchBtn.getItems().addAll(showQueryFileName, showQueryFileText);
 
-		btnsBox.getChildren().addAll(openFolderBtn, newFile, DeleteFile, showInFolder, searchBtn);
+		btnsBox.getChildren().addAll(openFolderBtn, openFileBtn, newFile, DeleteFile, showInFolder, searchBtn);
 		optionVbox.getChildren().add(btnsBox);
 	}
 

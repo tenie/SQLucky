@@ -3,6 +3,7 @@ package net.tenie.plugin.note.utility;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -206,56 +207,112 @@ public class NoteUtility {
 		File f = FileOrDirectoryChooser.showDirChooser("Select Directory", ComponentGetter.primaryStage);
 		if (f != null && f.exists()) {
 			filePath = f.getAbsolutePath();
-			if (rootNode.getChildren().size() >= 0) {
-				rootNode.getChildren().clear();
-			}
+//			if (rootNode.getChildren().size() >= 0) {
+//				rootNode.getChildren().clear();
+//			}
 			openNoteDir(rootNode, f);
-			ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path", filePath);
+//			ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path", filePath);
 
+			savePath(filePath);
 		}
 
 		return filePath;
 
 	}
 
+	// 打开文件
+	public static String openFile() {
+		String filePath = "";
+		File f = FileOrDirectoryChooser.showOpenAllFile("Select File", ComponentGetter.primaryStage);
+		if (f != null && f.exists()) {
+			filePath = f.getAbsolutePath();
+			openNoteFile(f);
+			savePath(filePath);
+		}
+
+		return filePath;
+
+	}
+
+	/**
+	 * 保存多个笔记的目录数
+	 */
+	public static void savePath(String filePath) {
+		String count = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "path_count");
+		Integer countInt = 0;
+		if (StrUtils.isNotNullOrEmpty(count)) {
+			countInt = Integer.valueOf(count);
+		}
+		countInt += 1;
+		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path_" + countInt, filePath);
+		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "path_count", countInt+"");
+	}
+
+	/**
+	 * 获取所以的note目录
+	 * @return
+	 */
+	public static List<String> fetchAllPath() {
+		String count = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "path_count");
+		Integer countInt = 0;
+		List<String> pathList = new ArrayList<>();
+		if (StrUtils.isNotNullOrEmpty(count)) {
+			countInt = Integer.valueOf(count);
+			for (int i = 0 ; i <= countInt ; i++){
+				String pathVal = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "dir_path_" + i);
+				pathList.add(pathVal);
+			}
+		}
+		return pathList;
+	}
+
 	// 打开sql文件
 	public static void openNoteDir(TreeItem<MyEditorSheet> node, File openFile) {
-		try {
-			Consumer<String> caller = x -> {
-				File[] files = openFile.listFiles();
-				if (files == null)
-					return;
+		if(openFile.isDirectory()){
+			List<File> fileList = new ArrayList<>();
+			File[] files = openFile.listFiles();
+			if (files == null){
+				return;
+			}else {
+				fileList.addAll(List.of(files));
+			}
+			TreeItem<MyEditorSheet> fileRootitem = node;
+			// 如果选择目录导入进来的情况
+			if (node.equals(NoteTabTree.rootNode)) {
+				fileRootitem = createItemNode(openFile);
+				node.getChildren().add(fileRootitem);
+			}
 
-				TreeItem<MyEditorSheet> fileRootitem = node;
-				// 如果选择目录导入进来的情况
-				if (node.equals(NoteTabTree.rootNode)) {
-					fileRootitem = createItemNode(openFile);
-					node.getChildren().add(fileRootitem);
+			TreeItem<MyEditorSheet> tmpItem = fileRootitem;
+			List<TreeItem<MyEditorSheet>> ls = new ArrayList<>();
+			for (var file : fileList) {
+				TreeItem<MyEditorSheet> item = createItemNode(file);
+				if (item != null) {
+					ls.add(item);
 				}
 
-				TreeItem<MyEditorSheet> tmpItem = fileRootitem;
-				List<TreeItem<MyEditorSheet>> ls = new ArrayList<>();
-				for (var file : files) {
-					TreeItem<MyEditorSheet> item = createItemNode(file);
-					if (item != null) {
-						ls.add(item);
-					}
-
-				}
-				if (ls.size() > 0) {
-					Platform.runLater(() -> {
-						tmpItem.getChildren().addAll(ls);
-						tmpItem.setExpanded(true);
-						NoteTabTree.noteTabTreeView.getSelectionModel().select(tmpItem);
-					});
-				}
-			};
-
-			CommonUtils.runThread(caller);
-
-		} catch (Exception e) {
-			e.printStackTrace();
+			}
+			if (ls.size() > 0) {
+				Platform.runLater(() -> {
+					tmpItem.getChildren().addAll(ls);
+					tmpItem.setExpanded(true);
+					NoteTabTree.noteTabTreeView.getSelectionModel().select(tmpItem);
+				});
+			}
+		}else {
+			TreeItem<MyEditorSheet> fileRootitem = node;
+			// 如果选择目录导入进来的情况
+			if (node.equals(NoteTabTree.rootNode)) {
+				fileRootitem = createItemNode(openFile);
+				node.getChildren().add(fileRootitem);
+			}
 		}
+	}
+
+	// 打开sql文件
+	public static void openNoteFile(File openFile) {
+		var fileRootitem = createItemNode(openFile);
+		NoteTabTree.rootNode.getChildren().add(fileRootitem);
 	}
 
 	/**
