@@ -1,39 +1,34 @@
 package net.tenie.Sqlucky.sdk.component.editor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.function.Consumer;
-
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import net.tenie.Sqlucky.sdk.component.*;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.model.Paragraph;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
-
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Bounds;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.IndexRange;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.model.Paragraph;
+import org.fxmisc.richtext.model.StyleSpansBuilder;
+
+import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.function.Consumer;
 
 /**
  * sql文本编辑组件
@@ -49,6 +44,8 @@ public class HighLightingEditor implements SqluckyEditor {
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
 	private MyEditorSheet sheet;
+
+	private DocumentPo documentPo;
 	private final int HIGH_LIGHT_MAX_STRING_LENGTH =1000_000;
 
 	@Override
@@ -107,7 +104,12 @@ public class HighLightingEditor implements SqluckyEditor {
 		}
 
 		codeArea = new MyCodeArea();
-
+		codeArea.textProperty().addListener((a,b,c)->{
+			if(c.isEmpty() && documentPo != null){
+				codeArea.insertText(0, documentPo.getText());
+				this.highLighting();
+			}
+		});
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 
@@ -132,9 +134,7 @@ public class HighLightingEditor implements SqluckyEditor {
 						callPopup();
 					}
 				}
-			}
-			// 按 "." 跳出补全提示框
-			else if (e.getCode() == KeyCode.PERIOD) {
+			} else if (e.getCode() == KeyCode.PERIOD) { // 按 "." 跳出补全提示框
 				int anchor = codeArea.getAnchor();
 				Consumer<String> caller = x -> {
 					try {
@@ -1017,13 +1017,13 @@ public class HighLightingEditor implements SqluckyEditor {
 	/**
 	 * 触发删除按钮
 	 */
-	public void codeAreaBackspaceDelete(KeyEvent e, ChangeListener<String> cl) {
-		// 删除选中字符串防止页面滚动, 自己删
-		codeArea.textProperty().removeListener(cl);
-		Platform.runLater(() -> {
-			codeArea.textProperty().addListener(cl);
-		});
-	}
+//	public void codeAreaBackspaceDelete(KeyEvent e, ChangeListener<String> cl) {
+//		// 删除选中字符串防止页面滚动, 自己删
+//		codeArea.textProperty().removeListener(cl);
+//		Platform.runLater(() -> {
+//			codeArea.textProperty().addListener(cl);
+//		});
+//	}
 
 	/**
 	 * 黏贴的时候, 防止页面跳到自己黏贴
@@ -1047,15 +1047,15 @@ public class HighLightingEditor implements SqluckyEditor {
 	/**
 	 * 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
 	 */
-	public void codeAreaCtrlZ(KeyEvent e, ChangeListener<String> cl) {
-
-		if (e.isShortcutDown()) {
-			codeArea.textProperty().removeListener(cl);
-			Platform.runLater(() -> {
-				codeArea.textProperty().addListener(cl);
-			});
-		}
-	}
+//	public void codeAreaCtrlZ(KeyEvent e, ChangeListener<String> cl) {
+//
+//		if (e.isShortcutDown()) {
+//			codeArea.textProperty().removeListener(cl);
+//			Platform.runLater(() -> {
+//				codeArea.textProperty().addListener(cl);
+//			});
+//		}
+//	}
 
 	private String paragraphPrefixBlankStr(int anchor) {
 		int a = anchor;
@@ -1135,6 +1135,14 @@ public class HighLightingEditor implements SqluckyEditor {
 
 		}
 
+	}
+
+	public DocumentPo getDocumentPo() {
+		return documentPo;
+	}
+
+	public void setDocumentPo(DocumentPo documentPo) {
+		this.documentPo = documentPo;
 	}
 }
 

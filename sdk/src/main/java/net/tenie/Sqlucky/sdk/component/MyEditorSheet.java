@@ -94,8 +94,7 @@ public class MyEditorSheet {
 		// 选择title的时候初始化tab内容
 		tab.selectedProperty().addListener(l -> {
 			boolean isSel = tab.isSelected();
-			if (isSel && isInit == false) {
-
+			if (isSel && !isInit) {
 				if (sqluckyEditor == null) {
 					if (documentPo.getType() == DocumentPo.IS_SQL) {
 						setDefaultEditor();
@@ -104,6 +103,7 @@ public class MyEditorSheet {
 					}
 				} else {
 					setSqluckyEditor(sqluckyEditor);
+
 				}
 
 				isInit = true;
@@ -118,7 +118,7 @@ public class MyEditorSheet {
 	// 设置editor的时候 设置文本
 	public void setSqluckyEditor(SqluckyEditor sqluckyEditor) {
 		this.sqluckyEditor = sqluckyEditor;
-
+		this.sqluckyEditor.setDocumentPo(documentPo);
 		VBox pane = sqluckyEditor.getCodeAreaPane();
 		vbox = new VBox();
 		vbox.setSpacing(3);

@@ -1154,6 +1154,8 @@ public class CommonUtils {
 	// 隐藏查找, 替换窗口
 	public static void hideFindReplaceWindow() {
 
+
+
 //		if(ComponentGetter.focusedSqluckyEditor != null){
 //			ComponentGetter.focusedSqluckyEditor.hiddenFindReplaceBox();
 //		}

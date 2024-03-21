@@ -10,6 +10,7 @@ import net.tenie.Sqlucky.sdk.component.editor.FindReplaceTextBox;
 import net.tenie.Sqlucky.sdk.component.editor.MyLineNumberNode;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 
 import java.util.List;
@@ -232,6 +233,16 @@ public class MyTextEditor implements SqluckyEditor {
 				ComponentGetter.codeAreaSqluckyEditor = this;
 			}
 		});
+	}
+
+	@Override
+	public DocumentPo getDocumentPo() {
+		return null;
+	}
+
+	@Override
+	public void setDocumentPo(DocumentPo documentPo) {
+
 	}
 
 	@Override

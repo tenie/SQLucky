@@ -3,15 +3,12 @@ package net.tenie.Sqlucky.sdk.component;
 import javafx.application.Platform;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.fxmisc.flowless.VirtualizedScrollPane;
-
-import java.util.List;
 
 /**
  * 没有行号的 codeArea
@@ -183,6 +180,16 @@ public class MyNoLineNumberEditor implements SqluckyEditor {
 
     @Override
     public void codeAreaSetFocusedSqluckyEditor() {
+
+    }
+
+    @Override
+    public DocumentPo getDocumentPo() {
+        return null;
+    }
+
+    @Override
+    public void setDocumentPo(DocumentPo documentPo) {
 
     }
 
