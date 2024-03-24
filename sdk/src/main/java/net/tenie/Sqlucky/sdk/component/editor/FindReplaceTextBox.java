@@ -31,11 +31,11 @@ import java.util.function.Consumer;
  *
  */
 public class FindReplaceTextBox {
-	private static String f3Str = "";
+	private  String f3Str = "";
 	private static Logger logger = LogManager.getLogger(FindReplaceTextBox.class);
 
 	// 查询字符串输入框
-	public static TextField textField;
+	public  TextField textField;
 	private JFXButton down;
 	private JFXButton up;
 	MyCodeArea codeArea;
@@ -150,7 +150,7 @@ public class FindReplaceTextBox {
 		return findStringStop(str, idx, sensitive, forward);
 	}
 
-	static void selectRange(CodeArea code, int anchor, int caretPosition) {
+	 void selectRange(CodeArea code, int anchor, int caretPosition) {
 		code.selectRange(anchor, caretPosition);
 		code.requestFollowCaret();
 	}

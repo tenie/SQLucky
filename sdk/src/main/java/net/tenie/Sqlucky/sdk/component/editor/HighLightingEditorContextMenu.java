@@ -6,6 +6,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
+import net.tenie.Sqlucky.sdk.sql.SqlUtils;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -43,22 +44,22 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 		MenuItem sqlFormat = new MenuItem("Format  SQL");
 		sqlFormat.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		sqlFormat.setOnAction(e -> {
-			CommonUtils.formatSqlText();
+			SqlUtils.formatSqlText();
 		});
 
 		MenuItem formatAll = new MenuItem("Format All SQL");
 		formatAll.setOnAction(e -> {
-			CommonUtils.formatSqlText();
+			SqlUtils.formatSqlText();
 		});
 
 		MenuItem sqlUnformat = new MenuItem("Unformat SQL");
 		sqlUnformat.setOnAction(e -> {
-			CommonUtils.pressSqlText();
+			SqlUtils.pressSqlText();
 		});
 
 		MenuItem unformatAll = new MenuItem("Unformat All SQL");
 		unformatAll.setOnAction(e -> {
-			CommonUtils.pressSqlText();
+			SqlUtils.pressSqlText();
 		});
 
 		MenuItem find = new MenuItem("Find");

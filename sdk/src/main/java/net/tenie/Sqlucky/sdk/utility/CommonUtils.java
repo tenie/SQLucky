@@ -966,153 +966,7 @@ public class CommonUtils {
 
 	}
 
-	// 递归判断是否是参数的组件子节点是焦点对象
-	public static boolean isChildFocused(Parent parent) {
-		for (Node node : parent.getChildrenUnmodifiable()) {
-			if (node.isFocused()) {
-				return true;
-			} else if (node instanceof Parent subParent) {
-				if (isChildFocused( subParent)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
-	private static SqluckyEditor getSqluckyEditorFromTab(Node node , Parent parent){
-		if (node instanceof SqluckyEditor  sqluckyEditor) {
-			return sqluckyEditor;
-		}else{
-			var tmpParent = node.getParent();
-			while ( ! tmpParent.equals(parent)){
-				if (tmpParent instanceof SqluckyEditor sqluckyEditor) {
-					return sqluckyEditor;
-				}
-				tmpParent = tmpParent.getParent();
-			}
-		}
-
-
-		return  null;
-	}
-	public static SqluckyEditor getFocusedSqluckyEditor(TabPane tabPane) {
-		for (Tab tab: tabPane.getTabs()){
-			Node tabContent = tab.getContent();
-			Node subNode =  getFocusedChildNode((Parent) tabContent);
-			if(subNode != null){
-//				return tab;
-				return getSqluckyEditorFromTab(subNode, (Parent) tabContent);
-			}
-		}
-		return null;
-//		Map.Entry entry = null;
-//		for (Node node : parent.getChildrenUnmodifiable()) {
-//			if (node.isFocused()) {
-//				if(node instanceof Tab){
-//
-//				}
-//				return node;
-//			} else if (node instanceof Parent) {
-//				var subNode = getFocusedChildNode((Parent) node);
-//				if (subNode != null ) {
-//					return subNode;
-//				}
-//			}
-//		}
-//		return null;
-	}
-	public static Node getFocusedChildNode(Parent parent) {
-		for (Node node : parent.getChildrenUnmodifiable()) {
-			if (node.isFocused()) {
-				return node;
-			} else if (node instanceof Parent ) {
-				var subNode = getFocusedChildNode((Parent) node);
-				if (subNode != null ) {
-					return subNode;
-				}
-			}
-		}
-		return null;
-	}
-
-	public static  Map<Parent, Consumer<Node>> findAction = new HashMap<>();
-
-	public static void initFindAction() {
-		if (findAction.size() == 0) {
-			findAction.put(ComponentGetter.mainTabPane, node -> {
-
-			});
-			findAction.put(ComponentGetter.dataTabPane, node -> {
-			});
-		}
-	}
-	/**
-	 * 显示查找
-	 * @param isReplace
-	 * @param findStr
-	 */
-	public static void showFind3(boolean isReplace, String findStr) {
-
-//		initFindAction();
-//		for(var entry : findAction.entrySet()){
-//			Tab tab = getFocusedTab((TabPane) entry.getKey());
-//			if(tab !=null ){
-//				MyEditorSheet myEditorSheet = (MyEditorSheet) tab.getUserData();
-//				myEditorSheet.getSqluckyEditor().getCodeArea().showFindReplaceTextBox(isReplace, findStr);
-//			}
-//		}
-	}
-	public static void showFind(boolean isReplace, String findStr) {
-		initFindAction();
-		for(var entry : findAction.entrySet()){
-			var parent = entry.getKey();
-			SqluckyEditor sqluckyEditor = getFocusedSqluckyEditor((TabPane) parent);
-			if(sqluckyEditor != null ){
-				sqluckyEditor.getCodeArea().showFindReplaceTextBox(isReplace, findStr);
-				return;
-			}
-//			Node node = getFocusedChildNode(parent);
-//			if(node != null ){
-//				if (node instanceof MyCodeArea codeArea) {
-//					codeArea.showFindReplaceTextBox(isReplace, findStr);
-//				}else {
-//					var consumer = entry.getValue();
-//					consumer.accept(node);
-//				}
-//				return;
-//			}
-		}
-	}
-
-
-
-
-	// 查找替换
-//	public static void find(boolean isReplace, String findStr) {
-//			boolean mainTabPaneisChildFocused = isChildFocused(ComponentGetter.mainTabPane);
-//			if (mainTabPaneisChildFocused) {
-//				if (ComponentGetter.focusedSqluckyEditor != null) {
-//
-//					ComponentGetter.focusedSqluckyEditor.showFindReplaceTextBox(isReplace, findStr);
-//				}
-//			} else {
-//				boolean dataTabPaneisChildFocused = isChildFocused(ComponentGetter.dataTabPane);
-//				if (dataTabPaneisChildFocused) {
-//					// 数据展示区的文本编辑器显示查找
-//					if (ComponentGetter.codeAreaSqluckyEditor != null) {
-//						ComponentGetter.codeAreaSqluckyEditor.showFindReplaceTextBox(isReplace, findStr);
-//					}
-//				}
-//			}
-//	}
-
-
-
-	// 查找替换
-	public static void findReplace(boolean isReplace, String findStr, MyEditorSheet sheet) {
-		sheet.getSqluckyEditor().getCodeArea().showFindReplaceTextBox(isReplace, findStr);
-	}
 
 	// 在浏览器中打开 URL
 	public static void OpenURLInBrowser(String url) {
@@ -1202,47 +1056,6 @@ public class CommonUtils {
 		return true;
 	}
 
-	// 代码格式化
-	public static void formatSqlText() {
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
-		String txt = code.getSelectedText();
-		if (StrUtils.isNotNullOrEmpty(txt)) {
-			IndexRange i = code.getSelection();
-			int start = i.getStart();
-			int end = i.getEnd();
-
-			String rs = SqlFormatter.format(txt);
-			code.deleteText(start, end);
-			code.insertText(start, rs);
-		} else {
-			txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-			String rs = SqlFormatter.format(txt);
-			code.clear();
-			code.appendText(rs);
-		}
-		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
-	}
-
-	// sql 压缩
-	public static void pressSqlText() {
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
-		String txt = code.getSelectedText();
-		if (StrUtils.isNotNullOrEmpty(txt)) {
-			IndexRange i = code.getSelection();
-			int start = i.getStart();
-			int end = i.getEnd();
-
-			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
-			code.deleteText(start, end);
-			code.insertText(start, rs);
-		} else {
-			txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-			String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
-			code.clear();
-			code.appendText(rs);
-		}
-		MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
-	}
 
 	// 键盘ESC按下后: 查找表的输入框清空, 选中的文本取消选中, 查找替换面板关闭
 	public static void pressBtnESC() {
@@ -1265,36 +1078,60 @@ public class CommonUtils {
 
 	// 隐藏查找, 替换窗口
 	public static void hideFindReplaceWindow() {
-		initFindAction();
-		for(var entry : findAction.entrySet()){
-			var parent = entry.getKey();
-			Node node = getFocusedChildNode(parent);
-			if(node != null ){
-				if (node instanceof MyCodeArea codeArea) {
-					codeArea.hiddenFindReplaceBox();
-					return;
-				}else {
-					var consumer = entry.getValue();
-					consumer.accept(node);
+		if(! FinderAction.hideMainTabPaneFindReplace()){
+			FinderAction.hideDataTabPaneFindReplace();
+		}
+	}
+
+	/**
+	 *  递归判断是否是参数的组件子节点是焦点对象
+	 */
+	public static boolean isChildFocused(Parent parent) {
+		for (Node node : parent.getChildrenUnmodifiable()) {
+			if (node.isFocused()) {
+				return true;
+			} else if (node instanceof Parent subParent) {
+				if (isChildFocused( subParent)) {
+					return true;
 				}
 			}
 		}
-//		boolean  mainTabPaneisChildFocused= isChildFocused(ComponentGetter.mainTabPane);
-//		if(mainTabPaneisChildFocused){
-//			if(ComponentGetter.focusedSqluckyEditor != null){
-//				ComponentGetter.focusedSqluckyEditor.hiddenFindReplaceBox();
-//			}
-//		}else {
-//			boolean  dataTabPaneisChildFocused= isChildFocused(ComponentGetter.dataTabPane);
-//			if(dataTabPaneisChildFocused){
-//				// 数据展示区的文本编辑器显示查找
-//				if(ComponentGetter.codeAreaSqluckyEditor != null){
-//					ComponentGetter.codeAreaSqluckyEditor.hiddenFindReplaceBox();
-//				}
-//			}
-//		}
+		return false;
+	}
 
 
+	/**
+	 * 获取焦点对象
+	 * @param parent
+	 * @return
+	 */
+	public static Node getFocusedChildNode(Parent parent) {
+		for (Node node : parent.getChildrenUnmodifiable()) {
+			if (node.isFocused()) {
+				return node;
+			} else if (node instanceof Parent ) {
+				var subNode = getFocusedChildNode((Parent) node);
+				if (subNode != null ) {
+					return subNode;
+				}
+			}
+		}
+		return null;
+	}
+
+
+	public static void showFind(boolean isReplace, String findStr) {
+		boolean isShow = FinderAction.showMainTabPaneFindReplace(isReplace, findStr);
+		if(!isShow){
+			FinderAction.showDataTabPaneFindReplace(isReplace, findStr);
+		}
+	}
+
+
+
+	// 查找替换
+	public static void findReplace(boolean isReplace, String findStr, MyEditorSheet sheet) {
+		sheet.getSqluckyEditor().getCodeArea().showFindReplaceTextBox(isReplace, findStr);
 	}
 
 	// 查找替换, 当前的编辑器

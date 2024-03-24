@@ -15,6 +15,7 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
+import net.tenie.Sqlucky.sdk.sql.SqlUtils;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -72,7 +73,7 @@ public class ButtonFactory {
 		JFXButton formatSQL = new JFXButton();
 		formatSQL.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		formatSQL.setOnMouseClicked(v -> {
-			CommonUtils.formatSqlText();
+			SqlUtils.formatSqlText();
 		});
 		formatSQL.setTooltip(MyTooltipTool.instance("Format"));
 

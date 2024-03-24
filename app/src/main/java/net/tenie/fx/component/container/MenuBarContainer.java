@@ -1,6 +1,7 @@
 package net.tenie.fx.component.container;
 
 import net.tenie.Sqlucky.sdk.sql.SqlParser;
+import net.tenie.Sqlucky.sdk.sql.SqlUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -151,7 +152,7 @@ public class MenuBarContainer {
 		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format"));
 		Format.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
 		Format.setOnAction(value -> {
-			CommonUtils.formatSqlText();
+			SqlUtils.formatSqlText();
 		});
 
 		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Line Comment"));
