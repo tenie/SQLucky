@@ -61,12 +61,12 @@ public class TextBottomSheet {
             }
 
             sqlArea.getCodeArea().setTitleName(key);
-            VBox sp = sqlArea.getCodeAreaPane(val, true);
+            sqlArea.setCodeArea(val, true);
 
             Tab  tab = new Tab(key);
             VBox tabVBox = new VBox();
-            tabVBox.getChildren().add(sp);
-            VBox.setVgrow(sp, Priority.ALWAYS);
+            tabVBox.getChildren().add(sqlArea);
+            VBox.setVgrow(sqlArea, Priority.ALWAYS);
             tab.setContent(tabVBox);
             tab.setUserData(sqlArea);
             tabPane.getTabs().add(tab);
@@ -83,7 +83,7 @@ public class TextBottomSheet {
             String val = map.get(key);
             SqluckyEditor sqlArea =  HighLightingEditorUtils.javaEditor();
             sqlArea.getCodeArea().setTitleName(key);
-            VBox sp = sqlArea.getCodeAreaPane(val, true);
+            sqlArea.setCodeArea(val, true);
             JFXButton tmpBtn = new JFXButton(key);
 
             tmpBtn.setGraphic(IconGenerator.svgImageDefActive("file-o"));
@@ -92,7 +92,7 @@ public class TextBottomSheet {
                 if(cs > 1){
                     // 如果当前children 和tabVbox中取出的是同一个, 就不用切换
                     var tmpSp =  mtb.getTabVBox().getChildren().get(1);
-                    if(tmpSp.equals(sp)){
+                    if(tmpSp.equals(sqlArea)){
                         return;
                     }else {
                         mtb.getTabVBox().getChildren().remove(1);
@@ -100,8 +100,8 @@ public class TextBottomSheet {
 
                 }
 
-                mtb.getTabVBox().getChildren().add(sp);
-                VBox.setVgrow(sp, Priority.ALWAYS);
+                mtb.getTabVBox().getChildren().add(sqlArea);
+                VBox.setVgrow(sqlArea, Priority.ALWAYS);
 
                 for (var otherBtn : btns){
                     // 添加选择下划线
@@ -147,11 +147,11 @@ public class TextBottomSheet {
     public static MyBottomSheet showTextSheet(String titleName, String text, boolean allowEdit) {
         var mtb = new MyBottomSheet(titleName);
         SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-        VBox sp = sqlArea.getCodeAreaPane(text, allowEdit);
+        sqlArea.setCodeArea(text, allowEdit);
         mtb.getTableData().setLock(true);  // 在设置操作按钮前, 指定锁按钮的状态
         mtb.operatePane(List.of(saveBtn(titleName, sqlArea))); // 没有操作按钮
-        mtb.tabVBoxAddComponentView(sp);
-        VBox.setVgrow(sp, Priority.ALWAYS);
+        mtb.tabVBoxAddComponentView(sqlArea);
+        VBox.setVgrow(sqlArea, Priority.ALWAYS);
 
         mtb.show();
         return mtb;
@@ -165,11 +165,11 @@ public class TextBottomSheet {
     public static MyBottomSheet showJavaTextSheet(String titleName, String text, boolean allowEdit) {
         var mtb = new MyBottomSheet(titleName);
         SqluckyEditor sqlArea =  HighLightingEditorUtils.javaEditor();
-        VBox sp = sqlArea.getCodeAreaPane(text, allowEdit);
+        sqlArea.setCodeArea(text, allowEdit);
         mtb.getTableData().setLock(true);  // 在设置操作按钮前, 指定锁按钮的状态
         mtb.operatePane(List.of(saveBtn(titleName, sqlArea))); // 没有操作按钮
-        mtb.tabVBoxAddComponentView(sp);
-        VBox.setVgrow(sp, Priority.ALWAYS);
+        mtb.tabVBoxAddComponentView(sqlArea);
+        VBox.setVgrow(sqlArea, Priority.ALWAYS);
 
         mtb.show();
         return mtb;

@@ -213,18 +213,17 @@ public class MyBottomSheet {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-		sqlArea.codeAreaSetFocusedSqluckyEditor();
 //		mtb.setSqlArea(sqlArea);
 //		VBox vb = new VBox();
 		String ddl = table.getDdl();
-		VBox sp = sqlArea.getCodeAreaPane(ddl, false);
+		sqlArea.setCodeArea(ddl, false);
 		// 表格上面的按钮
 		List<Node> btnLs = new ArrayList<>();
 		JFXButton sbtn = createSelectBtn(sqluckyConn, table.getTableSchema(), name);
 		btnLs.add(sbtn);
 		mtb.operatePane(btnLs);
-		mtb.tabVBoxAddComponentView(sp);
-		VBox.setVgrow(sp, Priority.ALWAYS);
+		mtb.tabVBoxAddComponentView(sqlArea);
+		VBox.setVgrow(sqlArea, Priority.ALWAYS);
 
 		mtb.show();
 		return mtb;
@@ -258,15 +257,14 @@ public class MyBottomSheet {
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-		sqlArea.codeAreaSetFocusedSqluckyEditor();
 //		mtb.setSqlArea(sqlArea);
 		String ddl = table.getDdl();
-		VBox sp = sqlArea.getCodeAreaPane(ddl, false);
+		sqlArea.setCodeArea(ddl, false);
 		// 表格上面的按钮
-		List<Node> btnLs = mtb.tableDDLOptionBtns(sqluckyConn, sp, table);
+		List<Node> btnLs = mtb.tableDDLOptionBtns(sqluckyConn, sqlArea, table);
 		mtb.operatePane(btnLs);
-		mtb.tabVBoxAddComponentView(sp);
-		VBox.setVgrow(sp, Priority.ALWAYS);
+		mtb.tabVBoxAddComponentView(sqlArea);
+		VBox.setVgrow(sqlArea, Priority.ALWAYS);
 
 		mtb.show();
 		return mtb;
@@ -292,12 +290,12 @@ public class MyBottomSheet {
 
 	// 数据tab中的组件
 	public static void DDLBox(SqluckyConnector sqluckyConn, MyBottomSheet mtb, String ddl , SqluckyEditor sqlArea ) {
-		VBox sp = sqlArea.getCodeAreaPane(ddl, false);
+		sqlArea.setCodeArea(ddl, false);
 		// 表格上面的按钮, 暂时先不显示操作按钮
 //		List<Node> btnLs = mtb.DDLOptionBtns(sqluckyConn, ddl, isRunFunc, isProc, name, isSelect, vb, sp, null);
 		mtb.operatePane(null); // 没有操作按钮
-		mtb.tabVBoxAddComponentView(sp);
-		VBox.setVgrow(sp, Priority.ALWAYS);
+		mtb.tabVBoxAddComponentView(sqlArea);
+		VBox.setVgrow(sqlArea, Priority.ALWAYS);
 	}
 
 	// 在按钮面板上显示信息: sql执行时间获取数据量, 数据库名称信息

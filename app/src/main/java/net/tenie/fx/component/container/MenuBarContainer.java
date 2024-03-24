@@ -138,12 +138,14 @@ public class MenuBarContainer {
 		MenuItem Find = new MenuItem(StrUtils.MenuItemNameFormat("Find"));
 		Find.setGraphic(IconGenerator.svgImageDefActive("search"));
 		Find.setOnAction(value -> {
-			CommonUtils.findReplace(false);
+//			CommonUtils.findReplace(false);
+			CommonUtils.showFind(false, "");
 		});
 
 		MenuItem FindReplace = new MenuItem(StrUtils.MenuItemNameFormat("Replace"));
 		FindReplace.setOnAction(value -> {
-			CommonUtils.findReplace(true);
+//			CommonUtils.findReplace(true);
+			CommonUtils.showFind(true, "");
 		});
 
 		MenuItem Format = new MenuItem(StrUtils.MenuItemNameFormat("Format"));

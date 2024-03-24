@@ -131,7 +131,7 @@ public class TransferDataController implements Initializable {
 	@FXML
 	private Label tipsLabel;
 
-	private VBox spCode;
+	private MyTextEditor spCode;
 	private MyCodeArea CodeArea;
 
 	private CheckTreeView<String> checkTreeView;
@@ -397,8 +397,8 @@ public class TransferDataController implements Initializable {
 		setGraphicAndCss();
 		tipsLabel.setText("Tips: 同步过程, 函数, 可能依赖序列或互相依赖");
 
-		var sqlCodeArea = new MyTextEditor();
-		spCode = sqlCodeArea.getCodeAreaPane();
+		MyTextEditor sqlCodeArea = new MyTextEditor();
+//		spCode = sqlCodeArea.getCodeAreaPane();
 		CodeArea = sqlCodeArea.getCodeArea();
 		setAction();
 

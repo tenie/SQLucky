@@ -1,25 +1,6 @@
 package net.tenie.Sqlucky.sdk.utility;
 
-import java.awt.Desktop;
-import java.awt.EventQueue;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import javafx.scene.control.*;
-import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
-import org.apache.commons.io.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.fxmisc.richtext.CodeArea;
-
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
-
 import javafx.animation.FadeTransition;
 import javafx.animation.RotateTransition;
 import javafx.application.Application;
@@ -31,7 +12,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -41,16 +26,33 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import net.tenie.Sqlucky.sdk.AppComponent;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.fxmisc.richtext.CodeArea;
+
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.CountDownLatch;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * 
@@ -965,12 +967,12 @@ public class CommonUtils {
 	}
 
 	// 递归判断是否是参数的组件子节点是焦点对象
-	public static boolean isChildFocused(javafx.scene.Parent parent) {
+	public static boolean isChildFocused(Parent parent) {
 		for (Node node : parent.getChildrenUnmodifiable()) {
 			if (node.isFocused()) {
 				return true;
-			} else if (node instanceof javafx.scene.Parent) {
-				if (isChildFocused((javafx.scene.Parent) node)) {
+			} else if (node instanceof Parent subParent) {
+				if (isChildFocused( subParent)) {
 					return true;
 				}
 			}
@@ -978,29 +980,139 @@ public class CommonUtils {
 		return false;
 	}
 
-	// 查找替换
-	public static void findReplace(boolean isReplace, String findStr, MyEditorSheet sheet) {
-		boolean  mainTabPaneisChildFocused= isChildFocused(ComponentGetter.mainTabPane);
-		if(mainTabPaneisChildFocused){
-			if(ComponentGetter.focusedSqluckyEditor != null){
-			 	ComponentGetter.focusedSqluckyEditor.showFindReplaceTextBox(isReplace, findStr);
-			}
-		}else {
-			boolean  dataTabPaneisChildFocused= isChildFocused(ComponentGetter.dataTabPane);
-			if(dataTabPaneisChildFocused){
-				// 数据展示区的文本编辑器显示查找
-				if(ComponentGetter.codeAreaSqluckyEditor != null){
-					ComponentGetter.codeAreaSqluckyEditor.showFindReplaceTextBox(isReplace, findStr);
+	private static SqluckyEditor getSqluckyEditorFromTab(Node node , Parent parent){
+		if (node instanceof SqluckyEditor  sqluckyEditor) {
+			return sqluckyEditor;
+		}else{
+			var tmpParent = node.getParent();
+			while ( ! tmpParent.equals(parent)){
+				if (tmpParent instanceof SqluckyEditor sqluckyEditor) {
+					return sqluckyEditor;
 				}
+				tmpParent = tmpParent.getParent();
 			}
 		}
 
+
+		return  null;
+	}
+	public static SqluckyEditor getFocusedSqluckyEditor(TabPane tabPane) {
+		for (Tab tab: tabPane.getTabs()){
+			Node tabContent = tab.getContent();
+			Node subNode =  getFocusedChildNode((Parent) tabContent);
+			if(subNode != null){
+//				return tab;
+				return getSqluckyEditorFromTab(subNode, (Parent) tabContent);
+			}
+		}
+		return null;
+//		Map.Entry entry = null;
+//		for (Node node : parent.getChildrenUnmodifiable()) {
+//			if (node.isFocused()) {
+//				if(node instanceof Tab){
+//
+//				}
+//				return node;
+//			} else if (node instanceof Parent) {
+//				var subNode = getFocusedChildNode((Parent) node);
+//				if (subNode != null ) {
+//					return subNode;
+//				}
+//			}
+//		}
+//		return null;
+	}
+	public static Node getFocusedChildNode(Parent parent) {
+		for (Node node : parent.getChildrenUnmodifiable()) {
+			if (node.isFocused()) {
+				return node;
+			} else if (node instanceof Parent ) {
+				var subNode = getFocusedChildNode((Parent) node);
+				if (subNode != null ) {
+					return subNode;
+				}
+			}
+		}
+		return null;
 	}
 
+	public static  Map<Parent, Consumer<Node>> findAction = new HashMap<>();
+
+	public static void initFindAction() {
+		if (findAction.size() == 0) {
+			findAction.put(ComponentGetter.mainTabPane, node -> {
+
+			});
+			findAction.put(ComponentGetter.dataTabPane, node -> {
+			});
+		}
+	}
+	/**
+	 * 显示查找
+	 * @param isReplace
+	 * @param findStr
+	 */
+	public static void showFind3(boolean isReplace, String findStr) {
+
+//		initFindAction();
+//		for(var entry : findAction.entrySet()){
+//			Tab tab = getFocusedTab((TabPane) entry.getKey());
+//			if(tab !=null ){
+//				MyEditorSheet myEditorSheet = (MyEditorSheet) tab.getUserData();
+//				myEditorSheet.getSqluckyEditor().getCodeArea().showFindReplaceTextBox(isReplace, findStr);
+//			}
+//		}
+	}
+	public static void showFind(boolean isReplace, String findStr) {
+		initFindAction();
+		for(var entry : findAction.entrySet()){
+			var parent = entry.getKey();
+			SqluckyEditor sqluckyEditor = getFocusedSqluckyEditor((TabPane) parent);
+			if(sqluckyEditor != null ){
+				sqluckyEditor.getCodeArea().showFindReplaceTextBox(isReplace, findStr);
+				return;
+			}
+//			Node node = getFocusedChildNode(parent);
+//			if(node != null ){
+//				if (node instanceof MyCodeArea codeArea) {
+//					codeArea.showFindReplaceTextBox(isReplace, findStr);
+//				}else {
+//					var consumer = entry.getValue();
+//					consumer.accept(node);
+//				}
+//				return;
+//			}
+		}
+	}
+
+
+
+
 	// 查找替换
-//	public static void findReplace(boolean isReplace) {
-//		findReplace(isReplace, "", null);
+//	public static void find(boolean isReplace, String findStr) {
+//			boolean mainTabPaneisChildFocused = isChildFocused(ComponentGetter.mainTabPane);
+//			if (mainTabPaneisChildFocused) {
+//				if (ComponentGetter.focusedSqluckyEditor != null) {
+//
+//					ComponentGetter.focusedSqluckyEditor.showFindReplaceTextBox(isReplace, findStr);
+//				}
+//			} else {
+//				boolean dataTabPaneisChildFocused = isChildFocused(ComponentGetter.dataTabPane);
+//				if (dataTabPaneisChildFocused) {
+//					// 数据展示区的文本编辑器显示查找
+//					if (ComponentGetter.codeAreaSqluckyEditor != null) {
+//						ComponentGetter.codeAreaSqluckyEditor.showFindReplaceTextBox(isReplace, findStr);
+//					}
+//				}
+//			}
 //	}
+
+
+
+	// 查找替换
+	public static void findReplace(boolean isReplace, String findStr, MyEditorSheet sheet) {
+		sheet.getSqluckyEditor().getCodeArea().showFindReplaceTextBox(isReplace, findStr);
+	}
 
 	// 在浏览器中打开 URL
 	public static void OpenURLInBrowser(String url) {
@@ -1153,34 +1265,42 @@ public class CommonUtils {
 
 	// 隐藏查找, 替换窗口
 	public static void hideFindReplaceWindow() {
-
-
-
-//		if(ComponentGetter.focusedSqluckyEditor != null){
-//			ComponentGetter.focusedSqluckyEditor.hiddenFindReplaceBox();
-//		}
-
-		boolean  mainTabPaneisChildFocused= isChildFocused(ComponentGetter.mainTabPane);
-		if(mainTabPaneisChildFocused){
-			if(ComponentGetter.focusedSqluckyEditor != null){
-				ComponentGetter.focusedSqluckyEditor.hiddenFindReplaceBox();
-			}
-		}else {
-			boolean  dataTabPaneisChildFocused= isChildFocused(ComponentGetter.dataTabPane);
-			if(dataTabPaneisChildFocused){
-				// 数据展示区的文本编辑器显示查找
-				if(ComponentGetter.codeAreaSqluckyEditor != null){
-					ComponentGetter.codeAreaSqluckyEditor.hiddenFindReplaceBox();
+		initFindAction();
+		for(var entry : findAction.entrySet()){
+			var parent = entry.getKey();
+			Node node = getFocusedChildNode(parent);
+			if(node != null ){
+				if (node instanceof MyCodeArea codeArea) {
+					codeArea.hiddenFindReplaceBox();
+					return;
+				}else {
+					var consumer = entry.getValue();
+					consumer.accept(node);
 				}
 			}
 		}
+//		boolean  mainTabPaneisChildFocused= isChildFocused(ComponentGetter.mainTabPane);
+//		if(mainTabPaneisChildFocused){
+//			if(ComponentGetter.focusedSqluckyEditor != null){
+//				ComponentGetter.focusedSqluckyEditor.hiddenFindReplaceBox();
+//			}
+//		}else {
+//			boolean  dataTabPaneisChildFocused= isChildFocused(ComponentGetter.dataTabPane);
+//			if(dataTabPaneisChildFocused){
+//				// 数据展示区的文本编辑器显示查找
+//				if(ComponentGetter.codeAreaSqluckyEditor != null){
+//					ComponentGetter.codeAreaSqluckyEditor.hiddenFindReplaceBox();
+//				}
+//			}
+//		}
 
 
 	}
 
-	// 查找替换
-	public static void findReplace(boolean isReplace) {
-		findReplace(isReplace, "", null);
+	// 查找替换, 当前的编辑器
+	public static void findReplaceByCurrentEditer(boolean isReplace) {
+		var sheet = MyEditorSheetHelper.getActivationEditorSheet();
+		findReplace(isReplace, "", sheet);
 	}
 
 	// 获取当前连接下拉选中的连接名称

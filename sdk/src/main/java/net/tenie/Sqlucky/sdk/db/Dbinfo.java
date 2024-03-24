@@ -257,7 +257,8 @@ public class Dbinfo {
 		try {
 			val = conn.getSchema();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 
 		return val;
@@ -268,7 +269,8 @@ public class Dbinfo {
 		try {
 			val = conn.getCatalog();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.error(e.getMessage());
 		}
 		return val;
 	}

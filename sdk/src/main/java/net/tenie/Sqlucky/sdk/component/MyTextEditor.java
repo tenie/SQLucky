@@ -14,9 +14,7 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 
 import java.util.List;
-import java.util.function.Consumer;
 
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,31 +24,24 @@ import org.apache.logging.log4j.Logger;
  * @author tenie
  *
  */
-public class MyTextEditor implements SqluckyEditor {
+public class MyTextEditor extends SqluckyEditor {
 	private static Logger logger = LogManager.getLogger(MyTextEditor.class);
-	private VBox codeAreaPane;
 	private MyCodeArea codeArea;
 	private CodeAreaHighLightingHelper highLightingHelper ;
 
+	private VBox fdbox;
+
+	private FindReplaceTextBox findReplaceTextBox;
+
+
 	public MyTextEditor() {
-		codeArea = new MyCodeArea();
+		codeArea = new MyCodeArea(this);
+		this.getChildren().add(codeArea);
+		VBox.setVgrow(codeArea, Priority.ALWAYS);
+		this.getStyleClass().add("my-tag");
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 	}
-
-//	public MyTextArea(String text) {
-//		codeArea = new MyCodeArea();
-//		// 行号主题色
-//		changeCodeAreaLineNoThemeHelper();
-//		setText(text);
-//	}
-
-
-//	public void setText(String text) {
-//		codeArea.appendText(text); 
-//		highLighting();
-//	}
-
 	@Override
 	public void hideAutoComplete() {
 	}
@@ -64,7 +55,7 @@ public class MyTextEditor implements SqluckyEditor {
 		codeArea.getMylineNumber().nextBookmark(tf);
 	}
 
-//	@Override
+	//	@Override
 	public void highLighting(int begin) {
 		Platform.runLater(() -> {
 			try {
@@ -147,36 +138,6 @@ public class MyTextEditor implements SqluckyEditor {
 	}
 
 	@Override
-	public VBox getCodeAreaPane() {
-		if( codeAreaPane == null) {
-			return getCodeAreaPane(null, true);
-		}else {
-			return codeAreaPane;
-		}
-	}
-
-	/**
-	 * 初始化codeArea 文本和是否可编辑, 返回StackPane容器
-	 */
-	@Override
-	public VBox getCodeAreaPane(String text, boolean editable) {
-		if( codeAreaPane == null) {
-//			codeAreaPane = new StackPane(new VirtualizedScrollPane<>(codeArea));
-			codeAreaPane = new VBox(codeArea);
-			codeAreaPane.getStyleClass().add("my-tag");
-			VBox.setVgrow(codeArea, Priority.ALWAYS);
-		}
-
-		if (text != null) {
-			codeArea.appendText(text);
-			highLighting();
-		}
-		codeArea.setEditable(editable);
-
-		return codeAreaPane;
-	}
-
-	@Override
 	public void setContextMenu(ContextMenu cm) {
 	}
 
@@ -216,24 +177,8 @@ public class MyTextEditor implements SqluckyEditor {
 	public void delAnchorAfterString() {
 	}
 
-	VBox fdbox ;
-	FindReplaceTextBox FindReplaceText;
 
 
-	@Override
-	public   void  hiddenFindReplaceBox(){
-		codeAreaPane.getChildren().remove(fdbox);
-	}
-
-	// 设置codeArea 的焦点监听, 换成到全局变量, 让查找替换面板可以正确显示
-	@Override
-	public void codeAreaSetFocusedSqluckyEditor() {
-		this.codeArea.focusedProperty().addListener((a,b,c)->{
-			if(c){
-				ComponentGetter.codeAreaSqluckyEditor = this;
-			}
-		});
-	}
 
 	@Override
 	public DocumentPo getDocumentPo() {
@@ -246,31 +191,23 @@ public class MyTextEditor implements SqluckyEditor {
 	}
 
 	@Override
-	public  void  showFindReplaceTextBox(boolean showReplace, String findText){
-		Consumer<VBox> hiddenBox = v->{
-			codeAreaPane.getChildren().remove(v);
-		};
-
-		if(StrUtils.isNullOrEmpty(findText)){
-			findText = codeArea.getSelectedText();
-		}
-
-		if(FindReplaceText == null){
-//			fdbox = FindReplaceTextBox.createFindReplaceTextBox(showReplace, findText, hiddenBox);
-
-			FindReplaceText = new FindReplaceTextBox(showReplace, findText, this, hiddenBox);
-			fdbox = FindReplaceText.getfindReplaceBox();
-
-			codeAreaPane.getChildren().add(0,fdbox);
-		}else {
-//			codeAreaPane.getChildren().add(0,fdbox);
-			FindReplaceText.showHiddenReplaceBox(showReplace);
-			FindReplaceText.setText(findText);
-			if(! codeAreaPane.getChildren().contains(fdbox)){
-				codeAreaPane.getChildren().add(0,fdbox);
-			}
-		}
+	public VBox getFdbox() {
+		return fdbox;
 	}
 
+	@Override
+	public void setFdbox(VBox fdbox) {
+		this.fdbox = fdbox;
+	}
+
+	@Override
+	public FindReplaceTextBox getFindReplaceTextBox() {
+		return findReplaceTextBox;
+	}
+
+	@Override
+	public void setFindReplaceTextBox(FindReplaceTextBox findReplaceTextBox) {
+		this.findReplaceTextBox = findReplaceTextBox;
+	}
 
 }

@@ -36,10 +36,10 @@ import java.util.function.Consumer;
  * @author tenie
  *
  */
-public class HighLightingEditor implements SqluckyEditor {
+public class HighLightingEditor extends SqluckyEditor {
 	private static Logger logger = LogManager.getLogger(HighLightingEditor.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
-	private VBox codeAreaPane;
+//	private VBox codeAreaPane;
 	private MyCodeArea codeArea;
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;
@@ -47,6 +47,10 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	private DocumentPo documentPo;
 	private final int HIGH_LIGHT_MAX_STRING_LENGTH =1000_000;
+
+
+	VBox fdbox ;
+	FindReplaceTextBox FindReplaceText;
 
 	@Override
 	public void hideAutoComplete() {
@@ -96,6 +100,7 @@ public class HighLightingEditor implements SqluckyEditor {
 //    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
 
 	public HighLightingEditor(MyAutoComplete myAuto, CodeAreaHighLightingHelper helper) {
+
 		this.myAuto = myAuto;
 		if(helper == null ){
 			highLightingHelper = new CodeAreaHighLightingHelper();
@@ -103,7 +108,11 @@ public class HighLightingEditor implements SqluckyEditor {
 			highLightingHelper = helper;
 		}
 
-		codeArea = new MyCodeArea();
+		codeArea = new MyCodeArea(this);
+		this.getChildren().add(codeArea);
+		VBox.setVgrow(codeArea, Priority.ALWAYS);
+		this.getStyleClass().add("my-tag");
+
 		codeArea.textProperty().addListener((a,b,c)->{
 			if(c.isEmpty() && documentPo != null){
 				codeArea.insertText(0, documentPo.getText());
@@ -427,82 +436,23 @@ public class HighLightingEditor implements SqluckyEditor {
 		return tf;
 	}
 
-	@Override
-	public VBox getCodeAreaPane() {
-		if (codeAreaPane == null) {
-			return getCodeAreaPane(null, true);
-		} else {
-			return codeAreaPane;
-		}
-	}
 
-
-	VBox fdbox ;
-	FindReplaceTextBox FindReplaceText;
-
-
-	@Override
-	public   void  hiddenFindReplaceBox(){
-		codeAreaPane.getChildren().remove(fdbox);
-	}
-
-	// 设置codeArea 的焦点监听, 换成到全局变量, 让查找替换面板可以正确显示
-	@Override
-	public void codeAreaSetFocusedSqluckyEditor() {
-		this.codeArea.focusedProperty().addListener((a,b,c)->{
-			if(c){
-				ComponentGetter.codeAreaSqluckyEditor = this;
-			}
-		});
-	}
-
-	@Override
-	public  void  showFindReplaceTextBox(boolean showReplace, String findText){
-		Consumer<VBox> hiddenBox = v->{
-			codeAreaPane.getChildren().remove(v);
-		};
-
-		if(StrUtils.isNullOrEmpty(findText)){
-			findText = codeArea.getSelectedText();
-		}
-
-		if(FindReplaceText == null){
-//			fdbox = FindReplaceTextBox.createFindReplaceTextBox(showReplace, findText, hiddenBox);
-
-			FindReplaceText = new FindReplaceTextBox(showReplace, findText,  this, hiddenBox);
-			fdbox = FindReplaceText.getfindReplaceBox();
-
-			codeAreaPane.getChildren().add(0,fdbox);
-		}else {
-//			codeAreaPane.getChildren().add(0,fdbox);
-			FindReplaceText.showHiddenReplaceBox(showReplace);
-			FindReplaceText.setText(findText);
-			if(! codeAreaPane.getChildren().contains(fdbox)){
-				codeAreaPane.getChildren().add(0,fdbox);
-			}
-		}
-	}
-
-
-	@Override
-	public VBox getCodeAreaPane(String text, boolean editable) {
-		if (codeAreaPane == null) {
-//			codeAreaPane = new StackPane(new VirtualizedScrollPane<>(codeArea));
-			codeAreaPane = new VBox(codeArea);
-			VBox.setVgrow(codeArea, Priority.ALWAYS);
-			codeAreaPane.getStyleClass().add("my-tag");
-		}
-
-		if (text != null) {
-			codeArea.appendText(text);
-			highLighting();
-		}
-		codeArea.setEditable(editable);
-//		Platform.runLater(()->{
-//			showFindReplaceTextBox();
-//		});
-		return codeAreaPane;
-	}
+//	@Override
+//	public VBox getCodeAreaPane(String text, boolean editable) {
+////		if (codeAreaPane == null) {
+////			codeAreaPane = new VBox(codeArea);
+//			this.getChildren().add(codeArea);
+//			VBox.setVgrow(codeArea, Priority.ALWAYS);
+//			this.getStyleClass().add("my-tag");
+////		}
+//
+//		if (text != null) {
+//			codeArea.appendText(text);
+//			highLighting();
+//		}
+//		codeArea.setEditable(editable);
+//		return this;
+//	}
 
 	@Override
 	public void highLighting(String str) {
@@ -1143,6 +1093,20 @@ public class HighLightingEditor implements SqluckyEditor {
 
 	public void setDocumentPo(DocumentPo documentPo) {
 		this.documentPo = documentPo;
+	}
+
+	public VBox getFdbox() {
+		return fdbox;
+	}
+	public void setFdbox(VBox fdbox) {
+		this.fdbox = fdbox;
+	}
+
+	public FindReplaceTextBox getFindReplaceTextBox() {
+		return FindReplaceText;
+	}
+	public void setFindReplaceTextBox(FindReplaceTextBox findReplaceTextBox) {
+		 this.FindReplaceText = findReplaceTextBox;
 	}
 }
 

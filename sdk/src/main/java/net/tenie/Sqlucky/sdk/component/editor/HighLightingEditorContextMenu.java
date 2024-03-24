@@ -64,12 +64,14 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 		MenuItem find = new MenuItem("Find");
 		find.setGraphic(IconGenerator.svgImageDefActive("search"));
 		find.setOnAction(e -> {
-			CommonUtils.findReplace(false);
+//			CommonUtils.findReplace(false);
+			CommonUtils.showFind(false, "");
 		});
 
 		MenuItem replace = new MenuItem("Replace");
 		replace.setOnAction(e -> {
-			CommonUtils.findReplace(true);
+//			CommonUtils.findReplace(true);
+			CommonUtils.showFind(true, "");
 		});
 
 //		cursor

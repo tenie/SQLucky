@@ -31,7 +31,7 @@ public class PluginManageWindow {
 	private VBox  pluginBox = new VBox();
 
 	// 描述
-	private MyCodeArea describe = new MyCodeArea();
+	private MyCodeArea describe = new MyCodeArea(null);
 
 	// 操作面板(下载, 退出)
 	private FlowPane optionPane = new FlowPane();

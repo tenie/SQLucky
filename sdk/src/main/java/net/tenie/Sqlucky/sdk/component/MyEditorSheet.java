@@ -109,9 +109,9 @@ public class MyEditorSheet {
 				isInit = true;
 
 			}
-			if(isSel){
-				ComponentGetter.focusedSqluckyEditor = this.sqluckyEditor;
-			}
+//			if(isSel){
+//				ComponentGetter.focusedSqluckyEditor = this.sqluckyEditor;
+//			}
 		});
 	}
 
@@ -119,11 +119,11 @@ public class MyEditorSheet {
 	public void setSqluckyEditor(SqluckyEditor sqluckyEditor) {
 		this.sqluckyEditor = sqluckyEditor;
 		this.sqluckyEditor.setDocumentPo(documentPo);
-		VBox pane = sqluckyEditor.getCodeAreaPane();
+//		VBox pane = sqluckyEditor.getCodeAreaPane();
 		vbox = new VBox();
 		vbox.setSpacing(3);
-		vbox.getChildren().add(pane);
-		VBox.setVgrow(pane, Priority.ALWAYS);
+		vbox.getChildren().add(sqluckyEditor);
+		VBox.setVgrow(sqluckyEditor, Priority.ALWAYS);
 		tab.setContent(vbox);
 		documentPo.setOpenStatus(1);
 		initTabSQLText(documentPo.getText());

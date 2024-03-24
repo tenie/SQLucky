@@ -196,11 +196,11 @@ public class MyAlert {
 		Label question = new Label(promptInfo);
 		// code
 		MyTextEditor myTextArea = new MyTextEditor();
-		VBox codeAreaPane = myTextArea.getCodeAreaPane(code, false);
-		codeAreaPane.setStyle("-fx-background-color: transparent;");
+		myTextArea.setCodeArea(code, false);
+		myTextArea.setStyle("-fx-background-color: transparent;");
 
 		List<Node> nds = new ArrayList<>();
-		nds.add(codeAreaPane);
+		nds.add(myTextArea);
 		nds.add(question);
 
 		VBox vb = DialogTools.getSceneVbox(500, 150, stage, ComponentGetter.INFO, nds, btns);
@@ -246,11 +246,11 @@ public class MyAlert {
 
 	public static void myConfirmation(String promptInfo, Stage stage, List<Node> btns, boolean isWait) {
 		MyNoLineNumberEditor myTextArea = new MyNoLineNumberEditor();
-		VBox codeAreaPane = myTextArea.getCodeAreaPane(promptInfo, false);
-		codeAreaPane.setStyle("-fx-background-color: transparent;");
+        myTextArea.setCodeArea(promptInfo, false);
+		myTextArea.setStyle("-fx-background-color: transparent;");
 
 		List<Node> nds = new ArrayList<>();
-		nds.add(codeAreaPane);
+		nds.add(myTextArea);
 
 		VBox vb = DialogTools.getSceneVbox(stage, ComponentGetter.INFO, nds, btns);
 		Scene scene = new Scene( vb);
@@ -370,12 +370,12 @@ public class MyAlert {
 			Label titleLabel = new Label(title);
 			titleLabel.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
 			MyTextEditor myTextArea = new MyTextEditor();
-			VBox codeAreaPane = myTextArea.getCodeAreaPane(text, false);
-			codeAreaPane.setStyle("-fx-background-color: transparent;");
+			myTextArea.setCodeArea(text, false);
+			myTextArea.setStyle("-fx-background-color: transparent;");
 
 			List<Node> nds = new ArrayList<>();
 
-			nds.add(codeAreaPane);
+			nds.add(myTextArea);
 
 			final Stage stage = new Stage();
 			JFXButton btn = new JFXButton("Close(C) ");

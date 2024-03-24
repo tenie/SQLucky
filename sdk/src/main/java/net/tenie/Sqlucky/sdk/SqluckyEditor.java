@@ -4,6 +4,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.editor.FindReplaceTextBox;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 
 /**
@@ -11,61 +12,65 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
  *
  * @author tenie
  */
-public interface SqluckyEditor {
-    void highLighting(String str);
+public abstract  class SqluckyEditor  extends VBox  {
+    public void setCodeArea(String text, boolean editable){
+        if (text != null) {
+            getCodeArea().appendText(text);
+            highLighting();
+        }
+        getCodeArea().setEditable(editable);
+    }
+    abstract public void highLighting(String str);
 
-    void highLighting();
+    abstract public void highLighting();
 
-    void errorHighLighting(int begin, String str);
+    abstract public  void errorHighLighting(int begin, String str);
 
-    void changeCodeAreaLineNoThemeHelper();
+    abstract public void changeCodeAreaLineNoThemeHelper();
 
-    MyCodeArea getCodeArea();
+    abstract public MyCodeArea getCodeArea();
 
-    void callPopup();
+    abstract public  void callPopup();
 
-    void codePopup(KeyEvent e);
+    abstract public void codePopup(KeyEvent e);
 
     //	隐藏自动补全
-    void hideAutoComplete();
+    abstract public void hideAutoComplete();
 
     //	显示自动补全
-    void showAutoComplete(double x, double y, String str);
+    abstract public void showAutoComplete(double x, double y, String str);
 
-    void nextBookmark(boolean tf);
+    abstract public void nextBookmark(boolean tf);
 
-    VBox getCodeAreaPane();
+//    abstract public  VBox getCodeAreaPane();
 
-    VBox getCodeAreaPane(String text, boolean editable);
+//    abstract public  VBox getCodeAreaPane(String text, boolean editable);
+//    public abstract void setCodeArea(String text, boolean editable);
+    abstract public void setContextMenu(ContextMenu cm);
 
-    void setContextMenu(ContextMenu cm);
+    abstract public void delLineOrSelectTxt();
 
-    void delLineOrSelectTxt();
+    abstract public void moveAnchorToLineBegin();
 
-    void moveAnchorToLineBegin();
+    abstract public void moveAnchorToLineEnd();
 
-    void moveAnchorToLineEnd();
+    abstract public void delAnchorBeforeWord();
 
-    void delAnchorBeforeWord();
+    abstract public  void delAnchorBeforeChar();
 
-    void delAnchorBeforeChar();
+    abstract public void delAnchorBeforeString();
 
-    void delAnchorBeforeString();
+    abstract public void delAnchorAfterWord();
 
-    void delAnchorAfterWord();
+    abstract public void delAnchorAfterChar();
 
-    void delAnchorAfterChar();
+    abstract public void delAnchorAfterString();
 
-    void delAnchorAfterString();
+    abstract public  DocumentPo getDocumentPo();
 
-    void showFindReplaceTextBox(boolean showReplace, String findText);
-
-    void hiddenFindReplaceBox();
-
-    // 设置 codeArea的焦点, 让查找替换, 可以知道在哪个codeArea中出去
-    void codeAreaSetFocusedSqluckyEditor();
-
-    DocumentPo getDocumentPo();
-
-    void setDocumentPo(DocumentPo documentPo);
+    abstract public void setDocumentPo(DocumentPo documentPo);
+    abstract public VBox getFdbox();
+    abstract public void setFdbox(VBox fdbox);
+    abstract public  FindReplaceTextBox getFindReplaceTextBox();
+    abstract public void setFindReplaceTextBox(FindReplaceTextBox findReplaceTextBox);
 }
