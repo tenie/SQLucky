@@ -129,20 +129,5 @@ public final class ComponentGetter {
 	public  static void setCurrentSqlStatement(Statement stm){
 		ComponentGetter.sqlStatement = stm;
 	}
-//	public static SqluckyBottomSheet currentDataTab() {
-//		SqluckyBottomSheet tab = (MyTabData) ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-//		return tab;
-//	}
-
-	// 获取当前数据表的Tab
-//	public static MyBottomSheet currentDataTab() {
-//		Tab tab = ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
-//		if (tab == null) {
-//			return null;
-//		}
-//		MyBottomSheet mtb = (MyBottomSheet) tab.getUserData();
-////		SqluckyBottomSheet sheet = (SqluckyBottomSheet) tab;
-//		return mtb;
-//	}
 
 }

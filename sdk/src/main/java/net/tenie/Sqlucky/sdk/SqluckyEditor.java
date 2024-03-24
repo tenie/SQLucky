@@ -17,6 +17,10 @@ public abstract  class SqluckyEditor  extends VBox  {
         if (text != null) {
             getCodeArea().appendText(text);
             highLighting();
+            if(getDocumentPo() == null){
+                DocumentPo documentPo = DocumentPo.createTmpDocumentPo(text);
+                setDocumentPo(documentPo);
+            }
         }
         getCodeArea().setEditable(editable);
     }

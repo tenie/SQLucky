@@ -64,6 +64,12 @@ public class DocumentPo implements Serializable {
 		this.saveToDB = needSaveToDB;
 	}
 
+	public  static DocumentPo createTmpDocumentPo(String text){
+		DocumentPo tmp = new DocumentPo(false);
+		tmp.setText(text);
+		return tmp;
+	}
+
 	public Boolean getSaveToDB() {
 		return saveToDB;
 	}

@@ -166,9 +166,8 @@ public class SqluckyAppComponent implements AppComponent {
 	@Override
 	public void tabPaneRemoveSqluckyTab(MyEditorSheet stb) {
 		var myTabPane = ComponentGetter.mainTabPane;
-		Tab tb = stb.getTab();
-		if (myTabPane.getTabs().contains(tb)) {
-			myTabPane.getTabs().remove(tb);
+		if (myTabPane.getTabs().contains(stb)) {
+			myTabPane.getTabs().remove(stb);
 		}
 	}
 

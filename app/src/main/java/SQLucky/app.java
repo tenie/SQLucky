@@ -283,26 +283,29 @@ public class app extends Application {
             var alltabs = mainTabPane.getTabs();
             for (int i = 0; i < alltabs.size(); i++) {
                 Tab tab = alltabs.get(i);
-                // TODO close save
-                MyEditorSheet mtab = (MyEditorSheet) tab.getUserData();
-                mtab.saveScriptPo(H2conn);
-                var spo = mtab.getDocumentPo();
-                // 将打开状态设置为1, 之后根据这个状态来恢复
-                if (spo != null && spo.getId() != null) {
-                    String sql = mtab.getAreaText();
-                    if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
-                        spo.setOpenStatus(1);
-                        // 当前激活的编辑页面
-                        if (activateTabPane == i) {
-                            spo.setIsActivate(1);
+                if(tab instanceof  MyEditorSheet mtab){
+                    // TODO close save
+//                    MyEditorSheet mtab = (MyEditorSheet) tab.getUserData();
+                    mtab.saveScriptPo(H2conn);
+                    var spo = mtab.getDocumentPo();
+                    // 将打开状态设置为1, 之后根据这个状态来恢复
+                    if (spo != null && spo.getId() != null) {
+                        String sql = mtab.getAreaText();
+                        if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
+                            spo.setOpenStatus(1);
+                            // 当前激活的编辑页面
+                            if (activateTabPane == i) {
+                                spo.setIsActivate(1);
+                            } else {
+                                spo.setIsActivate(0);
+                            }
                         } else {
+                            spo.setOpenStatus(0);
                             spo.setIsActivate(0);
                         }
-                    } else {
-                        spo.setOpenStatus(0);
-                        spo.setIsActivate(0);
                     }
                 }
+
             }
 
             // 删除 script tree view 中的空内容tab

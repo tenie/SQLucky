@@ -258,11 +258,10 @@ public class MyBottomSheetAction {
      * 将数据表, 独立显示
      */
     public static void dockSide(MyBottomSheet sheet) {
-        var tab = sheet.getTab();
+//        var tab = sheet;
         var tableData = sheet.getTableData();
-//        sheet.dockSide();
 
-        String tableName = CommonUtils.tabText(tab);
+        String tableName = CommonUtils.tabText(sheet);
 
         FilteredTableView<ResultSetRowPo> table = tableData.getTable();
         table.getColumns().forEach(tabCol -> {
@@ -270,7 +269,7 @@ public class MyBottomSheetAction {
         });
 
         DockSideWindow dsw = new DockSideWindow();
-        VBox vb = (VBox) tab.getContent();
+        VBox vb = (VBox) sheet.getContent();
         tableData.getLockBtn().setDisable(true);
         tableData.getHideBottom().setDisable(true);
 
@@ -279,8 +278,8 @@ public class MyBottomSheetAction {
         dsw.showWindow(sheet, vb, tableName);
 
         TabPane dataTab = ComponentGetter.dataTabPane;
-        if (dataTab.getTabs().contains(tab)) {
-            dataTab.getTabs().remove(tab);
+        if (dataTab.getTabs().contains(sheet)) {
+            dataTab.getTabs().remove(sheet);
         }
     }
 

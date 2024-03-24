@@ -118,7 +118,7 @@ public class ScriptTabTree {
 					myEditorSheets.add(myEditorSheet);
 					// 设置上次激活的编辑页面
 					if (po.getIsActivate() == 1) {
-						activateMyTab = myEditorSheet.getTab();
+						activateMyTab = myEditorSheet;
 					}
 
 					// 在操作系统中通过鼠标双击打开的文件, 如果再在以前打开过就直接选中
@@ -126,7 +126,7 @@ public class ScriptTabTree {
 						var filePath = po.getFileFullName();
 						if (StrUtils.isNotNullOrEmpty(filePath)) {
 							if (app.sysOpenFile.equals(filePath)) {
-								sysOpenFileTB = myEditorSheet.getTab();
+								sysOpenFileTB = myEditorSheet;
 								logger.info("**** filePath = " + filePath);
 							}
 						}
@@ -197,7 +197,7 @@ public class ScriptTabTree {
 					myAreaTabs.add(tb);
 					// 设置上次激活的编辑页面
 					if (po.getIsActivate() == 1) {
-						activateMyTab = tb.getTab();
+						activateMyTab = tb;
 					}
 				}
 

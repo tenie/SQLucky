@@ -97,8 +97,6 @@ public class HighLightingEditor extends SqluckyEditor {
 
 	}
 
-//    HighLightingSqlCodeAreaContextMenu cm = new  HighLightingSqlCodeAreaContextMenu(this); 
-
 	public HighLightingEditor(MyAutoComplete myAuto, CodeAreaHighLightingHelper helper) {
 
 		this.myAuto = myAuto;

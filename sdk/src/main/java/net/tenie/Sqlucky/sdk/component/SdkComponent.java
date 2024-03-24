@@ -53,33 +53,6 @@ public class SdkComponent {
 
 	private static int windowsUiBugTag = 0;
 
-	/**
-	 * 锁btn
-	 * 
-	 * @param mytb
-	 * @return
-	 */
-//	public static JFXButton createLockBtn(MyBottomSheet mytb) {
-//		// 锁
-//		JFXButton lockbtn = new JFXButton();
-//		if (mytb.getTableData().isLock()) {
-//			lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
-//		} else {
-//			lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
-//		}
-//		lockbtn.setOnMouseClicked(e -> {
-//			if (mytb.getTableData().isLock()) {
-//				lockbtn.setGraphic(IconGenerator.svgImageDefActive("unlock"));
-//				mytb.getTableData().setLock(false);
-//			} else {
-//				lockbtn.setGraphic(IconGenerator.svgImageDefActive("lock"));
-//				mytb.getTableData().setLock(true);
-//			}
-//
-//		});
-//
-//		return lockbtn;
-//	}
 
 	public static String createTabId() {
 		int tableIdx = ConfigVal.tableIdx++;
@@ -393,16 +366,17 @@ public class SdkComponent {
 		List<MyBottomSheet> ls2 = new ArrayList<>();
 		for (int i = 0; i < dataTab.getTabs().size(); i++) {
 			Tab tab = dataTab.getTabs().get(i);
-			MyBottomSheet nd = (MyBottomSheet) tab.getUserData();
-			if (nd == null)
-				continue;
-			Boolean tf = nd.getTableData().isLock();
-			if (tf != null && tf) {
-				logger.info("lock  ");
-			} else {
-				ls.add(tab);
-				ls2.add(nd);
+			if( tab instanceof  MyBottomSheet nd){
+				if (nd == null) continue;
+				Boolean tf = nd.getTableData().isLock();
+				if (tf != null && tf) {
+					logger.info("lock  ");
+				} else {
+					ls.add(tab);
+					ls2.add(nd);
+				}
 			}
+
 		}
 
 		if (ls.size() > 0) {
@@ -576,7 +550,7 @@ public class SdkComponent {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-				SdkComponent.clearDataTable(tb.getTab());
+				SdkComponent.clearDataTable(tb);
 				tb.clean();
 
 			}

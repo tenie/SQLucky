@@ -39,14 +39,13 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * 
  * @author tenie
  */
-public class MyBottomSheet {
-//	private SqluckyEditor sqlArea;
+public class MyBottomSheet extends  Tab{
 	private SheetDataValue tableData;
 	private boolean isDDL = false;
 	private boolean isDockSide = false; // 判断是否已经独立窗口了
 
 	private int idx = -1;
-	private Tab tab;
+//	private Tab tab;
 	private ContextMenu contextMenu;
 	// 摆放按钮, view等容器
 	private VBox tabVBox = new VBox();
@@ -58,10 +57,7 @@ public class MyBottomSheet {
 			this.tableData.clean();
 			tableData = null;
 		}
-		if (tab != null) {
-			this.tab.setContent(null);
-			this.tab = null;
-		}
+		this.setContent(null);
 		if (contextMenu != null) {
 			contextMenu = null;
 		}
@@ -71,12 +67,13 @@ public class MyBottomSheet {
 	public MyBottomSheet(String tabName) {
 		tableData = new SheetDataValue();
 		tableData.setTabName(tabName);
-		tab = new Tab(tabName);
-		tab.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
-		tab.setContextMenu(tableViewMenu());
-		tab.setUserData(this); // 再关闭tab时 获取 MyBottomSheet, 来clean
+//		tab = new Tab(tabName);
+		this.setText(tabName);
+		this.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
+		this.setContextMenu(tableViewMenu());
+//		this.setUserData(this); // 再关闭tab时 获取 MyBottomSheet, 来clean
 
-		tab.setContent(this.tabVBox);
+		this.setContent(this.tabVBox);
 
 		FilteredTableView<ResultSetRowPo> tableView = SdkComponent.creatFilteredTableView(this);
 		tableData.setTable(tableView);
@@ -130,14 +127,14 @@ public class MyBottomSheet {
 				List<Tab> ls = new ArrayList<>();
 				for (Tab tmptab : ComponentGetter.dataTabPane.getTabs()) {
 
-					if (!Objects.equals(tmptab, tab)) {
+					if (!Objects.equals(tmptab, this)) {
 						ls.add(tmptab);
 					}
 				}
 				ls.forEach(SdkComponent::clearDataTable);
 
 				ComponentGetter.dataTabPane.getTabs().clear();
-				ComponentGetter.dataTabPane.getTabs().add(this.tab);
+				ComponentGetter.dataTabPane.getTabs().add(this);
 			}
 
 		});
@@ -178,15 +175,15 @@ public class MyBottomSheet {
 		this.show();
 
 		// 当窗口失去焦点 3秒后关闭(移除)
-		this.tab.setOnSelectionChanged(v -> {
+		this.setOnSelectionChanged(v -> {
 			// TODO 锁按钮锁着就不关闭
-			if (tableData.isLock() == false) {
-				if (this.tab != null && this.tab.selectedProperty().get() == false) {
+			if (!tableData.isLock()) {
+				if (!this.selectedProperty().get()) {
 					CommonUtils.delayRunThread(str -> {
 						Platform.runLater(() -> {
-							if (this.tab != null && this.tab.selectedProperty().get() == false) {
-								SdkComponent.clearDataTable(this.getTab());
-								this.tab.setOnSelectionChanged(null);
+							if (!this.selectedProperty().get()) {
+								SdkComponent.clearDataTable(this);
+								this.setOnSelectionChanged(null);
 								this.clean();
 							}
 						});
@@ -476,21 +473,21 @@ public class MyBottomSheet {
 	 *
 	 */
 	public void show() {
-		tab.setText(tableData.getTabName());
+		this.setText(tableData.getTabName());
 		Platform.runLater(() -> {
 			var dataTab = ComponentGetter.dataTabPane;
 			if (isDDL) {
-				dataTab.getTabs().add(this.tab);
+				dataTab.getTabs().add(this);
 			} else {
 				if (idx > -1) {
-					dataTab.getTabs().add(idx, this.tab);
+					dataTab.getTabs().add(idx, this);
 				} else {
-					dataTab.getTabs().add(this.tab);
+					dataTab.getTabs().add(this);
 				}
 			}
 
 			SdkComponent.showBottomSheetPane();
-			dataTab.getSelectionModel().select(this.tab);
+			dataTab.getSelectionModel().select(this);
 		});
 	}
 
@@ -549,15 +546,6 @@ public class MyBottomSheet {
 	public void setIdx(int idx) {
 		this.idx = idx;
 	}
-
-	public Tab getTab() {
-		return tab;
-	}
-
-	public void setTab(Tab tab) {
-		this.tab = tab;
-	}
-
 
 	public boolean isDockSide() {
 		return isDockSide;

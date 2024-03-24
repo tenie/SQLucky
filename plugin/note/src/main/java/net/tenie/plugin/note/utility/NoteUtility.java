@@ -42,6 +42,9 @@ public class NoteUtility {
 	public static boolean isText = false;
 
 	public static void doubleClickItem(TreeItem<MyNoteEditorSheet> item) {
+		if(item == null) {
+			return;
+		}
 		MyNoteEditorSheet sheet = item.getValue();
 		File file = sheet.getFile();
 		if (!file.exists())

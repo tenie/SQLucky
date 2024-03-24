@@ -42,7 +42,7 @@ public class MyEditorSheetHelper {
 		if (ls != null && ls.size() > 0) {
 			var myTabPane = ComponentGetter.mainTabPane;
 			for (MyEditorSheet sheet : ls) {
-				myTabPane.getTabs().add(sheet.getTab());
+				myTabPane.getTabs().add(sheet);
 			}
 		}
 
@@ -94,8 +94,11 @@ public class MyEditorSheetHelper {
 		if (selectionTab == null) {
 			return null;
 		}
-		MyEditorSheet myEditorSheet = (MyEditorSheet) selectionTab.getUserData();
-		return myEditorSheet;
+		if(selectionTab instanceof  MyEditorSheet myEditorSheet){
+			return myEditorSheet;
+		}
+//		MyEditorSheet myEditorSheet = (MyEditorSheet) selectionTab.getUserData();
+		return null;
 	}
 
 	// 获取当前tab中的EditorSheet
@@ -113,9 +116,12 @@ public class MyEditorSheetHelper {
 		TabPane mainTabPane = ComponentGetter.mainTabPane;
 		var tabs = mainTabPane.getTabs();
 		for (var tab : tabs) {
-			MyEditorSheet mtb = (MyEditorSheet) tab.getUserData();
-			mtb.getDocumentPo().setOpenStatus(0);
-			mtb.syncScriptPo();
+			if( tab instanceof MyEditorSheet mtb){
+//				MyEditorSheet mtb = (MyEditorSheet) tab.getUserData();
+				mtb.getDocumentPo().setOpenStatus(0);
+				mtb.syncScriptPo();
+			}
+
 		}
 		tabs.clear();
 		var stp = ComponentGetter.scriptTitledPane;
@@ -500,12 +506,15 @@ public class MyEditorSheetHelper {
 		if (myTabPane != null && myTabPane.getTabs().size() > 0) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for (Tab tb : tabs) {
-				MyEditorSheet mtb = (MyEditorSheet) tb.getUserData();
-				// 修改代码编辑区域的样式
-				if (mtb.getSqluckyEditor() != null)
-					mtb.getSqluckyEditor().changeCodeAreaLineNoThemeHelper();
-				// 修改查找替换的样式如果有的话
-				changeFindReplacePaneBtnColor(tb);
+				if(tb instanceof  MyEditorSheet mtb){
+//					MyEditorSheet mtb = (MyEditorSheet) tb.getUserData();
+					// 修改代码编辑区域的样式
+					if (mtb.getSqluckyEditor() != null)
+						mtb.getSqluckyEditor().changeCodeAreaLineNoThemeHelper();
+					// 修改查找替换的样式如果有的话
+					changeFindReplacePaneBtnColor(tb);
+				}
+
 			}
 		}
 	}

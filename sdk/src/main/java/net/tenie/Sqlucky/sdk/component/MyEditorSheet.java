@@ -20,8 +20,8 @@ import org.fxmisc.richtext.CodeArea;
 import java.io.File;
 import java.sql.Connection;
 
-public class MyEditorSheet {
-	private Tab tab = new Tab();
+public class MyEditorSheet extends Tab {
+//	private Tab tab = new Tab();
 	private SqluckyEditor sqluckyEditor; // 编辑器(比如高亮的文本编辑器)
 	private DocumentPo documentPo; // 文本内容
 
@@ -37,11 +37,8 @@ public class MyEditorSheet {
 	private FindReplaceTextPanel findReplacePanel;
 
 	public void clean() {
-		if (tab != null) {
-			tab.setUserData(null);
-			tab.setContent(null);
-			tab = null;
-		}
+//		this.setUserData(null);
+		this.setContent(null);
 		if (vbox != null) {
 			vbox.getChildren().clear();
 			vbox = null;
@@ -92,8 +89,8 @@ public class MyEditorSheet {
 		// Tab 其他属性设置
 		setTabProperty();
 		// 选择title的时候初始化tab内容
-		tab.selectedProperty().addListener(l -> {
-			boolean isSel = tab.isSelected();
+		this.selectedProperty().addListener(l -> {
+			boolean isSel = this.isSelected();
 			if (isSel && !isInit) {
 				if (sqluckyEditor == null) {
 					if (documentPo.getType() == DocumentPo.IS_SQL) {
@@ -124,7 +121,7 @@ public class MyEditorSheet {
 		vbox.setSpacing(3);
 		vbox.getChildren().add(sqluckyEditor);
 		VBox.setVgrow(sqluckyEditor, Priority.ALWAYS);
-		tab.setContent(vbox);
+		this.setContent(vbox);
 		documentPo.setOpenStatus(1);
 		initTabSQLText(documentPo.getText());
 	}
@@ -138,30 +135,9 @@ public class MyEditorSheet {
 	// 创建一个纯文本的编辑器
 	private void createTextMyTab() {
 		SqluckyEditor sqlEditor = HighLightingEditorUtils.noKeyWordEditor();
-//		SqluckyEditor sqlEditor = new HighLightingEditor(myAuto, CodeAreaHighLightingHelperForJava.createHelper());
-//		SqluckyEditor sqlEditor = new MyTextEditor();
 		this.setSqluckyEditor(sqlEditor);
 	}
 
-	// 删除查找替换面板
-//	public void delFindReplacePane() {
-//		if (findAnchorPane != null) {
-//			if (vbox.getChildren().contains(findAnchorPane)) {
-//				vbox.getChildren().remove(findAnchorPane);
-//			}
-//			findAnchorPane = null;
-//
-//		}
-//		if (replaceAnchorPane != null) {
-//			if (vbox.getChildren().contains(replaceAnchorPane)) {
-//				vbox.getChildren().remove(replaceAnchorPane);
-//			}
-//			replaceAnchorPane = null;
-//		}
-//		if (findReplacePanel != null) {
-//			findReplacePanel = null;
-//		}
-//	}
 
 	// 判断查找面板是否显示中
 	public boolean findPaneIsShowing() {
@@ -173,16 +149,16 @@ public class MyEditorSheet {
 
 	// tab的属性设置, 名称, 右键菜单,
 	public void setTabProperty() {
-		tab.setUserData(this); // 将当前对象放入tab中
+//		this.setUserData(this); // 将当前对象放入tab中
 		// 右键菜单
-		tab.setContextMenu(MyTabMenu());
+		this.setContextMenu(MyTabMenu());
 		setTitleName();
 
 		// 关闭前事件
-		tab.setOnCloseRequest(tabCloseReq());
+		this.setOnCloseRequest(tabCloseReq());
 		// 选中事件
-		tab.setOnSelectionChanged(value -> {
-			boolean isSe = tab.isSelected();
+		this.setOnSelectionChanged(value -> {
+			boolean isSe = this.isSelected();
 			if(isSe) {
 				Integer tmpIdx = this.getTabConnIdx() ;
 				if(tmpIdx !=null) {
@@ -199,7 +175,7 @@ public class MyEditorSheet {
 	public void setTitleName() {
 		String TabName = documentPo.getTitle();
 		// 名称
-		CommonUtils.setTabName(tab, TabName);
+		CommonUtils.setTabName(this, TabName);
 	}
 
 	public SqluckyEditor getSqluckyEditor() {
@@ -209,10 +185,10 @@ public class MyEditorSheet {
 	public void showEditor() {
 		Platform.runLater(() -> {
 			var myTabPane = ComponentGetter.mainTabPane;
-			if (!myTabPane.getTabs().contains(tab)) {
-				myTabPane.getTabs().add(tab);// 在指定位置添加Tab
+			if (!myTabPane.getTabs().contains(this)) {
+				myTabPane.getTabs().add(this);// 在指定位置添加Tab
 			}
-			myTabPane.getSelectionModel().select(tab);
+			myTabPane.getSelectionModel().select(this);
 		});
 
 	}
@@ -220,8 +196,8 @@ public class MyEditorSheet {
 	public void showEditor(int idx) {
 		Platform.runLater(() -> {
 			var myTabPane = ComponentGetter.mainTabPane;
-			if (myTabPane.getTabs().contains(tab) == false) {
-				myTabPane.getTabs().add(idx, tab); // 在指定位置添加Tab
+			if (!myTabPane.getTabs().contains(this)) {
+				myTabPane.getTabs().add(idx, this); // 在指定位置添加Tab
 			}
 
 			myTabPane.getSelectionModel().select(idx);
@@ -326,8 +302,8 @@ public class MyEditorSheet {
 	public void destroySheet() {
 		var myTabPane = ComponentGetter.mainTabPane;
 		var tabs = myTabPane.getTabs();
-		if (tabs.contains(tab)) {
-			tabs.remove(tab);
+		if (tabs.contains(this)) {
+			tabs.remove(this);
 		}
 		this.clean();
 
@@ -345,7 +321,7 @@ public class MyEditorSheet {
 		closeOther.setOnAction(e -> {
 			closeAll();
 			var myTabPane = ComponentGetter.mainTabPane;
-			myTabPane.getTabs().add(this.tab);
+			myTabPane.getTabs().add(this);
 
 		});
 
@@ -353,14 +329,17 @@ public class MyEditorSheet {
 		closeRight.setOnAction(e -> {
 			var myTabPane = ComponentGetter.mainTabPane;
 			var tabs = myTabPane.getTabs();
-			int idx = tabs.indexOf(this.tab);
+			int idx = tabs.indexOf(this);
 			int tsize = tabs.size();
 			if ((idx + 1) < tsize) {
 				for (int i = idx + 1; i < tsize; i++) {
 					Tab t = tabs.get(i);
-					MyEditorSheet mt = (MyEditorSheet) t.getUserData();
-					mt.getDocumentPo().setOpenStatus(0);
-					mt.syncScriptPo();
+					if(t instanceof  MyEditorSheet mt){
+//						MyEditorSheet mt = (MyEditorSheet) t.getUserData();
+						mt.getDocumentPo().setOpenStatus(0);
+						mt.syncScriptPo();
+					}
+
 				}
 				tabs.remove(idx + 1, tsize);
 			}
@@ -370,13 +349,16 @@ public class MyEditorSheet {
 		closeLeft.setOnAction(e -> {
 			var myTabPane = ComponentGetter.mainTabPane;
 			var tabs = myTabPane.getTabs();
-			int idx = tabs.indexOf(this.tab);
+			int idx = tabs.indexOf(this);
 			if (idx > 0) {
 				for (int i = 0; i < idx; i++) {
 					Tab t = tabs.get(i);
-					MyEditorSheet mt = (MyEditorSheet) t.getUserData();
-					mt.getDocumentPo().setOpenStatus(0);
-					mt.syncScriptPo();
+					if(t instanceof  MyEditorSheet mt){
+//						MyEditorSheet mt = (MyEditorSheet) t.getUserData();
+						mt.getDocumentPo().setOpenStatus(0);
+						mt.syncScriptPo();
+					}
+
 				}
 				tabs.remove(0, idx);
 			}
@@ -385,7 +367,7 @@ public class MyEditorSheet {
 		contextMenu.getItems().addAll(closeAll, closeOther, closeRight, closeLeft);
 		contextMenu.setOnShowing(e -> {
 			var myTabPane = ComponentGetter.mainTabPane;
-			int idx = myTabPane.getTabs().indexOf(this.tab);
+			int idx = myTabPane.getTabs().indexOf(this);
 			int size = myTabPane.getTabs().size();
 			if (idx == 0) {
 				closeLeft.setDisable(true);
@@ -409,14 +391,6 @@ public class MyEditorSheet {
 		return contextMenu;
 	}
 
-	public Tab getTab() {
-		return tab;
-	}
-
-	public void setTab(Tab tab) {
-		this.tab = tab;
-	}
-
 	public DocumentPo getDocumentPo() {
 		return documentPo;
 	}
@@ -424,11 +398,6 @@ public class MyEditorSheet {
 	public void setDocumentPo(DocumentPo documentPo) {
 		this.documentPo = documentPo;
 	}
-
-	// Tab的名称(也是文件的名称)
-//	public String getTabName() {
-//		return documentPo.getTitle();
-//	}
 
 	public boolean isModify() {
 		return isModify;
@@ -440,12 +409,12 @@ public class MyEditorSheet {
 
 	// 得到 tab的显示名称
 	public String getTitle() {
-		return CommonUtils.tabText(this.tab);
+		return CommonUtils.tabText(this);
 	}
 
 	// 设置 tab的显示名称
 	public void setTitle(String val) {
-		CommonUtils.setTabName(this.tab, val);
+		CommonUtils.setTabName(this, val);
 	}
 
 	public Integer getTabConnIdx() {
@@ -499,8 +468,8 @@ public class MyEditorSheet {
 	// 存在 就显示出来
 	public boolean existTabShow() {
 		var myTabPane = ComponentGetter.mainTabPane;
-		if (myTabPane.getTabs().contains(tab)) {
-			myTabPane.getSelectionModel().select(tab);
+		if (myTabPane.getTabs().contains(this)) {
+			myTabPane.getSelectionModel().select(this);
 			return true;
 		}
 		return false;
@@ -520,8 +489,8 @@ public class MyEditorSheet {
 
 	public boolean isShowing() {
 		var myTabPane = ComponentGetter.mainTabPane;
-		if (myTabPane.getTabs().contains(tab)) {
-			int idxThis = myTabPane.getTabs().indexOf(tab);
+		if (myTabPane.getTabs().contains(this)) {
+			int idxThis = myTabPane.getTabs().indexOf(this);
 			int currentSelect = myTabPane.getSelectionModel().getSelectedIndex();
 			if (idxThis == currentSelect) {
 				return true;
