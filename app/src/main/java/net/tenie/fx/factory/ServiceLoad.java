@@ -27,7 +27,7 @@ public class ServiceLoad {
 			loader = loadFromUserHome();
         } catch (MalformedURLException | IllegalAccessException | InstantiationException | InvocationTargetException |
                  NoSuchMethodException | ClassNotFoundException e) {
-            e.printStackTrace();
+			logger.error(e.getMessage());
             throw new RuntimeException(e);
         }
     }
@@ -122,7 +122,7 @@ public class ServiceLoad {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -149,7 +149,12 @@ public class ServiceLoad {
 	public static void callLoad() {
 		if (registerPlugin.isEmpty()) return;
 		for (SqluckyPluginDelegate plugin : registerPlugin) {
-			plugin.load();
+			try {
+				plugin.load();
+			}catch (Exception e){
+				logger.error(e.getMessage());
+			}
+
 		}
 	}
 	// 应用显示后
@@ -157,7 +162,11 @@ public class ServiceLoad {
 		if (registerPlugin.isEmpty()) return;
 		Platform.runLater(()->{
 			for(SqluckyPluginDelegate plugin: registerPlugin ) {
-				plugin.showed();
+				try {
+					plugin.showed();
+				}catch (Exception e){
+					logger.error(e.getMessage());
+				}
 			}
 		});
 
