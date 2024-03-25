@@ -24,12 +24,6 @@ public class NoteDelegateImpl implements SqluckyPluginDelegate {
 
 		tree = new NoteTabTree(pluginName);
 		FinderAction.putSqluckyTitledPane(pluginName, tree);
-//		NotePane = new TitledPane();
-//		NotePane.setUserData(new SqlcukyTitledPaneInfoPo(pluginName, tree.getOptionBox()));
-
-//		NotePane.setText("Note");
-//		CommonUtils.addCssClass(NotePane, "titledPane-color");
-//		NotePane.setContent(tree.noteStackPane);
 
 		appComponent.addTitledPane(tree);
 	}

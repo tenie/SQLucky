@@ -111,7 +111,8 @@ public class HighLightingEditor extends SqluckyEditor {
 		this.getStyleClass().add("my-tag");
 
 		codeArea.textProperty().addListener((a,b,c)->{
-			if(c.isEmpty() && documentPo != null){
+			if(c.isEmpty() &&  documentPo != null
+					&& codeArea.getCodeArea().getUndoManager().getNextUndo() == null){
 				codeArea.insertText(0, documentPo.getText());
 				this.highLighting();
 			}
