@@ -14,21 +14,13 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginDescribe = "Data Model";
 	public static final String version = "0.0.1";
 
-	private static TitledPane NotePane;
-
+	DataModelTabTree tree;
 	@Override
 	public void load() {
 		AppComponent appComponent = ComponentGetter.appComponent;
 		// 节点的树对象
-		DataModelTabTree tree = new DataModelTabTree(pluginName);
+		tree = new DataModelTabTree(pluginName);
 		FinderAction.putSqluckyTitledPane(pluginName, tree);
-//		NotePane = new DataModelTitledPane(pluginName,tree.getBtnsBox(), tree.getDataModelTreeView());
-//		NotePane.setText("Data Model");
-//		// 操作按钮面板放入到一个对象中， 切换到这个面板的时候 按钮面板会在按钮区域展示
-//		SqlcukyTitledPaneInfoPo btnsObj = new SqlcukyTitledPaneInfoPo(pluginName, tree.getBtnsBox());
-//		NotePane.setUserData(btnsObj);
-//		CommonUtils.addCssClass(NotePane, "titledPane-color");
-//		NotePane.setContent(tree.getDataModelTreeView());
 
 		appComponent.addTitledPane(tree);
 	}
@@ -38,7 +30,7 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 		// 显示的时候切换图标
 		var icon = ComponentGetter.getIconDefActive("table");
 		var uaicon = ComponentGetter.getIconUnActive("table");
-		CommonUtils.setLeftPaneIcon(NotePane, icon, uaicon);
+		CommonUtils.setLeftPaneIcon(tree, icon, uaicon);
 
 	}
 

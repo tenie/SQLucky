@@ -88,14 +88,7 @@ public class MyTextEditor extends SqluckyEditor {
 		});
 
 	}
-//	
-//	public void highLighting(String str) {
-//		
-//	}
 
-//	@Override
-//	public void highLighting() {
-//	}
 
 	@Override
 	public void errorHighLighting(int begin, String str) {
