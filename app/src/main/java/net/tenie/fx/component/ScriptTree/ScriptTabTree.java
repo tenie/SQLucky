@@ -1,23 +1,12 @@
 package net.tenie.fx.component.ScriptTree;
 
-import java.io.File;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
-
 import SQLucky.app;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Tab;
-import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
@@ -25,23 +14,31 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
+import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.po.component.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.lib.db.h2.AppDao;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 
  * @author tenie
  *
  */
-public class ScriptTabTree {
+public class ScriptTabTree extends SqluckyTitledPane {
 
 	private static Logger logger = LogManager.getLogger(ScriptTabTree.class);
 
@@ -49,14 +46,31 @@ public class ScriptTabTree {
 	public static TreeItem<MyEditorSheet> rootNode;
 	List<ConnItemContainer> connItemParent = new ArrayList<>();
 	private ScriptTreeContextMenu menu;
+//	private String name = "Script";
+//	private Pane btnsBox;
 
 	public ScriptTabTree() {
 		createScriptTreeView();
+		var btnsBox = new ScriptTreeButtonPanel();
+		this.setBtnsBox(btnsBox);
+//		this.setName("Script");
+		this.setText("Script");
+//		this.setUserData(new SqlcukyTitledPaneInfoPo("Script", sbtnPanel));
+
+		CommonUtils.addCssClass(this, "titledPane-color");
+		this.setContent(ScriptTreeView);
+
+		// 图标切换
+		CommonUtils.addInitTask(v -> {
+			Platform.runLater(() -> {
+				CommonUtils.setLeftPaneIcon(this, ComponentGetter.iconScript, ComponentGetter.uaIconScript);
+			});
+
+		});
 	}
 
 	// 节点view
 	public TreeView<MyEditorSheet> createScriptTreeView() {
-//		rootNode = new TreeItem<>(new MyEditorSheet());
 		rootNode = new TreeItem<>(null);
 		ComponentGetter.scriptTreeRoot = rootNode;
 		ScriptTreeView = new TreeView<>(rootNode);
@@ -387,47 +401,6 @@ public class ScriptTabTree {
 		}
 	}
 
-	// TitledPane
-	public TitledPane scriptTitledPane() {
 
-		ScriptTreeButtonPanel sbtnPanel = new ScriptTreeButtonPanel();
-
-		TitledPane scriptTitledPane = new TitledPane();
-		scriptTitledPane.setText("Script");
-		scriptTitledPane.setUserData(new SqlcukyTitledPaneInfoPo("Script", sbtnPanel.getOptionHbox()));
-
-		CommonUtils.addCssClass(scriptTitledPane, "titledPane-color");
-		scriptTitledPane.setContent(ScriptTreeView);
-
-		// 图标切换
-		CommonUtils.addInitTask(v -> {
-			Platform.runLater(() -> {
-				CommonUtils.setLeftPaneIcon(scriptTitledPane, ComponentGetter.iconScript, ComponentGetter.uaIconScript);
-			});
-
-		});
-
-		return scriptTitledPane;
-	}
-
-	// treeView 右键菜单属性设置
-//		public   ChangeListener<TreeItem<MyTab>> treeViewContextMenu(TreeView<MyTab> treeView) {
-//			return new ChangeListener<TreeItem<MyTab>>() {
-//				@Override
-//				public void changed(ObservableValue<? extends TreeItem<MyTab>> observable,
-//						TreeItem<MyTab> oldValue, TreeItem<MyTab> newValue) {
-//					
-//				 
-//					 
-//					
-//					
-////					if(! menu.getRefresh().isDisable()) {
-////						TreeItem<TreeNodePo>  connItem = ConnItem(newValue);
-////						menu.setRefreshAction(connItem);
-////					}
-//
-//				}
-//			};
-//		}
 
 }

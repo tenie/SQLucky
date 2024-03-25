@@ -26,7 +26,7 @@ public class OperateContainer {
 		treeAreaDetailPane = new MasterDetailPane(Side.LEFT);
 		treeAreaDetailPane.setShowDetailNode(true);
 		treeAreaDetailPane.setMasterNode(codeCtr.getContainer());
-		treeAreaDetailPane.setDetailNode(dbinfoCtr.getContainer());
+		treeAreaDetailPane.setDetailNode(dbinfoCtr);
 //		treeAreaDetailPane.setDividerPosition(0.22);
 
 		container.getChildren().add(treeAreaDetailPane);
@@ -35,7 +35,7 @@ public class OperateContainer {
 		ComponentGetter.treeAreaDetailPane = treeAreaDetailPane;
 
 		CommonUtils.fadeTransition(codeCtr.getContainer(), 1000);
-		CommonUtils.fadeTransition(dbinfoCtr.getContainer(), 1000);
+		CommonUtils.fadeTransition(dbinfoCtr, 1000);
 	}
 
 	public HBox getContainer() {

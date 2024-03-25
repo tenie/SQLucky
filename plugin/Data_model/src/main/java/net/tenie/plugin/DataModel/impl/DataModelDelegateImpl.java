@@ -4,8 +4,8 @@ import javafx.scene.control.TitledPane;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.FinderAction;
 import net.tenie.plugin.DataModel.DataModelTabTree;
 
 public class DataModelDelegateImpl implements SqluckyPluginDelegate {
@@ -20,17 +20,17 @@ public class DataModelDelegateImpl implements SqluckyPluginDelegate {
 	public void load() {
 		AppComponent appComponent = ComponentGetter.appComponent;
 		// 节点的树对象
-		DataModelTabTree tree = new DataModelTabTree();
+		DataModelTabTree tree = new DataModelTabTree(pluginName);
+		FinderAction.putSqluckyTitledPane(pluginName, tree);
+//		NotePane = new DataModelTitledPane(pluginName,tree.getBtnsBox(), tree.getDataModelTreeView());
+//		NotePane.setText("Data Model");
+//		// 操作按钮面板放入到一个对象中， 切换到这个面板的时候 按钮面板会在按钮区域展示
+//		SqlcukyTitledPaneInfoPo btnsObj = new SqlcukyTitledPaneInfoPo(pluginName, tree.getBtnsBox());
+//		NotePane.setUserData(btnsObj);
+//		CommonUtils.addCssClass(NotePane, "titledPane-color");
+//		NotePane.setContent(tree.getDataModelTreeView());
 
-		NotePane = new TitledPane();
-		NotePane.setText("Data Model");
-		// 操作按钮面板放入到一个对象中， 切换到这个面板的时候 按钮面板会在按钮区域展示
-		SqlcukyTitledPaneInfoPo btnsObj = new SqlcukyTitledPaneInfoPo(pluginName, tree.getBtnsBox());
-		NotePane.setUserData(btnsObj);
-		CommonUtils.addCssClass(NotePane, "titledPane-color");
-		NotePane.setContent(tree.getDataModelTreeView());
-
-		appComponent.addTitledPane(NotePane);
+		appComponent.addTitledPane(tree);
 	}
 
 	@Override

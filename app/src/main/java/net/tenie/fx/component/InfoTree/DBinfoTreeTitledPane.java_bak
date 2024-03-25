@@ -1,0 +1,9 @@
+package net.tenie.fx.component.InfoTree;
+
+import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
+
+public class DBinfoTreeTitledPane extends SqluckyTitledPane {
+    public DBinfoTreeTitledPane(){
+
+    }
+}

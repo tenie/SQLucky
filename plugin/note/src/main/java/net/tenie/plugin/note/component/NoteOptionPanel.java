@@ -12,6 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -54,7 +55,7 @@ public class NoteOptionPanel {
 	JFXButton up = new JFXButton();
 	JFXButton down = new JFXButton();
 
-	public NoteOptionPanel() {
+	public NoteOptionPanel(SqluckyTitledPane sqluckyTitledPane) {
 
 		// 搜索面板初始化
 		initSearchPanel();
@@ -111,6 +112,14 @@ public class NoteOptionPanel {
 		MenuItem showQueryFileName = new MenuItem("Search file name ");
 		showQueryFileName.setGraphic(IconGenerator.svgImageDefActive("search"));
 		showQueryFileName.setOnAction(e -> {
+			showFileNameSearch();
+		});
+
+		sqluckyTitledPane.setShowFinder(s -> {
+			showFileNameSearch();
+		});
+
+		sqluckyTitledPane.setHideFinder(s -> {
 			showFileNameSearch();
 		});
 

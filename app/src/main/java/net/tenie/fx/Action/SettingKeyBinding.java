@@ -2,6 +2,7 @@ package net.tenie.fx.Action;
 
 import java.util.function.Consumer;
 
+import javafx.scene.layout.VBox;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -19,6 +20,8 @@ public final class SettingKeyBinding {
 	public static void setEscKeyBinding(Scene scene) {
 
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+		VBox v = new VBox();
+
 		scene.getAccelerators().put(escbtn, () -> {
 			CommonUtils.pressBtnESC();
 		});

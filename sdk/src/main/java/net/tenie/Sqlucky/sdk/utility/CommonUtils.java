@@ -912,8 +912,14 @@ public class CommonUtils {
 			}
 
 		}
+	}
+	public static void leftHideSecondOperateBox(Pane container, Node box) {
+		if (container.getChildren().contains(box)) {
+			container.getChildren().remove(box);
+		}
 
 	}
+
 
 	// 左侧折叠面板的图标切换
 	public static void leftPaneChangeIcon(TitledPane NotePane, StackPane Node, Region icon, Region uaicon) {
@@ -1072,14 +1078,20 @@ public class CommonUtils {
 //		SqluckyEditorUtils.currentMyTab().getSqlCodeArea().hideAutoComplete();
 		MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().hideAutoComplete();
 		// dbinfo TreeView 查询表隐藏
-		ComponentGetter.appComponent.DBinfoTreeFilterHide();
+//		ComponentGetter.appComponent.DBinfoTreeFilterHide();
+
 		
 	}
 
 	// 隐藏查找, 替换窗口
 	public static void hideFindReplaceWindow() {
 		if(! FinderAction.hideMainTabPaneFindReplace()){
-			FinderAction.hideDataTabPaneFindReplace();
+			if(!FinderAction.hideDataTabPaneFindReplace()){
+				if(!FinderAction.hideTitledPaneFind()){
+					FinderAction.hideTitledPane();
+				}
+			}
+
 		}
 	}
 
@@ -1123,7 +1135,13 @@ public class CommonUtils {
 	public static void showFind(boolean isReplace, String findStr) {
 		boolean isShow = FinderAction.showMainTabPaneFindReplace(isReplace, findStr);
 		if(!isShow){
-			FinderAction.showDataTabPaneFindReplace(isReplace, findStr);
+			isShow = FinderAction.showDataTabPaneFindReplace(isReplace, findStr);
+			if(!isShow){
+				isShow = FinderAction.showTitledPaneFind("");
+				if(!isShow){
+					FinderAction.showTitledPane("");
+				}
+			}
 		}
 	}
 

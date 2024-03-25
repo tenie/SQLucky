@@ -38,7 +38,7 @@ import net.tenie.plugin.DataModel.tools.DataModelUtility;
  * @author tenie
  *
  */
-public class DataModelTabTree {
+public class DataModelTabTree extends SqluckyTitledPane{
 
 	public static TreeView<DataModelTreeNodePo> DataModelTreeView;
 	public static TreeItem<DataModelTreeNodePo> treeRoot;
@@ -46,8 +46,13 @@ public class DataModelTabTree {
 	private Pane btnsBox;
 	String filePath = "";
 
-	public DataModelTabTree() {
+	public DataModelTabTree(String pluginName) {
 		createDataModelTreeView();
+//		this.setName(pluginName);
+        this.setBtnsBox(btnsBox);
+        this.setText(pluginName);
+        CommonUtils.addCssClass(this, "titledPane-color");
+        this.setContent(DataModelTreeView);
 	}
 
 	// 节点view
@@ -70,7 +75,7 @@ public class DataModelTabTree {
 		// 显示设置, 双击事件也在这里设置
 		DataModelTreeView.setCellFactory(new DataModelNodeCellFactory());
 
-		optionPanel = new DataModelOperate();
+		optionPanel = new DataModelOperate(this);
 		btnsBox = optionPanel.getOptionVbox();
 
 		// 恢复上次的数据

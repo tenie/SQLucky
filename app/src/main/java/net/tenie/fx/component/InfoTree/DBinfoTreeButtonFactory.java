@@ -13,6 +13,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
@@ -22,7 +23,7 @@ import net.tenie.fx.window.ConnectionEditor;
 
 public class DBinfoTreeButtonFactory {
 
-	public static VBox createTreeViewbtn(TreeView<TreeNodePo> treeView) {
+	public static VBox createTreeViewbtn(SqluckyTitledPane sqluckyTitlePane) {
 		List<Node> btns =  DBinfoTree.operateBtns;
 		VBox operateVbox =   DBinfoTree.operateVbox;
 
@@ -70,7 +71,14 @@ public class DBinfoTreeButtonFactory {
 		JFXButton queryTab = new JFXButton();
 		queryTab.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
 		queryTab.setOnMouseClicked(e -> {
+				queryBtnAction();
+		});
+		sqluckyTitlePane.setShowFinder(s -> {
 			queryBtnAction();
+		});
+
+		sqluckyTitlePane.setHideFinder(s -> {
+			queryBtnHide();
 		});
 
 		// 收缩树 zero-fitscreen-24

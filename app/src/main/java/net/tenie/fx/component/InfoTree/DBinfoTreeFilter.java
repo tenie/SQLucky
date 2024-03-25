@@ -36,9 +36,6 @@ public class DBinfoTreeFilter {
 	private TreeItem<TreeNodePo> rootNode;
 	private TextField txt;
 
-	public DBinfoTreeFilter() {
-	}
-
 	public TextField getTxtField() {
 		return txt;
 	}

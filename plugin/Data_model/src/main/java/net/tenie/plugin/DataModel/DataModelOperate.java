@@ -89,7 +89,7 @@ public class DataModelOperate {
 	/**
 	 * 构造函数
 	 */
-	public DataModelOperate() {
+	public DataModelOperate(SqluckyTitledPane sqluckyTitledPane) {
 		// search
 		queryBtn.setGraphic(ComponentGetter.getIconDefActive("windows-magnify-browse"));
 		queryBtn.setTooltip(CommonUtils.instanceTooltip("Search table & field info "));
@@ -97,6 +97,14 @@ public class DataModelOperate {
 			CommonUtils.leftHideOrShowSecondOperateBox(optionVbox, filterHbox, txt);
 
 		});
+		sqluckyTitledPane.setShowFinder(s->{
+			CommonUtils.leftHideOrShowSecondOperateBox(optionVbox, filterHbox, txt);
+		});
+		sqluckyTitledPane.setHideFinder(s->{
+			CommonUtils.leftHideSecondOperateBox(optionVbox, filterHbox);
+
+		});
+
 		queryExecBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
 		queryExecBtn.setTooltip(CommonUtils.instanceTooltip("Search table & field info "));
 		queryExecBtn.setOnMouseClicked(e -> {

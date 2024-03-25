@@ -8,10 +8,7 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
-public class ScriptTreeButtonPanel {
-
-	private HBox optionHbox = new HBox();
-
+public class ScriptTreeButtonPanel extends HBox{
 	private JFXButton importBtn = new JFXButton();
 
 	private JFXButton saveBtn = new JFXButton();
@@ -50,26 +47,7 @@ public class ScriptTreeButtonPanel {
 			ScriptTreeAction.saveAction();
 		});
 
-		optionHbox.getChildren().addAll(importBtn, newFile, saveBtn, showInFolder);
-	}
-
-	// 按钮面板和treeView 的vbox容器
-//	public VBox getScriptTitledPaneContent(TreeView<MyTab> scriptTreeView ) {
-//		VBox box  = new VBox();
-//		box.getChildren().addAll(optionHbox, scriptTreeView);
-//		
-//		box.getStyleClass().add("myTreeView-vbox");
-//		box.getStyleClass().add("myModalDialog");
-//		VBox.setVgrow(scriptTreeView, Priority.ALWAYS);
-//		return box;
-//	}
-
-	public HBox getOptionHbox() {
-		return optionHbox;
-	}
-
-	public void setOptionHbox(HBox optionHbox) {
-		this.optionHbox = optionHbox;
+		this.getChildren().addAll(importBtn, newFile, saveBtn, showInFolder);
 	}
 
 	public JFXButton getImportBtn() {

@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
+import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.Caret.CaretVisibility;
@@ -30,7 +34,6 @@ import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.SqlcukyTitledPaneInfoPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.po.component.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.po.component.ConnItemDbObjects;
@@ -52,7 +55,7 @@ import net.tenie.fx.dao.ConnectionDao;
  * @author tenie
  *
  */
-public class DBinfoTree {
+public class DBinfoTree extends SqluckyTitledPane {
 	private static Logger logger = LogManager.getLogger(DBinfoTree.class);
 	public static TreeView<TreeNodePo> DBinfoTreeView;
 	public static TreeItem<TreeNodePo> rootNode;
@@ -71,6 +74,8 @@ public class DBinfoTree {
 	public static List<Node> operateBtns ;
 	
 	public static TextField filterTextField;
+
+	private VBox dbInfoTreeBtnPane ;
 	
 	public DBinfoTree() {
 		
@@ -84,6 +89,23 @@ public class DBinfoTree {
 		filterTextField = 	dbInfoTreeFilter.getTxt();
 		AppWindow.dbInfoTreeFilter = dbInfoTreeFilterPane;
 		operateBtns = new ArrayList<>();
+
+		dbInfoTreeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn(this);
+		this.setText("DB Connection");
+//		dbTitledPane.setUserData(new SqlcukyTitledPaneInfoPo("Sqlucky DB Connection", treeBtnPane));
+//		this.setName("DB Connection");
+		this.setBtnsBox(dbInfoTreeBtnPane);
+		CommonUtils.addCssClass(this, "titledPane-color");
+		this.setContent(DBinfoTreeView);
+
+		// 图标切换
+		CommonUtils.addInitTask(v -> {
+			Platform.runLater(() -> {
+				CommonUtils.setLeftPaneIcon(this, ComponentGetter.iconInfo, ComponentGetter.uaIconInfo);
+			});
+
+		});
+
 	}
 
 	// db节点view
@@ -93,6 +115,12 @@ public class DBinfoTree {
 		DBinfoTreeView = new TreeView<>(rootNode);
 		DBinfoTreeView.getStyleClass().add("my-tag");
 		DBinfoTreeView.setShowRoot(false);
+		// TreeView 会拦截escape 按钮, 所以重新加上 escape的事件
+		DBinfoTreeView.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+			if(e.getCode() == KeyCode.ESCAPE){
+				CommonUtils.pressBtnESC();
+			}
+		});
 
 		// 读取数据库数据
 		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
@@ -582,23 +610,11 @@ public class DBinfoTree {
 	}
 
 	// TitledPane
-	public TitledPane dbInfoTitledPane(Pane treeBtnPane) {
-		TitledPane dbTitledPane = new TitledPane();
-		dbTitledPane.setText("DB Connection");
-		dbTitledPane.setUserData(new SqlcukyTitledPaneInfoPo("Sqlucky DB Connection", treeBtnPane));
-		CommonUtils.addCssClass(dbTitledPane, "titledPane-color");
-		dbTitledPane.setContent(DBinfoTreeView);
-
-		// 图标切换
-		CommonUtils.addInitTask(v -> {
-			Platform.runLater(() -> {
-				CommonUtils.setLeftPaneIcon(dbTitledPane, ComponentGetter.iconInfo, ComponentGetter.uaIconInfo);
-			});
-
-		});
-
-		return dbTitledPane;
-	}
+//	public TitledPane dbInfoTitledPane(Pane treeBtnPane) {
+////		TitledPane dbTitledPane = new TitledPane();
+//
+//		return dbTitledPane;
+//	}
 	
 	
 	public static void openConn(TreeItem<TreeNodePo> item) {
@@ -663,4 +679,7 @@ public class DBinfoTree {
 		}
 	}
 
+	public VBox getDbInfoTreeBtnPane() {
+		return dbInfoTreeBtnPane;
+	}
 }

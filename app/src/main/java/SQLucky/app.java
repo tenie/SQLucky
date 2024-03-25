@@ -228,7 +228,10 @@ public class app extends Application {
             Long mm = Runtime.getRuntime().maxMemory() / 1024;
             mm = mm / 1024;
             logger.info("Runtime.getRuntime().maxMemory = " + mm);
-            SettingKeyBinding.setEscKeyBinding(scene);
+            Platform.runLater(() -> {
+                SettingKeyBinding.setEscKeyBinding(ComponentGetter.primaryStage.getScene());
+            });
+
 
             // 数据迁移
             if (transferDB) {

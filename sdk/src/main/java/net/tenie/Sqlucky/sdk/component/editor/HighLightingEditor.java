@@ -39,7 +39,6 @@ import java.util.function.Consumer;
 public class HighLightingEditor extends SqluckyEditor {
 	private static Logger logger = LogManager.getLogger(HighLightingEditor.class);
 	private static final String sampleCode = String.join("\n", new String[] { "" });
-//	private VBox codeAreaPane;
 	private MyCodeArea codeArea;
 	private CodeAreaHighLightingHelper highLightingHelper;
 	private MyAutoComplete myAuto;

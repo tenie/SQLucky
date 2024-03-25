@@ -371,7 +371,7 @@ public class NoteUtility {
 				File selectfile = NoteUtility.currentTreeItemFile();
 				List<File> searchDirs = new ArrayList<>();
 				if (selectfile == null) {
-					var nodels = NoteTabTree.rootNode.getChildren();
+					var nodels = NoteTabTree.noteTabTreeView.getRoot().getChildren();//NoteTabTree.rootNode.getChildren();
 					for (var subNd : nodels) {
 						var tmpfile = subNd.getValue().getFile();
 						searchDirs.add(tmpfile);

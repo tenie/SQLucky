@@ -19,6 +19,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
+import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
@@ -30,7 +31,7 @@ import net.tenie.plugin.note.utility.NoteUtility;
  * @author tenie
  *
  */
-public class NoteTabTree {
+public class NoteTabTree extends SqluckyTitledPane {
 
 	public static StackPane noteStackPane = new StackPane();
 	public static TreeView<MyNoteEditorSheet> noteTabTreeView;
@@ -39,13 +40,19 @@ public class NoteTabTree {
 	private static VBox optionBox;
 	private static NoteOptionPanel optPane;
 
-	public NoteTabTree() {
+	public NoteTabTree(String pluginName) {
 
-		optPane = new NoteOptionPanel();
+		optPane = new NoteOptionPanel(this);
 		noteTabTreeView = createScriptTreeView();
 		optionBox = optPane.getOptionVbox();
 		noteStackPane.getChildren().add(noteTabTreeView);
 		noteStackPane.getStyleClass().add("myStackPane");
+
+
+		this.setBtnsBox(optionBox);
+		this.setText(pluginName);
+		CommonUtils.addCssClass(this, "titledPane-color");
+		this.setContent(noteStackPane);
 
 	}
 

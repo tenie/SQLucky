@@ -122,7 +122,7 @@ public class ServiceLoad {
 				}
 			}
 		} catch (Exception e) {
-			logger.error(e.getMessage());
+			e.printStackTrace();
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -152,7 +152,7 @@ public class ServiceLoad {
 			try {
 				plugin.load();
 			}catch (Exception e){
-				logger.error(e.getMessage());
+				e.printStackTrace();
 			}
 
 		}
@@ -165,7 +165,7 @@ public class ServiceLoad {
 				try {
 					plugin.showed();
 				}catch (Exception e){
-					logger.error(e.getMessage());
+					e.printStackTrace();
 				}
 			}
 		});
