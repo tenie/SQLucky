@@ -51,13 +51,8 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyEditorSheet
 					if (this.getTreeItem().isLeaf()) {
 
 						// A custom HBox that will contain your check box, label and
-						// button.
-						AnchorPane pn = new AnchorPane();
-
-//	                    CheckBox checkBox = new CheckBox();
 						Label label = new Label(item.getDocumentPo().getTitle());
-//	                    Button clean = new Button();  
-
+						AnchorPane pn = new AnchorPane();
 						pn.getChildren().add(label);
 						pn.getChildren().add(clean);
 

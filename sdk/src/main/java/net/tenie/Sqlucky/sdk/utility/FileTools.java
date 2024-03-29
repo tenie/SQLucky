@@ -190,18 +190,15 @@ public class FileTools {
 		if (f != null) {
 			fp = f.getAbsolutePath();
 		}
-//		host.setText(fp);
 		return fp;
 	}
 
-	// 选择文件
-	public static File selectJsonFile() {
-		// 获取文件
-		File f = FileOrDirectoryChooser.showOpenJsonFile("Open", ComponentGetter.primaryStage);
-		return f;
-	}
 
-	// 目录下的所有文件
+	/**
+	 *  目录下的所有文件(不包含子目录)
+	 * @param dirFile
+	 * @return
+	 */
 	public static List<File> getFileFromDir(File dirFile) {
 		List<File> fls = new ArrayList<>();
 		File arrFile[] = dirFile.listFiles();
@@ -216,7 +213,11 @@ public class FileTools {
 		return fls;
 	}
 
-	// 目录下的所有文件, 包括子目录
+	/**
+	 * 对目录下文件(不包括子目录), 进行操作
+	 * @param dir
+	 * @param caller
+	 */
 	public static void getAllFileFromDir(File dir, Function<File, Boolean> caller) {
 		File arrFile[] = dir.listFiles();
 		if (arrFile != null && arrFile.length > 0) {
@@ -231,10 +232,6 @@ public class FileTools {
 					else
 						return 1;// 如果 if 中修改为 返回-1 同时此处修改为返回 1 排序就会是递减
 				}
-
-//		            public boolean equals(Object obj) {
-//		                return true;
-//		            }
 
 			});
 			for (File fl : arrFile) {
@@ -253,7 +250,12 @@ public class FileTools {
 
 	}
 
-	public static List<File> getAllFileFromDir(File dir) {
+	/**
+	 * 从目录中找到所有文件, 包括子目录
+	 * @param dir
+	 * @return
+	 */
+	public static List<File> getAllFileFromDirIncludeSubdirectory(File dir) {
 		List<File> fls = new ArrayList<>();
 
 		File arrFile[] = dir.listFiles();
@@ -263,7 +265,7 @@ public class FileTools {
 					fls.add(fl);
 				}
 				if (fl.isDirectory()) {
-					List<File> vals = getAllFileFromDir(fl);
+					List<File> vals = getAllFileFromDirIncludeSubdirectory(fl);
 					fls.addAll(vals);
 				}
 			}
@@ -271,6 +273,11 @@ public class FileTools {
 
 		return fls;
 	}
+
+	public static void main(String[] args) {
+		getAllFileFromDirIncludeSubdirectory(new File("/home/tenie/myGit/Learning_Notes/工作相关/短信"));
+	}
+
 
 	/**
 	 * 读取文件内容, 判断内容中是否包含查询字符串
@@ -292,22 +299,6 @@ public class FileTools {
 		}
 
 		return null;
-	}
-
-	public static void demo(String[] args) {
-
-		File test = new File("D:\\data\\data.xls");
-		isBinaryFile(test);
-//		String charset = detectFileCharset(test);
-//		System.out.println(charset);
-
-//		boolean isText = isText(test);
-//		System.out.println(isText);
-//
-//		if (isText) {
-//			String charset = detectFileCharset(test);
-//			System.out.println(charset);
-//		}
 	}
 
 	/**
@@ -335,7 +326,7 @@ public class FileTools {
 	}
 
 	/**
-	 * 判断是否是二进制文件
+	 * 判断是否是二进制文件, 通过拓展名来判断
 	 * 
 	 * @param file
 	 * @return
@@ -344,17 +335,12 @@ public class FileTools {
 		if (file.exists()) {
 			String name = file.getName();
 			if (name.contains(".")) {
-//				name = name.substring(name.lastIndexOf("."));
-				logger.debug("file  = " + name);
-
+//				logger.debug("file  = " + name);
 				for (String typeStr : fileTypes) {
 					if (name.toLowerCase().endsWith(typeStr)) {
 						return true;
 					}
 				}
-//				if(fileTypes.contains(name.toLowerCase())) {
-//					return true;
-//				}
 			}
 		}
 
@@ -368,14 +354,17 @@ public class FileTools {
 	 * @return
 	 */
 	public static String detectFileCharset(File sourceFile) {
-
 		String encoding = null;
-
-		try {
-			encoding = UniversalDetector.detectCharset(sourceFile);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(sourceFile.length() == 0 ){
+			encoding = "UTF-8";
+		}else {
+			try {
+				encoding = UniversalDetector.detectCharset(sourceFile);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
+
 		return encoding;
 	}
 

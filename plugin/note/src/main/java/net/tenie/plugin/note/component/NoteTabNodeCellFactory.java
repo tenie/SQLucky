@@ -2,6 +2,7 @@ package net.tenie.plugin.note.component;
 
 import java.util.Objects;
 
+import javafx.scene.AccessibleRole;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeCell;
@@ -17,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.plugin.note.utility.NoteUtility;
 
 /**
@@ -33,6 +35,7 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<MyNoteEditorShe
 
 	TreeView<MyNoteEditorSheet> treeView;
 
+
 	public NoteTabNodeCellFactory(NoteOptionPanel optPane, TreeView<MyNoteEditorSheet> treeView) {
 		this.optPane = optPane;
 		showInFolder = optPane.getShowInFolder();
@@ -41,54 +44,88 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<MyNoteEditorShe
 
 	@Override
 	public TreeCell<MyNoteEditorSheet> call(TreeView<MyNoteEditorSheet> treeView) {
-		TreeCell<MyNoteEditorSheet> cell = new TreeCell<MyNoteEditorSheet>() {
 
-			@Override
-			public void updateItem(MyNoteEditorSheet item, boolean empty) {
-				super.updateItem(item, empty);
-				// 给cell 内容添加 button
-				// If the cell is empty we don't show anything.
-				if (isEmpty()) {
-					setGraphic(null);
-					setText(null);
-				} else {
-//	                if (this.getTreeItem().isLeaf()) {   // We only show the custom cell if it is a leaf, meaning it has no children.
+		TreeCell<MyNoteEditorSheet> cell = new NoteTreeCell(treeView, showInFolder);
+//		TreeCell<MyNoteEditorSheet> cell = new TreeCell<MyNoteEditorSheet>() {
+//			@Override
+//			public void updateItem(MyNoteEditorSheet item, boolean empty) {
+//				super.updateItem(item, empty);
+//				// 给cell 内容添加 button
+//				// If the cell is empty we don't show anything.
+//				if (isEmpty()) {
+//					setGraphic(null);
+//					setText(null);
+//				} else {
+//					isRootItem = item.getIsRootItem();
+//					DocumentPo po = item.getDocumentPo();
+//					Region icon = po.getIcon();
+//					Label label = new Label(po.getTitle());
+//					label.setGraphic(icon);
+//					AnchorPane pn = new AnchorPane();
+//					pn.getChildren().add(label);
+//					if(isRootItem){
+//						this.clean =  new Button();
+//						clean.setMaxSize(12, 12);
+//						clean.setGraphic(IconGenerator.svgImageUnactive("times-circle", 14));
+//						clean.getStyleClass().add("myCleanBtn");
+//						clean.setVisible(false); // clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
+//						clean.setOnAction(e -> {
+//
+//						});
+//
+//						this.setOnMouseEntered(e -> {
+//							if (this.isSelected()) {
+//								clean.setVisible(true);
+//							}
+//
+//						});
+//
+//						this.setOnMouseExited(e -> {
+//							clean.setVisible(false);
+//						});
+//						pn.getChildren().add(clean);
+//						AnchorPane.setRightAnchor(clean, 5.0);
+//					}
+//					this.setOnMouseClicked(e -> {
+//						if (e.getClickCount() == 1) {
+//							var selectedItemitem = treeView.getSelectionModel().getSelectedItem();
+//
+//							if (selectedItemitem != null) {
+//								showInFolder.setDisable(false);
+//							} else {
+//								showInFolder.setDisable(true);
+//							}
+//						} else if (e.getClickCount() == 2) {
+//							NoteUtility.doubleClickItem(this.getTreeItem());
+//						}
+//
+//						if(isRootItem){
+//							if (this.isSelected()) {
+//								clean.setVisible(true);
+//							}
+//						}
+//
+//					});
+//
+////					pn.accessibleRoleProperty().set(AccessibleRole.PARENT);
+//					setGraphic(pn);
+//
+//					setText(null);
+//				}
+//			}
+//
+//		};
 
-					// A custom HBox that will contain your check box, label and
-					// button.
-					AnchorPane pn = new AnchorPane();
 
-					DocumentPo po = item.getDocumentPo();
-					Region icon = po.getIcon();
+//		cell.setOnMouseClicked(e -> {
+//			if (cell.isSelected()) {
+//				clean.setVisible(true);
+//			}
+//
+//		});
 
-					Label label = new Label(po.getTitle());
-					label.setGraphic(icon);
 
-					pn.getChildren().add(label);
-//	                    pn.getChildren().add(clean); 
-//	                    AnchorPane.setRightAnchor(clean, 5.0);
-					setGraphic(pn);
 
-					setText(null);
-				}
-			}
-
-		};
-
-		cell.setOnMouseClicked(e -> {
-			if (e.getClickCount() == 1) {
-				var item = treeView.getSelectionModel().getSelectedItem();
-
-				if (item != null) {
-					showInFolder.setDisable(false);
-				} else {
-					showInFolder.setDisable(true);
-				}
-			} else if (e.getClickCount() == 2) {
-				NoteUtility.doubleClickItem(cell.getTreeItem());
-			}
-
-		});
 		cell.setOnDragDetected((MouseEvent event) -> dragDetected(event, cell, treeView));
 		cell.setOnDragOver((DragEvent event) -> dragOver(event, cell, treeView));
 		cell.setOnDragDropped((DragEvent event) -> drop(event, cell, treeView));
