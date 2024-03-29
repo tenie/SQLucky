@@ -37,10 +37,6 @@ import net.tenie.plugin.note.impl.NoteDelegateImpl;
 
 public class NoteUtility {
 
-	public static TreeItem<MyNoteEditorSheet> rootCache = null;
-	public static boolean isFile = false;
-	public static boolean isText = false;
-
 	public static void doubleClickItem(TreeItem<MyNoteEditorSheet> item) {
 		if(item == null) {
 			return;
@@ -183,14 +179,32 @@ public class NoteUtility {
 	// 新建一个文件
 	public static void newFile(TreeView<MyNoteEditorSheet> NoteTabTreeView, TreeItem<MyNoteEditorSheet> rootNode,
 			String filePath) {
-		var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
-		var ParentNode = itm.getParent();
-		if (Objects.equals(rootNode, ParentNode)) {
-			newFileNode(rootNode, filePath);
-		} else {
-			var parentFile = ParentNode.getValue().getFile();
-			newFileNode(ParentNode, parentFile.getAbsolutePath());
+//		var itm = NoteTabTreeView.getSelectionModel().getSelectedItem();
+//		var ParentNode = itm.getParent();
+//		if (Objects.equals(rootNode, ParentNode)) {
+//			newFileNode(rootNode, filePath);
+//		} else {
+//			var parentFile = ParentNode.getValue().getFile();
+//			newFileNode(ParentNode, parentFile.getAbsolutePath());
+//		}
+
+		File file = FileOrDirectoryChooser.showSaveText("Save", "", ComponentGetter.primaryStage);
+		if(file != null){
+			System.out.println(file.getAbsolutePath());
+            try {
+				if(!file.getName().contains(".")){
+					file = new File(file.getAbsolutePath()+".txt");
+				}
+				if(!file.exists()){
+					file.createNewFile();
+				}
+				openFile(file);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+//
 		}
+
 	}
 
 	public static void newFileNode(TreeItem<MyNoteEditorSheet> node, String fpval) {
@@ -224,24 +238,45 @@ public class NoteUtility {
 
 	}
 
-	// 打开文件
+	/**
+	 * treeView 中插入一个文件节点
+	 * @return
+	 */
 	public static String openFile() {
-		String filePath = "";
 		File f = FileOrDirectoryChooser.showOpenAllFile("Select File", ComponentGetter.primaryStage);
+		return	openFile(f);
+	}
+
+	/**
+	 * treeView 中插入一个文件节点
+	 * @param f
+	 * @return
+	 */
+	public static String openFile(File f) {
+		String filePath = "";
 		if (f != null && f.exists()) {
 			filePath = f.getAbsolutePath();
 			openNoteFile(f);
 			savePath(filePath);
 		}
-
 		return filePath;
-
 	}
 
 	/**
 	 * 保存多个笔记的目录数
 	 */
 	public static void savePath(String filePath) {
+		String count = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "path_count");
+		Integer countInt = 0;
+		if (StrUtils.isNotNullOrEmpty(count)) {
+			countInt = Integer.valueOf(count);
+		}
+		countInt += 1;
+		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path_" + countInt, filePath);
+		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "path_count", countInt+"");
+	}
+
+	public static void saveDeletePath(String filePath) {
 		String count = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "path_count");
 		Integer countInt = 0;
 		if (StrUtils.isNotNullOrEmpty(count)) {
@@ -271,12 +306,13 @@ public class NoteUtility {
 	}
 
 	// 打开sql文件
-	public static void openNoteDir(TreeItem<MyNoteEditorSheet> node, File openFile) {
+	public static TreeItem<MyNoteEditorSheet> openNoteDir(TreeItem<MyNoteEditorSheet> node, File openFile) {
+		TreeItem<MyNoteEditorSheet> rootItem = null;
 		if(openFile.isDirectory()){
 			List<File> fileList = new ArrayList<>();
 			File[] files = openFile.listFiles();
 			if (files == null){
-				return;
+				return rootItem;
 			}else {
 				fileList.addAll(List.of(files));
 			}
@@ -284,6 +320,8 @@ public class NoteUtility {
 			// 如果选择目录导入进来的情况
 			if (node.equals(NoteTabTree.rootNode)) {
 				fileRootitem = createItemNode(openFile);
+				fileRootitem.getValue().setIsRootItem(true, fileRootitem);
+				rootItem = fileRootitem;
 				node.getChildren().add(fileRootitem);
 			}
 
@@ -311,12 +349,17 @@ public class NoteUtility {
 				node.getChildren().add(fileRootitem);
 			}
 		}
+
+		return rootItem;
 	}
 
 	// 打开sql文件
-	public static void openNoteFile(File openFile) {
-		var fileRootitem = createItemNode(openFile);
+	public static TreeItem<MyNoteEditorSheet>  openNoteFile(File openFile) {
+		TreeItem<MyNoteEditorSheet>  fileRootitem = createItemNode(openFile);
+		MyNoteEditorSheet myNote = fileRootitem.getValue();
+		myNote.setIsRootItem(true, fileRootitem);
 		NoteTabTree.rootNode.getChildren().add(fileRootitem);
+		return fileRootitem;
 	}
 
 	/**
@@ -354,118 +397,12 @@ public class NoteUtility {
 
 	}
 
-	// 搜索
-	public static void searchAction(String queryStr, String fileType, Button down, Button up, Button stopbtn) {
-		if (StrUtils.isNullOrEmpty(queryStr)) {
-			return;
-		} else {
-			queryStr = queryStr.toLowerCase();
-		}
-		var windowSceneRoot = NoteTabTree.noteStackPane;
-		LoadingAnimation.addLoading(windowSceneRoot, "Search....", 14);
 
-		String searchStr = queryStr;
-		CommonUtils.runThread(v -> {
-			try {
 
-				File selectfile = NoteUtility.currentTreeItemFile();
-				List<File> searchDirs = new ArrayList<>();
-				if (selectfile == null) {
-					var nodels = NoteTabTree.noteTabTreeView.getRoot().getChildren();//NoteTabTree.rootNode.getChildren();
-					for (var subNd : nodels) {
-						var tmpfile = subNd.getValue().getFile();
-						searchDirs.add(tmpfile);
-					}
 
-				} else {
-					searchDirs.add(selectfile);
-				}
-				for (var file : searchDirs) {
-					if (file.isDirectory()) {
-						rootCache = NoteTabTree.rootNode;
 
-						MyNoteEditorSheet stab = new MyNoteEditorSheet("", null);// ComponentGetter.appComponent.MyNoteEditorSheet();
-						TreeItem<MyNoteEditorSheet> tmpRoot = new TreeItem<>(stab);
-						Platform.runLater(() -> {
-							NoteTabTree.noteTabTreeView.setRoot(tmpRoot);
-						});
 
-						Function<File, Boolean> caller = tmpfile -> {
-							if (isStopSearch()) {
-								return true;
-							}
-							if (isFile) { // 文件名搜索
-								LoadingAnimation.ChangeLabelText("Search: \n" + tmpfile.getName());
-								String fileName = tmpfile.getName().toLowerCase();
-								if (fileName.contains(searchStr)) {
-									TreeItem<MyNoteEditorSheet> fileRootitem = NoteUtility.createItemNode(tmpfile);
-									Platform.runLater(() -> {
-										tmpRoot.getChildren().add(fileRootitem);
-									});
 
-								}
-
-							} else if (isText) { // 文件内容搜索
-								if (fileType.endsWith("*")) { // 如果结尾是* , 就规避二进制文件
-									if (FileTools.isBinaryFile(tmpfile)) {
-										return isStopSearch();
-									}
-								}
-								boolean match = StrUtils.matchFileName(fileType, tmpfile);
-								if (match) {
-									LoadingAnimation.ChangeLabelText("Search: \n" + tmpfile.getName());
-									String charset = FileTools.detectFileCharset(tmpfile);
-									if (charset != null) {
-										String textStr = FileTools.read(tmpfile, charset);
-										if (textStr.toLowerCase().contains(searchStr)) {
-											TreeItem<MyNoteEditorSheet> fileRootitem = NoteUtility.createItemNode(tmpfile);
-
-											Platform.runLater(() -> {
-												tmpRoot.getChildren().add(fileRootitem);
-												down.setDisable(false);
-												up.setDisable(false);
-											});
-										}
-									}
-								}
-
-							}
-							return isStopSearch();
-						};
-
-						FileTools.getAllFileFromDir(file, caller);
-
-					}
-				}
-			} finally {
-				NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
-				NoteTabTree.noteTabTreeView.refresh();
-				LoadingAnimation.rmLoading(windowSceneRoot);
-				down.setDisable(false);
-				up.setDisable(false);
-				stopbtn.setDisable(true);
-			}
-
-		});
-	}
-
-	private static volatile boolean stopTag = false;
-
-	public static boolean getStopTag() {
-		return stopTag;
-	}
-
-	public static void beginSearch() {
-		stopTag = false;
-	}
-
-	public static void stopSearch() {
-		stopTag = true;
-	}
-
-	public static boolean isStopSearch() {
-		return getStopTag();
-	}
 
 	public static MyNoteEditorSheet openNextNote(ObservableList<TreeItem<MyNoteEditorSheet>> ls, int next) {
 		if (ls != null && next < ls.size()) {

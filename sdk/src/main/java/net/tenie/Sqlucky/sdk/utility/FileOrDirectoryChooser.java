@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.utility;
 
 import java.io.File;
 
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import org.apache.commons.io.FileUtils;
 
 import javafx.scene.control.TextField;
@@ -286,4 +287,10 @@ public final class FileOrDirectoryChooser {
 		}
 	}
 
+	// 选择文件
+	public static File selectJsonFile() {
+		// 获取文件
+		File f = FileOrDirectoryChooser.showOpenJsonFile("Open", ComponentGetter.primaryStage);
+		return f;
+	}
 }

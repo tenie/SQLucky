@@ -32,24 +32,20 @@ import net.tenie.plugin.note.utility.NoteUtility;
  *
  */
 public class NoteTabTree extends SqluckyTitledPane {
-
 	public static StackPane noteStackPane = new StackPane();
 	public static TreeView<MyNoteEditorSheet> noteTabTreeView;
 	public static TreeItem<MyNoteEditorSheet> rootNode;
 	public static String filePath = "";
-	private static VBox optionBox;
 	private static NoteOptionPanel optPane;
 
 	public NoteTabTree(String pluginName) {
 
 		optPane = new NoteOptionPanel(this);
 		noteTabTreeView = createScriptTreeView();
-		optionBox = optPane.getOptionVbox();
 		noteStackPane.getChildren().add(noteTabTreeView);
 		noteStackPane.getStyleClass().add("myStackPane");
 
-
-		this.setBtnsBox(optionBox);
+		this.setBtnsBox(optPane);
 		this.setText(pluginName);
 		CommonUtils.addCssClass(this, "titledPane-color");
 		this.setContent(noteStackPane);
@@ -58,7 +54,6 @@ public class NoteTabTree extends SqluckyTitledPane {
 
 	// db节点view
 	public TreeView<MyNoteEditorSheet> createScriptTreeView() {
-//		MyNoteEditorSheet sheet = ComponentGetter.appComponent.sqluckyTab();
 		rootNode = new TreeItem<>(null);
 		TreeView<MyNoteEditorSheet> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");
@@ -88,9 +83,9 @@ public class NoteTabTree extends SqluckyTitledPane {
 				File file = new File(filePath);
 				if (file.exists()) {
 					if(file.isDirectory()){
-						NoteUtility.openNoteDir(rootNode, file);
+						TreeItem<MyNoteEditorSheet>  rootItem =	NoteUtility.openNoteDir(rootNode, file);
 					}else {
-						NoteUtility.openNoteFile(file);
+						TreeItem<MyNoteEditorSheet>  rootItem = NoteUtility.openNoteFile(file);
 					}
 				}
 			}
@@ -297,10 +292,6 @@ public class NoteTabTree extends SqluckyTitledPane {
 
 		});
 		return contextMenu;
-	}
-
-	public static VBox getOptionBox() {
-		return optionBox;
 	}
 
 }
