@@ -168,6 +168,35 @@ public class DBTools {
 		return str;
 	}
 
+	/**
+	 * 读取一列的所有值
+	 * @param conn
+	 * @param sql
+	 * @return
+	 */
+	public static List<String> selectOneColList(Connection conn, String sql) {
+		ResultSet rs = null;
+		List<String> rsList = new ArrayList<>();
+		try {
+			rs = conn.createStatement().executeQuery(sql);
+			while (rs.next()) {
+				String str = rs.getString(1);
+				rsList.add(str);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (rs != null)
+				try {
+					rs.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+		}
+
+		return rsList;
+	}
+
 	public static Long selectOneLongVal(Connection conn, String sql) {
 		ResultSet rs = null;
 		Long val = null;

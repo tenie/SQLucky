@@ -233,19 +233,19 @@ public class PoDao {
 	public static int count(Connection conn, Object condition) throws Exception {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		LinkedList params = new LinkedList();
+		LinkedList<String> params = new LinkedList<>();
 
 		int var11;
 		try {
 			PoInfo binfo = PoDaoUtil.getDataBeanInfo(condition);
-			StringBuffer sql = new StringBuffer();
-			sql.append("SELECT COUNT(*) AS POCOUNT FROM " + binfo.getTabName() + " WHERE 1=1");
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT COUNT(*) AS POCOUNT FROM ").append(binfo.getTabName()).append(" WHERE 1=1");
 			int size = binfo.getColSize();
 
 			int idx;
 			for (idx = 0; idx < size; ++idx) {
 				if (binfo.getColVal(condition, idx) != null) {
-					sql.append(" AND " + binfo.getColName(idx) + "=?");
+					sql.append(" AND ").append(binfo.getColName(idx)).append("=?");
 				}
 			}
 
@@ -276,10 +276,9 @@ public class PoDao {
 	public static <T> List<T> select(Connection conn, T condition) throws Exception {
 		PreparedStatement ps = null;
 		ResultSet rs = null;
-		LinkedList params = new LinkedList();
+		LinkedList<String> params = new LinkedList<>();
 
 		try {
-//			POValidate.getInstance().validate(condition, 8);
 			PoInfo binfo = PoDaoUtil.getDataBeanInfo(condition);
 			String sql = PoDaoUtil.getSelectSql(binfo, condition);
 			ps = conn.prepareStatement(sql);
@@ -297,8 +296,7 @@ public class PoDao {
 			logger.debug(sql + " " + params);
 
 			rs = ps.executeQuery();
-			List var11 = PoDaoUtil.getDataBeansFromResultSet(condition, rs);
-			return var11;
+            return PoDaoUtil.getDataBeansFromResultSet(condition, rs);
 		} catch (Throwable var14) {
 			throw new Exception("Exception", var14);
 		} finally {

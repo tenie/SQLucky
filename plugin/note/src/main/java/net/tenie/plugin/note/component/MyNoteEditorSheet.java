@@ -13,7 +13,8 @@ import java.sql.Connection;
 
 public class MyNoteEditorSheet extends MyEditorSheet {
     private Boolean isRootItem = false;
-    TreeItem<MyNoteEditorSheet> fileRootitem;
+    private  TreeItem<MyNoteEditorSheet> fileRootitem;
+
     public MyNoteEditorSheet(DocumentPo valDocumentPo, SqluckyEditor sqluckyEditor) {
         super(valDocumentPo, sqluckyEditor);
     }
@@ -56,4 +57,8 @@ public class MyNoteEditorSheet extends MyEditorSheet {
     public void setFileRootitem(TreeItem<MyNoteEditorSheet> fileRootitem) {
         this.fileRootitem = fileRootitem;
     }
+
+
+
+
 }

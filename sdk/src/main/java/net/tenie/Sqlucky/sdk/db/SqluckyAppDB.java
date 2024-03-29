@@ -511,6 +511,50 @@ public class SqluckyAppDB {
 			e.printStackTrace();
 		}
 	}
+
+	/**
+	 * 保存插件的key value
+	 * @param conn
+	 * @param PluginName
+	 * @param key
+	 * @param val
+	 */
+	public static void savePluginConfig(Connection conn, String PluginName, String key, String val) {
+		deletePluginConfigKey(conn, PluginName, key);
+		String sql = "insert into APP_CONFIG (PLUGIN_NAME, NAME, VAL) values ('"+PluginName+"' ,'" + key + "' , '" + val + "' )";
+		try {
+			DBTools.execDML(conn, sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 删除插件的key value
+	 * @param conn
+	 * @param key
+	 */
+	public static void deletePluginConfigKey(Connection conn, String PluginName, String key) {
+		try {
+			DBTools.execDDL(conn, "DELETE from APP_CONFIG where name = '" + key + "' and  PLUGIN_NAME = '"+PluginName+"'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * 删除插件的key value
+	 * @param conn
+	 */
+	public static void deletePluginAllConfig(Connection conn, String PluginName) {
+		try {
+			DBTools.execDDL(conn, "DELETE from APP_CONFIG where  PLUGIN_NAME = '"+PluginName+"'");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+
 	public static void deleteConfigKey(Connection conn, String key) {
 		try {
 			DBTools.execDDL(conn, "DELETE from APP_CONFIG where name = '" + key + "' ");
@@ -525,5 +569,21 @@ public class SqluckyAppDB {
 		return vals;
 	}
 
+	public static List<String> readPluginAllConfig(Connection conn, String pluginName, String key ) {
+		String sql = "select   VAL   from   APP_CONFIG   where PLUGIN_NAME = '" + pluginName + "' and name = '" + key + "' ";
+		List<String> vals = DBTools.selectOneColList(conn, sql);
+		return vals;
+	}
+	public static List<String> readPluginAllConfig(Connection conn, String pluginName ) {
+		String sql = "select   VAL   from   APP_CONFIG   where PLUGIN_NAME = '" + pluginName + "'";
+		List<String> vals = DBTools.selectOneColList(conn, sql);
+		return vals;
+	}
+
+	public static String readPluginConfig(Connection conn, String pluginName, String key) {
+		String sql = "select   VAL   from   APP_CONFIG   where PLUGIN_NAME = '" + pluginName + "' and name = '" + key + "' ";
+		String vals = DBTools.selectOne(conn, sql);
+		return vals;
+	}
 
 }

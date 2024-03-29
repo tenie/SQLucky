@@ -41,7 +41,10 @@ public class NoteTreeCell extends TreeCell<MyNoteEditorSheet>{
                 clean.setVisible(false); // clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
                 clean.setOnAction(e -> {
                     TreeItem<MyNoteEditorSheet>  treeItem = item.getFileRootitem();
-                    treeView.getRoot().getChildren().remove(treeItem);
+                    boolean tf = treeView.getRoot().getChildren().remove(treeItem);
+                    if(tf){
+                        NoteUtility.rmSavePath(treeItem);
+                    }
                 });
 
                 this.setOnMouseEntered(e -> {
