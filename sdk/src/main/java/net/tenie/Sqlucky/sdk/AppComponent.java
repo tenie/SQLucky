@@ -24,18 +24,18 @@ public interface AppComponent {
 	void saveApplicationStatusInfo();
 	// 重启app
 	void reboot();
-	public   MyEditorSheet findMyTabByScriptPo(DocumentPo scpo);
+	   MyEditorSheet findMyTabByScriptPo(DocumentPo scpo);
 	// 设置文件打开时候目录path, 便于二次打开可以直达该目录
-	public void setOpenfileDir(String val);
+	 void setOpenfileDir(String val);
 
-	public void runSQL(SqluckyConnector sqlConn, String sqlv, boolean isCreateFunc);
+	 void runSQL(SqluckyConnector sqlConn, String sqlv, boolean isCreateFunc);
 
-	public SqluckyEditor createCodeArea();
+	 SqluckyEditor createCodeArea();
 
 	/*
 	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab
 	 */
-	public void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv);
+	 void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv);
 
 	Long refreshDataTableView(String connName, String sql, String idx, boolean isLock);
 	Long refreshDataTableView(SqluckyConnector dbconnPo, String sql, String idx, boolean isLock);
@@ -50,92 +50,99 @@ public interface AppComponent {
 
 	void tabPaneRemoveSqluckyTab(MyEditorSheet stb);
 
-	public Region getIconUnactive(String name);
+	 Region getIconUnactive(String name);
 
-	public Region getIconDefActive(String name);
+	 Region getIconDefActive(String name);
 
-	public void saveData(String name, String key, String value);
+	 void saveData(String name, String key, String value);
 
-	public String fetchData(String name, String key);
+
+	 void deleteData(String name, String key);
+	 void deletePluginAllData(String pluginName);
+	 String fetchData(String name, String key);
+
+	 List<String> fetchAllData(String pluginName, String key);
+
+	 List<String> fetchAllData(String pluginName);
 
 	// 注册数据库连接对象 DB DB2Connector
-	public void registerDBConnector(SqluckyDbRegister ctr);
+	 void registerDBConnector(SqluckyDbRegister ctr);
 
 	// 让插件可以对数据库节点右键菜单增加插件的菜单按钮
-	public void registerDBInfoMenu(List<Menu> ms, List<MenuItem> mis);
+	 void registerDBInfoMenu(List<Menu> ms, List<MenuItem> mis);
 
 	// 获取选中的 dbInfo 节点的类型(表格, 视图, 等)
-	public TreeItemType currentDBInfoNodeType();
+	 TreeItemType currentDBInfoNodeType();
 
 	// 获取 dbInfo 上的数据库连接对象
-	public DBNodeInfoPo currentDBInfoNode();
+	 DBNodeInfoPo currentDBInfoNode();
 
 	// DBInfoMenu 显示的时候调用
-	public void setDBInfoMenuOnShowing(Consumer<String> caller);
+	 void setDBInfoMenuOnShowing(Consumer<String> caller);
 
-	public Consumer<String> getDBInfoMenuOnShowing();
+	 Consumer<String> getDBInfoMenuOnShowing();
 
 	// 执行dml sql语句
-	public boolean execDML(String sql);
+	 boolean execDML(String sql);
 
 	// TODO 创建数据tableview
-//	public SqluckyBottomSheet sqlDataSheet(MyBottomSheet rs, SheetDataValue data, int idx, boolean disable);
+//	 SqluckyBottomSheet sqlDataSheet(MyBottomSheet rs, SheetDataValue data, int idx, boolean disable);
 
-//	public SqluckyBottomSheet tableViewSheet(SheetDataValue data, List<Node> nodeLs);
-//	public SqluckyBottomSheet tableViewSheet(MyBottomSheet myBottomSheet, List<Node> btnLs);
+//	 SqluckyBottomSheet tableViewSheet(SheetDataValue data, List<Node> nodeLs);
+//	 SqluckyBottomSheet tableViewSheet(MyBottomSheet myBottomSheet, List<Node> btnLs);
 
 	// 表, 视图 等 数据库对象的ddl语句
-//	public SqluckyBottomSheet ddlSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc,
+//	 SqluckyBottomSheet ddlSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc,
 //			boolean isSelect);
 
-//	public SqluckyBottomSheet tableInfoSheet(SqluckyConnector sqluckyConn, TablePo table);
+//	 SqluckyBottomSheet tableInfoSheet(SqluckyConnector sqluckyConn, TablePo table);
 
-//	public SqluckyBottomSheet ProcedureSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc);
+//	 SqluckyBottomSheet ProcedureSheet(SqluckyConnector sqluckyConn, String name, String ddl, boolean isRunFunc);
 
-//	public SqluckyBottomSheet EmptySheet(SqluckyConnector sqluckyConn, String name, String message);
+//	 SqluckyBottomSheet EmptySheet(SqluckyConnector sqluckyConn, String name, String message);
 
 	// 获取 DBconns 中保存的所有数据库链接信息
-	public Map<String, SqluckyConnector> getAllConnector();
+	 Map<String, SqluckyConnector> getAllConnector();
 
 	// 获取 DBinfoTree 中链接的所有名称
-	public List<String> getAllConnectorName();
+	 List<String> getAllConnectorName();
 
 	// 获取 DBinfoTree 中链接的所有激活的名称
-	public List<String> getAllActiveConnectorName();
+	 List<String> getAllActiveConnectorName();
 
 	// 登入窗口
-	public void showSingInWindow(String title);
+	 void showSingInWindow(String title);
 
 	/**
 	 * 使用新数据重建数据库连接节点树
 	 */
-	public void recreateDBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
+	 void recreateDBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
 
 	/**
 	 * 使用新数据合并入数据库连接节点树
 	 */
-	public void mergeDBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
+	 void mergeDBinfoTreeData(List<DBConnectorInfoPo> dbciPo);
 
-	public void recreateScriptTreeData(List<DocumentPo> docs);
+	 void recreateScriptTreeData(List<DocumentPo> docs);
 
-	public void mergeScriptTreeData(List<DocumentPo> docs);
+	 void mergeScriptTreeData(List<DocumentPo> docs);
 
 	// 创建一个DocumentPo对象, 并保存在数据库
-	public DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph);
+	 DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph);
 
-	public void updateScriptArchive(Connection conn, DocumentPo po);
+	 void updateScriptArchive(Connection conn, DocumentPo po);
 
 	// 给脚本treeView 添加子节点
-	public void scriptTreeAddItem(MyEditorSheet sheet);
+	 void scriptTreeAddItem(MyEditorSheet sheet);
 
 	// 刷新树
-	public void scriptTreeRefresh();
+	 void scriptTreeRefresh();
 	
 	// DBinfo 查询按钮
-	public void DBinfoTreeFilterHide();
+	 void DBinfoTreeFilterHide();
 
-	public void registerBottomSheetExportMenu(Function<MyBottomSheet, MenuItem > func);
-	public List<Function<MyBottomSheet, MenuItem>> getBottomSheetBtns();
-	public List<MenuItem> getBottomSheetBtns(MyBottomSheet sheet);
+	 void registerBottomSheetExportMenu(Function<MyBottomSheet, MenuItem > func);
+	 List<Function<MyBottomSheet, MenuItem>> getBottomSheetBtns();
+	 List<MenuItem> getBottomSheetBtns(MyBottomSheet sheet);
 
 }

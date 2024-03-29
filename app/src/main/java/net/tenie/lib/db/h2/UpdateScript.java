@@ -16,6 +16,8 @@ public class UpdateScript {
 	static {
 		sqlMap.put("PLUGIN_INFO添加file_name", "ALTER TABLE PLUGIN_INFO ADD    FILE_NAME varchar(200)");
 		sqlMap.put("PLUGIN_INFO添加file_name2", "ALTER TABLE PLUGIN_INFO ADD    FILE_NAME2 varchar(200)");
+		sqlMap.put("APP_CONFIG 添加 PLUGIN_NAME", "ALTER TABLE APP_CONFIG ADD  PLUGIN_NAME VARCHAR(200)");
+
 	}
 
 	/**
@@ -32,7 +34,7 @@ public class UpdateScript {
 					po.setRemark(key);
 
 					List<SqluckyAppendSqlPO> list = PoDao.select(conn, po);
-					if(list == null || list.isEmpty()){
+					if(list.isEmpty()){
 						po.setSqlVal(sqlMap.get(key));
 						PoDao.insert(conn, po);
 					}

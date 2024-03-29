@@ -24,6 +24,7 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import net.tenie.plugin.note.impl.NoteDelegateImpl;
 import net.tenie.plugin.note.utility.NoteUtility;
 
 /**
@@ -78,14 +79,16 @@ public class NoteTabTree extends SqluckyTitledPane {
 	public void recoverNode(TreeItem<MyNoteEditorSheet> rootNode) {
 
 		Consumer<String> cr = v -> {
-			List<String> pathAll = NoteUtility.fetchAllPath();
+			// 从数据库获取所有插件名称的配置值
+			List<String> pathAll = 	ComponentGetter.appComponent.fetchAllData(NoteDelegateImpl.pluginName);
+//					NoteUtility.fetchAllPath();
 			for(String filePath : pathAll){
 				File file = new File(filePath);
 				if (file.exists()) {
 					if(file.isDirectory()){
-						TreeItem<MyNoteEditorSheet>  rootItem =	NoteUtility.openNoteDir(rootNode, file);
+						NoteUtility.openNoteDir(rootNode, file);
 					}else {
-						TreeItem<MyNoteEditorSheet>  rootItem = NoteUtility.openNoteFile(file);
+						NoteUtility.openNoteFile(file);
 					}
 				}
 			}
@@ -239,7 +242,7 @@ public class NoteTabTree extends SqluckyTitledPane {
 
 		MenuItem Clean = new MenuItem("Clean ");
 		Clean.setOnAction(e -> {
-			NoteTabTree.filePath = NoteUtility.cleanAction(NoteTabTree.rootNode);
+			 NoteUtility.cleanAction(NoteTabTree.rootNode);
 		});
 
 		MenuItem newFile = new MenuItem("New File ");

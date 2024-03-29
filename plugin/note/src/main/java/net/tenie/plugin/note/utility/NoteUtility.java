@@ -1,20 +1,9 @@
 package net.tenie.plugin.note.utility;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
 import com.jfoenix.controls.JFXButton;
-
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.Region;
@@ -25,7 +14,6 @@ import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
@@ -34,6 +22,12 @@ import net.tenie.plugin.note.component.MyNoteEditorSheet;
 import net.tenie.plugin.note.component.NoteOptionPanel;
 import net.tenie.plugin.note.component.NoteTabTree;
 import net.tenie.plugin.note.impl.NoteDelegateImpl;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class NoteUtility {
 
@@ -137,12 +131,10 @@ public class NoteUtility {
 	}
 
 	// 关闭界面上打开的note目录
-	public static String cleanAction(TreeItem<MyNoteEditorSheet> rootNode) {
+	public static void cleanAction(TreeItem<MyNoteEditorSheet> rootNode) {
 		NoteOptionPanel.txt.clear();
 		rootNode.getChildren().clear();
-		String filePath = "";
-		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path", "");
-		return filePath;
+		ComponentGetter.appComponent.deletePluginAllData(NoteDelegateImpl.pluginName);
 	}
 
 	// delete file
@@ -228,10 +220,17 @@ public class NoteUtility {
 		String filePath = "";
 		File f = FileOrDirectoryChooser.showDirChooser("Select Directory", ComponentGetter.primaryStage);
 		if (f != null && f.exists()) {
-			filePath = f.getAbsolutePath();
-			openNoteDir(rootNode, f);
+			List<TreeItem<MyNoteEditorSheet>> children = rootNode.getChildren();
+			for(var  treeItem: children){
+				String fPath = treeItem.getValue().getFile().getAbsolutePath();
+				if(fPath.equals(f.getAbsolutePath())){
+					treeItem.setExpanded(true);
+					return "";
+				}
+			}
 
-			savePath(filePath);
+			TreeItem<MyNoteEditorSheet>  rootItem = openNoteDir(rootNode, f);
+			savePath(rootItem);
 		}
 
 		return filePath;
@@ -256,8 +255,16 @@ public class NoteUtility {
 		String filePath = "";
 		if (f != null && f.exists()) {
 			filePath = f.getAbsolutePath();
-			openNoteFile(f);
-			savePath(filePath);
+			List<TreeItem<MyNoteEditorSheet>>  children = NoteTabTree.noteTabTreeView.getRoot().getChildren();
+			for(var  treeItem: children){
+				String fPath = treeItem.getValue().getFile().getAbsolutePath();
+				if(fPath.equals(f.getAbsolutePath())){
+					NoteTabTree.noteTabTreeView.getSelectionModel().select(treeItem);
+					return "";
+				}
+			}
+			TreeItem<MyNoteEditorSheet>  treeItem = openNoteFile(f);
+			savePath(treeItem);
 		}
 		return filePath;
 	}
@@ -265,44 +272,22 @@ public class NoteUtility {
 	/**
 	 * 保存多个笔记的目录数
 	 */
-	public static void savePath(String filePath) {
-		String count = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "path_count");
-		Integer countInt = 0;
-		if (StrUtils.isNotNullOrEmpty(count)) {
-			countInt = Integer.valueOf(count);
-		}
-		countInt += 1;
-		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path_" + countInt, filePath);
-		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "path_count", countInt+"");
-	}
+	public static void savePath(TreeItem<MyNoteEditorSheet> rootItem) {
+		MyNoteEditorSheet sheet = rootItem.getValue();
+		File file =  sheet.getFile();
+		String filePath = file.getAbsolutePath();
 
-	public static void saveDeletePath(String filePath) {
-		String count = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "path_count");
-		Integer countInt = 0;
-		if (StrUtils.isNotNullOrEmpty(count)) {
-			countInt = Integer.valueOf(count);
-		}
-		countInt += 1;
-		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "dir_path_" + countInt, filePath);
-		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, "path_count", countInt+"");
+		ComponentGetter.appComponent.saveData(NoteDelegateImpl.pluginName, filePath, filePath);
+
 	}
 
 	/**
-	 * 获取所以的note目录
-	 * @return
+	 * 移除保存的路径
+	 * @param rootItem
 	 */
-	public static List<String> fetchAllPath() {
-		String count = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "path_count");
-		Integer countInt = 0;
-		List<String> pathList = new ArrayList<>();
-		if (StrUtils.isNotNullOrEmpty(count)) {
-			countInt = Integer.valueOf(count);
-			for (int i = 0 ; i <= countInt ; i++){
-				String pathVal = ComponentGetter.appComponent.fetchData(NoteDelegateImpl.pluginName, "dir_path_" + i);
-				pathList.add(pathVal);
-			}
-		}
-		return pathList;
+	public static void rmSavePath(TreeItem<MyNoteEditorSheet> rootItem) {
+		String filePath = rootItem.getValue().getFile().getAbsolutePath();
+		ComponentGetter.appComponent.deleteData(NoteDelegateImpl.pluginName, filePath);
 	}
 
 	// 打开sql文件

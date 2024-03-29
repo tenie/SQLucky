@@ -131,14 +131,36 @@ public class SqluckyAppComponent implements AppComponent {
 	 * 保持插件存储的key_value
 	 */
 	@Override
-	public void saveData(String name, String key, String value) {
+	public void saveData(String pluginName, String key, String value) {
 		var conn = SqluckyAppDB.getConn();
 		try {
-			StringBuilder strb = new StringBuilder();
-			strb.append(name);
-			strb.append("-");
-			strb.append(key);
-			SqluckyAppDB.saveConfig(conn, strb.toString(), value);
+			SqluckyAppDB.savePluginConfig(conn, pluginName, key, value);
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+
+	/**
+	 * 删除插件存储的key_value
+	 */
+	@Override
+	public void deleteData(String pluginName, String key){
+		var conn = SqluckyAppDB.getConn();
+		try {
+			SqluckyAppDB.deletePluginConfigKey(conn, pluginName, key);
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+
+	/**
+	 * 删除插件存储的key_value
+	 */
+	@Override
+	public void deletePluginAllData(String pluginName){
+		var conn = SqluckyAppDB.getConn();
+		try {
+			SqluckyAppDB.deletePluginAllConfig(conn, pluginName);
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -148,19 +170,41 @@ public class SqluckyAppComponent implements AppComponent {
 	 * 获取插件存储的key_value
 	 */
 	@Override
-	public String fetchData(String name, String key) {
+	public String fetchData(String pluginName, String key) {
 		String val = "";
 		var conn = SqluckyAppDB.getConn();
 		try {
-			StringBuilder strb = new StringBuilder();
-			strb.append(name);
-			strb.append("-");
-			strb.append(key);
-			val = SqluckyAppDB.readConfig(conn, strb.toString());
+			val = SqluckyAppDB.readPluginConfig(conn, pluginName, key);
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
 		return val;
+	}
+	@Override
+	public List<String> fetchAllData(String pluginName, String key){
+		List<String>  vals;
+		var conn = SqluckyAppDB.getConn();
+		try {
+			vals = SqluckyAppDB.readPluginAllConfig(conn, pluginName, key);
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+
+		return vals;
+	}
+
+
+	@Override
+	public List<String> fetchAllData(String pluginName){
+		List<String>  vals;
+		var conn = SqluckyAppDB.getConn();
+		try {
+			vals = SqluckyAppDB.readPluginAllConfig(conn, pluginName);
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+
+		return vals;
 	}
 
 	@Override
