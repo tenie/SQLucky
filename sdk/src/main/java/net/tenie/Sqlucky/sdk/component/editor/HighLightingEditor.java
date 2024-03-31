@@ -50,8 +50,8 @@ public class HighLightingEditor extends SqluckyEditor {
 	private final int HIGH_LIGHT_MAX_STRING_LENGTH =1000_000;
 
 
-	VBox fdbox ;
-	FindReplaceTextBox FindReplaceText;
+	private VBox fdbox ;
+
 
 	@Override
 	public void hideAutoComplete() {
@@ -1105,12 +1105,12 @@ public class HighLightingEditor extends SqluckyEditor {
 		this.fdbox = fdbox;
 	}
 
-	public FindReplaceTextBox getFindReplaceTextBox() {
-		return FindReplaceText;
-	}
-	public void setFindReplaceTextBox(FindReplaceTextBox findReplaceTextBox) {
-		 this.FindReplaceText = findReplaceTextBox;
-	}
+//	public FindReplaceTextBox getFindReplaceTextBox() {
+//		return FindReplaceText;
+//	}
+//	public void setFindReplaceTextBox(FindReplaceTextBox findReplaceTextBox) {
+//		 this.FindReplaceText = findReplaceTextBox;
+//	}
 }
 
 

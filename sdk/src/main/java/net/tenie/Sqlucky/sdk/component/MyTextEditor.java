@@ -184,24 +184,4 @@ public class MyTextEditor extends SqluckyEditor {
 
 	}
 
-	@Override
-	public VBox getFdbox() {
-		return fdbox;
-	}
-
-	@Override
-	public void setFdbox(VBox fdbox) {
-		this.fdbox = fdbox;
-	}
-
-	@Override
-	public FindReplaceTextBox getFindReplaceTextBox() {
-		return findReplaceTextBox;
-	}
-
-	@Override
-	public void setFindReplaceTextBox(FindReplaceTextBox findReplaceTextBox) {
-		this.findReplaceTextBox = findReplaceTextBox;
-	}
-
 }

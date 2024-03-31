@@ -8,12 +8,10 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.*;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditor;
 import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelperForJava;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.fxmisc.richtext.CodeArea;
 
@@ -31,10 +29,10 @@ public class MyEditorSheet extends Tab {
 	// 放查找面板, 文本area 的容器
 	private VBox vbox;
 	// 查找面板
-	private AnchorPane findAnchorPane;
+//	private AnchorPane findAnchorPane;
 	// 替换面板
 	private HBox replaceAnchorPane;
-	private FindReplaceTextPanel findReplacePanel;
+//	private FindReplaceTextPanel findReplacePanel;
 
 	public void clean() {
 //		this.setUserData(null);
@@ -43,18 +41,18 @@ public class MyEditorSheet extends Tab {
 			vbox.getChildren().clear();
 			vbox = null;
 		}
-		if (findAnchorPane != null) {
-			findAnchorPane.getChildren().clear();
-			findAnchorPane = null;
-		}
+//		if (findAnchorPane != null) {
+//			findAnchorPane.getChildren().clear();
+//			findAnchorPane = null;
+//		}
 		if (replaceAnchorPane != null) {
 			replaceAnchorPane.getChildren().clear();
 			replaceAnchorPane = null;
 		}
 
-		if (findReplacePanel != null) {
-			findReplacePanel = null;
-		}
+//		if (findReplacePanel != null) {
+//			findReplacePanel = null;
+//		}
 		if (documentPo != null) {
 			documentPo = null;
 		}
@@ -140,12 +138,12 @@ public class MyEditorSheet extends Tab {
 
 
 	// 判断查找面板是否显示中
-	public boolean findPaneIsShowing() {
-		if (findAnchorPane != null) {
-			return true;
-		}
-		return false;
-	}
+//	public boolean findPaneIsShowing() {
+//		if (findAnchorPane != null) {
+//			return true;
+//		}
+//		return false;
+//	}
 
 	// tab的属性设置, 名称, 右键菜单,
 	public void setTabProperty() {
@@ -433,13 +431,13 @@ public class MyEditorSheet extends Tab {
 		this.vbox = vbox;
 	}
 
-	public FindReplaceTextPanel getFindReplacePanel() {
-		return findReplacePanel;
-	}
+//	public FindReplaceTextPanel getFindReplacePanel() {
+//		return findReplacePanel;
+//	}
 
-	public void setFindReplacePanel(FindReplaceTextPanel findReplacePanel) {
-		this.findReplacePanel = findReplacePanel;
-	}
+//	public void setFindReplacePanel(FindReplaceTextPanel findReplacePanel) {
+//		this.findReplacePanel = findReplacePanel;
+//	}
 
 	public File getFile() {
 		if (documentPo == null)
@@ -447,14 +445,14 @@ public class MyEditorSheet extends Tab {
 		return documentPo.getFile();
 	}
 
-	public AnchorPane getFindAnchorPane() {
-		return findAnchorPane;
-	}
-
-	public void setFindAnchorPane(AnchorPane findAnchorPane) {
-		this.findAnchorPane = findAnchorPane;
-		vbox.getChildren().add(0, findAnchorPane);
-	}
+//	public AnchorPane getFindAnchorPane() {
+//		return findAnchorPane;
+//	}
+//
+//	public void setFindAnchorPane(AnchorPane findAnchorPane) {
+//		this.findAnchorPane = findAnchorPane;
+//		vbox.getChildren().add(0, findAnchorPane);
+//	}
 
 	public HBox getReplaceAnchorPane() {
 		return replaceAnchorPane;
@@ -487,14 +485,15 @@ public class MyEditorSheet extends Tab {
 		documentPo.setIcon(icon);
 	}
 
-	public boolean isShowing() {
+	/**
+	 * 判断是否选择的状态
+     */
+	public boolean isSelecting() {
 		var myTabPane = ComponentGetter.mainTabPane;
 		if (myTabPane.getTabs().contains(this)) {
 			int idxThis = myTabPane.getTabs().indexOf(this);
 			int currentSelect = myTabPane.getSelectionModel().getSelectedIndex();
-			if (idxThis == currentSelect) {
-				return true;
-			}
+            return idxThis == currentSelect;
 		}
 		return false;
 	}
