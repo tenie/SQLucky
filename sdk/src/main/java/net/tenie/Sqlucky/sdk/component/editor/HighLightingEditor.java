@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.component.editor;
 
 import javafx.application.Platform;
 import javafx.geometry.Bounds;
+import javafx.geometry.Insets;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.IndexRange;
 import javafx.scene.input.KeyCode;
@@ -22,6 +23,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
@@ -97,7 +99,6 @@ public class HighLightingEditor extends SqluckyEditor {
 	}
 
 	public HighLightingEditor(MyAutoComplete myAuto, CodeAreaHighLightingHelper helper) {
-
 		this.myAuto = myAuto;
 		if(helper == null ){
 			highLightingHelper = new CodeAreaHighLightingHelper();
@@ -106,9 +107,13 @@ public class HighLightingEditor extends SqluckyEditor {
 		}
 
 		codeArea = new MyCodeArea(this);
-		this.getChildren().add(codeArea);
-		VBox.setVgrow(codeArea, Priority.ALWAYS);
-		this.getStyleClass().add("my-tag");
+		this.init(codeArea);
+//		VirtualizedScrollPane vp = new VirtualizedScrollPane<>(codeArea);
+//		this.getChildren().add(vp);
+////		this.getChildren().add(codeArea);
+////		VBox.setVgrow(codeArea, Priority.ALWAYS);
+//		VBox.setVgrow(vp, Priority.ALWAYS);
+//		this.getStyleClass().add("my-tag");
 
 		codeArea.textProperty().addListener((a,b,c)->{
 			if(c.isEmpty() &&  documentPo != null

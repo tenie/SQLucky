@@ -24,6 +24,7 @@ public class MyNoLineNumberEditor extends SqluckyEditor {
 
     public MyNoLineNumberEditor() {
         codeArea = new MyCodeArea(this);
+        this.init(codeArea);
         codeArea.setMylineNumber(null); // 没有行号
         codeArea.getStyleClass().add("styled-text-area-no-line-number"); // 没有背景色
         this.getChildren().add(codeArea);

@@ -2,10 +2,12 @@ package net.tenie.Sqlucky.sdk;
 
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.editor.FindReplaceTextBox;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import org.fxmisc.flowless.VirtualizedScrollPane;
 
 /**
  * 文本编辑器
@@ -13,6 +15,18 @@ import net.tenie.Sqlucky.sdk.po.DocumentPo;
  * @author tenie
  */
 public abstract  class SqluckyEditor  extends VBox  {
+
+    /**
+     *
+     * 将MyCodeArea 放入到Vbox中， 让MyCodeArea有滚动条
+     * @param codeArea
+     */
+    public void init(MyCodeArea codeArea){
+        VirtualizedScrollPane<MyCodeArea> vp = new VirtualizedScrollPane<>(codeArea);
+        this.getChildren().add(vp);
+        VBox.setVgrow(vp, Priority.ALWAYS);
+        this.getStyleClass().add("my-tag");
+    }
     public void setCodeArea(String text, boolean editable){
         if (text != null) {
             getCodeArea().appendText(text);
