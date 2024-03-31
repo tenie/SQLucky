@@ -86,7 +86,7 @@ public class NoteTabTree extends SqluckyTitledPane {
 				File file = new File(filePath);
 				if (file.exists()) {
 					if(file.isDirectory()){
-						NoteUtility.openNoteDir(rootNode, file);
+						NoteUtility.openNoteDir(rootNode, file, false);
 					}else {
 						NoteUtility.openNoteFile(file);
 					}

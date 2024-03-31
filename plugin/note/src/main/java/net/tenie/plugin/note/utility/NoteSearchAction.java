@@ -58,7 +58,7 @@ public class NoteSearchAction {
                 TreeItem<MyNoteEditorSheet> tmpRoot = new TreeItem<>(stab);
 
                 for (var dir : searchDirs) {
-                    List<File>  fileList = FileTools.getAllFileFromDirIncludeSubdirectory(dir);
+                    List<File>  fileList = FileTools.getAllFileFromDirIncludeSubdirectory(dir, false);
                     searchFiles.addAll(fileList);
                 }
                 Platform.runLater(() -> {
