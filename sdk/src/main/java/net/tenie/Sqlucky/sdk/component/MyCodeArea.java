@@ -14,6 +14,7 @@ public class MyCodeArea extends CodeArea {
 	private SqluckyLineNumberNode mylineNumber;
 	private String titleName;
 	private SqluckyEditor sqluckyEditor;
+	private FindReplaceTextBox findReplaceTextBox;
 	public MyCodeArea(SqluckyEditor sqluckyEditor){
 		this.sqluckyEditor = sqluckyEditor;
 	}
@@ -38,9 +39,9 @@ public class MyCodeArea extends CodeArea {
 		this.titleName = titleName;
 	}
 
-	public void showFindReplaceTextBox(boolean showReplace, String findText){
+	public FindReplaceTextBox showFindReplaceTextBox(boolean showReplace, String findText){
 		if( sqluckyEditor == null ){
-			return;
+			return null;
 		}
 		Consumer<VBox> hiddenBox = v->{
 			sqluckyEditor.getChildren().remove(v);
@@ -50,26 +51,41 @@ public class MyCodeArea extends CodeArea {
 			findText = sqluckyEditor.getCodeArea().getSelectedText();
 		}
 
-		if(sqluckyEditor.getFindReplaceTextBox() == null){
-			FindReplaceTextBox findReplaceText = new FindReplaceTextBox(showReplace, findText,  sqluckyEditor, hiddenBox);
-			sqluckyEditor.setFindReplaceTextBox(findReplaceText);
-			VBox fdbox = findReplaceText.getfindReplaceBox();
-			sqluckyEditor.setFdbox(fdbox);
-			sqluckyEditor.getChildren().add(0,sqluckyEditor.getFdbox());
+		if(this.findReplaceTextBox == null){
+			this.findReplaceTextBox = new FindReplaceTextBox(showReplace, findText,  sqluckyEditor, hiddenBox);
+//			VBox fdbox = findReplaceTextBox.getfindReplaceBox();
+//			sqluckyEditor.setFdbox(fdbox);
+//			sqluckyEditor.getChildren().add(0,sqluckyEditor.getFdbox());
+			sqluckyEditor.getChildren().add(0, this.findReplaceTextBox );
 		}else {
-			sqluckyEditor.getFindReplaceTextBox().showHiddenReplaceBox(showReplace);
-			sqluckyEditor.getFindReplaceTextBox().setText(findText);
-			if(! sqluckyEditor.getChildren().contains(sqluckyEditor.getFdbox())){
-				sqluckyEditor.getChildren().add(0,sqluckyEditor.getFdbox());
+			this.findReplaceTextBox.showHiddenReplaceBox(showReplace);
+			this.findReplaceTextBox.setText(findText);
+//			if(! sqluckyEditor.getChildren().contains(sqluckyEditor.getFdbox())){
+//				sqluckyEditor.getChildren().add(0,sqluckyEditor.getFdbox());
+//			}
+			if(! sqluckyEditor.getChildren().contains(this.findReplaceTextBox)){
+				sqluckyEditor.getChildren().add(0,this.findReplaceTextBox);
 			}
 		}
+
+		return  this.findReplaceTextBox;
 	}
 
 	public   void  hiddenFindReplaceBox(){
 		if( sqluckyEditor == null ){
 			return;
 		}
-		sqluckyEditor.getChildren().remove(sqluckyEditor.getFdbox());
+		sqluckyEditor.getChildren().remove(this.findReplaceTextBox);
+	}
+
+	public boolean findIsShowing(){
+//		if( sqluckyEditor.getChildren().contains(this.findReplaceTextBox)){
+//			this.findReplaceTextBox
+//		}
+		if(findReplaceTextBox == null ){
+			return false;
+		}
+		return  sqluckyEditor.getChildren().contains(this.findReplaceTextBox);
 	}
 
 
@@ -80,4 +96,11 @@ public class MyCodeArea extends CodeArea {
 	public void setSqluckyEditor(SqluckyEditor sqluckyEditor) {
 		this.sqluckyEditor = sqluckyEditor;
 	}
+
+
+	public FindReplaceTextBox getFindReplaceTextBox() {
+		return findReplaceTextBox;
+	}
+
+
 }

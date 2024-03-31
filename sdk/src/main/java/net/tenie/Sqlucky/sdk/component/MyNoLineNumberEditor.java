@@ -155,24 +155,4 @@ public class MyNoLineNumberEditor extends SqluckyEditor {
 
     }
 
-    @Override
-    public VBox getFdbox() {
-        return null;
-    }
-
-    @Override
-    public void setFdbox(VBox fdbox) {
-
-    }
-
-    @Override
-    public FindReplaceTextBox getFindReplaceTextBox() {
-        return null;
-    }
-
-    @Override
-    public void setFindReplaceTextBox(FindReplaceTextBox findReplaceTextBox) {
-
-    }
-
 }

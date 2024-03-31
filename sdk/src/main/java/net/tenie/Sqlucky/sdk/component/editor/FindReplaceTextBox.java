@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  * @author tenie
  *
  */
-public class FindReplaceTextBox {
+public class FindReplaceTextBox extends  VBox {
 	private  String f3Str = "";
 	private static Logger logger = LogManager.getLogger(FindReplaceTextBox.class);
 
@@ -248,21 +248,21 @@ public class FindReplaceTextBox {
 
 	}
 
-	VBox findReplaceBox = new VBox();
+//	VBox findReplaceBox = new VBox();
 	HBox replaceBox ;
-	public VBox getfindReplaceBox(){
-		return findReplaceBox;
-	}
+//	public VBox getfindReplaceBox(){
+//		return findReplaceBox;
+//	}
 
 	SqluckyEditor sqluckyEditor;
 	// 查找替换组件的面板
-	public FindReplaceTextBox(boolean isReplace, String findText, SqluckyEditor sqlEd, Consumer<VBox> hiddenBox) { //, MyEditorSheet sheet
+	public FindReplaceTextBox(boolean isReplace, String findText, SqluckyEditor sqlEd, Consumer<VBox> hiddenBoxConsumer) { //, MyEditorSheet sheet
 		this.codeArea = sqlEd.getCodeArea();
 		this.sqluckyEditor = sqlEd;
 		AnchorPane findAnchorPane = new AnchorPane();
-		VBox.setMargin(findReplaceBox, new Insets(3, 1, 3, 3));
-		findReplaceBox.setSpacing(3);
-		findReplaceBox.getChildren().add(findAnchorPane);
+		VBox.setMargin(this, new Insets(3, 1, 3, 3));
+		this.setSpacing(3);
+		this.getChildren().add(findAnchorPane);
 		CommonUtils.addCssClass(findAnchorPane, "myFindPane");
 		JFXButton query = new JFXButton();
 		sensitiveCheckBox = new JFXCheckBox("Sensitive");
@@ -330,11 +330,11 @@ public class FindReplaceTextBox {
 		AnchorPane.setRightAnchor(hideBottom, 0.0);
 
 		hideBottom.setOnAction(v -> {
-			hiddenBox.accept(findReplaceBox);
+			hiddenBoxConsumer.accept(this);
 		});
 		if (isReplace) {
 			createReplacePane(textField, sensitiveCheckBox);
-			findReplaceBox.getChildren().add(replaceBox);
+			this.getChildren().add(replaceBox);
 		}
 		Platform.runLater(() -> {
 			textField.requestFocus();
@@ -350,13 +350,13 @@ public class FindReplaceTextBox {
 				createReplacePane(textField, sensitiveCheckBox);
 			}
 			// 判断是否已经显示， 不是就显示
-			if( ! findReplaceBox.getChildren().contains(replaceBox)){
-				findReplaceBox.getChildren().add(replaceBox);
+			if( ! this.getChildren().contains(replaceBox)){
+				this.getChildren().add(replaceBox);
 			}
 
 		}else { //隐藏
-			if(  findReplaceBox.getChildren().contains(replaceBox)){
-				findReplaceBox.getChildren().remove(replaceBox);
+			if(  this.getChildren().contains(replaceBox)){
+				this.getChildren().remove(replaceBox);
 			}
 
 		}

@@ -87,8 +87,7 @@ public abstract  class SqluckyEditor  extends VBox  {
     abstract public  DocumentPo getDocumentPo();
 
     abstract public void setDocumentPo(DocumentPo documentPo);
-    abstract public VBox getFdbox();
-    abstract public void setFdbox(VBox fdbox);
-    abstract public  FindReplaceTextBox getFindReplaceTextBox();
-    abstract public void setFindReplaceTextBox(FindReplaceTextBox findReplaceTextBox);
+//    abstract public VBox getFdbox();
+//    abstract public void setFdbox(VBox fdbox);
+//    abstract public  FindReplaceTextBoTextBox(FindReplaceTextBox findReplaceTextBox);
 }

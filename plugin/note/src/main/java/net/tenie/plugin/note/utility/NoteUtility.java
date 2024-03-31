@@ -10,7 +10,9 @@ import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
+//import net.tenie.Sqlucky.sdk.component.FindReplaceTextPanel;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.editor.FindReplaceTextBox;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -294,20 +296,23 @@ public class NoteUtility {
 	public static TreeItem<MyNoteEditorSheet> openNoteDir(TreeItem<MyNoteEditorSheet> node, File openFile) {
 		TreeItem<MyNoteEditorSheet> rootItem = null;
 		if(openFile.isDirectory()){
-			List<File> fileList = new ArrayList<>();
+			List<File> fileList;
 			File[] files = openFile.listFiles();
 			if (files == null){
 				return rootItem;
 			}else {
-				fileList.addAll(List.of(files));
+				fileList = new ArrayList<>(List.of(files));
 			}
 			TreeItem<MyNoteEditorSheet> fileRootitem = node;
 			// 如果选择目录导入进来的情况
 			if (node.equals(NoteTabTree.rootNode)) {
 				fileRootitem = createItemNode(openFile);
-				fileRootitem.getValue().setIsRootItem(true, fileRootitem);
-				rootItem = fileRootitem;
-				node.getChildren().add(fileRootitem);
+                if (fileRootitem != null) {
+                    fileRootitem.getValue().setIsRootItem(true, fileRootitem);
+					rootItem = fileRootitem;
+					node.getChildren().add(fileRootitem);
+                }
+
 			}
 
 			TreeItem<MyNoteEditorSheet> tmpItem = fileRootitem;
@@ -319,11 +324,14 @@ public class NoteUtility {
 				}
 
 			}
-			if (ls.size() > 0) {
+			if (!ls.isEmpty()) {
 				Platform.runLater(() -> {
-					tmpItem.getChildren().addAll(ls);
-					tmpItem.setExpanded(true);
-					NoteTabTree.noteTabTreeView.getSelectionModel().select(tmpItem);
+                    if (tmpItem != null) {
+                        tmpItem.getChildren().addAll(ls);
+						tmpItem.setExpanded(true);
+						NoteTabTree.noteTabTreeView.getSelectionModel().select(tmpItem);
+                    }
+
 				});
 			}
 		}else {
@@ -382,21 +390,12 @@ public class NoteUtility {
 
 	}
 
-
-
-
-
-
-
-
-	public static MyNoteEditorSheet openNextNote(ObservableList<TreeItem<MyNoteEditorSheet>> ls, int next) {
+	public static void openNextNote(ObservableList<TreeItem<MyNoteEditorSheet>> ls, int next) {
 		if (ls != null && next < ls.size()) {
 			var nextItem = ls.get(next);
 			NoteUtility.doubleClickItem(nextItem);
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(next);
-			return nextItem.getValue();
 		}
-		return null;
 	}
 
 	/**
@@ -406,33 +405,38 @@ public class NoteUtility {
 		TreeItem<MyNoteEditorSheet> currentItem = currentTreeItem();
 		if (currentItem == null) {
 			var ls = NoteTabTree.noteTabTreeView.getRoot().getChildren();
-			if (ls.size() > 0) {
-				currentItem = NoteTabTree.noteTabTreeView.getRoot().getChildren().get(0);
+			if (!ls.isEmpty()) {
+				currentItem = NoteTabTree.noteTabTreeView.getRoot().getChildren().getFirst();
 			}
 		}
 		if (currentItem == null) {
 			return;
 		}
-
+		// 查找开始位置设置, 默认从头开始
 		int startIdx = 0;
 		if (isUp) {
 			startIdx = -1;
 		}
 
-		// 判断当前节点是否大开着
-		MyNoteEditorSheet currentSktb = currentItem.getValue();
-		boolean isfind = false;
-		if (currentSktb.isShowing()) {
-			FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
-			if (fpanel == null) {
-				CommonUtils.findReplace(false, txt, currentSktb);
-				fpanel = currentSktb.getFindReplacePanel();
-				isfind = fpanel.findStringStopFromCodeArea(txt, startIdx, !isUp, false);
-			} else {
-				isfind = fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
+		// 判断当前节点是否打开着
+		MyNoteEditorSheet myNoteEditorSheet = currentItem.getValue();
+		boolean isfind = false;  // 是否找到
+		// 如果 sheet 是选中的情况下(文件已经打开的状态)
+		if (myNoteEditorSheet.isSelecting()) {
+			MyCodeArea myCodeArea = myNoteEditorSheet.getSqluckyEditor().getCodeArea();
+			// 判断查找面板是否已经打开
+			if( myCodeArea.findIsShowing()){
+				// 已经打开就不指定查找的开始位置(从当前位置开始查找)
+				isfind = myCodeArea.getFindReplaceTextBox().findStringStopFromCodeArea(txt, null , !isUp, false);
+			}else {
+				// 先打开查找面包
+				FindReplaceTextBox findReplaceTextBox = myCodeArea.showFindReplaceTextBox(false, txt);
+				// 向下找(从0下标位置)开始找, 向上找重尾部开始向上找
+				isfind = findReplaceTextBox.findStringStopFromCodeArea(txt, startIdx, !isUp, false);
 			}
 
-			if (!isfind && currentSktb.isShowing()) {
+			// 判断是否找到, 没找到切换到下一个文件(打开下一个sheet)
+			if (!isfind && myNoteEditorSheet.isSelecting()) {
 				// 获取所有搜索到的文件节点
 				var ls = currentItem.getParent().getChildren();
 				int idx = ls.indexOf(currentItem);
@@ -449,12 +453,13 @@ public class NoteUtility {
 					}
 
 				}
-
-				MyNoteEditorSheet skTab = openNextNote(ls, next);
+				// 打开下一个文件
+				openNextNote(ls, next);
+				// 调用查找
+				downUpBtnChange(isUp, txt);
 			}
 
-		} else {
-			// 没有展示的情况, 先展示再查找
+		} else {// 没有打开文件的情况, 先打开文件再查找
 			NoteUtility.doubleClickItem(currentItem);
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(currentItem);
 
@@ -464,13 +469,12 @@ public class NoteUtility {
 				if (isUp) {
 					startIdx2 = -1;
 				}
-				FindReplaceTextPanel fpanel = currentSktb.getFindReplacePanel();
-				if (fpanel == null) {
-					CommonUtils.findReplace(false, txt, currentSktb);
-					fpanel = currentSktb.getFindReplacePanel();
-					fpanel.findStringStopFromCodeArea(txt, startIdx2, !isUp, false);
-				} else {
-					fpanel.findStringStopFromCodeArea(txt, null, !isUp, false);
+				MyCodeArea myCodeArea = myNoteEditorSheet.getSqluckyEditor().getCodeArea();
+				if( myCodeArea.findIsShowing()){
+					myCodeArea.getFindReplaceTextBox().findStringStopFromCodeArea(txt, null , !isUp, false);
+				}else {
+					FindReplaceTextBox findReplaceTextBox = myCodeArea.showFindReplaceTextBox(false, txt);
+					findReplaceTextBox.findStringStopFromCodeArea(txt, startIdx2, !isUp, false);
 				}
 			});
 
