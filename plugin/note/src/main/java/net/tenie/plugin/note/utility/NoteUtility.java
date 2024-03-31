@@ -66,7 +66,7 @@ public class NoteUtility {
 
 		} else if (file.isDirectory()) {
 			if (item.getChildren().size() == 0) {
-				NoteUtility.openNoteDir(item, file);
+				NoteUtility.openNoteDir(item, file, false);
 				item.setExpanded(true);
 			}
 
@@ -119,7 +119,7 @@ public class NoteUtility {
 				rootNode.getChildren().clear();
 			}
 			if (StrUtils.isNotNullOrEmpty(filePath)) {
-				NoteUtility.openNoteDir(ParentNode, new File(filePath));
+				NoteUtility.openNoteDir(ParentNode, new File(filePath), false);
 			}
 
 		} else {
@@ -127,7 +127,7 @@ public class NoteUtility {
 				ParentNode.getChildren().clear();
 			}
 			var parentFile = ParentNode.getValue().getFile();
-			NoteUtility.openNoteDir(ParentNode, parentFile);
+			NoteUtility.openNoteDir(ParentNode, parentFile, false);
 		}
 
 	}
@@ -213,7 +213,7 @@ public class NoteUtility {
 			if (node.getChildren().size() > 0) {
 				node.getChildren().clear();
 			}
-			NoteUtility.openNoteDir(node, new File(fpval));
+			NoteUtility.openNoteDir(node, new File(fpval), false);
 		}
 	}
 
@@ -231,7 +231,7 @@ public class NoteUtility {
 				}
 			}
 
-			TreeItem<MyNoteEditorSheet>  rootItem = openNoteDir(rootNode, f);
+			TreeItem<MyNoteEditorSheet>  rootItem = openNoteDir(rootNode, f, false);
 			savePath(rootItem);
 		}
 
@@ -293,7 +293,7 @@ public class NoteUtility {
 	}
 
 	// 打开sql文件
-	public static TreeItem<MyNoteEditorSheet> openNoteDir(TreeItem<MyNoteEditorSheet> node, File openFile) {
+	public static TreeItem<MyNoteEditorSheet> openNoteDir(TreeItem<MyNoteEditorSheet> node, File openFile, boolean needHideFile) {
 		TreeItem<MyNoteEditorSheet> rootItem = null;
 		if(openFile.isDirectory()){
 			List<File> fileList;
@@ -318,6 +318,9 @@ public class NoteUtility {
 			TreeItem<MyNoteEditorSheet> tmpItem = fileRootitem;
 			List<TreeItem<MyNoteEditorSheet>> ls = new ArrayList<>();
 			for (var file : fileList) {
+				if(!needHideFile && file.getName().startsWith(".")){
+					continue;
+				}
 				TreeItem<MyNoteEditorSheet> item = createItemNode(file);
 				if (item != null) {
 					ls.add(item);

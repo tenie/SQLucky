@@ -255,17 +255,18 @@ public class FileTools {
 	 * @param dir
 	 * @return
 	 */
-	public static List<File> getAllFileFromDirIncludeSubdirectory(File dir) {
+	public static List<File> getAllFileFromDirIncludeSubdirectory(File dir, boolean needHideFile) {
 		List<File> fls = new ArrayList<>();
 
 		File arrFile[] = dir.listFiles();
 		if (arrFile != null && arrFile.length > 0) {
 			for (File fl : arrFile) {
-				if (fl.isFile()) {
+				if(!needHideFile && fl.getName().startsWith(".")){
+					continue;
+				}else if (fl.isFile()) {
 					fls.add(fl);
-				}
-				if (fl.isDirectory()) {
-					List<File> vals = getAllFileFromDirIncludeSubdirectory(fl);
+				}else if (fl.isDirectory()) {
+					List<File> vals = getAllFileFromDirIncludeSubdirectory(fl, needHideFile);
 					fls.addAll(vals);
 				}
 			}
@@ -273,11 +274,6 @@ public class FileTools {
 
 		return fls;
 	}
-
-	public static void main(String[] args) {
-		getAllFileFromDirIncludeSubdirectory(new File("/home/tenie/myGit/Learning_Notes/工作相关/短信"));
-	}
-
 
 	/**
 	 * 读取文件内容, 判断内容中是否包含查询字符串
