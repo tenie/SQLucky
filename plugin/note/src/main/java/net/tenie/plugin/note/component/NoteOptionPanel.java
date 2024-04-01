@@ -2,6 +2,8 @@ package net.tenie.plugin.note.component;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -30,9 +32,7 @@ import net.tenie.plugin.note.utility.NoteUtility;
  */
 public class NoteOptionPanel extends VBox{
 	private HBox btnsBox = new HBox();
-
 	private VBox searchVbox = new VBox();
-//	private VBox searchVbox2 = new VBox();
 	private JFXButton newFile = new JFXButton();
 	private JFXButton DeleteFile = new JFXButton();
 
@@ -54,169 +54,172 @@ public class NoteOptionPanel extends VBox{
 	JFXButton down = new JFXButton();
 	AnchorPane txtAnchorPane ;
 	AnchorPane fileTypeAnchorPane;
-	public NoteOptionPanel(SqluckyTitledPane sqluckyTitledPane) {
-		// 搜索面板初始化
-//		initSearchPanel();
-		query.setGraphic(ComponentGetter.getIconDefActive("search"));
-		query.setOnMouseClicked(e -> {
-			noteSearchAction.searchAction(txt.getText().trim(), fileType.getText().trim(), down, up, stopbtn);
-		});
-		// 查询文本
-		txt.getStyleClass().add("myTextField");
-		txtAnchorPane = UiTools.textFieldAddCleanBtn(txt, 200.0);
-		txt.textProperty().addListener((o, oldStr, newStr) -> {
-			if (noteSearchAction.rootCache != null && !NoteTabTree.noteTabTreeView.getRoot().equals(noteSearchAction.rootCache)) {
-				NoteTabTree.noteTabTreeView.setRoot(noteSearchAction.rootCache);
-				NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
-				down.setDisable(true);
-				up.setDisable(true);
-				stopbtn.setDisable(true);
-			}
 
-			if (StrUtils.isNullOrEmpty(newStr)) {
-				NoteTabTree.noteTabTreeView.setRoot(noteSearchAction.rootCache);
-				down.setDisable(true);
-				up.setDisable(true);
-				stopbtn.setDisable(true);
-			}
+    public NoteOptionPanel(SqluckyTitledPane sqluckyTitledPane) {
+        // 搜索面板初始化
+        // initSearchPanel();
+        query.setGraphic(ComponentGetter.getIconDefActive("search"));
+        query.setOnMouseClicked(e -> {
+            noteSearchAction.searchAction(txt.getText().trim(), fileType.getText().trim(), down, up, stopbtn);
+        });
+        // 查询文本
+        txt.getStyleClass().add("myTextField");
+        txtAnchorPane = UiTools.textFieldAddCleanBtn(txt, 200.0);
+        txt.textProperty().addListener((o, oldStr, newStr) -> {
+            if (StrUtils.isNullOrEmpty(newStr) && noteSearchAction.rootCache != null
+                && !NoteTabTree.noteTabTreeView.getRoot().equals(noteSearchAction.rootCache)) {
+				NoteTabTree.noteTabTreeView.getRoot().getChildren().clear();
+                NoteTabTree.noteTabTreeView.setRoot(noteSearchAction.rootCache);
+                NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
+                down.setDisable(true);
+                up.setDisable(true);
+                stopbtn.setDisable(true);
+                Platform.runLater(()->{
+                    CommonUtils.runThread(str -> {
+                        System.gc();
+                    });
+                });
 
-		});
+            }
+        });
 
-		// 回车后触发查询按钮
-		txt.setOnKeyPressed(val -> {
-			if (val.getCode() == KeyCode.ENTER) {
-				myEvent.btnClick(query);
-			}
-		});
-		// 文件类型
-		fileType.getStyleClass().add("myTextField");
-		fileType.setText("*.*");
-		fileTypeAnchorPane = UiTools.textFieldAddCleanBtn(fileType, 200.0);
-		fileType.textProperty().addListener((o, oldStr, newStr) -> {
-			if (noteSearchAction.rootCache != null && !NoteTabTree.noteTabTreeView.getRoot().equals(noteSearchAction.rootCache)) {
-				NoteTabTree.noteTabTreeView.setRoot(noteSearchAction.rootCache);
-				NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
-				down.setDisable(true);
-				up.setDisable(true);
-				stopbtn.setDisable(true);
+        // 回车后触发查询按钮
+        txt.setOnKeyPressed(val -> {
+            if (val.getCode() == KeyCode.ENTER) {
+                myEvent.btnClick(query);
+            }
+        });
+        // 文件类型
+        fileType.getStyleClass().add("myTextField");
+        fileType.setText("*.*");
+        fileTypeAnchorPane = UiTools.textFieldAddCleanBtn(fileType, 200.0);
+        fileType.textProperty().addListener((o, oldStr, newStr) -> {
+            if (noteSearchAction.rootCache != null
+                && !NoteTabTree.noteTabTreeView.getRoot().equals(noteSearchAction.rootCache)) {
+                NoteTabTree.noteTabTreeView.setRoot(noteSearchAction.rootCache);
+                NoteTabTree.noteTabTreeView.getSelectionModel().select(0);
+                down.setDisable(true);
+                up.setDisable(true);
+                stopbtn.setDisable(true);
 
-			}
-		});
+            }
+        });
 
-		fileType.setOnKeyPressed(val -> {
-			if (val.getCode() == KeyCode.ENTER) {
-				myEvent.btnClick(query);
-			}
-		});
+        fileType.setOnKeyPressed(val -> {
+            if (val.getCode() == KeyCode.ENTER) {
+                myEvent.btnClick(query);
+            }
+        });
 
-		// 上下查找btn
-		down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
-		down.setDisable(true);
-		down.setTooltip(MyTooltipTool.instance("Search next"));
-		down.setOnAction(v -> {
-			NoteUtility.downUpBtnChange(false, txt.getText());
-		});
+        // 上下查找btn
+        down.setGraphic(IconGenerator.svgImageDefActive("arrow-down"));
+        down.setDisable(true);
+        down.setTooltip(MyTooltipTool.instance("Search next"));
+        down.setOnAction(v -> {
+            NoteUtility.downUpBtnChange(false, txt.getText());
+        });
 
-		up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
-		up.setDisable(true);
-		up.setTooltip(MyTooltipTool.instance("Search previous"));
-		up.setOnAction(v -> {
-			NoteUtility.downUpBtnChange(true, txt.getText());
-		});
+        up.setGraphic(IconGenerator.svgImageDefActive("arrow-up"));
+        up.setDisable(true);
+        up.setTooltip(MyTooltipTool.instance("Search previous"));
+        up.setOnAction(v -> {
+            NoteUtility.downUpBtnChange(true, txt.getText());
+        });
 
-		stopbtn.setGraphic(IconGenerator.svgImage("stop", "red"));
-		stopbtn.setDisable(true);
-		stopbtn.setTooltip(MyTooltipTool.instance("Stop search"));
-		stopbtn.setOnAction(v -> {
-			noteSearchAction.stopSearch();
-		});
+        stopbtn.setGraphic(IconGenerator.svgImage("stop", "red"));
+        stopbtn.setDisable(true);
+        stopbtn.setTooltip(MyTooltipTool.instance("Stop search"));
+        stopbtn.setOnAction(v -> {
+            noteSearchAction.stopSearch();
+        });
 
-		hideBtn.setGraphic(IconGenerator.svgImageDefActive("window-close"));
-		hideBtn.setTooltip(MyTooltipTool.instance("Close"));
-		hideBtn.setOnAction(v -> {
-			hideSearchBox();
-		});
-		MenuButton openBtn = new MenuButton();
-		openBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
+        hideBtn.setGraphic(IconGenerator.svgImageDefActive("window-close"));
+        hideBtn.setTooltip(MyTooltipTool.instance("Close"));
+        hideBtn.setOnAction(v -> {
+            hideSearchBox();
+        });
+        MenuButton openBtn = new MenuButton();
+        openBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
 
-		MenuItem openFolderBtn = new MenuItem("Import Folder");
-		openFolderBtn.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
-		openFolderBtn.setOnAction(e -> {
-			NoteTabTree.filePath = NoteUtility.openFolder(NoteTabTree.rootNode);
-		});
-		MenuItem openFileBtn = new MenuItem("Import File");
-		openFileBtn.setGraphic(IconGenerator.svgImageDefActive("file-text-o"));
-		openFileBtn.setOnAction(e -> {
-			NoteTabTree.filePath = NoteUtility.openFile();
-		});
-		openBtn.getItems().addAll(openFolderBtn, openFileBtn);
+        MenuItem openFolderBtn = new MenuItem("Import Folder");
+        openFolderBtn.setGraphic(IconGenerator.svgImageDefActive("folder-open"));
+        openFolderBtn.setOnAction(e -> {
+            NoteTabTree.filePath = NoteUtility.openFolder(NoteTabTree.rootNode);
+        });
+        MenuItem openFileBtn = new MenuItem("Import File");
+        openFileBtn.setGraphic(IconGenerator.svgImageDefActive("file-text-o"));
+        openFileBtn.setOnAction(e -> {
+            NoteTabTree.filePath = NoteUtility.openFile();
+        });
+        openBtn.getItems().addAll(openFolderBtn, openFileBtn);
 
-//		openFolderBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-//		openFolderBtn.setTooltip(CommonUtils.instanceTooltip("Import Note Folder "));
-//		openFolderBtn.setOnMouseClicked(e -> {
-//			NoteTabTree.filePath = NoteUtility.openFolder(NoteTabTree.rootNode);
-//		});
-//
-//		openFileBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
-//		openFileBtn.setTooltip(CommonUtils.instanceTooltip("Import Note File "));
-//		openFileBtn.setOnMouseClicked(e -> {
-//			NoteTabTree.filePath = NoteUtility.openFile();
-//		});
+        // openFolderBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
+        // openFolderBtn.setTooltip(CommonUtils.instanceTooltip("Import Note Folder "));
+        // openFolderBtn.setOnMouseClicked(e -> {
+        // NoteTabTree.filePath = NoteUtility.openFolder(NoteTabTree.rootNode);
+        // });
+        //
+        // openFileBtn.setGraphic(ComponentGetter.getIconDefActive("folder-open"));
+        // openFileBtn.setTooltip(CommonUtils.instanceTooltip("Import Note File "));
+        // openFileBtn.setOnMouseClicked(e -> {
+        // NoteTabTree.filePath = NoteUtility.openFile();
+        // });
 
-		newFile.setGraphic(ComponentGetter.getIconDefActive("file-o"));
-		newFile.setTooltip(CommonUtils.instanceTooltip("New  File "));
-		newFile.setOnMouseClicked(e -> {
-			NoteUtility.newFile(NoteTabTree.noteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
-		});
+        newFile.setGraphic(ComponentGetter.getIconDefActive("file-o"));
+        newFile.setTooltip(CommonUtils.instanceTooltip("New  File "));
+        newFile.setOnMouseClicked(e -> {
+            NoteUtility.newFile(NoteTabTree.noteTabTreeView, NoteTabTree.rootNode, NoteTabTree.filePath);
+        });
 
-		DeleteFile.setGraphic(ComponentGetter.getIconDefActive("trash"));
-		DeleteFile.setTooltip(CommonUtils.instanceTooltip("Delete  File "));
-		DeleteFile.setOnMouseClicked(e -> {
-			NoteUtility.deleteFile(NoteTabTree.noteTabTreeView);
-		});
+        DeleteFile.setGraphic(ComponentGetter.getIconDefActive("trash"));
+        DeleteFile.setTooltip(CommonUtils.instanceTooltip("Delete  File "));
+        DeleteFile.setOnMouseClicked(e -> {
+            NoteUtility.deleteFile(NoteTabTree.noteTabTreeView);
+        });
 
-		showInFolder.setGraphic(ComponentGetter.getIconDefActive("sign-in"));
-		showInFolder.setTooltip(CommonUtils.instanceTooltip("Show In System Folder"));
-		showInFolder.setOnMouseClicked(e -> {
-			NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
-		});
-		showInFolder.setDisable(true);
+        showInFolder.setGraphic(ComponentGetter.getIconDefActive("sign-in"));
+        showInFolder.setTooltip(CommonUtils.instanceTooltip("Show In System Folder"));
+        showInFolder.setOnMouseClicked(e -> {
+            NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
+        });
+        showInFolder.setDisable(true);
 
-		MenuButton searchBtn = new MenuButton();
-		searchBtn.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
-		searchBtn.setTooltip(MyTooltipTool.instance("Serarch"));
-		// 文件名搜索
-		MenuItem showQueryFileName = new MenuItem("Search file name ");
-		showQueryFileName.setGraphic(IconGenerator.svgImageDefActive("search"));
-		showQueryFileName.setOnAction(e -> {
-			hideSearchBox();
-			showFileNameSearch();
-		});
+        MenuButton searchBtn = new MenuButton();
+        searchBtn.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
+        searchBtn.setTooltip(MyTooltipTool.instance("Serarch"));
+        // 文件名搜索
+        MenuItem showQueryFileName = new MenuItem("Search file name ");
+        showQueryFileName.setGraphic(IconGenerator.svgImageDefActive("search"));
+        showQueryFileName.setOnAction(e -> {
+            hideSearchBox();
+            showFileNameSearch();
+        });
 
-		// 全局快捷键显示
-		sqluckyTitledPane.setShowFinder(s -> {
-			hideSearchBox();
-			showFileNameSearch();
-		});
+        // 全局快捷键显示
+        sqluckyTitledPane.setShowFinder(s -> {
+            hideSearchBox();
+            showFileNameSearch();
+        });
 
-		// 全局的快捷键隐藏
-		sqluckyTitledPane.setHideFinder(s -> {
-			hideSearchBox();
-		});
+        // 全局的快捷键隐藏
+        sqluckyTitledPane.setHideFinder(s -> {
+            hideSearchBox();
+        });
 
-		// 文件内容搜索
-		MenuItem showQueryFileText = new MenuItem("Search file text ");
-		showQueryFileText.setGraphic(IconGenerator.svgImageDefActive("file-text-o"));
-		showQueryFileText.setOnAction(e -> {
-			hideSearchBox();
-			showFileTextSearch();
-		});
+        // 文件内容搜索
+        MenuItem showQueryFileText = new MenuItem("Search file text ");
+        showQueryFileText.setGraphic(IconGenerator.svgImageDefActive("file-text-o"));
+        showQueryFileText.setOnAction(e -> {
+            hideSearchBox();
+            showFileTextSearch();
+        });
 
-		searchBtn.getItems().addAll(showQueryFileName, showQueryFileText);
+        searchBtn.getItems().addAll(showQueryFileName, showQueryFileText);
 
-		btnsBox.getChildren().addAll(openBtn, newFile, DeleteFile, showInFolder, searchBtn);
-		this.getChildren().add(btnsBox);
-	}
+        btnsBox.getChildren().addAll(openBtn, newFile, DeleteFile, showInFolder, searchBtn);
+        this.getChildren().add(btnsBox);
+        btnsBox.setPadding(new Insets(3,0,3,0));
+    }
 
 
 	// 隐藏查询面板

@@ -293,61 +293,69 @@ public class NoteUtility {
 	}
 
 	// 打开sql文件
-	public static TreeItem<MyNoteEditorSheet> openNoteDir(TreeItem<MyNoteEditorSheet> node, File openFile, boolean needHideFile) {
-		TreeItem<MyNoteEditorSheet> rootItem = null;
-		if(openFile.isDirectory()){
-			List<File> fileList;
-			File[] files = openFile.listFiles();
-			if (files == null){
-				return rootItem;
-			}else {
-				fileList = new ArrayList<>(List.of(files));
-			}
-			TreeItem<MyNoteEditorSheet> fileRootitem = node;
-			// 如果选择目录导入进来的情况
-			if (node.equals(NoteTabTree.rootNode)) {
-				fileRootitem = createItemNode(openFile);
-                if (fileRootitem != null) {
-                    fileRootitem.getValue().setIsRootItem(true, fileRootitem);
-					rootItem = fileRootitem;
-					node.getChildren().add(fileRootitem);
-                }
+    public static TreeItem<MyNoteEditorSheet> openNoteDir(TreeItem<MyNoteEditorSheet> node, File openFile,
+        boolean needHideFile) {
+        TreeItem<MyNoteEditorSheet> rootItem = null;
+        // if(openFile.isDirectory()){
+        List<File> AllList = new ArrayList<>();
+		File[] dirList = openFile.listFiles(File::isDirectory);
+		File[] fileList = openFile.listFiles(File::isFile);
+        if (dirList != null) {
+            AllList.addAll(List.of(dirList));
+        }
+        if (fileList != null) {
+            AllList.addAll(List.of(fileList));
+        }
 
-			}
-
-			TreeItem<MyNoteEditorSheet> tmpItem = fileRootitem;
-			List<TreeItem<MyNoteEditorSheet>> ls = new ArrayList<>();
-			for (var file : fileList) {
-				if(!needHideFile && file.getName().startsWith(".")){
-					continue;
-				}
-				TreeItem<MyNoteEditorSheet> item = createItemNode(file);
-				if (item != null) {
-					ls.add(item);
-				}
-
-			}
-			if (!ls.isEmpty()) {
-				Platform.runLater(() -> {
-                    if (tmpItem != null) {
-                        tmpItem.getChildren().addAll(ls);
-						tmpItem.setExpanded(true);
-						NoteTabTree.noteTabTreeView.getSelectionModel().select(tmpItem);
-                    }
-
-				});
-			}
-		}else {
-			TreeItem<MyNoteEditorSheet> fileRootitem = node;
-			// 如果选择目录导入进来的情况
-			if (node.equals(NoteTabTree.rootNode)) {
-				fileRootitem = createItemNode(openFile);
-				node.getChildren().add(fileRootitem);
-			}
+        if(AllList.isEmpty()){
+			return null;
 		}
 
-		return rootItem;
-	}
+        TreeItem<MyNoteEditorSheet> fileRootitem = node;
+        // 如果选择目录导入进来的情况
+        if (node.equals(NoteTabTree.rootNode)) {
+            fileRootitem = createItemNode(openFile);
+            if (fileRootitem != null) {
+                fileRootitem.getValue().setIsRootItem(true, fileRootitem);
+                rootItem = fileRootitem;
+                node.getChildren().add(fileRootitem);
+            }
+
+        }
+
+        TreeItem<MyNoteEditorSheet> tmpItem = fileRootitem;
+        List<TreeItem<MyNoteEditorSheet>> ls = new ArrayList<>();
+        for (var file : AllList) {
+            if (!needHideFile && file.getName().startsWith(".")) {
+                continue;
+            }
+            TreeItem<MyNoteEditorSheet> item = createItemNode(file);
+            if (item != null) {
+                ls.add(item);
+            }
+
+        }
+        if (!ls.isEmpty()) {
+            Platform.runLater(() -> {
+                if (tmpItem != null) {
+                    tmpItem.getChildren().addAll(ls);
+                    tmpItem.setExpanded(true);
+                    NoteTabTree.noteTabTreeView.getSelectionModel().select(tmpItem);
+                }
+
+            });
+        }
+        // } else {
+        // TreeItem<MyNoteEditorSheet> fileRootitem = node;
+        // // 如果选择目录导入进来的情况
+        // if (node.equals(NoteTabTree.rootNode)) {
+        // fileRootitem = createItemNode(openFile);
+        // node.getChildren().add(fileRootitem);
+        // }
+        // }
+
+        return rootItem;
+    }
 
 	// 打开sql文件
 	public static TreeItem<MyNoteEditorSheet>  openNoteFile(File openFile) {

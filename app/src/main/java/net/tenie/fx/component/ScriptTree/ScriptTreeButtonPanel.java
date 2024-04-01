@@ -2,6 +2,7 @@ package net.tenie.fx.component.ScriptTree;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.geometry.Insets;
 import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
@@ -48,6 +49,7 @@ public class ScriptTreeButtonPanel extends HBox{
 		});
 
 		this.getChildren().addAll(importBtn, newFile, saveBtn, showInFolder);
+		this.setPadding(new Insets(3,0,3,0));
 	}
 
 	public JFXButton getImportBtn() {
