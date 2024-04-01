@@ -50,10 +50,8 @@ public class SelectAction {
 			}
 			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			sheetDaV.setDbConnection(sqluckyConn);
-//			String connectName = sqluckyConn.getConnName();
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTabName(tableName);
-//			sheetDaV.setConnName(connectName);
 			sheetDaV.setLock(isLock);
 
 			SelectExecInfo execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, sqluckyConn);
@@ -64,8 +62,6 @@ public class SelectAction {
 			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getDataRs().getDatas();
 			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
 
-			// 缓存
-//			sheetDaV.setTable(table);
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
 

@@ -5,6 +5,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.*;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
@@ -12,14 +13,16 @@ import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.fxmisc.richtext.CodeArea;
 
 import java.io.File;
 import java.sql.Connection;
+import java.util.function.Consumer;
 
 public class MyEditorSheet extends Tab {
-//	private Tab tab = new Tab();
 	private SqluckyEditor sqluckyEditor; // 编辑器(比如高亮的文本编辑器)
 	private DocumentPo documentPo; // 文本内容
 
@@ -28,31 +31,14 @@ public class MyEditorSheet extends Tab {
 	private boolean isModify = false;
 	// 放查找面板, 文本area 的容器
 	private VBox vbox;
-	// 查找面板
-//	private AnchorPane findAnchorPane;
-	// 替换面板
-	private HBox replaceAnchorPane;
-//	private FindReplaceTextPanel findReplacePanel;
 
 	public void clean() {
-//		this.setUserData(null);
 		this.setContent(null);
 		if (vbox != null) {
 			vbox.getChildren().clear();
 			vbox = null;
 		}
-//		if (findAnchorPane != null) {
-//			findAnchorPane.getChildren().clear();
-//			findAnchorPane = null;
-//		}
-		if (replaceAnchorPane != null) {
-			replaceAnchorPane.getChildren().clear();
-			replaceAnchorPane = null;
-		}
 
-//		if (findReplacePanel != null) {
-//			findReplacePanel = null;
-//		}
 		if (documentPo != null) {
 			documentPo = null;
 		}
@@ -62,7 +48,7 @@ public class MyEditorSheet extends Tab {
 	public MyEditorSheet(DocumentPo valDocumentPo, SqluckyEditor sqluckyEditor) {
 		if (valDocumentPo.getSaveToDB()) {
 			if (valDocumentPo.getId() == null) {
-				documentPo = ComponentGetter.appComponent.scriptArchive(valDocumentPo.getTitle(),
+				documentPo = ComponentGetter.appComponent.scriptArchive(valDocumentPo.getTitle().get(),
 						valDocumentPo.getText(), valDocumentPo.getFileFullName(), valDocumentPo.getEncode(),
 						valDocumentPo.getParagraph());
 			} else {
@@ -84,12 +70,30 @@ public class MyEditorSheet extends Tab {
 
 	// 延迟初始化sheet, 如果 SqluckyEditor为空创建默认的SqluckyEditor对象
 	public void delayInit(SqluckyEditor sqluckyEditor) {
-		// Tab 其他属性设置
-		setTabProperty();
+		setTabTitleName();
+		// 选中事件
+		this.setOnSelectionChanged(value -> {
+			boolean isSe = this.isSelected();
+			if(isSe) {
+				Integer tmpIdx = this.getTabConnIdx() ;
+				if(tmpIdx !=null) {
+					DBConns.changeChoiceBox(this.getTabConnIdx());
+				}else {
+					tmpIdx = DBConns.choiceBoxIndex();
+					this.setTabConnIdx(tmpIdx) ;
+				}
+			}
+		});
 		// 选择title的时候初始化tab内容
 		this.selectedProperty().addListener(l -> {
 			boolean isSel = this.isSelected();
 			if (isSel && !isInit) {
+				// 右键菜单
+				this.setContextMenu(createTabContextMenu());
+
+				// 关闭前事件
+				this.setOnCloseRequest(tabCloseReq());
+
 				if (sqluckyEditor == null) {
 					if (documentPo.getType() == DocumentPo.IS_SQL) {
 						setDefaultEditor();
@@ -136,34 +140,11 @@ public class MyEditorSheet extends Tab {
 		this.setSqluckyEditor(sqlEditor);
 	}
 
-	// tab的属性设置, 名称, 右键菜单,
-	public void setTabProperty() {
-		// 右键菜单
-		this.setContextMenu(MyTabMenu());
-		setTitleName();
-
-		// 关闭前事件
-		this.setOnCloseRequest(tabCloseReq());
-		// 选中事件
-		this.setOnSelectionChanged(value -> {
-			boolean isSe = this.isSelected();
-			if(isSe) {
-				Integer tmpIdx = this.getTabConnIdx() ;
-				if(tmpIdx !=null) {
-					DBConns.changeChoiceBox(this.getTabConnIdx());
-				}else {
-					tmpIdx = DBConns.choiceBoxIndex();
-					this.setTabConnIdx(tmpIdx) ;
-				}
-			}
-		});
-	}
-
 	// 设置title name
-	public void setTitleName() {
-		String TabName = documentPo.getTitle();
+	public void setTabTitleName() {
+//		String TabName = documentPo.getTitle().get();
 		// 名称
-		CommonUtils.setTabName(this, TabName);
+		CommonUtils.setTabName(this, documentPo.getTitle());
 	}
 
 	public SqluckyEditor getSqluckyEditor() {
@@ -298,7 +279,7 @@ public class MyEditorSheet extends Tab {
 	}
 
 	// 右键菜单
-	public ContextMenu MyTabMenu() {
+	public ContextMenu createTabContextMenu() {
 		ContextMenu contextMenu = new ContextMenu();
 		MenuItem closeAll = new MenuItem("Close ALl");
 		closeAll.setOnAction(e -> {
@@ -352,7 +333,22 @@ public class MyEditorSheet extends Tab {
 			}
 		});
 
-		contextMenu.getItems().addAll(closeAll, closeOther, closeRight, closeLeft);
+		//
+		MenuItem rename = new MenuItem("Set Name");
+		rename.setDisable(true);
+		rename.setOnAction(e -> {
+			Consumer<String> caller = x -> {
+				if (StrUtils.isNullOrEmpty(x.trim()))
+					return;
+				this.setTitle(x);
+				this.documentPo.setText(x);
+			};
+			DialogTools.showExecWindow("Name", "", caller);
+
+
+		});
+
+		contextMenu.getItems().addAll(closeAll, closeOther, closeRight, closeLeft, new SeparatorMenuItem(), rename);
 		contextMenu.setOnShowing(e -> {
 			var myTabPane = ComponentGetter.mainTabPane;
 			int idx = myTabPane.getTabs().indexOf(this);
@@ -373,6 +369,14 @@ public class MyEditorSheet extends Tab {
 				closeOther.setDisable(true);
 			} else {
 				closeOther.setDisable(false);
+			}
+
+
+			String fileFullName =  this.getDocumentPo().getFileFullName();
+			if (StrUtils.isNullOrEmpty(fileFullName)){
+				rename.setDisable(false);
+			}else {
+				rename.setDisable(true);
 			}
 
 		});
@@ -402,7 +406,8 @@ public class MyEditorSheet extends Tab {
 
 	// 设置 tab的显示名称
 	public void setTitle(String val) {
-		CommonUtils.setTabName(this, val);
+//		CommonUtils.setTabName(this, val);
+		this.documentPo.setTitle(val);
 	}
 
 	public Integer getTabConnIdx() {
@@ -421,38 +426,11 @@ public class MyEditorSheet extends Tab {
 		this.vbox = vbox;
 	}
 
-//	public FindReplaceTextPanel getFindReplacePanel() {
-//		return findReplacePanel;
-//	}
-
-//	public void setFindReplacePanel(FindReplaceTextPanel findReplacePanel) {
-//		this.findReplacePanel = findReplacePanel;
-//	}
-
 	public File getFile() {
 		if (documentPo == null)
 			return null;
 		return documentPo.getFile();
 	}
-
-//	public AnchorPane getFindAnchorPane() {
-//		return findAnchorPane;
-//	}
-//
-//	public void setFindAnchorPane(AnchorPane findAnchorPane) {
-//		this.findAnchorPane = findAnchorPane;
-//		vbox.getChildren().add(0, findAnchorPane);
-//	}
-
-	public HBox getReplaceAnchorPane() {
-		return replaceAnchorPane;
-	}
-
-	public void setReplaceAnchorPane(HBox replaceAnchorPane) {
-		this.replaceAnchorPane = replaceAnchorPane;
-		vbox.getChildren().add(1, replaceAnchorPane);
-	}
-
 	// 存在 就显示出来
 	public boolean existTabShow() {
 		var myTabPane = ComponentGetter.mainTabPane;

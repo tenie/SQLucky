@@ -140,15 +140,15 @@ public class MyEditorSheetHelper {
 		var conn = SqluckyAppDB.getConn();
 		try {
 			String sql = sheet.getAreaText();// SqlEditor.getTabSQLText(tb);
-			var scriptPo = sheet.getDocumentPo();
-			String fileName = scriptPo.getFileFullName();
+			DocumentPo documentPo = sheet.getDocumentPo();
+			String fileName = documentPo.getFileFullName();
 			if (StrUtils.isNotNullOrEmpty(fileName)) {
-				FileTools.saveByEncode(fileName, sql, scriptPo.getEncode());
+				FileTools.saveByEncode(fileName, sql, documentPo.getEncode());
 //				CommonUtility.setTabName(tb, FilenameUtils.getName(fileName));
 				sheet.setTitle(FilenameUtils.getName(fileName));
 
 			} else {
-				String title = scriptPo.getTitle();
+				String title = documentPo.getTitle().get();
 				sheet.setModify(false);
 				title = StrUtils.trimRightChar(title, "*");
 				File file = FileOrDirectoryChooser.showSaveDefault("Save", title, ComponentGetter.primaryStage);
@@ -157,7 +157,7 @@ public class MyEditorSheetHelper {
 					String name = FileTools.fileName(file.getPath());
 //					CommonUtility.setTabName(tb, name);
 					sheet.setTitle(name);
-					scriptPo.setFileFullName(file.getPath());
+					documentPo.setFileFullName(file.getPath());
 					fileName = file.getPath();
 				}
 			}

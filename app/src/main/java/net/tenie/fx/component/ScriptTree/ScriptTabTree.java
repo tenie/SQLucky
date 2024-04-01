@@ -46,16 +46,12 @@ public class ScriptTabTree extends SqluckyTitledPane {
 	public static TreeItem<MyEditorSheet> rootNode;
 	List<ConnItemContainer> connItemParent = new ArrayList<>();
 	private ScriptTreeContextMenu menu;
-//	private String name = "Script";
-//	private Pane btnsBox;
 
 	public ScriptTabTree() {
 		createScriptTreeView();
 		var btnsBox = new ScriptTreeButtonPanel();
 		this.setBtnsBox(btnsBox);
-//		this.setName("Script");
 		this.setText("Script");
-//		this.setUserData(new SqlcukyTitledPaneInfoPo("Script", sbtnPanel));
 
 		CommonUtils.addCssClass(this, "titledPane-color");
 		this.setContent(ScriptTreeView);
@@ -90,8 +86,6 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		// 选中监听事件
 //		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
 		ScriptTreeView.getSelectionModel().select(rootNode);
-
-//		ScriptTreeView = treeView;
 
 		// 显示设置
 		ScriptTreeView.setCellFactory(new ScriptTabNodeCellFactory());

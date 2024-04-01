@@ -96,7 +96,6 @@ public class DataTableContextMenu {
 		MenuItem addColumn = new MenuItem("Add New Column");
 		addColumn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 		addColumn.setOnAction(e -> {
-//			CommonAction.addNewColumn(myBottomSheet);
 			AppCommonAction.addNewColumn(myBottomSheet);
 		});
 

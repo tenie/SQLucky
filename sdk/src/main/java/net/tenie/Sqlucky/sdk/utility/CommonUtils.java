@@ -7,6 +7,7 @@ import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.beans.InvalidationListener;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -198,13 +199,23 @@ public class CommonUtils {
 		return title;
 	}
 
-	public static void setTabName(Tab tb, String val) {
+//	public static void setTabName(Tab tb, String val) {
+//		Label lb = (Label) tb.getGraphic();
+//		if (lb != null) {
+//			lb.setText(val);
+//			tb.setText("");
+//		} else {
+//			tb.setText(val);
+//		}
+//	}
+
+	public static void setTabName(Tab tb, SimpleStringProperty val) {
 		Label lb = (Label) tb.getGraphic();
 		if (lb != null) {
-			lb.setText(val);
+			lb.textProperty().bind(val);
 			tb.setText("");
 		} else {
-			tb.setText(val);
+			tb.setText(val.getValue());
 		}
 	}
 
@@ -496,7 +507,12 @@ public class CommonUtils {
 	public static void openExplorer(File file) {
 		EventQueue.invokeLater(() -> {
 			try {
-				Desktop.getDesktop().open(file);
+				if(file!=null && file.exists()){
+					Desktop.getDesktop().open(file);
+				}else{
+					MyAlert.errorAlert("File Not E	xists ");
+				}
+
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

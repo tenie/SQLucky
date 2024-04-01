@@ -52,19 +52,9 @@ public class SheetDataValue {
 	// tableView
 	private FilteredTableView<ResultSetRowPo> dbValTable;
 
-	// 操作数据的按钮, 按钮名称和控件对象方式保存
-//	private Map<String, Button> btnMap;
-
 	private JFXButton saveBtn = new JFXButton();
 	private JFXButton lockBtn = new JFXButton();
 	private JFXButton hideBottom = new JFXButton();
-//	JFXButton detailBtn = new JFXButton();;
-//	JFXButton tableSQLBtn = new JFXButton();
-//	JFXButton refreshBtn = new JFXButton();
-//	JFXButton addBtn = new JFXButton();
-//	JFXButton minusBtn = new JFXButton();
-//	JFXButton copyBtn = new JFXButton();
-//	JFXButton dockSideBtn = new JFXButton();
 
 	public void clean() {
 		if (dbValTable != null) {
@@ -91,29 +81,9 @@ public class SheetDataValue {
 		saveBtn = null;
 		lockBtn = null;
 		hideBottom = null;
-//		detailBtn = null;
-//		tableSQLBtn = null;
-//		refreshBtn = null;
-//		addBtn = null;
-//		minusBtn = null;
-//		copyBtn = null;
-//		dockSideBtn = null;
 	}
 
-//	public SheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName, String sqlStr, String connName,
-//			ObservableList<SheetFieldPo> colss, ResultSetPo dataRs) {
-//		this.dbValTable = table;
-//		this.tabName = tabName;
-//		this.sqlStr = sqlStr;
-//		this.connName = connName;
-//		this.colss = colss;
-//		this.dataRs = dataRs;
-//		this.dataRs.setSheetDataValue(this);
-//	}
 
-//	public SheetDataValue() {
-//
-//	}
 
 	public void setSheetDataValue(FilteredTableView<ResultSetRowPo> table, String tabName,
 			ObservableList<SheetFieldPo> colss, ResultSetPo dataRs) {

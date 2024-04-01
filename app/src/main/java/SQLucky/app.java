@@ -112,7 +112,7 @@ public class app extends Application {
             Theme = "DARK";
         }
 
-        ConfigVal.openfileDir = SqluckyAppDB.readConfig(conn, "OPEN_FILE_DIR");
+//        ConfigVal.openfileDir = SqluckyAppDB.readConfig(conn, "OPEN_FILE_DIR");
         SqluckyAppDB.closeConn(conn);
         ConfigVal.THEME = Theme;
         SqluckyAppComponent sqluckyComponent = new SqluckyAppComponent();

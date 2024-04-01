@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 import com.alibaba.fastjson.JSONObject;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.layout.Region;
 
 /**
@@ -21,7 +22,7 @@ public class DocumentPo implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer id;
-	private String title; // 文件名, 界面tab的显示名称
+	private SimpleStringProperty title = new SimpleStringProperty(); // 文件名, 界面tab的显示名称
 	private String text;
 	private String fileFullName; // 文件全路径名称
 	private String encode;
@@ -36,7 +37,7 @@ public class DocumentPo implements Serializable {
 
 	public DocumentPo() {
 		this.id = null;
-		this.title = "";
+		this.title.set("");
 		this.text = "";
 		this.fileFullName = "";
 		this.encode = "UTF-8";
@@ -51,7 +52,7 @@ public class DocumentPo implements Serializable {
 
 	public DocumentPo(boolean needSaveToDB) {
 		this.id = null;
-		this.title = "";
+		this.title.set("");
 		this.text = "";
 		this.fileFullName = "";
 		this.encode = "UTF-8";
@@ -94,12 +95,15 @@ public class DocumentPo implements Serializable {
 		this.encode = encode;
 	}
 
-	public String getTitle() {
+	public SimpleStringProperty getTitle() {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(SimpleStringProperty title) {
 		this.title = title;
+	}
+	public void setTitle(String title) {
+		this.title.set(title);
 	}
 
 	public String getText() {

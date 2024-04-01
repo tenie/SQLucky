@@ -353,7 +353,7 @@ public class ConnectionDao {
 				var treetitle = treeDoc.getTitle();
 				var treetext = treeDoc.getText();
 				for (var doc : docPo) {
-					String title = doc.getTitle();
+					String title = doc.getTitle().get();
 					String text = doc.getText();
 					if (treetitle.equals(title) && treetext.equals(text)) {
 						logger.debug(treetitle + " : 找到相同的");
