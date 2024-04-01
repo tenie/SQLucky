@@ -56,13 +56,10 @@ public class RunSQLHelper {
 	private static Thread thread;
 
 	private static JFXButton runbtn;
-//	private static JFXButton runLinebtn;
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
 	
 	public  static boolean isRunning = false;
-
-//	ExecutorService service = Executors.newFixedThreadPool(1);
 	private static SqluckyConnector tmpSqlConn;
 
 

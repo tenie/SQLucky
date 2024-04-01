@@ -29,7 +29,9 @@ public class NoteTreeCell extends TreeCell<MyNoteEditorSheet>{
             isRootItem = item.getIsRootItem();
             DocumentPo po = item.getDocumentPo();
             Region icon = po.getIcon();
-            Label label = new Label(po.getTitle());
+            Label label = new Label();
+            label.textProperty().bind( po.getTitle());
+
             label.setGraphic(icon);
             AnchorPane pn = new AnchorPane();
             pn.getChildren().add(label);

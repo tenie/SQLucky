@@ -266,7 +266,7 @@ public class AppDao {
 				+ " SQL_TEXT = ?, FILE_NAME = ? , ENCODE = ?, PARAGRAPH = ? , OPEN_STATUS = ?, IS_ACTIVATE = ? where id = ?";
 		try {
 			sm = conn.prepareStatement(sql);
-			sm.setString(1, po.getTitle());
+			sm.setString(1, po.getTitle().get());
 			sm.setString(2, po.getText());
 			sm.setString(3, po.getFileFullName());
 			sm.setString(4, po.getEncode());
