@@ -15,7 +15,6 @@ import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
@@ -42,7 +41,7 @@ public class NoteTabTree extends SqluckyTitledPane {
 	public NoteTabTree(String pluginName) {
 
 		optPane = new NoteOptionPanel(this);
-		noteTabTreeView = createScriptTreeView();
+		noteTabTreeView = createTreeView();
 		noteStackPane.getChildren().add(noteTabTreeView);
 		noteStackPane.getStyleClass().add("myStackPane");
 
@@ -54,7 +53,7 @@ public class NoteTabTree extends SqluckyTitledPane {
 	}
 
 	// db节点view
-	public TreeView<MyNoteEditorSheet> createScriptTreeView() {
+	public TreeView<MyNoteEditorSheet> createTreeView() {
 		rootNode = new TreeItem<>(null);
 		TreeView<MyNoteEditorSheet> treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("my-tag");

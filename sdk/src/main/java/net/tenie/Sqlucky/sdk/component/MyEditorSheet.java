@@ -136,18 +136,8 @@ public class MyEditorSheet extends Tab {
 		this.setSqluckyEditor(sqlEditor);
 	}
 
-
-	// 判断查找面板是否显示中
-//	public boolean findPaneIsShowing() {
-//		if (findAnchorPane != null) {
-//			return true;
-//		}
-//		return false;
-//	}
-
 	// tab的属性设置, 名称, 右键菜单,
 	public void setTabProperty() {
-//		this.setUserData(this); // 将当前对象放入tab中
 		// 右键菜单
 		this.setContextMenu(MyTabMenu());
 		setTitleName();

@@ -169,6 +169,8 @@ public class DataModelOperate {
 		});
 
 		btnHbox.getChildren().addAll(queryBtn, menuButton, delBtn);
+
+		btnHbox.setPadding(new Insets(3,0,3,0));
 		filterHbox.getChildren().addAll(queryExecBtn, txtAP);
 		HBox.setHgrow(txtAP, Priority.ALWAYS);
 		filterHbox.setPadding(new Insets(3,3,5,3));
