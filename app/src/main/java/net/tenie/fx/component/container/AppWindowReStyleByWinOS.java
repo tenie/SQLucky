@@ -21,12 +21,10 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 public class AppWindowReStyleByWinOS {
-
 	// 窗体拉伸属性
 	private static boolean isRight;// 是否处于右边界调整窗口状态
 	private static boolean isBottomRight;// 是否处于右下角调整窗口状态
 	private static boolean isBottomLeft;
-
 	private static boolean isBottom;// 是否处于下边界调整窗口状态
 	private static boolean isTop;
 	private static boolean isLeft;

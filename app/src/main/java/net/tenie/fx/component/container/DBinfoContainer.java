@@ -28,14 +28,11 @@ public class DBinfoContainer extends  VBox{
 	private ScriptTabTree scriptTabTree; // 脚本
 
 	public DBinfoContainer() {
-		// 容器
-//		container = new VBox();
+		super();
 		// 数据库信息
 		dbInfoTree = new DBinfoTree();
 		dbInfoTreeView = dbInfoTree.DBinfoTreeView;
 		// 按钮
-//		dbInfoTreeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn();
-//		TitledPane dbInfoTtPane = dbInfoTree.dbInfoTitledPane(dbInfoTreeBtnPane);
 		dbInfoTreeBtnPane = dbInfoTree.getDbInfoTreeBtnPane();
 		// 脚本
 		scriptTabTree = new ScriptTabTree();
@@ -52,8 +49,6 @@ public class DBinfoContainer extends  VBox{
 		
 		AppWindow.dbInfoTree = dbInfoTree;
 		ComponentGetter.leftNodeContainer = this;
-
-//		ComponentGetter.treeBtnPane = treeBtnPane;
 
 		ComponentGetter.infoAccordion = dbInfoAccordion;
 
@@ -79,14 +74,9 @@ public class DBinfoContainer extends  VBox{
 				});
 			}
 			if (n != null && n instanceof SqluckyTitledPane sqluckyTitledPane) {
-//				SqlcukyTitledPaneInfoPo info = (SqlcukyTitledPaneInfoPo) n.getUserData();
-//				if (info != null) {
-//					var bx = info.getBtnsBox();
 					var bx = sqluckyTitledPane.getBtnsBox();
 					this.getChildren().remove(0);
 					this.getChildren().add(0, bx);
-
-//				}
 			}
 
 		});

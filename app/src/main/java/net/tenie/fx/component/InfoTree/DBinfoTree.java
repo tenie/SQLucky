@@ -1,37 +1,22 @@
 package net.tenie.fx.component.InfoTree;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
-
-import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.*;
-import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.fxmisc.richtext.Caret.CaretVisibility;
-import org.fxmisc.richtext.CodeArea;
-
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
+import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
@@ -48,6 +33,15 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TreeObjAction;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.dao.ConnectionDao;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.fxmisc.richtext.Caret.CaretVisibility;
+import org.fxmisc.richtext.CodeArea;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.function.Consumer;
 
 /**
  * 链接节点树
@@ -56,15 +50,10 @@ import net.tenie.fx.dao.ConnectionDao;
  *
  */
 public class DBinfoTree extends SqluckyTitledPane {
-	private static Logger logger = LogManager.getLogger(DBinfoTree.class);
+	private static final Logger logger = LogManager.getLogger(DBinfoTree.class);
 	public static TreeView<TreeNodePo> DBinfoTreeView;
 	public static TreeItem<TreeNodePo> rootNode;
-
-//	public static Region icon;
-	private DBInfoTreeContextMenu menu;
-	// 缓存 激活的ConnItemContainer
-	List<ConnItemContainer> connItemParent = new ArrayList<>();
-
+	private DBInfoTreeContextMenu contextMenu;
 	// 操作按钮的的面板
 	public static VBox operateVbox  ;
 
@@ -78,13 +67,12 @@ public class DBinfoTree extends SqluckyTitledPane {
 	private VBox dbInfoTreeBtnPane ;
 	
 	public DBinfoTree() {
-		
+		super();
 		createConnsTreeView();
-		
 		operateVbox = new VBox();
 		// 查询过滤
 		dbInfoTreeFilter = new DBinfoTreeFilter();
-		dbInfoTreeFilterPane = dbInfoTreeFilter.createFilterPane(this.DBinfoTreeView);
+		dbInfoTreeFilterPane = dbInfoTreeFilter.createFilterPane(DBinfoTreeView);
 		 
 		filterTextField = 	dbInfoTreeFilter.getTxt();
 		AppWindow.dbInfoTreeFilter = dbInfoTreeFilterPane;
@@ -92,24 +80,20 @@ public class DBinfoTree extends SqluckyTitledPane {
 
 		dbInfoTreeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn(this);
 		this.setText("DB Connection");
-//		dbTitledPane.setUserData(new SqlcukyTitledPaneInfoPo("Sqlucky DB Connection", treeBtnPane));
-//		this.setName("DB Connection");
+
 		this.setBtnsBox(dbInfoTreeBtnPane);
 		CommonUtils.addCssClass(this, "titledPane-color");
 		this.setContent(DBinfoTreeView);
 
 		// 图标切换
-		CommonUtils.addInitTask(v -> {
-			Platform.runLater(() -> {
-				CommonUtils.setLeftPaneIcon(this, ComponentGetter.iconInfo, ComponentGetter.uaIconInfo);
-			});
-
-		});
+		CommonUtils.addInitTask(
+				v -> Platform.runLater(
+						() -> CommonUtils.setLeftPaneIcon(this, ComponentGetter.iconInfo, ComponentGetter.uaIconInfo)));
 
 	}
 
 	// db节点view
-	public TreeView<TreeNodePo> createConnsTreeView() {
+	public void createConnsTreeView() {
 		Region icon = IconGenerator.svgImageDefActive("windows-globe");
 		rootNode = new TreeItem<>(new TreeNodePo("Connections", icon));
 		DBinfoTreeView = new TreeView<>(rootNode);
@@ -127,33 +111,28 @@ public class DBinfoTree extends SqluckyTitledPane {
 		// 恢复数据中保存的连接数据
 		recoverNode(datas);
 		// 展示连接
-		if (rootNode.getChildren().size() > 0)
-			DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+		if (!rootNode.getChildren().isEmpty())
+			DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().getFirst()); // 选中节点
 		// 双击
 		DBinfoTreeView.setOnMouseClicked(e -> {
 			// 单击
-			if (e.getClickCount() == 1) {
-//				AppWindow.treeView.refresh();
-			}else {
+			if (e.getClickCount() == 2) {
 				// 双击
 				treeViewDoubleClick(e);
 				AppWindow.treeView.refresh();
 			}
 		});
 		// 右键菜单
-		menu = new DBInfoTreeContextMenu();
-		ContextMenu contextMenu = menu.getContextMenu();
+		contextMenu = new DBInfoTreeContextMenu();
 		ComponentGetter.dbInfoTreeContextMenu = contextMenu;
 		DBinfoTreeView.setContextMenu(contextMenu);
 		// 选中监听事件
 		DBinfoTreeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(DBinfoTreeView));
 		DBinfoTreeView.getSelectionModel().select(rootNode);
 
-//		DBinfoTreeView = treeView;
-
 		// 显示设置, 从TreeNodePo中的对象显示为 TreeItem 的名称和图标
 		DBinfoTreeView.setCellFactory(new TreeNodeCellFactory());
-		return DBinfoTreeView;
+//		return DBinfoTreeView;
 	}
 
 	// 恢复数据中保存的连接数据, 界面初始化的时候
@@ -449,83 +428,83 @@ public class DBinfoTree extends SqluckyTitledPane {
 
 				// 复制节点名称
 				var nodeName = newValue.getValue().getName();
-				menu.copuNodeName(nodeName);
+				contextMenu.copuNodeName(nodeName);
 
 				// 获取链接的TreeItem
 				if (Objects.equals(newValue, DBinfoTreeView.getRoot())) { // root
-					menu.setConnectDisable(true);
-					menu.setTableDisable(true);
-					menu.setRefreshDisable(true);
-					menu.setLinkDisable(true);
+					contextMenu.setConnectDisable(true);
+					contextMenu.setTableDisable(true);
+					contextMenu.setRefreshDisable(true);
+					contextMenu.setLinkDisable(true);
 				} else if (DBinfoTree.isConns(newValue)) {
 					if (newValue.getChildren().size() == 0) {
-						menu.setLinkDisable(false);
-						menu.setRefreshDisable(true);
+						contextMenu.setLinkDisable(false);
+						contextMenu.setRefreshDisable(true);
 					} else {
-						menu.setLinkDisable(true);
-						menu.setRefreshDisable(false);
+						contextMenu.setLinkDisable(true);
+						contextMenu.setRefreshDisable(false);
 					}
-					menu.setConnectDisable(false);
-					menu.setTableDisable(true);
+					contextMenu.setConnectDisable(false);
+					contextMenu.setTableDisable(true);
 					// TABLE
 				} else if (nd != null && nd.getType() == TreeItemType.TABLE) {
-					menu.setConnectDisable(true);
-					menu.setTableDisable(false);
+					contextMenu.setConnectDisable(true);
+					contextMenu.setTableDisable(false);
 					SqluckyConnector dbc = nd.getConnpo();
 					String schema = nd.getTable().getTableSchema();
 					String tablename = nd.getTable().getTableName();
-					menu.setTableAction(newValue, dbc, schema, tablename);
+					contextMenu.setTableAction(newValue, dbc, schema, tablename);
 				} else if (nd != null && nd.getType() == TreeItemType.VIEW) {
 					// TODO
-					menu.setConnectDisable(true);
-					menu.setViewFuncProcTriDisable(false);
+					contextMenu.setConnectDisable(true);
+					contextMenu.setViewFuncProcTriDisable(false);
 					SqluckyConnector dbc = nd.getConnpo();
 					String schema = nd.getTable().getTableSchema();
 					String viewName = nd.getTable().getTableName();
 //					var tabpo = nd.getTable();
-					menu.setViewAction(newValue, dbc, schema, viewName);
-					menu.setSelectMenuDisable(false, dbc, nd);
+					contextMenu.setViewAction(newValue, dbc, schema, viewName);
+					contextMenu.setSelectMenuDisable(false, dbc, nd);
 				} else if (nd != null && nd.getType() == TreeItemType.FUNCTION) {
 					// TODO
-					menu.setNodeType(TreeItemType.FUNCTION);
-					menu.setConnectDisable(true);
-					menu.setViewFuncProcTriDisable(false);
+					contextMenu.setNodeType(TreeItemType.FUNCTION);
+					contextMenu.setConnectDisable(true);
+					contextMenu.setViewFuncProcTriDisable(false);
 					SqluckyConnector dbc = nd.getConnpo();
 
 					String schema = nd.getFuncProTri().getSchema();
 					String funcName = nd.getFuncProTri().getName();
-					menu.setFuncAction(newValue, dbc, schema, funcName);
+					contextMenu.setFuncAction(newValue, dbc, schema, funcName);
 				} else if (nd != null && nd.getType() == TreeItemType.PROCEDURE) {
 					// TODO
-					menu.setNodeType(TreeItemType.PROCEDURE);
-					menu.setConnectDisable(true);
-					menu.setViewFuncProcTriDisable(false);
+					contextMenu.setNodeType(TreeItemType.PROCEDURE);
+					contextMenu.setConnectDisable(true);
+					contextMenu.setViewFuncProcTriDisable(false);
 					SqluckyConnector dbc = nd.getConnpo();
 
 					String schema = nd.getFuncProTri().getSchema();
 					String procName = nd.getFuncProTri().getName();
-					menu.setProcAction(newValue, dbc, schema, procName);
+					contextMenu.setProcAction(newValue, dbc, schema, procName);
 				} else if (nd != null && nd.getType() == TreeItemType.TRIGGER) {
 					// TODO
-					menu.setNodeType(TreeItemType.TRIGGER);
-					menu.setConnectDisable(true);
-					menu.setViewFuncProcTriDisable(false);
+					contextMenu.setNodeType(TreeItemType.TRIGGER);
+					contextMenu.setConnectDisable(true);
+					contextMenu.setViewFuncProcTriDisable(false);
 					SqluckyConnector dbc = nd.getConnpo();
 
 					String schema = nd.getFuncProTri().getSchema();
 					String triggerName = nd.getFuncProTri().getName();
-					menu.setTriggerAction(newValue, dbc, schema, triggerName);
+					contextMenu.setTriggerAction(newValue, dbc, schema, triggerName);
 				} else {
-					menu.setNodeType(null);
-					menu.setConnectDisable(true);
-					menu.setTableDisable(true);
-					menu.setRefreshDisable(false);
-					menu.setLinkDisable(true);
+					contextMenu.setNodeType(null);
+					contextMenu.setConnectDisable(true);
+					contextMenu.setTableDisable(true);
+					contextMenu.setRefreshDisable(false);
+					contextMenu.setLinkDisable(true);
 				}
 
-				if (!menu.getRefresh().isDisable()) {
+				if (!contextMenu.getRefresh().isDisable()) {
 					TreeItem<TreeNodePo> connItem = ConnItem(newValue);
-					menu.setRefreshAction(connItem);
+					contextMenu.setRefreshAction(connItem);
 				}
 
 			}

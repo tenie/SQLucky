@@ -36,10 +36,6 @@ public class DBinfoTreeFilter {
 	private TreeItem<TreeNodePo> rootNode;
 	private TextField txt;
 
-	public TextField getTxtField() {
-		return txt;
-	}
-
 	/**
 	 * 创建查询树节点的输入框
 	 * 
