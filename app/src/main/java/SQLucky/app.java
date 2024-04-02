@@ -10,6 +10,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -58,7 +59,6 @@ import java.util.function.Consumer;
  *
  */
 public class app extends Application {
-    //	public Date lastfocusedTime ;
     public static String sysOpenFile = "";
     public static List<String> argsList = new ArrayList<>();
     public static String userDir = "";
@@ -67,8 +67,6 @@ public class app extends Application {
     private Scene scene;
     private Image img;
     private String Theme;
-    //	private boolean tableExists = true;
-//	public static volatile boolean beginInit = false;
     private boolean transferDB = false;
     private static Logger logger = LogManager.getLogger(app.class);
 
@@ -203,8 +201,10 @@ public class app extends Application {
                 Node tabHeader = mainTabPane.lookup(".tab-header-area");
                 tabHeader.setOnMouseClicked(mouseEvent -> {
                     if (mouseEvent.getClickCount() == 2) {
-//						MyAreaTab.addCodeEmptyTabMethod();
-                        MyEditorSheetHelper.addEmptyHighLightingEditor();
+                        MouseButton button = mouseEvent.getButton();
+                        if(button == MouseButton.PRIMARY) { // 左键点击
+                            MyEditorSheetHelper.addEmptyHighLightingEditor();
+                        }
                     }
                 });
 

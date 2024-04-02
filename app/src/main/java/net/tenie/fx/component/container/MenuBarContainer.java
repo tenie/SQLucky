@@ -39,9 +39,8 @@ import net.tenie.fx.window.SignInWindow;
  * @author tenie
  *
  */
-public class MenuBarContainer {
+public class MenuBarContainer extends MenuBar{
 	private static Logger logger = LogManager.getLogger(MenuBarContainer.class);
-	private MenuBar mainMenuBar;
 	private Menu mnfile;
 	private Menu mnEdit;
 	private Menu mnTools;
@@ -51,15 +50,15 @@ public class MenuBarContainer {
 	private DataTransferWindow dtw;
 
 	public MenuBarContainer() {
-		mainMenuBar = new MenuBar();
+		super();
 		mnfile = createFileMenu();
 		mnEdit = createEditMenu();
 		mnTools = createToolsMenu();
 		mnHelp = createHelpMenu();
 		mnplugin = createPluginMenu();
 
-		mainMenuBar.getMenus().addAll(mnfile, mnEdit, mnTools, mnplugin, mnHelp);
-		mainMenuBar.setUseSystemMenuBar(true);
+		this.getMenus().addAll(mnfile, mnEdit, mnTools, mnplugin, mnHelp);
+		this.setUseSystemMenuBar(true);
 	}
 
 	// File 菜单创建
@@ -464,14 +463,6 @@ public class MenuBarContainer {
 		mn.getItems().addAll(plugin);
 		ComponentGetter.pluginMenu = mn;
 		return mn;
-	}
-
-	public MenuBar getMainMenuBar() {
-		return mainMenuBar;
-	}
-
-	public void setMainMenuBar(MenuBar mainMenuBar) {
-		this.mainMenuBar = mainMenuBar;
 	}
 
 	public Menu getMnfile() {

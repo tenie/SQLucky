@@ -9,41 +9,30 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /*   @author tenie */
-public class OperateContainer {
-	private HBox container;
+public class OperateContainer extends HBox {
 	private MasterDetailPane treeAreaDetailPane;
 	private DBinfoContainer dbinfoCtr; // 连接管理窗口
 	private CodeContainer codeCtr; // 代码编辑窗口
 
 	public OperateContainer() {
-		container = new HBox();
+		super();
 
 		codeCtr = new CodeContainer();
 		dbinfoCtr = new DBinfoContainer();
 
-//		SqlEditor.codeAreaRecover(); // 还原上次的sql代码
-
 		treeAreaDetailPane = new MasterDetailPane(Side.LEFT);
 		treeAreaDetailPane.setShowDetailNode(true);
-		treeAreaDetailPane.setMasterNode(codeCtr.getContainer());
+		treeAreaDetailPane.setMasterNode(codeCtr);
 		treeAreaDetailPane.setDetailNode(dbinfoCtr);
 //		treeAreaDetailPane.setDividerPosition(0.22);
 
-		container.getChildren().add(treeAreaDetailPane);
+		this.getChildren().add(treeAreaDetailPane);
 
 		HBox.setHgrow(treeAreaDetailPane, Priority.ALWAYS);
 		ComponentGetter.treeAreaDetailPane = treeAreaDetailPane;
 
-		CommonUtils.fadeTransition(codeCtr.getContainer(), 1000);
+		CommonUtils.fadeTransition(codeCtr, 1000);
 		CommonUtils.fadeTransition(dbinfoCtr, 1000);
-	}
-
-	public HBox getContainer() {
-		return container;
-	}
-
-	public void setContainer(HBox container) {
-		this.container = container;
 	}
 
 	public MasterDetailPane getTreeAreaDetailPane() {

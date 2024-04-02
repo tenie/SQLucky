@@ -26,8 +26,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.window.ConnectionEditor;
 
-public class DBInfoTreeContextMenu {
-	private ContextMenu contextMenu;
+public class DBInfoTreeContextMenu extends ContextMenu {
 	private MenuItem tableAddNewCol;
 	private MenuItem tableShow;
 	private MenuItem tableDrop;
@@ -46,8 +45,7 @@ public class DBInfoTreeContextMenu {
 	private TreeItemType nodeType;
 
 	public DBInfoTreeContextMenu() {
-
-		contextMenu = new ContextMenu();
+		super();
 
 		link = new MenuItem("Open Connection");
 		link.setOnAction(e -> {
@@ -109,14 +107,13 @@ public class DBInfoTreeContextMenu {
 
 		copyNameMenu = new MenuItem("Copy Name");
 		copyNameMenu.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
-//        copyNameMenu.setDisable(true);
 
-		contextMenu.getItems().addAll(link, unlink, Edit, Add, delete, new SeparatorMenuItem(), refresh,
+		this.getItems().addAll(link, unlink, Edit, Add, delete, new SeparatorMenuItem(), refresh,
 				new SeparatorMenuItem(), tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu,
 				copyNameMenu);
 
 		// 菜单显示调用回调函数
-		contextMenu.setOnShowing(v -> {
+		this.setOnShowing(v -> {
 			Consumer<String> consumer = ComponentGetter.appComponent.getDBInfoMenuOnShowing();
 			if (consumer != null) {
 				consumer.accept("");
@@ -278,14 +275,6 @@ public class DBInfoTreeContextMenu {
 			ConnectionEditor.openDbConn();
 		});
 
-	}
-
-	public ContextMenu getContextMenu() {
-		return contextMenu;
-	}
-
-	public void setContextMenu(ContextMenu contextMenu) {
-		this.contextMenu = contextMenu;
 	}
 
 	public MenuItem getTableAddNewCol() {

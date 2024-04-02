@@ -21,8 +21,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 
 /*   @author tenie */
-public class AppWindow {
-	private VBox mainWindow;
+public class AppWindow extends VBox{
 	private MenuBarContainer mainMenuBar;
 	private MasterDetailPane masterDetailPane;
 	private OperateContainer operate;
@@ -40,10 +39,9 @@ public class AppWindow {
 	public static volatile AppWindow app;
 
 	public AppWindow() {
-		mainWindow = new VBox();
-		CommonUtils.addCssClass(mainWindow, "main-background");
-		ComponentGetter.mainWindow = mainWindow;
-		
+		super();
+		CommonUtils.addCssClass(this, "main-background");
+		ComponentGetter.mainWindow = this;
 
 		mainMenuBar = new MenuBarContainer();
 		masterDetailPane = new MasterDetailPane(Side.BOTTOM);
@@ -53,24 +51,22 @@ public class AppWindow {
 
 		masterDetailPane.getStyleClass().add(0, "masterDetailPane");
 		masterDetailPane.setShowDetailNode(false);
-		masterDetailPane.setMasterNode(operate.getContainer());
+		masterDetailPane.setMasterNode(operate);
 		masterDetailPane.setDetailNode(dataView.getContainer());
 		masterDetailPane.setDividerPosition(0.6);
 		VBox.setVgrow(masterDetailPane, Priority.ALWAYS);
 
 		ComponentGetter.masterDetailPane = masterDetailPane;
-//		AppWindowComponentGetter.dataView = dataView;
 		// 设置tree 面板的显示比例
 		masterDetailPane.widthProperty().addListener((ob, ov, nv) -> {
 			if (nv.doubleValue() > 1) {
 				double wi = ComponentGetter.masterDetailPane.getWidth();
 				double tbp = 300.0;
 				double val = tbp / wi;
-//					System.out.println("设置窗口比例 :" + val);
 				ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
 			}
 		});
-		root = new StackPane(mainWindow);
+		root = new StackPane(this);
 		LoadingAnimation.addLoading(root);
 
 		appScene = new Scene(root);
@@ -79,38 +75,26 @@ public class AppWindow {
 
 		// 主菜单加入到顶部pane中
 		headAnchorPane = new AnchorPane();
-		MenuBar mmb = mainMenuBar.getMainMenuBar();
-		headAnchorPane.getChildren().add(mmb);
-		AnchorPane.setLeftAnchor(mmb, 3.0);
-		AnchorPane.setTopAnchor(mmb, 3.0);
-//		if( mmb.getStyleClass().contains("menu-bar")) {
-//			mmb.getStyleClass().remove("menu-bar");
-//		}
+		headAnchorPane.getChildren().add(mainMenuBar);
+		AnchorPane.setLeftAnchor(mainMenuBar, 3.0);
+		AnchorPane.setTopAnchor(mainMenuBar, 3.0);
+
 		headAnchorPane.getStyleClass().add("window-head-pane");
-//		mmb.getStyleClass().add("window-head-pane"); 
 
 		Platform.runLater(() -> {
-//			CommonUtility.platformAwait();
-			mainWindow.getChildren().addAll(headAnchorPane, masterDetailPane);
+			this.getChildren().addAll(headAnchorPane, masterDetailPane);
 			VBox.setMargin(masterDetailPane, new Insets(3, 3, 3, 3));
-//TODO			mainWindow.getChildren().addAll(mainMenuBar.getMainMenuBar(), masterDetailPane);
-			CommonUtils.fadeTransition(operate.getContainer(), 2000);
+			CommonUtils.fadeTransition(operate, 2000);
 			CommonUtils.fadeTransition(dataView.getContainer(), 2000);
-			CommonUtils.fadeTransition(mainMenuBar.getMainMenuBar(), 2000);
+			CommonUtils.fadeTransition(mainMenuBar, 2000);
 			CommonUtils.fadeTransition(masterDetailPane, 2000);
 		});
 
-		CommonUtils.fadeTransition(mainWindow, 1000);
+		CommonUtils.fadeTransition(this, 1000);
 		ComponentGetter.treeView = treeView;
 	}
 
 	static {
-
-//		System.out.println("csssss=" + AppWindow.class.getResource("/db/app.sql").toExternalForm());
-//		File appsql = new File
-//		FileInputStream fis = new FileInputStream(AppWindow.class.getResourceAsStream("/db/app.sql"));
-//		AppWindow.class.getResourceAsStream("/db/app.sql");
-
 		ConfigVal.cssList.add(AppWindow.class.getResource("/css/application.css").toExternalForm());
 		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/common.css").toExternalForm());
 		ConfigVal.cssList.add(AppWindow.class.getResource("/css/dark/sql-keywords.css").toExternalForm());
@@ -151,17 +135,8 @@ public class AppWindow {
 		ComponentGetter.iconRight = IconGenerator.svgImageDefActive("chevron-circle-right", 14);
 		ComponentGetter.iconLeft = IconGenerator.svgImageDefActive("chevron-circle-down", 14);
 
-//		ComponentGetter.LogoIcons   =   IconGenerator.sqluckyLogoSVGImage();
 		ComponentGetter.LogoIcons = new Image(AppWindow.class.getResourceAsStream(ConfigVal.appIcon));
 
-	}
-
-	public VBox getMainWindow() {
-		return mainWindow;
-	}
-
-	public void setMainWindow(VBox mainWindow) {
-		this.mainWindow = mainWindow;
 	}
 
 	public MenuBarContainer getMainMenuBar() {
@@ -202,15 +177,6 @@ public class AppWindow {
 
 	public void setAppScene(Scene appScene) {
 		this.appScene = appScene;
-	}
-
-	public Scene getTmpScene() {
-		VBox tmpbox = new VBox();
-		BorderPane root = new BorderPane(tmpbox);
-		root.setCenter(tmpbox);
-		tmpbox.getStyleClass().add("main-background");
-		Scene tmpscene = new Scene(root);
-		return tmpscene;
 	}
 
 	public AnchorPane getHeadAnchorPane() {
