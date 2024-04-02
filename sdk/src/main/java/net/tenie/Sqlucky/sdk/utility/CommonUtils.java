@@ -199,15 +199,15 @@ public class CommonUtils {
 		return title;
 	}
 
-//	public static void setTabName(Tab tb, String val) {
-//		Label lb = (Label) tb.getGraphic();
-//		if (lb != null) {
-//			lb.setText(val);
-//			tb.setText("");
-//		} else {
-//			tb.setText(val);
-//		}
-//	}
+	public static void setTabName(Tab tb, String val) {
+		Label lb = (Label) tb.getGraphic();
+		if (lb != null) {
+			lb.setText(val);
+			tb.setText("");
+		} else {
+			tb.setText(val);
+		}
+	}
 
 	public static void setTabName(Tab tb, SimpleStringProperty val) {
 		Label lb = (Label) tb.getGraphic();

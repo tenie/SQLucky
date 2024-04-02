@@ -406,7 +406,7 @@ public class MyEditorSheet extends Tab {
 
 	// 设置 tab的显示名称
 	public void setTitle(String val) {
-//		CommonUtils.setTabName(this, val);
+		CommonUtils.setTabName(this, val);
 		this.documentPo.setTitle(val);
 	}
 
