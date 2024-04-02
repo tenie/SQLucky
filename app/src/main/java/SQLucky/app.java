@@ -1,25 +1,6 @@
 package SQLucky;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
-
-import javafx.scene.text.Font;
-import net.tenie.fx.main.MyPreloaderGif;
-import net.tenie.fx.main.MyPreloaderMp4;
-import net.tenie.fx.main.Restart;
-import net.tenie.lib.db.h2.UpdateScript;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.sun.javafx.application.LauncherImpl;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Rectangle2D;
@@ -27,7 +8,9 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -35,6 +18,7 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
@@ -49,8 +33,23 @@ import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.AppWindowReStyleByWinOS;
 import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ServiceLoad;
+import net.tenie.fx.main.MyPreloaderGif;
+import net.tenie.fx.main.MyPreloaderMp4;
+import net.tenie.fx.main.Restart;
 import net.tenie.lib.db.h2.AppDao;
+import net.tenie.lib.db.h2.UpdateScript;
 import net.tenie.sdkImp.SqluckyAppComponent;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
 /**
  * 启动入口
@@ -312,22 +311,28 @@ public class app extends Application {
             }
 
             // 删除 script tree view 中的空内容tab
-            var childs = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
+            List<TreeItem<MyEditorSheet>> scriptList = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
             int idx = 1;
-            for (int i = 0; i < childs.size(); i++) {
-                var tv = childs.get(i);
-                var mytab = tv.getValue();
-                var scpo = mytab.getDocumentPo();
-                var sqltxt = scpo.getText();
-                if (sqltxt == null || sqltxt.trim().length() == 0) {
-                    AppDao.deleteScriptArchive(H2conn, scpo);
+            for (int i = 0; i < scriptList.size(); i++) {
+                TreeItem<MyEditorSheet> treeItem = scriptList.get(i);
+                MyEditorSheet myEditorSheet = treeItem.getValue();
+                DocumentPo documentPo = myEditorSheet.getDocumentPo();
+                String sqlTxt = documentPo.getText();
+                // 删除内容已经为空的历史记录
+                if (sqlTxt == null || sqlTxt.trim().isEmpty()) {
+                    AppDao.deleteScriptArchive(H2conn, documentPo);
                 } else {
-                    String fp = scpo.getFileFullName();
+                    String fp = documentPo.getFileFullName();
                     if (StrUtils.isNullOrEmpty(fp)) {
-                        scpo.setTitle("Untitled_" + idx + "*");
-                        idx++;
+                        String titleName = documentPo.getTitle().get();
+                        if(StrUtils.isNullOrEmpty(titleName) || titleName.startsWith("Untitled_")){
+                            documentPo.setTitle("Untitled_" + idx + "*");
+                            idx++;
+                        }
+
+
                     }
-                    AppDao.updateScriptArchive(H2conn, scpo);
+                    AppDao.updateScriptArchive(H2conn, documentPo);
 
                 }
             }
@@ -347,14 +352,19 @@ public class app extends Application {
         }
         Font.loadFont(app.class.getResourceAsStream("/css/MonaspaceArgonVarVF.ttf"), 14);
 
-        if (CommonUtils.isLinuxOS()) {
-            LauncherImpl.launchApplication(app.class, MyPreloaderGif.class, args);
-        } else {
-            LauncherImpl.launchApplication(app.class, MyPreloaderMp4.class, args);
+        if(CommonUtils.isDev()){
+            launch(args);
+        }else{
+            if (CommonUtils.isLinuxOS()) {
+                LauncherImpl.launchApplication(app.class, MyPreloaderGif.class, args);
+            } else {
+                LauncherImpl.launchApplication(app.class, MyPreloaderMp4.class, args);
 //			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
 //			LauncherImpl.launchApplication(SQLucky.class, MyPreloader.class, args);
 
+            }
         }
+
 
 //		LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
     }
