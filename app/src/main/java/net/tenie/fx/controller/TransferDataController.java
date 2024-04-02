@@ -106,6 +106,8 @@ public class TransferDataController implements Initializable {
 	private JFXCheckBox chSeq;
 
 	@FXML
+	private JFXCheckBox diffCheckBox;
+	@FXML
 	private Label queryLabel;
 	@FXML
 	private JFXButton execBtn;
@@ -193,6 +195,8 @@ public class TransferDataController implements Initializable {
 		chTri.setSelected(false);
 		chIndex.setSelected(false);
 		chSeq.setSelected(false);
+		diffCheckBox.setSelected(false);
+
 		amountTxt.setDisable(true);
 		amountTxt.setText("");
 	}
@@ -523,16 +527,23 @@ public class TransferDataController implements Initializable {
 				tarDbpo = tarDbpo1.copyObj(targetSchename);
 				Connection tarConn = tarDbpo.getConn();
 
-				moniterAppendLog("-------- 获取 ddl --------");
-				List<String> sqls = generateDDL(soConn, schename, targetSchename);
+				// diff
+				if (diffCheckBox.isSelected()){
+//					DbDiffTools
+				}else{
+					moniterAppendLog("-------- 获取 ddl --------");
+					List<String> sqls = generateDDL(soConn, schename, targetSchename);
 
-				moniterAppendLog("--------准备执行 sql--------");
-				// 执行ddl
-				TransferDataUtils.execListSQL(sqls, tarConn, isThrow, this::moniterAppendLog);
+					moniterAppendLog("--------准备执行 sql--------");
+					// 执行ddl
+					TransferDataUtils.execListSQL(sqls, tarConn, isThrow, this::moniterAppendLog);
 
-				moniterAppendLog("--------准备执行 insert --------");
-				synTabData(soConn, tarConn, schename, targetSchename, isThrow);
-				moniterAppendLog("--------END insert  --------");
+					moniterAppendLog("--------准备执行 insert --------");
+					synTabData(soConn, tarConn, schename, targetSchename, isThrow);
+					moniterAppendLog("--------END insert  --------");
+				}
+
+
 			} else {
 				if (isThrow)
 					throw new RuntimeException("数据库链接错误");

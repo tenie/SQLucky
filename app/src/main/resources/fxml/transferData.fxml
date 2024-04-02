@@ -56,6 +56,7 @@
                 <RowConstraints maxHeight="42.0" minHeight="5.0" prefHeight="23.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="40.0" minHeight="7.0" prefHeight="26.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="51.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="51.0" minHeight="10.0" prefHeight="32.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <JFXCheckBox fx:id="isIgnore" mnemonicParsing="false" prefHeight="16.0" prefWidth="137.0" text="忽略错误继续执行" />
@@ -77,6 +78,7 @@
                         </TextField>
                     </children>
                 </FlowPane>
+            <JFXCheckBox fx:id="diffCheckBox" text="表字段差异比较" GridPane.rowIndex="5" />
             </children>
             <VBox.margin>
                 <Insets bottom="10.0" left="10.0" />
