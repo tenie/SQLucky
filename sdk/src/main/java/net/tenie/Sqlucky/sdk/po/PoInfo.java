@@ -70,14 +70,20 @@ public class PoInfo {
 		var ms = this.cls.getMethods();
 		for(Method mth : ms) {
 			var mName = mth.getName();
-			if(mName.toLowerCase().endsWith( lowCN)) {
-				if(mName.startsWith("set")) {
-					continue;
-				}else {
-					return mth.invoke(bean);
-				}
-				
+			if(mName.startsWith("set")) {
+				continue;
+			}else if( mName.toLowerCase().substring(3).equals(lowCN)) {
+				return mth.invoke(bean);
 			}
+//			if(mName.toLowerCase().endsWith( lowCN)) {
+//				return mth.invoke(bean);
+//				if(mName.startsWith("set")) {
+//					continue;
+//				}else {
+//					return mth.invoke(bean);
+//				}
+				
+//			}
 			
 			
 			
