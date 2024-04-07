@@ -7,6 +7,7 @@ import java.util.List;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.geometry.Side;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /*   @author tenie */
@@ -85,6 +86,9 @@ public class ConfigVal {
 
 	// 打开文件目录缓存
 	public static String openfileDir = "";
+
+	// 底部sheet位置
+	public static Side bottomSide = Side.BOTTOM;
 	public static List<String> cssList = new ArrayList<>();
 	public static List<String> cssListLight = new ArrayList<>();
 	public static List<String> cssListYellow = new ArrayList<>();

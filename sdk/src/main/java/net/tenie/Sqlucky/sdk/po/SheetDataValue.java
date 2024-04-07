@@ -9,8 +9,10 @@ import java.util.Set;
 import javafx.geometry.Side;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
@@ -59,7 +61,7 @@ public class SheetDataValue {
 
 	private JFXButton saveBtn ;
 	private JFXButton lockBtn ;
-	private JFXButton hideBottom;
+	private static JFXButton hideBottom;
 
 	private static JFXButton sideRightBottom ;
 	static {
@@ -68,6 +70,16 @@ public class SheetDataValue {
 		Region zeroPositionRight = IconGenerator.svgImageDefActive("zero-position-right");
 		Tooltip bottomTootip = MyTooltipTool.instance("Move Sheet To Bottom");
 		Tooltip rightTootip = MyTooltipTool.instance("Move Sheet To Right");
+
+
+		Region downRegion =  IconGenerator.svgImageDefActive("caret-square-o-down");
+		Region rightRegion =  IconGenerator.svgImageDefActive("caret-square-o-right");
+		Region leftRegion =  IconGenerator.svgImageDefActive("caret-square-o-left");
+
+
+		Region rightRegion2 =  IconGenerator.svgImageDefActive("caret-square-o-right");
+		Region leftRegion2 =  IconGenerator.svgImageDefActive("caret-square-o-left");
+
 		sideRightBottom = new JFXButton();
 		sideRightBottom.setGraphic(zeroPositionRight);
 		sideRightBottom.setTooltip(rightTootip);
@@ -76,17 +88,40 @@ public class SheetDataValue {
 			if( masterDetailPane.getDetailSide().equals(Side.RIGHT) ){
 				sideRightBottom.setGraphic(zeroPositionRight);
 				masterDetailPane.setDetailSide(Side.BOTTOM);
+				ConfigVal.bottomSide = Side.BOTTOM;
+
 
 				sideRightBottom.setTooltip(rightTootip);
 				masterDetailPane.setDividerPosition(0.6);
+
+				// 隐藏按钮
+				JFXButton hideBottom = SheetDataValue.getHideBottom();
+				hideBottom.setGraphic(downRegion);
+
+				CommonButtons.hideBottom.setGraphic(leftRegion2);
+
 			}else {
 				sideRightBottom.setGraphic(zeroPositionBottom);
 				masterDetailPane.setDetailSide(Side.RIGHT);
+				ConfigVal.bottomSide = Side.RIGHT;
 
 				sideRightBottom.setTooltip(bottomTootip);
 				masterDetailPane.setDividerPosition(0.7);
+
+				// 隐藏按钮
+				JFXButton hideBottom = SheetDataValue.getHideBottom();
+				hideBottom.setGraphic(rightRegion);
+				CommonButtons.hideBottom.setGraphic(rightRegion2);
+
 			}
 
+		});
+
+		// 隐藏按钮
+		hideBottom = new JFXButton();
+		hideBottom.setGraphic(downRegion);
+		hideBottom.setOnMouseClicked(e -> {
+			SdkComponent.hideBottom();
 		});
 	}
 
@@ -120,7 +155,7 @@ public class SheetDataValue {
 	public SheetDataValue() {
 		saveBtn = new JFXButton();
 		lockBtn = new JFXButton();
-		hideBottom = new JFXButton();
+//		hideBottom = new JFXButton();
 	}
 
 
@@ -259,14 +294,7 @@ public class SheetDataValue {
 		return lockBtn;
 	}
 
-	public JFXButton getHideBottom() {
-		if (hideBottom.getGraphic() == null) {
-			hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
-			hideBottom.setOnMouseClicked(e -> {
-				SdkComponent.hideBottom();
-			});
-		}
-
+	public static JFXButton getHideBottom() {
 		return hideBottom;
 	}
 

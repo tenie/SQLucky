@@ -79,12 +79,18 @@ public class MyBottomSheet extends  Tab{
 
 		FilteredTableView<ResultSetRowPo> tableView = SdkComponent.creatFilteredTableView(this);
 		tableData.setTable(tableView);
-
+		buttonAnchorPane = new AnchorPane();
 		// 选中的时候添加sideRight按钮
 		this.setOnSelectionChanged(event -> {
 			if( this.isSelected() ){
 				JFXButton sideRightBottomBtn = SheetDataValue.getSideRightBottom();
 				btnHbox.getChildren().add(0, sideRightBottomBtn);
+
+				// 隐藏按钮
+				JFXButton hideBottom = SheetDataValue.getHideBottom();
+				buttonAnchorPane.getChildren().add(hideBottom);
+				AnchorPane.setRightAnchor(hideBottom, 0.0);
+				AnchorPane.setTopAnchor(hideBottom, 3.0);
 			}
 		});
 	}
@@ -327,14 +333,9 @@ public class MyBottomSheet extends  Tab{
 
 	// 查询数据表格的操作按钮pane
 	public AnchorPane operatePane(List<Node> btnLs) {
-		buttonAnchorPane = new AnchorPane();
-
-
 		CommonUtils.addCssClass(buttonAnchorPane, "data-table-btn-anchor-pane");
 		buttonAnchorPane.prefHeight(25);
 
-		// 隐藏按钮
-		JFXButton hideBottom = tableData.getHideBottom();
 		// 锁
 		JFXButton lockbtn = tableData.getLockBtn();
 		JFXButton dockSideBtn =	MyBottomSheetButton.createDockBtn(this);
@@ -350,10 +351,8 @@ public class MyBottomSheet extends  Tab{
 			}
 		}
 
-		buttonAnchorPane.getChildren().addAll(btnHbox, hideBottom);
+		buttonAnchorPane.getChildren().add(btnHbox);
 
-		AnchorPane.setRightAnchor(hideBottom, 0.0);
-		AnchorPane.setTopAnchor(hideBottom, 3.0);
 		AnchorPane.setTopAnchor(btnHbox, 3.0);
 
 		this.addButtonPane(buttonAnchorPane);
