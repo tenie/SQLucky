@@ -216,7 +216,10 @@ public class TransferDataController implements Initializable {
 	// 显示 日志 输出窗口
 	private void monitorShow() {
 		Platform.runLater(() -> {
-			treePane.getChildren().remove(0);
+			if(treePane.getChildren().contains(checkTreeView)){
+				treePane.getChildren().remove(checkTreeView);
+			}
+//			treePane.getChildren().remove(0);
 			treePane.getChildren().add(spCode);
 			HBox.setHgrow(spCode, Priority.ALWAYS);
 			monBtn.setText("Hide Monitor");
@@ -316,18 +319,27 @@ public class TransferDataController implements Initializable {
 
 	private void stopAction() {
 		if (currentThread != null) {
-			currentThread.stop();
+			 soDbpo.closeConn();
+			 tarDbpo.closeConn();
+
+//			currentThread.stop();
 			btnController(false);
 		}
 	}
 
 	private void monBtnAction() {
-		Object nd = treePane.getChildren().get(0);
-		if (nd instanceof StackPane) {
-			monitorHide();
-		} else {
+		if(treePane.getChildren().contains(checkTreeView)){
 			monitorShow();
+		}else {
+			monitorHide();
 		}
+
+//		Object nd = treePane.getChildren().get(0);
+//		if (nd instanceof StackPane) {
+//			monitorHide();
+//		} else {
+//			monitorShow();
+//		}
 
 	}
 
@@ -401,9 +413,9 @@ public class TransferDataController implements Initializable {
 		setGraphicAndCss();
 		tipsLabel.setText("Tips: 同步过程, 函数, 可能依赖序列或互相依赖");
 
-		MyTextEditor sqlCodeArea = new MyTextEditor();
-//		spCode = sqlCodeArea.getCodeAreaPane();
-		CodeArea = sqlCodeArea.getCodeArea();
+//		MyTextEditor sqlCodeArea
+		spCode = new MyTextEditor();
+		CodeArea = spCode.getCodeArea();
 		setAction();
 
 		// 设置数据库下拉选的值
