@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javafx.geometry.Side;
+import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -431,17 +433,29 @@ public class SdkComponent {
 
 	}
 
+	static Region rightRegion  = IconGenerator.svgImageDefActive("caret-square-o-right");
+	static Region downRegion  = IconGenerator.svgImageDefActive("caret-square-o-down");
+	static Region leftRegion  = IconGenerator.svgImageDefActive("caret-square-o-left");
+	static Region upRegion  = IconGenerator.svgImageDefActive("caret-square-o-up");
 	// TODO 显示或隐藏 数据面板, 修改控制按钮图标
 	public static void hideShowBottomHelper(boolean isShow, JFXButton btn) {
 		if (isShow) {
-			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
+			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
+				btn.setGraphic(rightRegion);
+			}else{
+				btn.setGraphic(downRegion);
+			}
 			double val = ComponentGetter.masterDetailPane.getDividerPosition();
 			if (val > 0.85) {
 				ComponentGetter.masterDetailPane.setDividerPosition(0.6);
 			}
 			ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
 		} else {
-			btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
+				btn.setGraphic(leftRegion);
+			}else{
+				btn.setGraphic(upRegion);
+			}
 			ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
 		}
 
