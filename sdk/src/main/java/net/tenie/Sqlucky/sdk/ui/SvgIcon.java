@@ -9,6 +9,12 @@ public class SvgIcon {
 	static {
 		svgObj.put("NULL", "");
 
+
+		svgObj.put("zero-position-right",
+				"M8 12v1h1v-1H8zm-1 0v1H6v-1h1zm-2 0v1H4v-1h1zm-2 0v1H2v-1h1zM9 0v1H8V0h1zM7 0v1H6V0h1zM5 0v1H4V0h1zM3 0v1H2V0h1zM1 6v1H0V6h1zm0 6v1H0v-1h1zM1 0v1H0V0h1zm0 10v1H0v-1h1zm0-2v1H0V8h1zm0-4v1H0V4h1zm0-2v1H0V2h1zm11.906-2v13h-2.812V0h2.812z");
+		svgObj.put("zero-position-bottom",
+				"M1 8H0v1h1V8zm0-1H0V6h1v1zm0-2H0V4h1v1zm0-2H0V2h1v1zm12 6h-1V8h1v1zm0-2h-1V6h1v1zm0-2h-1V4h1v1zm0-2h-1V2h1v1zM7 1H6V0h1v1zM1 1H0V0h1v1zm12 0h-1V0h1v1zM3 1H2V0h1v1zm2 0H4V0h1v1zm4 0H8V0h1v1zm2 0h-1V0h1v1zm2 11.906H0v-2.812h13v2.812z");
+
 		svgObj.put("material-filter-none",
 				"M4 8H0v32c0 2.21 1.79 4 4 4h32v-4H4V8zm36-8H12C9.79 0 8 1.79 8 4v28c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V4c0-2.21-1.79-4-4-4zm0 32H12V4h28v28z");
 		svgObj.put("SQL",

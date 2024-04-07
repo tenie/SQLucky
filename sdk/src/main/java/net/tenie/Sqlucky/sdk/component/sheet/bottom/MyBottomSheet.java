@@ -52,6 +52,8 @@ public class MyBottomSheet extends  Tab{
 	// 按钮面板
 	AnchorPane buttonAnchorPane ;
 
+	// 按钮摆放的容器
+	HBox btnHbox = new HBox();
 	public void clean() {
 		if (tableData != null) {
 			this.tableData.clean();
@@ -77,6 +79,14 @@ public class MyBottomSheet extends  Tab{
 
 		FilteredTableView<ResultSetRowPo> tableView = SdkComponent.creatFilteredTableView(this);
 		tableData.setTable(tableView);
+
+		// 选中的时候添加sideRight按钮
+		this.setOnSelectionChanged(event -> {
+			if( this.isSelected() ){
+				JFXButton sideRightBottomBtn = SheetDataValue.getSideRightBottom();
+				btnHbox.getChildren().add(0, sideRightBottomBtn);
+			}
+		});
 	}
 
 
@@ -318,8 +328,7 @@ public class MyBottomSheet extends  Tab{
 	// 查询数据表格的操作按钮pane
 	public AnchorPane operatePane(List<Node> btnLs) {
 		buttonAnchorPane = new AnchorPane();
-		// 按钮摆放的容器
-		HBox btnHbox = new HBox();
+
 
 		CommonUtils.addCssClass(buttonAnchorPane, "data-table-btn-anchor-pane");
 		buttonAnchorPane.prefHeight(25);
