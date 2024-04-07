@@ -6,6 +6,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javafx.geometry.Side;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
@@ -52,9 +57,38 @@ public class SheetDataValue {
 	// tableView
 	private FilteredTableView<ResultSetRowPo> dbValTable;
 
-	private JFXButton saveBtn = new JFXButton();
-	private JFXButton lockBtn = new JFXButton();
-	private JFXButton hideBottom = new JFXButton();
+	private JFXButton saveBtn ;
+	private JFXButton lockBtn ;
+	private JFXButton hideBottom;
+
+	private static JFXButton sideRightBottom ;
+	static {
+		// 底部sheet 位置切换操作
+		Region zeroPositionBottom = IconGenerator.svgImageDefActive("zero-position-bottom");
+		Region zeroPositionRight = IconGenerator.svgImageDefActive("zero-position-right");
+		Tooltip bottomTootip = MyTooltipTool.instance("Move Sheet To Bottom");
+		Tooltip rightTootip = MyTooltipTool.instance("Move Sheet To Right");
+		sideRightBottom = new JFXButton();
+		sideRightBottom.setGraphic(zeroPositionRight);
+		sideRightBottom.setTooltip(rightTootip);
+		sideRightBottom.setOnAction(e->{
+			var masterDetailPane =	ComponentGetter.masterDetailPane ;
+			if( masterDetailPane.getDetailSide().equals(Side.RIGHT) ){
+				sideRightBottom.setGraphic(zeroPositionRight);
+				masterDetailPane.setDetailSide(Side.BOTTOM);
+
+				sideRightBottom.setTooltip(rightTootip);
+				masterDetailPane.setDividerPosition(0.6);
+			}else {
+				sideRightBottom.setGraphic(zeroPositionBottom);
+				masterDetailPane.setDetailSide(Side.RIGHT);
+
+				sideRightBottom.setTooltip(bottomTootip);
+				masterDetailPane.setDividerPosition(0.7);
+			}
+
+		});
+	}
 
 	public void clean() {
 		if (dbValTable != null) {
@@ -81,6 +115,12 @@ public class SheetDataValue {
 		saveBtn = null;
 		lockBtn = null;
 		hideBottom = null;
+	}
+
+	public SheetDataValue() {
+		saveBtn = new JFXButton();
+		lockBtn = new JFXButton();
+		hideBottom = new JFXButton();
 	}
 
 
@@ -470,4 +510,7 @@ public class SheetDataValue {
 		return colssInfoList;
 	}
 
+	public static JFXButton getSideRightBottom() {
+		return sideRightBottom;
+	}
 }
