@@ -37,9 +37,9 @@ public class MyTextEditor extends SqluckyEditor {
 	public MyTextEditor() {
 		codeArea = new MyCodeArea(this);
 		this.init(codeArea);
-		this.getChildren().add(codeArea);
-		VBox.setVgrow(codeArea, Priority.ALWAYS);
-		this.getStyleClass().add("my-tag");
+//		this.getChildren().add(codeArea);
+//		VBox.setVgrow(codeArea, Priority.ALWAYS);
+//		this.getStyleClass().add("my-tag");
 		// 行号主题色
 		changeCodeAreaLineNoThemeHelper();
 	}
