@@ -171,6 +171,9 @@ public class HighLightingEditor extends SqluckyEditor {
 				// 文本缩进
 				if (e.getCode() == KeyCode.TAB) {
 					codeAreaTab(e, codeArea);
+				} else if (e.isControlDown() && e.getCode() == KeyCode.A) {
+					codeArea.selectAll();
+					e.consume();
 				} else if (e.getCode() == KeyCode.A) {
 					codeAreaCtrlShiftA(e);
 				} else if (e.getCode() == KeyCode.E) {
