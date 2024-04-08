@@ -50,10 +50,10 @@ public class MyBottomSheet extends  Tab{
 	// 摆放按钮, view等容器
 	private VBox tabVBox = new VBox();
 	// 按钮面板
-	AnchorPane buttonAnchorPane ;
+	private	AnchorPane buttonAnchorPane ;
 
 	// 按钮摆放的容器
-	HBox btnHbox = new HBox();
+	private HBox btnHbox = new HBox();
 	public void clean() {
 		if (tableData != null) {
 			this.tableData.clean();
@@ -83,11 +83,11 @@ public class MyBottomSheet extends  Tab{
 		// 选中的时候添加sideRight按钮
 		this.setOnSelectionChanged(event -> {
 			if( this.isSelected() ){
-				JFXButton sideRightBottomBtn = SheetDataValue.getSideRightBottom();
+				JFXButton sideRightBottomBtn = SheetDataValue.sideRightBottom;
 				btnHbox.getChildren().add(0, sideRightBottomBtn);
 
 				// 隐藏按钮
-				JFXButton hideBottom = SheetDataValue.getHideBottom();
+				JFXButton hideBottom = SheetDataValue.hideBottom;
 				buttonAnchorPane.getChildren().add(hideBottom);
 				AnchorPane.setRightAnchor(hideBottom, 0.0);
 				AnchorPane.setTopAnchor(hideBottom, 3.0);
@@ -577,5 +577,9 @@ public class MyBottomSheet extends  Tab{
 
 	public void setTabVBox(VBox tabVBox) {
 		this.tabVBox = tabVBox;
+	}
+
+	public HBox getBtnHbox() {
+		return btnHbox;
 	}
 }
