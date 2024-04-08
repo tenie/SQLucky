@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.component.sheet.bottom;
 
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -271,7 +272,17 @@ public class MyBottomSheetAction {
         DockSideWindow dsw = new DockSideWindow();
         VBox vb = (VBox) sheet.getContent();
         tableData.getLockBtn().setDisable(true);
-        tableData.getHideBottom().setDisable(true);
+
+        // 移除 隐藏按钮
+        JFXButton hideBottom = SheetDataValue.hideBottom;
+        if(sheet.getButtonAnchorPane().getChildren().contains(hideBottom)){
+            sheet.getButtonAnchorPane().getChildren().remove(hideBottom);
+        }
+        // 移除 side 按钮
+        JFXButton sideBottom = SheetDataValue.sideRightBottom;
+        if(sheet.getBtnHbox().getChildren().contains(sideBottom)){
+            sheet.getBtnHbox().getChildren().remove(sideBottom);
+        }
 
         sheet.setDockSide(true);
 //        isDockSide = true;

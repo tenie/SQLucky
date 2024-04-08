@@ -42,7 +42,6 @@ public class SheetDataValue {
 
 	// sql语句中 表的信息对象
 	private List<TablePo> sqlTableInfoList;
-//	private String connName;
 	private boolean isLock = false;
 	private SqluckyConnector dbConnection;
 	private Connection conn;
@@ -61,9 +60,10 @@ public class SheetDataValue {
 
 	private JFXButton saveBtn ;
 	private JFXButton lockBtn ;
-	private static JFXButton hideBottom;
 
-	private static JFXButton sideRightBottom ;
+	public static JFXButton hideBottom = new JFXButton();
+
+	public static JFXButton sideRightBottom = new JFXButton();;
 	static {
 		// 底部sheet 位置切换操作
 		Region zeroPositionBottom = IconGenerator.svgImageDefActive("zero-position-bottom");
@@ -80,7 +80,14 @@ public class SheetDataValue {
 		Region rightRegion2 =  IconGenerator.svgImageDefActive("caret-square-o-right");
 		Region leftRegion2 =  IconGenerator.svgImageDefActive("caret-square-o-left");
 
-		sideRightBottom = new JFXButton();
+
+		// 隐藏按钮
+
+		hideBottom.setGraphic(downRegion);
+		hideBottom.setOnMouseClicked(e -> {
+			SdkComponent.hideBottom();
+		});
+
 		sideRightBottom.setGraphic(zeroPositionRight);
 		sideRightBottom.setTooltip(rightTootip);
 		sideRightBottom.setOnAction(e->{
@@ -95,9 +102,9 @@ public class SheetDataValue {
 				masterDetailPane.setDividerPosition(0.6);
 
 				// 隐藏按钮
-				JFXButton hideBottom = SheetDataValue.getHideBottom();
 				hideBottom.setGraphic(downRegion);
 
+				// 全局的隐藏按钮
 				CommonButtons.hideBottom.setGraphic(leftRegion2);
 
 			}else {
@@ -109,20 +116,15 @@ public class SheetDataValue {
 				masterDetailPane.setDividerPosition(0.7);
 
 				// 隐藏按钮
-				JFXButton hideBottom = SheetDataValue.getHideBottom();
 				hideBottom.setGraphic(rightRegion);
+				// 全局的隐藏按钮
 				CommonButtons.hideBottom.setGraphic(rightRegion2);
 
 			}
 
 		});
 
-		// 隐藏按钮
-		hideBottom = new JFXButton();
-		hideBottom.setGraphic(downRegion);
-		hideBottom.setOnMouseClicked(e -> {
-			SdkComponent.hideBottom();
-		});
+
 	}
 
 	public void clean() {
@@ -149,13 +151,11 @@ public class SheetDataValue {
 
 		saveBtn = null;
 		lockBtn = null;
-		hideBottom = null;
 	}
 
 	public SheetDataValue() {
 		saveBtn = new JFXButton();
 		lockBtn = new JFXButton();
-//		hideBottom = new JFXButton();
 	}
 
 
@@ -294,9 +294,7 @@ public class SheetDataValue {
 		return lockBtn;
 	}
 
-	public static JFXButton getHideBottom() {
-		return hideBottom;
-	}
+
 
 	/**
 	 * 锁btn
@@ -538,7 +536,4 @@ public class SheetDataValue {
 		return colssInfoList;
 	}
 
-	public static JFXButton getSideRightBottom() {
-		return sideRightBottom;
-	}
 }
