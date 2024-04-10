@@ -84,13 +84,19 @@ public class MyBottomSheet extends  Tab{
 		this.setOnSelectionChanged(event -> {
 			if( this.isSelected() ){
 				JFXButton sideRightBottomBtn = SheetDataValue.sideRightBottom;
-				btnHbox.getChildren().add(0, sideRightBottomBtn);
+				if(	! btnHbox.getChildren().contains(sideRightBottomBtn)){
+					btnHbox.getChildren().add(0, sideRightBottomBtn);
+				}
+
 
 				// 隐藏按钮
 				JFXButton hideBottom = SheetDataValue.hideBottom;
-				buttonAnchorPane.getChildren().add(hideBottom);
-				AnchorPane.setRightAnchor(hideBottom, 0.0);
-				AnchorPane.setTopAnchor(hideBottom, 3.0);
+				if(! buttonAnchorPane.getChildren().contains(hideBottom)){
+					buttonAnchorPane.getChildren().add(hideBottom);
+					AnchorPane.setRightAnchor(hideBottom, 0.0);
+					AnchorPane.setTopAnchor(hideBottom, 3.0);
+				}
+
 			}
 		});
 	}

@@ -115,15 +115,15 @@ public class AppWindow extends VBox{
 		ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/yellow/TableView-yellow.css").toExternalForm());
 		ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/yellow/tabPane-yellow.css").toExternalForm());
 
-		ComponentGetter.INFO = new Label("Info");
+		ComponentGetter.INFO = new Label("");  //Info
 		ComponentGetter.INFO.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
 
-		ComponentGetter.ABOUT = new Label("About");
+		ComponentGetter.ABOUT = new Label(""); // About
 		ComponentGetter.ABOUT.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
 
-		ComponentGetter.WARN = new Label("Warn");
+		ComponentGetter.WARN = new Label(""); // Warn
 		ComponentGetter.WARN.setGraphic(IconGenerator.svgImage("info-circle", "#FFD700"));
-		ComponentGetter.ERROR = new Label("Error");
+		ComponentGetter.ERROR = new Label(""); // Error
 		ComponentGetter.ERROR.setGraphic(IconGenerator.svgImage("info-circle", "red"));
 		ComponentGetter.EMPTY = new Label("");
 
