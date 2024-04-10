@@ -177,26 +177,16 @@ public class DialogTools {
 
 	// TODO
 	public static void showExecWindow(String title, String containTxt, Consumer<String> caller) {
-//		VBox vb = new VBox();
 		TextField tf1 = new TextField("");
 		tf1.getStyleClass().add("myFindTextField");
 		tf1.setEditable(true);
 		tf1.setPrefWidth(500);
-		// tf1.setStyle("-fx-background-color: transparent;");
 		tf1.setText(containTxt);
 		tf1.setPrefHeight(40);
-		tf1.setFocusTraversable(false);
+		tf1.setFocusTraversable(true);
 
 		Label tit = new Label(title);
-//		vb.getChildren().add(tit);
-//		vb.getChildren().add(tf1);
-//		vb.setPrefWidth(500);
-//		vb.setPadding(new Insets(0,20,20,20));
-//		vb.setPrefHeight(100);
-//		vb.maxHeight(100);
-//		vb.maxWidth(500);
-//		ModalDialog.ModalDialogAppCallConsumer(vb, title, caller); 
-//		vb.getStyleClass().add("myAlert");
+
 		Stage stage = new Stage();
 		
 		JFXButton btn = new JFXButton("Cancel");
@@ -213,17 +203,10 @@ public class DialogTools {
 			stage.close();
 		});
 
-//		AnchorPane pn = new AnchorPane();
-//		pn.getChildren().addAll(okbtn, btn);
-//		AnchorPane.setRightAnchor(btn, 0.0);
-//		AnchorPane.setRightAnchor(okbtn, 60.0);
-//		vb.getChildren().add(pn);
-		
+
 		List<Node> nds = new ArrayList<>();
 		nds.add(tit);
 		nds.add(tf1);
-//		nds.add(pn);
-//		nds.add(text2);
 		
 		List<Node> btns = new ArrayList<>();
 		btns.add(btn);
@@ -232,10 +215,30 @@ public class DialogTools {
 		
 		VBox vb = DialogTools.getSceneVbox(stage, ComponentGetter.INFO, nds, btns);
 		Scene scene = new Scene(vb);
-//		stage.initModality(Modality.APPLICATION_MODAL);
+		stage.setOnShowing(e->{
+			tf1.requestFocus();
+		});
 		stage.setTitle(title);
 		stage.setScene(scene);
-		DialogTools.setSceneAndShow(scene, stage, false);
+
+		stage.setMaximized(false);
+		stage.setResizable(false);
+		stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
+		CommonUtils.loadCss(scene);
+
+		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+		KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
+		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+		scene.getAccelerators().put(escbtn, () -> {
+			stage.close();
+		});
+		scene.getAccelerators().put(enterbtn, () -> {
+			okbtn.fire();
+		});
+		scene.getAccelerators().put(spacebtn, () -> {
+			stage.close();
+		});
+		stage.show();
 	}
 
 	// javafx 默认的确认对话框

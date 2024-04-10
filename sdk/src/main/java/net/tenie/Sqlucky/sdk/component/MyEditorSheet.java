@@ -334,18 +334,16 @@ public class MyEditorSheet extends Tab {
 		});
 
 		//
-		MenuItem rename = new MenuItem("Set Name");
+		MenuItem rename = new MenuItem("Rename");
 		rename.setDisable(true);
 		rename.setOnAction(e -> {
 			Consumer<String> caller = x -> {
 				if (StrUtils.isNullOrEmpty(x.trim()))
 					return;
 				this.setTitle(x);
-				this.documentPo.setText(x);
+				this.documentPo.setTitle(x);
 			};
-			DialogTools.showExecWindow("Name", "", caller);
-
-
+			DialogTools.showExecWindow("New Name", this.documentPo.getTitle().get(), caller);
 		});
 
 		contextMenu.getItems().addAll(closeAll, closeOther, closeRight, closeLeft, new SeparatorMenuItem(), rename);
