@@ -2,6 +2,7 @@ package net.tenie.Sqlucky.sdk.component;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -403,15 +404,20 @@ public class MyEditorSheetHelper {
 	// 当前行的 字符串文本;
 	public static String getCurrentLineText() {
 		CodeArea code = getCodeArea();
-		String st = code.getSelectedText();
 		String rs = "";
+		if(code ==  null){
+			return rs;
+		}
+		String st = code.getSelectedText();
+
 		if (StrUtils.isNotNullOrEmpty(st)) {
 			rs = getSelectLineText();
 		} else {
 			int idx = code.getCurrentParagraph();
-			Paragraph val = code.getParagraph(idx);
+			Paragraph<Collection<String>, String, Collection<String>> val = code.getParagraph(idx);
 			List<String> ls = val.getSegments();
-			rs = ls.get(0);
+			rs = ls.getFirst();
+
 		}
 
 		return rs;

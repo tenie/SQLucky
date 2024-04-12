@@ -174,6 +174,12 @@ public class HighLightingEditor extends SqluckyEditor {
 				} else if (e.isControlDown() && e.getCode() == KeyCode.A) {
 					codeArea.selectAll();
 					e.consume();
+				} else if ( (e.isControlDown()|| e.isMetaDown()) &&
+						             e.getCode() == KeyCode.X) {
+					// 当没有选中文本的时候, 删除当前行
+					 if (codeArea.getSelectedText().isEmpty()){
+						 codeArea.selectLine();
+					 }
 				} else if (e.getCode() == KeyCode.A) {
 					codeAreaCtrlShiftA(e);
 				} else if (e.getCode() == KeyCode.E) {
