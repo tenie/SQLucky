@@ -364,6 +364,7 @@ public class FindReplaceTextBox extends  VBox {
 
 	public void setText(String findText){
 		textField.setText(findText);
+		textField.requestFocus();
 	}
 
 	public void createReplacePane(TextField findtf, JFXCheckBox cb) {

@@ -108,12 +108,6 @@ public class HighLightingEditor extends SqluckyEditor {
 
 		codeArea = new MyCodeArea(this);
 		this.init(codeArea);
-//		VirtualizedScrollPane vp = new VirtualizedScrollPane<>(codeArea);
-//		this.getChildren().add(vp);
-////		this.getChildren().add(codeArea);
-////		VBox.setVgrow(codeArea, Priority.ALWAYS);
-//		VBox.setVgrow(vp, Priority.ALWAYS);
-//		this.getStyleClass().add("my-tag");
 
 		codeArea.textProperty().addListener((a,b,c)->{
 			if(c.isEmpty() &&  documentPo != null
@@ -168,8 +162,13 @@ public class HighLightingEditor extends SqluckyEditor {
 			if (e.getCode() != KeyCode.SHIFT &&
 					e.getCode() != KeyCode.CONTROL &&
 					e.getCode() != KeyCode.ALT) {
-				// 文本缩进
-				if (e.getCode() == KeyCode.TAB) {
+
+				// 添加新行
+				if (e.getCode() == KeyCode.ENTER) {
+					if (!(e.isControlDown() || e.isAltDown() || e.isShiftDown() || e.isShortcutDown())) {
+						addNewLine(e);
+					}
+				}else if (e.getCode() == KeyCode.TAB) { // 文本缩进
 					codeAreaTab(e, codeArea);
 				} else if (e.isControlDown() && e.getCode() == KeyCode.A) {
 					codeArea.selectAll();
@@ -179,6 +178,10 @@ public class HighLightingEditor extends SqluckyEditor {
 					// 当没有选中文本的时候, 删除当前行
 					 if (codeArea.getSelectedText().isEmpty()){
 						 codeArea.selectLine();
+						 var range =  codeArea.getSelection();
+						 IndexRange delIndexRange = new IndexRange(range.getStart()-1, range.getEnd());
+						 codeArea.deleteText(delIndexRange);
+						 e.consume();
 					 }
 				} else if (e.getCode() == KeyCode.A) {
 					codeAreaCtrlShiftA(e);
@@ -248,11 +251,6 @@ public class HighLightingEditor extends SqluckyEditor {
 
 					delayHighLighting(this::textChangeAfterAction, 600, 0);
 				}
-			} else if (e.getCode() == KeyCode.ENTER) {
-				if (!(e.isControlDown() || e.isAltDown() || e.isShiftDown() || e.isShortcutDown())) {
-					addNewLine(e);
-				}
-
 			}
 		});
 		// TODO 输入事件
@@ -1053,13 +1051,16 @@ public class HighLightingEditor extends SqluckyEditor {
 	public static void codeAreaTab(KeyEvent e, CodeArea codeArea) {
 		if (codeArea.getSelectedText().contains("\n")) {
 			logger.info("文本缩进 : " + e.getCode());
-			e.consume();
+//			e.consume();
 			if (e.isShiftDown()) {
 				HighLightingEditorUtils.minus4Space();
 			} else {
 				HighLightingEditorUtils.add4Space();
 			}
+		}else{
+			HighLightingEditorUtils.add4Space();
 		}
+		e.consume();
 	}
 
 	private ArrayBlockingQueue<Consumer<Integer>> queue = new ArrayBlockingQueue<>(1);
