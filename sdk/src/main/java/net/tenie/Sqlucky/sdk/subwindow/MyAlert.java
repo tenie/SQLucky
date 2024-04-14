@@ -21,7 +21,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -196,7 +195,7 @@ public class MyAlert {
 		Label question = new Label(promptInfo);
 		// code
 		MyTextEditor myTextArea = new MyTextEditor();
-		myTextArea.setCodeArea(code, false);
+		myTextArea.initCodeArea(code, false);
 		myTextArea.setStyle("-fx-background-color: transparent;");
 
 		List<Node> nds = new ArrayList<>();
@@ -246,7 +245,7 @@ public class MyAlert {
 
 	public static void myConfirmation(String promptInfo, Stage stage, List<Node> btns, boolean isWait) {
 		MyNoLineNumberEditor myTextArea = new MyNoLineNumberEditor();
-        myTextArea.setCodeArea(promptInfo, false);
+        myTextArea.initCodeArea(promptInfo, false);
 		myTextArea.setStyle("-fx-background-color: transparent;");
 
 		List<Node> nds = new ArrayList<>();
@@ -370,7 +369,7 @@ public class MyAlert {
 			Label titleLabel = new Label(title);
 			titleLabel.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
 			MyTextEditor myTextArea = new MyTextEditor();
-			myTextArea.setCodeArea(text, false);
+			myTextArea.initCodeArea(text, false);
 			myTextArea.setStyle("-fx-background-color: transparent;");
 
 			List<Node> nds = new ArrayList<>();

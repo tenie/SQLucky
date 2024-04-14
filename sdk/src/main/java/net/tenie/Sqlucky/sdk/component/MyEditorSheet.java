@@ -104,8 +104,10 @@ public class MyEditorSheet extends Tab {
 					setSqluckyEditor(sqluckyEditor);
 
 				}
-
-				isInit = true;
+                if (sqluckyEditor != null) {
+                    sqluckyEditor.setSheet(this);
+                }
+                isInit = true;
 
 			}
 //			if(isSel){

@@ -196,6 +196,14 @@ public class HighLightingEditorUtils {
 		code.selectRange(begin, over + (count * 4));
 	}
 
+	// 添加tab符号
+	public static void onlyAdd4Space() {
+		String replaceStr2 = "    ";
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
+		int start = code.getAnchor();
+		code.insertText(start, replaceStr2);
+	}
+
 	// 根据括号( 寻找配对的 结束)括号所在的位置.
 	public static int findBeginStringRange(String text, int start, String pb, String pe) {
 		String startStr = text.substring(start).toUpperCase();
