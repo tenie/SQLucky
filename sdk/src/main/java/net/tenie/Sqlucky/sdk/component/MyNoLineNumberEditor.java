@@ -19,129 +19,13 @@ import org.apache.logging.log4j.Logger;
  */
 public class MyNoLineNumberEditor extends SqluckyEditor {
     private static Logger logger = LogManager.getLogger(MyNoLineNumberEditor.class);
-    private MyCodeArea codeArea;
-    private CodeAreaHighLightingHelper highLightingHelper;
+
 
     public MyNoLineNumberEditor() {
         codeArea = new MyCodeArea(this);
         this.init(codeArea);
         codeArea.setMylineNumber(null); // 没有行号
         codeArea.getStyleClass().add("styled-text-area-no-line-number"); // 没有背景色
-//        this.getChildren().add(codeArea);
-//        VBox.setVgrow(codeArea, Priority.ALWAYS);
-//        this.getStyleClass().add("my-tag");
-    }
-
-    @Override
-    public void hideAutoComplete() {
-    }
-
-    @Override
-    public void showAutoComplete(double x, double y, String str) {
-    }
-
-    @Override
-    public void nextBookmark(boolean tf) {
-        codeArea.getMylineNumber().nextBookmark(tf);
-    }
-
-    //	@Override
-    public void highLighting(int begin) {
-        Platform.runLater(() -> {
-            try {
-                if (highLightingHelper == null) {
-                    highLightingHelper = new CodeAreaHighLightingHelper();
-                }
-
-                highLightingHelper.applyHighlighting(codeArea, begin);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-    }
-
-    @Override
-    public void highLighting() {
-        highLighting(0);
-    }
-
-    @Override
-    public void highLighting(String str) {
-        Platform.runLater(() -> {
-            try {
-                if (highLightingHelper == null) {
-                    highLightingHelper = new CodeAreaHighLightingHelper();
-                }
-                highLightingHelper.applyFindWordHighlighting(codeArea, str);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-    }
-
-    @Override
-    public void errorHighLighting(int begin, String str) {
-    }
-
-    @Override
-    public void changeCodeAreaLineNoThemeHelper() {
-
-    }
-
-    @Override
-    public MyCodeArea getCodeArea() {
-        return codeArea;
-    }
-
-    @Override
-    public void callPopup() {
-    }
-
-    @Override
-    public void codePopup(KeyEvent e) {
-    }
-
-
-    @Override
-    public void setContextMenu(ContextMenu cm) {
-    }
-
-    @Override
-    public void delLineOrSelectTxt() {
-    }
-
-    @Override
-    public void moveAnchorToLineBegin() {
-    }
-
-    @Override
-    public void moveAnchorToLineEnd() {
-    }
-
-    @Override
-    public void delAnchorBeforeWord() {
-    }
-
-    @Override
-    public void delAnchorBeforeChar() {
-    }
-
-    @Override
-    public void delAnchorBeforeString() {
-    }
-
-    @Override
-    public void delAnchorAfterWord() {
-    }
-
-    @Override
-    public void delAnchorAfterChar() {
-    }
-
-    @Override
-    public void delAnchorAfterString() {
     }
 
 

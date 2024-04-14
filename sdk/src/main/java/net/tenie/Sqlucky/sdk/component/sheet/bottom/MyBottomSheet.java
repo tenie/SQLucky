@@ -235,7 +235,7 @@ public class MyBottomSheet extends  Tab{
 //		mtb.setSqlArea(sqlArea);
 //		VBox vb = new VBox();
 		String ddl = table.getDdl();
-		sqlArea.setCodeArea(ddl, false);
+		sqlArea.initCodeArea(ddl, false);
 		// 表格上面的按钮
 		List<Node> btnLs = new ArrayList<>();
 		JFXButton sbtn = createSelectBtn(sqluckyConn, table.getTableSchema(), name);
@@ -278,7 +278,7 @@ public class MyBottomSheet extends  Tab{
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
 //		mtb.setSqlArea(sqlArea);
 		String ddl = table.getDdl();
-		sqlArea.setCodeArea(ddl, false);
+		sqlArea.initCodeArea(ddl, false);
 		// 表格上面的按钮
 		List<Node> btnLs = mtb.tableDDLOptionBtns(sqluckyConn, sqlArea, table);
 		mtb.operatePane(btnLs);
@@ -309,7 +309,7 @@ public class MyBottomSheet extends  Tab{
 
 	// 数据tab中的组件
 	public static void DDLBox(SqluckyConnector sqluckyConn, MyBottomSheet mtb, String ddl , SqluckyEditor sqlArea ) {
-		sqlArea.setCodeArea(ddl, false);
+		sqlArea.initCodeArea(ddl, false);
 		// 表格上面的按钮, 暂时先不显示操作按钮
 //		List<Node> btnLs = mtb.DDLOptionBtns(sqluckyConn, ddl, isRunFunc, isProc, name, isSelect, vb, sp, null);
 		mtb.operatePane(null); // 没有操作按钮
