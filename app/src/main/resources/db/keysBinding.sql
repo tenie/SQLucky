@@ -76,3 +76,6 @@ values("Delete all characters after the cursor", "Ctrl + Shift + K");
 
 insert into KEYS_BINDING (ACTION_NAME, BINDING)
 values("Select Line Text", "Ctrl + G");
+
+insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show Data View Panel', 'Ctrl + esc');
+insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show DB Info Panel', 'Ctrl + F1');

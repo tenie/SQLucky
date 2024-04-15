@@ -414,7 +414,8 @@ public class MenuBarContainer extends MenuBar{
 		KeyBindingCache.menuItemBinding(fontSizeMinus);
 		KeyBindingCache.menuItemBinding(fontSizePlus);
 		KeyBindingCache.menuItemBinding(hideLeftBottom);
-
+		KeyBindingCache.menuItemBinding(hideBottom);
+		KeyBindingCache.menuItemBinding(hideLeft);
 		return mn;
 	}
 

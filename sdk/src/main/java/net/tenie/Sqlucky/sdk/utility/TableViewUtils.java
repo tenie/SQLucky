@@ -436,10 +436,7 @@ public class TableViewUtils {
 //				return;
 //			}
 
-			boolean showtab = true;
-			if (showtab) {
-				myBottomSheet.showInfoDelayRemoveTab(-1, true);
-			}
+			myBottomSheet.showInfoDelayRemoveTab(-1, true);
 
 		}
 	}

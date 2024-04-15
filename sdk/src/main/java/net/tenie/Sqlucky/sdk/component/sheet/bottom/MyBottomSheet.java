@@ -81,22 +81,17 @@ public class MyBottomSheet extends  Tab{
 		tableData.setTable(tableView);
 		buttonAnchorPane = new AnchorPane();
 		// 选中的时候添加sideRight按钮
-		this.setOnSelectionChanged(event -> {
-			if( this.isSelected() ){
+		this.selectedProperty().addListener((a,b,c)-> {
+			if (c) {
 				JFXButton sideRightBottomBtn = SheetDataValue.sideRightBottom;
-				if(	! btnHbox.getChildren().contains(sideRightBottomBtn)){
-					btnHbox.getChildren().add(0, sideRightBottomBtn);
-				}
-
-
 				// 隐藏按钮
 				JFXButton hideBottom = SheetDataValue.hideBottom;
-				if(! buttonAnchorPane.getChildren().contains(hideBottom)){
-					buttonAnchorPane.getChildren().add(hideBottom);
-					AnchorPane.setRightAnchor(hideBottom, 0.0);
-					AnchorPane.setTopAnchor(hideBottom, 3.0);
+				if (!btnHbox.getChildren().contains(sideRightBottomBtn)) {
+					btnHbox.getChildren().add(0, sideRightBottomBtn);
 				}
-
+				if (!btnHbox.getChildren().contains(hideBottom)) {
+					btnHbox.getChildren().add(0, hideBottom);
+				}
 			}
 		});
 	}

@@ -17,6 +17,9 @@ public class UpdateScript {
 		sqlMap.put("PLUGIN_INFO添加file_name", "ALTER TABLE PLUGIN_INFO ADD    FILE_NAME varchar(200)");
 		sqlMap.put("PLUGIN_INFO添加file_name2", "ALTER TABLE PLUGIN_INFO ADD    FILE_NAME2 varchar(200)");
 		sqlMap.put("APP_CONFIG 添加 PLUGIN_NAME", "ALTER TABLE APP_CONFIG ADD  PLUGIN_NAME VARCHAR(200)");
+		sqlMap.put("add key press : Hide/Show Data View Panel ", "insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show Data View Panel', 'Ctrl + esc');");
+		sqlMap.put("add key press : Hide/Show DB Info Panel ", "insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show DB Info Panel', 'Ctrl + F1');");
+
 
 	}
 
