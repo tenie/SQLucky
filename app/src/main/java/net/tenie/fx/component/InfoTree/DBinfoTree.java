@@ -162,7 +162,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 							if (scp != null) {
 								boolean autoConn = scp.getAutoConnect();
 								if (autoConn) {
-									DBinfoTree.openConn(treeItem);
+									DBinfoTree.openConn(treeItem, false);
 								}
 							}
 						});
@@ -200,7 +200,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 						if (scp != null) {
 							boolean autoConn = scp.getAutoConnect();
 							if (autoConn) {
-								DBinfoTree.openConn(treeItem);
+								DBinfoTree.openConn(treeItem, false);
 							}
 						}
 					});
@@ -283,7 +283,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 				return;
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
-				DBinfoTree.openConn(item);
+				DBinfoTree.openConn(item, false);
 				CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
 				if (codeArea != null) {
 					codeArea.requestFocus();
@@ -594,9 +594,13 @@ public class DBinfoTree extends SqluckyTitledPane {
 //
 //		return dbTitledPane;
 //	}
-	
-	
-	public static void openConn(TreeItem<TreeNodePo> item) {
+
+	/**
+	 * 打开数据库链接
+	 * @param item
+	 * @param silent 是否静默, 为false, 打开失败会有弹窗警告
+	 */
+	public static void openConn(TreeItem<TreeNodePo> item, boolean silent) {
 		// 判断 节点是否已经有子节点
 		if (item.getChildren().size() == 0) {
 
@@ -629,8 +633,10 @@ public class DBinfoTree extends SqluckyTitledPane {
 							});
 						} else {
 							Platform.runLater(() -> {
-								MyAlert.errorAlert(
-										" Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
+								if(! silent){
+									MyAlert.errorAlert(
+											" Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
+								}
 								item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
 								AppWindow.treeView.refresh();
 
@@ -641,7 +647,9 @@ public class DBinfoTree extends SqluckyTitledPane {
 						e.printStackTrace();
 						logger.debug(e.getMessage());
 						Platform.runLater(() -> {
-							MyAlert.errorAlert(" Error !");
+							if(! silent){
+								MyAlert.errorAlert(" Error !");
+							}
 							item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
 							AppWindow.treeView.refresh();
 						});
