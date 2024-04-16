@@ -15,6 +15,7 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.sql.SqlUtils;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
@@ -23,6 +24,7 @@ import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.window.ConnectionEditor;
 
 /**
  * 
@@ -149,6 +151,16 @@ public class ButtonFactory {
 		});
 		// 下拉选, 未连接的连接先打开数据库连接
 		connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
+//		点击的时候判断一下当前链接是不是链接状态
+		connsComboBox.setOnMouseClicked(event -> {
+
+			Label lb = connsComboBox.getSelectionModel().getSelectedItem();
+			String connName = lb.getText();
+			SqluckyConnector sqluckyConnector = DBConns.get(connName);
+			if( ! sqluckyConnector.isAlive()){
+		      ConnectionEditor.silentOpenConn(connName);
+			}
+		});
 		ComponentGetter.connComboBox = connsComboBox;
 
 		// sql 执行读取行数

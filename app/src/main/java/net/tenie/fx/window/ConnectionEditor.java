@@ -94,7 +94,7 @@ public class ConnectionEditor {
 			if (editLinkStatus) {
 				Platform.runLater(() -> {
 					var item = DBinfoTree.getTrewViewCurrentItem();
-					DBinfoTree.openConn(item);
+					DBinfoTree.openConn(item, false);
 				});
 			}
 		});
@@ -497,14 +497,18 @@ public class ConnectionEditor {
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
 			if(val == null ) return;
-			DBinfoTree.openConn(val);
+			DBinfoTree.openConn(val, false);
 		}
 	}
-
+	// 静默打开数据库链接
+	public static void silentOpenConn(String name){
+		TreeItem<TreeNodePo> item = DBinfoTree.getTreeItemByName(name);
+		DBinfoTree.openConn(item, true);
+	}
 	// 打开连接
 	public static void openConn(String name) {
 		TreeItem<TreeNodePo> item = DBinfoTree.getTreeItemByName(name);
-		DBinfoTree.openConn(item);
+		DBinfoTree.openConn(item, false);
 	}
 
 	public static Button createTestBtn(Function<String, SqluckyConnector> assembleSqlCon) {
