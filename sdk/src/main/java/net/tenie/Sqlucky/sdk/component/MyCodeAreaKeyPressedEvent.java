@@ -85,8 +85,17 @@ public class MyCodeAreaKeyPressedEvent {
                             codeArea.deleteText(delIndexRange);
                             e.consume();
                         }
+                    } else if ((e.isControlDown()|| e.isMetaDown()) && e.getCode() == KeyCode.C) {
+                         // 复制选中的内容, 避免页面跳动
+                         CommonUtils.setClipboardVal(codeArea.getSelectedText());
+                         e.consume();
+//                        codeArea.getAnchor();
+
+//                        codeAreaCtrlShiftA(e, sheet);
                     } else if (e.getCode() == KeyCode.A) {
-                        codeAreaCtrlShiftA(e, sheet);
+//                        codeArea.getAnchor();
+
+//                        codeAreaCtrlShiftA(e, sheet);
                     } else if (e.getCode() == KeyCode.E) {
                         codeAreaCtrlShiftE(e, sheet);
                     } else if (e.getCode() == KeyCode.W) {

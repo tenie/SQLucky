@@ -164,6 +164,10 @@ public class app extends Application {
 //                AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
 //                winos.setWindow(primaryStage, app.getHeadAnchorPane());
 //            }
+            if (CommonUtils.isLinuxOS()) {
+                AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
+                winos.setWindow(primaryStage, app.getHeadAnchorPane());
+            }
             
 //			else if(CommonUtility.isLinuxOS()) {
 //				// 图标
