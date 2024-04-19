@@ -112,7 +112,7 @@ public class MyCodeAreaKeyPressedEvent {
                     } else if (e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE) {
 //				codeAreaBackspaceDelete(e, cl);
                     } else if (e.getCode() == KeyCode.V) { // 黏贴的时候, 防止页面跳到自己黏贴
-                        codeAreaCtrlV(e, codeArea);
+                        codeAreaCtrlV(e, codeArea, sqluckyEditor);
                     } else if (e.getCode() == KeyCode.Z) { // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
 //				codeAreaCtrlZ(e, cl);
                     } else {
@@ -199,8 +199,6 @@ public class MyCodeAreaKeyPressedEvent {
 
         } else {
             logger.debug("delayRunThread");
-            return;
-
         }
 
     }
@@ -475,18 +473,22 @@ public class MyCodeAreaKeyPressedEvent {
     /**
      * 黏贴的时候, 防止页面跳到自己黏贴
      */
-    public static void codeAreaCtrlV(KeyEvent e, MyCodeArea codeArea) {
+    public static void codeAreaCtrlV(KeyEvent e, MyCodeArea codeArea, SqluckyEditor sqluckyEditor) {
         if (e.isShortcutDown()) {
             String val = CommonUtils.getClipboardVal();
 //			logger.info("黏贴值==" + val);
             if (val.length() > 0) {
-                String seltxt = codeArea.getSelectedText();
-                if (seltxt.length() > 0) {
-                    IndexRange idx = codeArea.getSelection();
-                    codeArea.deleteText(idx);
-                    codeArea.insertText(codeArea.getAnchor(), val);
-                    e.consume();
-                }
+                //TODO 暂时屏蔽, 观察一下
+//                String seltxt = codeArea.getSelectedText();
+//                if (seltxt.length() > 0) {
+//                    IndexRange idx = codeArea.getSelection();
+//                    codeArea.deleteText(idx);
+//                    codeArea.insertText(codeArea.getAnchor(), val);
+//                    e.consume();
+//                }
+                Platform.runLater(()->{
+                    sqluckyEditor.highLighting();
+                });
             }
         }
     }

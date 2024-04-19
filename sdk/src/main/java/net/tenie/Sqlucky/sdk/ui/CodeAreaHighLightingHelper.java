@@ -30,7 +30,7 @@ public class CodeAreaHighLightingHelper {
 	}
 	
 	public CodeAreaHighLightingHelper() {  
-	  keywords = new ArrayList<>(Arrays.asList( "EXPLAIN","LIMIT", "SELECT", "FROM", "UPDATE", "WHERE", "CASE", "CHAR", "OR",
+	  keywords = new ArrayList<>(Arrays.asList( "BETWEEN", "EXPLAIN","LIMIT", "SELECT", "FROM", "UPDATE", "WHERE", "CASE", "CHAR", "OR",
 			"LEFT", "RIGHT", "DOUBLE", "INNER", "JOIN", "EXISTS", "FLOAT", "ALTER", "TABLE", "DATA", "TYPE", "INT",
 			"VARCHAR", "LONG", "SET", "SHORT", "TIMESTAMP", "GROUP", "BY", "ON", "AS", "DECIMAL", "PRIMARY", "NULL",
 			"CHARACTER", "CONSTRAINT", "CREATE", "SEQUENCE", "WITH", "ELSE", "NUMERIC", "COLUMN", "ADD", "FETCH", "UNION",
