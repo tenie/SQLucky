@@ -534,14 +534,14 @@ public class MyCodeAreaKeyPressedEvent {
             String val = CommonUtils.getClipboardVal();
 //			logger.info("黏贴值==" + val);
             if (val.length() > 0) {
-                //TODO 暂时屏蔽, 观察一下
-//                String seltxt = codeArea.getSelectedText();
-//                if (seltxt.length() > 0) {
-//                    IndexRange idx = codeArea.getSelection();
-//                    codeArea.deleteText(idx);
-//                    codeArea.insertText(codeArea.getAnchor(), val);
-//                    e.consume();
-//                }
+                // 自己粘贴, 否则粘贴的行会跳到窗口顶部(windows上会出现)
+                String seltxt = codeArea.getSelectedText();
+                if (seltxt.length() > 0) {
+                    IndexRange idx = codeArea.getSelection();
+                    codeArea.deleteText(idx);
+                    codeArea.insertText(codeArea.getAnchor(), val);
+                    e.consume();
+                }
                 Platform.runLater(()->{
                     sqluckyEditor.highLighting();
                 });
