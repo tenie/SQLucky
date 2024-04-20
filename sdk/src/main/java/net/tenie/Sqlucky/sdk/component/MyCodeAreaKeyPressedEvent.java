@@ -107,6 +107,25 @@ public class MyCodeAreaKeyPressedEvent {
                     } else if (e.getCode() == KeyCode.D) {
                         codeAreaAltShiftD(e, sheet);
                         codeAreaCtrlShiftD(e, sheet);
+
+                        // 复制当前行到下一行
+                        if(e.isControlDown()|| e.isMetaDown()){
+                            if( codeArea.getSelectedText().isEmpty()){
+                                int currentAnchor = codeArea.getAnchor();
+                                codeArea.selectLine();
+                                var range = codeArea.getSelection();
+                                String selectText = codeArea.getSelectedText();
+                                codeArea.insertText(range.getEnd() +1, codeArea.getSelectedText() + "\n");
+                                // 光标移动到下一行的位置
+                                codeArea.moveTo(currentAnchor + selectText.length() + 1);
+                            }else {
+                                // 插入选择的内容
+                                var range = codeArea.getSelection();
+                                codeArea.insertText(range.getEnd() , codeArea.getSelectedText());
+                            }
+
+                        }
+
                     } else if (e.getCode() == KeyCode.H) {
                         codeAreaCtrlShiftH(e, sheet);
                     } else if (e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE) {
