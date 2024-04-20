@@ -18,6 +18,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 import javafx.util.StringConverter;
 import javafx.util.converter.DefaultStringConverter;
+import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
@@ -59,18 +60,29 @@ public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
         // 复制 字段和值, 如: key='foo'
         MenuItem copykeyVal = new MenuItem("Copy  Key & Value");
         copykeyVal.setOnAction(e -> {
+            // 获取行
             var tableRow =  this.getTableRow().getItem();
             if ( tableRow instanceof  ResultSetRowPo rowPo){
-                var cellPo = rowPo.getRowDatas().get(rowPo.getRowIndex());
-                int javaType = cellPo.getField().getColumnType().get();
-                if(CommonUtils.isNum(javaType) ) {
-                    String val =  this.getTableColumn().getText() + " = " + this.getText();
-                    CommonUtils.setClipboardVal(val);
-                }else {
-                    String val =  this.getTableColumn().getText() + " =  '" + this.getText() +"'";
-                    CommonUtils.setClipboardVal(val);
-                }
+                // 获取行的所有cell
+                for( ResultSetCellPo cellPo : rowPo.getRowDatas() ){
+                    // 获取cell的列名称
+                    String cellFieldName =   cellPo.getField().getColumnLabel().get();
+                    // 获取cell的值
+                    String cellVal =  cellPo.getCellData().get();
+                    // 当前的 列名和 cell值比较, 最终获取列的数据类型来决定是否给val加引号
+                    if( cellFieldName.equals(this.getTableColumn().getText() ) && cellVal.equals( this.getText())){
+                        int javaType = cellPo.getField().getColumnType().get();
+                        if (CommonUtils.isNum(javaType) ) {
+                            String val =  this.getTableColumn().getText() + " = " + this.getText();
+                            CommonUtils.setClipboardVal(val);
+                        }else {
+                            String val =  this.getTableColumn().getText() + " =  '" + this.getText() +"'";
+                            CommonUtils.setClipboardVal(val);
+                        }
 
+                        break;
+                    }
+                }
             }
 
         });
