@@ -56,6 +56,27 @@ public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
 
         cm.getItems().add(copyVal);
 
+        // 复制 字段和值, 如: key='foo'
+        MenuItem copykeyVal = new MenuItem("Copy  Key & Value");
+        copykeyVal.setOnAction(e -> {
+            var tableRow =  this.getTableRow().getItem();
+            if ( tableRow instanceof  ResultSetRowPo rowPo){
+                var cellPo = rowPo.getRowDatas().get(rowPo.getRowIndex());
+                int javaType = cellPo.getField().getColumnType().get();
+                if(CommonUtils.isNum(javaType) ) {
+                    String val =  this.getTableColumn().getText() + " = " + this.getText();
+                    CommonUtils.setClipboardVal(val);
+                }else {
+                    String val =  this.getTableColumn().getText() + " =  '" + this.getText() +"'";
+                    CommonUtils.setClipboardVal(val);
+                }
+
+            }
+
+        });
+
+        cm.getItems().add(copykeyVal);
+
         // 判断是否列是否能编辑, 可以编辑就添加设置为null的选项
         TableColumn<S, T> column = getTableColumn();
         if (column.isEditable()) {
