@@ -67,7 +67,18 @@ public class MyCodeAreaKeyPressedEvent {
 
                     // 添加新行
                     if (e.getCode() == KeyCode.ENTER) {
-                        if (!(e.isControlDown() || e.isAltDown() || e.isShiftDown() || e.isShortcutDown())) {
+                        // shift + enter , 光标移动到行位, 在添加新行
+                        if ( e.isShiftDown() ){
+                            // 当前行
+                            var currentParagraph = codeArea.getCurrentParagraph();
+                            var currentParagraphText =  codeArea.getText(currentParagraph);
+                            // 移动到行尾
+                            codeArea.moveTo(currentParagraph, currentParagraphText.length() );
+                            addNewLine(e, codeArea);
+                            // 最后添加一个换行符
+                            codeArea.insertText( codeArea.getAnchor() , "\n");
+                        }else
+                            if (!(e.isControlDown() || e.isAltDown() || e.isShiftDown() || e.isShortcutDown())) {
                             addNewLine(e, codeArea);
                         }
                     }else if (e.getCode() == KeyCode.TAB) { // 文本缩进
@@ -86,6 +97,7 @@ public class MyCodeAreaKeyPressedEvent {
                             e.consume();
                         }
                     } else if ((e.isControlDown()|| e.isMetaDown()) && e.getCode() == KeyCode.C) {
+                         selectLineAtCtrlC(e, codeArea);
                          // 复制选中的内容, 避免页面跳动
                          CommonUtils.setClipboardVal(codeArea.getSelectedText());
                          e.consume();
@@ -107,24 +119,8 @@ public class MyCodeAreaKeyPressedEvent {
                     } else if (e.getCode() == KeyCode.D) {
                         codeAreaAltShiftD(e, sheet);
                         codeAreaCtrlShiftD(e, sheet);
+                        copyLineAtCtrlD(e, codeArea, sqluckyEditor);
 
-                        // 复制当前行到下一行
-                        if(e.isControlDown()|| e.isMetaDown()){
-                            if( codeArea.getSelectedText().isEmpty()){
-                                int currentAnchor = codeArea.getAnchor();
-                                codeArea.selectLine();
-                                var range = codeArea.getSelection();
-                                String selectText = codeArea.getSelectedText();
-                                codeArea.insertText(range.getEnd() +1, codeArea.getSelectedText() + "\n");
-                                // 光标移动到下一行的位置
-                                codeArea.moveTo(currentAnchor + selectText.length() + 1);
-                            }else {
-                                // 插入选择的内容
-                                var range = codeArea.getSelection();
-                                codeArea.insertText(range.getEnd() , codeArea.getSelectedText());
-                            }
-
-                        }
 
                     } else if (e.getCode() == KeyCode.H) {
                         codeAreaCtrlShiftH(e, sheet);
@@ -252,7 +248,7 @@ public class MyCodeAreaKeyPressedEvent {
         int idx = codeArea.getCurrentParagraph(); // 获取当前行号
         int anchor = codeArea.getAnchor(); // 光标位置
 
-        if (seltxt.length() == 0) {// 没有选中文本, 存粹换行, 才进行缩进计算
+        if (seltxt.isEmpty()) {// 没有选中文本, 存粹换行, 才进行缩进计算
             // 根据行号获取该行的文本
             Paragraph<Collection<String>, String, Collection<String>> p = codeArea.getParagraph(idx);
             String ptxt = p.getText();
@@ -465,11 +461,52 @@ public class MyCodeAreaKeyPressedEvent {
         }
     }
 
+    /**
+     * 当前行的字符串, 插入到下一行 / 选中的字符串, 在后面插入
+     * @param e
+     * @param codeArea
+     * @param sqluckyEditor
+     */
+    public static void copyLineAtCtrlD(KeyEvent e,  MyCodeArea codeArea , SqluckyEditor sqluckyEditor){
+        // 复制当前行到下一行
+        if(e.isControlDown()){
+            if( codeArea.getSelectedText().isEmpty()){
+                int currentAnchor = codeArea.getAnchor();
+                codeArea.selectLine();
+                var range = codeArea.getSelection();
+                String selectText = codeArea.getSelectedText();
+                codeArea.insertText(range.getEnd() +1, codeArea.getSelectedText() + "\n");
+                // 光标移动到下一行的位置
+                codeArea.moveTo(currentAnchor + selectText.length() + 1);
+                sqluckyEditor.highLighting();
+            }else {
+                // 插入选择的内容
+                var range = codeArea.getSelection();
+                codeArea.insertText(range.getEnd() , codeArea.getSelectedText());
+                sqluckyEditor.highLighting();
+            }
 
+        }
+    }
 
     /**
-     * 删除光标前的字符串
+     * 当按下 ctrl + c 没有选择任何内容的情况下, 选中当前行
+     * @param e
+     * @param codeArea
      */
+    public static void selectLineAtCtrlC(KeyEvent e,  MyCodeArea codeArea) {
+        if(e.isControlDown() || e.isMetaDown()){
+            if( codeArea.getSelectedText().isEmpty()){
+                codeArea.selectLine();
+            }
+        }
+
+    }
+
+
+        /**
+         * 删除光标前的字符串
+         */
     public static void codeAreaCtrlShiftU(KeyEvent e, MyEditorSheet sheet) {
         if (e.isShiftDown() && e.isControlDown()) {
             logger.info("删除光标前的字符串" + e.getCode());
