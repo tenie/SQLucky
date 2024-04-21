@@ -182,13 +182,11 @@ public class MyBottomSheetAction {
 
 
     // 获取tree 节点中的 table 的sql
-    public static void findTable(MyBottomSheet sheet) {
-        RsVal rv = sheet.tableInfo();
-        SqluckyConnector dbcp = rv.dbconnPo;
+    public static void findTable(SqluckyConnector dbcp, String tableName ) {
         if (dbcp == null) {
             return;
         }
-        String tbn = rv.tableName;
+        String tbn = tableName;
         String key = "";
         int idx = tbn.indexOf(".");
         if (idx > 0) {
@@ -218,33 +216,15 @@ public class MyBottomSheetAction {
                 }
             }
         }
+        // 找到了, 显示建表语句
         if (tbrs != null) {
             TreeObjAction.showTableSql(dbcp, tbrs);
         } else {
-
-            int idx2 = rv.tableName.indexOf(".");
+            // 没找到的情况
+            int idx2 = tableName.indexOf(".");
             if (idx2 > 0) {
-                String[] vales = rv.tableName.split("\\.");
-                TablePo po = null;
-                String tableDll = dbcp.getExportDDL().exportCreateTable(dbcp.getConn(), vales[0], vales[1]);
-                if (StrUtils.isNotNullOrEmpty(tableDll)) {
-                    po = new TablePo();
-                    po.setTableName(vales[1]);
-                    po.setTableRemarks("");
-                    po.setTableSchema(vales[0]);
-                    po.setTableType(CommonConst.TYPE_TABLE);
-                    po.setDdl(tableDll);
-                } else {
-                    String viewDDL = dbcp.getExportDDL().exportCreateView(dbcp.getConn(), vales[0], vales[1]);
-                    if (StrUtils.isNotNullOrEmpty(viewDDL)) {
-                        po = new TablePo();
-                        po.setTableName(vales[1]);
-                        po.setTableRemarks("");
-                        po.setTableSchema(vales[0]);
-                        po.setTableType(CommonConst.TYPE_TABLE);
-                        po.setDdl(viewDDL);
-                    }
-                }
+                String[] vales = tableName.split("\\.");
+                TablePo po = queryDbTableDDL(dbcp, vales[0], vales[1]);
                 if (po != null) {
                     TreeObjAction.showTableSql(dbcp, po);
                 }
@@ -253,6 +233,37 @@ public class MyBottomSheetAction {
             }
         }
 
+    }
+
+    /**
+     * 到处
+     * @param dbcp
+     * @param schema
+     * @param tableName
+     * @return
+     */
+    public  static TablePo queryDbTableDDL(SqluckyConnector dbcp, String schema, String tableName){
+        TablePo po = null;
+        String tableDll = dbcp.getExportDDL().exportCreateTable(dbcp.getConn(), schema, tableName);
+        if (StrUtils.isNotNullOrEmpty(tableDll)) {
+            po = new TablePo();
+            po.setTableName(tableName);
+            po.setTableRemarks("");
+            po.setTableSchema(schema);
+            po.setTableType(CommonConst.TYPE_TABLE);
+            po.setDdl(tableDll);
+        } else {
+            String viewDDL = dbcp.getExportDDL().exportCreateView(dbcp.getConn(), schema, tableName);
+            if (StrUtils.isNotNullOrEmpty(viewDDL)) {
+                po = new TablePo();
+                po.setTableName(tableName);
+                po.setTableRemarks("");
+                po.setTableSchema(schema);
+                po.setTableType(CommonConst.TYPE_TABLE);
+                po.setDdl(viewDDL);
+            }
+        }
+        return po;
     }
 
     /**

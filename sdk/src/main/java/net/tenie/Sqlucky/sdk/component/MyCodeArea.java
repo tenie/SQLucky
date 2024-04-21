@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.component;
 
+import javafx.scene.control.IndexRange;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.editor.FindReplaceTextBox;
@@ -39,6 +40,12 @@ public class MyCodeArea extends CodeArea {
 		this.titleName = titleName;
 	}
 
+	/**
+	 * 显示查找替换组件
+	 * @param showReplace
+	 * @param findText
+	 * @return
+	 */
 	public FindReplaceTextBox showFindReplaceTextBox(boolean showReplace, String findText){
 		if( sqluckyEditor == null ){
 			return null;
@@ -71,6 +78,9 @@ public class MyCodeArea extends CodeArea {
 		return  this.findReplaceTextBox;
 	}
 
+	/**
+	 * 隐藏查找替换组件
+	 */
 	public   void  hiddenFindReplaceBox(){
 		if( sqluckyEditor == null ){
 			return;
@@ -78,6 +88,10 @@ public class MyCodeArea extends CodeArea {
 		sqluckyEditor.getChildren().remove(this.findReplaceTextBox);
 	}
 
+	/**
+	 * 判断查找组件是否已经显示状态
+	 * @return
+	 */
 	public boolean findIsShowing(){
 //		if( sqluckyEditor.getChildren().contains(this.findReplaceTextBox)){
 //			this.findReplaceTextBox
@@ -88,6 +102,61 @@ public class MyCodeArea extends CodeArea {
 		return  sqluckyEditor.getChildren().contains(this.findReplaceTextBox);
 	}
 
+	/**
+	 * 获取光标所在的单词
+	 * @param codeArea
+	 * @param codeAreaAnchor
+	 * @param endStrVal
+	 * @return
+	 */
+	public static IndexRange getAnchorWord(MyCodeArea codeArea , int codeAreaAnchor, String endStrVal){
+		int anchorIdx = codeAreaAnchor;
+		int startIdx = anchorIdx -1;
+		int endIdx = anchorIdx + 1;
+
+		boolean tf = true;
+		// 包含这些字符中, 就停止查找
+		String endString = ". \t\n;,";
+		if(StrUtils.isNotNullOrEmpty(endStrVal)){
+			endString = endStrVal;
+		}
+
+		// 头部位置的查找
+		while (tf){
+			if(startIdx <0 ){
+				break;
+			}
+			String  startStr = codeArea.getText(startIdx,anchorIdx);
+			if(endString.contains(startStr)){
+				tf = false;
+			}else{
+				anchorIdx = startIdx;
+				startIdx--;
+			}
+		}
+
+		// 尾部位置的查找
+		tf = true;
+		anchorIdx = codeAreaAnchor;
+		while (tf){
+			if( endIdx > codeArea.getLength()){
+				break;
+			}
+			String  endStr = codeArea.getText(anchorIdx,endIdx);
+			if(endString.contains(endStr)){
+				tf = false;
+			}else{
+				anchorIdx = endIdx;
+				endIdx++;
+
+			}
+		}
+		if( startIdx+1 < endIdx-1){
+			IndexRange indexRange = new IndexRange(startIdx+1, endIdx-1);
+			return indexRange;
+		}
+		return null;
+	}
 
 	public SqluckyEditor getSqluckyEditor() {
 		return sqluckyEditor;

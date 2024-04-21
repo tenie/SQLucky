@@ -824,7 +824,9 @@ public class CommonUtils {
 		return file;
 	}
 
-	// 创建文件事, 让用户现在文件的绝对路径和文件名
+	/**
+	 *  创建文件事, 让用户现在文件的绝对路径和文件名
+ 	 */
 	public static File getFilePathHelper(String fileType) {
 		FileChooser fileChooser = new FileChooser();
 //		fileChooser.setTitle(title);
@@ -837,6 +839,19 @@ public class CommonUtils {
 		return file;
 
 	}
+
+	/**
+	 * 选择文件
+	 * @return
+	 */
+	public static File getFileHelper() {
+		File file = FileOrDirectoryChooser.showOpenAllFile("Select File", ComponentGetter.primaryStage);
+		return file;
+	}
+
+
+
+
 
 	// 字段值被修改还原, 不允许修改
 	public static StringProperty createReadOnlyStringProperty(String val) {

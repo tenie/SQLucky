@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import net.tenie.Sqlucky.sdk.po.TreeItemType;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -140,14 +142,13 @@ public class ConnectionDao {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		} finally {
 		}
 
 		return datas;
 	}
 
 	// 保存
-	public static SqluckyConnector createOrUpdate(Connection conn, SqluckyConnector po) {
+	public static void createOrUpdate(Connection conn, SqluckyConnector po) {
 		Integer id = po.getId();
 		String connName = po.getConnName();
 		String user = po.getUser();
@@ -162,9 +163,6 @@ public class ConnectionDao {
 		String jdbcurl = po.getJdbcUrl();
 		int autoC = po.getAutoConnect() ? 1 : 0;
 
-//		    Date createdAt =      po.getCreatedAt();
-//		    Date updatedAt =      po.getUpdatedAt();
-//		    Integer recordVersion =  po.getRecordVersion(); 
 		String sql = "";
 		if (id != null && id > 0) {
 			// 更新
@@ -211,7 +209,6 @@ public class ConnectionDao {
 			e.printStackTrace();
 		}
 		logger.info(po.toString());
-		return po;
 	}
 
 	/**
@@ -378,5 +375,33 @@ public class ConnectionDao {
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
+	}
+
+	/**
+	 * 导入链接
+	 * @param po
+	 */
+	public static void dbInfoImport(DBConnectorInfoPo po  ){
+		// 判断链接名称是否重复, 重复添加后缀
+		renameOverlapDBinfoName(List.of(po));
+		String connectionName = po.getConnName();
+		SqluckyDbRegister dbRegister = DbVendor.register(po.getDbVendor());
+		SqluckyConnector sqluckyConnnector = dbRegister.createConnector(po);
+
+		TreeNodePo tnpo = new TreeNodePo(connectionName,
+				IconGenerator.svgImageUnactive("unlink"));
+		tnpo.setType(TreeItemType.CONNECT_INFO);
+		TreeItem item = new TreeItem<>(tnpo);
+		DBinfoTree.treeRootAddItem(item);
+
+		// 缓存数据
+		DBConns.add(connectionName, sqluckyConnnector);
+		var conn = SqluckyAppDB.getConn();
+		try{
+			ConnectionDao.createOrUpdate(conn, sqluckyConnnector);
+		}finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+
 	}
 }

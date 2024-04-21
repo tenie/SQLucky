@@ -1,8 +1,5 @@
 package net.tenie.fx.component.InfoTree;
 
-import java.sql.SQLException;
-import java.util.function.Consumer;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
@@ -25,6 +22,9 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.window.ConnectionEditor;
+
+import java.sql.SQLException;
+import java.util.function.Consumer;
 
 public class DBInfoTreeContextMenu extends ContextMenu {
 	private MenuItem tableAddNewCol;
@@ -83,6 +83,21 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 		delete.setGraphic(IconGenerator.svgImageDefActive("trash"));
 		delete.setDisable(true);
 
+
+
+		// export Connection
+		MenuItem exportDBConn = new MenuItem("Export Connection Info");
+		exportDBConn.setOnAction(e -> {
+			ConnectionEditor.exportDbConn();
+		});
+
+		// import Connection
+		MenuItem importDBConn = new MenuItem("Import Connection Info");
+		importDBConn.setOnAction(e -> {
+			ConnectionEditor.importDbConn();
+		});
+
+
 		refresh = new MenuItem("Refresh Connection");
 
 		refresh.setGraphic(IconGenerator.svgImageDefActive("refresh"));
@@ -108,7 +123,7 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 		copyNameMenu = new MenuItem("Copy Name");
 		copyNameMenu.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 
-		this.getItems().addAll(link, unlink, Edit, Add, delete, new SeparatorMenuItem(), refresh,
+		this.getItems().addAll(link, unlink, Edit, Add, delete, new SeparatorMenuItem(), exportDBConn, importDBConn, new SeparatorMenuItem(), refresh,
 				new SeparatorMenuItem(), tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu,
 				copyNameMenu);
 
