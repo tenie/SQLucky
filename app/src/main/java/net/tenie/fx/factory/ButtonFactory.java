@@ -155,6 +155,9 @@ public class ButtonFactory {
 		connsComboBox.setOnMouseClicked(event -> {
 
 			Label lb = connsComboBox.getSelectionModel().getSelectedItem();
+			if(lb == null ){
+				return;
+			}
 			String connName = lb.getText();
 			SqluckyConnector sqluckyConnector = DBConns.get(connName);
 			if( ! sqluckyConnector.isAlive()){

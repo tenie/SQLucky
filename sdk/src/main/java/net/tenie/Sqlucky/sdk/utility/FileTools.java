@@ -34,7 +34,6 @@ public class FileTools {
 	// 文件类型
 	public static List<String> fileTypes = new ArrayList<>();
 	static {
-
 		fileTypes.add(".rar");
 		fileTypes.add(".zip");
 		fileTypes.add(".7z");

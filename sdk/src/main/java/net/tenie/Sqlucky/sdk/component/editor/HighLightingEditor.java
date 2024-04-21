@@ -1,33 +1,21 @@
 package net.tenie.Sqlucky.sdk.component.editor;
 
-import javafx.application.Platform;
-import javafx.geometry.Bounds;
-import javafx.geometry.Insets;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.IndexRange;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.*;
-import net.tenie.Sqlucky.sdk.config.CommonConst;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetAction;
+import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.fxmisc.flowless.VirtualizedScrollPane;
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.model.Paragraph;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 
 import java.util.*;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.function.Consumer;
 
 /**
  * sql文本编辑组件
@@ -37,11 +25,11 @@ import java.util.function.Consumer;
  */
 public class HighLightingEditor extends SqluckyEditor {
 	private static Logger logger = LogManager.getLogger(HighLightingEditor.class);
-	private static final String sampleCode = String.join("\n", new String[] { "" });
+//	private static final String sampleCode = String.join("\n", new String[] { "" });
 
 	private DocumentPo documentPo;
 
-
+	private int codeAreaAnchor = 0;
 
 	public HighLightingEditor(MyAutoComplete myAuto, CodeAreaHighLightingHelper helper) {
 		this.myAuto = myAuto;
@@ -54,6 +42,9 @@ public class HighLightingEditor extends SqluckyEditor {
 		codeArea = new MyCodeArea(this);
 		this.init(codeArea);
 
+		/**
+		 * undo 到最后一次, 避免codeArea内容清空, 把documentPo内容赋值给codeArea
+		 */
 		codeArea.textProperty().addListener((a,b,c)->{
 			if(c.isEmpty() &&  documentPo != null
 					&& codeArea.getCodeArea().getUndoManager().getNextUndo() == null){
@@ -72,9 +63,7 @@ public class HighLightingEditor extends SqluckyEditor {
 		}
 		// 事件KeyEvent
 		MyCodeAreaKeyPressedEvent.initKeyPressedEvent(this);
-		// TODO 输入事件
-//		codeArea.textProperty().addListener(cl);
-		codeArea.replaceText(0, 0, sampleCode);
+//		codeArea.replaceText(0, 0, sampleCode);
 
 		// 中午输入法显示问题
 		codeArea.setInputMethodRequests(new InputMethodRequestsObject(codeArea));
@@ -88,10 +77,9 @@ public class HighLightingEditor extends SqluckyEditor {
 		codeArea.setOnDragEntered(e -> {
 			String val = ComponentGetter.dragTreeItemName;
 			if (StrUtils.isNotNullOrEmpty(val)) {
-				int start = ComponentGetter.codeAreaAnchor; // codeArea.getAnchor();
+				int start = ComponentGetter.codeAreaAnchor;
 				logger.debug("ComponentGetter.codeAreaAnchor = " + start);
 				codeArea.insertText(start, " " + val);
-//				codeArea.selectRange(start + 1, start + 1 + val.length());
 				codeArea.requestFocus();
 			}
 
@@ -102,6 +90,83 @@ public class HighLightingEditor extends SqluckyEditor {
 			ComponentGetter.codeAreaAnchor = codeArea.getAnchor();
 		});
 
+//		codeArea.setOnMousePressed();
+		// 双击选中设置
+		codeArea.setOnMousePressed(mouseEvent-> {
+			if (mouseEvent.getButton() == MouseButton.PRIMARY) { // 鼠标左键
+				int clickCount = mouseEvent.getClickCount();
+				// 单击时记录光标位置
+				if (clickCount == 1) {
+					codeAreaAnchor = codeArea.getAnchor();
+					// 如果ctrl 按下的情况, 查找表
+					if(mouseEvent.isControlDown()){
+//						DBConns.getCurrentConnectPO()
+						IndexRange range = MyCodeArea.getAnchorWord(codeArea, codeAreaAnchor, " \t\n");
+						if(range != null ){
+							String tableName = codeArea.getText(range.getStart(), range.getEnd());
+							MyBottomSheetAction.findTable(DBConns.getCurrentConnectPO(), tableName);
+						}
+					}
+
+				}else if (clickCount == 2 ) {
+					// 双击时选中
+
+					// 如果ctrl 和 alt 按着就默认行为
+					if( mouseEvent.isControlDown() && mouseEvent.isAltDown() ){
+						return;
+					}
+					IndexRange range = MyCodeArea.getAnchorWord(codeArea, codeAreaAnchor, null);
+					if(range != null ){
+						codeArea.selectRange(range.getStart(), range.getEnd() );
+						mouseEvent.consume();
+					}
+//					int anchorIdx = codeAreaAnchor;
+//					int startIdx = anchorIdx -1;
+//					int endIdx = anchorIdx + 1;
+//
+//					boolean tf = true;
+//					// 包含这些字符中, 就停止查找
+//					String endString = ". \t\n;,";
+//
+//					// 头部位置的查找
+//					while (tf){
+//						if(startIdx <0 ){
+//							break;
+//						}
+// 						String  startStr = codeArea.getText(startIdx,anchorIdx);
+//						if(endString.contains(startStr)){
+//							tf = false;
+//						}else{
+//							anchorIdx = startIdx;
+//							startIdx--;
+//						}
+//					}
+//
+//					// 尾部位置的查找
+//					tf = true;
+//					anchorIdx = codeAreaAnchor;
+//					while (tf){
+//						if( endIdx > codeArea.getLength()){
+//							break;
+//						}
+//						String  endStr = codeArea.getText(anchorIdx,endIdx);
+//						if(endString.contains(endStr)){
+//							tf = false;
+//						}else{
+//							anchorIdx = endIdx;
+//							endIdx++;
+//
+//						}
+//					}
+//					if( startIdx+1 < endIdx-1){
+//						codeArea.selectRange(startIdx+1, endIdx-1);
+//						mouseEvent.consume();
+//					}
+
+
+				}
+			}
+		});
 		// 当鼠标释放, 判断是否为双击, 是双击选中对应的内容, 在判断有没有选择的文本, 有的话就修改所有相同的文本
 		codeArea.setOnMouseReleased(mouseEvent -> {
 			if (mouseEvent.getButton() == MouseButton.PRIMARY) { // 鼠标左键
@@ -111,7 +176,6 @@ public class HighLightingEditor extends SqluckyEditor {
 				int strSz = trimStr.length();
 				boolean isContinue = true;
 				if (clickCount == 2) {
-
 					if (trimStr.isEmpty()) {
 						// 选中的内容为空白符, 就选中当前行
 						codeArea.selectLine();
@@ -163,11 +227,11 @@ public class HighLightingEditor extends SqluckyEditor {
 		if (strSz > 0) {
 			IndexRange i = codeArea.getSelection(); // 获取当前选中的区间
 			int start = i.getStart();
-			Set<String> keys = charMap.keySet();
+			Set<String> keys = parenthesesMap.keySet();
 
 			for (String key : keys) {
 				if (trimStr.endsWith(key)) {
-					String val = charMap.get(key);
+					String val = parenthesesMap.get(key);
 					int endIdx = str.lastIndexOf(key);
 					int is = start + endIdx + 1;
 					int end = CommonUtils.findBeginParenthesisRange(codeArea.getText(), is, key, val);
@@ -276,14 +340,14 @@ public class HighLightingEditor extends SqluckyEditor {
 
 
 
-	static Map<String, String> charMap = new HashMap<>();
+	static Map<String, String> parenthesesMap = new HashMap<>();
 	static Map<String, String> charMapPre = new HashMap<>();
 	static List<String> charList = new ArrayList<>();
 
 	static {
-		charMap.put("(", ")");
-		charMap.put("[", "]");
-		charMap.put("{", "}");
+		parenthesesMap.put("(", ")");
+		parenthesesMap.put("[", "]");
+		parenthesesMap.put("{", "}");
 
 		charMapPre.put(")", "(");
 		charMapPre.put("]", "[");
@@ -317,11 +381,11 @@ public class HighLightingEditor extends SqluckyEditor {
 		if (strSz > 0) {
 //			logger.info("鼠标单击找到括号对, 标记一下 |" + trimStr + "|");
 
-			Set<String> keys = charMap.keySet();
+			Set<String> keys = parenthesesMap.keySet();
 
 			for (String key : keys) {
 				if (trimStr.endsWith(key)) {
-					String val = charMap.get(key);
+					String val = parenthesesMap.get(key);
 					int endIdx = str.lastIndexOf(key);
 					int is = start + endIdx + 1;
 					end = CommonUtils.findBeginParenthesisRange(codeArea.getText(), is, key, val);

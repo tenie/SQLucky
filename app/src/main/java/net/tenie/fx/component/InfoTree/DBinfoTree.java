@@ -268,7 +268,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 	public static void treeRootAddItem(TreeItem<TreeNodePo> item) {
 		TreeView<TreeNodePo> treeView = AppWindow.treeView;
 		TreeItem<TreeNodePo> rootNode = treeView.getRoot();
-		rootNode.getChildren().add(item);
+		rootNode.getChildren().addFirst(item);
 		treeView.getSelectionModel().select(item); // 选择新加的节点
 	}
 
@@ -446,8 +446,8 @@ public class DBinfoTree extends SqluckyTitledPane {
 					}
 					contextMenu.setConnectDisable(false);
 					contextMenu.setTableDisable(true);
-					// TABLE
 				} else if (nd != null && nd.getType() == TreeItemType.TABLE) {
+					// 表
 					contextMenu.setConnectDisable(true);
 					contextMenu.setTableDisable(false);
 					SqluckyConnector dbc = nd.getConnpo();
@@ -455,7 +455,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 					String tablename = nd.getTable().getTableName();
 					contextMenu.setTableAction(newValue, dbc, schema, tablename);
 				} else if (nd != null && nd.getType() == TreeItemType.VIEW) {
-					// TODO
+					// 试图
 					contextMenu.setConnectDisable(true);
 					contextMenu.setViewFuncProcTriDisable(false);
 					SqluckyConnector dbc = nd.getConnpo();
@@ -465,7 +465,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 					contextMenu.setViewAction(newValue, dbc, schema, viewName);
 					contextMenu.setSelectMenuDisable(false, dbc, nd);
 				} else if (nd != null && nd.getType() == TreeItemType.FUNCTION) {
-					// TODO
+					// 函数
 					contextMenu.setNodeType(TreeItemType.FUNCTION);
 					contextMenu.setConnectDisable(true);
 					contextMenu.setViewFuncProcTriDisable(false);
@@ -475,7 +475,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 					String funcName = nd.getFuncProTri().getName();
 					contextMenu.setFuncAction(newValue, dbc, schema, funcName);
 				} else if (nd != null && nd.getType() == TreeItemType.PROCEDURE) {
-					// TODO
+					// 过程
 					contextMenu.setNodeType(TreeItemType.PROCEDURE);
 					contextMenu.setConnectDisable(true);
 					contextMenu.setViewFuncProcTriDisable(false);
@@ -485,7 +485,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 					String procName = nd.getFuncProTri().getName();
 					contextMenu.setProcAction(newValue, dbc, schema, procName);
 				} else if (nd != null && nd.getType() == TreeItemType.TRIGGER) {
-					// TODO
+					// 触发器
 					contextMenu.setNodeType(TreeItemType.TRIGGER);
 					contextMenu.setConnectDisable(true);
 					contextMenu.setViewFuncProcTriDisable(false);

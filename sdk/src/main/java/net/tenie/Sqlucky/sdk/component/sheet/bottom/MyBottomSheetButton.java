@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.po.RsVal;
 import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportSQLWindow;
@@ -72,7 +73,8 @@ public class MyBottomSheetButton {
             JFXButton tableSQLBtn = new JFXButton();
             tableSQLBtn.setGraphic(IconGenerator.svgImageDefActive("table"));
             tableSQLBtn.setOnMouseClicked(e -> {
-                MyBottomSheetAction.findTable(sheet);
+                RsVal rv = sheet.tableInfo();
+                MyBottomSheetAction.findTable(rv.dbconnPo,  rv.tableName);
             });
             tableSQLBtn.setTooltip(MyTooltipTool.instance("Table SQL"));
             tableSQLBtn.setDisable(disable);

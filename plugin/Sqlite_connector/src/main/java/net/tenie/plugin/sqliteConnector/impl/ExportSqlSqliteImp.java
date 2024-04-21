@@ -156,7 +156,7 @@ public class ExportSqlSqliteImp implements ExportDBObjects {
 		// 获取主键
 		List<TablePrimaryKeysPo> ls = tab.getPrimaryKeys();
 		String pkn = "";
-		if (ls.size() > 0) {
+		if (ls != null && !ls.isEmpty()) {
 			for (TablePrimaryKeysPo kp : ls) {
 				keysql += kp.getColumnName() + ",";
 				pkn = kp.getPkName();

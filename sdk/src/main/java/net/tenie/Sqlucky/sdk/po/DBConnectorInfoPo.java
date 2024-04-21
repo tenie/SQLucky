@@ -333,14 +333,31 @@ public class DBConnectorInfoPo {
 		String val = jo.toJSONString();
 		return val;
 	}
-	
-	// BDConnJsonObj的字符串 转化为 DBConnectorInfoPo
-	public static DBConnectorInfoPo toPo(String json) { 
+
+	/**
+	 * 	BDConnJsonObj 的字符串 转化为 DBConnectorInfoPo
+	 */
+	public static DBConnectorInfoPo toPo(String json) {
 		BDConnJsonObj val = JSONObject.parseObject(json, BDConnJsonObj.class);
+		if(! checkValidBDConnJsonObj(val)){
+			return null;
+		}
 		DBConnectorInfoPo valpo = new DBConnectorInfoPo(val);
 		return valpo;
 	}
-	
-	
+
+	/**
+	 * 检查json对象是否有效
+	 * @param val
+	 * @return
+	 */
+	private static boolean checkValidBDConnJsonObj(BDConnJsonObj val){
+		String connName = val.getConnName();
+		String dbVendor =val.getDbVendor();
+		if(StrUtils.isNullOrEmpty(connName) || StrUtils.isNullOrEmpty(dbVendor) ){
+			return false;
+		}
+		return true;
+	}
 }
 

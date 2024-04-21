@@ -1,14 +1,6 @@
 package net.tenie.fx.window;
 
-import java.sql.Connection;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import com.jfoenix.controls.JFXCheckBox;
-
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -16,13 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.AnchorPane;
@@ -51,6 +37,14 @@ import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.config.DbVendor;
 import net.tenie.fx.dao.ConnectionDao;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * 
@@ -62,7 +56,7 @@ public class ConnectionEditor {
 	public static boolean editLinkStatus = false;
 	private static Logger logger = LogManager.getLogger(ConnectionEditor.class);
 	private static Stage stage;
-
+	private static Node redRegion = IconGenerator.svgImage("spinner", "red");
 	public static Stage CreateModalWindow(VBox vb) {
 		vb.getStyleClass().add("connectionEditor");
 		vb.setPrefWidth(450);
@@ -267,7 +261,7 @@ public class ConnectionEditor {
 
 		// 方法
 		Function<String, SqluckyConnector> assembleSqlCon = x -> {
-			SqluckyDbRegister dbRegister = DbVendor.register(dbDriver.getValue());
+			SqluckyDbRegister dbRegister = null;
 			String connName = connectionName.getText();
 			// check date
 			if (StrUtils.isNullOrEmpty(connName)) {
@@ -285,7 +279,9 @@ public class ConnectionEditor {
 					return null;
 				}
 			} else {
+				dbRegister = DbVendor.register(dbDriver.getValue());
 				if (StrUtils.isNullOrEmpty(host.getText())) {
+
 					if (dbRegister.getJdbcUrlIsFile()) {
 						MyAlert.errorAlert("DB File is empty !");
 					} else {
@@ -324,17 +320,20 @@ public class ConnectionEditor {
 					host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
 					defaultSchema.getText(), defaultSchema.getText(), jdbcUrl.getText(), autoConnectCB.isSelected());
 //			SqluckyDbRegister reg = DbVendor.register(dbDriver.getValue());
-			SqluckyConnector sqluckyConnnector = dbRegister.createConnector(connPo);
-			if (dp != null) {
-				dp.closeConn();
-				sqluckyConnnector.setId(dp.getId());
+			if(dbRegister != null){
+				SqluckyConnector sqluckyConnnector = dbRegister.createConnector(connPo);
+				if (dp != null) {
+					dp.closeConn();
+					sqluckyConnnector.setId(dp.getId());
+				}
+				return sqluckyConnnector;
 			}
-			return sqluckyConnnector;
+			return  null;
 
 		};
 //TODO
-		Button testBtn = createTestBtn(assembleSqlCon);// new Button("Test");
-		Button saveBtn = createSaveBtn(assembleSqlCon, connectionName, dp); // new Button("Save");
+		Button testBtn = createTestBtn(assembleSqlCon);
+		Button saveBtn = createSaveBtn(assembleSqlCon, connectionName, dp);
 
 		layoutAndShow(lbconnNameStr,
 //				connectionName,
@@ -356,6 +355,9 @@ public class ConnectionEditor {
 					dp.getPort(), dp.getDbVendor(), dp.getDefaultSchema(), dp.getDbName(), dp);
 	}
 
+	/**
+	 * 编辑链接
+	 */
 	public static void editDbConn() {
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
@@ -375,6 +377,48 @@ public class ConnectionEditor {
 //			MyAlert.notification("Error", "编辑需要选中连接名称!", MyAlert.NotificationType.Error);
 		}
 	}
+
+	/**
+	 * 导出链接
+	 */
+	public static void exportDbConn() {
+		if (DBinfoTree.currentTreeItemIsConnNode()) {
+			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+			String connName = val.getValue().getName();
+			SqluckyConnector sc = DBConns.get(connName);
+			DBConnectorInfoPo infopo = sc.getDBConnectorInfoPo();
+			String json = infopo.toJsonStr();
+			System.out.println(json);
+			File jsonFile = CommonUtils.getFilePathHelper(".json");
+            try {
+                FileTools.save(jsonFile,  json);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        } else {
+			MyAlert.showNotifiaction("需要选中连接名称!");
+		}
+	}
+
+	/**
+	 * 导入链接
+	 */
+	public static void importDbConn() {
+		try {
+			File jsonFile = CommonUtils.getFileHelper();
+			String jsonString = FileTools.read(jsonFile, "UTF-8");
+			DBConnectorInfoPo po = DBConnectorInfoPo.toPo(jsonString);
+			if(po != null){
+				ConnectionDao.dbInfoImport(po);
+			}
+		}catch (Exception e){
+			logger.error(e.getMessage());
+		}
+
+	}
+
+
 
 	public static void deleteDbConn() {
 
@@ -514,16 +558,20 @@ public class ConnectionEditor {
 	public static Button createTestBtn(Function<String, SqluckyConnector> assembleSqlCon) {
 		Button testBtn = new Button("Test");
 		testBtn.setOnMouseClicked(e -> {
-//			testBtn.setStyle("-fx-background-color: red ");
-			Node nd = IconGenerator.svgImage("spinner", "red");
-			testBtn.setGraphic(nd);
-			CommonUtils.rotateTransition(nd);
-			logger.info("Test connection~~");
-			SqluckyConnector connpo = assembleSqlCon.apply("");
-			if (connpo != null) {
-				AppCommonAction.isAliveTestAlert(connpo, testBtn);
-				
+			var tamGpc = testBtn.getGraphic();
+			try {
+				testBtn.setGraphic(redRegion);
+				CommonUtils.rotateTransition(redRegion);
+				logger.info("Test connection~~");
+				SqluckyConnector connpo = assembleSqlCon.apply("");
+				if (connpo != null) {
+					AppCommonAction.isAliveTestAlert(connpo, testBtn);
+
+				}
+			}finally {
+				testBtn.setGraphic(tamGpc);
 			}
+
 			
 		});
 		return testBtn;
@@ -553,7 +601,7 @@ public class ConnectionEditor {
 
 				// 缓存数据
 				DBConns.add(connpo.getConnName(), connpo);
-				connpo = ConnectionDao.createOrUpdate(conn, connpo);
+				ConnectionDao.createOrUpdate(conn, connpo);
 				SqluckyAppDB.closeConn(conn);
 			} else {
 				return;

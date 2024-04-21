@@ -319,7 +319,10 @@ public class WorkDataBackupAction {
 			for (String item : ls) {
 				String jsonval = DesUtil.decrypt(item, pKey);
 				DBConnectorInfoPo po = DBConnectorInfoPo.toPo(jsonval);
-				pols.add(po);
+				if(po != null ){
+					pols.add(po);
+				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
