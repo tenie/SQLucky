@@ -97,9 +97,6 @@ public class TableViewUtils {
 
 		try {
 			FilteredTableView<ResultSetRowPo> table = TableViewUtils.creatInfoTableView();
-			// 查询的 的语句可以被修改
-//			table.editableProperty().bind(new SimpleBooleanProperty(true));
-
 			// 获取表名
 			if (tableName == null || "".equals(tableName)) {
 				tableName = ParseSQL.tabName(sql);
@@ -184,8 +181,7 @@ public class TableViewUtils {
 		Label label = new Label();
 		col.setGraphic(label);
 		// 通过下标从ObservableList 获取对应列显示的字符串值
-
-		col.setCellValueFactory(new ResultSetCellValueFactory(colIdx)); // new ResultSetCellValueFactory(colIdx)
+		col.setCellValueFactory(new ResultSetCellValueFactory(colIdx));
 		return col;
 	}
 
@@ -231,51 +227,6 @@ public class TableViewUtils {
 		col.setPrefWidth(width);
 
 	}
-
-	// 创建一个表
-	// 数据展示tableView StringProperty
-//	public static FilteredTableView<ObservableList<StringProperty>> creatFilteredTableView2() {
-//		FilteredTableView<ObservableList<StringProperty>> table = new FilteredTableView<ObservableList<StringProperty>>();
-//
-//		table.rowHeaderVisibleProperty().bind(new SimpleBooleanProperty(true));
-//		table.setPlaceholder(new Label());
-//		// 可以选中多行
-//		table.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
-//				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
-//
-//		String tableIdx = createTabId();
-//		table.setId(tableIdx);
-//		table.getStyleClass().add("myTableTag");
-//
-//		FilteredTableColumn<ObservableList<StringProperty>, Number> tc = new FilteredTableColumn<>();
-//		// 点击 行号, 显示一个 当前行的明细窗口
-//		tc.setCellFactory(col -> {
-//			TableCell<ObservableList<StringProperty>, Number> cell = new TableCell<ObservableList<StringProperty>, Number>() {
-//				@Override
-//				public void updateItem(Number item, boolean empty) {
-//					super.updateItem(item, empty);
-//					this.setText(null);
-//					this.setGraphic(null);
-//					if (!empty) {
-//						int rowIndex = this.getIndex();
-//						this.setText((rowIndex + 1) + "");
-//						this.setOnMouseClicked(e -> {
-//							if (e.getClickCount() == 2) {
-//								TableDataDetail.show();
-//							}
-//						});
-//					}
-//				}
-//			};
-//			return cell;
-//		});
-//
-//		table.setRowHeader(tc);
-//		// 启用 隐藏列的控制按钮
-//		table.tableMenuButtonVisibleProperty().setValue(true);
-//
-//		return table;
-//	}
 
 	// 提供数据生成表格
 	public static SheetTableData dataToSheet(List<String> fieldNameLs, List<Map<String, String>> vals,
@@ -364,7 +315,6 @@ public class TableViewUtils {
 			List<Map<String, String>> vals, List<MyCellOperateButton> btnvals,
 			TableView<ResultSetRowPo> tableView ) {
 		try {
-//			FilteredTableView<ResultSetRowPo> tableView = TableViewUtils.creatInfoTableView();
 			if(tableView == null) {
 				tableView = TableViewUtils.creatInfoTableView();
 				// 查询的 的语句可以被修改
@@ -378,7 +328,7 @@ public class TableViewUtils {
 			ObservableList<SheetFieldPo> fields = createSheetFieldPo(fieldNameLs);
 			ResultSetPo setPo = fetchCellVal(vals, fields);
 
-			ObservableList<ResultSetRowPo> allRawData = setPo.getDatas(); // sheetDaV.getInfoTableVals().getDatas();
+			ObservableList<ResultSetRowPo> allRawData = setPo.getDatas();
 			// table 添加列和数据
 			// 表格添加列
 			ObservableList<FilteredTableColumn<ResultSetRowPo, String>> tableColumns = TableViewUtils
@@ -431,10 +381,6 @@ public class TableViewUtils {
 			table.setItems(alldata);
 
 			rmWaitingPane(true);
-			// 渲染界面
-//			if (! Thread.currentThread().isInterrupted()) {
-//				return;
-//			}
 
 			myBottomSheet.showInfoDelayRemoveTab(-1, true);
 

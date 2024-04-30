@@ -12,15 +12,18 @@ import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.select.SelectItemVisitorAdapter;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class SqlParser {
 
-    public static boolean isValidSql(String sql){
+    public static boolean isValidSql(String sql) {
         try {
-            Statement   stmt =  CCJSqlParserUtil.parse( sql);
+            Statement stmt = CCJSqlParserUtil.parse(sql);
             System.out.println(stmt);
-            return  true;
+            return true;
         } catch (JSQLParserException e) {
             e.printStackTrace();
         }
@@ -30,23 +33,24 @@ public class SqlParser {
 
     /**
      * 获取sql中的查询列名称
+     *
      * @param sqlStr
      * @param useAliasName 是否使用alias name作为字段名称返回
      * @return
      */
-    public static List<String> selectQueryColumn(String sqlStr, boolean useAliasName){
+    public static List<String> selectQueryColumn(String sqlStr, boolean useAliasName) {
         Select stmt = null;
         List<String> rs = new ArrayList<>();
         try {
-            stmt = (Select) CCJSqlParserUtil.parse( sqlStr);
-            for (SelectItem selectItem : ((PlainSelect)stmt.getSelectBody()).getSelectItems()) {
+            stmt = (Select) CCJSqlParserUtil.parse(sqlStr);
+            for (SelectItem selectItem : ((PlainSelect) stmt.getSelectBody()).getSelectItems()) {
                 selectItem.accept(new SelectItemVisitorAdapter() {
                     @Override
                     public void visit(SelectItem item) {
-                        if(item.getAlias() != null ){
-                            rs.add(item.getAlias().getName()) ;
-                        }else {
-                            rs.add(item.getExpression().toString()) ;
+                        if (item.getAlias() != null) {
+                            rs.add(item.getAlias().getName());
+                        } else {
+                            rs.add(item.getExpression().toString());
                         }
 
 
@@ -65,17 +69,17 @@ public class SqlParser {
 
     /**
      * 获取sql中的where 的条件字段
+     *
      * @param sqlStr
      * @return
      */
-    public static List<String> selectSqlWhereColumn(String sqlStr){
+    public static List<String> selectSqlWhereColumn(String sqlStr) {
         List<String> rs = new ArrayList<>();
         try {
             Select stmt = (Select) CCJSqlParserUtil.parse(sqlStr);
-            System.out.println("before " + stmt.toString());
-            PlainSelect select =   (PlainSelect)stmt.getSelectBody();
+            PlainSelect select = (PlainSelect) stmt.getSelectBody();
             Expression where = select.getWhere();
-            if(where == null ) return rs;
+            if (where == null) return rs;
             where.accept(new ExpressionVisitorAdapter() {
                 @Override
                 public void visit(Column column) {
@@ -93,10 +97,11 @@ public class SqlParser {
 
     /**
      * 获取sql中的所有表
+     *
      * @param sqlStr
      * @return
      */
-    public static Set<String> selectSqlTableNames(String sqlStr){
+    public static Set<String> selectSqlTableNames(String sqlStr) {
         Set<String> tableNames = new HashSet<>();
         try {
             tableNames = TablesNamesFinder.findTables(sqlStr);
@@ -104,19 +109,5 @@ public class SqlParser {
             throw new RuntimeException(e);
         }
         return tableNames;
-    }
-
-
-    public static void main(String[] args) {
-        String sql = "SELECT a.col1 , a.col2 AS b, a.col3 AS c, FROM ffo.table a left join tab2 t on a.id = t.pid WHERE a.col_1 = 10 AND a.col_2 = 20 AND a.col_3 = 30";
-        isValidSql(sql);
-        List<String > vals = selectSqlWhereColumn(sql);
-
-//        List<String > vals = selectQueryColumn(sql, true);
-        System.out.println(vals);
-
-
-//        Set<String> tna  = selectSqlTableNames(sql);
-//        System.out.println(tna);
     }
 }

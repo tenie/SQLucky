@@ -24,104 +24,102 @@ import net.tenie.Sqlucky.sdk.utility.TableViewUtils;
 
 /**
  * 数据表单独窗口
- * 
- * @author tenie
  *
+ * @author tenie
  */
 public class DockSideWindow {
+    private Stage stage;
+    private MyBottomSheet myBottomSheet;
 
-	private Stage stage;
-	private MyBottomSheet myBottomSheet;
+    public void showWindow(TableView<ResultSetRowPo> tableView, String tableName) {
 
-	public void showWindow(TableView<ResultSetRowPo> tableView, String tableName) {
+        VBox subvb = new VBox();
 
-		VBox subvb = new VBox();
+        var topfp = topPane(tableView);
+        subvb.getChildren().add(topfp);
+        subvb.getChildren().add(tableView);
+        VBox.setVgrow(tableView, Priority.ALWAYS);
+        layout(subvb, tableName);
 
-		var topfp = topPane(tableView);
-		subvb.getChildren().add(topfp);
-		subvb.getChildren().add(tableView);
-		VBox.setVgrow(tableView, Priority.ALWAYS);
-		layout(subvb, tableName);
+    }
 
-	}
+    public void showWindow(MyBottomSheet myBottomSheet, VBox DataPaneVbox, String tableName) {
+        this.myBottomSheet = myBottomSheet;
+        VBox subvb = new VBox();
+        subvb.getChildren().add(DataPaneVbox);
+        VBox.setVgrow(DataPaneVbox, Priority.ALWAYS);
+        layout(subvb, tableName);
 
-	public void showWindow(MyBottomSheet myBottomSheet, VBox DataPaneVbox, String tableName) {
-		this.myBottomSheet = myBottomSheet;
-		VBox subvb = new VBox();
-		subvb.getChildren().add(DataPaneVbox);
-		VBox.setVgrow(DataPaneVbox, Priority.ALWAYS);
-		layout(subvb, tableName);
+    }
 
-	}
+    // 界面顶部的操作按钮
+    private FlowPane topPane(TableView<ResultSetRowPo> tableView) {
+        FlowPane topfp = new FlowPane();
+        topfp.setPadding(new Insets(5));
+        Label lb = new Label();
+        lb.setGraphic(IconGenerator.svgImageDefActive("search"));
+        TextField filterField = new TextField();
 
-	// 界面顶部的操作按钮
-	private FlowPane topPane(TableView<ResultSetRowPo> tableView) {
-		FlowPane topfp = new FlowPane();
-		topfp.setPadding(new Insets(5));
-		Label lb = new Label();
-		lb.setGraphic(IconGenerator.svgImageDefActive("search"));
-		TextField filterField = new TextField();
+        filterField.getStyleClass().add("myTextField");
+        topfp.getChildren().add(lb);
+        FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
+        topfp.getChildren().add(filterField);
+        topfp.setMinHeight(35);
+        topfp.prefHeight(35);
+        filterField.setPrefWidth(200);
+        // 过滤功能
 
-		filterField.getStyleClass().add("myTextField");
-		topfp.getChildren().add(lb);
-		FlowPane.setMargin(lb, new Insets(0, 10, 0, 5));
-		topfp.getChildren().add(filterField);
-		topfp.setMinHeight(35);
-		topfp.prefHeight(35);
-		filterField.setPrefWidth(200);
-		// 过滤功能
+        ObservableList<ResultSetRowPo> items = tableView.getItems();
 
-		ObservableList<ResultSetRowPo> items = tableView.getItems();
+        // 添加过滤功能
+        filterField.textProperty().addListener((o, oldVal, newVal) -> {
+            if (StrUtils.isNotNullOrEmpty(newVal)) {
+                TableViewUtils.tableViewAllDataFilter(tableView, items, newVal);
+            } else {
+                tableView.setItems(items);
+            }
 
-		// 添加过滤功能
-		filterField.textProperty().addListener((o, oldVal, newVal) -> {
-			if (StrUtils.isNotNullOrEmpty(newVal)) {
-				TableViewUtils.tableViewAllDataFilter(tableView, items, newVal);
-			} else {
-				tableView.setItems(items);
-			}
+        });
 
-		});
+        return topfp;
+    }
 
-		return topfp;
-	}
+    // 组件布局
+    public void layout(VBox tbox, String tableName) {
+        tbox.setPadding(new Insets(5));
+        Stage stage = CreateWindow(tbox, tableName);
 
-	// 组件布局
-	public void layout(VBox tbox, String tableName) {
-		tbox.setPadding(new Insets(5));
-		Stage stage = CreateWindow(tbox, tableName);
+        stage.show();
+    }
 
-		stage.show();
-	}
+    public Stage CreateWindow(VBox vb, String title) {
+        SqluckyStage sqluckyStatge = new SqluckyStage(vb);
+        stage = sqluckyStatge.getStage();
+        Scene scene = sqluckyStatge.getScene();
 
-	public Stage CreateWindow(VBox vb, String title) {
-		SqluckyStage sqluckyStatge = new SqluckyStage(vb);
-		stage = sqluckyStatge.getStage();
-		Scene scene = sqluckyStatge.getScene();
+        vb.getStyleClass().add("connectionEditor");
 
-		vb.getStyleClass().add("connectionEditor");
+        vb.setPrefWidth(1000);
+        vb.setPrefHeight(600);
+        AnchorPane bottomPane = new AnchorPane();
+        bottomPane.setPadding(new Insets(10));
 
-		vb.setPrefWidth(1000);
-		vb.setPrefHeight(600);
-		AnchorPane bottomPane = new AnchorPane();
-		bottomPane.setPadding(new Insets(10));
+        vb.getChildren().add(bottomPane);
+        KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+        KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+        scene.getAccelerators().put(escbtn, () -> {
+            stage.close();
+        });
+        scene.getAccelerators().put(spacebtn, () -> {
+            stage.close();
+        });
 
-		vb.getChildren().add(bottomPane);
-		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
-		scene.getAccelerators().put(escbtn, () -> {
-			stage.close();
-		});
-		scene.getAccelerators().put(spacebtn, () -> {
-			stage.close();
-		});
-
-		stage.setTitle(title);
-		CommonUtils.loadCss(scene);
-		stage.initModality(Modality.WINDOW_MODAL);
-		stage.setScene(scene);
-		stage.setOnCloseRequest(e -> myBottomSheet.clean());
-		return stage;
-	}
+        stage.setTitle(title);
+        CommonUtils.loadCss(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+        stage.setOnCloseRequest(e -> myBottomSheet.clean());
+        return stage;
+    }
 
 }

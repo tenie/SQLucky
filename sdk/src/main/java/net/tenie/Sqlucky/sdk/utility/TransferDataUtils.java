@@ -89,7 +89,6 @@ public class TransferDataUtils {
 			LoggerCaller.accept(tableName + " 的数据为" + countVal + " , 进入下一个表 ");
 			return;
 		}
-//		ObservableList<SheetFieldPo> fields = FXCollections.observableArrayList();
 		List<SheetFieldPo> fields = new ArrayList<>();
 		// DB对象
 		PreparedStatement pstate = null;
@@ -189,11 +188,9 @@ public class TransferDataUtils {
 	 * @param conn         数据源链接
 	 * @param toConn       接受数据的链接
 	 * @param sql          数据源的sql语句
-	 * @param tarTableName 接受的表名
 	 * @param isThrow      是否抛出异常
 	 * @throws SQLException
 	 */
-	@SuppressWarnings("exports")
 	public static void dbTableDataMigrationBySQLByInsert(Connection conn, Connection toConn, String sql, String insert,
 //			int columnnums,
 			boolean isThrow) throws SQLException {
@@ -240,8 +237,7 @@ public class TransferDataUtils {
 		try {
 
 			toConn.setAutoCommit(false);
-			String insertSql = insert; // InsertPreparedStatementDao.createPreparedStatementSql(tableName, fpo);
-
+			String insertSql = insert;
 			logger.info(insertSql);
 
 			pstmt = toConn.prepareStatement(insertSql);
@@ -250,7 +246,6 @@ public class TransferDataUtils {
 			// 循环查询结果
 			while (rs.next()) {
 				idx++;
-//				logger.info("\n===========idx = " + idx + "==============");
 				for (int i = 0; i < columnnums; i++) {
 					Object obj = null;
 					try {
@@ -260,9 +255,7 @@ public class TransferDataUtils {
 					}
 
 					pstmt.setObject(i + 1, obj);
-//					logger.info("obj = "+ obj.toString());
 				}
-//				pstmt.execute();
 				pstmt.addBatch();
 				if (idx % execLine == 0) {
 					int[] count = pstmt.executeBatch();
@@ -472,7 +465,7 @@ public class TransferDataUtils {
 		}
 	}
 
-	public static String getTableName(String sch, String tn) { // , SqluckyConnector dbpo
+	public static String getTableName(String sch, String tn) {
 		String rs = tn;
 		if (StrUtils.isNotNullOrEmpty(sch)) {
 			rs = sch + "." + tn;

@@ -475,7 +475,14 @@ public class MyCodeAreaKeyPressedEvent {
                 codeArea.selectLine();
                 var range = codeArea.getSelection();
                 String selectText = codeArea.getSelectedText();
-                codeArea.insertText(range.getEnd() +1, codeArea.getSelectedText() + "\n");
+                int allTxtLen =  codeArea.getText().length();
+                // 最后一行的情况, 直接append
+                if(range.getEnd() + 1 > allTxtLen){
+                    codeArea.appendText("\n"+codeArea.getSelectedText() );
+                }else{
+                    codeArea.insertText(range.getEnd() +1, codeArea.getSelectedText() + "\n");
+                }
+
                 // 光标移动到下一行的位置
                 codeArea.moveTo(currentAnchor + selectText.length() + 1);
                 sqluckyEditor.highLighting();
