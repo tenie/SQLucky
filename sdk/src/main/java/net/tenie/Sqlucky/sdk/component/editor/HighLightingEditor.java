@@ -25,8 +25,6 @@ import java.util.*;
  */
 public class HighLightingEditor extends SqluckyEditor {
 	private static Logger logger = LogManager.getLogger(HighLightingEditor.class);
-//	private static final String sampleCode = String.join("\n", new String[] { "" });
-
 	private DocumentPo documentPo;
 
 	private int codeAreaAnchor = 0;
@@ -90,8 +88,7 @@ public class HighLightingEditor extends SqluckyEditor {
 			ComponentGetter.codeAreaAnchor = codeArea.getAnchor();
 		});
 
-//		codeArea.setOnMousePressed();
-		// 双击选中设置
+		// 鼠标双击选中设置
 		codeArea.setOnMousePressed(mouseEvent-> {
 			if (mouseEvent.getButton() == MouseButton.PRIMARY) { // 鼠标左键
 				int clickCount = mouseEvent.getClickCount();
@@ -100,7 +97,6 @@ public class HighLightingEditor extends SqluckyEditor {
 					codeAreaAnchor = codeArea.getAnchor();
 					// 如果ctrl 按下的情况, 查找表
 					if(mouseEvent.isControlDown()){
-//						DBConns.getCurrentConnectPO()
 						IndexRange range = MyCodeArea.getAnchorWord(codeArea, codeAreaAnchor, " \t\n");
 						if(range != null ){
 							String tableName = codeArea.getText(range.getStart(), range.getEnd());

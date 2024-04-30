@@ -1,7 +1,5 @@
 package net.tenie.Sqlucky.sdk.subwindow;
 
-import java.util.List;
-
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -18,79 +16,80 @@ import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
+import java.util.List;
+
 public class QueryWindow {
+    private Stage stage;
 
-	private Stage stage;
+    public void showWindow(TableView<ResultSetRowPo> tableView, List<Node> nodes, String title) {
 
-	public void showWindow(TableView<ResultSetRowPo> tableView, List<Node> nodes, String title) {
+        VBox subvb = new VBox();
 
-		VBox subvb = new VBox();
+        var topfp = topPane(nodes);
+        subvb.getChildren().add(topfp);
+        subvb.getChildren().add(tableView);
+        VBox.setVgrow(tableView, Priority.ALWAYS);
+        layout(subvb, title);
 
-		var topfp = topPane(nodes);
-		subvb.getChildren().add(topfp);
-		subvb.getChildren().add(tableView);
-		VBox.setVgrow(tableView, Priority.ALWAYS);
-		layout(subvb, title);
+    }
 
-	}
+    // 界面顶部的操作按钮
+    private FlowPane topPane(List<Node> nodes) {
+        FlowPane topfp = new FlowPane();
+        topfp.setPadding(new Insets(5));
+        topfp.setMinHeight(35);
+        topfp.prefHeight(35);
 
-	// 界面顶部的操作按钮
-	private FlowPane topPane(List<Node> nodes) {
-		FlowPane topfp = new FlowPane();
-		topfp.setPadding(new Insets(5));
-		topfp.setMinHeight(35);
-		topfp.prefHeight(35);
+        for (var tmpNode : nodes) {
+            topfp.getChildren().add(tmpNode);
+        }
 
-		for (var tmpNode : nodes) {
-			topfp.getChildren().add(tmpNode);
-		}
+        return topfp;
+    }
 
-		return topfp;
-	}
+    // 组件布局
+    public void layout(VBox tbox, String title) {
+        tbox.setPadding(new Insets(5));
+        Stage stage = CreateWindow(tbox, title);
 
-	// 组件布局
-	public void layout(VBox tbox, String title) {
-		tbox.setPadding(new Insets(5));
-		Stage stage = CreateWindow(tbox, title);
+        stage.showAndWait();
+    }
 
-		stage.showAndWait();
-	}
+    public Stage CreateWindow(VBox vb, String title) {
+        SqluckyStage sqluckyStatge = new SqluckyStage(vb);
+        stage = sqluckyStatge.getStage();
+        Scene scene = sqluckyStatge.getScene();
 
-	public Stage CreateWindow(VBox vb, String title) {
-		SqluckyStage sqluckyStatge = new SqluckyStage(vb);
-		stage = sqluckyStatge.getStage();
-		Scene scene = sqluckyStatge.getScene();
+        vb.getStyleClass().add("connectionEditor");
 
-		vb.getStyleClass().add("connectionEditor");
+        vb.setPrefWidth(600);
+        AnchorPane bottomPane = new AnchorPane();
+        bottomPane.setPadding(new Insets(10));
 
-		vb.setPrefWidth(600);
-		AnchorPane bottomPane = new AnchorPane();
-		bottomPane.setPadding(new Insets(10));
+        vb.getChildren().add(bottomPane);
+        KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+        KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+        scene.getAccelerators().put(escbtn, () -> {
+            stage.close();
+        });
+        scene.getAccelerators().put(spacebtn, () -> {
+            stage.close();
+        });
 
-		vb.getChildren().add(bottomPane);
-		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
-		scene.getAccelerators().put(escbtn, () -> {
-			stage.close();
-		});
-		scene.getAccelerators().put(spacebtn, () -> {
-			stage.close();
-		});
+        stage.setTitle(title);
+        CommonUtils.loadCss(scene);
+        stage.initModality(Modality.WINDOW_MODAL);
+        stage.setScene(scene);
+        stage.requestFocus();
+        return stage;
+    }
 
-		stage.setTitle(title);
-		CommonUtils.loadCss(scene);
-		stage.initModality(Modality.WINDOW_MODAL);
-		stage.setScene(scene);
-		stage.requestFocus();
-		return stage;
-	}
+    public Stage getStage() {
+        return stage;
+    }
 
-	public Stage getStage() {
-		return stage;
-	}
-
-	public void setStage(Stage stage) {
-		this.stage = stage;
-	}
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
 
 }

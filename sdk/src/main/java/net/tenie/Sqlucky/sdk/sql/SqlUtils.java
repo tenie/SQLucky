@@ -38,12 +38,12 @@ public class SqlUtils {
             int start = i.getStart();
             int end = i.getEnd();
 
-            String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
+            String rs = StrUtils.pressString(txt);
             code.deleteText(start, end);
             code.insertText(start, rs);
         } else {
             txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-            String rs = StrUtils.pressString(txt); // SqlFormatter.format(txt);
+            String rs = StrUtils.pressString(txt);
             code.clear();
             code.appendText(rs);
         }

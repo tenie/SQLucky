@@ -16,17 +16,18 @@ public class FinderAction {
 
     public static Map<String, SqluckyTitledPane> regSqluckyTitledPane = new HashMap<>();
 
-    public static void putSqluckyTitledPane(String name , SqluckyTitledPane sqluckyTitledPane ){
+    public static void putSqluckyTitledPane(String name, SqluckyTitledPane sqluckyTitledPane) {
         regSqluckyTitledPane.put(name, sqluckyTitledPane);
     }
+
     public static boolean showTitledPane(String findStr) {
         boolean isShow = false;
-        for(var entry: regSqluckyTitledPane.entrySet()){
-            SqluckyTitledPane sqluckyTitledPane =  entry.getValue();
+        for (var entry : regSqluckyTitledPane.entrySet()) {
+            SqluckyTitledPane sqluckyTitledPane = entry.getValue();
             boolean isChild = isChildFocused(sqluckyTitledPane);
-            if(isChild){
+            if (isChild) {
                 sqluckyTitledPane.showFinder(findStr);
-                return  true;
+                return true;
             }
         }
         return isShow;
@@ -34,12 +35,12 @@ public class FinderAction {
 
     public static boolean hideTitledPane() {
         boolean isShow = false;
-        for(var entry: regSqluckyTitledPane.entrySet()){
-            SqluckyTitledPane sqluckyTitledPane =  entry.getValue();
+        for (var entry : regSqluckyTitledPane.entrySet()) {
+            SqluckyTitledPane sqluckyTitledPane = entry.getValue();
             boolean isChild = isChildFocused(sqluckyTitledPane);
-            if(isChild){
+            if (isChild) {
                 sqluckyTitledPane.hideFinder();
-                return  true;
+                return true;
             }
         }
         return isShow;
@@ -70,59 +71,39 @@ public class FinderAction {
 
     /**
      * 代码编辑区域的, find
+     *
      * @param isRep
      * @param findStr
      * @return
      */
-    public static boolean   showMainTabPaneFindReplace(boolean isRep, String findStr) {
-        return  showTabPaneFindReplace(ComponentGetter.mainTabPane, isRep, findStr);
-//        boolean isShow = false;
-//        var sheet = MyEditorSheetHelper.getActivationEditorSheet();
-//        if(sheet != null ){
-//            var editor = sheet.getSqluckyEditor();
-//            boolean isChildFoucde = isChildFocused(editor);
-//            if (isChildFoucde) {
-//                editor.getCodeArea().showFindReplaceTextBox(isRep, findStr);
-//                isShow = true;
-//            }
-//        }
-//
-//
-//        return isShow;
+    public static boolean showMainTabPaneFindReplace(boolean isRep, String findStr) {
+        return showTabPaneFindReplace(ComponentGetter.mainTabPane, isRep, findStr);
     }
+
     public static boolean hideMainTabPaneFindReplace() {
-        return  hideTabPaneFindReplace(ComponentGetter.mainTabPane);
+        return hideTabPaneFindReplace(ComponentGetter.mainTabPane);
     }
 
 
     /**
      * 数据显示区域的find
+     *
      * @param isRep
      * @param findStr
      * @return
      */
-    public static boolean  showDataTabPaneFindReplace(boolean isRep, String findStr) {
-        return  showTabPaneFindReplace(ComponentGetter.dataTabPane, isRep, findStr);
-//        boolean isShow = false;
-//        TabPane myTabPane = ComponentGetter.dataTabPane;
-//        Tab selectionTab = myTabPane.getSelectionModel().getSelectedItem();
-//        if(selectionTab != null ){
-//            Node tabConntent = selectionTab.getContent();
-//            SqluckyEditor sqluckyEditor = findFocusedSqluckyEditor(tabConntent);
-//            if (sqluckyEditor != null) {
-//                sqluckyEditor.getCodeArea().showFindReplaceTextBox(isRep, findStr);
-//                isShow = true;
-//            }
-//        }
-//        return isShow;
+    public static boolean showDataTabPaneFindReplace(boolean isRep, String findStr) {
+        return showTabPaneFindReplace(ComponentGetter.dataTabPane, isRep, findStr);
     }
-    public static boolean  hideDataTabPaneFindReplace() {
-        return  hideTabPaneFindReplace(ComponentGetter.dataTabPane);
+
+    public static boolean hideDataTabPaneFindReplace() {
+        return hideTabPaneFindReplace(ComponentGetter.dataTabPane);
     }
 
 
     /**
      * 显示TabPane中选中的tab中焦点的sqluckyEditor
+     *
      * @param myTabPane
      * @param isRep
      * @param findStr
@@ -131,7 +112,7 @@ public class FinderAction {
     private static boolean showTabPaneFindReplace(TabPane myTabPane, boolean isRep, String findStr) {
         boolean isShow = false;
         Tab selectionTab = myTabPane.getSelectionModel().getSelectedItem();
-        if(selectionTab != null ){
+        if (selectionTab != null) {
             Node tabConntent = selectionTab.getContent();
             SqluckyEditor sqluckyEditor = findFocusedSqluckyEditor(tabConntent);
             if (sqluckyEditor != null) {
@@ -144,13 +125,14 @@ public class FinderAction {
 
     /**
      * 隐藏TabPane中选中的tab中焦点的sqluckyEditor
+     *
      * @param myTabPane
      * @return
      */
     private static boolean hideTabPaneFindReplace(TabPane myTabPane) {
         boolean succeed = false;
         Tab selectionTab = myTabPane.getSelectionModel().getSelectedItem();
-        if(selectionTab != null ){
+        if (selectionTab != null) {
             Node tabConntent = selectionTab.getContent();
             SqluckyEditor sqluckyEditor = findFocusedSqluckyEditor(tabConntent);
             if (sqluckyEditor != null) {
@@ -163,69 +145,51 @@ public class FinderAction {
 
     /**
      * tab的内容中找到焦点对象, 通过焦点对象并找到SqluckyEditor
+     *
      * @param tabConntent
      * @return
      */
-    private static SqluckyEditor findFocusedSqluckyEditor( Node tabConntent ){
+    private static SqluckyEditor findFocusedSqluckyEditor(Node tabConntent) {
         if (tabConntent instanceof Parent pNode) {
             Node focusedNode = getFocusedChildNode(pNode);
             if (focusedNode != null) {
                 SqluckyEditor sqluckyEditor = focusedSqluckyEditor(focusedNode);
                 if (sqluckyEditor != null) {
-                    return  sqluckyEditor;
+                    return sqluckyEditor;
                 }
             }
         }
         return null;
     }
 
-    private static SqluckyTitledPane findFocusedSqluckyTitledPane(Node tabConntent ){
+    private static SqluckyTitledPane findFocusedSqluckyTitledPane(Node tabConntent) {
         if (tabConntent instanceof Parent pNode) {
             Node focusedNode = getFocusedChildNode(pNode);
             if (focusedNode != null) {
                 SqluckyTitledPane sqluckyTitledPane = focusedSqluckyTitledPane(focusedNode);
                 if (sqluckyTitledPane != null) {
-                    return  sqluckyTitledPane;
+                    return sqluckyTitledPane;
                 }
             }
         }
         return null;
-    }
-
-
-    public static void  showMainTabPaneFindReplace2(boolean isRep, String findStr){
-        TabPane tabPane = ComponentGetter.mainTabPane;
-        for(Tab tab : tabPane.getTabs()){
-            Node node =  tab.getContent();
-            if( node instanceof  Parent parent){
-                Node  focusedNode  =  getFocusedChildNode(parent);
-                if(focusedNode != null){
-                    SqluckyEditor sqluckyEditor = focusedSqluckyEditor(focusedNode);
-                    if(sqluckyEditor!= null ){
-                        sqluckyEditor.getCodeArea().showFindReplaceTextBox(isRep, findStr);
-                    }
-                    break;
-                }
-
-            }
-        }
-
     }
 
     /**
      * 判断对象是不是SqluckyEditor, 不是就循环父节点, 找不到就返回null
+     *
      * @param focusedNode
      * @return
      */
-    private static SqluckyEditor focusedSqluckyEditor(Node focusedNode){
-        if(focusedNode instanceof SqluckyEditor sqluckyEditor){
+    private static SqluckyEditor focusedSqluckyEditor(Node focusedNode) {
+        if (focusedNode instanceof SqluckyEditor sqluckyEditor) {
             return sqluckyEditor;
-        }else{
+        } else {
             Parent tmpParent = focusedNode.getParent();
-            while (tmpParent != null){
-                if(tmpParent instanceof SqluckyEditor sqluckyEditor){
+            while (tmpParent != null) {
+                if (tmpParent instanceof SqluckyEditor sqluckyEditor) {
                     return sqluckyEditor;
-                }else {
+                } else {
                     tmpParent = tmpParent.getParent();
                 }
 
@@ -235,15 +199,15 @@ public class FinderAction {
         return null;
     }
 
-    private static SqluckyTitledPane focusedSqluckyTitledPane(Node focusedNode){
-        if(focusedNode instanceof SqluckyTitledPane sqluckyTitledPane){
+    private static SqluckyTitledPane focusedSqluckyTitledPane(Node focusedNode) {
+        if (focusedNode instanceof SqluckyTitledPane sqluckyTitledPane) {
             return sqluckyTitledPane;
-        }else{
+        } else {
             Parent tmpParent = focusedNode.getParent();
-            while (tmpParent != null){
-                if(tmpParent instanceof SqluckyTitledPane sqluckyTitledPane){
+            while (tmpParent != null) {
+                if (tmpParent instanceof SqluckyTitledPane sqluckyTitledPane) {
                     return sqluckyTitledPane;
-                }else {
+                } else {
                     tmpParent = tmpParent.getParent();
                 }
 
@@ -252,7 +216,6 @@ public class FinderAction {
 
         return null;
     }
-
 
 
     // 递归判断是否是参数的组件子节点是焦点对象
@@ -261,7 +224,7 @@ public class FinderAction {
             if (node.isFocused()) {
                 return true;
             } else if (node instanceof Parent subParent) {
-                if (isChildFocused( subParent)) {
+                if (isChildFocused(subParent)) {
                     return true;
                 }
             }
@@ -271,6 +234,7 @@ public class FinderAction {
 
     /**
      * 获取焦点对象, 从参数parent的子对象中递归的查找焦点的子对象, 没有就返回null,
+     *
      * @param parent
      * @return
      */
@@ -278,9 +242,9 @@ public class FinderAction {
         for (Node node : parent.getChildrenUnmodifiable()) {
             if (node.isFocused()) {
                 return node;
-            } else if (node instanceof Parent ) {
+            } else if (node instanceof Parent) {
                 var subNode = getFocusedChildNode((Parent) node);
-                if (subNode != null ) {
+                if (subNode != null) {
                     return subNode;
                 }
             }

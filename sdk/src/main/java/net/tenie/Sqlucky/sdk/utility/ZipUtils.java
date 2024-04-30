@@ -19,29 +19,9 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class ZipUtils {
-	public static void test(String[] args) throws IOException {
-		// 单文件
-//		String sourceFile = "D:\\log_json.txt"; 
-//		zipFile(sourceFile, "D:\\compressed.zip");
-		// 多文件
-//		String file1 = "D:\\log_json.txt";
-//		String file2 = "D:\\icon.png";
-//		final List<String> srcFiles = Arrays.asList(file1, file2);
-//		zipMultipleFiles(srcFiles, "D:\\compressed222.zip");
-
-		// 文件夹
-//		ZipDirectory("D:\\mydir\\del", "D:\\compressedDirrrrr.zip");
-
-		// 给已有的zip文件添加新文件
-		zipfileAppendFile("D:\\log_json.txt", "D:\\compressedDirrrrr.zip");
-
-		// UnzipFile
-//		UnzipFile("D:\\compressedDirrrrr.zip", "D:\\邮件");
-	}
 
 	public static void zipFile(String sourceFile, String savePath) throws IOException {
-//		String sourceFile = "D:\\log_json.txt"; 
-		FileOutputStream fos = new FileOutputStream(savePath); // "D:\\compressed.zip"
+		FileOutputStream fos = new FileOutputStream(savePath);
 		ZipOutputStream zipOut = new ZipOutputStream(fos);
 
 		File fileToZip = new File(sourceFile);
@@ -61,12 +41,7 @@ public class ZipUtils {
 	}
 
 	public static void zipMultipleFiles(List<String> srcFiles, String savePath) throws IOException {
-//			String file1 = "src/main/resources/zipTest/test1.txt";
-//	        String file2 = "src/main/resources/zipTest/test2.txt";
-//	        final List<String> srcFiles = Arrays.asList(file1, file2);
-
-		final FileOutputStream fos = new FileOutputStream(savePath); // Paths.get(file1).getParent().toAbsolutePath() +
-																		// "/compressed.zip"
+		final FileOutputStream fos = new FileOutputStream(savePath);
 		ZipOutputStream zipOut = new ZipOutputStream(fos);
 
 		for (String srcFile : srcFiles) {
@@ -144,7 +119,7 @@ public class ZipUtils {
 		Map<String, String> env = new HashMap<>();
 		env.put("create", "true");
 
-		Path path = Paths.get(zipPath); // Paths.get(appFile).getParent() + "/compressed.zip"
+		Path path = Paths.get(zipPath);
 		URI uri = URI.create("jar:" + path.toUri());
 
 		try (FileSystem fs = FileSystems.newFileSystem(uri, env)) {
@@ -164,7 +139,6 @@ public class ZipUtils {
 	 * @throws IOException
 	 */
 	public static void UnzipFile(String fileZip, String desDirPath) throws IOException {
-//		 	String fileZip = "src/main/resources/unzipTest/compressed.zip";
 		File destDir = new File(desDirPath);
 
 		byte[] buffer = new byte[1024];

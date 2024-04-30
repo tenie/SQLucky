@@ -1,15 +1,5 @@
 package net.tenie.Sqlucky.sdk.subwindow;
 
-import java.io.File;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -20,11 +10,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
@@ -38,6 +24,15 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
 import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Sql导入

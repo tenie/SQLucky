@@ -1,16 +1,14 @@
 package net.tenie.fx.Action;
 
-import java.util.function.Consumer;
-
-import javafx.scene.layout.VBox;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyEvent;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.function.Consumer;
 
 /*   @author tenie */
 public final class SettingKeyBinding {
@@ -18,10 +16,7 @@ public final class SettingKeyBinding {
 
 	// 对esc按钮添加绑定
 	public static void setEscKeyBinding(Scene scene) {
-
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-		VBox v = new VBox();
-
 		scene.getAccelerators().put(escbtn, () -> {
 			CommonUtils.pressBtnESC();
 		});
