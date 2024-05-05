@@ -171,6 +171,7 @@ GridPane {
 .myAlert {
 	-fx-background-color: #000000;
 	-fx-border-color: #4e4e4e;
+    -fx-border-radius: 3px;
 }
 
 .myAlert  TextField {

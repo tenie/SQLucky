@@ -148,9 +148,10 @@ GridPane {
 }
 
 .myAlert {
-	/* -fx-border-color: #4C708C;   #3C3F41*/
+    -fx-border-color: #4C708C; 	/*   #3C3F41*/
 	-fx-background-color: #2B2B2B;
-
+    -fx-border-radius: 3px;
+   /* -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);*/
 }
 
 .myAlert  TextField {

@@ -99,6 +99,8 @@
 
 .myAlert {
 	-fx-background-color: #ffffff;
+	-fx-border-color: #dddddd;
+    -fx-border-radius: 3px;
 }
 
 .myAlertBtn {
