@@ -62,6 +62,16 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 			SqlUtils.pressSqlText();
 		});
 
+		MenuItem myBatisXml	 = new MenuItem("Use Xml Conversion Element");
+		myBatisXml.setOnAction(e -> {
+			SqlUtils.myBatisXmlSql();
+		});
+		MenuItem trimMyBatisXml	 = new MenuItem("Trim Xml Conversion Element ");
+		trimMyBatisXml.setOnAction(e -> {
+			SqlUtils.trimMyBatisXml();
+		});
+
+
 		MenuItem find = new MenuItem("Find");
 		find.setGraphic(IconGenerator.svgImageDefActive("search"));
 		find.setOnAction(e -> {
@@ -129,7 +139,7 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 		});
 
 		this.getItems().addAll(copy, Paste, del, cut, new SeparatorMenuItem(), sqlFormat, formatAll, sqlUnformat,
-				unformatAll, new SeparatorMenuItem(), find, replace, new SeparatorMenuItem(), cursorMenu, enditLine);
+				unformatAll, new SeparatorMenuItem(), myBatisXml, trimMyBatisXml, new SeparatorMenuItem(), find, replace, new SeparatorMenuItem(), cursorMenu, enditLine);
 		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
 
 		// 菜单显示的时刻
@@ -143,6 +153,9 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 				formatAll.setDisable(true);
 				sqlUnformat.setDisable(false);
 				unformatAll.setDisable(true);
+				myBatisXml.setDisable(false);
+				trimMyBatisXml.setDisable(false);
+
 			} else {
 				copy.setDisable(true);
 //				del.setDisable(true);
@@ -151,6 +164,8 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 				formatAll.setDisable(false);
 				sqlUnformat.setDisable(true);
 				unformatAll.setDisable(false);
+				myBatisXml.setDisable(true);
+				trimMyBatisXml.setDisable(true);
 			}
 
 			boolean hasVal = CommonUtils.clipboardHasString();

@@ -22,6 +22,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -393,11 +394,11 @@ public class FindReplaceTextBox extends  VBox {
 		replaceAllBtn.setOnAction(v -> {
 			if(!findtf.getText().equals(replaceTextField.getText())){
 				String text = codeArea.getText();
-				int end = text.length();
-				text = text.replaceAll(findtf.getText(), replaceTextField.getText());
-				codeArea.deleteText(0, end);
-				codeArea.insertText(0, text);
+				text = StrUtils.myReplaceAll(text, findtf.getText(), replaceTextField.getText(), cb.isSelected());
+				codeArea.clear();
+				codeArea.appendText(text);
 				sqluckyEditor.highLighting();
+
 			}
 			countAction();
 		});

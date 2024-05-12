@@ -29,6 +29,53 @@ public class StrUtils {
     public final static String BLANK_SPRING_STRING = " ";
     public static final char CHAR_TILDE = '~';
 
+    /**
+     * 替换字符串
+     * @param val
+     * @param oldStr
+     * @param strNew
+     * @return
+     */
+    public static String myReplaceAll(String val , String oldStr, String strNew, boolean sensitive){
+        List<Integer> rsList =  findStrAllIndex(val, oldStr, sensitive);
+        StringBuilder str = new StringBuilder();
+        int beginIdx = 0;
+        for(Integer idx : rsList){
+           String tmp1 =  val.substring(beginIdx,  idx);
+            str.append(tmp1);
+            str.append(strNew);
+            beginIdx = idx + oldStr.length();
+
+        }
+        String tmp1 =  val.substring(beginIdx);
+        str.append(tmp1);
+        return str.toString();
+    }
+
+    /**
+     * 查找字符串， 找到所以匹配字符所在的位置
+     * @param valStr
+     * @param findStr
+     * @return
+     */
+    public static List<Integer> findStrAllIndex(String valStr , String findStr, boolean sensitive){
+        if(! sensitive){
+            valStr =  valStr.toUpperCase();
+            findStr =  findStr.toUpperCase();
+        }
+        List<Integer> rsList = new ArrayList<>();
+        int fromIndex = 0;
+        int currentIndex = valStr.indexOf(findStr, fromIndex);
+        while (currentIndex > -1 ){
+            rsList.add(currentIndex);
+            fromIndex = currentIndex + findStr.length();
+            currentIndex = valStr.indexOf(findStr, fromIndex);
+        }
+
+
+        return rsList;
+    }
+
     // 字符串list 排序
     public static List<Integer> StrListToIntList(List<String> ls) {
         List<Integer> rs = new ArrayList<>();

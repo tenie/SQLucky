@@ -93,9 +93,6 @@ public class MyCodeArea extends CodeArea {
 	 * @return
 	 */
 	public boolean findIsShowing(){
-//		if( sqluckyEditor.getChildren().contains(this.findReplaceTextBox)){
-//			this.findReplaceTextBox
-//		}
 		if(findReplaceTextBox == null ){
 			return false;
 		}
