@@ -49,11 +49,31 @@ public class SqlUtils {
         }
         MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
     }
+    // 删除空行
+    public static void cleanEmptyLine() {
+        CodeArea code = MyEditorSheetHelper.getCodeArea();
+        String txt = code.getSelectedText();
+        if (StrUtils.isNotNullOrEmpty(txt)) {
+            IndexRange i = code.getSelection();
+            int start = i.getStart();
+            int end = i.getEnd();
+
+            String rs = StrUtils.cleanEmptyLine(txt);
+            code.deleteText(start, end);
+            code.insertText(start, rs);
+        } else {
+            txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
+            String rs = StrUtils.cleanEmptyLine(txt);
+            code.clear();
+            code.appendText(rs);
+        }
+        MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
+    }
 
     /**
      * myBatis xml 中的sql , 转换 <> <= <![CDATA[ <= ]]>
      */
-    public static void myBatisXmlSql() {
+    public static void useMyBatisXmlSql() {
         CodeArea code = MyEditorSheetHelper.getCodeArea();
         String txt = code.getSelectedText();
         if (StrUtils.isNotNullOrEmpty(txt)) {
@@ -106,8 +126,8 @@ public class SqlUtils {
         str =  str.replaceAll("<=", "-##");
         str =  str.replaceAll(">=", "##-");
 
-        str =  str.replaceAll("<", "<![CDATA[ < ]]>");
-        str =  str.replaceAll(">", "<![CDATA[ > ]]>");
+        str =  str.replaceAll(" < ", "<![CDATA[ < ]]>");
+        str =  str.replaceAll(" > ", "<![CDATA[ > ]]>");
 
         str =  str.replaceAll("#-#", "<![CDATA[ <> ]]>");
         str =  str.replaceAll("-##", "<![CDATA[ <= ]]>");
@@ -139,6 +159,15 @@ public class SqlUtils {
          while (str.contains("<![CDATA[ > ]]>")){
              str =   str.replace("<![CDATA[ > ]]>", ">");
         }
+        //  &lt; < 小于号
+        while (str.contains("&lt;")){
+            str =   str.replace("&lt;", "<");
+        }
+        // &gt; > 大于号
+        while (str.contains("&gt;")){
+            str =   str.replace("&gt;", ">");
+        }
+
 
         return str;
     }

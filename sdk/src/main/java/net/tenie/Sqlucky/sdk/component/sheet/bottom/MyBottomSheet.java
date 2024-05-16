@@ -80,6 +80,42 @@ public class MyBottomSheet extends  Tab{
 		FilteredTableView<ResultSetRowPo> tableView = SdkComponent.creatFilteredTableView(this);
 		tableData.setTable(tableView);
 		buttonAnchorPane = new AnchorPane();
+
+		// 显示隐藏按钮
+		buttonAnchorPane.setOnMouseEntered(event -> {
+				// 隐藏按钮
+				JFXButton hideBottom = SheetDataValue.hideBottom;
+				if (SheetDataValue.isSideRight) {
+					if (!btnHbox.getChildren().contains(hideBottom)) {
+						btnHbox.getChildren().add(0, hideBottom);
+					}
+				} else {
+					if (!buttonAnchorPane.getChildren().contains(hideBottom)) {
+						buttonAnchorPane.getChildren().add(hideBottom);
+						AnchorPane.setRightAnchor(hideBottom, 0.0);
+						AnchorPane.setTopAnchor(hideBottom, 6.0);
+					}
+				}
+
+
+		});
+
+		// 隐藏 隐藏按钮
+		buttonAnchorPane.setOnMouseExited(event -> {
+				// 隐藏按钮
+				JFXButton hideBottom = SheetDataValue.hideBottom;
+
+				if (SheetDataValue.isSideRight) {
+					if (btnHbox.getChildren().contains(hideBottom)) {
+						btnHbox.getChildren().remove(hideBottom);
+					}
+				} else {
+					if (buttonAnchorPane.getChildren().contains(hideBottom)) {
+						buttonAnchorPane.getChildren().remove(hideBottom);
+					}
+				}
+		});
+
 		// 选中的时候添加sideRight按钮
 		this.selectedProperty().addListener((a,b,c)-> {
 			if (c) {
@@ -88,9 +124,6 @@ public class MyBottomSheet extends  Tab{
 				JFXButton hideBottom = SheetDataValue.hideBottom;
 				if (!btnHbox.getChildren().contains(sideRightBottomBtn)) {
 					btnHbox.getChildren().add(0, sideRightBottomBtn);
-				}
-				if (!btnHbox.getChildren().contains(hideBottom)) {
-					btnHbox.getChildren().add(0, hideBottom);
 				}
 			}
 		});

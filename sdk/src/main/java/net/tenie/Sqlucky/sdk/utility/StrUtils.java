@@ -287,6 +287,23 @@ public class StrUtils {
 
     }
 
+
+    // 删除空行
+    public static String cleanEmptyLine(String text) {
+        StringBuilder str = new StringBuilder();
+        text = text.replaceAll("\r", "");
+        String val[] = text.split("\n");
+        if (val.length > 0) {
+            for (String line : val) {
+                if (line.trim().length() > 0 ){
+                    str.append(line + "\n");
+                }
+            }
+            return str.toString();
+        }
+        return text;
+    }
+
     public static UUID getRandomUUID() {
         return UUID.randomUUID();
     }

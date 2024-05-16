@@ -63,7 +63,8 @@ public class SheetDataValue {
 
 	public static JFXButton hideBottom = new JFXButton();
 
-	public static JFXButton sideRightBottom = new JFXButton();;
+	public static JFXButton sideRightBottom = new JFXButton();
+	public static boolean isSideRight = false;
 	static {
 		// 底部sheet 位置切换操作
 		Region zeroPositionBottom = IconGenerator.svgImageDefActive("zero-position-bottom");
@@ -106,6 +107,7 @@ public class SheetDataValue {
 
 				// 全局的隐藏按钮
 				CommonButtons.hideBottom.setGraphic(leftRegion2);
+				isSideRight = false;
 
 			}else {
 				sideRightBottom.setGraphic(zeroPositionBottom);
@@ -119,7 +121,7 @@ public class SheetDataValue {
 				hideBottom.setGraphic(rightRegion);
 				// 全局的隐藏按钮
 				CommonButtons.hideBottom.setGraphic(rightRegion2);
-
+				isSideRight = true;
 			}
 
 		});
