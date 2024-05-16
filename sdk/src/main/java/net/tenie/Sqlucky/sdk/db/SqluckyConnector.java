@@ -74,6 +74,7 @@ public abstract class SqluckyConnector {
 					isClosed = this.connPo.getConn().isClosed();
 				} catch (SQLException e) {
 					e.printStackTrace();
+					return false;
 				}
 				if (!isClosed) {
 					tf = true;

@@ -1,7 +1,5 @@
 package net.tenie.Sqlucky.sdk.component;
 
-import org.controlsfx.control.tableview2.FilteredTableView;
-
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.Tab;
@@ -12,6 +10,7 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DraggingTabPaneSupport;
+import org.controlsfx.control.tableview2.FilteredTableView;
 
 /*   
  * 展示(数据, ddl等)面板的容器
