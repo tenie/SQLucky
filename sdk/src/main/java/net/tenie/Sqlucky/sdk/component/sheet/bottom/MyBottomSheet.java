@@ -273,6 +273,7 @@ public class MyBottomSheet extends  Tab{
 		VBox.setVgrow(sqlArea, Priority.ALWAYS);
 
 		mtb.show();
+		sqlArea.getCodeArea().showFindReplaceTextBox(false, "");
 		return mtb;
 	}
 
@@ -314,6 +315,7 @@ public class MyBottomSheet extends  Tab{
 		VBox.setVgrow(sqlArea, Priority.ALWAYS);
 
 		mtb.show();
+		sqlArea.getCodeArea().showFindReplaceTextBox(false, "");
 		return mtb;
 	}
 
