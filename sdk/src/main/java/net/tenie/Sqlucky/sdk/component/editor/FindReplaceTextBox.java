@@ -126,6 +126,12 @@ public class FindReplaceTextBox extends  VBox {
 		findString(str, idx, sensitive, forward);
 	}
 
+	public  void findStringFromCodeAreaBeginHead( String str, boolean forward, boolean sensitive) {
+		if (StrUtils.isNullOrEmpty(str))
+			return;
+		findString(str, 0, sensitive, forward);
+	}
+
 	/**
 	 * 找不到就停止查找
 	 *
@@ -232,7 +238,7 @@ public class FindReplaceTextBox extends  VBox {
 
 
 	// 查找的计数action
-	private void countAction() {
+	private int  countAction() {
 		String sqlTxt = codeArea.getText();
 
 		int countVal = 0;
@@ -246,6 +252,8 @@ public class FindReplaceTextBox extends  VBox {
 			}
 			countLabel.setText(countVal + "");
 		}
+
+		return countVal;
 
 	}
 
@@ -311,7 +319,9 @@ public class FindReplaceTextBox extends  VBox {
 		});
 		textField.textProperty().addListener((obj, vOld, vNew) -> {
 			if (StrUtils.isNotNullOrEmpty(vNew)) {
-				countAction();
+				if( countAction() > 0) {
+					findStringFromCodeAreaBeginHead(textField.getText(), true, !sensitiveCheckBox.isSelected());
+				}
 			} else {
 				countLabel.setText("");
 			}

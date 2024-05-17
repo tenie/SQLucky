@@ -196,7 +196,13 @@ public class AppCommonAction {
     public static void underlineCaseCamel() {
 
         CodeArea code = MyEditorSheetHelper.getCodeArea();
-        String text = code.getSelectedText();
+        String text = null;
+        if (code != null) {
+            text = code.getSelectedText();
+        }else{
+            return;
+        }
+
         if (StrUtils.isNullOrEmpty(text))
             return;
         IndexRange i = code.getSelection(); // 获取当前选中的区间
@@ -204,7 +210,6 @@ public class AppCommonAction {
         int end = i.getEnd();
         // 将原文本删除
         code.deleteText(start, end);
-        // 插入 注释过的文本
         text = StrUtils.underlineCaseCamel(text);
         code.insertText(start, text);
         MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
