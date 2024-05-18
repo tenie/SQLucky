@@ -143,7 +143,7 @@ public class RunSQLHelper {
 	private static Integer execSqlList(List<SqlData> allsqls, SqluckyConnector sqluckyConn, RunSqlStatePo state) {
 		int rsVal = 1;
 		String sqlstr;
-		String sql;
+		String execSql;
 	
 		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
@@ -151,39 +151,40 @@ public class RunSQLHelper {
 
 		for (int i = 0; i < sqllenght; i++) {
 			sqlstr = allsqls.get(i).sql();
-			sql = sqlstr;
-			int type = ParseSQL.parseType(sql);
+			execSql = StrUtils.trimAllComment(sqlstr);
+
+			int type = ParseSQL.parseType(execSql);
 			String msg = "";
 			
-			SdkComponent.setWaitTabLabelText(sql);
+			SdkComponent.setWaitTabLabelText(sqlstr);
 			try {
 				if (state.getIsCallFunc()) { // 调用存储过程
-					ProcedureAction.procedureAction(sql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
+					ProcedureAction.procedureAction(execSql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
 				} else if (type == ParseSQL.SELECT) { // 调用查询
-					SelectAction.selectAction(sql, sqluckyConn, state.getTidx(), state.getIsLock() );
+					SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock() );
 				} else { 
 					Connection conn = sqluckyConn.getConn();
 					if (type == ParseSQL.UPDATE) {
-						msg = DmlDdlDao.updateSql2(conn, sql);
-						logger.info("add update sql: " + sql);
+						msg = DmlDdlDao.updateSql2(conn, execSql);
+						logger.info("add update sql: " + execSql);
 					} else if (type == ParseSQL.INSERT) {
-						msg = DmlDdlDao.insertSql2(conn, sql);
-						logger.info("add insert sql: " + sql);
+						msg = DmlDdlDao.insertSql2(conn, execSql);
+						logger.info("add insert sql: " + execSql);
 					} else if (type == ParseSQL.DELETE) {
-						msg = DmlDdlDao.deleteSql2(conn, sql);
-						logger.info("add DELETE sql: " + sql);
+						msg = DmlDdlDao.deleteSql2(conn, execSql);
+						logger.info("add DELETE sql: " + execSql);
 					} else if (type == ParseSQL.DROP) {
-						msg = DmlDdlDao.dropSql2(conn, sql);
-						logger.info("add DROP sql: " + sql);
+						msg = DmlDdlDao.dropSql2(conn, execSql);
+						logger.info("add DROP sql: " + execSql);
 					} else if (type == ParseSQL.ALTER) {
-						msg = DmlDdlDao.alterSql2(conn, sql);
-						logger.info("add ALTER sql: " + sql);
+						msg = DmlDdlDao.alterSql2(conn, execSql);
+						logger.info("add ALTER sql: " + execSql);
 					} else if (type == ParseSQL.CREATE) {
-						msg = DmlDdlDao.createSql2(conn, sql);
-						logger.info("add CREATE sql: " + sql);
+						msg = DmlDdlDao.createSql2(conn, execSql);
+						logger.info("add CREATE sql: " + execSql);
 					} else {
-						msg = DmlDdlDao.otherSql2(conn, sql);
-						logger.info("add OTEHR sql: " + sql);
+						msg = DmlDdlDao.otherSql2(conn, execSql);
+						logger.info("add OTEHR sql: " + execSql);
 					}
 
 				}

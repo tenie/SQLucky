@@ -565,8 +565,9 @@ public class CommonUtils {
     // TODO 从存储过程语句中提取参数
     public static List<ProcedureFieldPo> getProcedureFields(String ddl) {
         List<ProcedureFieldPo> rs = new ArrayList<>();
-        ddl = StrUtils.multiLineCommentToSpace(ddl);
-        ddl = MyEditorSheetHelper.trimCommentToSpace(ddl, "--");
+//        ddl = StrUtils.multiLineCommentToSpace(ddl);
+//        ddl = StrUtils.trimCommentToSpace(ddl, "--");
+        ddl = StrUtils.replaceAllCommentToSpace(ddl);
         // 给ddl分词, 找到过程名称后面的参数列表
         ddl = StrUtils.pressString(ddl).toUpperCase();
         if (procedureIsNoParameter(ddl)) { // 没有参数直接返回

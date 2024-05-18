@@ -38,7 +38,7 @@ public class CommonListener {
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 				if (StrUtils.isNotNullOrEmpty(newValue)) {
-					String str = StrUtils.clearString(newValue);
+					String str = StrUtils.clearStrToNumericStr(newValue);
 					if (str != null && str.length() > 0) {
 						ConfigVal.MaxRows = Integer.valueOf(str);
 					} else {

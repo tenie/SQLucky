@@ -13,6 +13,7 @@ import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import net.tenie.Sqlucky.sdk.po.MyRange;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -28,6 +29,9 @@ public class StrUtils {
     public final static String EMPTY_STRING = "";
     public final static String BLANK_SPRING_STRING = " ";
     public static final char CHAR_TILDE = '~';
+
+    // 占位符
+    public static final String PLACEHOLDERS =" _placeholders-yYJMhfbTQtnkg9lt2fHv_ ";
 
     /**
      * 替换字符串
@@ -142,16 +146,26 @@ public class StrUtils {
         return rs.toString();
     }
 
-    // 去除多行注释 /*  ??  */   "(/\\*[\\s\\S]*?\\*/)";
+    /**
+     * 去除多行注释
+     * @param sql
+     * @return
+     */
+    // /*  ??  */   "(/\\*[\\s\\S]*?\\*/)";
     public static String rmMultiLineComment(String sql) {
         String ps = "/\\*([\\s\\S]*?)\\*/";
         Pattern p = Pattern.compile(ps); // Pattern p = Pattern.compile("\\s*|\t|\r|\n");
         Matcher m = p.matcher(sql);
-        String val = m.replaceAll("");
-        return val;
+        return m.replaceAll("");
     }
 
-    //去除多行注释 /*  ??  */   "(/\\*[\\s\\S]*?\\*/)";
+    /**
+     * 多行注释 转为空格
+     * @param sql
+     * @return
+     */
+    // /*  ??  */   "(/\\*[\\s\\S]*?\\*/)";
+    @Deprecated
     public static String multiLineCommentToSpace(String sql) {
         String ps = "/\\*([\\s\\S]*?)\\*/";
         Pattern p = Pattern.compile(ps);
@@ -271,8 +285,12 @@ public class StrUtils {
         return rs.toString();
     }
 
-    // 去除字符串中的非数字部分
-    public static String clearString(String str) {
+    /**
+     *  去除字符串中的非数字部分
+     * @param str
+     * @return
+     */
+    public static String clearStrToNumericStr(String str) {
         StringBuffer val = new StringBuffer();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
@@ -283,12 +301,24 @@ public class StrUtils {
         return val.toString();
     }
 
-    // 去除字符串中的非数字部分
+    /**
+     * 判断字符串是不是数字
+     * @param str
+     * @return 是数字返回true
+     */
     public static boolean isNumeric(String str) {
-        return !str.isEmpty() && str.matches("-?\\d+(\\.\\d+)?");
+        boolean tf = false;
+        if(!str.isEmpty() ){
+            tf = str.matches("-?\\d+(\\.\\d+)?");
+        }
+        return  tf;
     }
 
-    // 去除字符串中的非数字部分, 包含.
+    /**
+     * 去除字符串中的非数字部分, 包含. 如: 文本框只能输入ip字符串
+     * @param str
+     * @return
+     */
     public static String clearIpStr(String str) {
         StringBuffer val = new StringBuffer();
         for (int i = 0; i < str.length(); i++) {
@@ -300,7 +330,11 @@ public class StrUtils {
         return val.toString();
     }
 
-    // 压缩字符串, 除注释行外所有的行合并成一行
+    /**
+     *  压缩字符串, 除注释行外所有的行合并成一行
+     * @param text
+     * @return
+     */
     public static String pressString(String text) {
         StringBuilder str = new StringBuilder();
         text = text.replaceAll("\r", "");
@@ -339,7 +373,11 @@ public class StrUtils {
     }
 
 
-    // 删除空行
+    /**
+     * 删除空行
+     * @param text
+     * @return
+     */
     public static String cleanEmptyLine(String text) {
         StringBuilder str = new StringBuilder();
         text = text.replaceAll("\r", "");
@@ -355,10 +393,20 @@ public class StrUtils {
         return text;
     }
 
+    /**
+     * 获取uuid
+     * @return
+     */
     public static UUID getRandomUUID() {
         return UUID.randomUUID();
     }
 
+    /**
+     * 判断字符串开始的字符串时候是 tag
+     * @param str
+     * @param tag
+     * @return
+     */
     public static boolean beginWith(String str, String tag) {
         boolean tf = false;
         if (str != null && tag != null && str.length() >= tag.length()) {
@@ -369,6 +417,12 @@ public class StrUtils {
         return tf;
     }
 
+    /**
+     * 判断字符串开始的字符串时候是 tag, 大小写不敏感
+     * @param str
+     * @param tag
+     * @return
+     */
     public static boolean beginWithNotSensitive(String str, String tag) {
         boolean tf = false;
         if (str != null && tag != null && str.length() > tag.length()) {
@@ -379,7 +433,9 @@ public class StrUtils {
         return tf;
     }
 
-    // 去除多余空白字符， 转化为一个“ ”
+    /**
+     *    去除多余空白字符， 转化为一个" "
+     */
     public static String clearBlank(String str) {
         String temp = str.replaceAll("\r", "");
         temp = temp.replaceAll("\n", " ");
@@ -399,8 +455,12 @@ public class StrUtils {
         return rs;
     }
 
-    // 生成一定长度的空白字符串
-    public static String createBlank(int len) {
+    /**
+     * 生成一定长度的空白字符串
+     * @param len
+     * @return
+     */
+    public static String createBlankString(int len) {
         StringBuilder strb = new StringBuilder("");
         for (int i = 0; i < len; i++) {
             strb.append(" ");
@@ -409,6 +469,7 @@ public class StrUtils {
     }
 
     // 去除注释
+    @Deprecated
     public static String trimComment(String sql, String symbol) {
         if (!sql.contains(symbol)) return sql;
         String str = sql.replaceAll(symbol, "\n" + symbol);
@@ -424,7 +485,7 @@ public class StrUtils {
                 if (!beginWith(temp, symbol)) {
                     nstr += temp + "\n";
                 } else {
-                    nstr += createBlank(temp.length());
+                    nstr += createBlankString(temp.length());
                 }
             }
         }
@@ -434,6 +495,284 @@ public class StrUtils {
         return nstr.trim();
     }
 
+    /**
+     * 去除所有注释
+     * @param textVal
+     * @return
+     */
+    public static String trimAllComment(String textVal) {
+        // 1. 先把文本中的字符串替换调
+        matherString msVal = getStringMatcher(textVal);
+        // 替换后的文本
+        String textNew = msVal.newString();
+
+        String COMMENT_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
+        Pattern pattern = Pattern.compile(COMMENT_PATTERN); //去掉空格符合换行符
+        Matcher matcher = pattern.matcher(textNew);
+        if (matcher.find()){
+            textNew =  matcher.replaceAll("");
+        }
+        // 还原占位符原本的字符串
+        textNew = recoverStringMatcher(msVal, textNew);
+        return textNew;
+    }
+    /**
+     * 所有的注释替换成空格
+     * 1. 找到所有的文本中的字符串, 用特殊符号占位( 避免字符串中的注释字符串也被清掉)
+     * 2. 找到所有文本中的注释, 替换成空格字符串
+     * 3. 还原第一步操作
+     * @param textVal
+     * @return
+     */
+    public static String replaceAllCommentToSpace(String textVal) {
+        // 1. 先把文本中的字符串替换调
+        matherString msVal = getStringMatcher(textVal);
+        // 替换后的文本
+        String textNew = msVal.newString();
+
+        String COMMENT_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
+        Pattern pattern = Pattern.compile(COMMENT_PATTERN); //去掉空格符合换行符
+        Matcher matcher = pattern.matcher(textNew);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        int count = 0;
+        int rangeBegin = 0;
+        while (matcher.find()) {
+            count++;
+            String blankStr = createBlankString(matcher.end() - matcher.start());
+            System.out.println("found: " + count + " : " + matcher.start() + " - " + matcher.end());
+            String tmp1 = textNew.substring(rangeBegin,  matcher.start() );
+            stringBuilder.append(tmp1);
+            stringBuilder.append(blankStr);
+            rangeBegin  = matcher.end();
+
+        }
+        String endst = textNew.substring(rangeBegin);
+        stringBuilder.append(endst);
+        String strVal = stringBuilder.toString();
+        // 还原占位符原本的字符串
+        strVal = recoverStringMatcher(msVal, strVal);
+        return strVal;
+    }
+
+
+    /**
+     * 文本中的字符串替换成空格
+     * 1. 找到所有的文本中的字符串, 用特殊符号占位( 避免字符串中的注释字符串也被清掉)
+     * 2. 找到所有文本中的注释, 替换成空格字符串
+     * 3. 还原第一步操作
+     * @param textVal
+     * @return
+     */
+    public static String replaceAllStringToSpace(String textVal) {
+        // 1. 先把文本中的字符串替换调
+        matherString msVal = getStringMatcher(textVal);
+        // 替换后的文本
+        String textNew = msVal.newString();
+
+        String COMMENT_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
+        Pattern pattern = Pattern.compile(COMMENT_PATTERN); //去掉空格符合换行符
+        Matcher matcher = pattern.matcher(textNew);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        int count = 0;
+        int rangeBegin = 0;
+        while (matcher.find()) {
+            count++;
+            String blankStr = createBlankString(matcher.end() - matcher.start());
+            System.out.println("found: " + count + " : " + matcher.start() + " - " + matcher.end());
+            String tmp1 = textNew.substring(rangeBegin,  matcher.start() );
+            stringBuilder.append(tmp1);
+            stringBuilder.append(blankStr);
+            rangeBegin  = matcher.end();
+
+        }
+        String endst = textNew.substring(rangeBegin);
+        stringBuilder.append(endst);
+        String strVal = stringBuilder.toString();
+        // 还原占位符原本的字符串
+        strVal = recoverStringMatcher(msVal, strVal);
+        return strVal;
+    }
+    /*
+     * 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
+     * 1. 先在原始文本中找到sql的字符串, 替换为空白字符串,得到一个新文本
+     * 2. 在新文本中根据 ; 分割字符串, 得到每个分割出来的子串在文本中的区间
+     * 3. 根据区间, 在原始文本中 提炼出sql语句
+     */
+    public static List<String> findSQLFromTxt(String textVal) {
+        // 1. 先把文本中的字符串替换为空格
+       String  textValNew =  replaceAllStringToSpace(textVal);
+
+        // 找到所有的sql分割符 ";"
+        List<Integer> idxList = findStrAllIndex(textValNew,";", false);
+
+        // 分割
+        List<String> stringList = new ArrayList<>();
+        if(!idxList.isEmpty()) {
+            int start = 0;
+            for (Integer idx : idxList) {
+                String tmp = textVal.substring(start, idx);
+                start = idx+1;
+                if (isNotNullOrEmpty(tmp)) {
+                    stringList.add(tmp);
+                }
+            }
+            String tmp = textVal.substring(start);
+            if (isNotNullOrEmpty(tmp) &&  !"".equals(tmp.trim())) {
+                stringList.add(tmp);
+            }
+        }
+        return stringList;
+    }
+
+    @Deprecated
+    public static List<String> findSQLFromTxt2(String text) {
+        String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
+        String patternString = "(?<STRING>" + STRING_PATTERN + ")";
+        Pattern PATTERN = Pattern.compile(patternString);
+        Matcher matcher = PATTERN.matcher(text);
+        String txtTmp = "";
+        int lastKwEnd = 0;
+        // 把匹配到的sql的字符串替换为对应长度的空白字符串, 得到一个和原始文本一样长度的新字符串
+        while (matcher.find()) {
+//			 String styleClass = matcher.group("STRING") != null ? "string" : null;
+            int start = matcher.start();
+            int end = matcher.end();
+            int len = end - start;
+            String space = StrUtils.createBlankString(len);
+            String tmp = text.substring(start, end);
+//			 logger.info("len = "+len+" ; tmp = " + tmp);
+            txtTmp += text.substring(lastKwEnd, start) + space;
+            lastKwEnd = end;
+        }
+        if (lastKwEnd > 0) {
+            String txtEnd = text.substring(lastKwEnd, text.length());
+            txtTmp += txtEnd;
+        } else {
+            txtTmp = text;
+        }
+//		logger.info("txtTmp = " + txtTmp);
+
+        // TODO 在新字符上面, 提取字sql语句的区间
+        String str = txtTmp;
+        // 根据区间提炼出真正要执行的sql语句
+        List<String> sqls = new ArrayList<>();
+        if (str.contains(";")) {
+            List<MyRange> idxs = new ArrayList<>();
+            String[] all = str.split(";"); // 分割多个语句
+            if (all != null && all.length > 0) {
+                int ss = 0;
+                for (int i = 0; i < all.length; i++) {
+                    String s = all[i];
+                    int end = ss + s.length();
+                    if (end > str.length()) {
+                        end--;
+                    }
+                    MyRange mr = new MyRange(ss, end);
+                    ss = end + 1;
+                    idxs.add(mr);
+                }
+            }
+            for (MyRange mr : idxs) {
+                int s = mr.getStart();
+                int e = mr.getEnd();
+                String tmps = text.substring(s, e);
+                sqls.add(tmps);
+            }
+        } else {
+            sqls.add(text);
+        }
+
+        return sqls;
+    }
+
+
+    /**
+     将注释部分转换为空格字符,保持字符串的长度
+     注意: 考虑字符串中的注释符号
+     * symbol 注释的符号
+     *
+     */
+    @Deprecated
+    public static String trimCommentToSpace(String sql, String symbol) {
+        if (!sql.contains(symbol))
+            return sql;
+
+        // 对包含在字符串中的 symbol 字符串不做处理, 用正则把字符串使用占位符替换掉
+        matherString msVal = getStringMatcher(sql);
+        String sqlNew = msVal.newString();
+        // 在symbol前插入换行符, 之后就是对行的处理
+        String str = sqlNew.replaceAll(symbol, "\n" + symbol);
+        if (str.contains("\r")) {
+            str = str.replace("\r", "");
+        }
+
+        String[] sa = str.split("\n");
+        String nstr = "";
+        if (sa != null && sa.length > 1) {
+            // 遍历行
+            for (int i = 0; i < sa.length; i++) {
+                String temp = sa[i];
+                // 如果不是以symbol开头的字符串就保持到nstr字符串
+                if (!StrUtils.beginWith(temp, symbol)) {
+                    nstr += temp + "\n";
+                } else {
+                    // 生成空白行的字符串
+                    String space = StrUtils.createBlankString(temp.length());
+
+                    nstr = nstr.substring(0, nstr.length() - 1);
+                    nstr += space + "\n";
+                }
+            }
+        }
+        if ("".equals(nstr)) {
+            nstr = sql;
+        }else {
+            nstr = recoverStringMatcher(msVal, nstr);
+        }
+
+        return nstr;
+    }
+    /**
+     * 用来字符串替换的数据结构
+     * @param matcherObj
+     * @param newString
+     * @param replaceStr
+     */
+    public record matherString(Matcher matcherObj, String newString, List<String> replaceStr ) {}
+
+    /**
+     * 正则匹配字符串, 找出字符串中的字符串 如: "字符串" '字符串'
+     * @param valStr
+     * @return
+     */
+    public static matherString getStringMatcher(String valStr) {
+        String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'|`([^`\\\\]|\\\\.)*`";
+        Pattern patn = Pattern.compile(STRING_PATTERN);
+        Matcher matr = patn.matcher(valStr);
+        List<String> tmpStrLs = new ArrayList<>();
+        while (matr.find()) {
+            String cutstr = valStr.substring(matr.start(), matr.end());
+            tmpStrLs.add(cutstr);
+        }
+        String str2 = matr.replaceAll(PLACEHOLDERS);
+        var rs = new matherString(matr, str2, tmpStrLs);
+        return rs;
+    }
+    /**
+     * 恢复字符串中的字符串
+     * @param msval
+     * @param strVal
+     * @return
+     */
+    public static String recoverStringMatcher(matherString msval, String strVal) {
+        List<String> ls = msval.replaceStr();
+        for(String str : ls) {
+            strVal = strVal.replaceFirst(PLACEHOLDERS, str);
+        }
+        return strVal;
+    }
     /**
      * check if null or empty string
      */

@@ -417,17 +417,18 @@ public class SqluckyAppDB {
 		String selectStr = "";
 		int start = 0;
 		CodeArea codeArea = MyEditorSheetHelper.getCodeArea();
-		if(isAll) { //所有文本
+
+		if(isAll) {
+			// codeArea 所有文本
 			str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
 		}else {
 			// 获取选中的文本
 			selectStr = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
 			str = selectStr;
 		}
-		
-		
+
+		// 如果str还是空, 获取光标所在当前行文本
 		if(StrUtils.isNullOrEmpty(str)) {
-			// 光标所在当前行文本
 			str = MyEditorSheetHelper.getCurrentLineText();
 		} 
 		if (str != null && str.length() > 0) {
@@ -449,10 +450,10 @@ public class SqluckyAppDB {
 	// 将sql 字符串根据;分割成多个字符串 并计算其他信息
 	private static List<SqlData> epurateSql(String str, int start) {
 
-		str = StrUtils.trimComment(str, "--");
+		str = StrUtils.replaceAllCommentToSpace(str);
 		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = MyEditorSheetHelper.findSQLFromTxt(str);
+		List<String> sqls = StrUtils.findSQLFromTxt(str);
 
 		if (sqls.size() > 0) {
 			for (String s : sqls) {
@@ -474,7 +475,7 @@ public class SqluckyAppDB {
 	public static List<SqlData> epurateSql(String str) {
 		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-		List<String> sqls = MyEditorSheetHelper.findSQLFromTxt(str);
+		List<String> sqls = StrUtils.findSQLFromTxt(str);
 
 		if (sqls.size() > 0) {
 			for (String s : sqls) {
