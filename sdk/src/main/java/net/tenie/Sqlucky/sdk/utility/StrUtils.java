@@ -1,23 +1,17 @@
 package net.tenie.Sqlucky.sdk.utility;
 
-import java.io.File;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import javafx.beans.property.StringProperty;
+import javafx.scene.control.IndexRange;
 import net.tenie.Sqlucky.sdk.po.MyRange;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import javafx.beans.property.StringProperty;
+import java.io.File;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class StrUtils {
@@ -30,8 +24,116 @@ public class StrUtils {
     public final static String BLANK_SPRING_STRING = " ";
     public static final char CHAR_TILDE = '~';
 
+    // 字符串正则
+//    public static final  String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'|`([^`\\\\]|\\\\.)*`";
+
+    public static final  String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
+    // 注释
+    public static final  String COMMENT_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
+
+    // xml 元素
+    public static final  String XML_ELE_PATTERN =  "\\<.[^<>]*\\>";
+
+    // xml 元素
+    public static final  String MYBATIS_PARAM_PATTERN =  "#\\{(.|\\R)*?\\}" + "|"  + "\\$\\{(.|\\R)*?\\}";
     // 占位符
     public static final String PLACEHOLDERS =" _placeholders-yYJMhfbTQtnkg9lt2fHv_ ";
+
+    /**
+     * 文本中对 区间内的行加注解
+     * @param text
+     * @param i
+     * @return
+     */
+    public static String textAddCommentsByRange(String text, IndexRange i) {
+        int start = i.getStart();
+        int end = i.getEnd();
+        StringBuilder rsStr = new StringBuilder();
+
+        // 修正开始下标 , 获取开始之前的字符串, 找到最接近start 的换行符
+        String frontTxt = text.substring(0, start);
+        int lidx = frontTxt.lastIndexOf('\n'); // 找到最后一个换行符
+        if (lidx > 0) {
+            lidx = frontTxt.length() - lidx - 1; // 获取换行符的位置, 不包括换行符自己
+            start = start - lidx; // start的位置定位到最后一个换行符之后
+        } else { // 如果没有找到换行符, 说明在第一行, 把start置为0
+            start = 0;
+        }
+        // 获取文本
+        String txt = text.substring(start, end);
+        // 添加注释
+        if (!StrUtils.beginWith(txt.trim(), "--")) {
+            txt = txt.replaceAll("\n", "\n-- ");
+            txt = "-- " + txt;
+        }
+        rsStr.append(text.substring(0, start));
+        rsStr.append(txt);
+        rsStr.append(text.substring(end));
+        return rsStr.toString();
+    }
+
+
+    /**
+     * 根据下标从文本中找到下标所在的行
+     * @return
+     */
+    public static int findIndexLine(String text, int strIdx){
+        List<Integer> idxList = findStrAllIndex(text, "\n", false);
+        int tmpIdx = -1;
+        if (idxList.isEmpty()){
+            tmpIdx = 0;
+        }else {
+            idxList.add(0, 0);
+        }
+        for(int i = 0 ; i < idxList.size(); i++){
+            int idx = idxList.get(i);
+            if( strIdx < idx){
+                if(i == 0){
+                    tmpIdx = idxList.get( i );
+                }else {
+                    tmpIdx = idxList.get( i -1);
+                }
+                break;
+            }
+        }
+        return  tmpIdx;
+    }
+
+    /**
+     * 根据下标从文本中找到下标所在的行
+     * @return
+     */
+    public static MyRange findIndexLineRange(String text, int strIdx){
+        List<Integer> idxList = findStrAllIndex(text, "\n", false);
+        int tmpIdxStart = -1;
+        int tmpIdxEnd = -1;
+        MyRange mr = null;
+        if (idxList.isEmpty()){
+            tmpIdxStart = 0;
+        }else {
+            idxList.add(0, 0);
+        }
+        for(int i = 0 ; i < idxList.size(); i++){
+            int idx = idxList.get(i);
+            if( strIdx < idx){
+                if(i == 0){
+                    tmpIdxStart = 0;
+                    tmpIdxEnd = 0;
+
+                }else {
+                    tmpIdxStart = idxList.get( i -1);
+                    tmpIdxEnd = idx-1;
+                }
+                break;
+            }
+        }
+        if(tmpIdxEnd > -1 && tmpIdxStart > -1){
+             mr = new MyRange(tmpIdxStart, tmpIdxEnd);
+        }
+
+        return  mr;
+    }
+
 
     /**
      * 替换字符串
@@ -496,6 +598,18 @@ public class StrUtils {
     }
 
     /**
+     * 创建Matcher
+     * @param patternStr
+     * @param val
+     * @return
+     */
+    public static Matcher createMatcher(String patternStr, String val){
+        Pattern pattern = Pattern.compile(patternStr); //去掉空格符合换行符
+        Matcher matcher = pattern.matcher(val);
+        return matcher;
+    }
+
+    /**
      * 去除所有注释
      * @param textVal
      * @return
@@ -506,9 +620,7 @@ public class StrUtils {
         // 替换后的文本
         String textNew = msVal.newString();
 
-        String COMMENT_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
-        Pattern pattern = Pattern.compile(COMMENT_PATTERN); //去掉空格符合换行符
-        Matcher matcher = pattern.matcher(textNew);
+        Matcher matcher = createMatcher(COMMENT_PATTERN,textNew );
         if (matcher.find()){
             textNew =  matcher.replaceAll("");
         }
@@ -530,9 +642,7 @@ public class StrUtils {
         // 替换后的文本
         String textNew = msVal.newString();
 
-        String COMMENT_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
-        Pattern pattern = Pattern.compile(COMMENT_PATTERN); //去掉空格符合换行符
-        Matcher matcher = pattern.matcher(textNew);
+        Matcher matcher = createMatcher(COMMENT_PATTERN,textNew );
 
         StringBuilder stringBuilder = new StringBuilder();
         int count = 0;
@@ -570,9 +680,7 @@ public class StrUtils {
         // 替换后的文本
         String textNew = msVal.newString();
 
-        String COMMENT_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
-        Pattern pattern = Pattern.compile(COMMENT_PATTERN); //去掉空格符合换行符
-        Matcher matcher = pattern.matcher(textNew);
+        Matcher matcher = createMatcher(COMMENT_PATTERN,textNew );
 
         StringBuilder stringBuilder = new StringBuilder();
         int count = 0;
@@ -628,10 +736,8 @@ public class StrUtils {
 
     @Deprecated
     public static List<String> findSQLFromTxt2(String text) {
-        String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
         String patternString = "(?<STRING>" + STRING_PATTERN + ")";
-        Pattern PATTERN = Pattern.compile(patternString);
-        Matcher matcher = PATTERN.matcher(text);
+        Matcher matcher = createMatcher(patternString,text );
         String txtTmp = "";
         int lastKwEnd = 0;
         // 把匹配到的sql的字符串替换为对应长度的空白字符串, 得到一个和原始文本一样长度的新字符串
@@ -748,9 +854,7 @@ public class StrUtils {
      * @return
      */
     public static matherString getStringMatcher(String valStr) {
-        String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'|`([^`\\\\]|\\\\.)*`";
-        Pattern patn = Pattern.compile(STRING_PATTERN);
-        Matcher matr = patn.matcher(valStr);
+        Matcher matr = createMatcher(STRING_PATTERN, valStr );
         List<String> tmpStrLs = new ArrayList<>();
         while (matr.find()) {
             String cutstr = valStr.substring(matr.start(), matr.end());
@@ -760,6 +864,76 @@ public class StrUtils {
         var rs = new matherString(matr, str2, tmpStrLs);
         return rs;
     }
+
+    /**
+     * 正则匹配字符串, 找出字符串中的字符串 如: "字符串" '字符串'
+     * @param valStr
+     * @return
+     */
+    public static matherString getCommentMatcher(String valStr) {
+        Matcher matr = createMatcher(STRING_PATTERN, valStr );
+        List<String> tmpStrLs = new ArrayList<>();
+        while (matr.find()) {
+            String cutstr = valStr.substring(matr.start(), matr.end());
+            tmpStrLs.add(cutstr);
+        }
+        String str2 = matr.replaceAll(PLACEHOLDERS);
+        var rs = new matherString(matr, str2, tmpStrLs);
+        return rs;
+    }
+
+
+    /**
+     * 正则匹配字符串, 找出xml元素, 换成占位符, 如 <></>
+     * @param valStr
+     * @return
+     */
+    public static matherString getXmlEleMatcher(String valStr) {
+        Matcher matr = createMatcher(XML_ELE_PATTERN, valStr );
+        List<String> tmpStrLs = new ArrayList<>();
+        while (matr.find()) {
+            String cutstr = valStr.substring(matr.start(), matr.end());
+            tmpStrLs.add(cutstr);
+        }
+        String str2 = matr.replaceAll(PLACEHOLDERS);
+        var rs = new matherString(matr, str2, tmpStrLs);
+        return rs;
+    }
+
+    /**
+     * 正则匹配字符串, 找出myBatis元素, 换成占位符, 如 ${} #{}
+     * @param valStr
+     * @return
+     */
+    public static List<IndexRange>  getMyBatisEleRangeList(String valStr) {
+        Matcher matr = createMatcher(MYBATIS_PARAM_PATTERN, valStr );
+        List<IndexRange> indexRangeList = new ArrayList<>();
+        while (matr.find()) {
+            IndexRange ir = new IndexRange(matr.start(), matr.end());
+            indexRangeList.add(ir);
+        }
+        return indexRangeList;
+    }
+    public static IndexRange  getMyBatisEleRangeFirst(String valStr) {
+        Matcher matr = createMatcher(MYBATIS_PARAM_PATTERN, valStr );
+        IndexRange ir = null;
+        if (matr.find()) {
+              ir = new IndexRange(matr.start(), matr.end());
+        }
+        return ir;
+    }
+
+    public static void main(String[] args) {
+//        String str = "111<if test=\" params.ownerCode !=null \nand \nparams.ownerCode != '' \">222";
+        String str = "  AND OWNER_CODE=#{params.ownerCode}222\n   AND OWNER_CODE=${params.ownerCode}111";
+//        matherString ms = getXmlEleMatcher(str);
+//        str =ms.newString;
+//        System.out.println(str);
+//        int idx =  findIndexLine(str, 40);
+        List<IndexRange> val =  getMyBatisEleRangeList(str);
+        System.out.println(val);
+    }
+
     /**
      * 恢复字符串中的字符串
      * @param msval
@@ -770,6 +944,21 @@ public class StrUtils {
         List<String> ls = msval.replaceStr();
         for(String str : ls) {
             strVal = strVal.replaceFirst(PLACEHOLDERS, str);
+        }
+        return strVal;
+    }
+
+
+    /**
+     * 恢复字符串的时候, 将字符串注释掉
+     * @param msval
+     * @param strVal
+     * @return
+     */
+    public static String recoverStringMatcherToComment(matherString msval, String strVal) {
+        List<String> ls = msval.replaceStr();
+        for(String str : ls) {
+            strVal = strVal.replaceFirst(PLACEHOLDERS, "/*"+str +"*/");
         }
         return strVal;
     }
