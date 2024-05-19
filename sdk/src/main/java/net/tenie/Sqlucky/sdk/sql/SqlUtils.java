@@ -6,6 +6,8 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.fxmisc.richtext.CodeArea;
 
+import java.util.List;
+
 public class SqlUtils {
     // 代码格式化
     public static void formatSqlText() {
@@ -122,22 +124,36 @@ public class SqlUtils {
      * @return
      */
     private static String useXmlConversionElement(String str){
+//        // 1. 先把文本中的xml元素 替换为占位符, 避免把xml标记符号也
+        StrUtils.matherString msVal = StrUtils.getXmlEleMatcher(str);
+        // 替换后的文本
+        str = msVal.newString();
+
         str =  str.replaceAll("<>", "#-#");
         str =  str.replaceAll("<=", "-##");
         str =  str.replaceAll(">=", "##-");
 
-        str =  str.replaceAll(" < ", "<![CDATA[ < ]]>");
-        str =  str.replaceAll(" > ", "<![CDATA[ > ]]>");
+        str =  str.replaceAll("<", "@_@@");
+        str =  str.replaceAll(">", "@@_@");
 
         str =  str.replaceAll("#-#", "<![CDATA[ <> ]]>");
         str =  str.replaceAll("-##", "<![CDATA[ <= ]]>");
         str =  str.replaceAll("##-", "<![CDATA[ >= ]]>");
 
+
+        str =  str.replaceAll("@_@@", " <![CDATA[ < ]]> ");
+        str =  str.replaceAll("@@_@", " <![CDATA[ > ]]> ");
+
+        // 注释掉xml元素
+        str = StrUtils.recoverStringMatcher(msVal, str);
         return str;
     }
 
     /**
-     * 大于小于在 xml中的写法 该为普通
+     * xml中的的转义字符串写法转化为普通字符串, 并且把xml中的元素注释掉
+     * 1. 先把转义符替换成正常字符
+     * 2. 把xml的元素<></> 注释掉
+     * 3. 把 mybatis元素 #{} ${} 注释掉
      * @param str
      * @return
      */
@@ -153,11 +169,11 @@ public class SqlUtils {
         while (str.contains("<![CDATA[ >= ]]>")){
             str =   str.replace("<![CDATA[ >= ]]>", ">=");
         }
-         while (str.contains("<![CDATA[ < ]]>")){
-             str =   str.replace("<![CDATA[ < ]]>", "<");
+        while (str.contains("<![CDATA[ < ]]>")){
+            str =   str.replace("<![CDATA[ < ]]>", "<");
         }
-         while (str.contains("<![CDATA[ > ]]>")){
-             str =   str.replace("<![CDATA[ > ]]>", ">");
+        while (str.contains("<![CDATA[ > ]]>")){
+            str =   str.replace("<![CDATA[ > ]]>", ">");
         }
         //  &lt; < 小于号
         while (str.contains("&lt;")){
@@ -167,8 +183,35 @@ public class SqlUtils {
         while (str.contains("&gt;")){
             str =   str.replace("&gt;", ">");
         }
+        // 1. 先把文本中的xml元素 替换为占位符, 避免把xml标记符号也
+        StrUtils.matherString msVal = StrUtils.getXmlEleMatcher(str);
+        // 替换后的文本
+        str = msVal.newString();
 
 
+        // 注释掉xml元素
+        str = StrUtils.recoverStringMatcherToComment(msVal, str);
+
+        str = myBatisElementAddComment(str);
         return str;
+    }
+
+    /**
+     * mysql 的元素注释掉, 避免sql执行报错, 如 ${} #{}
+     */
+    private static String myBatisElementAddComment(String text){
+        // 1. 先把文本中的字符串替换为占位符
+        StrUtils.matherString msVal = StrUtils.getStringMatcher(text);
+        // 替换后的文本
+        text = msVal.newString();
+        List<IndexRange>  indexRangeList= StrUtils.getMyBatisEleRangeList(text);
+        for(int i = indexRangeList.size() -1; i > -1 ; i --){
+            IndexRange ir = indexRangeList.get(i);
+            text = StrUtils.textAddCommentsByRange(text, ir);
+        }
+
+        text = StrUtils.recoverStringMatcher(msVal, text);
+        return text;
+
     }
 }
