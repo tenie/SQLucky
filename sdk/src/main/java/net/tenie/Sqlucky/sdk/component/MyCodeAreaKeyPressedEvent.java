@@ -22,34 +22,30 @@ import java.util.function.Consumer;
 public class MyCodeAreaKeyPressedEvent {
 
     private static Logger logger = LogManager.getLogger(MyCodeAreaKeyPressedEvent.class);
-    public static void initKeyPressedEvent(SqluckyEditor sqluckyEditor)
-        {
-            MyEditorSheet sheet = sqluckyEditor.getSheet();
-            MyCodeArea codeArea = sqluckyEditor.getCodeArea();
-            MyAutoComplete myAuto =  sqluckyEditor.getMyAuto();
-            // 事件KeyEvent
-            codeArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> 	{
 
-                if (myAuto != null) {
-                    // 提示框还在的情况下又有输入
-                    if (myAuto.isShow()) {
-                        // 输入的是退格键, 需要判断是否要隐藏提示框
-                        if (e.getCode() == KeyCode.BACK_SPACE) {
-                            myAuto.backSpaceHide(codeArea);
-                        }
-                        if (myAuto.isShow()) {
-                            myAuto.hide();
-                            sqluckyEditor.callPopup();
-                        }
+    public static void initKeyPressedEvent(SqluckyEditor sqluckyEditor) {
+        MyEditorSheet sheet = sqluckyEditor.getSheet();
+        MyCodeArea codeArea = sqluckyEditor.getCodeArea();
+        MyAutoComplete myAuto = sqluckyEditor.getMyAuto();
+        // 事件KeyEvent
+        codeArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+
+            if (myAuto != null) {
+                // 提示框还在的情况下又有输入
+                if (myAuto.isShow()) {
+                    // 输入的是退格键, 需要判断是否要隐藏提示框
+                    if (e.getCode() == KeyCode.BACK_SPACE) {
+                        myAuto.backSpaceHide(codeArea);
+                    } else {
+                        // 已经显示的情况, 继续输入时, 先隐藏, 在弹出新的选择框
+                        myAuto.hide();
+                        sqluckyEditor.callPopup();
                     }
-                } else if (e.getCode() == KeyCode.PERIOD) { // 按 "." 跳出补全提示框
+                } else if (e.getCode().isLetterKey()
+                        || e.getCode() == KeyCode.PERIOD
+                        || e.getCode().isDigitKey()) { // 按 "." 跳出补全提示框
                     int anchor = codeArea.getAnchor();
                     Consumer<String> caller = x -> {
-                        try {
-                            Thread.sleep(500);
-                        } catch (InterruptedException e1) {
-                            e1.printStackTrace();
-                        }
                         Platform.runLater(() -> {
                             int lateAnchor = codeArea.getAnchor();
                             if ((lateAnchor - 1) == anchor) {
@@ -58,79 +54,78 @@ public class MyCodeAreaKeyPressedEvent {
                         });
                     };
                     CommonUtils.runThread(caller);
-                    return;
                 }
+            }
 
-                if (e.getCode() != KeyCode.SHIFT &&
-                        e.getCode() != KeyCode.CONTROL &&
-                        e.getCode() != KeyCode.ALT) {
+            if (e.getCode() != KeyCode.SHIFT &&
+                    e.getCode() != KeyCode.CONTROL &&
+                    e.getCode() != KeyCode.ALT) {
 
-                    // 添加新行
-                    if (e.getCode() == KeyCode.ENTER) {
-                        // shift + enter , 光标移动到行位, 在添加新行
-                        if ( e.isShiftDown() ){
-                            // 当前行
-                            var currentParagraph = codeArea.getCurrentParagraph();
-                            var currentParagraphText =  codeArea.getText(currentParagraph);
-                            // 移动到行尾
-                            codeArea.moveTo(currentParagraph, currentParagraphText.length() );
-                            addNewLine(e, codeArea);
-                            // 最后添加一个换行符
-                            codeArea.insertText( codeArea.getAnchor() , "\n");
-                        }else
-                            if (!(e.isControlDown() || e.isAltDown() || e.isShiftDown() || e.isShortcutDown())) {
-                            addNewLine(e, codeArea);
-                        }
-                    }else if (e.getCode() == KeyCode.TAB) { // 文本缩进
-                        codeAreaTab(e, codeArea);
-                    } else if (e.isControlDown() && e.getCode() == KeyCode.A) {
-                        codeArea.selectAll();
+                // 添加新行
+                if (e.getCode() == KeyCode.ENTER) {
+                    // shift + enter , 光标移动到行位, 在添加新行
+                    if (e.isShiftDown()) {
+                        // 当前行
+                        var currentParagraph = codeArea.getCurrentParagraph();
+                        var currentParagraphText = codeArea.getText(currentParagraph);
+                        // 移动到行尾
+                        codeArea.moveTo(currentParagraph, currentParagraphText.length());
+                        addNewLine(e, codeArea);
+                        // 最后添加一个换行符
+                        codeArea.insertText(codeArea.getAnchor(), "\n");
+                    } else if (!(e.isControlDown() || e.isAltDown() || e.isShiftDown() || e.isShortcutDown())) {
+                        addNewLine(e, codeArea);
+                    }
+                } else if (e.getCode() == KeyCode.TAB) { // 文本缩进
+                    codeAreaTab(e, codeArea);
+                } else if (e.isControlDown() && e.getCode() == KeyCode.A) {
+                    codeArea.selectAll();
+                    e.consume();
+                } else if ((e.isControlDown() || e.isMetaDown()) &&
+                        e.getCode() == KeyCode.X) {
+                    // 当没有选中文本的时候, 删除当前行
+                    if (codeArea.getSelectedText().isEmpty()) {
+                        codeArea.selectLine();
+                        var range = codeArea.getSelection();
+                        IndexRange delIndexRange = new IndexRange(range.getStart() - 1, range.getEnd());
+                        codeArea.deleteText(delIndexRange);
                         e.consume();
-                    } else if ( (e.isControlDown()|| e.isMetaDown()) &&
-                            e.getCode() == KeyCode.X) {
-                        // 当没有选中文本的时候, 删除当前行
-                        if (codeArea.getSelectedText().isEmpty()){
-                            codeArea.selectLine();
-                            var range =  codeArea.getSelection();
-                            IndexRange delIndexRange = new IndexRange(range.getStart()-1, range.getEnd());
-                            codeArea.deleteText(delIndexRange);
-                            e.consume();
-                        }
-                    } else if ((e.isControlDown()|| e.isMetaDown()) && e.getCode() == KeyCode.C) {
-                         selectLineAtCtrlC(e, codeArea);
-                         // 复制选中的内容, 避免页面跳动
-                         CommonUtils.setClipboardVal(codeArea.getSelectedText());
-                         e.consume();
+                    }
+                } else if ((e.isControlDown() || e.isMetaDown()) && e.getCode() == KeyCode.C) {
+                    selectLineAtCtrlC(e, codeArea);
+                    // 复制选中的内容, 避免页面跳动
+                    CommonUtils.setClipboardVal(codeArea.getSelectedText());
+                    e.consume();
 //                        codeArea.getAnchor();
 
 //                        codeAreaCtrlShiftA(e, sheet);
-                    } else if (e.getCode() == KeyCode.A) {
+                } else if (e.getCode() == KeyCode.A) {
 //                        codeArea.getAnchor();
 
 //                        codeAreaCtrlShiftA(e, sheet);
-                    } else if (e.getCode() == KeyCode.E) {
-                        codeAreaCtrlShiftE(e, sheet);
-                    } else if (e.getCode() == KeyCode.W) {
-                        codeAreaCtrlShiftW(e, sheet);
-                    } else if (e.getCode() == KeyCode.U) {
-                        codeAreaCtrlShiftU(e, sheet);
-                    } else if (e.getCode() == KeyCode.K) {
-                        codeAreaCtrlShiftK(e, sheet);
-                    } else if (e.getCode() == KeyCode.D) {
-                        codeAreaAltShiftD(e, sheet);
-                        codeAreaCtrlShiftD(e, sheet);
-                        copyLineAtCtrlD(e, codeArea, sqluckyEditor);
+                } else if (e.getCode() == KeyCode.E) {
+                    codeAreaCtrlShiftE(e, sheet);
+                } else if (e.getCode() == KeyCode.W) {
+                    codeAreaCtrlShiftW(e, sheet);
+                } else if (e.getCode() == KeyCode.U) {
+                    codeAreaCtrlShiftU(e, sheet);
+                } else if (e.getCode() == KeyCode.K) {
+                    codeAreaCtrlShiftK(e, sheet);
+                } else if (e.getCode() == KeyCode.D) {
+                    codeAreaAltShiftD(e, sheet);
+                    codeAreaCtrlShiftD(e, sheet);
+                    copyLineAtCtrlD(e, codeArea, sqluckyEditor);
 
 
-                    } else if (e.getCode() == KeyCode.H) {
-                        codeAreaCtrlShiftH(e, sheet);
-                    } else if (e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE) {
+                } else if (e.getCode() == KeyCode.H) {
+                    codeAreaCtrlShiftH(e, sheet);
+                } else if (e.getCode() == KeyCode.BACK_SPACE || e.getCode() == KeyCode.DELETE) {
 //				codeAreaBackspaceDelete(e, cl);
-                    } else if (e.getCode() == KeyCode.V) { // 黏贴的时候, 防止页面跳到自己黏贴
-                        codeAreaCtrlV(e, codeArea, sqluckyEditor);
-                    } else if (e.getCode() == KeyCode.Z) { // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
+                } else if (e.getCode() == KeyCode.V) { // 黏贴的时候, 防止页面跳到自己黏贴
+                    codeAreaCtrlV(e, codeArea, sqluckyEditor);
+                } else if (e.getCode() == KeyCode.Z) { // 文本的样式变化会导致页面跳动, 在撤销的时候去除文本变化监听事件
 //				codeAreaCtrlZ(e, cl);
-                    } else {
+                } else {
 //				Consumer<Integer> caller = x -> {
 //					if (myAreaTab != null) {
 //						Platform.runLater(() -> {
@@ -175,23 +170,24 @@ public class MyCodeAreaKeyPressedEvent {
 //					delayHighLighting(caller, 600, 0);
 //				}
 
-                        delayHighLighting(val->{
-                            textChangeAfterAction(val, sheet, myAuto);
-                        }, 600, 0);
-                    }
+                    delayHighLighting(val -> {
+                        textChangeAfterAction(val, sheet, myAuto);
+                    }, 600, 0);
                 }
-            });
-        }
+            }
+        });
+    }
 
 
-    private static  ArrayBlockingQueue<Consumer<Integer>> queue = new ArrayBlockingQueue<>(1);
+    private static ArrayBlockingQueue<Consumer<Integer>> queue = new ArrayBlockingQueue<>(1);
+
     /**
      * 延迟执行高亮, 如果有任务在队列中, 会抛弃任务不执行
      *
      * @param caller
      * @param milliseconds
      */
-    public static  void delayHighLighting(Consumer<Integer> caller, int milliseconds, int lineNo) {
+    public static void delayHighLighting(Consumer<Integer> caller, int milliseconds, int lineNo) {
         if (queue.isEmpty()) {
             queue.offer(caller); // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
 
@@ -234,7 +230,7 @@ public class MyCodeAreaKeyPressedEvent {
             } else {
                 HighLightingEditorUtils.add4Space();
             }
-        }else{
+        } else {
             HighLightingEditorUtils.onlyAdd4Space();
         }
         e.consume();
@@ -304,7 +300,6 @@ public class MyCodeAreaKeyPressedEvent {
     }
 
 
-
     private static String paragraphPrefixBlankStr(int anchor, MyCodeArea codeArea) {
         int a = anchor;
         int b = anchor + 1;
@@ -333,7 +328,7 @@ public class MyCodeAreaKeyPressedEvent {
     /**
      * 移动光标到当前行的行首
      */
-    public static  void codeAreaCtrlShiftA(KeyEvent e, MyEditorSheet sheet) {
+    public static void codeAreaCtrlShiftA(KeyEvent e, MyEditorSheet sheet) {
         if (e.isShiftDown() && e.isControlDown()) {
             logger.info("光标移动到行首" + e.getCode());
             sheet.getSqluckyEditor().moveAnchorToLineBegin();
@@ -350,7 +345,6 @@ public class MyCodeAreaKeyPressedEvent {
 
     /**
      * 移动光标到当前行的行尾
-     *
      */
     public static void codeAreaCtrlShiftE(KeyEvent e, MyEditorSheet sheet) {
         if (e.isShiftDown() && e.isControlDown()) {
@@ -463,33 +457,34 @@ public class MyCodeAreaKeyPressedEvent {
 
     /**
      * 当前行的字符串, 插入到下一行 / 选中的字符串, 在后面插入
+     *
      * @param e
      * @param codeArea
      * @param sqluckyEditor
      */
-    public static void copyLineAtCtrlD(KeyEvent e,  MyCodeArea codeArea , SqluckyEditor sqluckyEditor){
+    public static void copyLineAtCtrlD(KeyEvent e, MyCodeArea codeArea, SqluckyEditor sqluckyEditor) {
         // 复制当前行到下一行
-        if(e.isControlDown()){
-            if( codeArea.getSelectedText().isEmpty()){
+        if (e.isControlDown()) {
+            if (codeArea.getSelectedText().isEmpty()) {
                 int currentAnchor = codeArea.getAnchor();
                 codeArea.selectLine();
                 var range = codeArea.getSelection();
                 String selectText = codeArea.getSelectedText();
-                int allTxtLen =  codeArea.getText().length();
+                int allTxtLen = codeArea.getText().length();
                 // 最后一行的情况, 直接append
-                if(range.getEnd() + 1 > allTxtLen){
-                    codeArea.appendText("\n"+codeArea.getSelectedText() );
-                }else{
-                    codeArea.insertText(range.getEnd() +1, codeArea.getSelectedText() + "\n");
+                if (range.getEnd() + 1 > allTxtLen) {
+                    codeArea.appendText("\n" + codeArea.getSelectedText());
+                } else {
+                    codeArea.insertText(range.getEnd() + 1, codeArea.getSelectedText() + "\n");
                 }
 
                 // 光标移动到下一行的位置
                 codeArea.moveTo(currentAnchor + selectText.length() + 1);
                 sqluckyEditor.highLighting();
-            }else {
+            } else {
                 // 插入选择的内容
                 var range = codeArea.getSelection();
-                codeArea.insertText(range.getEnd() , codeArea.getSelectedText());
+                codeArea.insertText(range.getEnd(), codeArea.getSelectedText());
                 sqluckyEditor.highLighting();
             }
 
@@ -498,12 +493,13 @@ public class MyCodeAreaKeyPressedEvent {
 
     /**
      * 当按下 ctrl + c 没有选择任何内容的情况下, 选中当前行
+     *
      * @param e
      * @param codeArea
      */
-    public static void selectLineAtCtrlC(KeyEvent e,  MyCodeArea codeArea) {
-        if(e.isControlDown() || e.isMetaDown()){
-            if( codeArea.getSelectedText().isEmpty()){
+    public static void selectLineAtCtrlC(KeyEvent e, MyCodeArea codeArea) {
+        if (e.isControlDown() || e.isMetaDown()) {
+            if (codeArea.getSelectedText().isEmpty()) {
                 codeArea.selectLine();
             }
         }
@@ -511,9 +507,9 @@ public class MyCodeAreaKeyPressedEvent {
     }
 
 
-        /**
-         * 删除光标前的字符串
-         */
+    /**
+     * 删除光标前的字符串
+     */
     public static void codeAreaCtrlShiftU(KeyEvent e, MyEditorSheet sheet) {
         if (e.isShiftDown() && e.isControlDown()) {
             logger.info("删除光标前的字符串" + e.getCode());
@@ -525,7 +521,7 @@ public class MyCodeAreaKeyPressedEvent {
     /**
      * 删除光标前一个字符
      */
-    public static  void codeAreaCtrlShiftH(KeyEvent e, MyEditorSheet sheet) {
+    public static void codeAreaCtrlShiftH(KeyEvent e, MyEditorSheet sheet) {
         if (e.isShiftDown() && e.isControlDown()) {
             logger.info("删除一个光标前字符" + e.getCode());
             sheet.getSqluckyEditor().delAnchorBeforeChar();
@@ -549,7 +545,7 @@ public class MyCodeAreaKeyPressedEvent {
                     codeArea.insertText(codeArea.getAnchor(), val);
                     e.consume();
                 }
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                     sqluckyEditor.highLighting();
                 });
             }

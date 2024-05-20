@@ -113,7 +113,7 @@ public class MyCodeArea extends CodeArea {
 
 		boolean tf = true;
 		// 包含这些字符中, 就停止查找
-		String endString = ". \t\n;,/\\:;'\"`";
+		String endString = ". \t\n;,/\\:;'\"`={}()[]";
 		if(StrUtils.isNotNullOrEmpty(endStrVal)){
 			endString = endStrVal;
 		}

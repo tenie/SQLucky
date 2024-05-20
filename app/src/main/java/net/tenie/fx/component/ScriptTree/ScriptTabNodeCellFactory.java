@@ -1,25 +1,15 @@
 package net.tenie.fx.component.ScriptTree;
 
-import java.util.Objects;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TreeCell;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
+import javafx.scene.control.*;
+import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Objects;
 
 /**
  * 
@@ -51,8 +41,9 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyEditorSheet
 //					if (this.getTreeItem().isLeaf()) {
 
 						// A custom HBox that will contain your check box, label and
-						Label label = new Label();
-						label.textProperty().bind(item.getDocumentPo().getTitle());
+//						Label label = new Label();
+					    Label label = item.getScriptTreeLabel();
+//						label.textProperty().bind(item.getDocumentPo().getTitle());
 						AnchorPane pn = new AnchorPane();
 						pn.getChildren().add(label);
 						pn.getChildren().add(clean);

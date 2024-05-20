@@ -3,11 +3,10 @@ package net.tenie.Sqlucky.sdk.component;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.layout.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
 import net.tenie.Sqlucky.sdk.db.DBConns;
@@ -23,6 +22,10 @@ import java.sql.Connection;
 import java.util.function.Consumer;
 
 public class MyEditorSheet extends Tab {
+	// 在脚本树中的节点
+	TreeItem<MyEditorSheet> treeItem ;
+
+
 	private SqluckyEditor sqluckyEditor; // 编辑器(比如高亮的文本编辑器)
 	private DocumentPo documentPo; // 文本内容
 
@@ -31,6 +34,9 @@ public class MyEditorSheet extends Tab {
 	private boolean isModify = false;
 	// 放查找面板, 文本area 的容器
 	private VBox vbox;
+
+	// 脚本树上的label
+	private Label scriptTreeLabel = new Label();
 
 	public void clean() {
 		this.setContent(null);
@@ -70,17 +76,23 @@ public class MyEditorSheet extends Tab {
 
 	// 延迟初始化sheet, 如果 SqluckyEditor为空创建默认的SqluckyEditor对象
 	public void delayInit(SqluckyEditor sqluckyEditor) {
+		scriptTreeLabel.textProperty().bind(this.getDocumentPo().getTitle());
+		treeItem = new TreeItem<>(this);
 		setTabTitleName();
 		// 选中事件
 		this.setOnSelectionChanged(value -> {
-			boolean isSe = this.isSelected();
-			if(isSe) {
+			boolean isSelected = this.isSelected();
+			if(isSelected) {
 				Integer tmpIdx = this.getTabConnIdx() ;
 				if(tmpIdx !=null) {
 					DBConns.changeChoiceBox(this.getTabConnIdx());
 				}else {
 					tmpIdx = DBConns.choiceBoxIndex();
 					this.setTabConnIdx(tmpIdx) ;
+				}
+				// 脚本树中的节点选中
+				if(ComponentGetter.scriptTreeView.getRoot().getChildren().contains(treeItem)){
+					ComponentGetter.scriptTreeView.getSelectionModel().select(treeItem);
 				}
 			}
 		});
@@ -464,5 +476,21 @@ public class MyEditorSheet extends Tab {
             return idxThis == currentSelect;
 		}
 		return false;
+	}
+
+	public Label getScriptTreeLabel() {
+		return scriptTreeLabel;
+	}
+
+	public void setScriptTreeLabel(Label scriptTreeLabel) {
+		this.scriptTreeLabel = scriptTreeLabel;
+	}
+
+	public TreeItem<MyEditorSheet> getTreeItem() {
+		return treeItem;
+	}
+
+	public void setTreeItem(TreeItem<MyEditorSheet> treeItem) {
+		this.treeItem = treeItem;
 	}
 }
