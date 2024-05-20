@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import net.tenie.Sqlucky.sdk.component.editor.MyAutoComplete;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
@@ -568,5 +569,25 @@ public class AppDao {
 		}
 		return ls;
 	}
+
+	// 自动补全要用的文本
+	public static void readAllAutoCompleteText(Connection conn){
+		String sql = "select TEXT  from AUTO_COMPLETE_TEXT";
+		List<String>  list = DBTools.selectOneColList(conn, sql);
+		for(String tmp : list){
+			MyAutoComplete.addKeyWords(tmp);
+		}
+	}
+	// 保存 自动补全文本
+	public static void saveAutoCompleteText(String val){
+		Connection conn = SqluckyAppDB.getConn();
+		try{
+			String sql = " INSERT INTO AUTO_COMPLETE_TEXT (TEXT ) VALUES ('"+val+"' )";
+			DBTools.execDDLNoErr(conn, sql);
+		}finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+	}
+
 
 }

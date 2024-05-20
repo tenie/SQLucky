@@ -422,4 +422,9 @@ public class SqluckyAppComponent implements AppComponent {
 
 		return ls;
 	}
+
+	@Override
+	public void saveAutoCompleteText(String val) {
+		AppDao.saveAutoCompleteText(val);
+	}
 }

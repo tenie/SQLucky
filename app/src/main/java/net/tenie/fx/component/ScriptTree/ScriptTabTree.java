@@ -70,6 +70,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		rootNode = new TreeItem<>(null);
 		ComponentGetter.scriptTreeRoot = rootNode;
 		ScriptTreeView = new TreeView<>(rootNode);
+		ComponentGetter.scriptTreeView = ScriptTreeView;
 		ScriptTreeView.getStyleClass().add("my-tag");
 		ScriptTreeView.setShowRoot(false);
 		// 展示连接
@@ -119,7 +120,9 @@ public class ScriptTabTree extends SqluckyTitledPane {
 			for (DocumentPo po : scriptDatas) {
 //				MyEditorSheet tb = new MyEditorSheet(po, true);
 				MyEditorSheet myEditorSheet = MyEditorSheetHelper.createHighLightingEditor(po);// new MyEditorSheet(po);
-				TreeItem<MyEditorSheet> item = new TreeItem<>(myEditorSheet);
+//				TreeItem<MyEditorSheet> item = new TreeItem<>(myEditorSheet);
+				TreeItem<MyEditorSheet> item = myEditorSheet.getTreeItem();
+
 				treeItems.add(item);
 				// 将需要恢复代码编辑框, 缓存到集合中
 				if (po.getOpenStatus() != null && po.getOpenStatus() == 1) {
@@ -198,7 +201,8 @@ public class ScriptTabTree extends SqluckyTitledPane {
 				// 只要确保DocumentPo id为null, new MyAreaTab时会保存到数据库
 				po.setId(null);
 				MyEditorSheet tb = MyEditorSheetHelper.createHighLightingEditor(po);// new MyEditorSheet(po, true);
-				TreeItem<MyEditorSheet> item = new TreeItem<>(tb);
+//				TreeItem<MyEditorSheet> item = new TreeItem<>(tb);
+				TreeItem<MyEditorSheet> item = tb.getTreeItem();
 				treeItems.add(item);
 				// 将需要恢复代码编辑框, 缓存到集合中
 				if (po.getOpenStatus() != null && po.getOpenStatus() == 1) {
@@ -270,7 +274,8 @@ public class ScriptTabTree extends SqluckyTitledPane {
 
 	// 给root节点加元素
 	public static void treeRootAddItem(MyEditorSheet mytab) {
-		TreeItem<MyEditorSheet> item = new TreeItem<>(mytab);
+//		TreeItem<MyEditorSheet> item = new TreeItem<>(mytab);
+		TreeItem<MyEditorSheet> item = mytab.getTreeItem();
 		treeRootAddItem(item);
 	}
 

@@ -78,6 +78,7 @@ public final class ComponentGetter {
 //	public static TreeItem<TreeNodePo> dbInfoTreeRoot;
 	// 脚本treeView root
 	public static TreeItem<MyEditorSheet> scriptTreeRoot;
+	public static TreeView<MyEditorSheet> scriptTreeView;
 //	public static TreeItem<SqluckyTab> scriptTreeRoot;
 
 	public static NotificationPane notificationPane;

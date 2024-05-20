@@ -97,7 +97,7 @@ public class app extends Application {
         Connection conn = SqluckyAppDB.getConn();
 
         // 数据库迁移
-        AppDao.testDbTableExists(conn, "SQLUCKY_APPEND_SQL");
+        AppDao.testDbTableExists(conn, "AUTO_COMPLETE_TEXT");
         // 插入更新sql
         UpdateScript.insertNewSQL();
         // 执行需要更新的sql
@@ -108,6 +108,8 @@ public class app extends Application {
             SqluckyAppDB.saveConfig(conn, "THEME", "DARK");
             Theme = "DARK";
         }
+        // 读自动补全文本
+        AppDao.readAllAutoCompleteText(conn);
 
 //        ConfigVal.openfileDir = SqluckyAppDB.readConfig(conn, "OPEN_FILE_DIR");
         SqluckyAppDB.closeConn(conn);

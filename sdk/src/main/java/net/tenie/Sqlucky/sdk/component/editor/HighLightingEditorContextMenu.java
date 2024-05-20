@@ -5,6 +5,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.sql.SqlUtils;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
@@ -143,9 +144,25 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 			codeArea.delAnchorAfterString();
 		});
 
-		this.getItems().addAll(copy, Paste, del, cut, new SeparatorMenuItem(), sqlFormat, formatAll, sqlUnformat,
-				unformatAll, cleanEmptyLine, new SeparatorMenuItem(), myBatisXml, trimMyBatisXml, new SeparatorMenuItem(), find, replace, new SeparatorMenuItem(), cursorMenu, enditLine);
+		// 收藏 字符串, 作为自动补全
+		MenuItem favoritesStr = new MenuItem("Favorites Select Text For Auto Complete");// (ctrl+shift+K)
+		favoritesStr.setGraphic(IconGenerator.svgImageDefActive("star"));
+		favoritesStr.setOnAction(e -> {
+//			codeArea.delAnchorAfterString();
+			String str = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
+			ComponentGetter.appComponent.saveAutoCompleteText(str);
+			MyAutoComplete.addKeyWords(str);
+		});
+
+
 		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
+
+		// 菜单
+		this.getItems().addAll(copy, Paste, del, cut, new SeparatorMenuItem(), sqlFormat, formatAll, sqlUnformat,
+				unformatAll, cleanEmptyLine, new SeparatorMenuItem(), myBatisXml, trimMyBatisXml,
+				new SeparatorMenuItem(), find, replace, new SeparatorMenuItem(), cursorMenu, enditLine,
+				new SeparatorMenuItem(), favoritesStr);
+
 
 		// 菜单显示的时刻
 		this.setOnShowing(e -> {
@@ -161,6 +178,7 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 				myBatisXml.setDisable(false);
 				trimMyBatisXml.setDisable(false);
 				cleanEmptyLine.setDisable(false);
+				favoritesStr.setDisable(false);
 
 			} else {
 				copy.setDisable(true);
@@ -173,6 +191,7 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 				myBatisXml.setDisable(true);
 				trimMyBatisXml.setDisable(true);
 				cleanEmptyLine.setDisable(true);
+				favoritesStr.setDisable(true);
 			}
 
 			boolean hasVal = CommonUtils.clipboardHasString();

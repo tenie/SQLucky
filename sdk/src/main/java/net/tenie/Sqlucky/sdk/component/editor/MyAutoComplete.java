@@ -1,13 +1,7 @@
 package net.tenie.Sqlucky.sdk.component.editor;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 
 import org.fxmisc.richtext.CodeArea;
@@ -43,17 +37,20 @@ public class MyAutoComplete implements AutoComplete {
 	private static VBox vb;
 	private static TreeItem<TablePo> rootNode;
 	private static TreeView<TablePo> treeView;
-	private static HashSet<TablePo> tmpls = new HashSet<>();
+	private static LinkedHashSet<TablePo> tmpls = new LinkedHashSet<>();
 	private static String filterStr = "";
 
 	private static Map<Integer, Set<TablePo>> page = new HashMap<>();
 	private static Map<Integer, Set<TablePo>> fields = new HashMap<>();
+
 
 	static {
 		keyWords.add(TablePo.noDbObj("SELECT * FROM "));
 		keyWords.add(TablePo.noDbObj("SELECT "));
 		keyWords.add(TablePo.noDbObj("FROM "));
 		keyWords.add(TablePo.noDbObj("WHERE "));
+
+		keyWords.add(TablePo.noDbObj("1 = 1 "));
 		keyWords.add(TablePo.noDbObj("LEFT JOIN   ON "));
 		keyWords.add(TablePo.noDbObj("CASE WHEN   THEN   ELSE   END AS  "));
 		keyWords.add(TablePo.noDbObj("ORDER BY "));
@@ -111,6 +108,11 @@ public class MyAutoComplete implements AutoComplete {
 
 	}
 
+	// 添加关键字
+	public static void  addKeyWords(String val){
+		keyWords.add(TablePo.noDbObj(val));
+	}
+
 	public MyAutoComplete() {
 		// 鼠标点击的时候
 		treeView.setOnMouseClicked(e -> {
@@ -146,19 +148,23 @@ public class MyAutoComplete implements AutoComplete {
 	// 按backspace按键的时候, 隐藏提示窗口的策略
 	@Override
 	public void backSpaceHide(MyCodeArea sqluckyCodeArea) {
-		if (isShow()) {
-			CodeArea codeArea = sqluckyCodeArea.getCodeArea();
-			int acr = codeArea.getAnchor();
-			int begin = 0;
-			if (acr > 0) {
-				begin = acr - 1;
+		Platform.runLater(()->{
+			if (isShow()) {
+
+				CodeArea codeArea = sqluckyCodeArea.getCodeArea();
+				int acr = codeArea.getAnchor();
+				int begin = 0;
+				if (acr > 0) {
+					begin = acr - 1;
+				}
+				String tmp = codeArea.getText(begin, acr);
+				if (tmp.startsWith(".") || tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n")
+						|| begin <= 0) {
+					hide();
+				}
 			}
-			String tmp = codeArea.getText(begin, acr);
-			if (tmp.startsWith(".") || tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n")
-					|| begin <= 0) {
-				hide();
-			}
-		}
+		});
+
 	}
 
 	@Override
@@ -175,7 +181,7 @@ public class MyAutoComplete implements AutoComplete {
 		filterStr = fStr.trim().toUpperCase();
 		String tmpFilterStr = filterStr;
 		if (!isShow()) {
-			tmpls = new HashSet<>();
+			tmpls = new LinkedHashSet<>();
 			if (tmpFilterStr.contains(".")) {
 				tmpFilterStr = tmpFilterStr.substring(tmpFilterStr.indexOf(".") + 1);
 				var fs = getCacheTableFields();
@@ -286,7 +292,7 @@ public class MyAutoComplete implements AutoComplete {
 					if (fields.containsKey(id)) {
 						tmppos = fields.get(id);
 					} else {
-						tmppos = new HashSet<>();
+						tmppos = new LinkedHashSet<>();
 						fields.put(id, tmppos);
 					}
 					var fis = tabpo.getFields();
@@ -316,7 +322,7 @@ public class MyAutoComplete implements AutoComplete {
 				if (page.containsKey(id)) {
 					tmppos = page.get(id);
 				} else {
-					tmppos = new HashSet<>();
+					tmppos = new LinkedHashSet<>();
 					page.put(id, tmppos);
 				}
 
@@ -336,7 +342,7 @@ public class MyAutoComplete implements AutoComplete {
 	// 获取缓存数据
 	@Override
 	public Collection<TablePo> getCacheTableFields() {
-		Set<TablePo> cacheFs = new HashSet<>();
+		LinkedHashSet<TablePo> cacheFs = new LinkedHashSet<>();
 		Integer id = getMyTabId();
 		if (id != null) {
 

@@ -144,5 +144,7 @@ public interface AppComponent {
 	 void registerBottomSheetExportMenu(Function<MyBottomSheet, MenuItem > func);
 	 List<Function<MyBottomSheet, MenuItem>> getBottomSheetBtns();
 	 List<MenuItem> getBottomSheetBtns(MyBottomSheet sheet);
+	// 保存 自动补全文本
+	 void saveAutoCompleteText(String val);
 
 }
