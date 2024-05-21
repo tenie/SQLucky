@@ -94,8 +94,8 @@ public class MyAutoComplete implements AutoComplete {
 
 		vb = new VBox();
 		vb.getStyleClass().add("my-tag");
-		vb.setPrefHeight(250);
-		vb.setPrefWidth(300);
+		vb.setPrefHeight(300);
+		vb.setPrefWidth(500);
 		rootNode = new TreeItem<>();
 		treeView = new TreeView<>(rootNode);
 		treeView.getStyleClass().add("auto-comolete");
@@ -231,7 +231,6 @@ public class MyAutoComplete implements AutoComplete {
 				pop.setY(y);
 				pop.setAutoHide(true);
 				pop.getContent().add(vb);
-
 				pop.show(ComponentGetter.primaryStage);
 				Platform.runLater(() -> {
 					treeView.getSelectionModel().select(0);

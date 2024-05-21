@@ -1,15 +1,13 @@
 package net.tenie.Sqlucky.sdk.component.editor;
 
-import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
+import javafx.scene.control.IndexRange;
+import net.tenie.Sqlucky.sdk.SqluckyEditor;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelperForJava;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingNoKeyWordHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
-
-import javafx.scene.control.IndexRange;
-import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 
 public class HighLightingEditorUtils {
 	private static Logger logger = LogManager.getLogger(HighLightingEditorUtils.class);
@@ -19,7 +17,7 @@ public class HighLightingEditorUtils {
 		MyAutoComplete myAuto = new MyAutoComplete();
 		SqluckyEditor sqlCodeAreaEditor = new HighLightingEditor(myAuto, null);
 //		右键菜单
-		HighLightingEditorContextMenu cm = new HighLightingEditorContextMenu(sqlCodeAreaEditor);
+		HighLightingEditorContextMenu cm = HighLightingEditorContextMenu.getHighLightingEditorContextMenu();
 		sqlCodeAreaEditor.setContextMenu(cm);
 		return sqlCodeAreaEditor;
 	}
@@ -28,7 +26,7 @@ public class HighLightingEditorUtils {
 		MyAutoComplete myAuto = new MyAutoComplete();
 		SqluckyEditor sqlCodeAreaEditor = new HighLightingEditor(myAuto, CodeAreaHighLightingHelperForJava.createHelper());
 //		右键菜单
-		HighLightingEditorContextMenu cm = new HighLightingEditorContextMenu(sqlCodeAreaEditor);
+		HighLightingEditorContextMenu cm =  HighLightingEditorContextMenu.getHighLightingEditorContextMenu();
 		sqlCodeAreaEditor.setContextMenu(cm);
 		return sqlCodeAreaEditor;
 	}
@@ -37,7 +35,7 @@ public class HighLightingEditorUtils {
 		MyAutoComplete myAuto = new MyAutoComplete();
 		SqluckyEditor sqlCodeAreaEditor = new HighLightingEditor(myAuto, new CodeAreaHighLightingNoKeyWordHelper());
 //		右键菜单
-		HighLightingEditorContextMenu cm = new HighLightingEditorContextMenu(sqlCodeAreaEditor);
+		HighLightingEditorContextMenu cm =  HighLightingEditorContextMenu.getHighLightingEditorContextMenu();
 		sqlCodeAreaEditor.setContextMenu(cm);
 		return sqlCodeAreaEditor;
 	}
