@@ -12,9 +12,29 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
-public class HighLightingEditorContextMenu extends ContextMenu {
+import java.util.ArrayList;
+import java.util.List;
 
-	public HighLightingEditorContextMenu(SqluckyEditor codeArea) {
+public class HighLightingEditorContextMenu extends ContextMenu {
+	private static  List<MenuItem> itemList = new ArrayList<>();
+	private static boolean isInit = false;
+	public static List<MenuItem> extensionMenuItem( List<MenuItem> itemListVal){
+
+		itemList.addAll(itemListVal);
+
+		return  itemList;
+	}
+	private static HighLightingEditorContextMenu menu = null;
+	public static HighLightingEditorContextMenu getHighLightingEditorContextMenu(){
+		if(menu == null){
+			menu = new HighLightingEditorContextMenu();
+		}
+
+		return menu;
+	}
+
+
+	private HighLightingEditorContextMenu() {
 		super();
 		this.setPrefWidth(200);
 		MenuItem copy = new MenuItem("Copy");
@@ -31,8 +51,10 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 
 		MenuItem del = new MenuItem("Delete");
 		del.setOnAction(e -> {
-//			SqlEditor.deleteSelectionText(); 
-			codeArea.delLineOrSelectTxt();
+//			SqlEditor.deleteSelectionText()
+			SqluckyEditor sqluckyEditor =MyEditorSheetHelper.getSqluckyEditor();
+
+			 sqluckyEditor.delLineOrSelectTxt();
 		});
 		del.setGraphic(IconGenerator.svgImageDefActive("eraser"));
 
@@ -96,13 +118,15 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 		MenuItem mvB = new MenuItem("Move to begin of line"); // (ctrl+shift+A)
 		mvB.setGraphic(IconGenerator.svgImageDefActive("step-backward"));
 		mvB.setOnAction(e -> {
-			codeArea.moveAnchorToLineBegin();
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.moveAnchorToLineBegin();
 		});
 
 		MenuItem mvE = new MenuItem("Move to end of line"); // (ctrl+shift+E)
 		mvE.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
 		mvE.setOnAction(e -> {
-			codeArea.moveAnchorToLineEnd();
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.moveAnchorToLineEnd();
 		});
 
 		MenuItem selectLine = new MenuItem("Select Line"); // (ctrl+shift+E)
@@ -117,31 +141,37 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 		Menu enditLine = new Menu("Edit Line");
 		MenuItem delWord = new MenuItem("Delete the word before the cursor"); // (ctrl+shift+W)
 		delWord.setOnAction(e -> {
-			codeArea.delAnchorBeforeWord();
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorBeforeWord();
 		});
 
 		MenuItem delChar = new MenuItem("Delete the character before the cursor"); // (ctrl+shift+H)
 		delChar.setOnAction(e -> {
-			codeArea.delAnchorBeforeChar();
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorBeforeChar();
 		});
 
 		MenuItem delAllChar = new MenuItem("Delete all characters before the cursor");// (ctrl+shift+U)
 		delAllChar.setOnAction(e -> {
-			codeArea.delAnchorBeforeString();
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorBeforeString();
 		});
 
 		MenuItem delWordBackward = new MenuItem("Delete the word after the cursor");// (alt+shift+D)
 		delWordBackward.setOnAction(e -> {
-			codeArea.delAnchorAfterWord();
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorAfterWord();
 		});
 
 		MenuItem delCharBackward = new MenuItem("Delete the character after the cursor");// (ctrl+shift+D)
 		delCharBackward.setOnAction(e -> {
-			codeArea.delAnchorAfterChar();
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorAfterChar();
 		});
 		MenuItem delAllCharBackward = new MenuItem("Delete all characters after the cursor");// (ctrl+shift+K)
 		delAllCharBackward.setOnAction(e -> {
-			codeArea.delAnchorAfterString();
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorAfterString();
 		});
 
 		// 收藏 字符串, 作为自动补全
@@ -164,8 +194,16 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 				new SeparatorMenuItem(), favoritesStr);
 
 
+
+
 		// 菜单显示的时刻
 		this.setOnShowing(e -> {
+			if( ! isInit  &&  itemList.size() > 0){
+				if(! this.getItems().contains(itemList.getFirst()) ){
+					this.getItems().addAll(itemList);
+					isInit = true;
+				}
+			}
 			String str = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
 			if (StrUtils.isNotNullOrEmpty(str)) {
 				copy.setDisable(false);

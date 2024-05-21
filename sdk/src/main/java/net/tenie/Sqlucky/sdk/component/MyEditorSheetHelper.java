@@ -179,12 +179,31 @@ public class MyEditorSheetHelper {
 	}
 
 	// 获取当前在前台的文本框
-	public static CodeArea getCodeArea() {
+	public static MyCodeArea getCodeArea() {
 		var sheet = MyEditorSheetHelper.getActivationEditorSheet();
-		if (sheet == null)
-			return null;
-		return sheet.getSqluckyEditor().getCodeArea();
+		if (sheet != null){
+			if( sheet.getSqluckyEditor() != null && sheet.getSqluckyEditor().getCodeArea() instanceof MyCodeArea  myCodeArea){
+				return  myCodeArea;
+			}
+		}
+
+		return null;
+//		return sheet.getSqluckyEditor().getCodeArea();
 	}
+
+	// 获取当前在前台的文本框
+	public static SqluckyEditor getSqluckyEditor() {
+		var sheet = MyEditorSheetHelper.getActivationEditorSheet();
+		if (sheet == null){
+			return null;
+		}
+		if( sheet.getSqluckyEditor() != null ){
+			return   sheet.getSqluckyEditor();
+		}
+		return null;
+//		return sheet.getSqluckyEditor().getCodeArea();
+	}
+
 
 	// 获取tab的内容 VBox
 	public static VBox getTabVbox(Tab tb) {
