@@ -185,19 +185,7 @@ public void highLighting(String str) {
         }
 
     }
-    /**
-     * 自动补全提示
-     *
-     * @param e
-     */
-    public void codePopup(KeyEvent e) {
-        if (myAuto == null)
-            return;
-        if (e.isAltDown()) {
-            callPopup();
 
-        }
-    }
     //	隐藏自动补全
     public void hideAutoComplete() {
         myAuto.hide();

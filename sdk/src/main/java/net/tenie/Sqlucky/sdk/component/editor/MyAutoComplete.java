@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.util.*;
 import java.util.function.Consumer;
 
+import javafx.scene.input.KeyEvent;
 import org.fxmisc.richtext.CodeArea;
 
 import javafx.application.Platform;
@@ -214,7 +215,7 @@ public class MyAutoComplete implements AutoComplete {
 		boolean tf = false;
 		if (tmpls != null && tmpls.size() > 0) {
 			rootNode.getChildren().clear();
-			for (var tb : tmpls) {;
+			for (var tb : tmpls) {
 				if (tb.getTableName().toUpperCase().contains(tmpFilterStr)) {
 					TreeItem<TablePo> item = new TreeItem<>(tb);
 					rootNode.getChildren().add(item);
@@ -227,6 +228,16 @@ public class MyAutoComplete implements AutoComplete {
 			}
 			if (tf) {
 				pop = new Popup();
+				// pop 设置键盘输入事件
+				pop.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+					System.out.println(e.getCode());
+					if (e.getCode().equals(KeyCode.SPACE)) {
+						hide();
+					}
+					if(isShow()){
+
+					}
+				});
 				pop.setX(x);
 				pop.setY(y);
 				pop.setAutoHide(true);
