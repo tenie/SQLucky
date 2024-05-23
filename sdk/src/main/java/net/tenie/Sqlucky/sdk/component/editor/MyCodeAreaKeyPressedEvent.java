@@ -1,13 +1,13 @@
-package net.tenie.Sqlucky.sdk.component;
+package net.tenie.Sqlucky.sdk.component.editor;
 
 import javafx.application.Platform;
 import javafx.scene.control.IndexRange;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditor;
-import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
-import net.tenie.Sqlucky.sdk.component.editor.MyAutoComplete;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.apache.logging.log4j.LogManager;
@@ -19,6 +19,9 @@ import java.util.Collection;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 
+/**
+ * codeArea 按键输入事件
+ */
 public class MyCodeAreaKeyPressedEvent {
 
     private static Logger logger = LogManager.getLogger(MyCodeAreaKeyPressedEvent.class);
@@ -31,30 +34,19 @@ public class MyCodeAreaKeyPressedEvent {
         codeArea.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
 
             if (myAuto != null) {
-                // 提示框还在的情况下又有输入
-                if (myAuto.isShow()) {
-                    // 输入的是退格键, 需要判断是否要隐藏提示框
-                    if (e.getCode() == KeyCode.BACK_SPACE) {
-                        myAuto.backSpaceHide(codeArea);
-                    } else {
-                        // 已经显示的情况, 继续输入时, 先隐藏, 在弹出新的选择框
-                        myAuto.hide();
-                        sqluckyEditor.callPopup();
-                    }
-                } else if (e.getCode().isLetterKey()
-                        || e.getCode() == KeyCode.PERIOD
-                        || e.getCode().isDigitKey()) { // 按 "." 跳出补全提示框
-                    int anchor = codeArea.getAnchor();
-                    Consumer<String> caller = x -> {
-                        Platform.runLater(() -> {
-                            int lateAnchor = codeArea.getAnchor();
-                            if ((lateAnchor - 1) == anchor) {
-                                sqluckyEditor.callPopup();
-                            }
+                if (!myAuto.isShow()) {
+                    if (e.getCode().isLetterKey()
+                            || e.getCode() == KeyCode.PERIOD
+                            || e.getCode().isDigitKey()) { // 按 "." 跳出补全提示框
+                        // 当前光标位置
+                        int anchor = codeArea.getAnchor();
+                        // 子线程里执行
+                        CommonUtils.runThread(x -> {
+                            sqluckyEditor.callPopup(anchor);
                         });
-                    };
-                    CommonUtils.runThread(caller);
+                    }
                 }
+
             }
 
             if (e.getCode() != KeyCode.SHIFT &&

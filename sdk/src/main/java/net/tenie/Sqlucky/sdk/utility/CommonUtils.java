@@ -166,6 +166,15 @@ public class CommonUtils {
         };
         t.start();
     }
+    public static void runThread(Consumer<String> caller, String val) {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                caller.accept(val);
+            }
+        };
+        t.start();
+    }
 
     // 检测文件是否存在
     public static boolean checkFileExist(String fileName) {

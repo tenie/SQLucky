@@ -21,6 +21,7 @@ import org.fxmisc.richtext.model.Paragraph;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * 文本编辑器
@@ -138,10 +139,11 @@ public void highLighting(String str) {
   }
 
     /**
-     * 自动补全
-     *
+     * 显示自动补全窗口, 如果是输入触发的, 使用 preAnchor 做为按钮按下是的光标位置, 和执行时光标的位置是1个字符差就显示
+     * 如果没有preAnchor 说明是主动触发
+     * @param preAnchor
      */
-    public void callPopup() {
+    public void callPopup(Integer preAnchor) {
         var codeArea = getCodeArea();
         if (codeArea.isFocused()) {
             if (CommonUtils.isMacOS()) {
@@ -164,26 +166,52 @@ public void highLighting(String str) {
             if (myAuto == null)
                 return;
             Platform.runLater(() -> {
+                // 光标的坐标系
                 Bounds bd = codeArea.caretBoundsProperty().getValue().get();
                 double x = bd.getCenterX();
                 double y = bd.getCenterY();
                 int anchor = codeArea.getAnchor();
-                String str = "";
-                for (int i = 1; anchor - i >= 0; i++) {
-                    var tmp = codeArea.getText(anchor - i, anchor);
-                    int tmplen = tmp.length();
-                    int idx = anchor - tmplen;
-                    if (tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") || idx <= 0) {
-                        str = tmp;
-                        break;
+                if(preAnchor != null ){
+                    if((anchor -1 ) != preAnchor ){
+                        return;
                     }
                 }
-                myAuto.showPop(x, y + 9, str);
+//                String  str = "";
+                // 获取光标向前方向的单词
+                String str = getAnchorWord();
+//                for (int i = 1; anchor - i >= 0; i++) {
+//                    var tmp = codeArea.getText(anchor - i, anchor);
+//                    int tmplen = tmp.length();
+//                    int idx = anchor - tmplen;
+//                    if (tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") || idx <= 0) {
+//                        str = tmp;
+//                        break;
+//                    }
+//                }
+                // 子线程创建pop
+                CommonUtils.runThread( strVal -> {
+                    myAuto.showPop(x, y + 9, strVal);
+                }, str);
+              ;
             });
-//			SqluckyEditor.currentMyTab().getSqlCodeArea().callPopup();
-
         }
 
+    }
+
+    public String getAnchorWord(){
+        String str = "";
+        int anchor = codeArea.getAnchor();
+        // 获取光标向前方向的单词
+        for (int i = 1; anchor - i >= 0; i++) {
+            var tmp = codeArea.getText(anchor - i, anchor);
+            int tmplen = tmp.length();
+            int idx = anchor - tmplen;
+            if (tmp.startsWith(" ") || tmp.startsWith("\t") || tmp.startsWith("\n") || idx <= 0) {
+                str = tmp.trim();
+                break;
+            }
+        }
+        return str;
     }
 
     //	隐藏自动补全

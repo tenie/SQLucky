@@ -215,6 +215,29 @@ public class AppCommonAction {
         MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
     }
 
+    // 选中的文本删除, 替换新文本
+    public static void selectTextReplace(String newText) {
+
+        CodeArea code = MyEditorSheetHelper.getCodeArea();
+        String text = "";
+        if (code != null) {
+            text = code.getSelectedText();
+        }else{
+            return;
+        }
+        if (StrUtils.isNullOrEmpty(text) || StrUtils.isNullOrEmpty(newText)){
+            return;
+        }
+
+        IndexRange i = code.getSelection(); // 获取当前选中的区间
+        int start = i.getStart();
+        int end = i.getEnd();
+        // 将原文本删除
+        code.deleteText(start, end);
+        code.insertText(start, newText);
+        MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
+    }
+
     public static void selectTextAddString() {
         CodeArea code = MyEditorSheetHelper.getCodeArea();
         IndexRange i = code.getSelection(); // 获取当前选中的区间
