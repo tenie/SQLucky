@@ -112,6 +112,16 @@ public class MyEditorSheetHelper {
 		return val;
 	}
 
+	// 获取当前tab中的EditorSheet
+	public static String getActivationEditorSelectText() {
+		MyEditorSheet myEditorSheet = getActivationEditorSheet();
+		if (myEditorSheet == null) {
+			return "";
+		}
+		String val = myEditorSheet.getSqluckyEditor().getCodeArea().getSelectedText();
+		return val;
+	}
+
 	// TODO archive script
 	public static void archiveAllScript() {
 		TabPane mainTabPane = ComponentGetter.mainTabPane;

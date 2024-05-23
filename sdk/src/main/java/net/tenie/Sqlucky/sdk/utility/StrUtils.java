@@ -30,6 +30,8 @@ public class StrUtils {
     public static final  String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
     // 注释
     public static final  String COMMENT_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
+    // 注释
+    public static final  String COMMENT_ANNOTATIONS_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" +  "|" + "@[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
 
     // xml 元素
     public static final  String XML_ELE_PATTERN =  "\\<.[^<>]*\\>";
@@ -316,7 +318,9 @@ public class StrUtils {
                   prefixIdx = 0;
               }
         }
-
+        if(prefixIdx > 0 ){
+            prefixIdx++;
+        }
         int suffixIdx = str.indexOf(" ", idx);
         if(suffixIdx == -1){
             suffixIdx =  str.indexOf("\n", idx);
@@ -352,6 +356,31 @@ public class StrUtils {
 
         return str;
     }
+
+    /**
+     * str 中的所有下划线单词转换为驼峰命名单词
+     * @param str
+     * @return
+     */
+    public static String underlineCaseJavaSetMethod(String str) {
+        if(str.contains("_")){
+            List<Integer> idxList = findStrAllIndex(str,"_", true);
+            Set<String> strSet = new HashSet<>();
+            for(Integer idx : idxList){
+                String tmmStr = findContinuousWordByIndex(str, idx);
+                strSet.add(tmmStr);
+            }
+            // 单词转换-> 单词替换
+            for(String oldStr: strSet){
+                String newStr = underlineWordToCaseCamel(oldStr);
+                newStr = "set"+initialUpperCase(newStr) ;
+                str = str.replaceAll(oldStr, newStr);
+            }
+        }
+
+        return str;
+    }
+
     // 下划线单词 轉 驼峰命名单词
     public static String underlineWordToCaseCamel(String str) {
         StringBuilder rs = new StringBuilder();
@@ -628,6 +657,27 @@ public class StrUtils {
         textNew = recoverStringMatcher(msVal, textNew);
         return textNew;
     }
+
+    /**
+     * 去除所有注释, 注解
+     * @param textVal
+     * @return
+     */
+    public static String trimAllCommentAnnotations(String textVal) {
+        // 1. 先把文本中的字符串替换调
+        matherString msVal = getStringMatcher(textVal);
+        // 替换后的文本
+        String textNew = msVal.newString();
+
+        Matcher matcher = createMatcher(COMMENT_ANNOTATIONS_PATTERN,textNew );
+        if (matcher.find()){
+            textNew =  matcher.replaceAll("");
+        }
+        // 还原占位符原本的字符串
+        textNew = recoverStringMatcher(msVal, textNew);
+        return textNew;
+    }
+
     /**
      * 所有的注释替换成空格
      * 1. 找到所有的文本中的字符串, 用特殊符号占位( 避免字符串中的注释字符串也被清掉)
@@ -925,13 +975,20 @@ public class StrUtils {
 
     public static void main(String[] args) {
 //        String str = "111<if test=\" params.ownerCode !=null \nand \nparams.ownerCode != '' \">222";
-        String str = "  AND OWNER_CODE=#{params.ownerCode}222\n   AND OWNER_CODE=${params.ownerCode}111";
+//        String str = "  AND OWNER_CODE=#{params.ownerCode}222\n   AND OWNER_CODE=${params.ownerCode}111";
 //        matherString ms = getXmlEleMatcher(str);
 //        str =ms.newString;
 //        System.out.println(str);
 //        int idx =  findIndexLine(str, 40);
-        List<IndexRange> val =  getMyBatisEleRangeList(str);
-        System.out.println(val);
+//        List<IndexRange> val =  getMyBatisEleRangeList(str);
+//        System.out.println(val);
+        String str = "xu_ab\nxu_ab";
+        List<Integer> idxList = findStrAllIndex(str,"_", true);
+        Set<String> strSet = new HashSet<>();
+        for(Integer idx : idxList){
+            String tmmStr = findContinuousWordByIndex(str, idx);
+            strSet.add(tmmStr);
+        }
     }
 
     /**

@@ -120,7 +120,7 @@ public class MenuBarContainer extends MenuBar{
 
 		MenuItem codeAutocompletionMenu = new MenuItem(StrUtils.MenuItemNameFormat("Code Autocompletion"));
 		codeAutocompletionMenu.setOnAction(value -> {
-			MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().callPopup();
+			MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().callPopup(null);
 		});
 
 		MenuItem nce = new MenuItem(StrUtils.MenuItemNameFormat("Add New Edit Page"));

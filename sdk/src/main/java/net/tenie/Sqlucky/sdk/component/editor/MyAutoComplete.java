@@ -120,7 +120,7 @@ public class MyAutoComplete implements AutoComplete {
 			var it = treeView.getSelectionModel().getSelectedItem();
 			String selectVal = it.getValue().getTableName();
 			codeAreaReplaceString(selectVal, it.getValue());
-			pop.hide();
+			hide();
 		});
 
 		// 回车的时候
@@ -129,7 +129,7 @@ public class MyAutoComplete implements AutoComplete {
 				var it = treeView.getSelectionModel().getSelectedItem();
 				String selectVal = it.getValue().getTableName();
 				codeAreaReplaceString(selectVal, it.getValue());
-				pop.hide();
+				hide();
 			} else if (KeyCode.ESCAPE.equals(e.getCode())) {
 				CommonUtils.pressBtnESC();
 			}
@@ -140,9 +140,12 @@ public class MyAutoComplete implements AutoComplete {
 	@Override
 	public void hide() {
 		if (pop != null) {
-			pop.hide();
-			pop.getContent().clear();
-			pop = null;
+			Platform.runLater(()->{
+				pop.hide();
+				pop.getContent().clear();
+				pop = null;
+			});
+
 		}
 	}
 
@@ -177,10 +180,11 @@ public class MyAutoComplete implements AutoComplete {
 		}
 	}
 
-	@Override
-	public void showPop(double x, double y, String fStr) {
-		filterStr = fStr.trim().toUpperCase();
-		String tmpFilterStr = filterStr;
+	/**
+	 * 通过字符串过滤显示列表
+	 * @param tmpFilterStr
+	 */
+	private boolean execFilterStr( String tmpFilterStr){
 		if (!isShow()) {
 			tmpls = new LinkedHashSet<>();
 			if (tmpFilterStr.contains(".")) {
@@ -193,17 +197,17 @@ public class MyAutoComplete implements AutoComplete {
 					Map<String, DbSchemaPo> map = po.getSchemas();
 					DbSchemaPo spo = map.get(po.getDefaultSchema());
 					if (spo != null) {
-						
+
 						tmpls.addAll(keyWords);
 						tmpls.addAll(spo.getTabs());
-						tmpls.addAll(spo.getViews()); 
+						tmpls.addAll(spo.getViews());
 						tmpls.addAll(getCacheTableFields());
-						 List<TablePo> otherSchema = otherSchemaTable(po, tmpFilterStr);
-						 if(otherSchema != null && otherSchema.size()> 0) {
-							 tmpls.addAll(otherSchema);
-						 }
-						
-						
+						List<TablePo> otherSchema = otherSchemaTable(po, tmpFilterStr);
+						if(otherSchema != null && otherSchema.size()> 0) {
+							tmpls.addAll(otherSchema);
+						}
+
+
 					}
 				} else {
 					tmpls.addAll(keyWords);
@@ -226,31 +230,68 @@ public class MyAutoComplete implements AutoComplete {
 				}
 
 			}
-			if (tf) {
-				pop = new Popup();
-				// pop 设置键盘输入事件
-				pop.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-					System.out.println(e.getCode());
-					if (e.getCode().equals(KeyCode.SPACE)) {
-						hide();
-					}
-					if(isShow()){
-
-					}
-				});
-				pop.setX(x);
-				pop.setY(y);
-				pop.setAutoHide(true);
-				pop.getContent().add(vb);
-				pop.show(ComponentGetter.primaryStage);
-				Platform.runLater(() -> {
-					treeView.getSelectionModel().select(0);
-				});
-			} else {
-				pop = null;
-			}
-
 		}
+		if(!rootNode.getChildren().isEmpty()){
+			Platform.runLater(()->{
+				treeView.refresh();
+			});
+		}
+		return tf;
+	}
+
+	@Override
+	public void showPop(double x, double y, String fStr) {
+		filterStr = fStr.toUpperCase();
+		String tmpFilterStr = filterStr;
+		boolean tf = execFilterStr(tmpFilterStr);
+		if (tf) {
+			createPopup(x, y);
+		} else {
+			hide();
+		}
+	}
+
+	/**
+	 * 创建Popup
+	 */
+	private void createPopup(double x, double y) {
+		if (vb == null) return;
+		Platform.runLater(() -> {
+			pop = new Popup();
+			// pop 设置键盘输入事件
+			pop.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
+				// 当输入的是空格, 隐藏
+				if (e.getCode().equals(KeyCode.SPACE) || e.getCode().equals(KeyCode.ENTER) || e.getCode().equals(KeyCode.ESCAPE)) {
+					hide();
+				}
+				if (isShow()) {
+					// 输入的是退格键, 需要判断是否要隐藏提示框
+					if (e.getCode() == KeyCode.BACK_SPACE) {
+						var codeArea = MyEditorSheetHelper.getCodeArea();
+						backSpaceHide(codeArea);
+					} else {
+						// 已经显示的情况, 继续输入时, 先隐藏, 在弹出新的选择框
+						pop.hide();
+						var sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+
+						String anchorWord = sqluckyEditor.getAnchorWord();
+						System.out.println(anchorWord);
+						boolean tf = execFilterStr(anchorWord);
+						if(tf){
+							pop.show(ComponentGetter.primaryStage);
+						}
+					}
+				}
+			});
+
+			pop.setX(x);
+			pop.setY(y);
+			pop.setAutoHide(true);
+			pop.getContent().add(vb);
+			pop.show(ComponentGetter.primaryStage);
+
+			treeView.getSelectionModel().select(0);
+		});
 	}
 	
 	public  List<TablePo> otherSchemaTable(SqluckyConnector po, String tmpFilterStr  ) { 
