@@ -38,8 +38,7 @@ public class CacheDataTableViewShapeChange {
 			// 水平滚顶条的缓存
 			CacheDataTableViewShapeChange.setHorizontal(table, tableName );
 			
-			// 添加 tooltip
-			CacheDataTableViewShapeChange.setTableHeaderTooltip(table , colss);
+
 		});
 		
 	}
@@ -133,7 +132,6 @@ public class CacheDataTableViewShapeChange {
 	 * @param col
 	 * @param tableName
 	 * @param colname
-	 * @param augmentation
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	static public void setColWidthByCache(FilteredTableColumn<ResultSetRowPo, String>  col, String tableName, String colname) {
@@ -206,8 +204,11 @@ public class CacheDataTableViewShapeChange {
 			e2.printStackTrace();
 		}
 	}
-	
-	// 设置 tooltip
+
+	/**
+	 * 	列 设置 tooltip, 显示字段信息
+ 	 */
+
 	public static void setTableHeaderTooltip(FilteredTableView<ResultSetRowPo> table,
 			ObservableList<SheetFieldPo> colss) {
 		try {
@@ -221,6 +222,7 @@ public class CacheDataTableViewShapeChange {
 					String name = label.getText();
 					if (StrUtils.isNotNullOrEmpty(name)) {
 						String typeName = findColType(colss, name);
+
 						var ttip = MyTooltipTool.instance(typeName);
 						label.setTooltip(ttip);
 					}
@@ -230,13 +232,26 @@ public class CacheDataTableViewShapeChange {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * 表格字段列, 提示信息: 字段的注解+ 类型信息
+	 * @param colss
+	 * @param name
+	 * @return
+	 */
 	private static String findColType(ObservableList<SheetFieldPo> colss , String name) {
 		if(colss != null ) {
 			for(var po:colss) {
 				String poname = po.getColumnLabel().get();
 				if(name.equals(poname)) {
-					String tyNa = po.getColumnTypeName().get() + "(" + po.getColumnDisplaySize().get();
+					String remark = po.getDbinfoRemark();
+					if(StrUtils.isNullOrEmpty(remark)){
+						remark = "";
+					}else{
+						remark += "  ";
+					}
+
+					String tyNa =remark +  po.getColumnTypeName().get() + "(" + po.getColumnDisplaySize().get();
 					if (po.getScale() != null && po.getScale().get() > 0) {
 						tyNa += ", " +po.getScale().get();
 					}

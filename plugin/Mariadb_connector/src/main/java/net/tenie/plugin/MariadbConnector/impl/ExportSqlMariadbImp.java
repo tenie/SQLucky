@@ -24,7 +24,7 @@ import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
  * @author tenie
  *
  */
-public class ExportSqlMariadbImp implements ExportDBObjects {
+public class ExportSqlMariadbImp extends ExportDBObjects {
 	private static Logger logger = LogManager.getLogger(ExportSqlMariadbImp.class);
 	private FetchDBInfoCommonTools fdb2;
 	public ExportSqlMariadbImp() {

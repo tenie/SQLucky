@@ -128,14 +128,14 @@ public class SdkComponent {
 
 	// 创建列
 	public static FilteredTableColumn<ResultSetRowPo, String> createColumn(String colname, int colIdx) {
-		FilteredTableColumn<ResultSetRowPo, String> col = new FilteredTableColumn<>();
-		col.setCellFactory(MyTableCellTextField2.forTableColumn());
-		col.setText(colname);
+		FilteredTableColumn<ResultSetRowPo, String> column = new FilteredTableColumn<>();
+		column.setCellFactory(MyTableCellTextField2.forTableColumn());
+		column.setText(colname);
 		Label label = new Label();
-		col.setGraphic(label);
+		column.setGraphic(label);
 		// 通过下标从ObservableList 获取对应列显示的字符串值
-		col.setCellValueFactory(new ResultSetCellValueFactory(colIdx));
-		return col;
+		column.setCellValueFactory(new ResultSetCellValueFactory(colIdx));
+		return column;
 	}
 
 	/**

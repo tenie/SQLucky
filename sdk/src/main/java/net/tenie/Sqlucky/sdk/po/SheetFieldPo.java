@@ -43,6 +43,9 @@ public class SheetFieldPo {
 	private Double columnWidth;
 	private LongProperty dateValue; // 如果是时间, 保存为long
 
+	// 字段 注释
+
+
 	// excel数据导入表需要使用下面2个字段
 //	private StringProperty excelRowVal = new SimpleStringProperty(""); // excel 对应列
 //	private SimpleStringProperty excelRowIdx = new SimpleStringProperty(""); // excel 对应列号

@@ -208,11 +208,11 @@ public class MyTableCellTextField2<S, T> extends TextFieldTableCell<S, T> {
         
     }
     
-    public void textFieldSetON(TextField textField) {
-    	textField.setOnAction(v->{
-//    		System.out.println(textField.getText());
-    	});
-    }
+//    public void textFieldSetON(TextField textField) {
+//    	textField.setOnAction(v->{
+////    		System.out.println(textField.getText());
+//    	});
+//    }
     
     @Override
 	public void updateItem(T item, boolean empty) {

@@ -9,33 +9,6 @@ import net.tenie.Sqlucky.sdk.po.PoInfo;
  *
  */
 public class DataModelTableFieldsPo {
-	public static void main(String[] args) throws Exception {
-		DataModelTableFieldsPo tableFieldsPo = new DataModelTableFieldsPo();
-		tableFieldsPo.setTableId(1L);
-		tableFieldsPo.setModelId(2L);
-		tableFieldsPo.setRowNo(2 );
-		tableFieldsPo.setDefKey("3"  );
-		tableFieldsPo.setDefName("4"  );
-		tableFieldsPo.setComment("5"  );
-		
-		tableFieldsPo.setDefaultValue("6"  );
-		tableFieldsPo.setTypeFullName("7"  );
-		tableFieldsPo.setPrimaryKeyName("8"  );
-		tableFieldsPo.setPrimaryKey("9"  );
-		String isNullable =   "NO";
-		if(isNullable !=null && "NO".equals(isNullable)) {
-			tableFieldsPo.setNotNull("YES");
-		}else {
-			tableFieldsPo.setNotNull("NO");
-		}
-		tableFieldsPo.setAutoIncrement("a");
-		System.out.println(tableFieldsPo);
-		PoInfo binfo = PoDaoUtil.getDataBeanInfo(tableFieldsPo);
-		String sql = PoDaoUtil.getInsertSql(binfo, tableFieldsPo);
-		System.out.println("======");
-		System.out.println(sql);
-	}
-
 	private Long itemId; 	// 自增长 id
 	private Long tableId;	// table的自增长id
 	private Long modelId;	// 模型的自增长id

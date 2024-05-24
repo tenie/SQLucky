@@ -141,11 +141,12 @@ public class MyAutoComplete implements AutoComplete {
 	public void hide() {
 		if (pop != null) {
 			Platform.runLater(()->{
-				pop.hide();
-				pop.getContent().clear();
-				pop = null;
+				if (pop != null) {
+					pop.hide();
+					pop.getContent().clear();
+					pop = null;
+				}
 			});
-
 		}
 	}
 
