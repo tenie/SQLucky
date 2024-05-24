@@ -206,11 +206,10 @@ public class Dbinfo {
 	/**
 	 * 显示列的 , 备注信息从数据库里读取
 	 * @param conn
-	 * @param tbpo
 	 * @param fls
 	 * @throws Exception
 	 */
-	public static void fetchTableFieldInfo(Connection conn, TablePo tbpo, List<SheetFieldPo>  fls) throws Exception {
+	public static void fetchTableFieldInfo(Connection conn,  List<SheetFieldPo>  fls, String schema, String table) throws Exception {
 		ResultSet rs = null;
 		try {
 			DatabaseMetaData dmd = conn.getMetaData();
@@ -219,7 +218,7 @@ public class Dbinfo {
 				String  remarkval  = po.getDbinfoRemark();
 				if(StrUtils.isNullOrEmpty(remarkval)){
 					String fieldName = po.getColumnLabel().get();
-					rs = dmd.getColumns(null, tbpo.getTableSchema(), tbpo.getTableName(), fieldName);
+					rs = dmd.getColumns(null, schema, table, fieldName);
 					while (rs.next()) {
 						String remarks = rs.getString("REMARKS");
 						po.setDbinfoRemark(remarks);

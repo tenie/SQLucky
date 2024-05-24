@@ -3,6 +3,9 @@ package net.tenie.fx.Action.sqlExecute;
 import java.sql.Connection;
 import java.util.List;
 
+import javafx.application.Platform;
+import net.tenie.Sqlucky.sdk.db.*;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -13,10 +16,6 @@ import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
-import net.tenie.Sqlucky.sdk.db.SelectDao;
-import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SelectExecInfo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
@@ -55,12 +54,14 @@ public class SelectAction {
 			sheetDaV.setLock(isLock);
 
 			SelectExecInfo execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, sqluckyConn);
+
 			sheetDaV.setSelectExecInfo(execInfo);
 			// 设置行号显示宽度
 			DataViewContainer.setTabRowWith(table, sheetDaV.getDataRs().getDatas().size());
 
 			ObservableList<ResultSetRowPo> allRawData = sheetDaV.getDataRs().getDatas();
 			ObservableList<SheetFieldPo> colss = sheetDaV.getColss();
+
 
 			// 查询的 的语句可以被修改
 			table.editableProperty().bind(new SimpleBooleanProperty(true));
@@ -92,7 +93,25 @@ public class SelectAction {
 //						false);
 //				TableViewUtils.rmWaitingPane(isRefresh);
 				myBottomSheet.showSelectData(tidx, false);
-				// 水平滚顶条位置设置和字段类型
+				// 设置: 水平滚顶条位置设置, 字段类型, 主表的字段名称
+
+				String tableNameTmp = tableName;
+
+				// 获取表字段的注解, 在列上悬浮展示
+				CommonUtils.runThread(x->{
+                    try {
+                        Dbinfo.fetchTableFieldInfo(sqluckyConn.getConn(), colss, sqluckyConn.getDefaultSchema(), tableNameTmp);
+						Platform.runLater(()->{
+							// 添加 tooltip
+							CacheDataTableViewShapeChange.setTableHeaderTooltip(table , colss);
+						});
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+
+
 				CacheDataTableViewShapeChange.setDataTableViewShapeCache(sheetDaV.getTabName(), sheetDaV.getTable(),
 						colss);
 			}

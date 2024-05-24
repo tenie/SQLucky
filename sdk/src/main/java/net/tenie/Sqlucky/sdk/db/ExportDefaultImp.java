@@ -15,7 +15,7 @@ import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
  * @author tenie
  *
  */
-public class ExportDefaultImp implements ExportDBObjects {
+public class ExportDefaultImp extends ExportDBObjects {
  
 	private	FetchDBInfoCommonTools fdbtool;
 	 

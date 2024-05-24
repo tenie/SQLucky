@@ -24,7 +24,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class ExportSqlH2Imp implements ExportDBObjects {
+public class ExportSqlH2Imp extends ExportDBObjects {
 
 	private FetchDBInfoCommonTools fdbtool;
 

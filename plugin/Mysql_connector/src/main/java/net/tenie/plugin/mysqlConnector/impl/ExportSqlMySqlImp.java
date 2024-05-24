@@ -25,7 +25,7 @@ import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
  * @author tenie
  *
  */
-public class ExportSqlMySqlImp implements ExportDBObjects {
+public class ExportSqlMySqlImp extends ExportDBObjects {
 	private static Logger logger = LogManager.getLogger(ExportSqlMySqlImp.class);
 
 	private FetchDBInfoCommonTools fdb2;
