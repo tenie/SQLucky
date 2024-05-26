@@ -315,7 +315,6 @@ public class DataModelUtility {
 	/**
 	 * 创建 一个节点
 	 * 
-	 * @param name
 	 * @return
 	 */
 	public static TreeItem<DataModelTreeNodePo> createItemNode(DataModelTreeNodePo treeNode) {
@@ -348,9 +347,6 @@ public class DataModelUtility {
 
 	/**
 	 * 根据模型id, 给模型重命名
-	 * 
-	 * @param mid
-	 * @param newName
 	 * @return
 	 */
 	public static void renameModelName() {
@@ -433,9 +429,7 @@ public class DataModelUtility {
 
 			boolean showtab = true;
 			if (showtab) {
-//				SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(myBottomSheet, dvt, -1, true);
-//				mtd.show();
-				myBottomSheet.showSelectData(-1, true);
+				myBottomSheet.showSelectData(-1, true ,null);
 			}
 
 		}

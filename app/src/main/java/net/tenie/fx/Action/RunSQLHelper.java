@@ -264,12 +264,6 @@ public class RunSQLHelper {
 		ComponentGetter.connComboBox.setDisable(runbtn.disabledProperty().getValue());
 	}
 
-//	public static void settingBtn(JFXButton run, boolean runt, JFXButton stop, boolean stopt, JFXButton btn) {
-//		run.setDisable(runt);
-//		btn.setDisable(runt);
-//		stop.setDisable(stopt);
-//	}
-
 	// 检查db连接状态
 	private static boolean checkDBConn() {
 		ComboBox<Label> conns = ComponentGetter.connComboBox;
@@ -304,11 +298,6 @@ public class RunSQLHelper {
 		thread.start();
 		return statusKey;
 	}
-
-//	public static void runCurrentLineSQLMethod() {
-//		Boolean isCurrentLine = true;
-//		runSQLMethod(null, null, false, isCurrentLine);
-//	}
 
 	public static void runSQLMethod() {
 		runSQLMethod(null, null, false, null);

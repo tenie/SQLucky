@@ -3,6 +3,7 @@ package net.tenie.Sqlucky.sdk.component.sheet.bottom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import javafx.geometry.Insets;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -194,7 +195,7 @@ public class MyBottomSheet extends  Tab{
 	}
 
 	// TODO show
-	public void showSelectData(int idx, boolean disable) {
+	public void showSelectData(int idx, boolean disable, Consumer<String> backcall) {
 		this.idx = idx;
 		// 操作按钮
 		List<Node> btnLs = MyBottomSheetButton.sqlDataOptionBtns(this, disable, true);
@@ -206,7 +207,7 @@ public class MyBottomSheet extends  Tab{
 		this.tabVBoxAddComponentView(tableData.getTable());
 		VBox.setVgrow(tableData.getTable(), Priority.ALWAYS);
 		//tab展示
-		this.show();
+		this.show(backcall);
 	}
 
 	/**
@@ -516,7 +517,7 @@ public class MyBottomSheet extends  Tab{
 	/**
 	 *
 	 */
-	public void show() {
+	public void show(Consumer<String> backcall) {
 		this.setText(tableData.getTabName());
 		Platform.runLater(() -> {
 			var dataTab = ComponentGetter.dataTabPane;
@@ -532,7 +533,13 @@ public class MyBottomSheet extends  Tab{
 
 			SdkComponent.showBottomSheetPane();
 			dataTab.getSelectionModel().select(this);
+			if(backcall != null ){
+				backcall.accept("");
+			}
 		});
+	}
+	public void show() {
+		show(null);
 	}
 
 	// 获取所有数据

@@ -61,6 +61,11 @@ public abstract class ExportDBObjects {
 	 * @param table
 	 */
 	public  void  setTableFieldComment(Connection conn, String schema, String table,List<SheetFieldPo>  fieldPoList ) {
+        try {
+            Dbinfo.fetchTableFieldInfo(conn, fieldPoList, schema, table);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

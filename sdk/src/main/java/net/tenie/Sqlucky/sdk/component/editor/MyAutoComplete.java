@@ -127,6 +127,7 @@ public class MyAutoComplete implements AutoComplete {
 		treeView.setOnKeyPressed(e -> {
 			if (KeyCode.ENTER.equals(e.getCode())) {
 				var it = treeView.getSelectionModel().getSelectedItem();
+				if(it == null ) return;
 				String selectVal = it.getValue().getTableName();
 				codeAreaReplaceString(selectVal, it.getValue());
 				hide();

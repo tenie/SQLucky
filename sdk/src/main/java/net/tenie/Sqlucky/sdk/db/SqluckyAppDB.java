@@ -351,9 +351,13 @@ public class SqluckyAppDB {
 	public static FilteredTableColumn<ResultSetRowPo, String> createColumnForSqlData(String colname, int colIdx,
 			boolean iskey, SheetDataValue dvt) {
 		FilteredTableColumn<ResultSetRowPo, String> col = SdkComponent.createColumn(colname, colIdx);
-		Label label = (Label) col.getGraphic();
 		if (iskey) {
+			Label label = new Label();
+			col.setGraphic(label);
 			label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#FF6600"));
+		}else {
+			Label label = new Label();
+			col.setGraphic(label);
 		}
 
 		String tableName = dvt.getTabName();

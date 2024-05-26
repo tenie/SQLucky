@@ -94,7 +94,7 @@ public class ProcedureAction {
 //					SqluckyBottomSheet mtd = ComponentGetter.appComponent.sqlDataSheet(dvt, tidx, true);
 //					SqlExecuteOption.rmWaitingPane( isRefresh );
 					TableViewUtils.rmWaitingPane(false);
-					myBottomSheet.showSelectData(tidx, false);
+					myBottomSheet.showSelectData(tidx, false, null);
 
 				} else {
 					msg = "ok. ";

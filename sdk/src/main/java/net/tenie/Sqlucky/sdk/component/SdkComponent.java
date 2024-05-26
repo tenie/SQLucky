@@ -131,8 +131,6 @@ public class SdkComponent {
 		FilteredTableColumn<ResultSetRowPo, String> column = new FilteredTableColumn<>();
 		column.setCellFactory(MyTableCellTextField2.forTableColumn());
 		column.setText(colname);
-		Label label = new Label();
-		column.setGraphic(label);
 		// 通过下标从ObservableList 获取对应列显示的字符串值
 		column.setCellValueFactory(new ResultSetCellValueFactory(colIdx));
 		return column;

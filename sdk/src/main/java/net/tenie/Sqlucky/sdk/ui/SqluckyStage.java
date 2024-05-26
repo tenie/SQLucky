@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.ui;
 
+import javafx.application.Platform;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
@@ -8,6 +9,9 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
+/**
+ * 自定义 stage , 记载动画,可以在stackPane上显示
+ */
 public class SqluckyStage {
     private Stage stage;
     private Scene scene;
@@ -54,6 +58,18 @@ public class SqluckyStage {
         init(pane);
         stage.setTitle(title);
     }
+
+
+    public void close(){
+        Platform.runLater(()->{
+            stackPane.getChildren().clear();
+            stackPane = null;
+            scene = null;
+            stage.close();
+            stage = null;
+        });
+    }
+
 
     public Stage getStage() {
         return stage;

@@ -634,8 +634,8 @@ public class DBinfoTree extends SqluckyTitledPane {
 						} else {
 							Platform.runLater(() -> {
 								if(! silent){
-									MyAlert.errorAlert(
-											" Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
+									MyAlert.notification("Error", " Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !", MyAlert.NotificationType.Error);
+//									MyAlert.errorAlert(" Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
 								}
 								item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
 								AppWindow.treeView.refresh();
@@ -648,7 +648,9 @@ public class DBinfoTree extends SqluckyTitledPane {
 						logger.debug(e.getMessage());
 						Platform.runLater(() -> {
 							if(! silent){
-								MyAlert.errorAlert(" Error !");
+//								MyAlert.errorAlert(" Error !");
+								MyAlert.notification("Error", " Error !", MyAlert.NotificationType.Error);
+//
 							}
 							item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
 							AppWindow.treeView.refresh();
