@@ -339,7 +339,12 @@ public class CommonUtils {
         threadAwait(1);
     }
 
-    // TODO
+    /**
+     * 线程阻塞函数, 使用sleep实现
+     * 使用计数器, 在子线程里sleep后, 计数器-1
+     * 在子线程外面等待计数器为0, 实现在线程等待
+     * @param second
+     */
     public static void threadAwait(int second) {
         // 设置一次计数
         CountDownLatch countDownLatch = new CountDownLatch(1);

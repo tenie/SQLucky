@@ -29,18 +29,17 @@ public class CacheDataTableViewShapeChange {
 	static private Map<String, Double> tableScrollHorizontal = new HashMap<>();
 	static private Map<String, List<String>> colOrder = new HashMap<>();
 
+	/**
+	 * 设置表格的外形(根据缓存)
+	 * @param tableName
+	 * @param table
+	 * @param colss
+	 */
 	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ResultSetRowPo> table , ObservableList<SheetFieldPo> colss) {
-		CommonUtils.threadAwait(1);
-		Platform.runLater(() -> { 
 			// 列移动缓存
 			CacheDataTableViewShapeChange.setTableHeader(table, tableName );			
-			
 			// 水平滚顶条的缓存
 			CacheDataTableViewShapeChange.setHorizontal(table, tableName );
-			
-
-		});
-		
 	}
 	
 	
