@@ -8,7 +8,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -24,8 +23,11 @@ import net.tenie.fx.component.InfoTree.DBinfoTree;
 public class AppWindow extends VBox{
 	private MenuBarContainer mainMenuBar;
 	private MasterDetailPane masterDetailPane;
-	private OperateContainer operate;
-	public static DataViewContainer dataView;
+	// 操作区域, 数据库链接, sql编辑
+	private OperateContainer operateContainer;
+
+	// 数据展示区域
+	public static DataViewContainer dataViewContainer;
 	private Scene appScene;
 	private StackPane root;
 	// 窗口的顶部(主菜单的位置)
@@ -45,14 +47,13 @@ public class AppWindow extends VBox{
 
 		mainMenuBar = new MenuBarContainer();
 		masterDetailPane = new MasterDetailPane(Side.BOTTOM);
-		masterDetailPane = new MasterDetailPane(Side.BOTTOM);
-		operate = new OperateContainer();
-		dataView = new DataViewContainer();
+		operateContainer = new OperateContainer();
+		dataViewContainer = new DataViewContainer();
 
 		masterDetailPane.getStyleClass().add(0, "masterDetailPane");
 		masterDetailPane.setShowDetailNode(false);
-		masterDetailPane.setMasterNode(operate);
-		masterDetailPane.setDetailNode(dataView.getContainer());
+		masterDetailPane.setMasterNode(operateContainer);
+		masterDetailPane.setDetailNode(dataViewContainer);
 		masterDetailPane.setDividerPosition(0.6);
 		VBox.setVgrow(masterDetailPane, Priority.ALWAYS);
 
@@ -84,8 +85,8 @@ public class AppWindow extends VBox{
 		Platform.runLater(() -> {
 			this.getChildren().addAll(headAnchorPane, masterDetailPane);
 			VBox.setMargin(masterDetailPane, new Insets(3, 3, 3, 3));
-			CommonUtils.fadeTransition(operate, 2000);
-			CommonUtils.fadeTransition(dataView.getContainer(), 2000);
+			CommonUtils.fadeTransition(operateContainer, 2000);
+			CommonUtils.fadeTransition(dataViewContainer, 2000);
 			CommonUtils.fadeTransition(mainMenuBar, 2000);
 			CommonUtils.fadeTransition(masterDetailPane, 2000);
 		});
@@ -156,19 +157,19 @@ public class AppWindow extends VBox{
 	}
 
 	public OperateContainer getOperate() {
-		return operate;
+		return operateContainer;
 	}
 
 	public void setOperate(OperateContainer operate) {
-		this.operate = operate;
+		this.operateContainer = operate;
 	}
 
 	public DataViewContainer getDataView() {
-		return dataView;
+		return dataViewContainer;
 	}
 
 	public void setDataView(DataViewContainer dataView) {
-		this.dataView = dataView;
+		this.dataViewContainer = dataView;
 	}
 
 	public Scene getAppScene() {

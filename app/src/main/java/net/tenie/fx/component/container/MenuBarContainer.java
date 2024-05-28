@@ -173,12 +173,17 @@ public class MenuBarContainer extends MenuBar{
 		// Underscore to hump
 		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underscore To Hump"));
 		underscore.setOnAction(value -> {
-			AppCommonAction.underlineCaseCamel();
+			Platform.runLater(()->{
+				AppCommonAction.underlineCaseCamel();
+			});
+
 		});
 
 		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underscore"));
 		Hump.setOnAction(value -> {
-			AppCommonAction.CamelCaseUnderline();
+			Platform.runLater(() -> {
+				AppCommonAction.CamelCaseUnderline();
+			});
 		});
 
 		Menu cursorMenu = new Menu("Cursor");

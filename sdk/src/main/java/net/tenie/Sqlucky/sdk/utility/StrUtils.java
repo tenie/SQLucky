@@ -327,6 +327,13 @@ public class StrUtils {
             if(suffixIdx == -1){
                 suffixIdx = str.length();
             }
+        }else {
+            int tmpSuffixIdx = str.indexOf("\n", idx);
+            if(tmpSuffixIdx > -1){
+                if(tmpSuffixIdx < suffixIdx){
+                    suffixIdx = tmpSuffixIdx;
+                }
+            }
         }
 
         String rs = str.substring(prefixIdx, suffixIdx);
@@ -339,7 +346,7 @@ public class StrUtils {
      * @param str
      * @return
      */
-    public static String underlineCaseCamel(String str) {
+    public static String underlineCaseCamel2(String str) {
         if(str.contains("_")){
             List<Integer> idxList = findStrAllIndex(str,"_", true);
             Set<String> strSet = new HashSet<>();
@@ -355,6 +362,72 @@ public class StrUtils {
         }
 
         return str;
+    }
+
+    public static String underlineCaseCamel(String str) {
+        StringBuilder strVal = new StringBuilder();
+        if(str.contains("_")){
+            List<String> lineStrList = new ArrayList<>();
+//            List<String> wordList = new ArrayList<>();
+           if(str.contains("\n")){
+               String[] lineArr = str.split("\n");
+               lineStrList.addAll(List.of(lineArr));
+           }else {
+               lineStrList.add(str);
+           }
+
+           if(lineStrList.size() > 1){
+               int listSize = lineStrList.size();
+               for(int i = 0 ; i < listSize; i++){
+                   String lineStr = lineStrList.get(i);
+                   if(lineStr.contains("\t")){
+                       lineStr = lineStr.replaceAll("\t", " ");
+                   }
+                   if(lineStr.contains(" ")){
+                      String[] wordArr =  lineStr.split(" ");
+                      for(String word : wordArr){
+                          if(word.contains("_")){
+                              String tmpStr = underlineWordToCaseCamel(word);
+                              strVal.append(tmpStr + " ");
+                          }else {
+                              strVal.append(word + " ");
+                          }
+                      }
+                   }else {
+                       if(lineStr.contains("_")){
+                           String tmpStr = underlineWordToCaseCamel(lineStr);
+                           strVal.append(tmpStr );
+                       }else {
+                           strVal.append(lineStr );
+                       }
+                   }
+
+                   if(i < (listSize -1)){
+                       strVal.append("\n");
+                   }
+               }
+           }else {
+               String tmpStr = underlineWordToCaseCamel(str);
+               strVal.append(tmpStr);
+           }
+
+//            List<Integer> idxList = findStrAllIndex(str,"_", true);
+//            Set<String> strSet = new HashSet<>();
+//            for(Integer idx : idxList){
+//                String tmmStr = findContinuousWordByIndex(str, idx);
+//                strSet.add(tmmStr);
+//            }
+//            // 单词转换-> 单词替换
+//            for(String oldStr: strSet){
+//                String newStr = underlineWordToCaseCamel(oldStr);
+//                str = str.replaceAll(oldStr, newStr);
+//            }
+        }
+        if(StrUtils.isNullOrEmpty(strVal.toString())){
+                return str;
+        }
+        return strVal.toString();
+//        return str;
     }
 
     /**
