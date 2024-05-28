@@ -1,13 +1,17 @@
 package net.tenie.Sqlucky.sdk.component;
 
+import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
+import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DraggingTabPaneSupport;
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -16,32 +20,36 @@ import org.controlsfx.control.tableview2.FilteredTableView;
  * 展示(数据, ddl等)面板的容器
  * @author tenie 
  */
-public class DataViewContainer {
-	private HBox container;
+public class DataViewContainer extends HBox{
+//	private HBox container;
+
 	private VBox TabPanContainer;
-	private TabPane dataView;
+	// 标签页根
+	private TabPane dataViewTabPane;
 
 	public DataViewContainer() {
-		container = new HBox();
+		super();
+//		container = new HBox();
 		TabPanContainer = new VBox();
-		container.getChildren().add(TabPanContainer);
-		dataView = new TabPane();
-		TabPanContainer.getChildren().add(dataView);
+//		container.getChildren().add(TabPanContainer);
+		this.getChildren().add(TabPanContainer);
+		dataViewTabPane = new TabPane();
+		TabPanContainer.getChildren().add(dataViewTabPane);
 
-		VBox.setVgrow(dataView, Priority.ALWAYS);
+		VBox.setVgrow(dataViewTabPane, Priority.ALWAYS);
 		HBox.setHgrow(TabPanContainer, Priority.ALWAYS);
 
-		ComponentGetter.dataTabPane = dataView;
+		ComponentGetter.dataTabPane = dataViewTabPane;
 		DraggingTabPaneSupport support2 = new DraggingTabPaneSupport();
-		support2.addSupport(dataView);
+		support2.addSupport(dataViewTabPane);
 		
-		dataView.getTabs().addListener((ListChangeListener<? super Tab>) c -> { 
+		dataViewTabPane.getTabs().addListener((ListChangeListener<? super Tab>) c -> {
 			var list = c.getList();
 			if(list.size() == 0) {
 //				SdkComponent.hideBottomPane(); 
 				CommonUtils.delayRunThread(v -> {
 					Platform.runLater(() -> {
-						if (dataView.getTabs().size() == 0) {
+						if (dataViewTabPane.getTabs().size() == 0) {
 							SdkComponent.hideBottomPane();
 						}
 					});
@@ -49,6 +57,73 @@ public class DataViewContainer {
 			}
 					
 		});
+
+		// 鼠标进入 dataViewTabPane 显示 隐藏按钮
+		dataViewTabPane.setOnMouseEntered(eh->{
+			Tab t = dataViewTabPane.getSelectionModel().getSelectedItem();
+			if( t != null){
+				if( t instanceof MyBottomSheet myTab ){
+					// 获取隐藏按钮
+					JFXButton hideBottom = SheetDataValue.hideBottom;
+					if (SheetDataValue.isSideRight) {
+						if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
+							myTab.getBtnHbox().getChildren().add(0, hideBottom);
+						}
+					} else {
+						if (!myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
+							myTab.getButtonAnchorPane().getChildren().add(hideBottom);
+							AnchorPane.setRightAnchor(hideBottom, 0.0);
+							AnchorPane.setTopAnchor(hideBottom, 6.0);
+						}
+					}
+				}
+			}
+
+		});
+		// 鼠标离开 dataViewTabPane 隐藏 隐藏按钮
+		dataViewTabPane.setOnMouseExited(eh->{
+			Tab t = dataViewTabPane.getSelectionModel().getSelectedItem();
+			if( t != null) {
+				if (t instanceof MyBottomSheet myTab) {
+					// 获取隐藏按钮
+					JFXButton hideBottom = SheetDataValue.hideBottom;
+
+					if (SheetDataValue.isSideRight) {
+						if (myTab.getBtnHbox().getChildren().contains(hideBottom)) {
+							myTab.getBtnHbox().getChildren().remove(hideBottom);
+						}
+					} else {
+						if (myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
+							myTab.getButtonAnchorPane().getChildren().remove(hideBottom);
+						}
+					}
+				}
+			}
+
+		});
+		// 选中的tab 显示隐藏按钮
+		dataViewTabPane.getSelectionModel().selectedItemProperty().addListener((a,b,c)->{
+			if (c instanceof MyBottomSheet myTab) {
+				// 获取隐藏按钮
+				JFXButton hideBottom = SheetDataValue.hideBottom;
+				if (SheetDataValue.isSideRight) {
+					if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
+						Platform.runLater(()->{
+							myTab.getBtnHbox().getChildren().add(0, hideBottom);
+						});
+
+					}
+				} else {
+					if (!myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
+						myTab.getButtonAnchorPane().getChildren().add(hideBottom);
+						AnchorPane.setRightAnchor(hideBottom, 0.0);
+						AnchorPane.setTopAnchor(hideBottom, 6.0);
+					}
+				}
+			}
+		});
+
+
 	}
 
 //	public static void showTableDate(DataViewTab dvt, String time , String rows) {
@@ -78,13 +153,13 @@ public class DataViewContainer {
 		}
 	}
 	
-	public HBox getContainer() {
-		return container;
-	}
-
-	public void setContainer(HBox container) {
-		this.container = container;
-	}
+//	public HBox getContainer() {
+//		return container;
+//	}
+//
+//	public void setContainer(HBox container) {
+//		this.container = container;
+//	}
 
 	public VBox getTabPancontainer() {
 		return TabPanContainer;
@@ -94,12 +169,12 @@ public class DataViewContainer {
 		TabPanContainer = tabPancontainer;
 	}
 
-	public TabPane getDataView() {
-		return dataView;
+	public TabPane getDataViewTabPane() {
+		return dataViewTabPane;
 	}
 
-	public void setDataView(TabPane dataView) {
-		this.dataView = dataView;
+	public void setDataViewTabPane(TabPane dataViewTabPane) {
+		this.dataViewTabPane = dataViewTabPane;
 	}
 
 }

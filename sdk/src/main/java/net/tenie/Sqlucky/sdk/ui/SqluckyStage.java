@@ -25,23 +25,23 @@ public class SqluckyStage {
     }
 
     public void init(Node pane) {
-        stage = new Stage();
+            stage = new Stage();
 
-        stackPane = new StackPane(pane);
-        scene = new Scene(stackPane);
-        stage.setScene(scene);
+            stackPane = new StackPane(pane);
+            scene = new Scene(stackPane);
+            stage.setScene(scene);
 
-        // css
-        CommonUtils.loadCss(scene);
-        // 图标
-        stage.getIcons().add(ComponentGetter.LogoIcons);
+            // css
+            CommonUtils.loadCss(scene);
+            // 图标
+            stage.getIcons().add(ComponentGetter.LogoIcons);
 
-        stage.focusedProperty().addListener(e -> {
-            if (stage.isFocused()) {
-                ComponentGetter.currentStackPane = stackPane;
-            }
+            stage.focusedProperty().addListener(e -> {
+                if (stage.isFocused()) {
+                    ComponentGetter.currentStackPane = stackPane;
+                }
 
-        });
+            });
 
     }
 

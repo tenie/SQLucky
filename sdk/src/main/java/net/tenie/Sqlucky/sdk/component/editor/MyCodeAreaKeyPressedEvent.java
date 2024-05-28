@@ -35,15 +35,17 @@ public class MyCodeAreaKeyPressedEvent {
 
             if (myAuto != null) {
                 if (!myAuto.isShow()) {
-                    if (e.getCode().isLetterKey()
-                            || e.getCode() == KeyCode.PERIOD
-                            || e.getCode().isDigitKey()) { // 按 "." 跳出补全提示框
-                        // 当前光标位置
-                        int anchor = codeArea.getAnchor();
-                        // 子线程里执行
-                        CommonUtils.runThread(x -> {
-                            sqluckyEditor.callPopup(anchor);
-                        });
+                    if(!(e.isControlDown() || e.isAltDown() || e.isShiftDown() || e.isShortcutDown())){
+                        if (e.getCode().isLetterKey()
+                                || e.getCode() == KeyCode.PERIOD
+                                || e.getCode().isDigitKey()) { // 按 "." 跳出补全提示框
+                            // 当前光标位置
+                            int anchor = codeArea.getAnchor();
+                            // 子线程里执行
+                            CommonUtils.runThread(x -> {
+                                sqluckyEditor.callPopup(anchor);
+                            });
+                        }
                     }
                 }
 

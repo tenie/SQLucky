@@ -146,23 +146,26 @@ public void highLighting(String str) {
     public void callPopup(Integer preAnchor) {
         var codeArea = getCodeArea();
         if (codeArea.isFocused()) {
-            if (CommonUtils.isMacOS()) {
-                Platform.runLater(() -> {
-                    int ar = codeArea.getAnchor();
-                    String str = codeArea.getText(ar - 1, ar);
-                    if (str.equals("÷")) {
-                        codeArea.deleteText(ar - 1, ar);
-                    }
-                });
-            } else if (CommonUtils.isLinuxOS()) {
-                Platform.runLater(() -> {
-                    int ar = codeArea.getAnchor();
-                    String str = codeArea.getText(ar - 1, ar);
-                    if (str.equals("/")) {
-                        codeArea.deleteText(ar - 1, ar);
-                    }
-                });
-            }
+                // TODO 屏蔽触发自动补全时多余输入
+//            if (CommonUtils.isMacOS()) {
+//                Platform.runLater(() -> {
+//                    int ar = codeArea.getAnchor();
+//                    if(ar == 0) return;
+//                    String str = codeArea.getText(ar - 1, ar);
+//                    if (str.equals("÷")) {
+//                        codeArea.deleteText(ar - 1, ar);
+//                    }
+//                });
+//            } else if (CommonUtils.isLinuxOS()) {
+//                Platform.runLater(() -> {
+//                    int ar = codeArea.getAnchor();
+//                    if(ar == 0) return;
+//                    String str = codeArea.getText(ar - 1, ar);
+//                    if (str.equals("/")) {
+//                        codeArea.deleteText(ar - 1, ar);
+//                    }
+//                });
+//            }
             if (myAuto == null)
                 return;
             Platform.runLater(() -> {

@@ -262,24 +262,29 @@ public class MyAutoComplete implements AutoComplete {
 			pop = new Popup();
 			// pop 设置键盘输入事件
 			pop.addEventFilter(KeyEvent.KEY_PRESSED, e -> {
-				// 当输入的是空格, 隐藏
-				if (e.getCode().equals(KeyCode.SPACE) || e.getCode().equals(KeyCode.ENTER) || e.getCode().equals(KeyCode.ESCAPE)) {
-					hide();
-				}
+
 				if (isShow()) {
+					// 当输入的是空格, 隐藏
+					if (e.getCode().equals(KeyCode.SPACE) || e.getCode().equals(KeyCode.ENTER) || e.getCode().equals(KeyCode.ESCAPE)) {
+						hide();
+					}else
+					if (e.getCode().isArrowKey()) {
+						System.out.println("isArrowKey");
+					}else
 					// 输入的是退格键, 需要判断是否要隐藏提示框
 					if (e.getCode() == KeyCode.BACK_SPACE) {
 						var codeArea = MyEditorSheetHelper.getCodeArea();
 						backSpaceHide(codeArea);
 					} else {
+
 						// 已经显示的情况, 继续输入时, 先隐藏, 在弹出新的选择框
 						pop.hide();
 						var sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
 
 						String anchorWord = sqluckyEditor.getAnchorWord();
-						System.out.println(anchorWord);
+//						System.out.println(anchorWord);
 						boolean tf = execFilterStr(anchorWord);
-						if(tf){
+						if (tf) {
 							pop.show(ComponentGetter.primaryStage);
 						}
 					}
