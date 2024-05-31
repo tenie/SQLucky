@@ -8,7 +8,9 @@ import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
-/* 
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+
+/*
  * 导出DB info
  *  * @author tenie 
  *  
@@ -68,6 +70,19 @@ public abstract class ExportDBObjects {
         }
 
     }
+
+	/**
+	 * 导出表的查询sql 语句, 查询20条, 这里默认全部, 需要各个数据库实现
+	 */
+	public  String select20(String tabSchema, String tablename ) {
+			String sql = "";
+			if (StrUtils.isNotNullOrEmpty(tabSchema)) {
+				sql = "SELECT * FROM " + tabSchema + "." + tablename;
+			} else {
+				sql = "SELECT * FROM " + tablename;
+			}
+			return  sql;
+	}
 
     // 目前没用
 	public abstract String exportCreatePrimaryKey(Connection conn, String schema, String obj);

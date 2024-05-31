@@ -23,6 +23,8 @@ public class RunSqlStatePo {
 	private  Boolean isCurrentLine = false;
 	
 	private Long statusKey;
+	// 查询限制行数
+	private Integer selectLimit;
 
 	public RunSqlStatePo(String sql, SqluckyConnector sqlConn) {
 		this.sqlStr = sql;
@@ -123,8 +125,52 @@ public class RunSqlStatePo {
 	public void setStatusKey(Long statusKey) {
 		this.statusKey = statusKey;
 	}
- 
-	
-	
-	
+
+	public Boolean getCreateFunc() {
+		return isCreateFunc;
+	}
+
+	public void setCreateFunc(Boolean createFunc) {
+		isCreateFunc = createFunc;
+	}
+
+	public Boolean getRefresh() {
+		return isRefresh;
+	}
+
+	public void setRefresh(Boolean refresh) {
+		isRefresh = refresh;
+	}
+
+	public Boolean getLock() {
+		return isLock;
+	}
+
+	public void setLock(Boolean lock) {
+		isLock = lock;
+	}
+
+	public Boolean getCallFunc() {
+		return isCallFunc;
+	}
+
+	public void setCallFunc(Boolean callFunc) {
+		isCallFunc = callFunc;
+	}
+
+	public Boolean getCurrentLine() {
+		return isCurrentLine;
+	}
+
+	public void setCurrentLine(Boolean currentLine) {
+		isCurrentLine = currentLine;
+	}
+
+	public Integer getSelectLimit() {
+		return selectLimit;
+	}
+
+	public void setSelectLimit(Integer selectLimit) {
+		this.selectLimit = selectLimit;
+	}
 }

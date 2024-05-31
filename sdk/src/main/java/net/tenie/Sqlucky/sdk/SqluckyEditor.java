@@ -179,9 +179,9 @@ public void highLighting(String str) {
                         return;
                     }
                 }
-//                String  str = "";
                 // 获取光标向前方向的单词
                 String str = getAnchorWord();
+                myAuto.showPop(x, y + 9, str);
 //                for (int i = 1; anchor - i >= 0; i++) {
 //                    var tmp = codeArea.getText(anchor - i, anchor);
 //                    int tmplen = tmp.length();
@@ -192,9 +192,9 @@ public void highLighting(String str) {
 //                    }
 //                }
                 // 子线程创建pop
-                CommonUtils.runThread( strVal -> {
-                    myAuto.showPop(x, y + 9, strVal);
-                }, str);
+//                CommonUtils.runThread( strVal -> {
+//                    myAuto.showPop(x, y + 9, strVal);
+//                }, str);
               ;
             });
         }
@@ -223,9 +223,9 @@ public void highLighting(String str) {
     }
 
     //	显示自动补全
-    public void showAutoComplete(double x, double y, String str) {
-        myAuto.showPop(x, y + 7, str);
-    }
+//    public void showAutoComplete(double x, double y, String str) {
+//        myAuto.showPop(x, y + 7, str);
+//    }
 
     public void nextBookmark(boolean tf) {
         getCodeArea().getMylineNumber().nextBookmark(tf);

@@ -34,7 +34,7 @@ public class SelectAction {
 	private static Logger logger = LogManager.getLogger(SelectAction.class);
 
 
-	public static void selectAction(String sql, SqluckyConnector sqluckyConn, int tidx, boolean isLock) throws Exception {
+	public static void selectAction(String sql, SqluckyConnector sqluckyConn, int tidx, boolean isLock, Integer selectLimit) throws Exception {
 		MyBottomSheet myBottomSheet  = null;
 		try {
 			// 获取表名
@@ -54,7 +54,12 @@ public class SelectAction {
 			sheetDaV.setTabName(tableName);
 			sheetDaV.setLock(isLock);
 
-			SelectExecInfo execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, sqluckyConn);
+			int limit = ConfigVal.MaxRows;
+			if(selectLimit != null && selectLimit > 0){
+				limit = selectLimit;
+			}
+
+			SelectExecInfo execInfo = SelectDao.selectSql2(sql, limit, sqluckyConn);
 
 			sheetDaV.setSelectExecInfo(execInfo);
 			// 设置行号显示宽度

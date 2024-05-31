@@ -19,8 +19,8 @@ import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.Action.sqlExecute.RunSqlStatePo;
 import net.tenie.fx.window.ConnectionEditor;
 
 import java.sql.SQLException;
@@ -215,16 +215,20 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 		var tbpo = treeNPO.getTable();
 		String tablename = tbpo.getTableName();
 		String tabSchema = tbpo.getTableSchema();
-		String sql = "";
-		if (StrUtils.isNotNullOrEmpty(tabSchema)) {
-			sql = "SELECT * FROM " + tabSchema + "." + tablename;
-		} else {
-			sql = "SELECT * FROM " + tablename;
-		}
-		String str = sql;
+//		String sql = "";
+//		if (StrUtils.isNotNullOrEmpty(tabSchema)) {
+//			sql = "SELECT * FROM " + tabSchema + "." + tablename;
+//		} else {
+//			sql = "SELECT * FROM " + tablename;
+//		}
+
+		String str = sqluckyConn.getExportDDL().select20(tabSchema, tablename);;
 		selectMenu.setText(str);
 		selectMenu.setOnAction(e -> {
-			RunSQLHelper.runSQL(sqluckyConn, str, false);
+			RunSqlStatePo state = new RunSqlStatePo(str, sqluckyConn);
+			state.setIsCreateFunc(false);
+			state.setSelectLimit(20);
+			RunSQLHelper.runSQLByRunSqlStatePo(sqluckyConn, state);
 		});
 	}
 

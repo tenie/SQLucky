@@ -32,10 +32,14 @@ public interface AppComponent {
 
 	 SqluckyEditor createCodeArea();
 
-	/*
-	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab
+
+	/**
+	 *  查看table ddl界面 执行查询按钮, 不刷新底部tab
+	 * @param sqlConn
+	 * @param sqlv
+	 * @param limit 限制查询的行数, 目前给的是20
 	 */
-	 void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv);
+	 void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv, Integer limit);
 
 	Long refreshDataTableView(String connName, String sql, String idx, boolean isLock);
 	Long refreshDataTableView(SqluckyConnector dbconnPo, String sql, String idx, boolean isLock);

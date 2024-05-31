@@ -161,7 +161,7 @@ public class RunSQLHelper {
 				if (state.getIsCallFunc()) { // 调用存储过程
 					ProcedureAction.procedureAction(execSql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
 				} else if (type == ParseSQL.SELECT) { // 调用查询
-					SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock() );
+					SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock(), state.getSelectLimit() );
 				} else { 
 					Connection conn = sqluckyConn.getConn();
 					if (type == ParseSQL.UPDATE) {
@@ -423,10 +423,35 @@ public class RunSQLHelper {
 		thread.start();
 	}
 
-	/*
-	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab
+	/**
+	 * 根据RunSqlStatePo中的值来执行sql
+	 * @param sqlConn
+	 * @param state
 	 */
-	public static void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv) {
+	public static void runSQLByRunSqlStatePo(SqluckyConnector sqlConn, RunSqlStatePo state) {
+		Connection connv = sqlConn.getConn();
+		try {
+			if (connv == null) {
+				return;
+			} else if (connv.isClosed()) {
+				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		thread = createThread(RunSQLHelper::runMain, state);
+		thread.start();
+	}
+
+
+	/**
+	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab
+	 * @param sqlConn
+	 * @param sqlv
+	 * @param limit 限制查询的行数, 查询20条
+	 */
+	public static void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv, Integer limit) {
 		Connection connv = sqlConn.getConn();
 		try {
 			if (connv == null) {
@@ -441,6 +466,7 @@ public class RunSQLHelper {
 
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsRefresh(true);
+		state.setSelectLimit(limit);
 		thread = createThread(RunSQLHelper::runMain, state);
 		thread.start();
 	}
