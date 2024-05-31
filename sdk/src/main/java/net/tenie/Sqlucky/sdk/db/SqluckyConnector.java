@@ -265,10 +265,4 @@ public abstract class SqluckyConnector {
 		return connPo.getConn();
 	}
 	
-//	public static void main(String[] args) throws InterruptedException {
-//		Date time = new Date();
-//		Thread.sleep(2000);
-//		Date time2= new Date();
-//		System.out.println(time2.getTime() - time.getTime()) ;
-//	}
 }

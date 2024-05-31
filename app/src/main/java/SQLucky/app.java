@@ -162,14 +162,14 @@ public class app extends Application {
                 MyPreloaderMp4.hiden();
             }
             // windows 系统, 使用自己的关闭窗口
-//            if (!CommonUtils.isMacOS()) {
-//                AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
-//                winos.setWindow(primaryStage, app.getHeadAnchorPane());
-//            }
-            if (CommonUtils.isLinuxOS()) {
+            if (!CommonUtils.isMacOS()) {
                 AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
                 winos.setWindow(primaryStage, app.getHeadAnchorPane());
             }
+//            if (CommonUtils.isLinuxOS()) {
+//                AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
+//                winos.setWindow(primaryStage, app.getHeadAnchorPane());
+//            }
             
 //			else if(CommonUtility.isLinuxOS()) {
 //				// 图标

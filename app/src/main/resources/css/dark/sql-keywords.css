@@ -20,23 +20,23 @@
 
 .findparenthesis {
 	-rtfx-background-color: #3169ce !important;
-	-fx-font-weight: bold;
+	/*-fx-font-weight: bold;*/
 }
 
 .errorword {
 	-fx-fill: red;
-	-fx-font-weight: bold;
+/*	-fx-font-weight: bold;*/
 	-fx-underline: true;
 }
 
 .keyword {
-	-fx-fill: #C97632;
-	-fx-font-weight: bold;
+	-fx-fill: #fda508;
+/*	-fx-font-weight: bold;*/
 }
 
 .keyword-error {
-	-fx-fill: #C97632;
-	-fx-font-weight: bold;
+	-fx-fill: #fda508;
+	/*-fx-font-weight: bold;*/
 	-fx-underline: true;
 }
 
@@ -46,17 +46,17 @@
 
 .paren {
 	-fx-fill: firebrick;
-	-fx-font-weight: bold;
+/*	-fx-font-weight: bold;*/
 }
 
 .bracket {
 	-fx-fill: darkgreen;
-	-fx-font-weight: bold;
+/*	-fx-font-weight: bold;*/
 }
 
 .brace {
 	-fx-fill: teal;
-	-fx-font-weight: bold;
+/*	-fx-font-weight: bold;*/
 }
 
 .string {
@@ -100,8 +100,8 @@
 }
 
 .styled-text-area .keyword-error {
-	-fx-fill: #C97632;
-	-fx-font-weight: bold;
+	-fx-fill: #fda508;
+/*	-fx-font-weight: bold;*/
 	-fx-underline: true;
 }
 

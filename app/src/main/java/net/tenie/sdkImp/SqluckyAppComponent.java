@@ -94,8 +94,8 @@ public class SqluckyAppComponent implements AppComponent {
 	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab
 	 */
 	@Override
-	public void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv) {
-		RunSQLHelper.runSelectSqlLockTabPane(sqlConn, sqlv);
+	public void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv, Integer limit) {
+		RunSQLHelper.runSelectSqlLockTabPane(sqlConn, sqlv, limit);
 	}
 
 	@Override

@@ -261,8 +261,6 @@ public class MyBottomSheet extends  Tab{
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-//		mtb.setSqlArea(sqlArea);
-//		VBox vb = new VBox();
 		String ddl = table.getDdl();
 		sqlArea.initCodeArea(ddl, false);
 		// 表格上面的按钮
@@ -498,16 +496,17 @@ public class MyBottomSheet extends  Tab{
 		// 查询按钮
 		JFXButton selectBtn = new JFXButton();
 		selectBtn.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
-		selectBtn.setTooltip(MyTooltipTool.instance("Run SQL: SELECT * FROM " + tableName));
+		String sqlstr = sqluckyConn.getExportDDL().select20(schemaName, tableName);;
+		selectBtn.setTooltip(MyTooltipTool.instance("Run SQL: " +sqlstr));
 		selectBtn.setOnAction(e -> {
-			String sqlstr = "";
-			if (StrUtils.isNotNullOrEmpty(schemaName)) {
-				sqlstr = "SELECT * FROM " + schemaName + "." + tableName;
-			} else {
-				sqlstr = "SELECT * FROM " + tableName;
-			}
 
-			ComponentGetter.appComponent.runSelectSqlLockTabPane(sqluckyConn, sqlstr);
+//			if (StrUtils.isNotNullOrEmpty(schemaName)) {
+//				sqlstr = "SELECT * FROM " + schemaName + "." + tableName;
+//			} else {
+//				sqlstr = "SELECT * FROM " + tableName;
+//			}
+
+			ComponentGetter.appComponent.runSelectSqlLockTabPane(sqluckyConn, sqlstr, 20);
 
 		});
 
