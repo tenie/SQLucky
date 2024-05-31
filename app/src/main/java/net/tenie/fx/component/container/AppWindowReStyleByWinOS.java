@@ -15,6 +15,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.Action.CommonEventHandler;
 
 public class AppWindowReStyleByWinOS {
@@ -68,6 +69,11 @@ public class AppWindowReStyleByWinOS {
 		stage2.maximizedProperty().addListener((a,b,c)->{
 			System.out.println("stage2 = " + c);
 			if(c){
+				if (CommonUtils.isLinuxOS()) {
+					stage2Width = stage2.getWidth();
+					stage2Height = stage2.getHeight();
+				}
+
 				stage.setScene(this.scene);
 				stage.show();
 				stage.toFront();
@@ -81,18 +87,22 @@ public class AppWindowReStyleByWinOS {
 
 			}
 		});
-		// 当小窗监控到最大化的时候, 保存之前的旧值, 在还原的时候使用
-		stage2.widthProperty().addListener((obs, oldVal, newVal) -> {
-			if(newVal.doubleValue() >= stageWidth){
-				stage2Width = oldVal.doubleValue();
-			}
-		});
-		// 当小窗监控到最大化的时候, 保存之前的旧值, 在还原的时候使用
-		stage2.heightProperty().addListener((obs, oldVal, newVal) -> {
-			if(newVal.doubleValue() >= stageHeight){
-				stage2Height = oldVal.doubleValue();
-			}
-		});
+
+		if (CommonUtils.isWinOS()) {
+			// 当小窗监控到最大化的时候, 保存之前的旧值, 在还原的时候使用
+			stage2.widthProperty().addListener((obs, oldVal, newVal) -> {
+				if(newVal.doubleValue() >= stageWidth){
+					stage2Width = oldVal.doubleValue();
+				}
+			});
+			// 当小窗监控到最大化的时候, 保存之前的旧值, 在还原的时候使用
+			stage2.heightProperty().addListener((obs, oldVal, newVal) -> {
+				if(newVal.doubleValue() >= stageHeight){
+					stage2Height = oldVal.doubleValue();
+				}
+			});
+		}
+
 	}
 	// 使用小窗口, 隐藏主窗口和按钮
 	private void resize(){
