@@ -88,15 +88,10 @@ public class app extends Application {
 
     @Override
     public void init() throws Exception {
-//		while (beginInit == false) {
-//			Thread.sleep(1000);
-//		}
         logger.info(ConfigVal.textLogo);
         transferDB = AppDao.checkTransferDB();
-
         Connection conn = SqluckyAppDB.getConn();
-
-        // 数据库迁移
+        // 查看新表是否存在
         AppDao.testDbTableExists(conn, "AUTO_COMPLETE_TEXT");
         // 插入更新sql
         UpdateScript.insertNewSQL();
@@ -111,7 +106,6 @@ public class app extends Application {
         // 读自动补全文本
         AppDao.readAllAutoCompleteText(conn);
 
-//        ConfigVal.openfileDir = SqluckyAppDB.readConfig(conn, "OPEN_FILE_DIR");
         SqluckyAppDB.closeConn(conn);
         ConfigVal.THEME = Theme;
         SqluckyAppComponent sqluckyComponent = new SqluckyAppComponent();
@@ -120,10 +114,9 @@ public class app extends Application {
         ServiceLoad.callRegister();
 
         app = new AppWindow();
-        img = ComponentGetter.LogoIcons; // new Image(SQLucky.class.getResourceAsStream(ConfigVal.appIcon));
+        img = ComponentGetter.LogoIcons;
 
         scene = app.getAppScene();
-
 
         AppCommonAction.setTheme(Theme);
         // 加载插件
@@ -146,7 +139,6 @@ public class app extends Application {
 
 //			primaryStage.setIconified(true);
             // 确保全屏显示
-
 //			primaryStage.setMaximized(false);
 //			primaryStage.setResizable(false);
 
@@ -161,17 +153,8 @@ public class app extends Application {
             } else {
                 MyPreloaderMp4.hiden();
             }
-            // windows 系统, 使用自己的关闭窗口
-            if (!CommonUtils.isMacOS()) {
-                AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
-                winos.setWindow(primaryStage, app.getHeadAnchorPane());
-            }
-//            if (CommonUtils.isLinuxOS()) {
-//                AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
-//                winos.setWindow(primaryStage, app.getHeadAnchorPane());
-//            }
-            
-//			else if(CommonUtility.isLinuxOS()) {
+
+//             if(CommonUtility.isLinuxOS()) {
 //				// 图标
 //				primaryStage.getIcons().add(img);
 //				primaryStage.setTitle("SQLucky");
@@ -180,11 +163,11 @@ public class app extends Application {
 //			}
             primaryStage.getIcons().add(img);
             primaryStage.setTitle("SQLucky");
-//			primaryStage.focusedProperty().addListener((ob, ol, nw)->{
-//				if(nw) {
-//					lastfocusedTime = new Date();
-//				}
-//			});
+            // macos 系统, 使用自己的关闭窗口
+            if (!CommonUtils.isMacOS()) {
+                AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
+                winos.setWindow(primaryStage, app.getHeadAnchorPane());
+            }
             primaryStage.show();
 
             // 在stage show之后 需要初始化的内容, 如: 外观, 事件
@@ -218,7 +201,6 @@ public class app extends Application {
             });
 
             ServiceLoad.callShowed();
-
             // 界面完成初始化后, 执行的回调函数
             Consumer<String> cr = v -> {
                 Platform.runLater(() -> {
@@ -227,62 +209,64 @@ public class app extends Application {
                     // 账号恢复
                     UserAccountAction.appLanuchInitAccount();
                 });
-
             };
             // 执行页面初始化好只会要执行的任务
             CommonUtils.executeInitTask(cr);
-            Long mm = Runtime.getRuntime().maxMemory() / 1024;
-            mm = mm / 1024;
-            logger.info("Runtime.getRuntime().maxMemory = " + mm);
+
             Platform.runLater(() -> {
                 SettingKeyBinding.setEscKeyBinding(ComponentGetter.primaryStage.getScene());
             });
 
-
             // 数据迁移
             if (transferDB) {
-                // 如果发现有新的数据库, 插入
-                Optional<File> oldFile = AppDao.appOldDbFiles();
-                if (oldFile.isPresent()) {
-                    Platform.runLater(() -> {
-                        boolean tf = MyAlert.myConfirmationShowAndWait("发现旧版本数据, 是否迁移");
-                        if (tf) {
-                            // 数据库迁移
-                            LoadingAnimation.primarySceneRootLoadingAnimation("Migrating", v -> {
-                                boolean succeed = false;
-                                File file = oldFile.get();
-                                try {
-                                    AppDao.transferOldDbData(file);
-                                    succeed = true;
-                                    // 成功后归档原数据库
-                                    String ftmpName = file.getName();
-                                    String archiveName = ftmpName.replace("_sqlite", "_archive");
-                                    File renameFile = new File(file.getParent(), archiveName);
-                                    file.renameTo(renameFile);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    MyAlert.errorAlert("迁移出错了!");
-                                }
-
-                                if (succeed) {
-                                    Platform.runLater(() -> {
-                                        MyAlert.myConfirmation("完成迁移, 重启APP, 加载迁移数据, ok ? ", x -> Restart.reboot(),
-                                                System.out::println);
-                                    });
-                                }
-                            });
-
-                        }
-                    });
-                }
-
+                moveDbData();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 数据迁移, 如果数据库版本比当前的版本新就提示迁移
+     */
+    private  void moveDbData(){
+        // 如果发现有新的数据库, 插入
+        Optional<File> oldFile = AppDao.appOldDbFiles();
+        if (oldFile.isPresent()) {
+            Platform.runLater(() -> {
+                boolean tf = MyAlert.myConfirmationShowAndWait("发现旧版本数据, 是否迁移");
+                if (tf) {
+                    // 数据库迁移
+                    LoadingAnimation.primarySceneRootLoadingAnimation("Migrating", v -> {
+                        boolean succeed = false;
+                        File file = oldFile.get();
+                        try {
+                            AppDao.transferOldDbData(file);
+                            succeed = true;
+                            // 成功后归档原数据库
+                            String ftmpName = file.getName();
+                            String archiveName = ftmpName.replace("_sqlite", "_archive");
+                            File renameFile = new File(file.getParent(), archiveName);
+                            file.renameTo(renameFile);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            MyAlert.errorAlert("迁移出错了!");
+                        }
+
+                        if (succeed) {
+                            Platform.runLater(() -> {
+                                MyAlert.myConfirmation("完成迁移, 重启APP, 加载迁移数据, ok ? ", x -> Restart.reboot(),
+                                        System.out::println);
+                            });
+                        }
+                    });
+
+                }
+            });
+        }
 
     }
-    // 保存app状态
+    // 退出程序, 保存app状态
     public static void saveApplicationStatusInfo() {
         Connection H2conn = SqluckyAppDB.getConn();
         try {
@@ -293,8 +277,6 @@ public class app extends Application {
             for (int i = 0; i < alltabs.size(); i++) {
                 Tab tab = alltabs.get(i);
                 if(tab instanceof  MyEditorSheet mtab){
-                    // TODO close save
-//                    MyEditorSheet mtab = (MyEditorSheet) tab.getUserData();
                     mtab.saveScriptPo(H2conn);
                     var spo = mtab.getDocumentPo();
                     // 将打开状态设置为1, 之后根据这个状态来恢复
@@ -314,7 +296,6 @@ public class app extends Application {
                         }
                     }
                 }
-
             }
 
             // 删除 script tree view 中的空内容tab
@@ -336,11 +317,8 @@ public class app extends Application {
                             documentPo.setTitle("Untitled_" + idx + "*");
                             idx++;
                         }
-
-
                     }
                     AppDao.updateScriptArchive(H2conn, documentPo);
-
                 }
             }
 
@@ -357,6 +335,7 @@ public class app extends Application {
         if (args != null && args.length > 0) {
             sysOpenFile = args[0];
         }
+        // 加载字体
         Font.loadFont(app.class.getResourceAsStream("/css/MonaspaceArgonVarVF.ttf"), 14);
 
         if(CommonUtils.isDev()){
@@ -371,8 +350,5 @@ public class app extends Application {
 
             }
         }
-
-
-//		LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
     }
 }

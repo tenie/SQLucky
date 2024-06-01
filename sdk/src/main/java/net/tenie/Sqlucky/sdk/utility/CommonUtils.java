@@ -229,6 +229,30 @@ public class CommonUtils {
         return false;
     }
 
+    public static boolean isInteger(int type) {
+        if (type == java.sql.Types.BIGINT
+                || type == java.sql.Types.BIT
+                || type == java.sql.Types.REAL
+                || type == java.sql.Types.TINYINT
+                || type == java.sql.Types.SMALLINT
+                || type == java.sql.Types.INTEGER) {
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isFloat(int type) {
+        if (type == java.sql.Types.DECIMAL
+                || type == java.sql.Types.DOUBLE
+                || type == java.sql.Types.FLOAT
+                || type == java.sql.Types.NUMERIC) {
+            return true;
+        }
+        return false;
+    }
+
+
+
     public static boolean isDateAndDateTime(int type) {
         if (type == java.sql.Types.DATE || type == java.sql.Types.TIME || type == java.sql.Types.TIMESTAMP) {
             return true;
