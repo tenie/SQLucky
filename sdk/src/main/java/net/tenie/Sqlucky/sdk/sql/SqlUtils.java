@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.sql;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
+import javafx.application.Platform;
 import javafx.scene.control.IndexRange;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
@@ -76,46 +77,57 @@ public class SqlUtils {
      * myBatis xml 中的sql , 转换 <> <= <![CDATA[ <= ]]>
      */
     public static void useMyBatisXmlSql() {
-        CodeArea code = MyEditorSheetHelper.getCodeArea();
-        String txt = code.getSelectedText();
-        if (StrUtils.isNotNullOrEmpty(txt)) {
-            IndexRange i = code.getSelection();
-            int start = i.getStart();
-            int end = i.getEnd();
+        Platform.runLater(()->{
+            CodeArea code = MyEditorSheetHelper.getCodeArea();
+            String txt = code.getSelectedText();
+            if (StrUtils.isNotNullOrEmpty(txt)) {
+                IndexRange i = code.getSelection();
+                int start = i.getStart();
+                int end = i.getEnd();
 
-            String rs = useXmlConversionElement(txt);
-            code.deleteText(start, end);
-            code.insertText(start, rs);
-        } else {
-            txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-            String rs = useXmlConversionElement(txt);
-            code.clear();
-            code.appendText(rs);
-        }
-        MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
+                String rs = useXmlConversionElement(txt);
+                code.deleteText(start, end);
+                code.insertText(start, rs);
+            } else {
+                txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
+                String rs = useXmlConversionElement(txt);
+                code.clear();
+                code.appendText(rs);
+            }
+            MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
+        });
     }
 
     /**
      * myBatis xml的大于小于符号 , 转为正常符号
      */
     public static void trimMyBatisXml() {
-        CodeArea code = MyEditorSheetHelper.getCodeArea();
-        String txt = code.getSelectedText();
-        if (StrUtils.isNotNullOrEmpty(txt)) {
-            IndexRange i = code.getSelection();
-            int start = i.getStart();
-            int end = i.getEnd();
+        Platform.runLater(() -> {
+            String text = MyEditorSheetHelper.getActivationEditorSelectTextOrAllText();
+            if (StrUtils.isNullOrEmpty(text))
+                return;
 
-            String rs = trimXmlConversionElement(txt);
-            code.deleteText(start, end);
-            code.insertText(start, rs);
-        } else {
-            txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-            String rs = trimXmlConversionElement(txt);
-            code.clear();
-            code.appendText(rs);
-        }
-        MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
+            String rs = trimXmlConversionElement(text);
+            MyEditorSheetHelper.replaceSelectTextOrAllText(rs);
+
+        });
+//        CodeArea code = MyEditorSheetHelper.getCodeArea();
+//        String txt = code.getSelectedText();
+//        if (StrUtils.isNotNullOrEmpty(txt)) {
+//            IndexRange i = code.getSelection();
+//            int start = i.getStart();
+//            int end = i.getEnd();
+//
+//            String rs = trimXmlConversionElement(txt);
+//            code.deleteText(start, end);
+//            code.insertText(start, rs);
+//        } else {
+//            txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
+//            String rs = trimXmlConversionElement(txt);
+//            code.clear();
+//            code.appendText(rs);
+//        }
+//        MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
     }
 
     /**
@@ -183,16 +195,16 @@ public class SqlUtils {
         while (str.contains("&gt;")){
             str =   str.replace("&gt;", ">");
         }
-        // 1. 先把文本中的xml元素 替换为占位符, 避免把xml标记符号也
-        StrUtils.matherString msVal = StrUtils.getXmlEleMatcher(str);
-        // 替换后的文本
-        str = msVal.newString();
-
-
-        // 注释掉xml元素
-        str = StrUtils.recoverStringMatcherToComment(msVal, str);
-
-        str = myBatisElementAddComment(str);
+//        // 1. 先把文本中的xml元素 替换为占位符, 避免把xml标记符号也
+//        StrUtils.matherString msVal = StrUtils.getXmlEleMatcher(str);
+//        // 替换后的文本
+//        str = msVal.newString();
+//
+//
+//        // 注释掉xml元素
+//        str = StrUtils.recoverStringMatcherToComment(msVal, str);
+//
+//        str = myBatisElementAddComment(str);
         return str;
     }
 

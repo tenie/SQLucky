@@ -583,6 +583,35 @@ public class MyBottomSheetAction {
         });
     }
 
+
+    // 导出表的字段列表, 不含分割字符
+    public static void getTableFields(SheetDataValue tableData) {
+
+        LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
+            ObservableList<SheetFieldPo> fs = tableData.getColss();
+            Thread t = new Thread() {
+                @Override
+                public void run() {
+                    int size = fs.size();
+                    StringBuilder fieldsName = new StringBuilder("");
+                    for (int i = 0; i < size; i++) {
+                        SheetFieldPo po = fs.get(i);
+                        String name = po.getColumnName().get();
+                        fieldsName.append(name);
+                        fieldsName.append("\n");
+
+                    }
+                    if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
+                        String rsStr = fieldsName.toString().trim();
+                        CommonUtils.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
+                    }
+                }
+            };
+            t.start();
+
+        });
+    }
+
     // 导出表的字段包含类型, 使用逗号分割
     public static void commaSplitTableFiledsIncludeType(SheetDataValue tableData) {
 

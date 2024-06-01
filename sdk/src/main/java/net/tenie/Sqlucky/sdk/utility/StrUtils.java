@@ -368,7 +368,6 @@ public class StrUtils {
         StringBuilder strVal = new StringBuilder();
         if(str.contains("_")){
             List<String> lineStrList = new ArrayList<>();
-//            List<String> wordList = new ArrayList<>();
            if(str.contains("\n")){
                String[] lineArr = str.split("\n");
                lineStrList.addAll(List.of(lineArr));

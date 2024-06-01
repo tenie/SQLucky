@@ -231,6 +231,14 @@ public class MyBottomSheetButton {
                     }
            );
 
+            // 导出字段名称列表
+            MenuItem fieldList = new MenuItem("Filed List");
+            fieldList.setOnAction(
+                    event -> {
+                        MyBottomSheetAction.getTableFields(sheet.getTableData());
+                    }
+            );
+
             MenuItem CommaSplitIncludeType = new MenuItem("Comma splitting Include Field Type");
             CommaSplitIncludeType.setOnAction(
                     event -> {
@@ -238,7 +246,7 @@ public class MyBottomSheetButton {
                     }
                  );
 
-            fieldNames.getItems().addAll(CommaSplit, CommaSplitIncludeType);
+            fieldNames.getItems().addAll(fieldList, CommaSplit, CommaSplitIncludeType);
 
             exportBtn.getItems().addAll(insertSQL, csv, excel, fieldNames);
             // 插件的按钮

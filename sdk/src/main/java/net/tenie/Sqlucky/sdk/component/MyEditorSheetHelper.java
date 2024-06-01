@@ -102,18 +102,27 @@ public class MyEditorSheetHelper {
 		return null;
 	}
 
-	// 获取当前tab中的EditorSheet
-	public static String getActivationEditorText() {
+	/**
+	 * 获取当前tab中的EditorSheet, 选中的文本或全部文本
+	 * @return
+	 */
+	public static String getActivationEditorSelectTextOrAllText() {
 		MyEditorSheet myEditorSheet = getActivationEditorSheet();
 		if (myEditorSheet == null) {
 			return "";
 		}
-		String val = myEditorSheet.getSqluckyEditor().getCodeArea().getText();
+		String val = myEditorSheet.getSqluckyEditor().getCodeArea().getSelectedText();
+		if(StrUtils.isNullOrEmpty(val)){
+			val = myEditorSheet.getSqluckyEditor().getCodeArea().getText();
+		}
 		return val;
 	}
 
-	// 获取当前tab中的EditorSheet
-	public static String getActivationEditorSelectText() {
+	/**
+	 * 获取所以文本
+	 * @return
+	 */
+	public static String getActivationEditorAllText() {
 		MyEditorSheet myEditorSheet = getActivationEditorSheet();
 		if (myEditorSheet == null) {
 			return "";
@@ -452,5 +461,38 @@ public class MyEditorSheetHelper {
 
 	public static void ErrorHighlighting(int begin, String str) {
 		MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().errorHighLighting(begin, str);
+	}
+
+	// 选中的文本删除, 替换新文本
+
+	/**
+	 * 用新字符串替换选中的文本或全部文本
+	 * @param newText
+	 */
+	public static void replaceSelectTextOrAllText(String newText) {
+		if(StrUtils.isNullOrEmpty(newText)){
+			return;
+		}
+		CodeArea code = MyEditorSheetHelper.getCodeArea();
+		String text = "";
+		if (code != null) {
+			text = code.getSelectedText();
+			if (StrUtils.isNullOrEmpty(text)){
+				code.clear();
+				code.appendText(newText);
+			}else {
+				IndexRange i = code.getSelection(); // 获取当前选中的区间
+				int start = i.getStart();
+				int end = i.getEnd();
+				// 将原文本删除
+				code.deleteText(start, end);
+				code.insertText(start, newText);
+
+			}
+			MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
+		}
+
+
+
 	}
 }

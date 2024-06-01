@@ -372,7 +372,7 @@ public class MyAutoComplete implements AutoComplete {
 	// 缓存页面单词
 	@Override
 	public void cacheTextWord() {
-		String text = MyEditorSheetHelper.getActivationEditorText();
+		String text = MyEditorSheetHelper.getActivationEditorAllText();
 		Consumer<String> caller = x -> {
 			Integer id = getMyTabId();
 			if (id != null) {

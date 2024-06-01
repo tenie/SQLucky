@@ -90,14 +90,7 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 			SqlUtils.cleanEmptyLine();
 		});
 
-		MenuItem myBatisXml	 = new MenuItem("Use Xml Conversion Element");
-		myBatisXml.setOnAction(e -> {
-			SqlUtils.useMyBatisXmlSql();
-		});
-		MenuItem trimMyBatisXml	 = new MenuItem("Trim Xml Conversion Element ");
-		trimMyBatisXml.setOnAction(e -> {
-			SqlUtils.trimMyBatisXml();
-		});
+
 
 
 		MenuItem find = new MenuItem("Find");
@@ -189,8 +182,8 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 
 		// 菜单
 		this.getItems().addAll(copy, Paste, del, cut, new SeparatorMenuItem(), sqlFormat, formatAll, sqlUnformat,
-				unformatAll, cleanEmptyLine, new SeparatorMenuItem(), myBatisXml, trimMyBatisXml,
-				new SeparatorMenuItem(), find, replace, new SeparatorMenuItem(), cursorMenu, enditLine,
+				unformatAll, cleanEmptyLine, new SeparatorMenuItem(),
+				find, replace, new SeparatorMenuItem(), cursorMenu, enditLine,
 				new SeparatorMenuItem(), favoritesStr);
 
 
@@ -213,8 +206,6 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 				formatAll.setDisable(true);
 				sqlUnformat.setDisable(false);
 				unformatAll.setDisable(true);
-				myBatisXml.setDisable(false);
-				trimMyBatisXml.setDisable(false);
 				cleanEmptyLine.setDisable(false);
 				favoritesStr.setDisable(false);
 
@@ -226,8 +217,6 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 				formatAll.setDisable(false);
 				sqlUnformat.setDisable(true);
 				unformatAll.setDisable(false);
-				myBatisXml.setDisable(true);
-				trimMyBatisXml.setDisable(true);
 				cleanEmptyLine.setDisable(true);
 				favoritesStr.setDisable(true);
 			}

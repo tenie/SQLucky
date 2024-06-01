@@ -34,7 +34,10 @@ public class LoadingAnimation {
 
     public static void addLoading(StackPane root, String loadingString, int fontSize) {
         Platform.runLater(() -> {
-            root.getChildren().get(0).setDisable(true);
+            if( ! root.getChildren().isEmpty()){
+                root.getChildren().get(0).setDisable(true);
+            }
+
             lb = new Label(loadingString);
             Animation = IconGenerator.svgImageUnactive("icomoon-spinner3", fontSize);
             CommonUtils.rotateTransition(Animation);
@@ -75,7 +78,12 @@ public class LoadingAnimation {
         Platform.runLater(() -> {
             stackPane.getChildren().remove(lb);
             stackPane.setCursor(Cursor.DEFAULT);
-            stackPane.getChildren().get(0).setDisable(false);
+
+            // 内容页面启用
+            if(! stackPane.getChildren().isEmpty()){
+                stackPane.getChildren().get(0).setDisable(false);
+            }
+
         });
 
     }
@@ -124,15 +132,15 @@ public class LoadingAnimation {
             CommonUtils.runThread(v -> {
                 try{
                     consumer.accept("");
-//                CommonUtils.threadAwait(2);
                 }finally {
-                    rmLoading(tmpstackPane);
-                    if (tmpSqluckyStage != null) {
-                        tmpSqluckyStage.close();
-                    }
+                    Platform.runLater(()->{
+                        rmLoading(tmpstackPane);
+                        if (tmpSqluckyStage != null) {
+                            tmpSqluckyStage.close();
+                        }
+                    });
+
                 }
-
-
             });
         });
     }

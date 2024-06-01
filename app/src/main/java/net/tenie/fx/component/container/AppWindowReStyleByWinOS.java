@@ -20,44 +20,43 @@ import net.tenie.fx.Action.CommonEventHandler;
 
 public class AppWindowReStyleByWinOS {
 	// 关闭, 最小化, 还原的图标
-	private JFXButton windowResize;
+	private JFXButton windowResize = new JFXButton();;
+	private	JFXButton hidden = new JFXButton();
+	private JFXButton close = new JFXButton();
+
 	private	Scene scene ;
-	private	Stage	stage2;
-	private	Stage	stage;
-	private Double stage2Width = 0.0;
-	private Double stage2Height = 0.0;
-	private Double stageWidth = 0.0;
-	private Double stageHeight = 0.0;
+
+	private	Stage smallWindowStage;
+	private	Stage primaryWindowStage;
+
+	private Double smallWindowWidth = 0.0;
+	private Double smallWindowHeight = 0.0;
+	private Double primaryWindowWidth = 0.0;
+	private Double primaryWindowHeight = 0.0;
 
 
 	// 窗口默认收缩尺寸(按钮触发)
 	javafx.geometry.Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-	public void setWindow(Stage stage1, AnchorPane operateBtnPane) throws Exception {
-		this.stage = stage1;
-		this.stage2 = new Stage();
-		this.stage2.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
-		this.stage2.getIcons().add(ComponentGetter.LogoIcons);
-		this.stage2.setTitle("SQLucky");
+	public void setWindow(Stage primaryStage, AnchorPane operateBtnPane) throws Exception {
+		this.primaryWindowStage = primaryStage;
 		// 添加关闭,最小化, 还原 按钮
-		addTopButtonPane(stage, operateBtnPane);
+		addTopButtonPane(primaryWindowStage, operateBtnPane);
 		// 添加图标
-		addTopImage(stage, operateBtnPane);
+		addTopImage(primaryWindowStage, operateBtnPane);
+		this.scene = primaryWindowStage.getScene();
+		// 不带系统的边框
+		primaryWindowStage.initStyle(StageStyle.TRANSPARENT);
 
-		this.scene = stage.getScene();
-//      不带系统的边框
-		stage.initStyle(StageStyle.TRANSPARENT);
-
-
-		// 双击切换窗口大小
+		// 主窗口的顶部 双击切换到小窗口
 		operateBtnPane.setOnMouseClicked(e->{
-			// 第一次点击的时候, 记录一下最大化窗口的尺寸,
-			if(stageWidth < 1 ){
-				stageWidth = stage.getWidth();
-				stageHeight = stage.getHeight();
+			// 第一次点击的时候, 记录一下主窗口的大小
+			if(primaryWindowWidth < 1 ){
+				primaryWindowWidth = primaryWindowStage.getWidth();
+				primaryWindowHeight = primaryWindowStage.getHeight();
 			}
 			if (e.getClickCount() == 2) {
 				Platform.runLater(()->{
-					if( !stage2.isShowing()){
+					if( !smallWindowStage.isShowing()){
 						resize();
 					}
 
@@ -65,66 +64,79 @@ public class AppWindowReStyleByWinOS {
 
 			}
 		});
-		// 小窗 监控到 最大化的时候, scene放入主窗口显示按钮也显示, 小窗隐藏
-		stage2.maximizedProperty().addListener((a,b,c)->{
-			System.out.println("stage2 = " + c);
-			if(c){
-				if (CommonUtils.isLinuxOS()) {
-					stage2Width = stage2.getWidth();
-					stage2Height = stage2.getHeight();
+
+		Platform.runLater(this::createSmallWindow);
+	}
+
+	/**
+	 * 创建小窗口对象
+	 */
+	private void createSmallWindow(){
+			this.smallWindowStage = new Stage();
+			this.smallWindowStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
+			this.smallWindowStage.getIcons().add(ComponentGetter.LogoIcons);
+			this.smallWindowStage.setTitle("SQLucky");
+			// 小窗 监控到 最大化的时候, scene放入主窗口显示按钮也显示, 小窗隐藏
+			smallWindowStage.maximizedProperty().addListener((a, b, c)->{
+				// 当最大化时
+				if(c){
+					// linux 最大化的事件触发是getWidth的值还不是最大化的值
+					if (CommonUtils.isLinuxOS()) {
+						smallWindowWidth = smallWindowStage.getWidth();
+						smallWindowHeight = smallWindowStage.getHeight();
+					}
+
+					// 主窗口显示
+					primaryWindowStage.setScene(this.scene);
+					primaryWindowStage.show();
+					primaryWindowStage.toFront();
+
+					// 按钮显示
+					hidden.setVisible(true);
+					windowResize.setVisible(true);
+					close.setVisible(true);
+
+					// 小窗口隐藏
+					smallWindowStage.hide();
+
 				}
-
-				stage.setScene(this.scene);
-				stage.show();
-				stage.toFront();
-
-				// 按钮隐藏
-				hidden.setVisible(true);
-				windowResize.setVisible(true);
-				close.setVisible(true);
-
-				stage2.hide();
-
+			});
+			// windows 系统 监听窗口最大化
+			if (CommonUtils.isWinOS()) {
+				// 当小窗监控到最大化的时候, 保存之前的旧值, 在还原的时候使用
+				smallWindowStage.widthProperty().addListener((obs, oldVal, newVal) -> {
+					if(newVal.doubleValue() >= primaryWindowWidth){
+						smallWindowWidth = oldVal.doubleValue();
+					}
+				});
+				// 当小窗监控到最大化的时候, 保存之前的旧值, 在还原的时候使用
+				smallWindowStage.heightProperty().addListener((obs, oldVal, newVal) -> {
+					if(newVal.doubleValue() >= primaryWindowHeight){
+						smallWindowHeight = oldVal.doubleValue();
+					}
+				});
 			}
-		});
-
-		if (CommonUtils.isWinOS()) {
-			// 当小窗监控到最大化的时候, 保存之前的旧值, 在还原的时候使用
-			stage2.widthProperty().addListener((obs, oldVal, newVal) -> {
-				if(newVal.doubleValue() >= stageWidth){
-					stage2Width = oldVal.doubleValue();
-				}
-			});
-			// 当小窗监控到最大化的时候, 保存之前的旧值, 在还原的时候使用
-			stage2.heightProperty().addListener((obs, oldVal, newVal) -> {
-				if(newVal.doubleValue() >= stageHeight){
-					stage2Height = oldVal.doubleValue();
-				}
-			});
-		}
-
 	}
 	// 使用小窗口, 隐藏主窗口和按钮
 	private void resize(){
-//			stage2.centerOnScreen();
-			stage2.setMaximized(false);
-			stage2.setScene(this.scene);
+			smallWindowStage.setMaximized(false);
+			smallWindowStage.setScene(this.scene);
 
-			if(stage2Width > 1){
-				stage2.setWidth(stage2Width);
-				stage2.setHeight(stage2Height);
+			if(smallWindowWidth > 1){
+				smallWindowStage.setWidth(smallWindowWidth);
+				smallWindowStage.setHeight(smallWindowHeight);
 			}
-			stage2.show();
+			smallWindowStage.show();
 
 			// 主窗口隐藏
-			stage.hide();
+			primaryWindowStage.hide();
 			hidden.setVisible(false);
 			windowResize.setVisible(false);
 			close.setVisible(false);
 
 			// 强制显示前端
 			Platform.runLater(()->{
-				stage2.toFront();
+				smallWindowStage.toFront();
 			});
 
 	}
@@ -143,8 +155,7 @@ public class AppWindowReStyleByWinOS {
 		AnchorPane.setTopAnchor(mediaView, 10.0);
 		AnchorPane.setLeftAnchor(mediaView, 10.0);
 	}
-	JFXButton hidden = new JFXButton();
-	JFXButton close = new JFXButton();
+
 	// 顶部按钮面板, 添加 最小化, 重置大小, 关闭按钮
 	private void addTopButtonPane(Stage stage, AnchorPane operateBtnPane) {
 		hidden.setGraphic(IconGenerator.svgImageCss("my-minus-square", 12.0, 1.0, "top-btn-Icon-color"));
@@ -155,7 +166,7 @@ public class AppWindowReStyleByWinOS {
 
 		// 最大化, 非最大化(还原)
 		Region windowResizeSvg = IconGenerator.svgImageCss("my-window-restore", 12, 12, "top-btn-Icon-color");
-		windowResize = new JFXButton();
+
 		windowResize.setGraphic(windowResizeSvg);
 		windowResize.getStyleClass().add("window-other-btn");
 

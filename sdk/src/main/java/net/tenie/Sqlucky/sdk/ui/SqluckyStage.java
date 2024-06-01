@@ -26,7 +26,6 @@ public class SqluckyStage {
 
     public void init(Node pane) {
             stage = new Stage();
-
             stackPane = new StackPane(pane);
             scene = new Scene(stackPane);
             stage.setScene(scene);

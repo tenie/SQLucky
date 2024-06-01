@@ -150,19 +150,24 @@ public class RunSQLHelper {
 		List<SqlData> errObj = new ArrayList<>();
 
 		for (int i = 0; i < sqllenght; i++) {
-			sqlstr = allsqls.get(i).sql();
-			execSql = StrUtils.trimAllComment(sqlstr);
+				String msg = "";
 
-			int type = ParseSQL.parseType(execSql);
-			String msg = "";
-			
-			SdkComponent.setWaitTabLabelText(sqlstr);
+				sqlstr = allsqls.get(i).sql();
+				execSql = StrUtils.trimAllComment(sqlstr);
 			try {
+				if (execSql.length() < 10) {
+					throw new RuntimeException("Illegal Sql : " + sqlstr);
+				}
+				int type = ParseSQL.parseType(execSql);
+
+
+				SdkComponent.setWaitTabLabelText(sqlstr);
+
 				if (state.getIsCallFunc()) { // 调用存储过程
 					ProcedureAction.procedureAction(execSql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
 				} else if (type == ParseSQL.SELECT) { // 调用查询
-					SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock(), state.getSelectLimit() );
-				} else { 
+					SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock(), state.getSelectLimit());
+				} else {
 					Connection conn = sqluckyConn.getConn();
 					if (type == ParseSQL.UPDATE) {
 						msg = DmlDdlDao.updateSql2(conn, execSql);
