@@ -73,30 +73,7 @@ public class SqlUtils {
         MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
     }
 
-    /**
-     * myBatis xml 中的sql , 转换 <> <= <![CDATA[ <= ]]>
-     */
-    public static void useMyBatisXmlSql() {
-        Platform.runLater(()->{
-            CodeArea code = MyEditorSheetHelper.getCodeArea();
-            String txt = code.getSelectedText();
-            if (StrUtils.isNotNullOrEmpty(txt)) {
-                IndexRange i = code.getSelection();
-                int start = i.getStart();
-                int end = i.getEnd();
 
-                String rs = useXmlConversionElement(txt);
-                code.deleteText(start, end);
-                code.insertText(start, rs);
-            } else {
-                txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-                String rs = useXmlConversionElement(txt);
-                code.clear();
-                code.appendText(rs);
-            }
-            MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
-        });
-    }
 
     /**
      * myBatis xml的大于小于符号 , 转为正常符号
@@ -135,7 +112,7 @@ public class SqlUtils {
      * @param str
      * @return
      */
-    private static String useXmlConversionElement(String str){
+    public static String useXmlConversionElement(String str){
 //        // 1. 先把文本中的xml元素 替换为占位符, 避免把xml标记符号也
         StrUtils.matherString msVal = StrUtils.getXmlEleMatcher(str);
         // 替换后的文本
@@ -169,7 +146,7 @@ public class SqlUtils {
      * @param str
      * @return
      */
-    private static String trimXmlConversionElement(String str){
+    public static String trimXmlConversionElement(String str){
 
         while (str.contains("<![CDATA[ <> ]]>")){
             str =   str.replace("<![CDATA[ <> ]]>", "<>");

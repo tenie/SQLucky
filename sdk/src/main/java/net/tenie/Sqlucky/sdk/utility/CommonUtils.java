@@ -328,7 +328,7 @@ public class CommonUtils {
         val.addListener(cl);
     }
 
-    // 剪贴板 赋值
+    // 剪贴板 赋值 (复制, 拷贝)
     public static void setClipboardVal(String val) {
         Platform.runLater(() -> {
             javafx.scene.input.Clipboard clipboard = javafx.scene.input.Clipboard.getSystemClipboard();

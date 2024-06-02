@@ -106,66 +106,6 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 			CommonUtils.showFind(true, "");
 		});
 
-//		cursor
-		Menu cursorMenu = new Menu("Cursor");
-		MenuItem mvB = new MenuItem("Move to begin of line"); // (ctrl+shift+A)
-		mvB.setGraphic(IconGenerator.svgImageDefActive("step-backward"));
-		mvB.setOnAction(e -> {
-			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
-			sqluckyEditor.moveAnchorToLineBegin();
-		});
-
-		MenuItem mvE = new MenuItem("Move to end of line"); // (ctrl+shift+E)
-		mvE.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
-		mvE.setOnAction(e -> {
-			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
-			sqluckyEditor.moveAnchorToLineEnd();
-		});
-
-		MenuItem selectLine = new MenuItem("Select Line"); // (ctrl+shift+E)
-//		selectLine.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
-		selectLine.setOnAction(e -> {
-			MyEditorSheetHelper.selectCurrentLineTrimText();
-
-		});
-
-		cursorMenu.getItems().addAll(mvB, mvE, selectLine);
-
-		Menu enditLine = new Menu("Edit Line");
-		MenuItem delWord = new MenuItem("Delete the word before the cursor"); // (ctrl+shift+W)
-		delWord.setOnAction(e -> {
-			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
-			sqluckyEditor.delAnchorBeforeWord();
-		});
-
-		MenuItem delChar = new MenuItem("Delete the character before the cursor"); // (ctrl+shift+H)
-		delChar.setOnAction(e -> {
-			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
-			sqluckyEditor.delAnchorBeforeChar();
-		});
-
-		MenuItem delAllChar = new MenuItem("Delete all characters before the cursor");// (ctrl+shift+U)
-		delAllChar.setOnAction(e -> {
-			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
-			sqluckyEditor.delAnchorBeforeString();
-		});
-
-		MenuItem delWordBackward = new MenuItem("Delete the word after the cursor");// (alt+shift+D)
-		delWordBackward.setOnAction(e -> {
-			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
-			sqluckyEditor.delAnchorAfterWord();
-		});
-
-		MenuItem delCharBackward = new MenuItem("Delete the character after the cursor");// (ctrl+shift+D)
-		delCharBackward.setOnAction(e -> {
-			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
-			sqluckyEditor.delAnchorAfterChar();
-		});
-		MenuItem delAllCharBackward = new MenuItem("Delete all characters after the cursor");// (ctrl+shift+K)
-		delAllCharBackward.setOnAction(e -> {
-			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
-			sqluckyEditor.delAnchorAfterString();
-		});
 
 		// 收藏 字符串, 作为自动补全
 		MenuItem favoritesStr = new MenuItem("Favorites Select Text For Auto Complete");// (ctrl+shift+K)
@@ -177,14 +117,10 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 			MyAutoComplete.addKeyWords(str);
 		});
 
-
-		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
-
 		// 菜单
 		this.getItems().addAll(copy, Paste, del, cut, new SeparatorMenuItem(), sqlFormat, formatAll, sqlUnformat,
 				unformatAll, cleanEmptyLine, new SeparatorMenuItem(),
-				find, replace, new SeparatorMenuItem(), cursorMenu, enditLine,
-				new SeparatorMenuItem(), favoritesStr);
+				find, replace, new SeparatorMenuItem(), favoritesStr ,new SeparatorMenuItem());
 
 
 
@@ -231,4 +167,75 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 		});
 	}
 
+	// 光标相关的按钮
+	private Menu cursorBtn(){
+
+//		cursor
+		Menu cursorMenu = new Menu("Cursor");
+		MenuItem mvB = new MenuItem("Move to begin of line"); // (ctrl+shift+A)
+		mvB.setGraphic(IconGenerator.svgImageDefActive("step-backward"));
+		mvB.setOnAction(e -> {
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.moveAnchorToLineBegin();
+		});
+
+		MenuItem mvE = new MenuItem("Move to end of line"); // (ctrl+shift+E)
+		mvE.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
+		mvE.setOnAction(e -> {
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.moveAnchorToLineEnd();
+		});
+
+		MenuItem selectLine = new MenuItem("Select Line"); // (ctrl+shift+E)
+//		selectLine.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
+		selectLine.setOnAction(e -> {
+			MyEditorSheetHelper.selectCurrentLineTrimText();
+
+		});
+
+		cursorMenu.getItems().addAll(mvB, mvE, selectLine);
+		return cursorMenu;
+	}
+
+	// 行编辑相关按钮
+	private Menu editLineBtn (){
+
+		Menu enditLine = new Menu("Edit Line");
+		MenuItem delWord = new MenuItem("Delete the word before the cursor"); // (ctrl+shift+W)
+		delWord.setOnAction(e -> {
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorBeforeWord();
+		});
+
+		MenuItem delChar = new MenuItem("Delete the character before the cursor"); // (ctrl+shift+H)
+		delChar.setOnAction(e -> {
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorBeforeChar();
+		});
+
+		MenuItem delAllChar = new MenuItem("Delete all characters before the cursor");// (ctrl+shift+U)
+		delAllChar.setOnAction(e -> {
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorBeforeString();
+		});
+
+		MenuItem delWordBackward = new MenuItem("Delete the word after the cursor");// (alt+shift+D)
+		delWordBackward.setOnAction(e -> {
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorAfterWord();
+		});
+
+		MenuItem delCharBackward = new MenuItem("Delete the character after the cursor");// (ctrl+shift+D)
+		delCharBackward.setOnAction(e -> {
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorAfterChar();
+		});
+		MenuItem delAllCharBackward = new MenuItem("Delete all characters after the cursor");// (ctrl+shift+K)
+		delAllCharBackward.setOnAction(e -> {
+			SqluckyEditor sqluckyEditor = MyEditorSheetHelper.getSqluckyEditor();
+			sqluckyEditor.delAnchorAfterString();
+		});
+		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
+		return enditLine;
+	}
 }
