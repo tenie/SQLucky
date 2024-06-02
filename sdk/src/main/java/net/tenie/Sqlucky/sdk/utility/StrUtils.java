@@ -429,30 +429,6 @@ public class StrUtils {
 //        return str;
     }
 
-    /**
-     * str 中的所有下划线单词转换为驼峰命名单词
-     * @param str
-     * @return
-     */
-    public static String underlineCaseJavaSetMethod(String str) {
-        if(str.contains("_")){
-            List<Integer> idxList = findStrAllIndex(str,"_", true);
-            Set<String> strSet = new HashSet<>();
-            for(Integer idx : idxList){
-                String tmmStr = findContinuousWordByIndex(str, idx);
-                strSet.add(tmmStr);
-            }
-            // 单词转换-> 单词替换
-            for(String oldStr: strSet){
-                String newStr = underlineWordToCaseCamel(oldStr);
-                newStr = "set"+initialUpperCase(newStr) ;
-                str = str.replaceAll(oldStr, newStr);
-            }
-        }
-
-        return str;
-    }
-
     // 下划线单词 轉 驼峰命名单词
     public static String underlineWordToCaseCamel(String str) {
         StringBuilder rs = new StringBuilder();
