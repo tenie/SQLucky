@@ -124,7 +124,7 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 		copyNameMenu.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 
 		this.getItems().addAll(link, unlink, Edit, Add, delete, new SeparatorMenuItem(), exportDBConn, importDBConn, new SeparatorMenuItem(), refresh,
-				new SeparatorMenuItem(), tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu,
+				new SeparatorMenuItem(), tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu, new SeparatorMenuItem(),
 				copyNameMenu);
 
 		// 菜单显示调用回调函数
@@ -215,13 +215,6 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 		var tbpo = treeNPO.getTable();
 		String tablename = tbpo.getTableName();
 		String tabSchema = tbpo.getTableSchema();
-//		String sql = "";
-//		if (StrUtils.isNotNullOrEmpty(tabSchema)) {
-//			sql = "SELECT * FROM " + tabSchema + "." + tablename;
-//		} else {
-//			sql = "SELECT * FROM " + tablename;
-//		}
-
 		String str = sqluckyConn.getExportDDL().select20(tabSchema, tablename);;
 		selectMenu.setText(str);
 		selectMenu.setOnAction(e -> {

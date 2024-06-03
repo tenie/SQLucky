@@ -9,6 +9,7 @@ import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -588,6 +589,16 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
     @Override
     public void setTableFieldComment(Connection conn, String schema, String table, List<SheetFieldPo> fieldPoList) {
         // 字段信息
+        if(table.contains(".")){
+            var tableArr = table.split("\\.");
+            if(StrUtils.isNotNullOrEmpty(tableArr[1])){
+                table = tableArr[1];
+            }
+        }
+        if(StrUtils.isNullOrEmpty(table)){
+            return;
+        }
+
         String sql = "select  * from information_schema.columns where TABLE_SCHEMA = '" + schema + "' and TABLE_NAME='" + table + "'";
 
         ResultSet rs = null;
@@ -610,5 +621,19 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
             throw new RuntimeException(e);
         }
 
+    }
+    /**
+     * 导出表的查询sql 语句, 查询20条, 这里默认全部, 需要各个数据库实现
+     */
+    @Override
+    public  String select20(String tabSchema, String tablename ) {
+        String sql = "";
+        if (StrUtils.isNotNullOrEmpty(tabSchema)) {
+            sql = "SELECT * FROM " + tabSchema + "." + tablename;
+        } else {
+            sql = "SELECT * FROM " + tablename;
+        }
+        sql += "\n limit 20";
+        return  sql;
     }
 }

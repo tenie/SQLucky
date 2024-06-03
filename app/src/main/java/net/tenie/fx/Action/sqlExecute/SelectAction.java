@@ -3,6 +3,7 @@ package net.tenie.fx.Action.sqlExecute;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
@@ -14,6 +15,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.SelectExecInfo;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.apache.logging.log4j.LogManager;
@@ -99,29 +101,19 @@ public class SelectAction {
 //						false);
 //				TableViewUtils.rmWaitingPane(isRefresh);
 				String tableNameTmp = tableName;
-				myBottomSheet.showSelectData(tidx, false, sv->{
+				myBottomSheet.showSelectData(tidx, false);
+				CommonUtils.runThread(()->{
 					// 设置表格的外形(根据缓存)
-					Platform.runLater(() -> {
-						CacheDataTableViewShapeChange.setDataTableViewShapeCache(sheetDaV.getTabName(),
-								sheetDaV.getTable(),
-								colss);
-						// 设置: 水平滚顶条位置设置, 字段类型, 主表的字段名称
-						// 给表的字段赋值注解
-						sqluckyConn.getExportDDL().setTableFieldComment(sqluckyConn.getConn(),
-								sqluckyConn.getDefaultSchema(),
-								tableNameTmp, colss);
-						// 添加 tooltip
-						CacheDataTableViewShapeChange.setTableHeaderTooltip(table , colss);
-					});
+					// 给表的字段赋值注解
+					sqluckyConn.getExportDDL().setTableFieldComment(sqluckyConn.getConn(),
+							sqluckyConn.getDefaultSchema(),
+							tableNameTmp, colss);
+					// 设置: 水平滚顶条位置设置, 字段类型, 主表的字段名称
+					CacheDataTableViewShapeChange.setDataTableViewShapeCache(sheetDaV.getTabName(),
+							sheetDaV.getTable(),
+							colss);
+
 				});
-
-
-
-
-
-
-
-
 
 			}
 		} catch (Exception e) {

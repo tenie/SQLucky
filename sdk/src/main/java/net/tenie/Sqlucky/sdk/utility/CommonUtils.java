@@ -156,6 +156,15 @@ public class CommonUtils {
         };
         t.start();
     }
+    public static void runThread(Runnable runObj) {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                runObj.run();
+            }
+        };
+        t.start();
+    }
 
     public static void runThread(Consumer<String> caller) {
         Thread t = new Thread() {
