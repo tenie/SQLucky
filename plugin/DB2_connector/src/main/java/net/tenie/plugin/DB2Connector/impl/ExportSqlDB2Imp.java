@@ -14,6 +14,7 @@ import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /* 
  *  @author tenie 
@@ -438,4 +439,18 @@ public class ExportSqlDB2Imp extends ExportDBObjects {
 		return schemas;
 	}
 
+	/**
+	 * 导出表的查询sql 语句, 查询20条, 这里默认全部, 需要各个数据库实现
+	 */
+	@Override
+	public  String select20(String tabSchema, String tablename ) {
+		String sql = "";
+		if (StrUtils.isNotNullOrEmpty(tabSchema)) {
+			sql = "SELECT * FROM " + tabSchema + "." + tablename;
+		} else {
+			sql = "SELECT * FROM " + tablename;
+		}
+		sql += "\n fetch first 20 rows only  WITH UR";
+		return  sql;
+	}
 }

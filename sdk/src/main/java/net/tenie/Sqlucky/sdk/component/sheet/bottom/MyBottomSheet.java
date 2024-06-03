@@ -195,6 +195,9 @@ public class MyBottomSheet extends  Tab{
 	}
 
 	// TODO show
+	public void showSelectData(int idx, boolean disable) {
+		showSelectData(idx, disable, null);
+	}
 	public void showSelectData(int idx, boolean disable, Consumer<String> backcall) {
 		this.idx = idx;
 		// 操作按钮

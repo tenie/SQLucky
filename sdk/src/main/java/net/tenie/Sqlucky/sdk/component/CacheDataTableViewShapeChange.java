@@ -36,10 +36,15 @@ public class CacheDataTableViewShapeChange {
 	 * @param colss
 	 */
 	public static void setDataTableViewShapeCache(String tableName, FilteredTableView<ResultSetRowPo> table , ObservableList<SheetFieldPo> colss) {
-			// 列移动缓存
+		CommonUtils.threadAwait(1);
+		Platform.runLater(() -> {
+					// 列移动缓存
 			CacheDataTableViewShapeChange.setTableHeader(table, tableName );			
 			// 水平滚顶条的缓存
 			CacheDataTableViewShapeChange.setHorizontal(table, tableName );
+			// 添加 tooltip
+			CacheDataTableViewShapeChange.setTableHeaderTooltip(table , colss);
+		});
 	}
 	
 	
@@ -222,8 +227,14 @@ public class CacheDataTableViewShapeChange {
 					if (StrUtils.isNotNullOrEmpty(name)) {
 						String typeName = findColType(colss, name);
 
-						var ttip = MyTooltipTool.instance(typeName);
-						label.setTooltip(ttip);
+						var ttip =label.getTooltip();
+						if(ttip == null ){
+							ttip = MyTooltipTool.instance(typeName);
+							label.setTooltip(ttip);
+						}else {
+							ttip.setText(typeName);
+						}
+
 					}
 				}
 			}

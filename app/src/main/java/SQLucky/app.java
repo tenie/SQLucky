@@ -268,66 +268,68 @@ public class app extends Application {
     }
     // 退出程序, 保存app状态
     public static void saveApplicationStatusInfo() {
-        Connection H2conn = SqluckyAppDB.getConn();
-        try {
-            ConnectionDao.refreshConnOrder();
-            TabPane mainTabPane = ComponentGetter.mainTabPane;
-            int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();
-            var alltabs = mainTabPane.getTabs();
-            for (int i = 0; i < alltabs.size(); i++) {
-                Tab tab = alltabs.get(i);
-                if(tab instanceof  MyEditorSheet mtab){
-                    mtab.saveScriptPo(H2conn);
-                    var spo = mtab.getDocumentPo();
-                    // 将打开状态设置为1, 之后根据这个状态来恢复
-                    if (spo != null && spo.getId() != null) {
-                        String sql = mtab.getAreaText();
-                        if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
-                            spo.setOpenStatus(1);
-                            // 当前激活的编辑页面
-                            if (activateTabPane == i) {
-                                spo.setIsActivate(1);
+        // 载入动画
+        LoadingAnimation.loadingAnimation("Saving....", v -> {
+            Connection H2conn = SqluckyAppDB.getConn();
+            try {
+                ConnectionDao.refreshConnOrder();
+                TabPane mainTabPane = ComponentGetter.mainTabPane;
+                int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();
+                var alltabs = mainTabPane.getTabs();
+                for (int i = 0; i < alltabs.size(); i++) {
+                    Tab tab = alltabs.get(i);
+                    if (tab instanceof MyEditorSheet mtab) {
+                        mtab.saveScriptPo(H2conn);
+                        var spo = mtab.getDocumentPo();
+                        // 将打开状态设置为1, 之后根据这个状态来恢复
+                        if (spo != null && spo.getId() != null) {
+                            String sql = mtab.getAreaText();
+                            if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
+                                spo.setOpenStatus(1);
+                                // 当前激活的编辑页面
+                                if (activateTabPane == i) {
+                                    spo.setIsActivate(1);
+                                } else {
+                                    spo.setIsActivate(0);
+                                }
                             } else {
+                                spo.setOpenStatus(0);
                                 spo.setIsActivate(0);
                             }
-                        } else {
-                            spo.setOpenStatus(0);
-                            spo.setIsActivate(0);
                         }
                     }
                 }
-            }
 
-            // 删除 script tree view 中的空内容tab
-            List<TreeItem<MyEditorSheet>> scriptList = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
-            int idx = 1;
-            for (int i = 0; i < scriptList.size(); i++) {
-                TreeItem<MyEditorSheet> treeItem = scriptList.get(i);
-                MyEditorSheet myEditorSheet = treeItem.getValue();
-                DocumentPo documentPo = myEditorSheet.getDocumentPo();
-                String sqlTxt = documentPo.getText();
-                // 删除内容已经为空的历史记录
-                if (sqlTxt == null || sqlTxt.trim().isEmpty()) {
-                    AppDao.deleteScriptArchive(H2conn, documentPo);
-                } else {
-                    String fp = documentPo.getFileFullName();
-                    if (StrUtils.isNullOrEmpty(fp)) {
-                        String titleName = documentPo.getTitle().get();
-                        if(StrUtils.isNullOrEmpty(titleName) || titleName.startsWith("Untitled_")){
-                            documentPo.setTitle("Untitled_" + idx + "*");
-                            idx++;
+                // 删除 script tree view 中的空内容tab
+                List<TreeItem<MyEditorSheet>> scriptList = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
+                int idx = 1;
+                for (int i = 0; i < scriptList.size(); i++) {
+                    TreeItem<MyEditorSheet> treeItem = scriptList.get(i);
+                    MyEditorSheet myEditorSheet = treeItem.getValue();
+                    DocumentPo documentPo = myEditorSheet.getDocumentPo();
+                    String sqlTxt = documentPo.getText();
+                    // 删除内容已经为空的历史记录
+                    if (sqlTxt == null || sqlTxt.trim().isEmpty()) {
+                        AppDao.deleteScriptArchive(H2conn, documentPo);
+                    } else {
+                        String fp = documentPo.getFileFullName();
+                        if (StrUtils.isNullOrEmpty(fp)) {
+                            String titleName = documentPo.getTitle().get();
+                            if (StrUtils.isNullOrEmpty(titleName) || titleName.startsWith("Untitled_")) {
+                                documentPo.setTitle("Untitled_" + idx + "*");
+                                idx++;
+                            }
                         }
+                        AppDao.updateScriptArchive(H2conn, documentPo);
                     }
-                    AppDao.updateScriptArchive(H2conn, documentPo);
                 }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                SqluckyAppDB.closeConn(H2conn);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            SqluckyAppDB.closeConn(H2conn);
-        }
-
+        });
     }
 
     public static void main(String[] args) throws IOException {
