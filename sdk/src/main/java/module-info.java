@@ -39,6 +39,7 @@ open module SQLucky.sdk {
 	requires com.fasterxml.jackson.annotation;
 	requires undofx;
 //	requires lombok;
+	requires org.yaml.snakeyaml;
 
 	requires org.apache.httpcomponents.client5.httpclient5;
 	requires org.apache.httpcomponents.client5.httpclient5.fluent;
@@ -47,6 +48,7 @@ open module SQLucky.sdk {
 	requires com.github.albfernandez.juniversalchardet;
 	requires org.apache.poi.poi;
 	requires org.apache.poi.ooxml;
+    requires com.google.common;
 //	requires okhttp3;
 
 	exports net.tenie.Sqlucky.sdk;

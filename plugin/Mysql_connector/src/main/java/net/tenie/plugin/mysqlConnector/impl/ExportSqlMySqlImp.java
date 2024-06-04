@@ -592,6 +592,7 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
         if(table.contains(".")){
             var tableArr = table.split("\\.");
             if(StrUtils.isNotNullOrEmpty(tableArr[1])){
+                schema = tableArr[0];
                 table = tableArr[1];
             }
         }
