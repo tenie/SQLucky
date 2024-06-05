@@ -29,8 +29,8 @@ public class AppWindowReStyleByWinOS {
 	private	Stage smallWindowStage;
 	private	Stage primaryWindowStage;
 
-	private Double smallWindowWidth = 0.0;
-	private Double smallWindowHeight = 0.0;
+	private Double smallWindowWidth = 1100.0;
+	private Double smallWindowHeight = 800.0;
 	private Double primaryWindowWidth = 0.0;
 	private Double primaryWindowHeight = 0.0;
 
@@ -125,7 +125,9 @@ public class AppWindowReStyleByWinOS {
 			if(smallWindowWidth > 1){
 				smallWindowStage.setWidth(smallWindowWidth);
 				smallWindowStage.setHeight(smallWindowHeight);
+
 			}
+		    smallWindowStage.toFront();
 			smallWindowStage.show();
 
 			// 主窗口隐藏
@@ -135,9 +137,49 @@ public class AppWindowReStyleByWinOS {
 			close.setVisible(false);
 
 			// 强制显示前端
-			Platform.runLater(()->{
-				smallWindowStage.toFront();
-			});
+//			Platform.runLater(()->{
+//				smallWindowStage.toFront();
+//				if(smallWindowStage.getWidth() >= primaryWindowWidth){
+//					smallWindowStage.setWidth(primaryWindowWidth - 100);
+//				}
+//				if(smallWindowStage.getHeight() >= primaryWindowHeight){
+//					smallWindowStage.setHeight(primaryWindowHeight - 100);
+//				}
+//			});
+		// 强制显示前端
+//		Platform.runLater(()->{
+////			if (CommonUtils.isWinOS()) {
+//				boolean tf = false;
+//				double tmpW = 0.0;
+//				double tmpH = 0.0;
+//				if(smallWindowStage.getWidth() >= primaryWindowWidth){
+//					tmpW = 1100.0;
+//					tf = true;
+//				}
+//				if(smallWindowStage.getHeight() >= primaryWindowHeight){
+//					tmpH = 900.0;
+//					tf = true;
+//				}
+//				if(tf){
+//					smallWindowStage.hide();
+//					if(tmpW > 1) {
+//						smallWindowStage.setWidth(tmpW);
+//					}
+//					if(tmpH > 1) {
+//						smallWindowStage.setHeight(tmpH);
+//					}
+//					Platform.runLater(()->{
+//						smallWindowStage.show();
+//						smallWindowStage.toFront();
+//					});
+//				}
+////			}
+////			else {
+////				smallWindowStage.toFront();
+////			}
+//
+//
+//		});
 
 	}
 
