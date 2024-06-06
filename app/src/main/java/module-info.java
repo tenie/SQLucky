@@ -19,8 +19,8 @@ open module SQLucky.app {
     requires javafx.media;
 //    requires javafx.web;
   	requires javafx.swing;
-	requires mybatis.plus.annotation;
-	requires mybatis.plus.generator;
+//	requires mybatis.plus.annotation;
+//	requires mybatis.plus.generator;
 
 	// mods
 	requires com.jfoenix;  
