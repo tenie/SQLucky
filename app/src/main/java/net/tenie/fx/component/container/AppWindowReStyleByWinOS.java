@@ -29,8 +29,8 @@ public class AppWindowReStyleByWinOS {
 	private	Stage smallWindowStage;
 	private	Stage primaryWindowStage;
 
-	private Double smallWindowWidth = 1100.0;
-	private Double smallWindowHeight = 800.0;
+	private Double smallWindowWidth = 1200.0;
+	private Double smallWindowHeight = 680.0;
 	private Double primaryWindowWidth = 0.0;
 	private Double primaryWindowHeight = 0.0;
 
@@ -84,6 +84,8 @@ public class AppWindowReStyleByWinOS {
 					if (CommonUtils.isLinuxOS()) {
 						smallWindowWidth = smallWindowStage.getWidth();
 						smallWindowHeight = smallWindowStage.getHeight();
+						System.out.println(smallWindowWidth);
+						System.out.println(smallWindowHeight);
 					}
 
 					// 主窗口显示
