@@ -4,10 +4,7 @@ import net.tenie.Sqlucky.sdk.config.ConfigVal;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
@@ -105,5 +102,226 @@ public class DateUtils {
 
         return val;
     }
+    /**
+     * 字符串转 Date
+     *
+     * @param dateStr
+     * @return
+     */
+    public static Date strToDate(String dateStr) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = simpleDateFormat.parse(dateStr);
+            return date;
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    /**
+     * date 转 字符串
+     * @param date
+     * @return
+     */
+    public static String dateToStr(Date date) {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String dateStr = simpleDateFormat.format(date);
+
+        return dateStr;
+    }
+
+
+//    /**
+//     * 字符串 转 LocalDateTime
+//     *
+//     * @param dateStr
+//     * @return
+//     */
+//    public static LocalDateTime strToLocalDateTime(String dateStr) {
+//        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        LocalDateTime ldt = LocalDateTime.parse(dateStr, df);
+//        return ldt;
+//    }
+//
+//    /**
+//     * LocalDateTime 转 字符串
+//     *
+//     * @param localDateTime
+//     * @return
+//     */
+//    public static String localDateTimeToStr(LocalDateTime localDateTime) {
+//        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        String localTime = df.format(localDateTime);
+//        return localTime;
+//    }
+
+    /**
+     * Date 转 LocalDateTime
+     *
+     * @param date
+     * @return
+     */
+    public static LocalDateTime dateToLocalDateTime(Date date) {
+        Instant instant = date.toInstant();
+        ZoneId zone = ZoneId.systemDefault();
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, zone);
+        return localDateTime;
+    }
+
+    /**
+     * LocalDateTime 转 Date
+     *
+     * @param localDateTime
+     * @return
+     */
+    public static Date localDateTimeToDate(LocalDateTime localDateTime) {
+        ZoneId zone = ZoneId.systemDefault();
+        Instant instant = localDateTime.atZone(zone).toInstant();
+        Date date = Date.from(instant);
+        return date;
+    }
+
+    /**
+     * LocalDate 转 Date
+     *
+     * @return
+     */
+    public static Date localDateToDate(LocalDate localDate) {
+        ZoneId zone = ZoneId.systemDefault();
+        Instant instant = localDate.atStartOfDay().atZone(zone).toInstant();
+        return Date.from(instant);
+    }
+
+    /**
+     * localDateTime 转 LocalDate
+     *
+     * @param localDateTime
+     * @return
+     */
+    public static LocalDate localDateTimeToLocalDate(LocalDateTime localDateTime) {
+        return localDateTime.toLocalDate();
+    }
+
+    /**
+     * 当前时间为 昨天的 LocalDateTime
+     *
+     * @return
+     */
+    public static LocalDateTime yesterday() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.plusDays(-1);
+    }
+
+    /**
+     * 当前时间为 明天的 LocalDateTime
+     *
+     * @return
+     */
+    public static LocalDateTime tomorrow() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.plusDays(1);
+    }
+
+    /**
+     * 获取北京时区
+     */
+    public static ZoneId beijingZone() {
+        //北京时区
+        ZoneId bjZone = ZoneId.of("GMT+08:00");
+        return bjZone;
+    }
+
+    /**
+     * 系统默认时区
+     *
+     * @return
+     */
+    public static ZoneId systemDefaultZone() {
+        return ZoneId.systemDefault();
+    }
+
+    /**
+     * 时间比较, 在之前
+     *
+     * @param dt1
+     * @param dt2
+     * @return
+     */
+    public static boolean isBefore(LocalDateTime dt1, LocalDateTime dt2) {
+        return dt1.isBefore(dt2);
+    }
+
+    /**
+     * 时间比较, 在之后
+     *
+     * @param dt1
+     * @param dt2
+     * @return
+     */
+    public static boolean isAfter(LocalDateTime dt1, LocalDateTime dt2) {
+        return dt1.isAfter(dt2);
+    }
+
+
+    /**
+     * 获取到毫秒级时间戳
+     * @param localDateTime 具体时间
+     * @return long 毫秒级时间戳
+     */
+    public static long toEpochMilli(LocalDateTime localDateTime){
+        return localDateTime.toInstant(ZoneOffset.of("+8")).toEpochMilli();
+    }
+
+    /**
+     * 毫秒级时间戳转 LocalDateTime
+     * @param epochMilli 毫秒级时间戳
+     * @return LocalDateTime
+     */
+    public static LocalDateTime ofEpochMilli(long epochMilli){
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), ZoneOffset.of("+8"));
+    }
+
+    /**
+     * 获取到秒级时间戳
+     * @param localDateTime 具体时间
+     * @return long 秒级时间戳
+     */
+    public static long toEpochSecond(LocalDateTime localDateTime){
+        return localDateTime.toEpochSecond(ZoneOffset.of("+8"));
+    }
+
+    /**
+     * 秒级时间戳转 LocalDateTime
+     * @param epochSecond 秒级时间戳
+     * @return LocalDateTime
+     */
+    public static LocalDateTime ofEpochSecond(long epochSecond){
+        return LocalDateTime.ofEpochSecond(epochSecond, 0,ZoneOffset.of("+8"));
+    }
+
+    /**
+     * 毫秒转 时间字符串 : "2020-02-02 22:22:22"
+     * @param epochSecond
+     * @return
+     */
+    public static String EpochMilliToDateString(long epochSecond){
+        LocalDateTime ldt  =  ofEpochMilli(epochSecond);
+        String str =localDateTimeToStr(ldt);
+        return str;
+    }
+    /**
+     * 毫秒转 时间字符串 : "2020-02-02 22:22:22"
+     * @param epochSecond
+     * @return
+     */
+    public static String EpochMilliToDateString(String epochSecond){
+        String str = "";
+        try{
+           Long val =  Long.valueOf(epochSecond);
+           str = EpochMilliToDateString(val);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return str;
+    }
 }

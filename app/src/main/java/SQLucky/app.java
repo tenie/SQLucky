@@ -328,6 +328,7 @@ public class app extends Application {
                 e.printStackTrace();
             } finally {
                 SqluckyAppDB.closeConn(H2conn);
+                System.exit(0);
             }
         });
     }

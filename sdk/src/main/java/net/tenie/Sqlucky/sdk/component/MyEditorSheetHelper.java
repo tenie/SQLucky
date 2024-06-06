@@ -463,8 +463,6 @@ public class MyEditorSheetHelper {
 		MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().errorHighLighting(begin, str);
 	}
 
-	// 选中的文本删除, 替换新文本
-
 	/**
 	 * 用新字符串替换选中的文本或全部文本
 	 * @param newText
