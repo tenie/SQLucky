@@ -1,10 +1,6 @@
 package net.tenie.fx.component.container;
 
-import net.tenie.Sqlucky.sdk.sql.SqlParser;
-import net.tenie.Sqlucky.sdk.sql.SqlUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import SQLucky.app;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Menu;
@@ -16,6 +12,7 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.KeyBindingCache;
+import net.tenie.Sqlucky.sdk.sql.SqlUtils;
 import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
 import net.tenie.Sqlucky.sdk.subwindow.ImportCsvWindow;
 import net.tenie.Sqlucky.sdk.subwindow.ImportExcelWindow;
@@ -24,14 +21,11 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.plugin.PluginManageWindow;
-import net.tenie.fx.window.CheckUpdateWindow;
-import net.tenie.fx.window.ConnectionEditor;
-import net.tenie.fx.window.DataTransferWindow;
-import net.tenie.fx.window.KeysBindWindow;
-import net.tenie.fx.window.SignInWindow;
+import net.tenie.fx.window.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * 顶部菜单栏
@@ -96,7 +90,7 @@ public class MenuBarContainer extends MenuBar{
 		MenuItem exit = new MenuItem(StrUtils.MenuItemNameFormat("Exit"));
 		exit.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 		exit.setOnAction((ActionEvent t) -> {
-			CommonEventHandler.mainPageClose();
+			app.saveApplicationStatusInfo();
 		});
 		KeyBindingCache.menuItemBinding(exit);
 

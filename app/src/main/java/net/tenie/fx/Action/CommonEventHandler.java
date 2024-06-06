@@ -103,19 +103,13 @@ public class CommonEventHandler {
 		return new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent e) {
-				mainPageClose();
+				// 主窗口关闭事件处理逻辑
+				app.saveApplicationStatusInfo();
 			}
 		};
 	}
-	// 主窗口关闭事件处理逻辑
-	public static void mainPageClose() {
-		try {
-			app.saveApplicationStatusInfo();
-		} finally {
-			System.exit(0);
-		}
 
-	}
+
 
 	public static EventHandler<ActionEvent> columnDataClipboard(boolean isSelected, boolean isFile, String colName,
 			MyBottomSheet mtd) {
