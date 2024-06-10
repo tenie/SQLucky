@@ -12,6 +12,9 @@ import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 根据不同的焦点, ctrl + f 显示不同的查找组件
+ */
 public class FinderAction {
 
     public static Map<String, SqluckyTitledPane> regSqluckyTitledPane = new HashMap<>();

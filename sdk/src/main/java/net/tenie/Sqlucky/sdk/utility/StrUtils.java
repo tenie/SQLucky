@@ -1352,8 +1352,65 @@ public class StrUtils {
         return str;
     }
 
+    /**
+     * 将首字母转换为小写
+     */
+    public static String firstCharToLowerCase(String str) {
+        char firstChar = str.charAt(0);
+        if (firstChar >= 'A' && firstChar <= 'Z') {
+            char[] arr = str.toCharArray();
+            arr[0] += ('a' - 'A');
+            return new String(arr);
+        }
+        return str;
+    }
+
+    /**
+     * 将首字母转换为大写
+     */
+    public static String firstCharToUpperCase(String str) {
+        char firstChar = str.charAt(0);
+        if (firstChar >= 'a' && firstChar <= 'z') {
+            char[] arr = str.toCharArray();
+            arr[0] -= ('a' - 'A');
+            return new String(arr);
+        }
+        return str;
+    }
+
+
+
     public static String dbFieldStyleToJavaFieldStyle(String str) {
         str = underlineCaseCamel(str);
         return str;
+    }
+
+    /**
+     * 查找 表名/schema名
+     * @param tableName
+     * @param isTable
+     * @return
+     */
+    public static String tableSchemaName(String tableName, boolean isTable){
+        String rs = "";
+        if(isTable){ // 找tabale
+            if(tableName.contains(".")){
+               String[] arr =  tableName.split("\\.");
+               rs = arr[1];
+            }else {
+                rs = tableName;
+            }
+
+        }else { // 找schema
+            if(tableName.contains(".")){
+                String[] arr =  tableName.split("\\.");
+                rs = arr[0];
+            }else {
+                rs = "";
+            }
+        }
+
+
+        return rs;
     }
 }

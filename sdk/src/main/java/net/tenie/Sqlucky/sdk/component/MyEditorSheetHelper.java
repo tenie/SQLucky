@@ -127,7 +127,7 @@ public class MyEditorSheetHelper {
 		if (myEditorSheet == null) {
 			return "";
 		}
-		String val = myEditorSheet.getSqluckyEditor().getCodeArea().getSelectedText();
+		String val = myEditorSheet.getSqluckyEditor().getCodeArea().getText();
 		return val;
 	}
 
@@ -256,8 +256,11 @@ public class MyEditorSheetHelper {
 	// 选中的文本
 	public static String getCurrentCodeAreaSQLSelectedText() {
 		CodeArea code = getCodeArea();
-		return code.getSelectedText();
-	}
+        if (code != null) {
+            return code.getSelectedText();
+        }
+		return "";
+    }
 
 	// 复制当前选中的文本
 	public static void copySelectionText() {

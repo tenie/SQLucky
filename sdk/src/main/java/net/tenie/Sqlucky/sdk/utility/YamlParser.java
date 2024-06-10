@@ -1,21 +1,31 @@
 package net.tenie.Sqlucky.sdk.utility;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-
-//import org.apache.commons.collections.list.GrowthList;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
-import org.yaml.snakeyaml.constructor.Constructor;
 
-import com.google.common.base.Charsets;
-import com.google.common.io.Files;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.*;
 
 public class YamlParser {
     private static final Logger logger = LoggerFactory.getLogger(YamlParser.class);
+
+    // 读取文件内容
+    private static String readJarFile(BufferedReader in) throws IOException {
+//        BufferedReader in = new BufferedReader(
+//                new InputStreamReader(PreloadData.class.getClassLoader().getResourceAsStream(fileName)));
+
+        StringBuilder buffer = new StringBuilder();
+        String line;
+        while ((line = in.readLine()) != null) {
+            buffer.append(line + "\n");
+        }
+        return buffer.toString();
+    }
+
 
     /**
      * yml文件流转成单层map
@@ -26,11 +36,11 @@ public class YamlParser {
      */
     public static Map<String, Object> yamlToFlattenedMap(String yamlContent) {
         Yaml yaml = createYaml();
-        Map<String, Object> map=new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         for (Object object : yaml.loadAll(yamlContent)) {
             if (object != null) {
                 map = asMap(object);
-                map=getFlattenedMap(map);
+                map = getFlattenedMap(map);
             }
         }
         return map;
@@ -76,7 +86,6 @@ public class YamlParser {
 //        Map<String, Object> result = getMultilayerMap(map);
 //        return result;
 //    }
-
     private static Yaml createYaml() {
         return new Yaml();
     }
@@ -187,7 +196,7 @@ public class YamlParser {
 
 
     @SuppressWarnings("unchecked")
-    private static Map<String, Object> bulidChlidMap(Map<String, Object> parent,String key){
+    private static Map<String, Object> bulidChlidMap(Map<String, Object> parent, String key) {
         if (parent.containsKey(key)) {
             return (Map<String, Object>) parent.get(key);
         } else {
@@ -198,20 +207,20 @@ public class YamlParser {
     }
 
     @SuppressWarnings("unchecked")
-    private static Map<String, Object> bulidChlidMap(List<Object> parent,int index){
+    private static Map<String, Object> bulidChlidMap(List<Object> parent, int index) {
         Map<String, Object> chlid = null;
-        try{
-            Object obj=parent.get(index);
-            if(null != obj){
-                chlid = (Map<String, Object>)obj;
+        try {
+            Object obj = parent.get(index);
+            if (null != obj) {
+                chlid = (Map<String, Object>) obj;
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.warn("get list error");
         }
 
         if (null == chlid) {
             chlid = new LinkedHashMap<>(16);
-            parent.add(index,chlid);
+            parent.add(index, chlid);
         }
         return chlid;
     }
@@ -227,40 +236,40 @@ public class YamlParser {
 //        }
 //    }
 
-    private static Object stringToObj(String obj){
-        Object result=null;
-        if(obj.equals("true") || obj.equals("false")){
-            result=Boolean.valueOf(obj);
-        }else if(isBigDecimal(obj)){
-            if(obj.indexOf(".") == -1){
-                result=Long.valueOf(obj.toString());
-            }else{
-                result=Double.valueOf(obj.toString());
+    private static Object stringToObj(String obj) {
+        Object result = null;
+        if (obj.equals("true") || obj.equals("false")) {
+            result = Boolean.valueOf(obj);
+        } else if (isBigDecimal(obj)) {
+            if (obj.indexOf(".") == -1) {
+                result = Long.valueOf(obj.toString());
+            } else {
+                result = Double.valueOf(obj.toString());
             }
-        }else{
-            result=obj;
+        } else {
+            result = obj;
         }
         return result;
     }
 
 
-    public static boolean isBigDecimal(String str){
-        if(str==null || str.trim().length() == 0){
+    public static boolean isBigDecimal(String str) {
+        if (str == null || str.trim().length() == 0) {
             return false;
         }
         char[] chars = str.toCharArray();
         int sz = chars.length;
         int i = (chars[0] == '-') ? 1 : 0;
-        if(i == sz) return false;
+        if (i == sz) return false;
 
-        if(chars[i] == '.') return false;//除了负号，第一位不能为'小数点'
+        if (chars[i] == '.') return false;//除了负号，第一位不能为'小数点'
 
         boolean radixPoint = false;
-        for(; i < sz; i++){
-            if(chars[i] == '.'){
-                if(radixPoint) return false;
+        for (; i < sz; i++) {
+            if (chars[i] == '.') {
+                if (radixPoint) return false;
                 radixPoint = true;
-            }else if(!(chars[i] >= '0' && chars[i] <= '9')){
+            } else if (!(chars[i] >= '0' && chars[i] <= '9')) {
                 return false;
             }
         }
@@ -269,13 +278,14 @@ public class YamlParser {
 
     /**
      * map 转 Properties
+     *
      * @param mapVal
      * @return
      */
-    public static Properties mapToProperties( Map<String, Object> mapVal){
+    public static Properties mapToProperties(Map<String, Object> mapVal) {
         Properties properties = new Properties();
-        if(mapVal != null && !mapVal.isEmpty()){
-            for(var keyVal : mapVal.entrySet()){
+        if (mapVal != null && !mapVal.isEmpty()) {
+            for (var keyVal : mapVal.entrySet()) {
                 properties.put(keyVal.getKey(), keyVal.getValue());
             }
         }
@@ -284,24 +294,29 @@ public class YamlParser {
 
     /**
      * yaml 字符串转 Properties
+     *
      * @param yamlStr
      * @return
      */
-    public static Properties yamlToProperties(String yamlStr){
+    public static Properties yamlToProperties(String yamlStr) {
         Map<String, Object> mapVal = YamlParser.yamlToFlattenedMap(yamlStr);
         Properties properties = mapToProperties(mapVal);
         return properties;
     }
+
     /**
      * 从classPath 下读yaml文件 转 Properties
+     *
      * @return
      */
-    public static Properties yamlToPropertiesFromClassPath(Class zclss, String classPathFileName){
-        String fileName = zclss.getResource(classPathFileName).getFile();
-        File file = new File(fileName);
+    public static Properties yamlToPropertiesFromClassPath(Class zclss, String classPathFileName) {
+        var io = zclss.getClassLoader().getResourceAsStream(classPathFileName);
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(io));
         try {
-            String content = Files.toString(file, Charsets.UTF_8);
+            String content = readJarFile(in);
             Properties properties = yamlToProperties(content);
+            System.out.println(properties);
             return properties;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -309,35 +324,5 @@ public class YamlParser {
 
 
     }
-
-
-
-
-    public static void main(String[] args) throws IOException {
-        String content = YamlParser.class.getResource("/application.yml").getFile();
-        File file = new File(content);
-          content = Files.toString(file, Charsets.UTF_8);
-        Properties properties = yamlToProperties(content);
-        System.out.println(properties);
-
-//        Map<String, Object> a= YamlParser.yamlToFlattenedMap(content);
-//        System.out.println(a);
-//        Properties properties = mapToProperties(a);
-//        System.out.println(properties);
-
-//        Properties properties = new Properties();
-//        properties.
-//        Map<String, Object> b = YamlParser.yamlToMultilayerMap(content);
-//        System.out.println(b);
-//
-//
-//        String c = YamlParser.multilayerMapToYaml(b);
-//        System.out.println(c);
-//        String d = YamlParser.flattenedMapToYaml(a);
-//        System.out.println(d);
-
-    }
-
-
 
 }

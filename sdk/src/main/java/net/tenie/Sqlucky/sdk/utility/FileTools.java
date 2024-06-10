@@ -335,9 +335,9 @@ public class FileTools {
     }
 
     /**
-     * 删除目录, 递归删除
+     * 删除目录, 递归删除子目录和文件, 最后删除自己
      *
-     * @param dir
+     * @param dir 要被删除的目录
      */
     public static void deleteDir(File dir) {
         if (dir != null && dir.isDirectory() && dir.exists()) {
