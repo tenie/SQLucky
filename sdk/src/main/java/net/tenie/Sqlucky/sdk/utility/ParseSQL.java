@@ -31,6 +31,7 @@ public class ParseSQL {
 				break;
 			}
 		}
+		temp = temp.toUpperCase();
 		if (StrUtils.beginWithNotSensitive(temp, "SELECT")) {
 			return SELECT;
 		} else if (StrUtils.beginWithNotSensitive(temp, "SHOW")) {
@@ -61,7 +62,7 @@ public class ParseSQL {
 	public static String tabName(String sql) {
 		String temp = StrUtils.trimAllComment(sql);
 		temp = StrUtils.clearBlank(temp);
-		temp = temp.toUpperCase();
+//		temp = temp.toUpperCase();
 		String val = "";
 		String key = "";
 		int type = parseType(temp);
