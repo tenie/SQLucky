@@ -125,13 +125,13 @@ public class ParseSQL {
 	private static String findSelectTabName(String sql, String key) {
 		String val = "";
 		String temp = sql;
-		int idx = sql.indexOf(key, 0);
+		int idx = temp.toUpperCase().indexOf(key);
 		int klen = key.length();
 		while (idx > 0) {
 			temp = temp.substring(idx + klen).trim();
 			logger.info(temp);
 			if (StrUtils.beginWith(temp, "(")) {
-				idx = temp.indexOf(key, 0);
+				idx = temp.indexOf(key);
 			} else {
 				temp = temp.replace(")", " ");
 				int i = temp.indexOf(' ');

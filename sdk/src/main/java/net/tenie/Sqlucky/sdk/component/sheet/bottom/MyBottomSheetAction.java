@@ -200,6 +200,7 @@ public class MyBottomSheetAction {
         List<TablePo> tbs = TreeObjCache.getTable(key.toUpperCase());
 
         TablePo tbrs = null;
+        tbn = tbn.toUpperCase();
         for (TablePo po : tbs) {
             if (po.getTableName().toUpperCase().equals(tbn)) {
                 tbrs = po;

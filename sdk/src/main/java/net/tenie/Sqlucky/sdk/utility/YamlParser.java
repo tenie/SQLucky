@@ -1,5 +1,6 @@
 package net.tenie.Sqlucky.sdk.utility;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,16 +15,10 @@ public class YamlParser {
     private static final Logger logger = LoggerFactory.getLogger(YamlParser.class);
 
     // 读取文件内容
-    private static String readJarFile(BufferedReader in) throws IOException {
-//        BufferedReader in = new BufferedReader(
-//                new InputStreamReader(PreloadData.class.getClassLoader().getResourceAsStream(fileName)));
-
-        StringBuilder buffer = new StringBuilder();
-        String line;
-        while ((line = in.readLine()) != null) {
-            buffer.append(line + "\n");
-        }
-        return buffer.toString();
+    private static String readJarFile(BufferedReader inputStream) throws IOException {
+        // 通过流转换为字符串
+        var tempVal =  IOUtils.toString(inputStream);
+        return tempVal;
     }
 
 
@@ -321,8 +316,6 @@ public class YamlParser {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
 }
