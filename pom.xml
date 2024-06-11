@@ -45,28 +45,6 @@
 
     <dependencyManagement>
         <dependencies>
-         <!--   <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-                <version>2.1.1.RELEASE</version>
-            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus-boot-starter</artifactId>-->
-<!--                <version>3.0.5</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus-core</artifactId>-->
-<!--                <version>3.0.5</version>-->
-<!--            </dependency>-->
-
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus-generator</artifactId>-->
-<!--                <version>3.0.5</version>-->
-<!--            </dependency>-->
-
             <dependency>
                 <groupId>org.yaml</groupId>
                 <artifactId>snakeyaml</artifactId>
@@ -203,28 +181,6 @@
                 <artifactId>velocity</artifactId>
                 <version>1.7</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-parent</artifactId>
-                <version>41</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starters</artifactId>
-                <version>2.1.1.RELEASE</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.junit.vintage</groupId>
-                        <artifactId>junit-vintage-engine</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-<!--            <dependency>-->
-<!--                <groupId>com.baomidou</groupId>-->
-<!--                <artifactId>mybatis-plus-generator</artifactId>-->
-<!--                <version>3.5.6</version>-->
-<!--            </dependency>-->
 
             <dependency>
                 <groupId>com.jcraft</groupId>
