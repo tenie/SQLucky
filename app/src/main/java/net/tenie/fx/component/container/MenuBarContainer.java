@@ -147,6 +147,11 @@ public class MenuBarContainer extends MenuBar{
 		Format.setOnAction(value -> {
 			SqlUtils.formatSqlText();
 		});
+		MenuItem unFormat = new MenuItem(StrUtils.MenuItemNameFormat("unformat"));
+//		Format.setGraphic(IconGenerator.svgImageDefActive("paragraph"));
+		unFormat.setOnAction(value -> {
+			SqlUtils.pressSqlText();
+		});
 
 		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Line Comment"));
 		commentCode.setOnAction(value -> {
@@ -240,7 +245,7 @@ public class MenuBarContainer extends MenuBar{
 		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
 //runCurrentMenu ,
 		mn.getItems().addAll(runMenu,runCurrentMenu , codeAutocompletionMenu, nce, cce, new SeparatorMenuItem(), Find,
-				FindReplace, new SeparatorMenuItem(), Format, commentCode, new SeparatorMenuItem(), UpperCase,
+				FindReplace, new SeparatorMenuItem(), Format, unFormat, commentCode, new SeparatorMenuItem(), UpperCase,
 				LowerCase, underscore, Hump, new SeparatorMenuItem(), cursorMenu, enditLine);
 
 		// 给菜单按钮绑定快捷
@@ -253,6 +258,7 @@ public class MenuBarContainer extends MenuBar{
 		KeyBindingCache.menuItemBinding(Find);
 		KeyBindingCache.menuItemBinding(FindReplace);
 		KeyBindingCache.menuItemBinding(Format);
+		KeyBindingCache.menuItemBinding(unFormat);
 		KeyBindingCache.menuItemBinding(commentCode);
 		KeyBindingCache.menuItemBinding(UpperCase);
 		KeyBindingCache.menuItemBinding(LowerCase);

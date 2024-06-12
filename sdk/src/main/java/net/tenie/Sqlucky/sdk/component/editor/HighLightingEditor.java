@@ -61,15 +61,14 @@ public class HighLightingEditor extends SqluckyEditor {
 		}
 		// 事件KeyEvent
 		MyCodeAreaKeyPressedEvent.initKeyPressedEvent(this);
-//		codeArea.replaceText(0, 0, sampleCode);
 
-		// 中午输入法显示问题
-		codeArea.setInputMethodRequests(new InputMethodRequestsObject(codeArea));
-		codeArea.setOnInputMethodTextChanged(e -> {
-			if (!Objects.equals(e.getCommitted(), "")) {
-				codeArea.insertText(codeArea.getCaretPosition(), e.getCommitted());
-			}
-		});
+//		// 中午输入法显示问题
+//		codeArea.setInputMethodRequests(new InputMethodRequestsObject(codeArea));
+//		codeArea.setOnInputMethodTextChanged(e -> {
+//			if (!Objects.equals(e.getCommitted(), "")) {
+//				codeArea.insertText(codeArea.getCaretPosition(), e.getCommitted());
+//			}
+//		});
 
 		// 当表被拖拽进入到code editor , 将表名插入到 光标处
 		codeArea.setOnDragEntered(e -> {
@@ -116,50 +115,6 @@ public class HighLightingEditor extends SqluckyEditor {
 						codeArea.selectRange(range.getStart(), range.getEnd() );
 						mouseEvent.consume();
 					}
-//					int anchorIdx = codeAreaAnchor;
-//					int startIdx = anchorIdx -1;
-//					int endIdx = anchorIdx + 1;
-//
-//					boolean tf = true;
-//					// 包含这些字符中, 就停止查找
-//					String endString = ". \t\n;,";
-//
-//					// 头部位置的查找
-//					while (tf){
-//						if(startIdx <0 ){
-//							break;
-//						}
-// 						String  startStr = codeArea.getText(startIdx,anchorIdx);
-//						if(endString.contains(startStr)){
-//							tf = false;
-//						}else{
-//							anchorIdx = startIdx;
-//							startIdx--;
-//						}
-//					}
-//
-//					// 尾部位置的查找
-//					tf = true;
-//					anchorIdx = codeAreaAnchor;
-//					while (tf){
-//						if( endIdx > codeArea.getLength()){
-//							break;
-//						}
-//						String  endStr = codeArea.getText(anchorIdx,endIdx);
-//						if(endString.contains(endStr)){
-//							tf = false;
-//						}else{
-//							anchorIdx = endIdx;
-//							endIdx++;
-//
-//						}
-//					}
-//					if( startIdx+1 < endIdx-1){
-//						codeArea.selectRange(startIdx+1, endIdx-1);
-//						mouseEvent.consume();
-//					}
-
-
 				}
 			}
 		});
@@ -176,8 +131,9 @@ public class HighLightingEditor extends SqluckyEditor {
 						// 选中的内容为空白符, 就选中当前行
 						codeArea.selectLine();
 					} else {
+						boolean isControlDown =  mouseEvent.isControlDown();
 						// 针对括号() {} []的双击, 选中括号内的文本
-						isContinue = selectSQLDoubleClicked(codeArea); // 如果选中了内容, 就会返回false
+						isContinue = selectSQLDoubleClicked(codeArea, isControlDown); // 如果选中了内容, 就会返回false
 					}
 
 				} else if (clickCount == 1) { // 鼠标单击
@@ -215,7 +171,7 @@ public class HighLightingEditor extends SqluckyEditor {
 
 	// 针对括号() {} []的双击, 选中括号内的文本
 	// 如果选中了内容, 就会返回false
-	public static boolean selectSQLDoubleClicked(CodeArea codeArea) {
+	public static boolean selectSQLDoubleClicked(CodeArea codeArea, boolean isControlDown ) {
 		boolean tf = true;
 		String str = codeArea.getSelectedText();
 		String trimStr = str.trim();
@@ -283,7 +239,7 @@ public class HighLightingEditor extends SqluckyEditor {
 				}
 			}
 
-			if (tf) {
+			if (tf && isControlDown) {
 				if (trimStr.toUpperCase().endsWith("SELECT")) {
 					int endIdx = str.toUpperCase().lastIndexOf("SELECT");
 					int is = start + endIdx + 6;
@@ -304,7 +260,7 @@ public class HighLightingEditor extends SqluckyEditor {
 
 			}
 
-			if (tf) {
+			if (tf && isControlDown) {
 				if (trimStr.toUpperCase().endsWith("CASE")) {
 					int endIdx = str.toUpperCase().lastIndexOf("CASE");
 					int is = start + endIdx + 4;
