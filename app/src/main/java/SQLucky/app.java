@@ -221,6 +221,16 @@ public class app extends Application {
             if (transferDB) {
                 moveDbData();
             }
+
+            // 界面获取到焦点检查文件是不被修改提示加载修改的内容
+            primaryStage.focusedProperty().addListener((a,b,c)->{
+                if(c){
+                    MyEditorSheet mes =   MyEditorSheetHelper.getActivationEditorSheet();
+                    if (mes != null) {
+                        mes.reloadText();
+                    }
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
