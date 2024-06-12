@@ -19,6 +19,7 @@ public class UpdateScript {
 		sqlMap.put("APP_CONFIG 添加 PLUGIN_NAME", "ALTER TABLE APP_CONFIG ADD  PLUGIN_NAME VARCHAR(200)");
 		sqlMap.put("add key press : Hide/Show Data View Panel ", "insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show Data View Panel', 'Ctrl + esc');");
 		sqlMap.put("add key press : Hide/Show DB Info Panel ", "insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show DB Info Panel', 'Ctrl + F1');");
+		sqlMap.put("add key press : unformat ", "insert into KEYS_BINDING (ACTION_NAME, BINDING) values('unformat', 'Ctrl + alt + F');");
 
 
 	}
