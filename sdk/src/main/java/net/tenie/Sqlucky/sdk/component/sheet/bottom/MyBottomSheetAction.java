@@ -603,8 +603,7 @@ public class MyBottomSheetAction {
 
                     }
                     if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
-                        String rsStr = fieldsName.toString().trim();
-                        CommonUtils.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
+                        CommonUtils.setClipboardVal(fieldsName.toString());
                     }
                 }
             };

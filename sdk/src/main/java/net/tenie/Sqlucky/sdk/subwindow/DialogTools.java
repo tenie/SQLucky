@@ -134,6 +134,7 @@ public class DialogTools {
         scene.getAccelerators().put(spacebtn, () -> {
             stage.close();
         });
+        stage.toFront();
         if (isWait) {
             stage.showAndWait();
         } else {

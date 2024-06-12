@@ -13,7 +13,9 @@ import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.FileTools;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.fxmisc.richtext.CodeArea;
 
@@ -34,6 +36,9 @@ public class MyEditorSheet extends Tab {
 	private boolean isModify = false;
 	// 放查找面板, 文本area 的容器
 	private VBox vbox;
+
+	private boolean needReload = true;
+
 
 	// 脚本树上的label
 	private Label scriptTreeLabel = new Label();
@@ -94,6 +99,8 @@ public class MyEditorSheet extends Tab {
 				if(ComponentGetter.scriptTreeView.getRoot().getChildren().contains(treeItem)){
 					ComponentGetter.scriptTreeView.getSelectionModel().select(treeItem);
 				}
+
+				reloadText();
 			}
 		});
 		// 选择title的时候初始化tab内容
@@ -128,6 +135,55 @@ public class MyEditorSheet extends Tab {
 		});
 	}
 
+	/**
+	 * 原文被其他程序修改后, 重新加载
+	 */
+	public void reloadText(){
+		if(sqluckyEditor == null ) return;
+		if(! needReload ) return;
+		String filePath = documentPo.getFileFullName();
+		if(StrUtils.isNullOrEmpty(filePath)) return;
+		File file = new File(filePath);
+		boolean tf = false;
+		if(file.exists() && file.isFile()){
+			String fileText = FileTools.read(file, "UTF-8");
+			String fileTexttmp = fileText.replaceAll("\r", "");
+			String codeText = sqluckyEditor.getCodeArea().getText();
+			int  codeSize = codeText.length();
+			int  fileSize = fileTexttmp.length();
+			if(codeSize != fileSize){
+				tf = true;
+			}else{
+				if(!fileTexttmp.equals(codeText)){
+					tf = true;
+				}
+			}
+
+			if(tf){
+				int idx = sqluckyEditor.getCodeArea().getAnchor();
+				CommonUtils.threadAwait(1);
+				Platform.runLater(()->{
+					boolean confVal = MyAlert.myConfirmationShowAndWait("文本发生改变是否重新加载?");
+					if(confVal ){
+						sqluckyEditor.getCodeArea().clear();
+						sqluckyEditor.getCodeArea().appendText(fileTexttmp);
+						Platform.runLater(()->{
+							sqluckyEditor.getCodeArea().moveTo(idx);
+						});
+					}else{
+						needReload = false;
+						CommonUtils.delayRunThread(this::setNeedReload, 5000);
+					}
+				});
+
+
+			}
+		}
+	}
+
+	private void setNeedReload(){
+		needReload = true;
+	}
 	// 设置editor的时候 设置文本
 	public void setSqluckyEditor(SqluckyEditor sqluckyEditor) {
 		this.sqluckyEditor = sqluckyEditor;

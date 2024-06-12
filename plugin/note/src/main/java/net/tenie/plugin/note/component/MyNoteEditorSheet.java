@@ -4,9 +4,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
-import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 
 import java.sql.Connection;

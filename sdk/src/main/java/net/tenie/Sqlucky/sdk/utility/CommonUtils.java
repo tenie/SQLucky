@@ -156,13 +156,30 @@ public class CommonUtils {
         };
         t.start();
     }
+
+    /**
+     * 子线程执行任务
+     * @param runObj
+     */
     public static void runThread(Runnable runObj) {
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                runObj.run();
+        Thread t = new Thread(() -> runObj.run());
+        t.start();
+    }
+
+    /**
+     * 延迟执行
+     * @param runObj
+     * @param millis 毫秒
+     */
+    public static void delayRunThread(Runnable runObj, long millis) {
+        Thread t = new Thread(() -> {
+            try {
+                Thread.sleep(millis);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
-        };
+            runObj.run();
+        });
         t.start();
     }
 
