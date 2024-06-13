@@ -843,6 +843,73 @@ public class StrUtils {
         strVal = recoverStringMatcher(msVal, strVal);
         return strVal;
     }
+    /**
+     * 找到所以注释,和字符串的区间, 发现;不在字符串和注释中, 那么这个;可以进行分割字符串返回
+     */
+    public static List<String> findSplitChar(String text){
+        List<String> sql = new ArrayList<>();
+        if(!text.contains(";")){
+            sql.add(text);
+            return sql;
+        }
+
+        Matcher matcher = createMatcher(COMMENT_PATTERN, text);
+        List<IndexRange> list =new ArrayList<>();
+        while (matcher.find()){
+            IndexRange ir = new IndexRange(matcher.start(), matcher.end());
+            list.add(ir);
+        }
+        matcher = createMatcher(STRING_PATTERN, text);
+        while (matcher.find()){
+            IndexRange ir = new IndexRange(matcher.start(), matcher.end());
+            list.add(ir);
+        }
+
+        List<Integer>  idxList= StrUtils.findStrAllIndex(text, ";", true);
+        // 等待被替换的idx
+        List<Integer> needIdx = new ArrayList<>();
+        for (Integer idx : idxList){
+            boolean tf = false;
+            for (IndexRange ir : list){
+                if(idx > ir.getStart() && idx <= ir.getEnd()){
+                    tf = true;
+                    break;
+                }
+            }
+
+            if(!tf){
+                needIdx.add(idx);
+            }
+        }
+
+
+        if(! needIdx.isEmpty()){
+            int begin = 0;
+            for (Integer idx : needIdx){
+               String sqlTmp =  text.substring(begin, idx);
+               if(StrUtils.isNotNullOrEmpty(sqlTmp)){
+                  if(sqlTmp.trim().length() > 10){
+                      sql.add(sqlTmp);
+                  }
+               }
+                begin = idx +1;
+            }
+            if(begin > 0 ){
+                String sqlTmp =  text.substring(begin);
+                if(StrUtils.isNotNullOrEmpty(sqlTmp)){
+                    if(sqlTmp.trim().length() > 10){
+                        sql.add(sqlTmp);
+                    }
+                }
+            }
+
+        }else {
+            sql.add(text);
+            return sql;
+        }
+        return sql;
+    }
+
     /*
      * 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
      * 1. 先在原始文本中找到sql的字符串, 替换为空白字符串,得到一个新文本
@@ -1062,10 +1129,6 @@ public class StrUtils {
               ir = new IndexRange(matr.start(), matr.end());
         }
         return ir;
-    }
-
-    public static void main(String[] args) {
-
     }
 
     /**
