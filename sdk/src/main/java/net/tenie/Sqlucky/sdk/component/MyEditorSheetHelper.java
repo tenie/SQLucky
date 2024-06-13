@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javafx.application.Platform;
 import org.apache.commons.io.FilenameUtils;
 import org.fxmisc.richtext.CodeArea;
 
@@ -474,25 +475,25 @@ public class MyEditorSheetHelper {
 		if(StrUtils.isNullOrEmpty(newText)){
 			return;
 		}
-		CodeArea code = MyEditorSheetHelper.getCodeArea();
-		String text = "";
-		if (code != null) {
-			text = code.getSelectedText();
-			if (StrUtils.isNullOrEmpty(text)){
-				code.clear();
-				code.appendText(newText);
-			}else {
-				IndexRange i = code.getSelection(); // 获取当前选中的区间
-				int start = i.getStart();
-				int end = i.getEnd();
-				// 将原文本删除
-				code.deleteText(start, end);
-				code.insertText(start, newText);
-
+		Platform.runLater(()-> {
+			CodeArea code = MyEditorSheetHelper.getCodeArea();
+			String text = "";
+			if (code != null) {
+				text = code.getSelectedText();
+				if (StrUtils.isNullOrEmpty(text)) {
+					code.clear();
+					code.appendText(newText);
+				} else {
+					IndexRange i = code.getSelection(); // 获取当前选中的区间
+					int start = i.getStart();
+					int end = i.getEnd();
+					// 将原文本删除
+					code.deleteText(start, end);
+					code.insertText(start, newText);
+				}
+				MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
 			}
-			MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
-		}
-
+		});
 
 
 	}

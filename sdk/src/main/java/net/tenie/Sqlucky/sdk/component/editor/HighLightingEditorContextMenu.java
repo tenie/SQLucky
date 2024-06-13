@@ -85,6 +85,12 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 			SqlUtils.pressSqlText();
 		});
 
+		MenuItem cleanBlankChar = new MenuItem("Clean Blank Char");
+		cleanBlankChar.setOnAction(e -> {
+			SqlUtils.cleanBlankChar();
+		});
+
+
 		MenuItem cleanEmptyLine = new MenuItem("Clean Empty Line");
 		cleanEmptyLine.setOnAction(e -> {
 			SqlUtils.cleanEmptyLine();
@@ -119,7 +125,7 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 
 		// 菜单
 		this.getItems().addAll(copy, Paste, del, cut, new SeparatorMenuItem(), sqlFormat, formatAll, sqlUnformat,
-				unformatAll, cleanEmptyLine, new SeparatorMenuItem(),
+				unformatAll,cleanBlankChar, cleanEmptyLine, new SeparatorMenuItem(),
 				find, replace, new SeparatorMenuItem(), favoritesStr ,new SeparatorMenuItem());
 
 
@@ -136,7 +142,6 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 			String str = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
 			if (StrUtils.isNotNullOrEmpty(str)) {
 				copy.setDisable(false);
-//				del.setDisable(false);
 				cut.setDisable(false);
 				sqlFormat.setDisable(false);
 				formatAll.setDisable(true);
@@ -144,10 +149,8 @@ public class HighLightingEditorContextMenu extends ContextMenu {
 				unformatAll.setDisable(true);
 				cleanEmptyLine.setDisable(false);
 				favoritesStr.setDisable(false);
-
 			} else {
 				copy.setDisable(true);
-//				del.setDisable(true);
 				cut.setDisable(true);
 				sqlFormat.setDisable(true);
 				formatAll.setDisable(false);

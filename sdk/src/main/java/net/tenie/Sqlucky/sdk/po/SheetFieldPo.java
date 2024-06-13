@@ -18,9 +18,9 @@ public class SheetFieldPo {
 	public static final String TEXT_TYPE = "TEXT_TYPE";
 	public static final String CHECK_BOX_TYPE = "CHECK_BOX_TYPE";
 
-	// 字段名称, 这个可能会没有
+	// 字段名称, 库里表的名称
 	private StringProperty columnName;
-	// 这个也是字段名称
+	// 字段的别名, as 后面的名称
 	private StringProperty columnLabel;
 
 	// 数据库里备注值

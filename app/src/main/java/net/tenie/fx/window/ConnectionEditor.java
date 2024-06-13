@@ -278,6 +278,7 @@ public class ConnectionEditor {
 					MyAlert.errorAlert("JDBC URL is empty !");
 					return null;
 				}
+				dbRegister = DbVendor.register(dbDriver.getValue());
 			} else {
 				dbRegister = DbVendor.register(dbDriver.getValue());
 				if (StrUtils.isNullOrEmpty(host.getText())) {
