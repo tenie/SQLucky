@@ -73,6 +73,23 @@ public class SqlUtils {
         MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
     }
 
+    /**
+     * 清空多余空白符号
+     */
+    public static void cleanBlankChar() {
+        Platform.runLater(() -> {
+            String text = MyEditorSheetHelper.getActivationEditorSelectTextOrAllText();
+            if (StrUtils.isNullOrEmpty(text))
+                return;
+            String rs = StrUtils.cleanrRedundantBlank(text);
+            MyEditorSheetHelper.replaceSelectTextOrAllText(rs);
+            MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
+        });
+
+    }
+
+
+
 
 
     /**
@@ -116,7 +133,7 @@ public class SqlUtils {
 //        // 1. 先把文本中的xml元素 替换为占位符, 避免把xml标记符号也
         StrUtils.matherString msVal = StrUtils.getXmlEleMatcher(str);
         // 替换后的文本
-        str = msVal.newString();
+//        str = msVal.newString();
 
         str =  str.replaceAll("<>", "#-#");
         str =  str.replaceAll("<=", "-##");
@@ -134,7 +151,7 @@ public class SqlUtils {
         str =  str.replaceAll("@@_@", " <![CDATA[ > ]]> ");
 
         // 注释掉xml元素
-        str = StrUtils.recoverStringMatcher(msVal, str);
+//        str = StrUtils.recoverStringMatcher(msVal, str);
         return str;
     }
 

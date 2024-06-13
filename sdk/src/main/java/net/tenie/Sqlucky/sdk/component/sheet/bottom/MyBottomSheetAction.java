@@ -568,7 +568,7 @@ public class MyBottomSheetAction {
                     StringBuilder fieldsName = new StringBuilder("");
                     for (int i = 0; i < size; i++) {
                         SheetFieldPo po = fs.get(i);
-                        String name = po.getColumnName().get();
+                        String name = po.getColumnLabel().get();
                         fieldsName.append(name);
                         fieldsName.append(", \n");
 
@@ -597,7 +597,7 @@ public class MyBottomSheetAction {
                     StringBuilder fieldsName = new StringBuilder("");
                     for (int i = 0; i < size; i++) {
                         SheetFieldPo po = fs.get(i);
-                        String name = po.getColumnName().get();
+                        String name = po.getColumnLabel().get();
                         fieldsName.append(name);
                         fieldsName.append("\n");
 
@@ -624,7 +624,7 @@ public class MyBottomSheetAction {
                     StringBuilder fieldsName = new StringBuilder("");
                     for (int i = 0; i < size; i++) {
                         SheetFieldPo po = fs.get(i);
-                        String name = po.getColumnName().get();
+                        String name = po.getColumnLabel().get();
                         fieldsName.append(name);
                         fieldsName.append(", --");
                         fieldsName.append(po.getColumnTypeName().get());

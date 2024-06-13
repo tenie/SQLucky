@@ -172,7 +172,7 @@ public class MyEditorSheet extends Tab {
 						});
 					}else{
 						needReload = false;
-						CommonUtils.delayRunThread(this::setNeedReload, 5000);
+//						CommonUtils.delayRunThread(this::setNeedReload, 5000);
 					}
 				});
 

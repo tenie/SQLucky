@@ -22,7 +22,15 @@ public class StrUtils {
     public static String dateTimeForFileName = "yyyy-MM-dd_HH_mm_ss";
     public final static String EMPTY_STRING = "";
     public final static String BLANK_SPRING_STRING = " ";
+    public final static String CHINESE_BLANK_CHAR  = "　";
     public static final char CHAR_TILDE = '~';
+    // HTML空白字符 &nbsp;&ensp;&emsp;
+    public final static String HTML_BLANK_STRING="   ";
+    public final static String HTML_BLANK_CHAR_NBSP =" ";
+    public final static String HTML_BLANK_CHAR_ENSP =" ";
+    public final static String HTML_BLANK_CHAR_EMSP =" ";
+
+
 
     // 字符串正则
 //    public static final  String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'|`([^`\\\\]|\\\\.)*`";
@@ -462,6 +470,41 @@ public class StrUtils {
             }
         }
         return rs.toString();
+    }
+
+    /**
+     * 清除html的空白字符串
+     * @return
+     */
+    public static String cleanHtmlBlankChar(String str){
+        str = str.replaceAll(HTML_BLANK_CHAR_EMSP," ");
+        str = str.replaceAll(HTML_BLANK_CHAR_NBSP," ");
+        str = str.replaceAll(HTML_BLANK_CHAR_ENSP," ");
+        str = str.replaceAll(CHINESE_BLANK_CHAR," ");
+
+        return str;
+    }
+
+    /**
+     * 清除多余空白符
+     * @return
+     */
+    public static String cleanrRedundantBlank(String str){
+        // 清除特殊的空白字符串
+        str =  cleanHtmlBlankChar(str);
+
+        // 清除制表符
+        if(str.contains("\t")){
+            str = str.replaceAll("\t", " ");
+        }
+
+        // 循环替换双空格
+        String blankStr = "  ";
+        while (str.contains(blankStr)){
+            str = str.replaceAll(blankStr, " ");
+        }
+
+        return str;
     }
 
     /**
@@ -1022,21 +1065,7 @@ public class StrUtils {
     }
 
     public static void main(String[] args) {
-//        String str = "111<if test=\" params.ownerCode !=null \nand \nparams.ownerCode != '' \">222";
-//        String str = "  AND OWNER_CODE=#{params.ownerCode}222\n   AND OWNER_CODE=${params.ownerCode}111";
-//        matherString ms = getXmlEleMatcher(str);
-//        str =ms.newString;
-//        System.out.println(str);
-//        int idx =  findIndexLine(str, 40);
-//        List<IndexRange> val =  getMyBatisEleRangeList(str);
-//        System.out.println(val);
-        String str = "xu_ab\nxu_ab";
-        List<Integer> idxList = findStrAllIndex(str,"_", true);
-        Set<String> strSet = new HashSet<>();
-        for(Integer idx : idxList){
-            String tmmStr = findContinuousWordByIndex(str, idx);
-            strSet.add(tmmStr);
-        }
+
     }
 
     /**
