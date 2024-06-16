@@ -1,9 +1,7 @@
 package net.tenie.fx.Action.sqlExecute;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
-import javafx.scene.Node;
 import net.tenie.Sqlucky.sdk.component.CacheDataTableViewShapeChange;
 import net.tenie.Sqlucky.sdk.component.DataViewContainer;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
@@ -40,7 +38,7 @@ public class SelectAction {
 		MyBottomSheet myBottomSheet  = null;
 		try {
 			// 获取表名
-			String tableName = ParseSQL.tabName(sql);
+			String tableName = ParseSQL.tabName(sql, ParseSQL.SELECT);
 			myBottomSheet = new MyBottomSheet(tableName);
 
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();

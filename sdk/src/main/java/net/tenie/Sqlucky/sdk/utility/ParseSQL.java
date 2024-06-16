@@ -59,39 +59,45 @@ public class ParseSQL {
 	}
 
 	// 获取 表名
-	public static String tabName(String sql) {
+	public static String tabName(String sql, int type) {
 		String temp = StrUtils.trimAllComment(sql);
 		temp = StrUtils.clearBlank(temp);
-//		temp = temp.toUpperCase();
 		String val = "";
 		String key = "";
-		int type = parseType(temp);
 		switch (type) {
-		case SELECT:
-			key = " FROM ";
-			return findSelectTabName(temp, key);
-		case UPDATE:
-			key = "UPDATE ";
-			break;
-		case INSERT:
-			key = "INSERT INTO ";
-			break;
-		case CREATE:
-			key = "CREATE TABLE ";
-			break;
-		case DELETE:
-			key = "DELETE FROM";
-			break;
-		case DROP:
-			key = "DROP TABLE";
-			break;
-		case ALTER:
-			key = "ALTER ";
-			break;
+			case SELECT:
+				key = " FROM ";
+				return findSelectTabName(temp, key);
+			case UPDATE:
+				key = "UPDATE ";
+				break;
+			case INSERT:
+				key = "INSERT INTO ";
+				break;
+			case CREATE:
+				key = "CREATE TABLE ";
+				break;
+			case DELETE:
+				key = "DELETE FROM";
+				break;
+			case DROP:
+				key = "DROP TABLE";
+				break;
+			case ALTER:
+				key = "ALTER ";
+				break;
 		}
 		val = findOtherSqlTabName(temp, key);
 
-		
+
+		return val;
+	}
+
+	// 获取 表名
+	public static String tabName(String sql) {
+		String val = "";
+		int type = parseType(sql);
+		val = ParseSQL.tabName(sql, type);
 		return val;
 	}
 	

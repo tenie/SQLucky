@@ -99,7 +99,7 @@ public class TableViewUtils {
 			FilteredTableView<ResultSetRowPo> table = TableViewUtils.creatInfoTableView();
 			// 获取表名
 			if (tableName == null || "".equals(tableName)) {
-				tableName = ParseSQL.tabName(sql);
+				tableName = ParseSQL.tabName(sql, ParseSQL.SELECT);
 				if (StrUtils.isNullOrEmpty(tableName)) {
 					tableName = "Table Name Not Finded";
 				}

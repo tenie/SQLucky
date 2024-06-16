@@ -142,7 +142,7 @@ public class RunSQLHelper {
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
 	private static Integer execSqlList(List<SqlData> allsqls, SqluckyConnector sqluckyConn, RunSqlStatePo state) {
 		int rsVal = 1;
-		String sqlstr;
+//		String sqlstr;
 		String execSql;
 	
 		int sqllenght = allsqls.size();
@@ -152,16 +152,14 @@ public class RunSQLHelper {
 		for (int i = 0; i < sqllenght; i++) {
 				String msg = "";
 
-				sqlstr = allsqls.get(i).sql();
-				execSql = StrUtils.trimAllComment(sqlstr);
+			execSql = allsqls.get(i).sql();
 			try {
 				if (execSql.length() < 10) {
-					throw new RuntimeException("Illegal Sql : " + sqlstr);
+					throw new RuntimeException("Illegal Sql : " + execSql);
 				}
 				int type = ParseSQL.parseType(execSql);
 
-
-				SdkComponent.setWaitTabLabelText(sqlstr);
+				SdkComponent.setWaitTabLabelText(execSql);
 
 				if (state.getIsCallFunc()) { // 调用存储过程
 					ProcedureAction.procedureAction(execSql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
@@ -215,9 +213,9 @@ public class RunSQLHelper {
 					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
 							fls.get(0));
 					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fls.get(1));
-					int endIdx = sqlstr.length() > 400 ? 400 : sqlstr.length();
+					int endIdx = execSql.length() > 400 ? 400 : execSql.length();
 					ddlDmlpo.addData(row,
-							CommonUtils.createReadOnlyStringProperty(sqlstr.substring(0, endIdx) + " ... "),
+							CommonUtils.createReadOnlyStringProperty(execSql.substring(0, endIdx) + " ... "),
 							fls.get(2));
 				}
 			}

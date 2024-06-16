@@ -729,6 +729,55 @@ public class StrUtils {
         return matcher;
     }
 
+
+    /**
+     * 找到所有的注释
+     */
+    public static List<IndexRange> findAllComment(String text){
+
+        String patternString = "(?<STRING>" + STRING_PATTERN + ")"
+                        + "|(?<COMMENT>" + COMMENT_PATTERN + ")";
+
+        // 找到所有注释
+        Matcher matcher = createMatcher(patternString, text);
+        List<IndexRange> commentlist =new ArrayList<>();
+        List<IndexRange> stringlist =new ArrayList<>();
+        while (matcher.find()){
+            if( matcher.group("STRING") != null){
+                IndexRange ir = new IndexRange(matcher.start(), matcher.end());
+                stringlist.add(ir);
+            }else  if( matcher.group("COMMENT") != null){
+                IndexRange ir = new IndexRange(matcher.start(), matcher.end());
+                commentlist.add(ir);
+            }
+        }
+
+
+//        for(var ir: commentlist){
+//            String str = text.substring(ir.getStart(), ir.getEnd());
+//            System.out.println("注解: " + str);
+//        }
+//
+//        for(var ir: stringlist){
+//            String str = text.substring(ir.getStart(), ir.getEnd());
+//            System.out.println("str: " + str);
+//        }
+
+        return  commentlist;
+    }
+
+    public static String TestTrimAllComment(String textVal) {
+//        List<IndexRange> ls = findAllComment(textVal);
+//        System.out.println("====================");
+//        for(var ir: ls){
+//            String str = textVal.substring(ir.getStart(), ir.getEnd());
+//            System.out.println(str);
+//        }
+        System.out.println("====================");
+        textVal =   trimAllComment(textVal);
+        System.out.println(textVal);
+        return "";
+    }
     /**
      * 去除所有注释
      * @param textVal
@@ -736,17 +785,50 @@ public class StrUtils {
      */
     public static String trimAllComment(String textVal) {
         // 1. 先把文本中的字符串替换调
-        matherString msVal = getStringMatcher(textVal);
+//        matherString msVal = getStringMatcher(textVal);
         // 替换后的文本
-        String textNew = msVal.newString();
+//        String textNew = msVal.newString();
 
-        Matcher matcher = createMatcher(COMMENT_PATTERN,textNew );
+        Matcher matcher = createMatcher(COMMENT_PATTERN,textVal );
         if (matcher.find()){
-            textNew =  matcher.replaceAll("");
+            textVal =  matcher.replaceAll("");
+        }
+
+        // 还原占位符原本的字符串
+//        textNew = recoverStringMatcher(msVal, textNew);
+
+//        List<IndexRange> ls = findAllComment(textVal);
+//
+//        String tmp = textVal;
+//        for(var ir: ls){
+//            String str = textVal.substring(ir.getStart(), ir.getEnd());
+//            tmp =  tmp.replaceFirst(str, "");
+//        }
+//
+        return textVal;
+    }
+
+
+    /**
+     * 去除所有注释
+     * @param textVal
+     * @return
+     */
+    public static String testtrimAllComment(String textVal) {
+        // 1. 先把文本中的字符串替换调
+//        matherString msVal = getStringMatcher(textVal);
+        // 替换后的文本
+//        String textNew = msVal.newString();
+        String foo = "-- // /***"
+                +"*/";
+         String COMMENT_PATTERN = "//[^\n]*|--[^\n]*|/\\*(.|\\R)*?\\*/";
+        Matcher matcher = createMatcher("(?://|/\\*).*?(?<!\\\\)(?:\\*/|$)",textVal );
+        if (matcher.find()){
+            textVal =  matcher.replaceAll("");
         }
         // 还原占位符原本的字符串
-        textNew = recoverStringMatcher(msVal, textNew);
-        return textNew;
+//        textNew = recoverStringMatcher(msVal, textNew);
+        return textVal;
     }
 
     /**
@@ -844,9 +926,9 @@ public class StrUtils {
         return strVal;
     }
     /**
-     * 找到所以注释,和字符串的区间, 发现;不在字符串和注释中, 那么这个;可以进行分割字符串返回
+     * 找到所以注释,和字符串的区间, 发现;不在字符串和注释中, 那么这个;可以进行分割字符串返回sql集合
      */
-    public static List<String> findSplitChar(String text){
+    public static List<String> findSQLFromTxt(String text){
         List<String> sql = new ArrayList<>();
         if(!text.contains(";")){
             sql.add(text);
@@ -916,7 +998,8 @@ public class StrUtils {
      * 2. 在新文本中根据 ; 分割字符串, 得到每个分割出来的子串在文本中的区间
      * 3. 根据区间, 在原始文本中 提炼出sql语句
      */
-    public static List<String> findSQLFromTxt(String textVal) {
+    @Deprecated
+    public static List<String> findSQLFromTxt1(String textVal) {
         // 1. 先把文本中的字符串替换为空格
        String  textValNew =  replaceAllStringToSpace(textVal);
 

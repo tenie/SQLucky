@@ -66,6 +66,7 @@ public class SelectDao {
 		PreparedStatement pstate = null;
 		ResultSet rs = null;
 		try {
+			logger.info("查询sql ： " + sql );
 			pstate = conn.prepareStatement(sql);
 
 			ComponentGetter.setCurrentSqlStatement(pstate);

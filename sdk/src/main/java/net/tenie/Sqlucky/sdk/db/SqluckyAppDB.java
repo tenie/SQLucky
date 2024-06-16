@@ -457,8 +457,7 @@ public class SqluckyAppDB {
 //		str = StrUtils.replaceAllCommentToSpace(str);
 		List<SqlData> sds = new ArrayList<>();
 		// 根据";" 分割字符串, 找到要执行的sql, 并排除sql字符串中含有;的情况
-//		List<String> sqls = StrUtils.findSQLFromTxt(str);
-		List<String> sqls = StrUtils.findSplitChar(str);
+		List<String> sqls = StrUtils.findSQLFromTxt(str);
 
 		if (sqls.size() > 0) {
 			for (String s : sqls) {
