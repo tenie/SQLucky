@@ -38,9 +38,9 @@ public class DbTableDatePo implements SqluckyDbTableDatePo {
 	
 	public static DbTableDatePo setExecuteInfoPo() {
 		DbTableDatePo ddlDmlpo = new DbTableDatePo(); 
-		ddlDmlpo.addField("Current Time", 140.0);
-		ddlDmlpo.addField("Execute SQL Info", 500.0);
-		ddlDmlpo.addField("Execute SQL", 550.0);
+		ddlDmlpo.addField("Time", 70.0);
+		ddlDmlpo.addField("Execute SQL Info", 1200.0);
+		ddlDmlpo.addField("Execute SQL", 400.0);
 		return ddlDmlpo;
 	}
 

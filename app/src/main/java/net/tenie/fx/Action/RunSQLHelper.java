@@ -209,18 +209,20 @@ public class RunSQLHelper {
 					// 显示字段是只读的
 					ObservableList<SheetFieldPo> fls = ddlDmlpo.getFields();
 					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.timeToStr(new Date())),
 							fls.get(0));
 					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fls.get(1));
-					int endIdx = execSql.length() > 400 ? 400 : execSql.length();
+//					int endIdx = execSql.length() > 400 ? 400 : execSql.length();
+
+					String pressString = StrUtils.pressString(execSql);
 					ddlDmlpo.addData(row,
-							CommonUtils.createReadOnlyStringProperty(execSql.substring(0, endIdx) + " ... "),
+							CommonUtils.createReadOnlyStringProperty(pressString),
 							fls.get(2));
 				}
 			}
 
 		}
-		// 如果 ddlDmlpo 中有 msg的信息 就会显示到界面上 if (! Thread.currentThread().isInterrupted()) {
+		// 如果 ddlDmlpo 中有 msg的信息 就会显示到界面上
 		TableViewUtils.showInfo(ddlDmlpo);
 		// 如果是执行的界面上的sql, 那么对错误的sql渲染为红色
 		if (StrUtils.isNullOrEmpty(state.getSqlStr())) {

@@ -18,6 +18,7 @@ public class StrUtils {
     private static Logger logger = LogManager.getLogger(StrUtils.class);
     public final static SimpleDateFormat sdf_Date = new SimpleDateFormat("yyyy-MM-dd");
     public final static SimpleDateFormat sdf_DateTime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public final static SimpleDateFormat sdf_Time = new SimpleDateFormat("HH:mm");
     public static String dateFormateL = "yyyy-MM-dd HH:mm:ss";
     public static String dateTimeForFileName = "yyyy-MM-dd_HH_mm_ss";
     public final static String EMPTY_STRING = "";
