@@ -751,18 +751,6 @@ public class StrUtils {
                 commentlist.add(ir);
             }
         }
-
-
-//        for(var ir: commentlist){
-//            String str = text.substring(ir.getStart(), ir.getEnd());
-//            System.out.println("注解: " + str);
-//        }
-//
-//        for(var ir: stringlist){
-//            String str = text.substring(ir.getStart(), ir.getEnd());
-//            System.out.println("str: " + str);
-//        }
-
         return  commentlist;
     }
 
@@ -774,62 +762,98 @@ public class StrUtils {
 //            System.out.println(str);
 //        }
         System.out.println("====================");
-        textVal =   trimAllComment(textVal);
-        System.out.println(textVal);
+//        trimAllCommentToBlank(textVal);
+        trimAllComment(textVal);
+        System.out.println("====================");
+//        textVal =   trimAllComment(textVal);
+//        System.out.println(textVal);
         return "";
     }
+
     /**
      * 去除所有注释
      * @param textVal
      * @return
      */
     public static String trimAllComment(String textVal) {
-        // 1. 先把文本中的字符串替换调
-//        matherString msVal = getStringMatcher(textVal);
-        // 替换后的文本
-//        String textNew = msVal.newString();
+        List<IndexRange>  ls =  findAllComment(textVal);
+        StringBuilder sb = new StringBuilder();
+        int idxStart = 0;  // 有用字符串的开始
+        int idxEnd = 0;  // 有用字符串的开始
 
+        for (IndexRange ir : ls){
+            int start = ir.getStart();
+            int end = ir.getEnd();
+            // 如果第一个字符就是注释起始, 就跳过
+            if(idxStart == 0 && start == 0){
+                idxStart = end;
+                continue;
+            }
+            // 注释的开始是原字符串上要截取的结束位置
+            idxEnd = start;
+
+            // 去除\r\n
+            if(textVal.length()> idxEnd){
+                int tmp = 0;
+                char charVal = textVal.charAt(idxStart);
+                if(charVal == 13){ // \r
+                    tmp++;
+                    charVal = textVal.charAt(idxStart+1);
+                    if (charVal == 10){ // \n
+                        tmp++;
+                    }
+                }else if (charVal == 10 ){// \n
+                    tmp++;
+                }
+                idxStart += tmp;
+            }
+            sb.append(textVal.substring(idxStart, idxEnd))  ;
+
+            // 下一次的开始位置是 注释字符串的结尾
+            idxStart = end;
+        }
+
+        // 最后一部字符次
+        if(idxStart < textVal.length()){
+            sb.append(textVal.substring(idxStart))  ;
+        }
+
+        return textVal;
+    }
+    /**
+     * 注释转化为空格字符
+     * @param textVal
+     * @return
+     */
+    public static String trimAllCommentToBlank(String textVal) {
+        List<IndexRange>  ls =  findAllComment(textVal);
+        StringBuilder sb = new StringBuilder(textVal);
+
+        for (IndexRange ir : ls){
+            int start = ir.getStart();
+            int end = ir.getEnd();
+            // 创建一个注释字符串一样长度的空白字符串
+            String str = createBlankString(end-start);
+            // 使用空白字符串替换掉注释
+            sb.replace(ir.getStart(), ir.getEnd(), str);
+        }
+
+        return textVal;
+    }
+
+    /**
+     * 去除所有注释, 简单粗暴, 会把字符串中的注释去掉
+     * @param textVal
+     * @return
+     */
+    public static String trimAllComment2(String textVal) {
         Matcher matcher = createMatcher(COMMENT_PATTERN,textVal );
         if (matcher.find()){
             textVal =  matcher.replaceAll("");
         }
-
-        // 还原占位符原本的字符串
-//        textNew = recoverStringMatcher(msVal, textNew);
-
-//        List<IndexRange> ls = findAllComment(textVal);
-//
-//        String tmp = textVal;
-//        for(var ir: ls){
-//            String str = textVal.substring(ir.getStart(), ir.getEnd());
-//            tmp =  tmp.replaceFirst(str, "");
-//        }
-//
         return textVal;
     }
 
-
-    /**
-     * 去除所有注释
-     * @param textVal
-     * @return
-     */
-    public static String testtrimAllComment(String textVal) {
-        // 1. 先把文本中的字符串替换调
-//        matherString msVal = getStringMatcher(textVal);
-        // 替换后的文本
-//        String textNew = msVal.newString();
-        String foo = "-- // /***"
-                +"*/";
-         String COMMENT_PATTERN = "//[^\n]*|--[^\n]*|/\\*(.|\\R)*?\\*/";
-        Matcher matcher = createMatcher("(?://|/\\*).*?(?<!\\\\)(?:\\*/|$)",textVal );
-        if (matcher.find()){
-            textVal =  matcher.replaceAll("");
-        }
-        // 还原占位符原本的字符串
-//        textNew = recoverStringMatcher(msVal, textNew);
-        return textVal;
-    }
 
     /**
      * 去除所有注释, 注解
@@ -928,7 +952,7 @@ public class StrUtils {
     /**
      * 找到所以注释,和字符串的区间, 发现;不在字符串和注释中, 那么这个;可以进行分割字符串返回sql集合
      */
-    public static List<String> findSQLFromTxt(String text){
+    public static List<String> findSqlListFromText(String text){
         List<String> sql = new ArrayList<>();
         if(!text.contains(";")){
             sql.add(text);
