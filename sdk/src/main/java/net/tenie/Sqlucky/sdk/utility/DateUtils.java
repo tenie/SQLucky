@@ -49,6 +49,9 @@ public class DateUtils {
     public static String dateToStrL(Date d) {
         return StrUtils.sdf_DateTime.format(d);
     }
+    public static String timeToStr(Date d) {
+        return StrUtils.sdf_Time.format(d);
+    }
 
     public static String dateToStr(Date d, String formate) {
         SimpleDateFormat sdf = new SimpleDateFormat(formate);
