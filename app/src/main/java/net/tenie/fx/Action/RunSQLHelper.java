@@ -142,7 +142,6 @@ public class RunSQLHelper {
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
 	private static Integer execSqlList(List<SqlData> allsqls, SqluckyConnector sqluckyConn, RunSqlStatePo state) {
 		int rsVal = 1;
-//		String sqlstr;
 		String execSql;
 	
 		int sqllenght = allsqls.size();
