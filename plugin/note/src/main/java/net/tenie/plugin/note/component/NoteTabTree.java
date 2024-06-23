@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 
 import com.jfoenix.controls.JFXButton;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -268,7 +269,9 @@ public class NoteTabTree extends SqluckyTitledPane {
 
 		MenuItem showInFolder = new MenuItem("Show In Folder");
 		showInFolder.setOnAction(e -> {
-			NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
+			Platform.runLater(()->{
+				NoteUtility.showInSystem(NoteTabTree.noteTabTreeView);
+			});
 		});
 
 		contextMenu.getItems().addAll(Open,OpenFile,
