@@ -142,11 +142,12 @@ public class MyEditorSheet extends Tab {
 		if(sqluckyEditor == null ) return;
 		if(! needReload ) return;
 		String filePath = documentPo.getFileFullName();
+		String encode = documentPo.getEncode();
 		if(StrUtils.isNullOrEmpty(filePath)) return;
 		File file = new File(filePath);
 		boolean tf = false;
 		if(file.exists() && file.isFile()){
-			String fileText = FileTools.read(file, "UTF-8");
+			String fileText = FileTools.read(file, encode);
 			String fileTexttmp = fileText.replaceAll("\r", "");
 			String codeText = sqluckyEditor.getCodeArea().getText();
 			int  codeSize = codeText.length();
@@ -180,6 +181,9 @@ public class MyEditorSheet extends Tab {
 			}
 		}
 	}
+
+
+
 
 	private void setNeedReload(){
 		needReload = true;
@@ -254,12 +258,6 @@ public class MyEditorSheet extends Tab {
 			public void handle(Event e) {
 				syncScriptPo();
 				documentPo.setOpenStatus(0);
-//				 // 如果只有一个窗口就不能关闭 
-//				TabPane myTabPane
-//				if (myTabPane.getTabs().size() == 1) {
-//  					e.consume();
-//				}
-
 			}
 		};
 	}
@@ -289,6 +287,10 @@ public class MyEditorSheet extends Tab {
 		ComponentGetter.appComponent.scriptTreeRefresh();
 	}
 
+	/**
+	 * 界面上的文本保存到数据库
+	 * @param conn
+	 */
 	public void saveScriptPo(Connection conn) {
 		if( documentPo.getSaveToDB()){
 			String sql = getAreaText();
@@ -299,7 +301,6 @@ public class MyEditorSheet extends Tab {
 			int p = getParagraph();
 			documentPo.setTitle(title);
 			documentPo.setParagraph(p);
-//		AppDao.updateScriptArchive(conn, documentPo);
 			ComponentGetter.appComponent.updateScriptArchive(conn, documentPo);
 		}
 

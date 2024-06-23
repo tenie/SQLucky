@@ -289,6 +289,8 @@ public class app extends Application {
                 for (int i = 0; i < alltabs.size(); i++) {
                     Tab tab = alltabs.get(i);
                     if (tab instanceof MyEditorSheet mtab) {
+
+                        // 文本保存到数据库
                         mtab.saveScriptPo(H2conn);
                         var spo = mtab.getDocumentPo();
                         // 将打开状态设置为1, 之后根据这个状态来恢复
