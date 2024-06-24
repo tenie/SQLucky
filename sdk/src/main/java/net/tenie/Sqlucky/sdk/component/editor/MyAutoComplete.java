@@ -77,7 +77,7 @@ public class MyAutoComplete implements AutoComplete {
 		keyWords.add(TablePo.noDbObj("WITH   AS  "));
 
 		keyWords.add(TablePo.noDbObj("FETCH FIRST 1 ROWS ONLY  "));
-		keyWords.add(TablePo.noDbObj("LIMIT 1  "));
+		keyWords.add(TablePo.noDbObj("LIMIT 20 "));
 		keyWords.add(TablePo.noDbObj("CURRENT DATE  "));
 		keyWords.add(TablePo.noDbObj("CURRENT TIME  "));
 		keyWords.add(TablePo.noDbObj("CURRENT TIMESTAMP  "));

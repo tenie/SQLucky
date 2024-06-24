@@ -270,6 +270,8 @@ public class MyBottomSheet extends  Tab{
 		List<Node> btnLs = new ArrayList<>();
 		JFXButton sbtn = createSelectBtn(sqluckyConn, table.getTableSchema(), name);
 		btnLs.add(sbtn);
+		// 锁定按钮
+		mtb.tableData.setLock(true);
 		mtb.operatePane(btnLs);
 		mtb.tabVBoxAddComponentView(sqlArea);
 		VBox.setVgrow(sqlArea, Priority.ALWAYS);
@@ -307,11 +309,13 @@ public class MyBottomSheet extends  Tab{
 		var mtb = new MyBottomSheet(name);
 		mtb.setDDL(true);
 		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-//		mtb.setSqlArea(sqlArea);
 		String ddl = table.getDdl();
 		sqlArea.initCodeArea(ddl, false);
+
 		// 表格上面的按钮
 		List<Node> btnLs = mtb.tableDDLOptionBtns(sqluckyConn, sqlArea, table);
+		// 锁定按钮
+		mtb.tableData.setLock(true);
 		mtb.operatePane(btnLs);
 		mtb.tabVBoxAddComponentView(sqlArea);
 		VBox.setVgrow(sqlArea, Priority.ALWAYS);

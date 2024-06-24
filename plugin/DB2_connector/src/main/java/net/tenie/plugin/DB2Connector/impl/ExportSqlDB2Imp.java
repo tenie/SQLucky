@@ -453,4 +453,28 @@ public class ExportSqlDB2Imp extends ExportDBObjects {
 		sql += "\n fetch first 20 rows only  WITH UR";
 		return  sql;
 	}
+
+	/**
+	 * 导出limit sql
+	 *
+	 * @param sql
+	 * @param limit
+	 * @return
+	 */
+	@Override
+	public String limitSelectSql(String sql, int limit) {
+			//  ROWS ONLY
+		String sqlTmp = sql.toUpperCase();
+		boolean tf = StrUtils.hasKeyWord(sqlTmp,"FETCH FIRST");
+		boolean tf2 = StrUtils.hasKeyWord(sqlTmp,"ROWS ONLY");
+
+		if (tf && tf2) {
+			return sql;
+		} else {
+			String limitSql = String.format("select * from ( %s ) a  FETCH FIRST %d ROWS ONLY ", sql, limit);
+
+			return limitSql;
+		}
+	}
+
 }

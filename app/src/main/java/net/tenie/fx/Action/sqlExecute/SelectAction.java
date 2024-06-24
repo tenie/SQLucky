@@ -34,7 +34,7 @@ public class SelectAction {
 	private static Logger logger = LogManager.getLogger(SelectAction.class);
 
 
-	public static void selectAction(String sql, SqluckyConnector sqluckyConn, int tidx, boolean isLock, Integer selectLimit) throws Exception {
+	public static void selectAction(String sql, SqluckyConnector sqluckyConn, int tidx, boolean isLock, Integer selectLimit, int type) throws Exception {
 		MyBottomSheet myBottomSheet  = null;
 		try {
 			// 获取表名
@@ -48,7 +48,7 @@ public class SelectAction {
 			if (StrUtils.isNullOrEmpty(tableName)) {
 				tableName = "Table Name Not Finded";
 			}
-			logger.info("tableName= " + tableName + "\n sql = " + sql);
+//			logger.info("tableName= " + tableName + "\n sql = " + sql);
 			sheetDaV.setDbConnection(sqluckyConn);
 			sheetDaV.setSqlStr(sql);
 			sheetDaV.setTabName(tableName);

@@ -3,6 +3,7 @@ package net.tenie.Sqlucky.sdk.db;
 import java.sql.Connection;
 import java.util.List;
 
+import net.sf.jsqlparser.statement.select.Limit;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
@@ -82,6 +83,24 @@ public abstract class ExportDBObjects {
 				sql = "SELECT * FROM " + tablename;
 			}
 			return  sql;
+	}
+
+	/**
+	 * 导出limit sql
+	 * @param sql
+	 * @param limit
+	 * @return
+	 */
+	public String limitSelectSql(String sql, int  limit){
+		String tmpsql = sql.toLowerCase();
+	    boolean tf = StrUtils.hasKeyWord(tmpsql,"limit");
+		if(tf){
+			return sql;
+		}else {
+			String limitSql =String.format("select * from ( %s ) a limit %d ", sql, limit);
+
+			return limitSql;
+		}
 	}
 
     // 目前没用
