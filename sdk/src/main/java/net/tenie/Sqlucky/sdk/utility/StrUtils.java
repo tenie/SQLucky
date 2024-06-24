@@ -487,7 +487,7 @@ public class StrUtils {
     }
 
     /**
-     * 清除多余空白符
+     * 清除多余空白符, 字符串中的空格会有问题
      * @return
      */
     public static String cleanrRedundantBlank(String str){
@@ -507,6 +507,7 @@ public class StrUtils {
 
         return str;
     }
+
 
     /**
      *  去除字符串中的非数字部分
@@ -730,6 +731,20 @@ public class StrUtils {
         return matcher;
     }
 
+    /**
+     * 是否存在要查找的关键字
+     * @param valText
+     * @param keyWord
+     * @return
+     */
+    public static boolean hasKeyWord(String valText, String keyWord){
+        String KEYWORD_PATTERN = "\\b(" + keyWord + ")\\b";
+        String patternString = "(?<KEYWORD>" + KEYWORD_PATTERN + ")";
+        Pattern pattern = Pattern.compile(patternString); //去掉空格符合换行符
+        Matcher matcher = pattern.matcher(valText);
+
+        return matcher.find();
+    }
 
     /**
      * 找到所有的注释

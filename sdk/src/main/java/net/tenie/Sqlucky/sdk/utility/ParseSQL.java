@@ -11,7 +11,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class ParseSQL {
 	private static Logger logger = LogManager.getLogger(ParseSQL.class);
-
+	public static final int OTHER_QUERY = 0;
 	public static final int SELECT = 1;
 	public static final int UPDATE = 2;
 	public static final int INSERT = 3;
@@ -35,13 +35,13 @@ public class ParseSQL {
 		if (StrUtils.beginWithNotSensitive(temp, "SELECT")) {
 			return SELECT;
 		} else if (StrUtils.beginWithNotSensitive(temp, "SHOW")) {
-			return SELECT;
+			return OTHER_QUERY;
 		} else if (StrUtils.beginWithNotSensitive(temp, "WITH")) {
-			return SELECT;
+			return OTHER_QUERY;
 		} else if (StrUtils.beginWithNotSensitive(temp, "VALUES")) {
-			return SELECT;
+			return OTHER_QUERY;
 		} else if (StrUtils.beginWithNotSensitive(temp, "EXPLAIN")) {
-			return SELECT;
+			return OTHER_QUERY;
 		} else if (StrUtils.beginWithNotSensitive(temp, "UPDATE")) {
 			return UPDATE;
 		} else if (StrUtils.beginWithNotSensitive(temp, "INSERT")) {

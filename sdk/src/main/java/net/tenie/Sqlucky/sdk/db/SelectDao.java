@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.utility.ParseSQL;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -65,6 +66,12 @@ public class SelectDao {
 		// DB对象
 		PreparedStatement pstate = null;
 		ResultSet rs = null;
+		// 获取limit 的sql
+		int type = ParseSQL.parseType(sql);
+		if(type == ParseSQL.SELECT){
+			sql = sqluckyConn.getExportDDL().limitSelectSql(sql, limit);
+		}
+
 		try {
 			logger.info("查询sql ： " + sql );
 			pstate = conn.prepareStatement(sql);
