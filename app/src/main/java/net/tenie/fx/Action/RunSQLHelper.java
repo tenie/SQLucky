@@ -162,8 +162,9 @@ public class RunSQLHelper {
 
 				if (state.getIsCallFunc()) { // 调用存储过程
 					ProcedureAction.procedureAction(execSql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
-				} else if (type <= ParseSQL.SELECT) { // 调用查询
+				} else if (type == ParseSQL.SELECT || type == ParseSQL.OTHER_QUERY ) { // 调用查询
 					SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock(), state.getSelectLimit(), type);
+
 				} else {
 					Connection conn = sqluckyConn.getConn();
 					if (type == ParseSQL.UPDATE) {
