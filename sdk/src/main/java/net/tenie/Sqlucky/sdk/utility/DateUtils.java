@@ -6,6 +6,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
 
 /**
@@ -327,4 +328,14 @@ public class DateUtils {
         }
         return str;
     }
+
+    public static LocalDateTime lastDayOfMonth(){
+        LocalDateTime now = LocalDateTime.now();
+        return now.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59);
+    }
+
+    public static LocalDateTime lastDayOfMonth(LocalDateTime  ldt){
+        return ldt.with(TemporalAdjusters.lastDayOfMonth()).withHour(23).withMinute(59).withSecond(59);
+    }
+
 }

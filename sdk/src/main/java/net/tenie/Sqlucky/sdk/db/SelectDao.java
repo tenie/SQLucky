@@ -58,7 +58,16 @@ public class SelectDao {
 		return fields;
 	}
 
+
+
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
+	public static SelectExecInfo selectSql(String sql, int limit, SqluckyConnector sqluckyConn, int type) throws Exception {
+		// 获取limit 的sql
+		if(type == ParseSQL.SELECT){
+			sql = sqluckyConn.getExportDDL().limitSelectSql(sql, limit);
+		}
+		return selectSql2(sql, limit, sqluckyConn);
+	}
 	public static SelectExecInfo selectSql2(String sql, int limit, SqluckyConnector sqluckyConn) throws Exception {
 		Connection conn = sqluckyConn.getConn();
 		SelectExecInfo execInfo = new SelectExecInfo();
@@ -66,12 +75,6 @@ public class SelectDao {
 		// DB对象
 		PreparedStatement pstate = null;
 		ResultSet rs = null;
-		// 获取limit 的sql
-		int type = ParseSQL.parseType(sql);
-		if(type == ParseSQL.SELECT){
-			sql = sqluckyConn.getExportDDL().limitSelectSql(sql, limit);
-		}
-
 		try {
 			logger.info("查询sql ： " + sql );
 			pstate = conn.prepareStatement(sql);
