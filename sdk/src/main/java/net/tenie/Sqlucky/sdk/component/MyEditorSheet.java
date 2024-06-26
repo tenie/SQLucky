@@ -20,6 +20,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.fxmisc.richtext.CodeArea;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.function.Consumer;
 
@@ -136,50 +137,113 @@ public class MyEditorSheet extends Tab {
 	}
 
 	/**
+	 * 界面上的文本保存到文件
+	 */
+	public void saveAreaTextToDocumentFile(){
+		String sql = this.getAreaText();// Sql
+		String filePath = documentPo.getFileFullName();
+		if(StrUtils.isNotNullOrEmpty(filePath)){
+			File file = new File(filePath);
+			if(file.exists() && file.isFile()){
+				try {
+					FileTools.saveByEncode(filePath, sql, documentPo.getEncode());
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
+
+
+    }
+
+	/**
+	 * 判断文件是否存在
+	 */
+	public boolean documentFileExists(){
+		boolean tf = false;
+		String filePath = documentPo.getFileFullName();
+		if(StrUtils.isNotNullOrEmpty(filePath)){
+			File file = new File(filePath);
+			if(file.exists() && file.isFile()){
+				tf = true;
+			}
+		}
+
+		return tf;
+	}
+
+	/**
+	 * 读取文件文本
+	 * @return
+	 */
+	public String readDocumentFileText(){
+		String val = "";
+		String filePath = documentPo.getFileFullName();
+		if(StrUtils.isNullOrEmpty(filePath)) return val;
+		File file = new File(filePath);
+		if(file.exists() && file.isFile()){
+			String encode = documentPo.getEncode();
+			val = FileTools.read(file, encode);
+		}
+		return val;
+	}
+
+	/**
+	 * 文件中的文本和界面上的内容是否相等
+	 * @return
+	 */
+	public boolean documentTextEqualsCodeAreaText(){
+		boolean tf = true;
+		String fileText = this.readDocumentFileText();
+		if(fileText.contains("\r")){
+			fileText = fileText.replaceAll("\r", "");
+		}
+		String codeText = sqluckyEditor.getCodeArea().getText();
+		if(codeText.contains("\r")){
+			codeText = codeText.replaceAll("\r", "");
+		}
+
+		int codeSize = codeText.length();
+		int fileSize = fileText.length();
+		if (codeSize != fileSize) {
+			tf = false;
+		} else {
+			if (!fileText.equals(codeText)) {
+				tf = false;
+			}
+		}
+
+		return tf;
+	}
+	/**
 	 * 原文被其他程序修改后, 重新加载
 	 */
 	public void reloadText(){
 		if(sqluckyEditor == null ) return;
+		if(!documentFileExists()) return;
 		if(! needReload ) return;
-		String filePath = documentPo.getFileFullName();
-		String encode = documentPo.getEncode();
-		if(StrUtils.isNullOrEmpty(filePath)) return;
-		File file = new File(filePath);
-		boolean tf = false;
-		if(file.exists() && file.isFile()){
-			String fileText = FileTools.read(file, encode);
-			String fileTexttmp = fileText.replaceAll("\r", "");
-			String codeText = sqluckyEditor.getCodeArea().getText();
-			int  codeSize = codeText.length();
-			int  fileSize = fileTexttmp.length();
-			if(codeSize != fileSize){
-				tf = true;
-			}else{
-				if(!fileTexttmp.equals(codeText)){
-					tf = true;
-				}
-			}
 
-			if(tf){
-				int idx = sqluckyEditor.getCodeArea().getAnchor();
-				CommonUtils.threadAwait(1);
-				Platform.runLater(()->{
-					boolean confVal = MyAlert.myConfirmationShowAndWait("文本发生改变是否重新加载?");
-					if(confVal ){
-						sqluckyEditor.getCodeArea().clear();
-						sqluckyEditor.getCodeArea().appendText(fileTexttmp);
-						Platform.runLater(()->{
-							sqluckyEditor.getCodeArea().moveTo(idx);
-						});
-					}else{
-						needReload = false;
+		// 内容不同时提示
+		if(! documentTextEqualsCodeAreaText()){
+			int idx = sqluckyEditor.getCodeArea().getAnchor();
+			CommonUtils.threadAwait(1);
+			Platform.runLater(() -> {
+				boolean confVal = MyAlert.myConfirmationShowAndWait("文本发生改变是否重新加载?");
+				if (confVal) {
+					sqluckyEditor.getCodeArea().clear();
+					String fileTexttmp = this.readDocumentFileText();
+					sqluckyEditor.getCodeArea().appendText(fileTexttmp);
+					Platform.runLater(() -> {
+						sqluckyEditor.getCodeArea().moveTo(idx);
+					});
+				} else {
+					needReload = false;
 //						CommonUtils.delayRunThread(this::setNeedReload, 5000);
-					}
-				});
+				}
+			});
 
-
-			}
 		}
+
 	}
 
 
@@ -266,6 +330,7 @@ public class MyEditorSheet extends Tab {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			syncScriptPo(conn);
+			ComponentGetter.appComponent.scriptTreeRefresh();
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -273,18 +338,30 @@ public class MyEditorSheet extends Tab {
 	}
 
 	public void syncScriptPo(Connection conn) {
-		String sql = getAreaText();
+		syncScriptPo(conn, null);
+	}
+	/**
+	 * 保存到数据库
+	 * @param conn
+	 */
+	public void syncScriptPo(Connection conn, String sql) {
+		if(StrUtils.isNullOrEmpty(sql)){
+			sql = getAreaText();
+		}
 		String title = getTitle();
+		documentPo.setTitle(title);
 		if (sql != null) {
 			documentPo.setText(sql);
+			int p = getParagraph();
+			documentPo.setParagraph(p);
 		}
 
-		documentPo.setTitle(title);
+
 		if (documentPo.getSaveToDB()) {
 			ComponentGetter.appComponent.updateScriptArchive(conn, documentPo);
 
 		}
-		ComponentGetter.appComponent.scriptTreeRefresh();
+
 	}
 
 	/**
@@ -292,17 +369,41 @@ public class MyEditorSheet extends Tab {
 	 * @param conn
 	 */
 	public void saveScriptPo(Connection conn) {
-		if( documentPo.getSaveToDB()){
-			String sql = getAreaText();
-			String title = getTitle();
-			if (sql != null) {
-				documentPo.setText(sql);
+		if( this.sqluckyEditor == null ) return;
+		if( documentFileExists()){
+			if( !documentTextEqualsCodeAreaText() ){
+				boolean confVal = MyAlert.myConfirmationShowAndWait("文本发生改变是否保存?");
+				if (confVal) {
+					saveAreaTextToDocumentFile();
+				}else {
+					String fileTexttmp = this.readDocumentFileText();
+					syncScriptPo(conn, fileTexttmp);
+				}
 			}
-			int p = getParagraph();
-			documentPo.setTitle(title);
-			documentPo.setParagraph(p);
-			ComponentGetter.appComponent.updateScriptArchive(conn, documentPo);
+		}else{
+			syncScriptPo(conn);
 		}
+
+//		var spo = this.getDocumentPo();
+		// 将打开状态设置为1, 之后根据这个状态来恢复
+		if (documentPo != null && documentPo.getId() != null) {
+			String sql = this.getAreaText();
+			if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
+				documentPo.setOpenStatus(1);
+				// 当前激活的编辑页面
+				if( this.isSelected()){
+					documentPo.setIsActivate(1);
+				}else {
+					documentPo.setIsActivate(0);
+				}
+
+			} else {
+				documentPo.setOpenStatus(0);
+				documentPo.setIsActivate(0);
+			}
+		}
+//		documentPo.getFileFullName()
+
 
 	}
 
@@ -323,6 +424,11 @@ public class MyEditorSheet extends Tab {
 		return documentPo.getText();
 	}
 
+	/**
+	 *
+	 * 光标所在段落
+	 * @return
+	 */
 	public int getParagraph() {
 		if (sqluckyEditor != null) {
 			CodeArea code = sqluckyEditor.getCodeArea();
