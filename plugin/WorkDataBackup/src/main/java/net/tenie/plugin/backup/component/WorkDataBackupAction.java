@@ -191,6 +191,7 @@ public class WorkDataBackupAction {
 				var item = ls.get(i);
 				MyEditorSheet stab = item.getValue();
 				stab.syncScriptPo(conn);
+				ComponentGetter.appComponent.scriptTreeRefresh();
 				DocumentPo tmp = item.getValue().getDocumentPo();
 				String jsonStr = tmp.toJsone();
 				String encsStr = DesUtil.encrypt(jsonStr, pKey);

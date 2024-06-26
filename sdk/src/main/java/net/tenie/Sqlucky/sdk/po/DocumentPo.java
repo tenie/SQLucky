@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 脚本po
@@ -114,7 +115,19 @@ public class DocumentPo implements Serializable {
 		this.text = text;
 	}
 
+	/**
+	 * 获取文件绝对路径, 如果文件不存在返回空
+	 * @return
+	 */
 	public String getFileFullName() {
+		if(StrUtils.isNotNullOrEmpty(fileFullName)){
+			File tmp = new File(fileFullName);
+			if(tmp.exists() && tmp.isFile()){
+				return fileFullName;
+			}else {
+				fileFullName = "";
+			}
+		}
 		return fileFullName;
 	}
 
