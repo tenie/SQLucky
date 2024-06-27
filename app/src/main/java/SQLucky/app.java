@@ -339,8 +339,23 @@ public class app extends Application {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                SqluckyAppDB.closeConn(H2conn);
-                System.exit(0);
+                if(! MyEditorSheet.ConsumerLs.isEmpty()){
+
+                    Platform.runLater(()->{
+                        for (var call :  MyEditorSheet.ConsumerLs){
+                            call.accept("");
+                        }
+                        SqluckyAppDB.closeConn(H2conn);
+                        System.exit(0);
+                    });
+
+                }else {
+                    SqluckyAppDB.closeConn(H2conn);
+                    System.exit(0);
+                }
+
+//                SqluckyAppDB.closeConn(H2conn);
+//                System.exit(0);
             }
         });
     }

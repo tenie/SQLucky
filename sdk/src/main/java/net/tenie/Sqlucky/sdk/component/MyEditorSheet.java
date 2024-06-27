@@ -22,6 +22,8 @@ import org.fxmisc.richtext.CodeArea;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class MyEditorSheet extends Tab {
@@ -263,7 +265,13 @@ public class MyEditorSheet extends Tab {
 		VBox.setVgrow(sqluckyEditor, Priority.ALWAYS);
 		this.setContent(vbox);
 		documentPo.setOpenStatus(1);
-		initTabSQLText(documentPo.getText());
+		String text = documentPo.getText();
+		if(documentFileExists()){
+			text = readDocumentFileText();
+			documentPo.setText(text);
+		}
+
+		initTabSQLText(text);
 	}
 
 	// 默认的SqluckyEditor
@@ -364,6 +372,8 @@ public class MyEditorSheet extends Tab {
 
 	}
 
+	public static List<Consumer<String>> ConsumerLs = new ArrayList<>();
+
 	/**
 	 * 界面上的文本保存到数据库
 	 * @param conn
@@ -372,13 +382,30 @@ public class MyEditorSheet extends Tab {
 		if( this.sqluckyEditor == null ) return;
 		if( documentFileExists()){
 			if( !documentTextEqualsCodeAreaText() ){
-				boolean confVal = MyAlert.myConfirmationShowAndWait("文本发生改变是否保存?");
-				if (confVal) {
-					saveAreaTextToDocumentFile();
-				}else {
-					String fileTexttmp = this.readDocumentFileText();
-					syncScriptPo(conn, fileTexttmp);
-				}
+				ConsumerLs.add(stc->{
+					boolean confVal = MyAlert.myConfirmationShowAndWait("文本发生改变是否保存?");
+					if (confVal) {
+						// 界面文本保存到文件
+						saveAreaTextToDocumentFile();
+						syncScriptPo(conn, "");
+					}
+//					else {
+//						不保存的情况
+//						String fileTexttmp = this.readDocumentFileText();
+//						syncScriptPo(conn);
+//					}
+				});
+
+//				Platform.runLater(()->{
+//					boolean confVal = MyAlert.myConfirmationShowAndWait("文本发生改变是否保存?");
+//					if (confVal) {
+//						saveAreaTextToDocumentFile();
+//					}else {
+//						String fileTexttmp = this.readDocumentFileText();
+//						syncScriptPo(conn, fileTexttmp);
+//					}
+//				});
+
 			}
 		}else{
 			syncScriptPo(conn);
