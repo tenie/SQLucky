@@ -339,8 +339,8 @@ public class app extends Application {
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
+                // 提示是否保存
                 if(! MyEditorSheet.ConsumerLs.isEmpty()){
-
                     Platform.runLater(()->{
                         for (var call :  MyEditorSheet.ConsumerLs){
                             call.accept("");
@@ -353,9 +353,6 @@ public class app extends Application {
                     SqluckyAppDB.closeConn(H2conn);
                     System.exit(0);
                 }
-
-//                SqluckyAppDB.closeConn(H2conn);
-//                System.exit(0);
             }
         });
     }
