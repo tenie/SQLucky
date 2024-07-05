@@ -93,11 +93,13 @@ public abstract class ExportDBObjects {
 	 */
 	public String limitSelectSql(String sql, int  limit){
 		String tmpsql = sql.toLowerCase();
-	    boolean tf = StrUtils.hasKeyWord(tmpsql,"limit");
+
+		String sqlTmp2 = StrUtils.cleanrRedundantBlank(tmpsql);
+	    boolean tf = StrUtils.hasKeyWord(sqlTmp2,"limit ");
 		if(tf){
 			return sql;
 		}else {
-			String limitSql =String.format("select * from ( %s ) a limit %d ", sql, limit);
+			String limitSql =String.format("%s limit %d ", sql, limit);
 
 			return limitSql;
 		}
