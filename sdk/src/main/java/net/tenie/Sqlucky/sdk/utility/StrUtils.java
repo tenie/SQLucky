@@ -993,7 +993,7 @@ public class StrUtils {
         for (Integer idx : idxList){
             boolean tf = false;
             for (IndexRange ir : list){
-                if(idx > ir.getStart() && idx <= ir.getEnd()){
+                if(idx > ir.getStart() && idx < ir.getEnd()){
                     tf = true;
                     break;
                 }

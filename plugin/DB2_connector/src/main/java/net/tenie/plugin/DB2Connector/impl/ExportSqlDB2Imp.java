@@ -463,15 +463,28 @@ public class ExportSqlDB2Imp extends ExportDBObjects {
 	 */
 	@Override
 	public String limitSelectSql(String sql, int limit) {
+		String limitSql = sql;
 			//  ROWS ONLY
 		String sqlTmp = sql.toUpperCase();
-		boolean tf = StrUtils.hasKeyWord(sqlTmp,"FETCH FIRST");
-		boolean tf2 = StrUtils.hasKeyWord(sqlTmp,"ROWS ONLY");
+		String sqlTmp2 = StrUtils.cleanrRedundantBlank(sqlTmp);
+		boolean tf1 = StrUtils.hasKeyWord(sqlTmp2,"FETCH FIRST");
+		boolean tf2 = StrUtils.hasKeyWord(sqlTmp2,"ROWS ONLY");
 
-		if (tf && tf2) {
+		if (tf1 && tf2) {
 			return sql;
 		} else {
-			String limitSql = String.format("select * from ( %s ) a  FETCH FIRST %d ROWS ONLY ", sql, limit);
+			tf1 = StrUtils.hasKeyWord(sqlTmp2,"WITH UR");
+			tf2 = StrUtils.hasKeyWord(sqlTmp2,"WITH CS");
+			boolean tf3 = StrUtils.hasKeyWord(sqlTmp2,"WITH RS");
+			boolean tf4 = StrUtils.hasKeyWord(sqlTmp2,"WITH RR");
+			if(tf1 || tf2 || tf3 || tf4){
+				int idxWith =  sqlTmp.lastIndexOf(" WITH ");
+				String sql1 = sql.substring(0, idxWith );
+				String sql2 = sql.substring(idxWith );
+				limitSql = String.format("%s FETCH FIRST %d ROWS ONLY %s ", sql1, limit, sql2);
+			}else {
+				limitSql = String.format("%s FETCH FIRST %d ROWS ONLY ", sql, limit);
+			}
 
 			return limitSql;
 		}
