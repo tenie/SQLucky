@@ -49,6 +49,8 @@ open module SQLucky.sdk {
 	requires org.apache.poi.poi;
 	requires org.apache.poi.ooxml;
     requires com.google.common;
+    requires jasypt;
+	requires cn.hutool;
 //	requires okhttp3;
 
 	exports net.tenie.Sqlucky.sdk;
