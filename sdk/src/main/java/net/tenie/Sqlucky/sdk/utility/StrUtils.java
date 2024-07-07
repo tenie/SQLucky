@@ -5,8 +5,10 @@ import javafx.scene.control.IndexRange;
 import net.tenie.Sqlucky.sdk.po.MyRange;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jasypt.util.text.BasicTextEncryptor;
 
 import java.io.File;
+import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1628,4 +1630,142 @@ public class StrUtils {
 
         return rs;
     }
+
+    /**
+     *  返回加密后的字符串
+     * @param password
+     * @param val
+     * @return
+     */
+    public static String encrypt(String password, String val) {
+        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+        textEncryptor.setPassword(password);//盐值
+        String encryptVal = textEncryptor.encrypt(val);
+        return encryptVal;
+    }
+
+    /**
+     * 返回解密后的字符串
+     * @param password
+     * @param encryptStr
+     * @return
+     */
+    public static  String decrypt(String password, String encryptStr){
+        BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
+        textEncryptor.setPassword(password);//盐值
+        String  stringVal  = textEncryptor.decrypt(encryptStr);
+        return stringVal;
+    }
+
+
+    /**
+     *字符串转 byte
+     * @param str
+     * @param charset
+     * @return
+     */
+    public static byte[] bytes(CharSequence str, Charset charset) {
+        if (str == null) {
+            return null;
+        }
+
+        if (null == charset) {
+            return str.toString().getBytes();
+        }
+        return str.toString().getBytes(charset);
+    }
+
+    /**
+     * 编码字符串
+     *
+     * @param str     字符串
+     * @param charset 字符集，如果此字段为空，则解码的结果取决于平台
+     * @return 编码后的字节码
+     */
+    public static byte[] bytes(CharSequence str, String charset) {
+        return bytes(str, isNullOrEmpty(charset) ? Charset.defaultCharset() : Charset.forName(charset));
+    }
+
+    /**
+     * byte 转字符串
+     * @param bytes
+     * @param charset
+     * @return
+     */
+    public static String str(byte[] bytes, String charset) {
+        return str(bytes, Charset.forName(charset));
+    }
+
+    public static String str(byte[] data, Charset charset) {
+        if (data == null) {
+            return null;
+        }
+
+        if (null == charset) {
+            return new String(data);
+        }
+        return new String(data, charset);
+    }
+
+    /**
+     * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串<br>
+     * 字符填充于字符串前
+     *
+     * @param str        被填充的字符串
+     * @param filledChar 填充的字符
+     * @param len        填充长度
+     * @return 填充后的字符串
+     * @since 3.1.2
+     */
+    public static String fillBefore(String str, char filledChar, int len) {
+        return fill(str, filledChar, len, true);
+    }
+    /**
+     * 将已有字符串填充为规定长度，如果已有字符串超过这个长度则返回这个字符串
+     *
+     * @param str        被填充的字符串
+     * @param filledChar 填充的字符
+     * @param len        填充长度
+     * @param isPre      是否填充在前
+     * @return 填充后的字符串
+     * @since 3.1.2
+     */
+    public static String fill(String str, char filledChar, int len, boolean isPre) {
+        final int strLen = str.length();
+        if (strLen > len) {
+            return str;
+        }
+
+        String filledStr = StrUtils.repeat(filledChar, len - strLen);
+        return isPre ? filledStr.concat(str) : str.concat(filledStr);
+    }
+    /**
+     * 字符串常量：空字符串 {@code ""}
+     */
+    public static final String EMPTY = "";
+    /**
+     * 重复某个字符
+     *
+     * <pre>
+     * StrUtil.repeat('e', 0)  = ""
+     * StrUtil.repeat('e', 3)  = "eee"
+     * StrUtil.repeat('e', -2) = ""
+     * </pre>
+     *
+     * @param c     被重复的字符
+     * @param count 重复的数目，如果小于等于0则返回""
+     * @return 重复字符字符串
+     */
+    public static String repeat(char c, int count) {
+        if (count <= 0) {
+            return EMPTY;
+        }
+
+        char[] result = new char[count];
+        for (int i = 0; i < count; i++) {
+            result[i] = c;
+        }
+        return new String(result);
+    }
+
 }

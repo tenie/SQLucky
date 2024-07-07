@@ -18,6 +18,16 @@
 	
 <dependencies>
 	<dependency>
+		<groupId>cn.hutool</groupId>
+		<artifactId>hutool-all</artifactId>
+		<version>5.8.29</version>
+	</dependency>
+	<!-- jasypt 加密解密库 -->
+	<dependency>
+		<groupId>org.jasypt</groupId>
+		<artifactId>jasypt</artifactId>
+	</dependency>
+	<dependency>
 		<groupId>org.yaml</groupId>
 		<artifactId>snakeyaml</artifactId>
 	</dependency>

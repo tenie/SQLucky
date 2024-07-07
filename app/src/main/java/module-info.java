@@ -11,7 +11,9 @@ open module SQLucky.app {
 	requires java.xml;
     requires java.sql;
     requires java.sql.rowset;
-    
+
+	requires jasypt;
+	requires cn.hutool;
 	requires javafx.base;
 	requires javafx.graphics;
     requires javafx.controls;
