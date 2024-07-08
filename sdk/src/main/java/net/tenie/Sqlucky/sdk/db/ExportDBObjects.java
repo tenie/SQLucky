@@ -95,7 +95,7 @@ public abstract class ExportDBObjects {
 		String tmpsql = sql.toLowerCase();
 
 		String sqlTmp2 = StrUtils.cleanrRedundantBlank(tmpsql);
-	    boolean tf = StrUtils.hasKeyWord(sqlTmp2,"limit ");
+	    boolean tf = StrUtils.hasKeyWord(sqlTmp2,"limit");
 		if(tf){
 			return sql;
 		}else {

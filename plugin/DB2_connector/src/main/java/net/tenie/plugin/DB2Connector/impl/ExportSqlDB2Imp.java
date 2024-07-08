@@ -478,7 +478,7 @@ public class ExportSqlDB2Imp extends ExportDBObjects {
 			boolean tf3 = StrUtils.hasKeyWord(sqlTmp2,"WITH RS");
 			boolean tf4 = StrUtils.hasKeyWord(sqlTmp2,"WITH RR");
 			if(tf1 || tf2 || tf3 || tf4){
-				int idxWith =  sqlTmp.lastIndexOf(" WITH ");
+				int idxWith =  sqlTmp.lastIndexOf("WITH");
 				String sql1 = sql.substring(0, idxWith );
 				String sql2 = sql.substring(idxWith );
 				limitSql = String.format("%s FETCH FIRST %d ROWS ONLY %s ", sql1, limit, sql2);
