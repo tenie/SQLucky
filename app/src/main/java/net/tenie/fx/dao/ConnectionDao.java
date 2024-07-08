@@ -44,7 +44,7 @@ public class ConnectionDao {
 		}
 	}
 
-//	更新节点的
+    // 更新节点的顺序
 	public static void refreshConnOrder() {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
