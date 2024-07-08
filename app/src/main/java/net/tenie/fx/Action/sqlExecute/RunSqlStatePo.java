@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.db.ProcedureFieldPo;
+import net.tenie.Sqlucky.sdk.po.db.SqlData;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 public class RunSqlStatePo {
@@ -25,6 +26,10 @@ public class RunSqlStatePo {
 	private Long statusKey;
 	// 查询限制行数
 	private Integer selectLimit;
+
+	// 要执行的sqls
+	private List<SqlData> allsqls;
+
 
 	public RunSqlStatePo(String sql, SqluckyConnector sqlConn) {
 		this.sqlStr = sql;
@@ -172,5 +177,13 @@ public class RunSqlStatePo {
 
 	public void setSelectLimit(Integer selectLimit) {
 		this.selectLimit = selectLimit;
+	}
+
+	public List<SqlData> getAllsqls() {
+		return allsqls;
+	}
+
+	public void setAllsqls(List<SqlData> allsqls) {
+		this.allsqls = allsqls;
 	}
 }

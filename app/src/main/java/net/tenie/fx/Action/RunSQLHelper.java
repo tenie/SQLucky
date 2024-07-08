@@ -89,36 +89,15 @@ public class RunSQLHelper {
 			}
 			// 等待加载动画
 			SdkComponent.addWaitingPane(state.getTidx(), state.getIsRefresh());
-			List<SqlData> allsqls = new ArrayList<>();
-
-			// 获取sql 语句
-			String sqlstr = state.getSqlStr();
-			// 执行创建存储过程函数, 触发器等
-			if (state.getIsCreateFunc()) {
-				if (StrUtils.isNotNullOrEmpty(sqlstr)) {
-					SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
-					allsqls.add(sq);
-				} else {
-					String str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-					SqlData sq = new SqlData(str, 0, str.length());
-					allsqls.add(sq);
-				}
-				// 执行传入的sql, 非界面上的sql
-			} else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
-				allsqls = SqluckyAppDB.epurateSql(sqlstr);
-			} else {
-				// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
-				allsqls = SqluckyAppDB.willExecSql( ! state.getIsCurrentLine());
-			}
 			// 执行sql SqluckyConnector
 			tmpSqlConn = state.getSqlConn();
-			var rsVal = execSqlList(allsqls, tmpSqlConn, state);
-
+			var rsVal = execSqlList(tmpSqlConn, state);
 			// 执行sql的状态保存
 			if (state.getStatusKey() != null) {
 				RUN_STATUS.put(state.getStatusKey(), rsVal);
-
 			}
+
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			if( ! thread.isInterrupted()){
@@ -140,10 +119,10 @@ public class RunSQLHelper {
 	}
 
 	// 执行查询sql 并拼装成一个表, 多个sql生成多个表
-	private static Integer execSqlList(List<SqlData> allsqls, SqluckyConnector sqluckyConn, RunSqlStatePo state) {
+	private static Integer execSqlList( SqluckyConnector sqluckyConn, RunSqlStatePo state) {
 		int rsVal = 1;
 		String execSql;
-	
+		List<SqlData> allsqls = state.getAllsqls();
 		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		List<SqlData> errObj = new ArrayList<>();
@@ -240,8 +219,39 @@ public class RunSQLHelper {
 	}
 
 	// 在子线程执行 运行sql 的任务
-	public static Thread createThread(Consumer<RunSqlStatePo> action, RunSqlStatePo state) {
-		return new Thread() {
+	public static void createThread(Consumer<RunSqlStatePo> action, RunSqlStatePo state) {
+		// 获取要执行的sql
+		List<SqlData> allsqls = new ArrayList<>();
+
+		// 获取sql 语句
+		String sqlstr = state.getSqlStr();
+		// 执行创建存储过程函数, 触发器等
+		if (state.getIsCreateFunc()) {
+			if (StrUtils.isNotNullOrEmpty(sqlstr)) {
+				SqlData sq = new SqlData(sqlstr, 0, sqlstr.length());
+				allsqls.add(sq);
+			} else {
+				String str = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
+				SqlData sq = new SqlData(str, 0, str.length());
+				allsqls.add(sq);
+			}
+			// 执行传入的sql, 非界面上的sql
+		} else if (StrUtils.isNotNullOrEmpty(sqlstr)) { // 执行指定sql
+			allsqls = SqluckyAppDB.epurateSql(sqlstr);
+		} else {
+			// 获取将要执行的sql 语句 , 如果有选中就获取选中的sql
+			allsqls = SqluckyAppDB.willExecSql( ! state.getIsCurrentLine());
+		}
+		// 执行多行sql, 进行确认
+		if(allsqls.size()>1){
+			boolean tf = MyAlert.myConfirmationShowAndWait("执行"+allsqls.size()+ "条SQL?");
+			if (!tf){
+				return;
+			}
+		}
+		state.setAllsqls(allsqls);
+
+		Thread th=  new Thread() {
 			@Override
 			public void run() {
 				logger.info("线程启动了" + this.getName());
@@ -249,6 +259,7 @@ public class RunSQLHelper {
 				logger.info("线程结束了" + this.getName());
 			}
 		};
+		th.start();
 	}
 
 	// 设置 按钮状态
@@ -299,8 +310,7 @@ public class RunSQLHelper {
 		state.setIsLock(isLockv);
 		state.setStatusKey(statusKey);
 
-		thread = createThread(RunSQLHelper::runMain, state);
-		thread.start();
+		createThread(RunSQLHelper::runMain, state);
 		return statusKey;
 	}
 
@@ -334,8 +344,7 @@ public class RunSQLHelper {
 		state.setIsCallFunc(true);
 		state.setCallProcedureFields(fields);
 
-		thread = createThread(RunSQLHelper::runMain, state);
-		thread.start();
+		createThread(RunSQLHelper::runMain, state);
 	}
 
 	//
@@ -397,8 +406,7 @@ public class RunSQLHelper {
 
 		state.setIsCreateFunc(isCreateFunc);
 
-		thread = createThread(RunSQLHelper::runMain, state);
-		thread.start();
+		createThread(RunSQLHelper::runMain, state);
 	}
 
 	/**
@@ -424,8 +432,7 @@ public class RunSQLHelper {
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsCreateFunc(isCreateFunc);
 
-		thread = createThread(RunSQLHelper::runMain, state);
-		thread.start();
+		createThread(RunSQLHelper::runMain, state);
 	}
 
 	/**
@@ -445,8 +452,7 @@ public class RunSQLHelper {
 			e.printStackTrace();
 			return;
 		}
-		thread = createThread(RunSQLHelper::runMain, state);
-		thread.start();
+		createThread(RunSQLHelper::runMain, state);
 	}
 
 
@@ -472,8 +478,7 @@ public class RunSQLHelper {
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setIsRefresh(true);
 		state.setSelectLimit(limit);
-		thread = createThread(RunSQLHelper::runMain, state);
-		thread.start();
+		createThread(RunSQLHelper::runMain, state);
 	}
 
 	// stop 入口
