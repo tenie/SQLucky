@@ -21,6 +21,9 @@
 	-fx-padding: 5px;
 }
 
+.bottomPadding3{
+	-fx-padding: 0px 0px 3px 0px;
+}
 .topPadding5{ 
 	-fx-padding: 5px 0px 5px 0px;
 }

@@ -44,6 +44,8 @@ public abstract  class SqluckyEditor  extends VBox  {
         this.getChildren().add(vp);
         VBox.setVgrow(vp, Priority.ALWAYS);
         this.getStyleClass().add("my-tag");
+
+        this.codeArea.getStyleClass().add("bottomPadding3");
     }
     public void initCodeArea(String text, boolean editable){
         if (text != null) {
