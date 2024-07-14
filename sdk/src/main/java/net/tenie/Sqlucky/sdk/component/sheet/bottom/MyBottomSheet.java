@@ -258,29 +258,6 @@ public class MyBottomSheet extends  Tab{
 		this.show();
 	}
 
-	// 视图dll
-	public static MyBottomSheet showViewDDLSheet(SqluckyConnector sqluckyConn, TablePo table) {
-		String name = table.getTableName();
-		var mtb = new MyBottomSheet(name);
-		mtb.setDDL(true);
-		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-		String ddl = table.getDdl();
-		sqlArea.initCodeArea(ddl, false);
-		// 表格上面的按钮
-		List<Node> btnLs = new ArrayList<>();
-		JFXButton sbtn = createSelectBtn(sqluckyConn, table.getTableSchema(), name);
-		btnLs.add(sbtn);
-		// 锁定按钮
-		mtb.tableData.setLock(true);
-		mtb.operatePane(btnLs);
-		mtb.tabVBoxAddComponentView(sqlArea);
-		VBox.setVgrow(sqlArea, Priority.ALWAYS);
-
-		mtb.show();
-		sqlArea.getCodeArea().showFindReplaceTextBox(false, "");
-		return mtb;
-	}
-
 	/**
 	 * 数据库对象的ddl语句, 非表, 视图
 	 * 
@@ -301,28 +278,6 @@ public class MyBottomSheet extends  Tab{
 		mtb.show();
 		return mtb;
 
-	}
-
-	// 双击treeview 表格节点, 显示表信息
-	public static MyBottomSheet showTableInfoSheet(SqluckyConnector sqluckyConn, TablePo table) {
-		String name = table.getTableName();
-		var mtb = new MyBottomSheet(name);
-		mtb.setDDL(true);
-		SqluckyEditor sqlArea = ComponentGetter.appComponent.createCodeArea();
-		String ddl = table.getDdl();
-		sqlArea.initCodeArea(ddl, false);
-
-		// 表格上面的按钮
-		List<Node> btnLs = mtb.tableDDLOptionBtns(sqluckyConn, sqlArea, table);
-		// 锁定按钮
-		mtb.tableData.setLock(true);
-		mtb.operatePane(btnLs);
-		mtb.tabVBoxAddComponentView(sqlArea);
-		VBox.setVgrow(sqlArea, Priority.ALWAYS);
-
-		mtb.show();
-		sqlArea.getCodeArea().showFindReplaceTextBox(false, "");
-		return mtb;
 	}
 
 	/**
@@ -420,7 +375,7 @@ public class MyBottomSheet extends  Tab{
 		List<Node> ls = new ArrayList<>();
 		VBox  vb = this.getTabVBox();
 		// 查询按钮
-		JFXButton selectBtn = createSelectBtn(sqluckyConn, table.getTableSchema(), name);
+		JFXButton selectBtn = MyBottomSheetUtility.createSelectBtn(sqluckyConn, table.getTableSchema(), name);
 
 		ls.add(selectBtn);
 
@@ -466,58 +421,7 @@ public class MyBottomSheet extends  Tab{
 			showIndexBtn.setDisable(false);
 		});
 		ls.add(showFKBtn);
-		// TODO 导入
-//		MenuButton importFileBtn = new MenuButton();
-//		importFileBtn.setGraphic(IconGenerator.svgImageDefActive("bootstrap-save-file"));
-//		importFileBtn.setTooltip(MyTooltipTool.instance("Import data"));
-//
-//		MenuItem excelImportBtn = new MenuItem("Import Excel");
-//		excelImportBtn.setGraphic(IconGenerator.svgImageDefActive("EXCEL"));
-//		excelImportBtn.setOnAction(e -> {
-//			ImportExcelWindow.showWindow(this.getTableData().getTabName(), this.getTableData().getConnName());
-//
-//		});
-//
-//		MenuItem csvImportBtn = new MenuItem("Import CSV");
-//		csvImportBtn.setGraphic(IconGenerator.svgImageDefActive("CSV"));
-//		csvImportBtn.setOnAction(e -> {
-//			ImportCsvWindow.showWindow(this.getTableData().getTabName(), this.getTableData().getConnName());
-//
-//		});
-//
-//		MenuItem sqlImportBtn = new MenuItem("Import Sql File");
-//		sqlImportBtn.setGraphic(IconGenerator.svgImageDefActive("SQL"));
-//		sqlImportBtn.setOnAction(e -> {
-//			ImportSQLWindow.showWindow(this.getTableData().getTabName(), this.getTableData().getConnName());
-//
-//		});
-//
-//		importFileBtn.getItems().addAll(excelImportBtn, csvImportBtn, sqlImportBtn);
-//		ls.add(importFileBtn);
-
 		return ls;
-	}
-
-	// 创建查询按钮
-	public static JFXButton createSelectBtn(SqluckyConnector sqluckyConn, String schemaName, String tableName) {
-		// 查询按钮
-		JFXButton selectBtn = new JFXButton();
-		selectBtn.setGraphic(IconGenerator.svgImageDefActive("windows-magnify-browse"));
-		String sqlstr = sqluckyConn.getExportDDL().select20(schemaName, tableName);;
-		selectBtn.setTooltip(MyTooltipTool.instance("Run SQL: " +sqlstr));
-		selectBtn.setOnAction(e -> {
-
-//			if (StrUtils.isNotNullOrEmpty(schemaName)) {
-//				sqlstr = "SELECT * FROM " + schemaName + "." + tableName;
-//			} else {
-//				sqlstr = "SELECT * FROM " + tableName;
-//			}
-
-			ComponentGetter.appComponent.runSelectSqlLockTabPane(sqluckyConn, sqlstr, 20);
-
-		});
-
-		return selectBtn;
 	}
 
 	/**

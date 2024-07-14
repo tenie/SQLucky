@@ -1,22 +1,21 @@
 package net.tenie.Sqlucky.sdk.po.component;
 
-import java.util.function.Consumer;
-
-import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetAction;
-import org.controlsfx.control.tableview2.FilteredTableView;
-
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetAction;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.db.ResultSetCellPo;
 import net.tenie.Sqlucky.sdk.db.ResultSetRowPo;
 import net.tenie.Sqlucky.sdk.po.RsVal;
 import net.tenie.Sqlucky.sdk.po.SheetDataValue;
 import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
-//import net.tenie.Sqlucky.sdk.subwindow.ModalDialog;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import org.controlsfx.control.tableview2.FilteredTableView;
+
+import java.util.function.Consumer;
 
 public class DataTableContextMenuAction {
 
@@ -27,6 +26,7 @@ public class DataTableContextMenuAction {
 			// 要被执行的函数
 			Consumer<String> caller = x -> {
 				AppCommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
+				MyBottomSheetUtility.showSqlSheet("Drop Column DDL",  rv.sql, true);
 			};
 //			ModalDialog.showComfirmExec("Confirm drop!", "Execute Sql: " + rv.sql + " ?", caller);
 			MyAlert.myConfirmation("Execute Sql: \n" + rv.sql + " ?", caller);
@@ -42,6 +42,7 @@ public class DataTableContextMenuAction {
 			String str = colname + " " + x;
 			RsVal rv = AppCommonAction.exportSQL(myBottomSheet, AppCommonAction.ALTER_COLUMN, str);
 			AppCommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
+			MyBottomSheetUtility.showSqlSheet("Alter Column DDL",  rv.sql, true);
 		};
 		DialogTools.showExecWindow("Alter " + colname + " Date Type: input words like 'CHAR(10) ", "", caller);
 

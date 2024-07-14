@@ -1,16 +1,15 @@
 package net.tenie.Sqlucky.sdk.utility;
 
-import java.util.List;
-
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
-
-import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetUtility;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.db.DBOptionHelper;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
+
+import java.util.List;
 
 public class TreeObjAction {
     /**
@@ -49,9 +48,9 @@ public class TreeObjAction {
         }
 
         if (type.equals(CommonConst.TYPE_TABLE)) {
-            MyBottomSheet.showTableInfoSheet(sqluckyConn, table);
+            MyBottomSheetUtility.showTableInfoSheet(sqluckyConn, table);
         } else if (type.equals(CommonConst.TYPE_VIEW)) {
-            MyBottomSheet.showViewDDLSheet(sqluckyConn, table);
+            MyBottomSheetUtility.showViewDDLSheet(sqluckyConn, table);
 
         }
 

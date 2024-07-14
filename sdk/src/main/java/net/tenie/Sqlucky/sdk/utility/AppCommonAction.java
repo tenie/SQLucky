@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetUtility;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -576,15 +577,17 @@ public class AppCommonAction {
         try {
             // 获取当前表中的信息: 连接, 表面, schema, ExportDDL类, 然后导出drop语句
             String sql = "";
+            String tableName = rv.tableName.trim();
+            String schemaName = rv.dbconnPo.getDefaultSchema().trim();
+            if(tableName.contains(schemaName+".")){
+                tableName = tableName.substring(schemaName.length() + 1);
+            }
             if (DROP_COLUMN == ty) {
-                sql = rv.dbconnPo.getExportDDL().exportAlterTableDropColumn(rv.conn, rv.dbconnPo.getDefaultSchema(),
-                        rv.tableName, colname);
+                sql = rv.dbconnPo.getExportDDL().exportAlterTableDropColumn(rv.conn, schemaName, tableName, colname);
             } else if (ALTER_COLUMN == ty) {
-                sql = rv.dbconnPo.getExportDDL().exportAlterTableModifyColumn(rv.conn, rv.dbconnPo.getDefaultSchema(),
-                        rv.tableName, colname);
+                sql = rv.dbconnPo.getExportDDL().exportAlterTableModifyColumn(rv.conn, schemaName, tableName, colname);
             } else if (ADD_COLUMN == ty) {
-                sql = rv.dbconnPo.getExportDDL().exportAlterTableAddColumn(rv.conn, rv.dbconnPo.getDefaultSchema(),
-                        rv.tableName, colname);
+                sql = rv.dbconnPo.getExportDDL().exportAlterTableAddColumn(rv.conn, schemaName, tableName, colname);
             }
 
             rv.sql = sql;
@@ -609,6 +612,7 @@ public class AppCommonAction {
                 return;
             RsVal rv2 = exportSQL(myBottomSheet, ADD_COLUMN, x);
             AppCommonAction.execExportSql(rv2.sql, rv2.conn, rv.dbconnPo);
+            MyBottomSheetUtility.showSqlSheet("Add Column DDL",  rv2.sql, true);
         };
         DialogTools.showExecWindow(rv.tableName + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
 
