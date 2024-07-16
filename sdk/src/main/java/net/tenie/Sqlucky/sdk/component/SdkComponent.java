@@ -362,43 +362,53 @@ public class SdkComponent {
 	public static void deleteEmptyTab(TabPane dataTab) {
 		// 判断是否已经到达最大tab显示页面
 		// 删除旧的 tab
-		List<Tab> ls = new ArrayList<>();
-		List<MyBottomSheet> ls2 = new ArrayList<>();
-		for (int i = 0; i < dataTab.getTabs().size(); i++) {
+		List<Tab> tabList = new ArrayList<>();
+		List<MyBottomSheet> myBottomSheetList = new ArrayList<>();
+		int tabSize = dataTab.getTabs().size();
+
+		// 配置了底部tab缓存个数, 进行比较
+		if( ConfigVal.cacheBottomTab  > 0 ){
+			if( tabSize < (ConfigVal.cacheBottomTab + 1) ) return;
+		}
+
+
+		for (int i = 0; i < tabSize; i++) {
 			Tab tab = dataTab.getTabs().get(i);
-			if( tab instanceof  MyBottomSheet nd){
-				if (nd == null) continue;
-				Boolean tf = nd.getTableData().isLock();
+			if( tab instanceof  MyBottomSheet myBottomSheet){
+				if (myBottomSheet == null) continue;
+				Boolean tf = myBottomSheet.getTableData().isLock();
 				if (tf != null && tf) {
 					logger.info("lock  ");
 				} else {
-					ls.add(tab);
-					ls2.add(nd);
+					tabList.add(tab);
+					myBottomSheetList.add(myBottomSheet);
+					if( ConfigVal.cacheBottomTab  > 0){
+						break;
+					}
 				}
 			}
-
 		}
 
-		if (ls.size() > 0) {
+		if (tabList.size() > 0) {
 			Platform.runLater(() -> {
-				ls.forEach(nd -> {
+				tabList.forEach(nd -> {
 					nd.setUserData(null);
 					nd.setContent(null);
 					dataTab.getTabs().remove(nd);
 				});
 //				System.gc();
-				ls.clear();
+				tabList.clear();
 //				MyOption.gc(SdkComponent.class, "deleteEmptyTab");
 
 			});
 		}
 
-		if (ls2.size() > 0) {
+		if (myBottomSheetList.size() > 0) {
 			Platform.runLater(() -> {
-				ls2.forEach(nd -> {
+				myBottomSheetList.forEach(nd -> {
 					nd.clean();
 				});
-				ls2.clear();
+				myBottomSheetList.clear();
 			});
 
 		}
