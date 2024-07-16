@@ -12,7 +12,8 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
 /*   @author tenie */
 public class ConfigVal {
-	public static String textLogo = "\n\n" + "███████╗ ██████╗ ██╗     ██╗   ██╗ ██████╗██╗  ██╗██╗   ██╗\n"
+	public static String textLogo = "\n\n"
+			+ "███████╗ ██████╗ ██╗     ██╗   ██╗ ██████╗██╗  ██╗██╗   ██╗\n"
 			+ "██╔════╝██╔═══██╗██║     ██║   ██║██╔════╝██║ ██╔╝╚██╗ ██╔╝\n"
 			+ "███████╗██║   ██║██║     ██║   ██║██║     █████╔╝  ╚████╔╝ \n"
 			+ "╚════██║██║▄▄ ██║██║     ██║   ██║██║     ██╔═██╗   ╚██╔╝  \n"
@@ -50,6 +51,8 @@ public class ConfigVal {
 	public static int pageSize = -1;
 	// sql 查询获取最大行
 	public static int MaxRows = 1000;
+	// 底部tab 保留个数
+	public static int cacheBottomTab = 10;
 
 	// sql txt area tag
 	public static String SQL_AREA_TAG = "code";
