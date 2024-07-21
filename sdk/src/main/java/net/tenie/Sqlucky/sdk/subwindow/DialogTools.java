@@ -23,6 +23,7 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class DialogTools {
     private static Logger logger = LogManager.getLogger(DialogTools.class);
@@ -171,6 +173,98 @@ public class DialogTools {
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.setScene(scene);
         DialogTools.setSceneAndShow(scene, stage, false);
+    }
+
+    // 修改(增加,更新数据)表字段时 显示 dll 窗口
+    public static void showDllExecWindow(String title, String containTxt, Function<String, String> sqlFunc, Consumer<String> caller) {
+        TextField tf1 = new TextField("");
+        tf1.getStyleClass().add("myFindTextField");
+        tf1.setEditable(true);
+        tf1.setPrefWidth(500);
+        tf1.setText(containTxt);
+        tf1.setPrefHeight(40);
+        tf1.setFocusTraversable(true);
+
+        String ddl = sqlFunc.apply(" ? ");
+        Label execText = new Label(ddl);
+
+        Label tit = new Label(title);
+
+
+
+        Stage stage = new Stage();
+
+        JFXButton btn = new JFXButton("Cancel");
+        btn.getStyleClass().add("myAlertBtn");
+        btn.setOnAction(value -> {
+            stage.close();
+        });
+
+        JFXButton okbtn = new JFXButton("OK");
+        okbtn.getStyleClass().add("myAlertOkBtn");
+        okbtn.setOnAction(value -> {
+            String val = tf1.getText();
+            caller.accept(val);
+            stage.close();
+        });
+
+        JFXButton copyBtn = new JFXButton("Copy SQL");
+        copyBtn.setDisable(true);
+        copyBtn.getStyleClass().add("myAlertOkBtn");
+        copyBtn.setOnAction(value -> {
+           String sql = tf1.getText();
+           if(StrUtils.isNotNullOrEmpty(sql)){
+               CommonUtils.setClipboardVal(  execText.getText());
+           }
+        });
+
+        tf1.textProperty().addListener((a,b,c)->{
+            if(StrUtils.isNotNullOrEmpty(c)){
+                execText.setText(sqlFunc.apply(c));
+                copyBtn.setDisable(false);
+            }else {
+                execText.setText(ddl);
+                copyBtn.setDisable(true);
+            }
+        });
+
+        List<Node> nds = new ArrayList<>();
+        nds.add(tit);
+        nds.add(tf1);
+        nds.add(execText);
+
+        List<Node> btns = new ArrayList<>();
+        btns.add(copyBtn);
+        btns.add(btn);
+        btns.add(okbtn);
+
+
+        VBox vb = DialogTools.getSceneVbox(stage, ComponentGetter.INFO, nds, btns);
+        Scene scene = new Scene(vb);
+        stage.setOnShowing(e -> {
+            tf1.requestFocus();
+        });
+        stage.setTitle(title);
+        stage.setScene(scene);
+
+        stage.setMaximized(false);
+        stage.setResizable(false);
+        stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
+        CommonUtils.loadCss(scene);
+
+        KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
+        KeyCodeCombination enterbtn = new KeyCodeCombination(KeyCode.ENTER);
+        KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
+        scene.getAccelerators().put(escbtn, () -> {
+            stage.close();
+        });
+        scene.getAccelerators().put(enterbtn, () -> {
+            okbtn.fire();
+        });
+        scene.getAccelerators().put(spacebtn, () -> {
+            stage.close();
+        });
+        stage.show();
     }
 
     // TODO

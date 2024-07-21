@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetUtility;
 import org.apache.commons.io.FileUtils;
@@ -614,7 +615,14 @@ public class AppCommonAction {
             AppCommonAction.execExportSql(rv2.sql, rv2.conn, rv.dbconnPo);
             MyBottomSheetUtility.showSqlSheet("Add Column DDL",  rv2.sql, true);
         };
-        DialogTools.showExecWindow(rv.tableName + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
+        Function<String, String> sqlFunc = x -> {
+            if (StrUtils.isNullOrEmpty(x.trim()))
+                return "";
+            RsVal rv2 = exportSQL(myBottomSheet, ADD_COLUMN, x);
+            return rv2.sql;
+        };
+
+        DialogTools.showDllExecWindow(rv.tableName + " Add Column ", "",sqlFunc, caller);
 
     }
 
@@ -635,7 +643,14 @@ public class AppCommonAction {
             String sql = dbc.getExportDDL().exportAlterTableAddColumn(conn, schema, tablename, colname);
             AppCommonAction.execExportSql(sql, conn, dbc);
         };
-        DialogTools.showExecWindow(tablename + " add column : input words like 'MY_COL CHAR(10)'", "", caller);
+        Function<String, String> sqlFunc = x -> {
+            if (StrUtils.isNullOrEmpty(x.trim()))
+                return "'";
+            String colname = x.trim();
+            return  dbc.getExportDDL().exportAlterTableAddColumn(conn, schema, tablename, colname);
+        };
+
+        DialogTools.showDllExecWindow(tablename + " add column : input words like 'MY_COL CHAR(10)'", "", sqlFunc, caller);
 
     }
 

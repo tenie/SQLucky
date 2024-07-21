@@ -16,6 +16,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class DataTableContextMenuAction {
 
@@ -44,7 +45,17 @@ public class DataTableContextMenuAction {
 			AppCommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
 			MyBottomSheetUtility.showSqlSheet("Alter Column DDL",  rv.sql, true);
 		};
-		DialogTools.showExecWindow("Alter " + colname + " Date Type: input words like 'CHAR(10) ", "", caller);
+
+		Function<String, String> sqlFunc = x -> {
+			if (StrUtils.isNullOrEmpty(x.trim()))
+				return "";
+			String str = colname + " " + x;
+			RsVal rv = AppCommonAction.exportSQL(myBottomSheet, AppCommonAction.ALTER_COLUMN, str);
+			return rv.sql;
+		};
+
+
+		DialogTools.showDllExecWindow("Alter " + colname + " Date Type ", "", sqlFunc, caller);
 
 	}
 
@@ -58,7 +69,13 @@ public class DataTableContextMenuAction {
 			String strsql = sql + x;
 			AppCommonAction.execExportSql(strsql, rv.conn, rv.dbconnPo);
 		};
-		DialogTools.showExecWindow("Execute : " + sql + " ? : input your value", "", caller);
+
+		Function<String, String> sqlFunc = x -> {
+			if (StrUtils.isNullOrEmpty(x.trim()))
+				return "";
+			return sql + x;
+		};
+		DialogTools.showDllExecWindow("Execute : " + sql + " ? : input your value", "", sqlFunc, caller);
 
 	}
 
@@ -70,8 +87,14 @@ public class DataTableContextMenuAction {
 				return;
 			updateAllColumn(myBottomSheet, colIdx, x);
 		};
-		DialogTools.showExecWindow(
-				"Execute : Update Current " + rv.tableName + " Column :" + colname + " data ? : input your value", "",
+		String sql =  " SET " + colname + " = ";
+		Function<String, String> sqlFunc = x -> {
+			if (StrUtils.isNullOrEmpty(x.trim()))
+				return "";
+			return sql + x;
+		};
+		DialogTools.showDllExecWindow(
+				"Execute : Update Current " + rv.tableName + " Column :" + colname + " data ? : input your value", "",sqlFunc,
 				caller);
 	}
 
@@ -83,8 +106,14 @@ public class DataTableContextMenuAction {
 				return;
 			updateSelectedDataColumn(myBottomSheet, colIdx, x);
 		};
-		DialogTools.showExecWindow(
-				"Execute : Update Selected " + rv.tableName + " Column :" + colname + " data ? : input your value", "",
+		String sql =  " SET " + colname + " = ";
+		Function<String, String> sqlFunc = x -> {
+			if (StrUtils.isNullOrEmpty(x.trim()))
+				return "";
+			return sql + x;
+		};
+		DialogTools.showDllExecWindow(
+				"Execute : Update Selected " + rv.tableName + " Column :" + colname + " data ? : input your value", "",sqlFunc,
 				caller);
 
 	}
