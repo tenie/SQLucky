@@ -8,6 +8,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 时间转换
@@ -15,6 +16,8 @@ import java.util.Date;
  * @author tenie
  */
 public class DateUtils {
+    public static SimpleDateFormat usSdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
+
 
     public static Date asDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
@@ -57,6 +60,20 @@ public class DateUtils {
     public static String dateToStr(Date d, String formate) {
         SimpleDateFormat sdf = new SimpleDateFormat(formate);
         return sdf.format(d);
+    }
+
+    // us格式转换 Tue Jul 23 23:06:51 CST 2024
+    public static String usDateStrToStrL(String usDateStr) {
+        Date d = null;
+        try {
+            d = usSdf.parse(usDateStr);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        if (d != null){
+            return StrUtils.sdf_DateTime.format(d);
+        }
+        return "";
     }
 
     // 返回一个时间字符串, 可用于文件名的一部分
