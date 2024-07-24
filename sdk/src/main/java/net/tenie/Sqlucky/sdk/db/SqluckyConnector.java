@@ -230,10 +230,22 @@ public abstract class SqluckyConnector {
 	public abstract String dbRootNodeName();
 	public abstract String translateErrMsg(String errString);
 	public abstract Map<String, DbSchemaPo> getSchemas();
-	public abstract Connection getConn();
 	public abstract SqluckyConnector copyObj( String schema);
 	public abstract String getRealDefaultSchema();
 	public abstract String getJdbcUrl();
+
+	/**
+	 * 获取 Connection
+	 * @return
+	 */
+	public Connection getConn() {
+		if (getConnPo().getConn() == null) {
+			Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
+			var conn = dbinfo.getconn();
+			getConnPo().setConn(conn);
+		}
+		return getConnPo().getConn();
+	}
 	
 	/**
 	 * 设置最后一次使用时间, 避免超时被另一个线程释放掉

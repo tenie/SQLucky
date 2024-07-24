@@ -183,7 +183,6 @@ public class RunSQLHelper {
 					final String msgVal = msg;
 					Platform.runLater(() -> {
 						MyAlert.showNotifiaction(msgVal);
-//						TableViewUtils.rmWaitingPane(true);
 					});
 				} else {
 					// 显示字段是只读的
@@ -192,7 +191,6 @@ public class RunSQLHelper {
 					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.timeToStr(new Date())),
 							fls.get(0));
 					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fls.get(1));
-//					int endIdx = execSql.length() > 400 ? 400 : execSql.length();
 
 					String pressString = StrUtils.pressString(execSql);
 					ddlDmlpo.addData(row,
@@ -267,7 +265,6 @@ public class RunSQLHelper {
 		if (runbtn == null) {
 			runbtn = CommonButtons.runbtn;
 			otherbtn = CommonButtons.runFunPro;
-//			runLinebtn = CommonButtons.runLinebtn;
 		}
 		if (stopbtn == null) {
 			stopbtn = CommonButtons.stopbtn;
@@ -275,7 +272,6 @@ public class RunSQLHelper {
 
 		runbtn.setDisable(stopbtn.disabledProperty().getValue());
 		otherbtn.setDisable(stopbtn.disabledProperty().getValue());
-//		runLinebtn.setDisable(stopbtn.disabledProperty().getValue());
 		stopbtn.setDisable(!runbtn.disabledProperty().getValue());
 		ComponentGetter.connComboBox.setDisable(runbtn.disabledProperty().getValue());
 	}
@@ -347,7 +343,6 @@ public class RunSQLHelper {
 		createThread(RunSQLHelper::runMain, state);
 	}
 
-	//
 	public static void  runAction(){
 		String selectStr = MyEditorSheetHelper.getCurrentCodeAreaSQLSelectedText();
 		// 没有选中文本, 获取当前行sql是否合法, 合法执行当前行
@@ -424,6 +419,7 @@ public class RunSQLHelper {
 			} else if (connv.isClosed()) {
 				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
 			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;

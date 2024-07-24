@@ -144,26 +144,4 @@ public class Db2Connector extends SqluckyConnector {
 	}
 
 
-	@Override
-	public Connection getConn() {
-		 
-//		getConnPo().getConn()
-		if (getCacheConn() == null) {
-//			logger.info(this.connPo.getDriver());
-//			logger.info(getJdbcUrl());
-//			logger.info(this.connPo.getUser());
-//			logger.info(passWord);
-//			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
-//				conn = dbinfo.getconn();
-//			}else {
-				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
-				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
-//			}			
-		}
-
-		return getConnPo().getConn();
-
-	}
 }

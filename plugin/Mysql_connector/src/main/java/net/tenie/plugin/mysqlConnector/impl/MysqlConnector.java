@@ -146,26 +146,4 @@ public class MysqlConnector extends SqluckyConnector {
 		return  jdbcUrlstr;
 	}
 
-
-	@Override
-	public Connection getConn() {
-//		getConnPo().getConn()
-		if (getConnPo().getConn() == null) {
-//			logger.info(this.connPo.getDriver());
-//			logger.info(getJdbcUrl());
-//			logger.info(this.connPo.getUser());
-//			logger.info(passWord);
-//			if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//				Dbinfo dbinfo = new Dbinfo(getJdbcUrl());
-//				conn = dbinfo.getconn();
-//			}else {
-				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
-				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
-//			}			
-		}
-
-		return getConnPo().getConn();
-
-	}
 }

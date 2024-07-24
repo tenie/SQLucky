@@ -144,20 +144,4 @@ public class SqluckySqliteConnector extends SqluckyConnector {
 		
 		return  jdbcUrlstr;
 	}
-
-
-	@Override
-	public Connection getConn() {
-		if (getConnPo().getConn() == null) {
-				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
-				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
-		}
-		return getConnPo().getConn();
-	}
-
- 
-
- 
-
 }

@@ -23,7 +23,7 @@ public class ParseSQL {
 
 	public static int parseType(String sql) {
 		// 去除注释
-		String temp = StrUtils.trimAllComment(sql);
+		String temp = StrUtils.trimAllCommentToBlank(sql).trim();
 		// 去除开头的非 字母部分, 如 ( 
 		for(int i = 0; i < temp.length(); i++) {
 			if( Character.isAlphabetic( temp.charAt(i) )){
@@ -60,7 +60,7 @@ public class ParseSQL {
 
 	// 获取 表名
 	public static String tabName(String sql, int type) {
-		String temp = StrUtils.trimAllComment(sql);
+		String temp = StrUtils.trimAllCommentToBlank(sql);
 		temp = StrUtils.clearBlank(temp);
 		String val = "";
 		String key = "";

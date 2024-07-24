@@ -793,6 +793,7 @@ public class StrUtils {
      * @param textVal
      * @return
      */
+    @Deprecated
     public static String trimAllComment(String textVal) {
         List<IndexRange>  ls =  findAllComment(textVal);
         StringBuilder sb = new StringBuilder();
@@ -856,7 +857,7 @@ public class StrUtils {
             sb.replace(ir.getStart(), ir.getEnd(), str);
         }
 
-        return textVal;
+        return sb.toString();
     }
 
     /**
