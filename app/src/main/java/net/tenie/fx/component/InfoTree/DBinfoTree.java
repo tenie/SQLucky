@@ -529,7 +529,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 
 	// 根据链接名称,获取链接Node
 	public static TreeItem<TreeNodePo> getConnNode(String dbName) {
-//			TreeItem<TreeNodePo> conn =
 		TreeItem<TreeNodePo> root = AppWindow.treeView.getRoot();
 		// 遍历tree root 找到对于的数据库节点
 		for (TreeItem<TreeNodePo> connNode : root.getChildren()) {
@@ -561,7 +560,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 						}
 					}
 				}
-
 			}
 		}
 		return null;
@@ -578,7 +576,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 				}
 			}
 		}
-
 		return null;
 	}
 
@@ -588,13 +585,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 		return DBConns.get(connName);
 	}
 
-	// TitledPane
-//	public TitledPane dbInfoTitledPane(Pane treeBtnPane) {
-////		TitledPane dbTitledPane = new TitledPane();
-//
-//		return dbTitledPane;
-//	}
-
 	/**
 	 * 打开数据库链接
 	 * @param item
@@ -602,7 +592,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 	 */
 	public static void openConn(TreeItem<TreeNodePo> item, boolean silent) {
 		// 判断 节点是否已经有子节点
-		if (item.getChildren().size() == 0) {
+		if (item.getChildren().isEmpty()) {
 
 			Node nd = IconGenerator.svgImage("spinner", "red");
 			CommonUtils.rotateTransition(nd);
@@ -619,9 +609,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 						SqluckyConnector po = DBConns.get(connName);
 						po1 = po;
 						po1.setInitConnectionNodeStatus(true);
-
 						var conntmp = po1.getConn();
-//						if (po.isAlive()) {
 						if (conntmp != null) {
 							ConnItemContainer connItemContainer = new ConnItemContainer(po, item);
 							TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
@@ -635,32 +623,26 @@ public class DBinfoTree extends SqluckyTitledPane {
 							Platform.runLater(() -> {
 								if(! silent){
 									MyAlert.notification("Error", " Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !", MyAlert.NotificationType.Error);
-//									MyAlert.errorAlert(" Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
 								}
 								item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
 								AppWindow.treeView.refresh();
-
 							});
-
 						}
 					} catch (Exception e) {
-						e.printStackTrace();
 						logger.debug(e.getMessage());
 						Platform.runLater(() -> {
 							if(! silent){
-//								MyAlert.errorAlert(" Error !");
 								MyAlert.notification("Error", " Error !", MyAlert.NotificationType.Error);
-//
 							}
 							item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
 							AppWindow.treeView.refresh();
 						});
-
 					} finally {
 						DBConns.flushChoiceBoxGraphic();
-						po1.setInitConnectionNodeStatus(false);
-					}
-
+                        if (po1 != null) {
+                            po1.setInitConnectionNodeStatus(false);
+                        }
+                    }
 				}
 			};
 			t.start();
