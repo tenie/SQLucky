@@ -76,11 +76,13 @@ public class DataModelOperate {
 		queryFieldColWidth.put("FIELD", 200.0);
 		queryFieldColWidth.put("FIELD_NAME", 250.0);
 		queryFieldColWidth.put("COMMENT", 300.0);
+		queryFieldColWidth.put("MODEL_NAME", 180.0);
 
 		tableInfoColWidth.put("FIELD", 180.0);
 		tableInfoColWidth.put("NAME", 220.0);
 		tableInfoColWidth.put("COMMENT", 250.0);
 		tableInfoColWidth.put("PRIMARY_KEY", 80.0);
+		tableInfoColWidth.put("MODEL_NAME", 180.0);
 	}
 
 	// 存放模型名称 对于的所有表的集合
@@ -232,27 +234,36 @@ public class DataModelOperate {
 
 	// 通过字符串， 查询字段表
 	private void exeQueryTableFields(String queryStr) {
-		Long modelId = 0L;
-		String modelIds = "0";
-		ObservableList<TreeItem<DataModelTreeNodePo>> allmodels = DataModelTabTree.treeRoot.getChildren();
-        for (TreeItem<DataModelTreeNodePo> treeItem : allmodels) {
-			boolean activeModdel = treeItem.getValue().isActive();
-            // 模型激活状态有子节点才获取模型的ID
-//            if (!treeItem.getChildren().isEmpty()) {
-            if (activeModdel) {
-                DataModelTreeNodePo modelepo = treeItem.getValue();
-                modelId = modelepo.getModelId();
-                modelIds += "," + modelId;
-            }
-        }
+//		Long modelId = 0L;
+//		String modelIds = "0";
+//		ObservableList<TreeItem<DataModelTreeNodePo>> allmodels = DataModelTabTree.treeRoot.getChildren();
+//        for (TreeItem<DataModelTreeNodePo> treeItem : allmodels) {
+//			boolean activeModdel = treeItem.getValue().isActive();
+//            // 模型激活状态有子节点才获取模型的ID
+////            if (!treeItem.getChildren().isEmpty()) {
+//            if (activeModdel) {
+//                DataModelTreeNodePo modelepo = treeItem.getValue();
+//                modelId = modelepo.getModelId();
+//                modelIds += "," + modelId;
+//            }
+//        }
 
 		queryStr = queryStr.toUpperCase();
 
 		var SqluckyConn = SqluckyAppDB.getSqluckyConnector();
-		String sql = "SELECT b.DEF_KEY AS TABLE_NAME, a.DEF_KEY AS  FIELD,  a.DEF_NAME AS FIELD_NAME , a.COMMENT FROM DATA_MODEL_TABLE_FIELDS  a\n"
-				+ "left join DATA_MODEL_TABLE b on b.ITEM_ID = a.TABLE_ID\n" + "where b.MODEL_ID in ( " + modelIds
-				+ ") and ( a.DEF_KEY like '%" + queryStr + "%' or  a.DEF_NAME  like '%" + queryStr
-				+ "%' or a.COMMENT like '%" + queryStr + "%' )";
+		String sql = "SELECT " +
+				"b.DEF_KEY AS TABLE_NAME, " +
+				"a.DEF_KEY AS  FIELD,  " +
+				"a.DEF_NAME AS FIELD_NAME , " +
+				"a.COMMENT, " +
+				"c.NAME as MODEL_NAME \n" +
+				"FROM DATA_MODEL_TABLE_FIELDS  a\n"
+				+ "left join DATA_MODEL_TABLE b on b.ITEM_ID = a.TABLE_ID \n"
+				+ "left join DATA_MODEL_INFO c on b.MODEL_ID = c.id \n"
+				+ "where 1=1\n" +
+//				" and b.MODEL_ID in ( " + modelIds + ") " +
+				"and ( a.DEF_KEY like '%" + queryStr + "%' or  a.DEF_NAME  like '%" + queryStr + "%' " +
+				"   or a.COMMENT like '%" + queryStr + "%' )";
 		try {
 			// TODO
 			List<Node> btns = new ArrayList<>();
