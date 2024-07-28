@@ -321,7 +321,6 @@ public class DataModelUtility {
 		Region icon = null;
 		if (treeNode.getIsModel()) {
 			icon = IconGenerator.svgImageUnactive("database");
-			;
 			Region acIcon = IconGenerator.svgImage("database", "#7CFC00 ");
 			treeNode.setUnactiveIcon(icon);
 			treeNode.setActiveIcon(acIcon);
@@ -336,7 +335,7 @@ public class DataModelUtility {
 			@Override
 			public void onChanged(Change c) {
 				var list = c.getList();
-				if (list.size() > 0) {
+				if (!list.isEmpty()) {
 					treeNode.setActive(true);
 				}
 
