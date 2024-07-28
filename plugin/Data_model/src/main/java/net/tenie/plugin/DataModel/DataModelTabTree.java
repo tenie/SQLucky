@@ -102,7 +102,8 @@ public class DataModelTabTree extends SqluckyTitledPane{
 			TreeItem<DataModelTreeNodePo> treeNode = DataModelUtility.createItemNode(ndpo);
 			nodels.add(treeNode);
 		}
-		if (nodels.size() > 0) {
+		if (!nodels.isEmpty()) {
+			mdTreeNode.getValue().setActive(true);
 			Platform.runLater(() -> {
 				mdTreeNode.getChildren().clear();
 				mdTreeNode.getChildren().addAll(nodels);

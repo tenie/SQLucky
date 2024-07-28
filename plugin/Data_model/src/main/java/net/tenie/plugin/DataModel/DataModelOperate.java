@@ -181,12 +181,14 @@ public class DataModelOperate {
 	private void queryAction() {
 		String txtVal = txt.getText();
 		Platform.runLater(() -> {
-			if (StrUtils.isNotNullOrEmpty(txtVal)) {
+			String tmpValue = txtVal.trim();
+			if (StrUtils.isNotNullOrEmpty(tmpValue)) {
 				SdkComponent.addWaitingPane(-1);
 				try {
-					exeQueryTable(txtVal);
+
 					// 查询字段
-					exeQueryTableFields(txtVal);
+					exeQueryTableFields(tmpValue);
+					exeQueryTable(tmpValue);
 				} finally {
 					SdkComponent.rmWaitingPane();
 				}
@@ -234,8 +236,10 @@ public class DataModelOperate {
 		String modelIds = "0";
 		ObservableList<TreeItem<DataModelTreeNodePo>> allmodels = DataModelTabTree.treeRoot.getChildren();
         for (TreeItem<DataModelTreeNodePo> treeItem : allmodels) {
+			boolean activeModdel = treeItem.getValue().isActive();
             // 模型激活状态有子节点才获取模型的ID
-            if (!treeItem.getChildren().isEmpty()) {
+//            if (!treeItem.getChildren().isEmpty()) {
+            if (activeModdel) {
                 DataModelTreeNodePo modelepo = treeItem.getValue();
                 modelId = modelepo.getModelId();
                 modelIds += "," + modelId;
