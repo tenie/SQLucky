@@ -922,6 +922,7 @@ public class CommonUtils {
     // 左侧添加隐藏操作按钮/查询框
     public static void leftHideOrShowSecondOperateBox(Pane container, Node box, TextField txt) {
         if (container.getChildren().contains(box)) {
+            txt.clear();
             container.getChildren().remove(box);
 
         } else {

@@ -76,6 +76,16 @@ public class DataModelTabTree extends SqluckyTitledPane{
 		DataModelTreeView.setCellFactory(new DataModelNodeCellFactory());
 
 		optionPanel = new DataModelOperate(this);
+
+		// 设置查询插口的显示/隐藏
+		this.setShowFinder(s->{
+			CommonUtils.leftHideOrShowSecondOperateBox(optionPanel.getOptionVbox(), optionPanel.getFilterHbox(), optionPanel.getTxt());
+		});
+		this.setHideFinder(s->{
+			optionPanel.getTxt().clear();
+			CommonUtils.leftHideSecondOperateBox(optionPanel.getOptionVbox(), optionPanel.getFilterHbox());
+
+		});
 		btnsBox = optionPanel.getOptionVbox();
 
 		// 恢复上次的数据

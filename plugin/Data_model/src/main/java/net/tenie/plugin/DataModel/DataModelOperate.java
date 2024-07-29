@@ -99,13 +99,13 @@ public class DataModelOperate {
 			CommonUtils.leftHideOrShowSecondOperateBox(optionVbox, filterHbox, txt);
 
 		});
-		sqluckyTitledPane.setShowFinder(s->{
-			CommonUtils.leftHideOrShowSecondOperateBox(optionVbox, filterHbox, txt);
-		});
-		sqluckyTitledPane.setHideFinder(s->{
-			CommonUtils.leftHideSecondOperateBox(optionVbox, filterHbox);
-
-		});
+//		sqluckyTitledPane.setShowFinder(s->{
+//			CommonUtils.leftHideOrShowSecondOperateBox(optionVbox, filterHbox, txt);
+//		});
+//		sqluckyTitledPane.setHideFinder(s->{
+//			CommonUtils.leftHideSecondOperateBox(optionVbox, filterHbox);
+//
+//		});
 
 		queryExecBtn.setGraphic(ComponentGetter.getIconDefActive("search"));
 		queryExecBtn.setTooltip(CommonUtils.instanceTooltip("Search table & field info "));
@@ -278,7 +278,7 @@ public class DataModelOperate {
 			// 查询框
 			TextField textField = new TextField();
 			textField.getStyleClass().add("myTextField");
-			AnchorPane txtAP = UiTools.textFieldAddCleanBtn(textField);
+			AnchorPane txtAP = UiTools.textFieldAddCleanBtn(textField,200.0);
 			txtAP.setVisible(false);
 
 			JFXButton query = new JFXButton();
