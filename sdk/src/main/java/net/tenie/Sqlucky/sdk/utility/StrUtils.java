@@ -375,6 +375,24 @@ public class StrUtils {
         return str;
     }
 
+    /**
+     * 单词转为驼峰命名
+     * @param word
+     * @return
+     */
+    public static String wordUnderlineCaseCamel(String word) {
+        String newWord = underlineCaseCamel(word);
+        if(word.equals(newWord)){
+            return word.toLowerCase();
+        }
+        return newWord;
+    }
+
+    /**
+     * 字符串转为驼峰命名
+     * @param str
+     * @return
+     */
     public static String underlineCaseCamel(String str) {
         StringBuilder strVal = new StringBuilder();
         if(str.contains("_")){
@@ -1599,7 +1617,7 @@ public class StrUtils {
 
 
     public static String dbFieldStyleToJavaFieldStyle(String str) {
-        str = underlineCaseCamel(str);
+        str = wordUnderlineCaseCamel(str);
         return str;
     }
 
