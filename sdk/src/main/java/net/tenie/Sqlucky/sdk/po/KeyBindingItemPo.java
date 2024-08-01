@@ -16,6 +16,12 @@ public class KeyBindingItemPo {
 		this.Keys = Keys;
 	}
 
+	public KeyBindingItemPo(String ActionName, String Keys, MenuItem menuItem) {
+		this.ActionName = ActionName;
+		this.Keys = Keys;
+		this.menuItem = menuItem;
+	}
+
 	public String getActionName() {
 		return ActionName;
 	}
