@@ -10,6 +10,7 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.KeyBindingItemPo;
 import net.tenie.Sqlucky.sdk.po.db.KeysBindingPO;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 /**
  * 菜单按钮会缓存起来, 使用按钮的快捷键设置来设置全局的快捷键设置
@@ -94,13 +95,18 @@ public class KeyBindingCache {
 	 * @param menuItem
 	 */
 	public static void menuItemBinding(MenuItem menuItem) {
-		String menuText = menuItem.getText();
-		KeyBindingItemPo po = findByActionName(menuText.trim());
+		String menuText = menuItem.getText().trim();
+		KeyBindingItemPo po = findByActionName(menuText);
 		if (po != null) {
 			po.setMenuItem(menuItem);
 			String keyStr = po.getKeys();
 			keyStr = macKeyChange(keyStr);
-			menuItem.setAccelerator(KeyCombination.keyCombination(keyStr));
+			if(StrUtils.isNotNullOrEmpty(keyStr)){
+				menuItem.setAccelerator(KeyCombination.keyCombination(keyStr));
+			}
+		}else{
+			KeyBindingItemPo item = new KeyBindingItemPo(menuText,"", menuItem);
+			items.add(item);
 		}
 	}
 
