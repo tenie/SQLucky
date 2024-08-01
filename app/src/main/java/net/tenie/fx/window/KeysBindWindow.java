@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.tenie.Sqlucky.sdk.config.KeyBindingCache;
+import net.tenie.lib.db.h2.AppDao;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import com.jfoenix.controls.JFXButton;
@@ -57,6 +59,7 @@ public class KeysBindWindow {
 	}
 	// 设置按钮
 	JFXButton bindingBtn = new JFXButton("Binding");
+	JFXButton restoreBtn = new JFXButton("Restore Defaults");
 	SheetTableData sheetDaV = null;
 	FilteredTableView<ResultSetRowPo> allkeysTable = null;
 	ObservableList<ResultSetRowPo> items;
@@ -89,10 +92,19 @@ public class KeysBindWindow {
 		// 绑定按钮
 		bindingBtn.getStyleClass().add("myAlertBtn");
 		bindingBtn.setDisable(true);
+		// 重置按钮
+		restoreBtn.getStyleClass().add("myAlertBtn");
+		restoreBtn.setOnAction(e->{
+			AppDao.restoreShortcutKeys();
+			KeyBindingCache.rebingAllKey();
+			stage.close();
+		});
+
 
 		HBox bindingBox = new HBox();
-		bindingBox.getChildren().add(bindingBtn);
+		bindingBox.getChildren().addAll(bindingBtn, restoreBtn);
 		HBox.setMargin(bindingBtn, new Insets(10));
+		HBox.setMargin(restoreBtn, new Insets(10));
 
 		// 关闭按钮
 		JFXButton closeBtn = new JFXButton("Close");

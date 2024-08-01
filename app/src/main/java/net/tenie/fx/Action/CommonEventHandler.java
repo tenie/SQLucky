@@ -93,7 +93,7 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-				MyEditorSheetHelper.saveSqlAction();
+				MyEditorSheetHelper.saveSqlToFileAction();
 			}
 		};
 	}

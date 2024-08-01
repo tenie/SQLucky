@@ -121,13 +121,44 @@ public class KeyBindingCache {
 	/*
 	 * action 重新绑定快捷键
 	 */
-	public static void rebingdingKey(String ActionName, String key) {
-		KeyBindingItemPo po = findByActionName(ActionName);
+	public static void rebingdingKey(String actionName, String key) {
+		System.out.println("===========\n");
+		System.out.println(actionName);
+		System.out.println(key);
+		System.out.println("===========\n");
+		KeyBindingItemPo po = findByActionName(actionName);
 		key = macKeyChange(key);
 		po.setKeys(key);
 		var menuItem = po.getMenuItem();
 		menuItem.setAccelerator(KeyCombination.keyCombination(po.getKeys()));
+
 	}
+	/*
+	 * action 重新绑定所有快捷键
+	 */
+	public static void rebingAllKey() {
+		KeysBindingPO po = new KeysBindingPO();
+		var conn = SqluckyAppDB.getConn();
+		try {
+			List<KeysBindingPO> ls = PoDao.select(conn, po);
+			if (!ls.isEmpty()) {
+				for (KeysBindingPO poVal : ls) {
+					String actionName = poVal.getActionName();
+					String key = poVal.getBinding();
+					rebingdingKey(actionName, key);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+
+
+
+	}
+
+
 
 	static {
 		// 从数据库获取按键对应的函数名称
@@ -148,5 +179,6 @@ public class KeyBindingCache {
 		}
 
 	}
+
 
 }

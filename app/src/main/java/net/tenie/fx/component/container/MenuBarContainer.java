@@ -82,7 +82,7 @@ public class MenuBarContainer extends MenuBar{
 		Save.setOnAction(value -> {
 			// 保存sql文本到硬盘
 //			CommonAction.saveSqlAction();
-			MyEditorSheetHelper.saveSqlAction();
+			MyEditorSheetHelper.saveSqlToFileAction();
 		});
 
 		KeyBindingCache.menuItemBinding(Save);
@@ -123,8 +123,13 @@ public class MenuBarContainer extends MenuBar{
 //			MyAreaTab.addCodeEmptyTabMethod();
 			MyEditorSheetHelper.addEmptyHighLightingEditor();
 		});
+		MenuItem closeEditPage = new MenuItem(StrUtils.MenuItemNameFormat("Close Edit Page"));
+		closeEditPage.setOnAction(value -> {
+			AppCommonAction.closeEditPage();
+		});
 
-		MenuItem cce = new MenuItem(StrUtils.MenuItemNameFormat("Close Data Table"));
+
+		MenuItem cce = new MenuItem(StrUtils.MenuItemNameFormat("Close Data Table Page"));
 		cce.setOnAction(value -> {
 			AppCommonAction.closeDataTable();
 		});
@@ -243,8 +248,8 @@ public class MenuBarContainer extends MenuBar{
 			MyEditorSheetHelper.getActivationEditorSheet().getSqluckyEditor().delAnchorAfterString();
 		});
 		enditLine.getItems().addAll(delWord, delChar, delAllChar, delWordBackward, delCharBackward, delAllCharBackward);
-//runCurrentMenu ,
-		mn.getItems().addAll(runMenu,runCurrentMenu , codeAutocompletionMenu, nce, cce, new SeparatorMenuItem(), Find,
+
+		mn.getItems().addAll(runMenu,runCurrentMenu , codeAutocompletionMenu, nce, closeEditPage, cce, new SeparatorMenuItem(), Find,
 				FindReplace, new SeparatorMenuItem(), Format, unFormat, commentCode, new SeparatorMenuItem(), UpperCase,
 				LowerCase, underscore, Hump, new SeparatorMenuItem(), cursorMenu, enditLine);
 
@@ -254,6 +259,7 @@ public class MenuBarContainer extends MenuBar{
 		KeyBindingCache.menuItemBinding(codeAutocompletionMenu);
 
 		KeyBindingCache.menuItemBinding(nce);
+		KeyBindingCache.menuItemBinding(closeEditPage);
 		KeyBindingCache.menuItemBinding(cce);
 		KeyBindingCache.menuItemBinding(Find);
 		KeyBindingCache.menuItemBinding(FindReplace);

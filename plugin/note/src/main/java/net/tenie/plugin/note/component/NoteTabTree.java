@@ -175,7 +175,7 @@ public class NoteTabTree extends SqluckyTitledPane {
 			okbtn.getStyleClass().add("myAlertBtn");
 			okbtn.setOnAction(value -> {
 //				stb.saveTextAction();
-				MyEditorSheetHelper.saveSqlAction(stb);
+				MyEditorSheetHelper.saveSqlToFileAction(stb);
 				removeItem(parentNode, treeitem);
 				stage.close();
 			});

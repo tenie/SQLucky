@@ -25,6 +25,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class MyEditorSheet extends Tab {
 	// 在脚本树中的节点
@@ -63,7 +64,7 @@ public class MyEditorSheet extends Tab {
 		if (valDocumentPo.getSaveToDB()) {
 			if (valDocumentPo.getId() == null) {
 				documentPo = ComponentGetter.appComponent.scriptArchive(valDocumentPo.getTitle().get(),
-						valDocumentPo.getText(), valDocumentPo.getFileFullName(), valDocumentPo.getEncode(),
+						valDocumentPo.getText(), valDocumentPo.getExistFileFullName(), valDocumentPo.getEncode(),
 						valDocumentPo.getParagraph());
 			} else {
 				documentPo = valDocumentPo;
@@ -143,7 +144,7 @@ public class MyEditorSheet extends Tab {
 	 */
 	public void saveAreaTextToDocumentFile(){
 		String sql = this.getAreaText();// Sql
-		String filePath = documentPo.getFileFullName();
+		String filePath = documentPo.getExistFileFullName();
 		if(StrUtils.isNotNullOrEmpty(filePath)){
 			File file = new File(filePath);
 			if(file.exists() && file.isFile()){
@@ -163,7 +164,7 @@ public class MyEditorSheet extends Tab {
 	 */
 	public boolean documentFileExists(){
 		boolean tf = false;
-		String filePath = documentPo.getFileFullName();
+		String filePath = documentPo.getExistFileFullName();
 		if(StrUtils.isNotNullOrEmpty(filePath)){
 			File file = new File(filePath);
 			if(file.exists() && file.isFile()){
@@ -180,7 +181,7 @@ public class MyEditorSheet extends Tab {
 	 */
 	public String readDocumentFileText(){
 		String val = "";
-		String filePath = documentPo.getFileFullName();
+		String filePath = documentPo.getExistFileFullName();
 		if(StrUtils.isNullOrEmpty(filePath)) return val;
 		File file = new File(filePath);
 		if(file.exists() && file.isFile()){
@@ -471,15 +472,66 @@ public class MyEditorSheet extends Tab {
 
 	}
 
-	// 销毁, 从界面上移除tab,并清空属性的引用
-	public void destroySheet() {
+	private boolean checkSqlFileExist(){
+		String fileName = this.documentPo.getExistFileFullName();
+        return StrUtils.isNotNullOrEmpty(fileName);
+    }
+
+	/**
+	 * 带确认的销毁Tab
+	 */
+	public void destroyTabConfirmation(){
+		String fileName = this.documentPo.getExistFileFullName();
+		if (StrUtils.isNotNullOrEmpty(fileName)) {
+			MyAlert.myConfirmation("是否保存到文件:" + fileName,
+					ok->{saveDiskAndDestroyTab();},
+					no->{destroyTab();});
+		}else{
+			destroyTab();
+		}
+	}
+
+	/**
+	 * 从页面上关闭 tab, 但不做其他操作, 数据还在内存中, 可以从tree上重新打开
+ 	 */
+	public void closeTab(){
 		var myTabPane = ComponentGetter.mainTabPane;
 		var tabs = myTabPane.getTabs();
 		if (tabs.contains(this)) {
+			syncScriptPo();
+			documentPo.setOpenStatus(0);
 			tabs.remove(this);
 		}
-		this.clean();
+	}
 
+	// 销毁, 从界面上移除tab,并清空属性的引用
+	public void destroyTab() {
+		this.closeTab();
+		this.clean();
+		List<TreeItem<MyEditorSheet>> scriptList = ComponentGetter.scriptTreeView.getRoot().getChildren();
+		scriptList =  scriptList.stream().filter(item-> item.getValue().equals(this)).collect(Collectors.toList());
+		if(!scriptList.isEmpty()){
+			for(TreeItem<MyEditorSheet> item : scriptList ){
+				if(ComponentGetter.scriptTreeView.getRoot().getChildren().contains(item)){
+					ComponentGetter.scriptTreeView.getRoot().getChildren().remove(item);
+				}
+
+			}
+			ComponentGetter.scriptTreeView.refresh();
+		}
+	}
+	// 同步到数据库, 然后销毁tab
+	public void syncAndDestroyTab() {
+		this.getDocumentPo().setOpenStatus(0);
+		this.syncScriptPo();
+		this.destroyTab();
+	}
+	// 保存到文件, 同步到数据库, 然后销毁Tab
+	public void saveDiskAndDestroyTab() {
+		MyEditorSheetHelper.saveSqlToFileAction(this);
+		this.getDocumentPo().setOpenStatus(0);
+		this.syncScriptPo();
+		this.destroyTab();
 	}
 
 	// 右键菜单
@@ -574,7 +626,7 @@ public class MyEditorSheet extends Tab {
 			}
 
 
-			String fileFullName =  this.getDocumentPo().getFileFullName();
+			String fileFullName =  this.getDocumentPo().getExistFileFullName();
 			if (StrUtils.isNullOrEmpty(fileFullName)){
 				rename.setDisable(false);
 			}else {
