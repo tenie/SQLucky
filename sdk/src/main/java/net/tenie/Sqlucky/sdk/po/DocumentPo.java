@@ -119,7 +119,7 @@ public class DocumentPo implements Serializable {
 	 * 获取文件绝对路径, 如果文件不存在返回空
 	 * @return
 	 */
-	public String getFileFullName() {
+	public String getExistFileFullName() {
 		if(StrUtils.isNotNullOrEmpty(fileFullName)){
 			File tmp = new File(fileFullName);
 			if(tmp.exists() && tmp.isFile()){

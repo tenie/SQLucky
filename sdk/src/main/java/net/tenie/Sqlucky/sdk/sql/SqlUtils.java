@@ -165,22 +165,22 @@ public class SqlUtils {
      */
     public static String trimXmlConversionElement(String str){
 
-        while (str.contains("<![CDATA[ <> ]]>")){
-            str =   str.replace("<![CDATA[ <> ]]>", "<>");
-        }
-
-        while (str.contains("<![CDATA[ <= ]]>")){
-            str =   str.replace("<![CDATA[ <= ]]>", "<=");
-        }
-        while (str.contains("<![CDATA[ >= ]]>")){
-            str =   str.replace("<![CDATA[ >= ]]>", ">=");
-        }
-        while (str.contains("<![CDATA[ < ]]>")){
-            str =   str.replace("<![CDATA[ < ]]>", "<");
-        }
-        while (str.contains("<![CDATA[ > ]]>")){
-            str =   str.replace("<![CDATA[ > ]]>", ">");
-        }
+//        while (str.contains("<![CDATA[ <> ]]>")){
+//            str =   str.replace("<![CDATA[ <> ]]>", "<>");
+//        }
+//
+//        while (str.contains("<![CDATA[ <= ]]>")){
+//            str =   str.replace("<![CDATA[ <= ]]>", "<=");
+//        }
+//        while (str.contains("<![CDATA[ >= ]]>")){
+//            str =   str.replace("<![CDATA[ >= ]]>", ">=");
+//        }
+//        while (str.contains("<![CDATA[ < ]]>")){
+//            str =   str.replace("<![CDATA[ < ]]>", "<");
+//        }
+//        while (str.contains("<![CDATA[ > ]]>")){
+//            str =   str.replace("<![CDATA[ > ]]>", ">");
+//        }
         //  &lt; < 小于号
         while (str.contains("&lt;")){
             str =   str.replace("&lt;", "<");
@@ -189,6 +189,17 @@ public class SqlUtils {
         while (str.contains("&gt;")){
             str =   str.replace("&gt;", ">");
         }
+        while (str.contains("<![CDATA[")){
+            str =   str.replace("<![CDATA[", "");
+        }
+        while (str.contains("< ! [CDATA[")){
+            str =   str.replace("< ! [CDATA[", "");
+        }
+        while (str.contains("]]>")){
+            str =   str.replace("]]>", "");
+        }
+
+
 //        // 1. 先把文本中的xml元素 替换为占位符, 避免把xml标记符号也
 //        StrUtils.matherString msVal = StrUtils.getXmlEleMatcher(str);
 //        // 替换后的文本

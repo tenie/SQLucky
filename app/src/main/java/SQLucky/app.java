@@ -208,14 +208,14 @@ public class app extends Application {
                     LoadingAnimation.rmLoading(ComponentGetter.primarySceneRoot);
                     // 账号恢复
                     UserAccountAction.appLanuchInitAccount();
+                    // 设置快捷键
+                    Platform.runLater(() -> {
+                        SettingKeyBinding.setEscKeyBinding(ComponentGetter.primaryStage.getScene());
+                    });
                 });
             };
             // 执行页面初始化好只会要执行的任务
             CommonUtils.executeInitTask(cr);
-
-            Platform.runLater(() -> {
-                SettingKeyBinding.setEscKeyBinding(ComponentGetter.primaryStage.getScene());
-            });
 
             // 数据迁移
             if (transferDB) {
@@ -325,7 +325,7 @@ public class app extends Application {
                     if (sqlTxt == null || sqlTxt.trim().isEmpty()) {
                         AppDao.deleteScriptArchive(H2conn, documentPo);
                     } else {
-                        String fp = documentPo.getFileFullName();
+                        String fp = documentPo.getExistFileFullName();
                         if (StrUtils.isNullOrEmpty(fp)) {
                             String titleName = documentPo.getTitle().get();
                             if (StrUtils.isNullOrEmpty(titleName) || titleName.startsWith("Untitled_")) {

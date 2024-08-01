@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import javafx.event.Event;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetUtility;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -653,7 +654,16 @@ public class AppCommonAction {
         DialogTools.showDllExecWindow(tablename + " add column : input words like 'MY_COL CHAR(10)'", "", sqlFunc, caller);
 
     }
-
+    // 关闭 代码编辑窗口, 但不销毁, 可以在tree中重新打开
+    public static void closeEditPage() {
+        // 关闭数据显示tab页
+        Tab t = ComponentGetter.mainTabPane.getSelectionModel().getSelectedItem();
+        if (t != null) {
+            if(t instanceof  MyEditorSheet tab){
+                tab.closeTab();
+            }
+        }
+    }
     // 关闭数据展示表格
     public static void closeDataTable() {
 		// 关闭数据显示tab页

@@ -1,11 +1,8 @@
 package net.tenie.Sqlucky.sdk.component;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javafx.application.Platform;
 import org.apache.commons.io.FilenameUtils;
@@ -25,7 +22,6 @@ import net.tenie.Sqlucky.sdk.component.editor.HighLightingEditorUtils;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.po.MyRange;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.FileOrDirectoryChooser;
@@ -150,19 +146,19 @@ public class MyEditorSheetHelper {
 	}
 
 	// 保存sql文本到硬盘
-	public static void saveSqlAction() {
+	public static void saveSqlToFileAction() {
 //		MyAreaTab tb = (MyAreaTab) SqluckyEditorUtils.mainTabPaneSelectedTab();
 		MyEditorSheet sheet = getActivationEditorSheet();
-		saveSqlAction(sheet);
+		saveSqlToFileAction(sheet);
 	}
 
 	// 保存sql文本到硬盘
-	public static void saveSqlAction(MyEditorSheet sheet) {
+	public static void saveSqlToFileAction(MyEditorSheet sheet) {
 		var conn = SqluckyAppDB.getConn();
 		try {
 			String sql = sheet.getAreaText();// SqlEditor.getTabSQLText(tb);
 			DocumentPo documentPo = sheet.getDocumentPo();
-			String fileName = documentPo.getFileFullName();
+			String fileName = documentPo.getExistFileFullName();
 			if (StrUtils.isNotNullOrEmpty(fileName)) {
 				FileTools.saveByEncode(fileName, sql, documentPo.getEncode());
 //				CommonUtility.setTabName(tb, FilenameUtils.getName(fileName));

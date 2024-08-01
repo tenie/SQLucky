@@ -21,7 +21,7 @@ import net.tenie.fx.component.ScriptTree.ScriptTabTree;
  *
  */
 public class DBinfoContainer extends  VBox{
-	private Accordion dbInfoAccordion;
+	private Accordion dbInfoAccordion; // TitledPane 容器
 	private VBox dbInfoTreeBtnPane; // 按钮面板
 	private TreeView<TreeNodePo> dbInfoTreeView;
 	private DBinfoTree dbInfoTree;
@@ -37,7 +37,7 @@ public class DBinfoContainer extends  VBox{
 		// 脚本
 		scriptTabTree = new ScriptTabTree();
 
-		// 数据连接/脚本 切换窗口
+		// TitledPane容器: 放入 数据连接 脚本 ...
 		dbInfoAccordion = createAccordion(scriptTabTree, dbInfoTree);
 
 		this.getChildren().addAll(dbInfoTreeBtnPane, dbInfoAccordion);
@@ -58,6 +58,12 @@ public class DBinfoContainer extends  VBox{
 
 	}
 
+	/**
+	 * 创建 TitledPane 容器
+	 * @param scriptTitledPane
+	 * @param dbTitledPane
+	 * @return
+	 */
 	private Accordion createAccordion(TitledPane scriptTitledPane, TitledPane dbTitledPane) {
 		Accordion ad = new Accordion();
 

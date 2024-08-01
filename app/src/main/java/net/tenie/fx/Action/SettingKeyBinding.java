@@ -1,13 +1,18 @@
 package net.tenie.fx.Action;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Accordion;
+import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyEvent;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /*   @author tenie */
@@ -20,6 +25,27 @@ public final class SettingKeyBinding {
 		scene.getAccelerators().put(escbtn, () -> {
 			CommonUtils.pressBtnESC();
 		});
+
+		// 左边 百叶窗 的切换
+		setAccordionChangeBinding(scene);
+
+	}
+	//设置快捷键 左边 百叶窗 的切换
+	private static void setAccordionChangeBinding(Scene scene){
+		Accordion infoAccordion = ComponentGetter.infoAccordion;
+		List<TitledPane> paneList =	infoAccordion.getPanes();
+		int panes = paneList.size();
+		for(int i = 0 ; i < panes ; i++){
+			String altStr = "Alt + " + (i+1);
+			KeyCombination altkey = KeyCombination.keyCombination(altStr);
+			TitledPane tp = paneList.get(i);
+			scene.getAccelerators().put(altkey, () -> {
+				if(tp != null ){
+					tp.setExpanded(true);
+					tp.requestFocus();
+				}
+			});
+		}
 	}
 
 	public static String codeNameToSymbol(String codeName) {

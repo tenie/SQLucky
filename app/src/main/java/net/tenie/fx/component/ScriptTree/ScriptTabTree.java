@@ -134,7 +134,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 
 					// 在操作系统中通过鼠标双击打开的文件, 如果再在以前打开过就直接选中
 					if (StrUtils.isNotNullOrEmpty(app.sysOpenFile)) {
-						var filePath = po.getFileFullName();
+						var filePath = po.getExistFileFullName();
 						if (StrUtils.isNotNullOrEmpty(filePath)) {
 							if (app.sysOpenFile.equals(filePath)) {
 								sysOpenFileTB = myEditorSheet;
@@ -341,14 +341,13 @@ public class ScriptTabTree extends SqluckyTitledPane {
 			// 是否保存
 			final Stage stage = new Stage();
 
-			// 1 保存
+			// 1 保存 文件保存到磁盘
 			JFXButton okbtn = new JFXButton("Yes(Y)");
 			okbtn.getStyleClass().add("myAlertOkBtn");
 			okbtn.setOnAction(value -> {
-//				文件保存到磁盘
-				MyEditorSheetHelper.saveSqlAction(sheet);
-				removeNode(myTabItemList, ctt, sheet);
-				sheet.destroySheet();
+//				MyEditorSheetHelper.saveSqlToFileAction(sheet);
+				removeTreeNode(myTabItemList, ctt, sheet);
+				sheet.saveDiskAndDestroyTab();
 				stage.close();
 			});
 
@@ -357,8 +356,8 @@ public class ScriptTabTree extends SqluckyTitledPane {
 			Nobtn.getStyleClass().add("myAlertBtn");
 
 			Nobtn.setOnAction(value -> {
-				removeNode(myTabItemList, ctt, sheet);
-				sheet.destroySheet();
+				removeTreeNode(myTabItemList, ctt, sheet);
+				sheet.closeTab();
 				stage.close();
 			});
 			// 取消
@@ -376,14 +375,14 @@ public class ScriptTabTree extends SqluckyTitledPane {
 
 			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns, false);
 		} else {
-			removeNode(myTabItemList, ctt, sheet);
+			removeTreeNode(myTabItemList, ctt, sheet);
 		}
 
 	}
 
 	// 从ScriptTabTree 中移除一个节点
-	public static void removeNode(ObservableList<TreeItem<MyEditorSheet>> myTabItemList, TreeItem<MyEditorSheet> ctt,
-			MyEditorSheet tb) {
+	public static void removeTreeNode(ObservableList<TreeItem<MyEditorSheet>> myTabItemList, TreeItem<MyEditorSheet> ctt,
+									  MyEditorSheet tb) {
 		var conn = SqluckyAppDB.getConn();
 		try {
 			var myTabPane = ComponentGetter.mainTabPane;

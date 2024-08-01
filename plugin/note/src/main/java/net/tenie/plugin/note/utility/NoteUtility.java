@@ -80,7 +80,7 @@ public class NoteUtility {
 		MyNoteEditorSheet tb = ctt.getValue();
 		try {
 			if (tb.getDocumentPo() != null) {
-				String fn = tb.getDocumentPo().getFileFullName();
+				String fn = tb.getDocumentPo().getExistFileFullName();
 				if (StrUtils.isNotNullOrEmpty(fn)) {
 					File file = new File(fn);
 					CommonUtils.openExplorer(file.getParentFile());

@@ -13,7 +13,7 @@ public class ScriptTreeAction {
 	public static void showInFloder() {
 		TreeItem<MyEditorSheet> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
 		MyEditorSheet sheet = ctt.getValue();
-		String fn = sheet.getDocumentPo().getFileFullName();
+		String fn = sheet.getDocumentPo().getExistFileFullName();
 		if (StrUtils.isNotNullOrEmpty(fn)) {
 			File file = new File(fn);
 			CommonUtils.openExplorer(file.getParentFile());
@@ -24,6 +24,6 @@ public class ScriptTreeAction {
 		TreeItem<MyEditorSheet> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
 		MyEditorSheet sheet = ctt.getValue();
 //		CommonAction.saveSqlAction(sheet);
-		MyEditorSheetHelper.saveSqlAction(sheet);
+		MyEditorSheetHelper.saveSqlToFileAction(sheet);
 	}
 }

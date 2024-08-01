@@ -185,27 +185,42 @@ public class AppDao {
 		try {
 			String sql = readSqlFile("/db/app.sql");
 			execSqlFileString(conn, sql.trim());
-			sql = readSqlFile("/db/keysBinding.sql");
+			insertShortcutKeys(conn);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	// 插入 快捷键
+	public static void insertShortcutKeys(Connection conn) {
+		try {
+			String sql = readSqlFile("/db/keysBinding.sql");
 			if (CommonUtils.isMacOS()) {
 				sql = macKeyChange(sql);
 			}
 			execSqlFileString(conn, sql);
-
-//
-//			DBTools.execDDLNoErr(conn, CONNECTION_INFO);
-//			DBTools.execDDLNoErr(conn, SCRIPT_ARCHIVE);
-//			DBTools.execDDLNoErr(conn, APP_CONFIG);
-//
-//			DBTools.execDDLNoErr(conn, DATA_MODEL_INFO);
-//			DBTools.execDDLNoErr(conn, DATA_MODEL_TABLE);
-//			DBTools.execDDLNoErr(conn, DATA_MODEL_TABLE_FIELDS);
-//			DBTools.execDDLNoErr(conn, PLUGIN_INFO);
-//			DBTools.execDDLNoErr(conn, SQLUCKY_USER);
-//			DBTools.execDDLNoErr(conn, KEYS_BINDING);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	// 删除快捷键
+	public static void deleteShortcutKeys(Connection conn) {
+		try {
+			String sql = "delete from KEYS_BINDING";
+			execSqlFileString(conn, sql);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	// 重置 快捷键
+	public static void restoreShortcutKeys(){
+		Connection conn = SqluckyAppDB.getConn();
+		deleteShortcutKeys(conn);
+		insertShortcutKeys(conn);
+		SqluckyAppDB.closeConn(conn);
 	}
 
 	public static DocumentPo scriptArchive(Connection conn, String title, String txt, String filename, String encode,
@@ -269,7 +284,7 @@ public class AppDao {
 			sm = conn.prepareStatement(sql);
 			sm.setString(1, po.getTitle().get());
 			sm.setString(2, po.getText());
-			sm.setString(3, po.getFileFullName());
+			sm.setString(3, po.getExistFileFullName());
 			sm.setString(4, po.getEncode());
 			sm.setInt(5, po.getParagraph());
 			sm.setInt(6, po.getOpenStatus());
