@@ -278,6 +278,9 @@ public class app extends Application {
     }
     // 退出程序, 保存app状态
     public static void saveApplicationStatusInfo() {
+        if(ComponentGetter.dockSideTabPaneWindow != null ){
+            ComponentGetter.dockSideTabPaneWindow.close();
+        }
         // 载入动画
         LoadingAnimation.loadingAnimation("Saving....", v -> {
             Connection H2conn = SqluckyAppDB.getConn();

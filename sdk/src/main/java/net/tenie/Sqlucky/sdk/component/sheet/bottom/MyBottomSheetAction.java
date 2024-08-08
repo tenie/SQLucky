@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
+import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
@@ -17,6 +18,7 @@ import net.tenie.Sqlucky.sdk.excel.ExcelDataPo;
 import net.tenie.Sqlucky.sdk.excel.ExcelUtil;
 import net.tenie.Sqlucky.sdk.po.*;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.subwindow.DockSideTabPaneWindow;
 import net.tenie.Sqlucky.sdk.subwindow.DockSideWindow;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
@@ -268,7 +270,25 @@ public class MyBottomSheetAction {
     }
 
     /**
-     * 将数据表, 独立显示
+     * 将 dataTabPane, 独立显示
+     */
+    public static void dockSideTabPane() {
+        ComponentGetter.masterDetailPane.setShowDetailNode(false);
+        JFXButton btn = CommonButtons.hideBottom;
+        btn.setDisable(true);
+        TabPane tabPane =  ComponentGetter.dataTabPane;
+        ComponentGetter.tabPanContainer.getChildren().remove(tabPane);
+        DockSideTabPaneWindow dsw = new DockSideTabPaneWindow();
+
+        dsw.showWindow(tabPane, ()->{
+            ComponentGetter.tabPanContainer.getChildren().add(tabPane);
+            btn.setDisable(false);
+        });
+    }
+
+
+    /**
+     * 将数据展示Pan 独立显示
      */
     public static void dockSide(MyBottomSheet sheet) {
 //        var tab = sheet;
@@ -306,6 +326,10 @@ public class MyBottomSheetAction {
         }
     }
 
+    /**
+     * 复制一行数据
+     * @param sheet
+     */
     public static void copyData(MyBottomSheet sheet) {
         var tableData = sheet.getTableData();
         // 获取当前的table view

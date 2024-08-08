@@ -10,6 +10,7 @@ import javafx.scene.control.SeparatorMenuItem;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetAction;
 import net.tenie.Sqlucky.sdk.config.CommonConst;
 import net.tenie.Sqlucky.sdk.config.KeyBindingCache;
 import net.tenie.Sqlucky.sdk.sql.SqlUtils;
@@ -417,10 +418,15 @@ public class MenuBarContainer extends MenuBar{
 			kbw.show();
 
 		});
+		MenuItem dockSideTabPane = new MenuItem(StrUtils.MenuItemNameFormat("Independent Date Window"));
+//		dockSideTabPane.setGraphic(IconGenerator.svgImageDefActive("keyboard-o"));
+		dockSideTabPane.setOnAction(value -> {
+			MyBottomSheetAction.dockSideTabPane();
+		});
 
 		mn.getItems().addAll(dataTransfer, importData, new SeparatorMenuItem(), addDB, editConn, openConn, closeConn,
 				closeALlConn, deleteConn, new SeparatorMenuItem(), hideLeft, hideBottom, hideLeftBottom,
-				new SeparatorMenuItem(), Theme, new SeparatorMenuItem(), fontSize, keysBind);
+				new SeparatorMenuItem(), Theme, new SeparatorMenuItem(), fontSize, keysBind, dockSideTabPane);
 
 		KeyBindingCache.menuItemBinding(fontSizeMinus);
 		KeyBindingCache.menuItemBinding(fontSizePlus);

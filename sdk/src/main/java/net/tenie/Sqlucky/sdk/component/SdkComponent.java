@@ -321,8 +321,12 @@ public class SdkComponent {
 	public static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
 		Platform.runLater(() -> {
 			SdkComponent.showBottomSheetPane();
+			if(ComponentGetter.dockSideTabPaneWindow != null){
+				ComponentGetter.dockSideTabPaneWindow.requestFocus();
+			}
 		});
 		Tab v = SdkComponent.addWaitingPane(tabIdx);
+
 		Platform.runLater(() -> {
 			if (holdSheet == false) { // 非刷新的， 删除多余的页
 				TabPane dataTab = ComponentGetter.dataTabPane;
@@ -425,12 +429,13 @@ public class SdkComponent {
 //	}
 
 	public static void hideBottom() {
-
 		JFXButton btn = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
-		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-		hideShowBottomHelper(showStatus, btn);
-		if (showStatus) {
-			SdkComponent.escapeWindowsUiBug();
+		if(! btn.isDisabled()){
+			boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
+			hideShowBottomHelper(showStatus, btn);
+			if (showStatus) {
+				SdkComponent.escapeWindowsUiBug();
+			}
 		}
 	}
 
@@ -472,10 +477,12 @@ public class SdkComponent {
 	// 底部数据展示面板是否显示
 	public static void showBottomSheetPane() {
 		JFXButton btn = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
-		boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-		if (showStatus) {
-			hideShowBottomHelper(true, btn);
-			escapeWindowsUiBug();
+		if(!btn.isDisabled()){
+			boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
+			if (showStatus) {
+				hideShowBottomHelper(true, btn);
+				escapeWindowsUiBug();
+			}
 		}
 	}
 
