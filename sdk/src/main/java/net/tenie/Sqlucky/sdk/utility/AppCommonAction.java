@@ -358,14 +358,20 @@ public class AppCommonAction {
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
             btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
 
-            ComponentGetter.masterDetailPane.setShowDetailNode(false);
-            btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+            if(! btnBottom.isDisabled()){
+                ComponentGetter.masterDetailPane.setShowDetailNode(false);
+                btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+            }
+
         } else {
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
             btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
 
-            ComponentGetter.masterDetailPane.setShowDetailNode(true);
-            btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
+            if(! btnBottom.isDisabled()){
+                ComponentGetter.masterDetailPane.setShowDetailNode(true);
+                btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
+            }
+
         }
 
     }

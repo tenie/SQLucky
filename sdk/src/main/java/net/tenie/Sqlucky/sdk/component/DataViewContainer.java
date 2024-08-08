@@ -40,6 +40,8 @@ public class DataViewContainer extends HBox{
 		HBox.setHgrow(TabPanContainer, Priority.ALWAYS);
 
 		ComponentGetter.dataTabPane = dataViewTabPane;
+		ComponentGetter.tabPanContainer = TabPanContainer;
+
 		DraggingTabPaneSupport support2 = new DraggingTabPaneSupport();
 		support2.addSupport(dataViewTabPane);
 		

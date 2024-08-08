@@ -1,24 +1,10 @@
 package net.tenie.Sqlucky.sdk.component;
 
-import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import org.controlsfx.control.MasterDetailPane;
-import org.controlsfx.control.NotificationPane;
-import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
-
 import javafx.application.Application;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
-import javafx.scene.control.Accordion;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -26,6 +12,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
+import org.controlsfx.control.MasterDetailPane;
+import org.controlsfx.control.NotificationPane;
+import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
 
 import java.sql.Statement;
 
@@ -39,6 +28,9 @@ public final class ComponentGetter {
 	public static PopupFilter<ObservableList<StringProperty>, String> popupFirstNameFilter;
 	public static TabPane dataTabPane;
 	public static TabPane mainTabPane;
+
+	public static VBox tabPanContainer;
+	public static Stage dockSideTabPaneWindow;
 
 	public static TextField dbInfoFilter;
 
