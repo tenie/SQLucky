@@ -416,8 +416,10 @@ public class SqluckyAppComponent implements AppComponent {
 	public List<MenuItem> getBottomSheetBtns(MyBottomSheet sheet) {
 		List<MenuItem> ls = new ArrayList<>();
 		for(var func :bottomSheetBtns){
-			MenuItem tmp = func.apply(sheet);
-			ls.add(tmp);
+			if(func != null){
+				MenuItem tmp = func.apply(sheet);
+				ls.add(tmp);
+			}
 		}
 
 		return ls;

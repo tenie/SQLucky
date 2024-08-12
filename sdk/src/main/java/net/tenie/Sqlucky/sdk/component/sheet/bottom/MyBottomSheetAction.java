@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
@@ -239,7 +240,7 @@ public class MyBottomSheetAction {
     }
 
     /**
-     * 到处
+     * 导出
      * @param dbcp
      * @param schema
      * @param tableName
@@ -273,16 +274,45 @@ public class MyBottomSheetAction {
      * 将 dataTabPane, 独立显示
      */
     public static void dockSideTabPane() {
-        ComponentGetter.masterDetailPane.setShowDetailNode(false);
+        // 隐藏 数据窗口, 禁用隐藏按钮
         JFXButton btn = CommonButtons.hideBottom;
+        SdkComponent.hideShowBottomHelper(false, btn);
         btn.setDisable(true);
+
+        // 主界面 移除 tabPane, 把tabPane放入独立窗口
         TabPane tabPane =  ComponentGetter.dataTabPane;
         ComponentGetter.tabPanContainer.getChildren().remove(tabPane);
-        DockSideTabPaneWindow dsw = new DockSideTabPaneWindow();
 
+        // 移除不需要的按钮
+        JFXButton sideRightBottomBtn = SheetDataValue.sideRightBottom;
+        JFXButton hideBottom = SheetDataValue.hideBottom;
+        Tab tab = tabPane.getSelectionModel().getSelectedItem();
+        MyBottomSheet tmpSheet;
+        if(tab instanceof  MyBottomSheet sheet ){
+            // 移除按钮
+            sheet.getBtnHbox().getChildren().remove(sideRightBottomBtn);
+            sheet.getBtnHbox().getChildren().remove(hideBottom);
+            sheet.getButtonAnchorPane().getChildren().remove(hideBottom);
+            tmpSheet = sheet;
+        } else {
+            tmpSheet = null;
+        }
+
+        // 实例化独立窗口
+        DockSideTabPaneWindow dsw = new DockSideTabPaneWindow();
         dsw.showWindow(tabPane, ()->{
+            // 关闭独立窗口的时候, 将tabPane 放入主界面
             ComponentGetter.tabPanContainer.getChildren().add(tabPane);
             btn.setDisable(false);
+
+            // 添加 sideRightBottom 到当前 MyBottomSheet
+            if(tmpSheet != null){
+                if( ! tmpSheet.getBtnHbox().getChildren().contains(sideRightBottomBtn)){
+                    tmpSheet.getBtnHbox().getChildren().addFirst(sideRightBottomBtn);
+                }
+            }
+            Platform.runLater(SdkComponent::hideBottom);
+
         });
     }
 

@@ -55,14 +55,7 @@ public class DockSideTabPaneWindow {
         bottomPane.setPadding(new Insets(10));
 
         vb.getChildren().add(bottomPane);
-        KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-        KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
-        scene.getAccelerators().put(escbtn, () -> {
-            stage.close();
-        });
-        scene.getAccelerators().put(spacebtn, () -> {
-            stage.close();
-        });
+
 
         stage.setTitle(title);
         CommonUtils.loadCss(scene);

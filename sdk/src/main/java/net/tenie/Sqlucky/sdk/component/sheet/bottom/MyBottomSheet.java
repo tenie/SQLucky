@@ -70,63 +70,28 @@ public class MyBottomSheet extends  Tab{
 	public MyBottomSheet(String tabName) {
 		tableData = new SheetDataValue();
 		tableData.setTabName(tabName);
-//		tab = new Tab(tabName);
 		this.setText(tabName);
 		this.setOnCloseRequest(SdkComponent.dataTabCloseReq(this));
 		this.setContextMenu(tableViewMenu());
-//		this.setUserData(this); // 再关闭tab时 获取 MyBottomSheet, 来clean
 
 		this.setContent(this.tabVBox);
 
 		FilteredTableView<ResultSetRowPo> tableView = SdkComponent.creatFilteredTableView(this);
 		tableData.setTable(tableView);
 		buttonAnchorPane = new AnchorPane();
-
-		// 显示隐藏按钮
-//		buttonAnchorPane.setOnMouseEntered(event -> {
-//				// 获取隐藏按钮
-//				JFXButton hideBottom = SheetDataValue.hideBottom;
-//				if (SheetDataValue.isSideRight) {
-//					if (!btnHbox.getChildren().contains(hideBottom)) {
-//						btnHbox.getChildren().add(0, hideBottom);
-//					}
-//				} else {
-//					if (!buttonAnchorPane.getChildren().contains(hideBottom)) {
-//						buttonAnchorPane.getChildren().add(hideBottom);
-//						AnchorPane.setRightAnchor(hideBottom, 0.0);
-//						AnchorPane.setTopAnchor(hideBottom, 6.0);
-//					}
-//				}
-//
-//
-//		});
-
-//		// 隐藏 隐藏按钮
-//		buttonAnchorPane.setOnMouseExited(event -> {
-//				// 获取隐藏按钮
-//				JFXButton hideBottom = SheetDataValue.hideBottom;
-//
-//				if (SheetDataValue.isSideRight) {
-//					if (btnHbox.getChildren().contains(hideBottom)) {
-//						btnHbox.getChildren().remove(hideBottom);
-//					}
-//				} else {
-//					if (buttonAnchorPane.getChildren().contains(hideBottom)) {
-//						buttonAnchorPane.getChildren().remove(hideBottom);
-//					}
-//				}
-//		});
-
 		// 选中的时候添加sideRight按钮
 		this.selectedProperty().addListener((a,b,c)-> {
-			if (c) {
-				JFXButton sideRightBottomBtn = SheetDataValue.sideRightBottom;
-				// 隐藏按钮
-				JFXButton hideBottom = SheetDataValue.hideBottom;
-				if (!btnHbox.getChildren().contains(sideRightBottomBtn)) {
-					btnHbox.getChildren().add(0, sideRightBottomBtn);
+			// 判断tabPane是不是单独出来了, 是的话不用 sideRightBottom了
+			if(ComponentGetter.dockSideTabPaneWindow == null ){
+				if (c) {
+					JFXButton sideRightBottomBtn = SheetDataValue.sideRightBottom;
+					// 隐藏按钮
+					if (!btnHbox.getChildren().contains(sideRightBottomBtn)) {
+						btnHbox.getChildren().add(0, sideRightBottomBtn);
+					}
 				}
 			}
+
 		});
 	}
 
@@ -149,8 +114,7 @@ public class MyBottomSheet extends  Tab{
 
 	// 获取被更新过的数据缓存
 	public ObservableList<ResultSetRowPo> getModifyData() {
-		var v = tableData.getDataRs().getUpdateDatas();
-		return v;
+        return tableData.getDataRs().getUpdateDatas();
 	}
 
 
@@ -194,7 +158,6 @@ public class MyBottomSheet extends  Tab{
 		return contextMenu;
 	}
 
-	// TODO show
 	public void showSelectData(int idx, boolean disable) {
 		showSelectData(idx, disable, null);
 	}
@@ -335,8 +298,13 @@ public class MyBottomSheet extends  Tab{
 
 		// 锁
 		JFXButton lockbtn = tableData.getLockBtn();
-		JFXButton dockSideBtn =	MyBottomSheetButton.createDockBtn(this);
-		btnHbox.getChildren().addAll(lockbtn, dockSideBtn);
+		btnHbox.getChildren().add(lockbtn);
+		if(ComponentGetter.dockSideTabPaneWindow == null ){
+			JFXButton dockSideBtn =	MyBottomSheetButton.createDockBtn(this);
+			btnHbox.getChildren().add(dockSideBtn);
+		}
+
+
 		btnHbox.setPadding(new Insets(3,0,3,0));
 		// 将按钮放入容器
 		if (btnLs != null) {
@@ -424,9 +392,6 @@ public class MyBottomSheet extends  Tab{
 		return ls;
 	}
 
-	/**
-	 *
-	 */
 	public void show(Consumer<String> backcall) {
 		this.setText(tableData.getTabName());
 		Platform.runLater(() -> {
@@ -483,14 +448,6 @@ public class MyBottomSheet extends  Tab{
 	public void setTableData(SheetDataValue tableData) {
 		this.tableData = tableData;
 	}
-
-//	public SqluckyEditor getSqlArea() {
-//		return sqlArea;
-//	}
-//
-//	public void setSqlArea(SqluckyEditor sqlArea) {
-//		this.sqlArea = sqlArea;
-//	}
 
 	public boolean isDDL() {
 		return isDDL;
