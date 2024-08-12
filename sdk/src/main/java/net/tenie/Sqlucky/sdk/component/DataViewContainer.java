@@ -62,14 +62,62 @@ public class DataViewContainer extends HBox{
 
 		// 鼠标进入 dataViewTabPane 显示 隐藏按钮
 		dataViewTabPane.setOnMouseEntered(eh->{
-			Tab t = dataViewTabPane.getSelectionModel().getSelectedItem();
-			if( t != null){
-				if( t instanceof MyBottomSheet myTab ){
+			// 判断tabPane是不是单独出来了, 是的话不用 sideRightBottom了
+			if(ComponentGetter.dockSideTabPaneWindow == null ){
+				Tab t = dataViewTabPane.getSelectionModel().getSelectedItem();
+				if( t != null){
+					if( t instanceof MyBottomSheet myTab ){
+						// 获取隐藏按钮
+						JFXButton hideBottom = SheetDataValue.hideBottom;
+						if (SheetDataValue.isSideRight) {
+							if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
+								myTab.getBtnHbox().getChildren().add(0, hideBottom);
+							}
+						} else {
+							if (!myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
+								myTab.getButtonAnchorPane().getChildren().add(hideBottom);
+								AnchorPane.setRightAnchor(hideBottom, 0.0);
+								AnchorPane.setTopAnchor(hideBottom, 6.0);
+							}
+						}
+					}
+				}
+			}
+		});
+		// 鼠标离开 dataViewTabPane 隐藏 隐藏按钮
+		dataViewTabPane.setOnMouseExited(eh-> {
+			if (ComponentGetter.dockSideTabPaneWindow == null) {
+				Tab t = dataViewTabPane.getSelectionModel().getSelectedItem();
+				if (t != null) {
+					if (t instanceof MyBottomSheet myTab) {
+						// 获取隐藏按钮
+						JFXButton hideBottom = SheetDataValue.hideBottom;
+
+						if (SheetDataValue.isSideRight) {
+							if (myTab.getBtnHbox().getChildren().contains(hideBottom)) {
+								myTab.getBtnHbox().getChildren().remove(hideBottom);
+							}
+						} else {
+							if (myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
+								myTab.getButtonAnchorPane().getChildren().remove(hideBottom);
+							}
+						}
+					}
+				}
+			}
+		});
+		// 选中的tab 显示隐藏按钮
+		dataViewTabPane.getSelectionModel().selectedItemProperty().addListener((a,b,c)-> {
+			if (ComponentGetter.dockSideTabPaneWindow == null) {
+				if (c instanceof MyBottomSheet myTab) {
 					// 获取隐藏按钮
 					JFXButton hideBottom = SheetDataValue.hideBottom;
 					if (SheetDataValue.isSideRight) {
 						if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
-							myTab.getBtnHbox().getChildren().add(0, hideBottom);
+							Platform.runLater(() -> {
+								myTab.getBtnHbox().getChildren().add(0, hideBottom);
+							});
+
 						}
 					} else {
 						if (!myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
@@ -77,49 +125,6 @@ public class DataViewContainer extends HBox{
 							AnchorPane.setRightAnchor(hideBottom, 0.0);
 							AnchorPane.setTopAnchor(hideBottom, 6.0);
 						}
-					}
-				}
-			}
-
-		});
-		// 鼠标离开 dataViewTabPane 隐藏 隐藏按钮
-		dataViewTabPane.setOnMouseExited(eh->{
-			Tab t = dataViewTabPane.getSelectionModel().getSelectedItem();
-			if( t != null) {
-				if (t instanceof MyBottomSheet myTab) {
-					// 获取隐藏按钮
-					JFXButton hideBottom = SheetDataValue.hideBottom;
-
-					if (SheetDataValue.isSideRight) {
-						if (myTab.getBtnHbox().getChildren().contains(hideBottom)) {
-							myTab.getBtnHbox().getChildren().remove(hideBottom);
-						}
-					} else {
-						if (myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
-							myTab.getButtonAnchorPane().getChildren().remove(hideBottom);
-						}
-					}
-				}
-			}
-
-		});
-		// 选中的tab 显示隐藏按钮
-		dataViewTabPane.getSelectionModel().selectedItemProperty().addListener((a,b,c)->{
-			if (c instanceof MyBottomSheet myTab) {
-				// 获取隐藏按钮
-				JFXButton hideBottom = SheetDataValue.hideBottom;
-				if (SheetDataValue.isSideRight) {
-					if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
-						Platform.runLater(()->{
-							myTab.getBtnHbox().getChildren().add(0, hideBottom);
-						});
-
-					}
-				} else {
-					if (!myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
-						myTab.getButtonAnchorPane().getChildren().add(hideBottom);
-						AnchorPane.setRightAnchor(hideBottom, 0.0);
-						AnchorPane.setTopAnchor(hideBottom, 6.0);
 					}
 				}
 			}
