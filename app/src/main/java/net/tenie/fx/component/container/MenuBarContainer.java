@@ -418,7 +418,7 @@ public class MenuBarContainer extends MenuBar{
 			kbw.show();
 
 		});
-		MenuItem dockSideTabPane = new MenuItem(StrUtils.MenuItemNameFormat("Independent Date Window"));
+		MenuItem dockSideTabPane = new MenuItem(StrUtils.MenuItemNameFormat("Separate Date Window"));
 //		dockSideTabPane.setGraphic(IconGenerator.svgImageDefActive("keyboard-o"));
 		dockSideTabPane.setOnAction(value -> {
 			MyBottomSheetAction.dockSideTabPane();
@@ -433,6 +433,7 @@ public class MenuBarContainer extends MenuBar{
 		KeyBindingCache.menuItemBinding(hideLeftBottom);
 		KeyBindingCache.menuItemBinding(hideBottom);
 		KeyBindingCache.menuItemBinding(hideLeft);
+		KeyBindingCache.menuItemBinding(dockSideTabPane);
 		return mn;
 	}
 

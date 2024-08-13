@@ -47,7 +47,7 @@ insert into KEYS_BINDING (ACTION_NAME, BINDING)
 values('Hump To Underscore', 'Ctrl + Shift + T');
 
 insert into KEYS_BINDING (ACTION_NAME, BINDING) 
-values('Hide/Show All Panels', 'Ctrl + H');
+values('Hide/Show All Panels', 'Ctrl + `');
 
 insert into KEYS_BINDING (ACTION_NAME, BINDING) 
 values('Font Size +', 'Ctrl + =');
@@ -77,9 +77,9 @@ values('Delete all characters after the cursor', 'Ctrl + Shift + K');
 insert into KEYS_BINDING (ACTION_NAME, BINDING)
 values('Select Line Text', 'Ctrl + G');
 
-insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show Data View Panel', 'Ctrl + esc');
-insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show DB Info Panel', 'Ctrl + F1');
+insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show Data View Panel', 'Ctrl + 1');
+insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Hide/Show DB Info Panel', 'Ctrl + 2');
 insert into KEYS_BINDING (ACTION_NAME, BINDING) values('unformat', 'Ctrl + alt + F');
-
+insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Separate Date Window', 'Ctrl + alt + `');
 
 insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Close Edit Page', 'Ctrl + W');
