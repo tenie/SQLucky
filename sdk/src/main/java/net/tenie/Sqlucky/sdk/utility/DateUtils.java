@@ -38,16 +38,58 @@ public class DateUtils {
     public static String localDateTimeToStr(LocalDateTime localDateTime) {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String dateStr = localDateTime.format(fmt);
-        System.out.println(dateStr);
         return dateStr;
     }
 
     public static LocalDateTime strToLocalDateTime(String dateStr) {
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime date2 = LocalDateTime.parse(dateStr, fmt);
-        System.out.println(date2);
 
         return date2;
+    }
+
+    /**
+     * 字符串时间, 减天数
+     * @param dateStr
+     * @return LocalDateTime
+     */
+    public static LocalDateTime strToLocalDateTimeMinusDay(String dateStr, long minusDays) {
+        LocalDateTime ldt = strToLocalDateTime(dateStr);
+        ldt = ldt.minusDays(minusDays);
+        System.out.println(localDateTimeToStr(ldt));
+        return ldt;
+    }
+
+
+
+    public static void main(String[] args) {
+        String begin = "2024-07-29 00:00:00";
+        String end = "2024-08-04 00:00:00";
+        String sql =" and ( ";
+        String strformat = "( a.EXPIRED_MONTH = '%s' and a.EXPIRED_DAY = '%s' )";
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime beginldt = LocalDateTime.parse(begin, fmt);
+        LocalDateTime endldt = LocalDateTime.parse(end, fmt);
+        long days = Duration.between(beginldt, endldt).toDays() ;
+        System.out.println("相差的天数: " + days + "天");
+        if(days == 6){
+            int mvTmp =  beginldt.getMonthValue();
+            int dvTmp =  beginldt.getDayOfMonth();
+            sql +=String.format(strformat, mvTmp, dvTmp);
+
+            for(int i = 1 ; i <6 ; i++) {
+                LocalDateTime tmpLdt = beginldt.plusDays(i);
+                mvTmp = tmpLdt.getMonthValue();
+                dvTmp = tmpLdt.getDayOfMonth();
+                sql += " or " + String.format(strformat, mvTmp, dvTmp);
+            }
+
+            mvTmp = endldt.getMonthValue();
+            dvTmp = endldt.getDayOfMonth();
+            sql += " or " + String.format(strformat, mvTmp, dvTmp) + " ) ";
+        }
+
+        System.out.println(sql);
     }
 
     public static String dateToStrL(Date d) {
@@ -242,6 +284,7 @@ public class DateUtils {
         LocalDateTime now = LocalDateTime.now();
         return now.plusDays(1);
     }
+
 
     /**
      * 获取北京时区

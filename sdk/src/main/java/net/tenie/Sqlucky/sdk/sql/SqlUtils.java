@@ -7,28 +7,57 @@ import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.fxmisc.richtext.CodeArea;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class SqlUtils {
+    // 注册格式化sql的拓展函数, 可以在格式化前和格式化后执行自定义的格式化
+    public static List<Function<String, String>> regFormatFuncPre = new ArrayList<>();
+    public static List<Function<String, String>> regFormatFuncAft = new ArrayList<>();
     // 代码格式化
     public static void formatSqlText() {
+
         CodeArea code = MyEditorSheetHelper.getCodeArea();
         String txt = code.getSelectedText();
         if (StrUtils.isNotNullOrEmpty(txt)) {
             IndexRange i = code.getSelection();
             int start = i.getStart();
             int end = i.getEnd();
-
-            String rs = SqlFormatter.format(txt);
+            txt = preFormat(txt);
+            txt = SqlFormatter.format(txt);
+            txt = aftFormat(txt);
             code.deleteText(start, end);
-            code.insertText(start, rs);
+            code.insertText(start, txt);
         } else {
             txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-            String rs = SqlFormatter.format(txt);
+            txt = preFormat(txt);
+            txt = SqlFormatter.format(txt);
+            txt = aftFormat(txt);
             code.clear();
-            code.appendText(rs);
+            code.appendText(txt);
         }
         MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
+    }
+
+    private static String preFormat(String txt){
+        String tmp = txt;
+        if(! regFormatFuncPre.isEmpty()){
+            for(var func: regFormatFuncPre){
+                tmp = func.apply(tmp);
+            }
+        }
+        return tmp;
+    }
+    private static String aftFormat(String txt){
+        String tmp = txt;
+        if(! regFormatFuncAft.isEmpty()){
+            for(var func: regFormatFuncAft){
+                tmp = func.apply(tmp);
+            }
+        }
+        return tmp;
     }
 
 
@@ -164,7 +193,13 @@ public class SqlUtils {
      * @return
      */
     public static String trimXmlConversionElement(String str){
-
+        if(! (str.contains("&lt;") ||
+                str.contains("&gt;") ||
+                str.contains("<![CDATA[") ||
+                str.contains("< ! [CDATA[") ||
+                str.contains("]]>")) ){
+            return str;
+        }
 //        while (str.contains("<![CDATA[ <> ]]>")){
 //            str =   str.replace("<![CDATA[ <> ]]>", "<>");
 //        }
