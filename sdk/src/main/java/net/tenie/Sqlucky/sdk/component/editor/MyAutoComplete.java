@@ -53,6 +53,7 @@ public class MyAutoComplete implements AutoComplete {
 
 		keyWords.add(TablePo.noDbObj("1 = 1 "));
 		keyWords.add(TablePo.noDbObj("LEFT JOIN   ON "));
+		keyWords.add(TablePo.noDbObj("INNER JOIN  ON "));
 		keyWords.add(TablePo.noDbObj("CASE WHEN   THEN   ELSE   END AS  "));
 		keyWords.add(TablePo.noDbObj("ORDER BY "));
 		keyWords.add(TablePo.noDbObj("ORDER BY  DESC "));
