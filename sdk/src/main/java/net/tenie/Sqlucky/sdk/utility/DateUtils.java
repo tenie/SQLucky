@@ -17,7 +17,7 @@ import java.util.Locale;
  */
 public class DateUtils {
     public static SimpleDateFormat usSdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
-
+    public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static Date asDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
@@ -36,15 +36,12 @@ public class DateUtils {
     }
 
     public static String localDateTimeToStr(LocalDateTime localDateTime) {
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String dateStr = localDateTime.format(fmt);
+        String dateStr = localDateTime.format(dateTimeFormatter);
         return dateStr;
     }
 
     public static LocalDateTime strToLocalDateTime(String dateStr) {
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime date2 = LocalDateTime.parse(dateStr, fmt);
-
+        LocalDateTime date2 = LocalDateTime.parse(dateStr, dateTimeFormatter);
         return date2;
     }
 
@@ -54,42 +51,46 @@ public class DateUtils {
      * @return LocalDateTime
      */
     public static LocalDateTime strToLocalDateTimeMinusDay(String dateStr, long minusDays) {
-        LocalDateTime ldt = strToLocalDateTime(dateStr);
+        LocalDateTime ldt = LocalDateTime.parse(dateStr, dateTimeFormatter);
         ldt = ldt.minusDays(minusDays);
-        System.out.println(localDateTimeToStr(ldt));
         return ldt;
     }
 
 
 
     public static void main(String[] args) {
-        String begin = "2024-07-29 00:00:00";
-        String end = "2024-08-04 00:00:00";
-        String sql =" and ( ";
-        String strformat = "( a.EXPIRED_MONTH = '%s' and a.EXPIRED_DAY = '%s' )";
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime beginldt = LocalDateTime.parse(begin, fmt);
-        LocalDateTime endldt = LocalDateTime.parse(end, fmt);
-        long days = Duration.between(beginldt, endldt).toDays() ;
-        System.out.println("相差的天数: " + days + "天");
-        if(days == 6){
-            int mvTmp =  beginldt.getMonthValue();
-            int dvTmp =  beginldt.getDayOfMonth();
-            sql +=String.format(strformat, mvTmp, dvTmp);
+        String text = //"==>  Preparing: SELECT * FROM ( SELECT ws.WS_NO_ID wsNoId, ws.WS_NO wsNo, sws.SC_WS_NO_ID scWsNoId, ws.WS_TYPE wsType, ws.WS_STATUS wsStatus, ws.SECOND_REPORT_STATUS secondReportStatus, wiu.SALES_STATUS salesStatus, WIU.WS_INFO_UPDATE_ID wsInfoUpdateId, CASE WHEN wsi.WS_DELI_COUNT IS NOT NULL THEN 10041001 ELSE 10041002 END isWsSale, wsi.WS_DELI_COUNT wsDeliCount, DATE_FORMAT(ws.SUBMIT_TIME,'%Y-%m-%d %H:%i:%s') submitTime, DATE_FORMAT(ws.AUDITING_DATE,'%Y-%m-%d %H:%i:%s') auditingDate, ws.WS_AUDITING_REMARK wsAuditingRemark, ws.POTENTIAL_CUSTOMER_NO potentialCustomerNo, ws.CUSTOMER_NAME customerName, ws.INDUSTRY_FIRST industryFirst, ws.INDUSTRY_SECOND industrySecond, ws.PUBLIC_PRIVATE_TAG publicPrivateTag, ws.WHOLESALE_TYPE_SUB wholesaleTypeSub, ws.WS_APP_TYPE wsAppType, ws.REBATE_TYPE rebateType, ws.CONTACTOR_NAME contactorName, ws.MOBILE mobile, ws.CONFIGURE_REMARK configureRemark, ws.DLR_PRINCIPAL_PHONE dlrPrincipalPhone, ws.IS_SECOND_REPORT isSecondReport, CASE WHEN wiu.SUBMIT_TIME IS NOT NULL THEN 10041001 ELSE 10041002 END isUpdateUpload, DATE_FORMAT(wsc.WS_SUPPLY_START_DATE,'%Y-%m-%d %H:%i:%s') wsSupplyStartDate, DATE_FORMAT(wsc.WS_SUPPLY_END_DATE,'%Y-%m-%d %H:%i:%s') wsSupplyEndDate FROM tt_po_cus_wholesale ws LEFT JOIN tt_po_second_cus_wholesale sws ON sws.WS_NO = ws.WS_NO AND sws.OWNER_CODE = ws.OWNER_CODE AND sws.IS_DELETED = 0 LEFT JOIN (SELECT wsc.WS_NO,wsc.OWNER_CODE,MAX(wsc.WS_SUPPLY_START_DATE) WS_SUPPLY_START_DATE,MAX(wsc.WS_SUPPLY_END_DATE) WS_SUPPLY_END_DATE FROM tt_ws_config_info wsc WHERE wsc.IS_DELETED = 0 AND wsc.OWNER_CODE = ? GROUP BY wsc.WS_NO,wsc.OWNER_CODE) wsc ON wsc.WS_NO=ws.WS_NO AND wsc.OWNER_CODE=ws.OWNER_CODE LEFT JOIN (SELECT COUNT(1) WS_DELI_COUNT,wsi.WS_NO,wsi.OWNER_CODE FROM tt_ws_sales_info wsi WHERE wsi.IS_DELETED = 0 AND wsi.VIN <> '' AND wsi.OWNER_CODE=? GROUP BY wsi.WS_NO,wsi.OWNER_CODE) wsi ON wsi.WS_NO = ws.WS_NO AND wsi.OWNER_CODE = ws.OWNER_CODE LEFT JOIN tm_ws_info_update wiu ON wiu.WS_NO = ws.WS_NO AND wiu.OWNER_CODE = ws.OWNER_CODE AND wiu.LAST_TAG = 10041001 AND wiu.VIN = '' AND wiu.IS_DELETED = 0 WHERE ws.OWNER_CODE = ? and ws.IS_DELETED = 0 AND ws.WS_STATUS in (?) ORDER BY ws.CREATED_AT DESC ) a LIMIT ?\n" +
+                "==> Parameters:";
+        String[] sqlArr = text.split("==> Parameters: ");
 
-            for(int i = 1 ; i <6 ; i++) {
-                LocalDateTime tmpLdt = beginldt.plusDays(i);
-                mvTmp = tmpLdt.getMonthValue();
-                dvTmp = tmpLdt.getDayOfMonth();
-                sql += " or " + String.format(strformat, mvTmp, dvTmp);
-            }
 
-            mvTmp = endldt.getMonthValue();
-            dvTmp = endldt.getDayOfMonth();
-            sql += " or " + String.format(strformat, mvTmp, dvTmp) + " ) ";
-        }
-
-        System.out.println(sql);
+//        String begin = "2024-07-29 00:00:00";
+//        String end = "2024-08-04 00:00:00";
+//        String sql =" and ( ";
+//        String strformat = "( a.EXPIRED_MONTH = '%s' and a.EXPIRED_DAY = '%s' )";
+//        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+//        LocalDateTime beginldt = LocalDateTime.parse(begin, fmt);
+//        LocalDateTime endldt = LocalDateTime.parse(end, fmt);
+//        long days = Duration.between(beginldt, endldt).toDays() ;
+//        System.out.println("相差的天数: " + days + "天");
+//        if(days == 6){
+//            int mvTmp =  beginldt.getMonthValue();
+//            int dvTmp =  beginldt.getDayOfMonth();
+//            sql +=String.format(strformat, mvTmp, dvTmp);
+//
+//            for(int i = 1 ; i <6 ; i++) {
+//                LocalDateTime tmpLdt = beginldt.plusDays(i);
+//                mvTmp = tmpLdt.getMonthValue();
+//                dvTmp = tmpLdt.getDayOfMonth();
+//                sql += " or " + String.format(strformat, mvTmp, dvTmp);
+//            }
+//
+//            mvTmp = endldt.getMonthValue();
+//            dvTmp = endldt.getDayOfMonth();
+//            sql += " or " + String.format(strformat, mvTmp, dvTmp) + " ) ";
+//        }
+//
+//        System.out.println(sql);
     }
 
     public static String dateToStrL(Date d) {
