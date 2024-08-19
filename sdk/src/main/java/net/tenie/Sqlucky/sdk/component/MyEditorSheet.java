@@ -104,7 +104,8 @@ public class MyEditorSheet extends Tab {
 					ComponentGetter.scriptTreeView.getSelectionModel().select(treeItem);
 				}
 
-				reloadText();
+				//原文被其他程序修改后, 重新加载
+//				reloadText();
 			}
 		});
 		// 选择title的时候初始化tab内容
