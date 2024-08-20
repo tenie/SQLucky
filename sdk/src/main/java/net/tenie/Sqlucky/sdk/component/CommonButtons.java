@@ -15,6 +15,7 @@ public final class CommonButtons {
 	
 	public static JFXButton hideLeft;
 	public static JFXButton hideBottom;
-	
+	public static JFXButton hideRight;
+
 	
 }

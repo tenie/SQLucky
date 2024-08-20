@@ -439,6 +439,27 @@ public class SdkComponent {
 		}
 	}
 
+	static Region rightTabPaneOpen = IconGenerator.rightTabPaneOpen();
+	static Region rightTabPaneClose =IconGenerator.rightTabPaneClose();
+	public static void showOrhideRight(){
+		JFXButton btn = CommonButtons.hideRight; // AllButtons.btns.get("hideBottom");
+		if(! btn.isDisabled()){
+			boolean showStatus = ComponentGetter.tabPaneMasterDetailPane.showDetailNodeProperty().getValue();
+			if(showStatus){
+				ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(false);
+				btn.setGraphic(rightTabPaneOpen);
+			}else {
+				ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(true);
+				btn.setGraphic(rightTabPaneClose);
+			}
+
+//			hideShowBottomHelper(showStatus, btn);
+			if (showStatus) {
+				SdkComponent.escapeWindowsUiBug();
+			}
+		}
+	}
+
 	public static void hideBottomPane() {
 
 		JFXButton btn = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
@@ -446,10 +467,10 @@ public class SdkComponent {
 
 	}
 
-	static Region rightRegion  = IconGenerator.svgImageDefActive("caret-square-o-right");
-	static Region downRegion  = IconGenerator.svgImageDefActive("caret-square-o-down");
-	static Region leftRegion  = IconGenerator.svgImageDefActive("caret-square-o-left");
-	static Region upRegion  = IconGenerator.svgImageDefActive("caret-square-o-up");
+	static Region rightRegion  = IconGenerator.mainTabPaneClose();//svgImageDefActive("caret-square-o-right");
+	static Region downRegion  = IconGenerator.bottomTabPaneClose(); //IconGenerator.svgImageDefActive("caret-square-o-down");
+	static Region leftRegion  = IconGenerator.mainTabPaneOpen();//svgImageDefActive("caret-square-o-left");
+	static Region upRegion  = IconGenerator.bottomTabPaneOpen(); //IconGenerator.svgImageDefActive("caret-square-o-up");
 	// TODO 显示或隐藏 数据面板, 修改控制按钮图标
 	public static void hideShowBottomHelper(boolean isShow, JFXButton btn) {
 		if (isShow) {

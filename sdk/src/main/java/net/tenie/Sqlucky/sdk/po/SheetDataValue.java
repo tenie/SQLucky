@@ -73,13 +73,13 @@ public class SheetDataValue {
 		Tooltip rightTootip = MyTooltipTool.instance("Move Sheet To Right");
 
 
-		Region downRegion =  IconGenerator.svgImageDefActive("caret-square-o-down");
-		Region rightRegion =  IconGenerator.svgImageDefActive("caret-square-o-right");
-		Region leftRegion =  IconGenerator.svgImageDefActive("caret-square-o-left");
+		Region downRegion =  IconGenerator.closeIcon();// IconGenerator.svgImageDefActive("caret-square-o-down");
+//		Region rightRegion =  IconGenerator.svgImageDefActive("caret-square-o-right");
+//		Region leftRegion =  IconGenerator.svgImageDefActive("caret-square-o-left");
 
 
-		Region rightRegion2 =  IconGenerator.svgImageDefActive("caret-square-o-right");
-		Region leftRegion2 =  IconGenerator.svgImageDefActive("caret-square-o-left");
+//		Region rightRegion2 =  IconGenerator.svgImageDefActive("caret-square-o-right");
+//		Region leftRegion2 =  IconGenerator.svgImageDefActive("caret-square-o-left");
 
 
 		// 隐藏按钮
@@ -106,7 +106,7 @@ public class SheetDataValue {
 				hideBottom.setGraphic(downRegion);
 
 				// 全局的隐藏按钮
-				CommonButtons.hideBottom.setGraphic(leftRegion2);
+//				CommonButtons.hideBottom.setGraphic(leftRegion2);
 				isSideRight = false;
 
 			}else {
@@ -118,9 +118,9 @@ public class SheetDataValue {
 				masterDetailPane.setDividerPosition(0.7);
 
 				// 隐藏按钮
-				hideBottom.setGraphic(rightRegion);
+//				hideBottom.setGraphic(rightRegion);
 				// 全局的隐藏按钮
-				CommonButtons.hideBottom.setGraphic(rightRegion2);
+//				CommonButtons.hideBottom.setGraphic(rightRegion2);
 				isSideRight = true;
 			}
 

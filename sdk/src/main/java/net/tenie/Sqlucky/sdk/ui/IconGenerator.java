@@ -18,6 +18,48 @@ import java.net.URL;
  * @author tenie
  */
 public final class IconGenerator {
+    public static Region bottomTabPaneClose() {
+        return IconGenerator.svgImageDefActive("bottom-tabPane-close");
+    }
+
+    public static Region bottomTabPaneOpen() {
+        return IconGenerator.svgImageDefActive("bottom-tabPane-open");
+    }
+
+    public static Region mainTabPaneClose() {
+        return IconGenerator.svgImageDefActive("main-tabPane-close");
+    }
+
+    public static Region mainTabPaneOpen() {
+        return IconGenerator.svgImageDefActive("main-tabPane-open");
+    }
+
+    public static Region rightTabPaneClose() {
+        return IconGenerator.svgImageDefActive("right-tabPane-close");
+    }
+
+    public static Region rightTabPaneOpen() {
+        return IconGenerator.svgImageDefActive("right-tabPane-open");
+    }
+
+    public static Region closeIcon() {
+        return IconGenerator.svgImageCss("my-window-close", 12, 12, "top-btn-Icon-color");
+    }
+
+    public static Region maximizeIcon() {
+        return IconGenerator.svgImageCss("my-window-maximize", 12, 12, "top-btn-Icon-color");
+    }
+
+    public static Region miniIcon() {
+        return IconGenerator.svgImageCss("my-minus-square", 12.0, 1.0, "top-btn-Icon-color");
+    }
+//            IconGenerator.svgImageCss("my-window-maximize", 12, 12, "top-btn-Icon-color");
+
+//            IconGenerator.svgImageCss("my-window-restore", 12, 12, "top-btn-Icon-color");
+
+//            IconGenerator.svgImageDefActive("window-close-btn");
+
+
     // 加载 svg文件
     public static Node sqluckyLogoSVG() {
         SVGImage svgImage = null;
