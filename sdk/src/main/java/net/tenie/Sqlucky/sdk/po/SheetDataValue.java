@@ -73,7 +73,7 @@ public class SheetDataValue {
 		Tooltip rightTootip = MyTooltipTool.instance("Move Sheet To Right");
 
 
-		Region downRegion =  IconGenerator.closeIcon();// IconGenerator.svgImageDefActive("caret-square-o-down");
+		Region closeIcon =  IconGenerator.closeIcon();// IconGenerator.svgImageDefActive("caret-square-o-down");
 //		Region rightRegion =  IconGenerator.svgImageDefActive("caret-square-o-right");
 //		Region leftRegion =  IconGenerator.svgImageDefActive("caret-square-o-left");
 
@@ -84,7 +84,7 @@ public class SheetDataValue {
 
 		// 隐藏按钮
 
-		hideBottom.setGraphic(downRegion);
+		hideBottom.setGraphic(closeIcon);
 		hideBottom.setOnMouseClicked(e -> {
 			SdkComponent.hideBottom();
 		});
@@ -103,7 +103,7 @@ public class SheetDataValue {
 				masterDetailPane.setDividerPosition(0.6);
 
 				// 隐藏按钮
-				hideBottom.setGraphic(downRegion);
+//				hideBottom.setGraphic(closeIcon);
 
 				// 全局的隐藏按钮
 //				CommonButtons.hideBottom.setGraphic(leftRegion2);

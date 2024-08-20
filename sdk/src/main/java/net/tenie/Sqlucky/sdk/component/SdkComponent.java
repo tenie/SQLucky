@@ -474,22 +474,22 @@ public class SdkComponent {
 	// TODO 显示或隐藏 数据面板, 修改控制按钮图标
 	public static void hideShowBottomHelper(boolean isShow, JFXButton btn) {
 		if (isShow) {
-			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
-				btn.setGraphic(rightRegion);
-			}else{
-				btn.setGraphic(downRegion);
-			}
+//			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
+//				btn.setGraphic(rightRegion);
+//			}else{
+//				btn.setGraphic(downRegion);
+//			}
 			double val = ComponentGetter.masterDetailPane.getDividerPosition();
 			if (val > 0.85) {
 				ComponentGetter.masterDetailPane.setDividerPosition(0.6);
 			}
 			ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
 		} else {
-			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
-				btn.setGraphic(leftRegion);
-			}else{
-				btn.setGraphic(upRegion);
-			}
+//			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
+//				btn.setGraphic(leftRegion);
+//			}else{
+//				btn.setGraphic(upRegion);
+//			}
 			ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
 		}
 
