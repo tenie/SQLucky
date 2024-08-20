@@ -1031,7 +1031,8 @@ public class StrUtils {
             for (Integer idx : needIdx){
                String sqlTmp =  text.substring(begin, idx);
                if(StrUtils.isNotNullOrEmpty(sqlTmp)){
-                  if(sqlTmp.trim().length() > 10){
+                  String tempStr = StrUtils.trimAllCommentToBlank(sqlTmp).trim();
+                  if(tempStr.length() > 10){
                       sql.add(sqlTmp);
                   }
                }
@@ -1040,7 +1041,8 @@ public class StrUtils {
             if(begin > 0 ){
                 String sqlTmp =  text.substring(begin);
                 if(StrUtils.isNotNullOrEmpty(sqlTmp)){
-                    if(sqlTmp.trim().length() > 10){
+                    String tempStr = StrUtils.trimAllCommentToBlank(sqlTmp).trim();
+                    if(tempStr.length() > 10){
                         sql.add(sqlTmp);
                     }
                 }

@@ -477,7 +477,8 @@ public class AppCommonAction {
             MyEditorSheet sheet = ComponentGetter.appComponent.findMyTabByScriptPo(scpo);
 
             if (sheet != null) { // 如果已经存在就不用重新打开
-                sheet.showEditor();
+                var myTabPane = ComponentGetter.mainTabPane;
+                sheet.showEditor(myTabPane);
             } else {
                 MyEditorSheetHelper.createTabFromSqlFile(scpo);
             }
@@ -512,7 +513,8 @@ public class AppCommonAction {
 
             MyEditorSheet sheet = ComponentGetter.appComponent.findMyTabByScriptPo(scpo);
             if (sheet != null) { // 如果已经存在就不用重新打开
-                sheet.showEditor();
+                var myTabPane = ComponentGetter.mainTabPane;
+                sheet.showEditor(myTabPane);
             } else {
                 MyEditorSheetHelper.createTabFromSqlFile(scpo);
             }

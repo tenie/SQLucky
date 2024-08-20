@@ -118,9 +118,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		if (scriptDatas != null && scriptDatas.size() > 0) {
 			ConfigVal.pageSize = scriptDatas.size();
 			for (DocumentPo po : scriptDatas) {
-//				MyEditorSheet tb = new MyEditorSheet(po, true);
-				MyEditorSheet myEditorSheet = MyEditorSheetHelper.createHighLightingEditor(po);// new MyEditorSheet(po);
-//				TreeItem<MyEditorSheet> item = new TreeItem<>(myEditorSheet);
+				MyEditorSheet myEditorSheet = MyEditorSheetHelper.createHighLightingEditor(po);
 				TreeItem<MyEditorSheet> item = myEditorSheet.getTreeItem();
 
 				treeItems.add(item);
@@ -149,7 +147,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 
 		Tab tmpSysOpenFileTB = sysOpenFileTB;
 		Tab activateTmpMyTab = activateMyTab;
-		// 页面显示后 执行下吗
+		// 页面显示后 执行, 显示代码编辑框Tab
 		Consumer<String> cr = v -> {
 			if (treeItems.size() > 0) {
 				Platform.runLater(() -> {
@@ -173,13 +171,11 @@ public class ScriptTabTree extends SqluckyTitledPane {
 					}
 					// 没有tab被添加, 添加一新的
 					if (myEditorSheets.size() == 0) {
-//						MyAreaTab.addCodeEmptyTabMethod();
 						MyEditorSheetHelper.addEmptyHighLightingEditor();
 					}
 				});
 			} else {
 				Platform.runLater(() -> {
-//					MyAreaTab.addCodeEmptyTabMethod();
 					MyEditorSheetHelper.addEmptyHighLightingEditor();
 				});
 			}
@@ -250,6 +246,8 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		rootNode.getChildren().clear();
 		var myTabPane = ComponentGetter.mainTabPane;
 		myTabPane.getTabs().clear();
+		var rightTabPane = ComponentGetter.rightTabPane;
+		rightTabPane.getTabs().clear();
 
 		recoverFromDocumentPos(scriptDatas);
 	}
@@ -258,12 +256,6 @@ public class ScriptTabTree extends SqluckyTitledPane {
 	public static ObservableList<TreeItem<MyEditorSheet>> allTreeItem() {
 		ObservableList<TreeItem<MyEditorSheet>> val = ScriptTreeView.getRoot().getChildren();
 		return val;
-	}
-
-	// 获取当前选中的节点
-	public static TreeItem<MyEditorSheet> getScriptViewCurrentItem() {
-		TreeItem<MyEditorSheet> ctt = ScriptTreeView.getSelectionModel().getSelectedItem();
-		return ctt;
 	}
 
 	// 给root节点加元素
@@ -290,29 +282,16 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		TreeItem<MyEditorSheet> item = ScriptTreeView.getSelectionModel().getSelectedItem();
 		MyEditorSheet sheet = item.getValue();
 		if (sheet != null && sheet.getDocumentPo() != null) {
-			sheet.showEditor();
-		}
-	}
+			int tabPosition = sheet.getDocumentPo().getTabPosition();
+			var myTabPane = ComponentGetter.mainTabPane;
+			var rightTabPane = ComponentGetter.rightTabPane;
+			if(0 == tabPosition){
+				sheet.showEditor(myTabPane);
+			}else {
+				sheet.showEditor(rightTabPane);
+			}
 
-	public static List<DocumentPo> allScriptPo() {
-		ObservableList<TreeItem<MyEditorSheet>> ls = allTreeItem();
-		List<DocumentPo> list = new ArrayList<>();
-		for (var ti : ls) {
-			var mytb = ti.getValue();
-			list.add(mytb.getDocumentPo());
 		}
-
-		return list;
-	}
-
-	public static List<MyEditorSheet> allMyTab() {
-		ObservableList<TreeItem<MyEditorSheet>> ls = allTreeItem();
-		List<MyEditorSheet> list = new ArrayList<>();
-		for (var ti : ls) {
-			var mytb = ti.getValue();
-			list.add(mytb);
-		}
-		return list;
 	}
 
 	public static MyEditorSheet findMyTabByScriptPo(DocumentPo scpo) {
@@ -386,9 +365,13 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		var conn = SqluckyAppDB.getConn();
 		try {
 			var myTabPane = ComponentGetter.mainTabPane;
+			var rightTabPane = ComponentGetter.rightTabPane;
 			if (myTabPane.getTabs().contains(tb)) {
 				myTabPane.getTabs().remove(tb);
+			}else if(rightTabPane.getTabs().contains(tb) ) {
+				rightTabPane.getTabs().remove(tb);
 			}
+
 			myTabItemList.remove(ctt);
 
 			var scpo = tb.getDocumentPo();

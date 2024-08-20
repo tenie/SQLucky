@@ -1,5 +1,7 @@
 package net.tenie.fx.component.container;
 
+import javafx.geometry.Side;
+import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.NotificationPane;
 
 import javafx.application.Platform;
@@ -16,18 +18,36 @@ import net.tenie.fx.factory.ButtonFactory;
 /*   @author tenie */
 public class CodeContainer extends VBox{
 	private AnchorPane operateBtnPane;
+	// 主代码框
 	private TabPane mainTabPane;
+	// 右侧代码框
+	private TabPane rightTabPane;
 	// 通知信息的面板容器, 一些提示信息, 会在这个容器顶部显示
 	private NotificationPane notificationPane = new NotificationPane();
+
+	// 多窗口代码框
+	private MasterDetailPane tabPaneMasterDetailPane;
+
+
 	public CodeContainer() {
 		super();
+
+		// 按钮面板
 		operateBtnPane = ButtonFactory.codeAreabtnInit();
 		
 		mainTabPane = new TabPane();
+		rightTabPane = new TabPane();
 		ComponentGetter.mainTabPane = mainTabPane;
+		ComponentGetter.rightTabPane = rightTabPane;
+		tabPaneMasterDetailPane  = new MasterDetailPane(Side.RIGHT);
+		tabPaneMasterDetailPane.setShowDetailNode(false);
+		tabPaneMasterDetailPane.setMasterNode(mainTabPane);
+		tabPaneMasterDetailPane.setDetailNode(rightTabPane);
+		ComponentGetter.tabPaneMasterDetailPane = tabPaneMasterDetailPane;
 
 		// 将主面板放入到"通知面板"的容器中
-		notificationPane.setContent(mainTabPane); 
+//		notificationPane.setContent(mainTabPane);
+		notificationPane.setContent(tabPaneMasterDetailPane);
 		VBox.setVgrow(notificationPane, Priority.ALWAYS);
 		// 配置 notificationPane 组件
 		configNotificationPane();

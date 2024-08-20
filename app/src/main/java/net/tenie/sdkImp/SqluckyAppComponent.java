@@ -374,8 +374,8 @@ public class SqluckyAppComponent implements AppComponent {
 
 	// 创建一个DocumentPo对象, 并保存在数据库
 	@Override
-	public DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph) {
-		return AppDao.scriptArchive(title, txt, filename, encode, paragraph);
+	public DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph, int tabPosition) {
+		return AppDao.scriptArchive(title, txt, filename, encode, paragraph, tabPosition);
 	}
 
 	@Override

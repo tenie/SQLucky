@@ -25,7 +25,8 @@ CREATE INDEX idx_conn_info on CONNECTION_INFO (`ID`,`CONN_NAME`);
    `SQL_TEXT` CLOB,  
    `FILE_NAME` VARCHAR(1000) ,  
    `ENCODE` VARCHAR(100) ,  
-   `PARAGRAPH` INT(11) DEFAULT '0' , 
+   `PARAGRAPH` INT(11) DEFAULT '0' ,
+   `TAB_POSITION` INT(11) DEFAULT '0' ,  -- tab 在哪个tabPane显示, 0 : 在mainTabPane, 1: rightTabPane
    `IS_ACTIVATE` INT(1) DEFAULT '0' ,    -- 是否激活 1:表示激活状态
    `OPEN_STATUS` INT(1) DEFAULT '0'      --打开状态 1: 打开, 0:未打开
 

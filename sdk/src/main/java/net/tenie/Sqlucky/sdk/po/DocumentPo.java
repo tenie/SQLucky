@@ -35,6 +35,7 @@ public class DocumentPo implements Serializable {
 	private Integer isActivate; // 是否激活, 在编辑区域打开的状态, 只有openStatus 为1时才有意义
 
 	private Boolean saveToDB; // 对文本内容需要保存到数据库的标记
+	private Integer tabPosition = 0;// tab在哪个 TabPane中显示, 0: mainTabPane 1: rightTabPane
 
 	public DocumentPo() {
 		this.id = null;
@@ -216,6 +217,22 @@ public class DocumentPo implements Serializable {
 
 	public void setIsActivate(Integer isActivate) {
 		this.isActivate = isActivate;
+	}
+
+	public Integer getTabPosition() {
+		return tabPosition;
+	}
+
+	public void setTabPosition(Integer tabPosition) {
+		this.tabPosition = tabPosition;
+	}
+
+	public String getFileFullName() {
+		return fileFullName;
+	}
+
+	public SimpleStringProperty titleProperty() {
+		return title;
 	}
 
 	@Override
