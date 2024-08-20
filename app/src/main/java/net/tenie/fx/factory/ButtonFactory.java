@@ -3,16 +3,13 @@ package net.tenie.fx.factory;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import net.tenie.Sqlucky.sdk.component.CommonButtons;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
-import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.component.*;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
@@ -104,23 +101,47 @@ public class ButtonFactory {
 		});
 
 		JFXButton hideLeft = new JFXButton();
-		hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
+//		hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
+		hideLeft.setGraphic(IconGenerator.mainTabPaneClose());
 		hideLeft.setOnMouseClicked(CommonEventHandler.hideLift());
 		hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
 
 		// TODO hideBottom
 		JFXButton hideBottom = new JFXButton();
-		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+//		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+		hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
 		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
 		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
 
+
+
+		JFXButton hideRight = new JFXButton();
+//		var rightTabPaneOpen =IconGenerator.rightTabPaneOpen();
+//		var rightTabPaneClose =IconGenerator.rightTabPaneClose();
+//		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+//		hideRight.setGraphic(rightTabPaneOpen);
+//		hideRight.setOnMouseClicked(CommonEventHandler.hideBottom());
+		hideRight.setOnAction(event -> {
+			SdkComponent.showOrhideRight();
+		});
+		hideRight.setTooltip(MyTooltipTool.instance("Hide or Show Right Panel "));
+//		Platform.runLater(SdkComponent::showOrhideRight);
+
+		btnsAnchorPane.getChildren().add(hideRight);
 		btnsAnchorPane.getChildren().add(hideLeft);
 		btnsAnchorPane.getChildren().add(hideBottom);
-		AnchorPane.setRightAnchor(hideBottom, 0.0);
-		AnchorPane.setRightAnchor(hideLeft, 30.0);
+		AnchorPane.setRightAnchor(hideRight, 0.0);
+		AnchorPane.setRightAnchor(hideBottom, 30.0);
+		AnchorPane.setRightAnchor(hideLeft, 60.0);
+
+
+
+
+
 
 		CommonButtons.hideLeft = hideLeft;
 		CommonButtons.hideBottom = hideBottom;
+		CommonButtons.hideRight = hideRight;
 
 		// 选择sql在哪个连接上执行
 		Label lbcnn = new Label("DB Connection: ");

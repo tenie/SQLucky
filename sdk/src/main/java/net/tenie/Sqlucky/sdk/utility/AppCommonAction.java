@@ -333,7 +333,7 @@ public class AppCommonAction {
         JFXButton btn = CommonButtons.hideLeft;
         if (ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue()) {
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
-            btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
+            btn.setGraphic(IconGenerator.mainTabPaneClose());
 
         } else {
             double dpval = ComponentGetter.treeAreaDetailPane.getDividerPosition();
@@ -344,7 +344,7 @@ public class AppCommonAction {
                 ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
             }
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
-            btn.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
+            btn.setGraphic(IconGenerator.mainTabPaneClose());
 
         }
     }
@@ -356,20 +356,24 @@ public class AppCommonAction {
         boolean bootp = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
         if (leftp || bootp) {
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
-            btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
+//            btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
+            btnLeft.setGraphic(IconGenerator.mainTabPaneClose());
 
             if(! btnBottom.isDisabled()){
                 ComponentGetter.masterDetailPane.setShowDetailNode(false);
-                btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+//                btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+                btnBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
             }
 
         } else {
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
-            btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
+//            btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
+            btnLeft.setGraphic(IconGenerator.mainTabPaneClose());
 
             if(! btnBottom.isDisabled()){
                 ComponentGetter.masterDetailPane.setShowDetailNode(true);
-                btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
+//                btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
+                btnBottom.setGraphic(IconGenerator.bottomTabPaneClose());
             }
 
         }

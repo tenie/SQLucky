@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
@@ -121,6 +122,7 @@ public class app extends Application {
         AppCommonAction.setTheme(Theme);
         // 加载插件
         ServiceLoad.callLoad();
+        Platform.runLater(SdkComponent::showOrhideRight);
         logger.info("完成初始化");
 
     }
