@@ -37,101 +37,6 @@ import net.tenie.Sqlucky.sdk.utility.TransferDataUtils;
  */
 public class AppDao {
 	private static Logger logger = LogManager.getLogger(AppDao.class);
-	public static final String CONNECTION_INFO = "CREATE TABLE `CONNECTION_INFO` (\n" +
-//			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +  
-	// sqlite 自增 AUTOINCREMENT
-			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + "  `CONN_NAME` VARCHAR(1000)   NOT NULL,\n"
-			+ "  `USER` VARCHAR(1000)   NOT NULL,\n" + "  `PASS_WORD` VARCHAR(1000)   NOT NULL,\n"
-			+ "  `HOST` VARCHAR(200) ,\n" + "  `PORT` VARCHAR(10) , \n" + "  `JDBC_URL` VARCHAR(500) , \n"
-			+ "  `DRIVER` VARCHAR(200) ,\n" + "  `VENDOR` VARCHAR(100)  ,\n" + "  `SCHEMA` VARCHAR(200)  ,\n"
-			+ "  `DB_NAME` VARCHAR(200)  ,\n" + "  `COMMENT` VARCHAR(200) DEFAULT NULL,\n"
-			+ "  `AUTO_CONNECT` INT(1) DEFAULT '0',\n" + "  `CREATED_AT` DATETIME DEFAULT NULL,\n"
-			+ "  `UPDATED_AT` DATETIME DEFAULT NULL,\n" + "  `RECORD_VERSION` INT(11) DEFAULT '0',\n"
-			+ "  `ORDER_TAG` DOUBLE(11) DEFAULT '99'" +
-			// sqlite 不能建表的时候创建联合组件
-//			+ ",\n" 
-//			"  PRIMARY KEY (`ID`,`CONN_NAME`)\n" + 
-			") ";
-
-	public static final String SCRIPT_ARCHIVE = "CREATE TABLE `SCRIPT_ARCHIVE` (\n" +
-//			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" + 
-			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + "  `TITLE_NAME` VARCHAR(1000)   NOT NULL,\n"
-			+ "  `SQL_TEXT` CLOB, \n" + "  `FILE_NAME` VARCHAR(1000) ,\n" + "  `ENCODE` VARCHAR(100) ,\n"
-			+ "  `PARAGRAPH` INT(11) DEFAULT '0' ,\n" + "  `IS_ACTIVATE` INT(1) DEFAULT '0' ,\n" + // 是否激活 1:表示激活状态
-			"  `OPEN_STATUS` INT(1) DEFAULT '0' \n" + // 打开状态 1: 打开, 0:未打开
-
-//			+ ",\n" 
-//			"  PRIMARY KEY ( `ID`, `TITLE_NAME`)\n" + 
-			") ";
-
-	public static final String APP_CONFIG = "CREATE TABLE `APP_CONFIG` (\n" + "  `NAME` VARCHAR(1000)   NOT NULL,\n"
-			+ "  `VAL`  VARCHAR(1000), \n" + "  PRIMARY KEY (`NAME`)\n" + ") ";
-
-	public static final String DATA_MODEL_INFO = "CREATE TABLE `DATA_MODEL_INFO` (\n"
-			+ "  `ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + "  `NAME` VARCHAR(200)   NOT NULL,\n"
-			+ "  `DESCRIBE` VARCHAR(300)  , \n" + "  `AVATAR` VARCHAR(200)   ,\n" + "  `VERSION` VARCHAR(100)   ,\n" +
-
-			"  `CREATEDTIME` VARCHAR(100)    ,\n" + "  `UPDATEDTIME` VARCHAR(100)    ,\n" +
-
-			"  `ORDER_TAG` INT(11) DEFAULT '99'" +
-//			+ ",\n" +
-//			"  PRIMARY KEY ( `ID`, `NAME`)\n" + 
-			") ";
-
-	public static final String DATA_MODEL_TABLE = "CREATE TABLE `DATA_MODEL_TABLE` (\n"
-			+ "  `ITEM_ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + "  `MODEL_ID` INT(11)   ,\n"
-			+ "  `ID` VARCHAR(100) ,\n" + "  `DEF_KEY` VARCHAR(200)   NOT NULL,\n" + "  `DEF_NAME` VARCHAR(300)  , \n"
-			+ "  `COMMENT` VARCHAR(1000)  , \n" +
-
-			"  `CREATED_TIME` DATETIME  ,\n" + "  `UPDATED_TIME` DATETIME  " +
-//			+ ",\n" + 
-//			"  PRIMARY KEY ( `ITEM_ID`, `DEF_KEY`)\n" + 
-			") ";
-	public static final String DATA_MODEL_TABLE_FIELDS = "CREATE TABLE `DATA_MODEL_TABLE_FIELDS` (\n"
-			+ "  `ITEM_ID` INTEGER PRIMARY KEY AUTOINCREMENT,\n" + "  `TABLE_ID` INT(11) NOT NULL ,\n"
-			+ "  `MODEL_ID` INT(11)   ,\n" + "  `ID` VARCHAR(100)  , \n" + "  `ROW_NO` INT(11) ,\n"
-			+ "  `DEF_KEY` VARCHAR(200)    ,   \n" + // 字段名称
-			"  `DEF_NAME` VARCHAR(300)  , \n" + "  `COMMENT` VARCHAR(1000)  , \n" +
-
-			"  `DOMAIN` VARCHAR(200)  , \n" + "  `TYPE` VARCHAR(200)  , \n" + "  `LEN` INT(11) ,\n"
-			+ "  `SCALE` VARCHAR(100)  , \n" +
-
-			"  `PRIMARY_KEY` VARCHAR(10) ,\n" + "  `NOT_NULL` VARCHAR(10) ,\n" + "  `AUTO_INCREMENT` VARCHAR(10) ,\n"
-			+ "  `DEFAULT_VALUE` VARCHAR(500)  , \n" + "  `HIDE_IN_GRAPH` VARCHAR(10) ,\n" +
-
-			"  `TYPE_FULL_NAME` VARCHAR(500)  , \n" + "  `PRIMARY_KEY_NAME` VARCHAR(500)  , \n"
-			+ "  `NOT_NULL_NAME` VARCHAR(500)  , \n" + "  `AUTO_INCREMENT_NAME` VARCHAR(500)  , \n"
-			+ "  `REF_DICT` VARCHAR(500)  , \n" +
-
-			"  `CREATED_TIME` DATETIME ,\n" + "  `UPDATED_TIME` DATETIME " +
-//			+ ",\n" + 
-//			"  PRIMARY KEY ( `ITEM_ID`, `TABLE_ID`,`DEF_KEY`)\n" + 
-			") ";
-
-	public static final String PLUGIN_INFO = "CREATE TABLE `PLUGIN_INFO` (\n" +
-//			"  `ID` INT(11) NOT NULL AUTO_INCREMENT,\n" +
-			"  `ID` INTEGER PRIMARY KEY AUTOINCREMENT, \n" + "  `PLUGIN_NAME` VARCHAR(200)    ,   \n"
-			+ "  `PLUGIN_CODE` VARCHAR(200)    ,   \n" + "  `PLUGIN_DESCRIBE` VARCHAR(1000)  , \n"
-			+ "  `COMMENT` VARCHAR(1000)  , \n" + "  `DOWNLOAD_STATUS` INT(1) ,\n" + // 下载状态, 0:未安装, 1: 以安装
-			"  `RELOAD_STATUS` INT(1) DEFAULT '1',\n" + // 是否需要加载, 0: 不加载, 1: 加载
-			"  `VERSION` VARCHAR(30)    , " + // 版本
-
-			"  `CREATED_TIME` DATETIME ,\n" + "  `UPDATED_TIME` DATETIME " +
-//			",\n" + 
-//			"  PRIMARY KEY ( `ID`, `PLUGIN_NAME`)\n" + 
-			") ";
-
-	public static final String SQLUCKY_USER = "CREATE TABLE `SQLUCKY_USER` (\n"
-			+ "  `ID` INTEGER PRIMARY KEY AUTOINCREMENT, \n" + "  `USER_NAME`  VARCHAR(300)   ,   \n"
-			+ "  `EMAIL` VARCHAR(300)    ,   \n" + "  `PASSWORD` VARCHAR(300)  , \n" +
-
-			"  `CREATED_TIME` DATETIME ,\n" + "  `UPDATED_TIME` DATETIME " + ") ";
-
-	public static final String KEYS_BINDING = "CREATE TABLE `KEYS_BINDING` (\n"
-			+ "  `ID` INTEGER PRIMARY KEY AUTOINCREMENT, \n" + "  `ACTION_NAME`  VARCHAR(300)   ,   \n"
-			+ "  `BINDING` VARCHAR(300)    ,   \n" + "  `CODE` VARCHAR(300)  , \n" +
-
-			"  `CREATED_TIME` DATETIME ,\n" + "  `UPDATED_TIME` DATETIME " + ") ";
 
 	public static String readSqlFile(String path) {
 		String sql = "";
@@ -224,8 +129,8 @@ public class AppDao {
 	}
 
 	public static DocumentPo scriptArchive(Connection conn, String title, String txt, String filename, String encode,
-			int paragraph) {
-		String sql = "insert into SCRIPT_ARCHIVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH) values ( ? , ?, ?, ?, ?)";
+			int paragraph, int tabPosition) {
+		String sql = "insert into SCRIPT_ARCHIVE (TITLE_NAME, SQL_TEXT, FILE_NAME, ENCODE, PARAGRAPH, TAB_POSITION) values ( ? , ?, ?, ?, ?, ?)";
 		PreparedStatement sm = null;
 		Integer id = -1;
 		try {
@@ -235,6 +140,8 @@ public class AppDao {
 			sm.setString(3, filename);
 			sm.setString(4, encode);
 			sm.setInt(5, paragraph);
+			sm.setInt(6, tabPosition);
+
 
 			id = DBTools.execInsertReturnId(sm);
 		} catch (SQLException e) {
@@ -258,11 +165,11 @@ public class AppDao {
 		return po;
 	}
 
-	public static DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph) {
+	public static DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph , int tabPosition) {
 		var conn = SqluckyAppDB.getConn();
 		DocumentPo po = null;
 		try {
-			po = scriptArchive(SqluckyAppDB.getConn(), title, txt, filename, encode, paragraph);
+			po = scriptArchive(SqluckyAppDB.getConn(), title, txt, filename, encode, paragraph, tabPosition);
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -279,7 +186,8 @@ public class AppDao {
 			return;
 		}
 		String sql = "update SCRIPT_ARCHIVE set TITLE_NAME = ?, "
-				+ " SQL_TEXT = ?, FILE_NAME = ? , ENCODE = ?, PARAGRAPH = ? , OPEN_STATUS = ?, IS_ACTIVATE = ? where id = ?";
+				+ " SQL_TEXT = ?, FILE_NAME = ? , ENCODE = ?, PARAGRAPH = ? , OPEN_STATUS = ?, IS_ACTIVATE = ?, " +
+				" TAB_POSITION = ?  where id = ?";
 		try {
 			sm = conn.prepareStatement(sql);
 			sm.setString(1, po.getTitle().get());
@@ -289,8 +197,10 @@ public class AppDao {
 			sm.setInt(5, po.getParagraph());
 			sm.setInt(6, po.getOpenStatus());
 			sm.setInt(7, po.getIsActivate());
-			sm.setInt(8, po.getId());
+			sm.setInt(8, po.getTabPosition());
+			sm.setInt(9, po.getId());
 
+			// 位置 position
 			sm.execute();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -363,6 +273,7 @@ public class AppDao {
 				po.setParagraph(rs.getInt("PARAGRAPH"));
 				po.setOpenStatus(rs.getInt("OPEN_STATUS"));
 				po.setIsActivate(rs.getInt("IS_ACTIVATE"));
+				po.setTabPosition(rs.getInt("TAB_POSITION"));
 				vals.add(po);
 			}
 		} catch (SQLException e) {

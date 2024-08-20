@@ -39,8 +39,22 @@ public class MyEditorSheetHelper {
 	public static void mainTabPaneAddAllMyTabs(List<MyEditorSheet> ls) {
 		if (ls != null && ls.size() > 0) {
 			var myTabPane = ComponentGetter.mainTabPane;
+			var rightTabPane = ComponentGetter.rightTabPane;
 			for (MyEditorSheet sheet : ls) {
-				myTabPane.getTabs().add(sheet);
+				int tabPosition = sheet.getDocumentPo().getTabPosition();
+				if( 0 == tabPosition ){
+					myTabPane.getTabs().add(sheet);
+				}else {
+
+					rightTabPane.getTabs().add(sheet);
+					if (!ComponentGetter.tabPaneMasterDetailPane.isShowDetailNode()) {
+						Platform.runLater(() -> {
+							ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(true);
+						});
+					}
+
+				}
+
 			}
 		}
 
@@ -57,7 +71,7 @@ public class MyEditorSheetHelper {
 		String labe = "Untitled_" + ConfigVal.pageSize + "*";
 
 		MyEditorSheet sheet = new MyEditorSheet(labe, null);
-		sheet.showEditor(size);
+		sheet.showEditor(size, myTabPane);
 		ComponentGetter.appComponent.scriptTreeAddItem(sheet);
 		return sheet;
 	}
@@ -80,7 +94,7 @@ public class MyEditorSheetHelper {
 		ConfigVal.pageSize++;
 
 		MyEditorSheet sheet = new MyEditorSheet(scpo, null);
-		sheet.showEditor(size);
+		sheet.showEditor(size, myTabPane);
 		ComponentGetter.appComponent.scriptTreeAddItem(sheet);
 		return sheet;
 	}
@@ -128,22 +142,6 @@ public class MyEditorSheetHelper {
 		return val;
 	}
 
-	// TODO archive script
-	public static void archiveAllScript() {
-		TabPane mainTabPane = ComponentGetter.mainTabPane;
-		var tabs = mainTabPane.getTabs();
-		for (var tab : tabs) {
-			if( tab instanceof MyEditorSheet mtb){
-//				MyEditorSheet mtb = (MyEditorSheet) tab.getUserData();
-				mtb.getDocumentPo().setOpenStatus(0);
-				mtb.syncScriptPo();
-			}
-
-		}
-		tabs.clear();
-		var stp = ComponentGetter.scriptTitledPane;
-		stp.setExpanded(true);
-	}
 
 	// 保存sql文本到硬盘
 	public static void saveSqlToFileAction() {

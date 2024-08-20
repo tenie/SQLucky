@@ -289,8 +289,13 @@ public class app extends Application {
                 // 更新节点的顺序
                 ConnectionDao.refreshConnOrder();
                 TabPane mainTabPane = ComponentGetter.mainTabPane;
+                TabPane rightTabPane = ComponentGetter.rightTabPane;
                 int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();
                 var alltabs = mainTabPane.getTabs();
+                if( !rightTabPane.getTabs().isEmpty()){
+                    alltabs.addAll(rightTabPane.getTabs());
+                }
+
                 for (int i = 0; i < alltabs.size(); i++) {
                     Tab tab = alltabs.get(i);
                     if (tab instanceof MyEditorSheet mtab) {

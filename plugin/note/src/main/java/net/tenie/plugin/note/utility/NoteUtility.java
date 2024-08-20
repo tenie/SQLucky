@@ -53,8 +53,8 @@ public class NoteUtility {
 							sheet.getSqluckyEditor().getCodeArea().clear();
 							sheet.getSqluckyEditor().getCodeArea().insertText(0, val);
 						}
-
-						sheet.showEditor();
+						var myTabPane = ComponentGetter.mainTabPane;
+						sheet.showEditor(myTabPane);
 					}
 				} else {
 					CommonUtils.openExplorer(file);

@@ -14,4 +14,13 @@ package net.tenie.Sqlucky.sdk.po.db;
 //
 //}
 
-public record SqlData(String sql, int begin, int length  ) {}
+public record SqlData(String sql, int begin, int length  ) {
+    @Override
+    public String toString() {
+        return "SqlData{" +
+                "sql='" + sql + '\'' +
+                ", begin=" + begin +
+                ", length=" + length +
+                '}';
+    }
+}

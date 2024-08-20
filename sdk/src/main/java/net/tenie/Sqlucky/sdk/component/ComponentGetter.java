@@ -28,6 +28,7 @@ public final class ComponentGetter {
 	public static PopupFilter<ObservableList<StringProperty>, String> popupFirstNameFilter;
 	public static TabPane dataTabPane;
 	public static TabPane mainTabPane;
+	public static TabPane rightTabPane;
 
 	public static VBox tabPanContainer;
 	public static Stage dockSideTabPaneWindow;
@@ -36,6 +37,7 @@ public final class ComponentGetter {
 
 	public static MasterDetailPane masterDetailPane;
 	public static MasterDetailPane treeAreaDetailPane;
+	public static MasterDetailPane tabPaneMasterDetailPane;
 
 	public static VBox mainWindow;
 	public static TreeView<TreeNodePo> treeView;

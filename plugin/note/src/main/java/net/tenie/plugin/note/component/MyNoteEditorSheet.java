@@ -27,17 +27,7 @@ public class MyNoteEditorSheet extends MyEditorSheet {
     public void syncScriptPo() {}
     @Override
     public void syncScriptPo(Connection conn) {}
-    /**
-     * tab 关闭时：阻止关闭最后一个
-     */
-    @Override
-    public EventHandler<Event> tabCloseReq() {
-        return new EventHandler<Event>() {
-            @Override
-            public void handle(Event e) {
-            }
-        };
-    }
+
 
     public Boolean getIsRootItem() {
         return isRootItem;

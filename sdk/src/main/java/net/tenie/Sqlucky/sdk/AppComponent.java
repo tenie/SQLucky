@@ -132,7 +132,7 @@ public interface AppComponent {
 	 void mergeScriptTreeData(List<DocumentPo> docs);
 
 	// 创建一个DocumentPo对象, 并保存在数据库
-	 DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph);
+	 DocumentPo scriptArchive(String title, String txt, String filename, String encode, int paragraph, int tabPosition);
 
 	 void updateScriptArchive(Connection conn, DocumentPo po);
 
