@@ -154,7 +154,7 @@ public class FinderAction {
      */
     private static SqluckyEditor findFocusedSqluckyEditor(Node tabConntent) {
         if (tabConntent instanceof Parent pNode) {
-            Node focusedNode = getFocusedChildNode(pNode);
+            Node focusedNode = CommonUtils.getFocusedChildNode(pNode);
             if (focusedNode != null) {
                 SqluckyEditor sqluckyEditor = focusedSqluckyEditor(focusedNode);
                 if (sqluckyEditor != null) {
@@ -167,7 +167,7 @@ public class FinderAction {
 
     private static SqluckyTitledPane findFocusedSqluckyTitledPane(Node tabConntent) {
         if (tabConntent instanceof Parent pNode) {
-            Node focusedNode = getFocusedChildNode(pNode);
+            Node focusedNode =  CommonUtils.getFocusedChildNode(pNode);
             if (focusedNode != null) {
                 SqluckyTitledPane sqluckyTitledPane = focusedSqluckyTitledPane(focusedNode);
                 if (sqluckyTitledPane != null) {
@@ -235,23 +235,23 @@ public class FinderAction {
         return false;
     }
 
-    /**
-     * 获取焦点对象, 从参数parent的子对象中递归的查找焦点的子对象, 没有就返回null,
-     *
-     * @param parent
-     * @return
-     */
-    private static Node getFocusedChildNode(Parent parent) {
-        for (Node node : parent.getChildrenUnmodifiable()) {
-            if (node.isFocused()) {
-                return node;
-            } else if (node instanceof Parent) {
-                var subNode = getFocusedChildNode((Parent) node);
-                if (subNode != null) {
-                    return subNode;
-                }
-            }
-        }
-        return null;
-    }
+//    /**
+//     * 获取焦点对象, 从参数parent的子对象中递归的查找焦点的子对象, 没有就返回null,
+//     *
+//     * @param parent
+//     * @return
+//     */
+//    private static Node getFocusedChildNode(Parent parent) {
+//        for (Node node : parent.getChildrenUnmodifiable()) {
+//            if (node.isFocused()) {
+//                return node;
+//            } else if (node instanceof Parent) {
+//                var subNode = getFocusedChildNode((Parent) node);
+//                if (subNode != null) {
+//                    return subNode;
+//                }
+//            }
+//        }
+//        return null;
+//    }
 }

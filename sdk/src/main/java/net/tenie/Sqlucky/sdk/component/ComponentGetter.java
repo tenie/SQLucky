@@ -3,6 +3,7 @@ package net.tenie.Sqlucky.sdk.component;
 import javafx.application.Application;
 import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -12,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.AppComponent;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.control.tableview2.filter.popupfilter.PopupFilter;
@@ -159,6 +161,10 @@ public final class ComponentGetter {
 
 	private static boolean isFocused(TabPane myTabPane){
 		Tab tab = myTabPane.getSelectionModel().getSelectedItem();
-		return tab.getContent().isFocused();
+		var val = CommonUtils.getFocusedChildNode((Parent) tab.getContent());
+		if(val == null ){
+			return false;
+		}
+		return true;
 	}
 }
