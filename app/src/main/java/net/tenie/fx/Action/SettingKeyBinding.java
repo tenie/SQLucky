@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 
 /*   @author tenie */
 public final class SettingKeyBinding {
+	public static KeyCode  keyCode = null;
 	private static Logger logger = LogManager.getLogger(SettingKeyBinding.class);
 
 	// 对esc按钮添加绑定
@@ -28,7 +29,12 @@ public final class SettingKeyBinding {
 
 		// 左边 百叶窗 的切换
 		setAccordionChangeBinding(scene);
-
+		scene.setOnKeyPressed(keyEvent -> {
+			keyCode =  keyEvent.getCode();
+		});
+		scene.setOnKeyReleased(keyEvent -> {
+			keyCode = null;
+		});
 	}
 	//设置快捷键 左边 百叶窗 的切换
 	private static void setAccordionChangeBinding(Scene scene){

@@ -78,6 +78,19 @@ public class MyEditorSheetHelper {
 		ComponentGetter.appComponent.scriptTreeAddItem(sheet);
 		return sheet;
 	}
+	public static MyEditorSheet addEmptyHighLightingEditor(TabPane myTabPane) {
+		int size = myTabPane.getTabs().size();
+		if (ConfigVal.pageSize < 0) {
+			ConfigVal.pageSize = size;
+		}
+		ConfigVal.pageSize++;
+		String labe = "Untitled_" + ConfigVal.pageSize + "*";
+
+		MyEditorSheet sheet = new MyEditorSheet(labe, null);
+		sheet.showEditor(size, myTabPane);
+		ComponentGetter.appComponent.scriptTreeAddItem(sheet);
+		return sheet;
+	}
 
 	// 通过documentpo 创建一个高亮的编辑器
 	public static MyEditorSheet createHighLightingEditor(DocumentPo po) {
