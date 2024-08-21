@@ -3,6 +3,7 @@ package net.tenie.Sqlucky.sdk.component;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.collections.ListChangeListener;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
@@ -23,24 +24,36 @@ import org.controlsfx.control.tableview2.FilteredTableView;
 public class DataViewContainer extends HBox{
 //	private HBox container;
 
-	private VBox TabPanContainer;
+	private VBox tabPanContainer;
 	// 标签页根
 	private TabPane dataViewTabPane;
+
+	// top button pane
+	private AnchorPane dataTabTopBtnPane;
+	// 顶部信息显示label
+	private AnchorPane topAPLabel = new AnchorPane();
+//			new Label("");
+
 
 	public DataViewContainer() {
 		super();
 //		container = new HBox();
-		TabPanContainer = new VBox();
+		tabPanContainer = new VBox();
 //		container.getChildren().add(TabPanContainer);
-		this.getChildren().add(TabPanContainer);
+		this.getChildren().add(tabPanContainer);
 		dataViewTabPane = new TabPane();
-		TabPanContainer.getChildren().add(dataViewTabPane);
+		dataTabTopBtnPane = new AnchorPane();
+		dataTabTopBtnPane.setPrefHeight(35);
+//		TabPanContainer.getChildren().add(ap);
+		tabPanContainer.getChildren().add(dataViewTabPane);
+
 
 		VBox.setVgrow(dataViewTabPane, Priority.ALWAYS);
-		HBox.setHgrow(TabPanContainer, Priority.ALWAYS);
+		HBox.setHgrow(tabPanContainer, Priority.ALWAYS);
 
 		ComponentGetter.dataTabPane = dataViewTabPane;
-		ComponentGetter.tabPanContainer = TabPanContainer;
+		ComponentGetter.tabPanContainer = tabPanContainer;
+		ComponentGetter.dataViewContainer = this;
 
 		DraggingTabPaneSupport support2 = new DraggingTabPaneSupport();
 		support2.addSupport(dataViewTabPane);
@@ -69,10 +82,17 @@ public class DataViewContainer extends HBox{
 					if( t instanceof MyBottomSheet myTab ){
 						// 获取隐藏按钮
 						JFXButton hideBottom = SheetDataValue.hideBottom;
+						// 数据窗口在右边的时候, 添加隐藏按钮
 						if (SheetDataValue.isSideRight) {
-							if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
-								myTab.getBtnHbox().getChildren().add(0, hideBottom);
+							if (!dataTabTopBtnPane.getChildren().contains(hideBottom)) {
+								Platform.runLater(()->dataTabTopBtnPane.getChildren().add(hideBottom));
+								AnchorPane.setTopAnchor(hideBottom, 0.0);
 							}
+
+//							dataTabTopBtnPane.getChildren().add(hideBottom);
+//							if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
+//								myTab.getBtnHbox().getChildren().add(0, hideBottom);
+//							}
 						} else {
 							if (!myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
 								myTab.getButtonAnchorPane().getChildren().add(hideBottom);
@@ -92,11 +112,14 @@ public class DataViewContainer extends HBox{
 					if (t instanceof MyBottomSheet myTab) {
 						// 获取隐藏按钮
 						JFXButton hideBottom = SheetDataValue.hideBottom;
-
+						// 数据窗口在右边的时候, 移除隐藏按钮
 						if (SheetDataValue.isSideRight) {
-							if (myTab.getBtnHbox().getChildren().contains(hideBottom)) {
-								myTab.getBtnHbox().getChildren().remove(hideBottom);
+							if (dataTabTopBtnPane.getChildren().contains(hideBottom)) {
+								Platform.runLater(()->dataTabTopBtnPane.getChildren().remove(hideBottom));
 							}
+//							if (myTab.getBtnHbox().getChildren().contains(hideBottom)) {
+//								myTab.getBtnHbox().getChildren().remove(hideBottom);
+//							}
 						} else {
 							if (myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
 								myTab.getButtonAnchorPane().getChildren().remove(hideBottom);
@@ -113,17 +136,23 @@ public class DataViewContainer extends HBox{
 					// 获取隐藏按钮
 					JFXButton hideBottom = SheetDataValue.hideBottom;
 					if (SheetDataValue.isSideRight) {
-						if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
-							Platform.runLater(() -> {
-								myTab.getBtnHbox().getChildren().add(0, hideBottom);
-							});
-
-						}
+//						AnchorPane.setRightAnchor(hideBottom, 0.0);
+						AnchorPane.setTopAnchor(hideBottom, 0.0);
+						//执行 sql信息
+						showLabelInfo();
+//						if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
+//							Platform.runLater(() -> {
+//								myTab.getBtnHbox().getChildren().add(0, hideBottom);
+//							});
+//
+//						}
 					} else {
 						if (!myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
 							myTab.getButtonAnchorPane().getChildren().add(hideBottom);
 							AnchorPane.setRightAnchor(hideBottom, 0.0);
 							AnchorPane.setTopAnchor(hideBottom, 6.0);
+							// 执行 sql信息
+							myTab.showSqlInfo();
 						}
 					}
 				}
@@ -133,24 +162,41 @@ public class DataViewContainer extends HBox{
 
 	}
 
-//	public static void showTableDate(DataViewTab dvt, String time , String rows) {
-//		showTableDate(dvt, -1, true, time, rows );
-//	}
-//
-//	public static void showTableDate(DataViewTab dvt, int idx, boolean disable, String time , String rows) {
-//		Platform.runLater(() -> { 
-//			dvt.createTab(idx, disable, time , rows); 
-//		});
-//	}
 
- 
+	// 显示顶部显示按钮的 TOP PANE
+	public void showTopPane(){
+//		this.dataTabTopBtnPane.getChildren().add(new Label("1111"));
+		this.dataTabTopBtnPane.setPrefHeight(25);
+		this.dataTabTopBtnPane.getChildren().add(this.topAPLabel);
+		AnchorPane.setTopAnchor(topAPLabel, 6.0);
 
 
+		this.tabPanContainer.getChildren().addFirst(this.dataTabTopBtnPane);
+	}
+	// sql执行信息展示
+	public void dataTabTopBtnPaneAddText(Label info){
+		Platform.runLater(()->{
+			topAPLabel.getChildren().clear();
+			topAPLabel.getChildren().add(info);
 
+//			topPaneTextLabel.setText(info);
+		});
+	}
 
+	public void showLabelInfo(){
+		Tab tab =ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
+		if(tab instanceof MyBottomSheet mbs){
+			Label infoLb = mbs.getSqlLabel();
+			ComponentGetter.dataViewContainer.dataTabTopBtnPaneAddText(infoLb);
+		}
+	}
 
-	
-	
+	// 隐藏顶部显示按钮的 TOP PANE
+	public void hideTopPane(){
+		this.tabPanContainer.getChildren().remove(this.dataTabTopBtnPane);
+		this.dataTabTopBtnPane.getChildren().clear();
+	}
+
 	// 设置序号行的宽度
 	public static void setTabRowWith(FilteredTableView<ResultSetRowPo> table , int dataSize ) {
 		if(dataSize > 1000) {
@@ -159,21 +205,13 @@ public class DataViewContainer extends HBox{
 			table.setRowHeaderWidth(60);
 		}
 	}
-	
-//	public HBox getContainer() {
-//		return container;
-//	}
-//
-//	public void setContainer(HBox container) {
-//		this.container = container;
-//	}
 
 	public VBox getTabPancontainer() {
-		return TabPanContainer;
+		return tabPanContainer;
 	}
 
 	public void setTabPancontainer(VBox tabPancontainer) {
-		TabPanContainer = tabPancontainer;
+		tabPanContainer = tabPancontainer;
 	}
 
 	public TabPane getDataViewTabPane() {

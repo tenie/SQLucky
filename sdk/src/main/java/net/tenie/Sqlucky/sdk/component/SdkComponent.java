@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javafx.geometry.Side;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.MaskerPane;
+import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
@@ -444,12 +444,12 @@ public class SdkComponent {
 	public static void showOrhideRight(){
 		JFXButton btn = CommonButtons.hideRight; // AllButtons.btns.get("hideBottom");
 		if(! btn.isDisabled()){
-			boolean showStatus = ComponentGetter.tabPaneMasterDetailPane.showDetailNodeProperty().getValue();
+			boolean showStatus = ComponentGetter.rightTabPaneMasterDetailPane.showDetailNodeProperty().getValue();
 			if(showStatus){
-				ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(false);
+				ComponentGetter.rightTabPaneMasterDetailPane.setShowDetailNode(false);
 				btn.setGraphic(rightTabPaneOpen);
 			}else {
-				ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(true);
+				ComponentGetter.rightTabPaneMasterDetailPane.setShowDetailNode(true);
 				btn.setGraphic(rightTabPaneClose);
 			}
 
@@ -458,6 +458,19 @@ public class SdkComponent {
 				SdkComponent.escapeWindowsUiBug();
 			}
 		}
+	}
+
+	// 首次 是否展示 right 的TabPane
+	public static void intiShowOrhideRightByTabSize(){
+		MasterDetailPane rightTabPaneMasterDetailPane = ComponentGetter.rightTabPaneMasterDetailPane;
+		JFXButton btn = CommonButtons.hideRight;
+		if(ComponentGetter.rightTabPane.getTabs().size() == 0 ){
+			rightTabPaneMasterDetailPane.setShowDetailNode(false);
+			btn.setGraphic(rightTabPaneOpen);
+		}else {
+			btn.setGraphic(rightTabPaneClose);
+		}
+
 	}
 
 	public static void hideBottomPane() {

@@ -8,7 +8,9 @@ import javafx.scene.layout.Priority;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
-/*   @author tenie */
+/**
+ * 操作容器, 左侧窗口, 代码编辑窗口
+ */
 public class OperateContainer extends HBox {
 	private MasterDetailPane treeAreaDetailPane;
 	private DBinfoContainer dbinfoCtr; // 连接管理窗口

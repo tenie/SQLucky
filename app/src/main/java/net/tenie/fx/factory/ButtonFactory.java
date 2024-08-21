@@ -144,7 +144,7 @@ public class ButtonFactory {
 		CommonButtons.hideRight = hideRight;
 
 		// 选择sql在哪个连接上执行
-		Label lbcnn = new Label("DB Connection: ");
+		Label lbcnn = new Label("DB: ");
 		JFXComboBox<Label> connsComboBox = new JFXComboBox<Label>();
 		lbcnn.setLabelFor(connsComboBox);
 		connsComboBox.setPrefHeight(25);
@@ -168,7 +168,10 @@ public class ButtonFactory {
 			}
 			// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
 			MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
-			sheet.setTabConnIdx(newValue.intValue());
+			if(sheet != null ){
+				sheet.setTabConnIdx(newValue.intValue());
+			}
+
 		});
 		// 下拉选, 未连接的连接先打开数据库连接
 		connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());

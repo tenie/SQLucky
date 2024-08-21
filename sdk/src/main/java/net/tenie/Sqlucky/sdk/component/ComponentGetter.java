@@ -26,6 +26,8 @@ import java.sql.Statement;
 public final class ComponentGetter {
 	public static Application SQLucky;
 	public static PopupFilter<ObservableList<StringProperty>, String> popupFirstNameFilter;
+
+	public static DataViewContainer dataViewContainer;
 	public static TabPane dataTabPane;
 	public static TabPane mainTabPane;
 	public static TabPane rightTabPane;
@@ -37,7 +39,7 @@ public final class ComponentGetter {
 
 	public static MasterDetailPane masterDetailPane;
 	public static MasterDetailPane treeAreaDetailPane;
-	public static MasterDetailPane tabPaneMasterDetailPane;
+	public static MasterDetailPane rightTabPaneMasterDetailPane;
 
 	public static VBox mainWindow;
 	public static TreeView<TreeNodePo> treeView;
@@ -125,4 +127,38 @@ public final class ComponentGetter {
 		ComponentGetter.sqlStatement = stm;
 	}
 
+	/**
+	 * 返回当前编辑界面的TabPane
+	 * @return
+	 */
+	public static TabPane getEditTabPane(){
+		TabPane myTabPane = ComponentGetter.mainTabPane;
+		if( myTabPane.getTabs().size() > 0 ){
+		 	if(isFocused(myTabPane)){
+				return  myTabPane;
+			}
+		}else {
+			if(myTabPane.isFocused()){
+				return  myTabPane;
+			}
+		}
+		myTabPane = ComponentGetter.rightTabPane;
+		if( myTabPane.getTabs().size() > 0 ){
+			if(isFocused(myTabPane)){
+				return  myTabPane;
+			}
+		}else {
+			if(myTabPane.isFocused()){
+				return  myTabPane;
+			}
+		}
+
+
+		return ComponentGetter.mainTabPane;
+	}
+
+	private static boolean isFocused(TabPane myTabPane){
+		Tab tab = myTabPane.getSelectionModel().getSelectedItem();
+		return tab.getContent().isFocused();
+	}
 }
