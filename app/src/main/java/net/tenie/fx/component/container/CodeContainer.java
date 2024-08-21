@@ -40,10 +40,11 @@ public class CodeContainer extends VBox{
 		ComponentGetter.mainTabPane = mainTabPane;
 		ComponentGetter.rightTabPane = rightTabPane;
 		tabPaneMasterDetailPane  = new MasterDetailPane(Side.RIGHT);
-		tabPaneMasterDetailPane.setShowDetailNode(false);
+		tabPaneMasterDetailPane.setShowDetailNode(true);
 		tabPaneMasterDetailPane.setMasterNode(mainTabPane);
 		tabPaneMasterDetailPane.setDetailNode(rightTabPane);
-		ComponentGetter.tabPaneMasterDetailPane = tabPaneMasterDetailPane;
+		tabPaneMasterDetailPane.setDividerPosition(0.3);
+		ComponentGetter.rightTabPaneMasterDetailPane = tabPaneMasterDetailPane;
 
 		// 将主面板放入到"通知面板"的容器中
 //		notificationPane.setContent(mainTabPane);

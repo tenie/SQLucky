@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Side;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
@@ -55,6 +56,18 @@ public class MyBottomSheet extends  Tab{
 
 	// 按钮摆放的容器
 	private HBox btnHbox = new HBox();
+
+	// 执行sql 的信息
+	Label sqlLabel = new Label("");
+	//执行 sql信息
+	public void showSqlInfo(){
+		if(!buttonAnchorPane.getChildren().contains(sqlLabel)){
+			buttonAnchorPane.getChildren().add(sqlLabel);
+			AnchorPane.setRightAnchor(sqlLabel, 40.0);
+			AnchorPane.setTopAnchor(sqlLabel, 6.0);
+		}
+	}
+
 	public void clean() {
 		if (tableData != null) {
 			this.tableData.clean();
@@ -85,7 +98,6 @@ public class MyBottomSheet extends  Tab{
 			if(ComponentGetter.dockSideTabPaneWindow == null ){
 				if (c) {
 					JFXButton sideRightBottomBtn = SheetDataValue.sideRightBottom;
-					// 隐藏按钮
 					if (!btnHbox.getChildren().contains(sideRightBottomBtn)) {
 						btnHbox.getChildren().add(0, sideRightBottomBtn);
 					}
@@ -168,7 +180,7 @@ public class MyBottomSheet extends  Tab{
 		// 操作面板
 		operatePane(btnLs);
 		// 添加sql执行时的信息
-		setSqlExecInfo(buttonAnchorPane);
+		setSqlExecInfo();
 		// 数据表格
 		this.tabVBoxAddComponentView(tableData.getTable());
 		VBox.setVgrow(tableData.getTable(), Priority.ALWAYS);
@@ -272,7 +284,7 @@ public class MyBottomSheet extends  Tab{
 	}
 
 	// 在按钮面板上显示信息: sql执行时间获取数据量, 数据库名称信息
-	private void setSqlExecInfo(AnchorPane pane) {
+	private void setSqlExecInfo() {
 		// TODO
 		String time = tableData.getExecTime() == 0 ? "0" : tableData.getExecTime() + "";
 		String rows = tableData.getRows() == 0 ? "0" : tableData.getRows() + "";
@@ -285,10 +297,18 @@ public class MyBottomSheet extends  Tab{
 		if (StrUtils.isNotNullOrEmpty(time)) {
 			info += " : " + time + " s / " + rows + " rows";
 		}
-		Label lb = new Label(info);
-		pane.getChildren().add(lb);
-		AnchorPane.setRightAnchor(lb, 40.0);
-		AnchorPane.setTopAnchor(lb, 6.0);
+
+		sqlLabel.setText(info);
+		var masterDetailPane =	ComponentGetter.masterDetailPane ;
+		if( masterDetailPane.getDetailSide().equals(Side.RIGHT) ){
+			ComponentGetter.dataViewContainer.dataTabTopBtnPaneAddText(sqlLabel);
+		}else {
+//			pane.getChildren().add(sqlLabel);
+//			AnchorPane.setRightAnchor(sqlLabel, 40.0);
+//			AnchorPane.setTopAnchor(sqlLabel, 6.0);
+			showSqlInfo();
+		}
+
 	}
 
 	// 查询数据表格的操作按钮pane
@@ -491,5 +511,13 @@ public class MyBottomSheet extends  Tab{
 
 	public HBox getBtnHbox() {
 		return btnHbox;
+	}
+
+	public Label getSqlLabel() {
+		return sqlLabel;
+	}
+
+	public void setSqlLabel(Label sqlLabel) {
+		this.sqlLabel = sqlLabel;
 	}
 }

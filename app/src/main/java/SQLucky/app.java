@@ -122,7 +122,7 @@ public class app extends Application {
         AppCommonAction.setTheme(Theme);
         // 加载插件
         ServiceLoad.callLoad();
-        Platform.runLater(SdkComponent::showOrhideRight);
+
         logger.info("完成初始化");
 
     }
@@ -188,17 +188,8 @@ public class app extends Application {
                 primaryStage.setWidth(primaryScreenBounds.getWidth());
                 primaryStage.setHeight(primaryScreenBounds.getHeight());
 
-                // 双击添加新codearea
-                var mainTabPane = ComponentGetter.mainTabPane;
-                Node tabHeader = mainTabPane.lookup(".tab-header-area");
-                tabHeader.setOnMouseClicked(mouseEvent -> {
-                    if (mouseEvent.getClickCount() == 2) {
-                        MouseButton button = mouseEvent.getButton();
-                        if(button == MouseButton.PRIMARY) { // 左键点击
-                            MyEditorSheetHelper.addEmptyHighLightingEditor();
-                        }
-                    }
-                });
+
+
 
             });
 
@@ -215,6 +206,18 @@ public class app extends Application {
                         SettingKeyBinding.setEscKeyBinding(ComponentGetter.primaryStage.getScene());
                     });
                 });
+
+                Platform.runLater(()->{
+                    // 双击添加新codearea
+                    var mainTabPane = ComponentGetter.mainTabPane;
+                    cleckDoubleAddTab(mainTabPane);
+                    var rightTabPane = ComponentGetter.rightTabPane;
+                    cleckDoubleAddTab(rightTabPane);
+                    // 右侧代码框, 显示或隐藏
+                    Platform.runLater(SdkComponent::intiShowOrhideRightByTabSize);
+
+                });
+
             };
             // 执行页面初始化好只会要执行的任务
             CommonUtils.executeInitTask(cr);
@@ -237,6 +240,21 @@ public class app extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+    // TabPane 头部 双击添加新Tab
+    private static void cleckDoubleAddTab(TabPane tabPane){
+        Node tabHeader = tabPane.lookup(".tab-header-area");
+        if(tabHeader == null ){
+            return;
+        }
+        tabHeader.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getClickCount() == 2) {
+                MouseButton button = mouseEvent.getButton();
+                if(button == MouseButton.PRIMARY) { // 左键点击
+                    MyEditorSheetHelper.addEmptyHighLightingEditor();
+                }
+            }
+        });
     }
 
     /**

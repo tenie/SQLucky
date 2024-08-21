@@ -212,7 +212,13 @@ public class SqluckyAppComponent implements AppComponent {
 		var myTabPane = ComponentGetter.mainTabPane;
 		if (myTabPane.getTabs().contains(stb)) {
 			myTabPane.getTabs().remove(stb);
+		}else {
+			myTabPane = ComponentGetter.rightTabPane;
+			if (myTabPane.getTabs().contains(stb)) {
+				myTabPane.getTabs().remove(stb);
+			}
 		}
+
 	}
 
 	@Override

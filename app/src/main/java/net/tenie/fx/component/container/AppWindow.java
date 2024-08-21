@@ -47,7 +47,9 @@ public class AppWindow extends VBox{
 
 		mainMenuBar = new MenuBarContainer();
 		masterDetailPane = new MasterDetailPane(Side.BOTTOM);
+		//  操作容器, 左侧窗口, 代码编辑窗口
 		operateContainer = new OperateContainer();
+		// 下面窗口
 		dataViewContainer = new DataViewContainer();
 
 		masterDetailPane.getStyleClass().add(0, "masterDetailPane");

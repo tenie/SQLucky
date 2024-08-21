@@ -669,7 +669,7 @@ public class AppCommonAction {
     // 关闭 代码编辑窗口, 但不销毁, 可以在tree中重新打开
     public static void closeEditPage() {
         // 关闭数据显示tab页
-        Tab t = ComponentGetter.mainTabPane.getSelectionModel().getSelectedItem();
+        Tab t = ComponentGetter.getEditTabPane().getSelectionModel().getSelectedItem();
         if (t != null) {
             if(t instanceof  MyEditorSheet tab){
                 tab.closeTab();

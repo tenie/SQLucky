@@ -38,7 +38,9 @@ public class MyEditorSheetHelper {
 	// 将Tab 放入界面
 	public static void mainTabPaneAddAllMyTabs(List<MyEditorSheet> ls) {
 		if (ls != null && ls.size() > 0) {
+			// 主
 			var myTabPane = ComponentGetter.mainTabPane;
+			// 右
 			var rightTabPane = ComponentGetter.rightTabPane;
 			for (MyEditorSheet sheet : ls) {
 				int tabPosition = sheet.getDocumentPo().getTabPosition();
@@ -47,9 +49,9 @@ public class MyEditorSheetHelper {
 				}else {
 
 					rightTabPane.getTabs().add(sheet);
-					if (!ComponentGetter.tabPaneMasterDetailPane.isShowDetailNode()) {
+					if (!ComponentGetter.rightTabPaneMasterDetailPane.isShowDetailNode()) {
 						Platform.runLater(() -> {
-							ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(true);
+							ComponentGetter.rightTabPaneMasterDetailPane.setShowDetailNode(true);
 						});
 					}
 
@@ -63,7 +65,7 @@ public class MyEditorSheetHelper {
 
 	// 添加空文本的codeTab
 	public static MyEditorSheet addEmptyHighLightingEditor() {
-		var myTabPane = ComponentGetter.mainTabPane;
+		var myTabPane = ComponentGetter.getEditTabPane();
 		int size = myTabPane.getTabs().size();
 		if (ConfigVal.pageSize < 0) {
 			ConfigVal.pageSize = size;
@@ -102,7 +104,8 @@ public class MyEditorSheetHelper {
 
 	// 获取当前tab中的EditorSheet
 	public static MyEditorSheet getActivationEditorSheet() {
-		TabPane myTabPane = ComponentGetter.mainTabPane;
+		TabPane myTabPane = ComponentGetter.getEditTabPane();
+
 		Tab selectionTab = myTabPane.getSelectionModel().getSelectedItem();
 		if (selectionTab == null) {
 			return null;
@@ -407,6 +410,11 @@ public class MyEditorSheetHelper {
 	// 改变样式
 	public static void changeThemeAllCodeArea() {
 		TabPane myTabPane = ComponentGetter.mainTabPane;
+		TabPane rightTabPane = ComponentGetter.rightTabPane;
+		changeThemeAllCodeArea(myTabPane);
+		changeThemeAllCodeArea(rightTabPane);
+	}
+	public static void changeThemeAllCodeArea(TabPane myTabPane) {
 		if (myTabPane != null && myTabPane.getTabs().size() > 0) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for (Tab tb : tabs) {
@@ -422,6 +430,8 @@ public class MyEditorSheetHelper {
 			}
 		}
 	}
+
+
 
 	// 修改查找替换的样式如果有的话
 	private static void changeFindReplacePaneBtnColor(Tab tb) {

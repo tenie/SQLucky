@@ -1,8 +1,6 @@
 package net.tenie.Sqlucky.sdk.component;
 
 import javafx.application.Platform;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.scene.control.*;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -305,7 +303,6 @@ public class MyEditorSheet extends Tab {
 
 	public void showEditor(TabPane myTabPane) {
 		Platform.runLater(() -> {
-//			var myTabPane = ComponentGetter.mainTabPane;
 			if (!myTabPane.getTabs().contains(this)) {
 				myTabPane.getTabs().add(this);// 在指定位置添加Tab
 			}
@@ -316,7 +313,6 @@ public class MyEditorSheet extends Tab {
 
 	public void showEditor(int idx, TabPane myTabPane) {
 		Platform.runLater(() -> {
-//			var myTabPane = ComponentGetter.mainTabPane;
 			if (!myTabPane.getTabs().contains(this)) {
 				myTabPane.getTabs().add(idx, this); // 在指定位置添加Tab
 			}
@@ -463,7 +459,7 @@ public class MyEditorSheet extends Tab {
 	// 删除 TabPane中的所有 MyTab, 不删除treeView中的节点
 	private void closeAll() {
 //		MyEditorSheetHelper.archiveAllScript(this);
-		TabPane mainTabPane = this.getTabPane(); // ComponentGetter.mainTabPane;
+		TabPane mainTabPane = this.getTabPane();
 		var tabs = mainTabPane.getTabs();
 		for (var tab : tabs) {
 			if( tab instanceof MyEditorSheet mtb){
@@ -479,7 +475,7 @@ public class MyEditorSheet extends Tab {
 
 		// 如果是关闭的右边的代码tab, 就隐藏
 		if(mainTabPane.equals(ComponentGetter.rightTabPane)){
-			ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(false);
+			ComponentGetter.rightTabPaneMasterDetailPane.setShowDetailNode(false);
 		}
 
 	}
@@ -509,7 +505,7 @@ public class MyEditorSheet extends Tab {
 	 * 				documentPo.setOpenStatus(0);
  	 */
 	public void closeTab(){
-		var myTabPane = this.getTabPane();// ComponentGetter.mainTabPane;
+		var myTabPane = this.getTabPane();
 		var tabs = myTabPane.getTabs();
 		if (tabs.contains(this)) {
 			syncScriptPo();
@@ -519,7 +515,7 @@ public class MyEditorSheet extends Tab {
 		// 如果是关闭的右边的代码tab, 就隐藏
 		if(myTabPane.equals(ComponentGetter.rightTabPane)){
 			if(myTabPane.getTabs().size() == 0){
-				ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(false);
+				ComponentGetter.rightTabPaneMasterDetailPane.setShowDetailNode(false);
 			}
 		}
 	}
@@ -565,14 +561,14 @@ public class MyEditorSheet extends Tab {
 		MenuItem closeOther = new MenuItem("Close Other");
 		closeOther.setOnAction(e -> {
 			closeAll();
-			var myTabPane = this.getTabPane(); // ComponentGetter.mainTabPane;
+			var myTabPane = this.getTabPane();
 			myTabPane.getTabs().add(this);
 
 		});
 
 		MenuItem closeRight = new MenuItem("Close Tabs To The Right");
 		closeRight.setOnAction(e -> {
-			var myTabPane = this.getTabPane();//  ComponentGetter.mainTabPane;
+			var myTabPane = this.getTabPane();
 			var tabs = myTabPane.getTabs();
 			int idx = tabs.indexOf(this);
 			int tsize = tabs.size();
@@ -592,7 +588,7 @@ public class MyEditorSheet extends Tab {
 
 		MenuItem closeLeft = new MenuItem("Close Tabs To The Left");
 		closeLeft.setOnAction(e -> {
-			var myTabPane = this.getTabPane(); //ComponentGetter.mainTabPane;
+			var myTabPane = this.getTabPane();
 			var tabs = myTabPane.getTabs();
 			int idx = tabs.indexOf(this);
 			if (idx > 0) {
@@ -626,7 +622,7 @@ public class MyEditorSheet extends Tab {
 
 		contextMenu.getItems().addAll(closeAll, closeOther, closeRight, closeLeft, new SeparatorMenuItem(), rename,  new SeparatorMenuItem(), moveRight);
 		contextMenu.setOnShowing(e -> {
-			var myTabPane = this.getTabPane(); //ComponentGetter.mainTabPane;
+			var myTabPane = this.getTabPane();
 			int idx = myTabPane.getTabs().indexOf(this);
 			int size = myTabPane.getTabs().size();
 			if (idx == 0) {
@@ -674,9 +670,9 @@ public class MyEditorSheet extends Tab {
 				ComponentGetter.mainTabPane.getTabs().remove(this);
 				ComponentGetter.rightTabPane.getTabs().add(this);
 				ComponentGetter.rightTabPane.getSelectionModel().select(this);
-				if (!ComponentGetter.tabPaneMasterDetailPane.isShowDetailNode()) {
+				if (!ComponentGetter.rightTabPaneMasterDetailPane.isShowDetailNode()) {
 					Platform.runLater(() -> {
-						ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(true);
+						ComponentGetter.rightTabPaneMasterDetailPane.setShowDetailNode(true);
 					});
 				}
 				this.documentPo.setTabPosition(1);
@@ -685,10 +681,10 @@ public class MyEditorSheet extends Tab {
 				ComponentGetter.rightTabPane.getTabs().remove(this);
 				ComponentGetter.mainTabPane.getTabs().add(this);
 				ComponentGetter.mainTabPane.getSelectionModel().select(this);
-				if (ComponentGetter.tabPaneMasterDetailPane.isShowDetailNode()) {
+				if (ComponentGetter.rightTabPaneMasterDetailPane.isShowDetailNode()) {
 					if(ComponentGetter.rightTabPane.getTabs().isEmpty()){
 						Platform.runLater(() -> {
-							ComponentGetter.tabPaneMasterDetailPane.setShowDetailNode(false);
+							ComponentGetter.rightTabPaneMasterDetailPane.setShowDetailNode(false);
 						});
 					}
 
@@ -752,8 +748,8 @@ public class MyEditorSheet extends Tab {
 	}
 	// 存在 就显示出来
 	public boolean existTabShow() {
-		var myTabPane = this.getTabPane(); //ComponentGetter.mainTabPane;
-		if (myTabPane != null ) {  // && myTabPane.getTabs().contains(this)
+		var myTabPane = this.getTabPane();
+		if (myTabPane != null ) {
 			myTabPane.getSelectionModel().select(this);
 			return true;
 		}
@@ -776,8 +772,8 @@ public class MyEditorSheet extends Tab {
 	 * 判断是否选择的状态
      */
 	public boolean isSelecting() {
-		var myTabPane = this.getTabPane(); //ComponentGetter.mainTabPane;
-		if (myTabPane != null) {  //myTabPane.getTabs().contains(this)
+		var myTabPane = this.getTabPane();
+		if (myTabPane != null) {
 			int idxThis = myTabPane.getTabs().indexOf(this);
 			int currentSelect = myTabPane.getSelectionModel().getSelectedIndex();
             return idxThis == currentSelect;

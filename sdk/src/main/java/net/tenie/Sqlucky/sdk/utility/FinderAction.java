@@ -80,11 +80,11 @@ public class FinderAction {
      * @return
      */
     public static boolean showMainTabPaneFindReplace(boolean isRep, String findStr) {
-        return showTabPaneFindReplace(ComponentGetter.mainTabPane, isRep, findStr);
+        return showTabPaneFindReplace(ComponentGetter.getEditTabPane(), isRep, findStr);
     }
 
     public static boolean hideMainTabPaneFindReplace() {
-        return hideTabPaneFindReplace(ComponentGetter.mainTabPane);
+        return hideTabPaneFindReplace(ComponentGetter.getEditTabPane());
     }
 
 

@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Set;
 
 import javafx.geometry.Side;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tab;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.po.db.TableFieldPo;
@@ -94,6 +97,7 @@ public class SheetDataValue {
 		sideRightBottom.setOnAction(e->{
 			var masterDetailPane =	ComponentGetter.masterDetailPane ;
 			if( masterDetailPane.getDetailSide().equals(Side.RIGHT) ){
+				ComponentGetter.dataViewContainer.hideTopPane();
 				sideRightBottom.setGraphic(zeroPositionRight);
 				masterDetailPane.setDetailSide(Side.BOTTOM);
 				ConfigVal.bottomSide = Side.BOTTOM;
@@ -108,8 +112,22 @@ public class SheetDataValue {
 				// 全局的隐藏按钮
 //				CommonButtons.hideBottom.setGraphic(leftRegion2);
 				isSideRight = false;
+				// 显示执行sql信息
+				Tab tab =ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
+				if(tab instanceof MyBottomSheet mbs){
+					mbs.showSqlInfo();
+				}
 
 			}else {
+				ComponentGetter.dataViewContainer.showTopPane();
+				ComponentGetter.dataViewContainer.showLabelInfo();
+//				Tab tab =ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
+//				if(tab instanceof MyBottomSheet mbs){
+//					Label infoLb = mbs.getSqlLabel();
+//					String info = infoLb.getText();
+//					infoLb.setText("");
+//					ComponentGetter.dataViewContainer.dataTabTopBtnPaneAddText(info);
+//				}
 				sideRightBottom.setGraphic(zeroPositionBottom);
 				masterDetailPane.setDetailSide(Side.RIGHT);
 				ConfigVal.bottomSide = Side.RIGHT;
