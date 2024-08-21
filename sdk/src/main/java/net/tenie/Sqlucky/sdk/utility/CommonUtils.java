@@ -1128,8 +1128,7 @@ public class CommonUtils {
 
 
     /**
-     * 获取焦点对象
-     *
+     * 获取焦点对象, 从参数parent的子对象中递归的查找焦点的子对象, 没有就返回null,
      * @param parent
      * @return
      */
