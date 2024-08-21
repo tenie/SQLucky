@@ -8,7 +8,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
 import javafx.stage.WindowEvent;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetAction;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
@@ -63,7 +65,14 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-				MyEditorSheetHelper.addEmptyHighLightingEditor();
+				// 按住control, 再按添加窗口按钮, 可以在rightTabPane中添加
+				var kc = KeyCode.CONTROL;
+				if(SettingKeyBinding.keyCode != null && SettingKeyBinding.keyCode.equals(kc)){
+					MyEditorSheetHelper.addEmptyHighLightingEditor(ComponentGetter.rightTabPane);
+				}else {
+					MyEditorSheetHelper.addEmptyHighLightingEditor();
+				}
+
 			}
 		};
 	}
