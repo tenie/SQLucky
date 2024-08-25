@@ -306,8 +306,9 @@ public class app extends Application {
         LoadingAnimation.loadingAnimation("Saving....", v -> {
             Connection H2conn = SqluckyAppDB.getConn();
             try {
-                // 更新节点的顺序
-                ConnectionDao.refreshConnOrder();
+                // 更新数据库链接节点的顺序, 在拖动的时候直接保存
+//                ConnectionDao.refreshConnOrder();
+
                 TabPane mainTabPane = ComponentGetter.mainTabPane;
                 TabPane rightTabPane = ComponentGetter.rightTabPane;
                 int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();

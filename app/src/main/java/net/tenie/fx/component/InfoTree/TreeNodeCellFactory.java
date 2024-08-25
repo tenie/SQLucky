@@ -1,25 +1,19 @@
 package net.tenie.fx.component.InfoTree;
 
-import java.util.Objects;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.DataFormat;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.util.Callback;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
+import net.tenie.fx.dao.ConnectionDao;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.util.Objects;
 
 /**
  * 把TreeNodePo对象的属性 赋值给 TreeItem显示(节点名称,图标)
@@ -123,6 +117,16 @@ public class TreeNodeCellFactory implements Callback<TreeView<TreeNodePo>, TreeC
 		
 		draggedItem = treeCell.getTreeItem();
 
+		// 当连接节点是打开的时候禁止拖动
+		TreeNodePo nodePo = draggedItem.getValue();
+		TreeItemType nodePoType =  nodePo.getType();
+		if(nodePoType.equals(TreeItemType.CONNECT_INFO)){
+			var ch = draggedItem.getChildren();
+			if(!ch.isEmpty()){
+				return;
+			}
+		}
+
 		if(draggedItem == null) {
 			return;
 		}
@@ -175,28 +179,58 @@ public class TreeNodeCellFactory implements Callback<TreeView<TreeNodePo>, TreeC
 		logger.info("drop");
 		Dragboard db = event.getDragboard();
 		boolean success = false;
-		if (!db.hasContent(JAVA_FORMAT))
+		if (!db.hasContent(JAVA_FORMAT)){
 			return;
+		}
 
+		// 当前鼠标所在位置的节点对象
 		TreeItem<TreeNodePo> thisItem = treeCell.getTreeItem();
 		TreeItem<TreeNodePo> droppedItemParent = draggedItem.getParent();
 
 		// 只能同一个父节点下换位置, 否则不动
 		if (Objects.equals(droppedItemParent, thisItem.getParent())) {
-			droppedItemParent.getChildren().remove(draggedItem);
-			int indexInParent = thisItem.getParent().getChildren().indexOf(thisItem);
-			thisItem.getParent().getChildren().add(indexInParent + 1, draggedItem);
-			
+			boolean addNext = false;
+			// 如果当前节点是打开的, 判断他下面的节点是不是也打开的, 也是打开的就不能插入他们之间
+			if(!thisItem.getChildren().isEmpty()){
+				TreeItem<TreeNodePo> thisItemNextSibling  = thisItem.nextSibling();
+                addNext = thisItemNextSibling.getChildren().isEmpty();
+			}else {
+				addNext = true;
+			}
+			// 插入当前节点之后
+			if(addNext){
+				droppedItemParent.getChildren().remove(draggedItem);
+				// 获取当前位置(thisItem) 的下表, 在当前位置后面添加被拖动的对象
+				int indexInParent = thisItem.getParent().getChildren().indexOf(thisItem);
+				thisItem.getParent().getChildren().add(indexInParent + 1, draggedItem);
+				success = true;
+			}
 
-		}
-		if (Objects.equals(droppedItemParent, thisItem)) {
+
+		//如果鼠标位置的节点是拖动的对象的父节点, 那么将拖动对象放在父节点的第一个位置
+		} else if (Objects.equals(droppedItemParent, thisItem)) {
 			droppedItemParent.getChildren().remove(draggedItem);
 			droppedItemParent.getChildren().add(0, draggedItem);
+			success = true;
 
 		}
 
+		if(success){
+			// 保持位置
+			String dragName = draggedItem.getValue().getName();
+			String sibName = "";
+			var sibling = draggedItem.nextSibling();
+			if(sibling != null ){
+				sibName = sibling.getValue().getName();
+			}
+			ConnectionDao.updatePosition(dragName, sibName );
+		}
 		treeView.getSelectionModel().select(draggedItem);
 		event.setDropCompleted(success);
+	}
+
+	private void savePosition(){
+
 	}
 
 	private void clearDropLocation() {

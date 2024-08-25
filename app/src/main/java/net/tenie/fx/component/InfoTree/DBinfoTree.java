@@ -268,7 +268,23 @@ public class DBinfoTree extends SqluckyTitledPane {
 	public static void treeRootAddItem(TreeItem<TreeNodePo> item) {
 		TreeView<TreeNodePo> treeView = AppWindow.treeView;
 		TreeItem<TreeNodePo> rootNode = treeView.getRoot();
-		rootNode.getChildren().addFirst(item);
+		var childrenLs = rootNode.getChildren();
+		int idx = 0;
+		if(!childrenLs.isEmpty()){
+			for(int i = 0; i< childrenLs.size() ; i++){
+				var children = childrenLs.get(i);
+				if(!children.getChildren().isEmpty()){
+					continue;
+				}else {
+					idx = i ;
+					break;
+				}
+			}
+			childrenLs.add(idx, item);
+		}else {
+			rootNode.getChildren().addFirst(item);
+		}
+
 		treeView.getSelectionModel().select(item); // 选择新加的节点
 	}
 
@@ -612,12 +628,20 @@ public class DBinfoTree extends SqluckyTitledPane {
 						var conntmp = po1.getConn();
 						if (conntmp != null) {
 							ConnItemContainer connItemContainer = new ConnItemContainer(po, item);
-							TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
+							TreeItem<TreeNodePo> subTreeItem = connItemContainer.getSchemaNode();
 							Platform.runLater(() -> {
-								item.getChildren().add(s);
+								item.getChildren().add(subTreeItem);
 								item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00"));
 								connItemContainer.selectTable(po.getDefaultSchema());
 								DBConns.flushChoiceBox(connName);
+								// 当 打开连接节点的时候, 放在第一个节点位置(便于查看)
+								var itemPatent = item.getParent();
+								itemPatent.getChildren().remove(item);
+								Platform.runLater(() -> {
+									itemPatent.getChildren().addFirst(item);
+									AppWindow.treeView.refresh();
+								});
+
 							});
 						} else {
 							Platform.runLater(() -> {

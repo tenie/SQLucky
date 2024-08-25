@@ -44,7 +44,7 @@ public class ConnectionDao {
 		}
 	}
 
-    // 更新节点的顺序
+    // 更新数据库链接节点的顺序
 	public static void refreshConnOrder() {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
@@ -66,6 +66,41 @@ public class ConnectionDao {
 
 	}
 
+	// 更新数据库链接节点的顺序
+	public static void refreshConnOrderByNewItem(Integer addId) {
+		List<RsData>  ls = selectConnectionInfo();
+		List<RsData> tmpList = new ArrayList<>();
+		RsData addRsData  = null;
+		if(ls !=null && ls.size()> 0){
+			for(var data : ls){
+				if(data.getInteger("ID").equals(addId)){
+					addRsData = data;
+				}else {
+					tmpList.add(data);
+				}
+			}
+		}
+		tmpList.add(0, addRsData);
+		// 更新报错
+		refreshConnOrder(tmpList);
+	}
+	// 根据提供给的列表来更新顺序
+	public static void refreshConnOrder(List<RsData> ls) {
+		Connection conn = SqluckyAppDB.getConn();
+		try {
+			logger.info("refreshConnOrder");
+			int size = ls.size();
+			for (int i = 0; i < size; i++) {
+				RsData data = ls.get(i);
+				int id = data.getInteger("ID");
+				updateDataOrder(conn, id, i);
+			}
+		} finally {
+			SqluckyAppDB.closeConn(conn);
+		}
+
+	}
+
 	public static void updateDataOrder(Connection conn, int id, int order) {
 		String sql = " UPDATE CONNECTION_INFO  set  ORDER_TAG = " + order + "  where ID = " + id;
 		try {
@@ -76,45 +111,100 @@ public class ConnectionDao {
 	}
 
 	/**
+	 * 更新位置
+	 */
+	public static void updatePosition(String target, String nextSib){
+		List<RsData>  ls = selectConnectionInfo();
+		List<RsData> tmpList = new ArrayList<>();
+		List<RsData> tmpList2 = new ArrayList<>();
+		RsData tgDa = null;
+		// 第一次循环找出 target ,
+		for(var da : ls ){
+			var name = da.getString("CONN_NAME");
+			if(name.equals(target)){
+				tgDa = da;
+			}else {
+				tmpList.add(da);
+			}
+		}
+		if(tgDa == null){
+			return;
+		}
+
+		// 如果nextSib是空, 就把找到的target 放最后
+		if(StrUtils.isNullOrEmpty(nextSib)){
+			tmpList.add(tgDa);
+			tmpList2 = tmpList;
+
+			// 找到 nextSib , 在他之前加入target
+		}else {
+			for(var data : tmpList ){
+				var name = data.getString("CONN_NAME");
+				if(name.equals(nextSib)){
+					tmpList2.add(tgDa);
+				}
+				tmpList2.add(data);
+			}
+		}
+
+		// 新的顺序插入数据库
+		ConnectionDao.refreshConnOrder(tmpList2);
+
+	}
+
+
+	/**
 	 * 查询
 	 */
-	public static List<SqluckyConnector> recoverConnObj() {
+	public static  List<RsData> selectConnectionInfo(){
 		Connection conn = SqluckyAppDB.getConn();
 		String sql = "SELECT * FROM  CONNECTION_INFO ORDER BY ORDER_TAG";
-		List<SqluckyConnector> datas = new ArrayList<SqluckyConnector>();
-		try {
-			List<RsData> rs = DBTools.selectSql(conn, sql);
-			for (RsData rd : rs) {
-				// VENDOR , 没有注册jdbc的数据库驱动就跳过
-				String vendor = rd.getString("VENDOR");
-				SqluckyDbRegister reg = DbVendor.register(vendor);
-				if (reg == null)
-					continue;
-
-				DBConnectorInfoPo connPo = new DBConnectorInfoPo(rd.getString("CONN_NAME"), rd.getString("DRIVER"), // DbVendor.getDriver(dbDriver.getValue()),
-						rd.getString("HOST"), rd.getString("PORT"), rd.getString("USER"), rd.getString("PASS_WORD"),
-						rd.getString("VENDOR"), // dbDriver.getValue(),
-						rd.getString("SCHEMA"), // defaultSchema.getText()
-						rd.getString("DB_NAME"), rd.getString("JDBC_URL"),
-						1 == rd.getInteger("AUTO_CONNECT") ? true : false);
-				// 设置使用jdbc url的flag
-				if (StrUtils.isNullOrEmpty(connPo.getHostOrFile()) && StrUtils.isNullOrEmpty(connPo.getPort())
-						&& StrUtils.isNotNullOrEmpty(connPo.getJdbcUrl())) {
-					connPo.setJdbcUrlUse(true);
-				} else {
-					connPo.setJdbcUrlUse(false);
-				}
-
-				SqluckyConnector po = reg.createConnector(connPo);
-				po.setId(rd.getInteger("ID"));
-				po.setComment(rd.getString("COMMENT"));
-				datas.add(po);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
+        try {
+            return DBTools.selectSql(conn, sql);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }finally {
 			SqluckyAppDB.closeConn(conn);
 		}
+
+    }
+
+	/**
+	 * 从数据库恢复数据
+	 * @return
+	 */
+	public static List<SqluckyConnector> recoverConnObj() {
+		String sql = "SELECT * FROM  CONNECTION_INFO ORDER BY ORDER_TAG";
+		List<SqluckyConnector> datas = new ArrayList<SqluckyConnector>();
+
+		List<RsData> rs = selectConnectionInfo();
+		for (RsData rd : rs) {
+			// VENDOR , 没有注册jdbc的数据库驱动就跳过
+			String vendor = rd.getString("VENDOR");
+			SqluckyDbRegister reg = DbVendor.register(vendor);
+			if (reg == null)
+				continue;
+
+			DBConnectorInfoPo connPo = new DBConnectorInfoPo(rd.getString("CONN_NAME"), rd.getString("DRIVER"), // DbVendor.getDriver(dbDriver.getValue()),
+					rd.getString("HOST"), rd.getString("PORT"), rd.getString("USER"), rd.getString("PASS_WORD"),
+					rd.getString("VENDOR"), // dbDriver.getValue(),
+					rd.getString("SCHEMA"), // defaultSchema.getText()
+					rd.getString("DB_NAME"), rd.getString("JDBC_URL"),
+					1 == rd.getInteger("AUTO_CONNECT"));
+			// 设置使用jdbc url的flag
+			if (StrUtils.isNullOrEmpty(connPo.getHostOrFile()) && StrUtils.isNullOrEmpty(connPo.getPort())
+					&& StrUtils.isNotNullOrEmpty(connPo.getJdbcUrl())) {
+				connPo.setJdbcUrlUse(true);
+			} else {
+				connPo.setJdbcUrlUse(false);
+			}
+
+			SqluckyConnector po = reg.createConnector(connPo);
+			po.setId(rd.getInteger("ID"));
+			po.setComment(rd.getString("COMMENT"));
+			datas.add(po);
+		}
+
 
 		return datas;
 	}

@@ -585,25 +585,39 @@ public class ConnectionEditor {
 			SqluckyConnector connpo = assembleSqlCon.apply("");
 			var conn = SqluckyAppDB.getConn();
 			TreeItem<TreeNodePo> item;
+			boolean isNew = false;
 			if (connpo != null) {
-				// 先删除树中的节点
+				// 更新操作, 先删除树中的节点
 				if (dp != null) {
 					DBConns.remove(dp.getConnName());
 					item = DBinfoTree.getTrewViewCurrentItem();
 					item.getValue().setName(connectionName.getText());
 					AppWindow.treeView.refresh();
 				} else {
+					// 新增一个节点
 					TreeNodePo tnpo = new TreeNodePo(connectionName.getText(),
 							IconGenerator.svgImageUnactive("unlink"));
 					tnpo.setType(TreeItemType.CONNECT_INFO);
 					item = new TreeItem<>(tnpo);
 					DBinfoTree.treeRootAddItem(item);
+					isNew = true;
 				}
 
 				// 缓存数据
 				DBConns.add(connpo.getConnName(), connpo);
+
 				ConnectionDao.createOrUpdate(conn, connpo);
 				SqluckyAppDB.closeConn(conn);
+
+				// 新连接保存位置
+				if(isNew){
+					Integer id = connpo.getId();
+					// 新建连接的情况
+					if (id != null && id > 0) {
+						ConnectionDao.refreshConnOrderByNewItem(id);
+					}
+
+				}
 			} else {
 				return;
 			}
