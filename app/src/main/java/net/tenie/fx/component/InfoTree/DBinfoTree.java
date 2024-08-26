@@ -652,13 +652,15 @@ public class DBinfoTree extends SqluckyTitledPane {
 								item.getChildren().add(subTreeItem);
 								item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00"));
 								connItemContainer.selectTable(po.getDefaultSchema());
-								DBConns.flushChoiceBox(connName);
+
 								// 当 打开连接节点的时候, 放在第一个节点位置(便于查看)
 								var itemPatent = item.getParent();
 								itemPatent.getChildren().remove(item);
 								Platform.runLater(() -> {
 									itemPatent.getChildren().addFirst(item);
 									AppWindow.treeView.refresh();
+									// 下拉选切换打开的连接
+									DBConns.selectComboBoxItem(connName);
 								});
 
 							});

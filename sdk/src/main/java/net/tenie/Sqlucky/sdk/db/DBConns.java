@@ -40,16 +40,13 @@ public final class DBConns {
 			});
 		}
 	}
+
+	// 刷新 combox 排序(激活的连接在前面)
 	public static void flushChoiceBox() {
 		flushChoiceBox(cb);
 	}
 
-	// 选中combox的元素
-	public static void flushChoiceBox(String name) {
-		flushChoiceBox() ;
-		selectComboBoxItem(name);
-		
-	}
+
 	// 选中combox的元素
 	public static void selectComboBoxItem( String name) {
 		ObservableList<Label> ls = cb.getItems();
@@ -76,7 +73,7 @@ public final class DBConns {
 		if( box.getSelectionModel()!=null &&  box.getSelectionModel().getSelectedItem()!=null) {
 			  selectStr = box.getSelectionModel().getSelectedItem().getText();
 		}
-		ObservableList<Label> list= getChoiceBoxItems();
+		ObservableList<Label> list= sortLiveChoiceBoxItems();
 		cb.setItems(list);
 		
 		if(StrUtils.isNotNullOrEmpty(selectStr)) {
@@ -90,8 +87,12 @@ public final class DBConns {
 	
 		
 	}
-	
-	public static ObservableList<Label> getChoiceBoxItems(){
+
+	/**
+	 * 激活的连接放在开头
+	 * @return
+	 */
+	public static ObservableList<Label> sortLiveChoiceBoxItems(){
 		ObservableList<Label> list = FXCollections.observableArrayList();
 		ObservableList<Label> aliveList = FXCollections.observableArrayList();
 		aliveList.add(new Label(""));

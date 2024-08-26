@@ -26,7 +26,7 @@ public class TransferDataUtils {
 	// 设置数据库下拉选的值
 	public static void setupDBComboBox(ComboBox<Label> cbox1, ComboBox<Label> cbox2) {
 		cbox1.setOnMouseClicked(e -> {
-			var items = DBConns.getChoiceBoxItems();
+			var items = DBConns.sortLiveChoiceBoxItems();
 			if (items == null || items.size() == 0)
 				return;
 			if (cbox2.getValue() != null) {
@@ -45,7 +45,7 @@ public class TransferDataUtils {
 		});
 
 		cbox2.setOnMouseClicked(e -> {
-			var items = DBConns.getChoiceBoxItems();
+			var items = DBConns.sortLiveChoiceBoxItems();
 			if (items == null || items.size() == 0)
 				return;
 			if (cbox1.getValue() != null) {

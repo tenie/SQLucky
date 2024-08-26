@@ -48,100 +48,6 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 public class AppCommonAction {
     private static Logger logger = LogManager.getLogger(AppCommonAction.class);
 
-    public static void openConn(TreeItem<TreeNodePo> item) {
-        // 判断 节点是否已经有子节点
-        if (item.getChildren().size() == 0) {
-            AppCommonAction.backRunOpenConn(item);
-        }
-    }
-
-    // 子线程打开db连接backRunOpenConn
-    public static void backRunOpenConn(TreeItem<TreeNodePo> item) {
-        Node nd = IconGenerator.svgImage("spinner", "red");
-        CommonUtils.rotateTransition(nd);
-        item.getValue().setIcon(nd);
-        ComponentGetter.treeView.refresh();
-
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                SqluckyConnector po1 = null;
-                try {
-                    logger.info("backRunOpenConn()");
-                    String connName = item.getValue().getName();
-                    SqluckyConnector po = DBConns.get(connName);
-                    po1 = po;
-                    po1.setInitConnectionNodeStatus(true);
-
-                    var conntmp = po1.getConn();
-                    if (conntmp != null) {
-                        ConnItemContainer connItemContainer = new ConnItemContainer(po, item);
-                        TreeItem<TreeNodePo> s = connItemContainer.getSchemaNode();
-                        Platform.runLater(() -> {
-                            item.getChildren().add(s);
-                            item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00"));
-                            connItemContainer.selectTable(po.getDefaultSchema());
-                            DBConns.flushChoiceBox(connName);
-                        });
-                    } else {
-                        Platform.runLater(() -> {
-                            MyAlert.errorAlert(
-                                    " Cannot connect ip:" + po.getHostOrFile() + " port:" + po.getPort() + "  !");
-                            item.getValue().setIcon(IconGenerator.svgImageUnactive("unlink"));
-                            ComponentGetter.treeView.refresh();
-
-                        });
-
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    logger.debug(e.getMessage());
-                    Platform.runLater(() -> {
-                        MyAlert.errorAlert(" Error !");
-                        item.getValue().setIcon(IconGenerator.svgImage("unlink", "red"));
-                        ComponentGetter.treeView.refresh();
-                    });
-
-                } finally {
-                    DBConns.flushChoiceBoxGraphic();
-                    po1.setInitConnectionNodeStatus(false);
-                }
-
-            }
-        };
-        t.start();
-    }
-
-    //	更新节点的
-    public static void refreshConnOrder() {
-        Connection conn = SqluckyAppDB.getConn();
-        try {
-            logger.info("refreshConnOrder");
-            TreeView<TreeNodePo> treeView = ComponentGetter.treeView;
-            TreeItem<TreeNodePo> root = treeView.getRoot();
-            ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
-            int size = ls.size();
-            for (int i = 0; i < size; i++) {
-                TreeItem<TreeNodePo> nopo = ls.get(i);
-                String name = nopo.getValue().getName();
-                SqluckyConnector po = DBConns.get(name);
-                int id = po.getId();
-                updateDataOrder(conn, id, i);
-            }
-        } finally {
-            SqluckyAppDB.closeConn(conn);
-        }
-
-    }
-
-    public static void updateDataOrder(Connection conn, int id, int order) {
-        String sql = " UPDATE CONNECTION_INFO  set  ORDER_TAG = " + order + "  where ID = " + id;
-        try {
-            DBTools.execDML(conn, sql);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
     // 代码大写
     public static void UpperCaseSQLTextSelectText() {
@@ -219,62 +125,6 @@ public class AppCommonAction {
     }
 
 
-    public static void selectTextAddString() {
-        CodeArea code = MyEditorSheetHelper.getCodeArea();
-        IndexRange i = code.getSelection(); // 获取当前选中的区间
-        int start = i.getStart();
-        int end = i.getEnd();
-
-        // 修正开始下标 , 获取开始之前的字符串, 找到最接近start 的换行符
-        String frontTxt = code.getText(0, start);
-        int lidx = frontTxt.lastIndexOf('\n'); // 找到最后一个换行符
-        if (lidx > 0) {
-            lidx = frontTxt.length() - lidx - 1; // 获取换行符的位置, 不包括换行符自己
-            start = start - lidx; // start的位置定位到最后一个换行符之后
-        } else { // 如果没有找到换行符, 说明在第一行, 把start置为0
-            start = 0;
-        }
-        // 获取文本
-        String txt = code.getText(start, end);
-        // 添加注释
-        if (!StrUtils.beginWith(txt.trim(), "--")) {
-            String temp = "";
-            for (int t = 0; t < start; t++) {
-                temp += " ";
-            }
-            txt = txt.replaceAll("\n", "\n-- ");
-            txt = temp + "\n-- " + txt;
-            logger.info(txt);
-            int k = txt.indexOf('\n', 0);
-            while (k >= 0) {
-                code.insertText(k, "-- ");
-                k = txt.indexOf('\n', k + 1);
-            }
-        } else {// 去除注释
-            String valStr = "";
-
-            String[] strArr = txt.split("\n");
-            String endtxt = "";
-            if (strArr.length > 0) {
-                endtxt = txt.substring(txt.length() - 1);
-                for (String val : strArr) {
-                    if (StrUtils.beginWith(val.trim(), "--")) {
-                        valStr += val.replaceFirst("-- ", "") + "\n";
-                    } else {
-                        valStr += val + "\n";
-                    }
-                }
-            }
-            if (!"\n".equals(endtxt)) { // 去除最后一个换行符
-                valStr = valStr.substring(0, valStr.length() - 1);
-            }
-            // 将原文本删除
-            code.deleteText(start, end);
-            // 插入 注释过的文本
-            code.insertText(start, valStr);
-        }
-        MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
-    }
 
     // 代码添加注释-- 或去除注释
     public static void addAnnotationSQLTextSelectText() {
@@ -694,15 +544,6 @@ public class AppCommonAction {
             }
         }
 
-    }
-
-    // 重启应用
-    public static void restartApp() {
-        Consumer<String> caller = x -> {
-            ComponentGetter.appComponent.saveApplicationStatusInfo();
-            ComponentGetter.appComponent.reboot();
-        };
-        MyAlert.myConfirmation("Restart Application ? ", caller);
     }
 
     // 设置整体样式

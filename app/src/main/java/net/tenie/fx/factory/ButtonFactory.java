@@ -17,6 +17,7 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.fx.Action.CommonEventHandler;
+import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 
@@ -175,7 +176,7 @@ public class ButtonFactory {
 
 		});
 		// 下拉选, 未连接的连接先打开数据库连接
-//		connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
+		connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
 //		点击的时候判断一下当前链接是不是链接状态
 		connsComboBox.setOnMouseClicked(event -> {
 
@@ -188,6 +189,8 @@ public class ButtonFactory {
 			if( ! sqluckyConnector.isAlive()){
 				DBinfoTree.silentOpenConn(connName);
 			}
+			// 刷新连接的排序
+			DBConns.flushChoiceBox();
 		});
 		ComponentGetter.connComboBox = connsComboBox;
 
