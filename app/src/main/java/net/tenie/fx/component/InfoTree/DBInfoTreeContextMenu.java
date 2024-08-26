@@ -49,7 +49,7 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 
 		link = new MenuItem("Open Connection");
 		link.setOnAction(e -> {
-			ConnectionEditor.openDbConn();
+			DBinfoTree.openDbConn();
 		});
 		link.setGraphic(IconGenerator.svgImageDefActive("link"));
 		link.setDisable(true);
@@ -72,7 +72,8 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 
 		Add = new MenuItem("Add Connection");
 		Add.setOnAction(e -> {
-			ConnectionEditor.ConnectionInfoSetting();
+//			ConnectionEditor.ConnectionInfoSetting();
+			new ConnectionEditor();
 		});
 		Add.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 
@@ -284,7 +285,7 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 		refresh.setOnAction(e -> {
 			DBinfoTree.DBinfoTreeView.getSelectionModel().select(newValue);
 			ConnectionEditor.closeDbConn();
-			ConnectionEditor.openDbConn();
+			DBinfoTree.openDbConn();
 		});
 
 	}

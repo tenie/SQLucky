@@ -38,7 +38,7 @@ public class DBinfoTreeButtonFactory {
 		JFXButton openConn = new JFXButton();
 		openConn.setGraphic(IconGenerator.svgImageDefActive("link"));
 		openConn.setOnMouseClicked(e -> {
-			ConnectionEditor.openDbConn();
+			DBinfoTree.openDbConn();
 		});
 		openConn.setTooltip(MyTooltipTool.instance("Open DB Connection"));
 

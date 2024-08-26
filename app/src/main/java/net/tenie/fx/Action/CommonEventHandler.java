@@ -35,7 +35,8 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-				ConnectionEditor.ConnectionInfoSetting();
+//				ConnectionEditor.ConnectionInfoSetting();
+				new ConnectionEditor();
 			}
 		};
 	}
