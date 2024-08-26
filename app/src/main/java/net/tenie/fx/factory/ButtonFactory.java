@@ -2,8 +2,6 @@ package net.tenie.fx.factory;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -19,9 +17,8 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.fx.Action.CommonEventHandler;
-import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
-import net.tenie.fx.window.ConnectionEditor;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
 
 /**
  * 
@@ -161,10 +158,14 @@ public class ButtonFactory {
 				runbtn.setDisable(false);
 //				runLinebtn.setDisable(false);
 				runFunPro.setDisable(false);
+
+				connsComboBox.setTooltip(MyTooltipTool.instance(connsComboBox.getItems().get(newValue.intValue()).getText()));
 			} else {
 				runbtn.setDisable(true);
 //				runLinebtn.setDisable(true);
 				runFunPro.setDisable(true);
+				connsComboBox.setTooltip(MyTooltipTool.instance(connsComboBox.getItems().get(ov.intValue()).getText()));
+
 			}
 			// 给代码页面 设置 对应的连接名称, 切换代码页的时候可以自动转换链接
 			MyEditorSheet sheet = MyEditorSheetHelper.getActivationEditorSheet();
@@ -174,7 +175,7 @@ public class ButtonFactory {
 
 		});
 		// 下拉选, 未连接的连接先打开数据库连接
-		connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
+//		connsComboBox.getSelectionModel().selectedItemProperty().addListener(CommonListener.choiceBoxChange2());
 //		点击的时候判断一下当前链接是不是链接状态
 		connsComboBox.setOnMouseClicked(event -> {
 
@@ -185,7 +186,7 @@ public class ButtonFactory {
 			String connName = lb.getText();
 			SqluckyConnector sqluckyConnector = DBConns.get(connName);
 			if( ! sqluckyConnector.isAlive()){
-		      ConnectionEditor.silentOpenConn(connName);
+				DBinfoTree.silentOpenConn(connName);
 			}
 		});
 		ComponentGetter.connComboBox = connsComboBox;

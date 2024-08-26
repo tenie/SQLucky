@@ -601,6 +601,25 @@ public class DBinfoTree extends SqluckyTitledPane {
 		return DBConns.get(connName);
 	}
 
+	// 根据连接名称来打开连接
+	public static void openConn(String name) {
+		TreeItem<TreeNodePo> item = DBinfoTree.getTreeItemByName(name);
+		DBinfoTree.openConn(item, false);
+	}
+	// 静默打开数据库链接
+    public static void silentOpenConn(String name) {
+        TreeItem<TreeNodePo> item = DBinfoTree.getTreeItemByName(name);
+        DBinfoTree.openConn(item, true);
+    }
+	// 打开连接按钮点击事件
+	public static void openDbConn() {
+		if (DBinfoTree.currentTreeItemIsConnNode()) {
+			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
+			if (val == null) return;
+			DBinfoTree.openConn(val, false);
+		}
+	}
+
 	/**
 	 * 打开数据库链接
 	 * @param item

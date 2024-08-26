@@ -23,6 +23,7 @@ import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.plugin.PluginManageWindow;
 import net.tenie.fx.window.*;
 import org.apache.logging.log4j.LogManager;
@@ -317,7 +318,8 @@ public class MenuBarContainer extends MenuBar{
 
 		MenuItem addDB = new MenuItem(StrUtils.MenuItemNameFormat("Add New DB Connection"));
 		addDB.setOnAction(value -> {
-			ConnectionEditor.ConnectionInfoSetting();
+//			ConnectionEditor.ConnectionInfoSetting();
+			new ConnectionEditor();
 		});
 		addDB.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 
@@ -329,7 +331,7 @@ public class MenuBarContainer extends MenuBar{
 
 		MenuItem openConn = new MenuItem(StrUtils.MenuItemNameFormat("Open DB Connection"));
 		openConn.setOnAction(value -> {
-			ConnectionEditor.openDbConn();
+			DBinfoTree.openDbConn();
 		});
 		openConn.setGraphic(IconGenerator.svgImageDefActive("link"));
 

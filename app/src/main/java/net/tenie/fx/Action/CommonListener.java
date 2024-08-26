@@ -12,7 +12,6 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.window.ConnectionEditor;
 
 /**
  * 
@@ -78,7 +77,7 @@ public class CommonListener {
 						IndexRange ir = MyEditorSheetHelper.getSelection();
 						CommonUtils.pressBtnESC();
 						AppCommonAction.shrinkTreeView();
-						ConnectionEditor.openConn(cnnpo.getConnName());
+//						DBinfoTree.openConn(cnnpo.getConnName());
 						MyEditorSheetHelper.selectRange(ir);
 					}
 				}

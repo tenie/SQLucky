@@ -41,6 +41,7 @@ public class StrUtils {
     public static final  String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
     // 注释
     public static final  String COMMENT_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
+    public static final  String COMMENT_HORIZONTAL_BAR_PATTERN =  "--[^\n]*";
     // 注释
     public static final  String COMMENT_ANNOTATIONS_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" +  "|" + "@[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
 
