@@ -41,7 +41,8 @@ public class StrUtils {
     public static final  String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"|'([^'\\\\]|\\\\.)*'";
     // 注释
     public static final  String COMMENT_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
-    public static final  String COMMENT_HORIZONTAL_BAR_PATTERN =  "--[^\n]*";
+    public static final  String COMMENT_PATTERN_1 =  "--[^\n]*";
+    public static final  String COMMENT_PATTERN_2 =  "#[^\n]*";
     // 注释
     public static final  String COMMENT_ANNOTATIONS_PATTERN = "//[^\n]*" + "|" + "--[^\n]*" +  "|" + "@[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
 
@@ -582,16 +583,18 @@ public class StrUtils {
      */
     public static String pressString(String text) {
         StringBuilder str = new StringBuilder();
+        text = replaceAllCommentType(text);
         text = text.replaceAll("\r", "");
-        text = text.replaceAll("--", "\n--");
+//        text = text.replaceAll("--", "\n--");
         String val[] = text.split("\n");
         if (val.length > 0) {
             for (String v : val) {
-                if (v.startsWith("--")) {
-                    str.append(" " + v + "\n");
-                } else {
-                    str.append(" " + v);
-                }
+//                if (v.startsWith("--")) {
+//                    str.append(" " + v + "\n");
+//                } else {
+//                    str.append(" " + v);
+//                }
+                str.append(" " + v);
             }
 
             String dest = str.toString().trim();
@@ -768,12 +771,60 @@ public class StrUtils {
     }
 
     /**
+     * 替换单行注解 -- # ,便于压缩sql
+     * @param text
+     * @return
+     */
+    public static String replaceAllCommentType( String text){
+        text = replaceCommentType(COMMENT_PATTERN_2, "#", text);
+        return replaceCommentType(COMMENT_PATTERN_1, "--", text);
+    }
+
+    /**
+     * 把单行注释改为多行注释, 便于压缩sql
+     *  把 -- 注释改成 /*
+     * @param text
+     */
+    public static String replaceCommentType(String comPat, String comStr, String text){
+        List<IndexRange> ls = findAllCommentByPatternStr(comPat, text);
+        if(ls.isEmpty()){
+            return text;
+        }
+        List<String> textLs = new ArrayList<>();
+        int start = 0;
+        int end = 0;
+        for(var idxR : ls){
+            start = end;
+            end =  idxR.getStart();
+            String tmp = text.substring(start, end);
+            textLs.add(tmp);
+            tmp = text.substring(idxR.getStart(), idxR.getEnd());
+            tmp = "/* " + tmp.replaceAll(comStr, "")+ " */";
+            textLs.add(tmp);
+            end = idxR.getEnd();
+        }
+        if(end < text.length()){
+            String tmp = text.substring(end);
+            textLs.add(tmp);
+        }
+
+        return String.join("", textLs);
+    }
+
+    /**
      * 找到所有的注释
      */
     public static List<IndexRange> findAllComment(String text){
+        return findAllCommentByPatternStr(COMMENT_PATTERN, text);
+    }
+
+    /**
+     * 找到所有的注释
+     */
+    public static List<IndexRange> findAllCommentByPatternStr(String commentPatternStr, String text){
 
         String patternString = "(?<STRING>" + STRING_PATTERN + ")"
-                        + "|(?<COMMENT>" + COMMENT_PATTERN + ")";
+                        + "|(?<COMMENT>" + commentPatternStr + ")";
 
         // 找到所有注释
         Matcher matcher = createMatcher(patternString, text);
