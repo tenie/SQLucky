@@ -276,7 +276,7 @@ public class MyBottomSheetAction {
     public static void dockSideTabPane() {
         // 隐藏 数据窗口, 禁用隐藏按钮
         JFXButton btn = CommonButtons.hideBottom;
-        SdkComponent.hideShowBottomHelper(false, btn);
+        SdkComponent.hideShowBottomHelper(false);
         btn.setDisable(true);
 
         // 主界面 移除 tabPane, 把tabPane放入独立窗口

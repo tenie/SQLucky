@@ -78,25 +78,9 @@ public class CommonEventHandler {
 		};
 	}
 
-	// hide left
-	public static EventHandler<Event> hideLift() {
-		return new EventHandler<Event>() {
-			@Override
-			public void handle(Event e) {
-				AppCommonAction.hideLeft();
-			}
-		};
-	}
 
-	//
-	public static EventHandler<Event> hideBottom() {
-		return new EventHandler<Event>() {
-			@Override
-			public void handle(Event e) {
-				SdkComponent.hideBottom();
-			}
-		};
-	}
+
+
 
 
 	// save file
