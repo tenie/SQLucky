@@ -13,6 +13,7 @@ import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.sql.SqlUtils;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
@@ -101,14 +102,14 @@ public class ButtonFactory {
 		JFXButton hideLeft = new JFXButton();
 //		hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
 		hideLeft.setGraphic(IconGenerator.mainTabPaneClose());
-		hideLeft.setOnMouseClicked(CommonEventHandler.hideLift());
+		hideLeft.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
 		hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
 
 		// TODO hideBottom
 		JFXButton hideBottom = new JFXButton();
 //		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
 		hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
-		hideBottom.setOnMouseClicked(CommonEventHandler.hideBottom());
+		hideBottom.setOnMouseClicked(event -> {SdkComponent.hideBottom();});
 		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
 
 

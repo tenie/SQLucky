@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import javafx.geometry.Side;
 import javafx.scene.layout.Region;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import org.apache.logging.log4j.LogManager;
@@ -432,7 +433,7 @@ public class SdkComponent {
 		JFXButton btn = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
 		if(! btn.isDisabled()){
 			boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-			hideShowBottomHelper(showStatus, btn);
+			hideShowBottomHelper(showStatus);
 			if (showStatus) {
 				SdkComponent.escapeWindowsUiBug();
 			}
@@ -474,35 +475,33 @@ public class SdkComponent {
 	}
 
 	public static void hideBottomPane() {
-
-		JFXButton btn = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
-		hideShowBottomHelper(false, btn);
-
+		hideShowBottomHelper(false);
 	}
 
-	static Region rightRegion  = IconGenerator.mainTabPaneClose();//svgImageDefActive("caret-square-o-right");
+	static Region rightRegion  = IconGenerator.rightTabPaneClose();//svgImageDefActive("caret-square-o-right");
 	static Region downRegion  = IconGenerator.bottomTabPaneClose(); //IconGenerator.svgImageDefActive("caret-square-o-down");
-	static Region leftRegion  = IconGenerator.mainTabPaneOpen();//svgImageDefActive("caret-square-o-left");
+	static Region leftRegion  = IconGenerator.rightTabPaneOpen();//svgImageDefActive("caret-square-o-left");
 	static Region upRegion  = IconGenerator.bottomTabPaneOpen(); //IconGenerator.svgImageDefActive("caret-square-o-up");
 	// TODO 显示或隐藏 数据面板, 修改控制按钮图标
-	public static void hideShowBottomHelper(boolean isShow, JFXButton btn) {
+	public static void hideShowBottomHelper(boolean isShow ) {
+		JFXButton btn =  CommonButtons.hideBottom;
 		if (isShow) {
-//			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
-//				btn.setGraphic(rightRegion);
-//			}else{
-//				btn.setGraphic(downRegion);
-//			}
+			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
+				btn.setGraphic(rightRegion);
+			}else{
+				btn.setGraphic(downRegion);
+			}
 			double val = ComponentGetter.masterDetailPane.getDividerPosition();
 			if (val > 0.85) {
 				ComponentGetter.masterDetailPane.setDividerPosition(0.6);
 			}
 			ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
 		} else {
-//			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
-//				btn.setGraphic(leftRegion);
-//			}else{
-//				btn.setGraphic(upRegion);
-//			}
+			if(ConfigVal.bottomSide.equals(Side.RIGHT)){
+				btn.setGraphic(leftRegion);
+			}else{
+				btn.setGraphic(upRegion);
+			}
 			ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
 		}
 
@@ -514,7 +513,7 @@ public class SdkComponent {
 		if(!btn.isDisabled()){
 			boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
 			if (showStatus) {
-				hideShowBottomHelper(true, btn);
+				hideShowBottomHelper(true);
 				escapeWindowsUiBug();
 			}
 		}

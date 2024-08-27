@@ -105,13 +105,14 @@ public class SheetDataValue {
 
 				sideRightBottom.setTooltip(rightTootip);
 				masterDetailPane.setDividerPosition(0.6);
-
 				// 隐藏按钮
 //				hideBottom.setGraphic(closeIcon);
 
 				// 全局的隐藏按钮
 //				CommonButtons.hideBottom.setGraphic(leftRegion2);
 				isSideRight = false;
+
+				SdkComponent.hideShowBottomHelper(false);
 				// 显示执行sql信息
 				Tab tab =ComponentGetter.dataTabPane.getSelectionModel().getSelectedItem();
 				if(tab instanceof MyBottomSheet mbs){
@@ -140,6 +141,8 @@ public class SheetDataValue {
 				// 全局的隐藏按钮
 //				CommonButtons.hideBottom.setGraphic(rightRegion2);
 				isSideRight = true;
+
+				SdkComponent.hideShowBottomHelper(true);
 			}
 
 		});

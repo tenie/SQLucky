@@ -1,46 +1,39 @@
 package net.tenie.Sqlucky.sdk.utility;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
-import javafx.event.Event;
+import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.IndexRange;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TreeItem;
+import javafx.scene.layout.Region;
+import net.tenie.Sqlucky.sdk.component.CommonButtons;
+import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
+import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetUtility;
+import net.tenie.Sqlucky.sdk.config.ConfigVal;
+import net.tenie.Sqlucky.sdk.db.DBConns;
+import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
+import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
+import net.tenie.Sqlucky.sdk.po.RsVal;
+import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
+import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 
-import com.jfoenix.controls.JFXButton;
-
-import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.IndexRange;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
-import net.tenie.Sqlucky.sdk.component.CommonButtons;
-import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheet;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.DBConns;
-import net.tenie.Sqlucky.sdk.db.DBTools;
-import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
-import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
-import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.po.RsVal;
-import net.tenie.Sqlucky.sdk.po.component.ConnItemContainer;
-import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
-import net.tenie.Sqlucky.sdk.subwindow.DialogTools;
-import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
-import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * @author tenie
@@ -179,11 +172,13 @@ public class AppCommonAction {
     }
 
 
+    static private Region mainTabPaneOpen = IconGenerator.mainTabPaneOpen();
+    static private Region mainTabPaneClose = IconGenerator.mainTabPaneClose();
     public static void hideLeft() {
         JFXButton btn = CommonButtons.hideLeft;
         if (ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue()) {
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
-            btn.setGraphic(IconGenerator.mainTabPaneClose());
+            btn.setGraphic(mainTabPaneOpen);
 
         } else {
             double dpval = ComponentGetter.treeAreaDetailPane.getDividerPosition();
@@ -194,7 +189,7 @@ public class AppCommonAction {
                 ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
             }
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
-            btn.setGraphic(IconGenerator.mainTabPaneClose());
+            btn.setGraphic(mainTabPaneClose);
 
         }
     }
