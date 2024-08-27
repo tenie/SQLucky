@@ -34,6 +34,8 @@ public final class ComponentGetter {
 	public static TabPane mainTabPane;
 	public static TabPane rightTabPane;
 
+	public static TabPane currentActiveTabPane;
+
 	public static VBox tabPanContainer;
 	public static Stage dockSideTabPaneWindow;
 
@@ -134,6 +136,10 @@ public final class ComponentGetter {
 	 * @return
 	 */
 	public static TabPane getEditTabPane(){
+		if(currentActiveTabPane != null){
+			return currentActiveTabPane;
+		}
+
 		TabPane myTabPane = ComponentGetter.mainTabPane;
 		if( myTabPane.getTabs().size() > 0 ){
 		 	if(isFocused(myTabPane)){
