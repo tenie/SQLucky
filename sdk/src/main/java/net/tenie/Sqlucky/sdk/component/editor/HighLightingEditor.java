@@ -71,21 +71,21 @@ public class HighLightingEditor extends SqluckyEditor {
 //		});
 
 		// 当表被拖拽进入到code editor , 将表名插入到 光标处
-		codeArea.setOnDragEntered(e -> {
-			String val = ComponentGetter.dragTreeItemName;
-			if (StrUtils.isNotNullOrEmpty(val)) {
-				int start = ComponentGetter.codeAreaAnchor;
-				logger.debug("ComponentGetter.codeAreaAnchor = " + start);
-				codeArea.insertText(start, " " + val);
-				codeArea.requestFocus();
-			}
-
-		});
+//		codeArea.setOnDragEntered(e -> {
+//			String val = ComponentGetter.dragTreeItemName;
+//			if (StrUtils.isNotNullOrEmpty(val)) {
+//				int start = ComponentGetter.codeAreaAnchor;
+//				logger.debug("ComponentGetter.codeAreaAnchor = " + start);
+//				codeArea.insertText(start, " " + val);
+//				codeArea.requestFocus();
+//			}
+//
+//		});
 
 		// 鼠标退出界面, 记录光标位置
-		codeArea.setOnMouseExited(mouseEvent -> {
-			ComponentGetter.codeAreaAnchor = codeArea.getAnchor();
-		});
+//		codeArea.setOnMouseExited(mouseEvent -> {
+//			ComponentGetter.codeAreaAnchor = codeArea.getAnchor();
+//		});
 
 		// 鼠标双击选中设置
 		codeArea.setOnMousePressed(mouseEvent-> {
