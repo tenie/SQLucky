@@ -1,6 +1,9 @@
 package net.tenie.fx.component.container;
 
 import javafx.geometry.Side;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.NotificationPane;
 
@@ -71,6 +74,22 @@ public class CodeContainer extends VBox{
 		configNotificationPane();
 		
 		this.getChildren().addAll(operateBtnPane, notificationPane);
+
+		// 当表被拖拽进入到code editor , 将表名插入到 光标处
+		this.setOnDragEntered(e -> {
+			String val = ComponentGetter.dragTreeItemName;// 被拖拽的节点名称
+			if (StrUtils.isNotNullOrEmpty(val)) {
+				MyCodeArea ca = MyEditorSheetHelper.getCodeArea();
+                int start = 0;
+                if (ca != null) {
+                    start = ca.getAnchor();
+					ca.insertText(start, " " + val);
+					ca.requestFocus();
+                }
+
+			}
+
+		});
 
 		// tab 拖拽
 		DraggingTabPaneSupport support1 = new DraggingTabPaneSupport();
