@@ -5,12 +5,12 @@ import net.sf.jsqlparser.expression.Expression;
 import net.sf.jsqlparser.expression.ExpressionVisitorAdapter;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.statement.Statement;
 import net.sf.jsqlparser.statement.select.PlainSelect;
 import net.sf.jsqlparser.statement.select.Select;
 import net.sf.jsqlparser.statement.select.SelectItem;
 import net.sf.jsqlparser.statement.select.SelectItemVisitorAdapter;
 import net.sf.jsqlparser.util.TablesNamesFinder;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,14 +21,14 @@ public class SqlParser {
 
     public static boolean isValidSql(String sql) {
         try {
-            Statement stmt = CCJSqlParserUtil.parse(sql);
-            System.out.println(stmt);
-            return true;
+            if(StrUtils.isNotNullOrEmpty(sql)){
+                CCJSqlParserUtil.parse(sql);
+                return true;
+            }
         } catch (JSQLParserException e) {
             e.printStackTrace();
         }
         return false;
-
     }
 
     /**
