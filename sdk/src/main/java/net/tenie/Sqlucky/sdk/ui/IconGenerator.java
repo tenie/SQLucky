@@ -19,27 +19,33 @@ import java.net.URL;
  */
 public final class IconGenerator {
     public static Region bottomTabPaneClose() {
-        return IconGenerator.svgImageDefActive("bottom-tabPane-close");
+//        return IconGenerator.svgImageDefActive("bottom-tabPane-close");
+        return IconGenerator.svgImageCss("bottom-tabPane-close", 12, 12, "top-btn-Icon-color");
     }
 
     public static Region bottomTabPaneOpen() {
-        return IconGenerator.svgImageDefActive("bottom-tabPane-open");
+//        return IconGenerator.svgImageDefActive("bottom-tabPane-open");
+        return IconGenerator.svgImageCss("bottom-tabPane-open", 12, 12, "top-btn-Icon-color");
     }
 
     public static Region mainTabPaneClose() {
-        return IconGenerator.svgImageDefActive("main-tabPane-close");
+//        return IconGenerator.svgImageDefActive("main-tabPane-close");
+        return IconGenerator.svgImageCss("main-tabPane-close", 12, 12, "top-btn-Icon-color");
     }
 
     public static Region mainTabPaneOpen() {
-        return IconGenerator.svgImageDefActive("main-tabPane-open");
+//        return IconGenerator.svgImageDefActive("main-tabPane-open");
+        return IconGenerator.svgImageCss("main-tabPane-open", 12, 12, "top-btn-Icon-color");
     }
 
     public static Region rightTabPaneClose() {
-        return IconGenerator.svgImageDefActive("right-tabPane-close");
+//        return IconGenerator.svgImageDefActive("right-tabPane-close");
+        return IconGenerator.svgImageCss("right-tabPane-close", 12, 12, "top-btn-Icon-color");
     }
 
     public static Region rightTabPaneOpen() {
-        return IconGenerator.svgImageDefActive("right-tabPane-open");
+//        return IconGenerator.svgImageDefActive("right-tabPane-open");
+        return IconGenerator.svgImageCss("right-tabPane-open", 12, 12, "top-btn-Icon-color");
     }
 
     public static Region closeIcon() {

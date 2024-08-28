@@ -45,14 +45,12 @@ public class CodeContainer extends VBox{
 
 		// 当焦点在rightTabPane 就给currentActiveTabPane赋值
 		rightTabPane.focusWithinProperty().addListener((a,b,c)->{
-			System.out.println("rightTabPane  .focusWithinProperty = " + c);
 			if(c){
 				ComponentGetter.currentActiveTabPane = rightTabPane;
 			}
 		});
         // 当焦点在mainTabPane 就给currentActiveTabPane赋值
 		mainTabPane.focusWithinProperty().addListener((a,b,c)->{
-			System.out.println("mainTabPane  .focusWithinProperty = " + c);
 			if(c){
 				ComponentGetter.currentActiveTabPane = mainTabPane;
 			}
