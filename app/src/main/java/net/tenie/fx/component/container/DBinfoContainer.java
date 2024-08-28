@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeView;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -12,7 +11,6 @@ import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
-import net.tenie.fx.component.InfoTree.DBinfoTreeButtonFactory;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 
 /**

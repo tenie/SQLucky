@@ -99,48 +99,48 @@ public class ButtonFactory {
 			RunSQLHelper.stopSQLMethod();
 		});
 
-		JFXButton hideLeft = new JFXButton();
-//		hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
-		hideLeft.setGraphic(IconGenerator.mainTabPaneClose());
-		hideLeft.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
-		hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
-
-		// TODO hideBottom
-		JFXButton hideBottom = new JFXButton();
-//		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
-		hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
-		hideBottom.setOnMouseClicked(event -> {SdkComponent.hideBottom();});
-		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
-
-
-
-		JFXButton hideRight = new JFXButton();
-//		var rightTabPaneOpen =IconGenerator.rightTabPaneOpen();
-//		var rightTabPaneClose =IconGenerator.rightTabPaneClose();
-//		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
-//		hideRight.setGraphic(rightTabPaneOpen);
-//		hideRight.setOnMouseClicked(CommonEventHandler.hideBottom());
-		hideRight.setOnAction(event -> {
-			SdkComponent.showOrhideRight();
-		});
-		hideRight.setTooltip(MyTooltipTool.instance("Hide or Show Right Panel "));
-//		Platform.runLater(SdkComponent::showOrhideRight);
-
-		btnsAnchorPane.getChildren().add(hideRight);
-		btnsAnchorPane.getChildren().add(hideLeft);
-		btnsAnchorPane.getChildren().add(hideBottom);
-		AnchorPane.setRightAnchor(hideRight, 0.0);
-		AnchorPane.setRightAnchor(hideBottom, 30.0);
-		AnchorPane.setRightAnchor(hideLeft, 60.0);
-
-
+//		JFXButton hideLeft = new JFXButton();
+////		hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
+//		hideLeft.setGraphic(IconGenerator.mainTabPaneClose());
+//		hideLeft.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
+//		hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
+//
+//		// TODO hideBottom
+//		JFXButton hideBottom = new JFXButton();
+////		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+//		hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
+//		hideBottom.setOnMouseClicked(event -> {SdkComponent.hideBottom();});
+//		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
+//
+//
+//
+//		JFXButton hideRight = new JFXButton();
+////		var rightTabPaneOpen =IconGenerator.rightTabPaneOpen();
+////		var rightTabPaneClose =IconGenerator.rightTabPaneClose();
+////		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+////		hideRight.setGraphic(rightTabPaneOpen);
+////		hideRight.setOnMouseClicked(CommonEventHandler.hideBottom());
+//		hideRight.setOnAction(event -> {
+//			SdkComponent.showOrhideRight();
+//		});
+//		hideRight.setTooltip(MyTooltipTool.instance("Hide or Show Right Panel "));
+////		Platform.runLater(SdkComponent::showOrhideRight);
+//
+//		btnsAnchorPane.getChildren().add(hideRight);
+//		btnsAnchorPane.getChildren().add(hideLeft);
+//		btnsAnchorPane.getChildren().add(hideBottom);
+//		AnchorPane.setRightAnchor(hideRight, 0.0);
+//		AnchorPane.setRightAnchor(hideBottom, 30.0);
+//		AnchorPane.setRightAnchor(hideLeft, 60.0);
 
 
 
 
-		CommonButtons.hideLeft = hideLeft;
-		CommonButtons.hideBottom = hideBottom;
-		CommonButtons.hideRight = hideRight;
+
+
+//		CommonButtons.hideLeft = hideLeft;
+//		CommonButtons.hideBottom = hideBottom;
+//		CommonButtons.hideRight = hideRight;
 
 		// 选择sql在哪个连接上执行
 		Label lbcnn = new Label("DB: ");

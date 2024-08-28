@@ -26,7 +26,6 @@ public class OperateContainer extends HBox {
 		treeAreaDetailPane.setShowDetailNode(true);
 		treeAreaDetailPane.setMasterNode(codeCtr);
 		treeAreaDetailPane.setDetailNode(dbinfoCtr);
-//		treeAreaDetailPane.setDividerPosition(0.22);
 
 		this.getChildren().add(treeAreaDetailPane);
 

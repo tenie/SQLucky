@@ -89,10 +89,6 @@ public class DataViewContainer extends HBox{
 								AnchorPane.setTopAnchor(hideBottom, 0.0);
 							}
 
-//							dataTabTopBtnPane.getChildren().add(hideBottom);
-//							if (!myTab.getBtnHbox().getChildren().contains(hideBottom)) {
-//								myTab.getBtnHbox().getChildren().add(0, hideBottom);
-//							}
 						} else {
 							if (!myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
 								myTab.getButtonAnchorPane().getChildren().add(hideBottom);
@@ -112,14 +108,12 @@ public class DataViewContainer extends HBox{
 					if (t instanceof MyBottomSheet myTab) {
 						// 获取隐藏按钮
 						JFXButton hideBottom = SheetDataValue.hideBottom;
-						// 数据窗口在右边的时候, 移除隐藏按钮
+						// 数据窗口在右边的时候, 不移除隐藏按钮
 						if (SheetDataValue.isSideRight) {
-							if (dataTabTopBtnPane.getChildren().contains(hideBottom)) {
-								Platform.runLater(()->dataTabTopBtnPane.getChildren().remove(hideBottom));
-							}
-//							if (myTab.getBtnHbox().getChildren().contains(hideBottom)) {
-//								myTab.getBtnHbox().getChildren().remove(hideBottom);
+//							if (dataTabTopBtnPane.getChildren().contains(hideBottom)) {
+//								Platform.runLater(()->dataTabTopBtnPane.getChildren().remove(hideBottom));
 //							}
+//
 						} else {
 							if (myTab.getButtonAnchorPane().getChildren().contains(hideBottom)) {
 								myTab.getButtonAnchorPane().getChildren().remove(hideBottom);

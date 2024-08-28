@@ -13,16 +13,24 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
+import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.Action.CommonEventHandler;
 
 public class AppWindowReStyleByWinOS {
 	// 关闭, 最小化, 还原的图标
-	private JFXButton windowResize = new JFXButton();;
+	private JFXButton windowResize = new JFXButton();
 	private	JFXButton hidden = new JFXButton();
 	private JFXButton close = new JFXButton();
+
+	private JFXButton hideLeft = new JFXButton();
+	private JFXButton hideBottom = new JFXButton();
+	private JFXButton hideRight = new JFXButton();
 
 	private	Scene scene ;
 
@@ -41,6 +49,8 @@ public class AppWindowReStyleByWinOS {
 		this.primaryWindowStage = primaryStage;
 		// 添加关闭,最小化, 还原 按钮
 		addTopButtonPane(primaryWindowStage, operateBtnPane);
+		//界面上的子窗口的隐藏和显示按钮
+		addSubWindowCtrlBtn(operateBtnPane);
 		// 添加图标
 		addTopImage(primaryWindowStage, operateBtnPane);
 		this.scene = primaryWindowStage.getScene();
@@ -58,6 +68,13 @@ public class AppWindowReStyleByWinOS {
 				Platform.runLater(()->{
 					if( !smallWindowStage.isShowing()){
 						resize();
+						AnchorPane.setRightAnchor(hideLeft, 75.0);
+						AnchorPane.setRightAnchor(hideBottom,  40.0);
+						AnchorPane.setRightAnchor(hideRight, 5.0);
+					}else {
+						AnchorPane.setRightAnchor(hideLeft, 180.0);
+						AnchorPane.setRightAnchor(hideBottom, 145.0);
+						AnchorPane.setRightAnchor(hideRight, 110.0);
 					}
 
 				});
@@ -100,6 +117,9 @@ public class AppWindowReStyleByWinOS {
 
 					// 小窗口隐藏
 					smallWindowStage.hide();
+					AnchorPane.setRightAnchor(hideLeft, 180.0);
+					AnchorPane.setRightAnchor(hideBottom, 145.0);
+					AnchorPane.setRightAnchor(hideRight, 110.0);
 
 				}
 			});
@@ -235,7 +255,6 @@ public class AppWindowReStyleByWinOS {
 		});
 
 		operateBtnPane.getChildren().add(hidden);
-
 		operateBtnPane.getChildren().add(windowResize);
 		operateBtnPane.getChildren().add(close);
 
@@ -246,6 +265,51 @@ public class AppWindowReStyleByWinOS {
 		AnchorPane.setRightAnchor(hidden, 75.0);
 		AnchorPane.setRightAnchor(windowResize, 40.0);
 		AnchorPane.setRightAnchor(close, 5.0);
+
+	}
+
+	/**
+	 * 界面上的子窗口的隐藏和显示按钮
+	 * @param operateBtnPane
+	 */
+	private void addSubWindowCtrlBtn(AnchorPane operateBtnPane){
+//		hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
+		hideLeft.setGraphic(IconGenerator.mainTabPaneClose());
+		hideLeft.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
+		hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
+
+		// TODO hideBottom
+//		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+		hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
+		hideBottom.setOnMouseClicked(event -> {
+			SdkComponent.hideBottom();});
+		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
+
+
+
+//		var rightTabPaneOpen =IconGenerator.rightTabPaneOpen();
+//		var rightTabPaneClose =IconGenerator.rightTabPaneClose();
+//		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
+//		hideRight.setGraphic(rightTabPaneOpen);
+//		hideRight.setOnMouseClicked(CommonEventHandler.hideBottom());
+		hideRight.setOnAction(event -> {
+			SdkComponent.showOrhideRight();
+		});
+		hideRight.setTooltip(MyTooltipTool.instance("Hide or Show Right Panel "));
+		operateBtnPane.getChildren().add(hideLeft);
+		operateBtnPane.getChildren().add(hideBottom);
+		operateBtnPane.getChildren().add(hideRight);
+		CommonButtons.hideLeft = hideLeft;
+		CommonButtons.hideBottom = hideBottom;
+		CommonButtons.hideRight = hideRight;
+		AnchorPane.setTopAnchor(hideLeft, 5.0);
+		AnchorPane.setTopAnchor(hideBottom, 5.0);
+		AnchorPane.setTopAnchor(hideRight, 5.0);
+
+
+		AnchorPane.setRightAnchor(hideLeft, 180.0);
+		AnchorPane.setRightAnchor(hideBottom, 145.0);
+		AnchorPane.setRightAnchor(hideRight, 110.0);
 	}
 
 
