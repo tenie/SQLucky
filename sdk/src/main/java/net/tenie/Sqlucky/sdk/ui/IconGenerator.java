@@ -59,6 +59,11 @@ public final class IconGenerator {
     public static Region miniIcon() {
         return IconGenerator.svgImageCss("my-minus-square", 12.0, 1.0, "top-btn-Icon-color");
     }
+    public static Region menuBarIcon() {
+        return IconGenerator.svgImageCss("th-list", 12.0, 12.0, "top-btn-Icon-color");
+//        return IconGenerator.svgImage("th-list",  "top-btn-Icon-color");
+    }
+
 //            IconGenerator.svgImageCss("my-window-maximize", 12, 12, "top-btn-Icon-color");
 
 //            IconGenerator.svgImageCss("my-window-restore", 12, 12, "top-btn-Icon-color");

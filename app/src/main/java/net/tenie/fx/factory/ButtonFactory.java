@@ -2,7 +2,9 @@ package net.tenie.fx.factory;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -21,6 +23,7 @@ import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
+import net.tenie.fx.component.container.AppWindow;
 
 /**
  * 
@@ -33,8 +36,7 @@ public class ButtonFactory {
 	// 代码区
 	// codeArea 代码区域 按钮初始化
 	@SuppressWarnings("unchecked")
-	public static AnchorPane codeAreabtnInit() {
-		AnchorPane btnsAnchorPane = new AnchorPane();
+	public static HBox codeAreabtnInit() {
 		JFXButton runbtn = new JFXButton();
 		runbtn.setGraphic(IconGenerator.svgImageDefActive("play"));
 		runbtn.setTooltip(MyTooltipTool.instance("Run SQL"));
@@ -256,8 +258,15 @@ public class ButtonFactory {
 		CommonButtons.runFunPro = runFunPro;
 //		CommonButtons.runLinebtn = runLinebtn;
 		CommonButtons.addcodeArea = addcodeArea;
-		btnsAnchorPane.getChildren().add(operateBox);
-		return btnsAnchorPane;
+//		btnsAnchorPane.getChildren().add(operateBox);
+		Platform.runLater(()->{
+			operateBox.setAlignment(Pos.BASELINE_RIGHT);
+			AppWindow.SQLuckyAppWindow.getHeadAnchorPane().getChildren().add(operateBox);
+			AnchorPane.setRightAnchor(operateBox, 220.0);
+
+		});
+
+		return operateBox;
 	}
 
 }

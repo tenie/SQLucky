@@ -1,6 +1,12 @@
 package net.tenie.fx.component.container;
 
+import com.jfoenix.controls.JFXButton;
+import javafx.event.EventHandler;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import net.tenie.fx.factory.ButtonFactory;
 import org.controlsfx.control.MasterDetailPane;
 
 import javafx.application.Platform;
@@ -21,6 +27,8 @@ import net.tenie.fx.component.InfoTree.DBinfoTree;
 
 /*   @author tenie */
 public class AppWindow extends VBox{
+	public static  Stage SQLuckyApp ;
+	public static  AppWindow SQLuckyAppWindow ;
 	private MenuBarContainer mainMenuBar;
 	private MasterDetailPane masterDetailPane;
 	// 操作区域, 数据库链接, sql编辑
@@ -31,7 +39,13 @@ public class AppWindow extends VBox{
 	private Scene appScene;
 	private StackPane root;
 	// 窗口的顶部(主菜单的位置)
-	private AnchorPane headAnchorPane;
+	private AnchorPane headAnchorPane = new AnchorPane();;
+	// 放菜单
+	HBox menuHBox = new HBox();
+	//控制菜单显示按钮
+	JFXButton showMenuBarBtn = new JFXButton();
+	// sql btn
+	public static HBox buttonBox;
 
 	// 全局组件
 //	public static DataViewContainer dataView;
@@ -42,6 +56,7 @@ public class AppWindow extends VBox{
 
 	public AppWindow() {
 		super();
+		AppWindow.SQLuckyAppWindow =this;
 		CommonUtils.addCssClass(this, "main-background");
 		ComponentGetter.mainWindow = this;
 
@@ -76,13 +91,34 @@ public class AppWindow extends VBox{
 		ComponentGetter.primaryscene = appScene;
 		ComponentGetter.primarySceneRoot = root;
 
+
+
+
 		// 主菜单加入到顶部pane中
-		headAnchorPane = new AnchorPane();
-		headAnchorPane.getChildren().add(mainMenuBar);
-		AnchorPane.setLeftAnchor(mainMenuBar, 3.0);
-		AnchorPane.setTopAnchor(mainMenuBar, 3.0);
+		addTopImage(headAnchorPane);
+
+		menuHBox.setPadding(new Insets(6, 0,0,0));
+
+		showMenuBarBtn.setGraphic(IconGenerator.menuBarIcon());
+		showMenuBarBtn.setOnAction(event -> {
+			menuHBox.getChildren().remove(showMenuBarBtn);
+			menuHBox.getChildren().add(mainMenuBar);
+			menuHBox.setPadding(new Insets(0));
+			Platform.runLater(()->{
+				 addMouseEventFilter(SQLuckyApp);
+			});
+
+		});
+		menuHBox.getChildren().add(showMenuBarBtn);
+
+//		AnchorPane.setLeftAnchor(mainMenuBar, 3.0);
+//		AnchorPane.setTopAnchor(mainMenuBar, 3.0);
+//		AnchorPane.setLeftAnchor(showMenuBarBtn, 30.0);
+//		AnchorPane.setTopAnchor(showMenuBarBtn, 6.0);
 
 		headAnchorPane.getStyleClass().add("window-head-pane");
+        // 按钮面板
+		buttonBox = ButtonFactory.codeAreabtnInit();
 
 		Platform.runLater(() -> {
 			this.getChildren().addAll(headAnchorPane, masterDetailPane);
@@ -95,6 +131,68 @@ public class AppWindow extends VBox{
 
 		CommonUtils.fadeTransition(this, 1000);
 		ComponentGetter.treeView = treeView;
+
+
+	}
+	// 控制菜单显示
+	public void ctrlMenuBarShow(){
+		if( menuHBox.getChildren().contains(mainMenuBar) && !subMenuIsHover()){
+			 hideMenuBar();
+			 removeMouseEventFilter(SQLuckyApp);
+
+
+		}
+	}
+	// 隐藏MenuBar
+	public void hideMenuBar(){
+		menuHBox.getChildren().remove(mainMenuBar);
+		if(!menuHBox.getChildren().contains(showMenuBarBtn)){
+			menuHBox.getChildren().add(showMenuBarBtn);
+			menuHBox.setPadding(new Insets(6, 0,0,0));
+		}
+	}
+	private  EventHandler<MouseEvent> appMouseEvent =new EventHandler<MouseEvent>() {
+		//重写EventHandler接口实现方法
+		@Override
+		public void handle(MouseEvent event) {
+			 ctrlMenuBarShow();
+		}
+	};
+	public void addMouseEventFilter(Stage pStage){
+		pStage.addEventFilter(MouseEvent.MOUSE_CLICKED, appMouseEvent);
+	}
+	public void removeMouseEventFilter(Stage pStage){
+		pStage.removeEventFilter(MouseEvent.MOUSE_CLICKED, appMouseEvent);
+	}
+
+	private boolean subMenuIsHover(){
+		var menusList = mainMenuBar.getMenus();
+		boolean tf = false;
+		for(var menu : menusList){
+			tf = menu.isShowing();
+			if(tf){
+				return tf;
+			}
+		}
+
+		return tf;
+	}
+
+
+	// 顶部左上角 图标
+	private void addTopImage(AnchorPane operateBtnPane) {
+		// 添加图标
+		Image i = ComponentGetter.LogoIcons;
+		ImageView mediaView = new ImageView(i);
+		mediaView.setFitWidth(22.0);
+		mediaView.setFitHeight(22.0);
+		operateBtnPane.getChildren().addFirst(mediaView);
+		AnchorPane.setTopAnchor(mediaView, 7.0);
+		AnchorPane.setLeftAnchor(mediaView, 10.0);
+
+         //    按钮bar 移动一下
+		operateBtnPane.getChildren().add(menuHBox);
+		AnchorPane.setLeftAnchor(menuHBox, 38.0);
 	}
 
 	static {

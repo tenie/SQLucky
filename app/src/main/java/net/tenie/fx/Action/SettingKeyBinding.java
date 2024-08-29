@@ -1,5 +1,6 @@
 package net.tenie.fx.Action;
 
+import SQLucky.app;
 import javafx.scene.Scene;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.TitledPane;
@@ -29,12 +30,20 @@ public final class SettingKeyBinding {
 
 		// 左边 百叶窗 的切换
 		setAccordionChangeBinding(scene);
+
+		// 主界面scene 监听键盘按下和释放
 		scene.setOnKeyPressed(keyEvent -> {
 			keyCode =  keyEvent.getCode();
 		});
 		scene.setOnKeyReleased(keyEvent -> {
 			keyCode = null;
 		});
+
+		// 主界面scene 监听鼠标按下
+//		scene.setOnMousePressed(event -> {
+//			app.app.ctrlMenuBarShow();
+//		});
+
 	}
 	//设置快捷键 左边 百叶窗 的切换
 	private static void setAccordionChangeBinding(Scene scene){
