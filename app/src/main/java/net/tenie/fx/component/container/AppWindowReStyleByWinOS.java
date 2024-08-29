@@ -52,7 +52,7 @@ public class AppWindowReStyleByWinOS {
 		//界面上的子窗口的隐藏和显示按钮
 		addSubWindowCtrlBtn(operateBtnPane);
 		// 添加图标
-		addTopImage(primaryWindowStage, operateBtnPane);
+//		addTopImage(primaryWindowStage, operateBtnPane);
 		this.scene = primaryWindowStage.getScene();
 		// 不带系统的边框
 		primaryWindowStage.initStyle(StageStyle.TRANSPARENT);
@@ -67,22 +67,25 @@ public class AppWindowReStyleByWinOS {
 			if (e.getClickCount() == 2) {
 				Platform.runLater(()->{
 					if( !smallWindowStage.isShowing()){
-						resize();
-						AnchorPane.setRightAnchor(hideLeft, 75.0);
-						AnchorPane.setRightAnchor(hideBottom,  40.0);
-						AnchorPane.setRightAnchor(hideRight, 5.0);
-					}else {
-						AnchorPane.setRightAnchor(hideLeft, 180.0);
-						AnchorPane.setRightAnchor(hideBottom, 145.0);
-						AnchorPane.setRightAnchor(hideRight, 110.0);
-					}
 
+						AppWindow.SQLuckyApp = smallWindowStage;
+						AppWindow.SQLuckyAppWindow.hideMenuBar();
+						resize();
+						smallWindowMoveAnchorPaneChildrens();
+					}
 				});
 
 			}
 		});
 
 		Platform.runLater(this::createSmallWindow);
+	}
+
+	private void smallWindowMoveAnchorPaneChildrens(){
+		AnchorPane.setRightAnchor(hideLeft, 75.0);
+		AnchorPane.setRightAnchor(hideBottom,  40.0);
+		AnchorPane.setRightAnchor(hideRight, 5.0);
+		AnchorPane.setRightAnchor(AppWindow.buttonBox, 120.0);
 	}
 
 	/**
@@ -120,7 +123,13 @@ public class AppWindowReStyleByWinOS {
 					AnchorPane.setRightAnchor(hideLeft, 180.0);
 					AnchorPane.setRightAnchor(hideBottom, 145.0);
 					AnchorPane.setRightAnchor(hideRight, 110.0);
+					AnchorPane.setRightAnchor(AppWindow.buttonBox, 220.0);
 
+					AppWindow.SQLuckyApp = primaryWindowStage;
+					AppWindow.SQLuckyAppWindow.hideMenuBar();
+				}else {
+					AppWindow.SQLuckyAppWindow.hideMenuBar();
+					AppWindow.SQLuckyApp = smallWindowStage;
 				}
 			});
 			// windows 系统 监听窗口最大化
@@ -208,15 +217,15 @@ public class AppWindowReStyleByWinOS {
 	// 顶部左上角 图标
 	private void addTopImage(Stage stage, AnchorPane operateBtnPane) {
 		// 先将原来的按钮bar 移动一下
-		var children1 = operateBtnPane.getChildren().get(0);
+		var children1 = operateBtnPane.getChildren().getFirst();
 		AnchorPane.setLeftAnchor(children1, 38.0);
 		// 添加图标
 		Image i = ComponentGetter.LogoIcons;
 		ImageView mediaView = new ImageView(i);
 		mediaView.setFitWidth(22.0);
 		mediaView.setFitHeight(22.0);
-		operateBtnPane.getChildren().add(0, mediaView);
-		AnchorPane.setTopAnchor(mediaView, 10.0);
+		operateBtnPane.getChildren().addFirst(mediaView);
+		AnchorPane.setTopAnchor(mediaView, 7.0);
 		AnchorPane.setLeftAnchor(mediaView, 10.0);
 	}
 
@@ -273,25 +282,15 @@ public class AppWindowReStyleByWinOS {
 	 * @param operateBtnPane
 	 */
 	private void addSubWindowCtrlBtn(AnchorPane operateBtnPane){
-//		hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
 		hideLeft.setGraphic(IconGenerator.mainTabPaneClose());
 		hideLeft.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
 		hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
 
 		// TODO hideBottom
-//		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
 		hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
-		hideBottom.setOnMouseClicked(event -> {
-			SdkComponent.hideBottom();});
+		hideBottom.setOnMouseClicked(event -> { SdkComponent.hideBottom();});
 		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
 
-
-
-//		var rightTabPaneOpen =IconGenerator.rightTabPaneOpen();
-//		var rightTabPaneClose =IconGenerator.rightTabPaneClose();
-//		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
-//		hideRight.setGraphic(rightTabPaneOpen);
-//		hideRight.setOnMouseClicked(CommonEventHandler.hideBottom());
 		hideRight.setOnAction(event -> {
 			SdkComponent.showOrhideRight();
 		});
@@ -310,6 +309,7 @@ public class AppWindowReStyleByWinOS {
 		AnchorPane.setRightAnchor(hideLeft, 180.0);
 		AnchorPane.setRightAnchor(hideBottom, 145.0);
 		AnchorPane.setRightAnchor(hideRight, 110.0);
+		AnchorPane.setRightAnchor(AppWindow.buttonBox, 220.0);
 	}
 
 

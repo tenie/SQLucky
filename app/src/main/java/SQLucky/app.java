@@ -3,6 +3,7 @@ package SQLucky;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -11,6 +12,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -127,11 +129,15 @@ public class app extends Application {
 
     }
 
+
+
     @Override
     public void start(Stage primaryStage) {
         ComponentGetter.SQLucky = this;
+
         try {
             pStage = primaryStage;
+            AppWindow.SQLuckyApp = pStage;
             ComponentGetter.primaryStage = primaryStage;
 
             primaryStage.setScene(scene);

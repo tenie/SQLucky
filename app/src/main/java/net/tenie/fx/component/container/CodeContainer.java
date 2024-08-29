@@ -20,7 +20,7 @@ import net.tenie.fx.factory.ButtonFactory;
 
 /*   @author tenie */
 public class CodeContainer extends VBox{
-	private AnchorPane operateBtnPane;
+//	private AnchorPane operateBtnPane;
 	// 主代码框
 	private TabPane mainTabPane;
 	// 右侧代码框
@@ -36,7 +36,7 @@ public class CodeContainer extends VBox{
 		super();
 
 		// 按钮面板
-		operateBtnPane = ButtonFactory.codeAreabtnInit();
+//		operateBtnPane = ButtonFactory.codeAreabtnInit();
 		
 		mainTabPane = new TabPane();
 		rightTabPane = new TabPane();
@@ -71,7 +71,8 @@ public class CodeContainer extends VBox{
 		// 配置 notificationPane 组件
 		configNotificationPane();
 		
-		this.getChildren().addAll(operateBtnPane, notificationPane);
+		this.getChildren().add(notificationPane);
+//		this.getChildren().addAll(operateBtnPane, notificationPane);
 
 		// 当表被拖拽进入到code editor , 将表名插入到 光标处
 		this.setOnDragEntered(e -> {
@@ -94,7 +95,7 @@ public class CodeContainer extends VBox{
 		support1.addSupport(mainTabPane);
 		
 		
-		CommonUtils.fadeTransition(operateBtnPane, 1000); 
+//		CommonUtils.fadeTransition(operateBtnPane, 1000);
 		CommonUtils.fadeTransition(mainTabPane, 1000); 
 		
 	}
@@ -124,13 +125,8 @@ public class CodeContainer extends VBox{
 	}
 	
 
-	public AnchorPane getOperateBtnPane() {
-		return operateBtnPane;
-	}
 
-	public void setOperateBtnPane(AnchorPane operateBtnPane) {
-		this.operateBtnPane = operateBtnPane;
-	}
+
 
 	public TabPane getMainTabPane() {
 		return mainTabPane;
