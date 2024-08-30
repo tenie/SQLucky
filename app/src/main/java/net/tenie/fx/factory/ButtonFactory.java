@@ -32,20 +32,20 @@ import net.tenie.fx.component.container.AppWindow;
  */
 public class ButtonFactory {
 	public static TextField rowsTextField;
+	// 按钮box
+	public   HBox operateBox = new HBox();
+
+	// 选择框, limit输入框
+	public   HBox dbinfoOperateBox = new HBox();
 
 	// 代码区
 	// codeArea 代码区域 按钮初始化
 	@SuppressWarnings("unchecked")
-	public static HBox codeAreabtnInit() {
+	public  ButtonFactory() {
 		JFXButton runbtn = new JFXButton();
 		runbtn.setGraphic(IconGenerator.svgImageDefActive("play"));
 		runbtn.setTooltip(MyTooltipTool.instance("Run SQL"));
 		runbtn.setDisable(true);
-
-//		JFXButton runLinebtn = new JFXButton();
-//		runLinebtn.setGraphic(IconGenerator.svgImageDefActive("step-forward"));
-//		runLinebtn.setTooltip(MyTooltipTool.instance("Run SQL Current Line"));
-//		runLinebtn.setDisable(true);
 
 		// 执行存储过程
 		JFXButton runFunPro = new JFXButton();
@@ -88,11 +88,7 @@ public class ButtonFactory {
 
 		runbtn.setOnMouseClicked(e -> {
 			RunSQLHelper.runAction();
-//			RunSQLHelper.runSQLMethod();
 		});
-//		runLinebtn.setOnMouseClicked(e -> {
-//			RunSQLHelper.runCurrentLineSQLMethod();
-//		});
 
 		runFunPro.setOnMouseClicked(e -> {
 			RunSQLHelper.runCreateFuncSQLMethod();
@@ -146,8 +142,80 @@ public class ButtonFactory {
 
 		// 选择sql在哪个连接上执行
 		Label lbcnn = new Label("DB: ");
-		JFXComboBox<Label> connsComboBox = new JFXComboBox<Label>();
+		JFXComboBox<Label> connsComboBox =  initConnsComboBox(runbtn , runFunPro);
 		lbcnn.setLabelFor(connsComboBox);
+		ComponentGetter.connComboBox = connsComboBox;
+
+		// sql 执行读取行数
+		Label lb = new Label("Limit: ");
+		rowsTextField = initLimitTextField();
+		lb.setLabelFor(rowsTextField);
+
+		operateBox.getChildren().add(runbtn);
+		operateBox.getChildren().add(stopbtn);
+		operateBox.getChildren().add(addcodeArea);
+		operateBox.getChildren().add(saveSQL);
+		operateBox.getChildren().add(formatSQL);
+		operateBox.getChildren().add(runFunPro);
+		operateBox.getChildren().add(findSQlTxt);
+
+		operateBox.setAlignment(Pos.CENTER_RIGHT);
+		operateBox.setPadding(new Insets(3,0,3,0));
+		CommonButtons.runbtn = runbtn;
+		CommonButtons.stopbtn = stopbtn;
+		CommonButtons.runFunPro = runFunPro;
+		CommonButtons.addcodeArea = addcodeArea;
+
+//		btnsAnchorPane.getChildren().add(operateBox);
+//		Platform.runLater(()->{
+//			operateBox.setAlignment(Pos.CENTER_RIGHT);
+//			AppWindow.SQLuckyAppWindow.getHeadAnchorPane().getChildren().add(operateBox);
+//			AnchorPane.setRightAnchor(operateBox, 220.0);
+
+//		});
+
+
+
+		HBox.setMargin(lbcnn, new Insets(5, 2,0,20));
+		dbinfoOperateBox.getChildren().add(lbcnn);
+		dbinfoOperateBox.getChildren().add(connsComboBox);
+		HBox.setMargin(lb, new Insets(5, 2,0,20));
+		dbinfoOperateBox.getChildren().add(lb);
+		dbinfoOperateBox.getChildren().add(rowsTextField);
+
+//		dbinfoOperateBox.setAlignment(Pos.CENTER_RIGHT);
+		dbinfoOperateBox.setPadding(new Insets(3,0,3,0));
+
+	}
+
+
+	private static TextField initLimitTextField(){
+		TextField rowsTextField = new TextField();
+		ComponentGetter.maxRowsTextField = rowsTextField;
+
+		rowsTextField.setPrefHeight(25);
+		rowsTextField.setMinHeight(25);
+
+		rowsTextField.getStyleClass().add("myTextField");
+		rowsTextField.setMaxWidth(90);
+		rowsTextField.setTooltip(MyTooltipTool.instance("Load query data rows, suggest < 10000 "));
+		rowsTextField.setText(ConfigVal.MaxRows + "");
+
+		TextFieldSetup.setMaxLength(rowsTextField, 9);
+		TextFieldSetup.maxRowsNumberOnly(rowsTextField);
+
+		// 失去焦点, 如果没有输入值默认1
+		rowsTextField.focusedProperty().addListener((observable, oldValue, newValu) -> {
+			if (newValu == false) {
+				if (StrUtils.isNullOrEmpty(rowsTextField.getText())) {
+					rowsTextField.setText("1");
+				}
+			}
+		});
+		return rowsTextField;
+	}
+	private static JFXComboBox<Label> initConnsComboBox(JFXButton runbtn ,JFXButton runFunPro){
+		JFXComboBox<Label> connsComboBox = new JFXComboBox<Label>();
 		connsComboBox.setPrefHeight(25);
 		connsComboBox.setMinHeight(25);
 		connsComboBox.setMaxWidth(200);
@@ -156,17 +224,16 @@ public class ButtonFactory {
 		connsComboBox.getStyleClass().add("my-tag");
 
 		DBConns.flushChoiceBox(connsComboBox); // 填充内容
+
 		// change 事件
 		connsComboBox.getSelectionModel().selectedIndexProperty().addListener((obj, ov, newValue) -> {
 			if (newValue != null && newValue.intValue() > 0) {
 				runbtn.setDisable(false);
-//				runLinebtn.setDisable(false);
 				runFunPro.setDisable(false);
 
 				connsComboBox.setTooltip(MyTooltipTool.instance(connsComboBox.getItems().get(newValue.intValue()).getText()));
 			} else {
 				runbtn.setDisable(true);
-//				runLinebtn.setDisable(true);
 				runFunPro.setDisable(true);
 				connsComboBox.setTooltip(MyTooltipTool.instance(connsComboBox.getItems().get(ov.intValue()).getText()));
 
@@ -195,78 +262,30 @@ public class ButtonFactory {
 			// 刷新连接的排序
 			DBConns.flushChoiceBox();
 		});
-		ComponentGetter.connComboBox = connsComboBox;
+		return connsComboBox;
+	}
 
-		// sql 执行读取行数
-		Label lb = new Label("Max Rows: ");
-		rowsTextField = new TextField();
-		ComponentGetter.maxRowsTextField = rowsTextField;
-		lb.setLabelFor(rowsTextField);
-		rowsTextField.setPrefHeight(25);
-		rowsTextField.setMinHeight(25);
-
-		rowsTextField.getStyleClass().add("myTextField");
-		rowsTextField.setMaxWidth(90);
-		rowsTextField.setTooltip(MyTooltipTool.instance("Load query data rows, suggest < 10000 "));
-		rowsTextField.setText(ConfigVal.MaxRows + "");
-
-		TextFieldSetup.setMaxLength(rowsTextField, 9);
-		TextFieldSetup.maxRowsNumberOnly(rowsTextField);
-
-		// 失去焦点, 如果没有输入值默认1
-		rowsTextField.focusedProperty().addListener((observable, oldValue, newValu) -> {
-			if (newValu == false) {
-				if (StrUtils.isNullOrEmpty(rowsTextField.getText())) {
-					rowsTextField.setText("1");
-				}
-			}
-		});
-
-		HBox operateBox = new HBox();
-		operateBox.getChildren().add(runbtn);
-		// runLinebtn
-//		operateBox.getChildren().add(runLinebtn);
-
-		operateBox.getChildren().add(stopbtn);
-
-		operateBox.getChildren().add(addcodeArea);
-
-		operateBox.getChildren().add(saveSQL);
-
-		operateBox.getChildren().add(formatSQL);
-
-		// runFunPro
-		operateBox.getChildren().add(runFunPro);
-
-		// findSQlTxt
-		operateBox.getChildren().add(findSQlTxt);
-
-		HBox.setMargin(lbcnn, new Insets(5, 2,0,20));
-		operateBox.getChildren().add(lbcnn);
-
-		operateBox.getChildren().add(connsComboBox);
-
-		HBox.setMargin(lb, new Insets(5, 2,0,20));
-		operateBox.getChildren().add(lb);
-
-		operateBox.getChildren().add(rowsTextField);
-
-
-		operateBox.setPadding(new Insets(3,0,3,0));
-		CommonButtons.runbtn = runbtn;
-		CommonButtons.stopbtn = stopbtn;
-		CommonButtons.runFunPro = runFunPro;
-//		CommonButtons.runLinebtn = runLinebtn;
-		CommonButtons.addcodeArea = addcodeArea;
-//		btnsAnchorPane.getChildren().add(operateBox);
-		Platform.runLater(()->{
-			operateBox.setAlignment(Pos.BASELINE_RIGHT);
-			AppWindow.SQLuckyAppWindow.getHeadAnchorPane().getChildren().add(operateBox);
-			AnchorPane.setRightAnchor(operateBox, 220.0);
-
-		});
-
+	public HBox getOperateBox() {
 		return operateBox;
 	}
 
+	public void setOperateBox(HBox operateBox) {
+		this.operateBox = operateBox;
+	}
+
+	public HBox getDbinfoOperateBox() {
+		return dbinfoOperateBox;
+	}
+
+	public void setDbinfoOperateBox(HBox dbinfoOperateBox) {
+		this.dbinfoOperateBox = dbinfoOperateBox;
+	}
+
+	public static TextField getRowsTextField() {
+		return rowsTextField;
+	}
+
+	public static void setRowsTextField(TextField rowsTextField) {
+		ButtonFactory.rowsTextField = rowsTextField;
+	}
 }

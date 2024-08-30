@@ -3,7 +3,6 @@ package SQLucky;
 import com.sun.javafx.application.LauncherImpl;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -12,7 +11,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -33,9 +31,9 @@ import net.tenie.fx.Action.Log4jPrintStream;
 import net.tenie.fx.Action.SettingKeyBinding;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
+import net.tenie.fx.component.container.AppHeadContainer;
 import net.tenie.fx.component.container.AppWindow;
 import net.tenie.fx.component.container.AppWindowReStyleByWinOS;
-import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.fx.main.MyPreloaderGif;
 import net.tenie.fx.main.MyPreloaderMp4;
@@ -64,8 +62,6 @@ import java.util.function.Consumer;
 public class app extends Application {
     public static String sysOpenFile = "";
     public static List<String> argsList = new ArrayList<>();
-    public static String userDir = "";
-    public static Stage pStage;
     private AppWindow app;
     private Scene scene;
     private Image img;
@@ -136,8 +132,7 @@ public class app extends Application {
         ComponentGetter.SQLucky = this;
 
         try {
-            pStage = primaryStage;
-            AppWindow.SQLuckyApp = pStage;
+            AppHeadContainer.SQLuckyStage = primaryStage;
             ComponentGetter.primaryStage = primaryStage;
 
             primaryStage.setScene(scene);
@@ -174,7 +169,7 @@ public class app extends Application {
             // macos 系统, 使用自己的关闭窗口
             if (!CommonUtils.isMacOS()) {
                 AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
-                winos.setWindow(primaryStage, app.getHeadAnchorPane());
+                winos.setWindow(primaryStage, AppWindow.appHeadContainer.getHeadHbox());
             }
             primaryStage.show();
 

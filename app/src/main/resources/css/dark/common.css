@@ -376,13 +376,13 @@ FlowPane TextField {
 
 /* 滚动条角的颜色 */
 .my-tag  .corner {
-	-fx-background-color: #3C3F41;
+	-fx-background-color: #2b2b2b;
 }
 
 .my-tag   .scroll-bar {
-	-fx-background-color: #3C3F41;
+	-fx-background-color: #2b2b2b;
 }
-
+# 水平方向
 .my-tag  .scroll-bar:horizontal .increment-button, .my-tag  .scroll-bar:horizontal .decrement-button
 	{
 	-fx-background-color: transparent;
@@ -411,7 +411,7 @@ FlowPane TextField {
 
 .my-tag  .scroll-bar:horizontal .thumb, .my-tag  .scroll-bar:vertical .thumb
 	{
-	-fx-background-color: #4E5254,
+	-fx-background-color: #2b2b2b,
 		linear-gradient(to right, derive(#4E5254, 95%), derive(#4E5254, 10%)),
 		linear-gradient(to right, derive(#4E5254, 38%), derive(#4E5254, -16%));
 	-fx-background-insets: 0, 1, 2;
@@ -420,7 +420,7 @@ FlowPane TextField {
 
 .my-tag  .scroll-bar:horizontal .thumb:hover, .my-tag  .scroll-bar:vertical .thumb:hover
 	{
-	-fx-background-color: #4E5254,
+	-fx-background-color: #2b2b2b,
 		linear-gradient(to right, derive(#4E5254, 95%), derive(#4E5254, 10%)),
 		linear-gradient(to right, derive(#4E5254, 38%), derive(#4E5254, -16%));
 	-fx-background-insets: 0, 1, 2;
