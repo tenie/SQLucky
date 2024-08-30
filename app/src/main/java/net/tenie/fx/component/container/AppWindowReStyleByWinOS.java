@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.shape.SVGPath;
 import javafx.stage.Screen;
@@ -24,13 +25,13 @@ import net.tenie.fx.Action.CommonEventHandler;
 
 public class AppWindowReStyleByWinOS {
 	// 关闭, 最小化, 还原的图标
-	private JFXButton windowResize = new JFXButton();
-	private	JFXButton hidden = new JFXButton();
-	private JFXButton close = new JFXButton();
-
-	private JFXButton hideLeft = new JFXButton();
-	private JFXButton hideBottom = new JFXButton();
-	private JFXButton hideRight = new JFXButton();
+//	private JFXButton windowResize = new JFXButton();
+//	private	JFXButton hidden = new JFXButton();
+//	private JFXButton close = new JFXButton();
+//
+//	private JFXButton hideLeft = new JFXButton();
+//	private JFXButton hideBottom = new JFXButton();
+//	private JFXButton hideRight = new JFXButton();
 
 	private	Scene scene ;
 
@@ -45,12 +46,12 @@ public class AppWindowReStyleByWinOS {
 
 	// 窗口默认收缩尺寸(按钮触发)
 	javafx.geometry.Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-	public void setWindow(Stage primaryStage, AnchorPane operateBtnPane) throws Exception {
+	public void setWindow(Stage primaryStage,  HBox headHbox ) throws Exception {
 		this.primaryWindowStage = primaryStage;
 		// 添加关闭,最小化, 还原 按钮
-		addTopButtonPane(primaryWindowStage, operateBtnPane);
+		addTopButtonPane(primaryWindowStage);
 		//界面上的子窗口的隐藏和显示按钮
-		addSubWindowCtrlBtn(operateBtnPane);
+//		addSubWindowCtrlBtn(operateBtnPane);
 		// 添加图标
 //		addTopImage(primaryWindowStage, operateBtnPane);
 		this.scene = primaryWindowStage.getScene();
@@ -58,7 +59,7 @@ public class AppWindowReStyleByWinOS {
 		primaryWindowStage.initStyle(StageStyle.TRANSPARENT);
 
 		// 主窗口的顶部 双击切换到小窗口
-		operateBtnPane.setOnMouseClicked(e->{
+		headHbox.setOnMouseClicked(e->{
 			// 第一次点击的时候, 记录一下主窗口的大小
 			if(primaryWindowWidth < 1 ){
 				primaryWindowWidth = primaryWindowStage.getWidth();
@@ -68,10 +69,12 @@ public class AppWindowReStyleByWinOS {
 				Platform.runLater(()->{
 					if( !smallWindowStage.isShowing()){
 
-						AppWindow.SQLuckyApp = smallWindowStage;
-						AppWindow.SQLuckyAppWindow.hideMenuBar();
+//						AppWindow.SQLuckyApp = smallWindowStage;
+						AppHeadContainer.SQLuckyStage = smallWindowStage;
+//						AppWindow.SQLuckyAppWindow.hideMenuBar();
 						resize();
-						smallWindowMoveAnchorPaneChildrens();
+//						smallWindowMoveAnchorPaneChildrens();
+						AppWindow.appHeadContainer.removeHiddenWindowResizeClose();
 					}
 				});
 
@@ -79,13 +82,6 @@ public class AppWindowReStyleByWinOS {
 		});
 
 		Platform.runLater(this::createSmallWindow);
-	}
-
-	private void smallWindowMoveAnchorPaneChildrens(){
-		AnchorPane.setRightAnchor(hideLeft, 75.0);
-		AnchorPane.setRightAnchor(hideBottom,  40.0);
-		AnchorPane.setRightAnchor(hideRight, 5.0);
-		AnchorPane.setRightAnchor(AppWindow.buttonBox, 120.0);
 	}
 
 	/**
@@ -114,22 +110,24 @@ public class AppWindowReStyleByWinOS {
 					primaryWindowStage.toFront();
 
 					// 按钮显示
-					hidden.setVisible(true);
-					windowResize.setVisible(true);
-					close.setVisible(true);
+
+//					CommonButtons.hidden.setVisible(true);
+//					CommonButtons.windowResize.setVisible(true);
+//					CommonButtons.close.setVisible(true);
 
 					// 小窗口隐藏
 					smallWindowStage.hide();
-					AnchorPane.setRightAnchor(hideLeft, 180.0);
-					AnchorPane.setRightAnchor(hideBottom, 145.0);
-					AnchorPane.setRightAnchor(hideRight, 110.0);
-					AnchorPane.setRightAnchor(AppWindow.buttonBox, 220.0);
-
-					AppWindow.SQLuckyApp = primaryWindowStage;
-					AppWindow.SQLuckyAppWindow.hideMenuBar();
+//					AnchorPane.setRightAnchor(hideLeft, 180.0);
+//					AnchorPane.setRightAnchor(hideBottom, 145.0);
+//					AnchorPane.setRightAnchor(hideRight, 110.0);
+//					AnchorPane.setRightAnchor(AppWindow.buttonBox, 220.0);
+					AppWindow.appHeadContainer.addHiddenWindowResizeClose();
+					AppHeadContainer.SQLuckyStage = primaryWindowStage;
+//					AppWindow.SQLuckyAppWindow.hideMenuBar();
 				}else {
-					AppWindow.SQLuckyAppWindow.hideMenuBar();
-					AppWindow.SQLuckyApp = smallWindowStage;
+//					AppWindow.SQLuckyAppWindow.hideMenuBar();
+					AppHeadContainer.SQLuckyStage = smallWindowStage;
+					AppWindow.appHeadContainer.removeHiddenWindowResizeClose();
 				}
 			});
 			// windows 系统 监听窗口最大化
@@ -163,9 +161,10 @@ public class AppWindowReStyleByWinOS {
 
 			// 主窗口隐藏
 			primaryWindowStage.hide();
-			hidden.setVisible(false);
-			windowResize.setVisible(false);
-			close.setVisible(false);
+			AppWindow.appHeadContainer.removeHiddenWindowResizeClose();
+//		CommonButtons.hidden.setVisible(false);
+//		CommonButtons.windowResize.setVisible(false);
+//		CommonButtons.close.setVisible(false);
 
 			// 强制显示前端
 //			Platform.runLater(()->{
@@ -230,50 +229,50 @@ public class AppWindowReStyleByWinOS {
 	}
 
 	// 顶部按钮面板, 添加 最小化, 重置大小, 关闭按钮
-	private void addTopButtonPane(Stage stage, AnchorPane operateBtnPane) {
-		hidden.setGraphic(IconGenerator.svgImageCss("my-minus-square", 12.0, 1.0, "top-btn-Icon-color"));
-		hidden.getStyleClass().add("window-other-btn");
-		hidden.setOnAction(e -> {
+	private void addTopButtonPane(Stage stage) {
+//		hidden.setGraphic(IconGenerator.svgImageCss("my-minus-square", 12.0, 1.0, "top-btn-Icon-color"));
+//		hidden.getStyleClass().add("window-other-btn");
+		CommonButtons.hidden.setOnAction(e -> {
 			stage.setIconified(true);
 		});
 
 		// 最大化, 非最大化(还原)
-		Region windowResizeSvg = IconGenerator.svgImageCss("my-window-restore", 12, 12, "top-btn-Icon-color");
-
-		windowResize.setGraphic(windowResizeSvg);
-		windowResize.getStyleClass().add("window-other-btn");
+//		Region windowResizeSvg = IconGenerator.svgImageCss("my-window-restore", 12, 12, "top-btn-Icon-color");
+//
+//		windowResize.setGraphic(windowResizeSvg);
+//		CommonButtons.windowResize.getStyleClass().add("window-other-btn");
 
 		// 还原
-		SVGPath svgRestore = new SVGPath();
-		svgRestore = (SVGPath) windowResizeSvg.getShape();
-		// 最大化
-		SVGPath	svgMax = new SVGPath();
-		var tmpMax = IconGenerator.svgImageCss("my-window-maximize", 12, 12, "top-btn-Icon-color");
-		svgMax = (SVGPath) tmpMax.getShape();
+//		SVGPath svgRestore = new SVGPath();
+//		svgRestore = (SVGPath) windowResizeSvg.getShape();
+//		// 最大化
+//		SVGPath	svgMax = new SVGPath();
+//		var tmpMax = IconGenerator.svgImageCss("my-window-maximize", 12, 12, "top-btn-Icon-color");
+//		svgMax = (SVGPath) tmpMax.getShape();
 
-		windowResize.setOnMouseClicked(e -> {
+		CommonButtons.windowResize.setOnMouseClicked(e -> {
 			resize();
 		});
 		// 关闭
-		var closeSvg = IconGenerator.svgImageCss("my-window-close", 12, 12, "top-btn-Icon-color");
+//		var closeSvg = IconGenerator.svgImageCss("my-window-close", 12, 12, "top-btn-Icon-color");
 
-		close.getStyleClass().add("window-close-btn");
-		close.setGraphic(closeSvg);
-		close.setOnMouseClicked(e -> {
+//		close.getStyleClass().add("window-close-btn");
+//		close.setGraphic(closeSvg);
+		CommonButtons.close.setOnMouseClicked(e -> {
 			Event.fireEvent(stage, new WindowEvent(stage, WindowEvent.WINDOW_CLOSE_REQUEST));
 		});
 
-		operateBtnPane.getChildren().add(hidden);
-		operateBtnPane.getChildren().add(windowResize);
-		operateBtnPane.getChildren().add(close);
-
-		AnchorPane.setTopAnchor(hidden, 5.0);
-		AnchorPane.setTopAnchor(windowResize, 5.0);
-		AnchorPane.setTopAnchor(close, 5.0);
-
-		AnchorPane.setRightAnchor(hidden, 75.0);
-		AnchorPane.setRightAnchor(windowResize, 40.0);
-		AnchorPane.setRightAnchor(close, 5.0);
+//		operateBtnPane.getChildren().add(hidden);
+//		operateBtnPane.getChildren().add(windowResize);
+//		operateBtnPane.getChildren().add(close);
+//
+//		AnchorPane.setTopAnchor(hidden, 5.0);
+//		AnchorPane.setTopAnchor(windowResize, 5.0);
+//		AnchorPane.setTopAnchor(close, 5.0);
+//
+//		AnchorPane.setRightAnchor(hidden, 75.0);
+//		AnchorPane.setRightAnchor(windowResize, 40.0);
+//		AnchorPane.setRightAnchor(close, 5.0);
 
 	}
 
@@ -281,36 +280,36 @@ public class AppWindowReStyleByWinOS {
 	 * 界面上的子窗口的隐藏和显示按钮
 	 * @param operateBtnPane
 	 */
-	private void addSubWindowCtrlBtn(AnchorPane operateBtnPane){
-		hideLeft.setGraphic(IconGenerator.mainTabPaneClose());
-		hideLeft.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
-		hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
-
-		// TODO hideBottom
-		hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
-		hideBottom.setOnMouseClicked(event -> { SdkComponent.hideBottom();});
-		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
-
-		hideRight.setOnAction(event -> {
-			SdkComponent.showOrhideRight();
-		});
-		hideRight.setTooltip(MyTooltipTool.instance("Hide or Show Right Panel "));
-		operateBtnPane.getChildren().add(hideLeft);
-		operateBtnPane.getChildren().add(hideBottom);
-		operateBtnPane.getChildren().add(hideRight);
-		CommonButtons.hideLeft = hideLeft;
-		CommonButtons.hideBottom = hideBottom;
-		CommonButtons.hideRight = hideRight;
-		AnchorPane.setTopAnchor(hideLeft, 5.0);
-		AnchorPane.setTopAnchor(hideBottom, 5.0);
-		AnchorPane.setTopAnchor(hideRight, 5.0);
-
-
-		AnchorPane.setRightAnchor(hideLeft, 180.0);
-		AnchorPane.setRightAnchor(hideBottom, 145.0);
-		AnchorPane.setRightAnchor(hideRight, 110.0);
-		AnchorPane.setRightAnchor(AppWindow.buttonBox, 220.0);
-	}
+//	private void addSubWindowCtrlBtn(AnchorPane operateBtnPane){
+//		hideLeft.setGraphic(IconGenerator.mainTabPaneClose());
+//		hideLeft.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
+//		hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
+//
+//		// TODO hideBottom
+//		hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
+//		hideBottom.setOnMouseClicked(event -> { SdkComponent.hideBottom();});
+//		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
+//
+//		hideRight.setOnAction(event -> {
+//			SdkComponent.showOrhideRight();
+//		});
+//		hideRight.setTooltip(MyTooltipTool.instance("Hide or Show Right Panel "));
+//		operateBtnPane.getChildren().add(hideLeft);
+//		operateBtnPane.getChildren().add(hideBottom);
+//		operateBtnPane.getChildren().add(hideRight);
+//		CommonButtons.hideLeft = hideLeft;
+//		CommonButtons.hideBottom = hideBottom;
+//		CommonButtons.hideRight = hideRight;
+//		AnchorPane.setTopAnchor(hideLeft, 5.0);
+//		AnchorPane.setTopAnchor(hideBottom, 5.0);
+//		AnchorPane.setTopAnchor(hideRight, 5.0);
+//
+//
+//		AnchorPane.setRightAnchor(hideLeft, 180.0);
+//		AnchorPane.setRightAnchor(hideBottom, 145.0);
+//		AnchorPane.setRightAnchor(hideRight, 110.0);
+////		AnchorPane.setRightAnchor(AppWindow.buttonBox, 220.0);
+//	}
 
 
 

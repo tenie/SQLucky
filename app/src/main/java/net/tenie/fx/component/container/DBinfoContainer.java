@@ -45,7 +45,7 @@ public class DBinfoContainer extends  VBox{
 
 		ComponentGetter.treeView = dbInfoTreeView;
 		
-		AppWindow.dbInfoTree = dbInfoTree;
+//		AppWindow.dbInfoTree = dbInfoTree;
 		ComponentGetter.leftNodeContainer = this;
 
 		ComponentGetter.infoAccordion = dbInfoAccordion;

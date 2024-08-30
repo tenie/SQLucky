@@ -75,7 +75,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 		dbInfoTreeFilterPane = dbInfoTreeFilter.createFilterPane(DBinfoTreeView);
 		 
 		filterTextField = 	dbInfoTreeFilter.getTxt();
-		AppWindow.dbInfoTreeFilter = dbInfoTreeFilterPane;
 		operateBtns = new ArrayList<>();
 
 		dbInfoTreeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn(this);

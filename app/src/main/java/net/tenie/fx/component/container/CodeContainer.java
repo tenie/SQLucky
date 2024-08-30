@@ -1,22 +1,19 @@
 package net.tenie.fx.component.container;
 
-import javafx.geometry.Side;
-import net.tenie.Sqlucky.sdk.component.MyCodeArea;
-import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import org.controlsfx.control.MasterDetailPane;
-import org.controlsfx.control.NotificationPane;
-
 import javafx.application.Platform;
+import javafx.geometry.Side;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.DraggingTabPaneSupport;
-import net.tenie.fx.factory.ButtonFactory;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import org.controlsfx.control.MasterDetailPane;
+import org.controlsfx.control.NotificationPane;
 
 /*   @author tenie */
 public class CodeContainer extends VBox{
