@@ -345,6 +345,21 @@ FlowPane TextField {
 	-fx-background-color: #292929;
 }
 
+
+/* 顶部控件样式*/
+.myTopTextField {
+	-fx-text-fill: white;
+	-fx-background-color:  #000000;
+/*	-fx-border-color: #059BCE;
+	-fx-border-width: 0 0 1 0;*/
+}
+.myToplabel{
+ /*   -fx-border-color: #059BCE;  0.2em 0.2em 0.3em*/
+    -fx-background-color: #FDA232;
+    -fx-background-radius: 5px;
+    -fx-padding: 0.3em;
+}
+
 .myComboBox {
 	
 }

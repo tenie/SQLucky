@@ -280,9 +280,10 @@ FlowPane TextField {
 	-fx-border-color: #5E6060;
 	-fx-border-radius: 3px;
 }
+/* 顶部控件样式*/
 .myTopTextField {
 	-fx-text-fill: white;
-	-fx-background-color: #373a3c;
+	-fx-background-color: #2e2e2e;
 /*	-fx-border-color: #059BCE;
 	-fx-border-width: 0 0 1 0;*/
 }
