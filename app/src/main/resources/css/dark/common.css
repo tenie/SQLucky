@@ -280,6 +280,18 @@ FlowPane TextField {
 	-fx-border-color: #5E6060;
 	-fx-border-radius: 3px;
 }
+.myTopTextField {
+	-fx-text-fill: white;
+	-fx-background-color: #373a3c;
+/*	-fx-border-color: #059BCE;
+	-fx-border-width: 0 0 1 0;*/
+}
+.myToplabel{
+ /*   -fx-border-color: #059BCE;  0.2em 0.2em 0.3em*/
+    -fx-background-color: #1e89e3;
+    -fx-background-radius: 5px;
+    -fx-padding: 0.3em;
+}
 
 .myTextField {
 	-fx-text-fill: white;

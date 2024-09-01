@@ -2,12 +2,10 @@ package net.tenie.fx.factory;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.component.*;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -15,7 +13,6 @@ import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.sql.SqlUtils;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
@@ -23,7 +20,6 @@ import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
-import net.tenie.fx.component.container.AppWindow;
 
 /**
  * 
@@ -141,13 +137,15 @@ public class ButtonFactory {
 //		CommonButtons.hideRight = hideRight;
 
 		// 选择sql在哪个连接上执行
-		Label lbcnn = new Label("DB: ");
+		Label lbcnn = new Label("DB:");
+		lbcnn.getStyleClass().add("myToplabel");
 		JFXComboBox<Label> connsComboBox =  initConnsComboBox(runbtn , runFunPro);
 		lbcnn.setLabelFor(connsComboBox);
 		ComponentGetter.connComboBox = connsComboBox;
 
 		// sql 执行读取行数
-		Label lb = new Label("Limit: ");
+		Label lb = new Label("Limit:");
+		lb.getStyleClass().add("myToplabel");
 		rowsTextField = initLimitTextField();
 		lb.setLabelFor(rowsTextField);
 
@@ -175,16 +173,15 @@ public class ButtonFactory {
 //		});
 
 
-
-		HBox.setMargin(lbcnn, new Insets(5, 2,0,20));
+		HBox.setMargin(lbcnn, new Insets(0, 2,0,20));
 		dbinfoOperateBox.getChildren().add(lbcnn);
 		dbinfoOperateBox.getChildren().add(connsComboBox);
-		HBox.setMargin(lb, new Insets(5, 2,0,20));
+		HBox.setMargin(lb, new Insets(0, 2,0,20));
 		dbinfoOperateBox.getChildren().add(lb);
 		dbinfoOperateBox.getChildren().add(rowsTextField);
 
 //		dbinfoOperateBox.setAlignment(Pos.CENTER_RIGHT);
-		dbinfoOperateBox.setPadding(new Insets(3,0,3,0));
+		dbinfoOperateBox.setPadding(new Insets(3,0,0,0));
 
 	}
 
@@ -196,7 +193,7 @@ public class ButtonFactory {
 		rowsTextField.setPrefHeight(25);
 		rowsTextField.setMinHeight(25);
 
-		rowsTextField.getStyleClass().add("myTextField");
+		rowsTextField.getStyleClass().add("myTopTextField");
 		rowsTextField.setMaxWidth(90);
 		rowsTextField.setTooltip(MyTooltipTool.instance("Load query data rows, suggest < 10000 "));
 		rowsTextField.setText(ConfigVal.MaxRows + "");
