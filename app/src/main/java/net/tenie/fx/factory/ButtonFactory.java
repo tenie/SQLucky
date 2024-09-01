@@ -137,14 +137,14 @@ public class ButtonFactory {
 //		CommonButtons.hideRight = hideRight;
 
 		// 选择sql在哪个连接上执行
-		Label lbcnn = new Label("DB:");
+		Label lbcnn = new Label("DB");
 		lbcnn.getStyleClass().add("myToplabel");
 		JFXComboBox<Label> connsComboBox =  initConnsComboBox(runbtn , runFunPro);
 		lbcnn.setLabelFor(connsComboBox);
 		ComponentGetter.connComboBox = connsComboBox;
 
 		// sql 执行读取行数
-		Label lb = new Label("Limit:");
+		Label lb = new Label("Limit");
 		lb.getStyleClass().add("myToplabel");
 		rowsTextField = initLimitTextField();
 		lb.setLabelFor(rowsTextField);
@@ -173,10 +173,10 @@ public class ButtonFactory {
 //		});
 
 
-		HBox.setMargin(lbcnn, new Insets(0, 2,0,20));
+		HBox.setMargin(lbcnn, new Insets(0, 2,0,5));
 		dbinfoOperateBox.getChildren().add(lbcnn);
 		dbinfoOperateBox.getChildren().add(connsComboBox);
-		HBox.setMargin(lb, new Insets(0, 2,0,20));
+		HBox.setMargin(lb, new Insets(0, 0,0,10));
 		dbinfoOperateBox.getChildren().add(lb);
 		dbinfoOperateBox.getChildren().add(rowsTextField);
 
