@@ -811,6 +811,21 @@ public class StrUtils {
         return String.join("", textLs);
     }
 
+    // 根据正则匹配, 替换字符串
+    public static String replaceStrByPattern(String commentPatternStr, String newStr, String text){
+        String patternString = "(?<STRING>" + STRING_PATTERN + ")"
+                + "|(?<COMMENT>" + commentPatternStr + ")";
+
+        // 找到所有注释
+        Matcher matcher = createMatcher(patternString, text);
+        while (matcher.find()){
+            if( matcher.group("COMMENT") != null){
+                text = matcher.replaceAll(newStr);
+            }
+        }
+        return text;
+    }
+
     /**
      * 找到所有的注释
      */

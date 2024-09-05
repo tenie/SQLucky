@@ -44,12 +44,12 @@ public class SqluckyAppDB {
 
 	// 连接打开次数的计数, 只有当connTimes = 0 , 调用close, 才会真的关闭
 	private static AtomicInteger connTimes = new AtomicInteger(0);
-	private static Connection conn;
+	private volatile  static Connection conn;
 	// 使用阻塞队列, 串行获取: 连接, 和关闭连接
 //	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
 
 	// 获取应用本身的数据库链接
-	public static Connection getConn() {
+	synchronized  public static Connection getConn() {
 		try {
 			if (conn == null) {
 //				conn = createH2Conn();
@@ -113,7 +113,7 @@ public class SqluckyAppDB {
 		}
 	}
 
-	public static void closeConn(Connection conn) {
+	synchronized public static void closeConn(Connection conn) {
 		if (conn != null) {
 			try {
 				Thread th = new Thread(() -> {
