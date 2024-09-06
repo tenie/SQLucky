@@ -190,8 +190,8 @@ public class ButtonFactory {
 		TextField rowsTextField = new TextField();
 		ComponentGetter.maxRowsTextField = rowsTextField;
 
-		rowsTextField.setPrefHeight(25);
-		rowsTextField.setMinHeight(25);
+//		rowsTextField.setPrefHeight(25);
+//		rowsTextField.setMinHeight(25);
 
 		rowsTextField.getStyleClass().add("myTopTextField");
 		rowsTextField.setMaxWidth(90);
