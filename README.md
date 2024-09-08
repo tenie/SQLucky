@@ -9,17 +9,11 @@
 > 下载:
    
 -    [Releases 页面下载](https://github.com/tenie/SQLucky/releases/)
->  3.2.0-Beta 下载
--    [Windows amd64 (msi安装包)](https://github.com/tenie/SQLucky/releases/download/3.2.0-Beta/SQLucky-win64.msi)
--    [Windows amd64 (zip压缩包)](https://github.com/tenie/SQLucky/releases/download/3.2.0-Beta/SQLucky-win64.zip)
-
->  3.1.0-Beta 下载
--    [Ubuntu amd64 (deb安装包)](https://github.com/tenie/SQLucky/releases/download/3.1.0-Beta/sqlucky_3.1.0_ubunntu-amd64.deb)
--    [Windows amd64 (msi安装包)](https://github.com/tenie/SQLucky/releases/download/3.1.0-Beta/SQLucky-3.1.0-window-amd64.msi)
--    [Windows amd64 (zip压缩包)](https://github.com/tenie/SQLucky/releases/download/3.1.0-Beta/SQLucky-window-amd64.zip)
--    [Mac amd64 (dmg安装包)](https://github.com/tenie/SQLucky/releases/download/3.1.0-Beta/SQLucky-3.1.0-Mac-x64.dmg)
-   
----
+>  3.3.0-Beta 下载
+-    [Ubuntu amd64 (deb安装包)](https://github.com/tenie/SQLucky/releases/download/3.3.0-Beta/sqlucky_ubuntu-x64.deb)
+-    [Windows amd64 (msi安装包)](https://github.com/tenie/SQLucky/releases/download/3.3.0-Beta/SQLucky-windows-x64.msi)
+-    [Windows amd64 (zip压缩包)](https://github.com/tenie/SQLucky/releases/download/3.3.0-Beta/SQLucky-windows-x64.zip)
+-    [Mac amd64 (dmg安装包)](https://github.com/tenie/SQLucky/releases/download/3.3.0-Beta/SQLucky-mac-x64.dmg)
 
 > 开发依赖:
 
