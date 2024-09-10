@@ -66,13 +66,20 @@ public class CommonEventHandler {
 		return new EventHandler<Event>() {
 			@Override
 			public void handle(Event e) {
-				// 按住control, 再按添加窗口按钮, 可以在rightTabPane中添加
-				var kc = KeyCode.CONTROL;
-				if(SettingKeyBinding.keyCode != null && SettingKeyBinding.keyCode.equals(kc)){
-					MyEditorSheetHelper.addEmptyHighLightingEditor(ComponentGetter.rightTabPane);
-				}else {
-					MyEditorSheetHelper.addEmptyHighLightingEditor();
+
+				if(!ComponentGetter.rightTabPaneMasterDetailPane.isShowDetailNode()){
+					MyEditorSheetHelper.addEmptyHighLightingEditor(ComponentGetter.mainTabPane);
+				}else{
+					// 按住control, 再按添加窗口按钮, 可以在rightTabPane中添加
+					var kc = KeyCode.CONTROL;
+					if(SettingKeyBinding.keyCode != null && SettingKeyBinding.keyCode.equals(kc)){
+						MyEditorSheetHelper.addEmptyHighLightingEditor(ComponentGetter.rightTabPane);
+					}else {
+//						MyEditorSheetHelper.addEmptyHighLightingEditor();
+						MyEditorSheetHelper.addEmptyHighLightingEditor(ComponentGetter.mainTabPane);
+					}
 				}
+
 
 			}
 		};
