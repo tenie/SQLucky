@@ -125,6 +125,12 @@ public class MenuBarContainer extends MenuBar{
 //			MyAreaTab.addCodeEmptyTabMethod();
 			MyEditorSheetHelper.addEmptyHighLightingEditor();
 		});
+
+		MenuItem previousTab = new MenuItem(StrUtils.MenuItemNameFormat("Previous  Edit Page"));
+		previousTab.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
+		previousTab.setOnAction(value -> {
+			MyEditorSheetHelper.addEmptyHighLightingEditor();
+		});
 		MenuItem closeEditPage = new MenuItem(StrUtils.MenuItemNameFormat("Close Edit Page"));
 		closeEditPage.setOnAction(value -> {
 			AppCommonAction.closeEditPage();
