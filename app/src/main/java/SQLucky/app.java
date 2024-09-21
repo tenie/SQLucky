@@ -193,8 +193,9 @@ public class app extends Application {
 
 
             });
+            Platform.runLater(() -> {
+                 ServiceLoad.callShowed();
 
-            ServiceLoad.callShowed();
             // 界面完成初始化后, 执行的回调函数
             Consumer<String> cr = v -> {
                 Platform.runLater(() -> {
@@ -222,7 +223,7 @@ public class app extends Application {
             };
             // 执行页面初始化好只会要执行的任务
             CommonUtils.executeInitTask(cr);
-
+            });
             // 数据迁移
             if (transferDB) {
                 moveDbData();

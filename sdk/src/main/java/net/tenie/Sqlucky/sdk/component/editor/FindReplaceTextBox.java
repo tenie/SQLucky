@@ -15,6 +15,7 @@ import net.tenie.Sqlucky.sdk.SqluckyEditor;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.ui.UiTools;
+import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.myEvent;
@@ -137,10 +138,10 @@ public class FindReplaceTextBox extends  VBox {
 	 *
 	 * @param str
 	 * @param forward
-	 * @param sensitive
+	 * @param notSensitive
 	 * @return 返回false, 表示找不到
 	 */
-	public boolean findStringStopFromCodeArea(String str, Integer position, boolean forward, boolean sensitive) {
+	public boolean findStringStopFromCodeArea(String str, Integer position, boolean forward, boolean notSensitive) {
 		if (StrUtils.isNullOrEmpty(str))
 			return false;
 
@@ -154,7 +155,7 @@ public class FindReplaceTextBox extends  VBox {
 			idx = areaLength;
 		}
 
-		return findStringStop(str, idx, sensitive, forward);
+		return findStringStop(str, idx, notSensitive, forward);
 	}
 
 	 void selectRange(CodeArea code, int anchor, int caretPosition) {
@@ -167,19 +168,33 @@ public class FindReplaceTextBox extends  VBox {
 	 *
 	 * @param str       要查找的字符串
 	 * @param fromIndex 从文本的哪个位置开始找
-	 * @param sensitive 是否大小写敏感
+	 * @param notSensitive 是否大小写敏感
 	 * @param forward   向前还是向后找
 	 */
-	public  void findString(String str, int fromIndex, boolean sensitive, boolean forward) {
+	public  void findString(String str, int fromIndex, boolean notSensitive, boolean forward) {
 		// 获取文本
 		String text = codeArea.getText();
-		if (sensitive) {
+		if (notSensitive) {
 			str = str.toUpperCase();
 			text = text.toUpperCase();
+			operateFindIdx(str,text,fromIndex,forward);
+		}else{
+			operateFindIdx(str,text,fromIndex,forward);
 		}
+
+	}
+
+	/**
+	 * 查找, 移动光标
+	 * @param str
+	 * @param text
+	 * @param fromIndex
+	 * @param forward
+	 */
+	private void operateFindIdx(String str, String text,  int fromIndex,  boolean forward){
 		int start = -1;
 		int length = str.length();
-		if (text.indexOf(str) > -1) {
+		if (text.contains(str)) {
 			if (forward) {
 				start = text.indexOf(str, fromIndex);
 				if (start < 0) {
@@ -203,11 +218,13 @@ public class FindReplaceTextBox extends  VBox {
 		sqluckyEditor.highLighting(str);
 	}
 
+
+
 	// 不循环找, 找不到下一个就不循环
-	public boolean findStringStop( String str, int fromIndex, boolean sensitive, boolean forward) {
+	public boolean findStringStop( String str, int fromIndex, boolean notSensitive, boolean forward) {
 		// 获取文本
 		String text = codeArea.getText();
-		if (sensitive) {
+		if (notSensitive) {
 			str = str.toUpperCase();
 			text = text.toUpperCase();
 		}
@@ -278,6 +295,7 @@ public class FindReplaceTextBox extends  VBox {
 		query.setGraphic(IconGenerator.svgImageDefActive("search"));
 
 		textField = new TextField();
+
 		query.setOnAction(v -> {
 			findStringFromCodeArea(textField.getText(), true, !sensitiveCheckBox.isSelected());
 		});
@@ -319,7 +337,7 @@ public class FindReplaceTextBox extends  VBox {
 		});
 		textField.textProperty().addListener((obj, vOld, vNew) -> {
 			if (StrUtils.isNotNullOrEmpty(vNew)) {
-				if( countAction() > 0) {
+				if (countAction() > 0) {
 					findStringFromCodeAreaBeginHead(textField.getText(), true, !sensitiveCheckBox.isSelected());
 				}
 			} else {
@@ -329,8 +347,22 @@ public class FindReplaceTextBox extends  VBox {
 
 		AnchorPane textFieldPane = UiTools.textFieldAddCleanBtn(textField, 250.0);
 
+
+		JFXButton humpUnderline = new JFXButton("Hump/Underline");
+		humpUnderline.setGraphic(IconGenerator.svgImageDefActive("underline"));
+		humpUnderline.setOnAction(event -> {
+			var text = textField.getText();
+			if (text.contains("_")) {
+				text = StrUtils.underlineCaseCamel(text);
+			} else {
+				text = StrUtils.CamelCaseUnderline(text);
+			}
+
+			textField.setText(text);
+		});
+
 		HBox findBox = new HBox();
-		findBox.getChildren().addAll(query,textFieldPane,down, up, sensitiveCheckBox, countBtn, countLabel);
+		findBox.getChildren().addAll(query, textFieldPane, down, up, sensitiveCheckBox, humpUnderline, countBtn, countLabel);
 		HBox.setMargin(countLabel, new Insets(5, 3, 0, 3));
 		HBox.setMargin(sensitiveCheckBox, new Insets(5, 0, 0, 3));
 		findAnchorPane.getChildren().add(findBox);
