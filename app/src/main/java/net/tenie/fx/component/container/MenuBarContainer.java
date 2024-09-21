@@ -183,7 +183,7 @@ public class MenuBarContainer extends MenuBar{
 		});
 
 		// Underscore to hump
-		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underscore To Hump"));
+		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underline To Hump"));
 		underscore.setOnAction(value -> {
 			Platform.runLater(()->{
 				AppCommonAction.underlineCaseCamel();
@@ -191,7 +191,7 @@ public class MenuBarContainer extends MenuBar{
 
 		});
 
-		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underscore"));
+		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underline"));
 		Hump.setOnAction(value -> {
 			Platform.runLater(() -> {
 				AppCommonAction.CamelCaseUnderline();
