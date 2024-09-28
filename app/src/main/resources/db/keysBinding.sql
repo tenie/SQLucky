@@ -41,10 +41,10 @@ insert into KEYS_BINDING (ACTION_NAME, BINDING)
 values('Lower Case', 'Ctrl + Shift + Y');
 
 insert into KEYS_BINDING (ACTION_NAME, BINDING) 
-values('Underscore To Hump', 'Ctrl + Shift + R');
+values('Underline To Hump', 'Ctrl + Shift + R');
 
 insert into KEYS_BINDING (ACTION_NAME, BINDING) 
-values('Hump To Underscore', 'Ctrl + Shift + T');
+values('Hump To Underline', 'Ctrl + Shift + T');
 
 insert into KEYS_BINDING (ACTION_NAME, BINDING) 
 values('Hide/Show All Panels', 'Ctrl + `');
