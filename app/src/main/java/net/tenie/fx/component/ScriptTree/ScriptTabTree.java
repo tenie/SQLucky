@@ -100,7 +100,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 	public static void recoverScriptNode() {
 		List<DocumentPo> scriptDatas;
 		// 上次的激活页面
-		Tab activateMyTab = null;
+		Boolean activateMyTab = false;
 		// 从系统中打开 .sql文件时, 大概这个sql的编辑页面
 		Tab sysOpenFileTB = null;
 
@@ -125,9 +125,9 @@ public class ScriptTabTree extends SqluckyTitledPane {
 				// 将需要恢复代码编辑框, 缓存到集合中
 				if (po.getOpenStatus() != null && po.getOpenStatus() == 1) {
 					myEditorSheets.add(myEditorSheet);
-					// 设置上次激活的编辑页面
+					// 有上次激活的编辑页面
 					if (po.getIsActivate() == 1) {
-						activateMyTab = myEditorSheet;
+						activateMyTab = true;
 					}
 
 					// 在操作系统中通过鼠标双击打开的文件, 如果再在以前打开过就直接选中
@@ -140,13 +140,12 @@ public class ScriptTabTree extends SqluckyTitledPane {
 							}
 						}
 					}
-
 				}
 			}
 		}
 
 		Tab tmpSysOpenFileTB = sysOpenFileTB;
-		Tab activateTmpMyTab = activateMyTab;
+		boolean activateMyTabTmp = activateMyTab;
 		// 页面显示后 执行, 显示代码编辑框Tab
 		Consumer<String> cr = v -> {
 			if (treeItems.size() > 0) {
@@ -154,7 +153,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 					rootNode.getChildren().addAll(treeItems);
 					// 恢复代码编辑框
 					if (myEditorSheets.size() > 0) {
-						MyEditorSheetHelper.mainTabPaneAddAllMyTabs(myEditorSheets);
+						Consumer<String> activateCall = MyEditorSheetHelper.mainTabPaneAddAllMyTabs(myEditorSheets);
 
 						// 系统打开文件触发启动APP时, 恢复历史中的文件
 						if (tmpSysOpenFileTB != null) {
@@ -164,9 +163,9 @@ public class ScriptTabTree extends SqluckyTitledPane {
 							logger.info("系统打开文件触发启动APP时, 新开一个 脚本文件 ");
 							File sif = new File(app.sysOpenFile);
 							AppCommonAction.openSqlFile(sif);
-						} else if (activateTmpMyTab != null) {// 恢复选中上次选中页面
+						} else if (activateMyTabTmp) {// 恢复选中上次选中页面
 							logger.info(" 恢复选中上次选中页面");
-							ComponentGetter.mainTabPane.getSelectionModel().select(activateTmpMyTab);
+							activateCall.accept("");
 						}
 					}
 					// 没有tab被添加, 添加一新的
@@ -179,7 +178,6 @@ public class ScriptTabTree extends SqluckyTitledPane {
 					MyEditorSheetHelper.addEmptyHighLightingEditor();
 				});
 			}
-
 		};
 		CommonUtils.addInitTask(cr);
 	}

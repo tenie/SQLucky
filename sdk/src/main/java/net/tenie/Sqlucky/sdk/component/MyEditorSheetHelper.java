@@ -3,6 +3,7 @@ package net.tenie.Sqlucky.sdk.component;
 import java.io.File;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 import javafx.application.Platform;
 import org.apache.commons.io.FilenameUtils;
@@ -36,7 +37,9 @@ import org.fxmisc.richtext.model.Paragraph;
 public class MyEditorSheetHelper {
 
 	// 将Tab 放入界面
-	public static void mainTabPaneAddAllMyTabs(List<MyEditorSheet> ls) {
+	public static Consumer<String>  mainTabPaneAddAllMyTabs(List<MyEditorSheet> ls) {
+		Tab mainActivateMyTab = null;
+		Tab rightActivateMyTab = null;
 		if (ls != null && ls.size() > 0) {
 			// 主
 			var myTabPane = ComponentGetter.mainTabPane;
@@ -44,11 +47,17 @@ public class MyEditorSheetHelper {
 			var rightTabPane = ComponentGetter.rightTabPane;
 			for (MyEditorSheet sheet : ls) {
 				int tabPosition = sheet.getDocumentPo().getTabPosition();
+				int isActivate = sheet.getDocumentPo().getIsActivate();
 				if( 0 == tabPosition ){
 					myTabPane.getTabs().add(sheet);
+					if(isActivate == 1){
+						mainActivateMyTab = sheet;
+					}
 				}else {
-
 					rightTabPane.getTabs().add(sheet);
+					if(isActivate == 1){
+						rightActivateMyTab = sheet;
+					}
 					if (!ComponentGetter.rightTabPaneMasterDetailPane.isShowDetailNode()) {
 						Platform.runLater(() -> {
 							ComponentGetter.rightTabPaneMasterDetailPane.setShowDetailNode(true);
@@ -58,10 +67,22 @@ public class MyEditorSheetHelper {
 				}
 
 			}
+
 		}
-
-
+		Tab mainActivateMyTabTmp = mainActivateMyTab;
+		Tab rightActivateMyTabTmp = rightActivateMyTab;
+		Consumer<String> activateCall = x->{
+			if(mainActivateMyTabTmp != null){
+				ComponentGetter.mainTabPane.getSelectionModel().select(mainActivateMyTabTmp);
+			}
+			if(rightActivateMyTabTmp != null){
+				ComponentGetter.rightTabPane.getSelectionModel().select(rightActivateMyTabTmp);
+			}
+		};
+		return activateCall;
 	}
+
+
 
 	// 添加空文本的codeTab
 	public static MyEditorSheet addEmptyHighLightingEditor() {
