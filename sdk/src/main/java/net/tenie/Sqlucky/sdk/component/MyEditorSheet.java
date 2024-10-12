@@ -145,21 +145,17 @@ public class MyEditorSheet extends Tab {
 	/**
 	 * 界面上的文本保存到文件
 	 */
-	public void saveAreaTextToDocumentFile(){
-		String sql = this.getAreaText();// Sql
-		String filePath = documentPo.getExistFileFullName();
+	public static void saveAreaTextToDocumentFile(String sql, String filePath, String encode){
 		if(StrUtils.isNotNullOrEmpty(filePath)){
 			File file = new File(filePath);
 			if(file.exists() && file.isFile()){
 				try {
-					FileTools.saveByEncode(filePath, sql, documentPo.getEncode());
+					FileTools.saveByEncode(filePath, sql, encode);
 				} catch (IOException e) {
 					throw new RuntimeException(e);
 				}
 			}
 		}
-
-
     }
 
 	/**
@@ -370,48 +366,30 @@ public class MyEditorSheet extends Tab {
 	 * @param conn
 	 */
 	public void saveScriptPo(Connection conn) {
-		if( this.sqluckyEditor == null ) return;
-		if( documentFileExists()){
-			if( !documentTextEqualsCodeAreaText() ){
-				ConsumerLs.add(stc->{
+		if (this.sqluckyEditor == null) return;
+		if (documentFileExists()) {
+			if (!documentTextEqualsCodeAreaText()) {
+				String sql = this.getAreaText();
+				String filePath = documentPo.getExistFileFullName();
+				String encode = documentPo.getEncode();
+				ConsumerLs.add(stc -> {
 					boolean confVal = MyAlert.myConfirmationShowAndWait("文本发生改变是否保存?");
 					if (confVal) {
 						// 界面文本保存到文件
-						saveAreaTextToDocumentFile();
-						syncScriptPo(conn, "");
+						saveAreaTextToDocumentFile(sql, filePath, encode);
 					}
-//					else {
-//						不保存的情况
-//						String fileTexttmp = this.readDocumentFileText();
-//						syncScriptPo(conn);
-//					}
 				});
-
-//				Platform.runLater(()->{
-//					boolean confVal = MyAlert.myConfirmationShowAndWait("文本发生改变是否保存?");
-//					if (confVal) {
-//						saveAreaTextToDocumentFile();
-//					}else {
-//						String fileTexttmp = this.readDocumentFileText();
-//						syncScriptPo(conn, fileTexttmp);
-//					}
-//				});
-
 			}
-		}else{
-			syncScriptPo(conn);
 		}
-
-//		var spo = this.getDocumentPo();
 		// 将打开状态设置为1, 之后根据这个状态来恢复
 		if (documentPo != null && documentPo.getId() != null) {
 			String sql = this.getAreaText();
 			if (StrUtils.isNotNullOrEmpty(sql) && sql.trim().length() > 0) {
 				documentPo.setOpenStatus(1);
 				// 当前激活的编辑页面
-				if( this.isSelected()){
+				if (this.isSelected()) {
 					documentPo.setIsActivate(1);
-				}else {
+				} else {
 					documentPo.setIsActivate(0);
 				}
 
@@ -420,9 +398,7 @@ public class MyEditorSheet extends Tab {
 				documentPo.setIsActivate(0);
 			}
 		}
-//		documentPo.getFileFullName()
-
-
+		syncScriptPo(conn);
 	}
 
 	// 设置tab 中的 area 中的文本
