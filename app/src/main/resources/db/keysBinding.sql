@@ -83,3 +83,6 @@ insert into KEYS_BINDING (ACTION_NAME, BINDING) values('unformat', 'Ctrl + alt +
 insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Separate Date Window', 'Ctrl + alt + `');
 
 insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Close Edit Page', 'Ctrl + W');
+
+insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Back', 'Ctrl + alt + Left');
+insert into KEYS_BINDING (ACTION_NAME, BINDING) values('Forward', 'Ctrl + alt + Right');

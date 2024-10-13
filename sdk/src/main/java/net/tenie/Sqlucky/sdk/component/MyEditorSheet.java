@@ -22,13 +22,19 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class MyEditorSheet extends Tab {
+	// 导航, 前进/后退
+	public static Stack<MyEditorSheet> backMyEditorSheet = new Stack<>();
+	public static Stack<MyEditorSheet> forwardMyEditorSheet = new Stack<>();
+	public static Boolean isBack = false;
+	public static Boolean isForward = false;
+
 	// 在脚本树中的节点
 	TreeItem<MyEditorSheet> treeItem ;
-
 
 	private SqluckyEditor sqluckyEditor; // 编辑器(比如高亮的文本编辑器)
 	private DocumentPo documentPo; // 文本内容
@@ -107,6 +113,20 @@ public class MyEditorSheet extends Tab {
 
 				//原文被其他程序修改后, 重新加载
 //				reloadText();
+			}else {
+				// 如果是触发的 后退, 前进
+				if (MyEditorSheet.isBack) {
+					// 如果是"后退",
+					forwardMyEditorSheet.push(this);
+					MyEditorSheet.isBack = false;
+				} else if (MyEditorSheet.isForward) {
+					backMyEditorSheet.push(this);
+					MyEditorSheet.isForward = false;
+				} else {
+					// 离开当前页面后添加到stack缓存
+					backMyEditorSheet.push(this);
+				}
+
 			}
 		});
 		// 选择title的时候初始化tab内容
@@ -136,9 +156,7 @@ public class MyEditorSheet extends Tab {
                 isInit = true;
 
 			}
-//			if(isSel){
-//				ComponentGetter.focusedSqluckyEditor = this.sqluckyEditor;
-//			}
+
 		});
 	}
 
