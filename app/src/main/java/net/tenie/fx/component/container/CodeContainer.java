@@ -93,7 +93,7 @@ public class CodeContainer extends VBox{
 		
 		
 //		CommonUtils.fadeTransition(operateBtnPane, 1000);
-		CommonUtils.fadeTransition(mainTabPane, 1000); 
+//		CommonUtils.fadeTransition(mainTabPane, 1000);
 		
 	}
 

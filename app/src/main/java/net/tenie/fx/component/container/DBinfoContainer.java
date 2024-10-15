@@ -50,9 +50,9 @@ public class DBinfoContainer extends  VBox{
 
 		ComponentGetter.infoAccordion = dbInfoAccordion;
 
-		CommonUtils.fadeTransition(dbInfoTreeBtnPane, 1000);
-		CommonUtils.fadeTransition(dbInfoAccordion, 1000);
-		CommonUtils.fadeTransition(dbInfoTreeView, 1000);
+//		CommonUtils.fadeTransition(dbInfoTreeBtnPane, 1000);
+//		CommonUtils.fadeTransition(dbInfoAccordion, 1000);
+//		CommonUtils.fadeTransition(dbInfoTreeView, 1000);
 
 	}
 

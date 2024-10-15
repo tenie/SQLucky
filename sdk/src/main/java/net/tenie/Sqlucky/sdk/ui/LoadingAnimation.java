@@ -34,18 +34,22 @@ public class LoadingAnimation {
 
     public static void addLoading(StackPane root, String loadingString, int fontSize) {
         Platform.runLater(() -> {
-            if( ! root.getChildren().isEmpty()){
-                root.getChildren().get(0).setDisable(true);
-            }
+            try {
+                if (!root.getChildren().isEmpty()) {
+                    root.getChildren().get(0).setDisable(true);
+                }
 
-            lb = new Label(loadingString);
-            Animation = IconGenerator.svgImageUnactive("icomoon-spinner3", fontSize);
-            CommonUtils.rotateTransition(Animation);
-            lb.setGraphic(Animation);
-            lb.setFont(new Font(fontSize));
-            StackPane.setAlignment(lb, Pos.CENTER);
-            root.setCursor(Cursor.WAIT);
-            root.getChildren().add(lb);
+                lb = new Label(loadingString);
+                Animation = IconGenerator.loading(fontSize); //IconGenerator.svgImageUnactive("icomoon-spinner3", fontSize);
+//                CommonUtils.rotateTransition(Animation);
+                lb.setGraphic(Animation);
+                lb.setFont(new Font(fontSize));
+                StackPane.setAlignment(lb, Pos.CENTER);
+                root.setCursor(Cursor.WAIT);
+                root.getChildren().add(lb);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         });
 
     }

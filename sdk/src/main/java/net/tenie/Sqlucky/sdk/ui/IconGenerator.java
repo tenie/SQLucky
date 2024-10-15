@@ -7,6 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.Shape;
+import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.girod.javafx.svgimage.SVGImage;
 import org.girod.javafx.svgimage.SVGLoader;
 
@@ -107,6 +108,22 @@ public final class IconGenerator {
 
         Shape shape = Path.subtract(githubIcon, githubIcon2);
         return shape;
+    }
+
+    // 加载动画
+    static SVGPath icomoonSpinner3SVGPath = new SVGPath();
+    static Region icomoonSpinner3Region = new Region();
+    static {
+        icomoonSpinner3SVGPath.setContent(getSvgStr("icomoon-spinner3"));
+        icomoonSpinner3Region.setShape(icomoonSpinner3SVGPath);
+        icomoonSpinner3Region.setStyle("-fx-background-color: " + "#A9A9A9" + ";");
+    }
+    public static Region loading(int size){
+        icomoonSpinner3Region.setMinSize(size, size);
+        icomoonSpinner3Region.setPrefSize(size, size);
+        icomoonSpinner3Region.setMaxSize(size, size);
+        CommonUtils.rotateTransition(icomoonSpinner3Region);
+        return icomoonSpinner3Region;
     }
 
     // 修改颜色

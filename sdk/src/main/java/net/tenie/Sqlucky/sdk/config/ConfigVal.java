@@ -52,7 +52,7 @@ public class ConfigVal {
 	// sql 查询获取最大行
 	public static int MaxRows = 1000;
 	// 底部tab 保留个数
-	public static int cacheBottomTab = 10;
+	public static int cacheBottomTab = 20;
 
 	// sql txt area tag
 	public static String SQL_AREA_TAG = "code";
