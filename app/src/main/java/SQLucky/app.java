@@ -64,20 +64,12 @@ public class app extends Application {
     public static List<String> argsList = new ArrayList<>();
     private AppWindow app;
     private Scene scene;
-    private Image img;
+    public static Image img;
     private String Theme;
     private boolean transferDB = false;
     private static Logger logger = LogManager.getLogger(app.class);
 
     private static boolean preloaderStatus = false;
-
-//    public static boolean isPreloaderStatus() {
-//        return preloaderStatus;
-//    }
-//
-//    public static void setPreloaderStatus(boolean preloaderStatus) {
-//        preloaderStatus = preloaderStatus;
-//    }
 
     static {
         if (!CommonUtils.isDev()) {
@@ -125,74 +117,70 @@ public class app extends Application {
 
     }
 
+    // 初始化一个Stage
+    public static Stage initStage(Scene scene) {
+        Stage primaryStage =new Stage();
+        AppHeadContainer.SQLuckyStage = primaryStage;
+        ComponentGetter.primaryStage = primaryStage;
+        primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
+        primaryStage.centerOnScreen(); // 居中
+        primaryStage.getIcons().add(img);
+        primaryStage.setTitle("SQLucky");
+        if (!CommonUtils.isMacOS()) {
+            AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
+            // 添加关闭按钮
+            AppWindow.appHeadContainer.addHiddenWindowResizeClose();
+            try {
+                winos.setupWindow(primaryStage, AppWindow.appHeadContainer.getHeadHbox());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        primaryStage.show();
+        // 在stage show之后 需要初始化的内容, 如: 外观, 事件
+        Platform.runLater(() -> {
+            if (CommonUtils.isLinuxOS()) {
+//					primaryStage.setAlwaysOnTop(true);
+                primaryStage.toFront();
+            }
+            if (!primaryStage.isFocused()) {
+                primaryStage.toFront();
+            }
+            primaryStage.toFront();
+            Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+            primaryStage.setX(primaryScreenBounds.getMinX());
+            primaryStage.setY(primaryScreenBounds.getMinY());
+            primaryStage.setWidth(primaryScreenBounds.getWidth());
+            primaryStage.setHeight(primaryScreenBounds.getHeight());
+        });
 
+        return primaryStage;
+    }
+    // 销毁 Stage
+    public static void destroyStage(Stage stage){
+        if(stage != null){
+            stage.setScene(null);
+            stage.setOnCloseRequest(null);
+            stage.getIcons().clear();
+            stage.setTitle(null);
+            stage.close();
+        }
+    }
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage pStage) {
+        pStage.close();
         ComponentGetter.SQLucky = this;
 
         try {
-            AppHeadContainer.SQLuckyStage = primaryStage;
-            ComponentGetter.primaryStage = primaryStage;
-
-            primaryStage.setScene(scene);
-//			var sceneRoot = scene.getRoot();
-//			CommonUtility.fadeTransition(sceneRoot, 2000);
-//			app.fadeTransition();
-
-//			primaryStage.setIconified(true);
-            // 确保全屏显示
-//			primaryStage.setMaximized(false);
-//			primaryStage.setResizable(false);
-
-            primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
-//			CommonAction.setTheme(Theme);
-
-            primaryStage.centerOnScreen(); // 居中
-//			primaryStage.initStyle(StageStyle.UNDECORATED);//设定窗口无边框
-//		    primaryStage.setIconified(true); //最小化窗口，任务栏可见图标
+            initStage(scene);
             if (CommonUtils.isLinuxOS()) {
                 MyPreloaderGif.hiden();
             } else {
                 MyPreloaderMp4.hiden();
             }
 
-//             if(CommonUtility.isLinuxOS()) {
-//				// 图标
-//				primaryStage.getIcons().add(img);
-//				primaryStage.setTitle("SQLucky");
-//			}else if(CommonUtility.isMacOS()) {
-//				primaryStage.setTitle("SQLucky");
-//			}
-            primaryStage.getIcons().add(img);
-            primaryStage.setTitle("SQLucky");
-            // macos 系统, 使用自己的关闭窗口
-            if (!CommonUtils.isMacOS()) {
-                AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
-                winos.setWindow(primaryStage, AppWindow.appHeadContainer.getHeadHbox());
-            }
-            primaryStage.show();
-
-            // 在stage show之后 需要初始化的内容, 如: 外观, 事件
-            Platform.runLater(() -> {
-                if (CommonUtils.isLinuxOS()) {
-//					primaryStage.setAlwaysOnTop(true);
-                    primaryStage.toFront();
-                }
-                if (!primaryStage.isFocused()) {
-                    primaryStage.toFront();
-                }
-                primaryStage.toFront();
-                Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-                primaryStage.setX(primaryScreenBounds.getMinX());
-                primaryStage.setY(primaryScreenBounds.getMinY());
-                primaryStage.setWidth(primaryScreenBounds.getWidth());
-                primaryStage.setHeight(primaryScreenBounds.getHeight());
-
-
-
-
-            });
             Platform.runLater(() -> {
                  ServiceLoad.callShowed();
 

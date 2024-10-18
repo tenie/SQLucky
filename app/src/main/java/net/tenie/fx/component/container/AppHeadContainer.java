@@ -88,7 +88,7 @@ public class AppHeadContainer {
         // 界面上的子窗口的隐藏和显示按钮
         initSubWindowCtrlBtn(buttonBox);
 
-        // 初始化按钮, 关闭, 还原, 最小化
+        // 初始化按钮, 关闭, 还原, 最小化, 但不添加到主界面上
         initTopButtonPane();
 
         rightAnchorPane.getChildren().add(buttonBox);
@@ -108,7 +108,6 @@ public class AppHeadContainer {
 //            AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
 //            winos.setWindow(primaryStage, app.getHeadAnchorPane());
 //        }
-
 
     }
 
@@ -154,15 +153,15 @@ public class AppHeadContainer {
         CommonButtons.hidden = hidden;
         CommonButtons.windowResize = windowResize;
         CommonButtons.close = close;
-
-        addHiddenWindowResizeClose();
     }
 
+    // 添加自定义的 关闭, 最小化, 重置大小按钮
     public void addHiddenWindowResizeClose(){
         if(!CommonUtils.isMacOS() && !buttonBox.getChildren().contains(hidden)){
             buttonBox.getChildren().addAll(hidden, windowResize, close);
         }
     }
+    // 移除自定义的 关闭, 最小化, 重置大小按钮
     public void removeHiddenWindowResizeClose(){
         buttonBox.getChildren().removeAll(hidden, windowResize, close);
 
@@ -181,7 +180,7 @@ public class AppHeadContainer {
         hideLeft.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
         hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
 
-        // TODO hideBottom
+        // hideBottom
         hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
         hideBottom.setOnMouseClicked(event -> { SdkComponent.hideBottom();});
         hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
@@ -198,7 +197,6 @@ public class AppHeadContainer {
     // 控制菜单显示
     public void ctrlMenuBarShow(){
         if( leftBox.getChildren().contains(mainMenuBar) && !subMenuIsHover()){
-//            leftBox.getChildren().remove(mainMenuBar);
             mainMenuBar.setVisible(false);
             if(!leftBox.getChildren().contains(showMenuBarBtn)){
                 leftBox.getChildren().add(1,showMenuBarBtn);
@@ -208,13 +206,8 @@ public class AppHeadContainer {
         }
     }
 
-    private EventHandler<MouseEvent> appMouseEvent =new EventHandler<MouseEvent>() {
-        //重写EventHandler接口实现方法
-        @Override
-        public void handle(MouseEvent event) {
-            ctrlMenuBarShow();
-        }
-    };
+    //重写EventHandler接口实现方法
+    private final EventHandler<MouseEvent> appMouseEvent = event -> ctrlMenuBarShow();
     public void addMouseEventFilter(Stage pStage){
         pStage.addEventFilter(MouseEvent.MOUSE_CLICKED, appMouseEvent);
     }
