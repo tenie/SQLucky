@@ -1,12 +1,5 @@
 package net.tenie.plugin.DataModel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,11 +25,19 @@ import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.ui.SqluckyStage;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
 import net.tenie.plugin.DataModel.po.ModelDBType;
 import net.tenie.plugin.DataModel.tools.DataModelDAO;
 import net.tenie.plugin.DataModel.tools.DataModelMySQLDao;
 import net.tenie.plugin.DataModel.tools.DataModelUtility;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 模型生成(通过mysql 的创建语句来生成模型) 子界面
@@ -163,7 +164,8 @@ public class DataModelGenerateWindow {
 		TextFieldSetup.setMaxLength(tfModelName, 60);
 		connNameChoiceBox.valueProperty().addListener((obj, ol, ne) -> {
 			if (ne != null && !"".equals(ne)) {
-				tfModelName.setText(ne + "_");
+				String dateStr = DateUtils.localDateToStr(LocalDate.now());
+				tfModelName.setText(ne + "_"+ dateStr);
 				tfModelName.requestFocus();
 			}
 		});

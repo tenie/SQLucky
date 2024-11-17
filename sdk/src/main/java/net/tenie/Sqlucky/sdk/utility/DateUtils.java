@@ -18,6 +18,7 @@ import java.util.Locale;
 public class DateUtils {
     public static SimpleDateFormat usSdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.US);
     public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public static Date asDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
@@ -38,6 +39,9 @@ public class DateUtils {
     public static String localDateTimeToStr(LocalDateTime localDateTime) {
         String dateStr = localDateTime.format(dateTimeFormatter);
         return dateStr;
+    }
+    public static String localDateToStr(LocalDate localDateTime) {
+        return localDateTime.format(dateFormatter);
     }
 
     public static LocalDateTime strToLocalDateTime(String dateStr) {
