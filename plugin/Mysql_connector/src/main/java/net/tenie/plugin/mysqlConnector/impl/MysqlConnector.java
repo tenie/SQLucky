@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -26,7 +25,7 @@ public class MysqlConnector extends SqluckyConnector {
 	public MysqlConnector(DBConnectorInfoPo connPo , SqluckyDbRegister dbReg) {
 		super(connPo, dbReg); 
 		ExportSqlMySqlImp ex = new ExportSqlMySqlImp();
-		getConnPo().setExportDDL( ex);
+		getDbConnectorInfoPo().setExportDDL( ex);
 	} 
 	 
 
@@ -43,11 +42,11 @@ public class MysqlConnector extends SqluckyConnector {
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
-		var schemas = getConnPo().getSchemas();
+		var schemas = getDbConnectorInfoPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
 				schemas = fetchSchemasInfo();		
-				getConnPo().setSchemas(schemas);
+				getDbConnectorInfoPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -136,12 +135,12 @@ public class MysqlConnector extends SqluckyConnector {
 
 	@Override
 	public String getJdbcUrl() {
-		String jdbcUrlstr = connPo.getJdbcUrl();
+		String jdbcUrlstr = dbConnectorInfoPo.getJdbcUrl();
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
 			jdbcUrlstr  = "jdbc:mysql://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
-			connPo.setJdbcUrl(jdbcUrlstr);
+			dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr);
 		}
 		return  jdbcUrlstr;
 	}

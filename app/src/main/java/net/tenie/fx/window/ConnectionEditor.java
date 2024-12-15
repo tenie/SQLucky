@@ -58,6 +58,8 @@ public class ConnectionEditor {
     private static Node redRegion = IconGenerator.svgImage("spinner", "red");
     private TreeItem<TreeNodePo> editTreeItem;
 
+    private static double wh = 500.0;
+    private static ConnectionEditor connectionEditor = null;
     // 更新- 连接设置界面
     public ConnectionEditor(boolean editLinkStatus, TreeItem<TreeNodePo> treeItem) {
         this.editLinkStatus = editLinkStatus;
@@ -74,8 +76,8 @@ public class ConnectionEditor {
 
     public Stage CreateModalWindow(VBox vb) {
         vb.getStyleClass().add("connectionEditor");
-        vb.setPrefWidth(450);
-        vb.maxWidth(450);
+        vb.setPrefWidth(650);
+        vb.maxWidth(650);
 
         SqluckyStage sqluckyStage = new SqluckyStage(vb);
         Scene scene = sqluckyStage.getScene();
@@ -87,17 +89,16 @@ public class ConnectionEditor {
         vb.getChildren().add(bottomPane);
         KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
         KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
-        scene.getAccelerators().put(escbtn, () -> {
-            stage.close();
-        });
-        scene.getAccelerators().put(spacebtn, () -> {
-            stage.close();
-        });
-        stage.initModality(Modality.APPLICATION_MODAL);
+        scene.getAccelerators().put(escbtn, this::closeStage);
+        scene.getAccelerators().put(spacebtn, this::closeStage);
+        stage.initModality(Modality.WINDOW_MODAL);
         stage.setScene(scene);
 
         stage.setMaximized(false);
         stage.setResizable(false);
+        stage.setOnCloseRequest(v -> {
+            connectionEditor = null;
+        });
         stage.setOnHidden(e -> {
             // TODO 打开连接
             if (editLinkStatus) {
@@ -148,8 +149,8 @@ public class ConnectionEditor {
 
         ChoiceBox<String> dbDriver = new ChoiceBox<String>(FXCollections.observableArrayList(DbVendor.getAll()));
         dbDriver.setTooltip(MyTooltipTool.instance("Select DB Type"));
-        dbDriver.setPrefWidth(250);
-        dbDriver.setMinWidth(250);
+        dbDriver.setPrefWidth(wh);
+        dbDriver.setMinWidth(wh);
 
         // jdbc url
         JFXCheckBox isUseJdbcUrl = new JFXCheckBox("Use JDBC URL");
@@ -167,8 +168,8 @@ public class ConnectionEditor {
 
         jdbcUrl.setPromptText("jdbc:db://ip:port/xxxx");
         jdbcUrl.disableProperty().bind(isUseJdbcUrl.selectedProperty().not());
-        jdbcUrl.setPrefWidth(250);
-        jdbcUrl.setMinWidth(250);
+        jdbcUrl.setPrefWidth(wh);
+        jdbcUrl.setMinWidth(wh);
         AnchorPane jdbcUrlFieldPane = UiTools.textFieldAddCleanBtn(jdbcUrl);
 
 
@@ -177,8 +178,8 @@ public class ConnectionEditor {
         host.setText(hostVal);
         host.lengthProperty().addListener(CommonListener.textFieldLimit(host, 100));
         host.disableProperty().bind(isUseJdbcUrl.selectedProperty());
-        host.setPrefWidth(250);
-        host.setMinWidth(250);
+        host.setPrefWidth(wh);
+        host.setMinWidth(wh);
         AnchorPane hostFieldPane = UiTools.textFieldAddCleanBtn(host);
 
         TextField port = new TextField();
@@ -186,32 +187,32 @@ public class ConnectionEditor {
         port.setText(portVal);
         port.lengthProperty().addListener(CommonListener.textFieldLimit(port, 5));
         port.textProperty().addListener(CommonListener.textFieldNumChange(port));
-        port.setPrefWidth(250);
-        port.setMinWidth(250);
+        port.setPrefWidth(wh);
+        port.setMinWidth(wh);
         AnchorPane portFieldPane = UiTools.textFieldAddCleanBtn(port);
 
         TextField user = new TextField();
         user.setPromptText(userStr);
         user.setText(userVal);
         user.lengthProperty().addListener(CommonListener.textFieldLimit(user, 100));
-        user.setPrefWidth(250);
-        user.setMinWidth(250);
+        user.setPrefWidth(wh);
+        user.setMinWidth(wh);
         AnchorPane userFieldPane = UiTools.textFieldAddCleanBtn(user);
 
         PasswordField password = new PasswordField();
         password.setPromptText(passwordStr);
         password.setText(passwordVal);
         password.lengthProperty().addListener(CommonListener.textFieldLimit(password, 50));
-        password.setPrefWidth(250);
-        password.setMinWidth(250);
+        password.setPrefWidth(wh);
+        password.setMinWidth(wh);
         AnchorPane passwordFieldPane = UiTools.textFieldAddCleanBtn(password);
 
         TextField defaultSchema = new TextField();
         defaultSchema.setPromptText(defaultSchemaStr);
         defaultSchema.setText(defaultSchemaVal);
         defaultSchema.lengthProperty().addListener(CommonListener.textFieldLimit(defaultSchema, 50));
-        defaultSchema.setPrefWidth(250);
-        defaultSchema.setMinWidth(250);
+        defaultSchema.setPrefWidth(wh);
+        defaultSchema.setMinWidth(wh);
         AnchorPane defaultSchemaFieldPane = UiTools.textFieldAddCleanBtn(defaultSchema);
 
         // 获取db file
@@ -316,11 +317,12 @@ public class ConnectionEditor {
                     }
                 }
             }
-
-            if (StrUtils.isNullOrEmpty(defaultSchema.getText())) {
-                var textval = lbdefaultSchemaStr.getText();
-                MyAlert.errorAlert(textval + " is empty !");
-                return null;
+            if (!dbRegister.getName().equals("Mysql")) {
+                if (StrUtils.isNullOrEmpty(defaultSchema.getText())) {
+                    var textval = lbdefaultSchemaStr.getText();
+                    MyAlert.errorAlert(textval + " is empty !");
+                    return null;
+                }
             }
 
             if (StrUtils.isNullOrEmpty(connName)) {
@@ -377,13 +379,19 @@ public class ConnectionEditor {
      * 编辑链接
      */
     public static void editDbConn() {
+        if (connectionEditor != null) {
+            Platform.runLater(() -> {
+                connectionEditor.getStage().requestFocus();
+            });
+            return;
+        }
         if (DBinfoTree.currentTreeItemIsConnNode()) {
             TreeItem<TreeNodePo> treeItem = DBinfoTree.getTrewViewCurrentItem();
             boolean tf = ConnectionEditor.treeItemIsLink(treeItem);
             if (tf) {
                 ConnectionEditor.closeDbConn();
             }
-            ConnectionEditor connectionEditor = new ConnectionEditor(tf, treeItem);
+            connectionEditor = new ConnectionEditor(tf, treeItem);
         } else {
             MyAlert.showNotifiaction("编辑需要选中连接名称!");
         }
@@ -576,8 +584,6 @@ public class ConnectionEditor {
     }
 
 
-
-
     public Button createTestBtn(Function<String, SqluckyConnector> assembleSqlCon) {
         Button testBtn = new Button("Test");
         testBtn.setOnMouseClicked(e -> {
@@ -642,7 +648,7 @@ public class ConnectionEditor {
             } else {
                 return;
             }
-            stage.close();
+            closeStage();
 
         });
         return saveBtn;
@@ -705,9 +711,22 @@ public class ConnectionEditor {
         grid.add(testBtn, 0, i);
         grid.add(saveBtn, 1, i);
         // 默认焦点
-        Platform.runLater(() -> connectionName.requestFocus());
-        stage.show();
+        Platform.runLater(() -> {
+            stage.show();
+            connectionName.requestFocus();
+        });
+
 
     }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void closeStage() {
+        connectionEditor = null;
+        stage.close();
+    }
+
 
 }

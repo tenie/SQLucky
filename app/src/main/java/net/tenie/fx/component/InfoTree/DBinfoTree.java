@@ -304,8 +304,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 					codeArea.requestFocus();
 					codeArea.setShowCaret(CaretVisibility.ON);
 				}
-
-//				item.setExpanded(true);
 			} // Schemas 双击, 打开非默认的schema
 			else if (parentItem != null && parentItem.getValue().getType() == TreeItemType.SCHEMA_ROOT) {
 				SqluckyConnector po = getSchameIsConnObj(item);
@@ -322,7 +320,14 @@ public class DBinfoTree extends SqluckyTitledPane {
 					connItemContainer.addConnItem(ci);
 					connItemContainer.selectTable(schemaName);
 				}
-				// TODO
+
+//				String defaultSchemaName = po.getDBConnectorInfoPo().getDefaultSchema();
+//				if(StrUtils.isNullOrEmpty(defaultSchemaName)){
+//					po.getDBConnectorInfoPo().setDefaultSchema(schemaName);
+//				}
+				// 重新连接
+				po.resetJdbcUrlStr(schemaName);
+				ConnItemContainer.moveSchemaToTop(schemaName, parentItem);
 			}
 			// 表格
 			else if (parentItem.getValue().getType() != null
@@ -646,7 +651,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 						var conntmp = po1.getConn();
 						if (conntmp != null) {
 							ConnItemContainer connItemContainer = new ConnItemContainer(po, item);
-							TreeItem<TreeNodePo> subTreeItem = connItemContainer.getSchemaNode();
+							TreeItem<TreeNodePo> subTreeItem = connItemContainer.getDataBasesSchemasRoot();
 							Platform.runLater(() -> {
 								item.getChildren().add(subTreeItem);
 								item.getValue().setIcon(IconGenerator.svgImage("link", "#7CFC00"));
@@ -660,7 +665,10 @@ public class DBinfoTree extends SqluckyTitledPane {
 									AppWindow.treeView.refresh();
 									// 下拉选切换打开的连接
 									DBConns.selectComboBoxItem(connName);
+									item.setExpanded(true);
+									subTreeItem.setExpanded(true);
 								});
+
 
 							});
 						} else {

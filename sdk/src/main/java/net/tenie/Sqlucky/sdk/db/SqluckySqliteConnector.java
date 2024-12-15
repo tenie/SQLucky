@@ -22,7 +22,7 @@ public class SqluckySqliteConnector extends SqluckyConnector {
 		
 		super(connPo, dbReg);
 		ExportDefaultImp ex = new ExportDefaultImp();
-		getConnPo().setExportDDL( ex);
+		getDbConnectorInfoPo().setExportDDL( ex);
 	} 
 	 
 	public static SqluckySqliteConnector  createTmpConnector(String user, String password, String jdbcUrl) {
@@ -49,11 +49,11 @@ public class SqluckySqliteConnector extends SqluckyConnector {
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
-		var schemas = getConnPo().getSchemas();
+		var schemas = getDbConnectorInfoPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
 				schemas = fetchSchemasInfo();		
-				getConnPo().setSchemas(schemas);
+				getDbConnectorInfoPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -119,7 +119,7 @@ public class SqluckySqliteConnector extends SqluckyConnector {
 				);
 //		var dbc = new SqluckySqliteConnector(val);
 		SqluckySqliteRegister dbReg = new SqluckySqliteRegister();
-		SqluckySqliteConnector dbc = (SqluckySqliteConnector) dbReg.createConnector(connPo);
+		SqluckySqliteConnector dbc = (SqluckySqliteConnector) dbReg.createConnector(dbConnectorInfoPo);
 		
 		return dbc;
 	}
@@ -133,13 +133,13 @@ public class SqluckySqliteConnector extends SqluckyConnector {
 
 	@Override
 	public String getJdbcUrl() {
-		String jdbcUrlstr = connPo.getJdbcUrl();
+		String jdbcUrlstr = dbConnectorInfoPo.getJdbcUrl();
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
 			
 			jdbcUrlstr  = "jdbc:sqlite:" + getHostOrFile(); 
-			connPo.setJdbcUrl(jdbcUrlstr);
+			dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr);
 		}
 		
 		return  jdbcUrlstr;

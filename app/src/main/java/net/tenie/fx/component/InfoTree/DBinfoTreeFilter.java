@@ -120,9 +120,9 @@ public class DBinfoTreeFilter {
 		// 1. 首先看节点是否激活的(有子节点?)
 		if (conn.getChildren().size() > 0) {
 			ConnItemContainer cip = conn.getValue().getConnItemContainer();
-			if (cip != null && cip.getSchemaNode().getChildren().size() > 0) {
+			if (cip != null && cip.getDataBasesSchemasRoot().getChildren().size() > 0) {
 				// 获取Schema的节点集合
-				ObservableList<TreeItem<TreeNodePo>> vals = cip.getSchemaNode().getChildren();
+				ObservableList<TreeItem<TreeNodePo>> vals = cip.getDataBasesSchemasRoot().getChildren();
 
 				ConnItemContainer filterCIContainer = new ConnItemContainer(cip.getConnpo());
 				SqluckyConnector connpo = filterCIContainer.getConnpo();
@@ -169,11 +169,11 @@ public class DBinfoTreeFilter {
 					}
 				}
 				// schema数据对象有数据的 情况, 创建一个新的连接节点并返回它
-				if (filterCIContainer.getSchemaNode().getChildren().size() > 0) {
+				if (filterCIContainer.getDataBasesSchemasRoot().getChildren().size() > 0) {
 					MyTreeItem<TreeNodePo> filterLinkTreeItem = new MyTreeItem<TreeNodePo>(
 							new TreeNodePo(connpo.getConnName(), IconGenerator.svgImage("link", "#7CFC00")), connpo);
 
-					filterLinkTreeItem.getChildren().add(filterCIContainer.getSchemaNode());
+					filterLinkTreeItem.getChildren().add(filterCIContainer.getDataBasesSchemasRoot());
 					filterLinkTreeItem.getValue().setConnItemContainer(filterCIContainer);
 					return filterLinkTreeItem;
 				}

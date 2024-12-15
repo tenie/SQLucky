@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -26,14 +25,14 @@ public class Db2Connector extends SqluckyConnector {
 	public Db2Connector(DBConnectorInfoPo connPo, SqluckyDbRegister dbRegister) {
 		super(connPo, dbRegister);
 		ExportSqlDB2Imp ex = new ExportSqlDB2Imp();
-		getConnPo().setExportDDL( ex);
+		getDbConnectorInfoPo().setExportDDL( ex);
 	} 
 	 
  
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
-		Map<String, DbSchemaPo> schemas = getConnPo().getSchemas();
+		Map<String, DbSchemaPo> schemas = getDbConnectorInfoPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
 //				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
@@ -46,12 +45,12 @@ public class Db2Connector extends SqluckyConnector {
 //					schemas = Dbinfo.fetchSchemasInfo(this);					
 //				}
 				schemas = fetchSchemasInfo();		
-				getConnPo().setSchemas(schemas);
+				getDbConnectorInfoPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return getConnPo().getSchemas();
+		return getDbConnectorInfoPo().getSchemas();
 	}
 
 
@@ -133,12 +132,12 @@ public class Db2Connector extends SqluckyConnector {
 
 	@Override
 	public String getJdbcUrl() {
-		String jdbcUrlstr = connPo.getJdbcUrl();
+		String jdbcUrlstr = dbConnectorInfoPo.getJdbcUrl();
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
 			jdbcUrlstr  = "jdbc:db2://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
-			connPo.setJdbcUrl(jdbcUrlstr);
+			dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr);
 		}
 		return  jdbcUrlstr;
 	}

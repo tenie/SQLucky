@@ -4,16 +4,13 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.tenie.Sqlucky.sdk.db.Dbinfo;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 
 
@@ -28,17 +25,17 @@ public class H2FileConnector extends SqluckyConnector {
 	public H2FileConnector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {
 		super(connPo, dbReg);
 		ExportSqlH2Imp ex = new ExportSqlH2Imp();
-		getConnPo().setExportDDL( ex); 
+		getDbConnectorInfoPo().setExportDDL( ex);
 	} 
 	 
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
-		var schemas = getConnPo().getSchemas();
+		var schemas = getDbConnectorInfoPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
 				schemas = fetchSchemasInfo();	
-				getConnPo().setSchemas(schemas);
+				getDbConnectorInfoPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -140,12 +137,12 @@ public class H2FileConnector extends SqluckyConnector {
 
 //		}
 //		jdbc:h2:tcp://localhost:9092/~/config/ssfblog_db
-		String jdbcUrlstr = connPo.getJdbcUrl();
+		String jdbcUrlstr = dbConnectorInfoPo.getJdbcUrl();
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
 			
-			String fp = connPo.getHostOrFile();
+			String fp = dbConnectorInfoPo.getHostOrFile();
 			if(fp.endsWith(".mv.db"))
 				fp= fp.substring(0, fp.lastIndexOf(".mv.db"));
 			if(fp.endsWith(".trace.db"))
@@ -154,7 +151,7 @@ public class H2FileConnector extends SqluckyConnector {
 				fp= fp.substring(0, fp.lastIndexOf(".db")); 
 			
 			jdbcUrlstr = "jdbc:h2:" +fp;
-			connPo.setJdbcUrl(jdbcUrlstr);
+			dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr);
 		}
 		
 		 

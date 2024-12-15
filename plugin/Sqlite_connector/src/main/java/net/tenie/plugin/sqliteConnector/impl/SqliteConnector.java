@@ -22,12 +22,12 @@ public class SqliteConnector extends SqluckyConnector {
 	public SqliteConnector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {
 		super(connPo, dbReg);
 		ExportSqlSqliteImp ex = new ExportSqlSqliteImp();
-		getConnPo().setExportDDL( ex);
+		getDbConnectorInfoPo().setExportDDL( ex);
 	} 
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
-		var schemas = getConnPo().getSchemas();
+		var schemas = getDbConnectorInfoPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
 					Map<String, DbSchemaPo> sch = new HashMap<>();
@@ -35,7 +35,7 @@ public class SqliteConnector extends SqluckyConnector {
 					sp.setSchemaName(SqliteRegister.instanceName);
 					sch.put(SqliteRegister.instanceName, sp);
 					schemas = sch;
-					getConnPo().setSchemas(schemas);
+					getDbConnectorInfoPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -123,12 +123,12 @@ public class SqliteConnector extends SqluckyConnector {
 
 	@Override
 	public String getJdbcUrl() {
-		String jdbcUrlstr = connPo.getJdbcUrl();
+		String jdbcUrlstr = dbConnectorInfoPo.getJdbcUrl();
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else { 
 			jdbcUrlstr  = "jdbc:sqlite:" + getHostOrFile(); 
-			connPo.setJdbcUrl(jdbcUrlstr);
+			dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr);
 		}
 		return  jdbcUrlstr;
 	}
@@ -145,21 +145,21 @@ public class SqliteConnector extends SqluckyConnector {
 
 	@Override
 	public Connection getConn() { 
-		if (getConnPo().getConn() == null) {
+		if (getDbConnectorInfoPo().getConn() == null) {
 			var hasUser = StrUtils.isNotNullOrEmpty(getUser());
 			var hasPw = StrUtils.isNotNullOrEmpty(getPassWord());
 			if(hasUser && hasPw) {
 				Dbinfo dbinfo = new Dbinfo( getJdbcUrl(), getUser(), getPassWord());
 				var conn = dbinfo.getconn();
-				getConnPo().setConn(conn);
+				getDbConnectorInfoPo().setConn(conn);
 			}else {
 				var conn = Dbinfo.getConnByJdbc( getJdbcUrl());
-				getConnPo().setConn(conn);		 
+				getDbConnectorInfoPo().setConn(conn);
 			}
 				
 		}
 
-		return getConnPo().getConn();
+		return getDbConnectorInfoPo().getConn();
 
 	}
 

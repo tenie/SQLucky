@@ -17,13 +17,13 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
  */
 public class ConnItemContainer {
 	private TreeItem<TreeNodePo> parentNode;
-	private TreeItem<TreeNodePo> schemaNode;
+	private TreeItem<TreeNodePo> dataBasesSchemasRoot;
 	private SqluckyConnector connpo;
 
 	// 创建空的对象, 包含一个空的schema Node
 	public ConnItemContainer(SqluckyConnector connpo) {
 		this.connpo = connpo;
-		schemaNode = CreateEmptySchemaNode(connpo);
+		dataBasesSchemasRoot = CreateEmptySchemaNode(connpo);
 //		this.connpo.setItemContainer(this);
 	}
 
@@ -37,14 +37,14 @@ public class ConnItemContainer {
 		this.parentNode = node;
 		this.connpo = connpo;
 		String defSch = connpo.getDefaultSchema();
-		schemaNode = CreateSchemaNode(connpo);
-		moveSchemaToTop(defSch, schemaNode);
+		dataBasesSchemasRoot = CreateDataBasesSchemasRootNode(connpo);
+		moveSchemaToTop(defSch, dataBasesSchemasRoot);
 		// 创建子节点
 		ConnItemDbObjects ci = showConnNode(connpo, defSch);
 		// 将自己缓存到数对象中
 //		ComponentGetter.dbInfoTree.getConnItemParent().add(this);
 		parentNode.getValue().setConnItemContainer(this);
-		schemaNode.getValue().setConnItem(ci);
+		dataBasesSchemasRoot.getValue().setConnItem(ci);
 	}
 
 	public ConnItemDbObjects showConnNode(SqluckyConnector connpo, String schemaName) {
@@ -55,7 +55,7 @@ public class ConnItemContainer {
 
 	// 根据给定的数据库对象, 将他加入到对应的schema node下
 	public void addConnItem(ConnItemDbObjects ci) {
-		ObservableList<TreeItem<TreeNodePo>> ls = schemaNode.getChildren();
+		ObservableList<TreeItem<TreeNodePo>> ls = dataBasesSchemasRoot.getChildren();
 		for (int i = 0; i < ls.size(); i++) {
 			TreeItem<TreeNodePo> val = ls.get(i);
 			String dbObjSchemaName = ci.getSchemaName();
@@ -75,15 +75,15 @@ public class ConnItemContainer {
 	// 将数据库对象节点放入 schema node 下
 	public void addChildren(ConnItemDbObjects ci) {
 		TreeItem<TreeNodePo> item = ci.getParentNode();
-		schemaNode.getChildren().add(item);
+		dataBasesSchemasRoot.getChildren().add(item);
 	}
 
 	// 根据给定的schema Name 选择它的子节点下的table节点
 	public void selectTable(String itemName) {
-		for (int i = 0; i < schemaNode.getChildren().size(); i++) {
-			String scheName = schemaNode.getChildren().get(i).getValue().getName();
+		for (int i = 0; i < dataBasesSchemasRoot.getChildren().size(); i++) {
+			String scheName = dataBasesSchemasRoot.getChildren().get(i).getValue().getName();
 			if (itemName.equals(scheName)) {
-				var nd = schemaNode.getChildren().get(i).getValue().getConnItem().getTableNode();
+				var nd = dataBasesSchemasRoot.getChildren().get(i).getValue().getConnItem().getTableNode();
 				Platform.runLater(() -> {
 //					AppWindow.treeView.getSelectionModel().select(nd);
 					ComponentGetter.treeView.getSelectionModel().select(nd);
@@ -94,16 +94,21 @@ public class ConnItemContainer {
 	}
 
 	// 默认的schema移动到第一位 , 遍历所有节点, 找默认节点, 从原位置删除, 后再插入到第一个位置
-	public void moveSchemaToTop(String defSch, TreeItem<TreeNodePo> schemas) {
-		if (defSch != null) {
-			ObservableList<TreeItem<TreeNodePo>> ls = schemas.getChildren();
+	public static void moveSchemaToTop(String schemaName, TreeItem<TreeNodePo> TreeItemSchemas) {
+		if (schemaName != null) {
+			ObservableList<TreeItem<TreeNodePo>> ls = TreeItemSchemas.getChildren();
 			for (int i = 0; i < ls.size(); i++) {
 				TreeItem<TreeNodePo> val = ls.get(i);
-				if (val.getValue().getName().equals(defSch)) {
+				if (val.getValue().getName().equals(schemaName)) {
 					val.getValue().setIcon(IconGenerator.svgImage("database", "#7CFC00 "));
 					ls.remove(i);
 					ls.add(0, val);
-					break;
+//					break;
+				}else{
+					val.getValue().setIcon(IconGenerator.svgImageUnactive("database"));
+					if( val.isExpanded()){
+						val.setExpanded(false);
+					}
 				}
 			}
 		}
@@ -118,29 +123,24 @@ public class ConnItemContainer {
 	}
 
 	// 获取所有的schema, 并构建node
-	public static TreeItem<TreeNodePo> CreateSchemaNode(SqluckyConnector connpo) {
-		// 判断是不是mysql
-		String nodeName = connpo.dbRootNodeName();
+	public static TreeItem<TreeNodePo> CreateDataBasesSchemasRootNode(SqluckyConnector connpo) {
+		// 获取放schema 的根节点名称
+		String dataBasesName = connpo.dbRootNodeName();
 		// 创建一个schema node , 将数据库数据放入
-		TreeItem<TreeNodePo> schemas = new TreeItem<TreeNodePo>(new TreeNodePo(nodeName, TreeItemType.SCHEMA_ROOT,
+		TreeItem<TreeNodePo> dataBasesSchemasRoot = new TreeItem<TreeNodePo>(new TreeNodePo(dataBasesName, TreeItemType.SCHEMA_ROOT,
 				IconGenerator.svgImage("th-list", "#FFD700"), connpo));
 		// 获取schema 数据
 		Set<String> set = connpo.settingSchema();
 		for (String sche : set) {
 			TreeItem<TreeNodePo> item = new TreeItem<>(
 					new TreeNodePo(sche, TreeItemType.SCHEMA, IconGenerator.svgImageUnactive("database"), connpo));
-			schemas.getChildren().add(item);
+			dataBasesSchemasRoot.getChildren().add(item);
 		}
-		return schemas;
+		return dataBasesSchemasRoot;
 	}
 
-	public TreeItem<TreeNodePo> getSchemaNode() {
-		return schemaNode;
-	}
-
-	public void setSchemaNode(TreeItem<TreeNodePo> schemaNode) {
-
-		this.schemaNode = schemaNode;
+	public TreeItem<TreeNodePo> getDataBasesSchemasRoot() {
+		return dataBasesSchemasRoot;
 	}
 
 	public SqluckyConnector getConnpo() {

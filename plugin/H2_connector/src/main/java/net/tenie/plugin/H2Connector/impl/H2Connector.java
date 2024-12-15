@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import net.tenie.Sqlucky.sdk.db.Dbinfo;
+
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -25,17 +25,17 @@ public class H2Connector extends SqluckyConnector {
 	public H2Connector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {
 		super(connPo, dbReg);
 		ExportSqlH2Imp ex = new ExportSqlH2Imp();
-		getConnPo().setExportDDL( ex);
+		getDbConnectorInfoPo().setExportDDL( ex);
 	} 
 	 
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
-		var schemas = getConnPo().getSchemas();
+		var schemas = getDbConnectorInfoPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
 				schemas = fetchSchemasInfo();		
-				getConnPo().setSchemas(schemas);
+				getDbConnectorInfoPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -144,12 +144,12 @@ public class H2Connector extends SqluckyConnector {
 
 //		}
 //		jdbc:h2:tcp://localhost:9092/~/config/ssfblog_db
-		String jdbcUrlstr = connPo.getJdbcUrl();
+		String jdbcUrlstr = dbConnectorInfoPo.getJdbcUrl();
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
 			jdbcUrlstr = "jdbc:h2:tcp//" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
-			connPo.setJdbcUrl(jdbcUrlstr);
+			dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr);
 		}
 		
 		 

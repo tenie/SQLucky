@@ -34,6 +34,16 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
 
     }
 
+    /**
+     * 创建数据库
+     *
+     * @param conn
+     * @param dataBaseName
+     * @return
+     */
+    public String exportCreateDataBase(Connection conn, String dataBaseName) {
+        return "CREATE DATABASE " + dataBaseName;
+    }
 
     /**
      * 导出所有表对象, 属性: 表名, 字段, 主键, ddl
@@ -589,14 +599,14 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
     @Override
     public void setTableFieldComment(Connection conn, String schema, String table, List<SheetFieldPo> fieldPoList) {
         // 字段信息
-        if(table.contains(".")){
+        if (table.contains(".")) {
             var tableArr = table.split("\\.");
-            if(StrUtils.isNotNullOrEmpty(tableArr[1])){
+            if (StrUtils.isNotNullOrEmpty(tableArr[1])) {
                 schema = tableArr[0];
                 table = tableArr[1];
             }
         }
-        if(StrUtils.isNullOrEmpty(table)){
+        if (StrUtils.isNullOrEmpty(table)) {
             return;
         }
 
@@ -623,11 +633,12 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
         }
 
     }
+
     /**
      * 导出表的查询sql 语句, 查询20条, 这里默认全部, 需要各个数据库实现
      */
     @Override
-    public  String select20(String tabSchema, String tablename ) {
+    public String select20(String tabSchema, String tablename) {
         String sql = "";
         if (StrUtils.isNotNullOrEmpty(tabSchema)) {
             sql = "SELECT * FROM " + tabSchema + "." + tablename;
@@ -635,6 +646,6 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
             sql = "SELECT * FROM " + tablename;
         }
         sql += "\n limit 20";
-        return  sql;
+        return sql;
     }
 }

@@ -4,13 +4,9 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import net.tenie.Sqlucky.sdk.config.ConfigVal;
-import net.tenie.Sqlucky.sdk.db.Dbinfo;
+
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
@@ -29,7 +25,7 @@ public class PostgresqlConnector extends SqluckyConnector {
 	public PostgresqlConnector(DBConnectorInfoPo connPo, SqluckyDbRegister dbReg) {
 		super(connPo, dbReg); 
 		ExportSqlPostgresqlImp ex = new ExportSqlPostgresqlImp();
-		getConnPo().setExportDDL( ex);
+		getDbConnectorInfoPo().setExportDDL( ex);
 	} 
 	 
 
@@ -44,11 +40,11 @@ public class PostgresqlConnector extends SqluckyConnector {
 
 	@Override
 	public Map<String, DbSchemaPo> getSchemas() {
-		var schemas = getConnPo().getSchemas();
+		var schemas = getDbConnectorInfoPo().getSchemas();
 		try {
 			if (schemas == null || schemas.isEmpty()) { 
 				schemas = fetchSchemasInfo();		
-				getConnPo().setSchemas(schemas);
+				getDbConnectorInfoPo().setSchemas(schemas);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -137,12 +133,12 @@ public class PostgresqlConnector extends SqluckyConnector {
 
 	@Override
 	public String getJdbcUrl() {
-		String jdbcUrlstr = connPo.getJdbcUrl();
+		String jdbcUrlstr = dbConnectorInfoPo.getJdbcUrl();
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
 			jdbcUrlstr  = "jdbc:postgresql://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
-			connPo.setJdbcUrl(jdbcUrlstr);
+			dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr);
 		}
 		return  jdbcUrlstr;
 	}
