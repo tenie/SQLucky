@@ -69,7 +69,9 @@ public class ServiceLoad {
 	 * 2. 如果ServiceLoader加载的插件, 数据库里没有, 就会插入新的数据
 	 */
 	public static void callRegister() {
-		if (loader == null) return;
+		if (loader == null) {
+            return;
+        }
 		Connection conn = SqluckyAppDB.getConn();
 
 		try {
@@ -147,7 +149,9 @@ public class ServiceLoad {
 	
 	// 应用实例化完成后, 但还没显示前
 	public static void callLoad() {
-		if (registerPlugin.isEmpty()) return;
+		if (registerPlugin.isEmpty()) {
+            return;
+        }
 		for (SqluckyPluginDelegate plugin : registerPlugin) {
 			try {
 				plugin.load();
@@ -159,7 +163,9 @@ public class ServiceLoad {
 	}
 	// 应用显示后
 	public static void callShowed(){
-		if (registerPlugin.isEmpty()) return;
+		if (registerPlugin.isEmpty()) {
+            return;
+        }
 		Platform.runLater(()->{
 			for(SqluckyPluginDelegate plugin: registerPlugin ) {
 				try {

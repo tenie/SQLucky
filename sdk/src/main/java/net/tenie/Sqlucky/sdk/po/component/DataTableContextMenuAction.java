@@ -38,8 +38,9 @@ public class DataTableContextMenuAction {
 	// 修改字段
 	public static void alterColumn(MyBottomSheet myBottomSheet, String colname) {
 		Consumer<String> caller = x -> {
-			if (StrUtils.isNullOrEmpty(x.trim()))
-				return;
+			if (StrUtils.isNullOrEmpty(x.trim())) {
+                return;
+            }
 			String str = colname + " " + x;
 			RsVal rv = AppCommonAction.exportSQL(myBottomSheet, AppCommonAction.ALTER_COLUMN, str);
 			AppCommonAction.execExportSql(rv.sql, rv.conn, rv.dbconnPo);
@@ -47,8 +48,9 @@ public class DataTableContextMenuAction {
 		};
 
 		Function<String, String> sqlFunc = x -> {
-			if (StrUtils.isNullOrEmpty(x.trim()))
-				return "";
+			if (StrUtils.isNullOrEmpty(x.trim())) {
+                return "";
+            }
 			String str = colname + " " + x;
 			RsVal rv = AppCommonAction.exportSQL(myBottomSheet, AppCommonAction.ALTER_COLUMN, str);
 			return rv.sql;
@@ -64,15 +66,17 @@ public class DataTableContextMenuAction {
 		RsVal rv = new RsVal(dataObj); // SqluckyBottomSheetUtility.tableInfo(dataObj);
 		String sql = "UPDATE " + rv.tableName + " SET " + colname + " = ";
 		Consumer<String> caller = x -> {
-			if (StrUtils.isNullOrEmpty(x.trim()))
-				return;
+			if (StrUtils.isNullOrEmpty(x.trim())) {
+                return;
+            }
 			String strsql = sql + x;
 			AppCommonAction.execExportSql(strsql, rv.conn, rv.dbconnPo);
 		};
 
 		Function<String, String> sqlFunc = x -> {
-			if (StrUtils.isNullOrEmpty(x.trim()))
-				return "";
+			if (StrUtils.isNullOrEmpty(x.trim())) {
+                return "";
+            }
 			return sql + x;
 		};
 		DialogTools.showDllExecWindow("Execute : " + sql + " ? : input your value", "", sqlFunc, caller);
@@ -83,14 +87,16 @@ public class DataTableContextMenuAction {
 	public static void updateCurrentColumn(MyBottomSheet myBottomSheet, String colname, int colIdx) {
 		RsVal rv = myBottomSheet.tableInfo();
 		Consumer<String> caller = x -> {
-			if (StrUtils.isNullOrEmpty(x.trim()))
-				return;
+			if (StrUtils.isNullOrEmpty(x.trim())) {
+                return;
+            }
 			updateAllColumn(myBottomSheet, colIdx, x);
 		};
 		String sql =  " SET " + colname + " = ";
 		Function<String, String> sqlFunc = x -> {
-			if (StrUtils.isNullOrEmpty(x.trim()))
-				return "";
+			if (StrUtils.isNullOrEmpty(x.trim())) {
+                return "";
+            }
 			return sql + x;
 		};
 		DialogTools.showDllExecWindow(
@@ -102,14 +108,16 @@ public class DataTableContextMenuAction {
 	public static void updateSelectColumn(MyBottomSheet myBottomSheet, String colname, int colIdx) {
 		RsVal rv = myBottomSheet.tableInfo();
 		Consumer<String> caller = x -> {
-			if (StrUtils.isNullOrEmpty(x.trim()))
-				return;
+			if (StrUtils.isNullOrEmpty(x.trim())) {
+                return;
+            }
 			updateSelectedDataColumn(myBottomSheet, colIdx, x);
 		};
 		String sql =  " SET " + colname + " = ";
 		Function<String, String> sqlFunc = x -> {
-			if (StrUtils.isNullOrEmpty(x.trim()))
-				return "";
+			if (StrUtils.isNullOrEmpty(x.trim())) {
+                return "";
+            }
 			return sql + x;
 		};
 		DialogTools.showDllExecWindow(

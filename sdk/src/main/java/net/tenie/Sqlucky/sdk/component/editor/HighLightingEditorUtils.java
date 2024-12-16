@@ -45,14 +45,17 @@ public class HighLightingEditorUtils {
 		String startStr = text.substring(0, start);
 		int end = 0;
 		int strSz = startStr.length();
-		if (strSz == 0)
-			return end;
-		if (!startStr.contains(pe))
-			return end;
+		if (strSz == 0) {
+            return end;
+        }
+		if (!startStr.contains(pe)) {
+            return end;
+        }
 		int idx = 1;
 		for (int i = start; i != 0; i--) {
-			if (idx == 0)
-				break;
+			if (idx == 0) {
+                break;
+            }
 			String tmp = startStr.substring(i - 1, i);
 
 			if (pe.equals(tmp)) {
@@ -69,8 +72,9 @@ public class HighLightingEditorUtils {
 	public static IndexRange findStringRange(String text, int start, String pe) {
 		IndexRange ir = new IndexRange(0, 0);
 		int strSz = text.length();
-		if (strSz == 0)
-			return ir;
+		if (strSz == 0) {
+            return ir;
+        }
 		int idx = -1;
 		for (int i = 0; i < strSz; i++) {
 			String tmp = text.substring(i, i + 1);
@@ -207,15 +211,18 @@ public class HighLightingEditorUtils {
 		String startStr = text.substring(start).toUpperCase();
 		int end = 0;
 		int strSz = startStr.length();
-		if (strSz == 0)
-			return end;
-		if (!startStr.contains(pe))
-			return end;
+		if (strSz == 0) {
+            return end;
+        }
+		if (!startStr.contains(pe)) {
+            return end;
+        }
 		int idx = 1;
 		int peSz = pe.length();
 		for (int i = 0; i < strSz; i++) {
-			if (idx == 0)
-				break;
+			if (idx == 0) {
+                break;
+            }
 			String tmp = startStr.substring(i, i + peSz);
 			if (pb.equals(tmp)) {
 				idx++;
@@ -234,15 +241,18 @@ public class HighLightingEditorUtils {
 
 		int end = 0;
 		int strSz = startStr.length();
-		if (strSz == 0)
-			return end;
-		if (!startStr.contains(pe))
-			return end;
+		if (strSz == 0) {
+            return end;
+        }
+		if (!startStr.contains(pe)) {
+            return end;
+        }
 		int idx = 1;
 		int peSz = pe.length();
 		for (int i = start; i != 0; i--) {
-			if (idx == 0)
-				break;
+			if (idx == 0) {
+                break;
+            }
 			String tmp = startStr.substring(i - peSz, i);
 			if (pb.equals(tmp)) {
 				idx++;

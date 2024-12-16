@@ -145,11 +145,11 @@ public class AnimationBuilder implements SVGTags {
          if (m.matches()) {
             int time = Integer.parseInt(m.group(1));
             String type = m.group(2);
-            if (type.equals("s")) {
+            if ("s".equals(type)) {
                return Duration.seconds(time);
-            } else if (type.equals("ms")) {
+            } else if ("ms".equals(type)) {
                return Duration.millis(time);
-            } else if (type.equals("min")) {
+            } else if ("min".equals(type)) {
                return Duration.minutes(time);
             } else {
                return Duration.ZERO;

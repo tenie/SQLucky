@@ -107,40 +107,54 @@ public class FuncProcTriggerPo {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         FuncProcTriggerPo other = (FuncProcTriggerPo) obj;
         if (content == null) {
-            if (other.content != null)
+            if (other.content != null) {
                 return false;
-        } else if (!content.equals(other.content))
+            }
+        } else if (!content.equals(other.content)) {
             return false;
-        if (id != other.id)
+        }
+        if (id != other.id) {
             return false;
+        }
         if (name == null) {
-            if (other.name != null)
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!name.equals(other.name)) {
             return false;
+        }
         if (remarks == null) {
-            if (other.remarks != null)
+            if (other.remarks != null) {
                 return false;
-        } else if (!remarks.equals(other.remarks))
+            }
+        } else if (!remarks.equals(other.remarks)) {
             return false;
+        }
         if (schema == null) {
-            if (other.schema != null)
+            if (other.schema != null) {
                 return false;
-        } else if (!schema.equals(other.schema))
+            }
+        } else if (!schema.equals(other.schema)) {
             return false;
+        }
         if (type == null) {
-            if (other.type != null)
+            if (other.type != null) {
                 return false;
-        } else if (!type.equals(other.type))
+            }
+        } else if (!type.equals(other.type)) {
             return false;
+        }
         return true;
     }
 

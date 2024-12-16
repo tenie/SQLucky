@@ -220,26 +220,15 @@ public class YamlParser {
         return chlid;
     }
 
-//    @SuppressWarnings("unchecked")
-//    private static List<Object> bulidChlidList(Map<String, Object> parent,String key){
-//        if (parent.containsKey(key)) {
-//            return (List<Object>) parent.get(key);
-//        } else {
-//            List<Object> chlid = new GrowthList(16);
-//            parent.put(key, chlid);
-//            return chlid;
-//        }
-//    }
-
     private static Object stringToObj(String obj) {
         Object result = null;
-        if (obj.equals("true") || obj.equals("false")) {
+        if ("true".equals(obj) || "false".equals(obj)) {
             result = Boolean.valueOf(obj);
         } else if (isBigDecimal(obj)) {
-            if (obj.indexOf(".") == -1) {
-                result = Long.valueOf(obj.toString());
+            if (!obj.contains(".")) {
+                result = Long.valueOf(obj);
             } else {
-                result = Double.valueOf(obj.toString());
+                result = Double.valueOf(obj);
             }
         } else {
             result = obj;
@@ -249,20 +238,27 @@ public class YamlParser {
 
 
     public static boolean isBigDecimal(String str) {
-        if (str == null || str.trim().length() == 0) {
+        if (str == null || str.trim().isEmpty()) {
             return false;
         }
         char[] chars = str.toCharArray();
         int sz = chars.length;
         int i = (chars[0] == '-') ? 1 : 0;
-        if (i == sz) return false;
+        if (i == sz) {
+            return false;
+        }
 
-        if (chars[i] == '.') return false;//除了负号，第一位不能为'小数点'
+        //除了负号，第一位不能为'小数点'
+        if (chars[i] == '.') {
+            return false;
+        }
 
         boolean radixPoint = false;
         for (; i < sz; i++) {
             if (chars[i] == '.') {
-                if (radixPoint) return false;
+                if (radixPoint) {
+                    return false;
+                }
                 radixPoint = true;
             } else if (!(chars[i] >= '0' && chars[i] <= '9')) {
                 return false;
@@ -280,9 +276,7 @@ public class YamlParser {
     public static Properties mapToProperties(Map<String, Object> mapVal) {
         Properties properties = new Properties();
         if (mapVal != null && !mapVal.isEmpty()) {
-            for (var keyVal : mapVal.entrySet()) {
-                properties.put(keyVal.getKey(), keyVal.getValue());
-            }
+            properties.putAll(mapVal);
         }
         return properties;
     }

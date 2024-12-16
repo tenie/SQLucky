@@ -47,8 +47,9 @@ public class AppCommonAction {
 
         CodeArea code = MyEditorSheetHelper.getCodeArea();
         String text = code.getSelectedText();
-        if (StrUtils.isNullOrEmpty(text))
+        if (StrUtils.isNullOrEmpty(text)) {
             return;
+        }
         IndexRange i = code.getSelection(); // 获取当前选中的区间
         int start = i.getStart();
         int end = i.getEnd();
@@ -64,8 +65,9 @@ public class AppCommonAction {
 
         CodeArea code = MyEditorSheetHelper.getCodeArea();
         String text = code.getSelectedText();
-        if (StrUtils.isNullOrEmpty(text))
+        if (StrUtils.isNullOrEmpty(text)) {
             return;
+        }
         IndexRange i = code.getSelection(); // 获取当前选中的区间
         int start = i.getStart();
         int end = i.getEnd();
@@ -81,8 +83,9 @@ public class AppCommonAction {
 
         CodeArea code = MyEditorSheetHelper.getCodeArea();
         String text = code.getSelectedText();
-        if (StrUtils.isNullOrEmpty(text))
+        if (StrUtils.isNullOrEmpty(text)) {
             return;
+        }
         IndexRange i = code.getSelection(); // 获取当前选中的区间
         int start = i.getStart();
         int end = i.getEnd();
@@ -105,8 +108,9 @@ public class AppCommonAction {
             return;
         }
 
-        if (StrUtils.isNullOrEmpty(text))
+        if (StrUtils.isNullOrEmpty(text)) {
             return;
+        }
         IndexRange i = code.getSelection(); // 获取当前选中的区间
         int start = i.getStart();
         int end = i.getEnd();
@@ -306,8 +310,9 @@ public class AppCommonAction {
     public static void openSqlFile() {
         try {
             File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
-            if (f == null)
+            if (f == null) {
                 return;
+            }
             String charset = FileTools.detectFileCharset(f);
             if (charset == null) {
                 new RuntimeException("Open failed!");
@@ -342,8 +347,9 @@ public class AppCommonAction {
     // 打开系统中的一个sql文件, 并在主界面显示
     public static void openSqlFile(File f) {
         try {
-            if (f == null)
+            if (f == null) {
                 return;
+            }
             String charset = FileTools.detectFileCharset(f);
             if (charset == null) {
                 new RuntimeException("Open failed!");
@@ -467,15 +473,17 @@ public class AppCommonAction {
     public static void addNewColumn(MyBottomSheet myBottomSheet) {
         RsVal rv = myBottomSheet.tableInfo();
         Consumer<String> caller = x -> {
-            if (StrUtils.isNullOrEmpty(x.trim()))
+            if (StrUtils.isNullOrEmpty(x.trim())) {
                 return;
+            }
             RsVal rv2 = exportSQL(myBottomSheet, ADD_COLUMN, x);
             AppCommonAction.execExportSql(rv2.sql, rv2.conn, rv.dbconnPo);
             MyBottomSheetUtility.showSqlSheet("Add Column DDL",  rv2.sql, true);
         };
         Function<String, String> sqlFunc = x -> {
-            if (StrUtils.isNullOrEmpty(x.trim()))
+            if (StrUtils.isNullOrEmpty(x.trim())) {
                 return "";
+            }
             RsVal rv2 = exportSQL(myBottomSheet, ADD_COLUMN, x);
             return rv2.sql;
         };
@@ -495,15 +503,17 @@ public class AppCommonAction {
 
         Connection conn = dbc.getConn();
         Consumer<String> caller = x -> {
-            if (StrUtils.isNullOrEmpty(x.trim()))
+            if (StrUtils.isNullOrEmpty(x.trim())) {
                 return;
+            }
             String colname = x.trim();
             String sql = dbc.getExportDDL().exportAlterTableAddColumn(conn, schema, tablename, colname);
             AppCommonAction.execExportSql(sql, conn, dbc);
         };
         Function<String, String> sqlFunc = x -> {
-            if (StrUtils.isNullOrEmpty(x.trim()))
+            if (StrUtils.isNullOrEmpty(x.trim())) {
                 return "'";
+            }
             String colname = x.trim();
             return  dbc.getExportDDL().exportAlterTableAddColumn(conn, schema, tablename, colname);
         };

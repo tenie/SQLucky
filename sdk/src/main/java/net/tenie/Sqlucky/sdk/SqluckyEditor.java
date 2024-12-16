@@ -168,8 +168,9 @@ public void highLighting(String str) {
 //                    }
 //                });
 //            }
-            if (myAuto == null)
+            if (myAuto == null) {
                 return;
+            }
             Platform.runLater(() -> {
                 // 光标的坐标系
                 Bounds bd = codeArea.caretBoundsProperty().getValue().get();
@@ -293,8 +294,9 @@ public void highLighting(String str) {
         if (codeArea.isFocused()) {
             int anchor = codeArea.getAnchor(); // 光标位置
             String txt = codeArea.getText(anchor - 1, anchor);
-            if (!txt.equals("\n"))
+            if (!"\n".equals(txt)) {
                 codeArea.deleteText(anchor - 1, anchor);
+            }
 
         }
     }
@@ -330,8 +332,9 @@ public void highLighting(String str) {
         if (codeArea.isFocused()) {
             int anchor = codeArea.getAnchor(); // 光标位置
             String txt = codeArea.getText(anchor, anchor + 1);
-            if (!txt.equals("\n"))
+            if (!"\n".equals(txt)) {
                 codeArea.deleteText(anchor, anchor + 1);
+            }
         }
     }
 

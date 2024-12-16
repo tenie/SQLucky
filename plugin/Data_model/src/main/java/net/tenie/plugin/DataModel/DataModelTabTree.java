@@ -64,8 +64,10 @@ public class DataModelTabTree extends SqluckyTitledPane{
 		DataModelTreeView.getStyleClass().add("my-tag");
 		DataModelTreeView.setShowRoot(false);
 		// 展示连接
-		if (treeRoot.getChildren().size() > 0)
-			DataModelTreeView.getSelectionModel().select(treeRoot.getChildren().get(0)); // 选中节点
+		if (!treeRoot.getChildren().isEmpty()) {
+			// 选中节点
+            DataModelTreeView.getSelectionModel().select(treeRoot.getChildren().getFirst());
+        }
 		// 右键菜单
 		DataModelTabTreeContextMenu contextMenu = new DataModelTabTreeContextMenu(this);
 		DataModelTreeView.setContextMenu(contextMenu.getContextMenu());
@@ -272,8 +274,9 @@ public class DataModelTabTree extends SqluckyTitledPane{
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (SqluckyConn != null)
-				SqluckyAppDB.closeSqluckyConnector(SqluckyConn);
+			if (SqluckyConn != null) {
+                SqluckyAppDB.closeSqluckyConnector(SqluckyConn);
+            }
 			SdkComponent.rmWaitingPane();
 		}
 
@@ -373,21 +376,16 @@ public class DataModelTabTree extends SqluckyTitledPane{
 		treeRootAddItem(item);
 	}
 
-	public Pane getBtnsBox() {
+	@Override
+    public Pane getBtnsBox() {
 		return btnsBox;
 	}
 
-	public void setBtnsBox(Pane btnsBox) {
+	@Override
+    public void setBtnsBox(Pane btnsBox) {
 		this.btnsBox = btnsBox;
 	}
 
-	public static TreeView<DataModelTreeNodePo> getDataModelTreeView() {
-		return DataModelTreeView;
-	}
-
-	public static void setDataModelTreeView(TreeView<DataModelTreeNodePo> dataModelTreeView) {
-		DataModelTreeView = dataModelTreeView;
-	}
 
 	public static TreeItem<DataModelTreeNodePo> currentSelectItem() {
 		TreeItem<DataModelTreeNodePo> item = DataModelTabTree.DataModelTreeView.getSelectionModel().getSelectedItem();
@@ -396,10 +394,6 @@ public class DataModelTabTree extends SqluckyTitledPane{
 
 	public DataModelOperate getOptionPanel() {
 		return optionPanel;
-	}
-
-	public void setOptionPanel(DataModelOperate optionPanel) {
-		this.optionPanel = optionPanel;
 	}
 
 }

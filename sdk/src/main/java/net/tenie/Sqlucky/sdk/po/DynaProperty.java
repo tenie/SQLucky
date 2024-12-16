@@ -175,6 +175,7 @@ public class DynaProperty implements Serializable {
    /**
     * Return a String representation of this Object.
     */
+   @Override
    public String toString() {
 
        StringBuffer sb = new StringBuffer("DynaProperty[name=");

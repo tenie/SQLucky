@@ -32,10 +32,12 @@ public class PoDaoUtil {
 	public static final int APPEND_TAIL = 2;
 
 	public static PoInfo getDataBeanInfo(Object bean) {
-		if (bean == null)
-			return null;
-		if (!beanInfoMap.containsKey(bean.getClass()))
-			beanInfoMap.put(bean.getClass(), new PoInfo(bean));
+		if (bean == null) {
+            return null;
+        }
+		if (!beanInfoMap.containsKey(bean.getClass())) {
+            beanInfoMap.put(bean.getClass(), new PoInfo(bean));
+        }
 		return beanInfoMap.get(bean.getClass());
 	}
 
@@ -53,8 +55,9 @@ public class PoDaoUtil {
 		}
 		sbuf.deleteCharAt(sbuf.length() - 1);
 		sbuf.append(") values(");
-		for (i = 0; i < colSize; i++)
-			sbuf.append("?,");
+		for (i = 0; i < colSize; i++) {
+            sbuf.append("?,");
+        }
 		sbuf.deleteCharAt(sbuf.length() - 1);
 		sbuf.append(")");
 		return sbuf.toString();
@@ -72,8 +75,9 @@ public class PoDaoUtil {
 				tmp++;
 			}
 		}
-		if (tmp > 0)
-			sbuf.deleteCharAt(sbuf.length() - 1);
+		if (tmp > 0) {
+            sbuf.deleteCharAt(sbuf.length() - 1);
+        }
 		sbuf.append(" where 1=1 ");
 		tmp = 0;
 		for (i = 0; i < size; i++) {
@@ -90,8 +94,9 @@ public class PoDaoUtil {
 		sbuf.append("delete from " + info.getTabName() + " where 1=1 ");
 		int size = info.getColSize();
 		for (int i = 0; i < size; i++) {
-			if (info.getColVal(condition, i) != null)
-				sbuf.append(" and " + info.getColName(i) + "=? ");
+			if (info.getColVal(condition, i) != null) {
+                sbuf.append(" and " + info.getColName(i) + "=? ");
+            }
 		}
 		return sbuf.toString();
 	}
@@ -101,13 +106,15 @@ public class PoDaoUtil {
 		sbuf.append("select ");
 		int size = info.getColSize();
 		int i;
-		for (i = 0; i < size; i++)
-			sbuf.append(String.valueOf(info.getColName(i)) + ",");
+		for (i = 0; i < size; i++) {
+            sbuf.append(String.valueOf(info.getColName(i)) + ",");
+        }
 		sbuf.deleteCharAt(sbuf.length() - 1);
 		sbuf.append(" from " + info.getTabName() + " where 1=1 ");
 		for (i = 0; i < size; i++) {
-			if (info.getColVal(condition, i) != null)
-				sbuf.append(" and " + info.getColName(i) + "=? ");
+			if (info.getColVal(condition, i) != null) {
+                sbuf.append(" and " + info.getColName(i) + "=? ");
+            }
 		}
 		return sbuf.toString();
 	}
@@ -127,21 +134,24 @@ public class PoDaoUtil {
 		int i;
 		sbuf.append(" from " + info.getTabName() + " where 1=1 ");
 		for (i = 0; i < size; i++) {
-			if (info.getColVal(condition, i) != null)
-				sbuf.append(" and " + info.getColName(i) + "=? ");
+			if (info.getColVal(condition, i) != null) {
+                sbuf.append(" and " + info.getColName(i) + "=? ");
+            }
 		}
 		return sbuf.toString();
 	}
 
 	public static Timestamp toSqlDate(Date dt) {
-		if (dt == null)
-			return null;
+		if (dt == null) {
+            return null;
+        }
 		return new Timestamp(dt.getTime());
 	}
 
 	public static Date toJavaDate(Timestamp dt) {
-		if (dt == null)
-			return null;
+		if (dt == null) {
+            return null;
+        }
 		return new Date(dt.getTime());
 	}
 
@@ -246,23 +256,24 @@ public class PoDaoUtil {
 				colName = binfo.getColName(i);
 				colType = binfo.getColType(i);
 				val = rs.getObject(colName);
-				if (val != null)
-					if (colType.equals(Date.class)) {
-						binfo.setColVal(dataBean, i, (rs.getTimestamp(colName) == null) ? null
-								: new Date(rs.getTimestamp(colName).getTime()));
-					} else if (colType.equals(Integer.class)) {
-						binfo.setColVal(dataBean, i, rs.getInt(colName));
-					} else if (colType.equals(Long.class)) {
-						binfo.setColVal(dataBean, i, rs.getLong(colName));
-					} else if (colType.equals(Float.class)) {
-						binfo.setColVal(dataBean, i, rs.getFloat(colName));
-					} else if (colType.equals(Double.class)) {
-						binfo.setColVal(dataBean, i, rs.getDouble(colName));
-					} else if (colType.equals(String.class)) {
-						binfo.setColVal(dataBean, i, rs.getString(colName));
-					} else {
-						binfo.setColVal(dataBean, i, val);
-					}
+				if (val != null) {
+                    if (colType.equals(Date.class)) {
+                        binfo.setColVal(dataBean, i, (rs.getTimestamp(colName) == null) ? null
+                                : new Date(rs.getTimestamp(colName).getTime()));
+                    } else if (colType.equals(Integer.class)) {
+                        binfo.setColVal(dataBean, i, rs.getInt(colName));
+                    } else if (colType.equals(Long.class)) {
+                        binfo.setColVal(dataBean, i, rs.getLong(colName));
+                    } else if (colType.equals(Float.class)) {
+                        binfo.setColVal(dataBean, i, rs.getFloat(colName));
+                    } else if (colType.equals(Double.class)) {
+                        binfo.setColVal(dataBean, i, rs.getDouble(colName));
+                    } else if (colType.equals(String.class)) {
+                        binfo.setColVal(dataBean, i, rs.getString(colName));
+                    } else {
+                        binfo.setColVal(dataBean, i, val);
+                    }
+                }
 			}
 			result.addLast((T) dataBean);
 		}
@@ -273,9 +284,10 @@ public class PoDaoUtil {
 		HashMap<String, Class> lhs = new HashMap<>(5);
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int colSize = rsmd.getColumnCount();
-		for (int i = 1; i < colSize + 1; i++)
-			lhs.put(rsmd.getColumnName(i).toUpperCase(),
-					getJavaType(rsmd.getColumnName(i), rsmd.getColumnType(i), rsmd.getPrecision(i), rsmd.getScale(i)));
+		for (int i = 1; i < colSize + 1; i++) {
+            lhs.put(rsmd.getColumnName(i).toUpperCase(),
+                    getJavaType(rsmd.getColumnName(i), rsmd.getColumnType(i), rsmd.getPrecision(i), rsmd.getScale(i)));
+        }
 		return lhs;
 	}
 
@@ -439,8 +451,9 @@ public class PoDaoUtil {
 				ps.setTimestamp(idx++, toSqlDate((Date) item));
 			} else if (item instanceof Collection cln) {
 				Object[] vals = cln.toArray();
-				for (int j = 0; j < vals.length; j++)
-					ps.setObject(idx++, vals[j]);
+				for (int j = 0; j < vals.length; j++) {
+                    ps.setObject(idx++, vals[j]);
+                }
 			} else {
 				ps.setObject(idx++, item);
 			}
@@ -448,17 +461,21 @@ public class PoDaoUtil {
 	}
 
 	public static String appendLength(String source, int length, int appendType, char padding) {
-		if (source == null)
-			return null;
-		if (source.length() >= length)
-			return source;
+		if (source == null) {
+            return null;
+        }
+		if (source.length() >= length) {
+            return source;
+        }
 		StringBuilder sbd = new StringBuilder(source);
 		if (appendType == 1) {
-			for (int i = length - source.length(); i > 0; i--)
-				sbd.insert(0, padding);
+			for (int i = length - source.length(); i > 0; i--) {
+                sbd.insert(0, padding);
+            }
 		} else {
-			for (int i = source.length(); i < length; i++)
-				sbd.append(padding);
+			for (int i = source.length(); i < length; i++) {
+                sbd.append(padding);
+            }
 		}
 		return sbd.toString();
 	}

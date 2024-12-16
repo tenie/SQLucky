@@ -39,8 +39,9 @@ public class NoteUtility {
 		}
 		MyNoteEditorSheet sheet = item.getValue();
 		File file = sheet.getFile();
-		if (!file.exists())
-			return;
+		if (!file.exists()) {
+            return;
+        }
 		if (file.isFile()) {
 			if (StrUtils.isNotNullOrEmpty(file.getAbsolutePath())) {
 				String charset = FileTools.detectFileCharset(file);

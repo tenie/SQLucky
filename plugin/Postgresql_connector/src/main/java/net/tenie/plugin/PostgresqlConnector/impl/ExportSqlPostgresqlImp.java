@@ -19,14 +19,14 @@ import net.tenie.Sqlucky.sdk.utility.FetchDBInfoCommonTools;
  */
 public class ExportSqlPostgresqlImp extends ExportDBObjects { 
 
-	 
-	private	FetchDBInfoCommonTools fdbtool;
-	 
-	
-	public ExportSqlPostgresqlImp() { 
-		fdbtool  =new FetchDBInfoCommonTools(); 
-	}
- 
+//
+//	private	FetchDBInfoCommonTools fdbtool;
+//
+//
+//	public ExportSqlPostgresqlImp() {
+//		fdbtool  =new FetchDBInfoCommonTools();
+//	}
+//
 	/**
 	 * 导出所有表对象, 属性: 表名, 字段, 主键, ddl
 	 */
@@ -42,7 +42,7 @@ public class ExportSqlPostgresqlImp extends ExportDBObjects {
 						// 表对象 主键赋值
 						Dbinfo.fetchTablePrimaryKeys(conn, v);
 						// 表对象ddl语句
-						String ddl = fdbtool.createTab( v);
+						String ddl = FetchDBInfoCommonTools.createTab( v);
 						v.setDdl(ddl);
 					} catch (Exception e) { 
 						e.printStackTrace();
@@ -131,7 +131,7 @@ public class ExportSqlPostgresqlImp extends ExportDBObjects {
 		try {
 			// 函数名称 
 			List<FuncProcTriggerPo> vals = Dbinfo.fetchAllTriggers(conn, schema);
-			if (vals != null && vals.size() > 0) {
+			if (!vals.isEmpty()) {
 				vals.forEach(v -> { 
 					String ddl = exportCreateTrigger(conn,  schema, v.getName());
 					v.setDdl(ddl);
@@ -184,7 +184,7 @@ public class ExportSqlPostgresqlImp extends ExportDBObjects {
 			// 表对象 主键赋值
 			Dbinfo.fetchTablePrimaryKeys(conn, v);
 			// 表对象ddl语句
-		    ddl = fdbtool.createTab(v); 
+		    ddl = FetchDBInfoCommonTools.createTab(v);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -193,38 +193,32 @@ public class ExportSqlPostgresqlImp extends ExportDBObjects {
 
 	@Override
 	public String exportCreateView(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportView(conn, schema, obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportView(conn, schema, obj);
 	}
 
 	@Override
 	public String exportCreateFunction(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportFunction(conn,  schema, obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportFunction(conn,  schema, obj);
 	}
 
 	@Override
 	public String exportCreateProcedure(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportProcedure(conn,  schema, obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportProcedure(conn,  schema, obj);
 	}
 
 	@Override
-	public String exportCreateIndex(Connection conn, String schema, String obj) { 
-		String ddl = fdbtool.exportIndex(conn,  schema, obj); 
-		return ddl;
+	public String exportCreateIndex(Connection conn, String schema, String obj) {
+        return FetchDBInfoCommonTools.exportIndex(conn,  schema, obj);
 	}
 
 	@Override
 	public String exportCreateSequence(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportSeq(conn, schema,  obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportSeq(conn, schema,  obj);
 	}
 
 	@Override
-	public String exportCreateTrigger(Connection conn, String schema, String obj) { 
-		String ddl = fdbtool.exportTrigger(conn,  schema, obj);
-		return ddl;
+	public String exportCreateTrigger(Connection conn, String schema, String obj) {
+        return FetchDBInfoCommonTools.exportTrigger(conn,  schema, obj);
 	}
 
 	@Override
@@ -235,8 +229,7 @@ public class ExportSqlPostgresqlImp extends ExportDBObjects {
 
 	@Override
 	public String exportCreateForeignKey(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportForeignKey(conn,  schema, obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportForeignKey(conn,  schema, obj);
 	}
 
 	@Override
@@ -271,45 +264,38 @@ public class ExportSqlPostgresqlImp extends ExportDBObjects {
 
 	@Override
 	public String exportDropTable(String schema , String name) {
-		String sql = "DROP TABLE " + schema + "." + name.trim();
-		return sql;
+        return "DROP TABLE " + schema + "." + name.trim();
 	}
 
 	@Override
 	public String exportDropView(String schema, String name) {
-		String sql = "DROP VIEW " + schema + "." + name.trim();
-		return sql;
+        return "DROP VIEW " + schema + "." + name.trim();
 	}
 
 	@Override
 	public String exportDropFunction(String schema, String name) {
-		String sql = "DROP  FUNCTION " + schema + "." + name.trim();
-		return sql;
+        return "DROP  FUNCTION " + schema + "." + name.trim();
 	}
 
 	@Override
 	public String exportDropProcedure(String schema, String name) {
-		String sql = "DROP  PROCEDURE " + schema + "." + name.trim();
-		return sql;
+        return "DROP  PROCEDURE " + schema + "." + name.trim();
 	}
 
 	@Override
 	public String exportDropIndex(String schema, String name, String tableName) {
-		String sql = "DROP INDEX " + schema + "." + name.trim();
-		return sql;
+        return "DROP INDEX " + schema + "." + name.trim();
 	}
 
 
 	@Override
 	public String exportDropSequence(String schema, String name) {
-		String sql = "DROP sequence " + schema + "." + name.trim() ;
-		return sql;
+        return "DROP sequence " + schema + "." + name.trim();
 	}
 
 	@Override
 	public String exportDropTrigger(String schema, String name) {
-		String sql = "DROP TRIGGER " + schema + "." + name.trim();
-		return sql;
+        return "DROP TRIGGER " + schema + "." + name.trim();
 	}
 
 	@Override
@@ -350,8 +336,7 @@ public class ExportSqlPostgresqlImp extends ExportDBObjects {
 
 	@Override
 	public String exportCallFuncSql(String funcStr) {
-		String sql = "select "+funcStr+" from dual";
-		return sql;
+        return "select "+funcStr+" from dual";
 	}
 
 	@Override
@@ -371,9 +356,7 @@ public class ExportSqlPostgresqlImp extends ExportDBObjects {
 	public 	List<String> tableSchema(Connection conn, String table) {
 		String schema = "";
 		String sql = "select schemaname from pg_tables where tablename='"+table+"'";
-//		schema = FetchDBInfoCommonTools.selectOne(conn, sql);
-		List<String> schemas = FetchDBInfoCommonTools.selectOneIndex(conn, sql);
-		return schemas;
+        return FetchDBInfoCommonTools.selectOneIndex(conn, sql);
 	}
 
 }

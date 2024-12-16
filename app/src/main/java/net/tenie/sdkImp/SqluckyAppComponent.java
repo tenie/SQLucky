@@ -50,7 +50,8 @@ public class SqluckyAppComponent implements AppComponent {
 
 	private Consumer<String> dbInfoMenuOnShowingCaller;
 	
-	public void saveApplicationStatusInfo() {
+	@Override
+    public void saveApplicationStatusInfo() {
 		
 	}
 	

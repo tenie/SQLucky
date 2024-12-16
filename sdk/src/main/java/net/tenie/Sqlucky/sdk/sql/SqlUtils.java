@@ -127,8 +127,9 @@ public class SqlUtils {
     public static void trimMyBatisXml() {
         Platform.runLater(() -> {
             String text = MyEditorSheetHelper.getActivationEditorSelectTextOrAllText();
-            if (StrUtils.isNullOrEmpty(text))
+            if (StrUtils.isNullOrEmpty(text)) {
                 return;
+            }
 
             String rs = trimXmlConversionElement(text);
             MyEditorSheetHelper.replaceSelectTextOrAllText(rs);

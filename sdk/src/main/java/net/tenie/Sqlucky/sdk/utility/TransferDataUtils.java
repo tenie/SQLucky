@@ -27,8 +27,9 @@ public class TransferDataUtils {
 	public static void setupDBComboBox(ComboBox<Label> cbox1, ComboBox<Label> cbox2) {
 		cbox1.setOnMouseClicked(e -> {
 			var items = DBConns.sortLiveChoiceBoxItems();
-			if (items == null || items.size() == 0)
-				return;
+			if (items == null || items.size() == 0) {
+                return;
+            }
 			if (cbox2.getValue() != null) {
 				String taDBVal = cbox2.getValue().getText();
 				if (taDBVal != null && taDBVal.length() > 0) {
@@ -46,8 +47,9 @@ public class TransferDataUtils {
 
 		cbox2.setOnMouseClicked(e -> {
 			var items = DBConns.sortLiveChoiceBoxItems();
-			if (items == null || items.size() == 0)
-				return;
+			if (items == null || items.size() == 0) {
+                return;
+            }
 			if (cbox1.getValue() != null) {
 				String taDBVal = cbox1.getValue().getText();
 				if (taDBVal != null && taDBVal.length() > 0) {
@@ -122,11 +124,13 @@ public class TransferDataUtils {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			logger.debug(e.getMessage());
-			if (isThrow)
-				throw e;
+			if (isThrow) {
+                throw e;
+            }
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 	}
 
@@ -174,11 +178,13 @@ public class TransferDataUtils {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			logger.debug(e.getMessage());
-			if (isThrow)
-				throw e;
+			if (isThrow) {
+                throw e;
+            }
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 	}
 
@@ -213,11 +219,13 @@ public class TransferDataUtils {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			logger.debug(e.getMessage());
-			if (isThrow)
-				throw e;
+			if (isThrow) {
+                throw e;
+            }
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 	}
 
@@ -276,11 +284,13 @@ public class TransferDataUtils {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			logger.debug(e1.getMessage());
-			if (isThrow)
-				throw e1;
+			if (isThrow) {
+                throw e1;
+            }
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
 
 			boolean tmpisAutoCommit = toConn.getAutoCommit();
 			if (isAutoCommit != tmpisAutoCommit) {
@@ -347,11 +357,13 @@ public class TransferDataUtils {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			logger.debug(e1.getMessage());
-			if (isThrow)
-				throw e1;
+			if (isThrow) {
+                throw e1;
+            }
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
 
 			boolean tmpisAutoCommit = toConn.getAutoCommit();
 			if (isAutoCommit != tmpisAutoCommit) {
@@ -427,11 +439,13 @@ public class TransferDataUtils {
 			e1.printStackTrace();
 			logger.debug(e1.getMessage());
 			LoggerCaller.accept(e1.getMessage());
-			if (isThrow)
-				throw e1;
+			if (isThrow) {
+                throw e1;
+            }
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
 
 			boolean tmpisAutoCommit = toConn.getAutoCommit();
 			if (isAutoCommit != tmpisAutoCommit) {

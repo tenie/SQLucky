@@ -497,8 +497,9 @@ public class SqluckyAppDB {
 	// 获取当前执行面板中的连接
 	private static Connection getComboBoxDbConn() {
 		String connboxVal = ComponentGetter.connComboBox.getValue().getText();
-		if (StrUtils.isNullOrEmpty(connboxVal))
-			return null;
+		if (StrUtils.isNullOrEmpty(connboxVal)) {
+            return null;
+        }
 		Connection conn = DBConns.get(connboxVal).getConn();
 		return conn;
 	}

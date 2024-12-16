@@ -455,8 +455,9 @@ public class MyEditorSheetHelper {
 				if(tb instanceof  MyEditorSheet mtb){
 //					MyEditorSheet mtb = (MyEditorSheet) tb.getUserData();
 					// 修改代码编辑区域的样式
-					if (mtb.getSqluckyEditor() != null)
-						mtb.getSqluckyEditor().changeCodeAreaLineNoThemeHelper();
+					if (mtb.getSqluckyEditor() != null) {
+                        mtb.getSqluckyEditor().changeCodeAreaLineNoThemeHelper();
+                    }
 					// 修改查找替换的样式如果有的话
 					changeFindReplacePaneBtnColor(tb);
 				}
@@ -480,8 +481,9 @@ public class MyEditorSheetHelper {
 					for (Node apnd : apchs) {
 						if (apnd instanceof JFXButton btn) {
 //							JFXButton btn = (JFXButton) apnd;
-							if (btn.getGraphic() != null)
-								btn.getGraphic().setStyle("-fx-background-color: " + color + ";");
+							if (btn.getGraphic() != null) {
+                                btn.getGraphic().setStyle("-fx-background-color: " + color + ";");
+                            }
 						}
 					}
 				}

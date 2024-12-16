@@ -121,15 +121,17 @@ public class FindReplaceTextBox extends  VBox {
 	 * @param sensitive 是否大小写敏感
 	 */
 	public  void findStringFromCodeArea( String str, boolean forward, boolean sensitive) {
-		if (StrUtils.isNullOrEmpty(str))
-			return;
+		if (StrUtils.isNullOrEmpty(str)) {
+            return;
+        }
 		int idx = codeArea.getCaretPosition(); // 光标位置
 		findString(str, idx, sensitive, forward);
 	}
 
 	public  void findStringFromCodeAreaBeginHead( String str, boolean forward, boolean sensitive) {
-		if (StrUtils.isNullOrEmpty(str))
-			return;
+		if (StrUtils.isNullOrEmpty(str)) {
+            return;
+        }
 		findString(str, 0, sensitive, forward);
 	}
 
@@ -142,8 +144,9 @@ public class FindReplaceTextBox extends  VBox {
 	 * @return 返回false, 表示找不到
 	 */
 	public boolean findStringStopFromCodeArea(String str, Integer position, boolean forward, boolean notSensitive) {
-		if (StrUtils.isNullOrEmpty(str))
-			return false;
+		if (StrUtils.isNullOrEmpty(str)) {
+            return false;
+        }
 
 		Integer idx = 0;
 		if (position == null) {

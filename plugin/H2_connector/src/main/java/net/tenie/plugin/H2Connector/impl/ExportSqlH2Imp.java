@@ -115,12 +115,15 @@ public class ExportSqlH2Imp extends ExportDBObjects {
 			}
 
 		} finally {
-			if (tablesResultSet != null)
-				tablesResultSet.close();
-			if (rs != null)
-				rs.close();
-			if (sm != null)
-				sm.close();
+			if (tablesResultSet != null) {
+                tablesResultSet.close();
+            }
+			if (rs != null) {
+                rs.close();
+            }
+			if (sm != null) {
+                sm.close();
+            }
 		}
 		return tbls;
 	}
@@ -210,7 +213,7 @@ public class ExportSqlH2Imp extends ExportDBObjects {
 			// 表对象 主键赋值
 			Dbinfo.fetchTablePrimaryKeys(conn, v);
 			// 表对象ddl语句
-			ddl = fdbtool.createTab(v);
+			ddl = FetchDBInfoCommonTools.createTab(v);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

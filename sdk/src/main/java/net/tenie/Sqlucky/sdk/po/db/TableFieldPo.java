@@ -328,28 +328,37 @@ public class TableFieldPo {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) {
+            return true;
+        }
+		if (obj == null) {
+            return false;
+        }
+		if (getClass() != obj.getClass()) {
+            return false;
+        }
 		TableFieldPo other = (TableFieldPo) obj;
 		if (fieldName == null) {
-			if (other.fieldName != null)
-				return false;
-		} else if (!fieldName.equals(other.fieldName))
-			return false;
+			if (other.fieldName != null) {
+                return false;
+            }
+		} else if (!fieldName.equals(other.fieldName)) {
+            return false;
+        }
 		if (length == null) {
-			if (other.length != null)
-				return false;
-		} else if (!length.equals(other.length))
-			return false;
+			if (other.length != null) {
+                return false;
+            }
+		} else if (!length.equals(other.length)) {
+            return false;
+        }
 		if (type == null) {
-			if (other.type != null)
-				return false;
-		} else if (!type.equals(other.type))
-			return false;
+			if (other.type != null) {
+                return false;
+            }
+		} else if (!type.equals(other.type)) {
+            return false;
+        }
 		return true;
 	}
 

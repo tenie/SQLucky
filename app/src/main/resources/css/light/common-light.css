@@ -55,18 +55,20 @@
 	-fx-border-width: 1 1 1 1;
 	-fx-background-radius: 0px;
 }
+.myTopTextField {
+        -fx-padding: 0.4em;
+        -fx-border-width: 0 0 1 0;
+        -fx-background-color: #F1F1F1,
+            linear-gradient(to left, derive(#F1F1F1, 95%), derive(#F1F1F1, 10%)),
+            linear-gradient(to left, derive(#F1F1F1, 38%), derive(#F1F1F1, -16%));
+}
 
 .myToplabel{
- /*   -fx-border-color: #059BCE;  0.2em 0.2em 0.3em*/
-    -fx-background-color: #1e89e3;
     -fx-background-radius: 5px;
     -fx-padding: 0.3em;
-}
-.myTopTextField {
-    -fx-text-fill: #000000;
-    -fx-background-color: #F1F1F1;
-/*	-fx-border-color: #059BCE;
-	-fx-border-width: 0 0 1 0;*/
+    -fx-background-color: #1e89e3,
+        linear-gradient(to left, derive(#1e89e3, 95%), derive(#1e89e3, 10%)),
+        linear-gradient(to left, derive(#1e89e3, 38%), derive(#1e89e3, -16%));
 }
 
 

@@ -97,8 +97,9 @@ public class DBInfoTreeContextMenuAction {
 					if (status.equals(0)) {
 						break;
 					} else if (status.equals(1)) {
-						if (successFunc != null)
-							successFunc.accept(treeItem);
+						if (successFunc != null) {
+                            successFunc.accept(treeItem);
+                        }
 						break;
 					} else {
 						try {

@@ -216,10 +216,11 @@ public class CommonUtils {
         String title = tb.getText();
         if (StrUtils.isNullOrEmpty(title)) {
             Label lb = (Label) tb.getGraphic();
-            if (lb != null)
+            if (lb != null) {
                 title = lb.getText();
-            else
+            } else {
                 title = "";
+            }
         }
         return title;
     }
@@ -577,8 +578,9 @@ public class CommonUtils {
     public static String readFileText(File file, String encode) {
         String val = "";
         try {
-            if (!file.exists())
+            if (!file.exists()) {
                 return val;
+            }
             val = FileUtils.readFileToString(file, encode);
 
         } catch (IOException e) {
@@ -592,8 +594,7 @@ public class CommonUtils {
         // 括号开始的位置, 不包括括号自己
         int begin = text.indexOf("(") + 1;
         int end = findBeginParenthesisRange(text, begin, "(", ")");
-        String str = text.substring(begin, end);
-        return str;
+        return text.substring(begin, end);
     }
 
     // 获取 IN 字段
@@ -626,26 +627,25 @@ public class CommonUtils {
         return true;
     }
 
-    // TODO 从存储过程语句中提取参数
+    //   从存储过程语句中提取参数
     public static List<ProcedureFieldPo> getProcedureFields(String ddl) {
         List<ProcedureFieldPo> rs = new ArrayList<>();
-//        ddl = StrUtils.multiLineCommentToSpace(ddl);
-//        ddl = StrUtils.trimCommentToSpace(ddl, "--");
         ddl = StrUtils.replaceAllCommentToSpace(ddl);
         // 给ddl分词, 找到过程名称后面的参数列表
         ddl = StrUtils.pressString(ddl).toUpperCase();
-        if (procedureIsNoParameter(ddl)) { // 没有参数直接返回
+        // 没有参数直接返回
+        if (procedureIsNoParameter(ddl)) {
             return rs;
         }
 
         String val = firstParenthesisInsideString(ddl);
-        val = val != null ? val.trim() : "";
+        val = val.trim();
         if (val.length() > 1) {
-            String args[] = val.split(",");
-            for (int i = 0; i < args.length; i++) {
-                String str = args[i].trim();
+            String[] args = val.split(",");
+            for (String arg : args) {
+                String str = arg.trim();
 
-                String fields[] = str.split(" ");
+                String[] fields = str.split(" ");
                 String inout = fields[0].toUpperCase();
                 boolean in = inout.contains("IN");
                 boolean out = inout.contains("OUT");
@@ -666,14 +666,17 @@ public class CommonUtils {
         String startStr = text.substring(start);
         int end = 0;
         int strSz = startStr.length();
-        if (strSz == 0)
+        if (strSz == 0) {
             return end;
-        if (!startStr.contains(pe))
+        }
+        if (!startStr.contains(pe)) {
             return end;
+        }
         int idx = 1;
         for (int i = 0; i < startStr.length(); i++) {
-            if (idx == 0)
+            if (idx == 0) {
                 break;
+            }
             String tmp = startStr.substring(i, i + 1);
 
             if (pe.equals(tmp)) {
@@ -785,8 +788,9 @@ public class CommonUtils {
     // 读选择系统中的文件读取为字符串 UTF-8
     public static String openFileReadToString(String encode) {
         File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
-        if (f == null)
+        if (f == null) {
             return "";
+        }
         String val = "";
         try {
             val = FileUtils.readFileToString(f, encode);

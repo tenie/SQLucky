@@ -109,8 +109,9 @@ public class ResultSetRowPo {
 	// cell 添加事件, 当单元格被修改做一些处理, 对cell的修改前需要调用这个方法手动添加监听,这样修改值才会被缓存便于更新
 	public void cellAddChangeListener() { // List<Button> btns
 		// 手动添加 不用给cell添加监听
-		if (isNewAdd)
-			return;
+		if (isNewAdd) {
+            return;
+        }
 		if (rowDatas != null && rowDatas.size() > 0) {
 			for (ResultSetCellPo cell : rowDatas) {
 				ResultSetCellPo.addStringPropertyChangeListener(cell); // , btns

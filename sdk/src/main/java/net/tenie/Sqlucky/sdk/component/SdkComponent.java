@@ -371,14 +371,18 @@ public class SdkComponent {
 
         // 配置了底部tab缓存个数, 进行比较
         if (ConfigVal.cacheBottomTab > 0) {
-            if (tabSize < (ConfigVal.cacheBottomTab + 1)) return;
+            if (tabSize < (ConfigVal.cacheBottomTab + 1)) {
+                return;
+            }
         }
 
 
         for (int i = 0; i < tabSize; i++) {
             Tab tab = dataTab.getTabs().get(i);
             if (tab instanceof MyBottomSheet myBottomSheet) {
-                if (myBottomSheet == null) continue;
+                if (myBottomSheet == null) {
+                    continue;
+                }
                 Boolean tf = myBottomSheet.getTableData().isLock();
                 if (tf != null && tf) {
                     logger.info("lock  ");
@@ -559,7 +563,9 @@ public class SdkComponent {
     }
 
     public static void clearDataTable(int tbIdx) {
-        if (tbIdx < 0) return;
+        if (tbIdx < 0) {
+            return;
+        }
         TabPane tabPane = ComponentGetter.dataTabPane;
         var tb = tabPane.getTabs().get(tbIdx);
         long begintime = System.currentTimeMillis();

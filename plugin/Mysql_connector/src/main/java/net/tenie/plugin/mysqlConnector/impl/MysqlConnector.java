@@ -94,12 +94,13 @@ public class MysqlConnector extends SqluckyConnector {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return pos;

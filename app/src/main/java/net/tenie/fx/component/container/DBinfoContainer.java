@@ -29,7 +29,7 @@ public class DBinfoContainer extends  VBox{
 		super();
 		// 数据库信息
 		dbInfoTree = new DBinfoTree();
-		dbInfoTreeView = dbInfoTree.DBinfoTreeView;
+		dbInfoTreeView = DBinfoTree.DBinfoTreeView;
 		// 按钮
 		dbInfoTreeBtnPane = dbInfoTree.getDbInfoTreeBtnPane();
 		// 脚本

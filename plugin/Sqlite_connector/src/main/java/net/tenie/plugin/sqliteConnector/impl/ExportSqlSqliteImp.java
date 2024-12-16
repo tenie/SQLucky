@@ -22,12 +22,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  *
  */
 public class ExportSqlSqliteImp extends ExportDBObjects {
- 
-	private	FetchDBInfoCommonTools fdbtool;
-	public ExportSqlSqliteImp() { 
-		fdbtool  =new FetchDBInfoCommonTools(); 
-	}
-	 
+	
 	/**
 	 * 导出所有表对象, 属性: 表名, 字段, 主键, ddl
 	 */
@@ -183,38 +178,32 @@ public class ExportSqlSqliteImp extends ExportDBObjects {
 
 	@Override
 	public String exportCreateView(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportView(conn, schema, obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportView(conn, schema, obj);
 	}
 
 	@Override
 	public String exportCreateFunction(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportFunction(conn,  schema, obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportFunction(conn,  schema, obj);
 	}
 
 	@Override
 	public String exportCreateProcedure(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportProcedure(conn,  schema, obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportProcedure(conn,  schema, obj);
 	}
 
 	@Override
-	public String exportCreateIndex(Connection conn, String schema, String obj) { 
-		String ddl = fdbtool.exportIndex(conn,  schema, obj); 
-		return ddl;
+	public String exportCreateIndex(Connection conn, String schema, String obj) {
+        return FetchDBInfoCommonTools.exportIndex(conn,  schema, obj);
 	}
 
 	@Override
 	public String exportCreateSequence(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportSeq(conn, schema,  obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportSeq(conn, schema,  obj);
 	}
 
 	@Override
-	public String exportCreateTrigger(Connection conn, String schema, String obj) { 
-		String ddl = fdbtool.exportTrigger(conn,  schema, obj);
-		return ddl;
+	public String exportCreateTrigger(Connection conn, String schema, String obj) {
+        return FetchDBInfoCommonTools.exportTrigger(conn,  schema, obj);
 	}
 
 	@Override
@@ -225,14 +214,12 @@ public class ExportSqlSqliteImp extends ExportDBObjects {
 
 	@Override
 	public String exportCreateForeignKey(Connection conn, String schema, String obj) {
-		String ddl = fdbtool.exportForeignKey(conn,  schema, obj);
-		return ddl;
+        return FetchDBInfoCommonTools.exportForeignKey(conn,  schema, obj);
 	}
 
 	@Override
 	public String exportAlterTableAddColumn(Connection conn, String schema, String tableName, String newCol) {
-		String sql = "ALTER TABLE "+tableName+" ADD    " + newCol +";";
-		return sql;
+        return "ALTER TABLE "+tableName+" ADD    " + newCol +";";
 	}
 
 	@Override
@@ -265,38 +252,32 @@ public class ExportSqlSqliteImp extends ExportDBObjects {
 
 	@Override
 	public String exportDropView(String schema, String name) {
-		String sql = "DROP VIEW " +   name.trim();
-		return sql;
+        return "DROP VIEW " +   name.trim();
 	}
 
 	@Override
 	public String exportDropFunction(String schema, String name) {
-		String sql = "DROP  FUNCTION " +  name.trim();
-		return sql;
+        return "DROP  FUNCTION " +  name.trim();
 	}
 
 	@Override
 	public String exportDropProcedure(String schema, String name) {
-		String sql = "DROP  PROCEDURE " +   name.trim();
-		return sql;
+        return "DROP  PROCEDURE " +   name.trim();
 	}
 
 	@Override
 	public String exportDropIndex(String schema, String name, String tableName) {
-		String sql = "DROP INDEX " +  name.trim();
-		return sql;
+        return "DROP INDEX " +  name.trim();
 	}
  
 	@Override
 	public String exportDropSequence(String schema, String name) {
-		String sql = "DROP sequence " +  name.trim() ;
-		return sql;
+        return "DROP sequence " +  name.trim();
 	}
 
 	@Override
 	public String exportDropTrigger(String schema, String name) {
-		String sql = "DROP TRIGGER " +  name.trim();
-		return sql;
+        return "DROP TRIGGER " +  name.trim();
 	}
 
 	@Override
@@ -313,14 +294,12 @@ public class ExportSqlSqliteImp extends ExportDBObjects {
 
 	@Override
 	public List<FuncProcTriggerPo> allIndexObj(Connection conn, String schema) {
-		List<FuncProcTriggerPo>  vals = new ArrayList<>();
-		return vals;
+        return new ArrayList<>();
 	}
 
 	@Override
 	public List<FuncProcTriggerPo> allSequenceObj(Connection conn, String schema) {
-		List<FuncProcTriggerPo>  vals = new ArrayList<>();
-		return vals;
+        return new ArrayList<>();
 	}
 
 	@Override
@@ -337,8 +316,7 @@ public class ExportSqlSqliteImp extends ExportDBObjects {
 	
 	@Override
 	public String exportCallFuncSql(String funcStr) {
-		String sql = "select "+funcStr+" from dual";
-		return sql;
+        return "select "+funcStr+" from dual";
 	}
 
 	@Override
@@ -355,8 +333,6 @@ public class ExportSqlSqliteImp extends ExportDBObjects {
 
 	@Override
 	public List<String> tableSchema(Connection conn, String table) {
-		String schema = "";
-		List<String> schemas = new ArrayList<>();
-		return schemas;
+        return new ArrayList<>();
 	}
 }

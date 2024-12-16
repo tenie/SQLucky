@@ -16,7 +16,8 @@ public class SqliteRegister implements SqluckyDbRegister{
 		return driver;
 	}
  
-	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
+	@Override
+    public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
 		return new SqliteConnector(connPo, this);
 	}
 
@@ -28,7 +29,8 @@ public class SqliteRegister implements SqluckyDbRegister{
 		this.dbVendor = dbVendor;
 	}
 
-	public boolean getJdbcUrlIsFile() {
+	@Override
+    public boolean getJdbcUrlIsFile() {
 		return JdbcUrlIsFile;
 	}
 

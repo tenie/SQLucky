@@ -54,7 +54,9 @@ public class CodeAreaHighLightingNoKeyWordHelper extends CodeAreaHighLightingHel
         String mypatternString = "|(?<FINDWORD>(" + str.toUpperCase() + "))";
         mypatternString = getPatternString(mypatternString);
         Pattern pattern = getPattern(mypatternString);
-        if (pattern == null) return null;
+        if (pattern == null) {
+            return null;
+        }
         Matcher matcher = pattern.matcher(text.toUpperCase());
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder
@@ -86,7 +88,9 @@ public class CodeAreaHighLightingNoKeyWordHelper extends CodeAreaHighLightingHel
 
                 String subText = codeArea.getText().substring(begin);
                 StyleSpans<Collection<String>> highlighting = computeHighlighting(subText);
-                if (highlighting == null) return;
+                if (highlighting == null) {
+                    return;
+                }
                 Platform.runLater(() -> {
                     codeArea.setStyleSpans(begin, highlighting);
                 });
@@ -111,7 +115,9 @@ public class CodeAreaHighLightingNoKeyWordHelper extends CodeAreaHighLightingHel
 
     private StyleSpans<Collection<String>> computeHighlighting(String text) {
         var pattern = getPattern();
-        if (pattern == null) return null;
+        if (pattern == null) {
+            return null;
+        }
         Matcher matcher = pattern.matcher(text.toUpperCase());
         int lastKwEnd = 0;
         StyleSpansBuilder<Collection<String>> spansBuilder

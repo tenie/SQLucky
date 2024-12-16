@@ -93,49 +93,6 @@ public class ButtonFactory {
 			RunSQLHelper.stopSQLMethod();
 		});
 
-//		JFXButton hideLeft = new JFXButton();
-////		hideLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
-//		hideLeft.setGraphic(IconGenerator.mainTabPaneClose());
-//		hideLeft.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
-//		hideLeft.setTooltip(MyTooltipTool.instance("hide or show connection panel "));
-//
-//		// TODO hideBottom
-//		JFXButton hideBottom = new JFXButton();
-////		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
-//		hideBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
-//		hideBottom.setOnMouseClicked(event -> {SdkComponent.hideBottom();});
-//		hideBottom.setTooltip(MyTooltipTool.instance("hide or show data panel "));
-//
-//
-//
-//		JFXButton hideRight = new JFXButton();
-////		var rightTabPaneOpen =IconGenerator.rightTabPaneOpen();
-////		var rightTabPaneClose =IconGenerator.rightTabPaneClose();
-////		hideBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
-////		hideRight.setGraphic(rightTabPaneOpen);
-////		hideRight.setOnMouseClicked(CommonEventHandler.hideBottom());
-//		hideRight.setOnAction(event -> {
-//			SdkComponent.showOrhideRight();
-//		});
-//		hideRight.setTooltip(MyTooltipTool.instance("Hide or Show Right Panel "));
-////		Platform.runLater(SdkComponent::showOrhideRight);
-//
-//		btnsAnchorPane.getChildren().add(hideRight);
-//		btnsAnchorPane.getChildren().add(hideLeft);
-//		btnsAnchorPane.getChildren().add(hideBottom);
-//		AnchorPane.setRightAnchor(hideRight, 0.0);
-//		AnchorPane.setRightAnchor(hideBottom, 30.0);
-//		AnchorPane.setRightAnchor(hideLeft, 60.0);
-
-
-
-
-
-
-//		CommonButtons.hideLeft = hideLeft;
-//		CommonButtons.hideBottom = hideBottom;
-//		CommonButtons.hideRight = hideRight;
-
 		// 选择sql在哪个连接上执行
 		Label lbcnn = new Label("DB");
 		lbcnn.getStyleClass().add("myToplabel");
@@ -164,19 +121,11 @@ public class ButtonFactory {
 		CommonButtons.runFunPro = runFunPro;
 		CommonButtons.addcodeArea = addcodeArea;
 
-//		btnsAnchorPane.getChildren().add(operateBox);
-//		Platform.runLater(()->{
-//			operateBox.setAlignment(Pos.CENTER_RIGHT);
-//			AppWindow.SQLuckyAppWindow.getHeadAnchorPane().getChildren().add(operateBox);
-//			AnchorPane.setRightAnchor(operateBox, 220.0);
-
-//		});
-
-
 		HBox.setMargin(lbcnn, new Insets(0, 2,0,5));
 		dbinfoOperateBox.getChildren().add(lbcnn);
 		dbinfoOperateBox.getChildren().add(connsComboBox);
 		HBox.setMargin(lb, new Insets(0, 0,0,10));
+		HBox.setMargin(rowsTextField, new Insets(0, 0,0,1));
 		dbinfoOperateBox.getChildren().add(lb);
 		dbinfoOperateBox.getChildren().add(rowsTextField);
 
@@ -189,9 +138,6 @@ public class ButtonFactory {
 	private static TextField initLimitTextField(){
 		TextField rowsTextField = new TextField();
 		ComponentGetter.maxRowsTextField = rowsTextField;
-
-//		rowsTextField.setPrefHeight(25);
-//		rowsTextField.setMinHeight(25);
 
 		rowsTextField.getStyleClass().add("myTopTextField");
 		rowsTextField.setMaxWidth(90);
@@ -218,7 +164,7 @@ public class ButtonFactory {
 		connsComboBox.setMaxWidth(200);
 		connsComboBox.setMinWidth(200);
 		connsComboBox.getStyleClass().add("myComboBox");
-		connsComboBox.getStyleClass().add("my-tag");
+//		connsComboBox.getStyleClass().add("my-tag");
 
 		DBConns.flushChoiceBox(connsComboBox); // 填充内容
 

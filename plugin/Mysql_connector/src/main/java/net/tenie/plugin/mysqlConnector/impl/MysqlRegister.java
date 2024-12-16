@@ -15,7 +15,8 @@ public class MysqlRegister implements SqluckyDbRegister{
 		return driver;
 	}
  
-	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
+	@Override
+    public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
 		return new MysqlConnector(connPo, this);
 	}
 
@@ -27,7 +28,8 @@ public class MysqlRegister implements SqluckyDbRegister{
 		this.dbVendor = dbVendor;
 	}
 
-	public boolean getJdbcUrlIsFile() {
+	@Override
+    public boolean getJdbcUrlIsFile() {
 		return JdbcUrlIsFile;
 	}
 

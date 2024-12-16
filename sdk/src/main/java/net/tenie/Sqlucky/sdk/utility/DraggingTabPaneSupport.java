@@ -67,7 +67,9 @@ public class DraggingTabPaneSupport {
         }
 
         Node graphic = tab.getGraphic();
-        if (graphic == null) return;
+        if (graphic == null) {
+            return;
+        }
         graphic.setOnDragDetected(e -> {
             Dragboard dragboard = graphic.startDragAndDrop(TransferMode.MOVE);
             ClipboardContent content = new ClipboardContent();

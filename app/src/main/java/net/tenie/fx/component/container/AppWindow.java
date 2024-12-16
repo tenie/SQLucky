@@ -154,7 +154,7 @@ public class AppWindow extends VBox {
     }
 
     public void setDataView(DataViewContainer dataView) {
-        this.dataViewContainer = dataView;
+        dataViewContainer = dataView;
     }
 
     public Scene getAppScene() {

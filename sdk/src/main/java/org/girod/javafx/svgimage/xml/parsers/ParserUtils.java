@@ -312,7 +312,7 @@ public class ParserUtils implements SVGTags {
             String value1 = m.group(1);
             double size = Double.parseDouble(value1);
             String unit = m.group(2);
-            if (unit != null && unit.equals("px")) {
+            if (unit != null && "px".equals(unit)) {
                // see https://stackoverflow.com/questions/12788422/svg-coordinate-system-points-vs-pixels
                size = size * 1.25d;
                return size;

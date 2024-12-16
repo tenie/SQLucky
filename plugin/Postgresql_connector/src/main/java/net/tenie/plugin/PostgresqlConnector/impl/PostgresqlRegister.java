@@ -15,7 +15,8 @@ public class PostgresqlRegister implements SqluckyDbRegister{
 		return driver;
 	}
  
-	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
+	@Override
+    public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
 		return new PostgresqlConnector(connPo, this);
 	}
 
@@ -27,7 +28,8 @@ public class PostgresqlRegister implements SqluckyDbRegister{
 		this.dbVendor = dbVendor;
 	}
 
-	public boolean getJdbcUrlIsFile() {
+	@Override
+    public boolean getJdbcUrlIsFile() {
 		return JdbcUrlIsFile;
 	}
 

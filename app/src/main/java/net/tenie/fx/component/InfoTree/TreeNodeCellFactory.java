@@ -151,13 +151,15 @@ public class TreeNodeCellFactory implements Callback<TreeView<TreeNodePo>, TreeC
 
 	private void dragOver(DragEvent event, TreeCell<TreeNodePo> treeCell, TreeView<TreeNodePo> treeView) {
   
-		if (!event.getDragboard().hasContent(JAVA_FORMAT))
-			return;
+		if (!event.getDragboard().hasContent(JAVA_FORMAT)) {
+            return;
+        }
 		TreeItem<TreeNodePo> thisItem = treeCell.getTreeItem();
 
 		// can't drop on itself
-		if (draggedItem == null || thisItem == null || thisItem == draggedItem)
-			return;
+		if (draggedItem == null || thisItem == null || thisItem == draggedItem) {
+            return;
+        }
 		// ignore if this is the root
 		if (draggedItem.getParent() == null) {
 			clearDropLocation();
@@ -236,7 +238,8 @@ public class TreeNodeCellFactory implements Callback<TreeView<TreeNodePo>, TreeC
 	private void clearDropLocation() {
 		logger.info("clearDropLocation");
 		ComponentGetter.dragTreeItemName = "";
-		if (dropZone != null)
-			dropZone.setStyle("");
+		if (dropZone != null) {
+            dropZone.setStyle("");
+        }
 	}
 }

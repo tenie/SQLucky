@@ -13,6 +13,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  */
 public abstract class ExportDBObjectsAb extends ExportDBObjects {
     // 所有表
+    @Override
     public List<TablePo> allTableObj(Connection conn, String schema) {
         try {
             List<TablePo> vals = Dbinfo.fetchAllTableName(conn, schema);
@@ -95,37 +96,44 @@ public abstract class ExportDBObjectsAb extends ExportDBObjects {
         return val;
     }
 
+    @Override
     public String exportDropTable(String schema, String name) {
         String sql = "DROP TABLE " + getObjName(schema, name);
         return sql;
     }
 
+    @Override
     public String exportDropView(String schema, String name) {
         String sql = "DROP VIEW " + getObjName(schema, name);
         return sql;
     }
 
+    @Override
     public String exportDropFunction(String schema, String name) {
         String sql = "DROP  FUNCTION " + getObjName(schema, name);
         return sql;
     }
 
+    @Override
     public String exportDropProcedure(String schema, String name) {
         String sql = "DROP  PROCEDURE " + getObjName(schema, name);
         return sql;
     }
 
     // mySQL ：ALTER TABLE table_name DROP INDEX index_name
+    @Override
     public String exportDropIndex(String schema, String indexName, String tableName) {
         String sql = "DROP INDEX " + getObjName(schema, indexName);
         return sql;
     }
 
+    @Override
     public String exportDropSequence(String schema, String name) {
         String sql = "DROP SEQUENCE " + getObjName(schema, name);
         return sql;
     }
 
+    @Override
     public String exportDropTrigger(String schema, String name) {
         String sql = "DROP TRIGGER " + getObjName(schema, name);
         return sql;

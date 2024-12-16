@@ -18,8 +18,9 @@ public class BuildObject {
 			if (methodName.startsWith("set")) {
 				String key = methodName.substring(3, methodName.length() - 1);
 				Object val = fieldname.get(key);
-				if (val != null)
-					method.invoke(obj, val);
+				if (val != null) {
+                    method.invoke(obj, val);
+                }
 			}
 		}
 		return obj;
@@ -27,7 +28,7 @@ public class BuildObject {
 
 	@SuppressWarnings("rawtypes")
 	public static Object buildObj(String classStr, Object parameterObj) throws Exception {
-		if(classStr.equals("java.lang.Object")) {
+		if("java.lang.Object".equals(classStr)) {
 			return parameterObj;
 		}
 		Class<?> classobj = Class.forName(classStr);

@@ -22,7 +22,8 @@ public class MyPreloaderGif extends Preloader {
 	public static void  hiden() {
 		if(preloaderStage!= null) {
 			Thread th = new Thread() {
-				public void run() {
+				@Override
+                public void run() {
 					 var tf = getFinish();
 					 while(!tf) {
 						 tf = getFinish();
@@ -44,7 +45,8 @@ public class MyPreloaderGif extends Preloader {
 	
    private void stopTime() {
 	   Thread th = new Thread() {
-			public void run() {
+			@Override
+            public void run() {
 				 try {
 					Thread.sleep(4000);
 					isFinish = true;
@@ -57,7 +59,7 @@ public class MyPreloaderGif extends Preloader {
 	}
     @Override
     public void start(Stage primaryStage) throws Exception {
-       this.preloaderStage = primaryStage;
+       preloaderStage = primaryStage;
        double w = 550.0;
    	   double h = 319.0;
        VBox loading = new VBox();

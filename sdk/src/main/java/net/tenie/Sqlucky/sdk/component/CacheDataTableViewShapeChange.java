@@ -148,8 +148,9 @@ public class CacheDataTableViewShapeChange {
 //			width = 600.0;
 //		} else {
 			width = (colname.length() * 10.0) + 15;
-			if (width < 100)
-				width = 110.0;
+			if (width < 100) {
+                width = 110.0;
+            }
 //			if (augmentation) {
 //				width = 200.0;
 //			}
@@ -175,8 +176,9 @@ public class CacheDataTableViewShapeChange {
 			width = cusWidth;
 		}else {
 				width = (colname.length() * 10.0) + 15;
-				if (width < 90)
-					width = 100.0;
+				if (width < 90) {
+                    width = 100.0;
+                }
 		}
 		
 		col.setMinWidth(width);
@@ -189,7 +191,9 @@ public class CacheDataTableViewShapeChange {
 	public static void setTableHeader(FilteredTableView<ResultSetRowPo> table, String tableName) {
 		try {
 			Node h2 = table.lookup(".nested-column-header");
-			if(h2 == null ) return ;
+			if(h2 == null ) {
+                return ;
+            }
 			javafx.scene.Parent p = (Parent) h2;
 			ObservableList<Node> ls = p.getChildrenUnmodifiable();
 			for (var lb : ls) {
@@ -217,7 +221,9 @@ public class CacheDataTableViewShapeChange {
 			ObservableList<SheetFieldPo> colss) {
 		try {
 			Node colHeader = table.lookup(".nested-column-header");
-			if(colHeader == null ) return ;
+			if(colHeader == null ) {
+                return ;
+            }
 			javafx.scene.Parent p = (Parent) colHeader;
 			ObservableList<Node> ls = p.getChildrenUnmodifiable();
 			for (var lb : ls) {

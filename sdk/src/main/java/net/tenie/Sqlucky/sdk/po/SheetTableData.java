@@ -53,7 +53,9 @@ public class SheetTableData {
 			infoTableVals.clean();
 		}
 		
-		if(btnLs != null) btnLs.clear();
+		if(btnLs != null) {
+            btnLs.clear();
+        }
 		btnLs = null;
 	}
 

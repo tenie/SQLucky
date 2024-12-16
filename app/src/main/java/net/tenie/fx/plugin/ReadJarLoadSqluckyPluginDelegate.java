@@ -90,7 +90,7 @@ public class ReadJarLoadSqluckyPluginDelegate {
      */
     private static Class loadAndInstanceClass(String clazzName, String interfaceName, ClassLoader classLoader) {
         try {
-            if (clazzName.equals("module-info")) {
+            if ("module-info".equals(clazzName)) {
                 return null;
             }
             // 需要使用其他的classLoader加载

@@ -557,16 +557,18 @@ public class TransferDataController implements Initializable {
 
 
 			} else {
-				if (isThrow)
-					throw new RuntimeException("数据库链接错误");
+				if (isThrow) {
+                    throw new RuntimeException("数据库链接错误");
+                }
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.debug(e.getMessage());
 			errorMsg.add(e.getMessage());
 			moniterAppendLog(e.getMessage());
-			if (isThrow)
-				throw e;
+			if (isThrow) {
+                throw e;
+            }
 		}
 		if (errorMsg.size() > 0) {
 			moniterAppendErrorLog(errorMsg);
@@ -630,8 +632,9 @@ public class TransferDataController implements Initializable {
 			logger.debug(e.getMessage());
 			errorMsg.add(e.getMessage());
 			moniterAppendLog(e.getMessage());
-			if (isThrow)
-				throw e;
+			if (isThrow) {
+                throw e;
+            }
 		}
 	}
 

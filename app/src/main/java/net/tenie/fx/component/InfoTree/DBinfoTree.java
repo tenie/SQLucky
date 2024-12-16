@@ -110,8 +110,9 @@ public class DBinfoTree extends SqluckyTitledPane {
 		// 恢复数据中保存的连接数据
 		recoverNode(datas);
 		// 展示连接
-		if (!rootNode.getChildren().isEmpty())
-			DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().getFirst()); // 选中节点
+		if (!rootNode.getChildren().isEmpty()) {
+            DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().getFirst()); // 选中节点
+        }
 		// 双击
 		DBinfoTreeView.setOnMouseClicked(e -> {
 			// 单击
@@ -291,11 +292,13 @@ public class DBinfoTree extends SqluckyTitledPane {
 	public void treeViewDoubleClick(MouseEvent mouseEvent) {
 		if (mouseEvent.getClickCount() == 2) {
 			TreeItem<TreeNodePo> item = DBinfoTree.getTrewViewCurrentItem();
-			if (item == null)
-				return;
+			if (item == null) {
+                return;
+            }
 			TreeItem<TreeNodePo> parentItem = item.getParent();
-			if (parentItem == null)
-				return;
+			if (parentItem == null) {
+                return;
+            }
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
 				DBinfoTree.openConn(item, false);
@@ -443,8 +446,9 @@ public class DBinfoTree extends SqluckyTitledPane {
 
 				// 如果是table 节点 启用add new column
 				TreeNodePo nd = newValue != null ? newValue.getValue() : null;
-				if (newValue == null || DBinfoTreeView == null)
-					return;
+				if (newValue == null || DBinfoTreeView == null) {
+                    return;
+                }
 
 				// 复制节点名称
 				var nodeName = newValue.getValue().getName();
@@ -532,8 +536,9 @@ public class DBinfoTree extends SqluckyTitledPane {
 	}
 
 	private TreeItem<TreeNodePo> ConnItem(TreeItem<TreeNodePo> newValue) {
-		if (DBinfoTree.isConns(newValue))
-			return newValue;
+		if (DBinfoTree.isConns(newValue)) {
+            return newValue;
+        }
 		TreeItem<TreeNodePo> connItem = null;
 		TreeItem<TreeNodePo> parent = newValue.getParent();
 		while (parent != null) {
@@ -619,7 +624,9 @@ public class DBinfoTree extends SqluckyTitledPane {
 	public static void openDbConn() {
 		if (DBinfoTree.currentTreeItemIsConnNode()) {
 			TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
-			if (val == null) return;
+			if (val == null) {
+                return;
+            }
 			DBinfoTree.openConn(val, false);
 		}
 	}

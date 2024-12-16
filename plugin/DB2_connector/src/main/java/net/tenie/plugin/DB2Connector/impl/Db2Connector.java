@@ -34,16 +34,7 @@ public class Db2Connector extends SqluckyConnector {
 	public Map<String, DbSchemaPo> getSchemas() {
 		Map<String, DbSchemaPo> schemas = getDbConnectorInfoPo().getSchemas();
 		try {
-			if (schemas == null || schemas.isEmpty()) { 
-//				if (DbVendor.sqlite.toUpperCase().equals(dbVendor.toUpperCase())) {
-//					Map<String, DbSchemaPo> sch = new HashMap<>();
-//					DbSchemaPo sp = new DbSchemaPo();
-//					sp.setSchemaName(SQLITE_DATABASE);
-//					sch.put(SQLITE_DATABASE, sp);
-//					schemas = sch;
-//				} else {
-//					schemas = Dbinfo.fetchSchemasInfo(this);					
-//				}
+			if (schemas == null || schemas.isEmpty()) {
 				schemas = fetchSchemasInfo();		
 				getDbConnectorInfoPo().setSchemas(schemas);
 			}
@@ -62,24 +53,16 @@ public class Db2Connector extends SqluckyConnector {
 
 	@Override
 	public String translateErrMsg(String errString) {
-		String  str = Db2ErrorCode.translateErrMsg(errString);
-		return str;
+        return Db2ErrorCode.translateErrMsg(errString);
 	}
 	
 	public  Map<String, DbSchemaPo> fetchSchemasInfo() {
 		ResultSet rs = null;
-		Map<String, DbSchemaPo> pos = new HashMap<String, DbSchemaPo>();
+		Map<String, DbSchemaPo> pos = new HashMap<>();
 		Connection conn = getConn();
 		try {
 			DatabaseMetaData dmd = conn.getMetaData();
-//			if (    DbVendor.mysql.toUpperCase().equals(dbVendor.toUpperCase())
-//				||  DbVendor.mariadb.toUpperCase().equals(dbVendor.toUpperCase())
-//					) {
-//				rs = dmd.getCatalogs();
-//			} else {
-//				rs = dmd.getSchemas(); // 默认 db2
-//			}
-			rs = dmd.getSchemas(); // 默认 db2
+			rs = dmd.getSchemas();
 
 			while (rs.next()) {
 				DbSchemaPo po = new DbSchemaPo();
@@ -91,12 +74,13 @@ public class Db2Connector extends SqluckyConnector {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return pos;
@@ -118,9 +102,8 @@ public class Db2Connector extends SqluckyConnector {
 				getJdbcUrl(),
 				getAutoConnect()
 				);
-		var dbc = new Db2Connector(val , getDbRegister());
-		
-		return dbc;
+
+        return new Db2Connector(val , getDbRegister());
 	}
 
 

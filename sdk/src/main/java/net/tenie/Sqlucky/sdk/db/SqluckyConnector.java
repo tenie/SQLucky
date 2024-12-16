@@ -237,20 +237,17 @@ public abstract class SqluckyConnector {
 	// 使用新的数据库名, 重新设置连接
 	public void resetJdbcUrlStr(String dataBaseName){
 		String jdbcUrlstr = dbConnectorInfoPo.getJdbcUrl();
+		String urlStr = "";
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			String jdbcUrlstrTmp = jdbcUrlstr;
 			jdbcUrlstrTmp = jdbcUrlstrTmp.replaceFirst("://", "   ");
 			int idx = jdbcUrlstrTmp.indexOf("/");
 			if(idx > 0 ){
-				String beginStr = jdbcUrlstr.substring(0, idx+1);
-				beginStr += dataBaseName;
+				urlStr= jdbcUrlstr.substring(0, idx+1) + dataBaseName;
 				int idx2 = jdbcUrlstr.indexOf("?");
 				if(idx2 > idx){
-					String endStr = jdbcUrlstr.substring(idx2);
 					// 设置jdbc url
-					dbConnectorInfoPo.setJdbcUrl(beginStr + endStr);
-					// 重新连接
-					reConnection();
+					urlStr += jdbcUrlstr.substring(idx2);
 				}
 			}else{
 				int idx2 = jdbcUrlstr.indexOf("?");
@@ -258,16 +255,18 @@ public abstract class SqluckyConnector {
 					String beginStr = jdbcUrlstr.substring(0, idx2);
 					String endStr = jdbcUrlstr.substring(idx2);
 					// 设置jdbc url
-					dbConnectorInfoPo.setJdbcUrl(beginStr + "/" + dataBaseName + endStr);
-					// 重新连接
-					reConnection();
+					urlStr = beginStr + "/" + dataBaseName + endStr;
 				}else{
 					// 设置jdbc url
-					dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr + "/" + dataBaseName);
-					// 重新连接
-					reConnection();
+					urlStr = jdbcUrlstr + "/" + dataBaseName;
 				}
 			}
+			if(StrUtils.isNotNullOrEmpty(urlStr)){
+				dbConnectorInfoPo.setJdbcUrl(urlStr);
+				// 重新连接
+				reConnection();
+			}
+
 		}
 
 	}

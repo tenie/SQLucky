@@ -45,8 +45,9 @@ public class TableDataDetail {
      */
     public static void show(MyBottomSheet mtd) {
         var tb = mtd.getTableData().getTable();
-        if (tb == null)
+        if (tb == null) {
             return;
+        }
         ResultSetRowPo selectedItem = tb.getSelectionModel().getSelectedItem();
         Stage stage;
         if (selectedItem != null) {
@@ -145,8 +146,9 @@ public class TableDataDetail {
                     public void changed(ObservableValue<? extends SheetFieldPo> observableValue, SheetFieldPo oldItem,
                                         SheetFieldPo newItem) {
                         SheetFieldPo p = newItem;
-                        if (p == null)
+                        if (p == null) {
                             return;
+                        }
                         tf1.setText(p.getColumnLabel().get());
                         String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
                         if (p.getScale() != null && p.getScale().get() > 0) {

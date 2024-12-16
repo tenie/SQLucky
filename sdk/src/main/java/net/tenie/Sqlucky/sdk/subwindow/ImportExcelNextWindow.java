@@ -130,8 +130,9 @@ public class ImportExcelNextWindow {
 
         try {
             workbook = ExcelUtil.readFileToWorkbok(excelFile);
-            if (workbook == null)
+            if (workbook == null) {
                 return new String[0];
+            }
             List<ExcelHeadCellInfo> row1 = ReadExcel.readHeadInfo(workbook);
 
             if (row1 != null) {
@@ -229,8 +230,9 @@ public class ImportExcelNextWindow {
                     public void changed(ObservableValue<? extends ImportFieldPo> observableValue, ImportFieldPo oldItem,
                                         ImportFieldPo newItem) {
                         ImportFieldPo p = newItem;
-                        if (p == null)
+                        if (p == null) {
                             return;
+                        }
                         String tyNa = p.getColumnTypeName().get() + "(" + p.getColumnDisplaySize().get();
                         if (p.getScale() != null && p.getScale().get() > 0) {
                             tyNa += ", " + p.getScale().get();
@@ -370,10 +372,12 @@ public class ImportExcelNextWindow {
             var node2 = list.get(k + 1);
             int idxi = i++;
             int idxj = j++;
-            if (node1 != null)
+            if (node1 != null) {
                 grid.add(node1, 0, idxi);
-            if (node2 != null)
+            }
+            if (node2 != null) {
                 grid.add(node2, 1, idxj);
+            }
         }
 
         stage.show();

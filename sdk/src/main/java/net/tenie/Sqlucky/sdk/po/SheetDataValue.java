@@ -331,7 +331,7 @@ public class SheetDataValue {
             for (String tabName : names) {
                 TablePo tbpo = new TablePo();
                 if (tabName.contains(".")) {
-                    String tmpArr[] = tabName.split("\\.");
+                    String[] tmpArr = tabName.split("\\.");
                     tbpo.setTableSchema(tmpArr[0]);
                     tbpo.setTableName(tmpArr[1]);
                 }
@@ -361,7 +361,7 @@ public class SheetDataValue {
     private TablePo createEmptyTablePo() {
         TablePo tbpo = new TablePo();
         if (tabName.contains(".")) {
-            String tmpArr[] = tabName.split("\\.");
+            String[] tmpArr = tabName.split("\\.");
             tbpo.setTableSchema(tmpArr[0]);
             tbpo.setTableName(tmpArr[1]);
         }

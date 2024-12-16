@@ -61,10 +61,12 @@ public class DeleteDao {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
-			if (rs != null)
-				rs.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
+			if (rs != null) {
+                rs.close();
+            }
 		}
 
 		return msg;
@@ -81,8 +83,9 @@ public class DeleteDao {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
 		}
 	}
 
@@ -100,8 +103,9 @@ public class DeleteDao {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
 		}
 	}
 

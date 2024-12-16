@@ -163,12 +163,13 @@ public class ExportSqlMariadbImp extends ExportDBObjects {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return ls;
@@ -262,7 +263,7 @@ public class ExportSqlMariadbImp extends ExportDBObjects {
 
 	@Override
 	public String exportCreateForeignKey(Connection conn, String schema, String obj) {
-		String ddl = fdb2.exportForeignKey(conn, schema, obj);
+		String ddl = FetchDBInfoCommonTools.exportForeignKey(conn, schema, obj);
 		return ddl;
 	}
 
@@ -364,12 +365,13 @@ public class ExportSqlMariadbImp extends ExportDBObjects {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 		return ddl;
 	}
@@ -388,12 +390,13 @@ public class ExportSqlMariadbImp extends ExportDBObjects {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 		return allDDl;
 	}
@@ -417,12 +420,13 @@ public class ExportSqlMariadbImp extends ExportDBObjects {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return ls;

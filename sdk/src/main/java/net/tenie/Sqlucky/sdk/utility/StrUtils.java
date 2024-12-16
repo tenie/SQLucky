@@ -226,13 +226,13 @@ public class StrUtils {
     public static Set<String> splitWordByStr(String str) {
         String tmp = str.replaceAll(" ", "\n");
         tmp = tmp.replaceAll("\t", "\n");
-        String vals[] = tmp.split("\n");
+        String[] vals = tmp.split("\n");
 
         Set<String> rsset = new HashSet<>();
         if (vals != null) {
             for (var v : vals) {
                 String rsstr = v.trim();
-                if (rsstr.length() > 0) {
+                if (!rsstr.isEmpty()) {
                     rsset.add(rsstr);
                 }
             }
@@ -719,7 +719,9 @@ public class StrUtils {
     // 去除注释
     @Deprecated
     public static String trimComment(String sql, String symbol) {
-        if (!sql.contains(symbol)) return sql;
+        if (!sql.contains(symbol)) {
+            return sql;
+        }
         String str = sql.replaceAll(symbol, "\n" + symbol);
         if (str.contains("\r")) {
             str = str.replace("\r", "");
@@ -1223,8 +1225,9 @@ public class StrUtils {
      */
     @Deprecated
     public static String trimCommentToSpace(String sql, String symbol) {
-        if (!sql.contains(symbol))
+        if (!sql.contains(symbol)) {
             return sql;
+        }
 
         // 对包含在字符串中的 symbol 字符串不做处理, 用正则把字符串使用占位符替换掉
         matherString msVal = getStringMatcher(sql);
@@ -1464,8 +1467,9 @@ public class StrUtils {
                 }
             }
         }
-        if (rs.length() > 0)
+        if (rs.length() > 0) {
             rs = rs.substring(0, rs.length() - 1);
+        }
         return rs;
     }
 

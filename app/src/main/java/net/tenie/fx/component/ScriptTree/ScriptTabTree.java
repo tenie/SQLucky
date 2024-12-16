@@ -74,8 +74,9 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		ScriptTreeView.getStyleClass().add("my-tag");
 		ScriptTreeView.setShowRoot(false);
 		// 展示连接
-		if (rootNode.getChildren().size() > 0)
-			ScriptTreeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+		if (rootNode.getChildren().size() > 0) {
+            ScriptTreeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+        }
 		// 双击
 		ScriptTreeView.setOnMouseClicked(e -> {
 			treeViewDoubleClick(e);

@@ -348,20 +348,23 @@ FlowPane TextField {
 
 /* 顶部控件样式*/
 .myTopTextField {
-	-fx-text-fill: white;
-	-fx-background-color:  #000000;
-/*	-fx-border-color: #059BCE;
-	-fx-border-width: 0 0 1 0;*/
+    -fx-text-fill: white;
+    -fx-padding: 0.4em;
+    -fx-border-width: 0 0 1 0;
+    -fx-background-color: #000000,
+        linear-gradient(to bottom, derive(#000000, 95%), derive(#000000, 10%)),
+        linear-gradient(to bottom, derive(#000000, 38%), derive(#000000, -16%));
 }
 .myToplabel{
- /*   -fx-border-color: #059BCE;  0.2em 0.2em 0.3em*/
-    -fx-background-color: #FDA232;
     -fx-background-radius: 5px;
     -fx-padding: 0.3em;
+    -fx-background-color: #FDA232,
+        linear-gradient(to left, derive(#FDA232, 95%), derive(#FDA232, 10%)),
+        linear-gradient(to left, derive(#FDA232, 38%), derive(#FDA232, -16%));
 }
 
 .myComboBox {
-	
+
 }
 
 .combo-box {
@@ -445,23 +448,23 @@ FlowPane TextField {
 }
 
 .my-tag  .scroll-bar:vertical .increment-arrow, .my-tag  .scroll-bar:vertical .decrement-arrow
-	{
+{
 	-fx-shape: " ";
 	-fx-padding: 0.0 0.1em;
 }
 
 .my-tag  .scroll-bar:horizontal .thumb, .my-tag  .scroll-bar:vertical .thumb
-	{
+{
 	-fx-background-color: #3c3f41;
 	-fx-background-insets: 0, 1, 2;
 	-fx-background-radius: 0.5em;
 }
 
 .my-tag  .scroll-bar:horizontal .thumb:hover, .my-tag  .scroll-bar:vertical .thumb:hover
-	{
+{
 	-fx-background-color: #B9B9B9,
-		linear-gradient(to right, derive(#B9B9B9, 95%), derive(#B9B9B9, 10%)),
-		linear-gradient(to right, derive(#B9B9B9, 38%), derive(#B9B9B9, -16%));
+		linear-gradient(to top, derive(#B9B9B9, 95%), derive(#B9B9B9, 10%)),
+		linear-gradient(to top, derive(#B9B9B9, 38%), derive(#B9B9B9, -16%));
 	-fx-background-insets: 0, 1, 2;
 	-fx-background-radius: 0.5em;
 }

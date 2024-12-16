@@ -79,7 +79,9 @@ public class SqlParser {
             Select stmt = (Select) CCJSqlParserUtil.parse(sqlStr);
             PlainSelect select = (PlainSelect) stmt.getSelectBody();
             Expression where = select.getWhere();
-            if (where == null) return rs;
+            if (where == null) {
+                return rs;
+            }
             where.accept(new ExpressionVisitorAdapter() {
                 @Override
                 public void visit(Column column) {

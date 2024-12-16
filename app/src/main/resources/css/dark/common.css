@@ -283,15 +283,18 @@ FlowPane TextField {
 /* 顶部控件样式*/
 .myTopTextField {
 	-fx-text-fill: white;
-	-fx-background-color: #2e2e2e;
-/*	-fx-border-color: #059BCE;
-	-fx-border-width: 0 0 1 0;*/
+    -fx-padding: 0.5em;
+    -fx-border-width: 0 0 1 0;
+	  -fx-background-color: #2e2e2e,
+        		linear-gradient(to bottom, derive(#2e2e2e, 95%), derive(#2e2e2e, 10%)),
+        		linear-gradient(to bottom, derive(#2e2e2e, 38%), derive(#2e2e2e, -16%));
 }
 .myToplabel{
- /*   -fx-border-color: #059BCE;  0.2em 0.2em 0.3em*/
-    -fx-background-color: #1e89e3;
     -fx-background-radius: 5px;
     -fx-padding: 0.3em;
+    -fx-background-color: #1e89e3,
+    		linear-gradient(to right, derive(#1e89e3, 95%), derive(#1e89e3, 10%)),
+    		linear-gradient(to right, derive(#1e89e3, 38%), derive(#1e89e3, -16%));
 }
 
 .myTextField {
@@ -333,7 +336,7 @@ FlowPane TextField {
 }
 
 .myComboBox {
-	
+
 }
 
 .combo-box {
@@ -422,23 +425,41 @@ FlowPane TextField {
 	-fx-padding: 0.0 0.15em;
 }
 
-.my-tag  .scroll-bar:horizontal .thumb, .my-tag  .scroll-bar:vertical .thumb
-	{
+.my-tag  .scroll-bar:horizontal .thumb
+{
 	-fx-background-color: #2b2b2b,
-		linear-gradient(to right, derive(#4E5254, 95%), derive(#4E5254, 10%)),
-		linear-gradient(to right, derive(#4E5254, 38%), derive(#4E5254, -16%));
+		linear-gradient(to left, derive(#4E5254, 95%), derive(#4E5254, 10%)),
+		linear-gradient(to left, derive(#4E5254, 38%), derive(#4E5254, -16%));
 	-fx-background-insets: 0, 1, 2;
 	-fx-background-radius: 0.5em;
 }
 
-.my-tag  .scroll-bar:horizontal .thumb:hover, .my-tag  .scroll-bar:vertical .thumb:hover
-	{
+.my-tag  .scroll-bar:vertical .thumb
+{
 	-fx-background-color: #2b2b2b,
-		linear-gradient(to right, derive(#4E5254, 95%), derive(#4E5254, 10%)),
-		linear-gradient(to right, derive(#4E5254, 38%), derive(#4E5254, -16%));
+		linear-gradient(to top, derive(#4E5254, 95%), derive(#4E5254, 10%)),
+		linear-gradient(to top, derive(#4E5254, 38%), derive(#4E5254, -16%));
 	-fx-background-insets: 0, 1, 2;
 	-fx-background-radius: 0.5em;
 }
+
+/*.my-tag  .scroll-bar:horizontal .thumb:hover
+{
+	-fx-background-color: #2b2b2b,
+		linear-gradient(to top, derive(#4E5254, 95%), derive(#4E5254, 10%)),
+		linear-gradient(to top, derive(#4E5254, 38%), derive(#4E5254, -16%));
+	-fx-background-insets: 0, 1, 2;
+	-fx-background-radius: 0.5em;
+}
+
+ .my-tag  .scroll-bar:vertical .thumb:hover
+{
+	-fx-background-color: #2b2b2b,
+		linear-gradient(to top, derive(#4E5254, 95%), derive(#4E5254, 10%)),
+		linear-gradient(to top, derive(#4E5254, 38%), derive(#4E5254, -16%));
+	-fx-background-insets: 0, 1, 2;
+	-fx-background-radius: 0.5em;
+}*/
 
 .dialog-pane .button {
 	-fx-background-color: black;

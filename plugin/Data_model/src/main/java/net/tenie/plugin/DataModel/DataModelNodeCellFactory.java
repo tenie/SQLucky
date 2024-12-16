@@ -79,8 +79,9 @@ public class DataModelNodeCellFactory
 //				clean.setVisible(true);
 //			}
 			if (e.getClickCount() == 2) {
-				if (cell == null || cell.getTreeItem() == null)
-					return;
+				if (cell == null || cell.getTreeItem() == null) {
+                    return;
+                }
 				// 模型节点双击, 展示所有的表节点
 				if (cell.getTreeItem().getValue().getIsModel()) {
 					DataModelTabTree.modelInfoTreeAddTableTreeNode(cell.getTreeItem());
@@ -133,13 +134,15 @@ public class DataModelNodeCellFactory
 	private void dragOver(DragEvent event, TreeCell<DataModelTreeNodePo> treeCell,
 			TreeView<DataModelTreeNodePo> treeView) {
 
-		if (!event.getDragboard().hasContent(JAVA_FORMAT))
-			return;
+		if (!event.getDragboard().hasContent(JAVA_FORMAT)) {
+            return;
+        }
 		TreeItem<DataModelTreeNodePo> thisItem = treeCell.getTreeItem();
 
 		// can't drop on itself
-		if (draggedItem == null || thisItem == null || thisItem == draggedItem)
-			return;
+		if (draggedItem == null || thisItem == null || thisItem == draggedItem) {
+            return;
+        }
 		// ignore if this is the root
 		if (draggedItem.getParent() == null) {
 			clearDropLocation();
@@ -160,8 +163,9 @@ public class DataModelNodeCellFactory
 		logger.info("drop");
 		Dragboard db = event.getDragboard();
 		boolean success = false;
-		if (!db.hasContent(JAVA_FORMAT))
-			return;
+		if (!db.hasContent(JAVA_FORMAT)) {
+            return;
+        }
 
 		TreeItem<DataModelTreeNodePo> thisItem = treeCell.getTreeItem();
 		TreeItem<DataModelTreeNodePo> droppedItemParent = draggedItem.getParent();
@@ -186,8 +190,9 @@ public class DataModelNodeCellFactory
 	private void clearDropLocation() {
 		logger.info("clearDropLocation");
 		ComponentGetter.dragTreeItemName = "";
-		if (dropZone != null)
-			dropZone.setStyle("");
+		if (dropZone != null) {
+            dropZone.setStyle("");
+        }
 	}
 
 }

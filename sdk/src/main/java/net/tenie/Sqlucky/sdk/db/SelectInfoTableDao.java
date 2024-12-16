@@ -70,8 +70,9 @@ public class SelectInfoTableDao {
 			throw e;
 		} finally {
 //			System.out.println("finally");
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 	}
 

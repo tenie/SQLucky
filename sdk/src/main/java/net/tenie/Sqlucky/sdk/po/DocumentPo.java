@@ -155,23 +155,30 @@ public class DocumentPo implements Serializable {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) {
+            return true;
+        }
+		if (obj == null) {
+            return false;
+        }
+		if (getClass() != obj.getClass()) {
+            return false;
+        }
 		DocumentPo other = (DocumentPo) obj;
 		if (file == null) {
-			if (other.file != null)
-				return false;
-		} else if (!file.equals(other.file))
-			return false;
+			if (other.file != null) {
+                return false;
+            }
+		} else if (!file.equals(other.file)) {
+            return false;
+        }
 		if (fileFullName == null) {
-			if (other.fileFullName != null)
-				return false;
-		} else if (!fileFullName.equals(other.fileFullName))
-			return false;
+			if (other.fileFullName != null) {
+                return false;
+            }
+		} else if (!fileFullName.equals(other.fileFullName)) {
+            return false;
+        }
 		return true;
 	}
 

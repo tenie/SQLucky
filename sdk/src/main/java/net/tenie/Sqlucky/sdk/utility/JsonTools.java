@@ -59,8 +59,9 @@ public class JsonTools {
 
     public static void readJosnModel(String encode) {
         File f = FileOrDirectoryChooser.showOpenSqlFile("Open", ComponentGetter.primaryStage);
-        if (f == null)
+        if (f == null) {
             return;
+        }
         String val = "";
         try {
             val = FileUtils.readFileToString(f, encode);

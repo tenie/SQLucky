@@ -35,12 +35,13 @@ public class FetchDBInfoCommonTools {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
         }
 
         return ls;
@@ -63,12 +64,13 @@ public class FetchDBInfoCommonTools {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
         }
 
         return ls;
@@ -86,12 +88,13 @@ public class FetchDBInfoCommonTools {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
         }
 
         return str;
@@ -110,12 +113,13 @@ public class FetchDBInfoCommonTools {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
         }
 
         return ls;
@@ -511,10 +515,12 @@ public class FetchDBInfoCommonTools {
             e.printStackTrace();
         } finally {
             try {
-                if (rs != null)
+                if (rs != null) {
                     rs.close();
-                if (stmt != null)
+                }
+                if (stmt != null) {
                     stmt.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -533,12 +539,13 @@ public class FetchDBInfoCommonTools {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
         }
 
         return retI;
@@ -786,7 +793,7 @@ public class FetchDBInfoCommonTools {
         List<String> ls = new ArrayList<String>();
         try {
             List<RsData> rs = DBTools.selectSql(conn, sql);
-            if (rs != null && rs.size() > 0)
+            if (rs != null && rs.size() > 0) {
                 for (RsData dt : rs) {
                     String UNIQUERULE = dt.getString("UNIQUERULE");
                     String INDNAME = dt.getString("INDNAME");
@@ -801,6 +808,7 @@ public class FetchDBInfoCommonTools {
                             + ("N".equals(REVERSE_SCANS) ? " DISALLOW REVERSE SCANS " : "");
                     ls.add(createSql);
                 }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -839,7 +847,7 @@ public class FetchDBInfoCommonTools {
         List<RsData> rs;
         try {
             rs = DBTools.selectSql(conn, sql);
-            if (rs != null && rs.size() > 0)
+            if (rs != null && rs.size() > 0) {
                 for (RsData dt : rs) {
                     String str = "ALTER TABLE " + schema + "." + dt.getString("TABNAME") + " ADD CONSTRAINT  "
                             + dt.getString("CONSTNAME") + " FOREIGN KEY ("
@@ -869,6 +877,7 @@ public class FetchDBInfoCommonTools {
                     }
                     ls.add(str);
                 }
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();

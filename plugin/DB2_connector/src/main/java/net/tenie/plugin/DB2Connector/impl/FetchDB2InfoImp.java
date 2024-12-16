@@ -39,12 +39,13 @@ public class FetchDB2InfoImp {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return ls;
@@ -67,12 +68,13 @@ public class FetchDB2InfoImp {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return ls;
@@ -90,12 +92,13 @@ public class FetchDB2InfoImp {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return str;
@@ -491,10 +494,12 @@ public class FetchDB2InfoImp {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (rs != null)
-					rs.close();
-				if (stmt != null)
-					stmt.close();
+				if (rs != null) {
+                    rs.close();
+                }
+				if (stmt != null) {
+                    stmt.close();
+                }
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -513,12 +518,13 @@ public class FetchDB2InfoImp {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return retI;
@@ -769,21 +775,22 @@ public class FetchDB2InfoImp {
 		List<String> ls = new ArrayList<String>();
 		try {
 			List<RsData> rs = DBTools.selectSql(conn, sql);
-			if (rs != null && rs.size() > 0)
-				for (RsData dt : rs) {
-					String UNIQUERULE = dt.getString("UNIQUERULE");
-					String INDNAME = dt.getString("INDNAME");
-					String TABNAME = dt.getString("TABNAME");
-					String COLNAMES = dt.getString("COLNAMES");
-					String INDEXTYPE = dt.getString("INDEXTYPE");
-					String REVERSE_SCANS = dt.getString("REVERSE_SCANS");
+			if (rs != null && rs.size() > 0) {
+                for (RsData dt : rs) {
+                    String UNIQUERULE = dt.getString("UNIQUERULE");
+                    String INDNAME = dt.getString("INDNAME");
+                    String TABNAME = dt.getString("TABNAME");
+                    String COLNAMES = dt.getString("COLNAMES");
+                    String INDEXTYPE = dt.getString("INDEXTYPE");
+                    String REVERSE_SCANS = dt.getString("REVERSE_SCANS");
 
-					String createSql = "CREATE " + ("U".equals(UNIQUERULE) ? "UNIQUE" : " ") + " INDEX " + INDNAME
-							+ " on " + TABNAME + " ( " + COLNAMES.replace("+", ",").substring(1) + " ) "
-							+ ("CLUS".equals(INDEXTYPE) ? " cluster " : " ")
-							+ ("N".equals(REVERSE_SCANS) ? " DISALLOW REVERSE SCANS " : "");
-					ls.add(createSql);
-				}
+                    String createSql = "CREATE " + ("U".equals(UNIQUERULE) ? "UNIQUE" : " ") + " INDEX " + INDNAME
+                            + " on " + TABNAME + " ( " + COLNAMES.replace("+", ",").substring(1) + " ) "
+                            + ("CLUS".equals(INDEXTYPE) ? " cluster " : " ")
+                            + ("N".equals(REVERSE_SCANS) ? " DISALLOW REVERSE SCANS " : "");
+                    ls.add(createSql);
+                }
+            }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -822,36 +829,37 @@ public class FetchDB2InfoImp {
 		List<RsData> rs;
 		try {
 			rs = DBTools.selectSql(conn, sql);
-			if (rs != null && rs.size() > 0)
-				for (RsData dt : rs) {
-					String str = "ALTER TABLE " + schema + "." + dt.getString("TABNAME") + " ADD CONSTRAINT  "
-							+ dt.getString("CONSTNAME") + " FOREIGN KEY ("
-							+ StrUtils.StrPlitJoin(dt.getString("FK_COLNAMES"), " ", ",") + ") REFERENCES "
-							+ dt.getString("REFTABNAME") + "("
-							+ StrUtils.StrPlitJoin(dt.getString("PK_COLNAMES"), " ", ",") + ") " + "";
-					if ("R".equals(dt.getString("DELETERULE"))) {
-						str += " ON DELETE  RESTRICT ";
-					}
+			if (rs != null && rs.size() > 0) {
+                for (RsData dt : rs) {
+                    String str = "ALTER TABLE " + schema + "." + dt.getString("TABNAME") + " ADD CONSTRAINT  "
+                            + dt.getString("CONSTNAME") + " FOREIGN KEY ("
+                            + StrUtils.StrPlitJoin(dt.getString("FK_COLNAMES"), " ", ",") + ") REFERENCES "
+                            + dt.getString("REFTABNAME") + "("
+                            + StrUtils.StrPlitJoin(dt.getString("PK_COLNAMES"), " ", ",") + ") " + "";
+                    if ("R".equals(dt.getString("DELETERULE"))) {
+                        str += " ON DELETE  RESTRICT ";
+                    }
 
-					if ("C".equals(dt.getString("DELETERULE"))) {
-						str += " ON DELETE  CASCADE ";
-					}
-					if ("A".equals(dt.getString("DELETERULE"))) {
-						str += "  ";
-					}
+                    if ("C".equals(dt.getString("DELETERULE"))) {
+                        str += " ON DELETE  CASCADE ";
+                    }
+                    if ("A".equals(dt.getString("DELETERULE"))) {
+                        str += "  ";
+                    }
 
-					if ("R".equals(dt.getString("UPDATERULE"))) {
-						str += " ON UPDATE  RESTRICT ";
-					}
+                    if ("R".equals(dt.getString("UPDATERULE"))) {
+                        str += " ON UPDATE  RESTRICT ";
+                    }
 
-					if ("C".equals(dt.getString("UPDATERULE"))) {
-						str += " ON UPDATE  CASCADE ";
-					}
-					if ("A".equals(dt.getString("UPDATERULE"))) {
-						str += "  ";
-					}
-					ls.add(str);
-				}
+                    if ("C".equals(dt.getString("UPDATERULE"))) {
+                        str += " ON UPDATE  CASCADE ";
+                    }
+                    if ("A".equals(dt.getString("UPDATERULE"))) {
+                        str += "  ";
+                    }
+                    ls.add(str);
+                }
+            }
 
 		} catch (SQLException e) {
 			e.printStackTrace();

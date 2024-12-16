@@ -78,13 +78,15 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<MyNoteEditorShe
 
 	private void dragOver(DragEvent event, TreeCell<MyNoteEditorSheet> treeCell, TreeView<MyNoteEditorSheet> treeView) {
 
-		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT))
-			return;
+		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT)) {
+            return;
+        }
 		TreeItem<MyNoteEditorSheet> thisItem = treeCell.getTreeItem();
 
 		// can't drop on itself
-		if (draggedItem == null || thisItem == null || thisItem == draggedItem)
-			return;
+		if (draggedItem == null || thisItem == null || thisItem == draggedItem) {
+            return;
+        }
 		// ignore if this is the root
 		if (draggedItem.getParent() == null) {
 			clearDropLocation();
@@ -104,8 +106,9 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<MyNoteEditorShe
 	private void drop(DragEvent event, TreeCell<MyNoteEditorSheet> treeCell, TreeView<MyNoteEditorSheet> treeView) {
 		Dragboard db = event.getDragboard();
 		boolean success = false;
-		if (!db.hasContent(DataFormat.PLAIN_TEXT))
-			return;
+		if (!db.hasContent(DataFormat.PLAIN_TEXT)) {
+            return;
+        }
 
 		TreeItem<MyNoteEditorSheet> thisItem = treeCell.getTreeItem();
 		TreeItem<MyNoteEditorSheet> droppedItemParent = draggedItem.getParent();
@@ -128,8 +131,9 @@ public class NoteTabNodeCellFactory implements Callback<TreeView<MyNoteEditorShe
 	}
 
 	private void clearDropLocation() {
-		if (dropZone != null)
-			dropZone.setStyle("");
+		if (dropZone != null) {
+            dropZone.setStyle("");
+        }
 	}
 
 }

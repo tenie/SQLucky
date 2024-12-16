@@ -352,8 +352,9 @@ public class DataModelUtility {
 		var mdpo = DataModelTabTree.currentSelectItem().getValue();
 		Long mid = mdpo.getModelId();
 		Consumer<String> caller = newName -> {
-			if (StrUtils.isNullOrEmpty(newName.trim()))
-				return;
+			if (StrUtils.isNullOrEmpty(newName.trim())) {
+                return;
+            }
 			var val = DataModelDAO.selectDMInfoByName(newName);
 			if (val != null) {
 				MyAlert.errorAlert("Fail ! Name Exist :" + newName);

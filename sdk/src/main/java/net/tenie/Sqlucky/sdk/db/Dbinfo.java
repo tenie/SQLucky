@@ -114,8 +114,9 @@ public class Dbinfo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 	}
 
@@ -198,8 +199,9 @@ public class Dbinfo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 	}
 
@@ -230,8 +232,9 @@ public class Dbinfo {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 	}
 
@@ -437,8 +440,6 @@ public class Dbinfo {
 	// 函数
 	public static List<FuncProcTriggerPo> fetchAllFunctions(Connection conn, String schemaOrCatalog) throws Exception {
 		ResultSet funRs = null;
-//		ResultSet rs = null;
-		Statement sm = null;
 		List<FuncProcTriggerPo> ls = new ArrayList<FuncProcTriggerPo>();
 		try {
 			DatabaseMetaData dbMetaData = conn.getMetaData();
@@ -466,11 +467,9 @@ public class Dbinfo {
 			}
 
 		} finally {
-			if (funRs != null)
-				funRs.close();
-
-			if (sm != null)
-				sm.close();
+			if (funRs != null) {
+                funRs.close();
+            }
 		}
 		return ls;
 	}
@@ -478,7 +477,6 @@ public class Dbinfo {
 	// procedure
 	public static List<FuncProcTriggerPo> fetchAllProcedures(Connection conn, String schemaOrCatalog) throws Exception {
 		ResultSet proRs = null;
-		Statement sm = null;
 		List<FuncProcTriggerPo> ls = new ArrayList<FuncProcTriggerPo>();
 		try {
 			DatabaseMetaData dbMetaData = conn.getMetaData();
@@ -505,10 +503,9 @@ public class Dbinfo {
 			}
 
 		} finally {
-			if (proRs != null)
-				proRs.close();
-			if (sm != null)
-				sm.close();
+			if (proRs != null) {
+                proRs.close();
+            }
 		}
 		return ls;
 	}
@@ -517,7 +514,6 @@ public class Dbinfo {
 	@Deprecated
 	public static List<FuncProcTriggerPo> fetchAllTriggers(Connection conn, String schemaOrCatalog) throws Exception {
 		ResultSet proRs = null;
-		Statement sm = null;
 		List<FuncProcTriggerPo> ls = new ArrayList<FuncProcTriggerPo>();
 		try {
 			DatabaseMetaData dbMetaData = conn.getMetaData();
@@ -544,10 +540,9 @@ public class Dbinfo {
 			}
 
 		} finally {
-			if (proRs != null)
-				proRs.close();
-			if (sm != null)
-				sm.close();
+			if (proRs != null) {
+                proRs.close();
+            }
 		}
 		return ls;
 	}
@@ -591,12 +586,15 @@ public class Dbinfo {
 			}
 			return tables;
 		} finally {
-			if (tablesResultSet != null)
-				tablesResultSet.close();
-			if (rs != null)
-				rs.close();
-			if (sm != null)
-				sm.close();
+			if (tablesResultSet != null) {
+                tablesResultSet.close();
+            }
+			if (rs != null) {
+                rs.close();
+            }
+			if (sm != null) {
+                sm.close();
+            }
 		}
 
 	}
@@ -636,15 +634,15 @@ public class Dbinfo {
 	 * @return
 	 */
 	private String getCommentFromSql(String sql) {
-		if (sql == null && "".equals(sql)) {
+		if (sql == null || sql.isEmpty()) {
 			return "";
 		}
-		String sr[] = sql.split("\n");
+		String[] sr = sql.split("\n");
 		if (sr.length == 0) {
 			return "";
 		}
 		String srs = sr[sr.length - 1];
-		String comment[] = srs.split("COMMENT");
+		String[] comment = srs.split("COMMENT");
 		if (comment.length == 0) {
 			return "";
 		}

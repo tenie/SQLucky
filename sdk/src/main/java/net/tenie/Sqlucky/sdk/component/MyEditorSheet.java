@@ -199,7 +199,9 @@ public class MyEditorSheet extends Tab {
 	public String readDocumentFileText(){
 		String val = "";
 		String filePath = documentPo.getExistFileFullName();
-		if(StrUtils.isNullOrEmpty(filePath)) return val;
+		if(StrUtils.isNullOrEmpty(filePath)) {
+            return val;
+        }
 		File file = new File(filePath);
 		if(file.exists() && file.isFile()){
 			String encode = documentPo.getEncode();
@@ -239,9 +241,15 @@ public class MyEditorSheet extends Tab {
 	 * 原文被其他程序修改后, 重新加载
 	 */
 	public void reloadText(){
-		if(sqluckyEditor == null ) return;
-		if(!documentFileExists()) return;
-		if(! needReload ) return;
+		if(sqluckyEditor == null ) {
+            return;
+        }
+		if(!documentFileExists()) {
+            return;
+        }
+		if(! needReload ) {
+            return;
+        }
 
 		// 内容不同时提示
 		if(! documentTextEqualsCodeAreaText()){
@@ -384,7 +392,9 @@ public class MyEditorSheet extends Tab {
 	 * @param conn
 	 */
 	public void saveScriptPo(Connection conn) {
-		if (this.sqluckyEditor == null) return;
+		if (this.sqluckyEditor == null) {
+            return;
+        }
 		if (documentFileExists()) {
 			if (!documentTextEqualsCodeAreaText()) {
 				String sql = this.getAreaText();
@@ -604,8 +614,9 @@ public class MyEditorSheet extends Tab {
 		rename.setDisable(true);
 		rename.setOnAction(e -> {
 			Consumer<String> caller = x -> {
-				if (StrUtils.isNullOrEmpty(x.trim()))
-					return;
+				if (StrUtils.isNullOrEmpty(x.trim())) {
+                    return;
+                }
 				this.setTitle(x);
 				this.documentPo.setTitle(x);
 			};
@@ -736,8 +747,9 @@ public class MyEditorSheet extends Tab {
 	}
 
 	public File getFile() {
-		if (documentPo == null)
-			return null;
+		if (documentPo == null) {
+            return null;
+        }
 		return documentPo.getFile();
 	}
 	// 存在 就显示出来

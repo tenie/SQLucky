@@ -61,7 +61,7 @@ class AwtImageConverter {
    static boolean snapshot(WritableImage image, SnapshotParameters params, String format, File file) throws SVGLibraryException {
       RenderedImage awtImg = SwingFXUtils.fromFXImage(image, null);
       try {
-         if (format.equals("jpg")) {
+         if ("jpg".equals(format)) {
             // see https://stackoverflow.com/questions/4386446/issue-using-imageio-write-jpg-file-pink-background
             PixelGrabber pg = new PixelGrabber((java.awt.Image) awtImg, 0, 0, -1, -1, true);
             pg.grabPixels();

@@ -24,7 +24,8 @@ public class DbTableDatePo implements SqluckyDbTableDatePo {
 	// 行数
 	private int rows = 0;
 	
-	public void clean() {
+	@Override
+    public void clean() {
 		fields.clear();
 		resultSet.clean();
 		
@@ -56,23 +57,28 @@ public class DbTableDatePo implements SqluckyDbTableDatePo {
 		rowpo.addCell(new SimpleStringProperty(errorMessage), null, p);
 		return errdpo;
 	}
-	public ResultSetRowPo addRow() {
+	@Override
+    public ResultSetRowPo addRow() {
 		ResultSetRowPo row = resultSet.creatRow();
 		return row;
 	}
 	
-	public void addData(ResultSetRowPo row, String data, SheetFieldPo field) {
+	@Override
+    public void addData(ResultSetRowPo row, String data, SheetFieldPo field) {
 		row.addCell(data, null, field);
 	}
-	public void addData(ResultSetRowPo row, StringProperty data, SheetFieldPo field) {
+	@Override
+    public void addData(ResultSetRowPo row, StringProperty data, SheetFieldPo field) {
 		row.addCell(data, null, field);
 	}
 
-	public void addField(SheetFieldPo data) {
+	@Override
+    public void addField(SheetFieldPo data) {
 		fields.add(data);
 	}
 
-	public SheetFieldPo addField(String data) {
+	@Override
+    public SheetFieldPo addField(String data) {
 		SheetFieldPo po = new SheetFieldPo();
 		po.setColumnLabel(data);
 		po.setColumnName(data);
@@ -84,7 +90,8 @@ public class DbTableDatePo implements SqluckyDbTableDatePo {
 		fields.add(po);
 		return po;
 	}
-	public SheetFieldPo addField(String data ,Double Width) {
+	@Override
+    public SheetFieldPo addField(String data , Double Width) {
 		SheetFieldPo po = new SheetFieldPo();
 		po.setColumnLabel(data);
 		po.setColumnName(data);
@@ -98,29 +105,36 @@ public class DbTableDatePo implements SqluckyDbTableDatePo {
 		return po;
 	}
 
-	public ObservableList<SheetFieldPo> getFields() {
+	@Override
+    public ObservableList<SheetFieldPo> getFields() {
 		return fields;
 	}
 
-	public void setFields(ObservableList<SheetFieldPo> fields) {
+	@Override
+    public void setFields(ObservableList<SheetFieldPo> fields) {
 		this.fields = fields;
 	}
 
-	public double getExecTime() {
+	@Override
+    public double getExecTime() {
 		return execTime;
 	}
 
-	public void setExecTime(double execTime) {
+	@Override
+    public void setExecTime(double execTime) {
 		this.execTime = execTime;
 	}
 
-	public ResultSetPo getResultSet() {
+	@Override
+    public ResultSetPo getResultSet() {
 		return resultSet;
 	}
-	public void setResultSet(ResultSetPo resultSet) {
+	@Override
+    public void setResultSet(ResultSetPo resultSet) {
 		this.resultSet = resultSet;
 	}
-	public void setRows(int rows) {
+	@Override
+    public void setRows(int rows) {
 		this.rows = rows;
 	}
 	

@@ -128,7 +128,9 @@ public class MyAutoComplete implements AutoComplete {
 		treeView.setOnKeyPressed(e -> {
 			if (KeyCode.ENTER.equals(e.getCode())) {
 				var it = treeView.getSelectionModel().getSelectedItem();
-				if(it == null ) return;
+				if(it == null ) {
+                    return;
+                }
 				String selectVal = it.getValue().getTableName();
 				codeAreaReplaceString(selectVal, it.getValue());
 				hide();
@@ -258,7 +260,9 @@ public class MyAutoComplete implements AutoComplete {
 	 * 创建Popup
 	 */
 	private void createPopup(double x, double y) {
-		if (vb == null) return;
+		if (vb == null) {
+            return;
+        }
 		Platform.runLater(() -> {
 			pop = new Popup();
 			// pop 设置键盘输入事件

@@ -323,8 +323,12 @@ public class SignInWindow {
 			var node2 = list.get(k+1);
 			int idxi= i++;
 			int idxj= j++;
-			if(node1 !=null ) grid.add(node1, 0, idxi);
-			if(node2 !=null ) grid.add(node2, 1, idxj);
+			if(node1 !=null ) {
+                grid.add(node1, 0, idxi);
+            }
+			if(node2 !=null ) {
+                grid.add(node2, 1, idxj);
+            }
 		}
 		ColumnConstraints c1 = new ColumnConstraints();
 		ColumnConstraints c2= new ColumnConstraints();

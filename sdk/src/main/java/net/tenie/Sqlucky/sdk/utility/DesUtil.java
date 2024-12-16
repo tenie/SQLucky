@@ -50,8 +50,9 @@ public class DesUtil {
      */
     public static String decrypt(String data) {
         String rs = "";
-        if (data == null)
+        if (data == null) {
             return rs;
+        }
         byte[] buf = Base64.getDecoder().decode(data);
 
         byte[] bt;
@@ -98,8 +99,9 @@ public class DesUtil {
      * @throws Exception
      */
     public static String decrypt(String data, String key) throws Exception {
-        if (data == null)
+        if (data == null) {
             return null;
+        }
         if (key == null || "".equals(key)) {
             key = defaultKey;
         }

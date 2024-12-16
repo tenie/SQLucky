@@ -107,8 +107,9 @@ public class SheetFieldPo {
 	}
 
 	public void setColumnName(String columnName) {
-		if (StrUtils.isNotNullOrEmpty(columnName))
-			this.columnName = new SimpleStringProperty(columnName);
+		if (StrUtils.isNotNullOrEmpty(columnName)) {
+            this.columnName = new SimpleStringProperty(columnName);
+        }
 	}
 
 	public StringProperty getColumnClassName() {
@@ -120,8 +121,9 @@ public class SheetFieldPo {
 	}
 
 	public void setColumnClassName(String columnClassName) {
-		if (StrUtils.isNotNullOrEmpty(columnClassName))
-			this.columnClassName = new SimpleStringProperty(columnClassName);
+		if (StrUtils.isNotNullOrEmpty(columnClassName)) {
+            this.columnClassName = new SimpleStringProperty(columnClassName);
+        }
 	}
 
 	public IntegerProperty getColumnDisplaySize() {
@@ -133,8 +135,9 @@ public class SheetFieldPo {
 	}
 
 	public void setColumnDisplaySize(Integer columnDisplaySize) {
-		if (columnDisplaySize != null)
-			this.columnDisplaySize = new SimpleIntegerProperty(columnDisplaySize);
+		if (columnDisplaySize != null) {
+            this.columnDisplaySize = new SimpleIntegerProperty(columnDisplaySize);
+        }
 	}
 
 	public StringProperty getColumnLabel() {
@@ -149,8 +152,9 @@ public class SheetFieldPo {
 	}
 
 	public void setColumnLabel(String columnLabel) {
-		if (StrUtils.isNotNullOrEmpty(columnLabel))
-			this.columnLabel = new SimpleStringProperty(columnLabel);
+		if (StrUtils.isNotNullOrEmpty(columnLabel)) {
+            this.columnLabel = new SimpleStringProperty(columnLabel);
+        }
 	}
 
 	public IntegerProperty getColumnType() {
@@ -162,8 +166,9 @@ public class SheetFieldPo {
 	}
 
 	public void setColumnType(Integer columnType) {
-		if (columnType != null)
-			this.columnType = new SimpleIntegerProperty(columnType);
+		if (columnType != null) {
+            this.columnType = new SimpleIntegerProperty(columnType);
+        }
 	}
 
 	public StringProperty getColumnTypeName() {
@@ -175,8 +180,9 @@ public class SheetFieldPo {
 	}
 
 	public void setColumnTypeName(String columnTypeName) {
-		if (StrUtils.isNotNullOrEmpty(columnTypeName))
-			this.columnTypeName = new SimpleStringProperty(columnTypeName);
+		if (StrUtils.isNotNullOrEmpty(columnTypeName)) {
+            this.columnTypeName = new SimpleStringProperty(columnTypeName);
+        }
 	}
 
 	public Double getColumnWidth() {

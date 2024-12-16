@@ -147,12 +147,13 @@ public class AppDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (sm != null)
-				try {
-					sm.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (sm != null) {
+                try {
+                    sm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 		DocumentPo po = new DocumentPo();
 		po.setId(id);
@@ -205,12 +206,13 @@ public class AppDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (sm != null)
-				try {
-					sm.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (sm != null) {
+                try {
+                    sm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 	}
@@ -226,12 +228,13 @@ public class AppDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (sm != null)
-				try {
-					sm.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (sm != null) {
+                try {
+                    sm.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 	}
@@ -280,10 +283,12 @@ public class AppDao {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (rs != null)
-					rs.close();
-				if (sm != null)
-					sm.close();
+				if (rs != null) {
+                    rs.close();
+                }
+				if (sm != null) {
+                    sm.close();
+                }
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -364,8 +369,9 @@ public class AppDao {
 			throw e;
 
 		} finally {
-			if (sqluckyConn != null)
-				sqluckyConn.closeConn();
+			if (sqluckyConn != null) {
+                sqluckyConn.closeConn();
+            }
 			if (conn != null) {
 				SqluckyAppDB.closeConn(conn);
 			}

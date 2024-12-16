@@ -182,8 +182,9 @@ public class ConnectionDao {
 			// VENDOR , 没有注册jdbc的数据库驱动就跳过
 			String vendor = rd.getString("VENDOR");
 			SqluckyDbRegister reg = DbVendor.register(vendor);
-			if (reg == null)
-				continue;
+			if (reg == null) {
+                continue;
+            }
 
 			DBConnectorInfoPo connPo = new DBConnectorInfoPo(rd.getString("CONN_NAME"), rd.getString("DRIVER"), // DbVendor.getDriver(dbDriver.getValue()),
 					rd.getString("HOST"), rd.getString("PORT"), rd.getString("USER"), rd.getString("PASS_WORD"),
@@ -217,8 +218,9 @@ public class ConnectionDao {
 				// VENDOR connPo.getDbVendor
 				String vendor = connPo.getDbVendor();
 				SqluckyDbRegister reg = DbVendor.register(vendor);
-				if (reg == null)
-					continue;
+				if (reg == null) {
+                    continue;
+                }
 				// 设置使用jdbc url的flag
 				if (StrUtils.isNullOrEmpty(connPo.getHostOrFile()) && StrUtils.isNullOrEmpty(connPo.getPort())
 						&& StrUtils.isNotNullOrEmpty(connPo.getJdbcUrl())) {
@@ -340,8 +342,9 @@ public class ConnectionDao {
 
 	// 从新创建dbinfoTree的数据, 删除旧数据
 	public static void DBInfoTreeReCreate(List<DBConnectorInfoPo> dbciPo) {
-		if (dbciPo == null || dbciPo.size() == 0)
-			return;
+		if (dbciPo == null || dbciPo.isEmpty()) {
+            return;
+        }
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 删除表里的旧数据
@@ -381,8 +384,9 @@ public class ConnectionDao {
 
 	// 将新的数据库连接数据和旧数据合并起来
 	public static void DBInfoTreeMerge(List<DBConnectorInfoPo> dbciPo) {
-		if (dbciPo == null || dbciPo.size() == 0)
-			return;
+		if (dbciPo == null || dbciPo.isEmpty()) {
+            return;
+        }
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 判断链接名称是否重复, 重复添加后缀
@@ -408,8 +412,9 @@ public class ConnectionDao {
 
 	// 从新创建scriptTree的数据, 删除旧数据
 	public static void scriptTreeReCreate(List<DocumentPo> docPo) {
-		if (docPo == null || docPo.size() == 0)
-			return;
+		if (docPo == null || docPo.isEmpty()) {
+            return;
+        }
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 删除表里的旧数据
@@ -426,8 +431,9 @@ public class ConnectionDao {
 
 	// 将新sript数据和旧数据合并起来
 	public static void scriptTreeMerge(List<DocumentPo> docPo) {
-		if (docPo == null || docPo.size() == 0)
-			return;
+		if (docPo == null || docPo.isEmpty()) {
+            return;
+        }
 
 		List<DocumentPo> tmpDocs = new ArrayList<>();
 		Connection conn = SqluckyAppDB.getConn();

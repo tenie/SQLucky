@@ -111,8 +111,9 @@ public class DBTools {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (sm != null)
-				sm.close();
+			if (sm != null) {
+                sm.close();
+            }
 		}
 		return i;
 	}
@@ -132,8 +133,9 @@ public class DBTools {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
 		}
 	}
 
@@ -157,12 +159,13 @@ public class DBTools {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return str;
@@ -186,12 +189,13 @@ public class DBTools {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return rsList;
@@ -208,12 +212,13 @@ public class DBTools {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return val;
@@ -231,12 +236,13 @@ public class DBTools {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return val;
@@ -257,8 +263,9 @@ public class DBTools {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (sm != null)
-				sm.close();
+			if (sm != null) {
+                sm.close();
+            }
 		}
 		return dpo;
 	}
@@ -275,8 +282,9 @@ public class DBTools {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (sm != null)
-				sm.close();
+			if (sm != null) {
+                sm.close();
+            }
 		}
 	}
 
@@ -296,10 +304,12 @@ public class DBTools {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
-			if (rs != null)
-				rs.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
+			if (rs != null) {
+                rs.close();
+            }
 		}
 		return id;
 	}
@@ -318,8 +328,9 @@ public class DBTools {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 		return id;
 	}
@@ -329,14 +340,12 @@ public class DBTools {
 	 */
 	public static void execSQL(Connection conn, List<String> ls) throws SQLException {
 		Statement sm = null;
-		PreparedStatement ps = null;
-
 		try {
 			for (String sql : ls) {
-				String sqlA[] = sql.split(";");
+				String[] sqlA = sql.split(";");
 				for (int i = 0; i < sqlA.length; i++) {
 					String subsql = sqlA[i].trim();
-					if (subsql.length() > 0) {
+					if (!subsql.isEmpty()) {
 						sm = conn.createStatement();
 						sm.executeUpdate(subsql);
 					}
@@ -346,8 +355,9 @@ public class DBTools {
 			e.printStackTrace();
 			throw e;
 		} finally {
-			if (ps != null)
-				ps.close();
+			if (sm != null) {
+				sm.close();
+            }
 		}
 	}
 
@@ -364,13 +374,15 @@ public class DBTools {
 					e.printStackTrace();
 					throw e;
 				} finally {
-					if (pstmt != null)
-						pstmt.close();
+					if (pstmt != null) {
+                        pstmt.close();
+                    }
 				}
 			} catch (Exception e1) {
 				e1.printStackTrace();
-				if (isThrow)
-					throw e1;
+				if (isThrow) {
+                    throw e1;
+                }
 			}
 		}
 	}
@@ -423,8 +435,9 @@ public class DBTools {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			if (pstmt != null)
-				pstmt.close();
+			if (pstmt != null) {
+                pstmt.close();
+            }
 		}
 	}
 
@@ -448,8 +461,9 @@ public class DBTools {
 		} catch (SQLException e) {
 			throw e;
 		} finally {
-			if (rs != null)
-				rs.close();
+			if (rs != null) {
+                rs.close();
+            }
 		}
 		return ls;
 	}

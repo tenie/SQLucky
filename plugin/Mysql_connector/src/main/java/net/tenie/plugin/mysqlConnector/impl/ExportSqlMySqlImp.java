@@ -27,12 +27,12 @@ import java.util.List;
 public class ExportSqlMySqlImp extends ExportDBObjects {
     private static Logger logger = LogManager.getLogger(ExportSqlMySqlImp.class);
 
-    private FetchDBInfoCommonTools fdb2;
+//    private FetchDBInfoCommonTools fdb2;
 
-    public ExportSqlMySqlImp() {
-        fdb2 = new FetchDBInfoCommonTools();
-
-    }
+//    public ExportSqlMySqlImp() {
+//        fdb2 = new FetchDBInfoCommonTools();
+//
+//    }
 
     /**
      * 创建数据库
@@ -41,6 +41,7 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
      * @param dataBaseName
      * @return
      */
+    @Override
     public String exportCreateDataBase(Connection conn, String dataBaseName) {
         return "CREATE DATABASE " + dataBaseName;
     }
@@ -189,12 +190,13 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
         }
 
         return ls;
@@ -288,8 +290,7 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
 
     @Override
     public String exportCreateForeignKey(Connection conn, String schema, String obj) {
-        String ddl = fdb2.exportForeignKey(conn, schema, obj);
-        return ddl;
+        return FetchDBInfoCommonTools.exportForeignKey(conn, schema, obj);
     }
 
     @Override
@@ -390,12 +391,13 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
         }
         return ddl;
     }
@@ -414,12 +416,13 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
         }
         return allDDl;
     }
@@ -443,12 +446,13 @@ public class ExportSqlMySqlImp extends ExportDBObjects {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            if (rs != null)
+            if (rs != null) {
                 try {
                     rs.close();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
+            }
         }
 
         return ls;

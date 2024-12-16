@@ -60,8 +60,9 @@ public class NoteTabTree extends SqluckyTitledPane {
 		treeView.getStyleClass().add("my-tag");
 		treeView.setShowRoot(false);
 		// 展示连接
-		if (rootNode.getChildren().size() > 0)
-			treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+		if (rootNode.getChildren().size() > 0) {
+            treeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+        }
 		// 右键菜单
 		ContextMenu contextMenu = createContextMenu();
 		treeView.setContextMenu(contextMenu);

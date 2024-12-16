@@ -134,7 +134,9 @@ public class PluginManageAction {
 			// 选中事件
 			allPluginTable.getSelectionModel().selectedItemProperty().addListener((ob, ov ,nv)->{
 				describe.clear();
-				if(nv == null) return;
+				if(nv == null) {
+                    return;
+                }
 				String strDescribe = nv.getValueByFieldName("Describe");
 				 
 				describe.appendText(strDescribe);
@@ -356,7 +358,7 @@ public class PluginManageAction {
 
 				}
 
-				if (loadStatus.equals("√")){
+				if ("√".equals(loadStatus)){
 					Platform.runLater(() -> {
 						MyAlert.alertWait("下载成功, 需要重启生效");
 						PluginManageAction.queryAction("", sheetDaV, allPluginTable);

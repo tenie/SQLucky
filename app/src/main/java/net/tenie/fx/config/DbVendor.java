@@ -59,7 +59,9 @@ public class DbVendor {
 	}
 
 	public static void registerDbConnection( SqluckyDbRegister db) {
-		if(db == null) return;
+		if(db == null) {
+            return;
+        }
 		String name = db.getName();
 		add( name, db);
 	}

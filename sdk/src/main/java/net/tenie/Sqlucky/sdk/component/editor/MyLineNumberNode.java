@@ -69,7 +69,8 @@ public class MyLineNumberNode implements SqluckyLineNumberNode {
 	private final IntFunction<String> format;
 	
 	private List<String> lineNoList = new ArrayList<>();
-	public List<String> getLineNoList() {
+	@Override
+    public List<String> getLineNoList() {
 		return lineNoList;
 	}
 	public void setLineNoList(List<String> lineNoList) {
@@ -189,7 +190,8 @@ public class MyLineNumberNode implements SqluckyLineNumberNode {
 	 * bookmark next
 	 * @param isNext true: 从上往下找
 	 */
-	public   void nextBookmark( boolean isNext) {
+	@Override
+    public   void nextBookmark(boolean isNext) {
 		  
 		MyCodeArea codeArea =     area; // SqlEditor.getCodeArea();  
 		int idx = codeArea.getCurrentParagraph(); // 获取当前行号

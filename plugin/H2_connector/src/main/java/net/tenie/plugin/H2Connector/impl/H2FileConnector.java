@@ -75,12 +75,13 @@ public class H2FileConnector extends SqluckyConnector {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (rs != null)
-				try {
-					rs.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+			if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 		}
 
 		return pos;
@@ -143,12 +144,15 @@ public class H2FileConnector extends SqluckyConnector {
 		}else {
 			
 			String fp = dbConnectorInfoPo.getHostOrFile();
-			if(fp.endsWith(".mv.db"))
-				fp= fp.substring(0, fp.lastIndexOf(".mv.db"));
-			if(fp.endsWith(".trace.db"))
-				fp= fp.substring(0, fp.lastIndexOf(".trace.db"));
-			if(fp.endsWith(".db"))
-				fp= fp.substring(0, fp.lastIndexOf(".db")); 
+			if(fp.endsWith(".mv.db")) {
+                fp= fp.substring(0, fp.lastIndexOf(".mv.db"));
+            }
+			if(fp.endsWith(".trace.db")) {
+                fp= fp.substring(0, fp.lastIndexOf(".trace.db"));
+            }
+			if(fp.endsWith(".db")) {
+                fp= fp.substring(0, fp.lastIndexOf(".db"));
+            }
 			
 			jdbcUrlstr = "jdbc:h2:" +fp;
 			dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr);

@@ -4,63 +4,67 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 
-public class H2FileRegister implements SqluckyDbRegister{
-	private String driver = "";
-	private String dbVendor = "H2-file";
-	private boolean JdbcUrlIsFile = true; 
-	private boolean mustUseJdbcUrl = false;
-	private String instanceName =  "PUBLIC"; // 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称   
-	
-	public boolean getMustUseJdbcUrl() {
-		return mustUseJdbcUrl;
-	}
-  
-	public void setMustUseJdbcUrl(boolean mustUseJdbcUrl) {
-		this.mustUseJdbcUrl = mustUseJdbcUrl;
-	}
-	
-	@Override
-	public String getDriver() { 
-		return driver;
-	}
- 
-	public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new H2FileConnector(connPo, this);
-	}
+public class H2FileRegister implements SqluckyDbRegister {
+    private String driver = "";
+    private String dbVendor = "H2-file";
+    private boolean JdbcUrlIsFile = true;
+    private boolean mustUseJdbcUrl = false;
+    private String instanceName = "PUBLIC"; // 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称
 
-	public String getDbVendor() {
-		return dbVendor;
-	}
+    @Override
+    public boolean getMustUseJdbcUrl() {
+        return mustUseJdbcUrl;
+    }
 
-	public void setDbVendor(String dbVendor) {
-		this.dbVendor = dbVendor;
-	}
+    public void setMustUseJdbcUrl(boolean mustUseJdbcUrl) {
+        this.mustUseJdbcUrl = mustUseJdbcUrl;
+    }
 
-	public boolean getJdbcUrlIsFile() {
-		return JdbcUrlIsFile;
-	}
+    @Override
+    public String getDriver() {
+        return driver;
+    }
 
-	public void setJdbcUrlIsFile(boolean jdbcUrlIsFile) {
-		JdbcUrlIsFile = jdbcUrlIsFile;
-	}
+    @Override
+    public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
+        return new H2FileConnector(connPo, this);
+    }
 
-	public void setDriver(String driver) {
-		this.driver = driver;
-	}
+    public String getDbVendor() {
+        return dbVendor;
+    }
 
-	@Override
-	public String getName() {
-		return dbVendor;
-	}
-	@Override
-	public String getInstanceName() {
-		return instanceName;
-	}
+    public void setDbVendor(String dbVendor) {
+        this.dbVendor = dbVendor;
+    }
 
-	@Override
-	public boolean hasUser() {
-		return true;
-	}
-	
-	
+    @Override
+    public boolean getJdbcUrlIsFile() {
+        return JdbcUrlIsFile;
+    }
+
+    public void setJdbcUrlIsFile(boolean jdbcUrlIsFile) {
+        JdbcUrlIsFile = jdbcUrlIsFile;
+    }
+
+    public void setDriver(String driver) {
+        this.driver = driver;
+    }
+
+    @Override
+    public String getName() {
+        return dbVendor;
+    }
+
+    @Override
+    public String getInstanceName() {
+        return instanceName;
+    }
+
+    @Override
+    public boolean hasUser() {
+        return true;
+    }
+
+
 }

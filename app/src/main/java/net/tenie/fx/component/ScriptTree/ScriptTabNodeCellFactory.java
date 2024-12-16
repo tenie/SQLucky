@@ -117,13 +117,15 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyEditorSheet
 
 	private void dragOver(DragEvent event, TreeCell<MyEditorSheet> treeCell, TreeView<MyEditorSheet> treeView) {
 
-		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT))
-			return;
+		if (!event.getDragboard().hasContent(DataFormat.PLAIN_TEXT)) {
+            return;
+        }
 		TreeItem<MyEditorSheet> thisItem = treeCell.getTreeItem();
 
 		// can't drop on itself
-		if (draggedItem == null || thisItem == null || thisItem == draggedItem)
-			return;
+		if (draggedItem == null || thisItem == null || thisItem == draggedItem) {
+            return;
+        }
 		// ignore if this is the root
 		if (draggedItem.getParent() == null) {
 			clearDropLocation();
@@ -144,8 +146,9 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyEditorSheet
 		logger.info("drop");
 		Dragboard db = event.getDragboard();
 		boolean success = false;
-		if (!db.hasContent(DataFormat.PLAIN_TEXT))
-			return;
+		if (!db.hasContent(DataFormat.PLAIN_TEXT)) {
+            return;
+        }
 
 		TreeItem<MyEditorSheet> thisItem = treeCell.getTreeItem();
 		TreeItem<MyEditorSheet> droppedItemParent = draggedItem.getParent();
@@ -169,8 +172,9 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyEditorSheet
 
 	private void clearDropLocation() {
 		logger.info("clearDropLocation");
-		if (dropZone != null)
-			dropZone.setStyle("");
+		if (dropZone != null) {
+            dropZone.setStyle("");
+        }
 	}
 
 }

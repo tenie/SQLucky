@@ -405,23 +405,30 @@ public class TablePo {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
+		if (this == obj) {
+            return true;
+        }
+		if (obj == null) {
+            return false;
+        }
+		if (getClass() != obj.getClass()) {
+            return false;
+        }
 		TablePo other = (TablePo) obj;
 		if (tableName == null) {
-			if (other.tableName != null)
-				return false;
-		} else if (!tableName.equals(other.tableName))
-			return false;
+			if (other.tableName != null) {
+                return false;
+            }
+		} else if (!tableName.equals(other.tableName)) {
+            return false;
+        }
 		if (tableSchema == null) {
-			if (other.tableSchema != null)
-				return false;
-		} else if (!tableSchema.equals(other.tableSchema))
-			return false;
+			if (other.tableSchema != null) {
+                return false;
+            }
+		} else if (!tableSchema.equals(other.tableSchema)) {
+            return false;
+        }
 		return true;
 	}
 

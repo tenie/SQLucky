@@ -314,7 +314,7 @@ public class XMLNode {
       if (attributes.containsKey(attrName)) {
          String attrvalue = attributes.get(attrName);
          try {
-            return attrvalue.equals("true");
+            return "true".equals(attrvalue);
          } catch (NumberFormatException e) {
             return defaultValue;
          }

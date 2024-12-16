@@ -317,7 +317,7 @@ public class ConnectionEditor {
                     }
                 }
             }
-            if (!dbRegister.getName().equals("Mysql")) {
+            if (!"Mysql".equals(dbRegister.getName())) {
                 if (StrUtils.isNullOrEmpty(defaultSchema.getText())) {
                     var textval = lbdefaultSchemaStr.getText();
                     MyAlert.errorAlert(textval + " is empty !");
@@ -370,9 +370,10 @@ public class ConnectionEditor {
     public void updateConnectionInfoSetting() {
         String str = this.editTreeItem.getValue().getName();
         SqluckyConnector dp = DBConns.get(str);
-        if (dp != null)
+        if (dp != null) {
             ConnectionInfoSetting(true, dp.getConnName(), dp.getUser(), dp.getPassWord(), dp.getHostOrFile(),
                     dp.getPort(), dp.getDbVendor(), dp.getDefaultSchema(), dp.getDbName(), dp);
+        }
     }
 
     /**
@@ -554,7 +555,9 @@ public class ConnectionEditor {
     public static void closeDbConn() {
         logger.info("closeConnEvent()");
         TreeItem<TreeNodePo> val = DBinfoTree.getTrewViewCurrentItem();
-        if (val == null) return;
+        if (val == null) {
+            return;
+        }
         val = getConnNodeRoot(val);
         closeDbConnHelper(val);
         // 断开的连接不在顶部

@@ -302,8 +302,9 @@ public class MyCodeAreaKeyPressedEvent {
         StringBuilder strb2 = new StringBuilder("");
 
         while (true) {
-            if (a >= len)
+            if (a >= len) {
                 break;
+            }
 
             String sc = codeArea.getText(a, b);
             if (" ".equals(sc) || "\t".equals(sc)) {
