@@ -7,8 +7,9 @@ import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 public class Db2Register implements SqluckyDbRegister{
 	private String driver = "com.ibm.db2.jcc.DB2Driver";
 	private String dbVendor = "DB2";
-	private boolean JdbcUrlIsFile = false;
-	private String instanceName = "";  // 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称
+	private boolean jdbcUrlIsFile = false;
+	// 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称
+	private String instanceName = "";
 	
 	@Override
 	public String getDriver() { 
@@ -30,11 +31,11 @@ public class Db2Register implements SqluckyDbRegister{
 
 	@Override
     public boolean getJdbcUrlIsFile() {
-		return JdbcUrlIsFile;
+		return jdbcUrlIsFile;
 	}
 
 	public void setJdbcUrlIsFile(boolean jdbcUrlIsFile) {
-		JdbcUrlIsFile = jdbcUrlIsFile;
+		jdbcUrlIsFile = jdbcUrlIsFile;
 	}
 
 	public void setDriver(String driver) {

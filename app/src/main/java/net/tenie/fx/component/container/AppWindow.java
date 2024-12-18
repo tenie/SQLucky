@@ -19,6 +19,8 @@ import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.controlsfx.control.MasterDetailPane;
 
+import java.util.Objects;
+
 /*   @author tenie */
 public class AppWindow extends VBox {
     public static AppHeadContainer appHeadContainer;
@@ -45,7 +47,7 @@ public class AppWindow extends VBox {
         // 下面窗口
         dataViewContainer = new DataViewContainer();
 
-        masterDetailPane.getStyleClass().add(0, "masterDetailPane");
+        masterDetailPane.getStyleClass().addFirst("masterDetailPane");
         masterDetailPane.setShowDetailNode(false);
         masterDetailPane.setMasterNode(operateContainer);
         masterDetailPane.setDetailNode(dataViewContainer);
@@ -109,15 +111,15 @@ public class AppWindow extends VBox {
         ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/yellow/TableView-yellow.css").toExternalForm());
         ConfigVal.cssListYellow.add(AppWindow.class.getResource("/css/yellow/tabPane-yellow.css").toExternalForm());
 
-        ComponentGetter.INFO = new Label("");  //Info
+        ComponentGetter.INFO = new Label("");
         ComponentGetter.INFO.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
 
-        ComponentGetter.ABOUT = new Label(""); // About
+        ComponentGetter.ABOUT = new Label("");
         ComponentGetter.ABOUT.setGraphic(IconGenerator.svgImage("info-circle", "#7CFC00"));
 
-        ComponentGetter.WARN = new Label(""); // Warn
+        ComponentGetter.WARN = new Label("");
         ComponentGetter.WARN.setGraphic(IconGenerator.svgImage("info-circle", "#FFD700"));
-        ComponentGetter.ERROR = new Label(""); // Error
+        ComponentGetter.ERROR = new Label("");
         ComponentGetter.ERROR.setGraphic(IconGenerator.svgImage("info-circle", "red"));
         ComponentGetter.EMPTY = new Label("");
 
@@ -129,33 +131,14 @@ public class AppWindow extends VBox {
         ComponentGetter.iconRight = IconGenerator.svgImageDefActive("chevron-circle-right", 14);
         ComponentGetter.iconLeft = IconGenerator.svgImageDefActive("chevron-circle-down", 14);
 
-        ComponentGetter.LogoIcons = new Image(AppWindow.class.getResourceAsStream(ConfigVal.appIcon));
+        ComponentGetter.LogoIcons = new Image(Objects.requireNonNull(AppWindow.class.getResourceAsStream(ConfigVal.appIcon)));
 
     }
 
-    public MasterDetailPane getMasterDetailPane() {
-        return masterDetailPane;
-    }
 
-    public void setMasterDetailPane(MasterDetailPane masterDetailPane) {
-        this.masterDetailPane = masterDetailPane;
-    }
 
-    public OperateContainer getOperate() {
-        return operateContainer;
-    }
 
-    public void setOperate(OperateContainer operate) {
-        this.operateContainer = operate;
-    }
 
-    public DataViewContainer getDataView() {
-        return dataViewContainer;
-    }
-
-    public void setDataView(DataViewContainer dataView) {
-        dataViewContainer = dataView;
-    }
 
     public Scene getAppScene() {
         return appScene;

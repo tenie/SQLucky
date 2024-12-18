@@ -585,23 +585,17 @@ public class StrUtils {
         StringBuilder str = new StringBuilder();
         text = replaceAllCommentType(text);
         text = text.replaceAll("\r", "");
-//        text = text.replaceAll("--", "\n--");
-        String val[] = text.split("\n");
+        String[] val = text.split("\n");
         if (val.length > 0) {
             for (String v : val) {
-//                if (v.startsWith("--")) {
-//                    str.append(" " + v + "\n");
-//                } else {
-//                    str.append(" " + v);
-//                }
-                str.append(" " + v);
+                str.append(" ").append(v);
             }
 
             String dest = str.toString().trim();
             dest = dest.replaceAll("\t", " ");
             int sz = dest.length();
             while (true) {
-                dest = dest.replaceAll("  ", " ");
+                dest = dest.replaceAll(" {2}", " ");
                 int tmpSz = dest.length();
                 if (tmpSz == sz) {
                     break;
@@ -629,11 +623,11 @@ public class StrUtils {
     public static String cleanEmptyLine(String text) {
         StringBuilder str = new StringBuilder();
         text = text.replaceAll("\r", "");
-        String val[] = text.split("\n");
+        String[] val = text.split("\n");
         if (val.length > 0) {
             for (String line : val) {
-                if (line.trim().length() > 0 ){
-                    str.append(line + "\n");
+                if (!line.trim().isEmpty()){
+                    str.append(line).append("\n");
                 }
             }
             return str.toString();
@@ -709,7 +703,7 @@ public class StrUtils {
      * @return
      */
     public static String createBlankString(int len) {
-        StringBuilder strb = new StringBuilder("");
+        StringBuilder strb = new StringBuilder();
         for (int i = 0; i < len; i++) {
             strb.append(" ");
         }
@@ -739,7 +733,7 @@ public class StrUtils {
                 }
             }
         }
-        if ("".equals(nstr)) {
+        if (nstr.isEmpty()) {
             nstr = sql;
         }
         return nstr.trim();
@@ -747,21 +741,16 @@ public class StrUtils {
 
     /**
      * 创建Matcher
-     * @param patternStr
-     * @param val
-     * @return
      */
     public static Matcher createMatcher(String patternStr, String val){
-        Pattern pattern = Pattern.compile(patternStr); //去掉空格符合换行符
+        //去掉空格符合换行符
+        Pattern pattern = Pattern.compile(patternStr);
         Matcher matcher = pattern.matcher(val);
         return matcher;
     }
 
     /**
      * 是否存在要查找的关键字
-     * @param valText
-     * @param keyWord
-     * @return
      */
     public static boolean hasKeyWord(String valText, String keyWord){
         String KEYWORD_PATTERN = "\\b(" + keyWord + ")\\b";
@@ -774,8 +763,6 @@ public class StrUtils {
 
     /**
      * 替换单行注解 -- # ,便于压缩sql
-     * @param text
-     * @return
      */
     public static String replaceAllCommentType( String text){
         text = replaceCommentType(COMMENT_PATTERN_2, "#", text);
@@ -785,7 +772,6 @@ public class StrUtils {
     /**
      * 把单行注释改为多行注释, 便于压缩sql
      *  把 -- 注释改成 /*
-     * @param text
      */
     public static String replaceCommentType(String comPat, String comStr, String text){
         List<IndexRange> ls = findAllCommentByPatternStr(comPat, text);
@@ -842,16 +828,11 @@ public class StrUtils {
 
         String patternString = "(?<STRING>" + STRING_PATTERN + ")"
                         + "|(?<COMMENT>" + commentPatternStr + ")";
-
         // 找到所有注释
         Matcher matcher = createMatcher(patternString, text);
         List<IndexRange> commentlist =new ArrayList<>();
-        List<IndexRange> stringlist =new ArrayList<>();
         while (matcher.find()){
-            if( matcher.group("STRING") != null){
-                IndexRange ir = new IndexRange(matcher.start(), matcher.end());
-                stringlist.add(ir);
-            }else  if( matcher.group("COMMENT") != null){
+            if( matcher.group("COMMENT") != null){
                 IndexRange ir = new IndexRange(matcher.start(), matcher.end());
                 commentlist.add(ir);
             }
@@ -860,18 +841,9 @@ public class StrUtils {
     }
 
     public static String TestTrimAllComment(String textVal) {
-//        List<IndexRange> ls = findAllComment(textVal);
-//        System.out.println("====================");
-//        for(var ir: ls){
-//            String str = textVal.substring(ir.getStart(), ir.getEnd());
-//            System.out.println(str);
-//        }
         System.out.println("====================");
-//        trimAllCommentToBlank(textVal);
         trimAllComment(textVal);
         System.out.println("====================");
-//        textVal =   trimAllComment(textVal);
-//        System.out.println(textVal);
         return "";
     }
 
@@ -884,8 +856,10 @@ public class StrUtils {
     public static String trimAllComment(String textVal) {
         List<IndexRange>  ls =  findAllComment(textVal);
         StringBuilder sb = new StringBuilder();
-        int idxStart = 0;  // 有用字符串的开始
-        int idxEnd = 0;  // 有用字符串的开始
+        // 有用字符串的开始
+        int idxStart = 0;
+        // 有用字符串的开始
+        int idxEnd = 0;
 
         for (IndexRange ir : ls){
             int start = ir.getStart();
@@ -902,13 +876,16 @@ public class StrUtils {
             if(textVal.length()> idxEnd){
                 int tmp = 0;
                 char charVal = textVal.charAt(idxStart);
-                if(charVal == 13){ // \r
+                // \r
+                if(charVal == 13){
                     tmp++;
                     charVal = textVal.charAt(idxStart+1);
-                    if (charVal == 10){ // \n
+                    // \n
+                    if (charVal == 10){
                         tmp++;
                     }
-                }else if (charVal == 10 ){// \n
+                    // \n
+                }else if (charVal == 10 ){
                     tmp++;
                 }
                 idxStart += tmp;
@@ -1165,13 +1142,10 @@ public class StrUtils {
         int lastKwEnd = 0;
         // 把匹配到的sql的字符串替换为对应长度的空白字符串, 得到一个和原始文本一样长度的新字符串
         while (matcher.find()) {
-//			 String styleClass = matcher.group("STRING") != null ? "string" : null;
             int start = matcher.start();
             int end = matcher.end();
             int len = end - start;
             String space = StrUtils.createBlankString(len);
-            String tmp = text.substring(start, end);
-//			 logger.info("len = "+len+" ; tmp = " + tmp);
             txtTmp += text.substring(lastKwEnd, start) + space;
             lastKwEnd = end;
         }
@@ -1181,9 +1155,8 @@ public class StrUtils {
         } else {
             txtTmp = text;
         }
-//		logger.info("txtTmp = " + txtTmp);
 
-        // TODO 在新字符上面, 提取字sql语句的区间
+        // 在新字符上面, 提取字sql语句的区间
         String str = txtTmp;
         // 根据区间提炼出真正要执行的sql语句
         List<String> sqls = new ArrayList<>();
@@ -1256,7 +1229,7 @@ public class StrUtils {
                 }
             }
         }
-        if ("".equals(nstr)) {
+        if (nstr.isEmpty()) {
             nstr = sql;
         }else {
             nstr = recoverStringMatcher(msVal, nstr);
@@ -1274,8 +1247,6 @@ public class StrUtils {
 
     /**
      * 正则匹配字符串, 找出字符串中的字符串 如: "字符串" '字符串'
-     * @param valStr
-     * @return
      */
     public static matherString getStringMatcher(String valStr) {
         Matcher matr = createMatcher(STRING_PATTERN, valStr );
@@ -1291,8 +1262,6 @@ public class StrUtils {
 
     /**
      * 正则匹配字符串, 找出字符串中的字符串 如: "字符串" '字符串'
-     * @param valStr
-     * @return
      */
     public static matherString getCommentMatcher(String valStr) {
         Matcher matr = createMatcher(STRING_PATTERN, valStr );
@@ -1309,8 +1278,6 @@ public class StrUtils {
 
     /**
      * 正则匹配字符串, 找出xml元素, 换成占位符, 如 <></>
-     * @param valStr
-     * @return
      */
     public static matherString getXmlEleMatcher(String valStr) {
         Matcher matr = createMatcher(XML_ELE_PATTERN, valStr );
@@ -1326,8 +1293,6 @@ public class StrUtils {
 
     /**
      * 正则匹配字符串, 找出myBatis元素, 换成占位符, 如 ${} #{}
-     * @param valStr
-     * @return
      */
     public static List<IndexRange>  getMyBatisEleRangeList(String valStr) {
         Matcher matr = createMatcher(MYBATIS_PARAM_PATTERN, valStr );
@@ -1349,9 +1314,6 @@ public class StrUtils {
 
     /**
      * 恢复字符串中的字符串
-     * @param msval
-     * @param strVal
-     * @return
      */
     public static String recoverStringMatcher(matherString msval, String strVal) {
         List<String> ls = msval.replaceStr();
@@ -1364,9 +1326,6 @@ public class StrUtils {
 
     /**
      * 恢复字符串的时候, 将字符串注释掉
-     * @param msval
-     * @param strVal
-     * @return
      */
     public static String recoverStringMatcherToComment(matherString msval, String strVal) {
         List<String> ls = msval.replaceStr();
@@ -1456,21 +1415,21 @@ public class StrUtils {
     }
 
     public static String StrPlitJoin(String str, String regex, String delimiter) {
-        String rs = "";
+        StringBuilder rs = new StringBuilder();
         String[] temp = str.split(regex);
         if (temp != null && temp.length > 0) {
             int len = temp.length;
             for (int i = 0; i < len; i++) {
                 String s = temp[i];
-                if (s.length() > 0 && s.trim().length() > 0) {
-                    rs += s + delimiter;
+                if (!s.isEmpty() && !s.trim().isEmpty()) {
+                    rs.append(s).append(delimiter);
                 }
             }
         }
-        if (rs.length() > 0) {
-            rs = rs.substring(0, rs.length() - 1);
+        if (!rs.isEmpty()) {
+            rs = new StringBuilder(rs.substring(0, rs.length() - 1));
         }
-        return rs;
+        return rs.toString();
     }
 
     // 字符串计数
@@ -1494,8 +1453,7 @@ public class StrUtils {
     }
 
     public static String MenuItemNameFormat(String name, int size) {
-        String str = String.format("  %-" + size + "s", name);
-        return str;
+        return String.format("  %-" + size + "s", name);
     }
 
     // 匹配文件名
@@ -1537,7 +1495,7 @@ public class StrUtils {
 
             } else if (fileTyleStr.contains("*")) {
                 // 前后包含
-                String arrStr[] = fileTyleStr.split("\\*");
+                String[] arrStr = fileTyleStr.split("\\*");
                 String qStr1 = arrStr[0];
                 String qStr2 = arrStr[1];
                 if (fileName.startsWith(qStr1) && fileName.endsWith(qStr2)) {
@@ -1556,7 +1514,7 @@ public class StrUtils {
         return rtVal;
     }
 
-    public static String Html2Text(String inputString) {
+    public static String html2Text(String inputString) {
         if (inputString == null) {
             return "";
         }
@@ -1605,16 +1563,6 @@ public class StrUtils {
             p_html = Pattern.compile(regEx_html, Pattern.CASE_INSENSITIVE);
             m_html = p_html.matcher(htmlStr);
             htmlStr = m_html.replaceAll("");
-
-//		            // 过滤空格回车标签
-//		            p_space = Pattern.compile(regEx_space, Pattern.CASE_INSENSITIVE);
-//		            m_space = p_space.matcher(htmlStr);
-//		            htmlStr = m_space.replaceAll("");
-//
-//		            // 过滤转义字符
-//		            p_escape = Pattern.compile(regEx_escape, Pattern.CASE_INSENSITIVE);
-//		            m_escape = p_escape.matcher(htmlStr);
-//		            htmlStr = m_escape.replaceAll("");
 
             textStr = htmlStr;
 
@@ -1696,9 +1644,6 @@ public class StrUtils {
 
     /**
      * 查找 表名/schema名
-     * @param tableName
-     * @param isTable
-     * @return
      */
     public static String tableSchemaName(String tableName, boolean isTable){
         String rs = "";
@@ -1725,9 +1670,6 @@ public class StrUtils {
 
     /**
      *  返回加密后的字符串
-     * @param password
-     * @param val
-     * @return
      */
     public static String encrypt(String password, String val) {
         BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
@@ -1738,9 +1680,6 @@ public class StrUtils {
 
     /**
      * 返回解密后的字符串
-     * @param password
-     * @param encryptStr
-     * @return
      */
     public static  String decrypt(String password, String encryptStr){
         BasicTextEncryptor textEncryptor = new BasicTextEncryptor();
@@ -1752,9 +1691,6 @@ public class StrUtils {
 
     /**
      *字符串转 byte
-     * @param str
-     * @param charset
-     * @return
      */
     public static byte[] bytes(CharSequence str, Charset charset) {
         if (str == null) {
@@ -1780,9 +1716,6 @@ public class StrUtils {
 
     /**
      * byte 转字符串
-     * @param bytes
-     * @param charset
-     * @return
      */
     public static String str(byte[] bytes, String charset) {
         return str(bytes, Charset.forName(charset));

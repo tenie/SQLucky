@@ -50,7 +50,8 @@ public class AppCommonAction {
         if (StrUtils.isNullOrEmpty(text)) {
             return;
         }
-        IndexRange i = code.getSelection(); // 获取当前选中的区间
+        // 获取当前选中的区间
+        IndexRange i = code.getSelection();
         int start = i.getStart();
         int end = i.getEnd();
         // 将原文本删除
@@ -61,14 +62,18 @@ public class AppCommonAction {
     }
 
     // 代码小写
-    public static void LowerCaseSQLTextSelectText() {
+    public static void lowerCaseSQLTextSelectText() {
 
         CodeArea code = MyEditorSheetHelper.getCodeArea();
-        String text = code.getSelectedText();
+        String text = null;
+        if (code != null) {
+            text = code.getSelectedText();
+        }
         if (StrUtils.isNullOrEmpty(text)) {
             return;
         }
-        IndexRange i = code.getSelection(); // 获取当前选中的区间
+        // 获取当前选中的区间
+        IndexRange i = code.getSelection();
         int start = i.getStart();
         int end = i.getEnd();
         // 将原文本删除
@@ -79,10 +84,13 @@ public class AppCommonAction {
     }
 
     // 驼峰命名转下划线
-    public static void CamelCaseUnderline() {
+    public static void camelCaseUnderline() {
 
         CodeArea code = MyEditorSheetHelper.getCodeArea();
-        String text = code.getSelectedText();
+        String text = null;
+        if (code != null) {
+            text = code.getSelectedText();
+        }
         if (StrUtils.isNullOrEmpty(text)) {
             return;
         }
@@ -111,7 +119,8 @@ public class AppCommonAction {
         if (StrUtils.isNullOrEmpty(text)) {
             return;
         }
-        IndexRange i = code.getSelection(); // 获取当前选中的区间
+        // 获取当前选中的区间
+        IndexRange i = code.getSelection();
         int start = i.getStart();
         int end = i.getEnd();
         // 将原文本删除
@@ -124,53 +133,56 @@ public class AppCommonAction {
 
 
     // 代码添加注释-- 或去除注释
-    public static void addAnnotationSQLTextSelectText() {
-
+    public static void addAnnotationSqlTextSelectText() {
         CodeArea code = MyEditorSheetHelper.getCodeArea();
-        IndexRange i = code.getSelection(); // 获取当前选中的区间
-        int start = i.getStart();
-        int end = i.getEnd();
+        // 获取当前选中的区间
+        IndexRange i = null;
+        if (code != null) {
+            i = code.getSelection();
+        }
+        int start = 0;
+        if (i != null) {
+            start = i.getStart();
+        }
+        int end = 0;
+        if (i != null) {
+            end = i.getEnd();
+        }
 
         // 修正开始下标 , 获取开始之前的字符串, 找到最接近start 的换行符
-        String frontTxt = code.getText(0, start);
-        int lidx = frontTxt.lastIndexOf('\n'); // 找到最后一个换行符
+        String frontTxt = null;
+        if (code != null) {
+            frontTxt = code.getText(0, start);
+        }
+        // 找到最后一个换行符
+        int lidx = 0;
+        if (frontTxt != null) {
+            lidx = frontTxt.lastIndexOf('\n');
+        }
         if (lidx > 0) {
-            lidx = frontTxt.length() - lidx - 1; // 获取换行符的位置, 不包括换行符自己
-            start = start - lidx; // start的位置定位到最后一个换行符之后
+            // 获取换行符的位置, 不包括换行符自己
+            lidx = frontTxt.length() - lidx - 1;
+            // start的位置定位到最后一个换行符之后
+            start = start - lidx;
         } else { // 如果没有找到换行符, 说明在第一行, 把start置为0
             start = 0;
         }
         // 获取文本
-        String txt = code.getText(start, end);
+        String txt = null;
+        if (code != null) {
+            txt = code.getText(start, end);
+        }
         // 添加注释
-        if (!StrUtils.beginWith(txt.trim(), "--")) {
+        // 去除注释
+        // 去除最后一个换行符
+        // 将原文本删除
+        // 插入 注释过的文本
+        if (txt != null && !StrUtils.beginWith(txt.trim(), "--")) {
             txt = txt.replaceAll("\n", "\n-- ");
             txt = "-- " + txt;
             code.deleteText(start, end);
             code.insertText(start, txt);
 
-        } else {// 去除注释
-            String valStr = "";
-
-            String[] strArr = txt.split("\n");
-            String endtxt = "";
-            if (strArr.length > 0) {
-                endtxt = txt.substring(txt.length() - 1);
-                for (String val : strArr) {
-                    if (StrUtils.beginWith(val.trim(), "--")) {
-                        valStr += val.replaceFirst("-- ", "") + "\n";
-                    } else {
-                        valStr += val + "\n";
-                    }
-                }
-            }
-            if (!"\n".equals(endtxt)) { // 去除最后一个换行符
-                valStr = valStr.substring(0, valStr.length() - 1);
-            }
-            // 将原文本删除
-            code.deleteText(start, end);
-            // 插入 注释过的文本
-            code.insertText(start, valStr);
         }
         MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
     }
@@ -199,29 +211,25 @@ public class AppCommonAction {
     }
 
     public static void hideLeftBottom() {
-        JFXButton btnLeft = CommonButtons.hideLeft; // AllButtons.btns.get("hideLeft");
-        JFXButton btnBottom = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
+        JFXButton btnLeft = CommonButtons.hideLeft;
+        JFXButton btnBottom = CommonButtons.hideBottom;
         boolean leftp = ComponentGetter.treeAreaDetailPane.showDetailNodeProperty().getValue();
         boolean bootp = ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
         if (leftp || bootp) {
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(false);
-//            btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-right"));
             btnLeft.setGraphic(IconGenerator.mainTabPaneClose());
 
             if(! btnBottom.isDisabled()){
                 ComponentGetter.masterDetailPane.setShowDetailNode(false);
-//                btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-up"));
                 btnBottom.setGraphic(IconGenerator.bottomTabPaneOpen());
             }
 
         } else {
             ComponentGetter.treeAreaDetailPane.setShowDetailNode(true);
-//            btnLeft.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-left"));
             btnLeft.setGraphic(IconGenerator.mainTabPaneClose());
 
             if(! btnBottom.isDisabled()){
                 ComponentGetter.masterDetailPane.setShowDetailNode(true);
-//                btnBottom.setGraphic(IconGenerator.svgImageDefActive("caret-square-o-down"));
                 btnBottom.setGraphic(IconGenerator.bottomTabPaneClose());
             }
 
@@ -237,7 +245,7 @@ public class AppCommonAction {
                 connpo.getConn();
                 Platform.runLater(() -> {
                     if (connpo.isAlive()) {
-                        String infoStr = connpo.DBInfo(connpo.getConn()); // Dbinfo.getDBInfo(connpo.getConn());
+                        String infoStr = connpo.DBInfo(connpo.getConn());
                         MyAlert.infoAlert("  Successfully  ! \n" + infoStr);
                         connpo.closeConn();
                         testBtn.setStyle("-fx-background-color: green ");

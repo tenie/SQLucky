@@ -63,7 +63,7 @@ public class DataTableContextMenuAction {
 
 	// 更新表中字段的值
 	public static void updateTableColumn(SheetDataValue dataObj, String colname) {
-		RsVal rv = new RsVal(dataObj); // SqluckyBottomSheetUtility.tableInfo(dataObj);
+		RsVal rv = new RsVal(dataObj);
 		String sql = "UPDATE " + rv.tableName + " SET " + colname + " = ";
 		Consumer<String> caller = x -> {
 			if (StrUtils.isNullOrEmpty(x.trim())) {
@@ -164,7 +164,7 @@ public class DataTableContextMenuAction {
 		}
 
 		ObservableList<ResultSetRowPo> alls = myBottomSheet.getTableData().getTable().getSelectionModel()
-				.getSelectedItems(); //// SqluckyBottomSheetUtility.dataTableViewSelectedItems(myBottomSheet);
+				.getSelectedItems();
 		for (ResultSetRowPo ls : alls) {
 			StringProperty tmp = ls.getRowDatas().get(colIdx).getCellData();
 			tmp.setValue(value);

@@ -455,7 +455,8 @@ public class ConnectionEditor {
 
         for (TreeItem<TreeNodePo> val : ls) {
             if (val.equals(selectItem)) {
-                po = DBConns.get(val.getValue().getName()); // 找到连接对象
+                // 找到连接对象
+                po = DBConns.get(val.getValue().getName());
                 if (po != null) {
                     treeNode = val;
                     break;
@@ -561,7 +562,6 @@ public class ConnectionEditor {
         val = getConnNodeRoot(val);
         closeDbConnHelper(val);
         // 断开的连接不在顶部
-//        treeItemDown(val);
         DBConns.flushChoiceBoxGraphic();
         AppWindow.treeView.refresh();
 

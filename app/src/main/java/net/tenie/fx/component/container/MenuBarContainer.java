@@ -153,7 +153,7 @@ public class MenuBarContainer extends MenuBar{
 
 		MenuItem commentCode = new MenuItem(StrUtils.MenuItemNameFormat("Line Comment"));
 		commentCode.setOnAction(value -> {
-			AppCommonAction.addAnnotationSQLTextSelectText();
+			AppCommonAction.addAnnotationSqlTextSelectText();
 		});
 
 		// 大写
@@ -164,7 +164,7 @@ public class MenuBarContainer extends MenuBar{
 
 		MenuItem LowerCase = new MenuItem(StrUtils.MenuItemNameFormat("Lower Case"));
 		LowerCase.setOnAction(value -> {
-			AppCommonAction.LowerCaseSQLTextSelectText();
+			AppCommonAction.lowerCaseSQLTextSelectText();
 		});
 
 		MenuItem underscore = new MenuItem(StrUtils.MenuItemNameFormat("Underline To Hump"));
@@ -177,9 +177,7 @@ public class MenuBarContainer extends MenuBar{
 
 		MenuItem Hump = new MenuItem(StrUtils.MenuItemNameFormat("Hump To Underline"));
 		Hump.setOnAction(value -> {
-			Platform.runLater(() -> {
-				AppCommonAction.CamelCaseUnderline();
-			});
+			Platform.runLater(AppCommonAction::camelCaseUnderline);
 		});
 
 		Menu cursorMenu = new Menu("Cursor");

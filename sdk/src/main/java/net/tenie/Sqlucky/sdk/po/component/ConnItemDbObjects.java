@@ -135,7 +135,7 @@ public class ConnItemDbObjects {
     public TreeItem<TreeNodePo> CreateViewNode(SqluckyConnector connpo, String sche) {
         TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("View", TreeItemType.VIEW_ROOT,
                 IconGenerator.svgImage("object-group", "blue"), connpo));
-        List<TablePo> tabs = DBOptionHelper.getViewsName(connpo, sche);// connpo.getViews(sche);
+        List<TablePo> tabs = DBOptionHelper.getViewsName(connpo, sche);
 
         // 缓存起来
         String cacheKey = connpo.getConnName() + "_" + sche;
@@ -160,7 +160,7 @@ public class ConnItemDbObjects {
     public TreeItem<TreeNodePo> CreateFunctionNode(SqluckyConnector connpo, String sche) {
         TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Function", TreeItemType.FUNCTION_ROOT,
                 IconGenerator.svgImage("gears", "blue"), connpo));
-        List<FuncProcTriggerPo> vals = DBOptionHelper.getFunctions(connpo, sche);// connpo.getFunctions(sche);
+        List<FuncProcTriggerPo> vals = DBOptionHelper.getFunctions(connpo, sche);
 
         addFuncTreeItem(Table, vals, "gear", TreeItemType.FUNCTION, connpo);
 
@@ -178,7 +178,7 @@ public class ConnItemDbObjects {
     public TreeItem<TreeNodePo> CreateProceduresNode(SqluckyConnector connpo, String sche) {
         TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Procedure", TreeItemType.PROCEDURE_ROOT,
                 IconGenerator.svgImage("puzzle-piece", "blue"), connpo));
-        List<FuncProcTriggerPo> vals = DBOptionHelper.getProcedures(connpo, sche); // connpo.getProcedures(sche);
+        List<FuncProcTriggerPo> vals = DBOptionHelper.getProcedures(connpo, sche);
 
         addFuncTreeItem(Table, vals, "gear", TreeItemType.PROCEDURE, connpo);
 
@@ -192,7 +192,6 @@ public class ConnItemDbObjects {
         return Table;
     }
     // 创建trigger节点
-
     public TreeItem<TreeNodePo> CreateTriggerNode() {
         TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Trigger", TreeItemType.TRIGGER_ROOT,
                 IconGenerator.svgImage("gears", "blue"), connpo));
@@ -204,7 +203,7 @@ public class ConnItemDbObjects {
     public TreeItem<TreeNodePo> CreateTriggerNode(SqluckyConnector connpo, String sche) {
         TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Trigger", TreeItemType.TRIGGER_ROOT,
                 IconGenerator.svgImage("originals-ray-gun", "blue"), connpo));
-        List<FuncProcTriggerPo> vals = DBOptionHelper.getTriggers(connpo, sche); // connpo.getProcedures(sche);
+        List<FuncProcTriggerPo> vals = DBOptionHelper.getTriggers(connpo, sche);
 
         addFuncTreeItem(Table, vals, "originals-ray-gun", TreeItemType.TRIGGER, connpo);
 
@@ -216,7 +215,7 @@ public class ConnItemDbObjects {
     public TreeItem<TreeNodePo> CreateIndexNode(SqluckyConnector connpo, String sche) {
         TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Index", TreeItemType.INDEX_ROOT,
                 IconGenerator.svgImage("book-perspective", "blue"), connpo));
-        List<FuncProcTriggerPo> vals = DBOptionHelper.getIndexs(connpo, sche); // connpo.getProcedures(sche);
+        List<FuncProcTriggerPo> vals = DBOptionHelper.getIndexs(connpo, sche);
 
         addFuncTreeItem(Table, vals, "book-perspective", TreeItemType.INDEX, connpo);
 
@@ -224,18 +223,16 @@ public class ConnItemDbObjects {
     }
 
     public TreeItem<TreeNodePo> CreateIndexNode() {
-        TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Index", TreeItemType.INDEX_ROOT,
-                IconGenerator.svgImage("book-perspective", "blue"), connpo));
 
-        return Table;
+        return new TreeItem<TreeNodePo>(new TreeNodePo("Index", TreeItemType.INDEX_ROOT,
+                IconGenerator.svgImage("book-perspective", "blue"), connpo));
     }
 
     // seq
     public TreeItem<TreeNodePo> CreateSequenceNode(SqluckyConnector connpo, String sche) {
         TreeItem<TreeNodePo> Table = new TreeItem<TreeNodePo>(new TreeNodePo("Sequence", TreeItemType.SEQUENCE_ROOT,
                 IconGenerator.svgImage("foundation-die-six", "blue"), connpo));
-        List<FuncProcTriggerPo> vals = DBOptionHelper.getSequences(connpo, sche, true); // connpo.getProcedures(sche);
-
+        List<FuncProcTriggerPo> vals = DBOptionHelper.getSequences(connpo, sche, true);
         addFuncTreeItem(Table, vals, "foundation-die-six", TreeItemType.SEQUENCE, connpo);
 
         return Table;
@@ -293,7 +290,7 @@ public class ConnItemDbObjects {
         po.setConnpo(connpo);
         po.setFuncProTri(fpt);
         TreeItem<TreeNodePo> subitem = new TreeItem<>(po);
-        if (img != null && img.length() > 0) {
+        if (img != null && !img.isEmpty()) {
             Node iv = IconGenerator.svgImageUnactive(img);
             po.setIcon(iv);
         }

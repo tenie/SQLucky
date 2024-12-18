@@ -29,8 +29,7 @@ import net.tenie.plugin.DataModel.po.DataModelTreeNodePo;
 public class DataModelNodeCellFactory
 		implements Callback<TreeView<DataModelTreeNodePo>, TreeCell<DataModelTreeNodePo>> {
 	private static Logger logger = LogManager.getLogger(DataModelNodeCellFactory.class);
-	private static final DataFormat JAVA_FORMAT = DataFormat.PLAIN_TEXT;// new
-																		// DataFormat("application/x-java-serialized-object");
+	private static final DataFormat JAVA_FORMAT = DataFormat.PLAIN_TEXT;
 	private static final String DROP_HINT_STYLE = "-fx-border-color: #eea82f; -fx-border-width: 0 0 2 0; -fx-padding: 3 3 1 3";
 	private TreeCell<DataModelTreeNodePo> dropZone;
 	private TreeItem<DataModelTreeNodePo> draggedItem;
@@ -55,29 +54,8 @@ public class DataModelNodeCellFactory
 				}
 			}
 		};
-//		clean.setMaxSize(12, 12); 
-//  		clean.setGraphic(ComponentGetter.getIconUnActive("times-circle"));
-//  		clean.getStyleClass().add("myCleanBtn");
-//  		clean.setVisible(false); //clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
-//  		clean.setOnAction(e->{
-//  			var it = cell.getTreeItem();
-//  		}); 
-
-//  		cell.setOnMouseEntered(e->{
-//			if(cell.isSelected()) {
-//				clean.setVisible(true);
-//			}
-//		
-//		});
-//  		
-//		cell.setOnMouseExited(e->{
-//			clean.setVisible(false);
-//		});
 
 		cell.setOnMouseClicked(e -> {
-//			if (cell.isSelected()) {
-//				clean.setVisible(true);
-//			}
 			if (e.getClickCount() == 2) {
 				if (cell == null || cell.getTreeItem() == null) {
                     return;
@@ -179,7 +157,7 @@ public class DataModelNodeCellFactory
 		}
 		if (Objects.equals(droppedItemParent, thisItem)) {
 			droppedItemParent.getChildren().remove(draggedItem);
-			droppedItemParent.getChildren().add(0, draggedItem);
+			droppedItemParent.getChildren().addFirst(draggedItem);
 
 		}
 

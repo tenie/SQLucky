@@ -207,18 +207,18 @@ public class DataModelOperate {
 	// 延迟执行函数
 	public void delayQuery(Consumer<String> caller, int milliseconds, String val) {
 		if (queue.isEmpty()) {
-			queue.offer(caller); // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
-
+			// 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
+			queue.offer(caller);
 			Thread t = new Thread() {
 				@Override
 				public void run() {
-
 					try {
 						Thread.sleep(milliseconds);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
-					var cl = queue.poll(); // 从队列取出一个元素
+					// 从队列取出一个元素
+					var cl = queue.poll();
 					if (cl != null) {
 						cl.accept(val);
 					}
@@ -234,20 +234,6 @@ public class DataModelOperate {
 
 	// 通过字符串， 查询字段表
 	private void exeQueryTableFields(String queryStr) {
-//		Long modelId = 0L;
-//		String modelIds = "0";
-//		ObservableList<TreeItem<DataModelTreeNodePo>> allmodels = DataModelTabTree.treeRoot.getChildren();
-//        for (TreeItem<DataModelTreeNodePo> treeItem : allmodels) {
-//			boolean activeModdel = treeItem.getValue().isActive();
-//            // 模型激活状态有子节点才获取模型的ID
-////            if (!treeItem.getChildren().isEmpty()) {
-//            if (activeModdel) {
-//                DataModelTreeNodePo modelepo = treeItem.getValue();
-//                modelId = modelepo.getModelId();
-//                modelIds += "," + modelId;
-//            }
-//        }
-
 		queryStr = queryStr.toUpperCase();
 
 		var SqluckyConn = SqluckyAppDB.getSqluckyConnector();
@@ -265,7 +251,6 @@ public class DataModelOperate {
 				"and ( a.DEF_KEY like '%" + queryStr + "%' or  a.DEF_NAME  like '%" + queryStr + "%' " +
 				"   or a.COMMENT like '%" + queryStr + "%' )";
 		try {
-			// TODO
 			List<Node> btns = new ArrayList<>();
 			// 导出excel
 			JFXButton exportExcel = new JFXButton();
@@ -306,7 +291,6 @@ public class DataModelOperate {
 
 			});
 			// 添加过滤功能
-
 			// tableView 处理
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();
 			TableView<ResultSetRowPo> tableView = sheetDaV.getTable();
@@ -328,28 +312,8 @@ public class DataModelOperate {
 
 	// 查询表
 	private void exeQueryTable(String queryStr) {
-		 //
-//			for (TreeItem<DataModelTreeNodePo> md : DataModelTabTree.treeRoot.getChildren()) {
-//				// 模型下面没有节点跳过
-//				if (md.getChildren().size() == 0)
-//					continue;
-//
-//				// 模型名称
-//				var modelName = md.getValue().getName();
-//				if(! rootMap.containsKey(modelName)) {
-//					// 模型的孩子（表）， 添加到缓存集合中
-//					ObservableList<TreeItem<DataModelTreeNodePo>> tmps = FXCollections.observableArrayList();
-//					tmps.addAll(md.getChildren());
-//					rootMap.put(modelName, tmps);
-//				}
-//			}
-
 		// 为空，还原
 		for (var md : DataModelTabTree.treeRoot.getChildren()) {
-			// 模型下面没有节点跳过
-//			if (md.getChildren().size() == 0)
-//				continue;
-
 			if(! rootMap.containsKey(md.getValue().getName())) {
 				continue;
 			}
@@ -364,10 +328,8 @@ public class DataModelOperate {
 				// 恢复之前缓存的所有表
 				md.getChildren().addAll(tbs);
 			}
-		
 		}
 
-	
 		// 如果输入的字符串有值， 进行查询
 		if (StrUtils.isNotNullOrEmpty(queryStr)) {
 			queryTable(queryStr, DataModelTabTree.treeRoot.getChildren());
@@ -412,7 +374,7 @@ public class DataModelOperate {
 					}
 				});
 
-				if (filterTable.size() > 0) {
+				if (!filterTable.isEmpty()) {
 					exists = true;
 					// 清空原来的表集合
 					model.getChildren().clear();
@@ -428,31 +390,17 @@ public class DataModelOperate {
 			}
 		}
 		// 展开模型treeItem
-		if (DataModelTabTree.treeRoot.getChildren().size() > 0) {
+		if (!DataModelTabTree.treeRoot.getChildren().isEmpty()) {
             DataModelTabTree.treeRoot.getChildren().get(0).setExpanded(exists);
         }
 	}
-
-	// 查询字符串 ObservableList<TreeItem<TreeNodePo>> rs =
-	// FXCollections.observableArrayList();
-//	private static ObservableList<TreeItem<DataModelTreeNodePo>> filter(
-//			ObservableList<TreeItem<DataModelTreeNodePo>> val, String str) {
-//		ObservableList<TreeItem<DataModelTreeNodePo>> rs = FXCollections.observableArrayList();
-//		String temp = str.toUpperCase();
-//		val.forEach(v -> {
-//			if (v.getValue().getName().toUpperCase().contains(temp)) {
-//				rs.add(v);
-//			}
-//		});
-//		return rs;
-//	}
 
 	public static DataModelInfoPo readJosnModel(String fileName, String encode) {
 		DataModelInfoPo DataModelPoVal = null;
 		File f = new File(fileName);
 		try {
 			String val = FileUtils.readFileToString(f, encode);
-			if (val != null && !"".equals(val)) {
+			if (val != null && !val.isEmpty()) {
 				DataModelPoVal = JSONObject.parseObject(val, DataModelInfoPo.class);
 			}
 		} catch (IOException e) {
@@ -463,9 +411,6 @@ public class DataModelOperate {
 		return DataModelPoVal;
 	}
 
-	public HBox getBtnHbox() {
-		return btnHbox;
-	}
 
 	public VBox getOptionVbox() {
 		return optionVbox;

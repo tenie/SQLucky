@@ -9,7 +9,6 @@ import org.fxmisc.richtext.CodeArea;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class SqlUtils {
@@ -20,7 +19,10 @@ public class SqlUtils {
     public static void formatSqlText() {
 
         CodeArea code = MyEditorSheetHelper.getCodeArea();
-        String txt = code.getSelectedText();
+        String txt = null;
+        if (code != null) {
+            txt = code.getSelectedText();
+        }
         if (StrUtils.isNotNullOrEmpty(txt)) {
             IndexRange i = code.getSelection();
             int start = i.getStart();
@@ -64,7 +66,10 @@ public class SqlUtils {
     // sql 压缩
     public static void pressSqlText() {
         CodeArea code = MyEditorSheetHelper.getCodeArea();
-        String txt = code.getSelectedText();
+        String txt = null;
+        if (code != null) {
+            txt = code.getSelectedText();
+        }
         if (StrUtils.isNotNullOrEmpty(txt)) {
             IndexRange i = code.getSelection();
             int start = i.getStart();
@@ -76,8 +81,10 @@ public class SqlUtils {
         } else {
             txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
             String rs = StrUtils.pressString(txt);
-            code.clear();
-            code.appendText(rs);
+            if (code != null) {
+                code.clear();
+                code.appendText(rs);
+            }
         }
         MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
     }
@@ -108,18 +115,14 @@ public class SqlUtils {
     public static void cleanBlankChar() {
         Platform.runLater(() -> {
             String text = MyEditorSheetHelper.getActivationEditorSelectTextOrAllText();
-            if (StrUtils.isNullOrEmpty(text))
+            if (StrUtils.isNullOrEmpty(text)) {
                 return;
+            }
             String rs = StrUtils.cleanrRedundantBlank(text);
             MyEditorSheetHelper.replaceSelectTextOrAllText(rs);
             MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
         });
-
     }
-
-
-
-
 
     /**
      * myBatis xml的大于小于符号 , 转为正常符号
@@ -130,28 +133,10 @@ public class SqlUtils {
             if (StrUtils.isNullOrEmpty(text)) {
                 return;
             }
-
             String rs = trimXmlConversionElement(text);
             MyEditorSheetHelper.replaceSelectTextOrAllText(rs);
 
         });
-//        CodeArea code = MyEditorSheetHelper.getCodeArea();
-//        String txt = code.getSelectedText();
-//        if (StrUtils.isNotNullOrEmpty(txt)) {
-//            IndexRange i = code.getSelection();
-//            int start = i.getStart();
-//            int end = i.getEnd();
-//
-//            String rs = trimXmlConversionElement(txt);
-//            code.deleteText(start, end);
-//            code.insertText(start, rs);
-//        } else {
-//            txt = MyEditorSheetHelper.getCurrentCodeAreaSQLText();
-//            String rs = trimXmlConversionElement(txt);
-//            code.clear();
-//            code.appendText(rs);
-//        }
-//        MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
     }
 
     /**
@@ -162,9 +147,6 @@ public class SqlUtils {
     public static String useXmlConversionElement(String str){
 //        // 1. 先把文本中的xml元素 替换为占位符, 避免把xml标记符号也
         StrUtils.matherString msVal = StrUtils.getXmlEleMatcher(str);
-        // 替换后的文本
-//        str = msVal.newString();
-
         str =  str.replaceAll("<>", "#-#");
         str =  str.replaceAll("<=", "-##");
         str =  str.replaceAll(">=", "##-");
@@ -180,8 +162,6 @@ public class SqlUtils {
         str =  str.replaceAll("@_@@", " <![CDATA[ < ]]> ");
         str =  str.replaceAll("@@_@", " <![CDATA[ > ]]> ");
 
-        // 注释掉xml元素
-//        str = StrUtils.recoverStringMatcher(msVal, str);
         return str;
     }
 
@@ -201,22 +181,6 @@ public class SqlUtils {
                 str.contains("]]>")) ){
             return str;
         }
-//        while (str.contains("<![CDATA[ <> ]]>")){
-//            str =   str.replace("<![CDATA[ <> ]]>", "<>");
-//        }
-//
-//        while (str.contains("<![CDATA[ <= ]]>")){
-//            str =   str.replace("<![CDATA[ <= ]]>", "<=");
-//        }
-//        while (str.contains("<![CDATA[ >= ]]>")){
-//            str =   str.replace("<![CDATA[ >= ]]>", ">=");
-//        }
-//        while (str.contains("<![CDATA[ < ]]>")){
-//            str =   str.replace("<![CDATA[ < ]]>", "<");
-//        }
-//        while (str.contains("<![CDATA[ > ]]>")){
-//            str =   str.replace("<![CDATA[ > ]]>", ">");
-//        }
         //  &lt; < 小于号
         while (str.contains("&lt;")){
             str =   str.replace("&lt;", "<");
@@ -235,17 +199,6 @@ public class SqlUtils {
             str =   str.replace("]]>", "");
         }
 
-
-//        // 1. 先把文本中的xml元素 替换为占位符, 避免把xml标记符号也
-//        StrUtils.matherString msVal = StrUtils.getXmlEleMatcher(str);
-//        // 替换后的文本
-//        str = msVal.newString();
-//
-//
-//        // 注释掉xml元素
-//        str = StrUtils.recoverStringMatcherToComment(msVal, str);
-//
-//        str = myBatisElementAddComment(str);
         return str;
     }
 

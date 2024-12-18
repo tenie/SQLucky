@@ -55,43 +55,34 @@ public class TransferDataController implements Initializable {
 	private static final String TRIGGER = "Trigger";
 	private static final String INDEX = "Index";
 	private static final String SEQUENCE = "Sequence";
-
 	public static List<String> errorMsg = new ArrayList<>();
-
 	@FXML
 	private AnchorPane tpane;
 	@FXML
 	private AnchorPane optionPane;
-
 	private static Thread currentThread;
-
 	@FXML
 	private VBox windowVbox;
 	@FXML
 	private Label title;
 	@FXML
 	private HBox treePane;
-
 	@FXML
 	private ComboBox<Label> soDB;
 	@FXML
 	private ComboBox<Label> soSC;
-
 	@FXML
 	private ComboBox<Label> taDB;
 	@FXML
 	private ComboBox<Label> taSC;
-
 	@FXML
 	private JFXCheckBox isIgnore;
 	@FXML
 	private JFXCheckBox isDel;
-
 	@FXML
 	private JFXCheckBox tabData;
 	@FXML
 	private JFXCheckBox tabStruct;
-
 	@FXML
 	private JFXCheckBox chView;
 	@FXML
@@ -104,7 +95,6 @@ public class TransferDataController implements Initializable {
 	private JFXCheckBox chIndex;
 	@FXML
 	private JFXCheckBox chSeq;
-
 	@FXML
 	private JFXCheckBox diffCheckBox;
 	@FXML
@@ -117,13 +107,10 @@ public class TransferDataController implements Initializable {
 	private JFXButton hideBtn;
 	@FXML
 	private JFXButton monBtn;
-
 	@FXML
 	private JFXButton upSelBtn;
 	@FXML
 	private JFXButton downSelBtn;
-
-//	@FXML private TextField	filterTxt;
 	private TextField filterTxt;
 	// 同步数据行数最大行数
 	@FXML
@@ -137,14 +124,14 @@ public class TransferDataController implements Initializable {
 	private MyCodeArea CodeArea;
 
 	private CheckTreeView<String> checkTreeView;
-	private CheckBoxTreeItem<String> root; // CheckBoxTreeItem<String>
-//	private CheckBoxTreeItem<String> filterRoot;
+	private CheckBoxTreeItem<String> root;
 	ObservableList<Label> empty = FXCollections.observableArrayList();
+	private int logLineSize = 0;
 
 	// CheckBoxTreeItem 向上选和向下选中所有item
 	private void selectAllObjByUpOrDown(boolean isUpSelect) {
 		ObservableList<TreeItem<String>> rootChildren = root.getChildren();
-		if (rootChildren != null && rootChildren.size() > 0) {
+		if (rootChildren != null && !rootChildren.isEmpty()) {
 			for (var item : rootChildren) {
 				// 遍历表节点
 				var tabList = item.getChildren();
@@ -162,33 +149,30 @@ public class TransferDataController implements Initializable {
 				// 根据selectObj的位置对其上面或下面的对象进行全选
 				for (int i = 0; i < tabList.size(); i++) {
 					CheckBoxTreeItem<String> tmpTab = (CheckBoxTreeItem<String>) tabList.get(i);
-					if (isUpSelect) { // 向上全选
+					// 向上全选
+					if (isUpSelect) {
 						if (i < idx) {
 							tmpTab.setSelected(true);
 						} else {
 							break;
 						}
-					} else {// 向下全选
+						// 向下全选
+					} else {
 						if (i > idx) {
 							tmpTab.setSelected(true);
 						}
 					}
-
 				}
-
 			}
 		}
-
 	}
 
 	// 清除 check Box
 	private void cleanCheckBox() {
 		isIgnore.setSelected(false);
 		isDel.setSelected(false);
-
 		tabData.setSelected(false);
 		tabStruct.setSelected(false);
-
 		chView.setSelected(false);
 		chFun.setSelected(false);
 		chPro.setSelected(false);
@@ -196,13 +180,12 @@ public class TransferDataController implements Initializable {
 		chIndex.setSelected(false);
 		chSeq.setSelected(false);
 		diffCheckBox.setSelected(false);
-
 		amountTxt.setDisable(true);
 		amountTxt.setText("");
 	}
 
 	// 创建check tree
-	public void creatCheckTree() {
+	public void createCheckTree() {
 		root = new CheckBoxTreeItem<String>("全选");
 		root.setExpanded(true);
 		checkTreeView = new CheckTreeView<>(root);
@@ -216,10 +199,7 @@ public class TransferDataController implements Initializable {
 	// 显示 日志 输出窗口
 	private void monitorShow() {
 		Platform.runLater(() -> {
-			if(treePane.getChildren().contains(checkTreeView)){
-				treePane.getChildren().remove(checkTreeView);
-			}
-//			treePane.getChildren().remove(0);
+            treePane.getChildren().remove(checkTreeView);
 			treePane.getChildren().add(spCode);
 			HBox.setHgrow(spCode, Priority.ALWAYS);
 			monBtn.setText("Hide Monitor");
@@ -228,13 +208,12 @@ public class TransferDataController implements Initializable {
 	}
 
 	private void monitorHide() {
-		treePane.getChildren().remove(0);
+		treePane.getChildren().removeFirst();
 		treePane.getChildren().add(checkTreeView);
 		monBtn.setText("Monitor");
 		monBtn.setStyle("");
 	}
 
-	private int logLineSize = 0;
 
 	// 输出log
 	private void moniterAppendLog(String str) {
@@ -247,7 +226,6 @@ public class TransferDataController implements Initializable {
 			CodeArea.scrollYToPixel(Double.MAX_VALUE);
 			logLineSize++;
 		});
-
 	}
 
 	private void moniterAppendErrorLog(List<String> logs) {
@@ -255,9 +233,7 @@ public class TransferDataController implements Initializable {
 			for (String str : logs) {
 				CodeArea.appendText(str + "\n");
 			}
-
 		});
-
 	}
 
 	// 清除log
@@ -310,20 +286,16 @@ public class TransferDataController implements Initializable {
 					String rtValStr = rt.getSecond();
 					moniterAppendLog("--------执行 时间 : " + rtValStr + " 秒 --------");
 				}
-
 			};
 		};
 		currentThread.start();
-
 	}
 
 	private void stopAction() {
 		if (currentThread != null) {
 			 soDbpo.closeConn();
 			 tarDbpo.closeConn();
-
-//			currentThread.stop();
-			btnController(false);
+			 btnController(false);
 		}
 	}
 
@@ -333,14 +305,6 @@ public class TransferDataController implements Initializable {
 		}else {
 			monitorHide();
 		}
-
-//		Object nd = treePane.getChildren().get(0);
-//		if (nd instanceof StackPane) {
-//			monitorHide();
-//		} else {
-//			monitorShow();
-//		}
-
 	}
 
 	// 设置 图标 css
@@ -357,13 +321,10 @@ public class TransferDataController implements Initializable {
 		stopBtn.setGraphic(IconGenerator.svgImage("stop", "red"));
 		hideBtn.setGraphic(IconGenerator.svgImageUnactive("circle-o"));
 		monBtn.setGraphic(IconGenerator.svgImageDefActive("laptop"));
-//		CommonUtils.addCssClass(windowVbox, "myAlert");
-
 	}
 
 	// 设置按钮 输入框 的action
 	private void setAction() {
-
 		// 监控显示隐藏
 		monBtn.setOnAction(e -> {
 			monBtnAction();
@@ -372,7 +333,7 @@ public class TransferDataController implements Initializable {
 		tabData.selectedProperty().addListener((a, old, nw) -> {
 			amountTxt.setDisable(!nw);
 		});
-		// TODO 执行按钮
+		// 执行按钮
 		execBtn.setOnAction(e -> {
 			runActionn();
 		});
@@ -385,7 +346,7 @@ public class TransferDataController implements Initializable {
 			ComponentGetter.dataTransferStage.hide();
 		});
 
-		// TODO 向上选表格
+		// 向上选表格
 		upSelBtn.setOnAction(e -> {
 			selectAllObjByUpOrDown(true);
 		});
@@ -397,7 +358,6 @@ public class TransferDataController implements Initializable {
 		amountTxt.setDisable(true);
 		amountTxt.lengthProperty().addListener(CommonListener.textFieldLimit(amountTxt, 4));
 		amountTxt.textProperty().addListener(CommonListener.textFieldNumChange(amountTxt));
-
 		AnchorPane.setRightAnchor(hideBtn, 3.0);
 	}
 
@@ -407,31 +367,23 @@ public class TransferDataController implements Initializable {
 		SqluckyTextField tf = new SqluckyTextField();
 		filterTxt = tf.getTxt();
 		filterTxtInitialize(filterTxt);
-
 		tpane.getChildren().add(tf.getPane());
-
 		setGraphicAndCss();
 		tipsLabel.setText("Tips: 同步过程, 函数, 可能依赖序列或互相依赖");
-
-//		MyTextEditor sqlCodeArea
 		spCode = new MyTextEditor();
 		CodeArea = spCode.getCodeArea();
 		setAction();
-
 		// 设置数据库下拉选的值
 		TransferDataUtils.setupDBComboBox(soDB, taDB);
-
 		soDB.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 			soSC.setItems(empty);
 			cleanCheckBox();
 			if (newValue != null) {
 				String str = newValue.getText();
 				soSC.setItems(getSchemaLabels(str));
-
 				root.getChildren().removeAll(root.getChildren());
 				filterTxt.clear();
 			}
-
 		});
 		soSC.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
 			root.getChildren().removeAll(root.getChildren());
@@ -446,7 +398,7 @@ public class TransferDataController implements Initializable {
 			}
 		});
 
-		creatCheckTree();
+		createCheckTree();
 
 		tabData.selectedProperty().addListener((obs, oldValue, newValue) -> {
 			if (newValue && !tabStruct.isSelected() && soDB.getValue() != null && soSC.getValue() != null) {
@@ -455,14 +407,12 @@ public class TransferDataController implements Initializable {
 				if (soSC.getValue() != null) {
 					schename = soSC.getValue().getText();
 				}
-
 				if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
 					TreeItem<TreeNodePo> schemaNode = DBinfoTree.getSchemaNode(dbname, schename);
 
 					addNodeHelper(schemaNode, TABLE);
 				}
 			}
-
 			removeNode(!newValue && !tabStruct.isSelected(), TABLE);
 		});
 
@@ -475,11 +425,9 @@ public class TransferDataController implements Initializable {
 				}
 				if (StrUtils.isNotNullOrEmpty(dbname) && StrUtils.isNotNullOrEmpty(schename)) {
 					TreeItem<TreeNodePo> schemaNode = DBinfoTree.getSchemaNode(dbname, schename);
-
 					addNodeHelper(schemaNode, TABLE);
 				}
 			}
-
 			removeNode(!newValue && !tabData.isSelected(), TABLE);
 		});
 
@@ -570,7 +518,7 @@ public class TransferDataController implements Initializable {
                 throw e;
             }
 		}
-		if (errorMsg.size() > 0) {
+		if (!errorMsg.isEmpty()) {
 			moniterAppendErrorLog(errorMsg);
 		}
 
@@ -607,8 +555,8 @@ public class TransferDataController implements Initializable {
 		}
 
 		int amount = -1;
-		if (amountTxt.getText().length() > 0) {
-			amount = Integer.valueOf(amountTxt.getText());
+		if (!amountTxt.getText().isEmpty()) {
+			amount = Integer.parseInt(amountTxt.getText());
 		}
 		boolean delObj = isDel.isSelected();
 		TreeItem<String> table = rootSubNode(TABLE);
@@ -622,7 +570,6 @@ public class TransferDataController implements Initializable {
 						TransferDataUtils.cleanData(toConn, targetSchename, tabName, this::moniterAppendLog);
 
 					}
-//					TransferDataUtils.cleanData(delObj, toConn, targetSchename, tabName, this::moniterAppendLog);
 					TransferDataUtils.dbTableDataMigration(soConn, toConn, tabName, schename, targetSchename, amount,
 							isThrow, this::moniterAppendLog);
 				}
@@ -639,8 +586,8 @@ public class TransferDataController implements Initializable {
 	}
 
 	// 试图, 函数, 索引等
-	private void createSynSql(boolean tf, List<String> sqls, Connection soConn, String schename, String nodeType,
-			String targetSchename) {
+	private void createSynSql(boolean tf, List<String> sqls, Connection soConn, String schema, String nodeType,
+			String targetSchema) {
 		if (tf) {
 			boolean delObj = isDel.isSelected();
 			TreeItem<String> table = rootSubNode(nodeType);
@@ -650,71 +597,69 @@ public class TransferDataController implements Initializable {
 					String checkBoxName = cb.getValue();
 					// drop语句
 					if (delObj) {
-						String drop = getDropDDL(nodeType, schename, checkBoxName, targetSchename);
+						String drop = getDropDdl(nodeType, schema, checkBoxName, targetSchema);
 						logger.info(drop);
 						sqls.add(drop);
 						moniterAppendLog(drop);
 					}
 					// create语句
-					String create = getCreateDDL(soConn, nodeType, schename, checkBoxName, targetSchename);
+					String create = getCreateDdl(soConn, nodeType, schema, checkBoxName, targetSchema);
 					logger.info(create);
 					sqls.add(create);
 					moniterAppendLog(create);
-
 				}
 			}
-
 		}
 	}
 
 	// 获取drop 语句
-	private String getDropDDL(String type, String schename, String objName, String tarSchename) {
+	private String getDropDdl(String type, String schema, String objName, String tarSchema) {
 		String drop = "";
 		ExportDBObjects export = soDbpo.getExportDDL();
 		if (type.equals(TABLE)) {
-			drop = export.exportDropTable(schename, objName);
+			drop = export.exportDropTable(schema, objName);
 		} else if (type.equals(VIEW)) {
-			drop = export.exportDropView(schename, objName);
+			drop = export.exportDropView(schema, objName);
 		} else if (type.equals(FUNCTION)) {
-			drop = export.exportDropFunction(schename, objName);
+			drop = export.exportDropFunction(schema, objName);
 		} else if (type.equals(PROCEDURE)) {
-			drop = export.exportDropProcedure(schename, objName);
+			drop = export.exportDropProcedure(schema, objName);
 		} else if (type.equals(TRIGGER)) {
-			drop = export.exportDropTrigger(schename, objName);
+			drop = export.exportDropTrigger(schema, objName);
 		} else if (type.equals(INDEX)) {
-			drop = export.exportDropIndex(schename, objName, null);
+			drop = export.exportDropIndex(schema, objName, null);
 		} else if (type.equals(SEQUENCE)) {
-			drop = export.exportDropSequence(schename, objName);
+			drop = export.exportDropSequence(schema, objName);
 		}
 
-		String sorName = TransferDataUtils.getTableName(schename, objName);
-		String tarName = TransferDataUtils.getTableName(tarSchename, objName);
+		String sorName = TransferDataUtils.getTableName(schema, objName);
+		String tarName = TransferDataUtils.getTableName(tarSchema, objName);
 		drop = drop.replaceAll(sorName, tarName);
 		return drop;
 	}
 
 	// 获取Create 语句
-	private String getCreateDDL(Connection conn, String type, String schename, String objName, String tarSchename) {
+	private String getCreateDdl(Connection conn, String type, String schema, String objName, String tarSchema) {
 		String createDDL = "";
 		ExportDBObjects export = soDbpo.getExportDDL();
 		if (type.equals(TABLE)) {
-			createDDL = export.exportCreateTable(conn, schename, objName);
+			createDDL = export.exportCreateTable(conn, schema, objName);
 		} else if (type.equals(VIEW)) {
-			createDDL = export.exportCreateView(conn, schename, objName);
+			createDDL = export.exportCreateView(conn, schema, objName);
 		} else if (type.equals(FUNCTION)) {
-			createDDL = export.exportCreateFunction(conn, schename, objName);
+			createDDL = export.exportCreateFunction(conn, schema, objName);
 		} else if (type.equals(PROCEDURE)) {
-			createDDL = export.exportCreateProcedure(conn, schename, objName);
+			createDDL = export.exportCreateProcedure(conn, schema, objName);
 		} else if (type.equals(TRIGGER)) {
-			createDDL = export.exportCreateTrigger(conn, schename, objName);
+			createDDL = export.exportCreateTrigger(conn, schema, objName);
 		} else if (type.equals(INDEX)) {
-			createDDL = export.exportCreateIndex(conn, schename, objName);
+			createDDL = export.exportCreateIndex(conn, schema, objName);
 		} else if (type.equals(SEQUENCE)) {
-			createDDL = export.exportCreateSequence(conn, schename, objName);
+			createDDL = export.exportCreateSequence(conn, schema, objName);
 		}
 
-		String sorName = TransferDataUtils.getTableName(schename, objName);
-		String tarName = TransferDataUtils.getTableName(tarSchename, objName);
+		String sorName = TransferDataUtils.getTableName(schema, objName);
+		String tarName = TransferDataUtils.getTableName(tarSchema, objName);
 		createDDL = createDDL.replaceAll(sorName, tarName);
 
 		return createDDL;
@@ -742,29 +687,25 @@ public class TransferDataController implements Initializable {
 				selectNodes.add(sub);
 			}
 		}
-
 		return selectNodes;
 	}
 
 	// 获取schema名称列表
 	private ObservableList<TreeItem<TreeNodePo>> getSchemaComboBoxList(String dbName) {
-
 		ObservableList<TreeItem<TreeNodePo>> temp = FXCollections.observableArrayList();
 		ObservableList<TreeItem<TreeNodePo>> newVal = FXCollections.observableArrayList();
-
 		TreeItem<TreeNodePo> connNode = DBinfoTree.getConnNode(dbName);
 		if (connNode != null) {
-			if (connNode.getChildren().size() > 0) {
+			if (!connNode.getChildren().isEmpty()) {
 				temp = connNode.getChildren().get(0).getChildren();
-				if (temp.size() > 0) {
+				if (!temp.isEmpty()) {
 					for (TreeItem<TreeNodePo> tnp : temp) {
-						if (tnp.getChildren().size() > 0) {
+						if (!tnp.getChildren().isEmpty()) {
 							newVal.add(tnp);
 						}
 					}
 				}
 			}
-
 		}
 		return newVal;
 	}
@@ -867,15 +808,15 @@ public class TransferDataController implements Initializable {
 			if (StrUtils.isNotNullOrEmpty(newVal)) {
 				filtList.clear();
 				// 遍历每一个连接节点, 在节点下查找到了数据, 就会返回一个新节点对象, 最后使用新节点创建一个新的树
-				for (int i = 0; i < temp.size(); i++) {
-					CheckBoxTreeItem<String> connNode = (CheckBoxTreeItem<String>) temp.get(i);
-					// 查找
-					CheckBoxTreeItem<String> nConnNode = connNodeOption(connNode, newVal);
-					// 新节点不是NULL 缓存
-					if (nConnNode != null) {
-						filtList.add(nConnNode);
-					}
-				}
+                for (TreeItem<String> stringTreeItem : temp) {
+                    CheckBoxTreeItem<String> connNode = (CheckBoxTreeItem<String>) stringTreeItem;
+                    // 查找
+                    CheckBoxTreeItem<String> nConnNode = connNodeOption(connNode, newVal);
+                    // 新节点不是NULL 缓存
+                    if (nConnNode != null) {
+                        filtList.add(nConnNode);
+                    }
+                }
 				// 创建一个新的树根, 将查询数据挂在新的上面
 				CheckBoxTreeItem<String> rootNode = new CheckBoxTreeItem<String>("全选");
 				rootNode.getChildren().addAll(filtList);
@@ -895,7 +836,7 @@ public class TransferDataController implements Initializable {
 	 */
 	private CheckBoxTreeItem<String> connNodeOption(CheckBoxTreeItem<String> node, String queryStr) {
 		// 1. 首先看节点是否激活的(有子节点?)
-		if (node.getChildren().size() > 0) {
+		if (!node.getChildren().isEmpty()) {
 			CheckBoxTreeItem<String> nnode = new CheckBoxTreeItem<String>(node.getValue());
 			int count = 0;
 			int sz = 0;

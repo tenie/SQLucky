@@ -89,9 +89,7 @@ public class CommonUtils {
             setFontSize(14);
         }
         String uri = Paths.get(path).toUri().toString();
-
         scene.getStylesheets().add(uri);
-
     }
 
     // 设置字符大小
@@ -127,8 +125,8 @@ public class CommonUtils {
      */
     public static void delayRunThread(Consumer<String> caller, int milliseconds) {
         if (queue.isEmpty()) {
-            queue.offer(caller); // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
-
+            // 队列尾部插入元素, 如果队列满了, 返回false, 插入失败
+            queue.offer(caller);
             Thread t = new Thread() {
                 @Override
                 public void run() {
@@ -137,7 +135,8 @@ public class CommonUtils {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
-                    var cl = queue.poll(); // 从队列取出一个元素
+                    // 从队列取出一个元素
+                    var cl = queue.poll();
                     if (cl != null) {
                         cl.accept("");
                     }
@@ -696,7 +695,6 @@ public class CommonUtils {
                 ComponentGetter.primaryscene.setCursor(cursorVal);
             });
         });
-
     }
 
     // 应用创建完后, 执行一些初始化的任务
@@ -829,8 +827,7 @@ public class CommonUtils {
         fileChooser.setInitialDirectory(dir);
         fileChooser.getExtensionFilters().clear();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter(fileType, "*." + fileType));
-        File file = fileChooser.showSaveDialog(new Stage());
-        return file;
+        return fileChooser.showSaveDialog(new Stage());
 
     }
 
@@ -920,7 +917,6 @@ public class CommonUtils {
                 btn.setDisable(true);
             }
         }
-
     }
 
     // 左侧添加隐藏操作按钮/查询框
@@ -928,21 +924,16 @@ public class CommonUtils {
         if (container.getChildren().contains(box)) {
             txt.clear();
             container.getChildren().remove(box);
-
         } else {
             container.getChildren().add(1, box);
             if (txt != null) {
                 txt.requestFocus();
             }
-
         }
     }
 
     public static void leftHideSecondOperateBox(Pane container, Node box) {
-        if (container.getChildren().contains(box)) {
-            container.getChildren().remove(box);
-        }
-
+        container.getChildren().remove(box);
     }
 
 
@@ -1014,13 +1005,13 @@ public class CommonUtils {
         String app = "";
         if (os_name.toLowerCase().startsWith("win")) {
             app = java_home.replace("runtime", "SQLucky.exe");
-            logger.info("win app = " + app);
+            logger.info("win app = {}", app);
         } else if (os_name.toLowerCase().startsWith("mac")) {
             app = java_home.replace("runtime/Contents/Home", "MacOS/SQLucky");
-            logger.info("mac app = " + app);
+            logger.info("mac app = {}", app);
         } else if (os_name.toLowerCase().startsWith("linux")) {
             app = java_home.replace("lib/runtime", "bin/SQLucky");
-            logger.info(" linux app = " + app);
+            logger.info(" linux app = {}", app);
         }
 
         return app;

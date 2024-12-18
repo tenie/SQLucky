@@ -3,11 +3,16 @@ package net.tenie.plugin.DataModel.po;
 import java.util.List;
 
 public class DataModelInfoPo  {
-	private Long id;			// 自增id
-	private String name;		// 模型名称
-	private String describe;    // 介绍信息
-	private String avatar;		// 作者 , 非必要
-	private String version;     // 版本, 非必要
+	// 自增id
+	private Long id;
+	// 模型名称
+	private String name;
+	// 介绍信息
+	private String describe;
+	// 作者 , 非必要
+	private String avatar;
+	// 版本, 非必要
+	private String version;
 	private String createdtime; 
 	private String updatedtime;
 	

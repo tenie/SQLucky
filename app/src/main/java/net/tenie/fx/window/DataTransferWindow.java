@@ -55,13 +55,15 @@ public class DataTransferWindow {
 			stage.setTitle("");
 
 			URL url = getClass().getResource(fxml);
-			Parent root = FXMLLoader.load(url);
-		    scene = new Scene(root);
+            Parent root = null;
+            if (url != null) {
+                root = FXMLLoader.load(url);
+            }
+            scene = new Scene(root);
 		    CommonUtils.loadCss(scene); 
 			stage.setScene(scene);
 			stage.show();
-			
-			Image	img = ComponentGetter.LogoIcons; //new Image(DataTransferWindow.class.getResourceAsStream(ConfigVal.appIcon));
+			Image img = ComponentGetter.LogoIcons;
 			stage.getIcons().add(img);
 			stage.setOnCloseRequest(ev->{
 				stage.hide();
@@ -72,8 +74,7 @@ public class DataTransferWindow {
 		}
 	}
 	
-	public   Stage CreateModalWindow() {
-
+	public   Stage createModalWindow() {
 		final Stage stage = new Stage();
 		VBox vb = new VBox();
 		vb.getStyleClass().add("myAlert");
@@ -122,7 +123,8 @@ public class DataTransferWindow {
 
 		stage.setMaximized(false);
 		stage.setResizable(false);
-		stage.initStyle(StageStyle.UNDECORATED);// 设定窗口无边框
+		// 设定窗口无边框
+		stage.initStyle(StageStyle.UNDECORATED);
 
 		stage.show();
 		stage.setOnCloseRequest(v -> {

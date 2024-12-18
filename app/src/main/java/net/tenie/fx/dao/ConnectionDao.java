@@ -186,10 +186,10 @@ public class ConnectionDao {
                 continue;
             }
 
-			DBConnectorInfoPo connPo = new DBConnectorInfoPo(rd.getString("CONN_NAME"), rd.getString("DRIVER"), // DbVendor.getDriver(dbDriver.getValue()),
+			DBConnectorInfoPo connPo = new DBConnectorInfoPo(rd.getString("CONN_NAME"), rd.getString("DRIVER"),
 					rd.getString("HOST"), rd.getString("PORT"), rd.getString("USER"), rd.getString("PASS_WORD"),
-					rd.getString("VENDOR"), // dbDriver.getValue(),
-					rd.getString("SCHEMA"), // defaultSchema.getText()
+					rd.getString("VENDOR"),
+					rd.getString("SCHEMA"),
 					rd.getString("DB_NAME"), rd.getString("JDBC_URL"),
 					1 == rd.getInteger("AUTO_CONNECT"));
 			// 设置使用jdbc url的flag
@@ -458,7 +458,7 @@ public class ConnectionDao {
 			}
 
 			// 合并还原
-			if (tmpDocs.size() > 0) {
+			if (!tmpDocs.isEmpty()) {
 				for (var tmpdoc : tmpDocs) {
 					docPo.remove(tmpdoc);
 				}
@@ -487,7 +487,7 @@ public class ConnectionDao {
 		TreeNodePo tnpo = new TreeNodePo(connectionName,
 				IconGenerator.svgImageUnactive("unlink"));
 		tnpo.setType(TreeItemType.CONNECT_INFO);
-		TreeItem item = new TreeItem<>(tnpo);
+		TreeItem<TreeNodePo> item = new TreeItem<>(tnpo);
 		DBinfoTree.treeRootAddItem(item);
 
 		// 缓存数据

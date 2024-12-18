@@ -55,9 +55,9 @@ public class DataTableContextMenu {
 		// 右点菜单
 		ContextMenu cm = new ContextMenu();
 		MenuItem miActive = new MenuItem("Copy Column Name");
-//		miActive.getStyleClass().add("myMenuItem");
 		miActive.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
-		miActive.setOnAction(e -> { // 粘贴板赋值
+		// 粘贴板赋值
+		miActive.setOnAction(e -> {
 			CommonUtils.setClipboardVal(colname);
 		});
 
@@ -81,7 +81,6 @@ public class DataTableContextMenu {
 
 		// drop column
 		MenuItem dropCol = new MenuItem("Drop Column: " + colname);
-//		dropCol.getStyleClass().add("myMenuItem");
 		dropCol.setGraphic(IconGenerator.svgImageDefActive("eraser"));
 		dropCol.setOnAction(e -> {
 			DataTableContextMenuAction.dropColumn(myBottomSheet, colname);

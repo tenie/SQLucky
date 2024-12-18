@@ -265,7 +265,7 @@ public class CodeAreaHighLightingHelper {
             length--;
         }
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        spansBuilder.add(Collections.singleton("errorword"), length);  // str.length()-1
+        spansBuilder.add(Collections.singleton("errorword"), length);
         StyleSpans<Collection<String>> highlighting = spansBuilder.create();
         Platform.runLater(() -> {
             codeArea.setStyleSpans(begin, highlighting);

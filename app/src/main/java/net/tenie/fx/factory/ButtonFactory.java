@@ -74,11 +74,11 @@ public class ButtonFactory {
 		formatSQL.setTooltip(MyTooltipTool.instance("Format"));
 
 		// 查找
-		JFXButton findSQlTxt = new JFXButton();
-		findSQlTxt.setGraphic(IconGenerator.svgImageDefActive("search"));
-		findSQlTxt.setId("runFunPro");
-		findSQlTxt.setTooltip(MyTooltipTool.instance("Find"));
-		findSQlTxt.setOnMouseClicked(e ->{
+		JFXButton findSqlTxt = new JFXButton();
+		findSqlTxt.setGraphic(IconGenerator.svgImageDefActive("search"));
+		findSqlTxt.setId("runFunPro");
+		findSqlTxt.setTooltip(MyTooltipTool.instance("Find"));
+		findSqlTxt.setOnMouseClicked(e ->{
 			CommonUtils.findReplaceByCurrentEditer(false);
 		} );
 
@@ -112,7 +112,7 @@ public class ButtonFactory {
 		operateBox.getChildren().add(saveSQL);
 		operateBox.getChildren().add(formatSQL);
 		operateBox.getChildren().add(runFunPro);
-		operateBox.getChildren().add(findSQlTxt);
+		operateBox.getChildren().add(findSqlTxt);
 
 		operateBox.setAlignment(Pos.CENTER_RIGHT);
 		operateBox.setPadding(new Insets(3,0,3,0));
@@ -164,9 +164,8 @@ public class ButtonFactory {
 		connsComboBox.setMaxWidth(200);
 		connsComboBox.setMinWidth(200);
 		connsComboBox.getStyleClass().add("myComboBox");
-//		connsComboBox.getStyleClass().add("my-tag");
-
-		DBConns.flushChoiceBox(connsComboBox); // 填充内容
+		// 填充内容
+		DBConns.flushChoiceBox(connsComboBox);
 
 		// change 事件
 		connsComboBox.getSelectionModel().selectedIndexProperty().addListener((obj, ov, newValue) -> {

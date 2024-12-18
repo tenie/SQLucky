@@ -2,104 +2,109 @@ package net.tenie.plugin.DataModel.po;
 
 import java.util.Date;
 import java.util.List;
+
 /**
  * json 解析后的对象
- * @author tenie
  *
+ * @author tenie
  */
 public class DataModelTablePo {
-	private Long itemId;		// 自增id  
-	private Long modelId;      // 主表id ,自动生成   ,必填字段
-	private String id;			// 模型文件里的id
-	private String defKey;      // 表名 , 建表语句的表名 ,必填字段
-	private String defName;		// 中文表名 , 必填字段
-	private String comment;     //   ,必填字段
-	
-	private Date createdTime;
-	private Date updatedTime;
-	
-	private List<DataModelTableFieldsPo> fields;
+    // 自增id
+    private Long itemId;
+    // 主表id ,自动生成   ,必填字段
+    private Long modelId;
+    // 模型文件里的id
+    private String id;
+    // 表名 , 建表语句的表名 ,必填字段
+    private String defKey;
+    // 中文表名 , 必填字段
+    private String defName;
+    //   ,必填字段
+    private String comment;
 
-	public String getId() {
-		return id;
-	}
+    private Date createdTime;
+    private Date updatedTime;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    private List<DataModelTableFieldsPo> fields;
 
-	public String getDefKey() {
-		return defKey;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public void setDefKey(String defKey) {
-		this.defKey = defKey;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getDefName() {
-		return defName;
-	}
+    public String getDefKey() {
+        return defKey;
+    }
 
-	public void setDefName(String defName) {
-		this.defName = defName;
-	}
+    public void setDefKey(String defKey) {
+        this.defKey = defKey;
+    }
 
-	public String getComment() {
-		return comment;
-	}
+    public String getDefName() {
+        return defName;
+    }
 
-	public void setComment(String comment) {
-		this.comment = comment;
-	}
+    public void setDefName(String defName) {
+        this.defName = defName;
+    }
 
-	public List<DataModelTableFieldsPo> getFields() {
-		return fields;
-	}
+    public String getComment() {
+        return comment;
+    }
 
-	public void setFields(List<DataModelTableFieldsPo> fields) {
-		this.fields = fields;
-	}
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
-	public Long getItemId() {
-		return itemId;
-	}
+    public List<DataModelTableFieldsPo> getFields() {
+        return fields;
+    }
 
-	public void setItemId(Long itemId) {
-		this.itemId = itemId;
-	}
+    public void setFields(List<DataModelTableFieldsPo> fields) {
+        this.fields = fields;
+    }
 
-	public Date getCreatedTime() {
-		return createdTime;
-	}
+    public Long getItemId() {
+        return itemId;
+    }
 
-	public void setCreatedTime(Date createdTime) {
-		this.createdTime = createdTime;
-	}
+    public void setItemId(Long itemId) {
+        this.itemId = itemId;
+    }
 
-	public Date getUpdatedTime() {
-		return updatedTime;
-	}
+    public Date getCreatedTime() {
+        return createdTime;
+    }
 
-	public void setUpdatedTime(Date updatedTime) {
-		this.updatedTime = updatedTime;
-	}
+    public void setCreatedTime(Date createdTime) {
+        this.createdTime = createdTime;
+    }
 
-	public Long getModelId() {
-		return modelId;
-	}
+    public Date getUpdatedTime() {
+        return updatedTime;
+    }
 
-	public void setModelId(Long modelId) {
-		this.modelId = modelId;
-	}
+    public void setUpdatedTime(Date updatedTime) {
+        this.updatedTime = updatedTime;
+    }
 
-	@Override
-	public String toString() {
-		return "DataModelTablePo [itemId=" + itemId + ", modelId=" + modelId + ", id=" + id + ", defKey=" + defKey
-				+ ", defName=" + defName + ", comment=" + comment + ", createdTime=" + createdTime + ", updatedTime="
-				+ updatedTime + ", fields=" + fields + "]";
-	}
+    public Long getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(Long modelId) {
+        this.modelId = modelId;
+    }
+
+    @Override
+    public String toString() {
+        return "DataModelTablePo [itemId=" + itemId + ", modelId=" + modelId + ", id=" + id + ", defKey=" + defKey
+                + ", defName=" + defName + ", comment=" + comment + ", createdTime=" + createdTime + ", updatedTime="
+                + updatedTime + ", fields=" + fields + "]";
+    }
 
 
-	 
-	
 }
