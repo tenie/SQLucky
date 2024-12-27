@@ -359,8 +359,8 @@ FlowPane TextField {
     -fx-background-radius: 5px;
     -fx-padding: 0.3em;
     -fx-background-color: #FDA232,
-        linear-gradient(to left, derive(#FDA232, 95%), derive(#FDA232, 10%)),
-        linear-gradient(to left, derive(#FDA232, 38%), derive(#FDA232, -16%));
+        linear-gradient(to bottom, derive(#FDA232, 95%), derive(#FDA232, 10%)),
+        linear-gradient(to bottom, derive(#FDA232, 38%), derive(#FDA232, -16%));
 }
 
 .myComboBox {

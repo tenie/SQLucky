@@ -43,7 +43,7 @@ import net.tenie.fx.Action.sqlExecute.SelectAction;
 import net.tenie.fx.dao.DmlDdlDao;
 
 /**
- * 
+ *
  * @author tenie
  *
  */
@@ -58,7 +58,7 @@ public class RunSQLHelper {
 	private static JFXButton runbtn;
 	private static JFXButton stopbtn;
 	private static JFXButton otherbtn;
-	
+
 	public  static boolean isRunning = false;
 	private static SqluckyConnector tmpSqlConn;
 
@@ -123,89 +123,87 @@ public class RunSQLHelper {
 		int rsVal = 1;
 		String execSql;
 		List<SqlData> allsqls = state.getAllsqls();
-		int sqllenght = allsqls.size();
 		DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
 		List<SqlData> errObj = new ArrayList<>();
 
-		for (int i = 0; i < sqllenght; i++) {
-				String msg = "";
+        for (SqlData allsql : allsqls) {
+            String msg = "";
 
-			execSql = allsqls.get(i).sql();
-			try {
-				if (execSql.length() < 10) {
-					throw new RuntimeException("Illegal Sql : " + execSql);
-				}
-				int type = ParseSQL.parseType(execSql);
+            execSql = allsql.sql();
+            try {
+                if (execSql.length() < 10) {
+                    throw new RuntimeException("Illegal Sql : " + execSql);
+                }
+                int type = ParseSQL.parseType(execSql);
 
-				SdkComponent.setWaitTabLabelText(execSql);
+                SdkComponent.setWaitTabLabelText(execSql);
+                // 调用存储过程
+                if (state.getIsCallFunc()) {
+                    ProcedureAction.procedureAction(execSql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
+                } else if (type == ParseSQL.SELECT || type == ParseSQL.OTHER_QUERY) {
+                    // 调用查询
+                    SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock(), state.getSelectLimit(), type);
+                } else {
+                    Connection conn = sqluckyConn.getConn();
+                    if (type == ParseSQL.UPDATE) {
+                        msg = DmlDdlDao.updateSql2(conn, execSql);
+                        logger.info("add update sql: " + execSql);
+                    } else if (type == ParseSQL.INSERT) {
+                        msg = DmlDdlDao.insertSql2(conn, execSql);
+                        logger.info("add insert sql: " + execSql);
+                    } else if (type == ParseSQL.DELETE) {
+                        msg = DmlDdlDao.deleteSql2(conn, execSql);
+                        logger.info("add DELETE sql: " + execSql);
+                    } else if (type == ParseSQL.DROP) {
+                        msg = DmlDdlDao.dropSql2(conn, execSql);
+                        logger.info("add DROP sql: " + execSql);
+                    } else if (type == ParseSQL.ALTER) {
+                        msg = DmlDdlDao.alterSql2(conn, execSql);
+                        logger.info("add ALTER sql: " + execSql);
+                    } else if (type == ParseSQL.CREATE) {
+                        msg = DmlDdlDao.createSql2(conn, execSql);
+                        logger.info("add CREATE sql: " + execSql);
+                    } else {
+                        msg = DmlDdlDao.otherSql2(conn, execSql);
+                        logger.info("add OTEHR sql: " + execSql);
+                    }
 
-				if (state.getIsCallFunc()) { // 调用存储过程
-					ProcedureAction.procedureAction(execSql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
-				} else if (type == ParseSQL.SELECT || type == ParseSQL.OTHER_QUERY ) { // 调用查询
-					SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock(), state.getSelectLimit(), type);
+                }
+            } catch (Exception e) {
+                msg = "failed : " + e.getMessage();
+                msg += "\n" + sqluckyConn.translateErrMsg(msg);
+                errObj.add(allsql);
+                rsVal = 0;
+            }
+            if (StrUtils.isNotNullOrEmpty(msg)) {
+//				// 如果只有一行ddl执行
+//				if ( !msg.startsWith("failed")) {
+//					final String msgVal = msg;
+//					Platform.runLater(() -> {
+//						MyAlert.showNotifiaction(msgVal);
+//					});
+//				} else {
+                // 显示字段是只读的
+                ObservableList<SheetFieldPo> fls = ddlDmlpo.getFields();
+                var row = ddlDmlpo.addRow();
+                ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.timeToStr(new Date())),
+                        fls.get(0));
+                ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fls.get(1));
 
-				} else {
-					Connection conn = sqluckyConn.getConn();
-					if (type == ParseSQL.UPDATE) {
-						msg = DmlDdlDao.updateSql2(conn, execSql);
-						logger.info("add update sql: " + execSql);
-					} else if (type == ParseSQL.INSERT) {
-						msg = DmlDdlDao.insertSql2(conn, execSql);
-						logger.info("add insert sql: " + execSql);
-					} else if (type == ParseSQL.DELETE) {
-						msg = DmlDdlDao.deleteSql2(conn, execSql);
-						logger.info("add DELETE sql: " + execSql);
-					} else if (type == ParseSQL.DROP) {
-						msg = DmlDdlDao.dropSql2(conn, execSql);
-						logger.info("add DROP sql: " + execSql);
-					} else if (type == ParseSQL.ALTER) {
-						msg = DmlDdlDao.alterSql2(conn, execSql);
-						logger.info("add ALTER sql: " + execSql);
-					} else if (type == ParseSQL.CREATE) {
-						msg = DmlDdlDao.createSql2(conn, execSql);
-						logger.info("add CREATE sql: " + execSql);
-					} else {
-						msg = DmlDdlDao.otherSql2(conn, execSql);
-						logger.info("add OTEHR sql: " + execSql);
-					}
+                String pressString = StrUtils.pressString(execSql);
+                ddlDmlpo.addData(row,
+                        CommonUtils.createReadOnlyStringProperty(pressString),
+                        fls.get(2));
+//				}
+            }
 
-				}
-			} catch (Exception e) {
-				msg = "failed : " + e.getMessage();
-				msg += "\n" + sqluckyConn.translateErrMsg(msg);
-				SqlData sd = allsqls.get(i);
-				errObj.add(sd);
-				rsVal = 0;
-			}
-			if (StrUtils.isNotNullOrEmpty(msg)) {
-				// 如果只有一行ddl执行
-				if (sqllenght == -1 && !msg.startsWith("failed")) {
-					final String msgVal = msg;
-					Platform.runLater(() -> {
-						MyAlert.showNotifiaction(msgVal);
-					});
-				} else {
-					// 显示字段是只读的
-					ObservableList<SheetFieldPo> fls = ddlDmlpo.getFields();
-					var row = ddlDmlpo.addRow();
-					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.timeToStr(new Date())),
-							fls.get(0));
-					ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fls.get(1));
-
-					String pressString = StrUtils.pressString(execSql);
-					ddlDmlpo.addData(row,
-							CommonUtils.createReadOnlyStringProperty(pressString),
-							fls.get(2));
-				}
-			}
-
-		}
+        }
 		// 如果 ddlDmlpo 中有 msg的信息 就会显示到界面上
 		TableViewUtils.showInfo(ddlDmlpo);
 		// 如果是执行的界面上的sql, 那么对错误的sql渲染为红色
 		if (StrUtils.isNullOrEmpty(state.getSqlStr())) {
 			Platform.runLater(() -> {
-				if (errObj.size() > 0) {
+				if (!errObj.isEmpty()) {
 					for (SqlData sd : errObj) {
 						int bg = sd.begin();
 						MyEditorSheetHelper.ErrorHighlighting(bg, sd.sql());
@@ -249,7 +247,7 @@ public class RunSQLHelper {
 		}
 		state.setAllsqls(allsqls);
 
-		Thread th=  new Thread() {
+		thread =  new Thread() {
 			@Override
 			public void run() {
 				logger.info("线程启动了" + this.getName());
@@ -257,7 +255,7 @@ public class RunSQLHelper {
 				logger.info("线程结束了" + this.getName());
 			}
 		};
-		th.start();
+		thread.start();
 	}
 
 	// 设置 按钮状态
@@ -277,7 +275,7 @@ public class RunSQLHelper {
 	}
 
 	// 检查db连接状态
-	private static boolean checkDBConn() {
+	private static boolean checkDbConn() {
 		ComboBox<Label> conns = ComponentGetter.connComboBox;
 		boolean warn = false;
 		if (conns.getValue() == null || StrUtils.isNullOrEmpty(conns.getValue().getText())) {
@@ -287,12 +285,36 @@ public class RunSQLHelper {
 		}
 		String val = conns.getValue().getText();
 		SqluckyConnector po = DBConns.get(val);
-		if (po == null || !po.isAlive()) {
+		if (po == null ) {
 			warn = true;
 			MyAlert.notification("Error", "Please ,  connect DB !", MyAlert.NotificationType.Error);
+		}else{
+
+			// 判断是否连接
+			if(!po.isAlive() ){
+				// 如果已经断开, 尝试重连一次
+				po.reConnection();
+				if(!po.isAlive() ){
+					warn = true;
+					MyAlert.notification("Error", "Please ,  connect DB !", MyAlert.NotificationType.Error);
+				}
+
+			}else{
+				var rebl = SqluckyConnector.isConnectionValid( po.getConn());
+				if(!rebl){
+					// 如果已经断开, 尝试重连一次
+					po.reConnection();
+					if(!po.isAlive() ){
+						warn = true;
+						MyAlert.notification("Error", "Please ,  connect DB !", MyAlert.NotificationType.Error);
+					}
+				}
+			}
 		}
+
 		return warn;
 	}
+
 
 	// 刷新
 	public static Long refresh(SqluckyConnector sqlConn, String sqlv, String tabIdxv, boolean isLockv) {
@@ -310,17 +332,17 @@ public class RunSQLHelper {
 		return statusKey;
 	}
 
-	public static void runSQLMethod() {
-		runSQLMethod(null, null, false, null);
+	public static void runSqlMethod() {
+		runSqlMethod(null, null, false, null);
 	}
 
-	public static void runCreateFuncSQLMethod() {
-		runSQLMethod(null, null, true, null);
+	public static void runCreateFuncSqlMethod() {
+		runSqlMethod(null, null, true, null);
 	}
 
 	// 调用函数/存储过程
 	public static void callProcedure(String sqlv, SqluckyConnector sqlConn, List<ProcedureFieldPo> fields) {
-		if (checkDBConn()){
+		if (checkDbConn()){
 			return;
 		}
 
@@ -348,51 +370,52 @@ public class RunSQLHelper {
 		// 没有选中文本, 获取当前行sql是否合法, 合法执行当前行
 		if(StrUtils.isNullOrEmpty(selectStr)){
 			String str = MyEditorSheetHelper.getCurrentLineText();
-			System.out.println(str);
 			boolean valid = SqlParser.isValidSql(str);
 			if(valid){
 				MyEditorSheetHelper.selectCurrentLine();
 				Platform.runLater(()->
-						RunSQLHelper.runSQLMethod(null, null, false, true) );
+						RunSQLHelper.runSqlMethod(null, null, false, true) );
 				return;
 			}
 
 		}else { // 执行选中的sql
 			Platform.runLater(()->
-					RunSQLHelper.runSQLMethod(null, null, false, true)
+					RunSQLHelper.runSqlMethod(null, null, false, true)
 			);
 			return;
 		}
-		Platform.runLater(()->RunSQLHelper.runSQLMethod());
+		Platform.runLater(RunSQLHelper::runSqlMethod);
 	}
 
 
 	public static void runActionCurrentLine() {
 		MyEditorSheetHelper.selectCurrentLine();
 		Platform.runLater(() -> {
-			RunSQLHelper.runSQLMethod(null, null, false, true);
+			RunSQLHelper.runSqlMethod(null, null, false, true);
 		});
 	}
 
 
-	public static void runSQLMethod(String sqlv, String tabIdxv, boolean isCreateFunc, Boolean isCurrentLine) {
-		if (checkDBConn()){
+	public static void runSqlMethod(String sqlv, String tabIdxv, boolean isCreateFunc, Boolean isCurrentLine) {
+		if (checkDbConn()){
 			return;
 		}
-
 		SqluckyConnector sqlConn = AppCommonAction.getDbConnectionPoByComboBoxDbConnName();
-		Connection connv = sqlConn.getConn();
-		try {
-			if (connv == null) {
-				return;
-			} else if (connv.isClosed()) {
-				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+        if (sqlConn == null ||  sqlConn.getConn() == null) {
+			MyAlert.notification("Error", "Please , choose alive DB connection!", MyAlert.NotificationType.Error);
 			return;
+        }else{
+			try {
+				if ( sqlConn.getConn().isClosed()) {
+					MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
+					return;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				MyAlert.notification("Error", "Connect is Closed!", MyAlert.NotificationType.Error);
+				return;
+			}
 		}
-
 		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
 		state.setTidx(tabIdxv);
 		if (isCurrentLine != null) {
@@ -406,12 +429,10 @@ public class RunSQLHelper {
 
 	/**
 	 * 根据自己提供的SqluckyConnector, 来执行sql
-	 * 
-	 * @param sqlConn
-	 * @param sqlv
+	 *
 	 * @param isCreateFunc 执行create 语句
 	 */
-	public static void runSQL(SqluckyConnector sqlConn, String sqlv, boolean isCreateFunc) {
+	public static void runSql(SqluckyConnector sqlConn, String sqlv, boolean isCreateFunc) {
 		Connection connv = sqlConn.getConn();
 		try {
 			if (connv == null) {
@@ -433,10 +454,8 @@ public class RunSQLHelper {
 
 	/**
 	 * 根据RunSqlStatePo中的值来执行sql
-	 * @param sqlConn
-	 * @param state
 	 */
-	public static void runSQLByRunSqlStatePo(SqluckyConnector sqlConn, RunSqlStatePo state) {
+	public static void runSqlByRunSqlStatePo(SqluckyConnector sqlConn, RunSqlStatePo state) {
 		Connection connv = sqlConn.getConn();
 		try {
 			if (connv == null) {
@@ -454,8 +473,6 @@ public class RunSQLHelper {
 
 	/**
 	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab
-	 * @param sqlConn
-	 * @param sqlv
 	 * @param limit 限制查询的行数, 查询20条
 	 */
 	public static void runSelectSqlLockTabPane(SqluckyConnector sqlConn, String sqlv, Integer limit) {
@@ -478,7 +495,7 @@ public class RunSQLHelper {
 	}
 
 	// stop 入口
-	public static void stopSQLMethod() {
+	public static void stopSqlMethod() {
 		if (thread != null && !stopbtn.disabledProperty().getValue()) {
 			thread.interrupt();
 			logger.info("线程是否被中断：" + thread.isInterrupted());
@@ -494,7 +511,6 @@ public class RunSQLHelper {
 				tmpSqlConn.closeConn();
 				tmpSqlConn.getConn();
 			}
-
 		}
 	}
 

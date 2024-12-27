@@ -12,7 +12,6 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -88,7 +87,7 @@ public class SqluckyAppComponent implements AppComponent {
 	 */
 	@Override
 	public void runSQL(SqluckyConnector sqlConn, String sqlv, boolean isCreateFunc) {
-		RunSQLHelper.runSQL(sqlConn, sqlv, isCreateFunc);
+		RunSQLHelper.runSql(sqlConn, sqlv, isCreateFunc);
 	}
 
 	/*

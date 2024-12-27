@@ -222,7 +222,7 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 			RunSqlStatePo state = new RunSqlStatePo(str, sqluckyConn);
 			state.setIsCreateFunc(false);
 			state.setSelectLimit(20);
-			RunSQLHelper.runSQLByRunSqlStatePo(sqluckyConn, state);
+			RunSQLHelper.runSqlByRunSqlStatePo(sqluckyConn, state);
 		});
 	}
 

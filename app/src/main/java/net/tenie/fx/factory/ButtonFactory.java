@@ -87,10 +87,10 @@ public class ButtonFactory {
 		});
 
 		runFunPro.setOnMouseClicked(e -> {
-			RunSQLHelper.runCreateFuncSQLMethod();
+			RunSQLHelper.runCreateFuncSqlMethod();
 		});
 		stopbtn.setOnMouseClicked(e -> {
-			RunSQLHelper.stopSQLMethod();
+			RunSQLHelper.stopSqlMethod();
 		});
 
 		// 选择sql在哪个连接上执行

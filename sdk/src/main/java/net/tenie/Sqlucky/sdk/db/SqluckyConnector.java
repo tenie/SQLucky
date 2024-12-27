@@ -79,10 +79,28 @@ public abstract class SqluckyConnector {
 				if (!isClosed) {
 					tf = true;
 				}
-
 			}
 		}
 		return tf;
+	}
+
+	/**
+	 * 测试服务端到客户端的连接是否断开
+	 * @param connection
+	 * @return
+	 */
+	public static boolean isConnectionValid(Connection connection) {
+		try {
+			if (connection != null && !connection.isClosed()) {
+				// Running a simple validation query
+				connection.prepareStatement("SELECT 1").executeQuery();
+				return true;
+			}
+		} catch (SQLException e) {
+			// log some useful data here
+			return false;
+		}
+		return false;
 	}
 
 	// 刷新Schema中的tabs

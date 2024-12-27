@@ -293,8 +293,8 @@ FlowPane TextField {
     -fx-background-radius: 5px;
     -fx-padding: 0.3em;
     -fx-background-color: #1e89e3,
-    		linear-gradient(to right, derive(#1e89e3, 95%), derive(#1e89e3, 10%)),
-    		linear-gradient(to right, derive(#1e89e3, 38%), derive(#1e89e3, -16%));
+    		linear-gradient(to bottom, derive(#1e89e3, 95%), derive(#1e89e3, 10%)),
+    		linear-gradient(to bottom, derive(#1e89e3, 38%), derive(#1e89e3, -16%));
 }
 
 .myTextField {
