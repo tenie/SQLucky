@@ -24,6 +24,8 @@ import net.tenie.Sqlucky.sdk.subwindow.DockSideWindow;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
 import java.io.File;
@@ -34,11 +36,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * @author tenie
+ */
 public class MyBottomSheetAction {
+    private static final Logger logger = LogManager.getLogger(MyBottomSheetAction.class);
     /**
      * 表格数据导出到excel
      *
-     * @param isSelect true 导出选中行的数据, fasle 全部导出
+     * @param isSelect true 导出选中行的数据, false 全部导出
      */
     public static void exportExcelAction(MyBottomSheet sheet, boolean isSelect) {
         File ff = CommonUtils.getFilePathHelper("xls");
@@ -60,7 +66,7 @@ public class MyBottomSheetAction {
             try {
                 ExcelUtil.createExcel(po, excleFile);
             } catch (Exception e1) {
-                e1.printStackTrace();
+                logger.error(e1);
                 MyAlert.errorAlert("Error");
             }
 
@@ -71,7 +77,7 @@ public class MyBottomSheetAction {
     public static ExcelDataPo tableValueToExcelDataPo(MyBottomSheet sheet, boolean isSelect) {
         SheetDataValue tableData = sheet.getTableData();
         String tabName = tableData.getTabName();
-        ObservableList<SheetFieldPo> fpos = tableData.getColss();
+        ObservableList<SheetFieldPo> sheetFieldPoList = tableData.getColss();
 
         ObservableList<ResultSetRowPo> rows = getValsHelper(sheet, isSelect);
 
@@ -79,28 +85,28 @@ public class MyBottomSheetAction {
 
         // 表头字段
         List<String> fields = new ArrayList<>();
-        for (var fpo : fpos) {
+        for (var fpo : sheetFieldPoList) {
             fields.add(fpo.getColumnLabel().get());
         }
         // 数据
-        List<List<String>> datas = new ArrayList<>();
-        for (var rowpo : rows) {
+        List<List<String>> dataList = new ArrayList<>();
+        for (var rowPo : rows) {
             List<String> rowlist = new ArrayList<>();
-            ObservableList<ResultSetCellPo> cells = rowpo.getRowDatas();
+            ObservableList<ResultSetCellPo> cells = rowPo.getRowDatas();
             for (ResultSetCellPo cell : cells) {
-                var cellval = cell.getCellData().get();
-                if (cellval != null && "<null>".equals(cellval)) {
-                    cellval = null;
+                var cellVal = cell.getCellData().get();
+                if ("<null>".equals(cellVal)) {
+                    cellVal = null;
                 }
-                rowlist.add(cellval);
+                rowlist.add(cellVal);
             }
-            datas.add(rowlist);
+            dataList.add(rowlist);
 
         }
 
         po.setSheetName(tabName);
         po.setHeaderFields(fields);
-        po.setDatas(datas);
+        po.setDatas(dataList);
 
         return po;
     }
@@ -113,31 +119,28 @@ public class MyBottomSheetAction {
         final File ff = tmpFile;
 
         LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    ObservableList<ResultSetRowPo> vals = MyBottomSheetAction.getValsHelper(sheet, isSelected);
-                    String sql = GenerateSQLString.csvStrHelper(vals);
-                    if (StrUtils.isNotNullOrEmpty(sql)) {
-                        if (isFile) {
-                            if (ff != null) {
-                                try {
-                                    FileTools.save(ff, sql);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+            Thread t = new Thread(() -> {
+                ObservableList<ResultSetRowPo> vals = MyBottomSheetAction.getValsHelper(sheet, isSelected);
+                String sql = GenerateSQLString.csvStrHelper(vals);
+                if (StrUtils.isNotNullOrEmpty(sql)) {
+                    if (isFile) {
+                        if (ff != null) {
+                            try {
+                                FileTools.save(ff, sql);
+                            } catch (IOException e) {
+                               logger.error(e);
                             }
-                        } else {
-                            CommonUtils.setClipboardVal(sql);
                         }
+                    } else {
+                        CommonUtils.setClipboardVal(sql);
                     }
                 }
-            };
+            });
             t.start();
         });
     }
 
-    public static void InsertSQLClipboard(MyBottomSheet sheet, boolean isSelected, boolean isFile) {
+    public static void insertSqlClipboard(MyBottomSheet sheet, boolean isSelected, boolean isFile) {
         var tableData = sheet.getTableData();
         File tmpFile = null;
         if (isFile) {
@@ -145,36 +148,33 @@ public class MyBottomSheetAction {
         }
         final File ff = tmpFile;
         LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    String tableName = tableData.getTabName();// SqluckyBottomSheetUtility.getTableName(tableData);
-                    final ObservableList<ResultSetRowPo> fvals = getValsHelper(sheet, isSelected);
+            Thread t = new Thread(() -> {
+                String tableName = tableData.getTabName();
+                final ObservableList<ResultSetRowPo> rowPoList = getValsHelper(sheet, isSelected);
 
-                    String sql = GenerateSQLString.insertSQLHelper(fvals, tableName);
-                    if (StrUtils.isNotNullOrEmpty(sql)) {
-                        if (isFile) {
-                            if (ff != null) {
-                                try {
-                                    FileTools.save(ff, sql);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
+                String sql = GenerateSQLString.insertSQLHelper(rowPoList, tableName);
+                if (StrUtils.isNotNullOrEmpty(sql)) {
+                    if (isFile) {
+                        if (ff != null) {
+                            try {
+                                FileTools.save(ff, sql);
+                            } catch (IOException e) {
+                                logger.error(e);
                             }
-                        } else {
-                            CommonUtils.setClipboardVal(sql);
                         }
-
+                    } else {
+                        CommonUtils.setClipboardVal(sql);
                     }
+
                 }
-            };
+            });
             t.start();
         });
 
     }
 
     public static ObservableList<ResultSetRowPo> getValsHelper(MyBottomSheet sheet, boolean isSelected) {
-        ObservableList<ResultSetRowPo> vals = null;
+        ObservableList<ResultSetRowPo> vals;
         if (isSelected) {
             vals = sheet.getTableData().getTable().getSelectionModel().getSelectedItems();
         } else {
@@ -185,52 +185,59 @@ public class MyBottomSheetAction {
 
 
     // 获取tree 节点中的 table 的sql
-    public static void findTable(SqluckyConnector dbcp, String tableName ) {
-        if (dbcp == null) {
+    public static void findTable(SqluckyConnector sqluckyConnector, String tableName ) {
+        if (sqluckyConnector == null) {
             return;
         }
+
+        boolean connError = sqluckyConnector.checkSqluckyConnector();
+        if(connError){
+            return;
+        }
+
         String tbn = tableName;
-        String key = "";
+        String key ;
         int idx = tbn.indexOf(".");
         if (idx > 0) {
-            key = dbcp.getConnName() + "_" + tbn.substring(0, idx);
-            tbn = tbn.substring(idx + 1); // 去除schema , 得到表名
+            key = sqluckyConnector.getConnName() + "_" + tbn.substring(0, idx);
+            // 去除schema , 得到表名
+            tbn = tbn.substring(idx + 1);
         } else {
-            key = dbcp.getConnName() + "_" + dbcp.getDefaultSchema();
+            key = sqluckyConnector.getConnName() + "_" + sqluckyConnector.getDefaultSchema();
         }
 
         // 从表格缓存中查找表
-        List<TablePo> tbs = TreeObjCache.getTable(key.toUpperCase());
+        List<TablePo> tableList = TreeObjCache.getTable(key.toUpperCase());
 
-        TablePo tbrs = null;
+        TablePo tablePo = null;
         tbn = tbn.toUpperCase();
-        for (TablePo po : tbs) {
+        for (TablePo po : tableList) {
             if (po.getTableName().toUpperCase().equals(tbn)) {
-                tbrs = po;
+                tablePo = po;
                 break;
             }
         }
         // 从试图缓存中查找
-        if (tbrs == null) {
-            tbs = TreeObjCache.getView(key.toUpperCase());
-            for (TablePo po : tbs) {
+        if (tablePo == null) {
+            tableList = TreeObjCache.getView(key.toUpperCase());
+            for (TablePo po : tableList) {
                 if (po.getTableName().toUpperCase().equals(tbn)) {
-                    tbrs = po;
+                    tablePo = po;
                     break;
                 }
             }
         }
         // 找到了, 显示建表语句
-        if (tbrs != null) {
-            TreeObjAction.showTableSql(dbcp, tbrs);
+        if (tablePo != null) {
+            TreeObjAction.showTableSql(sqluckyConnector, tablePo);
         } else {
             // 没找到的情况
             int idx2 = tableName.indexOf(".");
             if (idx2 > 0) {
                 String[] vales = tableName.split("\\.");
-                TablePo po = queryDbTableDDL(dbcp, vales[0], vales[1]);
+                TablePo po = queryDbTableDdl(sqluckyConnector, vales[0], vales[1]);
                 if (po != null) {
-                    TreeObjAction.showTableSql(dbcp, po);
+                    TreeObjAction.showTableSql(sqluckyConnector, po);
                 }
 
 
@@ -241,12 +248,8 @@ public class MyBottomSheetAction {
 
     /**
      * 导出
-     * @param dbcp
-     * @param schema
-     * @param tableName
-     * @return
      */
-    public  static TablePo queryDbTableDDL(SqluckyConnector dbcp, String schema, String tableName){
+    public  static TablePo queryDbTableDdl(SqluckyConnector dbcp, String schema, String tableName){
         TablePo po = null;
         String tableDll = dbcp.getExportDDL().exportCreateTable(dbcp.getConn(), schema, tableName);
         if (StrUtils.isNotNullOrEmpty(tableDll)) {
@@ -257,14 +260,14 @@ public class MyBottomSheetAction {
             po.setTableType(CommonConst.TYPE_TABLE);
             po.setDdl(tableDll);
         } else {
-            String viewDDL = dbcp.getExportDDL().exportCreateView(dbcp.getConn(), schema, tableName);
-            if (StrUtils.isNotNullOrEmpty(viewDDL)) {
+            String viewDdl = dbcp.getExportDDL().exportCreateView(dbcp.getConn(), schema, tableName);
+            if (StrUtils.isNotNullOrEmpty(viewDdl)) {
                 po = new TablePo();
                 po.setTableName(tableName);
                 po.setTableRemarks("");
                 po.setTableSchema(schema);
                 po.setTableType(CommonConst.TYPE_TABLE);
-                po.setDdl(viewDDL);
+                po.setDdl(viewDdl);
             }
         }
         return po;
@@ -327,9 +330,7 @@ public class MyBottomSheetAction {
         String tableName = CommonUtils.tabText(sheet);
 
         FilteredTableView<ResultSetRowPo> table = tableData.getTable();
-        table.getColumns().forEach(tabCol -> {
-            tabCol.setContextMenu(null);
-        });
+        table.getColumns().forEach(tabCol ->  tabCol.setContextMenu(null));
 
         DockSideWindow dsw = new DockSideWindow();
         VBox vb = (VBox) sheet.getContent();
@@ -337,28 +338,21 @@ public class MyBottomSheetAction {
 
         // 移除 隐藏按钮
         JFXButton hideBottom = SheetDataValue.hideBottom;
-        if(sheet.getButtonAnchorPane().getChildren().contains(hideBottom)){
-            sheet.getButtonAnchorPane().getChildren().remove(hideBottom);
-        }
+        sheet.getButtonAnchorPane().getChildren().remove(hideBottom);
         // 移除 side 按钮
         JFXButton sideBottom = SheetDataValue.sideRightBottom;
-        if(sheet.getBtnHbox().getChildren().contains(sideBottom)){
-            sheet.getBtnHbox().getChildren().remove(sideBottom);
-        }
+        sheet.getBtnHbox().getChildren().remove(sideBottom);
 
         sheet.setDockSide(true);
 //        isDockSide = true;
         dsw.showWindow(sheet, vb, tableName);
 
         TabPane dataTab = ComponentGetter.dataTabPane;
-        if (dataTab.getTabs().contains(sheet)) {
-            dataTab.getTabs().remove(sheet);
-        }
+        dataTab.getTabs().remove(sheet);
     }
 
     /**
      * 复制一行数据
-     * @param sheet
      */
     public static void copyData(MyBottomSheet sheet) {
         var tableData = sheet.getTableData();
@@ -368,14 +362,13 @@ public class MyBottomSheetAction {
         ObservableList<SheetFieldPo> fs = tableData.getColss();
         // 选中的行数据
         ObservableList<ResultSetRowPo> selectedRows = tableData.getTable().getSelectionModel().getSelectedItems();
-        if (selectedRows == null || selectedRows.size() == 0) {
+        if (selectedRows == null || selectedRows.isEmpty()) {
             return;
         }
         try {
             // 遍历选中的行
-            for (int i = 0; i < selectedRows.size(); i++) {
+            for (ResultSetRowPo rowPo : selectedRows) {
                 // 一行数据, 提醒: 最后一列是行号
-                ResultSetRowPo rowPo = selectedRows.get(i);
                 var rs = rowPo.getResultSet();
                 ResultSetRowPo appendRow = rs.manualAppendNewRow();
                 ObservableList<ResultSetCellPo> cells = rowPo.getRowDatas();
@@ -384,11 +377,11 @@ public class MyBottomSheetAction {
                 for (int j = 0; j < cells.size(); j++) {
                     ResultSetCellPo cellPo = cells.get(j);
 
-                    StringProperty newsp = new SimpleStringProperty(cellPo.getCellData().get());
-                    appendRow.addCell(newsp, cellPo.getDbOriginalValue(), cellPo.getField());
+                    StringProperty newStrPro = new SimpleStringProperty(cellPo.getCellData().get());
+                    appendRow.addCell(newStrPro, cellPo.getDbOriginalValue(), cellPo.getField());
                     int dataType = fs.get(j).getColumnType().get();
-                    CommonUtils.newStringPropertyChangeListener(newsp, dataType);
-                    item.add(newsp);
+                    CommonUtils.newStringPropertyChangeListener(newStrPro, dataType);
+                    item.add(newStrPro);
                 }
 
             }
@@ -410,51 +403,47 @@ public class MyBottomSheetAction {
         Connection conn = tableData.getDbConnection().getConn();
 
         ObservableList<ResultSetRowPo> vals = table.getSelectionModel().getSelectedItems();
-        List<ResultSetRowPo> selectRows = new ArrayList<>();
-        for (var vl : vals) {
-            selectRows.add(vl);
-        }
+        List<ResultSetRowPo> selectRows = new ArrayList<>(vals);
 
         // 执行sql 后的信息 (主要是错误后显示到界面上)
-        DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
+        DbTableDatePo ddlDmlPo = DbTableDatePo.setExecuteInfoPo();
         Consumer<String> caller = x -> {
-            Boolean showDBExecInfo = false;
+            boolean showDbExecInfo = false;
             try {
-                for (int i = 0; i < selectRows.size(); i++) {
-                    ResultSetRowPo sps = selectRows.get(i);
+                for (ResultSetRowPo sps : selectRows) {
                     String msg = "";
                     // 如果不是后期手动添加的行, 就不需要执行数据库删除操作
                     Boolean isNewAdd = sps.getIsNewAdd();
-                    if (isNewAdd == false) {
-                        showDBExecInfo = true;
+                    if (!isNewAdd) {
+                        showDbExecInfo = true;
                         msg = DeleteDao.execDelete(conn, tabName, sps);
                     }
 
                     var rs = sps.getResultSet();
                     rs.getDatas().remove(sps);
-                    var fs = ddlDmlpo.getFields();
-                    var row = ddlDmlpo.addRow();
-                    ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+                    var fs = ddlDmlPo.getFields();
+                    var row = ddlDmlPo.addRow();
+                    ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
                             fs.get(0));
-                    ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fs.get(1));
-                    ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("success"), fs.get(2));
+                    ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fs.get(1));
+                    ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty("success"), fs.get(2));
 
                 }
 
             } catch (Exception e1) {
-                var fs = ddlDmlpo.getFields();
-                var row = ddlDmlpo.addRow();
-                ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+                var fs = ddlDmlPo.getFields();
+                var row = ddlDmlPo.addRow();
+                ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
                         fs.get(0));
-                ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(e1.getMessage()), fs.get(1));
-                ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("fail."), fs.get(2));
+                ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty(e1.getMessage()), fs.get(1));
+                ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty("fail."), fs.get(2));
             } finally {
-                if (showDBExecInfo) {
-                    TableViewUtils.showInfo(ddlDmlpo);
+                if (showDbExecInfo) {
+                    TableViewUtils.showInfo(ddlDmlPo);
                 }
             }
         };
-        if (selectRows.size() > 0) {
+        if (!selectRows.isEmpty()) {
             MyAlert.myConfirmation("Sure to delete selected rows?", caller);
         }
 
@@ -466,17 +455,16 @@ public class MyBottomSheetAction {
         var tableData = sheet.getTableData();
         var tbv = sheet.getTableData().getTable();
         tbv.scrollTo(0);
-        ResultSetPo rspo = tableData.getDataRs();
-        ResultSetRowPo rowpo = rspo.manualAppendNewRow(0);
+        ResultSetPo resultSetPo = tableData.getDataRs();
+        ResultSetRowPo rowPo = resultSetPo.manualAppendNewRow(0);
 
-        ObservableList<SheetFieldPo> fs = rspo.getFields();
-        for (int i = 0; i < fs.size(); i++) {
-            SheetFieldPo fieldpo = fs.get(i);
+        ObservableList<SheetFieldPo> fs = resultSetPo.getFields();
+        for (SheetFieldPo fieldPo : fs) {
             SimpleStringProperty sp = new SimpleStringProperty("");
-            rowpo.addCell(sp, null, fieldpo);
+            rowPo.addCell(sp, null, fieldPo);
         }
         Platform.runLater(() -> {
-            ObservableList<ResultSetCellPo> vals = rowpo.getRowDatas();
+            ObservableList<ResultSetCellPo> vals = rowPo.getRowDatas();
             for (ResultSetCellPo val : vals) {
                 var cel = val.getCellData();
                 cel.set("<null>");
@@ -502,15 +490,14 @@ public class MyBottomSheetAction {
                     ObservableList<ResultSetRowPo> allRawData = execInfo.getDataRs().getDatas();
                     tableData.getTable().setItems(allRawData);
                 } catch (Exception e) {
-                    e.printStackTrace();
-
+                    logger.error(e);
                 }
             }else {
-                // TODO 关闭当前tab
+                // 关闭当前tab
                 var dataTab = ComponentGetter.dataTabPane;
-                int selidx = dataTab.getSelectionModel().getSelectedIndex();
-                SdkComponent.clearDataTable(selidx);
-                ComponentGetter.appComponent.refreshDataTableView(connName, sql, selidx + "", isLock);
+                int selectIdx = dataTab.getSelectionModel().getSelectedIndex();
+                SdkComponent.clearDataTable(selectIdx);
+                ComponentGetter.appComponent.refreshDataTableView(connName, sql, selectIdx + "", isLock);
             }
         }
     }
@@ -521,11 +508,11 @@ public class MyBottomSheetAction {
         String tabName = tableData.getTabName();
         Connection conn = tableData.getDbConnection().getConn();
         SqluckyConnector dpo = tableData.getDbConnection();
-        if (tabName != null && tabName.length() > 0) {
+        if (tabName != null && !tabName.isEmpty()) {
             // 待保存数据
             ObservableList<ResultSetRowPo> modifyData = tableData.getDataRs().getUpdateDatas();
             // 执行sql 后的信息 (主要是错误后显示到界面上)
-            DbTableDatePo ddlDmlpo = DbTableDatePo.setExecuteInfoPo();
+            DbTableDatePo ddlDmlPo = DbTableDatePo.setExecuteInfoPo();
             boolean btnDisable = true;
             if (!modifyData.isEmpty()) {
                 for (ResultSetRowPo val : modifyData) {
@@ -533,70 +520,67 @@ public class MyBottomSheetAction {
                         String msg = UpdateDao.execUpdate(conn, tabName, val);
 
                         if (StrUtils.isNotNullOrEmpty(msg)) {
-                            var fds = ddlDmlpo.getFields();
-                            var row = ddlDmlpo.addRow();
-                            ddlDmlpo.addData(row,
+                            var fds = ddlDmlPo.getFields();
+                            var row = ddlDmlPo.addRow();
+                            ddlDmlPo.addData(row,
                                     CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
                                     fds.get(0));
-                            ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fds.get(1));
-                            ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("success"), fds.get(2));
+                            ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fds.get(1));
+                            ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty("success"), fds.get(2));
                         }
 
                     } catch (Exception e1) {
-                        e1.printStackTrace();
+                        logger.error(e1);
                         btnDisable = false;
                         String msg = "failed : " + e1.getMessage();
                         msg += "\n" + dpo.translateErrMsg(msg);
-                        var fds = ddlDmlpo.getFields();
-                        var row = ddlDmlpo.addRow();
-                        ddlDmlpo.addData(row,
+                        var fds = ddlDmlPo.getFields();
+                        var row = ddlDmlPo.addRow();
+                        ddlDmlPo.addData(row,
                                 CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())), fds.get(0));
-                        ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fds.get(1));
-                        ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty("failed"), fds.get(2));
+                        ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty(msg), fds.get(1));
+                        ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty("failed"), fds.get(2));
                     }
                 }
                 rmUpdateData(sheet);
             }
 
             // 插入操作
-            ObservableList<ResultSetRowPo> dataList = tableData.getDataRs().getNewDatas();// SqluckyBottomSheetUtility.getAppendData(tableData);
+            ObservableList<ResultSetRowPo> dataList = tableData.getDataRs().getNewDatas();
             for (ResultSetRowPo os : dataList) {
                 try {
                     ObservableList<ResultSetCellPo> cells = os.getRowDatas();
                     String msg = InsertDao.execInsert(conn, tabName, cells);
-                    var fds = ddlDmlpo.getFields();
-                    var row = ddlDmlpo.addRow();
-                    ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+                    var fds = ddlDmlPo.getFields();
+                    var row = ddlDmlPo.addRow();
+                    ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
                             fds.get(0));
-                    ddlDmlpo.addData(row, new SimpleStringProperty(msg), fds.get(1));
-                    ddlDmlpo.addData(row, new SimpleStringProperty("success"), fds.get(2));
+                    ddlDmlPo.addData(row, new SimpleStringProperty(msg), fds.get(1));
+                    ddlDmlPo.addData(row, new SimpleStringProperty("success"), fds.get(2));
 
                     // 对insert 的数据保存后 , 不能再修改
-//					ObservableList<ResultSetCellPo> cells = os.getRowDatas();
-                    for (int i = 0; i < cells.size(); i++) {
-                        var cellpo = cells.get(i);
-                        StringProperty sp = cellpo.getCellData();
+                    for (ResultSetCellPo cellPo : cells) {
+                        StringProperty sp = cellPo.getCellData();
                         CommonUtils.prohibitChangeListener(sp, sp.get());
                     }
 
                 } catch (Exception e1) {
-                    e1.printStackTrace();
+                    logger.error(e1);
                     btnDisable = false;
-                    var fs = ddlDmlpo.getFields();
-                    var row = ddlDmlpo.addRow();
-                    ddlDmlpo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
+                    var fs = ddlDmlPo.getFields();
+                    var row = ddlDmlPo.addRow();
+                    ddlDmlPo.addData(row, CommonUtils.createReadOnlyStringProperty(DateUtils.dateToStrL(new Date())),
                             fs.get(0));
-                    ddlDmlpo.addData(row, new SimpleStringProperty(e1.getMessage()), fs.get(1));
-                    ddlDmlpo.addData(row, new SimpleStringProperty("failed"), fs.get(2));
+                    ddlDmlPo.addData(row, new SimpleStringProperty(e1.getMessage()), fs.get(1));
+                    ddlDmlPo.addData(row, new SimpleStringProperty("failed"), fs.get(2));
                 }
             }
             // 删除缓存数据
-//			SqluckyBottomSheetUtility.rmAppendData(tableData);
             tableData.getDataRs().getNewDatas().clear();
 
             // 保存按钮禁用
             tableData.getSaveBtn().setDisable(btnDisable);
-            TableViewUtils.showInfo(ddlDmlpo);
+            TableViewUtils.showInfo(ddlDmlPo);
 
         }
 
@@ -615,24 +599,19 @@ public class MyBottomSheetAction {
 
         LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
             ObservableList<SheetFieldPo> fs = tableData.getColss();
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    int size = fs.size();
-                    StringBuilder fieldsName = new StringBuilder("");
-                    for (int i = 0; i < size; i++) {
-                        SheetFieldPo po = fs.get(i);
-                        String name = po.getColumnLabel().get();
-                        fieldsName.append(name);
-                        fieldsName.append(", \n");
+            Thread t = new Thread(() -> {
+                StringBuilder fieldsName = new StringBuilder();
+                for (SheetFieldPo po : fs) {
+                    String name = po.getColumnLabel().get();
+                    fieldsName.append(name);
+                    fieldsName.append(", \n");
 
-                    }
-                    if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
-                        String rsStr = fieldsName.toString().trim();
-                        CommonUtils.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
-                    }
                 }
-            };
+                if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
+                    String rsStr = fieldsName.toString().trim();
+                    CommonUtils.setClipboardVal(fieldsName.substring(0, rsStr.length() - 1));
+                }
+            });
             t.start();
 
         });
@@ -644,52 +623,42 @@ public class MyBottomSheetAction {
 
         LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
             ObservableList<SheetFieldPo> fs = tableData.getColss();
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    int size = fs.size();
-                    StringBuilder fieldsName = new StringBuilder("");
-                    for (int i = 0; i < size; i++) {
-                        SheetFieldPo po = fs.get(i);
-                        String name = po.getColumnLabel().get();
-                        fieldsName.append(name);
-                        fieldsName.append("\n");
+            Thread t = new Thread(() -> {
+                StringBuilder fieldsName = new StringBuilder();
+                for (SheetFieldPo po : fs) {
+                    String name = po.getColumnLabel().get();
+                    fieldsName.append(name);
+                    fieldsName.append("\n");
 
-                    }
-                    if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
-                        CommonUtils.setClipboardVal(fieldsName.toString());
-                    }
                 }
-            };
+                if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
+                    CommonUtils.setClipboardVal(fieldsName.toString());
+                }
+            });
             t.start();
 
         });
     }
 
     // 导出表的字段包含类型, 使用逗号分割
-    public static void commaSplitTableFiledsIncludeType(SheetDataValue tableData) {
+    public static void commaSplitTableFieldsIncludeType(SheetDataValue tableData) {
 
         LoadingAnimation.primarySceneRootLoadingAnimation("Exporting ...", v -> {
             ObservableList<SheetFieldPo> fs = tableData.getColss();
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    int size = fs.size();
-                    StringBuilder fieldsName = new StringBuilder("");
-                    for (int i = 0; i < size; i++) {
-                        SheetFieldPo po = fs.get(i);
-                        String name = po.getColumnLabel().get();
-                        fieldsName.append(name);
-                        fieldsName.append(", --");
-                        fieldsName.append(po.getColumnTypeName().get());
-                        fieldsName.append("\n");
+            Thread t = new Thread(() -> {
+                StringBuilder fieldsName = new StringBuilder();
+                for (SheetFieldPo po : fs) {
+                    String name = po.getColumnLabel().get();
+                    fieldsName.append(name);
+                    fieldsName.append(", --");
+                    fieldsName.append(po.getColumnTypeName().get());
+                    fieldsName.append("\n");
 
-                    }
-                    if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
-                        CommonUtils.setClipboardVal(fieldsName.toString());
-                    }
                 }
-            };
+                if (StrUtils.isNotNullOrEmpty(fieldsName.toString())) {
+                    CommonUtils.setClipboardVal(fieldsName.toString());
+                }
+            });
             t.start();
         });
     }

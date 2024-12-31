@@ -1,5 +1,15 @@
 package net.tenie.Sqlucky.sdk.db;
 
+import javafx.scene.control.TreeItem;
+import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
+import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
+import net.tenie.Sqlucky.sdk.po.db.TablePo;
+import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
+import net.tenie.Sqlucky.sdk.utility.DateUtils;
+import net.tenie.Sqlucky.sdk.utility.StrUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
@@ -8,24 +18,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import javafx.scene.control.TreeItem;
-import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
-import net.tenie.Sqlucky.sdk.po.DbSchemaPo;
-import net.tenie.Sqlucky.sdk.po.db.TablePo;
-import net.tenie.Sqlucky.sdk.utility.DateUtils;
-//DbConnector
+/**
+ * @author tenie
+ */
 public abstract class SqluckyConnector {
 
-	private static Logger logger = LogManager.getLogger(SqluckyConnector.class);
+	private static final  Logger logger = LogManager.getLogger(SqluckyConnector.class);
 	
 	protected DBConnectorInfoPo dbConnectorInfoPo;
 	protected TreeItem connTreeItem;
 	protected SqluckyDbRegister dbRegister;
- 
+
+	// 正在连接中, 原子操作
+	private final AtomicBoolean finishInitNodeStatus = new AtomicBoolean(true);
 	public SqluckyDbRegister getDbRegister() {
 		return dbRegister;
 	}
@@ -40,10 +45,6 @@ public abstract class SqluckyConnector {
 		this.connTreeItem = item;
 	}
  
-	public TreeItem getDbInfoTreeNode() {
-		return this.connTreeItem;
-	}
-
 	public void setDBConnectorInfoPo(DBConnectorInfoPo po) {
 		this.dbConnectorInfoPo = po;
 	}
@@ -52,8 +53,6 @@ public abstract class SqluckyConnector {
 		return this.dbConnectorInfoPo;
 	}
 
-	// 正在连接中, 原子操作
-	private AtomicBoolean finishInitNodeStatus = new AtomicBoolean(true);
 
 	// 是不是正在连接
 	public synchronized Boolean finishInitNode() {
@@ -214,7 +213,7 @@ public abstract class SqluckyConnector {
 	}
 
 	public void setSchemas(Map<String, DbSchemaPo> schemas) {
-		this.dbConnectorInfoPo.setSchemas(schemas);// = schemas;
+		this.dbConnectorInfoPo.setSchemas(schemas);
 	}
 
 	public ExportDBObjects getExportDDL() {
@@ -348,5 +347,30 @@ public abstract class SqluckyConnector {
 		}
 		return dbConnectorInfoPo.getConn();
 	}
-	
+
+	// 检查db连接状态
+	public boolean checkSqluckyConnector() {
+		boolean warn = false;
+		// 判断是否连接
+		if (!this.isAlive()) {
+			// 如果已经断开, 尝试重连一次
+			this.reConnection();
+			if (!this.isAlive()) {
+				warn = true;
+				MyAlert.notification("Error", "Please ,  connect DB !", MyAlert.NotificationType.Error);
+			}
+		} else {
+			var rebl = SqluckyConnector.isConnectionValid(this.getConn());
+			if (!rebl) {
+				// 如果已经断开, 尝试重连一次
+				this.reConnection();
+				if (!this.isAlive()) {
+					warn = true;
+					MyAlert.notification("Error", "Please ,  connect DB !", MyAlert.NotificationType.Error);
+				}
+			}
+		}
+
+		return warn;
+	}
 }

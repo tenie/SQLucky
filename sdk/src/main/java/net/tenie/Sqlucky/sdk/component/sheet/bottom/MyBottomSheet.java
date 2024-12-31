@@ -1,6 +1,7 @@
 package net.tenie.Sqlucky.sdk.component.sheet.bottom;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -8,7 +9,6 @@ import java.util.function.Consumer;
 import javafx.geometry.Insets;
 import javafx.geometry.Side;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
-import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SdkComponent;
 import org.controlsfx.control.tableview2.FilteredTableView;
 
@@ -176,7 +176,7 @@ public class MyBottomSheet extends  Tab{
 	public void showSelectData(int idx, boolean disable, Consumer<String> backcall) {
 		this.idx = idx;
 		// 操作按钮
-		List<Node> btnLs = MyBottomSheetButton.sqlDataOptionBtns(this, disable, true);
+		List<Node> btnLs = MyBottomSheetButton.sqlDataOptionBtn(this, disable, true);
 		// 操作面板
 		operatePane(btnLs);
 		// 添加sql执行时的信息
@@ -519,5 +519,11 @@ public class MyBottomSheet extends  Tab{
 
 	public void setSqlLabel(Label sqlLabel) {
 		this.sqlLabel = sqlLabel;
+	}
+
+	public static void main(String[] args) {
+		List<String> vinList = Arrays.asList("a", "b", "c");
+		String vins =    String.join(",", vinList);
+		System.out.println(vins);
 	}
 }
