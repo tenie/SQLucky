@@ -8,17 +8,13 @@ import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.MyTooltipTool;
 import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
-import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.window.ConnectionEditor;
 
 public class DBinfoTreeButtonFactory {
@@ -31,7 +27,7 @@ public class DBinfoTreeButtonFactory {
 		// 页面初始化: 添加组件
 		JFXButton addConnbtn = new JFXButton();
 		addConnbtn.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
-		addConnbtn.setOnMouseClicked(CommonEventHandler.addConnEvent());
+		addConnbtn.setOnMouseClicked(e -> new ConnectionEditor());
 		addConnbtn.setTooltip(MyTooltipTool.instance("Add new DB Connection"));
 		btns.add(addConnbtn);
 		// open连接
@@ -54,7 +50,7 @@ public class DBinfoTreeButtonFactory {
 
 		JFXButton closeALlConn = new JFXButton();
 		closeALlConn.setGraphic(IconGenerator.svgImageDefActive("power-off"));
-		closeALlConn.setOnMouseClicked(CommonEventHandler.closeAllConnEvent());
+		closeALlConn.setOnMouseClicked(e->ConnectionEditor.closeAllDbConn());
 		closeALlConn.setTooltip(MyTooltipTool.instance("Close All DB Connection"));
 		btns.add(closeALlConn);
 
@@ -92,7 +88,7 @@ public class DBinfoTreeButtonFactory {
 		// 删除连接
 		JFXButton deleteConn = new JFXButton();
 		deleteConn.setGraphic(IconGenerator.svgImageDefActive("trash"));
-		deleteConn.setOnMouseClicked(CommonEventHandler.deleteConnEvent());
+		deleteConn.setOnMouseClicked(e->ConnectionEditor.deleteDbConn());
 		deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
 		btns.add(deleteConn);
 

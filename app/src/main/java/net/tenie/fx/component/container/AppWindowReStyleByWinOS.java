@@ -11,7 +11,6 @@ import javafx.stage.WindowEvent;
 import net.tenie.Sqlucky.sdk.component.CommonButtons;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.fx.Action.CommonEventHandler;
 
 public class AppWindowReStyleByWinOS {
     private Scene scene;
@@ -62,7 +61,10 @@ public class AppWindowReStyleByWinOS {
      */
     private void createSmallWindow() {
         this.smallWindowStage = new Stage();
-        this.smallWindowStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
+        this.smallWindowStage.setOnCloseRequest(e -> {
+            // 主窗口关闭事件处理逻辑
+            app.saveApplicationStatusInfo();
+        });
         this.smallWindowStage.getIcons().add(ComponentGetter.LogoIcons);
         this.smallWindowStage.setTitle("SQLucky");
         // 设置最大化事件

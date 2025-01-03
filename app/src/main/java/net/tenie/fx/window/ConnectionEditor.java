@@ -439,7 +439,7 @@ public class ConnectionEditor {
 
     }
 
-
+    // 删除连接按钮点击事件
     public static void deleteDbConn() {
 
         SqluckyConnector po = null;
@@ -486,7 +486,7 @@ public class ConnectionEditor {
         }
 
     }
-
+//    断开所有连接按钮点击事件
     public static void closeAllDbConn() {
         TreeView<TreeNodePo> treeView = AppWindow.treeView;
         TreeItem<TreeNodePo> rootNode = treeView.getRoot();

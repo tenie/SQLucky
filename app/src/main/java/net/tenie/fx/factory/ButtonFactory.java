@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import net.tenie.Sqlucky.sdk.component.*;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
@@ -16,9 +17,9 @@ import net.tenie.Sqlucky.sdk.ui.IconGenerator;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TextFieldSetup;
-import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.CommonListener;
 import net.tenie.fx.Action.RunSQLHelper;
+import net.tenie.fx.Action.SettingKeyBinding;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 
 /**
@@ -58,12 +59,24 @@ public class ButtonFactory {
 		// add panel
 		JFXButton addcodeArea = new JFXButton();
 		addcodeArea.setGraphic(IconGenerator.svgImageDefActive("plus-square"));
-		addcodeArea.setOnMouseClicked(CommonEventHandler.addCodeTab());
+		addcodeArea.setOnMouseClicked(e -> {
+			if(!ComponentGetter.rightTabPaneMasterDetailPane.isShowDetailNode()){
+				MyEditorSheetHelper.addEmptyHighLightingEditor(ComponentGetter.mainTabPane);
+			}else{
+				// 按住control, 再按添加窗口按钮, 可以在rightTabPane中添加
+				var kc = KeyCode.CONTROL;
+				if(SettingKeyBinding.keyCode != null && SettingKeyBinding.keyCode.equals(kc)){
+					MyEditorSheetHelper.addEmptyHighLightingEditor(ComponentGetter.rightTabPane);
+				}else {
+					MyEditorSheetHelper.addEmptyHighLightingEditor(ComponentGetter.mainTabPane);
+				}
+			}
+		});
 		addcodeArea.setTooltip(MyTooltipTool.instance("Add New Edit Page"));
 
 		JFXButton saveSQL = new JFXButton();
 		saveSQL.setGraphic(IconGenerator.svgImageDefActive("save"));
-		saveSQL.setOnMouseClicked(CommonEventHandler.saveSQl());
+		saveSQL.setOnMouseClicked(e->MyEditorSheetHelper.saveSqlToFileAction());
 		saveSQL.setTooltip(MyTooltipTool.instance("Save"));
 
 		JFXButton formatSQL = new JFXButton();

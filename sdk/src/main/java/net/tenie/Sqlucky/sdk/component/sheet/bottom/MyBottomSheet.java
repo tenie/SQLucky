@@ -521,9 +521,4 @@ public class MyBottomSheet extends  Tab{
 		this.sqlLabel = sqlLabel;
 	}
 
-	public static void main(String[] args) {
-		List<String> vinList = Arrays.asList("a", "b", "c");
-		String vins =    String.join(",", vinList);
-		System.out.println(vins);
-	}
 }

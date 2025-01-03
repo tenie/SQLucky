@@ -26,7 +26,6 @@ import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
-import net.tenie.fx.Action.CommonEventHandler;
 import net.tenie.fx.Action.Log4jPrintStream;
 import net.tenie.fx.Action.SettingKeyBinding;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
@@ -62,14 +61,10 @@ import java.util.function.Consumer;
 public class app extends Application {
     public static String sysOpenFile = "";
     public static List<String> argsList = new ArrayList<>();
-    private AppWindow app;
     private Scene scene;
     public static Image img;
-    private String Theme;
-    private boolean transferDB = false;
-    private static Logger logger = LogManager.getLogger(app.class);
-
-    private static boolean preloaderStatus = false;
+    private boolean transferDb = false;
+    private static final Logger logger = LogManager.getLogger(app.class);
 
     static {
         if (!CommonUtils.isDev()) {
@@ -78,9 +73,9 @@ public class app extends Application {
     }
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         logger.info(ConfigVal.textLogo);
-        transferDB = AppDao.checkTransferDB();
+        transferDb = AppDao.checkTransferDB();
         Connection conn = SqluckyAppDB.getConn();
         // 查看新表是否存在
         AppDao.testDbTableExists(conn, "AUTO_COMPLETE_TEXT");
@@ -89,27 +84,26 @@ public class app extends Application {
         // 执行需要更新的sql
         UpdateScript.executeAppendSql();
         // 界面主题色， 没有设置过，默认黑色
-        Theme = SqluckyAppDB.readConfig(conn, "THEME");
-        if (StrUtils.isNullOrEmpty(Theme)) {
+        String theme = SqluckyAppDB.readConfig(conn, "THEME");
+        if (StrUtils.isNullOrEmpty(theme)) {
             SqluckyAppDB.saveConfig(conn, "THEME", "DARK");
-            Theme = "DARK";
+            theme = "DARK";
         }
         // 读自动补全文本
         AppDao.readAllAutoCompleteText(conn);
 
         SqluckyAppDB.closeConn(conn);
-        ConfigVal.THEME = Theme;
-        SqluckyAppComponent sqluckyComponent = new SqluckyAppComponent();
-        ComponentGetter.appComponent = sqluckyComponent;
+        ConfigVal.THEME = theme;
+        ComponentGetter.appComponent = new SqluckyAppComponent();
         // 注册
         ServiceLoad.callRegister();
 
-        app = new AppWindow();
+        AppWindow   app = new AppWindow();
         img = ComponentGetter.LogoIcons;
 
         scene = app.getAppScene();
 
-        AppCommonAction.setTheme(Theme);
+        AppCommonAction.setTheme(theme);
         // 加载插件
         ServiceLoad.callLoad();
 
@@ -118,12 +112,15 @@ public class app extends Application {
     }
 
     // 初始化一个Stage
-    public static Stage initStage(Scene scene) {
+    public static void initStage(Scene scene) {
         Stage primaryStage =new Stage();
         AppHeadContainer.SQLuckyStage = primaryStage;
         ComponentGetter.primaryStage = primaryStage;
         primaryStage.setScene(scene);
-        primaryStage.setOnCloseRequest(CommonEventHandler.mainCloseEvent());
+        primaryStage.setOnCloseRequest(e -> {
+            // 主窗口关闭事件处理逻辑
+            app.saveApplicationStatusInfo();
+        });
         primaryStage.centerOnScreen(); // 居中
         primaryStage.getIcons().add(img);
         primaryStage.setTitle("SQLucky");
@@ -155,7 +152,6 @@ public class app extends Application {
             primaryStage.setHeight(primaryScreenBounds.getHeight());
         });
 
-        return primaryStage;
     }
     // 销毁 Stage
     public static void destroyStage(Stage stage){
@@ -213,7 +209,7 @@ public class app extends Application {
             CommonUtils.executeInitTask(cr);
             });
             // 数据迁移
-            if (transferDB) {
+            if (transferDb) {
                 moveDbData();
             }
 
@@ -228,7 +224,7 @@ public class app extends Application {
 //                }
 //            });
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e);
         }
     }
     // TabPane 头部 双击添加新Tab
@@ -253,38 +249,36 @@ public class app extends Application {
     private  void moveDbData(){
         // 如果发现有新的数据库, 插入
         Optional<File> oldFile = AppDao.appOldDbFiles();
-        if (oldFile.isPresent()) {
-            Platform.runLater(() -> {
-                boolean tf = MyAlert.myConfirmationShowAndWait("发现旧版本数据, 是否迁移");
-                if (tf) {
-                    // 数据库迁移
-                    LoadingAnimation.primarySceneRootLoadingAnimation("Migrating", v -> {
-                        boolean succeed = false;
-                        File file = oldFile.get();
-                        try {
-                            AppDao.transferOldDbData(file);
-                            succeed = true;
-                            // 成功后归档原数据库
-                            String ftmpName = file.getName();
-                            String archiveName = ftmpName.replace("_sqlite", "_archive");
-                            File renameFile = new File(file.getParent(), archiveName);
-                            file.renameTo(renameFile);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            MyAlert.errorAlert("迁移出错了!");
-                        }
+        oldFile.ifPresent(value -> Platform.runLater(() -> {
+            boolean tf = MyAlert.myConfirmationShowAndWait("发现旧版本数据, 是否迁移");
+            if (tf) {
+                // 数据库迁移
+                LoadingAnimation.primarySceneRootLoadingAnimation("Migrating", v -> {
+                    boolean succeed = false;
+                    File file = value;
+                    try {
+                        AppDao.transferOldDbData(file);
+                        succeed = true;
+                        // 成功后归档原数据库
+                        String ftmpName = file.getName();
+                        String archiveName = ftmpName.replace("_sqlite", "_archive");
+                        File renameFile = new File(file.getParent(), archiveName);
+                        file.renameTo(renameFile);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        MyAlert.errorAlert("迁移出错了!");
+                    }
 
-                        if (succeed) {
-                            Platform.runLater(() -> {
-                                MyAlert.myConfirmation("完成迁移, 重启APP, 加载迁移数据, ok ? ", x -> Restart.reboot(),
-                                        System.out::println);
-                            });
-                        }
-                    });
+                    if (succeed) {
+                        Platform.runLater(() -> {
+                            MyAlert.myConfirmation("完成迁移, 重启APP, 加载迁移数据, ok ? ", x -> Restart.reboot(),
+                                    System.out::println);
+                        });
+                    }
+                });
 
-                }
-            });
-        }
+            }
+        }));
 
     }
     // 退出程序, 保存app状态
@@ -294,24 +288,23 @@ public class app extends Application {
         }
         // 载入动画
         LoadingAnimation.loadingAnimation("Saving....", v -> {
-            Connection H2conn = SqluckyAppDB.getConn();
+            Connection h2Conn = SqluckyAppDB.getConn();
             try {
                 // 更新数据库链接节点的顺序, 在拖动的时候直接保存
 //                ConnectionDao.refreshConnOrder();
 
                 TabPane mainTabPane = ComponentGetter.mainTabPane;
                 TabPane rightTabPane = ComponentGetter.rightTabPane;
-                int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();
+//                int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();
                 var alltabs = mainTabPane.getTabs();
                 if( !rightTabPane.getTabs().isEmpty()){
                     alltabs.addAll(rightTabPane.getTabs());
                 }
 
-                for (int i = 0; i < alltabs.size(); i++) {
-                    Tab tab = alltabs.get(i);
+                for (Tab tab : alltabs) {
                     if (tab instanceof MyEditorSheet mtab) {
                         // 文本保存到数据库
-                        mtab.saveScriptPo(H2conn);
+                        mtab.saveScriptPo(h2Conn);
 
                     }
                 }
@@ -319,14 +312,13 @@ public class app extends Application {
                 // 删除 script tree view 中的空内容tab
                 List<TreeItem<MyEditorSheet>> scriptList = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
                 int idx = 1;
-                for (int i = 0; i < scriptList.size(); i++) {
-                    TreeItem<MyEditorSheet> treeItem = scriptList.get(i);
+                for (TreeItem<MyEditorSheet> treeItem : scriptList) {
                     MyEditorSheet myEditorSheet = treeItem.getValue();
                     DocumentPo documentPo = myEditorSheet.getDocumentPo();
                     String sqlTxt = documentPo.getText();
                     // 删除内容已经为空的历史记录
                     if (sqlTxt == null || sqlTxt.trim().isEmpty()) {
-                        AppDao.deleteScriptArchive(H2conn, documentPo);
+                        AppDao.deleteScriptArchive(h2Conn, documentPo);
                     } else {
                         String fp = documentPo.getExistFileFullName();
                         if (StrUtils.isNullOrEmpty(fp)) {
@@ -336,12 +328,12 @@ public class app extends Application {
                                 idx++;
                             }
                         }
-                        AppDao.updateScriptArchive(H2conn, documentPo);
+                        AppDao.updateScriptArchive(h2Conn, documentPo);
                     }
                 }
 
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error(e);
             } finally {
                 // 提示是否保存
                 if(! MyEditorSheet.ConsumerLs.isEmpty()){
@@ -349,12 +341,12 @@ public class app extends Application {
                         for (var call :  MyEditorSheet.ConsumerLs){
                             call.accept("");
                         }
-                        SqluckyAppDB.closeConn(H2conn);
+                        SqluckyAppDB.closeConn(h2Conn);
                         System.exit(0);
                     });
 
                 }else {
-                    SqluckyAppDB.closeConn(H2conn);
+                    SqluckyAppDB.closeConn(h2Conn);
                     System.exit(0);
                 }
             }
