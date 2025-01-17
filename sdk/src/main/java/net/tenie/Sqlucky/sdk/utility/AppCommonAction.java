@@ -183,6 +183,35 @@ public class AppCommonAction {
             code.deleteText(start, end);
             code.insertText(start, txt);
 
+        }else {// 去除注释
+            StringBuilder valStr = new StringBuilder();
+
+            String[] strArr = null;
+            if (txt != null) {
+                strArr = txt.split("\n");
+            }
+            String endtxt = "";
+            if (strArr != null && strArr.length > 0) {
+                endtxt = txt.substring(txt.length() - 1);
+                for (String val : strArr) {
+                    if (StrUtils.beginWith(val.trim(), "--")) {
+                        valStr.append(val.replaceFirst("-- ", "")).append("\n");
+                    } else {
+                        valStr.append(val).append("\n");
+                    }
+                }
+            }
+            // 去除最后一个换行符
+            if (!"\n".equals(endtxt)) {
+                valStr = new StringBuilder(valStr.substring(0, valStr.length() - 1));
+            }
+            // 将原文本删除
+            if (code != null) {
+                code.deleteText(start, end);
+                // 插入 注释过的文本
+                code.insertText(start, valStr.toString());
+            }
+
         }
         MyEditorSheetHelper.currentSqlCodeAreaHighLighting();
     }

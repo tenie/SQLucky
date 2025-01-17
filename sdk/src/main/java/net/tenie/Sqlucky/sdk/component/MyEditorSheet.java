@@ -505,11 +505,12 @@ public class MyEditorSheet extends Tab {
 
 	/**
 	 * 从页面上关闭 tab, 但不做其他操作, 数据还在内存中, 可以从tree上重新打开
-	 * 	syncScriptPo();
-	 * 				documentPo.setOpenStatus(0);
  	 */
 	public void closeTab(){
 		var myTabPane = this.getTabPane();
+		if(myTabPane == null ){
+			return;
+		}
 		var tabs = myTabPane.getTabs();
 		if (tabs.contains(this)) {
 			syncScriptPo();
@@ -518,7 +519,7 @@ public class MyEditorSheet extends Tab {
 		}
 		// 如果是关闭的右边的代码tab, 就隐藏
 		if(myTabPane.equals(ComponentGetter.rightTabPane)){
-			if(myTabPane.getTabs().size() == 0){
+			if(myTabPane.getTabs().isEmpty()){
 				ComponentGetter.rightTabPaneMasterDetailPane.setShowDetailNode(false);
 			}
 		}
