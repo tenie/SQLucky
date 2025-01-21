@@ -80,9 +80,9 @@ public class app extends Application {
         // 查看新表是否存在
         AppDao.testDbTableExists(conn, "AUTO_COMPLETE_TEXT");
         // 插入更新sql
-        UpdateScript.insertNewSQL();
+        UpdateScript.insertNewSQL(conn);
         // 执行需要更新的sql
-        UpdateScript.executeAppendSql();
+        UpdateScript.executeAppendSql(conn);
         // 界面主题色， 没有设置过，默认黑色
         String theme = SqluckyAppDB.readConfig(conn, "THEME");
         if (StrUtils.isNullOrEmpty(theme)) {
@@ -98,7 +98,7 @@ public class app extends Application {
         // 注册
         ServiceLoad.callRegister();
 
-        AppWindow   app = new AppWindow();
+        AppWindow  app = new AppWindow();
         img = ComponentGetter.LogoIcons;
 
         scene = app.getAppScene();

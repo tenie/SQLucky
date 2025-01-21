@@ -378,28 +378,6 @@ public class DataModelUtility {
 		}
 	}
 
-	// 测试PoDao
-	public static void test() {
-		var conn = SqluckyAppDB.getConn();
-		try {
-			DataModelInfoPo poinsert = new DataModelInfoPo();
-			poinsert.setName("insertName");
-			poinsert.setDescribe("ins...");
-			poinsert.setAvatar("insaaa");
-			PoDao.insert(conn, poinsert);
-
-			DataModelInfoPo po = new DataModelInfoPo();
-			po.setId(2L);
-			List<DataModelInfoPo> val;
-
-			val = PoDao.select(conn, po);
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			SqluckyAppDB.closeConn(conn);
-		}
-
-	}
 
 	// 展示信息窗口,
 	public static void showExecuteSQLInfo(DbTableDatePo ddlDmlpo, Thread thread) {

@@ -170,7 +170,7 @@ public class AppDao {
 		var conn = SqluckyAppDB.getConn();
 		DocumentPo po = null;
 		try {
-			po = scriptArchive(SqluckyAppDB.getConn(), title, txt, filename, encode, paragraph, tabPosition);
+			po = scriptArchive(conn, title, txt, filename, encode, paragraph, tabPosition);
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -304,18 +304,6 @@ public class AppDao {
 
 		}
 	}
-
-//	public static void testDbTableExists() {
-//		Connection conn = SqluckyAppDB.getConn();
-//		try {
-//			testDbTableExists(conn);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		} finally {
-//			SqluckyAppDB.closeConn(conn);
-//			SQLucky.beginInit = true;
-//		}
-//	}
 
 	// 检查表是否存在
 	public static boolean tabExist(Connection conn, String tablename) {

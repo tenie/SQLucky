@@ -85,9 +85,6 @@ public class PluginManageAction {
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			PoDao.delete(conn, infoPo);
-			
-			// 删除文件
-			
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}finally {
@@ -320,7 +317,7 @@ public class PluginManageAction {
 		LoadingAnimation.addLoading("Download ...");
 		
 		CommonUtils.runThread(v->{
-			var conn = SqluckyAppDB.getConn();
+			Connection conn = null;
 			try {
 				int currentSelectIndex = allPluginTable.getSelectionModel().getSelectedIndex();
 
@@ -352,10 +349,8 @@ public class PluginManageAction {
 					PluginInfoPO valpo = new PluginInfoPO();
 					valpo.setDownloadStatus(1);
 
-
+					conn = SqluckyAppDB.getConn();
 					PoDao.update(conn, ppo, valpo);
-
-
 				}
 
 				if ("√".equals(loadStatus)){

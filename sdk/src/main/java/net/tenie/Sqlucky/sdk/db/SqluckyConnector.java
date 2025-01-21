@@ -307,15 +307,15 @@ public abstract class SqluckyConnector {
 	 * @return
 	 */
 	public void reConnection() {
-		if (getDbConnectorInfoPo().getConn() != null) {
-			try {
-				getDbConnectorInfoPo().getConn().close();
-				getDbConnectorInfoPo().setConn(null);
-				getConn();
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
+//		if (getDbConnectorInfoPo().getConn() != null) {
+		try {
+			getDbConnectorInfoPo().getConn().close();
+			getDbConnectorInfoPo().setConn(null);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+//			}
 		}
+		getConn();
 	}
 	
 	/**

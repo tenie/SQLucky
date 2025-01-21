@@ -293,12 +293,13 @@ public class DBinfoTree extends SqluckyTitledPane {
 		if (mouseEvent.getClickCount() == 2) {
 			TreeItem<TreeNodePo> item = DBinfoTree.getTrewViewCurrentItem();
 			if (item == null) {
-                return;
-            }
+				return;
+			}
 			TreeItem<TreeNodePo> parentItem = item.getParent();
 			if (parentItem == null) {
-                return;
-            }
+				return;
+			}
+
 			// 连接节点双击, 打开节点
 			if (DBinfoTree.currentTreeItemIsConnNode()) {
 				DBinfoTree.openConn(item, false);
@@ -307,133 +308,133 @@ public class DBinfoTree extends SqluckyTitledPane {
 					codeArea.requestFocus();
 					codeArea.setShowCaret(CaretVisibility.ON);
 				}
-			} // Schemas 双击, 打开非默认的schema
-			else if (parentItem != null && parentItem.getValue().getType() == TreeItemType.SCHEMA_ROOT) {
-				SqluckyConnector po = getSchameIsConnObj(item);
-				// 获取当前schema node 所在的连接节点
-				TreeItem<TreeNodePo> connRoot = item.getParent().getParent();
-				// 获取当前节点的schema name
-				String schemaName = item.getValue().getName();
-				// 初始化schema中数据库对象的数据
-				ConnItemDbObjects ci = new ConnItemDbObjects(po, schemaName);
-				item.getValue().setConnItem(ci);
-				//
-				ConnItemContainer connItemContainer = connRoot.getValue().getConnItemContainer(); // findConnItemParent(connRoot);
-				if (connItemContainer != null) {
-					connItemContainer.addConnItem(ci);
-					connItemContainer.selectTable(schemaName);
+			} else {
+				// 检查连接是否正常
+				SqluckyConnector sqluckyConnector = item.getValue().getConnpo();
+				boolean connError = sqluckyConnector.checkSqluckyConnector();
+				if (connError) {
+					return;
 				}
+				// Schemas 双击, 打开非默认的schema
+				if (parentItem.getValue().getType() == TreeItemType.SCHEMA_ROOT) {
+//					SqluckyConnector po = getSchameIsConnObj(item);
+					// 获取当前schema node 所在的连接节点
+					TreeItem<TreeNodePo> connRoot = item.getParent().getParent();
+					// 获取当前节点的schema name
+					String schemaName = item.getValue().getName();
+					// 初始化schema中数据库对象的数据
+					ConnItemDbObjects ci = new ConnItemDbObjects(sqluckyConnector, schemaName);
+					item.getValue().setConnItem(ci);
+					//
+					ConnItemContainer connItemContainer = connRoot.getValue().getConnItemContainer(); // findConnItemParent(connRoot);
+					if (connItemContainer != null) {
+						connItemContainer.addConnItem(ci);
+						connItemContainer.selectTable(schemaName);
+					}
 
 //				String defaultSchemaName = po.getDBConnectorInfoPo().getDefaultSchema();
 //				if(StrUtils.isNullOrEmpty(defaultSchemaName)){
 //					po.getDBConnectorInfoPo().setDefaultSchema(schemaName);
 //				}
-				// 重新连接
-				po.resetJdbcUrlStr(schemaName);
-				ConnItemContainer.moveSchemaToTop(schemaName, parentItem);
-			}
-			// 表格
-			else if (parentItem.getValue().getType() != null
-					&& parentItem.getValue().getType() == TreeItemType.TABLE_ROOT) {
-				SqluckyConnector dpo = item.getValue().getConnpo();
-				TablePo table = item.getValue().getTable();
-				TreeObjAction.showTableSql(dpo, table);
-			}
-			// 视图
-			else if (parentItem.getValue().getType() != null
-					&& parentItem.getValue().getType() == TreeItemType.VIEW_ROOT) {
-				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
-				TablePo table = item.getValue().getTable();
-				TreeObjAction.showTableSql(sqluckyconn, table);
-			}
-			// 函数
-			else if (parentItem.getValue().getType() != null
-					&& parentItem.getValue().getType() == TreeItemType.FUNCTION_ROOT) {
-				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
-				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
-				String sqlStr = fpt.getDdl();
-				if (StrUtils.isNullOrEmpty(sqlStr)) {
-					sqlStr = sqluckyconn.getExportDDL().exportCreateFunction(sqluckyconn.getConn(), fpt.getSchema(),
-							fpt.getName());
-					if (StrUtils.isNotNullOrEmpty(sqlStr)) {
-						fpt.setDdl(sqlStr);
-					}
+					// 重新连接
+					sqluckyConnector.resetJdbcUrlStr(schemaName);
+					ConnItemContainer.moveSchemaToTop(schemaName, parentItem);
 				}
+				// 表格
+				else if (parentItem.getValue().getType() != null
+						&& parentItem.getValue().getType() == TreeItemType.TABLE_ROOT) {
+					TablePo table = item.getValue().getTable();
+					TreeObjAction.showTableSql(sqluckyConnector, table);
+				}
+				// 视图
+				else if (parentItem.getValue().getType() != null
+						&& parentItem.getValue().getType() == TreeItemType.VIEW_ROOT) {
+					TablePo table = item.getValue().getTable();
+					TreeObjAction.showTableSql(sqluckyConnector, table);
+				}
+				// 函数
+				else if (parentItem.getValue().getType() != null
+						&& parentItem.getValue().getType() == TreeItemType.FUNCTION_ROOT) {
+					FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
+					String sqlStr = fpt.getDdl();
+					if (StrUtils.isNullOrEmpty(sqlStr)) {
+						sqlStr = sqluckyConnector.getExportDDL().exportCreateFunction(sqluckyConnector.getConn(), fpt.getSchema(),
+								fpt.getName());
+						if (StrUtils.isNotNullOrEmpty(sqlStr)) {
+							fpt.setDdl(sqlStr);
+						}
+					}
 
-				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, true, false);
+					MyBottomSheet.showDdlSheet(sqluckyConnector, item.getValue().getName(), sqlStr, true, false);
 
-			} // 过程
-			else if (parentItem.getValue().getType() != null
-					&& parentItem.getValue().getType() == TreeItemType.PROCEDURE_ROOT) {
-				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
-				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
-				String sqlStr = fpt.getDdl();
+				} // 过程
+				else if (parentItem.getValue().getType() != null
+						&& parentItem.getValue().getType() == TreeItemType.PROCEDURE_ROOT) {
+					FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
+					String sqlStr = fpt.getDdl();
 
-				if (StrUtils.isNullOrEmpty(sqlStr)) {
-					sqlStr = sqluckyconn.getExportDDL().exportCreateProcedure(sqluckyconn.getConn(), fpt.getSchema(),
-							fpt.getName());
-					if (StrUtils.isNotNullOrEmpty(sqlStr)) {
+					if (StrUtils.isNullOrEmpty(sqlStr)) {
+						sqlStr = sqluckyConnector.getExportDDL().exportCreateProcedure(sqluckyConnector.getConn(), fpt.getSchema(),
+								fpt.getName());
+						if (StrUtils.isNotNullOrEmpty(sqlStr)) {
 //						sqlStr = SqlFormatter.format(sqlStr);
-						fpt.setDdl(sqlStr);
+							fpt.setDdl(sqlStr);
+						}
 					}
-				}
 
-				if (!fpt.isProcedure()) {
-					fpt.setProcedure(true);
-				}
-				MyBottomSheet.showProcedureSheet(sqluckyconn, item.getValue().getName(), sqlStr);
-
-			} // trigger
-			else if (parentItem.getValue().getType() != null
-					&& parentItem.getValue().getType() == TreeItemType.TRIGGER_ROOT) {
-				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
-				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
-				String sqlStr = fpt.getDdl();
-				if (StrUtils.isNullOrEmpty(sqlStr)) {
-					sqlStr = sqluckyconn.getExportDDL().exportCreateTrigger(sqluckyconn.getConn(), fpt.getSchema(),
-							fpt.getName());
-					if (StrUtils.isNotNullOrEmpty(sqlStr)) {
-						sqlStr = SqlFormatter.format(sqlStr);
-						fpt.setDdl(sqlStr);
+					if (!fpt.isProcedure()) {
+						fpt.setProcedure(true);
 					}
-				}
-				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
+					MyBottomSheet.showProcedureSheet(sqluckyConnector, item.getValue().getName(), sqlStr);
 
-			} // index
-			else if (parentItem.getValue().getType() != null
-					&& parentItem.getValue().getType() == TreeItemType.INDEX_ROOT) {
-				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
-				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
-				String sqlStr = fpt.getDdl();
-				if (StrUtils.isNullOrEmpty(sqlStr)) {
-					sqlStr = sqluckyconn.getExportDDL().exportCreateIndex(sqluckyconn.getConn(), fpt.getSchema(),
-							fpt.getName());
-					if (StrUtils.isNotNullOrEmpty(sqlStr)) {
-						sqlStr = SqlFormatter.format(sqlStr);
-						fpt.setDdl(sqlStr);
+				} // trigger
+				else if (parentItem.getValue().getType() != null
+						&& parentItem.getValue().getType() == TreeItemType.TRIGGER_ROOT) {
+					FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
+					String sqlStr = fpt.getDdl();
+					if (StrUtils.isNullOrEmpty(sqlStr)) {
+						sqlStr = sqluckyConnector.getExportDDL().exportCreateTrigger(sqluckyConnector.getConn(), fpt.getSchema(),
+								fpt.getName());
+						if (StrUtils.isNotNullOrEmpty(sqlStr)) {
+							sqlStr = SqlFormatter.format(sqlStr);
+							fpt.setDdl(sqlStr);
+						}
 					}
-				}
+					MyBottomSheet.showDdlSheet(sqluckyConnector, item.getValue().getName(), sqlStr, false, false);
 
-				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
-
-			} // Sequence
-			else if (parentItem.getValue().getType() != null
-					&& parentItem.getValue().getType() == TreeItemType.SEQUENCE_ROOT) {
-				SqluckyConnector sqluckyconn = item.getValue().getConnpo();
-				FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
-				String sqlStr = fpt.getDdl();
-				if (StrUtils.isNullOrEmpty(sqlStr)) {
-					sqlStr = sqluckyconn.getExportDDL().exportCreateSequence(sqluckyconn.getConn(), fpt.getSchema(),
-							fpt.getName());
-					if (StrUtils.isNotNullOrEmpty(sqlStr)) {
-						sqlStr = SqlFormatter.format(sqlStr);
-						fpt.setDdl(sqlStr);
+				} // index
+				else if (parentItem.getValue().getType() != null
+						&& parentItem.getValue().getType() == TreeItemType.INDEX_ROOT) {
+					FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
+					String sqlStr = fpt.getDdl();
+					if (StrUtils.isNullOrEmpty(sqlStr)) {
+						sqlStr = sqluckyConnector.getExportDDL().exportCreateIndex(sqluckyConnector.getConn(), fpt.getSchema(),
+								fpt.getName());
+						if (StrUtils.isNotNullOrEmpty(sqlStr)) {
+							sqlStr = SqlFormatter.format(sqlStr);
+							fpt.setDdl(sqlStr);
+						}
 					}
-				}
 
-				MyBottomSheet.showDdlSheet(sqluckyconn, item.getValue().getName(), sqlStr, false, false);
+					MyBottomSheet.showDdlSheet(sqluckyConnector, item.getValue().getName(), sqlStr, false, false);
+
+				} // Sequence
+				else if (parentItem.getValue().getType() != null
+						&& parentItem.getValue().getType() == TreeItemType.SEQUENCE_ROOT) {
+					FuncProcTriggerPo fpt = item.getValue().getFuncProTri();
+					String sqlStr = fpt.getDdl();
+					if (StrUtils.isNullOrEmpty(sqlStr)) {
+						sqlStr = sqluckyConnector.getExportDDL().exportCreateSequence(sqluckyConnector.getConn(), fpt.getSchema(),
+								fpt.getName());
+						if (StrUtils.isNotNullOrEmpty(sqlStr)) {
+							sqlStr = SqlFormatter.format(sqlStr);
+							fpt.setDdl(sqlStr);
+						}
+					}
+
+					MyBottomSheet.showDdlSheet(sqluckyConnector, item.getValue().getName(), sqlStr, false, false);
+				}
 			}
-
 		}
 	}
 

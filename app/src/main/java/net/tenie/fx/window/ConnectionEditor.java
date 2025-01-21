@@ -614,7 +614,6 @@ public class ConnectionEditor {
         Button saveBtn = new Button("Save");
         saveBtn.setOnMouseClicked(e -> {
             SqluckyConnector connpo = assembleSqlCon.apply("");
-            var conn = SqluckyAppDB.getConn();
             TreeItem<TreeNodePo> item;
             boolean isNew = false;
             if (connpo != null) {
@@ -635,7 +634,7 @@ public class ConnectionEditor {
 
                 // 缓存数据
                 DBConns.add(connpo.getConnName(), connpo);
-
+                Connection conn = SqluckyAppDB.getConn();
                 ConnectionDao.createOrUpdate(conn, connpo);
                 SqluckyAppDB.closeConn(conn);
 

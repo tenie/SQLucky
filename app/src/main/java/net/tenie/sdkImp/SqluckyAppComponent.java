@@ -235,6 +235,8 @@ public class SqluckyAppComponent implements AppComponent {
 			succeed = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally {
+			SqluckyAppDB.closeConn(conn);
 		}
 
 		return succeed;

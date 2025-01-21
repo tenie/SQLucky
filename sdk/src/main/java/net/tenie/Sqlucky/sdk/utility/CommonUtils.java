@@ -728,18 +728,24 @@ public class CommonUtils {
     public static void executeInitTask(Consumer<String> Callback) {
         for (Consumer<String> caller : initTasks) {
             try {
-                Thread t = new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            caller.accept("");
-                        } finally {
-                            minusTaskCount();
-                            logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtils.getTaskCount());
-                        }
-                    }
-                };
-                t.start();
+                try {
+                    caller.accept("");
+                } finally {
+                    minusTaskCount();
+                    logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtils.getTaskCount());
+                }
+//                Thread t = new Thread() {
+//                    @Override
+//                    public void run() {
+//                        try {
+//                            caller.accept("");
+//                        } finally {
+//                            minusTaskCount();
+//                            logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtils.getTaskCount());
+//                        }
+//                    }
+//                };
+//                t.start();
             } catch (Exception e) {
                 e.printStackTrace();
             }

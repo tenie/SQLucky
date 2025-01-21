@@ -225,14 +225,13 @@ public class DataModelTabTree extends SqluckyTitledPane{
 			tableHeadOptionNode.add(txtAP);
 
 			// 查询数据库, 获取字段信息
-//			conn = SqluckyAppDB.getConn();
 			SqluckyConn = SqluckyAppDB.getSqluckyConnector();
 			String sql = "select DEF_KEY as FIELD," + " DEF_NAME AS NAME , " + "COMMENT, " + "TYPE_FULL_NAME, "
 					+ "PRIMARY_KEY, " + "NOT_NULL, " + "AUTO_INCREMENT, " + "DEFAULT_VALUE, " + "PRIMARY_KEY_NAME, "
 					+ "NOT_NULL_NAME, " + "AUTO_INCREMENT_NAME  " + "from DATA_MODEL_TABLE_FIELDS where TABLE_ID = "
 					+ tableId;
 
-//			
+
 			MyBottomSheet myBottomSheet = DataModelUtility.dataModelQueryFieldsShow(sql, SqluckyConn, tableName,
 					tableHeadOptionNode, DataModelOperate.tableInfoColWidth);
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();

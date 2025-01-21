@@ -31,8 +31,6 @@ public class UserAccountAction {
 	
 	/**
 	 * 保存登入信息
-	 * @param conn
-	 * @param name
 	 * @return
 	 */
 	public static void saveUser(String email, String password) {

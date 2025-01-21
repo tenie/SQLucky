@@ -28,11 +28,10 @@ public class UpdateScript {
 	/**
 	 * 添加脚本到数据库
 	 */
-	public static void insertNewSQL() {
+	public static void insertNewSQL(Connection conn) {
 		if (!sqlMap.isEmpty()) {
 			var keys = sqlMap.keySet();
 
-			Connection conn = SqluckyAppDB.getConn();
 			try {
 				for (String key : keys) {
 					SqluckyAppendSqlPO po = new SqluckyAppendSqlPO();
@@ -43,12 +42,9 @@ public class UpdateScript {
 						po.setSqlVal(sqlMap.get(key));
 						PoDao.insert(conn, po);
 					}
-
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
-			}finally {
-				SqluckyAppDB.closeConn(conn);
 			}
 		}
 	}
@@ -56,8 +52,7 @@ public class UpdateScript {
 	/**
 	 * 找到未执行的sql, 执行
 	 */
-	public static void executeAppendSql(){
-		Connection conn = SqluckyAppDB.getConn();
+	public static void executeAppendSql(Connection conn ){
 		try {
 				SqluckyAppendSqlPO po = new SqluckyAppendSqlPO();
 				po.setIsExecute(0);
@@ -80,8 +75,6 @@ public class UpdateScript {
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
-		}finally {
-			SqluckyAppDB.closeConn(conn);
 		}
 	}
 

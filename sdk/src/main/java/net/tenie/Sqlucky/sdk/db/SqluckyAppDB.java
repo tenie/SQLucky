@@ -5,12 +5,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.sql.DataSource;
 
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.apache.ibatis.datasource.unpooled.UnpooledDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableColumn;
 import org.fxmisc.richtext.CodeArea;
 
@@ -42,21 +46,43 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  */
 public class SqluckyAppDB {
 
+	private static final Logger logger = LogManager.getLogger(SqluckyAppDB.class);
 	// 连接打开次数的计数, 只有当connTimes = 0 , 调用close, 才会真的关闭
 	private static AtomicInteger connTimes = new AtomicInteger(0);
 	private volatile  static Connection conn;
 	// 使用阻塞队列, 串行获取: 连接, 和关闭连接
-//	private static BlockingQueue<Connection> bQueue=new ArrayBlockingQueue<>(1);
+	private static BlockingQueue<Connection> bQueue= new ArrayBlockingQueue<>(1);
 
 	// 获取应用本身的数据库链接
 	synchronized  public static Connection getConn() {
 		try {
+			Connection connection = createSqliteConn();
+			bQueue.put(connection);
+			return connection;
+		} catch (Exception e) {
+			logger.error(e);
+		}
+		return null;
+	}
+
+	synchronized public static void closeConn(Connection conn) {
+		if (conn != null) {
+			try {
+				var val = bQueue.take();
+				logger.info("bQueue.take() = {} ", val);
+				conn.close();
+			} catch (Exception e) {
+				logger.error(e);
+			}
+		}
+	}
+	// 获取应用本身的数据库链接
+	synchronized  public static Connection getConn2() {
+		try {
 			if (conn == null) {
-//				conn = createH2Conn();
 				conn = createSqliteConn();
 //				System.out.println("获取应用本身的数据库链接");
 			} else if (conn.isClosed()) {
-//				conn = createH2Conn();
 				conn = createSqliteConn();
 //				System.out.println("获取应用本身的数据库链接");
 			}
@@ -113,7 +139,7 @@ public class SqluckyAppDB {
 		}
 	}
 
-	synchronized public static void closeConn(Connection conn) {
+	synchronized public static void closeConn2(Connection conn) {
 		if (conn != null) {
 			try {
 				Thread th = new Thread(() -> {
