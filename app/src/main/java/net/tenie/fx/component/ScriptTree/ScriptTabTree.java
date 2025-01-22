@@ -69,9 +69,9 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		rootNode = new TreeItem<>(null);
 		ComponentGetter.scriptTreeRoot = rootNode;
 		ScriptTreeView = new TreeView<>(rootNode);
-		ScriptTreeView.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
-				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
-
+//		ScriptTreeView.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
+//				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
+		ScriptTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		ComponentGetter.scriptTreeView = ScriptTreeView;
 		ScriptTreeView.getStyleClass().add("my-tag");
 		ScriptTreeView.setShowRoot(false);
