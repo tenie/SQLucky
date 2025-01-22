@@ -3,12 +3,11 @@ package net.tenie.fx.component.ScriptTree;
 import SQLucky.app;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
@@ -70,6 +69,9 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		rootNode = new TreeItem<>(null);
 		ComponentGetter.scriptTreeRoot = rootNode;
 		ScriptTreeView = new TreeView<>(rootNode);
+		ScriptTreeView.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
+				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
+
 		ComponentGetter.scriptTreeView = ScriptTreeView;
 		ScriptTreeView.getStyleClass().add("my-tag");
 		ScriptTreeView.setShowRoot(false);
@@ -278,18 +280,21 @@ public class ScriptTabTree extends SqluckyTitledPane {
 	}
 
 	public static void openEditor() {
-		TreeItem<MyEditorSheet> item = ScriptTreeView.getSelectionModel().getSelectedItem();
-		MyEditorSheet sheet = item.getValue();
-		if (sheet != null && sheet.getDocumentPo() != null) {
-			int tabPosition = sheet.getDocumentPo().getTabPosition();
-			var myTabPane = ComponentGetter.mainTabPane;
-			var rightTabPane = ComponentGetter.rightTabPane;
-			if(0 == tabPosition){
-				sheet.showEditor(myTabPane);
-			}else {
-				sheet.showEditor(rightTabPane);
+		List<TreeItem<MyEditorSheet>>  selectedItems = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItems();
+		if(selectedItems != null && !selectedItems.isEmpty()) {
+			for (var item : selectedItems) {
+				MyEditorSheet sheet = item.getValue();
+				if (sheet != null && sheet.getDocumentPo() != null) {
+					int tabPosition = sheet.getDocumentPo().getTabPosition();
+					var myTabPane = ComponentGetter.mainTabPane;
+					var rightTabPane = ComponentGetter.rightTabPane;
+					if(0 == tabPosition){
+						sheet.showEditor(myTabPane);
+					}else {
+						sheet.showEditor(rightTabPane);
+					}
+				}
 			}
-
 		}
 	}
 
@@ -310,51 +315,58 @@ public class ScriptTabTree extends SqluckyTitledPane {
 	public static void closeAction(TreeItem<MyEditorSheet> rootNode) {
 
 		ObservableList<TreeItem<MyEditorSheet>> myTabItemList = rootNode.getChildren();
-		TreeItem<MyEditorSheet> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
-		MyEditorSheet sheet = ctt.getValue();
+		List<TreeItem<MyEditorSheet>>  selectedItems = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItems();
+//		TreeItem<MyEditorSheet> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
+		if(selectedItems != null && !selectedItems.isEmpty()){
+			for(var ctt: selectedItems){
+				MyEditorSheet sheet = ctt.getValue();
 
-		String title = sheet.getTitle();// CommonUtility.tabText(tb);
-		String sql = sheet.getAreaText(); // SqlEditor.getTabSQLText(tb);
-		if (title.endsWith("*") && sql != null && sql.trim().length() > 0) {
-			// 是否保存
-			final Stage stage = new Stage();
+				String title = sheet.getTitle();// CommonUtility.tabText(tb);
+				String sql = sheet.getAreaText(); // SqlEditor.getTabSQLText(tb);
+				if (title.endsWith("*") && sql != null && sql.trim().length() > 0) {
+					// 是否保存
+					final Stage stage = new Stage();
 
-			// 1 保存 文件保存到磁盘
-			JFXButton okbtn = new JFXButton("Yes(Y)");
-			okbtn.getStyleClass().add("myAlertOkBtn");
-			okbtn.setOnAction(value -> {
+					// 1 保存 文件保存到磁盘
+					JFXButton okbtn = new JFXButton("Yes(Y)");
+					okbtn.getStyleClass().add("myAlertOkBtn");
+					okbtn.setOnAction(value -> {
 //				MyEditorSheetHelper.saveSqlToFileAction(sheet);
-				removeTreeNode(myTabItemList, ctt, sheet);
-				sheet.saveDiskAndDestroyTab();
-				stage.close();
-			});
+						removeTreeNode(myTabItemList, ctt, sheet);
+						sheet.saveDiskAndDestroyTab();
+						stage.close();
+					});
 
-			// 2 不保存
-			JFXButton Nobtn = new JFXButton("No(N)");
-			Nobtn.getStyleClass().add("myAlertBtn");
+					// 2 不保存
+					JFXButton Nobtn = new JFXButton("No(N)");
+					Nobtn.getStyleClass().add("myAlertBtn");
 
-			Nobtn.setOnAction(value -> {
-				removeTreeNode(myTabItemList, ctt, sheet);
-				sheet.closeTab();
-				stage.close();
-			});
-			// 取消
-			JFXButton cancelbtn = new JFXButton("Cancel(C)");
-			cancelbtn.getStyleClass().add("myAlertBtn");
-			cancelbtn.setOnAction(value -> {
-				stage.close();
-			});
+					Nobtn.setOnAction(value -> {
+						removeTreeNode(myTabItemList, ctt, sheet);
+						sheet.closeTab();
+						stage.close();
+					});
+					// 取消
+					JFXButton cancelbtn = new JFXButton("Cancel(C)");
+					cancelbtn.getStyleClass().add("myAlertBtn");
+					cancelbtn.setOnAction(value -> {
+						stage.close();
+					});
 
-			List<Node> btns = new ArrayList<>();
+					List<Node> btns = new ArrayList<>();
 
-			btns.add(cancelbtn);
-			btns.add(Nobtn);
-			btns.add(okbtn);
+					btns.add(cancelbtn);
+					btns.add(Nobtn);
+					btns.add(okbtn);
 
-			MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns, false);
-		} else {
-			removeTreeNode(myTabItemList, ctt, sheet);
+					MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns, false);
+				} else {
+					removeTreeNode(myTabItemList, ctt, sheet);
+				}
+			}
+
 		}
+
 
 	}
 

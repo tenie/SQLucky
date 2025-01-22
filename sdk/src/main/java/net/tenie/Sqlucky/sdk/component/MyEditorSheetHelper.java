@@ -1,12 +1,15 @@
 package net.tenie.Sqlucky.sdk.component;
 
 import java.io.File;
+import java.sql.Connection;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
 import javafx.application.Platform;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
 
 import com.jfoenix.controls.JFXButton;
@@ -36,6 +39,7 @@ import org.fxmisc.richtext.model.Paragraph;
  */
 public class MyEditorSheetHelper {
 
+	private static final Logger logger = LogManager.getLogger(MyEditorSheetHelper.class);
 	// 将Tab 放入界面
 	public static Consumer<String>  mainTabPaneAddAllMyTabs(List<MyEditorSheet> ls) {
 		Tab mainActivateMyTab = null;
@@ -190,7 +194,7 @@ public class MyEditorSheetHelper {
 
 	// 保存sql文本到硬盘
 	public static void saveSqlToFileAction(MyEditorSheet sheet) {
-		var conn = SqluckyAppDB.getConn();
+
 		try {
 			String sql = sheet.getAreaText();// SqlEditor.getTabSQLText(tb);
 			DocumentPo documentPo = sheet.getDocumentPo();
@@ -214,14 +218,14 @@ public class MyEditorSheetHelper {
 					fileName = file.getPath();
 				}
 			}
+			Connection conn = SqluckyAppDB.getConn();
 			sheet.syncScriptPo(conn);
+			SqluckyAppDB.closeConn(conn);
 			ComponentGetter.appComponent.setOpenfileDir(fileName);
 
 		} catch (Exception e1) {
 			MyAlert.errorAlert(e1.getMessage());
-			e1.printStackTrace();
-		} finally {
-			SqluckyAppDB.closeConn(conn);
+			logger.error(e1);
 		}
 	}
 

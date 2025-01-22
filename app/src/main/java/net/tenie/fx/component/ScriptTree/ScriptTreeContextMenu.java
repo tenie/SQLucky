@@ -41,9 +41,6 @@ public class ScriptTreeContextMenu {
 		MenuItem save = new MenuItem("Save");
 		save.setOnAction(e -> {
 			ScriptTreeAction.saveAction();
-//			TreeItem<MyTab> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
-//			MyTab mtab = ctt.getValue();
-//			CommonAction.saveSqlAction(mtab);
 		});
 
 		MenuItem Import = new MenuItem("Import...");
