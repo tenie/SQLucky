@@ -31,12 +31,10 @@ public class ExcelUtil {
 	/**
 	 * 判断Excel的版本,获取Workbook
 	 * 
-	 * @param in
-	 * @param filename
 	 * @return
 	 * @throws IOException
 	 */
-	public static Workbook readFileToWorkbok(File file) throws IOException {
+	public static Workbook readFileToWorkbook(File file) throws IOException {
 		if (file.exists() == false) {
 			file.createNewFile();
 		}
@@ -58,13 +56,12 @@ public class ExcelUtil {
 
 	public static Workbook readFileToWorkbok(String fname) throws IOException {
 		File file = new File(fname);
-		return readFileToWorkbok(file);
+		return readFileToWorkbook(file);
 	}
 
 	/**
 	 * 创建一个 .xls文件, 如果文件存在,就先删除旧文件
 	 * 
-	 * @param fileName
 	 * @throws IOException
 	 */
 	public static Workbook writeFileToWorkbook(File file, String sheetName) throws IOException {
@@ -125,7 +122,7 @@ public class ExcelUtil {
 
 	public static List<ArrayList<String>> readExcel(String filename, Integer beginRowIdx, Integer count)
 			throws IOException {
-		Workbook workbook = readFileToWorkbok(new File(filename));
+		Workbook workbook = readFileToWorkbook(new File(filename));
 		List<ArrayList<String>> rs = new ArrayList<>();
 		rs = ReadExcel.readExcel(workbook, beginRowIdx, count);
 		return rs;

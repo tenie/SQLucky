@@ -228,11 +228,6 @@ public class InsertDao {
 
 	/**
 	 * 
-	 * @param conn
-	 * @param tableName
-	 * @param fields
-	 * @return
-	 * @throws Exception
 	 */
 	public static String execInsertByExcelField(Connection conn, String tableName, List<ImportFieldPo> importFieldPoList,
 			List<List<String>> rowVals, String saveSqlfileStr, boolean onlySaveSql) throws Exception {

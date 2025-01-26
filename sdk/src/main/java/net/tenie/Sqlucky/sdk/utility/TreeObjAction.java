@@ -50,9 +50,10 @@ public class TreeObjAction {
             MyBottomSheetUtility.showTableInfoSheet(sqluckyConn, table);
         } else if (type.equals(CommonConst.TYPE_VIEW)) {
             MyBottomSheetUtility.showViewDDLSheet(sqluckyConn, table);
-
         }
-
     }
 
+    public static String getTableSQL(SqluckyConnector sqluckyConn, String tableSchema, String tableName) {
+        return DBOptionHelper.getCreateTableSQL(sqluckyConn, tableSchema, tableName);
+    }
 }

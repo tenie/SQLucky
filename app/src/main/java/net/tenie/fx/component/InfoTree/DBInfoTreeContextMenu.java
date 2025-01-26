@@ -8,15 +8,19 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TreeItem;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
+import net.tenie.Sqlucky.sdk.db.ExportDBObjects;
 import net.tenie.Sqlucky.sdk.db.SelectDao;
 import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.po.DbTableDatePo;
+import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.TreeItemType;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.subwindow.TableDataDetail;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
+import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.Action.RunSQLHelper;
@@ -24,11 +28,13 @@ import net.tenie.fx.Action.sqlExecute.RunSqlStatePo;
 import net.tenie.fx.window.ConnectionEditor;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class DBInfoTreeContextMenu extends ContextMenu {
 	private MenuItem tableAddNewCol;
 	private MenuItem tableShow;
+	private MenuItem exportAllTable;
 	private MenuItem tableDrop;
 
 	private MenuItem link;
@@ -108,6 +114,12 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 		tableAddNewCol.setGraphic(IconGenerator.svgImageDefActive("plus-square-o"));
 		tableAddNewCol.setDisable(true);
 
+
+		exportAllTable = new MenuItem("Export DB Table DDL");
+//		exportAllTable.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
+		exportAllTable.setDisable(true);
+
+
 		tableShow = new MenuItem("Show Table Field Type");
 		tableShow.setGraphic(IconGenerator.svgImageDefActive("search-plus"));
 		tableShow.setDisable(true);
@@ -125,7 +137,7 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 		copyNameMenu.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
 
 		this.getItems().addAll(link, unlink, Edit, Add, delete, new SeparatorMenuItem(), exportDBConn, importDBConn, new SeparatorMenuItem(), refresh,
-				new SeparatorMenuItem(), tableAddNewCol, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu, new SeparatorMenuItem(),
+				new SeparatorMenuItem(), tableAddNewCol, exportAllTable, tableShow, tableDrop, new SeparatorMenuItem(), selectMenu, new SeparatorMenuItem(),
 				copyNameMenu);
 
 		// 菜单显示调用回调函数
@@ -157,6 +169,7 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 			selectMenu.setText("Select");
 		}
 		tableShow.setDisable(tf);
+		exportAllTable.setDisable(!tf);
 
 	}
 
@@ -210,6 +223,39 @@ public class DBInfoTreeContextMenu extends ContextMenu {
 		setSelectMenuAction(sqluckyConn, treeItem.getValue());
 
 	}
+
+	/**
+	 * 导出 数据库中的所有建表语句
+	 * @param treeItem
+	 * @param sqluckyConn
+	 */
+	public void setTableRootAction(TreeItem<TreeNodePo> treeItem, SqluckyConnector sqluckyConn) {
+		List<TreeItem<TreeNodePo>>  tableList = treeItem.getChildren();
+		String schema = treeItem.getParent().getValue().getName();
+
+		exportAllTable.setOnAction(e -> {
+			// 载入动画
+			LoadingAnimation.loadingAnimation("Loading....", v -> {
+				StringBuilder allString = new StringBuilder();
+				for(var treeItemTmp: tableList){
+					String tablename = treeItemTmp.getValue().getTable().getTableName();
+					ExportDBObjects export = sqluckyConn.getExportDDL();
+					allString.append(export.exportCreateTable(sqluckyConn.getConn(), schema, tablename)).append(";\n");
+
+				}
+				DocumentPo scpo = new DocumentPo();
+				scpo.setEncode("UT8-8");
+				scpo.setText(allString.toString());
+				scpo.setTitle(schema+" Table DDL ");
+				MyEditorSheetHelper.createTabFromSqlFile(scpo);
+			});
+
+		});
+
+
+
+	}
+
 
 	// 右键菜单, 查询按钮设置
 	public void setSelectMenuAction(SqluckyConnector sqluckyConn, TreeNodePo treeNPO) {

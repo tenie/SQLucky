@@ -324,34 +324,6 @@ public class MyAlert {
             notificationBuilder.darkStyle();
         }
         notificationBuilder.show();
-//        switch (type) {
-//            case Error:
-////			 notificationBuilder.graphic( ComponentGetter.ERROR);
-//                notificationBuilder.showError();
-//                break;
-//
-//            case Warning:
-////			 notificationBuilder.graphic( ComponentGetter.WARN);
-//                notificationBuilder.showWarning();
-//                break;
-//
-//            case Information:
-////			 notificationBuilder.graphic( ComponentGetter.INFO);
-//                notificationBuilder.showInformation();
-//                break;
-//
-//            case Confirm:
-////			 notificationBuilder.graphic( ComponentGetter.INFO);
-//                notificationBuilder.showConfirm();
-//                break;
-//
-//            default:
-////			notificationBuilder.graphic( ComponentGetter.INFO);
-//                notificationBuilder.show();
-//                break;
-//
-//        }
-
     }
 
     public enum NotificationType {

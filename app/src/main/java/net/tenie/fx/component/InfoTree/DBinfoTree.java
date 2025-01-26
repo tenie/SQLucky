@@ -111,7 +111,8 @@ public class DBinfoTree extends SqluckyTitledPane {
 		recoverNode(datas);
 		// 展示连接
 		if (!rootNode.getChildren().isEmpty()) {
-            DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().getFirst()); // 选中节点
+			// 选中节点
+            DBinfoTreeView.getSelectionModel().select(rootNode.getChildren().getFirst());
         }
 		// 双击
 		DBinfoTreeView.setOnMouseClicked(e -> {
@@ -132,13 +133,12 @@ public class DBinfoTree extends SqluckyTitledPane {
 
 		// 显示设置, 从TreeNodePo中的对象显示为 TreeItem 的名称和图标
 		DBinfoTreeView.setCellFactory(new TreeNodeCellFactory());
-//		return DBinfoTreeView;
 	}
 
 	// 恢复数据中保存的连接数据, 界面初始化的时候
 	public static void recoverNode(List<SqluckyConnector> datas) {
 		List<MyTreeItem<TreeNodePo>> ls = new ArrayList<>();
-		if (datas != null && datas.size() > 0) {
+		if (datas != null && !datas.isEmpty()) {
 			for (SqluckyConnector po : datas) {
 				TreeNodePo tnpo = new TreeNodePo(po.getConnName(), IconGenerator.svgImageUnactive("unlink"));
 				tnpo.setType(TreeItemType.CONNECT_INFO);
@@ -148,7 +148,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 			}
 		}
 		Consumer<String> cr = v -> {
-			if (ls.size() > 0) {
+			if (!ls.isEmpty()) {
 				// 连接方法缓存
 				Platform.runLater(() -> {
 					rootNode.getChildren().addAll(ls);
@@ -186,7 +186,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 			}
 		}
 
-		if (ls.size() > 0) {
+		if (!ls.isEmpty()) {
 			// 连接方法缓存
 			Platform.runLater(() -> {
 				rootNode.getChildren().addAll(ls);
@@ -207,7 +207,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 				}
 			});
 		}
-
 	}
 
 	// 所有连接节点
@@ -224,7 +223,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 				return DBinfoTreeView.getRoot().getChildren().contains(item);
 			}
 		}
-
 		return tf;
 	}
 
@@ -284,8 +282,8 @@ public class DBinfoTree extends SqluckyTitledPane {
 		}else {
 			rootNode.getChildren().addFirst(item);
 		}
-
-		treeView.getSelectionModel().select(item); // 选择新加的节点
+		// 选择新加的节点
+		treeView.getSelectionModel().select(item);
 	}
 
 	// tree view 双击事件
@@ -456,13 +454,13 @@ public class DBinfoTree extends SqluckyTitledPane {
 				contextMenu.copuNodeName(nodeName);
 
 				// 获取链接的TreeItem
-				if (Objects.equals(newValue, DBinfoTreeView.getRoot())) { // root
+				if (Objects.equals(newValue, DBinfoTreeView.getRoot())) {
 					contextMenu.setConnectDisable(true);
 					contextMenu.setTableDisable(true);
 					contextMenu.setRefreshDisable(true);
 					contextMenu.setLinkDisable(true);
 				} else if (DBinfoTree.isConns(newValue)) {
-					if (newValue.getChildren().size() == 0) {
+					if (newValue.getChildren().isEmpty()) {
 						contextMenu.setLinkDisable(false);
 						contextMenu.setRefreshDisable(true);
 					} else {
@@ -471,6 +469,16 @@ public class DBinfoTree extends SqluckyTitledPane {
 					}
 					contextMenu.setConnectDisable(false);
 					contextMenu.setTableDisable(true);
+				} else if (nd != null && nd.getType() == TreeItemType.TABLE_ROOT) {
+					// TABLE 父节点
+					contextMenu.setNodeType(null);
+					contextMenu.setConnectDisable(true);
+					contextMenu.setTableDisable(true);
+					contextMenu.setRefreshDisable(false);
+					contextMenu.setLinkDisable(true);
+
+					SqluckyConnector dbc = nd.getConnpo();
+					contextMenu.setTableRootAction(newValue, dbc);
 				} else if (nd != null && nd.getType() == TreeItemType.TABLE) {
 					// 表
 					contextMenu.setConnectDisable(true);
@@ -486,7 +494,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 					SqluckyConnector dbc = nd.getConnpo();
 					String schema = nd.getTable().getTableSchema();
 					String viewName = nd.getTable().getTableName();
-//					var tabpo = nd.getTable();
 					contextMenu.setViewAction(newValue, dbc, schema, viewName);
 					contextMenu.setSelectMenuDisable(false, dbc, nd);
 				} else if (nd != null && nd.getType() == TreeItemType.FUNCTION) {
@@ -528,7 +535,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 				}
 
 				if (!contextMenu.getRefresh().isDisable()) {
-					TreeItem<TreeNodePo> connItem = ConnItem(newValue);
+					TreeItem<TreeNodePo> connItem = connItem(newValue);
 					contextMenu.setRefreshAction(connItem);
 				}
 
@@ -536,7 +543,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 		};
 	}
 
-	private TreeItem<TreeNodePo> ConnItem(TreeItem<TreeNodePo> newValue) {
+	private TreeItem<TreeNodePo> connItem(TreeItem<TreeNodePo> newValue) {
 		if (DBinfoTree.isConns(newValue)) {
             return newValue;
         }
@@ -578,7 +585,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 			}
 
 			if (tnp != null) {
-				if (tnp.getChildren().size() > 0) {
+				if (!tnp.getChildren().isEmpty()) {
 					ObservableList<TreeItem<TreeNodePo>> lsShc = tnp.getChildren().get(0).getChildren();
 					for (TreeItem<TreeNodePo> sche : lsShc) {
 						if (sche.getValue().getName().equals(schema)) {
