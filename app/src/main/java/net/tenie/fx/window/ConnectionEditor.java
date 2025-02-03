@@ -231,7 +231,7 @@ public class ConnectionEditor {
                 jdbcUrl.setText("");
             }
         });
-        // TODO
+        //
         dbDriver.valueProperty().addListener((ChangeListener<String>) (observable, oldValue, newValue) -> {
 
             var dbpo = DbVendor.register(dbDriver.getValue());
@@ -336,7 +336,7 @@ public class ConnectionEditor {
                 }
             }
 
-            // TODO 连接信息保存 DbVendor
+            // 连接信息保存 DbVendor
             DBConnectorInfoPo connPo = new DBConnectorInfoPo(connName, DbVendor.getDriver(dbDriver.getValue()),
                     host.getText(), port.getText(), user.getText(), password.getText(), dbDriver.getValue(),
                     defaultSchema.getText(), defaultSchema.getText(), jdbcUrl.getText(), autoConnectCB.isSelected());
@@ -352,7 +352,6 @@ public class ConnectionEditor {
             return null;
 
         };
-//TODO
         Button testBtn = createTestBtn(assembleSqlCon);
         Button saveBtn = createSaveBtn(assembleSqlCon, connectionName, dp);
 
@@ -394,7 +393,8 @@ public class ConnectionEditor {
             }
             connectionEditor = new ConnectionEditor(tf, treeItem);
         } else {
-            MyAlert.showNotifiaction("编辑需要选中连接名称!");
+//            MyAlert.showNotifiaction("编辑需要选中连接名称!");
+            MyAlert.notification("Error", "编辑需要选中连接名称!", MyAlert.NotificationType.Error);
         }
     }
 
@@ -418,7 +418,8 @@ public class ConnectionEditor {
             }
 
         } else {
-            MyAlert.showNotifiaction("需要选中连接名称!");
+//            MyAlert.showNotifiaction("需要选中连接名称!");
+            MyAlert.notification("Error", "需要选中连接名称!", MyAlert.NotificationType.Error);
         }
     }
 
