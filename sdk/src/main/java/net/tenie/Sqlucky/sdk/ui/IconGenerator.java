@@ -7,7 +7,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.SVGPath;
 import javafx.scene.shape.Shape;
-import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import org.girod.javafx.svgimage.SVGImage;
 import org.girod.javafx.svgimage.SVGLoader;
 
@@ -122,7 +121,6 @@ public final class IconGenerator {
         icomoonSpinner3Region.setMinSize(size, size);
         icomoonSpinner3Region.setPrefSize(size, size);
         icomoonSpinner3Region.setMaxSize(size, size);
-        CommonUtils.rotateTransition(icomoonSpinner3Region);
         return icomoonSpinner3Region;
     }
 

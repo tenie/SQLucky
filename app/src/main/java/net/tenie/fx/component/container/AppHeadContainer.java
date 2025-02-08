@@ -102,13 +102,6 @@ public class AppHeadContainer {
         leftBox.getChildren().add(DbinfoOperateBox);
         leftBox.getChildren().add(mainMenuBar);
         mainMenuBar.setVisible(false);
-
-//        // macos 系统, 使用自己的关闭窗口
-//        if (!CommonUtils.isMacOS()) {
-//            AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
-//            winos.setWindow(primaryStage, app.getHeadAnchorPane());
-//        }
-
     }
 
     // 初始化 显示菜单按钮

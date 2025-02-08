@@ -24,9 +24,8 @@ public final class SettingKeyBinding {
 	// 对esc按钮添加绑定
 	public static void setEscKeyBinding(Scene scene) {
 		KeyCodeCombination escbtn = new KeyCodeCombination(KeyCode.ESCAPE);
-		scene.getAccelerators().put(escbtn, () -> {
-			CommonUtils.pressBtnESC();
-		});
+		// ESCAPE 添加事件
+		scene.getAccelerators().put(escbtn, CommonUtils::pressBtnESC);
 
 		// 左边 百叶窗 的切换
 		setAccordionChangeBinding(scene);

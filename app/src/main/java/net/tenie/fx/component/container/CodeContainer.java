@@ -9,15 +9,14 @@ import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyCodeArea;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheetHelper;
 import net.tenie.Sqlucky.sdk.ui.IconGenerator;
-import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.DraggingTabPaneSupport;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.controlsfx.control.MasterDetailPane;
 import org.controlsfx.control.NotificationPane;
 
-/*   @author tenie */
+/**
+ *  @author tenie
+ */
 public class CodeContainer extends VBox{
-//	private AnchorPane operateBtnPane;
 	// 主代码框
 	private TabPane mainTabPane;
 	// 右侧代码框
@@ -31,10 +30,6 @@ public class CodeContainer extends VBox{
 
 	public CodeContainer() {
 		super();
-
-		// 按钮面板
-//		operateBtnPane = ButtonFactory.codeAreabtnInit();
-		
 		mainTabPane = new TabPane();
 		rightTabPane = new TabPane();
 		ComponentGetter.mainTabPane = mainTabPane;
@@ -62,14 +57,12 @@ public class CodeContainer extends VBox{
 		ComponentGetter.rightTabPaneMasterDetailPane = tabPaneMasterDetailPane;
 
 		// 将主面板放入到"通知面板"的容器中
-//		notificationPane.setContent(mainTabPane);
 		notificationPane.setContent(tabPaneMasterDetailPane);
 		VBox.setVgrow(notificationPane, Priority.ALWAYS);
 		// 配置 notificationPane 组件
 		configNotificationPane();
 		
 		this.getChildren().add(notificationPane);
-//		this.getChildren().addAll(operateBtnPane, notificationPane);
 
 		// 当表被拖拽进入到code editor , 将表名插入到 光标处
 		this.setOnDragEntered(e -> {
@@ -82,18 +75,15 @@ public class CodeContainer extends VBox{
 					ca.insertText(start, " " + val);
 					ca.requestFocus();
                 }
-
 			}
-
 		});
 
 		// tab 拖拽
-		DraggingTabPaneSupport support1 = new DraggingTabPaneSupport();
-		support1.addSupport(mainTabPane);
-		
-		
-//		CommonUtils.fadeTransition(operateBtnPane, 1000);
-//		CommonUtils.fadeTransition(mainTabPane, 1000);
+//		CommonUtils.addInitTask(str->{
+//			DraggingTabPaneSupport support1 = new DraggingTabPaneSupport();
+//			support1.addSupport(ComponentGetter.mainTabPane );
+//		});
+
 		
 	}
 

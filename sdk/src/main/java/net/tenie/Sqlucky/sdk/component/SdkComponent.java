@@ -467,7 +467,7 @@ public class SdkComponent {
     public static void intiShowOrhideRightByTabSize() {
         MasterDetailPane rightTabPaneMasterDetailPane = ComponentGetter.rightTabPaneMasterDetailPane;
         JFXButton btn = CommonButtons.hideRight;
-        if (ComponentGetter.rightTabPane.getTabs().size() == 0) {
+        if (ComponentGetter.rightTabPane.getTabs().isEmpty()) {
             rightTabPaneMasterDetailPane.setShowDetailNode(false);
             btn.setGraphic(rightTabPaneOpen);
         } else {

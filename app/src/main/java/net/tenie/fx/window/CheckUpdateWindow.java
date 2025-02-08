@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import javafx.animation.RotateTransition;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.controlsfx.control.tableview2.FilteredTableView;
@@ -48,7 +50,7 @@ public class CheckUpdateWindow {
 		window.layout(title);
 	}
 	// 创建窗口
-	public Stage CreateModalWindow(VBox vb,  String title) {
+	public Stage CreateModalWindow(VBox vb,  String title, RotateTransition rotateTransition) {
 		SqluckyStage sqlStage = new SqluckyStage(vb);
 		stageWindow = sqlStage.getStage();
 		Scene scene = sqlStage.getScene();
@@ -64,11 +66,11 @@ public class CheckUpdateWindow {
 		KeyCodeCombination spacebtn = new KeyCodeCombination(KeyCode.SPACE);
 		scene.getAccelerators().put(escbtn, () -> {
 			stageWindow.close();
-			
+			rotateTransition.stop();
 		});
 		scene.getAccelerators().put(spacebtn, () -> {
 			stageWindow.close();
-			
+			rotateTransition.stop();
 		});
 
 		stageWindow.initModality(Modality.APPLICATION_MODAL);
@@ -78,6 +80,7 @@ public class CheckUpdateWindow {
 		stageWindow.setResizable(false);
 		stageWindow.setOnCloseRequest(v->{
 			stageWindow = null;
+			rotateTransition.stop();
 		});
 		return stageWindow;
 	}
@@ -158,8 +161,8 @@ public class CheckUpdateWindow {
 		String sign = "Checking ";
 		Label title = new Label(sign);
 		title.setPadding(new Insets(15));
-		Node nd = IconGenerator.svgImage("icomoon-spinner9", 30 , "#7CFC00"); 
-		CommonUtils.rotateTransition(nd);
+		Node nd = IconGenerator.svgImage("icomoon-spinner9", 30 , "#7CFC00");
+		RotateTransition rotateTransition = CommonUtils.rotateTransition(nd);
 		title.setGraphic(nd);
 		vb.getChildren().add(title);
 		
@@ -167,11 +170,10 @@ public class CheckUpdateWindow {
 		CommonUtils.runThread(str->{
 			String msg = "检测失败";
 			try {
-				String version = newAppVersionCode();//HttpUtil.get(ConfigVal.getSqluckyServer()+"/sqlucky/version");
+				String version = newAppVersionCode();
 				if(version != null) {
 					if(ConfigVal.version.equals(version)) {
 						msg = "已经是最新版本!";
-//						appVersion = version;
 					}else {
 						msg = "当前版本: " + ConfigVal.version + "; 最新版本: " + version;
 						btn.setDisable(false);
@@ -186,7 +188,7 @@ public class CheckUpdateWindow {
 			Platform.runLater(()->{
 				title.setText(showMsg); 
 				var svg = IconGenerator.sqluckyLogoSVG();
-				title.setGraphic(svg); 
+				title.setGraphic(svg);
 			});
 			
 			
@@ -197,7 +199,7 @@ public class CheckUpdateWindow {
 		GridPane grid = new GridPane();
 		vb.getChildren().add(grid);
 		vb.setPadding( new Insets(5));
-		Stage stage = CreateModalWindow(vb, titleStage);
+		Stage stage = CreateModalWindow(vb, titleStage, rotateTransition);
 		grid.setHgap(10);
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 10, 10, 10));

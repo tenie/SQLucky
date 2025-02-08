@@ -1,12 +1,16 @@
 package net.tenie.fx.component.InfoTree;
 
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -32,7 +36,6 @@ import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.Sqlucky.sdk.utility.TreeObjAction;
 import net.tenie.fx.component.container.AppWindow;
-import net.tenie.fx.dao.ConnectionDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.Caret.CaretVisibility;
@@ -41,7 +44,6 @@ import org.fxmisc.richtext.CodeArea;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 /**
  * 链接节点树
@@ -65,7 +67,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 	public static TextField filterTextField;
 
 	private VBox dbInfoTreeBtnPane ;
-	
+
 	public DBinfoTree() {
 		super();
 		createConnsTreeView();
@@ -73,8 +75,8 @@ public class DBinfoTree extends SqluckyTitledPane {
 		// 查询过滤
 		dbInfoTreeFilter = new DBinfoTreeFilter();
 		dbInfoTreeFilterPane = dbInfoTreeFilter.createFilterPane(DBinfoTreeView);
-		 
-		filterTextField = 	dbInfoTreeFilter.getTxt();
+
+		filterTextField = dbInfoTreeFilter.getTxt();
 		operateBtns = new ArrayList<>();
 
 		dbInfoTreeBtnPane = DBinfoTreeButtonFactory.createTreeViewbtn(this);
@@ -83,12 +85,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 		this.setBtnsBox(dbInfoTreeBtnPane);
 		CommonUtils.addCssClass(this, "titledPane-color");
 		this.setContent(DBinfoTreeView);
-
-		// 图标切换
-		CommonUtils.addInitTask(
-				v -> Platform.runLater(
-						() -> CommonUtils.setLeftPaneIcon(this, ComponentGetter.iconInfo, ComponentGetter.uaIconInfo)));
-
 	}
 
 	// db节点view
@@ -105,10 +101,6 @@ public class DBinfoTree extends SqluckyTitledPane {
 			}
 		});
 
-		// 读取数据库数据
-		List<SqluckyConnector> datas = ConnectionDao.recoverConnObj();
-		// 恢复数据中保存的连接数据
-		recoverNode(datas);
 		// 展示连接
 		if (!rootNode.getChildren().isEmpty()) {
 			// 选中节点
@@ -147,30 +139,27 @@ public class DBinfoTree extends SqluckyTitledPane {
 				ls.add(item);
 			}
 		}
-		Consumer<String> cr = v -> {
-			if (!ls.isEmpty()) {
-				// 连接方法缓存
-				Platform.runLater(() -> {
-					rootNode.getChildren().addAll(ls);
-					DBConns.addAll(datas);
-				});
-				Platform.runLater(() -> {
-					// 打开自动连接的连接
-					for (MyTreeItem treeItem : ls) {
-						Platform.runLater(() -> {
-							SqluckyConnector scp = treeItem.getSqluckyConn();
-							if (scp != null) {
-								boolean autoConn = scp.getAutoConnect();
-								if (autoConn) {
-									DBinfoTree.openConn(treeItem, false);
-								}
+		if (!ls.isEmpty()) {
+			// 连接方法缓存
+			Platform.runLater(() -> {
+				rootNode.getChildren().addAll(ls);
+				DBConns.addAll(datas);
+			});
+			Platform.runLater(() -> {
+				// 打开自动连接的连接
+				for (MyTreeItem treeItem : ls) {
+					Platform.runLater(() -> {
+						SqluckyConnector scp = treeItem.getSqluckyConn();
+						if (scp != null) {
+							boolean autoConn = scp.getAutoConnect();
+							if (autoConn) {
+								DBinfoTree.openConn(treeItem, false);
 							}
-						});
-					}
-				});
-			}
-		};
-		CommonUtils.addInitTask(cr);
+						}
+					});
+				}
+			});
+		}
 	}
 
 	// 清空root, 然后插入新节点
@@ -649,7 +638,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 		if (item.getChildren().isEmpty()) {
 
 			Node nd = IconGenerator.svgImage("spinner", "red");
-			CommonUtils.rotateTransition(nd);
+			RotateTransition rotateTransition = CommonUtils.rotateTransition(nd);
 			item.getValue().setIcon(nd);
 			AppWindow.treeView.refresh();
 
@@ -709,6 +698,7 @@ public class DBinfoTree extends SqluckyTitledPane {
                         if (po1 != null) {
                             po1.setInitConnectionNodeStatus(false);
                         }
+						Platform.runLater(rotateTransition::stop);
                     }
 				}
 			};

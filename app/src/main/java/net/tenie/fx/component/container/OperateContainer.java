@@ -31,9 +31,6 @@ public class OperateContainer extends HBox {
 
 		HBox.setHgrow(treeAreaDetailPane, Priority.ALWAYS);
 		ComponentGetter.treeAreaDetailPane = treeAreaDetailPane;
-
-//		CommonUtils.fadeTransition(codeCtr, 1000);
-//		CommonUtils.fadeTransition(dbinfoCtr, 1000);
 	}
 
 	public MasterDetailPane getTreeAreaDetailPane() {

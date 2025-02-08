@@ -451,7 +451,7 @@ public class CommonUtils {
      *
      * @param pointer
      */
-    public static void rotateTransition(Node pointer) {
+    public static RotateTransition rotateTransition(Node pointer) {
         // 播放持续时间
         double play_time = 3.0;
         // 开始角度
@@ -470,8 +470,8 @@ public class CommonUtils {
         // 每次旋转后是否改变旋转方向
         rotateTransition.setAutoReverse(false);
         rotateTransition.play();
+        return rotateTransition;
     }
-
     /**
      * 添加显示动画, 动画有问题先注释了
      *
@@ -695,91 +695,6 @@ public class CommonUtils {
                 ComponentGetter.primaryscene.setCursor(cursorVal);
             });
         });
-    }
-
-    // 应用创建完后, 执行一些初始化的任务
-    private static List<Consumer<String>> initTasks = new ArrayList<>();
-    private static volatile int tasksCount = 0;
-
-    private static synchronized int getTaskCount() {
-        return tasksCount;
-    }
-
-    private static synchronized int addTaskCount() {
-        return tasksCount++;
-    }
-
-    private static synchronized int minusTaskCount() {
-        return tasksCount--;
-    }
-
-    public static void addInitTask(Consumer<String> v) {
-        initTasks.add(v);
-        addTaskCount();
-        logger.debug("addTaskCount == getTaskCount()  = " + CommonUtils.getTaskCount());
-
-    }
-
-    public static synchronized int countTask() {
-        return initTasks.size();
-    }
-
-    // 子线程执行初始化任务
-    public static void executeInitTask(Consumer<String> Callback) {
-        for (Consumer<String> caller : initTasks) {
-            try {
-                try {
-                    caller.accept("");
-                } finally {
-                    minusTaskCount();
-                    logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtils.getTaskCount());
-                }
-//                Thread t = new Thread() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            caller.accept("");
-//                        } finally {
-//                            minusTaskCount();
-//                            logger.debug("minusTaskCount == getTaskCount()  = " + CommonUtils.getTaskCount());
-//                        }
-//                    }
-//                };
-//                t.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        InitFinishCall(Callback);
-
-    }
-
-    /**
-     * 初始化完成后的回调函数
-     *
-     * @param caller
-     */
-    public static void InitFinishCall(Consumer<String> caller) {
-        try {
-            Thread t = new Thread() {
-                @Override
-                public void run() {
-                    while (CommonUtils.getTaskCount() > 0) {
-                        try {
-                            Thread.sleep(500);
-                            logger.debug("getTaskCount()  = " + CommonUtils.getTaskCount());
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    caller.accept("");
-                }
-            };
-            t.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
     }
 
     // 组件的悬停提示

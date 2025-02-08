@@ -86,8 +86,8 @@ public class ServiceLoad {
 						spd.register();
 						registerPlugin.add(spd);
 					}
-
-				} else { // 如果 数据库里的插件信息和加载的数据不同, 删除数据库的这条数据
+				} else {
+					// 如果 数据库里的插件信息和加载的数据不同, 删除数据库的这条数据
 					deleteInfoList.add(po);
 				}
 			}
@@ -124,7 +124,7 @@ public class ServiceLoad {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e);
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
@@ -156,7 +156,7 @@ public class ServiceLoad {
 			try {
 				plugin.load();
 			}catch (Exception e){
-				e.printStackTrace();
+				logger.error(e);
 			}
 
 		}
@@ -171,7 +171,7 @@ public class ServiceLoad {
 				try {
 					plugin.showed();
 				}catch (Exception e){
-					e.printStackTrace();
+					logger.error(e);
 				}
 			}
 		});

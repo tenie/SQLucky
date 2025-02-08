@@ -78,25 +78,18 @@ public class NoteTabTree extends SqluckyTitledPane {
 
 //	// 恢复数据中保存的连接数据
 	public void recoverNode(TreeItem<MyNoteEditorSheet> rootNode) {
-
-		Consumer<String> cr = v -> {
-			// 从数据库获取所有插件名称的配置值
-			List<String> pathAll = 	ComponentGetter.appComponent.fetchAllData(NoteDelegateImpl.pluginName);
-//					NoteUtility.fetchAllPath();
-			for(String filePath : pathAll){
-				File file = new File(filePath);
-				if (file.exists()) {
-					if(file.isDirectory()){
-						NoteUtility.openNoteDir(rootNode, file, false);
-					}else {
-						NoteUtility.openNoteFile(file);
-					}
+		// 从数据库获取所有插件名称的配置值
+		List<String> pathAll = 	ComponentGetter.appComponent.fetchAllData(NoteDelegateImpl.pluginName);
+		for(String filePath : pathAll){
+			File file = new File(filePath);
+			if (file.exists()) {
+				if(file.isDirectory()){
+					NoteUtility.openNoteDir(rootNode, file, false);
+				}else {
+					NoteUtility.openNoteFile(file);
 				}
 			}
-
-		};
-		CommonUtils.addInitTask(cr);
-
+		}
 	}
 
 	public static void closeNodeConfirmation(TreeItem<MyNoteEditorSheet> treeitem) {

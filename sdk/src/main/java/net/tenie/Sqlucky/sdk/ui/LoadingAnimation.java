@@ -1,29 +1,29 @@
 package net.tenie.Sqlucky.sdk.ui;
 
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
+/**
+ * 加载中的动画
+ */
 public class LoadingAnimation {
     private static Label lb;
     private static Region Animation;
-
+    private static ConcurrentHashMap<StackPane, RotateTransition> stackPaneMap = new ConcurrentHashMap<>();
     public static void ChangeLabelText(String val) {
         if (lb != null) {
             Platform.runLater(() -> {
@@ -41,6 +41,8 @@ public class LoadingAnimation {
 
                 lb = new Label(loadingString);
                 Animation = IconGenerator.loading(fontSize); //IconGenerator.svgImageUnactive("icomoon-spinner3", fontSize);
+                RotateTransition rotateTransition = CommonUtils.rotateTransition(Animation);
+                stackPaneMap.put(root, rotateTransition);
 //                CommonUtils.rotateTransition(Animation);
                 lb.setGraphic(Animation);
                 lb.setFont(new Font(fontSize));
@@ -87,7 +89,10 @@ public class LoadingAnimation {
             if(! stackPane.getChildren().isEmpty()){
                 stackPane.getChildren().get(0).setDisable(false);
             }
-
+            RotateTransition rotateTransition =  stackPaneMap.remove(stackPane);
+            if(rotateTransition != null){
+                rotateTransition.stop();
+            }
         });
 
     }

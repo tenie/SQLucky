@@ -1,6 +1,7 @@
 package net.tenie.fx.window;
 
 import com.jfoenix.controls.JFXCheckBox;
+import javafx.animation.RotateTransition;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
@@ -592,9 +593,10 @@ public class ConnectionEditor {
         Button testBtn = new Button("Test");
         testBtn.setOnMouseClicked(e -> {
             var tamGpc = testBtn.getGraphic();
+            RotateTransition rt = null;
             try {
                 testBtn.setGraphic(redRegion);
-                CommonUtils.rotateTransition(redRegion);
+                rt = CommonUtils.rotateTransition(redRegion);
                 logger.info("Test connection~~");
                 SqluckyConnector connpo = assembleSqlCon.apply("");
                 if (connpo != null) {
@@ -603,9 +605,10 @@ public class ConnectionEditor {
                 }
             } finally {
                 testBtn.setGraphic(tamGpc);
+                if (rt!=null){
+                    rt.stop();
+                }
             }
-
-
         });
         return testBtn;
     }

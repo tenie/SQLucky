@@ -65,8 +65,6 @@ public class AppWindow extends VBox {
             }
         });
         root = new StackPane(this);
-        LoadingAnimation.addLoading(root);
-
         appScene = new Scene(root);
         ComponentGetter.primaryscene = appScene;
         ComponentGetter.primarySceneRoot = root;
@@ -79,15 +77,8 @@ public class AppWindow extends VBox {
         Platform.runLater(() -> {
             this.getChildren().addAll(HeadHbox, masterDetailPane);
             VBox.setMargin(masterDetailPane, new Insets(3, 3, 3, 3));
-//			CommonUtils.fadeTransition(operateContainer, 2000);
-//			CommonUtils.fadeTransition(dataViewContainer, 2000);
-//			CommonUtils.fadeTransition(masterDetailPane, 2000);
         });
-
-//		CommonUtils.fadeTransition(this, 1000);
         ComponentGetter.treeView = treeView;
-
-
     }
 
     static {

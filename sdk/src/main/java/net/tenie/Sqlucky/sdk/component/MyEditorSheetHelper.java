@@ -453,7 +453,7 @@ public class MyEditorSheetHelper {
 		changeThemeAllCodeArea(rightTabPane);
 	}
 	public static void changeThemeAllCodeArea(TabPane myTabPane) {
-		if (myTabPane != null && myTabPane.getTabs().size() > 0) {
+		if (myTabPane != null && !myTabPane.getTabs().isEmpty()) {
 			ObservableList<Tab> tabs = myTabPane.getTabs();
 			for (Tab tb : tabs) {
 				if(tb instanceof  MyEditorSheet mtb){

@@ -56,12 +56,12 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		this.setContent(ScriptTreeView);
 
 		// 图标切换
-		CommonUtils.addInitTask(v -> {
-			Platform.runLater(() -> {
-				CommonUtils.setLeftPaneIcon(this, ComponentGetter.iconScript, ComponentGetter.uaIconScript);
-			});
-
-		});
+//		CommonUtils.addInitTask(v -> {
+//			Platform.runLater(() -> {
+//				CommonUtils.setLeftPaneIcon(this, ComponentGetter.iconScript, ComponentGetter.uaIconScript);
+//			});
+//
+//		});
 	}
 
 	// 节点view
@@ -94,8 +94,6 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		// 显示设置
 		ScriptTreeView.setCellFactory(new ScriptTabNodeCellFactory());
 
-		// 恢复
-		recoverScriptNode();
 		return ScriptTreeView;
 	}
 
@@ -149,40 +147,35 @@ public class ScriptTabTree extends SqluckyTitledPane {
 
 		Tab tmpSysOpenFileTB = sysOpenFileTB;
 		boolean activateMyTabTmp = activateMyTab;
-		// 页面显示后 执行, 显示代码编辑框Tab
-		Consumer<String> cr = v -> {
-			if (treeItems.size() > 0) {
-				Platform.runLater(() -> {
-					rootNode.getChildren().addAll(treeItems);
-					// 恢复代码编辑框
-					if (myEditorSheets.size() > 0) {
-						Consumer<String> activateCall = MyEditorSheetHelper.mainTabPaneAddAllMyTabs(myEditorSheets);
+		if (!treeItems.isEmpty()) {
+			Platform.runLater(() -> {
+				rootNode.getChildren().addAll(treeItems);
+				// 恢复代码编辑框
+				if (myEditorSheets.size() > 0) {
+					Consumer<String> activateCall = MyEditorSheetHelper.mainTabPaneAddAllMyTabs(myEditorSheets);
 
-						// 系统打开文件触发启动APP时, 恢复历史中的文件
-						if (tmpSysOpenFileTB != null) {
-							logger.info("系统打开文件触发启动APP时, 恢复历史中的文件 ");
-							ComponentGetter.mainTabPane.getSelectionModel().select(tmpSysOpenFileTB);
-						} else if (StrUtils.isNotNullOrEmpty(app.sysOpenFile)) { // 系统打开文件触发启动APP时, 新开一个 脚本文件
-							logger.info("系统打开文件触发启动APP时, 新开一个 脚本文件 ");
-							File sif = new File(app.sysOpenFile);
-							AppCommonAction.openSqlFile(sif);
-						} else if (activateMyTabTmp) {// 恢复选中上次选中页面
-							logger.info(" 恢复选中上次选中页面");
-							activateCall.accept("");
-						}
+					// 系统打开文件触发启动APP时, 恢复历史中的文件
+					if (tmpSysOpenFileTB != null) {
+						logger.info("系统打开文件触发启动APP时, 恢复历史中的文件 ");
+						ComponentGetter.mainTabPane.getSelectionModel().select(tmpSysOpenFileTB);
+					} else if (StrUtils.isNotNullOrEmpty(app.sysOpenFile)) { // 系统打开文件触发启动APP时, 新开一个 脚本文件
+						logger.info("系统打开文件触发启动APP时, 新开一个 脚本文件 ");
+						File sif = new File(app.sysOpenFile);
+						AppCommonAction.openSqlFile(sif);
+					} else if (activateMyTabTmp) {// 恢复选中上次选中页面
+						logger.info(" 恢复选中上次选中页面");
+						activateCall.accept("");
 					}
-					// 没有tab被添加, 添加一新的
-					if (myEditorSheets.size() == 0) {
-						MyEditorSheetHelper.addEmptyHighLightingEditor();
-					}
-				});
-			} else {
-				Platform.runLater(() -> {
+				}
+				// 没有tab被添加, 添加一新的
+				if (myEditorSheets.isEmpty()) {
 					MyEditorSheetHelper.addEmptyHighLightingEditor();
-				});
-			}
-		};
-		CommonUtils.addInitTask(cr);
+				}
+			});
+		} else {
+			Platform.runLater(MyEditorSheetHelper::addEmptyHighLightingEditor);
+		}
+
 	}
 
 	// 使用外部数据还原script tree节点

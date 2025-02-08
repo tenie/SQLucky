@@ -9,21 +9,22 @@ import javafx.scene.layout.VBox;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
 import net.tenie.Sqlucky.sdk.po.component.TreeNodePo;
-import net.tenie.Sqlucky.sdk.utility.CommonUtils;
 import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 
 /**
  * 
  * @author tenie
- *
  */
 public class DBinfoContainer extends  VBox{
-	private Accordion dbInfoAccordion; // TitledPane 容器
-	private VBox dbInfoTreeBtnPane; // 按钮面板
+	// TitledPane 容器
+	private Accordion dbInfoAccordion;
+	// 按钮面板
+	private VBox dbInfoTreeBtnPane;
 	private TreeView<TreeNodePo> dbInfoTreeView;
-	private DBinfoTree dbInfoTree;
-	private ScriptTabTree scriptTabTree; // 脚本
+	public static DBinfoTree dbInfoTree;
+	// 脚本
+	public static  ScriptTabTree scriptTabTree;
 
 	public DBinfoContainer() {
 		super();
@@ -45,15 +46,9 @@ public class DBinfoContainer extends  VBox{
 
 		ComponentGetter.treeView = dbInfoTreeView;
 		
-//		AppWindow.dbInfoTree = dbInfoTree;
 		ComponentGetter.leftNodeContainer = this;
 
 		ComponentGetter.infoAccordion = dbInfoAccordion;
-
-//		CommonUtils.fadeTransition(dbInfoTreeBtnPane, 1000);
-//		CommonUtils.fadeTransition(dbInfoAccordion, 1000);
-//		CommonUtils.fadeTransition(dbInfoTreeView, 1000);
-
 	}
 
 	/**

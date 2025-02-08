@@ -288,21 +288,15 @@ public class DataModelUtility {
 
 	}
 
-//	//TODO 恢复数据中保存的连接数据
+	// 恢复数据中保存的连接数据
 	public static void recoverModelInfoNode(TreeItem<DataModelTreeNodePo> rootNode) {
-
-		Consumer<String> cr = v -> {
-			List<DataModelInfoPo> ls = DataModelDAO.selectDMInfo();
-			if (ls != null && ls.size() > 0) {
-				for (var po : ls) {
-					DataModelTreeNodePo nodepo = new DataModelTreeNodePo(po);
-					TreeViewAddModelItem(rootNode, nodepo);
-				}
+		List<DataModelInfoPo> ls = DataModelDAO.selectDMInfo();
+		if (ls != null && !ls.isEmpty()) {
+			for (var po : ls) {
+				DataModelTreeNodePo nodepo = new DataModelTreeNodePo(po);
+				TreeViewAddModelItem(rootNode, nodepo);
 			}
-
-		};
-		CommonUtils.addInitTask(cr);
-
+		}
 	}
 
 	public static void TreeViewAddModelItem(TreeItem<DataModelTreeNodePo> rootNode, DataModelTreeNodePo nodepo) {
@@ -331,16 +325,13 @@ public class DataModelUtility {
 		}
 
 		TreeItem<DataModelTreeNodePo> item = new TreeItem<>(treeNode);
-		item.getChildren().addListener(new ListChangeListener<TreeItem<DataModelTreeNodePo>>() {
-			@Override
-			public void onChanged(Change c) {
-				var list = c.getList();
-				if (!list.isEmpty()) {
-					treeNode.setActive(true);
-				}
+		item.getChildren().addListener((ListChangeListener<TreeItem<DataModelTreeNodePo>>) c -> {
+            var list = c.getList();
+            if (!list.isEmpty()) {
+                treeNode.setActive(true);
+            }
 
-			}
-		});
+        });
 		return item;
 	}
 

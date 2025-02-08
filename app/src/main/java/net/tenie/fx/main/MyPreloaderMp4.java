@@ -49,14 +49,6 @@ public class MyPreloaderMp4 extends Preloader {
 				}
 			};
 			th.start();
-
-			// 动画有问题, 先注释了
-//			 FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 1200, 0.8);
-//			 fadeTransition.setOnFinished(e -> {
-//				 preloaderStage.close();
-//				  
-//			  });
-
 		}
 
 	}
@@ -80,11 +72,13 @@ public class MyPreloaderMp4 extends Preloader {
 	public void start(Stage primaryStage) throws Exception {
 		double w = 550.0;
 		double h = 319.0;
-		URL valUrl2 = MyPreloaderMp4.class.getResource("/");
 		URL valUrl = MyPreloaderMp4.class.getResource("/image/sqlucky_hd2.mp4");
-		String filePath = valUrl.toExternalForm(); // MyPreloaderMp4.class.getResource("/image/sqlucky_hd2.mp4").toExternalForm();
+        String filePath = null;
+        if (valUrl != null) {
+            filePath = valUrl.toExternalForm();
+        }
 
-		preloaderStage = primaryStage;
+        preloaderStage = primaryStage;
 
 		loading = new StackPane();
 		loading.setMaxWidth(Region.USE_PREF_SIZE);
@@ -119,7 +113,6 @@ public class MyPreloaderMp4 extends Preloader {
 	@Override
 	public void handleStateChangeNotification(StateChangeNotification stateChangeNotification) {
 		if (stateChangeNotification.getType() == Type.BEFORE_START) {
-//			FadeTransition fadeTransition = CommonUtility.fadeTransitionHidden(loading, 2000);
 //			fadeTransition.setOnFinished(e -> {
 //				preloaderStage.hide();
 //			});

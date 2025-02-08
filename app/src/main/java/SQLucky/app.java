@@ -23,16 +23,19 @@ import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.ui.LoadingAnimation;
-import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
+import net.tenie.Sqlucky.sdk.utility.DraggingTabPaneSupport;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import net.tenie.fx.Action.Log4jPrintStream;
 import net.tenie.fx.Action.SettingKeyBinding;
+import net.tenie.fx.component.InfoTree.DBinfoTree;
 import net.tenie.fx.component.ScriptTree.ScriptTabTree;
 import net.tenie.fx.component.UserAccount.UserAccountAction;
 import net.tenie.fx.component.container.AppHeadContainer;
 import net.tenie.fx.component.container.AppWindow;
-import net.tenie.fx.component.container.AppWindowReStyleByWinOS;
+import net.tenie.fx.component.container.AppCustomizeShellFullForWinLinux;
+import net.tenie.fx.component.container.DBinfoContainer;
+import net.tenie.fx.dao.ConnectionDao;
 import net.tenie.fx.factory.ServiceLoad;
 import net.tenie.fx.main.MyPreloaderGif;
 import net.tenie.fx.main.MyPreloaderMp4;
@@ -50,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 /**
  * 启动入口
@@ -95,25 +97,22 @@ public class app extends Application {
         SqluckyAppDB.closeConn(conn);
         ConfigVal.THEME = theme;
         ComponentGetter.appComponent = new SqluckyAppComponent();
-        // 注册
+        // 注册插件, 会根据注册的数据库连接插件加载连接信息
         ServiceLoad.callRegister();
 
         AppWindow  app = new AppWindow();
         img = ComponentGetter.LogoIcons;
 
         scene = app.getAppScene();
-
-        AppCommonAction.setTheme(theme);
-        // 加载插件
-        ServiceLoad.callLoad();
+        // 加载样式
+        CommonUtils.loadCss(scene);
 
         logger.info("完成初始化");
 
     }
 
     // 初始化一个Stage
-    public static void initStage(Scene scene) {
-        Stage primaryStage =new Stage();
+    public static void initStage(Stage primaryStage, Scene scene) {
         AppHeadContainer.SQLuckyStage = primaryStage;
         ComponentGetter.primaryStage = primaryStage;
         primaryStage.setScene(scene);
@@ -125,25 +124,22 @@ public class app extends Application {
         primaryStage.getIcons().add(img);
         primaryStage.setTitle("SQLucky");
         if (!CommonUtils.isMacOS()) {
-            AppWindowReStyleByWinOS winos = new AppWindowReStyleByWinOS();
+            AppCustomizeShellFullForWinLinux cusShell = new AppCustomizeShellFullForWinLinux();
             // 添加关闭按钮
             AppWindow.appHeadContainer.addHiddenWindowResizeClose();
             try {
-                winos.setupWindow(primaryStage, AppWindow.appHeadContainer.getHeadHbox());
+                cusShell.setupWindow(primaryStage);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
         primaryStage.show();
+        // 加载的动画
+        LoadingAnimation.addLoading(ComponentGetter.primarySceneRoot);
+        // 右下角图标
+        TrayNotification.setupSystemTray();
         // 在stage show之后 需要初始化的内容, 如: 外观, 事件
         Platform.runLater(() -> {
-            if (CommonUtils.isLinuxOS()) {
-//					primaryStage.setAlwaysOnTop(true);
-                primaryStage.toFront();
-            }
-            if (!primaryStage.isFocused()) {
-                primaryStage.toFront();
-            }
             primaryStage.toFront();
             Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
             primaryStage.setX(primaryScreenBounds.getMinX());
@@ -166,63 +162,57 @@ public class app extends Application {
 
     @Override
     public void start(Stage pStage) {
-        pStage.close();
         ComponentGetter.SQLucky = this;
 
         try {
-            initStage(scene);
+            initStage(pStage, scene);
             if (CommonUtils.isLinuxOS()) {
                 MyPreloaderGif.hiden();
             } else {
                 MyPreloaderMp4.hiden();
             }
 
-            Platform.runLater(() -> {
-                 ServiceLoad.callShowed();
+            // 加载插件
+            ServiceLoad.callLoad();
+            // 显示插件
+            ServiceLoad.callShowed();
 
-            // 界面完成初始化后, 执行的回调函数
-            Consumer<String> cr = v -> {
-                Platform.runLater(() -> {
-                    // 移除loading...
-                    LoadingAnimation.rmLoading(ComponentGetter.primarySceneRoot);
-                    // 账号恢复
-                    UserAccountAction.appLanuchInitAccount();
-                    // 设置快捷键
-                    Platform.runLater(() -> {
-                        SettingKeyBinding.setEscKeyBinding(ComponentGetter.primaryStage.getScene());
-                    });
-                });
+            // 恢复 连接信息
+            var sqluckyConnectorList = ConnectionDao.recoverConnObj();
+            DBinfoTree.recoverNode(sqluckyConnectorList);
+            // 恢复 脚本
+            ScriptTabTree.recoverScriptNode();
+            // tab 拖拽
+            DraggingTabPaneSupport support1 = new DraggingTabPaneSupport();
+            support1.addSupport(ComponentGetter.mainTabPane);
 
-                Platform.runLater(()->{
-                    // 双击添加新codearea
-                    var mainTabPane = ComponentGetter.mainTabPane;
-                    cleckDoubleAddTab(mainTabPane);
-                    var rightTabPane = ComponentGetter.rightTabPane;
-                    cleckDoubleAddTab(rightTabPane);
-                    // 右侧代码框, 显示或隐藏
-                    Platform.runLater(SdkComponent::intiShowOrhideRightByTabSize);
 
-                });
+            // 账号恢复
+            UserAccountAction.appLanuchInitAccount();
+            // 设置快捷键
+            SettingKeyBinding.setEscKeyBinding(ComponentGetter.primaryStage.getScene());
 
-            };
-            // 执行页面初始化好只会要执行的任务
-            CommonUtils.executeInitTask(cr);
-            });
+            // 双击添加新codearea
+            var mainTabPane = ComponentGetter.mainTabPane;
+            cleckDoubleAddTab(mainTabPane);
+            var rightTabPane = ComponentGetter.rightTabPane;
+            cleckDoubleAddTab(rightTabPane);
+            // 右侧代码框, 显示或隐藏
+            Platform.runLater(SdkComponent::intiShowOrhideRightByTabSize);
+
+            // 图标切换
+            CommonUtils.setLeftPaneIcon(DBinfoContainer.dbInfoTree, ComponentGetter.iconInfo, ComponentGetter.uaIconInfo);
+            CommonUtils.setLeftPaneIcon(DBinfoContainer.scriptTabTree, ComponentGetter.iconScript, ComponentGetter.uaIconScript);
+
+            // 移除loading...
+            LoadingAnimation.rmLoading(ComponentGetter.primarySceneRoot);
+
+
             // 数据迁移
             if (transferDb) {
                 moveDbData();
             }
 
-            // 界面获取到焦点检查文件是不被修改提示加载修改的内容
-//            primaryStage.focusedProperty().addListener((a,b,c)->{
-//                if(c){
-//                    MyEditorSheet mes =   MyEditorSheetHelper.getActivationEditorSheet();
-//                    if (mes != null) {
-//                        //原文被其他程序修改后, 重新加载
-//                        mes.reloadText();
-//                    }
-//                }
-//            });
         } catch (Exception e) {
             logger.error(e);
         }
@@ -288,68 +278,70 @@ public class app extends Application {
         }
         // 载入动画
         LoadingAnimation.loadingAnimation("Saving....", v -> {
-            Connection h2Conn = SqluckyAppDB.getConn();
-            try {
-                // 更新数据库链接节点的顺序, 在拖动的时候直接保存
+            Platform.runLater(()->{
+                Connection h2Conn = SqluckyAppDB.getConn();
+                try {
+                    // 更新数据库链接节点的顺序, 在拖动的时候直接保存
 //                ConnectionDao.refreshConnOrder();
 
-                TabPane mainTabPane = ComponentGetter.mainTabPane;
-                TabPane rightTabPane = ComponentGetter.rightTabPane;
+                    TabPane mainTabPane = ComponentGetter.mainTabPane;
+                    TabPane rightTabPane = ComponentGetter.rightTabPane;
 //                int activateTabPane = mainTabPane.getSelectionModel().getSelectedIndex();
-                var alltabs = mainTabPane.getTabs();
-                if( !rightTabPane.getTabs().isEmpty()){
-                    alltabs.addAll(rightTabPane.getTabs());
-                }
-
-                for (Tab tab : alltabs) {
-                    if (tab instanceof MyEditorSheet mtab) {
-                        // 文本保存到数据库
-                        mtab.saveScriptPo(h2Conn);
-
+                    var alltabs = mainTabPane.getTabs();
+                    if( !rightTabPane.getTabs().isEmpty()){
+                        alltabs.addAll(rightTabPane.getTabs());
                     }
-                }
 
-                // 删除 script tree view 中的空内容tab
-                List<TreeItem<MyEditorSheet>> scriptList = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
-                int idx = 1;
-                for (TreeItem<MyEditorSheet> treeItem : scriptList) {
-                    MyEditorSheet myEditorSheet = treeItem.getValue();
-                    DocumentPo documentPo = myEditorSheet.getDocumentPo();
-                    String sqlTxt = documentPo.getText();
-                    // 删除内容已经为空的历史记录
-                    if (sqlTxt == null || sqlTxt.trim().isEmpty()) {
-                        AppDao.deleteScriptArchive(h2Conn, documentPo);
-                    } else {
-                        String fp = documentPo.getExistFileFullName();
-                        if (StrUtils.isNullOrEmpty(fp)) {
-                            String titleName = documentPo.getTitle().get();
-                            if (StrUtils.isNullOrEmpty(titleName) || titleName.startsWith("Untitled_")) {
-                                documentPo.setTitle("Untitled_" + idx + "*");
-                                idx++;
+                    for (Tab tab : alltabs) {
+                        if (tab instanceof MyEditorSheet mtab) {
+                            // 文本保存到数据库
+                            mtab.saveScriptPo(h2Conn);
+
+                        }
+                    }
+
+                    // 删除 script tree view 中的空内容tab
+                    List<TreeItem<MyEditorSheet>> scriptList = ScriptTabTree.ScriptTreeView.getRoot().getChildren();
+                    int idx = 1;
+                    for (TreeItem<MyEditorSheet> treeItem : scriptList) {
+                        MyEditorSheet myEditorSheet = treeItem.getValue();
+                        DocumentPo documentPo = myEditorSheet.getDocumentPo();
+                        String sqlTxt = documentPo.getText();
+                        // 删除内容已经为空的历史记录
+                        if (sqlTxt == null || sqlTxt.trim().isEmpty()) {
+                            AppDao.deleteScriptArchive(h2Conn, documentPo);
+                        } else {
+                            String fp = documentPo.getExistFileFullName();
+                            if (StrUtils.isNullOrEmpty(fp)) {
+                                String titleName = documentPo.getTitle().get();
+                                if (StrUtils.isNullOrEmpty(titleName) || titleName.startsWith("Untitled_")) {
+                                    documentPo.setTitle("Untitled_" + idx + "*");
+                                    idx++;
+                                }
                             }
+                            AppDao.updateScriptArchive(h2Conn, documentPo);
                         }
-                        AppDao.updateScriptArchive(h2Conn, documentPo);
                     }
-                }
 
-            } catch (Exception e) {
-                logger.error(e);
-            } finally {
-                // 提示是否保存
-                if(! MyEditorSheet.ConsumerLs.isEmpty()){
-                    Platform.runLater(()->{
-                        for (var call :  MyEditorSheet.ConsumerLs){
-                            call.accept("");
-                        }
+                } catch (Exception e) {
+                    logger.error(e);
+                } finally {
+                    // 提示是否保存
+                    if(! MyEditorSheet.ConsumerLs.isEmpty()){
+                        Platform.runLater(()->{
+                            for (var call :  MyEditorSheet.ConsumerLs){
+                                call.accept("");
+                            }
+                            SqluckyAppDB.closeConn(h2Conn);
+                            System.exit(0);
+                        });
+
+                    }else {
                         SqluckyAppDB.closeConn(h2Conn);
                         System.exit(0);
-                    });
-
-                }else {
-                    SqluckyAppDB.closeConn(h2Conn);
-                    System.exit(0);
+                    }
                 }
-            }
+            });
         });
     }
 
@@ -368,9 +360,6 @@ public class app extends Application {
                 LauncherImpl.launchApplication(app.class, MyPreloaderGif.class, args);
             } else {
                 LauncherImpl.launchApplication(app.class, MyPreloaderMp4.class, args);
-//			LauncherImpl.launchApplication(SQLucky.class, MyPreloaderGif.class, args);
-//			LauncherImpl.launchApplication(SQLucky.class, MyPreloader.class, args);
-
             }
         }
     }
