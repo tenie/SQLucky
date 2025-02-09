@@ -33,7 +33,7 @@ import java.util.Objects;
 
 public class NoteUtility {
 
-	public static void doubleClickItem(TreeItem<MyNoteEditorSheet> item) {
+	public static void clickItem(TreeItem<MyNoteEditorSheet> item) {
 		if(item == null) {
 			return;
 		}
@@ -405,7 +405,7 @@ public class NoteUtility {
 	public static void openNextNote(ObservableList<TreeItem<MyNoteEditorSheet>> ls, int next) {
 		if (ls != null && next < ls.size()) {
 			var nextItem = ls.get(next);
-			NoteUtility.doubleClickItem(nextItem);
+			NoteUtility.clickItem(nextItem);
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(next);
 		}
 	}
@@ -472,7 +472,7 @@ public class NoteUtility {
 			}
 
 		} else {// 没有打开文件的情况, 先打开文件再查找
-			NoteUtility.doubleClickItem(currentItem);
+			NoteUtility.clickItem(currentItem);
 			NoteTabTree.noteTabTreeView.getSelectionModel().select(currentItem);
 
 			// 展示之后开始查找

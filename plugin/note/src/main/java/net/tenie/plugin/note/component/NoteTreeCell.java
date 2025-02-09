@@ -62,18 +62,12 @@ public class NoteTreeCell extends TreeCell<MyNoteEditorSheet>{
                 pn.getChildren().add(clean);
                 AnchorPane.setRightAnchor(clean, 5.0);
             }
-            this.setOnMouseClicked(e -> {
-                if (e.getClickCount() == 1) {
-                    var selectedItemitem = treeView.getSelectionModel().getSelectedItem();
 
-                    if (selectedItemitem != null) {
-                        showInFolder.setDisable(false);
-                    } else {
-                        showInFolder.setDisable(true);
-                    }
-                } else if (e.getClickCount() == 2) {
-                    NoteUtility.doubleClickItem(this.getTreeItem());
-                }
+            // 点击事件, 显示文件到tab
+            this.setOnMouseClicked(e -> {
+                var selectedItem = treeView.getSelectionModel().getSelectedItem();
+                showInFolder.setDisable(selectedItem == null);
+                NoteUtility.clickItem(this.getTreeItem());
 
                 if(isRootItem){
                     if (this.isSelected()) {
