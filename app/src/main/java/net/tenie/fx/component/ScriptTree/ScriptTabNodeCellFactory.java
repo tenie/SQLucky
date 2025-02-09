@@ -65,6 +65,7 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyEditorSheet
 		clean.getStyleClass().add("myCleanBtn");
 		clean.setVisible(false); // clean 按钮默认不显示, 只有在鼠标进入搜索框才显示
 		clean.setOnAction(e -> {
+			ScriptTabTree.openEditor();
 			var rootNode = ScriptTabTree.ScriptTreeView.getRoot();
 			ScriptTabTree.closeAction(rootNode);
 		});

@@ -81,7 +81,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
         }
 		// 双击
 		ScriptTreeView.setOnMouseClicked(e -> {
-			treeViewDoubleClick(e);
+			openEditor();
 		});
 		// 右键菜单
 		menu = new ScriptTreeContextMenu(rootNode);
@@ -265,13 +265,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		treeRootAddItem(item);
 	}
 
-	// tree view 双击事件
-	public void treeViewDoubleClick(MouseEvent mouseEvent) {
-		if (mouseEvent.getClickCount() == 2) {
-			openEditor();
-		}
-	}
-
+	// 显示脚本tab
 	public static void openEditor() {
 		List<TreeItem<MyEditorSheet>>  selectedItems = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItems();
 		if(selectedItems != null && !selectedItems.isEmpty()) {

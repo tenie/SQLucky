@@ -23,6 +23,7 @@ public class ScriptTreeContextMenu {
 
 		close = new MenuItem("Close");
 		close.setOnAction(e -> {
+			ScriptTabTree.openEditor();
 			ScriptTabTree.closeAction(rootNode);
 		});
 
