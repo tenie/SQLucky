@@ -1,5 +1,6 @@
 package net.tenie.fx.component.container;
 
+import SQLucky.app;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.geometry.Rectangle2D;
@@ -48,8 +49,8 @@ public class AppCustomizeShellFullForWinLinux {
     private Double stageY;
     private Double stageWidth;
     private Double stageHeight;
-    // 窗口是否最大化, (拖拽窗口有用, 最大化时不能拖拽)
-    private Boolean isMaxWindow = true;
+//    // 窗口是否最大化, (拖拽窗口有用, 最大化时不能拖拽)
+//    private Boolean isMaxWindow = true;
 
     // 大窗口的顶部按钮面板, 添加 最小化, 重置大小, 关闭按钮的触发事件
     private void addTopButtonAction(Stage stage) {
@@ -90,7 +91,7 @@ public class AppCustomizeShellFullForWinLinux {
 
         // 鼠标按下, 如果是在窗口顶部和窗口非最大化的时候, 记录鼠标按下时的鼠标坐标, 用于拖拽事件中移动位置
         scene.setOnMousePressed(event -> {
-            if (isWindowHead && !isMaxWindow) {
+            if (isWindowHead && !app.isMaxWindow) {
                 var primaryScreenBoundsWidth = primaryScreenBounds.getWidth();
                 var primaryScreenBoundsHeight = primaryScreenBounds.getHeight();
                 double width = stage.getWidth();
@@ -143,7 +144,7 @@ public class AppCustomizeShellFullForWinLinux {
 
     // 最大化和还原的切换
     private void optionWindowResize(Stage stage) {
-        if (!isMaxWindow) {
+        if (!app.isMaxWindow) {
             // 缓存一下没有最大化前的窗口位置
             stageWidth = stage.getWidth();
             stageHeight = stage.getHeight();
@@ -160,7 +161,7 @@ public class AppCustomizeShellFullForWinLinux {
                 stage.setWidth(primaryScreenBoundsTmp.getWidth());
                 stage.setHeight(primaryScreenBoundsTmp.getHeight());
             });
-            isMaxWindow = true;
+            app.isMaxWindow = true;
         } else {
             stage.setMaximized(false);
             stage.setX(stageX);
@@ -168,7 +169,7 @@ public class AppCustomizeShellFullForWinLinux {
             stage.setWidth(stageWidth);
             stage.setHeight(stageHeight);
 
-            isMaxWindow = false;
+            app.isMaxWindow = false;
         }
     }
 
@@ -380,7 +381,7 @@ public class AppCustomizeShellFullForWinLinux {
             }, 150);
         }
 
-        if (isWindowHead && isMaxWindow == false) {
+        if (isWindowHead && !app.isMaxWindow) {
             stage.setX(event.getScreenX() - xOffset);
             stage.setY(event.getScreenY() - yOffset);
         }

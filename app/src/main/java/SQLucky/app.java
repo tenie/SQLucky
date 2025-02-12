@@ -68,6 +68,9 @@ public class app extends Application {
     private boolean transferDb = false;
     private static final Logger logger = LogManager.getLogger(app.class);
 
+
+    // 窗口是否最大化, (拖拽窗口有用, 最大化时不能拖拽)
+    public static Boolean isMaxWindow = true;
     static {
         if (!CommonUtils.isDev()) {
             Log4jPrintStream.redirectSystemOut();
@@ -147,7 +150,25 @@ public class app extends Application {
             primaryStage.setWidth(primaryScreenBounds.getWidth());
             primaryStage.setHeight(primaryScreenBounds.getHeight());
         });
+        // 最大化窗口, 显示的时候有占满全屏的情况导致任务栏被覆盖
+        primaryStage.focusedProperty().addListener((a,b,c)->{
+            if( app.isMaxWindow){
+                Platform.runLater(()->{
+                    Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+                    double scHe=  primaryScreenBounds.getHeight();
+                    double scWi=   primaryScreenBounds.getWidth();
 
+                    double stWi =  primaryStage.getWidth();
+                    double stHe= primaryStage.getHeight();
+                    if(scHe != stHe || scWi != stWi){
+                        primaryStage.setX(primaryScreenBounds.getMinX());
+                        primaryStage.setY(primaryScreenBounds.getMinY());
+                        primaryStage.setWidth(primaryScreenBounds.getWidth());
+                        primaryStage.setHeight(primaryScreenBounds.getHeight());
+                    }
+                });
+            }
+        });
     }
     // 销毁 Stage
     public static void destroyStage(Stage stage){

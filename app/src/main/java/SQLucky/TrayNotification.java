@@ -1,6 +1,8 @@
 package SQLucky;
 
 import javafx.application.Platform;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.fx.component.container.AppWindow;
@@ -41,6 +43,13 @@ public class TrayNotification {
                         // 判断窗口是不是最小化状态
                         if (sg.iconifiedProperty().get()) {
                             sg.setIconified(false);
+                            Platform.runLater(()->{
+                                Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+                                sg.setX(primaryScreenBounds.getMinX());
+                                sg.setY(primaryScreenBounds.getMinY());
+                                sg.setWidth(primaryScreenBounds.getWidth());
+                                sg.setHeight(primaryScreenBounds.getHeight());
+                            });
                         }
                         sg.show();
                         sg.toFront();
