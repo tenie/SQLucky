@@ -36,25 +36,13 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyEditorSheet
 					setGraphic(null);
 					setText(null);
 				} else {
-					// We only show the custom cell if it is a leaf, meaning it has
-					// no children.
-//					if (this.getTreeItem().isLeaf()) {
-
-						// A custom HBox that will contain your check box, label and
-//						Label label = new Label();
 					    Label label = item.getScriptTreeLabel();
-//						label.textProperty().bind(item.getDocumentPo().getTitle());
 						AnchorPane pn = new AnchorPane();
 						pn.getChildren().add(label);
 						pn.getChildren().add(clean);
 
 						AnchorPane.setRightAnchor(clean, 5.0);
 						setGraphic(pn);
-
-//						setText(null);
-//					} else {
-//						setText(item.getDocumentPo().getTitle().getValue());
-//					}
 				}
 
 			}
@@ -105,7 +93,6 @@ public class ScriptTabNodeCellFactory implements Callback<TreeView<MyEditorSheet
 		if (draggedItem == null  || draggedItem.getParent() == null) {
 			return;
 		}
-
 		Dragboard db = treeCell.startDragAndDrop(TransferMode.ANY);
 
 		ClipboardContent content = new ClipboardContent();

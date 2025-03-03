@@ -3,12 +3,9 @@ package net.tenie.fx.component.ScriptTree;
 import SQLucky.app;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
@@ -17,7 +14,6 @@ import net.tenie.Sqlucky.sdk.component.SqluckyTitledPane;
 import net.tenie.Sqlucky.sdk.config.ConfigVal;
 import net.tenie.Sqlucky.sdk.db.SqluckyAppDB;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
-import net.tenie.Sqlucky.sdk.po.component.ConnItemContainer;
 import net.tenie.Sqlucky.sdk.subwindow.MyAlert;
 import net.tenie.Sqlucky.sdk.utility.AppCommonAction;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
@@ -38,15 +34,12 @@ import java.util.function.Consumer;
  *
  */
 public class ScriptTabTree extends SqluckyTitledPane {
-
-	private static Logger logger = LogManager.getLogger(ScriptTabTree.class);
+	private static final Logger logger = LogManager.getLogger(ScriptTabTree.class);
 
 	public static TreeView<MyEditorSheet> ScriptTreeView;
 	public static TreeItem<MyEditorSheet> rootNode;
-	List<ConnItemContainer> connItemParent = new ArrayList<>();
-	private ScriptTreeContextMenu menu;
 
-	public ScriptTabTree() {
+    public ScriptTabTree() {
 		createScriptTreeView();
 		var btnsBox = new ScriptTreeButtonPanel();
 		this.setBtnsBox(btnsBox);
@@ -54,69 +47,54 @@ public class ScriptTabTree extends SqluckyTitledPane {
 
 		CommonUtils.addCssClass(this, "titledPane-color");
 		this.setContent(ScriptTreeView);
-
-		// 图标切换
-//		CommonUtils.addInitTask(v -> {
-//			Platform.runLater(() -> {
-//				CommonUtils.setLeftPaneIcon(this, ComponentGetter.iconScript, ComponentGetter.uaIconScript);
-//			});
-//
-//		});
 	}
 
 	// 节点view
-	public TreeView<MyEditorSheet> createScriptTreeView() {
+	public void createScriptTreeView() {
 		rootNode = new TreeItem<>(null);
 		ComponentGetter.scriptTreeRoot = rootNode;
 		ScriptTreeView = new TreeView<>(rootNode);
-//		ScriptTreeView.getSelectionModel().selectionModeProperty().bind(Bindings.when(new SimpleBooleanProperty(true))
-//				.then(SelectionMode.MULTIPLE).otherwise(SelectionMode.SINGLE));
 		ScriptTreeView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		ComponentGetter.scriptTreeView = ScriptTreeView;
 		ScriptTreeView.getStyleClass().add("my-tag");
 		ScriptTreeView.setShowRoot(false);
 		// 展示连接
-		if (rootNode.getChildren().size() > 0) {
-            ScriptTreeView.getSelectionModel().select(rootNode.getChildren().get(0)); // 选中节点
+		if (!rootNode.getChildren().isEmpty()) {
+            ScriptTreeView.getSelectionModel().select(rootNode.getChildren().getFirst()); // 选中节点
         }
 		// 双击
-		ScriptTreeView.setOnMouseClicked(e -> {
-			openEditor();
-		});
+		ScriptTreeView.setOnMouseClicked(e -> openEditor());
 		// 右键菜单
-		menu = new ScriptTreeContextMenu(rootNode);
+        ScriptTreeContextMenu menu = new ScriptTreeContextMenu(rootNode);
 		ContextMenu contextMenu = menu.getContextMenu();
 		ScriptTreeView.setContextMenu(contextMenu);
-		// 选中监听事件
-//		treeView.getSelectionModel().selectedItemProperty().addListener(treeViewContextMenu(treeView));
 		ScriptTreeView.getSelectionModel().select(rootNode);
-
 		// 显示设置
 		ScriptTreeView.setCellFactory(new ScriptTabNodeCellFactory());
 
-		return ScriptTreeView;
 	}
 
 	// 恢复数据中保存的连接数据
 	public static void recoverScriptNode() {
-		List<DocumentPo> scriptDatas;
+		List<DocumentPo> scriptDatas = null;
 		// 上次的激活页面
-		Boolean activateMyTab = false;
+		boolean activateMyTab = false;
 		// 从系统中打开 .sql文件时, 大概这个sql的编辑页面
 		Tab sysOpenFileTB = null;
-
 		Connection H2conn = SqluckyAppDB.getConn();
 		try {
 			// 读取 上次左侧script tree中的所有数据
-			scriptDatas = AppDao.readScriptPo(H2conn);
-		} finally {
+            if (H2conn != null) {
+                scriptDatas = AppDao.readScriptPo(H2conn);
+            }
+        } finally {
 			SqluckyAppDB.closeConn(H2conn);
 		}
 		//
 		List<TreeItem<MyEditorSheet>> treeItems = new ArrayList<>();
-		List<MyEditorSheet> myEditorSheets = new ArrayList<>(); // myAreaTabs
+		List<MyEditorSheet> myEditorSheets = new ArrayList<>();
 		// 将DocumentPo 对象转换位tree的节点对象
-		if (scriptDatas != null && scriptDatas.size() > 0) {
+		if (scriptDatas != null && !scriptDatas.isEmpty()) {
 			ConfigVal.pageSize = scriptDatas.size();
 			for (DocumentPo po : scriptDatas) {
 				MyEditorSheet myEditorSheet = MyEditorSheetHelper.createHighLightingEditor(po);
@@ -137,7 +115,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 						if (StrUtils.isNotNullOrEmpty(filePath)) {
 							if (app.sysOpenFile.equals(filePath)) {
 								sysOpenFileTB = myEditorSheet;
-								logger.info("**** filePath = " + filePath);
+                                logger.info("**** filePath = {}", filePath);
 							}
 						}
 					}
@@ -151,7 +129,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 			Platform.runLater(() -> {
 				rootNode.getChildren().addAll(treeItems);
 				// 恢复代码编辑框
-				if (myEditorSheets.size() > 0) {
+				if (!myEditorSheets.isEmpty()) {
 					Consumer<String> activateCall = MyEditorSheetHelper.mainTabPaneAddAllMyTabs(myEditorSheets);
 
 					// 系统打开文件触发启动APP时, 恢复历史中的文件
@@ -162,8 +140,9 @@ public class ScriptTabTree extends SqluckyTitledPane {
 						logger.info("系统打开文件触发启动APP时, 新开一个 脚本文件 ");
 						File sif = new File(app.sysOpenFile);
 						AppCommonAction.openSqlFile(sif);
-					} else if (activateMyTabTmp) {// 恢复选中上次选中页面
-						logger.info(" 恢复选中上次选中页面");
+					} else if (activateMyTabTmp) {
+						// 恢复选中上次选中页面
+						logger.info(" 恢复选中上次选中页面1");
 						activateCall.accept("");
 					}
 				}
@@ -175,7 +154,6 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		} else {
 			Platform.runLater(MyEditorSheetHelper::addEmptyHighLightingEditor);
 		}
-
 	}
 
 	// 使用外部数据还原script tree节点
@@ -184,14 +162,13 @@ public class ScriptTabTree extends SqluckyTitledPane {
 		List<TreeItem<MyEditorSheet>> treeItems = new ArrayList<>();
 		List<MyEditorSheet> myAreaTabs = new ArrayList<>();
 		// 将DocumentPo 对象转换位tree的节点对象
-		if (scriptDatas != null && scriptDatas.size() > 0) {
+		if (scriptDatas != null && !scriptDatas.isEmpty()) {
 			ConfigVal.pageSize = scriptDatas.size();
 			for (DocumentPo po : scriptDatas) {
 				// 使用外部数据, 还原将数据保存到数据库,
 				// 只要确保DocumentPo id为null, new MyAreaTab时会保存到数据库
 				po.setId(null);
-				MyEditorSheet tb = MyEditorSheetHelper.createHighLightingEditor(po);// new MyEditorSheet(po, true);
-//				TreeItem<MyEditorSheet> item = new TreeItem<>(tb);
+				MyEditorSheet tb = MyEditorSheetHelper.createHighLightingEditor(po);
 				TreeItem<MyEditorSheet> item = tb.getTreeItem();
 				treeItems.add(item);
 				// 将需要恢复代码编辑框, 缓存到集合中
@@ -202,18 +179,16 @@ public class ScriptTabTree extends SqluckyTitledPane {
 						activateMyTab = tb;
 					}
 				}
-
 			}
 		}
 
 		Tab activateTmpMyTab = activateMyTab;
 		// 页面显示后 执行下吗
-		if (treeItems.size() > 0) {
+		if (!treeItems.isEmpty()) {
 			Platform.runLater(() -> {
 				rootNode.getChildren().addAll(treeItems);
 				// 恢复代码编辑框
-				if (myAreaTabs.size() > 0) {
-//					MyAreaTab.mainTabPaneAddAllMyTabs(myAreaTabs);
+				if (!myAreaTabs.isEmpty()) {
 					MyEditorSheetHelper.mainTabPaneAddAllMyTabs(myAreaTabs);
 					if (activateTmpMyTab != null) {// 恢复选中上次选中页面
 						logger.info(" 恢复选中上次选中页面");
@@ -221,18 +196,13 @@ public class ScriptTabTree extends SqluckyTitledPane {
 					}
 				}
 				// 没有tab被添加, 添加一新的
-				if (myAreaTabs.size() == 0) {
-//					MyAreaTab.addCodeEmptyTabMethod();
+				if (myAreaTabs.isEmpty()) {
 					MyEditorSheetHelper.addEmptyHighLightingEditor();
 				}
 			});
 		} else {
-			Platform.runLater(() -> {
-//				MyAreaTab.addCodeEmptyTabMethod();
-				MyEditorSheetHelper.addEmptyHighLightingEditor();
-			});
+			Platform.runLater(MyEditorSheetHelper::addEmptyHighLightingEditor);
 		}
-
 	}
 
 	// 使用外部数据还原script tree节点, 清空节点和 清空tabpane打开的编辑tab
@@ -248,8 +218,7 @@ public class ScriptTabTree extends SqluckyTitledPane {
 
 	// 所有连接节点
 	public static ObservableList<TreeItem<MyEditorSheet>> allTreeItem() {
-		ObservableList<TreeItem<MyEditorSheet>> val = ScriptTreeView.getRoot().getChildren();
-		return val;
+        return ScriptTreeView.getRoot().getChildren();
 	}
 
 	// 给root节点加元素
@@ -260,7 +229,6 @@ public class ScriptTabTree extends SqluckyTitledPane {
 
 	// 给root节点加元素
 	public static void treeRootAddItem(MyEditorSheet mytab) {
-//		TreeItem<MyEditorSheet> item = new TreeItem<>(mytab);
 		TreeItem<MyEditorSheet> item = mytab.getTreeItem();
 		treeRootAddItem(item);
 	}
@@ -293,24 +261,21 @@ public class ScriptTabTree extends SqluckyTitledPane {
 			if (tmp.equals(scpo)) {
 				return mytb;
 			}
-
 		}
 		return null;
 	}
 
 	// 关闭一个脚本 Node cell
 	public static void closeAction(TreeItem<MyEditorSheet> rootNode) {
-
 		ObservableList<TreeItem<MyEditorSheet>> myTabItemList = rootNode.getChildren();
 		List<TreeItem<MyEditorSheet>>  selectedItems = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItems();
-//		TreeItem<MyEditorSheet> ctt = ScriptTabTree.ScriptTreeView.getSelectionModel().getSelectedItem();
 		if(selectedItems != null && !selectedItems.isEmpty()){
 			for(var ctt: selectedItems){
 				MyEditorSheet sheet = ctt.getValue();
 
-				String title = sheet.getTitle();// CommonUtility.tabText(tb);
-				String sql = sheet.getAreaText(); // SqlEditor.getTabSQLText(tb);
-				if (title.endsWith("*") && sql != null && sql.trim().length() > 0) {
+				String title = sheet.getTitle();
+				String sql = sheet.getAreaText();
+				if (title.endsWith("*") && sql != null && !sql.trim().isEmpty()) {
 					// 是否保存
 					final Stage stage = new Stage();
 
@@ -318,7 +283,6 @@ public class ScriptTabTree extends SqluckyTitledPane {
 					JFXButton okbtn = new JFXButton("Yes(Y)");
 					okbtn.getStyleClass().add("myAlertOkBtn");
 					okbtn.setOnAction(value -> {
-//				MyEditorSheetHelper.saveSqlToFileAction(sheet);
 						removeTreeNode(myTabItemList, ctt, sheet);
 						sheet.saveDiskAndDestroyTab();
 						stage.close();
@@ -336,50 +300,41 @@ public class ScriptTabTree extends SqluckyTitledPane {
 					// 取消
 					JFXButton cancelbtn = new JFXButton("Cancel(C)");
 					cancelbtn.getStyleClass().add("myAlertBtn");
-					cancelbtn.setOnAction(value -> {
-						stage.close();
-					});
+					cancelbtn.setOnAction(value -> stage.close());
 
 					List<Node> btns = new ArrayList<>();
-
 					btns.add(cancelbtn);
 					btns.add(Nobtn);
 					btns.add(okbtn);
-
 					MyAlert.myConfirmation("Save " + StrUtils.trimRightChar(title, "*") + "?", stage, btns, false);
 				} else {
 					removeTreeNode(myTabItemList, ctt, sheet);
 				}
 			}
-
 		}
-
-
 	}
 
 	// 从ScriptTabTree 中移除一个节点
 	public static void removeTreeNode(ObservableList<TreeItem<MyEditorSheet>> myTabItemList, TreeItem<MyEditorSheet> ctt,
 									  MyEditorSheet tb) {
+		var myTabPane = ComponentGetter.mainTabPane;
+		var rightTabPane = ComponentGetter.rightTabPane;
+		if (myTabPane.getTabs().contains(tb)) {
+			myTabPane.getTabs().remove(tb);
+		} else {
+			rightTabPane.getTabs().remove(tb);
+		}
+
+		myTabItemList.remove(ctt);
+		var scPo = tb.getDocumentPo();
+
 		var conn = SqluckyAppDB.getConn();
 		try {
-			var myTabPane = ComponentGetter.mainTabPane;
-			var rightTabPane = ComponentGetter.rightTabPane;
-			if (myTabPane.getTabs().contains(tb)) {
-				myTabPane.getTabs().remove(tb);
-			}else if(rightTabPane.getTabs().contains(tb) ) {
-				rightTabPane.getTabs().remove(tb);
+			if (conn != null) {
+				AppDao.deleteScriptArchive(conn, scPo);
 			}
-
-			myTabItemList.remove(ctt);
-
-			var scpo = tb.getDocumentPo();
-			AppDao.deleteScriptArchive(conn, scpo);
-
 		} finally {
 			SqluckyAppDB.closeConn(conn);
 		}
 	}
-
-
-
 }
