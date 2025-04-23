@@ -14,6 +14,7 @@
         <module>plugin/H2_connector</module>
         <module>plugin/Sqlite_connector</module>
         <module>plugin/Mysql_connector</module>
+        <module>plugin/SqlServer_connector</module>
         <module>plugin/Mariadb_connector</module>
         <module>plugin/Postgresql_connector</module>
         <module>plugin/Data_model</module>
@@ -254,6 +255,11 @@
             </dependency>
             <dependency>
                 <groupId>net.tenie</groupId>
+                <artifactId>SQLucky-Connector-SqlServer</artifactId>
+                <version>${sqlucky.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>net.tenie</groupId>
                 <artifactId>SQLucky-Connector-Mariadb</artifactId>
                 <version>${sqlucky.version}</version>
             </dependency>
@@ -376,6 +382,11 @@
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
                 <version>8.0.26</version>
+            </dependency>
+            <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>mssql-jdbc</artifactId>
+                <version>12.10.0.jre11</version>
             </dependency>
 
             <dependency>

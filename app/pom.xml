@@ -168,6 +168,10 @@
 		</dependency>
 		<dependency>
 			<groupId>net.tenie</groupId>
+			<artifactId>SQLucky-Connector-SqlServer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>net.tenie</groupId>
 			<artifactId>SQLucky-Connector-Mariadb</artifactId>
 		</dependency>
 		
@@ -289,7 +293,10 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>mssql-jdbc</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.mariadb.jdbc</groupId>
 			<artifactId>mariadb-java-client</artifactId>
