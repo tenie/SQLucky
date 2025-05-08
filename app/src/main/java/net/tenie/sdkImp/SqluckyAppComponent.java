@@ -89,6 +89,10 @@ public class SqluckyAppComponent implements AppComponent {
 	public void runSQL(SqluckyConnector sqlConn, String sqlv, boolean isCreateFunc) {
 		RunSQLHelper.runSql(sqlConn, sqlv, isCreateFunc);
 	}
+	@Override
+	public void runSQL(String sqlv) {
+		RunSQLHelper.runSqlMethod(sqlv, null, false, true);
+	}
 
 	/*
 	 * 查看table ddl界面 执行查询按钮, 不刷新底部tab

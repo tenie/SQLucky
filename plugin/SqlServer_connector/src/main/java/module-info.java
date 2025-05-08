@@ -9,7 +9,7 @@ open module SQLucky.plugin.connector.sqlServer{
 	requires com.jfoenix;  
 	requires org.apache.logging.log4j;	
 
-	exports net.tenie.plugin.sqlServerConnector.impl;
+//	exports net.tenie.plugin.sqlServerConnector.impl;
 	exports net.tenie.plugin.mysqlConnector.impl;
-	provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with MysqlConnectorDelegateImpl;
+//	provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with MysqlConnectorDelegateImpl;
 }

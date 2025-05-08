@@ -597,7 +597,7 @@ public class SdkComponent {
         tabPane.getTabs().remove(tb);
         long endtime = System.currentTimeMillis();
         long costTime = (endtime - begintime);
-        MyOption.gc(SdkComponent.class, "clearDataTable");
+//        MyOption.gc(SdkComponent.class, "clearDataTable");
         logger.info("关闭使用时间 = " + costTime);
 
 //		CommonUtility.delayRunThread(v->{

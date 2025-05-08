@@ -30,6 +30,8 @@ public interface AppComponent {
 
 	 void runSQL(SqluckyConnector sqlConn, String sqlv, boolean isCreateFunc);
 
+	 void runSQL(String sqlv);
+
 	 SqluckyEditor createCodeArea();
 
 
