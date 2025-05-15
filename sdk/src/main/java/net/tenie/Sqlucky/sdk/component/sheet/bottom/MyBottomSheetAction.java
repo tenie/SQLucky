@@ -194,6 +194,9 @@ public class MyBottomSheetAction {
         if(connError){
             return;
         }
+        if(tableName.contains("`")){
+            tableName = tableName.replaceAll("`", "");
+        }
 
         String tbn = tableName;
         String key ;

@@ -4,9 +4,9 @@ import net.tenie.Sqlucky.sdk.db.SqluckyConnector;
 import net.tenie.Sqlucky.sdk.db.SqluckyDbRegister;
 import net.tenie.Sqlucky.sdk.po.DBConnectorInfoPo;
 
-public class MysqlRegister implements SqluckyDbRegister{
+public class SqlServerRegister implements SqluckyDbRegister{
 	private String driver = "";
-	private String dbVendor = "Mysql";
+	private String dbVendor = "Sql Server";
 	private boolean JdbcUrlIsFile = false;
 	private String instanceName = ""; // 对h2 ,sqlite 没有schemas 就使用这个给来表示schemas的名称
 	
@@ -17,7 +17,7 @@ public class MysqlRegister implements SqluckyDbRegister{
  
 	@Override
     public SqluckyConnector createConnector(DBConnectorInfoPo connPo) {
-		return new MysqlConnector(connPo, this);
+		return new SqlServerConnector(connPo, this);
 	}
 
 	public String getDbVendor() {

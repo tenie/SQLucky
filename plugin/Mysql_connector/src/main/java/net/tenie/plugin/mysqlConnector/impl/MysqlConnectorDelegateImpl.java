@@ -3,7 +3,7 @@ package net.tenie.plugin.mysqlConnector.impl;
 import net.tenie.Sqlucky.sdk.SqluckyPluginDelegate;
 import net.tenie.Sqlucky.sdk.component.ComponentGetter;
 
-public class SqlServerConnectorDelegateImpl implements SqluckyPluginDelegate {
+public class MysqlConnectorDelegateImpl implements SqluckyPluginDelegate {
 	public static final String pluginName = "Mysql Connector";
 	public static final String pluginCode = "net.tenie.plugin.MysqlConnector";
 	public static final String pluginDescribe = "Mysql Connector";

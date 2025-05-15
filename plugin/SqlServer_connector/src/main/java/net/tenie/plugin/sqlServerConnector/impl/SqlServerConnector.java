@@ -19,12 +19,12 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * @author tenie
  *
  */
-public class MysqlConnector extends SqluckyConnector {
+public class SqlServerConnector extends SqluckyConnector {
  
 	
-	public MysqlConnector(DBConnectorInfoPo connPo , SqluckyDbRegister dbReg) {
-		super(connPo, dbReg); 
-		ExportSqlMySqlImp ex = new ExportSqlMySqlImp();
+	public SqlServerConnector(DBConnectorInfoPo connPo , SqluckyDbRegister dbReg) {
+		super(connPo, dbReg);
+		ExportSqlSqlServerImp ex = new ExportSqlSqlServerImp();
 		getDbConnectorInfoPo().setExportDDL( ex);
 	} 
 	 
@@ -63,7 +63,7 @@ public class MysqlConnector extends SqluckyConnector {
 
 	@Override
 	public String translateErrMsg(String errString) {
-		String  str = MysqlErrorCode.translateErrMsg(errString);
+		String  str = SqlServerErrorCode.translateErrMsg(errString);
 		return str;
 	}
 	
@@ -122,7 +122,7 @@ public class MysqlConnector extends SqluckyConnector {
 				getJdbcUrl(),
 				getAutoConnect()
 				);
-		var dbc = new MysqlConnector(val, getDbRegister());
+		var dbc = new SqlServerConnector(val, getDbRegister());
 		
 		return dbc;
 	}
@@ -140,7 +140,9 @@ public class MysqlConnector extends SqluckyConnector {
 		if(StrUtils.isNotNullOrEmpty(jdbcUrlstr)) {
 			return jdbcUrlstr;
 		}else {
-			jdbcUrlstr  = "jdbc:mysql://" + getHostOrFile() + ":" + getPort() + "/" + getDefaultSchema();
+			jdbcUrlstr  = "jdbc:sqlserver://;serverName=" + getHostOrFile() +
+					                        ";port=" + getPort() + ";databaseName=" + getDefaultSchema() +
+												";trustServerCertificate=true;";
 			dbConnectorInfoPo.setJdbcUrl(jdbcUrlstr);
 		}
 		return  jdbcUrlstr;
