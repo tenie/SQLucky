@@ -498,6 +498,8 @@ public class ConnectionEditor {
         }
         DBConns.flushChoiceBoxGraphic();
         AppWindow.treeView.refresh();
+        // 清空连接下拉框选中
+        DBConns.unselectComboBoxItem();
     }
 
     private static void closeDbConnHelper(TreeItem<TreeNodePo> val) {

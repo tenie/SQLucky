@@ -48,6 +48,7 @@ public class DBinfoTreeButtonFactory {
 		closeConn.setTooltip(MyTooltipTool.instance("Close DB Connection"));
 		btns.add(closeConn);
 
+		// 关闭所有
 		JFXButton closeALlConn = new JFXButton();
 		closeALlConn.setGraphic(IconGenerator.svgImageDefActive("power-off"));
 		closeALlConn.setOnMouseClicked(e->ConnectionEditor.closeAllDbConn());

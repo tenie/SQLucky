@@ -174,8 +174,8 @@ public class ButtonFactory {
 		JFXComboBox<Label> connsComboBox = new JFXComboBox<Label>();
 		connsComboBox.setPrefHeight(25);
 		connsComboBox.setMinHeight(25);
-		connsComboBox.setMaxWidth(200);
-		connsComboBox.setMinWidth(200);
+		connsComboBox.setMaxWidth(240);
+		connsComboBox.setMinWidth(240);
 		connsComboBox.getStyleClass().add("myComboBox");
 		// 填充内容
 		DBConns.flushChoiceBox(connsComboBox);

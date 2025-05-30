@@ -295,6 +295,8 @@ public class DBinfoTree extends SqluckyTitledPane {
 					codeArea.requestFocus();
 					codeArea.setShowCaret(CaretVisibility.ON);
 				}
+				String connName = item.getValue().getName();
+				DBConns.selectComboBoxItem(connName);
 			} else {
 				// 检查连接是否正常
 				SqluckyConnector sqluckyConnector = item.getValue().getConnpo();

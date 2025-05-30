@@ -59,6 +59,10 @@ public final class DBConns {
 			}
 		}
 	}
+	public static void unselectComboBoxItem() {
+		cb.getSelectionModel().clearSelection();
+	}
+
 
 	// 选择连接框的选项添加
 	public static void flushChoiceBox(ComboBox<Label> box) {
