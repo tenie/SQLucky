@@ -30,6 +30,14 @@ public class DBinfoTreeButtonFactory {
 		addConnbtn.setOnMouseClicked(e -> new ConnectionEditor());
 		addConnbtn.setTooltip(MyTooltipTool.instance("Add new DB Connection"));
 		btns.add(addConnbtn);
+		// 编辑, 如果选中的是连接就编辑, 不是连接就新增
+		JFXButton editConn = new JFXButton();
+		editConn.setGraphic(IconGenerator.svgImageDefActive("edit"));
+		editConn.setOnMouseClicked(e -> {
+			ConnectionEditor.editDbConn();
+		});
+		editConn.setTooltip(MyTooltipTool.instance("Select connection node to edit, otherwise add new one."));
+		btns.add(editConn);
 		// open连接
 		JFXButton openConn = new JFXButton();
 		openConn.setGraphic(IconGenerator.svgImageDefActive("link"));
@@ -55,14 +63,7 @@ public class DBinfoTreeButtonFactory {
 		closeALlConn.setTooltip(MyTooltipTool.instance("Close All DB Connection"));
 		btns.add(closeALlConn);
 
-		JFXButton editConn = new JFXButton();
-		editConn.setGraphic(IconGenerator.svgImageDefActive("edit"));
-		editConn.setOnMouseClicked(e -> {
-			ConnectionEditor.editDbConn();
 
-		});
-		editConn.setTooltip(MyTooltipTool.instance("Edit DB Connection"));
-		btns.add(editConn);
 
 		// 查找
 		JFXButton queryTab = new JFXButton();
@@ -93,6 +94,13 @@ public class DBinfoTreeButtonFactory {
 		deleteConn.setTooltip(MyTooltipTool.instance("Delete DB Connection"));
 		btns.add(deleteConn);
 
+		// 删除连接
+		JFXButton hidenLeftWindows = new JFXButton();
+		hidenLeftWindows.setGraphic(IconGenerator.svgImageDefActive("main-tabPane-close"));
+		hidenLeftWindows.setOnMouseClicked(event ->  { AppCommonAction.hideLeft();});
+		hidenLeftWindows.setTooltip(MyTooltipTool.instance("Hide panel"));
+		btns.add(hidenLeftWindows);
+
 		// 脚本
 //			JFXButton script = new JFXButton();
 //			script.setGraphic(IconGenerator.svgImageDefActive("entypo-download"));
@@ -111,6 +119,7 @@ public class DBinfoTreeButtonFactory {
 		btnHbox.getChildren().add(closeALlConn);
 
 		btnHbox.getChildren().add(deleteConn);
+		btnHbox.getChildren().add(hidenLeftWindows);
 //			pn.getChildren().add(script);
 		btnHbox.setPadding(new Insets(3,0,3,0));
 		operateVbox.getChildren().add(btnHbox);

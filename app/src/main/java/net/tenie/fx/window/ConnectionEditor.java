@@ -395,7 +395,8 @@ public class ConnectionEditor {
             connectionEditor = new ConnectionEditor(tf, treeItem);
         } else {
 //            MyAlert.showNotifiaction("编辑需要选中连接名称!");
-            MyAlert.notification("Error", "编辑需要选中连接名称!", MyAlert.NotificationType.Error);
+//            MyAlert.notification("Error", "编辑需要选中连接名称!", MyAlert.NotificationType.Error);
+            new ConnectionEditor();
         }
     }
 

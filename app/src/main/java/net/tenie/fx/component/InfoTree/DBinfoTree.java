@@ -295,8 +295,7 @@ public class DBinfoTree extends SqluckyTitledPane {
 					codeArea.requestFocus();
 					codeArea.setShowCaret(CaretVisibility.ON);
 				}
-				String connName = item.getValue().getName();
-				DBConns.selectComboBoxItem(connName);
+
 			} else {
 				// 检查连接是否正常
 				SqluckyConnector sqluckyConnector = item.getValue().getConnpo();
@@ -665,6 +664,9 @@ public class DBinfoTree extends SqluckyTitledPane {
 
 								// 当 打开连接节点的时候, 放在第一个节点位置(便于查看)
 								var itemPatent = item.getParent();
+								if(itemPatent == null ){
+									return;
+								}
 								itemPatent.getChildren().remove(item);
 								Platform.runLater(() -> {
 									itemPatent.getChildren().addFirst(item);
@@ -706,6 +708,10 @@ public class DBinfoTree extends SqluckyTitledPane {
 			};
 			t.start();
 		
+		}else{
+			// 双击节点切换连接
+			String connName = item.getValue().getName();
+			DBConns.selectComboBoxItem(connName);
 		}
 	}
 

@@ -74,8 +74,8 @@ public class DBinfoContainer extends  VBox{
 			}
 			if (n != null && n instanceof SqluckyTitledPane sqluckyTitledPane) {
 					var bx = sqluckyTitledPane.getBtnsBox();
-					this.getChildren().remove(0);
-					this.getChildren().add(0, bx);
+					this.getChildren().removeFirst();
+					this.getChildren().addFirst(bx);
 			}
 
 		});

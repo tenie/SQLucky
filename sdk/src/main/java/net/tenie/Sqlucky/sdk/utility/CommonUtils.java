@@ -369,7 +369,9 @@ public class CommonUtils {
     public static String getClipboardVal() {
         var cbd = Clipboard.getSystemClipboard();
         if (cbd != null && cbd.hasString()) {
-            return cbd.getString();
+            String txt = cbd.getString();
+            txt =  txt.replaceAll("\\u0000","");
+            return txt;
         }
         return "";
     }

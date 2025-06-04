@@ -317,23 +317,19 @@ public class SdkComponent {
     }
 
 
-    public static Tab addWaitingPane(int tabIdx, boolean holdSheet) {
+    public static void addWaitingPane(int tabIdx, boolean holdSheet) {
         Platform.runLater(() -> {
             SdkComponent.showBottomSheetPane();
             if (ComponentGetter.dockSideTabPaneWindow != null) {
                 ComponentGetter.dockSideTabPaneWindow.requestFocus();
             }
         });
-        Tab v = SdkComponent.addWaitingPane(tabIdx);
-
         Platform.runLater(() -> {
-            if (holdSheet == false) { // 非刷新的， 删除多余的页
+            if (!holdSheet) { // 非刷新的， 删除多余的页
                 TabPane dataTab = ComponentGetter.dataTabPane;
                 SdkComponent.deleteEmptyTab(dataTab);
             }
         });
-
-        return v;
     }
 
 
@@ -436,9 +432,9 @@ public class SdkComponent {
         if (!btn.isDisabled()) {
             boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
             hideShowBottomHelper(showStatus);
-            if (showStatus) {
-                SdkComponent.escapeWindowsUiBug();
-            }
+//            if (showStatus) {
+//                SdkComponent.escapeWindowsUiBug();
+//            }
         }
     }
 
@@ -457,9 +453,9 @@ public class SdkComponent {
                 btn.setGraphic(rightTabPaneClose);
             }
 
-            if (showStatus) {
-                SdkComponent.escapeWindowsUiBug();
-            }
+//            if (showStatus) {
+//                SdkComponent.escapeWindowsUiBug();
+//            }
         }
     }
 
@@ -485,7 +481,7 @@ public class SdkComponent {
     static Region leftRegion = IconGenerator.rightTabPaneOpen();//svgImageDefActive("caret-square-o-left");
     static Region upRegion = IconGenerator.bottomTabPaneOpen(); //IconGenerator.svgImageDefActive("caret-square-o-up");
 
-    // TODO 显示或隐藏 数据面板, 修改控制按钮图标
+    // 显示或隐藏 数据面板, 修改控制按钮图标
     public static void hideShowBottomHelper(boolean isShow) {
         JFXButton btn = CommonButtons.hideBottom;
         if (isShow) {
@@ -498,28 +494,31 @@ public class SdkComponent {
             if (val > 0.85) {
                 ComponentGetter.masterDetailPane.setDividerPosition(0.6);
             }
-            ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
+            Platform.runLater(()-> ComponentGetter.masterDetailPane.setShowDetailNode(true));
         } else {
             if (ConfigVal.bottomSide.equals(Side.RIGHT)) {
                 btn.setGraphic(leftRegion);
             } else {
                 btn.setGraphic(upRegion);
             }
-            ComponentGetter.masterDetailPane.setShowDetailNode(isShow);
+            Platform.runLater(()-> ComponentGetter.masterDetailPane.setShowDetailNode(false));
+
         }
 
     }
 
     // 底部数据展示面板是否显示
     public static void showBottomSheetPane() {
-        JFXButton btn = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
-        if (!btn.isDisabled()) {
-            boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
-            if (showStatus) {
-                hideShowBottomHelper(true);
-                escapeWindowsUiBug();
-            }
-        }
+//        JFXButton btn = CommonButtons.hideBottom; // AllButtons.btns.get("hideBottom");
+//        if (!btn.isDisabled()) {
+//            boolean showStatus = !ComponentGetter.masterDetailPane.showDetailNodeProperty().getValue();
+//            if (showStatus) {
+//                hideShowBottomHelper(true);
+//                escapeWindowsUiBug();
+//            }
+//        }
+        hideShowBottomHelper(true);
+//        escapeWindowsUiBug();
     }
 
     // 避免windows UI bug, 选择一下输入框

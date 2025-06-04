@@ -371,9 +371,9 @@ public class MyCodeAreaKeyPressedEvent {
                 if (!selectedText.isEmpty()) {
                     IndexRange idx = codeArea.getSelection();
                     codeArea.deleteText(idx);
-                    codeArea.insertText(codeArea.getAnchor(), val);
-                    e.consume();
                 }
+                codeArea.insertText(codeArea.getAnchor(), val);
+                e.consume();
                 Platform.runLater(sqluckyEditor::highLighting);
             }
         }

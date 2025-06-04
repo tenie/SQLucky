@@ -116,10 +116,10 @@ public class SelectAction {
 
 			}
 		} catch (Exception e) {
-			if(myBottomSheet!= null){
+			if(myBottomSheet != null){
 				myBottomSheet.clean();
 			}
-			e.printStackTrace();
+			logger.error("SelectAction 执行过程中发生异常", e);
 			throw e;
 		}
 	}

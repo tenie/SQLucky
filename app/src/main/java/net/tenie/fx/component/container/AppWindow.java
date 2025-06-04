@@ -55,11 +55,11 @@ public class AppWindow extends VBox {
         VBox.setVgrow(masterDetailPane, Priority.ALWAYS);
 
         ComponentGetter.masterDetailPane = masterDetailPane;
-        // 设置tree 面板的显示比例
+        // 设置db info tree 面板的显示比例
         masterDetailPane.widthProperty().addListener((ob, ov, nv) -> {
             if (nv.doubleValue() > 1) {
                 double wi = ComponentGetter.masterDetailPane.getWidth();
-                double tbp = 300.0;
+                double tbp = 330.0;
                 double val = tbp / wi;
                 ComponentGetter.treeAreaDetailPane.setDividerPosition(val);
             }
