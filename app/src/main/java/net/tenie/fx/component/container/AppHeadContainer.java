@@ -98,10 +98,13 @@ public class AppHeadContainer {
 
         // 加入左边box
         leftBox.getChildren().add(LogoImageView);
-        leftBox.getChildren().add(showMenuBarBtn);
+        if(!CommonUtils.isMacOS()){
+            leftBox.getChildren().add(showMenuBarBtn);
+            mainMenuBar.setVisible(false);
+        }
         leftBox.getChildren().add(DbinfoOperateBox);
+        // 菜单, 如果mac os, 不显示菜单按钮
         leftBox.getChildren().add(mainMenuBar);
-        mainMenuBar.setVisible(false);
     }
 
     // 初始化 显示菜单按钮
@@ -109,17 +112,18 @@ public class AppHeadContainer {
         showMenuBarBtn = new JFXButton();
         showMenuBarBtn.setGraphic(IconGenerator.menuBarIcon());
 
-        showMenuBarBtn.setOnAction(event -> {
-            leftBox.getChildren().remove(showMenuBarBtn);
-            leftBox.getChildren().remove(DbinfoOperateBox);
-//            leftBox.getChildren().add(mainMenuBar);
-            mainMenuBar.setVisible(true);
-//            menuHBox.setPadding(new Insets(0));
-            Platform.runLater(()->{
-                addMouseEventFilter(SQLuckyStage);
-            });
+        if(!CommonUtils.isMacOS()){
+            showMenuBarBtn.setOnAction(event -> {
+                leftBox.getChildren().remove(showMenuBarBtn);
+                leftBox.getChildren().remove(DbinfoOperateBox);
+                mainMenuBar.setVisible(true);
+                Platform.runLater(()->{
+                    addMouseEventFilter(SQLuckyStage);
+                });
 
-        });
+            });
+        }
+
 
         return showMenuBarBtn;
     }
