@@ -1,9 +1,6 @@
 package net.tenie.Sqlucky.sdk.component.sheet.bottom;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 import javafx.geometry.Insets;
@@ -41,7 +38,7 @@ import net.tenie.Sqlucky.sdk.utility.StrUtils;
  * 
  * @author tenie
  */
-public class MyBottomSheet extends  Tab{
+public class MyBottomSheet extends MyTab{
 	private SheetDataValue tableData;
 	private boolean isDDL = false;
 	private boolean isDockSide = false; // 判断是否已经独立窗口了
