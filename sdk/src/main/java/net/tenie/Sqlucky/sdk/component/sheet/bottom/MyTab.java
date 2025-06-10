@@ -21,4 +21,18 @@ public class MyTab  extends Tab {
     public void setCustomParam(Map<String, String> customParam) {
         this.customParam = customParam;
     }
+
+    public void addCustomParam(String key, String value) {
+        if (customParam == null) {
+            customParam = new java.util.HashMap<>();
+        }
+        customParam.put(key, value);
+    }
+
+    public String getCustomParam(String key) {
+        if (customParam == null) {
+            return null;
+        }
+        return customParam.get(key);
+    }
 }

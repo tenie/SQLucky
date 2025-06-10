@@ -99,7 +99,7 @@ public class RunSQLHelper {
 
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
 			if( ! thread.isInterrupted()){
 				thread.interrupt();
 			}
