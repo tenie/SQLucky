@@ -505,6 +505,7 @@ public class StrUtils {
         str = str.replaceAll(HTML_BLANK_CHAR_ENSP," ");
         str = str.replaceAll(CHINESE_BLANK_CHAR," ");
         str =  str.replaceAll("\\u0000","");
+        str = str.replaceAll("\\xa0", " ");
         return str;
     }
 

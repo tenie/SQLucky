@@ -371,6 +371,7 @@ public class CommonUtils {
         if (cbd != null && cbd.hasString()) {
             String txt = cbd.getString();
             txt =  txt.replaceAll("\\u0000","");
+            txt = txt.replaceAll("\\xa0", " ");
             return txt;
         }
         return "";
