@@ -27,7 +27,8 @@ public class CodeAreaHighLightingHelper {
                 "CHARACTER", "CONSTRAINT", "CREATE", "SEQUENCE", "WITH", "ELSE", "NUMERIC", "COLUMN", "ADD", "FETCH", "UNION",
                 "DEFAULT", "CURRENT", "DROP", "FOR", "NEXT", "START", "BIGINT", "MAXVALUE", "INCREMENT", "FIRST", "ROWS",
                 "ONLY", "DATE", "ALL", "CALL", "OUTER", "IS", "NOT", "VALUE", "VIEW", "INSERT", "INTO", "VALUES", "AND",
-                "ORDER", "DESC", "BEGIN", "DECLARE", "END", "CLOSE", "OPEN", "LIKE", "DELETE", "DISTINCT", "WHEN", "THEN"
+                "ORDER", "DESC", "BEGIN", "DECLARE", "END", "CLOSE", "OPEN", "LIKE", "DELETE", "DISTINCT", "WHEN", "THEN",
+                "KEY" , "UNSIGNED", "AUTO_INCREMENT", "COMMENT","DATETIME"
 
         ));
 
