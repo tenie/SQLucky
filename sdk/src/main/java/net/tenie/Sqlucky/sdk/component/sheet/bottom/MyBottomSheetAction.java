@@ -506,11 +506,12 @@ public class MyBottomSheetAction {
     }
 
     // 保存按钮逻辑
-    public static void dataSave(MyBottomSheet sheet) {
+    public static boolean dataSave(MyBottomSheet sheet) {
         var tableData = sheet.getTableData();
         String tabName = tableData.getTabName();
         Connection conn = tableData.getDbConnection().getConn();
         SqluckyConnector dpo = tableData.getDbConnection();
+        boolean hasError = false;
         if (tabName != null && !tabName.isEmpty()) {
             // 待保存数据
             ObservableList<ResultSetRowPo> modifyData = tableData.getDataRs().getUpdateDatas();
@@ -534,6 +535,7 @@ public class MyBottomSheetAction {
 
                     } catch (Exception e1) {
                         logger.error(e1);
+                        hasError = true;
                         btnDisable = false;
                         String msg = "failed : " + e1.getMessage();
                         msg += "\n" + dpo.translateErrMsg(msg);
@@ -568,6 +570,7 @@ public class MyBottomSheetAction {
                     }
 
                 } catch (Exception e1) {
+                    hasError = true;
                     logger.error(e1);
                     btnDisable = false;
                     var fs = ddlDmlPo.getFields();
@@ -583,10 +586,14 @@ public class MyBottomSheetAction {
 
             // 保存按钮禁用
             tableData.getSaveBtn().setDisable(btnDisable);
-            TableViewUtils.showInfo(ddlDmlPo);
+            if (hasError){
+                TableViewUtils.showInfo(ddlDmlPo);
+            }else {
+                Platform.runLater(()-> MyAlert.notification("Save","Operation successful",MyAlert.NotificationType.show));
+            }
 
         }
-
+        return hasError;
     }
     // 清空更新过的数据缓存和新加的数据缓存
     public static void rmUpdateData(MyBottomSheet sheet) {

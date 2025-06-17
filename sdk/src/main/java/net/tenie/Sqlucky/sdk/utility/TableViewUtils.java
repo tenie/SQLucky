@@ -364,7 +364,7 @@ public class TableViewUtils {
 	// 展示信息窗口,
 	public static void showInfo(DbTableDatePo ddlDmlpo) {
 		// 有数据才展示
-		if (ddlDmlpo.getResultSet().getDatas().size() > 0) {
+		if (!ddlDmlpo.getResultSet().getDatas().isEmpty()) {
 			String tableName = ConfigVal.EXEC_INFO_TITLE;
 			MyBottomSheet myBottomSheet = new MyBottomSheet(tableName);
 			SheetDataValue sheetDaV = myBottomSheet.getTableData();

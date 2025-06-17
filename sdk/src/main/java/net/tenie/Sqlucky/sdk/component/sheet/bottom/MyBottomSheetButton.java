@@ -47,7 +47,12 @@ public class MyBottomSheetButton {
 
             JFXButton saveBtn = sheet.getTableData().getSaveBtn();
             saveBtn.setGraphic(IconGenerator.svgImageDefActive("save"));
-            saveBtn.setOnMouseClicked(e -> MyBottomSheetAction.dataSave(sheet) );
+            saveBtn.setOnMouseClicked(e -> {
+                boolean hasError =  MyBottomSheetAction.dataSave(sheet);
+                if(!hasError){
+                    MyBottomSheetAction.refreshData(sheet);
+                }
+            } );
             saveBtn.setTooltip(MyTooltipTool.instance("Save data"));
             saveBtn.setDisable(true);
             // 保存按钮监听 : 保存亮起, 锁住
