@@ -1,5 +1,8 @@
 package net.tenie.Sqlucky.sdk.utility;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.IndexRange;
 import net.tenie.Sqlucky.sdk.po.MyRange;
@@ -531,7 +534,51 @@ public class StrUtils {
         return str;
     }
 
+    /**
+     *  json格式化
+     * @param jsonString
+     * @return
+     */
+    public static String formatJson(String jsonString){
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        return gson.toJson(gson.fromJson(jsonString, Object.class));
+    }
+    // 压缩json字符串, 输出一行
+    public static String compactJson(String prettyJson){
+        // 创建 Gson 实例（默认配置即为紧凑格式）
+        Gson gson = new Gson();
 
+        // 解析 JSON 字符串
+        JsonElement jsonElement = gson.fromJson(prettyJson, JsonElement.class);
+
+        // 转换为紧凑格式（单行）
+
+//        System.out.println("压缩后的 JSON:");
+//        System.out.println(compactJson);
+        return gson.toJson(jsonElement);
+    }
+
+
+    public static void main(String[] args) {
+        // 格式化的 JSON 字符串（带缩进和换行）
+        String prettyJson = "{\n" +
+                "  \"name\": \"John\",\n" +
+                "  \"age\": 30,\n" +
+                "  \"city\": \"New York\",\n" +
+                "  \"hobbies\": [\"reading\", \"gaming\"]\n" +
+                "}";
+        // 创建 Gson 实例（默认配置即为紧凑格式）
+        Gson gson = new Gson();
+
+        // 解析 JSON 字符串
+        JsonElement jsonElement = gson.fromJson(prettyJson, JsonElement.class);
+
+        // 转换为紧凑格式（单行）
+        String compactJson = gson.toJson(jsonElement);
+
+        System.out.println("压缩后的 JSON:");
+        System.out.println(compactJson);
+    }
     /**
      *  去除字符串中的非数字部分
      * @param str

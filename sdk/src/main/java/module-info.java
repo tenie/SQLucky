@@ -51,6 +51,7 @@ open module SQLucky.sdk {
     requires com.google.common;
     requires jasypt;
 	requires cn.hutool;
+    requires com.google.gson;
 //	requires okhttp3;
 
 	exports net.tenie.Sqlucky.sdk;

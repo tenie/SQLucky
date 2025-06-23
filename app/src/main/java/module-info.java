@@ -23,7 +23,7 @@ open module SQLucky.app {
   	requires javafx.swing;
 //	requires mybatis.plus.annotation;
 //	requires mybatis.plus.generator;
-
+	requires com.google.gson;
 	// mods
 	requires com.jfoenix;  
 	requires org.controlsfx.controls;
