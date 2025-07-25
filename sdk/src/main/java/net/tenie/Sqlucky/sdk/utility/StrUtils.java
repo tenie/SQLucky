@@ -12,6 +12,8 @@ import org.jasypt.util.text.BasicTextEncryptor;
 
 import java.io.File;
 import java.nio.charset.Charset;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -1710,7 +1712,41 @@ public class StrUtils {
         return stringVal;
     }
 
+    public static String SHA384Base64(String input){
+        try {
+            // 创建一个SHA-384 MessageDigest实例
+            MessageDigest md = MessageDigest.getInstance("SHA-384");
 
+            // 使用输入更新消息摘要
+            byte[] hashBytes = md.digest(input.getBytes());
+
+            // 将字节数组转换为十六进制或Base64字符串输出
+//            System.out.println("SHA-384 Hash (Hex): " + bytesToHex(hashBytes));
+//            System.out.println("SHA-384 Hash (Base64): " + Base64.getEncoder().encodeToString(hashBytes));
+            return Base64.getEncoder().encodeToString(hashBytes);
+        } catch (NoSuchAlgorithmException e) {
+//            System.err.println("Unsupported algorithm: SHA-384");
+            e.printStackTrace();
+        }
+        return "";
+    }
+    /**
+     * 将字节数组转换成十六进制格式的字符串。
+     *
+     * @param bytes 字节数组
+     * @return 十六进制表示的字符串
+     */
+    private static String bytesToHex(byte[] bytes) {
+        StringBuilder hexString = new StringBuilder(2 * bytes.length);
+        for (byte b : bytes) {
+            String hex = Integer.toHexString(0xff & b);
+            if (hex.length() == 1) {
+                hexString.append('0');
+            }
+            hexString.append(hex);
+        }
+        return hexString.toString();
+    }
     /**
      *字符串转 byte
      */

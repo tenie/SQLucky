@@ -314,7 +314,6 @@ public class MyEditorSheet extends Tab {
 
 	// 设置title name
 	public void setTabTitleName() {
-//		String TabName = documentPo.getTitle().get();
 		// 名称
 		CommonUtils.setTabName(this, documentPo.getTitle());
 	}

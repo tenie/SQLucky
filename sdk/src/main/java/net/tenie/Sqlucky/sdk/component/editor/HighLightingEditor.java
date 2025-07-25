@@ -1,15 +1,16 @@
 package net.tenie.Sqlucky.sdk.component.editor;
 
+import javafx.application.Platform;
 import javafx.scene.control.IndexRange;
 import javafx.scene.input.MouseButton;
 import net.tenie.Sqlucky.sdk.SqluckyEditor;
-import net.tenie.Sqlucky.sdk.component.*;
+import net.tenie.Sqlucky.sdk.component.MyCodeArea;
+import net.tenie.Sqlucky.sdk.component.MyEditorSheet;
 import net.tenie.Sqlucky.sdk.component.sheet.bottom.MyBottomSheetAction;
 import net.tenie.Sqlucky.sdk.db.DBConns;
 import net.tenie.Sqlucky.sdk.po.DocumentPo;
 import net.tenie.Sqlucky.sdk.ui.CodeAreaHighLightingHelper;
 import net.tenie.Sqlucky.sdk.utility.CommonUtils;
-import net.tenie.Sqlucky.sdk.utility.StrUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fxmisc.richtext.CodeArea;
@@ -47,6 +48,15 @@ public class HighLightingEditor extends SqluckyEditor {
                     && codeArea.getCodeArea().getUndoManager().getNextUndo() == null) {
                 codeArea.insertText(0, documentPo.getText());
                 this.highLighting();
+            }else if(!b.isEmpty()){
+                MyEditorSheet sheet1 = this.getSheet();
+                Platform.runLater(() -> {
+                    String title = sheet1.getTitle();
+                    if (!title.endsWith("*")) {
+                        sheet1.setTitle(title + "*");
+                        sheet1.setModify(true);
+                    }
+                });
             }
         });
         // 行号主题色

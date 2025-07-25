@@ -388,13 +388,12 @@ public class MyCodeAreaKeyPressedEvent {
         if (sheet != null) {
 
             Platform.runLater(() -> {
-                String title = sheet.getTitle();
-                if (!title.endsWith("*")) {
-                    sheet.setTitle(title + "*");
-                    sheet.setModify(true);
-                }
+//                String title = sheet.getTitle();
+//                if (!title.endsWith("*")) {
+//                    sheet.setTitle(title + "*");
+//                    sheet.setModify(true);
+//                }
                 sheet.getSqluckyEditor().highLighting(x);
-//                sheet.highLighting(x);
             });
             // 缓存单词
             if (myAuto != null) {
