@@ -23,6 +23,8 @@ public class DBConnectorInfoPo {
 	private String user;
 	private String passWord;
 	private String jdbcUrl;
+	// 临时jdbc url双击数据库的时候, 临时切换到对应的数据库
+	private String jdbcUrlTmp;
 	private String otherParameter; // 可以为空,
 	private String comment; // 可以为空,
 	private Date createdAt;
@@ -175,7 +177,14 @@ public class DBConnectorInfoPo {
 		this.passWord = passWord;
 	}
 	public String getJdbcUrl() {
-		return jdbcUrl;
+		String rsVal = "";
+		if(this.jdbcUrlTmp !=null && !this.jdbcUrlTmp.isEmpty()) {
+			rsVal = this.jdbcUrlTmp;
+			this.jdbcUrlTmp = "";
+		}else{
+			rsVal = jdbcUrl;
+		}
+		return rsVal;
 	}
 	public void setJdbcUrl(String jdbcUrl) {
 		this.jdbcUrl = jdbcUrl;
@@ -298,8 +307,13 @@ public class DBConnectorInfoPo {
 		return autoConnect;
 	}
 
+	public String getJdbcUrlTmp() {
+		return jdbcUrlTmp;
+	}
 
-
+	public void setJdbcUrlTmp(String jdbcUrlTmp) {
+		this.jdbcUrlTmp = jdbcUrlTmp;
+	}
 
 	public void setAutoConnect(boolean autoConnect) {
 		this.autoConnect = autoConnect;

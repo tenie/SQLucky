@@ -279,7 +279,7 @@ public abstract class SqluckyConnector {
 				}
 			}
 			if(StrUtils.isNotNullOrEmpty(urlStr)){
-				dbConnectorInfoPo.setJdbcUrl(urlStr);
+				dbConnectorInfoPo.setJdbcUrlTmp(urlStr);
 				// 重新连接
 				reConnection();
 			}
@@ -307,13 +307,11 @@ public abstract class SqluckyConnector {
 	 * @return
 	 */
 	public void reConnection() {
-//		if (getDbConnectorInfoPo().getConn() != null) {
 		try {
 			getDbConnectorInfoPo().getConn().close();
 			getDbConnectorInfoPo().setConn(null);
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-//			}
 		}
 		getConn();
 	}
