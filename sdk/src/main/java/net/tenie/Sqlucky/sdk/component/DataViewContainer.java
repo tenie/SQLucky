@@ -183,7 +183,9 @@ public class DataViewContainer extends HBox {
 
     // 设置序号行的宽度
     public static void setTabRowWith(FilteredTableView<ResultSetRowPo> table, int dataSize) {
-        if (dataSize > 100000) {
+        if(dataSize == 0){
+            table.setRowHeaderWidth(10);
+        }else if (dataSize > 100000) {
             table.setRowHeaderWidth(70);
         }else if (dataSize > 1000) {
             table.setRowHeaderWidth(65);
