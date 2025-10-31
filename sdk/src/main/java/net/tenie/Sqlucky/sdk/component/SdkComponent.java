@@ -96,15 +96,17 @@ public class SdkComponent {
 //				sum.setValue(Integer.valueOf(sp.get()) + 1);
 //				return sum;
 //			});
-
+        Label label = new Label();
+//        label.setGraphic(IconGenerator.svgImage("material-vpn-key", 10, "#FF6600"));
         // 点击 行号, 显示一个 当前行的明细窗口
-        tc.setCellFactory(col -> {
-            TableCell<ResultSetRowPo, Number> cell = new TableCell<>() {
+        tc.setGraphic(label);
+        tc.setCellFactory(col ->
+            new  TableCell<>() {
                 @Override
                 public void updateItem(Number item, boolean empty) {
                     super.updateItem(item, empty);
-                    this.setText(null);
-                    this.setGraphic(null);
+//                    this.setText(null);
+//                    this.setGraphic(null);
                     if (!empty) {
                         int rowIndex = this.getIndex();
                         this.setText((rowIndex + 1) + "");
@@ -115,10 +117,8 @@ public class SdkComponent {
                         });
                     }
                 }
-            };
-            return cell;
-        });
-
+            }
+        );
         table.setRowHeader(tc);
         // 启用 隐藏列的控制按钮
         table.tableMenuButtonVisibleProperty().setValue(true);

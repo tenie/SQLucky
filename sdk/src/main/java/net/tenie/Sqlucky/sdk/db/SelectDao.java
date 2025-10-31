@@ -61,10 +61,15 @@ public class SelectDao {
 
 
 	// 获取查询的结果, 返回字段名称的数据和 值的数据
-	public static SelectExecInfo selectSql(String sql, int limit, SqluckyConnector sqluckyConn, int type) throws Exception {
+	public static SelectExecInfo selectSql(String sql, int pageStart , int limit, SqluckyConnector sqluckyConn, int type) throws Exception {
 		// 获取limit 的sql
 		if(type == ParseSQL.SELECT){
-			sql = sqluckyConn.getExportDDL().limitSelectSql(sql, limit);
+			String dbVendor = sqluckyConn.getDbVendor().toUpperCase();
+			if ("MYSQL".equals(dbVendor) || "Mariadb".equals(dbVendor)) {
+				sql = sqluckyConn.getExportDDL().pageSelectSql(sql, pageStart, limit);
+			}else{
+				sql = sqluckyConn.getExportDDL().limitSelectSql(sql, limit);
+			}
 		}
 		return selectSql2(sql, limit, sqluckyConn);
 	}

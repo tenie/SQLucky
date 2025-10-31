@@ -39,6 +39,40 @@ public class MyBottomSheetButton {
     }
 
 
+//    public static List<Node> queryDataOptionBtn(MyBottomSheet sheet, boolean disable, boolean isCreate) {
+//        List<Node> ls = new ArrayList<>();
+//        if (isCreate) {
+//            // refresh
+//            JFXButton refreshBtn = new JFXButton();
+//            refreshBtn.setGraphic(IconGenerator.svgImageDefActive("refresh"));
+//            refreshBtn.setOnMouseClicked(e -> MyBottomSheetAction.refreshData(sheet));
+//            refreshBtn.setTooltip(MyTooltipTool.instance("refresh table "));
+//            refreshBtn.setDisable(disable);
+//
+//            // 下一页
+//            JFXButton nextPageBtn = new JFXButton();
+//            nextPageBtn.setGraphic(IconGenerator.svgImageDefActive("angle-double-right"));
+//            nextPageBtn.setOnMouseClicked(e -> MyBottomSheetAction.nextData(sheet));
+//            nextPageBtn.setTooltip(MyTooltipTool.instance("Next Page"));
+//            nextPageBtn.setDisable(disable);
+//
+//
+//            // 上一页
+//            JFXButton prePageBtn = new JFXButton();
+//            prePageBtn.setGraphic(IconGenerator.svgImageDefActive("angle-double-left"));
+//            prePageBtn.setOnMouseClicked(e -> MyBottomSheetAction.prePageData(sheet));
+//            prePageBtn.setTooltip(MyTooltipTool.instance("Previous  Page"));
+//            prePageBtn.setDisable(disable);
+//            ls.add(refreshBtn);
+//            String dbVendor = sheet.getTableData().getDbConnection().getDbVendor().toUpperCase();
+//            if ("MYSQL".equals(dbVendor) || "MARIADB".equals(dbVendor)) {
+//                ls.add(prePageBtn);
+//                ls.add(nextPageBtn);
+//            }
+//        }
+//        return ls;
+//    }
+
     public static List<Node> sqlDataOptionBtn(MyBottomSheet sheet, boolean disable, boolean isCreate) {
         List<Node> ls = new ArrayList<>();
         // 锁
@@ -88,6 +122,21 @@ public class MyBottomSheetButton {
             refreshBtn.setOnMouseClicked(e -> MyBottomSheetAction.refreshData(sheet));
             refreshBtn.setTooltip(MyTooltipTool.instance("refresh table "));
             refreshBtn.setDisable(disable);
+
+            // 下一页
+            JFXButton nextPageBtn = new JFXButton();
+            nextPageBtn.setGraphic(IconGenerator.svgImageDefActive("angle-double-right"));
+            nextPageBtn.setOnMouseClicked(e -> MyBottomSheetAction.nextData(sheet));
+            nextPageBtn.setTooltip(MyTooltipTool.instance("Next Page"));
+            nextPageBtn.setDisable(disable);
+
+
+            // 上一页
+            JFXButton prePageBtn = new JFXButton();
+            prePageBtn.setGraphic(IconGenerator.svgImageDefActive("angle-double-left"));
+            prePageBtn.setOnMouseClicked(e -> MyBottomSheetAction.prePageData(sheet));
+            prePageBtn.setTooltip(MyTooltipTool.instance("Previous  Page"));
+            prePageBtn.setDisable(disable);
 
             // 添加一行数据
             JFXButton addBtn = new JFXButton();
@@ -215,10 +264,16 @@ public class MyBottomSheetButton {
                     excelSelected.setDisable(true);
                 }
             });
+
+            ls.add(refreshBtn);
+            String dbVendor = sheet.getTableData().getDbConnection().getDbVendor().toUpperCase();
+            if ("MYSQL".equals(dbVendor) || "MARIADB".equals(dbVendor)) {
+                ls.add(prePageBtn);
+                ls.add(nextPageBtn);
+            }
             ls.add(saveBtn);
             ls.add(detailBtn);
             ls.add(tableSQLBtn);
-            ls.add(refreshBtn);
             ls.add(addBtn);
             ls.add(minusBtn);
             ls.add(copyBtn);

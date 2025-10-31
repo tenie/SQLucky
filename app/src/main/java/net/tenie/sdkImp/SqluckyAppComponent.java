@@ -374,6 +374,11 @@ public class SqluckyAppComponent implements AppComponent {
 	}
 
 	@Override
+	public void refreshDataTableViewByPage(String connName, String sql, String idx, boolean isLock, int PageStart) {
+		RunSQLHelper.refreshTableDataByPage(DBConns.get(connName), sql, idx, isLock, PageStart);
+	}
+
+	@Override
 	public Long refreshDataTableView(String connName, String sql, String idx, boolean isLock) {
 
 		return RunSQLHelper.refresh(DBConns.get(connName), sql, idx, isLock);

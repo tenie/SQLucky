@@ -1,15 +1,14 @@
 package net.tenie.Sqlucky.sdk.db;
 
-import java.sql.Connection;
-import java.util.List;
-
-import net.sf.jsqlparser.statement.select.Limit;
 import net.tenie.Sqlucky.sdk.po.SheetFieldPo;
 import net.tenie.Sqlucky.sdk.po.db.FuncProcTriggerPo;
 import net.tenie.Sqlucky.sdk.po.db.TableForeignKeyPo;
 import net.tenie.Sqlucky.sdk.po.db.TableIndexPo;
 import net.tenie.Sqlucky.sdk.po.db.TablePo;
 import net.tenie.Sqlucky.sdk.utility.StrUtils;
+
+import java.sql.Connection;
+import java.util.List;
 
 /*
  * 导出DB info
@@ -120,6 +119,21 @@ public abstract class ExportDBObjects {
             return limitSql;
         }
     }
+
+    public String pageSelectSql(String sql, int startNum ,int limit) {
+        String tmpsql = sql.toLowerCase();
+
+        String sqlTmp2 = StrUtils.cleanrRedundantBlank(tmpsql);
+        boolean tf = StrUtils.hasKeyWord(sqlTmp2, "limit");
+        if (tf) {
+            return sql;
+        } else {
+            String limitSql = String.format("%s limit %d, %d ", sql, startNum, limit);
+
+            return limitSql;
+        }
+    }
+
 
     // 目前没用
     public abstract String exportCreatePrimaryKey(Connection conn, String schema, String obj);

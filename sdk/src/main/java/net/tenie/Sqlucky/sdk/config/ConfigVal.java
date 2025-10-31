@@ -50,7 +50,7 @@ public class ConfigVal {
 	// 代码显示个数计数
 	public static int pageSize = -1;
 	// sql 查询获取最大行
-	public static int MaxRows = 1000;
+	public static int MaxRows = 200;
 	// 底部tab 保留个数
 	public static int cacheBottomTab = 20;
 

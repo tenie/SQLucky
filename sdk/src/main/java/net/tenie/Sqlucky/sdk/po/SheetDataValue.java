@@ -52,6 +52,11 @@ public class SheetDataValue {
     // 行数
     private int rowSize = 0;
 
+
+    // 分页属性
+    private int pageStart = 0;
+
+
     // 展示的数据集
     private ResultSetPo dataRs;
     // 列
@@ -537,4 +542,11 @@ public class SheetDataValue {
         return colssInfoList;
     }
 
+    public int getPageStart() {
+        return pageStart;
+    }
+
+    public void setPageStart(int pageStart) {
+        this.pageStart = pageStart;
+    }
 }

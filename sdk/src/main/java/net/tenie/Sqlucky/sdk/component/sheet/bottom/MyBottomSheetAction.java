@@ -482,6 +482,11 @@ public class MyBottomSheetAction {
     public static void refreshData(MyBottomSheet sheet) {
         boolean isLock = sheet.getTableData().isLock();
         var tableData = sheet.getTableData();
+        int pageStart = tableData.getPageStart();
+
+        if(pageStart >= ConfigVal.MaxRows){
+            pageStart -=  ConfigVal.MaxRows;
+        }
         String sql = tableData.getSqlStr();
         Connection conn = tableData.getDbConnection().getConn();
         String connName = tableData.getConnName();
@@ -489,7 +494,7 @@ public class MyBottomSheetAction {
             if(sheet.isDockSide()) {
                 SelectExecInfo execInfo;
                 try {
-                    execInfo = SelectDao.selectSql2(sql, ConfigVal.MaxRows, DBConns.get(connName));
+                    execInfo = SelectDao.selectSql(sql,pageStart, ConfigVal.MaxRows, DBConns.get(connName), ParseSQL.SELECT);
                     ObservableList<ResultSetRowPo> allRawData = execInfo.getDataRs().getDatas();
                     tableData.getTable().setItems(allRawData);
                 } catch (Exception e) {
@@ -500,7 +505,86 @@ public class MyBottomSheetAction {
                 var dataTab = ComponentGetter.dataTabPane;
                 int selectIdx = dataTab.getSelectionModel().getSelectedIndex();
                 SdkComponent.clearDataTable(selectIdx);
-                ComponentGetter.appComponent.refreshDataTableView(connName, sql, selectIdx + "", isLock);
+
+                ComponentGetter.appComponent.refreshDataTableViewByPage(connName, sql, selectIdx + "", isLock, pageStart);
+            }
+        }
+    }
+
+
+    // 刷新查询结果
+    public static void nextData(MyBottomSheet sheet) {
+        boolean isLock = sheet.getTableData().isLock();
+        var tableData = sheet.getTableData();
+        int pageStart = tableData.getPageStart();
+        String sql = tableData.getSqlStr();
+        Connection conn = tableData.getDbConnection().getConn();
+        String connName = tableData.getConnName();
+        if (conn != null) {
+            if(sheet.isDockSide()) {
+                SelectExecInfo execInfo;
+                try {
+                    execInfo = SelectDao.selectSql(sql, pageStart, ConfigVal.MaxRows, DBConns.get(connName) ,  ParseSQL.SELECT);
+                    // 设置分页, 查询结果和limit相等就设置其实页
+                    if(execInfo.getRowSize() ==  ConfigVal.MaxRows){
+                        tableData.setPageStart(pageStart+ ConfigVal.MaxRows);
+                    }
+
+                    ObservableList<ResultSetRowPo> allRawData = execInfo.getDataRs().getDatas();
+                    tableData.getTable().setItems(allRawData);
+                } catch (Exception e) {
+                    logger.error(e);
+                }
+            }else {
+                // 关闭当前tab
+                var dataTab = ComponentGetter.dataTabPane;
+                int selectIdx = dataTab.getSelectionModel().getSelectedIndex();
+                SdkComponent.clearDataTable(selectIdx);
+                ComponentGetter.appComponent.refreshDataTableViewByPage(connName, sql, selectIdx + "", isLock,pageStart);
+
+            }
+        }
+    }
+
+
+
+    // 刷新查询结果
+    public static void prePageData(MyBottomSheet sheet) {
+        boolean isLock = sheet.getTableData().isLock();
+        var tableData = sheet.getTableData();
+        int pageStart = tableData.getPageStart();
+        // pageStart
+        if(pageStart>0 ){
+            // 因为 第一次查询会字段加到下一页的值, 所以, 要减2次才能到当前页的下一页位置
+            pageStart = pageStart- ConfigVal.MaxRows*2 ;
+        }
+        if(pageStart<0){// 减成负数, 回到第一页
+            pageStart = 0;
+        }
+        String sql = tableData.getSqlStr();
+        Connection conn = tableData.getDbConnection().getConn();
+        String connName = tableData.getConnName();
+        if (conn != null) {
+            if(sheet.isDockSide()) {
+                SelectExecInfo execInfo;
+                try {
+                    execInfo = SelectDao.selectSql(sql, pageStart, ConfigVal.MaxRows, DBConns.get(connName) ,  ParseSQL.SELECT);
+                    // 设置分页, 查询结果和limit相等就设置其实页
+                    if(execInfo.getRowSize() ==  ConfigVal.MaxRows){
+                        tableData.setPageStart(pageStart+ ConfigVal.MaxRows);
+                    }
+
+                    ObservableList<ResultSetRowPo> allRawData = execInfo.getDataRs().getDatas();
+                    tableData.getTable().setItems(allRawData);
+                } catch (Exception e) {
+                    logger.error(e);
+                }
+            }else {
+                // 关闭当前tab
+                var dataTab = ComponentGetter.dataTabPane;
+                int selectIdx = dataTab.getSelectionModel().getSelectedIndex();
+                SdkComponent.clearDataTable(selectIdx);
+                ComponentGetter.appComponent.refreshDataTableViewByPage(connName, sql, selectIdx + "", isLock,pageStart);
             }
         }
     }

@@ -142,7 +142,7 @@ public class RunSQLHelper {
                     ProcedureAction.procedureAction(execSql, sqluckyConn, state.getCallProcedureFields(), state.getTidx(), state.getIsLock());
                 } else if (type == ParseSQL.SELECT || type == ParseSQL.OTHER_QUERY) {
                     // 调用查询
-                    SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock(), state.getSelectLimit(), type);
+                    SelectAction.selectAction(execSql, sqluckyConn, state.getTidx(), state.getIsLock(), state.getSelectLimit(), type, state.getPageStart());
                 } else {
                     Connection conn = sqluckyConn.getConn();
                     if (type == ParseSQL.UPDATE) {
@@ -315,6 +315,22 @@ public class RunSQLHelper {
 		return warn;
 	}
 
+
+	// 刷新
+	public static void refreshTableDataByPage(SqluckyConnector sqlConn, String sqlv, String tabIdxv, boolean isLockv, int pageStart) {
+		Long statusKey = CommonUtils.dateTime();
+
+		RUN_STATUS.put(statusKey, -1);
+
+		RunSqlStatePo state = new RunSqlStatePo(sqlv, sqlConn);
+		state.setTidx(tabIdxv);
+		state.setIsRefresh(true);
+		state.setIsLock(isLockv);
+		state.setStatusKey(statusKey);
+		state.setPageStart(pageStart);
+
+		createThread(RunSQLHelper::runMain, state);
+	}
 
 	// 刷新
 	public static Long refresh(SqluckyConnector sqlConn, String sqlv, String tabIdxv, boolean isLockv) {

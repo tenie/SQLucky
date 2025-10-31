@@ -44,26 +44,20 @@ public class ConnectionDao {
 		}
 	}
 
-    // 更新数据库链接节点的顺序
-	public static void refreshConnOrder() {
-		Connection conn = SqluckyAppDB.getConn();
-		try {
-			logger.info("refreshConnOrder");
-			TreeView<TreeNodePo> treeView = AppWindow.treeView;
-			TreeItem<TreeNodePo> root = treeView.getRoot();
-			ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
-			int size = ls.size();
-			for (int i = 0; i < size; i++) {
-				TreeItem<TreeNodePo> nopo = ls.get(i);
-				String name = nopo.getValue().getName();
-				SqluckyConnector po = DBConns.get(name);
-				int id = po.getId();
-				updateDataOrder(conn, id, i);
-			}
-		} finally {
-			SqluckyAppDB.closeConn(conn);
+	// 更新数据库链接节点的顺序
+	public static void refreshConnOrder(Connection conn) {
+		logger.info("refreshConnOrder");
+		TreeView<TreeNodePo> treeView = AppWindow.treeView;
+		TreeItem<TreeNodePo> root = treeView.getRoot();
+		ObservableList<TreeItem<TreeNodePo>> ls = root.getChildren();
+		int size = ls.size();
+		for (int i = 0; i < size; i++) {
+			TreeItem<TreeNodePo> nopo = ls.get(i);
+			String name = nopo.getValue().getName();
+			SqluckyConnector po = DBConns.get(name);
+			int id = po.getId();
+			updateDataOrder(conn, id, i);
 		}
-
 	}
 
 	// 更新数据库链接节点的顺序
@@ -159,15 +153,15 @@ public class ConnectionDao {
 	public static  List<RsData> selectConnectionInfo(){
 		Connection conn = SqluckyAppDB.getConn();
 		String sql = "SELECT * FROM  CONNECTION_INFO ORDER BY ORDER_TAG";
-        try {
-            return DBTools.selectSql(conn, sql);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }finally {
+		try {
+			return DBTools.selectSql(conn, sql);
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}finally {
 			SqluckyAppDB.closeConn(conn);
 		}
 
-    }
+	}
 
 	/**
 	 * 从数据库恢复数据
@@ -183,8 +177,8 @@ public class ConnectionDao {
 			String vendor = rd.getString("VENDOR");
 			SqluckyDbRegister reg = DbVendor.register(vendor);
 			if (reg == null) {
-                continue;
-            }
+				continue;
+			}
 
 			DBConnectorInfoPo connPo = new DBConnectorInfoPo(rd.getString("CONN_NAME"), rd.getString("DRIVER"),
 					rd.getString("HOST"), rd.getString("PORT"), rd.getString("USER"), rd.getString("PASS_WORD"),
@@ -219,8 +213,8 @@ public class ConnectionDao {
 				String vendor = connPo.getDbVendor();
 				SqluckyDbRegister reg = DbVendor.register(vendor);
 				if (reg == null) {
-                    continue;
-                }
+					continue;
+				}
 				// 设置使用jdbc url的flag
 				if (StrUtils.isNullOrEmpty(connPo.getHostOrFile()) && StrUtils.isNullOrEmpty(connPo.getPort())
 						&& StrUtils.isNotNullOrEmpty(connPo.getJdbcUrl())) {
@@ -305,7 +299,7 @@ public class ConnectionDao {
 
 	/**
 	 * 删除 CONNECTION_INFO 表数据
-	 * 
+	 *
 	 * @param conn
 	 */
 	public static void deleteConnectionInfo(Connection conn) {
@@ -318,7 +312,7 @@ public class ConnectionDao {
 
 	/**
 	 * 删除 SCRIPT_ARCHIVE 表数据
-	 * 
+	 *
 	 * @param conn
 	 */
 	public static void deleteScript(Connection conn) {
@@ -343,8 +337,8 @@ public class ConnectionDao {
 	// 从新创建dbinfoTree的数据, 删除旧数据
 	public static void DBInfoTreeReCreate(List<DBConnectorInfoPo> dbciPo) {
 		if (dbciPo == null || dbciPo.isEmpty()) {
-            return;
-        }
+			return;
+		}
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 删除表里的旧数据
@@ -385,8 +379,8 @@ public class ConnectionDao {
 	// 将新的数据库连接数据和旧数据合并起来
 	public static void DBInfoTreeMerge(List<DBConnectorInfoPo> dbciPo) {
 		if (dbciPo == null || dbciPo.isEmpty()) {
-            return;
-        }
+			return;
+		}
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 判断链接名称是否重复, 重复添加后缀
@@ -413,8 +407,8 @@ public class ConnectionDao {
 	// 从新创建scriptTree的数据, 删除旧数据
 	public static void scriptTreeReCreate(List<DocumentPo> docPo) {
 		if (docPo == null || docPo.isEmpty()) {
-            return;
-        }
+			return;
+		}
 		Connection conn = SqluckyAppDB.getConn();
 		try {
 			// 删除表里的旧数据
@@ -432,8 +426,8 @@ public class ConnectionDao {
 	// 将新sript数据和旧数据合并起来
 	public static void scriptTreeMerge(List<DocumentPo> docPo) {
 		if (docPo == null || docPo.isEmpty()) {
-            return;
-        }
+			return;
+		}
 
 		List<DocumentPo> tmpDocs = new ArrayList<>();
 		Connection conn = SqluckyAppDB.getConn();

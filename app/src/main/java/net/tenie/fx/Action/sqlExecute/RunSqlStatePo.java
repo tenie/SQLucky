@@ -30,6 +30,8 @@ public class RunSqlStatePo {
 	// 要执行的sqls
 	private List<SqlData> allsqls;
 
+	// 分页开始页
+	private int pageStart = -1;
 
 	public RunSqlStatePo(String sql, SqluckyConnector sqlConn) {
 		this.sqlStr = sql;
@@ -185,5 +187,13 @@ public class RunSqlStatePo {
 
 	public void setAllsqls(List<SqlData> allsqls) {
 		this.allsqls = allsqls;
+	}
+
+	public int getPageStart() {
+		return pageStart;
+	}
+
+	public void setPageStart(int pageStart) {
+		this.pageStart = pageStart;
 	}
 }

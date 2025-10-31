@@ -56,6 +56,12 @@ public class MyBottomSheet extends MyTab{
 
 	// 执行sql 的信息
 	Label sqlLabel = new Label("");
+
+	// 操作按钮
+	List<Node> btnLs ;
+	List<Node> querybtnLs ;
+
+
 	//执行 sql信息
 	public void showSqlInfo(){
 		if(!buttonAnchorPane.getChildren().contains(sqlLabel)){
@@ -173,7 +179,7 @@ public class MyBottomSheet extends MyTab{
 	public void showSelectData(int idx, boolean disable, Consumer<String> backcall) {
 		this.idx = idx;
 		// 操作按钮
-		List<Node> btnLs = MyBottomSheetButton.sqlDataOptionBtn(this, disable, true);
+		btnLs = MyBottomSheetButton.sqlDataOptionBtn(this, disable, true);
 		// 操作面板
 		operatePane(btnLs);
 		// 添加sql执行时的信息
