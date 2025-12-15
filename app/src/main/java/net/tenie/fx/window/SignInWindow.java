@@ -175,10 +175,11 @@ public class SignInWindow {
 		
 		list.add(    setbtn); 
 		// 注册按钮
-		var signUp = createSignUpSettings();
-		list.add(    signUp); 
-		
-		layout(list, title);
+//		var signUp = createSignUpSettings();
+//		list.add(    signUp);
+		list.add(new Label(" "));
+
+				layout(list, title);
 	}  
 	
 	private String SignIn = "Sign in ";
@@ -291,7 +292,7 @@ public class SignInWindow {
 		String btnName = "Sign Up";
 		Button btn = new Button(btnName); 
 		btn.setOnAction(v->{
-			CommonUtils.OpenURLInBrowser("https://app.sqlucky.com/");
+//			CommonUtils.OpenURLInBrowser("https://.com/");
 		});
 		return btn;
 	}
