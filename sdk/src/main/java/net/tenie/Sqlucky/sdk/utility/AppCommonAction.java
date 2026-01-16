@@ -434,8 +434,8 @@ public class AppCommonAction {
             sz -= 1;
         }
 
-        if (sz > 20) {
-            sz = 20;
+        if (sz > 40) {
+            sz = 40;
         }
 
         if (sz < 10) {
