@@ -6,12 +6,14 @@ import com.google.gson.JsonElement;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.IndexRange;
 import net.tenie.Sqlucky.sdk.po.MyRange;
+import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jasypt.util.text.BasicTextEncryptor;
 
-import java.io.File;
+import java.io.*;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
@@ -19,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 public class StrUtils {
@@ -1849,6 +1853,52 @@ public class StrUtils {
             result[i] = c;
         }
         return new String(result);
+    }
+
+
+
+    public static String unzipFileString(File file) throws Exception {
+        byte[] msgBtye = unzip(FileUtils.readFileToByteArray(file));
+        return new String(msgBtye, StandardCharsets.UTF_8);
+    }
+
+
+    //解压, 将压缩字符串解压成可视化字符串
+    public static byte[] unzip(byte[] src) throws Exception {
+        ZipInputStream zipin=null;
+        ByteArrayOutputStream out=null;
+        try{
+            byte[] tst=Arrays.copyOf(src, 5);
+            if("<msg>".equals(new String(tst,"UTF-8"))){
+                return src;
+            }
+            zipin=new ZipInputStream(new ByteArrayInputStream(src));
+            ZipEntry entry=zipin.getNextEntry();
+            if(entry!=null){
+                out=new ByteArrayOutputStream();
+                byte[] buff = new byte[1024];
+                int again = 0;
+                while ((again = zipin.read(buff, 0, buff.length)) > 0) {
+                    out.write(buff, 0, again);
+                }
+                out.flush();
+                return out.toByteArray();
+            }else{
+                return null;
+            }
+        }catch(Exception e){
+            throw e;
+        }finally{
+            closeQuietly(zipin);
+            closeQuietly(out);
+        }
+
+    }
+
+    public static void closeQuietly(Closeable o) {
+        if(o!=null){
+            try{o.close();}catch(Exception e){}
+        }
     }
 
 }
