@@ -8,20 +8,9 @@
 
 > 开发依赖:
 
-    Java 21
+    Java 25
     maven  latest
     
-> 源码快速启动:
-   
-     
-    $ git clone git@github.com:tenie/SQLucky.git
-    $ cd  SQLucky
-    $ mvn -N install
-    $ mvn  install
-    $ cd app
-    $ mvn javafx:run
-
-
 
 ---
 
