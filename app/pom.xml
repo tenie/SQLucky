@@ -100,10 +100,10 @@
  	  <artifactId>SparseBitSet</artifactId>
 </dependency>	
 
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-</dependency>
+<!--<dependency>-->
+<!--    <groupId>org.projectlombok</groupId>-->
+<!--    <artifactId>lombok</artifactId>-->
+<!--</dependency>-->
 	
 <dependency>
     <groupId>com.fasterxml.jackson.core</groupId>
@@ -351,7 +351,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
+<!--				<version>3.8.1</version>-->
 				<configuration>
 					<!-- 指定编译版本 -->
 					<release>${maven.compiler.release}</release>

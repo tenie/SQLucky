@@ -26,8 +26,8 @@
     <properties>
         <sqlucky.version>3.1.0</sqlucky.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>21</maven.compiler.release>
-        <javafx.version>20.0.2</javafx.version>
+        <maven.compiler.release>25</maven.compiler.release>
+        <javafx.version>24.0.1</javafx.version>
         <jfoenix.version>9.0.10</jfoenix.version>
         <richtextfx.version>0.10.6</richtextfx.version>
         <controlsfx.version>11.2.1</controlsfx.version>
@@ -143,12 +143,12 @@
             </dependency>
 
 
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>1.18.30</version>
-                <!-- <scope>provided</scope> -->
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>org.projectlombok</groupId>-->
+<!--                <artifactId>lombok</artifactId>-->
+<!--                <version>1.18.30</version>-->
+<!--                &lt;!&ndash; <scope>provided</scope> &ndash;&gt;-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -467,10 +467,9 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.8.1</version>
+                    <version>3.13.0</version>
                     <configuration>
-                        <source>21</source>
-                        <target>21</target>
+                        <release>${maven.compiler.release}</release>
                         <encoding>UTF-8</encoding>
                     </configuration>
                 </plugin>

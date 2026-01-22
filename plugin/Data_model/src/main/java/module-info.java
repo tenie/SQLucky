@@ -19,7 +19,7 @@ open module SQLucky.plugin.DataModel{
 	requires com.fasterxml.jackson.core; 
 	requires com.fasterxml.jackson.databind;
 	requires com.fasterxml.jackson.annotation;
-	requires lombok;
+//	requires lombok;
 	
 	exports net.tenie.plugin.DataModel.impl;
     provides net.tenie.Sqlucky.sdk.SqluckyPluginDelegate with net.tenie.plugin.DataModel.impl.DataModelDelegateImpl;

@@ -270,13 +270,13 @@
                         <arg>org.controlsfx.controls/impl.org.controlsfx.i18n=SQLucky.sdk</arg>
                     </compilerArgs>
 
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>1.18.26</version>
-                        </path>
-                    </annotationProcessorPaths>
+<!--                    <annotationProcessorPaths>-->
+<!--                        <path>-->
+<!--                            <groupId>org.projectlombok</groupId>-->
+<!--                            <artifactId>lombok</artifactId>-->
+<!--                            <version>1.18.26</version>-->
+<!--                        </path>-->
+<!--                    </annotationProcessorPaths>-->
                 </configuration>
             </plugin>
 

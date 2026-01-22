@@ -34,7 +34,7 @@ open module SQLucky.app {
 	requires com.fasterxml.jackson.core; 
 	requires com.fasterxml.jackson.databind;
 	requires com.fasterxml.jackson.annotation;
-	requires lombok;
+//	requires lombok;
 	
 
 	requires org.apache.httpcomponents.client5.httpclient5;
