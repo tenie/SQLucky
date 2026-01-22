@@ -260,13 +260,13 @@ public class app extends Application {
     private  void moveDbData(){
         // 如果发现有新的数据库, 插入
         Optional<File> oldFile = AppDao.appOldDbFiles();
-        oldFile.ifPresent(value -> Platform.runLater(() -> {
+        oldFile.ifPresent(file -> Platform.runLater(() -> {
             boolean tf = MyAlert.myConfirmationShowAndWait("发现旧版本数据, 是否迁移");
             if (tf) {
                 // 数据库迁移
                 LoadingAnimation.primarySceneRootLoadingAnimation("Migrating", v -> {
                     boolean succeed = false;
-                    File file = value;
+//                    File file = value;
                     try {
                         AppDao.transferOldDbData(file);
                         succeed = true;
