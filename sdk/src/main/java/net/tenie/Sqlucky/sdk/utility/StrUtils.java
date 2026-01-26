@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 import org.jasypt.util.text.BasicTextEncryptor;
 
 import java.io.*;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -1899,6 +1901,63 @@ public class StrUtils {
         if(o!=null){
             try{o.close();}catch(Exception e){}
         }
+    }
+
+
+    /**
+     * 对字符串进行MD5计算
+     *
+     * @param input 待计算MD5的字符串
+     * @return MD5哈希值的十六进制字符串表示
+     */
+    public static String calculateMD5(String input) {
+        if (input == null) {
+            return null;
+        }
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] messageDigest = md.digest(input.getBytes(java.nio.charset.StandardCharsets.UTF_8));
+
+            // 将字节数组转换为十六进制字符串
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : messageDigest) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) {
+                    hexString.append('0');
+                }
+                hexString.append(hex);
+            }
+
+            return hexString.toString();
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("MD5 algorithm not available", e);
+        }
+    }
+
+    /**
+     * url 解码
+     * @param url
+     * @return
+     */
+   public static String urlDecode(String url){
+       try {
+           return URLDecoder.decode(url, StandardCharsets.UTF_8.name());
+       } catch (UnsupportedEncodingException e) {
+           e.printStackTrace();
+       }
+       return url;
+   }
+    /**
+     * url 编码
+     */
+    public static String urlEncode(String url){
+        try {
+            return URLEncoder.encode(url, StandardCharsets.UTF_8.name());
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return url;
     }
 
 }
