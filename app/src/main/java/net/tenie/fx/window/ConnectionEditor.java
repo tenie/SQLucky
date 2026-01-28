@@ -208,6 +208,18 @@ public class ConnectionEditor {
         password.setMinWidth(wh);
         AnchorPane passwordFieldPane = UiTools.textFieldAddCleanBtn(password);
 
+        // 复制密码
+        Button copyBtn = new Button("");
+        copyBtn.setGraphic(IconGenerator.svgImageDefActive("clipboard"));
+        copyBtn.setTooltip(MyTooltipTool.instance("Copy Password"));
+        copyBtn.setVisible(true);
+        copyBtn.disableProperty().bind(password.textProperty().isEmpty());
+        copyBtn.setOnAction(e -> {
+            CommonUtils.setClipboardVal(password.getText());
+        });
+
+
+
         TextField defaultSchema = new TextField();
         defaultSchema.setPromptText(defaultSchemaStr);
         defaultSchema.setText(defaultSchemaVal);
@@ -361,7 +373,7 @@ public class ConnectionEditor {
                 connectionNameFieldPane,
                 lbdbDriverStr, dbDriver, isUseJdbcUrl, jdbcUrlFieldPane, lbhostStr, hostFieldPane,
                 h2FilePath, lbportStr, portFieldPane, lbdefaultSchemaStr, defaultSchemaFieldPane, lbuserStr, userFieldPane, lbpasswordStr,
-                passwordFieldPane, autoConnect, autoConnectCB, testBtn, saveBtn);
+                passwordFieldPane, autoConnect, autoConnectCB, testBtn, saveBtn, copyBtn);
 
     }
 
@@ -667,8 +679,8 @@ public class ConnectionEditor {
     public void layoutAndShow(Node lbconnNameStr, Node connectionName, Node lbdbDriverStr,
                               Node dbDriver, Node isUseJU, Node jdbcUrl, Node lbhostStr, Node host, Node h2FilePath,
                               Node lbportStr, Node port, Node lbdefaultSchemaStr, Node defaultSchema, Node lbuserStr,
-                              Node user, Node lbpasswordStr, Node password, Node autoConnect, Node autoConnectCB,
-                              Node testBtn, Node saveBtn
+                              Node user, Node lbpasswordStr, Node password,  Node autoConnect, Node autoConnectCB,
+                              Node testBtn, Node saveBtn,  Button copyBtn
 
     ) {
         VBox vb = new VBox();
@@ -710,9 +722,10 @@ public class ConnectionEditor {
 
         grid.add(lbuserStr, 0, i++);
         grid.add(user, 1, j++);
-
+        tmp = j++;
         grid.add(lbpasswordStr, 0, i++);
-        grid.add(password, 1, j++);
+        grid.add(password, 1, tmp);
+        grid.add(copyBtn, 2, tmp);
 
         grid.add(autoConnect, 0, i++);
         grid.add(autoConnectCB, 1, j++);
@@ -720,12 +733,17 @@ public class ConnectionEditor {
         grid.add(testBtn, 0, i);
         grid.add(saveBtn, 1, i);
         // 默认焦点
+        stage.show();
+        connectionName.requestFocus();
+        stage.toFront();
+        stage.requestFocus();
+        stage.setAlwaysOnTop(true);
+
         Platform.runLater(() -> {
-            stage.show();
-            connectionName.requestFocus();
+            stage.toFront();
+            stage.requestFocus();
+            stage.setAlwaysOnTop(false);
         });
-
-
     }
 
     public Stage getStage() {

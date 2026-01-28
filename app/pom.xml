@@ -39,6 +39,12 @@
 	<dependency>
 		<groupId>com.google.guava</groupId>
 		<artifactId>guava</artifactId>
+		<exclusions>
+				  <exclusion>
+					 <groupId>com.google.code.findbugs</groupId>
+					 <artifactId>jsr305</artifactId>
+				   </exclusion>
+		   </exclusions>
 	</dependency>
 	<dependency>
 		<groupId>org.apache.velocity</groupId>
@@ -372,15 +378,16 @@
 				<!-- javafx 插件, 启用应用 -->
 				<groupId>org.openjfx</groupId>
 				<artifactId>javafx-maven-plugin</artifactId>
-				<version>0.0.5</version>
+				<version>0.0.8</version>
 				<configuration>
-					<release>${maven.compiler.release}</release>
+<!--					<release>${maven.compiler.release}</release>-->
 					<jlinkImageName>SQLucky</jlinkImageName>
 					<launcher>launcher</launcher>
 					<mainClass>SQLucky.app/SQLucky.app</mainClass>
-					<runtimePathOption>MODULEPATH </runtimePathOption>
+					<runtimePathOption>MODULEPATH</runtimePathOption>
 					<options>
-						<option>-Dhttps.protocols=TLSv1.2</option> 
+						<option>-Dhttps.protocols=TLSv1.2</option>
+<!--						<option>-Dglass.win.uiScale=1.0</option>-->
 						<option>--add-modules=javafx.controls,javafx.fxml</option>
 						<option>--add-opens</option>
 						<option>javafx.graphics/javafx.scene.text=ALL-UNNAMED</option>
