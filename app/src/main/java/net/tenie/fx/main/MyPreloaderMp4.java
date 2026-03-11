@@ -21,8 +21,7 @@ public class MyPreloaderMp4 extends Preloader {
 	private static Stage preloaderStage;
 	private volatile static boolean isFinish = false;
 	private static StackPane loading;
-
-	private MediaPlayer mediaPlayer;
+	private static MediaPlayer mediaPlayer;
 
 	public static boolean getFinish() {
 		return isFinish;
@@ -43,7 +42,14 @@ public class MyPreloaderMp4 extends Preloader {
 						}
 					}
 					Platform.runLater(() -> {
+						if (mediaPlayer != null) {
+							mediaPlayer.stop();
+							mediaPlayer.dispose();
+							mediaPlayer = null;
+						}
 						preloaderStage.close();
+						loading = null;
+						preloaderStage = null;
 					});
 
 				}
